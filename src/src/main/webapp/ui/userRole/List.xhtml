@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/layout/template.xhtml">
+
+        <ui:define name="title">
+            <h:outputText value="#{msg.UserRoleTitle}"/>
+        </ui:define>
+
+        <ui:define name="body">
+            <p align="center"><b>#{msg.UserRoleTitle}</b></p>
+            <h:form id="UserRoleListForm">
+                <p:dataTable id="datalist" value="#{userRoleController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{userRoleController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.userRoleId}" sortMode="single" sortOrder="descending" sortBy="#{item.userRoleId}"
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} &nbsp;&nbsp;&nbsp;&nbsp; #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                    rows="20" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{userRoleController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    
+                    <p:column headerText="#{msg.userRoleId}" sortBy="#{item.userRoleId}">
+                        <h:outputText value="#{item.userRoleId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.userId}" sortBy="#{item.userId}">
+                        <h:outputText value="#{item.userId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.roleId}" sortBy="#{item.roleId}">
+                        <h:outputText value="#{item.roleId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.institutionId}" sortBy="#{item.institutionId}">
+                        <h:outputText value="#{item.institutionId}"/>
+                    </p:column>
+                    <f:facet name="{Toolbar}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="UserRole_export"/>
+                        </p:commandButton>
+                        &nbsp;&nbsp;
+                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{userRoleController.prepareCreate}" update=":UserRoleEditDlg" oncomplete="PF('UserRoleEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{userRoleController.prepareView}" update=":UserRoleViewDlg" oncomplete="PF('UserRoleViewDialog').show()" disabled="#{empty userRoleController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{userRoleController.prepareEdit}" update=":UserRoleEditDlg" oncomplete="PF('UserRoleEditDialog').show()" disabled="#{empty userRoleController.selected}"/>
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{userRoleController.prepareDelete}" update=":UserRoleViewDlg" oncomplete="PF('UserRoleViewDialog').show()" disabled="#{empty userRoleController.selected}"/>
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+        </ui:define>
+    </ui:composition>
+</html>

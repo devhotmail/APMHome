@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/layout/template.xhtml">
+
+        <ui:define name="title">
+            <h:outputText value="#{msg.InstitutionTitle}"/>
+        </ui:define>
+
+        <ui:define name="body">
+            <p align="center"><b>#{msg.InstitutionTitle}</b></p>
+            <h:form id="listForm">
+                <p:dataTable id="datalist" value="#{jpaDynaColumnDemoController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{jpaDynaColumnDemoController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} &nbsp;&nbsp;&nbsp;&nbsp; #{msg.RowsPerPage}: {RowsPerPageDropdown} {columnToggler}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                    rows="20" emptyMessage="#{msg.noRecordFound}" binding="#{jpaDynaColumnDemoController.dataTable}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{jpaDynaColumnDemoController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    
+                    <f:facet name="{columnToggler}">
+                        <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                        <p:columnToggler datasource="datalist" trigger="toggler">
+                            <p:ajax event="toggle" listener="#{jpaDynaColumnDemoController.onToggleColumn}" />
+                        </p:columnToggler>
+                    </f:facet>
+
+                    <p:columns field="#{column.fieldName}" value="#{jpaDynaColumnDemoController.columns}" var="column" columnIndexVar="colIndex" filterBy="#{column.fieldName}" sortBy="#{item[column.fieldName]}" visible="#{column.isVisible}">
+                        <f:facet name="header">
+                            <h:outputText value="#{column.headerName}"/>
+                        </f:facet>
+                        <h:outputText value="#{jpaDynaColumnDemoController.getFieldValue(item, column.fieldName)}"/>
+                    </p:columns>
+                    <f:facet name="{Toolbar}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <p:commandButton value="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="xls_export"/>
+                        </p:commandButton>
+                        &nbsp;&nbsp;
+                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{jpaDynaColumnDemoController.prepareCreate}" update=":InstitutionEditDlg" oncomplete="PF('InstitutionEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{jpaDynaColumnDemoController.prepareView}" update=":InstitutionViewDlg" oncomplete="PF('InstitutionViewDialog').show()" disabled="#{empty jpaDynaColumnDemoController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{jpaDynaColumnDemoController.prepareEdit}" update=":InstitutionEditDlg" oncomplete="PF('InstitutionEditDialog').show()" disabled="#{empty jpaDynaColumnDemoController.selected}"/>
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash" title="#{msg.Delete}" actionListener="#{jpaDynaColumnDemoController.prepareDelete}" update=":InstitutionViewDlg" oncomplete="PF('InstitutionViewDialog').show()" disabled="#{empty jpaDynaColumnDemoController.selected}"/>
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+        </ui:define>
+    </ui:composition>
+</html>

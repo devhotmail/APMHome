@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="PatientExamViewEditDlg" widgetVar="PatientExamViewEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{patientExamViewController.CRUDActionName} #{msg.PatientExamViewTitle}">
+            <h:form id="PatientExamViewEditForm">
+                <h:panelGroup id="display">
+                    <h:panelGrid columns="4" rendered="#{patientExamViewController.selected != null}">
+                        <p:outputLabel value="#{msg.PatientExamViewField_examID}" for="examID" />
+                        <p:inputText id="examID" value="#{patientExamViewController.selected.examID}"  required="true" requiredMessage="#{msg.PatientExamViewField_examID} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.PatientExamViewField_preExamExamDate}" for="preExamExamDate" />
+                        <p:inputText id="preExamExamDate" value="#{patientExamViewController.selected.preExamExamDate}"  required="true" requiredMessage="#{msg.PatientExamViewField_preExamExamDate} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.PatientExamViewField_examAccessionID}" for="examAccessionID" />
+                        <p:inputText id="examAccessionID" value="#{patientExamViewController.selected.examAccessionID}"  required="true" requiredMessage="#{msg.PatientExamViewField_examAccessionID} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.PatientExamViewField_patientNameChinese}" for="patientNameChinese" />
+                        <p:inputText id="patientNameChinese" value="#{patientExamViewController.selected.patientNameChinese}"  required="true" requiredMessage="#{msg.PatientExamViewField_patientNameChinese} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.PatientExamViewField_patientGender}" for="patientGender" />
+                        <p:inputText id="patientGender" value="#{patientExamViewController.selected.patientGender}"  required="true" requiredMessage="#{msg.PatientExamViewField_patientGender} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.PatientExamViewField_studyInstanceUID}" for="studyInstanceUID" />
+                        <p:inputText id="studyInstanceUID" value="#{patientExamViewController.selected.studyInstanceUID}"  required="true" requiredMessage="#{msg.PatientExamViewField_studyInstanceUID} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.PatientExamViewField_examSatus}" for="examSatus" />
+                        <p:inputText id="examSatus" value="#{patientExamViewController.selected.examSatus}"  required="true" requiredMessage="#{msg.PatientExamViewField_examSatus} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.PatientExamViewField_preExamDepartment}" for="preExamDepartment" />
+                        <p:inputText id="preExamDepartment" value="#{patientExamViewController.selected.preExamDepartment}"  required="true" requiredMessage="#{msg.PatientExamViewField_preExamDepartment} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.PatientExamViewField_preExamFrom}" for="preExamFrom" />
+                        <p:inputText id="preExamFrom" value="#{patientExamViewController.selected.preExamFrom}"  required="true" requiredMessage="#{msg.PatientExamViewField_preExamFrom} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.PatientExamViewField_patientHospitalID}" for="patientHospitalID" />
+                        <p:inputText id="patientHospitalID" value="#{patientExamViewController.selected.patientHospitalID}"  required="true" requiredMessage="#{msg.PatientExamViewField_patientHospitalID} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.PatientExamViewField_patientIntraID}" for="patientIntraID" />
+                        <p:inputText id="patientIntraID" value="#{patientExamViewController.selected.patientIntraID}"  required="true" requiredMessage="#{msg.PatientExamViewField_patientIntraID} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.PatientExamViewField_hospitalId}" for="hospitalId" />
+                        <p:inputText id="hospitalId" value="#{patientExamViewController.selected.hospitalId}"  required="true" requiredMessage="#{msg.PatientExamViewField_hospitalId} #{msg.ValidationRequire}"/>
+    <!--
+                        <p:outputLabel value="#{msg.PatientExamViewField_report}" for="report"/>
+                        <p:selectOneMenu id="reportId" value="#{patientExamViewController.selected.report}Id" required="true" requiredMessage="#{msg.PatientExamViewField_report} #{msg.ValidationRequire}">
+                            <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                            <f:selectItems value="#{reportController.itemList}"
+                                           var="report"
+                                           itemLabel="#{report.name}"
+                                           itemValue="#{report.id}"/>
+                        </p:selectOneMenu>
+    -->
+    <!--
+                        <p:outputLabel value="#{msg.PatientExamViewField_procedureStepInfo}" for="procedureStepInfo"/>
+                        <p:selectOneMenu id="procedureStepInfoId" value="#{patientExamViewController.selected.procedureStepInfo}Id" required="true" requiredMessage="#{msg.PatientExamViewField_procedureStepInfo} #{msg.ValidationRequire}">
+                            <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                            <f:selectItems value="#{procedureStepInfoController.itemList}"
+                                           var="procedureStepInfo"
+                                           itemLabel="#{procedureStepInfo.name}"
+                                           itemValue="#{procedureStepInfo.id}"/>
+                        </p:selectOneMenu>
+    -->
+    <!--
+                        <p:outputLabel value="#{msg.PatientExamViewField_modalityInfo}" for="modalityInfo"/>
+                        <p:selectOneMenu id="modalityInfoId" value="#{patientExamViewController.selected.modalityInfo}Id" required="true" requiredMessage="#{msg.PatientExamViewField_modalityInfo} #{msg.ValidationRequire}">
+                            <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                            <f:selectItems value="#{modalityInfoController.itemList}"
+                                           var="modalityInfo"
+                                           itemLabel="#{modalityInfo.name}"
+                                           itemValue="#{modalityInfo.id}"/>
+                        </p:selectOneMenu>
+    -->
+    <!--
+                        <p:outputLabel value="#{msg.PatientExamViewField_orderInfo}" for="orderInfo"/>
+                        <p:selectOneMenu id="orderInfoId" value="#{patientExamViewController.selected.orderInfo}Id" required="true" requiredMessage="#{msg.PatientExamViewField_orderInfo} #{msg.ValidationRequire}">
+                            <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                            <f:selectItems value="#{orderInfoController.itemList}"
+                                           var="orderInfo"
+                                           itemLabel="#{orderInfo.name}"
+                                           itemValue="#{orderInfo.id}"/>
+                        </p:selectOneMenu>
+    -->
+                    </h:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{patientExamViewController.save}" value="#{msg.Save}" update="display,:PatientExamViewEditDlg, :PatientExamViewListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'PatientExamViewEditDialog');"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" onclick="PF('PatientExamViewEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

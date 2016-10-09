@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/layout/template.xhtml">
+
+    <ui:define name="preRenderView">
+        <f:event type="preRenderView" listener="#{userContextService.checkIsSuperAdminAndFirstRequest}"/>
+    </ui:define>
+        
+    <ui:define name="body">
+       just a test page
+        <br/><br/>
+            <p:commandButton value="Reload Chart Config Data" actionListener="#{demoChartController.reLoadChartConfig}"/>
+        
+        <h3>
+        p:commandButton的icon图标:
+        </h3>
+        <a href="http://getbootstrap.com/components/#glyphicons-glyphs">链接： Bootstrap Glyphicon List</a>
+        <br/>
+        常用图标: 
+        glyphicon-plus-sign(新增)
+        glyphicon-edit(编辑)
+        glyphicon-minus-sign(删除)
+        glyphicon-remove-sign(取消/删除) 
+        glyphicon-ok-sign(确认)
+        glyphicon-off(关闭对话框)
+        glyphicon-refresh(刷新)
+        glyphicon-print(打印)
+        glyphicon-download(下载)
+        glyphicon-cloud-upload(上传)
+        glyphicon-floppy-disk(保存)
+        glyphicon-eye-open (查看详细)
+        glyphicon-import(导入)
+        <h3>p:commandButton的样式:</h3>
+        <br/>
+        <h:form>
+            btn-primary(default):
+            <p:commandButton icon="glyphicon-refresh" ajax="true" actionListener="#{fieldMsg.reloadMessages()}" value="重新加载 i18n messages"/>
+            <br/>
+            btn-info:
+            <p:commandButton class="btn-sm btn-info" icon="glyphicon-refresh" ajax="true" actionListener="#{fieldMsg.reloadMessages()}" value="重新加载 i18n messages"/>
+            <br/>
+            btn-success
+            <p:commandButton class="btn-sm btn-success" icon="glyphicon-refresh" ajax="true" actionListener="#{fieldMsg.reloadMessages()}" value="重新加载 i18n messages"/>
+            <br/>
+            btn-danger:
+            <p:commandButton class="btn-sm btn-danger" icon="glyphicon-refresh" ajax="true" actionListener="#{fieldMsg.reloadMessages()}" value="重新加载 i18n messages"/>
+            <br/>
+            btn-link:
+            <p:commandButton class="btn btn-sm btn-link" icon="glyphicon-refresh" ajax="true" actionListener="#{fieldMsg.reloadMessages()}" value="重新加载 i18n messages"/>
+            <br/>
+            btn-gray:
+            <p:commandButton class="btn btn-sm btn-gray" icon="glyphicon-refresh" ajax="true" actionListener="#{fieldMsg.reloadMessages()}" value="重新加载 i18n messages"/>
+            <br/>
+            
+        </h:form>
+        <br/><br/>
+    </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/layout/template.xhtml">
+
+        <ui:define name="title">
+            <h:outputText value="#{msg.MppsTitle}"/>
+        </ui:define>
+
+        <ui:define name="body">
+            
+            <h:form id="searchForm" rendered="#{webReportDemoController.isSearchMode}">
+                <p:panel id="searchPanel" toggleable="false" header="查询条件" style="width: 99%;">
+                    <h:panelGrid id="searchPanelGrid" columns="10" style="width: 100%;">
+                        <p:outputLabel class="boldLabel" value="#{msg.PatientExamViewField_patientNameChinese}" style="text-align: right;"/>
+                        <p:inputText id="search_LIKE_p-patientNameChinese" placeholder="模糊匹配"/>
+                        <p:outputLabel class="boldLabel" value="#{msg.PatientExamViewField_patientIntraID}"/>
+                        <p:inputText id="search_EQ_e-PatientID" placeholder="精确匹配PatientIntraID"/>
+                        
+                        <p:outputLabel class="boldLabel" value="Exam Date"/>
+                        <p:calendar locale="#{localeService.language}" placeholder="时间大于或等于" locale="zh" id="search_GTE_e-PreExamExamDate" pattern="yyyy-MM-dd" readonlyInput="false" showButtonPanel="true" navigator="true" showOn="focus"/>
+                    </h:panelGrid>
+                    <table align="center">
+                        <tr><td>
+                        <p:commandButton style="width: 140px;" actionListener="#{testSqlDataTableController.setSearchFilter}" update=":MppsListForm" value="#{msg.search}"/>
+                        
+                        <p:commandButton style="width: 140px;" value="#{msg.resetInput}" update="searchPanelGrid" process="@this">
+                            <p:resetInput target="searchPanel"/>
+                        </p:commandButton>                        
+                        </td></tr>
+                    </table>
+                </p:panel>
+            </h:form>
+            
+            <h:form id="MppsListForm">
+                <p:dataTable id="datalist" value="#{testSqlDataTableController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{testSqlDataTableController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.hashCode()}" sortMode="single" sortOrder="descending" sortBy="#{item.get('PatientID')}"
+                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} &nbsp;&nbsp;&nbsp;&nbsp; #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                    rows="5" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="5,20,40,60,90">
+
+                    <p:ajax event="rowSelect" listener="#{testSqlDataTableController.onRowSelected}"/>
+                    
+                    <p:column headerText="PatientIntraID" sortBy="#{item.get('PatientIntraID')}">
+                        <h:outputText value="#{item.get('PatientIntraID')}"/>
+                    </p:column>
+                    <p:column headerText="PreExamFrom" sortBy="#{item.get('PreExamFrom')}">
+                        <h:outputText value="#{item.get('PreExamFrom')}"/>
+                    </p:column>
+                    <p:column headerText="patientNameChinese" sortBy="#{item.get('patientNameChinese')}">
+                        <h:outputText value="#{item.get('patientNameChinese')}"/>
+                    </p:column>
+                    <p:column headerText="PatientBirtDay" sortBy="#{item.get('PatientBirtDay')}">
+                        <h:outputText value="#{item.get('PatientBirtDay')}"/>
+                    </p:column>
+                    <p:column headerText="PatientHospitalID" sortBy="#{item.get('PatientHospitalID')}">
+                        <h:outputText value="#{item.get('PatientHospitalID')}"/>
+                    </p:column>
+                    <p:column headerText="Exam Date" sortBy="#{item.get('PreExamExamDate')}">
+                        <h:outputText value="#{item.get('PreExamExamDate')}"/>
+                    </p:column>
+                    <p:column headerText="Report Date" sortBy="#{item.get('PostExamReportDate')}">
+                        <h:outputText value="#{item.get('PostExamReportDate')}"/>
+                    </p:column>
+                    
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

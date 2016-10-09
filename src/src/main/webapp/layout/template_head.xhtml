@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <f:view>
+        <ui:insert name="preRenderView"/>
+
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+                <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+                <title><ui:insert name="title">#{msg.app_name}</ui:insert></title>
+            </f:facet>
+            <f:facet name="last">
+                <h:outputStylesheet name="css/main.css" />
+                <h:outputScript name="js/main.js" />
+            </f:facet>
+            <ui:insert name="head"/>
+        </h:head>
+
+        <h:body>
+
+            <p:ajaxStatus style="z-index: 999; width:64px;height:64px;position:fixed;right:5px;bottom:5px">
+                <f:facet name="start">
+                    <p:graphicImage url="#{resource['img/ajaxloader.gif']}"/>
+                </f:facet>
+
+                <f:facet name="complete">
+                    <h:outputText value="" />
+                </f:facet>
+            </p:ajaxStatus>
+
+            <p:growl id="growl"  autoUpdate="true" life="5000" showDetail="false" rendered="true"/>
+            <div id="header">
+                <div id="banner">
+                    <div id="logoImage"></div>
+                    <div id="logoTitle">#{msg.app_name}</div>
+                    <div id="welcomearea">
+                        <h:form id="pageHeader">
+                            <p:outputLabel> #{msg.Welcome}, #{userContextService.userLoginName}. </p:outputLabel>&nbsp;
+                            <h:outputLink value="#{request.requestURL}?locale=zh" styleClass="userInfo-chn">中文</h:outputLink>
+                            <h:outputLink value="#{request.requestURL}?locale=en" styleClass="userInfo-en">English</h:outputLink>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-left: auto; margin-right: auto; width: 100%;">
+               
+            </div>
+            <div style="margin-left: auto; margin-right: auto; width: 100%;">
+                <ui:insert name="body"></ui:insert>
+
+                <br/>
+                <p:separator/>
+                <p align="center">
+                    <ul id="footerMenu">
+                        <li><a title="Terms of Service" id='terms-of-service' href="#">Terms of Service</a></li>
+                        <li><a title="Privacy Policy" href="#" target="_BLANK">Privacy Policy</a></li>
+                    </ul>
+                </p>
+            </div>
+        </h:body>
+    </f:view>
+</html>

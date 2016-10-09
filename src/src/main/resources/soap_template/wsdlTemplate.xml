@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://ris.webservice.dragon.hcit.ge.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="RisWebServiceService" targetNamespace="http://ris.webservice.dragon.hcit.ge.com">
+  <wsdl:types>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ris.webservice.dragon.hcit.ge.com" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://ris.webservice.dragon.hcit.ge.com">
+  <xsd:element name="risWebService" nillable="true" type="xsd:string"/>
+  <xsd:element name="result" nillable="true" type="xsd:string"/>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="risWebService">
+    <wsdl:part element="tns:risWebService" name="risWebService">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="risWebServiceResponse">
+    <wsdl:part element="tns:result" name="result">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RisWebService">
+    <wsdl:operation name="risWebService">
+      <wsdl:input message="tns:risWebService" name="risWebService">
+    </wsdl:input>
+      <wsdl:output message="tns:risWebServiceResponse" name="risWebServiceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RisWebServiceServiceSoapBinding" type="tns:RisWebService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="risWebService">
+      <soap:operation soapAction="risWebService" style="document"/>
+      <wsdl:input name="risWebService">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="risWebServiceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RisWebServiceService">
+    <wsdl:port binding="tns:RisWebServiceServiceSoapBinding" name="RisWebServicePort">
+      <soap:address location="http://localhost:8080/rissi/soap/huashan/Service"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

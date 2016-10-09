@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+        xmlns:p="http://primefaces.org/ui"
+        contentType="text/html" 
+        encoding="UTF-8"
+        transient="true">
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="#{localeService.locale}" lang="#{localeService.locale}">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+                <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+                <title><ui:insert name="title">#{msg.app_name}</ui:insert></title>
+            </f:facet>
+            <f:facet name="last">
+                <h:outputStylesheet name="css/main.css" />
+                
+                <h:outputScript name="js/main.js" />
+                
+            </f:facet>
+        </h:head>
+        <h:body>
+            <br/>
+            <h:form id="form" enctype="multipart/form-data; charset=utf-8" prependId="false">
+                <ui:insert name="body"/>
+                <br/>
+                <ui:insert name="footer">
+                    <h:panelGroup rendered="false">
+                        <p:separator/>
+                        <p align="center">
+                            <div align="center" style="border: medium none;">© 2014 Company Name</div>
+                        </p>
+                    </h:panelGroup>    
+                </ui:insert>                   
+            </h:form>
+        </h:body>
+    </html>
+</f:view>

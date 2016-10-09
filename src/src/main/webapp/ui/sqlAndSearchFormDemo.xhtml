@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/layout/template.xhtml">
+
+        <ui:define name="title">
+            <h:outputText value="#{msg.SQLTestControllerTitle}"/>
+        </ui:define>
+
+        <ui:define name="body">
+            <p:breadCrumb homeDisplay="text">
+                <p:menuitem value="检查设备" url="/home1.xhtml"/>
+                <p:menuitem value="检查部位" url="/home2.xhtml"/>
+                <p:menuitem value="检查方法" url="/home3.xhtml" />
+            </p:breadCrumb>
+
+<div class="panel-group" id="reportdetailForm:j_idt128">
+<div style="border:none;" class="panel panel-info">
+<div class="panel-heading">
+<a data-toggle="collapse" data-target="#reportdetailForm_j_idt128content" style="display:block;outline: none;text-decoration: underline;" href="javascript:;" class="panel-title-link ">
+<span>
+<i id="reportdetailForm:j_idt131" class="panel-header-icon glyphicon glyphicon-th">
+</i>
+</span>
+
+                                报告明细
+                            </a>
+</div>
+<div id="reportdetailForm_j_idt128content" class="panel-collapse collapse in">
+<div class="panel-body">
+</div>
+</div>
+</div>
+</div>            
+            <b:panel look="info">
+                <f:facet name="heading">
+                        <b:icon name="glyphicon-th" styleClass="panel-header-icon"/>
+                        #{msg.exam_list_result}
+                    </f:facet>
+            </b:panel>
+            
+            <p align="center"><b>Native SQL DataTable and SearchForm Demo</b></p>
+            
+            <h:form id="searchForm">
+
+                <p:fieldset legend="查询条件">
+                    <h:panelGrid id="searchPanel"  columns="14">
+                        <p:outputLabel value="#{msg.ExamID}"/>
+                        <p:inputText id="search_GTE_Exam_ID" placeholder="ExamID>=?"/>
+                        <p:spacer/><p:spacer/>
+                        <p:outputLabel value="#{msg.ExamStatus}"/>
+                        <p:inputText id="search_EQ_exam_status" placeholder="ExamStatus=?"/>
+
+                        <p:outputLabel value="#{msg.birthday}" for="search_GTE_birthday"/>
+                        <p:calendar locale="#{localeService.language}"  id="search_GTE_birthday" pattern="yyyy-MM-dd" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+
+                        <p:outputLabel value="to" for="search_LTE_birthday"/>
+                        <p:calendar locale="#{localeService.language}"  id="search_LTE_birthday" pattern="yyyy-MM-dd" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+
+                        <p:commandButton id="datalist" value="#{msg.Search}" actionListener="#{sqlDynaColumnController.setSearchFilter()}" update="listForm:datalist"/>
+                        <p:spacer/>
+                        <p:commandButton value="#{msg.resetInput}" update="searchPanel" process="@this">
+                            <p:resetInput target="searchPanel"/>
+                        </p:commandButton>
+                    </h:panelGrid>
+                </p:fieldset>
+
+                <p:tree value="#{sqlDynaColumnController.root}" var="node" dynamic="true">
+                    <p:treeNode>
+                        <h:outputText value="#{node}" />
+                    </p:treeNode>
+                </p:tree>
+            </h:form>
+
+            <h:form id="listForm">
+                <p:messages autoUpdate="true" closable="true"/>
+                <p:fieldset legend="查询结果">
+                <p:dataTable id="datalist" value="#{sqlDynaColumnController.lazyModel}" var="item" widgetVar="varDataList"
+                             selectionMode="single" selection="#{sqlDynaColumnController.selected}"
+                             lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                             rowKey="#{item.hashCode()}" sortMode="single" sortOrder="descending"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} &nbsp;&nbsp;&nbsp;&nbsp; #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                             currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                             rows="20" emptyMessage="#{msg.noRecordFound}" scrollable="true"
+                             rowsPerPageTemplate="20,40,60,90">
+
+                    <!--<p:ajax event="rowSelect" listener="#{sqlDynaColumnController.onRowSelected()}"/>-->
+                    <p:ajax event="filter" listener="#{sqlDynaColumnController.onFilter}" update=""/>
+
+                    <p:column headerText="#{msg.exam_id}" sortBy="#{item.exam_id}" width="200">
+                        <h:outputText value="#{item.exam_id}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.exam_status}" sortBy="#{item.exam_status}" width="200">
+                        <h:outputText value="#{item.exam_status}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.patient_name}" sortBy="#{item.patient_name}" width="400">
+                        <h:outputText value="#{item.patient_name}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.gender}" sortBy="#{item.gender_id}" width="200">
+                        <h:outputText value="#{fieldMsg.fieldValue('gender', item.gender_id)}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.birthday}" sortBy="#{item.birthday}" width="400">
+                        <f:facet name="filter">
+                            <p:inputMask mask="9999-99-99 ${msgFilterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' ${msgFilterTo} ');" onblur="filterByDateFieldOnBlur(this, ' ${msgFilterTo} ');"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.birthday}"/>
+                    </p:column>
+                    <f:facet name="{Toolbar}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <p:commandButton class="ui-button ui-button-icon-only" icon="ui-icon-arrowstop-1-s" style="height: 25px;" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="xls_export"/>
+                        </p:commandButton>
+                        &nbsp;&nbsp;
+                    </f:facet>
+                </p:dataTable>
+</p:fieldset>                    
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

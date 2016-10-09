@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="ChartConfigEditDlg" widgetVar="ChartConfigEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{chartConfigController.CRUDActionName} ChartConfig">
+            <h:form id="ChartConfigEditForm">
+                <h:panelGroup id="display">
+                    <h:panelGrid columns="6" rendered="#{chartConfigController.selected != null}">
+                        <p:outputLabel value="#{msg.chartName}" for="chartName" />
+                        <p:inputText id="chartName" value="#{chartConfigController.selected.chartName}"  required="true" requiredMessage="#{msg.chartName} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.chartTitle}" for="chartTitle" />
+                        <p:inputText id="chartTitle" value="#{chartConfigController.selected.chartTitle}" />
+                        <p:outputLabel value="#{msg.chartType}" for="chartType" />
+                        <p:inputText id="chartType" value="#{chartConfigController.selected.chartType}"  required="true" requiredMessage="#{msg.chartType} #{msg.ValidationRequire}"/>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2" rendered="#{chartConfigController.selected != null}">
+                        <p:outputLabel value="#{msg.chartDataSql}" for="chartDataSql" />
+                        <p:inputTextarea cols="80" id="chartDataSql" value="#{chartConfigController.selected.chartDataSql}"  required="true" requiredMessage="#{msg.chartDataSql} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.isDefaultEmptyResult}" for="isDefaultEmptyResult" />
+                        <p:selectBooleanCheckbox id="isDefaultEmptyResult" value="#{chartConfigController.selected.isDefaultEmptyResult}" required="true" requiredMessage="#{msg.isDefaultEmptyResult} #{msg.ValidationRequire}"/>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="6" rendered="#{chartConfigController.selected != null}">
+                        <p:outputLabel value="#{msg.seriesDataField}" for="seriesDataField" />
+                        <p:inputText id="seriesDataField" value="#{chartConfigController.selected.seriesDataField}"  required="true" requiredMessage="#{msg.seriesDataField} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.xAxisDataField}" for="xAxisDataField" />
+                        <p:inputText id="xAxisDataField" value="#{chartConfigController.selected.xAxisDataField}"  required="true" requiredMessage="#{msg.xAxisDataField} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.yAxisDataField}" for="yAxisDataField" />
+                        <p:inputText id="yAxisDataField" value="#{chartConfigController.selected.yAxisDataField}"  required="true" requiredMessage="#{msg.yAxisDataField} #{msg.ValidationRequire}"/>
+                        <p:outputLabel value="#{msg.legendPosition}" for="legendPosition" />
+                        <p:inputText id="legendPosition" value="#{chartConfigController.selected.legendPosition}" />
+                        <p:outputLabel value="#{msg.legendRows}" for="legendRows" />
+                        <p:inputText id="legendRows" value="#{chartConfigController.selected.legendRows}" />
+                        <p:outputLabel value="#{msg.zoomEnabled}" for="zoomEnabled" />
+                        <p:selectBooleanCheckbox id="zoomEnabled" value="#{chartConfigController.selected.zoomEnabled}"/>
+                        <p:outputLabel value="#{msg.xAxisLabel}" for="xAxisLabel" />
+                        <p:inputText id="xAxisLabel" value="#{chartConfigController.selected.xAxisLabel}" />
+                        <p:outputLabel value="#{msg.xAxisMin}" for="xAxisMin" />
+                        <p:inputText id="xAxisMin" value="#{chartConfigController.selected.xAxisMin}" />
+                        <p:outputLabel value="#{msg.xAxisMax}" for="xAxisMax" />
+                        <p:inputText id="xAxisMax" value="#{chartConfigController.selected.xAxisMax}" />
+                        <p:outputLabel value="#{msg.xAxisTickAngle}" for="xAxisTickAngle" />
+                        <p:inputText id="xAxisTickAngle" value="#{chartConfigController.selected.xAxisTickAngle}" />
+                        <p:outputLabel value="#{msg.xAxisTickCount}" for="xAxisTickCount" />
+                        <p:inputText id="xAxisTickCount" value="#{chartConfigController.selected.xAxisTickCount}" />
+                        <p:outputLabel value="#{msg.xAxisTickFormat}" for="xAxisTickFormat" />
+                        <p:inputText id="xAxisTickFormat" value="#{chartConfigController.selected.xAxisTickFormat}" />
+                        <p:outputLabel value="#{msg.xAxisTickInterval}" for="xAxisTickInterval" />
+                        <p:inputText id="xAxisTickInterval" value="#{chartConfigController.selected.xAxisTickInterval}" />
+                        <p:outputLabel value="#{msg.yAxisLabel}" for="yAxisLabel" />
+                        <p:inputText id="yAxisLabel" value="#{chartConfigController.selected.yAxisLabel}" />
+                        <p:outputLabel value="#{msg.yAxisMin}" for="yAxisMin" />
+                        <p:inputText id="yAxisMin" value="#{chartConfigController.selected.yAxisMin}" />
+                        <p:outputLabel value="#{msg.yAxisMax}" for="yAxisMax" />
+                        <p:inputText id="yAxisMax" value="#{chartConfigController.selected.yAxisMax}" />
+                        <p:outputLabel value="#{msg.addDateAxis}" for="addDateAxis" />
+                        <p:selectBooleanCheckbox id="addDateAxis" value="#{chartConfigController.selected.addDateAxis}" required="true" requiredMessage="#{msg.addDateAxis} #{msg.ValidationRequire}"/>
+                    </h:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{chartConfigController.save}" value="#{msg.Save}" update="display,:ChartConfigEditDlg, :ChartConfigListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'ChartConfigEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('ChartConfigEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

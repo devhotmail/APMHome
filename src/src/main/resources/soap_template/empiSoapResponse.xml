@@ -1,0 +1,16 @@
+<#setting number_format="0">
+<#setting date_format="yyyy-MM-dd"/>
+<#setting datetime_format="yyyy-MM-dd"/>
+<#list body.patientList as map>
+<patientInfo>
+    <empiID>${map['empiId']?default("")}</empiID>
+    <patientAddress>${map['patientAddress']?default("")}</patientAddress>
+    <patientBirthDate>${map['patientBirthDate']}</patientBirthDate>
+    <patientGender>${map['patientGender']?default("")}</patientGender>
+    <patientIdentityCardId>${map['patientIdentityCardId']?default("")}</patientIdentityCardId>
+    <patientMedicareCardId>${map['patientMedicareCardId']?default("")}</patientMedicareCardId>
+    <patientName>${map['patientName']?default("")}</patientName>
+    <patientPhoneNumber>${map['patientPhoneNumber']?default("")}</patientPhoneNumber>
+    <patientPostalCode>${map['patientPostalCode']?default("")}</patientPostalCode>
+</patientInfo>
+</#list>

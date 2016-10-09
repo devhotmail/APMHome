@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="UserAccountViewDlg" widgetVar="UserAccountViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{userAccountController.CRUDActionName} #{msg.UserAccountTitle}">
+            <h:form id="UserAccountViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="4" rendered="#{userAccountController.selected != null}">
+                        <h:outputLabel value="#{msg.UserAccountField_characterInfoID}" for="characterInfoID" />
+                        <h:outputText value="#{userAccountController.selected.characterInfoID}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_groupID}" for="groupID" />
+                        <h:outputText value="#{userAccountController.selected.groupID}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_userLoginName}" for="userLoginName" />
+                        <h:outputText value="#{userAccountController.selected.userLoginName}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_userName}" for="userName" />
+                        <h:outputText value="#{userAccountController.selected.userName}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_userPassword}" for="userPassword" />
+                        <h:outputText value="#{userAccountController.selected.userPassword}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_userSign}" for="userSign" />
+                        <h:outputText value="#{userAccountController.selected.userSign}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_userID}" for="userID" />
+                        <h:outputText value="#{userAccountController.selected.userID}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_status}" for="status" />
+                        <h:outputText value="#{userAccountController.selected.status}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_userIDType}" for="userIDType" />
+                        <h:outputText value="#{userAccountController.selected.userIDType}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_latestLogonDate}" for="latestLogonDate" />
+                        <h:outputText value="#{userAccountController.selected.latestLogonDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.UserAccountField_userHISID}" for="userHISID" />
+                        <h:outputText value="#{userAccountController.selected.userHISID}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_pYAbbr}" for="pYAbbr" />
+                        <h:outputText value="#{userAccountController.selected.PYAbbr}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_personID}" for="personID" />
+                        <h:outputText value="#{userAccountController.selected.personID}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_tFSync}" for="tFSync" />
+                        <p:selectBooleanCheckbox id="tFSync" value="#{userAccountController.selected.TFSync}" required="true" requiredMessage="#{msg.UserAccountField_tFSync} #{msg.ValidationRequire}" disabled="true"/>
+                        <h:outputLabel value="#{msg.UserAccountField_institutionId}" for="institutionId" />
+                        <h:outputText value="#{userAccountController.selected.institutionId}"/>
+                        <h:outputLabel value="#{msg.UserAccountField_isSuperAdmin}" for="isSuperAdmin" />
+                        <p:selectBooleanCheckbox id="isSuperAdmin" value="#{userAccountController.selected.isSuperAdmin}" disabled="true"/>
+                        <h:outputLabel value="#{msg.UserAccountField_isTenantAdmin}" for="isTenantAdmin" />
+                        <p:selectBooleanCheckbox id="isTenantAdmin" value="#{userAccountController.selected.isTenantAdmin}" disabled="true"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{userAccountController.deleteAction}" icon="ui-icon-trash" actionListener="#{userAccountController.delete}" value="#{msg.Delete}" update="display,:UserAccountViewDlg, :UserAccountListForm:datalist, :growl" oncomplete="handleSubmit(args, 'UserAccountViewDialog');"/>
+                    <p:commandButton immediate="true" value="#{msg.Close}" onclick="PF('UserAccountViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

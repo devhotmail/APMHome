@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/layout/template.xhtml">
+
+        <ui:define name="title">
+            <h:outputText value="#{msg.DemoPageControllerTitle}"/>
+        </ui:define>
+
+        <ui:define name="body">
+            <p align="center"><b>#{msg.DemoPageControllerTitle}</b></p>
+            <h:form id="DemoPageControllerListForm">
+                <p:dataTable id="datalist" value="#{demoPageController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{demoPageController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.hashCode()}" sortMode="single" sortOrder="descending" 
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} &nbsp;&nbsp;&nbsp;&nbsp; #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                    rows="20" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <p:ajax event="rowSelect"/>
+                    
+                    <p:column headerText="#{msg.id}" sortBy="#{item.get('id')}">
+                        <h:outputText value="#{item.get('id')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.name}" sortBy="#{item.get('name')}">
+                        <h:outputText value="#{item.get('name')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.name_en}" sortBy="#{item.get('name_en')}">
+                        <h:outputText value="#{item.get('name_en')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.alias}" sortBy="#{item.get('alias')}">
+                        <h:outputText value="#{item.get('alias')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.description}" sortBy="#{item.get('description')}">
+                        <h:outputText value="#{item.get('description')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.contact_person}" sortBy="#{item.get('contact_person')}">
+                        <h:outputText value="#{item.get('contact_person')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.contact_phone}" sortBy="#{item.get('contact_phone')}">
+                        <h:outputText value="#{item.get('contact_phone')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.contact_email}" sortBy="#{item.get('contact_email')}">
+                        <h:outputText value="#{item.get('contact_email')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.location}" sortBy="#{item.get('location')}">
+                        <h:outputText value="#{item.get('location')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.location_en}" sortBy="#{item.get('location_en')}">
+                        <h:outputText value="#{item.get('location_en')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.time_zone}" sortBy="#{item.get('time_zone')}">
+                        <h:outputText value="#{item.get('time_zone')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.is_enabled}" sortBy="#{item.get('is_enabled')}">
+                        <h:outputText value="#{item.get('is_enabled')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.default_lang}" sortBy="#{item.get('default_lang')}">
+                        <h:outputText value="#{item.get('default_lang')}"/>
+                    </p:column>
+                    <f:facet name="{Toolbar}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <p:commandButton value="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="DemoPageController_export"/>
+                        </p:commandButton>
+                        &nbsp;&nbsp;
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/layout/template.xhtml">
+
+        <ui:define name="title">
+            <h:outputText value="#{msg.PatientExamViewTitle}"/>
+        </ui:define>
+
+        <ui:define name="preRenderView">
+            <f:metadata>
+                <f:viewParam name="examId" value="#{webReportDemoController.examId}" converterMessage="parameter examId must be a number."></f:viewParam>
+                <f:viewParam name="opid" value="#{webReportDemoController.opid}"></f:viewParam>
+                <f:viewParam name="ipid" value="#{webReportDemoController.ipid}"></f:viewParam>
+                
+                <f:event type="preRenderView" listener="#{webReportDemoController.setWarnOnEmptySearchFilters(false)}"/>
+            </f:metadata>
+        </ui:define>
+
+        <ui:define name="body">
+            
+
+            <p:outputLabel rendered="false" style="float: left" value="#{msg.login_login} #{userContextService.userLoginName}:"/>
+            <p:outputLabel rendered="false" style="float:left;position:relative;left:35%;" class="boldLabel" value="#{msg.PatientExamViewTitle}"/>
+            <p:link  rendered="false" style="float: right; position:relative;right:2%;" value="#{msg.login_logout}" href="/logout.xhtml?faces-redirect=true"/>
+            
+            <h:form id="searchForm" rendered="#{webReportDemoController.isSearchMode}">
+                <p:panel id="searchPanel" toggleable="false" header="查询条件" style="width: 99%;">
+                    <h:panelGrid id="searchPanelGrid" columns="10" style="width: 100%;">
+                        <p:outputLabel class="boldLabel" value="#{msg.PatientExamViewField_patientNameChinese}" style="text-align: right;"/>
+                        <p:inputText id="search_EQ_patientNameChinese"/>
+                        <p:outputLabel class="boldLabel" value="#{msg.PatientExamViewField_patientIntraID}"/>
+                        <p:inputText id="search_EQ_patientIntraID"/>
+                        <p:outputLabel class="boldLabel" value="#{msg.PatientExamViewField_examID}"/>
+                        <p:inputText id="search_EQ_examID"/>
+                        <p:outputLabel class="boldLabel" value="门诊号"/>
+                        <p:inputText id="search_LIKE_opid"/>
+                        <p:outputLabel class="boldLabel" value="#{msg.PatientExamViewField_patientHospitalID}"/>
+                        <p:inputText id="search_LIKE_ipid"/>
+
+                        <p:outputLabel class="boldLabel" value="#{msg.PatientExamViewField_preExamExamDate}"/>
+                        <p:calendar locale="#{localeService.language}" id="search_GTE_preExamExamDate" pattern="yyyy-MM-dd" readonlyInput="false" showButtonPanel="true" navigator="true" showOn="focus"/>
+                        <p:outputLabel class="boldLabel" value="#{msg.filterTo}"/>
+                        <p:calendar locale="#{localeService.language}" id="search_LTE_preExamExamDate" pattern="yyyy-MM-dd" readonlyInput="false" showButtonPanel="true" navigator="true" showOn="focus"/>
+
+                        <p:outputLabel class="boldLabel" value="#{msg.PatientExamViewField_examStatus}"/>
+                        <p:selectOneMenu id="search_EQ_examStatus" height="300" style="width: 150px;">
+                            <f:selectItem itemLabel="请选择..." itemValue=""/>
+                            <f:selectItems value="#{risDbController.examStatusList}"
+                                           var="item"
+                                           itemLabel="#{item.value}"
+                                           itemValue="#{item.code}"/>                            
+                        </p:selectOneMenu>
+                        
+                        <p:outputLabel class="boldLabel" value="#{msg.PatientExamViewField_patientGender}"/>
+                        <p:selectOneRadio id="search_EQ_patientGender">
+                            <f:selectItem itemLabel="全部" itemValue="" />
+                            <f:selectItem itemLabel="男" itemValue="男" />
+                            <f:selectItem itemLabel="女" itemValue="女" />
+                        </p:selectOneRadio>
+
+                        <p:outputLabel class="boldLabel" value="#{msg.PatientExamViewField_patientPathologyID}"/>
+                        <p:selectOneRadio id="search_EQ_patientPathologyID">
+                            <f:selectItem itemLabel="全部" itemValue="" />
+                            <f:selectItem itemLabel="普通" itemValue="普通" />
+                            <f:selectItem itemLabel="特需" itemValue="特需" />
+                        </p:selectOneRadio>
+
+                        <p:outputLabel class="boldLabel" value="#{msg.PatientExamViewField_preExamDepartment}"/>
+                        <p:selectOneMenu id="search_EQ_preExamDepartment"  style="width: 190px;" height="200">
+                            <f:selectItem itemLabel="请选择..." itemValue=""/>
+                            <f:selectItems value="#{orgInfoController.itemList}"
+                                           var="item"
+                                           itemValue="#{item.orgName}"
+                                           itemLabel="#{item.orgName}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel class="boldLabel" value="#{msg.ModalityInfoField_modalityName}"/>
+                        <p:selectOneMenu id="search_EQ_modalityID" style="width: 190px;" height="300">
+                            <f:selectItem itemLabel="请选择..." itemValue=""/>
+                            <f:selectItems value="#{modalityInfoController.itemList}"
+                                           var="item"
+                                           itemLabel="#{item.modalityName}"
+                                           itemValue="#{item.modalityID}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel class="boldLabel" value="#{msg.PatientExamViewField_preExamFrom}"/>
+                        <p:selectOneMenu id="search_EQ_preExamFrom">
+                            <f:selectItem itemLabel="请选择..." itemValue=""/>
+                            <f:selectItem itemLabel="门诊" itemValue="门诊"/>
+                            <f:selectItem itemLabel="住院" itemValue="住院"/>
+                            <f:selectItem itemLabel="急诊" itemValue="急诊"/>
+                            <f:selectItem itemLabel="体检" itemValue="体检"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                    <table align="center">
+                        <tr><td>
+                        <p:commandButton style="width: 140px;" actionListener="#{webReportDemoController.setSearchFilter}" update=":growl :PatientExamViewListForm :historyListForm" value="#{msg.search}"/>
+                        
+                        <p:commandButton style="width: 140px;" value="#{msg.resetInput}" update="searchPanelGrid" process="@this">
+                            <p:resetInput target="searchPanel"/>
+                        </p:commandButton>                        
+                        </td></tr>
+                    </table>
+                </p:panel>
+            </h:form>
+            
+            <h:form id="PatientExamViewListForm">
+                <p:fieldset legend="查询结果" style="width: 97%; margin: 0px;">
+                    <p:dataTable id="datalist" value="#{webReportDemoController.lazyModel}" var="item" widgetVar="varDataList"
+                        selectionMode="single" selection="#{webReportDemoController.selected}"
+                        lazy="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
+                        rowKey="#{item.mppsId}" liveResize="true" resizableColumns="false"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                        currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                        rows="5" emptyMessage="#{msg.noRecordFound}" style="width: 100%"
+                        rowsPerPageTemplate="5,10,20">
+
+                        <p:ajax event="rowSelect" listener="#{webReportDemoController.onRowSelect}" update=":historyListForm"/>
+
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_studyInstanceUID}" style="width: 40px;">
+                            <p:link rendered="#{item.hasImage}" target="_new" href="http://192.168.8.31/ZFP?mode=Inbound#view&amp;un=pacs&amp;pw=Ts20TOBMZkoUR5D8eLOrqITRZXNk70sx&amp;sui=#{item.suid}">
+                                <p:graphicImage value="/resources/img/icohasimage.gif" style="width: 22px;"/>
+                            </p:link>
+                        </p:column>
+                        
+                        <p:column resizable="true" headerText="#{msg.ReportField_reportType}" style="width: 40px;">
+                            <p:commandButton rendered="#{item.hasReport}" actionListener="#{webReportDemoController.setSelectedExam(item)}" update=":PatientExamViewListForm:datalist :historyListForm :HtmlViewDlg" oncomplete="PF('HtmlViewDialog').show()" icon="ui-icon-document" style="background-color: transparent!important; background-image: none!important;"/>
+                        </p:column>
+
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_examStatus}">
+                            <h:outputText value="#{item.examStatusValue}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_patientIntraID}">
+                            <h:outputText value="#{item.patientIntraID}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_patientNameChinese}">
+                            <h:outputText value="#{item.patientNameChinese}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.OrderInfoField_patientExamAge}" style="width: 80px;">
+                            <h:outputText style="font-size: 12px !important;" value="#{item.patientAge}" rendered="#{item.orderInfo ne null}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_patientGender}" style="width: 40px;">
+                            <h:outputText value="#{item.patientGender}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_preExamFrom}" style="width: 40px;">
+                            <h:outputText value="#{item.preExamFrom}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="门诊号">
+                            <h:outputText value="#{item.opid}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_patientHospitalID}">
+                            <h:outputText value="#{item.ipid}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_preExamExamDate}">
+                            <h:outputText style="font-size: 11px !important;" escape="false" value="#{item.preExamExamDate}&lt;br&gt;#{item.preExamExamTime}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_preExamDepartment}">
+                            <h:outputText value="#{item.preExamDepartment}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.ModalityInfoField_modalityName}">
+                            <h:outputText value="#{item.modalityInfo.modalityName}" rendered="#{item.modalityInfo ne null}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.ProcedureStepInfoField_procedureStepName}">
+                            <h:outputText value="#{item.procedureStepInfo.procedureStepName}" rendered="#{item.procedureStepInfo ne null}"/>
+                        </p:column>
+
+                        <p:column resizable="true" headerText="下载"  style="width: 40px;">
+                            <p:link rendered="#{item.hasImage}" target="_new" href="/web/download/dicom?examid=#{item.examID}">
+                                <p:graphicImage value="/resources/img/download_icon.png" style="height: 16px; width: 16px;"/>
+                            </p:link>
+                        </p:column>
+                        <f:facet name="{Toolbar}">
+                            
+                            <p:commandButton value="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
+                                <p:dataExporter type="xls" target="datalist" fileName="PatientExamView_export"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+                </p:fieldset>                    
+            </h:form>
+            
+            <h:form id="historyListForm">
+                <p:fieldset legend="历史检查" style="width: 97%; margin: 0px;">
+                    <p:dataTable id="datalistHistory" value="#{webReportDemoController.historyLazyModel}" var="item" widgetVar="varDataListHistory"
+                        lazy="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
+                        rowKey="#{item.mppsId}"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                        currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                        rows="5" emptyMessage="#{msg.noRecordFound}" 
+                        rowsPerPageTemplate="20,40,60,90">
+                        
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_studyInstanceUID}" style="width: 40px;">
+                            <p:link rendered="#{item.hasImage}" target="_new" href="http://192.192.190.50/ZFP?mode=Inbound#view&amp;un=pacs&amp;pw=Ts20TOBMZkoUR5D8eLOrqITRZXNk70sx&amp;sui=#{item.suid}">
+                                <p:graphicImage value="/resources/img/icohasimage.gif" style="width: 22px;"/>
+                            </p:link>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.ReportField_reportpath}" style="width: 40px;">
+                            <p:link target="_new" href="#{item.report.reportFtpUrl}" rendered="#{item.hasReportFile}">
+                                <p:graphicImage style="height: 16px; width: 16px;" value="/resources/img/pdf_report.png"/>
+                            </p:link>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.ReportField_reportType}" style="width: 40px;">
+                            <p:commandButton rendered="#{item.hasReport}" actionListener="#{webReportDemoController.setSelectedHistoryExam(item)}" update=":PatientExamViewListForm:datalist :historyListForm :HtmlViewDlg" oncomplete="PF('HtmlViewDialog').show()" icon="ui-icon-document" style="background-color: transparent!important; background-image: none!important;"/>
+                        </p:column>
+
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_examStatus}">
+                            <h:outputText value="#{item.examStatusValue}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_patientIntraID}">
+                            <h:outputText value="#{item.patientIntraID}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_patientNameChinese}">
+                            <h:outputText value="#{item.patientNameChinese}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.OrderInfoField_patientExamAge}" style="width: 80px;">
+                            <h:outputText style="font-size: 12px !important;" value="#{item.patientAge}" rendered="#{item.orderInfo ne null}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_patientGender}" style="width: 40px;">
+                            <h:outputText value="#{item.patientGender}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_preExamFrom}" style="width: 40px;">
+                            <h:outputText value="#{item.preExamFrom}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_patientHospitalID}">
+                            <h:outputText value="#{item.ipid}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_preExamExamDate}">
+                            <h:outputText style="font-size: 11px !important;" escape="false" value="#{item.preExamExamDate}&lt;br&gt;#{item.preExamExamTime}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.PatientExamViewField_preExamDepartment}">
+                            <h:outputText value="#{item.preExamDepartment}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.ModalityInfoField_modalityName}">
+                            <h:outputText value="#{item.modalityInfo.modalityName}" rendered="#{item.modalityInfo ne null}"/>
+                        </p:column>
+                        <p:column resizable="true" headerText="#{msg.ProcedureStepInfoField_procedureStepName}">
+                            <h:outputText value="#{item.procedureStepInfo.procedureStepName}" rendered="#{item.procedureStepInfo ne null}"/>
+                        </p:column>
+
+                        <p:column resizable="true" headerText="下载"  style="width: 40px;">
+                            <p:link rendered="#{item.hasImage}" target="_new" href="/web/download/dicom?examid=#{item.examID}">
+                                <p:graphicImage value="/resources/img/download_icon.png" style="height: 16px; width: 16px;"/>
+                            </p:link>
+                        </p:column>
+
+                        <f:facet name="{historyToolbar}">
+                            
+                            <p:commandButton rendered="false" value="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
+                                <p:dataExporter type="xls" target="datalist" fileName="PatientExamView_export"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+                </p:fieldset>
+            </h:form>
+            
+            
+        <p:dialog id="HtmlViewDlg" widgetVar="HtmlViewDialog" header="#{msg.ReportField_reportType}" modal="true" resizable="true" draggable="true" appendTo="@(body)">
+            <h:form id="HtmlViewForm">
+                <h:panelGrid columns="6" id="panelHtmlView" rendered="#{webReportDemoController.selectedExamInfo ne null}">
+                    <p:outputLabel value="#{msg.PatientExamViewField_patientNameChinese}"/>
+                    <p:inputText readonly="true" disabled="true" value="#{webReportDemoController.selectedExamInfo.patientNameChinese}"/>
+                    <p:outputLabel value="#{msg.PatientExamViewField_patientIntraID}"/>
+                    <p:inputText readonly="true" disabled="true" value="#{webReportDemoController.selectedExamInfo.patientIntraID}"/>
+                    <p:outputLabel value="#{msg.PatientExamViewField_examID}"/>
+                    <p:inputText readonly="true" disabled="true" value="#{webReportDemoController.selectedExamInfo.examID}"/>
+                    <p:outputLabel value="#{msg.PatientExamViewField_patientHospitalID}"/>
+                    <p:inputText readonly="true" disabled="true" value="#{webReportDemoController.selectedExamInfo.ipid}"/>
+                    <p:outputLabel value="#{msg.PatientExamViewField_preExamExamDate}"/>
+                    <p:inputText readonly="true" disabled="true" value="#{webReportDemoController.selectedExamInfo.preExamExamDate}"/>
+                    
+                    <p:outputLabel value="#{msg.PatientExamViewField_examStatus}"/>
+                    <p:inputText readonly="true" disabled="true" value="#{webReportDemoController.selectedExamInfo.examStatusValue}"/>
+                    
+                    <p:outputLabel value="#{msg.PatientExamViewField_patientGender}"/>
+                    <p:inputText readonly="true" disabled="true" value="#{webReportDemoController.selectedExamInfo.patientGender}"/>
+                </h:panelGrid>
+                <h:panelGrid columns="2" id="panelHtmlView2" rendered="#{webReportDemoController.selected ne null}">
+                    <p:outputLabel value="#{msg.ReportField_reportDiagnose}"/>
+                    <p:inputTextarea cols="100" rows="6" readonly="true" disabled="false" value="#{webReportDemoController.selectedExamInfo.report.reportDiagnose}"/>
+                    <p:outputLabel value="#{msg.ReportField_reportResult}"/>
+                    <p:inputTextarea cols="100" rows="6" readonly="true" disabled="false" value="#{webReportDemoController.selectedExamInfo.report.reportResult}"/>
+                </h:panelGrid>
+                <br/>
+                <p:commandButton immediate="true" type="button" value="#{msg.Close}" onclick="PF('HtmlViewDialog').hide()"/>
+
+            </h:form>
+        </p:dialog>
+    </ui:define>
+    </ui:composition>
+</html>

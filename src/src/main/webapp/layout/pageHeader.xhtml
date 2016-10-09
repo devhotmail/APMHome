@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:b="http://bootsfaces.net/ui">
+
+    <b:navBar brand=" APS" style="background: #5b87b7;" inverse="true" brandStyle="padding: 4px 2px" brandImg="#{resource['icons/ge-monogram-athensgray.svg']}" fixed="top">
+        <b:navbarLinks>
+            <b:navLink value="#{msg.home}" outcome="/home"/>
+            <b:dropMenu value="Admin">
+                <b:navLink value="Edit I18n Messages" outcome="/ui/i18nMessage/List.xhtml"/>
+                <b:navLink value="Edit Chart Configuration" outcome="/ui/chartConfig/List.xhtml"/>
+                <b:navLink value="Edit Data List Configuration" outcome="/ui/dataTableConfig/List.xhtml"/>
+                <b:navLink value="Edit Restful Service Configuration" outcome="/ui/dataTableConfig/List.xhtml"/>
+                <b:navLink/>
+                <b:navLink header="Code Generation"/>
+                <b:navLink value="Code Generation(JPA)" outcome="/admin/codegen/codegen.xhtml"/>
+                <b:navLink value="Code Generation(NativeSQL)" outcome="/admin/codegen/codegenNativeSQL.xhtml"/>
+            </b:dropMenu>
+        </b:navbarLinks>
+        <b:navbarLinks pull="right">
+            <b:navLink icon="glyphicon-user" href="#">#{userContextService.userName}</b:navLink>
+            <b:navLink href="#{request.requestURL}?#{appContextService.getQueryStringWithLocal(request, 'zh')}" styleClass="userInfo-chn" value="中文"/>
+            <b:navLink href="#{request.requestURL}?#{appContextService.getQueryStringWithLocal(request, 'en')}" styleClass="userInfo-en" value="English"/>
+            <b:navLink icon="glyphicon-log-out" href="#{request.contextPath}/logout.xhtml" value="#{msg.logout}"/>
+        </b:navbarLinks>
+    </b:navBar>
+
+</ui:fragment>

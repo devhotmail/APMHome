@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DataTableConfigViewDlg" widgetVar="DataTableConfigViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{dataTableConfigController.CRUDActionName} DataTableConfig">
+            <h:form id="DataTableConfigViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{dataTableConfigController.selected != null}">
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{dataTableConfigController.selected.id}"/>
+                        <h:outputLabel value="#{msg.dataTableName}" for="dataTableName" />
+                        <h:outputText value="#{dataTableConfigController.selected.dataTableName}"/>
+                        <h:outputLabel value="#{msg.dataSql}" for="dataSql" />
+                        <h:outputText value="#{dataTableConfigController.selected.dataSql}"/>
+                        <h:outputLabel value="#{msg.dataCountSql}" for="dataCountSql" />
+                        <h:outputText value="#{dataTableConfigController.selected.dataCountSql}"/>
+                        <h:outputLabel value="#{msg.isDefaultEmptyResult}" for="isDefaultEmptyResult" />
+                        <p:selectBooleanCheckbox id="isDefaultEmptyResult" value="#{dataTableConfigController.selected.isDefaultEmptyResult}" required="true" requiredMessage="#{msg.isDefaultEmptyResult} #{msg.ValidationRequire}" disabled="true"/>
+                        <h:outputLabel value="#{msg.isPaginationSupported}" for="isPaginationSupported" />
+                        <p:selectBooleanCheckbox id="isPaginationSupported" value="#{dataTableConfigController.selected.isPaginationSupported}" required="true" requiredMessage="#{msg.isPaginationSupported} #{msg.ValidationRequire}" disabled="true"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{dataTableConfigController.deleteAction}" icon="ui-icon-trash" actionListener="#{dataTableConfigController.delete}" value="#{msg.Delete}" update="display,:DataTableConfigViewDlg, :DataTableConfigListForm:datalist, :growl" oncomplete="handleSubmit(args, 'DataTableConfigViewDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('DataTableConfigViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

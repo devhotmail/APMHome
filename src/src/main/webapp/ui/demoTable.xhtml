@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/layout/template.xhtml">
+
+        <ui:define name="title">
+            <h:outputText value="#{msg.DemoTableControllerTitle}"/>
+        </ui:define>
+
+        <ui:define name="body">
+            <p align="center"><b>#{msg.duty_config}</b></p>
+            
+            <h:form>
+                <h:panelGrid columns="16">
+                    <p:outputLabel value="d.id"/>
+                    <p:inputText id="search_EQ_id"/>
+                    <p:outputLabel value="d.name"/>
+                    <p:inputText id="search_LIKE_name"/>
+                    <p:outputLabel value="d.email"/>
+                    <p:inputText id="search_LIKE_d-email"/>
+                    <p:outputLabel value="e.email"/>
+                    <p:inputText id="search_LIKE_u-email"/>
+                    <p:outputLabel value="e.user_name"/>
+                    <p:inputText id="search_LIKE_user_name"/>
+                    
+                </h:panelGrid>
+                <p:commandButton value="查询" update=":DemoTableControllerListForm:datalist" actionListener="#{demoTableController.setSearchFilter}"/>
+            </h:form>
+            
+            <h:form id="DemoTableControllerListForm">
+                <p:dataTable id="datalist" value="#{demoTableController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{demoTableController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="both" paginatorAlwaysVisible="true"
+                    rowKey="#{item.hashCode()}" sortMode="single" sortOrder="descending" 
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} &nbsp;&nbsp;&nbsp;&nbsp; #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                    rows="20" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <p:ajax event="rowSelect"/>
+                    
+                    <p:column headerText="#{msg.id}" sortBy="#{item.d-id}">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.name}" sortBy="#{item.d-name}">
+                        <h:outputText value="#{item.get('name')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.age}" sortBy="#{item.age}">
+                        <h:outputText value="#{item.get('age')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.age}" sortBy="#{item.demail}">
+                        <h:outputText value="#{item.get('demail')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.age}" sortBy="#{item.email}">
+                        <h:outputText value="#{item.get('email')}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.userName}" sortBy="#{item.u-user_name}">
+                        <h:outputText value="#{item.user_name}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.userId}" sortBy="#{item.u-user_id}">
+                        <h:outputText value="#{item.user_id}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.userSignFile}" sortBy="#{item.u-user_sign_file}">
+                        <h:outputText value="#{item.user_sign_file}"/>
+                    </p:column>
+                    <f:facet name="{Toolbar}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="DemoTableController_export"/>
+                        </p:commandButton>
+                        &nbsp;&nbsp;
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
