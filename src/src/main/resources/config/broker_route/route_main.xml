@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:cxf="http://camel.apache.org/schema/cxf"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+         http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd">
+
+    <bean id="webUtilAppContext" class="webapp.framework.web.WebUtil"/>
+    
+    <bean id="pinyinUtil" class="com.ge.apm.service.utils.PinyinUtil"
+              p:specialFirstNames1="{'区':'ou', '黑':'he', '盖':'ge', '查':'zha', '曾':'zeng',
+                                '缪':'miao','晟':'cheng', '单':'shan','乐':'le',
+                                '解':'xie','员':'yun','仇':'qiu','朴':'piao'}" 
+              p:specialFirstNames2="{'尉迟':'yu chi'}"/>
+
+    
+ 	<bean id="appContext" class="com.ge.apm.view.sysutil.AppContextService"
+              p:maxIdleMinutes="15"
+              p:sqlPagingTemplate=" limit :#_pageSize offset :#_pageStart"
+              p:sql4UserOnline="update user_account set is_online=true,last_login_time=LOCALTIMESTAMP(0) where id=:#id"
+              p:sql4UserOffline="update user_account set is_online=false where id=:#id"
+              p:fileUploadFolder="C:/RisDocument/ResourceCalendar/"/>
+
+                     
+    <!-- to add more messages:
+              'msgType':'select xxxx_id as msg_key, xxxx_zh as value_zh, xxxx_en as value_en, xxxx_tw as value_tw, institution_id as instId from xxxx' -->
+    <bean id="i18nExtraDbMessages" class="webapp.framework.web.service.ExtraDbMessageSource"
+              p:extraMessages="{}"/>
+        
+    <routeContext id="route_main" xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="direct:executeNativeSQL"/>
+            <removeHeaders pattern="Camel*"/>
+            <recipientList delimiter="|">
+                <simple>sql:${headers._sql}?dataSource=risDataSource</simple>
+            </recipientList>
+        </route>
+
+
+		<!--
+        <route>
+            <from uri="timer://resetUserOnlineStatus?delay=1&amp;repeatCount=1"/>
+            <to uri="sql:update user_account set is_online=false?dataSource=risDataSource"/>
+        </route>
+        <route>
+            <from uri="quartz://quartzCheckActiveUsers?cron=0+0/5+*+*+*+?"/>
+            <bean ref="appContext" method="checkActiveUsers"/>
+        </route>
+		-->
+		
+        <route>
+            <from uri="servlet:///restDemo?servletName=MyServlet"/>
+            <to uri="sql:select * from user_account?dataSource=risDataSource"/>
+            <bean ref="webUtil" method="convertSqlResultToJson"/>
+            <setHeader headerName="Content-Type"><constant> application/json;charset=UTF-8</constant></setHeader>
+        </route>
+        
+    </routeContext>
+
+</beans>
