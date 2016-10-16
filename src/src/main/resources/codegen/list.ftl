@@ -1,19 +1,17 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
 
-    <ui:composition template="/layout/template.xhtml">
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
 
-        <ui:define name="title">
-            <h:outputText value="${viewTitle}"/>
-        </ui:define>
-
-        <ui:define name="body">
-            <p align="center"><b>${viewTitle}</b></p>
+                <p align="center">
+                    <b>${viewTitle}</b>
+                </p>
             <h:form id="${entityName}ListForm">
                 <p:dataTable id="datalist" value="${lazyModel}" var="item" widgetVar="varDataList"
                     selectionMode="single" selection="${selected}"
@@ -74,6 +72,10 @@
 
             <ui:include src="Edit.xhtml"/>
             <ui:include src="View.xhtml"/>
-        </ui:define>
-    </ui:composition>
-</html>
+
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

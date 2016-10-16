@@ -34,6 +34,23 @@
                         
                         <ul class="ultima-menu animated">
                             <li role="menuitem">
+                                <h:panelGroup rendered="#{localeService.language eq 'zh'}">
+                                    <a href="#{request.requestURL}?locale=en" class="ripplelink">
+                                        <i class="material-icons">translate</i>
+                                        <span>English</span>
+                                    </a>
+                                </h:panelGroup>
+                            </li>
+                            <li role="menuitem">
+                                <h:panelGroup rendered="#{localeService.language eq 'en'}">
+                                    <a href="#{request.requestURL}?locale=zh" class="ripplelink">
+                                        <i class="material-icons">translate</i>
+                                        <span>中文</span>
+                                    </a>
+                                </h:panelGroup>
+                            </li>
+
+                            <li role="menuitem">
                                 <a href="#">
                                     <i class="material-icons">&#xE7FD;</i>
                                     <span>Profile</span>
@@ -48,7 +65,7 @@
                             <li role="menuitem">
                                 <a href="#{facesContext.externalContext.requestContextPath}/logout.xhtml">
                                     <i class="material-icons">&#xE8AC;</i>
-                                    <span>Logout</span>
+                                    <span>#{msg.logout}</span>
                                 </a>
                             </li>
                         </ul>

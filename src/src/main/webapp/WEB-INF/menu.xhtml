@@ -23,63 +23,95 @@
                             <li role="menuitem">
                                 <a href="#" class="ripplelink">
                                     <i class="material-icons">&#xE7FD;</i>
-                                    <span>Profile</span>
+                                    <span>#{msg.Profile}</span>
                                 </a>
                             </li>
                             <li role="menuitem">
                                 <a href="#" class="ripplelink">
                                     <i class="material-icons">&#xE8B9;</i>
-                                    <span>Settings</span>
+                                    <span>#{msg.Settings}</span>
                                 </a>
                             </li>
                             <li role="menuitem">
                                 <a href="#{facesContext.externalContext.requestContextPath}/logout.xhtml" class="ripplelink">
                                     <i class="material-icons">&#xE8AC;</i>
-                                    <span>Logout</span>
+                                    <span>English</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#{facesContext.externalContext.requestContextPath}/logout.xhtml" class="ripplelink">
+                                    <i class="material-icons">&#xE8AC;</i>
+                                    <span>中文</span>
+                                </a>
+                            </li>
+                            
+                            <li role="menuitem">
+                                <a href="#{facesContext.externalContext.requestContextPath}/logout.xhtml" class="ripplelink">
+                                    <i class="material-icons">&#xE8AC;</i>
+                                    <span>#{msg.logout}</span>
                                 </a>
                             </li>
                         </ul>
                     </ui:fragment>
                     
                     <pu:menu widgetVar="me">
-                        <p:menuitem id="um_dashboard" value="我的首页" icon="&#xE871;" outcome="/home"/>
-                        <p:submenu id="themes" label="设备资产档案管理" icon="&#xE40A;">
-                            <p:menuitem id="theme1" value="设备基本信息管理" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('indigo')}" ajax="false" />
-                            <p:menuitem id="theme2" value="设备落位管理/盘点" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('brown')}" ajax="false" />
-                            <p:menuitem id="theme3" value="设备电子档案管理" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('blue')}" ajax="false" />
-                            <p:menuitem id="theme4" value="设备资产价值统计分析" icon="&#xE3AE;" actionListener="#{guestPreferences.setTheme('blue-grey')}" ajax="false" />
-                            <p:menuitem id="custom1" value="xx设备合同管理" icon="&#xE061;" actionListener="#{guestPreferences.setCompact(true)}" ajax="false"/>
-                            <p:menuitem id="custom2" value="xx设备供应商管理" icon="&#xE062;" actionListener="#{guestPreferences.setCompact(false)}" ajax="false"/>
+                        <p:menuitem id="um_dashboard" value="#{msg.HomePage}" icon="&#xE871;" outcome="/home"/>
+                        <p:submenu label="#{msg.AssetMDM}" icon="&#xE40A;">
+                            <p:menuitem value="#{msg.AssetList}" icon="&#xE3AE;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.AssetInventory}" icon="&#xE3AE;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.AssetDocumentMgmt}" icon="&#xE3AE;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.AssetValueAnalysis}" icon="&#xE3AE;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.AssetContractMgmt}" icon="&#xE061;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.SupplierMgmt}" icon="&#xE062;" outcome="/empty"/>
                         </p:submenu>
-                        <p:submenu id="um_customization" label="设备维修流程管理" icon="&#xE8B8;">
-                            <p:menuitem id="custom3" value="报修管理" icon="&#xE5D2;" actionListener="#{guestPreferences.setMenuLayout('static')}" ajax="false"/>
-                            <p:menuitem id="custom4" value="我的工单" icon="&#xE879;" actionListener="#{guestPreferences.setMenuLayout('overlay')}" ajax="false"/>
-                            <p:menuitem id="custom5" value="维修记录" icon="&#xE22C;" actionListener="#{guestPreferences.setMenuLayout('horizontal')}" ajax="false"/>
-                            <p:menuitem id="custom6" value="维修质量评估" icon="&#xE893;" outcome="/home"/>
-                            <p:menuitem id="custom7" value="巡检" icon="&#xE892;" outcome="/home"/>
+                        <p:submenu label="#{msg.WorkOrderMgmt}" icon="&#xE8B8;">
+                            <p:menuitem value="#{msg.ServiceRequestMgmt}" icon="&#xE5D2;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.MyWorkOrder}" icon="&#xE879;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.MaintainanceRecord}" icon="&#xE22C;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.ServiceQualityReview}" icon="&#xE893;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.Inspection}" icon="&#xE892;" outcome="/empty"/>
                         </p:submenu>
-                        <p:submenu id="um_components" label="设备监控" icon="&#xE896;">
-                            <p:menuitem id="um_sample" value="Sample Page" icon="&#xE30B;" outcome="/home"/>
-                            <p:menuitem id="um_forms" value="Forms" icon="&#xE890;" outcome="/home" />
-                            <p:menuitem id="um_data" value="Data" icon="&#xE3EC;" outcome="/home" />
-                            <p:menuitem id="um_panels" value="Panels" icon="&#xE14F;" outcome="/home" />
-                            <p:menuitem id="um_overlays" value="Overlays" icon="&#xE14D;" outcome="/home" />
-                            <p:menuitem id="um_menus" value="Menus" icon="&#xE5D2;" outcome="/home" />
-                            <p:menuitem id="um_messages" value="Messages" icon="&#xE0C9;" outcome="/home" />
-                            <p:menuitem id="um_charts" value="Charts" icon="&#xE24B;" outcome="/home" />
-                            <p:menuitem id="um_file" value="File" icon="&#xE226;" outcome="/home" />
-                            <p:menuitem id="um_misc" value="Misc" icon="&#xE332;" outcome="/home" />
+                        <p:submenu label="#{msg.DeviceMonitor}" icon="&#xE896;">
+                            <p:menuitem value="#{msg.DeviceStatusMonitor}" icon="&#xE30B;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.DeviceDowntimeAnalysis}" icon="&#xE890;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.DeviceMaintainanceEventAnalysis}" icon="&#xE3EC;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.DeviceMaintainanceCostAnalysis}" icon="&#xE14F;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.DeviceUtilizationAnalysis}" icon="&#xE14D;" outcome="/home"/>
+                            <p:menuitem value="#{msg.SparePartsConsumptionAnalysis}" icon="&#xE5D2;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceFailureAnalysis}" icon="&#xE0C9;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceOperationMonitor}" icon="&#xE24B;" outcome="/home"/>
                         </p:submenu>
-                        <p:submenu id="um_default" label="Template Pages" icon="&#xE884;">
-                            <p:menuitem id="um_db_landing" value="Landing" icon="&#xE904;" outcome="/home"/>
-                            <p:menuitem id="um_empty" value="Empty Page" icon="&#xE88B;" outcome="/home" />
-                            <p:menuitem id="um_login" value="Login Page" icon="&#xE8E8;" outcome="/home" />
-                            <p:menuitem id="um_error" value="Error Page" icon="&#xE000;" outcome="/home" />
-                            <p:menuitem id="um_404" value="404 Page" icon="&#xE001;" outcome="/home" />
-                            <p:menuitem id="um_access" value="Access Denied Page" icon="&#xE32A;" outcome="/home" />
+                        <p:submenu label="#{msg.PreventiveMaintainceMgmt}" icon="&#xE884;">
+                            <p:menuitem id="um_db_landing" value="#{msg.PreventiveMaintaincePlanning}" icon="&#xE904;" outcome="/home"/>
+                            <p:menuitem id="um_empty" value="#{msg.DeviceMetrologyMgmt}" icon="&#xE88B;" outcome="/home"/>
+                            <p:menuitem id="um_login" value="#{msg.DeviceQualityControl}" icon="&#xE8E8;" outcome="/home"/>
+                            <p:menuitem id="um_error" value="#{msg.DeviceAdverseEventMgmt}" icon="&#xE000;" outcome="/home"/>
+                            <p:menuitem id="um_404" value="#{msg.DeviceMedicalAccidentMgmt}" icon="&#xE001;" outcome="/home"/>
                         </p:submenu>
-                        <p:menuitem id="um_utils" value="Utils" icon="&#xE869;" outcome="/utils"/>
-                        <p:menuitem id="um_doc" value="Documentation" icon="&#xE880;" outcome="/docs"/>
+                        <p:submenu label="#{msg.AssetKnowledgeBaseMgmt}" icon="&#xE884;">
+                            <p:menuitem value="#{msg.AssetDocMgmt}" icon="&#xE226;" outcome="/home"/>
+                            <p:menuitem value="#{msg.AssetKMMgmt}" icon="&#xE332;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceMgmtForum}" icon="&#xE32A;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceApplication}" icon="&#xE32A;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceUpgradMgmt}" icon="&#xE32A;" outcome="/home"/>
+                            <p:menuitem value="#{msg.AdvancedDeviceInfoTracking}" icon="&#xE32A;" outcome="/home"/>
+                        </p:submenu>
+                        <p:submenu label="#{msg.DeviceOperationKPIAnalysis}" icon="&#xE884;">
+                            <p:menuitem value="#{msg.DeviceROIAnalysis}" icon="&#xE226;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceKPIAnalysis}" icon="&#xE332;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceKPIForecast}" icon="&#xE32A;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceCostAnalysis}" icon="&#xE32A;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DevicePurchaseDecisionSupport}" icon="&#xE32A;" outcome="/home"/>
+                        </p:submenu>
+                        <p:submenu label="SysAdmin" icon="&#xE884;">
+                            <p:menuitem value="Code Tool for JPA" icon="&#xE226;" outcome="/admin/codegen/codegen.xhtml"/>
+                            <p:menuitem value="#{msg.DeviceKPIAnalysis}" icon="&#xE332;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceKPIForecast}" icon="&#xE32A;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceCostAnalysis}" icon="&#xE32A;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DevicePurchaseDecisionSupport}" icon="&#xE32A;" outcome="/home"/>
+                        </p:submenu>
+                        
+                        <p:menuitem value="Icon List" icon="&#xE869;" outcome="/utils"/>
                     </pu:menu>
                 </div>
             </div>
