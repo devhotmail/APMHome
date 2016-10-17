@@ -32,9 +32,8 @@ CREATE TABLE user_account (
   status varchar(20) DEFAULT NULL,
   is_online boolean,
   PRIMARY KEY (id)
-)
+);
 
-alter table 
 
 CREATE TABLE chart_config (
   id serial not null,
@@ -115,7 +114,7 @@ CREATE TABLE demo_data (
   id serial NOT NULL,
   name varchar(255) NOT NULL,
   number1 int  NOT NULL,
-  number2 int  NOT NULL DEFAULT,
+  number2 int  NOT NULL ,
   number3 decimal(4,2) NOT NULL,
   number4 int  DEFAULT NULL,
   type varchar(10),
