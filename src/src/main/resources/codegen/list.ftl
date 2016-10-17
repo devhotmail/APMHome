@@ -17,7 +17,7 @@
                     selectionMode="single" selection="${selected}"
                     lazy="true" paginator="true" paginatorPosition="${toolbarPosition}" paginatorAlwaysVisible="true"
                     rowKey="${itemId}" sortMode="single" sortOrder="descending" sortBy="${itemId}"
-                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} &nbsp;&nbsp;&nbsp;&nbsp; ${rowsPerPage}: {RowsPerPageDropdown}"
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ${rowsPerPage}: {RowsPerPageDropdown}"
                     currentPageReportTemplate="${recordCountLabel}: {totalRecords}"
                     rows="20" emptyMessage="${noRecordFound}"
                     rowsPerPageTemplate="20,40,60,90">
@@ -57,11 +57,9 @@
     </#if>
 </#list>
                     <f:facet name="{Toolbar}">
-                        &nbsp;&nbsp;&nbsp;&nbsp;
                         <p:commandButton ${buttonIconTitle}="${exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
                             <p:dataExporter type="xls" target="datalist" fileName="${entityName}_export"/>
                         </p:commandButton>
-                        &nbsp;&nbsp;
                         <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" ${buttonIconTitle}="${buttonCreate}" actionListener="${createListner}" update=":${entityName}EditDlg" oncomplete="PF('${entityName}EditDialog').show()"/>
                         <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" ${buttonIconTitle}="${buttonView}" actionListener="${viewListner}" update=":${entityName}ViewDlg" oncomplete="PF('${entityName}ViewDialog').show()" disabled="${buttonDisabled}"/>
                         <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" ${buttonIconTitle}="${buttonEdit}" actionListener="${editListner}" update=":${entityName}EditDlg" oncomplete="PF('${entityName}EditDialog').show()" disabled="${buttonDisabled}"/>
