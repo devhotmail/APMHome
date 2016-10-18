@@ -8,7 +8,7 @@
 连接帐号设置为 postgres/root, 
 如果口令不是 root, 那么要在下面第5步中，修改程序的配置文件 database.properties
 
-2) 在PostgreSQL中创建数据库 geapm
+2) 在PostgreSQL中创建数据库 ge_apm
 
 3) 创建数据库表结构
 在geapm中执行脚本 create_tables.sql
