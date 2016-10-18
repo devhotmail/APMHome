@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="AssetClinicalRecordEditDlg" widgetVar="AssetClinicalRecordEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetClinicalRecordController.CRUDActionName} #{msg.AssetClinicalRecord}">
+            <h:form id="AssetClinicalRecordEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetClinicalRecordController.selected != null}">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="id" value="#{assetClinicalRecordController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
+                            <label>#{msg.id}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="siteId" value="#{assetClinicalRecordController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.siteId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="assetId" value="#{assetClinicalRecordController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.assetId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="modalityId" value="#{assetClinicalRecordController.selected.modalityId}"  required="true" requiredMessage="#{msg.modalityId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.modalityId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="modalityType" value="#{assetClinicalRecordController.selected.modalityType}"  required="true" requiredMessage="#{msg.modalityType} #{msg.ValidationRequire}"/>
+                            <label>#{msg.modalityType}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="procedureId" value="#{assetClinicalRecordController.selected.procedureId}"  required="true" requiredMessage="#{msg.procedureId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.procedureId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="procedureName" value="#{assetClinicalRecordController.selected.procedureName}" />
+                            <label>#{msg.procedureName}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="procedureStepId" value="#{assetClinicalRecordController.selected.procedureStepId}" />
+                            <label>#{msg.procedureStepId}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="procedureStepName" value="#{assetClinicalRecordController.selected.procedureStepName}" />
+                            <label>#{msg.procedureStepName}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="priceAmount" value="#{assetClinicalRecordController.selected.priceAmount}" />
+                            <label>#{msg.priceAmount}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="injectCount" value="#{assetClinicalRecordController.selected.injectCount}" />
+                            <label>#{msg.injectCount}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="exposeCount" value="#{assetClinicalRecordController.selected.exposeCount}" />
+                            <label>#{msg.exposeCount}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="filmCount" value="#{assetClinicalRecordController.selected.filmCount}" />
+                            <label>#{msg.filmCount}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="examDate" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetClinicalRecordController.selected.examDate}" required="true" requiredMessage="#{msg.examDate} #{msg.ValidationRequire}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.examDate}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="examStartTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetClinicalRecordController.selected.examStartTime}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.examStartTime}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="examEndTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetClinicalRecordController.selected.examEndTime}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.examEndTime}</label>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{assetClinicalRecordController.save}" value="#{msg.Save}" update="display,:AssetClinicalRecordEditDlg, :AssetClinicalRecordListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'AssetClinicalRecordEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('AssetClinicalRecordEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

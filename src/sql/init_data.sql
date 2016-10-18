@@ -15,3 +15,9 @@ INSERT INTO "chart_config" VALUES (3, 'dashboard_line', 'select * from demo_data
 INSERT INTO "data_table_config" VALUES (4, 'test1', 'select count(*) from chart_config', 'select * from chart_config', 't', 't');
 INSERT INTO "data_table_config" VALUES (5, 'test2', 'select count(*) from demo_data where 1=1 :#searchFilter', 'select * from demo_data where 1=1 :#searchFilter', 't', 't');
 INSERT INTO "data_table_config" VALUES (6, 'aaa', 'aaa', 'aaa', 'f', 't');
+
+
+INSERT INTO "public"."asset_info"("id", "name", "hospital_id", "department_id", "owner_org_id", "owner_user_id", "site_id") VALUES(1, 'GE OPTIMA CT', 1, 1, 1, 1, 1);
+
+
+INSERT INTO "public"."asset_clinical_record"("id", "site_id", "asset_id", "modality_id", "modality_type", "procedure_id", "procedure_name", "price_amount", "inject_count", "expose_count", "film_count", "exam_date", "exam_start_time", "exam_end_time") VALUES(1, 1, 1, 1, 1, 1, '1', 300, 5, 89, 4, '2016-09-20', '08:10:23', '10:01:56');

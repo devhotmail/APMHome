@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+
+                <p align="center">
+                    <b>#{msg.AssetClinicalRecord}</b>
+                </p>
+            <h:form id="AssetClinicalRecordListForm">
+                
+                <p:inputText id="search_GTE_priceAmount" required="true" label="#{msg.priceAmount}" />
+              
+                <p:commandButton validateClient="true" actionListener="#{assetClinicalRecordController.setSearchFilter()}" value="#{msg.Search}" update="datalist" icon="ui-icon-check" />
+                
+                
+                <p:dataTable id="datalist" value="#{assetClinicalRecordController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{assetClinicalRecordController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                    rows="20" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{assetClinicalRecordController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    
+                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.siteId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.assetId}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.assetId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.modalityId}" sortBy="#{item.modalityId}" filterBy="#{item.modalityId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.modalityId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.modalityType}" sortBy="#{item.modalityType}" filterBy="#{item.modalityType}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.modalityType}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.procedureId}" sortBy="#{item.procedureId}" filterBy="#{item.procedureId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.procedureId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.procedureName}" sortBy="#{item.procedureName}" filterBy="#{item.procedureName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.procedureName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.procedureStepId}" sortBy="#{item.procedureStepId}" filterBy="#{item.procedureStepId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.procedureStepId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.procedureStepName}" sortBy="#{item.procedureStepName}" filterBy="#{item.procedureStepName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.procedureStepName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.priceAmount}" sortBy="#{item.priceAmount}" filterBy="#{item.priceAmount}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.priceAmount}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.injectCount}" sortBy="#{item.injectCount}" filterBy="#{item.injectCount}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.injectCount}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.exposeCount}" sortBy="#{item.exposeCount}" filterBy="#{item.exposeCount}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.exposeCount}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.filmCount}" sortBy="#{item.filmCount}" filterBy="#{item.filmCount}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.filmCount}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.examDate}" sortBy="#{item.examDate}" filterBy="#{item.examDate}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
+                        </f:facet>
+                        <h:outputText value="#{item.examDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.examStartTime}" sortBy="#{item.examStartTime}" filterBy="#{item.examStartTime}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
+                        </f:facet>
+                        <h:outputText value="#{item.examStartTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.examEndTime}" sortBy="#{item.examEndTime}" filterBy="#{item.examEndTime}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
+                        </f:facet>
+                        <h:outputText value="#{item.examEndTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <f:facet name="{Toolbar}">
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="AssetClinicalRecord_export"/>
+                        </p:commandButton>
+                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetClinicalRecordController.prepareCreate}" update=":AssetClinicalRecordEditDlg" oncomplete="PF('AssetClinicalRecordEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{assetClinicalRecordController.prepareView}" update=":AssetClinicalRecordViewDlg" oncomplete="PF('AssetClinicalRecordViewDialog').show()" disabled="#{empty assetClinicalRecordController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{assetClinicalRecordController.prepareEdit}" update=":AssetClinicalRecordEditDlg" oncomplete="PF('AssetClinicalRecordEditDialog').show()" disabled="#{empty assetClinicalRecordController.selected}"/>
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{assetClinicalRecordController.prepareDelete}" update=":AssetClinicalRecordViewDlg" oncomplete="PF('AssetClinicalRecordViewDialog').show()" disabled="#{empty assetClinicalRecordController.selected}"/>
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>
