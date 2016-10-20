@@ -1,302 +1,48 @@
+DROP TABLE IF EXISTS i18n_message CASCADE;
+DROP TABLE IF EXISTS chart_config CASCADE;
+DROP TABLE IF EXISTS data_table_config CASCADE;
 
-CREATE SEQUENCE "public"."asset_clinical_record_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
+DROP TABLE IF EXISTS site_info CASCADE;
+DROP TABLE IF EXISTS org_info CASCADE;
+DROP TABLE IF EXISTS sys_role CASCADE;
+DROP TABLE IF EXISTS user_account CASCADE;
+DROP TABLE IF EXISTS user_role CASCADE;
 
--- ----------------------------
--- Sequence structure for asset_file_attachment_id_seq
--- ----------------------------
+DROP TABLE IF EXISTS asset_file_attachment CASCADE;
+DROP TABLE IF EXISTS inspection_checklist CASCADE;
+DROP TABLE IF EXISTS inspection_order CASCADE;
+DROP TABLE IF EXISTS inspection_order_detail CASCADE;
+DROP TABLE IF EXISTS pm_order CASCADE;
+DROP TABLE IF EXISTS work_order CASCADE;
+DROP TABLE IF EXISTS work_order_history CASCADE;
+DROP TABLE IF EXISTS work_order_step CASCADE;
+DROP TABLE IF EXISTS work_order_step_detail CASCADE;
+DROP TABLE IF EXISTS asset_clinical_record CASCADE;
+DROP TABLE IF EXISTS supplier CASCADE;
+DROP TABLE IF EXISTS asset_info CASCADE;
 
-CREATE SEQUENCE "public"."asset_file_attachment_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
 
--- ----------------------------
--- Sequence structure for asset_info_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."asset_info_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-
--- ----------------------------
--- Sequence structure for chart_config_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."chart_config_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-SELECT setval('"public"."chart_config_id_seq"', 1, true);
-
--- ----------------------------
--- Sequence structure for data_table_config_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."data_table_config_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 6
- CACHE 1;
-SELECT setval('"public"."data_table_config_id_seq"', 6, true);
-
--- ----------------------------
--- Sequence structure for demo_data_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."demo_data_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-
--- ----------------------------
--- Sequence structure for i18n_message_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."i18n_message_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 3
- CACHE 1;
-SELECT setval('"public"."i18n_message_id_seq"', 3, true);
-
--- ----------------------------
--- Sequence structure for inspection_check_list_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."inspection_check_list_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-
--- ----------------------------
--- Sequence structure for inspection_order_detail_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."inspection_order_detail_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-
--- ----------------------------
--- Sequence structure for inspection_order_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."inspection_order_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-
--- ----------------------------
--- Sequence structure for institution_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."institution_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-SELECT setval('"public"."institution_id_seq"', 1, true);
-
--- ----------------------------
--- Sequence structure for organization_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."organization_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-SELECT setval('"public"."organization_id_seq"', 1, true);
-
--- ----------------------------
--- Sequence structure for pm_order_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."pm_order_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-
--- ----------------------------
--- Sequence structure for supplier_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."supplier_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-
--- ----------------------------
--- Sequence structure for sys_role_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."sys_role_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 3
- CACHE 1;
-SELECT setval('"public"."sys_role_id_seq"', 3, true);
-
--- ----------------------------
--- Sequence structure for user_account_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."user_account_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-SELECT setval('"public"."user_account_id_seq"', 1, true);
-
--- ----------------------------
--- Sequence structure for user_role_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."user_role_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-
--- ----------------------------
--- Sequence structure for work_order_history_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."work_order_history_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-
--- ----------------------------
--- Sequence structure for work_order_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."work_order_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-
--- ----------------------------
--- Sequence structure for work_order_step_detail_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."work_order_step_detail_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-
--- ----------------------------
--- Sequence structure for work_order_step_id_seq
--- ----------------------------
-
-CREATE SEQUENCE "public"."work_order_step_id_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
- CACHE 1;
-
--- ----------------------------
--- Table structure for asset_clinical_record
--- ----------------------------
-DROP TABLE IF EXISTS "public"."asset_clinical_record";
-CREATE TABLE "public"."asset_clinical_record" (
-"id" int4 DEFAULT nextval('asset_clinical_record_id_seq'::regclass) NOT NULL,
-"site_id" int4 NOT NULL,
-"asset_id" int4 NOT NULL,
-"modality_id" int4 NOT NULL,
-"modality_type" int4 NOT NULL,
-"procedure_id" int4 NOT NULL,
-"procedure_name" varchar(40) COLLATE "default",
-"procedure_step_id" int4,
-"procedure_step_name" varchar(40) COLLATE "default",
-"price_amount" float8,
-"inject_count" float8,
-"expose_count" numeric(53),
-"film_count" int4,
-"exam_date" date NOT NULL,
-"exam_start_time" time(6),
-"exam_end_time" time(6)
-)
-WITH (OIDS=FALSE)
-
-;
-
--- ----------------------------
--- Table structure for asset_file_attachment
--- ----------------------------
-DROP TABLE IF EXISTS "public"."asset_file_attachment";
-CREATE TABLE "public"."asset_file_attachment" (
-"id" int4 DEFAULT nextval('asset_file_attachment_id_seq'::regclass) NOT NULL,
-"asset_id" int4 NOT NULL,
-"file_type" int4 NOT NULL,
-"file_url" varchar(100) COLLATE "default" NOT NULL,
+CREATE TABLE i18n_message (
+"id" serial NOT NULL,
+"msg_type" varchar(60) COLLATE "default" NOT NULL,
+"msg_key" varchar(60) COLLATE "default" NOT NULL,
+"value_zh" varchar(128) COLLATE "default" DEFAULT NULL::character varying,
+"value_en" varchar(128) COLLATE "default" DEFAULT NULL::character varying,
+"value_tw" varchar(128) COLLATE "default" DEFAULT NULL::character varying,
 "site_id" int4 NOT NULL
-)
-WITH (OIDS=FALSE)
+);
 
-;
+CREATE TABLE data_table_config(
+"id" serial NOT NULL,
+"data_table_name" varchar(30) COLLATE "default" NOT NULL,
+"data_count_sql" varchar(500) COLLATE "default" NOT NULL,
+"data_sql" varchar(500) COLLATE "default" NOT NULL,
+"is_default_empty_result" bool NOT NULL,
+"is_pagination_supported" bool
+);
 
--- ----------------------------
--- Table structure for asset_info
--- ----------------------------
-DROP TABLE IF EXISTS "public"."asset_info";
-CREATE TABLE "public"."asset_info" (
-"id" int4 DEFAULT nextval('asset_info_id_seq'::regclass) NOT NULL,
-"name" varchar(40) COLLATE "default" NOT NULL,
-"hospital_id" int4 NOT NULL,
-"department_id" int4,
-"owner_org_id" int4 NOT NULL,
-"owner_user_id" int4 NOT NULL,
-"site_id" int4 NOT NULL
-)
-WITH (OIDS=FALSE)
-
-;
-
--- ----------------------------
--- Table structure for chart_config
--- ----------------------------
-DROP TABLE IF EXISTS "public"."chart_config";
-CREATE TABLE "public"."chart_config" (
-"id" int4 DEFAULT nextval('chart_config_id_seq'::regclass) NOT NULL,
+CREATE TABLE chart_config (
+"id" serial NOT NULL,
 "chart_name" varchar(30) COLLATE "default" NOT NULL,
 "chart_data_sql" varchar(500) COLLATE "default" NOT NULL,
 "is_default_empty_result" bool NOT NULL,
@@ -320,398 +66,308 @@ CREATE TABLE "public"."chart_config" (
 "y_axis_min" varchar(20) COLLATE "default" DEFAULT NULL::character varying,
 "y_axis_max" varchar(20) COLLATE "default" DEFAULT NULL::character varying,
 "add_date_axis" bool
-)
-WITH (OIDS=FALSE)
+);
 
-;
 
--- ----------------------------
--- Table structure for data_table_config
--- ----------------------------
-DROP TABLE IF EXISTS "public"."data_table_config";
-CREATE TABLE "public"."data_table_config" (
-"id" int4 DEFAULT nextval('data_table_config_id_seq'::regclass) NOT NULL,
-"data_table_name" varchar(30) COLLATE "default" NOT NULL,
-"data_count_sql" varchar(500) COLLATE "default" NOT NULL,
-"data_sql" varchar(500) COLLATE "default" NOT NULL,
-"is_default_empty_result" bool NOT NULL,
-"is_pagination_supported" bool
-)
-WITH (OIDS=FALSE)
-
-;
-
--- ----------------------------
--- Table structure for demo_data
--- ----------------------------
-DROP TABLE IF EXISTS "public"."demo_data";
-CREATE TABLE "public"."demo_data" (
-"id" int4 DEFAULT nextval('demo_data_id_seq'::regclass) NOT NULL,
-"name" varchar(255) COLLATE "default" NOT NULL,
-"number1" int4 NOT NULL,
-"number2" int4 DEFAULT 3 NOT NULL,
-"number3" numeric(4,2) DEFAULT 4.99 NOT NULL,
-"number4" int4,
-"type" varchar(10) COLLATE "default" DEFAULT 'G'::character varying,
-"the_date" varchar(20) COLLATE "default" DEFAULT NULL::character varying
-)
-WITH (OIDS=FALSE)
-
-;
-
--- ----------------------------
--- Table structure for i18n_message
--- ----------------------------
-DROP TABLE IF EXISTS "public"."i18n_message";
-CREATE TABLE "public"."i18n_message" (
-"id" int4 DEFAULT nextval('i18n_message_id_seq'::regclass) NOT NULL,
-"msg_type" varchar(60) COLLATE "default" NOT NULL,
-"msg_key" varchar(60) COLLATE "default" NOT NULL,
-"value_zh" varchar(128) COLLATE "default" DEFAULT NULL::character varying,
-"value_en" varchar(128) COLLATE "default" DEFAULT NULL::character varying,
-"value_tw" varchar(128) COLLATE "default" DEFAULT NULL::character varying,
-"site_id" int4 NOT NULL
-)
-WITH (OIDS=FALSE)
-
-;
-
--- ----------------------------
--- Table structure for inspection_check_list
--- ----------------------------
-DROP TABLE IF EXISTS "public"."inspection_check_list";
-CREATE TABLE "public"."inspection_check_list" (
-"id" int4 DEFAULT nextval('inspection_check_list_id_seq'::regclass) NOT NULL,
-"asset_id" int4 NOT NULL,
-"item" varchar(100) COLLATE "default" NOT NULL,
-"site_id" int4 NOT NULL
-)
-WITH (OIDS=FALSE)
-
-;
-
--- ----------------------------
--- Table structure for inspection_order
--- ----------------------------
-DROP TABLE IF EXISTS "public"."inspection_order";
-CREATE TABLE "public"."inspection_order" (
-"id" int4 DEFAULT nextval('inspection_order_id_seq'::regclass) NOT NULL,
-"site_id" int4 NOT NULL,
-"name" varchar(40) COLLATE "default" NOT NULL,
-"asset_id" int4 NOT NULL
-)
-WITH (OIDS=FALSE)
-
-;
-
--- ----------------------------
--- Table structure for inspection_order_detail
--- ----------------------------
-DROP TABLE IF EXISTS "public"."inspection_order_detail";
-CREATE TABLE "public"."inspection_order_detail" (
-"id" int4 DEFAULT nextval('inspection_order_detail_id_seq'::regclass) NOT NULL,
-"site_id" int4 NOT NULL,
-"asset_id" int4 NOT NULL,
-"order_id" int4 NOT NULL,
-"dept_id" int4 NOT NULL,
-"item_id" int4 NOT NULL,
-"is_passed" bool NOT NULL
-)
-WITH (OIDS=FALSE)
-
-;
-
--- ----------------------------
--- Table structure for org_info
--- ----------------------------
-DROP TABLE IF EXISTS "public"."org_info";
-CREATE TABLE "public"."org_info" (
-"id" int4 DEFAULT nextval('organization_id_seq'::regclass) NOT NULL,
-"site_id" int4 NOT NULL,
-"name" varchar(50) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
-"name_en" varchar(50) COLLATE "default"
-)
-WITH (OIDS=FALSE)
-
-;
-
--- ----------------------------
--- Table structure for pm_order
--- ----------------------------
-DROP TABLE IF EXISTS "public"."pm_order";
-CREATE TABLE "public"."pm_order" (
-"id" int4 DEFAULT nextval('pm_order_id_seq'::regclass) NOT NULL,
-"site_id" int4 NOT NULL,
-"asset_id" int4 NOT NULL,
-"name" varchar(60) COLLATE "default" NOT NULL
-)
-WITH (OIDS=FALSE)
-
-;
-
--- ----------------------------
--- Table structure for site_info
--- ----------------------------
-DROP TABLE IF EXISTS "public"."site_info";
-CREATE TABLE "public"."site_info" (
-"id" int4 DEFAULT nextval('institution_id_seq'::regclass) NOT NULL,
-"name" varchar(100) COLLATE "default" DEFAULT NULL::character varying,
-"name_en" varchar(100) COLLATE "default" DEFAULT NULL::character varying,
-"alias" varchar(50) COLLATE "default" DEFAULT NULL::character varying,
-"description" varchar(200) COLLATE "default" DEFAULT NULL::character varying,
-"contact_person" varchar(100) COLLATE "default" DEFAULT NULL::character varying,
-"contact_phone" varchar(100) COLLATE "default" DEFAULT NULL::character varying,
-"contact_email" varchar(100) COLLATE "default" DEFAULT NULL::character varying,
-"location" varchar(100) COLLATE "default" DEFAULT NULL::character varying,
-"location_en" varchar(200) COLLATE "default" DEFAULT NULL::character varying,
+CREATE TABLE "site_info" (
+"id" serial NOT NULL,
+"name" varchar(64) COLLATE "default" DEFAULT NULL::character varying,
+"name_en" varchar(64) COLLATE "default" DEFAULT NULL::character varying,
+"alias" varchar(64) COLLATE "default" DEFAULT NULL::character varying,
+"description" varchar(256) COLLATE "default" DEFAULT NULL::character varying,
+"contact_person" varchar(64) COLLATE "default" DEFAULT NULL::character varying,
+"contact_phone" varchar(64) COLLATE "default" DEFAULT NULL::character varying,
+"contact_email" varchar(64) COLLATE "default" DEFAULT NULL::character varying,
+"location" varchar(64) COLLATE "default" DEFAULT NULL::character varying,
+"location_en" varchar(256) COLLATE "default" DEFAULT NULL::character varying,
 "time_zone" int4,
-"default_lang" varchar(20) COLLATE "default" DEFAULT NULL::character varying,
+"default_lang" varchar(16) COLLATE "default" DEFAULT NULL::character varying,
 "is_enabled" bool
-)
-WITH (OIDS=FALSE)
+);
 
-;
+CREATE TABLE org_info (
+"id" serial NOT NULL,
+site_id int4 NOT NULL,
+"name" varchar(64) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
+"name_en" varchar(64) COLLATE "default",
+parent_id int
+);
 
--- ----------------------------
--- Table structure for supplier
--- ----------------------------
-DROP TABLE IF EXISTS "public"."supplier";
-CREATE TABLE "public"."supplier" (
-"id" int4 DEFAULT nextval('supplier_id_seq'::regclass) NOT NULL,
-"site_id" int4 NOT NULL,
-"name" varchar(60) COLLATE "default" NOT NULL
-)
-WITH (OIDS=FALSE)
+CREATE TABLE "sys_role" (
+"id" serial NOT NULL,
+"name" varchar(32) COLLATE "default" DEFAULT NULL::character varying,
+"role_desc" varchar(64) COLLATE "default" DEFAULT NULL::character varying,
+"home_page" varchar(64) COLLATE "default" DEFAULT NULL::character varying
+);
 
-;
-
--- ----------------------------
--- Table structure for sys_role
--- ----------------------------
-DROP TABLE IF EXISTS "public"."sys_role";
-CREATE TABLE "public"."sys_role" (
-"id" int4 DEFAULT nextval('sys_role_id_seq'::regclass) NOT NULL,
-"name" varchar(50) COLLATE "default" DEFAULT NULL::character varying,
-"role_desc" varchar(50) COLLATE "default" DEFAULT NULL::character varying
-)
-WITH (OIDS=FALSE)
-
-;
-
--- ----------------------------
--- Table structure for user_account
--- ----------------------------
-DROP TABLE IF EXISTS "public"."user_account";
-CREATE TABLE "public"."user_account" (
-"id" int4 DEFAULT nextval('user_account_id_seq'::regclass) NOT NULL,
-"org_id" int4 NOT NULL,
-"login_name" varchar(50) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
-"name" varchar(50) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
-"password" varchar(40) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
-"email" varchar(50) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
-"telephone" varchar(20) COLLATE "default" DEFAULT NULL::character varying,
+CREATE TABLE "user_account" (
+"id" serial NOT NULL,
+org_id int4 NOT NULL,
+"login_name" varchar(16) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
+"name" varchar(32) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
+"password" varchar(16) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
+"email" varchar(16) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
+"telephone" varchar(16) COLLATE "default" DEFAULT NULL::character varying,
 "is_super_admin" bool DEFAULT false NOT NULL,
 "is_tenant_admin" bool DEFAULT false NOT NULL,
 "is_active" bool DEFAULT true NOT NULL,
 "is_online" bool DEFAULT false,
-"site_id" int4,
+site_id int4,
 "last_login_time" timestamp(6)
-)
-WITH (OIDS=FALSE)
+);
 
-;
-
--- ----------------------------
--- Table structure for user_role
--- ----------------------------
-DROP TABLE IF EXISTS "public"."user_role";
-CREATE TABLE "public"."user_role" (
-"id" int4 DEFAULT nextval('user_role_id_seq'::regclass) NOT NULL,
+CREATE TABLE user_role (
+"id" serial NOT NULL,
 "user_id" int4,
 "role_id" int4
-)
-WITH (OIDS=FALSE)
+);
 
-;
 
--- ----------------------------
--- Table structure for work_order
--- ----------------------------
-DROP TABLE IF EXISTS "public"."work_order";
-CREATE TABLE "public"."work_order" (
-"id" int4 DEFAULT nextval('work_order_id_seq'::regclass) NOT NULL,
-"site_id" int4 NOT NULL,
-"asset_id" int4 NOT NULL,
-"name" varchar(40) COLLATE "default" NOT NULL
-)
-WITH (OIDS=FALSE)
+create table asset_info(
+id serial not null,
+site_id int not null,
+name varchar(64) not null,
+alias varchar(64),
+function_group int,
+function_type int,
+function_grade int,
+manufacture varchar(64),
+vendor varchar(64),
+maitanance varchar(64),
+maitanance_tel varchar(32),
+serial_num varchar(64),
+depart_num varchar(64),
+financing_num varchar(64),
+barcode varchar(64),
+modality_id varchar(64),
+location_code varchar(64),
+location_name varchar(64),
+hospital_id int not null,
+clinical_dept_id int,
+clinical_dept_name varchar(64),
+"group" int,
+asset_dept_id int not null,
+asset_owner_id int not null,
+asset_owner_name varchar(16) not null,
+asset_owner_tel varchar(16),
+is_valid bool not null,
+status int not null,
+manufact_date date,
+purchase_date date,
+arrive_date date,
+install_date date,
+warranty_date date,
+terminate_date date,
+plan_date date,
+purchase_price float,
+salvage_value float,
+lifecycle int,
+depreciation_method int);
 
-;
 
--- ----------------------------
--- Table structure for work_order_history
--- ----------------------------
-DROP TABLE IF EXISTS "public"."work_order_history";
-CREATE TABLE "public"."work_order_history" (
-"id" int4 DEFAULT nextval('work_order_history_id_seq'::regclass) NOT NULL,
-"site_id" int4 NOT NULL,
-"work_order_id" int4 NOT NULL,
-"update_time" timestamp(6) NOT NULL,
-"update_detail" varchar(200) COLLATE "default" NOT NULL
-)
-WITH (OIDS=FALSE)
+create table asset_file_attachment(
+id serial not null,
+site_id int not null,
+asset_id int not null,
+name varchar(64) not null,
+file_type varchar(64) not null,
+file_url varchar(128) not null);
 
-;
 
--- ----------------------------
--- Table structure for work_order_step
--- ----------------------------
-DROP TABLE IF EXISTS "public"."work_order_step";
-CREATE TABLE "public"."work_order_step" (
-"id" int4 DEFAULT nextval('work_order_step_id_seq'::regclass) NOT NULL,
-"site_id" int4 NOT NULL,
-"work_order_id" int4 NOT NULL,
-"step_name" varchar(40) COLLATE "default" NOT NULL
-)
-WITH (OIDS=FALSE)
+create table inspection_checklist(
+id serial not null,
+site_id int not null,
+asset_id int not null,
+item varchar(64) not null);
 
-;
+create table inspection_order(
+id serial not null,
+site_id int not null,
+asset_id int not null,
+name varchar(64) not null,
+creator varchar(64) not null,
+create_time timestamp not null,
+owner_id int not null,
+owner_name varchar(16) not null,
+owner_org_id int not null,
+owner_org_name varchar(64) not null,
+start_time timestamp,
+end_time timestamp,
+is_finished bool not null,
+comments varchar(256),
+paper_url varchar(128) );
 
--- ----------------------------
--- Table structure for work_order_step_detail
--- ----------------------------
-DROP TABLE IF EXISTS "public"."work_order_step_detail";
-CREATE TABLE "public"."work_order_step_detail" (
-"id" int4 DEFAULT nextval('work_order_step_detail_id_seq'::regclass) NOT NULL,
-"site_id" int4 NOT NULL,
-"work_order_id" int4 NOT NULL,
-"step_id" int4 NOT NULL,
-"man_hours" int4 NOT NULL,
-"accessory" varchar(60) COLLATE "default" NOT NULL,
-"accessory_quantity" int4 NOT NULL,
-"accessory_price" float8
-)
-WITH (OIDS=FALSE)
 
-;
+create table inspection_order_detail(
+id serial not null,
+site_id int not null,
+order_id int not null,
+dept_id int not null,
+dept_name int not null,
+item_id int not null,
+item_name int not null,
+is_passed bool not null);
 
--- ----------------------------
--- Alter Sequences Owned By 
--- ----------------------------
-ALTER SEQUENCE "public"."asset_clinical_record_id_seq" OWNED BY "asset_clinical_record"."id";
-ALTER SEQUENCE "public"."asset_file_attachment_id_seq" OWNED BY "asset_file_attachment"."id";
-ALTER SEQUENCE "public"."asset_info_id_seq" OWNED BY "asset_info"."id";
-ALTER SEQUENCE "public"."chart_config_id_seq" OWNED BY "chart_config"."id";
-ALTER SEQUENCE "public"."data_table_config_id_seq" OWNED BY "data_table_config"."id";
-ALTER SEQUENCE "public"."demo_data_id_seq" OWNED BY "demo_data"."id";
-ALTER SEQUENCE "public"."i18n_message_id_seq" OWNED BY "i18n_message"."id";
-ALTER SEQUENCE "public"."inspection_check_list_id_seq" OWNED BY "inspection_check_list"."id";
-ALTER SEQUENCE "public"."inspection_order_detail_id_seq" OWNED BY "inspection_order_detail"."id";
-ALTER SEQUENCE "public"."inspection_order_id_seq" OWNED BY "inspection_order"."id";
-ALTER SEQUENCE "public"."institution_id_seq" OWNED BY "site_info"."id";
-ALTER SEQUENCE "public"."organization_id_seq" OWNED BY "org_info"."id";
-ALTER SEQUENCE "public"."pm_order_id_seq" OWNED BY "pm_order"."id";
-ALTER SEQUENCE "public"."supplier_id_seq" OWNED BY "supplier"."id";
-ALTER SEQUENCE "public"."sys_role_id_seq" OWNED BY "sys_role"."id";
-ALTER SEQUENCE "public"."user_account_id_seq" OWNED BY "user_account"."id";
-ALTER SEQUENCE "public"."user_role_id_seq" OWNED BY "user_role"."id";
-ALTER SEQUENCE "public"."work_order_history_id_seq" OWNED BY "work_order_history"."id";
-ALTER SEQUENCE "public"."work_order_id_seq" OWNED BY "work_order"."id";
-ALTER SEQUENCE "public"."work_order_step_detail_id_seq" OWNED BY "work_order_step_detail"."id";
-ALTER SEQUENCE "public"."work_order_step_id_seq" OWNED BY "work_order_step"."id";
 
--- ----------------------------
--- Primary Key structure for table asset_clinical_record
--- ----------------------------
-ALTER TABLE "public"."asset_clinical_record" ADD PRIMARY KEY ("id");
+create table pm_order(
+id serial not null,
+site_id int not null,
+asset_id int not null,
+name varchar(64) not null,
+creator_id int not null,
+creator_name varchar(16) not null,
+create_time timestamp not null,
+owner_id int,
+owner_name varchar(16),
+owner_org_id int,
+owner_org_name varchar(64),
+start_time timestamp,
+end_time timestamp,
+is_finished bool not null,
+comments varchar(256),
+next_time timestamp,
+report_url varchar(128));
 
--- ----------------------------
--- Primary Key structure for table asset_file_attachment
--- ----------------------------
-ALTER TABLE "public"."asset_file_attachment" ADD PRIMARY KEY ("id");
 
--- ----------------------------
--- Primary Key structure for table asset_info
--- ----------------------------
-ALTER TABLE "public"."asset_info" ADD PRIMARY KEY ("id");
+create table work_order(
+id serial not null,
+site_id int not null,
+asset_id int not null,
+name varchar(32) not null,
+creator_id int not null,
+creator_name varchar(16) not null,
+create_time timestamp not null,
+requestor_id int not null,
+requestor_name varchar(16) not null,
+request_time timestamp not null,
+request_reason varchar(256) not null,
+case_owner_id int,
+case_owner_name varchar(16),
+case_type int not null,
+case_sub_type int not null,
+case_priority int not null,
+is_internal bool not null,
+current_person_id int not null,
+current_person_name varchar(16),
+current_step int not null,
+is_closed bool not null,
+close_reason varchar(256),
+comments varchar(256),
+total_man_hour int,
+total_price float,
+confirmed_start_time timestamp,
+confirmed_end_time timestamp);
 
--- ----------------------------
--- Primary Key structure for table chart_config
--- ----------------------------
-ALTER TABLE "public"."chart_config" ADD PRIMARY KEY ("id");
 
--- ----------------------------
--- Primary Key structure for table data_table_config
--- ----------------------------
-ALTER TABLE "public"."data_table_config" ADD PRIMARY KEY ("id");
+create table work_order_history(
+id serial not null,
+site_id int not null,
+asset_id int not null,
+work_order_id int not null,
+update_person_id int not null,
+update_person_name varchar(16) not null,
+update_time timestamp not null,
+update_detail varchar(512) not null);
 
--- ----------------------------
--- Primary Key structure for table i18n_message
--- ----------------------------
-ALTER TABLE "public"."i18n_message" ADD PRIMARY KEY ("id");
 
--- ----------------------------
--- Primary Key structure for table inspection_check_list
--- ----------------------------
-ALTER TABLE "public"."inspection_check_list" ADD PRIMARY KEY ("id");
+create table work_order_step(
+id serial not null,
+site_id int not null,
+work_order_id int not null,
+step_name varchar(32) not null,
+owner_id int not null,
+owner_name varchar(16) not null,
+start_time timestamp not null,
+end_time timestamp not null,
+description varchar(128),
+attachment_url varchar(128) );
 
--- ----------------------------
--- Primary Key structure for table inspection_order
--- ----------------------------
-ALTER TABLE "public"."inspection_order" ADD PRIMARY KEY ("id");
 
--- ----------------------------
--- Primary Key structure for table inspection_order_detail
--- ----------------------------
-ALTER TABLE "public"."inspection_order_detail" ADD PRIMARY KEY ("id");
+create table work_order_step_detail(
+id serial not null,
+site_id int not null,
+step_id int not null,
+man_hours int,
+accessory varchar(60),
+accessory_quantity int,
+accessory_price float);
 
--- ----------------------------
--- Primary Key structure for table org_info
--- ----------------------------
-ALTER TABLE "public"."org_info" ADD PRIMARY KEY ("id");
 
--- ----------------------------
--- Primary Key structure for table pm_order
--- ----------------------------
-ALTER TABLE "public"."pm_order" ADD PRIMARY KEY ("id");
+create table asset_clinical_record(
+id serial not null,
+site_id int not null,
+asset_id int not null,
+modality_id int not null,
+modality_type_id int not null,
+modality_type varchar(32) not null,
+procedure_id int not null,
+procedure_name varchar(32) not null,
+procedure_step_id int not null,
+procedure_step_name varchar(32) not null,
+price_amount float,
+price_unit int,
+patient_id varchar(64),
+patient_name_zh varchar(32),
+patient_name_en varchar(32),
+patient_age varchar(32),
+patient_gender int,
+inject_count float,
+expose_count float,
+film_count int,
+exam_date date not null,
+exam_start_time time not null,
+exam_end_time time not null);
 
--- ----------------------------
--- Primary Key structure for table site_info
--- ----------------------------
-ALTER TABLE "public"."site_info" ADD PRIMARY KEY ("id");
 
--- ----------------------------
--- Primary Key structure for table sys_role
--- ----------------------------
-ALTER TABLE "public"."sys_role" ADD PRIMARY KEY ("id");
+create table supplier(
+id serial not null,
+site_id int not null,
+asset_id int not null,
+name varchar(64) not null,
+city varchar(32),
+address varchar(128),
+zipcode varchar(16),
+contactor varchar(16),
+tel varchar(16));
 
--- ----------------------------
--- Primary Key structure for table user_account
--- ----------------------------
-ALTER TABLE "public"."user_account" ADD PRIMARY KEY ("id");
 
--- ----------------------------
--- Primary Key structure for table user_role
--- ----------------------------
-ALTER TABLE "public"."user_role" ADD PRIMARY KEY ("id");
+ALTER TABLE asset_info ADD PRIMARY KEY (id);
+ALTER TABLE asset_file_attachment ADD PRIMARY KEY (id);
+ALTER TABLE inspection_checklist ADD PRIMARY KEY (id);
+ALTER TABLE inspection_order ADD PRIMARY KEY (id);
+ALTER TABLE inspection_order_detail ADD PRIMARY KEY (id);
+ALTER TABLE pm_order ADD PRIMARY KEY (id);
+ALTER TABLE work_order ADD PRIMARY KEY (id);
+ALTER TABLE work_order_history ADD PRIMARY KEY (id);
+ALTER TABLE work_order_step ADD PRIMARY KEY (id);
+ALTER TABLE work_order_step_detail ADD PRIMARY KEY (id);
+ALTER TABLE asset_clinical_record ADD PRIMARY KEY (id);
+ALTER TABLE supplier ADD PRIMARY KEY (id);
+ALTER TABLE site_info ADD PRIMARY KEY (id);
+ALTER TABLE org_info ADD PRIMARY KEY (id);
+ALTER TABLE sys_role ADD PRIMARY KEY (id);
+ALTER TABLE user_account ADD PRIMARY KEY (id);
+ALTER TABLE user_role ADD PRIMARY KEY (id);
+ALTER TABLE i18n_message ADD PRIMARY KEY (id);
+ALTER TABLE chart_config ADD PRIMARY KEY (id);
+ALTER TABLE data_table_config ADD PRIMARY KEY (id);
 
--- ----------------------------
--- Primary Key structure for table work_order
--- ----------------------------
-ALTER TABLE "public"."work_order" ADD PRIMARY KEY ("id");
 
--- ----------------------------
--- Foreign Key structure for table "public"."org_info"
--- ----------------------------
-ALTER TABLE "public"."org_info" ADD FOREIGN KEY ("site_id") REFERENCES "public"."site_info" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE org_info ADD FOREIGN KEY (site_id) REFERENCES site_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE org_info ADD FOREIGN KEY (parent_id) REFERENCES org_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE user_account ADD FOREIGN KEY (org_id) REFERENCES org_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE user_role ADD FOREIGN KEY (user_id) REFERENCES user_account (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE user_role ADD FOREIGN KEY (role_id) REFERENCES sys_role (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
--- ----------------------------
--- Foreign Key structure for table "public"."user_account"
--- ----------------------------
-ALTER TABLE "public"."user_account" ADD FOREIGN KEY ("org_id") REFERENCES "public"."org_info" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE asset_info ADD FOREIGN KEY (hospital_id) REFERENCES org_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE asset_file_attachment ADD FOREIGN KEY (asset_id) REFERENCES asset_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE asset_clinical_record ADD FOREIGN KEY (asset_id) REFERENCES asset_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE inspection_checklist ADD FOREIGN KEY (asset_id) REFERENCES asset_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE inspection_order ADD FOREIGN KEY (asset_id) REFERENCES asset_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE inspection_order_detail ADD FOREIGN KEY (order_id) REFERENCES inspection_order (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE pm_order ADD FOREIGN KEY (asset_id) REFERENCES asset_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE work_order ADD FOREIGN KEY (asset_id) REFERENCES asset_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
--- ----------------------------
--- Foreign Key structure for table "public"."user_role"
--- ----------------------------
-ALTER TABLE "public"."user_role" ADD FOREIGN KEY ("user_id") REFERENCES "public"."user_account" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."user_role" ADD FOREIGN KEY ("role_id") REFERENCES "public"."sys_role" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE work_order_history ADD FOREIGN KEY (work_order_id) REFERENCES work_order (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE work_order_step ADD FOREIGN KEY (work_order_id) REFERENCES work_order (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE work_order_step_detail ADD FOREIGN KEY (step_id) REFERENCES work_order_step (id) ON DELETE NO ACTION ON UPDATE NO ACTION;

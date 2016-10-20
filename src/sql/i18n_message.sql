@@ -82,3 +82,6 @@ INSERT INTO "i18n_message" VALUES (141, 'label', 'DeviceKPIAnalysis', '设备绩
 INSERT INTO "i18n_message" VALUES (142, 'label', 'DeviceKPIForecast', '设备绩效预测（年）', 'Device KPI Forecast', NULL, -1);
 INSERT INTO "i18n_message" VALUES (143, 'label', 'DeviceCostAnalysis', '设备采购/维护成本统计分析', 'Device Cost Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (144, 'label', 'DevicePurchaseDecisionSupport', '设备采购辅助决策分析', 'Device Purchase Decision Support', NULL, -1);
+
+
+SELECT setval('"public"."i18n_message_id_seq"', 145, false);
