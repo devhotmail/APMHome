@@ -1,0 +1,21 @@
+.ui-growl{
+z-index: 9999!important;
+}
+.ui-growl-item{
+background-color: #ffff99!important;
+}
+.ui-growl-message{
+color: black!important;
+}
+.ui-dialog{
+z-index: 1900!important;
+}
+.ui-datepicker{
+z-index: 2000!important;
+}
+.ui-selectonemenu-panel {
+z-index: 2000!important;
+}
+.layout-wrapper.menu-layout-overlay .topbar {
+z-index: 1800!important;
+}

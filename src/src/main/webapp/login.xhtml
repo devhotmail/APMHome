@@ -14,6 +14,7 @@
             <meta name="apple-mobile-web-app-capable" content="yes" />
         </f:facet>
         <title>GE APM</title>
+        <h:outputStylesheet name="css/main.css" />
         <h:outputScript name="js/ripple.js" library="ultima-layout" />
         <h:outputScript name="js/layout.js" library="ultima-layout" />
     </h:head>
@@ -42,12 +43,12 @@
                         </h:panelGroup>
                     </div>
                     <div class="ui-g-12">
-                        <p:commandButton validateClient="true" actionListener="#{loginController.doLogin()}" value="#{msg.login}" icon="ui-icon-person" update="loginMessages"/>
+                        <p:commandButton validateClient="true" actionListener="#{loginController.doLogin()}" value="#{msg.login}" icon="ui-icon-person" update="loginMessages growl"/>
                     </div>
                 </div>
                 <input type="hidden" id="javax.faces.ViewState" name="javax.faces.ViewState" value="stateless"/>
                 <p:messages closable="true" showSummary="true" id="loginMessages" showDetail="false"/>
-
+                <p:growl id="growl" autoUpdate="true"/>
             </div>
 
         </h:form>
