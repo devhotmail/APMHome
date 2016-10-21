@@ -36,10 +36,10 @@ public class SiteInfo implements Serializable {
     @Column(name = "name_en")
     private String nameEn;
     @Size(max = 64)
-    @Column(name = "alias")
-    private String alias;
+    @Column(name = "alias_name")
+    private String aliasName;
     @Size(max = 256)
-    @Column(name = "description")
+    @Column(name = "site_description")
     private String description;
     @Size(max = 64)
     @Column(name = "contact_person")
@@ -95,12 +95,12 @@ public class SiteInfo implements Serializable {
         this.nameEn = nameEn;
     }
 
-    public String getAlias() {
-        return alias;
+    public String getAliasName() {
+        return aliasName;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public void setAliasName(String aliasName) {
+        this.aliasName = aliasName;
     }
 
     public String getDescription() {
