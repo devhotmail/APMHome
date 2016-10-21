@@ -37,6 +37,7 @@ http://localhost:8080/geapm
 运行 mvn package 即可，在 target 目录会生成可部署的 war 文件
 
 11) 其他  mvn goals:
+mvn clean
 mvn compile
 mvn test
 mvn package
