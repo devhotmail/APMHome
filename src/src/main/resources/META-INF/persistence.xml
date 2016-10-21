@@ -3,6 +3,5 @@
   <persistence-unit name="risSiPU" transaction-type="RESOURCE_LOCAL">
     <description>NA</description>
     <mapping-file>META-INF/orm.xml</mapping-file>
-    <class>com.ge.apm.domain.AssetClinicalRecord</class>
   </persistence-unit>
 </persistence>

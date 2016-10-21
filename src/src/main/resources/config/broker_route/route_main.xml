@@ -20,10 +20,7 @@
 
     
  	<bean id="appContext" class="com.ge.apm.view.sysutil.AppContextService"
-              p:maxIdleMinutes="15"
               p:sqlPagingTemplate=" limit :#_pageSize offset :#_pageStart"
-              p:sql4UserOnline="update user_account set is_online=true,last_login_time=LOCALTIMESTAMP(0) where id=:#id"
-              p:sql4UserOffline="update user_account set is_online=false where id=:#id"
               p:fileUploadFolder="C:/RisDocument/ResourceCalendar/"/>
 
                      
@@ -55,7 +52,8 @@
 		
         <route>
             <from uri="servlet:///restDemo?servletName=MyServlet"/>
-            <to uri="sql:select * from user_account?dataSource=risDataSource"/>
+            <log message="${headers.value}" loggingLevel="ERROR"/>
+            <to uri="sql:select * from i18n_message where value_zh=:#value?dataSource=risDataSource"/>
             <bean ref="webUtil" method="convertSqlResultToJson"/>
             <setHeader headerName="Content-Type"><constant> application/json;charset=UTF-8</constant></setHeader>
         </route>
