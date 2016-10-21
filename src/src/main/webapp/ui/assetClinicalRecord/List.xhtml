@@ -13,12 +13,6 @@
                     <b>#{msg.AssetClinicalRecord}</b>
                 </p>
             <h:form id="AssetClinicalRecordListForm">
-                
-                <p:inputText id="search_GTE_priceAmount" required="true" label="#{msg.priceAmount}" />
-              
-                <p:commandButton validateClient="true" actionListener="#{assetClinicalRecordController.setSearchFilter()}" value="#{msg.Search}" update="datalist" icon="ui-icon-check" />
-                
-                
                 <p:dataTable id="datalist" value="#{assetClinicalRecordController.lazyModel}" var="item" widgetVar="varDataList"
                     selectionMode="single" selection="#{assetClinicalRecordController.selected}"
                     lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
@@ -37,13 +31,13 @@
                     <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
                         <h:outputText value="#{item.siteId}"/>
                     </p:column>
-                    <p:column headerText="#{msg.assetId}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.assetId}"/>
-                    </p:column>
                     <p:column headerText="#{msg.modalityId}" sortBy="#{item.modalityId}" filterBy="#{item.modalityId}" filterMatchMode="EQ">
                         <h:outputText value="#{item.modalityId}"/>
                     </p:column>
-                    <p:column headerText="#{msg.modalityType}" sortBy="#{item.modalityType}" filterBy="#{item.modalityType}" filterMatchMode="EQ">
+                    <p:column headerText="#{msg.modalityTypeId}" sortBy="#{item.modalityTypeId}" filterBy="#{item.modalityTypeId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.modalityTypeId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.modalityType}" sortBy="#{item.modalityType}" filterBy="#{item.modalityType}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.modalityType}"/>
                     </p:column>
                     <p:column headerText="#{msg.procedureId}" sortBy="#{item.procedureId}" filterBy="#{item.procedureId}" filterMatchMode="EQ">
@@ -60,6 +54,24 @@
                     </p:column>
                     <p:column headerText="#{msg.priceAmount}" sortBy="#{item.priceAmount}" filterBy="#{item.priceAmount}" filterMatchMode="EQ">
                         <h:outputText value="#{item.priceAmount}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.priceUnit}" sortBy="#{item.priceUnit}" filterBy="#{item.priceUnit}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.priceUnit}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.patientId}" sortBy="#{item.patientId}" filterBy="#{item.patientId}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.patientId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.patientNameZh}" sortBy="#{item.patientNameZh}" filterBy="#{item.patientNameZh}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.patientNameZh}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.patientNameEn}" sortBy="#{item.patientNameEn}" filterBy="#{item.patientNameEn}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.patientNameEn}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.patientAge}" sortBy="#{item.patientAge}" filterBy="#{item.patientAge}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.patientAge}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.patientGender}" sortBy="#{item.patientGender}" filterBy="#{item.patientGender}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.patientGender}"/>
                     </p:column>
                     <p:column headerText="#{msg.injectCount}" sortBy="#{item.injectCount}" filterBy="#{item.injectCount}" filterMatchMode="EQ">
                         <h:outputText value="#{item.injectCount}"/>
@@ -93,6 +105,9 @@
                         <h:outputText value="#{item.examEndTime}">
                             <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                         </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.assetId}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.assetId}"/>
                     </p:column>
                     <f:facet name="{Toolbar}">
                         <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">

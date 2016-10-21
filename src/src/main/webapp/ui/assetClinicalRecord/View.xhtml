@@ -16,10 +16,10 @@
                         <h:outputText value="#{assetClinicalRecordController.selected.id}"/>
                         <h:outputLabel value="#{msg.siteId}" for="siteId" />
                         <h:outputText value="#{assetClinicalRecordController.selected.siteId}"/>
-                        <h:outputLabel value="#{msg.assetId}" for="assetId" />
-                        <h:outputText value="#{assetClinicalRecordController.selected.assetId}"/>
                         <h:outputLabel value="#{msg.modalityId}" for="modalityId" />
                         <h:outputText value="#{assetClinicalRecordController.selected.modalityId}"/>
+                        <h:outputLabel value="#{msg.modalityTypeId}" for="modalityTypeId" />
+                        <h:outputText value="#{assetClinicalRecordController.selected.modalityTypeId}"/>
                         <h:outputLabel value="#{msg.modalityType}" for="modalityType" />
                         <h:outputText value="#{assetClinicalRecordController.selected.modalityType}"/>
                         <h:outputLabel value="#{msg.procedureId}" for="procedureId" />
@@ -32,6 +32,18 @@
                         <h:outputText value="#{assetClinicalRecordController.selected.procedureStepName}"/>
                         <h:outputLabel value="#{msg.priceAmount}" for="priceAmount" />
                         <h:outputText value="#{assetClinicalRecordController.selected.priceAmount}"/>
+                        <h:outputLabel value="#{msg.priceUnit}" for="priceUnit" />
+                        <h:outputText value="#{assetClinicalRecordController.selected.priceUnit}"/>
+                        <h:outputLabel value="#{msg.patientId}" for="patientId" />
+                        <h:outputText value="#{assetClinicalRecordController.selected.patientId}"/>
+                        <h:outputLabel value="#{msg.patientNameZh}" for="patientNameZh" />
+                        <h:outputText value="#{assetClinicalRecordController.selected.patientNameZh}"/>
+                        <h:outputLabel value="#{msg.patientNameEn}" for="patientNameEn" />
+                        <h:outputText value="#{assetClinicalRecordController.selected.patientNameEn}"/>
+                        <h:outputLabel value="#{msg.patientAge}" for="patientAge" />
+                        <h:outputText value="#{assetClinicalRecordController.selected.patientAge}"/>
+                        <h:outputLabel value="#{msg.patientGender}" for="patientGender" />
+                        <h:outputText value="#{assetClinicalRecordController.selected.patientGender}"/>
                         <h:outputLabel value="#{msg.injectCount}" for="injectCount" />
                         <h:outputText value="#{assetClinicalRecordController.selected.injectCount}"/>
                         <h:outputLabel value="#{msg.exposeCount}" for="exposeCount" />
@@ -50,6 +62,8 @@
                         <h:outputText value="#{assetClinicalRecordController.selected.examEndTime}">
                             <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                         </h:outputText>
+                        <h:outputLabel value="#{msg.assetId}" for="assetId" />
+                        <h:outputText value="#{assetClinicalRecordController.selected.assetId}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{assetClinicalRecordController.deleteAction}" icon="ui-icon-trash" actionListener="#{assetClinicalRecordController.delete}" value="#{msg.Delete}" update="display,:AssetClinicalRecordViewDlg, :AssetClinicalRecordListForm:datalist, :growl" oncomplete="handleSubmit(args, 'AssetClinicalRecordViewDialog');"/>
