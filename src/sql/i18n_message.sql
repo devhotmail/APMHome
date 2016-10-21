@@ -160,7 +160,7 @@ INSERT INTO "i18n_message" VALUES (248,'field_name','manufacture','制造商','M
 INSERT INTO "i18n_message" VALUES (249,'field_name','modalityId','院内IT系统编号','Modality Id',null,-1);
 INSERT INTO "i18n_message" VALUES (250,'field_name','modalityType','设备类型','Modality Type',null,-1);
 INSERT INTO "i18n_message" VALUES (251,'field_name','modalityTypeId','设备类型','Modality Type Id',null,-1);
-INSERT INTO "i18n_message" VALUES (252,'field_name','name','设备名称','Name',null,-1);
+INSERT INTO "i18n_message" VALUES (252,'field_name','name','名称','Name',null,-1);
 INSERT INTO "i18n_message" VALUES (253,'field_name','nextTime','下次计划时间','Next Time',null,-1);
 INSERT INTO "i18n_message" VALUES (254,'field_name','ownerId','执行人','Owner Id',null,-1);
 INSERT INTO "i18n_message" VALUES (255,'field_name','ownerName','责任人','Owner Name',null,-1);
@@ -202,6 +202,30 @@ INSERT INTO "i18n_message" VALUES (290,'field_name','updateTime','处理时间',
 INSERT INTO "i18n_message" VALUES (291,'field_name','vendor','供应商','Vendor',null,-1);
 INSERT INTO "i18n_message" VALUES (292,'field_name','warrantyDate','保证截止日期','Warranty Date',null,-1);
 INSERT INTO "i18n_message" VALUES (293,'field_name','zipcode','邮编','Zipcode',null,-1);
+INSERT INTO "i18n_message" VALUES (294,'field_name','contactEmail','Email','Contact Email',null,-1);
+INSERT INTO "i18n_message" VALUES (295,'field_name','contactPerson','联系人','Contact Person',null,-1);
+INSERT INTO "i18n_message" VALUES (296,'field_name','contactPhone','联系电话','Contact Phone',null,-1);
+INSERT INTO "i18n_message" VALUES (297,'field_name','defaultLang','默认语言','Default Lang',null,-1);
+INSERT INTO "i18n_message" VALUES (298,'field_name','email','Email','Email',null,-1);
+INSERT INTO "i18n_message" VALUES (299,'field_name','homePage','默认首页','Home Page',null,-1);
+INSERT INTO "i18n_message" VALUES (300,'field_name','isActive','激活?','Active?',null,-1);
+INSERT INTO "i18n_message" VALUES (301,'field_name','isEnabled','启用?','Enabled?',null,-1);
+INSERT INTO "i18n_message" VALUES (302,'field_name','isLocalAdmin','本院管理员','Local Admin?',null,-1);
+INSERT INTO "i18n_message" VALUES (303,'field_name','isOnline','在线?','Online?',null,-1);
+INSERT INTO "i18n_message" VALUES (304,'field_name','isSiteAdmin','Site管理员?','Site Admin?',null,-1);
+INSERT INTO "i18n_message" VALUES (305,'field_name','isSuperAdmin','超级管理员?','Super Admin?',null,-1);
+INSERT INTO "i18n_message" VALUES (306,'field_name','lastLoginTime','上次登录时间','Last Login Time',null,-1);
+INSERT INTO "i18n_message" VALUES (307,'field_name','location','地点','Location',null,-1);
+INSERT INTO "i18n_message" VALUES (308,'field_name','locationEn','地点','Location En',null,-1);
+INSERT INTO "i18n_message" VALUES (309,'field_name','nameEn','名称','Name En',null,-1);
+INSERT INTO "i18n_message" VALUES (310,'field_name','nameEn','名称(En)','Name En',null,-1);
+INSERT INTO "i18n_message" VALUES (311,'field_name','orgId','所属部门','Org Id',null,-1);
+INSERT INTO "i18n_message" VALUES (312,'field_name','parentId','上级部门','Parent Id',null,-1);
+INSERT INTO "i18n_message" VALUES (313,'field_name','roleDesc','角色描述','Role Desc',null,-1);
+INSERT INTO "i18n_message" VALUES (314,'field_name','roleId','角色','Role Id',null,-1);
+INSERT INTO "i18n_message" VALUES (315,'field_name','telephone','电话','Telephone',null,-1);
+INSERT INTO "i18n_message" VALUES (316,'field_name','timeZone','时区','Time Zone',null,-1);
+INSERT INTO "i18n_message" VALUES (317,'field_name','site_description','详细描述','Description',null,-1);
 
 
-SELECT setval('"public"."i18n_message_id_seq"', 293, false);
+SELECT setval('"public"."i18n_message_id_seq"', 317, false);
