@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="AssetInfoEditDlg" widgetVar="AssetInfoEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetInfoController.CRUDActionName} #{msg.AssetInfo}">
+            <h:form id="AssetInfoEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetInfoController.selected != null}">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="id" value="#{assetInfoController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
+                            <label>#{msg.id}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="siteId" value="#{assetInfoController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.siteId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="name" value="#{assetInfoController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                            <label>#{msg.name}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="aliasName" value="#{assetInfoController.selected.aliasName}" />
+                            <label>#{msg.aliasName}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="functionGroup" value="#{assetInfoController.selected.functionGroup}" />
+                            <label>#{msg.functionGroup}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="functionType" value="#{assetInfoController.selected.functionType}" />
+                            <label>#{msg.functionType}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="functionGrade" value="#{assetInfoController.selected.functionGrade}" />
+                            <label>#{msg.functionGrade}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="manufacture" value="#{assetInfoController.selected.manufacture}" />
+                            <label>#{msg.manufacture}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="vendor" value="#{assetInfoController.selected.vendor}" />
+                            <label>#{msg.vendor}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="maitanance" value="#{assetInfoController.selected.maitanance}" />
+                            <label>#{msg.maitanance}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="maitananceTel" value="#{assetInfoController.selected.maitananceTel}" />
+                            <label>#{msg.maitananceTel}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="serialNum" value="#{assetInfoController.selected.serialNum}" />
+                            <label>#{msg.serialNum}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="departNum" value="#{assetInfoController.selected.departNum}" />
+                            <label>#{msg.departNum}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="financingNum" value="#{assetInfoController.selected.financingNum}" />
+                            <label>#{msg.financingNum}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="barcode" value="#{assetInfoController.selected.barcode}" />
+                            <label>#{msg.barcode}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="modalityId" value="#{assetInfoController.selected.modalityId}" />
+                            <label>#{msg.modalityId}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="locationCode" value="#{assetInfoController.selected.locationCode}" />
+                            <label>#{msg.locationCode}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="locationName" value="#{assetInfoController.selected.locationName}" />
+                            <label>#{msg.locationName}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="clinicalDeptId" value="#{assetInfoController.selected.clinicalDeptId}" />
+                            <label>#{msg.clinicalDeptId}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptName}" />
+                            <label>#{msg.clinicalDeptName}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="assetGroup" value="#{assetInfoController.selected.assetGroup}" />
+                            <label>#{msg.assetGroup}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="assetDeptId" value="#{assetInfoController.selected.assetDeptId}"  required="true" requiredMessage="#{msg.assetDeptId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.assetDeptId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="assetOwnerId" value="#{assetInfoController.selected.assetOwnerId}"  required="true" requiredMessage="#{msg.assetOwnerId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.assetOwnerId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="assetOwnerName" value="#{assetInfoController.selected.assetOwnerName}"  required="true" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}"/>
+                            <label>#{msg.assetOwnerName}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="assetOwnerTel" value="#{assetInfoController.selected.assetOwnerTel}" />
+                            <label>#{msg.assetOwnerTel}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:selectBooleanCheckbox id="isValid" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
+                            <label>#{msg.isValid}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="status" value="#{assetInfoController.selected.status}"  required="true" requiredMessage="#{msg.status} #{msg.ValidationRequire}"/>
+                            <label>#{msg.status}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="manufactDate" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetInfoController.selected.manufactDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.manufactDate}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="purchaseDate" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetInfoController.selected.purchaseDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.purchaseDate}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="arriveDate" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.arriveDate}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="installDate" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.installDate}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="warrantyDate" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetInfoController.selected.warrantyDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.warrantyDate}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="terminateDate" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.terminateDate}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="planDate" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetInfoController.selected.planDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.planDate}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" />
+                            <label>#{msg.purchasePrice}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="salvageValue" value="#{assetInfoController.selected.salvageValue}" />
+                            <label>#{msg.salvageValue}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="lifecycle" value="#{assetInfoController.selected.lifecycle}" />
+                            <label>#{msg.lifecycle}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}" />
+                            <label>#{msg.depreciationMethod}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="hospitalId" value="#{assetInfoController.selected.hospitalId}"  required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.hospitalId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="hospital" value="#{assetInfoController.selected.hospital}" />
+                            <label>#{msg.hospital}</label>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{assetInfoController.save}" value="#{msg.Save}" update="display,:AssetInfoEditDlg, :AssetInfoListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'AssetInfoEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('AssetInfoEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

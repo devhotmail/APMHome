@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="InspectionOrderEditDlg" widgetVar="InspectionOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionOrderController.CRUDActionName} #{msg.InspectionOrder}">
+            <h:form id="InspectionOrderEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionOrderController.selected != null}">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="id" value="#{inspectionOrderController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
+                            <label>#{msg.id}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="siteId" value="#{inspectionOrderController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.siteId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="name" value="#{inspectionOrderController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                            <label>#{msg.name}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="creator" value="#{inspectionOrderController.selected.creator}"  required="true" requiredMessage="#{msg.creator} #{msg.ValidationRequire}"/>
+                            <label>#{msg.creator}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="createTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{inspectionOrderController.selected.createTime}" required="true" requiredMessage="#{msg.createTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.createTime}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="ownerId" value="#{inspectionOrderController.selected.ownerId}"  required="true" requiredMessage="#{msg.ownerId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.ownerId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="ownerName" value="#{inspectionOrderController.selected.ownerName}"  required="true" requiredMessage="#{msg.ownerName} #{msg.ValidationRequire}"/>
+                            <label>#{msg.ownerName}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="ownerOrgId" value="#{inspectionOrderController.selected.ownerOrgId}"  required="true" requiredMessage="#{msg.ownerOrgId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.ownerOrgId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="ownerOrgName" value="#{inspectionOrderController.selected.ownerOrgName}"  required="true" requiredMessage="#{msg.ownerOrgName} #{msg.ValidationRequire}"/>
+                            <label>#{msg.ownerOrgName}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{inspectionOrderController.selected.startTime}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.startTime}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{inspectionOrderController.selected.endTime}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.endTime}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:selectBooleanCheckbox id="isFinished" value="#{inspectionOrderController.selected.isFinished}" required="true" requiredMessage="#{msg.isFinished} #{msg.ValidationRequire}"/>
+                            <label>#{msg.isFinished}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="comments" value="#{inspectionOrderController.selected.comments}" />
+                            <label>#{msg.comments}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="paperUrl" value="#{inspectionOrderController.selected.paperUrl}" />
+                            <label>#{msg.paperUrl}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="assetId" value="#{inspectionOrderController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.assetId}*</label>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{inspectionOrderController.save}" value="#{msg.Save}" update="display,:InspectionOrderEditDlg, :InspectionOrderListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'InspectionOrderEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('InspectionOrderEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

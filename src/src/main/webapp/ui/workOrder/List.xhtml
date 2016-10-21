@@ -1,0 +1,165 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+
+                <p align="center">
+                    <b>#{msg.WorkOrder}</b>
+                </p>
+            <h:form id="WorkOrderListForm">
+                <p:dataTable id="datalist" value="#{workOrderController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{workOrderController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                    rows="20" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{workOrderController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    
+                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.siteId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.name}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.creatorId}" sortBy="#{item.creatorId}" filterBy="#{item.creatorId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.creatorId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.creatorName}" sortBy="#{item.creatorName}" filterBy="#{item.creatorName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.creatorName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.createTime}" sortBy="#{item.createTime}" filterBy="#{item.createTime}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
+                        </f:facet>
+                        <h:outputText value="#{item.createTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.requestorId}" sortBy="#{item.requestorId}" filterBy="#{item.requestorId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.requestorId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.requestorName}" sortBy="#{item.requestorName}" filterBy="#{item.requestorName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.requestorName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.requestTime}" sortBy="#{item.requestTime}" filterBy="#{item.requestTime}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
+                        </f:facet>
+                        <h:outputText value="#{item.requestTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.requestReason}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.caseOwnerId}" sortBy="#{item.caseOwnerId}" filterBy="#{item.caseOwnerId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.caseOwnerId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.caseOwnerName}" sortBy="#{item.caseOwnerName}" filterBy="#{item.caseOwnerName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.caseOwnerName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.caseType}" sortBy="#{item.caseType}" filterBy="#{item.caseType}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.caseType}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.caseSubType}" sortBy="#{item.caseSubType}" filterBy="#{item.caseSubType}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.caseSubType}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.casePriority}" sortBy="#{item.casePriority}" filterBy="#{item.casePriority}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.casePriority}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.isInternal}" sortBy="#{item.isInternal}" filterBy="#{item.isInternal}" filterMatchMode="EQ">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('varDataList').filter()">
+                                <f:converter converterId="javax.faces.Boolean" />
+                                <f:selectItem itemLabel="#{msg.All}" itemValue="" />
+                                <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
+                                <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{item.isInternal? msg.True2Yes : msg.False2No }"/>
+                    </p:column>
+                    <p:column headerText="#{msg.currentPersonId}" sortBy="#{item.currentPersonId}" filterBy="#{item.currentPersonId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.currentPersonId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.currentPersonName}" sortBy="#{item.currentPersonName}" filterBy="#{item.currentPersonName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.currentPersonName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.currentStep}" sortBy="#{item.currentStep}" filterBy="#{item.currentStep}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.currentStep}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.isClosed}" sortBy="#{item.isClosed}" filterBy="#{item.isClosed}" filterMatchMode="EQ">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('varDataList').filter()">
+                                <f:converter converterId="javax.faces.Boolean" />
+                                <f:selectItem itemLabel="#{msg.All}" itemValue="" />
+                                <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
+                                <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{item.isClosed? msg.True2Yes : msg.False2No }"/>
+                    </p:column>
+                    <p:column headerText="#{msg.closeReason}" sortBy="#{item.closeReason}" filterBy="#{item.closeReason}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.closeReason}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.comments}" sortBy="#{item.comments}" filterBy="#{item.comments}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.comments}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.totalManHour}" sortBy="#{item.totalManHour}" filterBy="#{item.totalManHour}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.totalManHour}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.totalPrice}" sortBy="#{item.totalPrice}" filterBy="#{item.totalPrice}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.totalPrice}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.confirmedStartTime}" sortBy="#{item.confirmedStartTime}" filterBy="#{item.confirmedStartTime}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
+                        </f:facet>
+                        <h:outputText value="#{item.confirmedStartTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.confirmedEndTime}" sortBy="#{item.confirmedEndTime}" filterBy="#{item.confirmedEndTime}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
+                        </f:facet>
+                        <h:outputText value="#{item.confirmedEndTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.assetId}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.assetId}"/>
+                    </p:column>
+                    <f:facet name="{Toolbar}">
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="WorkOrder_export"/>
+                        </p:commandButton>
+                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{workOrderController.prepareCreate}" update=":WorkOrderEditDlg" oncomplete="PF('WorkOrderEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{workOrderController.prepareView}" update=":WorkOrderViewDlg" oncomplete="PF('WorkOrderViewDialog').show()" disabled="#{empty workOrderController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{workOrderController.prepareEdit}" update=":WorkOrderEditDlg" oncomplete="PF('WorkOrderEditDialog').show()" disabled="#{empty workOrderController.selected}"/>
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{workOrderController.prepareDelete}" update=":WorkOrderViewDlg" oncomplete="PF('WorkOrderViewDialog').show()" disabled="#{empty workOrderController.selected}"/>
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+
+                <p align="center">
+                    <b>#{msg.WorkOrderStepDetail}</b>
+                </p>
+            <h:form id="WorkOrderStepDetailListForm">
+                <p:dataTable id="datalist" value="#{workOrderStepDetailController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{workOrderStepDetailController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                    rows="20" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{workOrderStepDetailController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    
+                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.siteId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.manHours}" sortBy="#{item.manHours}" filterBy="#{item.manHours}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.manHours}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.accessory}" sortBy="#{item.accessory}" filterBy="#{item.accessory}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.accessory}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.accessoryQuantity}" sortBy="#{item.accessoryQuantity}" filterBy="#{item.accessoryQuantity}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.accessoryQuantity}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.accessoryPrice}" sortBy="#{item.accessoryPrice}" filterBy="#{item.accessoryPrice}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.accessoryPrice}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.workOrderStepId}" sortBy="#{item.workOrderStepId}" filterBy="#{item.workOrderStepId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.workOrderStepId}"/>
+                    </p:column>
+                    <f:facet name="{Toolbar}">
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="WorkOrderStepDetail_export"/>
+                        </p:commandButton>
+                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{workOrderStepDetailController.prepareCreate}" update=":WorkOrderStepDetailEditDlg" oncomplete="PF('WorkOrderStepDetailEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{workOrderStepDetailController.prepareView}" update=":WorkOrderStepDetailViewDlg" oncomplete="PF('WorkOrderStepDetailViewDialog').show()" disabled="#{empty workOrderStepDetailController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{workOrderStepDetailController.prepareEdit}" update=":WorkOrderStepDetailEditDlg" oncomplete="PF('WorkOrderStepDetailEditDialog').show()" disabled="#{empty workOrderStepDetailController.selected}"/>
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{workOrderStepDetailController.prepareDelete}" update=":WorkOrderStepDetailViewDlg" oncomplete="PF('WorkOrderStepDetailViewDialog').show()" disabled="#{empty workOrderStepDetailController.selected}"/>
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

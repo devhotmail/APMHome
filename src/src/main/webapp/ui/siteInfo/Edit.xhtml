@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="SiteInfoEditDlg" widgetVar="SiteInfoEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{siteInfoController.CRUDActionName} #{msg.SiteInfo}">
+            <h:form id="SiteInfoEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{siteInfoController.selected != null}">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="id" value="#{siteInfoController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
+                            <label>#{msg.id}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="name" value="#{siteInfoController.selected.name}" />
+                            <label>#{msg.name}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="nameEn" value="#{siteInfoController.selected.nameEn}" />
+                            <label>#{msg.nameEn}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="alias" value="#{siteInfoController.selected.alias}" />
+                            <label>#{msg.alias}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="description" value="#{siteInfoController.selected.description}" />
+                            <label>#{msg.description}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="contactPerson" value="#{siteInfoController.selected.contactPerson}" />
+                            <label>#{msg.contactPerson}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="contactPhone" value="#{siteInfoController.selected.contactPhone}" />
+                            <label>#{msg.contactPhone}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="contactEmail" value="#{siteInfoController.selected.contactEmail}" />
+                            <label>#{msg.contactEmail}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="location" value="#{siteInfoController.selected.location}" />
+                            <label>#{msg.location}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="locationEn" value="#{siteInfoController.selected.locationEn}" />
+                            <label>#{msg.locationEn}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="timeZone" value="#{siteInfoController.selected.timeZone}" />
+                            <label>#{msg.timeZone}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="defaultLang" value="#{siteInfoController.selected.defaultLang}" />
+                            <label>#{msg.defaultLang}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:selectBooleanCheckbox id="isEnabled" value="#{siteInfoController.selected.isEnabled}"/>
+                            <label>#{msg.isEnabled}</label>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{siteInfoController.save}" value="#{msg.Save}" update="display,:SiteInfoEditDlg, :SiteInfoListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'SiteInfoEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('SiteInfoEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

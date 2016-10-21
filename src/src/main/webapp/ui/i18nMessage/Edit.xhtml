@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="I18nMessageEditDlg" widgetVar="I18nMessageEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{i18nMessageController.CRUDActionName} #{msg.I18nMessage}">
+            <h:form id="I18nMessageEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{i18nMessageController.selected != null}">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="id" value="#{i18nMessageController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
+                            <label>#{msg.id}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="msgType" value="#{i18nMessageController.selected.msgType}"  required="true" requiredMessage="#{msg.msgType} #{msg.ValidationRequire}"/>
+                            <label>#{msg.msgType}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="msgKey" value="#{i18nMessageController.selected.msgKey}"  required="true" requiredMessage="#{msg.msgKey} #{msg.ValidationRequire}"/>
+                            <label>#{msg.msgKey}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="valueZh" value="#{i18nMessageController.selected.valueZh}" />
+                            <label>#{msg.valueZh}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="valueEn" value="#{i18nMessageController.selected.valueEn}" />
+                            <label>#{msg.valueEn}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="valueTw" value="#{i18nMessageController.selected.valueTw}" />
+                            <label>#{msg.valueTw}</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="siteId" value="#{i18nMessageController.selected.siteId}" />
+                            <label>#{msg.siteId}</label>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{i18nMessageController.save}" value="#{msg.Save}" update="display,:I18nMessageEditDlg, :I18nMessageListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'I18nMessageEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('I18nMessageEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

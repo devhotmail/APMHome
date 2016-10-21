@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="WorkOrderStepViewDlg" widgetVar="WorkOrderStepViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderStepController.CRUDActionName} #{msg.WorkOrderStep}">
+            <h:form id="WorkOrderStepViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{workOrderStepController.selected != null}">
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{workOrderStepController.selected.id}"/>
+                        <h:outputLabel value="#{msg.siteId}" for="siteId" />
+                        <h:outputText value="#{workOrderStepController.selected.siteId}"/>
+                        <h:outputLabel value="#{msg.stepName}" for="stepName" />
+                        <h:outputText value="#{workOrderStepController.selected.stepName}"/>
+                        <h:outputLabel value="#{msg.ownerId}" for="ownerId" />
+                        <h:outputText value="#{workOrderStepController.selected.ownerId}"/>
+                        <h:outputLabel value="#{msg.ownerName}" for="ownerName" />
+                        <h:outputText value="#{workOrderStepController.selected.ownerName}"/>
+                        <h:outputLabel value="#{msg.startTime}" for="startTime" />
+                        <h:outputText value="#{workOrderStepController.selected.startTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.endTime}" for="endTime" />
+                        <h:outputText value="#{workOrderStepController.selected.endTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.description}" for="description" />
+                        <h:outputText value="#{workOrderStepController.selected.description}"/>
+                        <h:outputLabel value="#{msg.attachmentUrl}" for="attachmentUrl" />
+                        <h:outputText value="#{workOrderStepController.selected.attachmentUrl}"/>
+                        <h:outputLabel value="#{msg.workOrderId}" for="workOrderId" />
+                        <h:outputText value="#{workOrderStepController.selected.workOrderId}"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{workOrderStepController.deleteAction}" icon="ui-icon-trash" actionListener="#{workOrderStepController.delete}" value="#{msg.Delete}" update="display,:WorkOrderStepViewDlg, :WorkOrderStepListForm:datalist, :growl" oncomplete="handleSubmit(args, 'WorkOrderStepViewDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('WorkOrderStepViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

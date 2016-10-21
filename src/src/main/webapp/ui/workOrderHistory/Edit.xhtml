@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="WorkOrderHistoryEditDlg" widgetVar="WorkOrderHistoryEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderHistoryController.CRUDActionName} #{msg.WorkOrderHistory}">
+            <h:form id="WorkOrderHistoryEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderHistoryController.selected != null}">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="id" value="#{workOrderHistoryController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
+                            <label>#{msg.id}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="siteId" value="#{workOrderHistoryController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.siteId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="assetId" value="#{workOrderHistoryController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.assetId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="updatePersonId" value="#{workOrderHistoryController.selected.updatePersonId}"  required="true" requiredMessage="#{msg.updatePersonId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.updatePersonId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="updatePersonName" value="#{workOrderHistoryController.selected.updatePersonName}"  required="true" requiredMessage="#{msg.updatePersonName} #{msg.ValidationRequire}"/>
+                            <label>#{msg.updatePersonName}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:calendar id="updateTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderHistoryController.selected.updateTime}" required="true" requiredMessage="#{msg.updateTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                            <label>#{msg.updateTime}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="updateDetail" value="#{workOrderHistoryController.selected.updateDetail}"  required="true" requiredMessage="#{msg.updateDetail} #{msg.ValidationRequire}"/>
+                            <label>#{msg.updateDetail}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="workOrderId" value="#{workOrderHistoryController.selected.workOrderId}"  required="true" requiredMessage="#{msg.workOrderId} #{msg.ValidationRequire}"/>
+                            <label>#{msg.workOrderId}*</label>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{workOrderHistoryController.save}" value="#{msg.Save}" update="display,:WorkOrderHistoryEditDlg, :WorkOrderHistoryListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'WorkOrderHistoryEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('WorkOrderHistoryEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
