@@ -37,6 +37,7 @@ INSERT INTO "i18n_message" VALUES (36, 'label', 'true', '是', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (37, 'label', 'false', '否', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (38, 'label', 'passwordIncorrect', '对不起，您输入的密码不正确', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (39, 'label', 'security_bad_credentials', '用户名或密码错误', 'incorrect user name or password', NULL, -1);
+
 INSERT INTO "i18n_message" VALUES (100, 'label', 'HomePage', '我的主页', 'Dashboard', NULL, -1);
 INSERT INTO "i18n_message" VALUES (101, 'label', 'HomePageHospitalHead', '我的主页(院长)', 'Dashboard(Hospital Head)', NULL, -1);
 INSERT INTO "i18n_message" VALUES (102, 'label', 'HomePageDeptHead', '我的主页(主任)', 'Dashboard(Department Head)', NULL, -1);

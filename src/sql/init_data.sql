@@ -8,7 +8,7 @@ INSERT INTO "sys_role" VALUES (3, 'AssetStuff', '设备科成员', 'home2.xhtml'
 INSERT INTO "sys_role" VALUES (4, 'DeptHead', '科室主任', 'home3.xhtml');
 INSERT INTO "sys_role" VALUES (5, 'DeptStuff', '科室成员', 'home3.xhtml');
 
-INSERT INTO "user_account" VALUES (1, 1, 'admin', 'administrator', '5605ee4b362e9754', 'apm.admin@ge.com', '', 't', 't', 't', 't', 1, '2016-10-17 10:57:00');
+INSERT INTO "user_account" VALUES (1, 1, 'admin', 'administrator', '5605ee4b362e9754', 'apm.admin@ge.com', '', 't', 't', 't','t', 't', 1, '2016-10-17 10:57:00');
 
 INSERT INTO "chart_config" VALUES (1, 'dashboard_pie', 'select * from demo_data where id>=990 ', 't', 'Pie', 'type', 'number1', 'number1', '饼图测试', 'e', NULL, 2, 't', 'x Label', NULL, NULL, NULL, NULL, NULL, NULL, 'y Label', NULL, NULL, 't');
 INSERT INTO "chart_config" VALUES (2, 'dashboard_bar', 'select * from demo_data where true :#searchFilter', 't', 'Bar', 'type', 'the_date', 'number3', '柱状图测试', 'e', NULL, 2, 't', 'x Label', '', '', '', '', '', '', 'y Label', '', '', 't');
