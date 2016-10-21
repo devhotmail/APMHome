@@ -15,7 +15,6 @@ import webapp.framework.web.WebUtil;
 public class AssetClinicalRecordController extends JpaCRUDController<AssetClinicalRecord> {
 
     AssetClinicalRecordRepository dao = null;
-    private String text1;
 
     @Override
     protected void init() {
@@ -40,14 +39,6 @@ public class AssetClinicalRecordController extends JpaCRUDController<AssetClinic
     public List<AssetClinicalRecord> getItemList() {
         //to do: change the code if necessary
         return dao.find();
-    }
-    
-    public String getText1() {
-        return this.text1;
-    }
-    
-    public void setText1(String text1) {
-        this.text1 = text1;
     }
 
 /*

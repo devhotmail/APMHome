@@ -5,29 +5,29 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.GenericCRUDController;
-import com.ge.apm.dao.SysRoleRepository;
-import com.ge.apm.domain.SysRole;
+import webapp.framework.web.mvc.JpaCRUDController;
+import com.ge.apm.dao.OrgInfoRepository;
+import com.ge.apm.domain.OrgInfo;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class SysRoleController extends GenericCRUDController<SysRole> {
+public class OrgInfoController extends JpaCRUDController<OrgInfo> {
 
-    SysRoleRepository dao = null;
+    OrgInfoRepository dao = null;
 
     @Override
     protected void init() {
-        dao = WebUtil.getBean(SysRoleRepository.class);
+        dao = WebUtil.getBean(OrgInfoRepository.class);
     }
 
     @Override
-    protected SysRoleRepository getDAO() {
+    protected OrgInfoRepository getDAO() {
         return dao;
     }
 
     @Override
-    protected Page<SysRole> loadData(PageRequest pageRequest) {
+    protected Page<OrgInfo> loadData(PageRequest pageRequest) {
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
@@ -36,38 +36,38 @@ public class SysRoleController extends GenericCRUDController<SysRole> {
     }
 
     @Override
-    public List<SysRole> getItemList() {
+    public List<OrgInfo> getItemList() {
         //to do: change the code if necessary
         return dao.find();
     }
 
 /*
     @Override
-    public void onBeforeNewObject(PRole object) {
+    public void onBeforeNewObject(OrgInfo object) {
     }
     
     @Override
-    public void onAfterNewObject(PRole object, boolean isOK) {
+    public void onAfterNewObject(OrgInfo object, boolean isOK) {
     }
 
     @Override
-    public void onBeforeUpdateObject(PRole object) {
+    public void onBeforeUpdateObject(OrgInfo object) {
     }
     
     @Override
-    public void onAfterUpdateObject(PRole object, boolean isOK) {
+    public void onAfterUpdateObject(OrgInfo object, boolean isOK) {
     }
     
     @Override
-    public void onBeforeDeleteObject(PRole object) {
+    public void onBeforeDeleteObject(OrgInfo object) {
     }
     
     @Override
-    public void onAfterDeleteObject(PRole object, boolean isOK) {
+    public void onAfterDeleteObject(OrgInfo object, boolean isOK) {
     }
     
     @Override
-    public void onBeforeSave(PRole object) {
+    public void onBeforeSave(OrgInfo object) {
     }
     
     @Override

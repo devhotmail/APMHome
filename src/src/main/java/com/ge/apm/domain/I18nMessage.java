@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import webapp.framework.web.service.UserContext;
 
 /**
@@ -20,6 +22,7 @@ import webapp.framework.web.service.UserContext;
  */
 @Entity
 @Table(name = "i18n_message")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class I18nMessage implements Serializable, Comparable {
 
     private static final long serialVersionUID = 1L;

@@ -18,31 +18,10 @@ import webapp.framework.web.WebUtil;
  */
 public class LogoutHandler extends SimpleUrlLogoutSuccessHandler implements LogoutSuccessHandler {
 
-    private static UserAccountRepository userDao = null;
-    
-    private UserAccount getLoginUserAccount(String userLoginName){
-        if(userDao==null)
-            userDao = (UserAccountRepository) WebUtil.getBean(UserAccountRepository.class);
-        
-        if(userDao==null) 
-            return null;
-        
-        return userDao.getByLoginName(userLoginName);
-    }
-            
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth)
             throws IOException, ServletException {
         if (auth != null) {
-            Object principal = auth.getPrincipal();
-
-            if (principal instanceof UserDetails) {
-                String userLoginName = ((UserDetails) principal).getUsername();
-                UserAccount userAccount = getLoginUserAccount(userLoginName);
-                
-                AppContextService.removeActiveUser(userAccount);
-            }
-
             super.onLogoutSuccess(request, response, auth);
         }
         else

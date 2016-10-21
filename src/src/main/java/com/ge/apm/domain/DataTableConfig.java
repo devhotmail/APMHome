@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  *
@@ -17,6 +19,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "data_table_config")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DataTableConfig implements Serializable {
     private static final long serialVersionUID = 1L;
     

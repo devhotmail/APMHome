@@ -6,26 +6,20 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  *
  * @author 212547631
  */
 @Entity
-@Table(name = "org_info")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class OrgInfo implements Serializable {
+@Table(name = "asset_file_attachment")
+public class AssetFileAttachment implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -35,27 +29,41 @@ public class OrgInfo implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "site_id")
+    private int siteId;
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "name")
     private String name;
-    @Size(max = 64)
-    @Column(name = "name_en")
-    private String nameEn;
-    
-    @JoinColumn(name = "parent_id", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.EAGER)
-    private OrgInfo parentOrg;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 64)
+    @Column(name = "file_type")
+    private String fileType;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 128)
+    @Column(name = "file_url")
+    private String fileUrl;
+    @Column(name = "asset_id")
+    @Basic(optional = false)
+    @NotNull
+    private Integer assetId;
 
-    public OrgInfo() {
+    public AssetFileAttachment() {
     }
 
-    public OrgInfo(Integer id) {
+    public AssetFileAttachment(Integer id) {
         this.id = id;
     }
 
-    public OrgInfo(Integer id, String name) {
+    public AssetFileAttachment(Integer id, int siteId, String name, String fileType, String fileUrl) {
         this.id = id;
+        this.siteId = siteId;
         this.name = name;
+        this.fileType = fileType;
+        this.fileUrl = fileUrl;
     }
 
     public Integer getId() {
@@ -66,6 +74,14 @@ public class OrgInfo implements Serializable {
         this.id = id;
     }
 
+    public int getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(int siteId) {
+        this.siteId = siteId;
+    }
+
     public String getName() {
         return name;
     }
@@ -74,20 +90,28 @@ public class OrgInfo implements Serializable {
         this.name = name;
     }
 
-    public String getNameEn() {
-        return nameEn;
+    public String getFileType() {
+        return fileType;
     }
 
-    public void setNameEn(String nameEn) {
-        this.nameEn = nameEn;
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 
-    public OrgInfo getParentOrg() {
-        return parentOrg;
+    public String getFileUrl() {
+        return fileUrl;
     }
 
-    public void setParentOrg(OrgInfo parentOrg) {
-        this.parentOrg = parentOrg;
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
     }
 
     @Override
@@ -100,10 +124,10 @@ public class OrgInfo implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof OrgInfo)) {
+        if (!(object instanceof AssetFileAttachment)) {
             return false;
         }
-        OrgInfo other = (OrgInfo) object;
+        AssetFileAttachment other = (AssetFileAttachment) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -112,7 +136,7 @@ public class OrgInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "com.ge.apm.domain.OrgInfo[ id=" + id + " ]";
+        return "com.ge.apm.domain.AssetFileAttachment[ id=" + id + " ]";
     }
     
 }

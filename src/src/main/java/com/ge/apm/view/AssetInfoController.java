@@ -5,29 +5,29 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.GenericCRUDController;
-import com.ge.apm.dao.SysRoleRepository;
-import com.ge.apm.domain.SysRole;
+import webapp.framework.web.mvc.JpaCRUDController;
+import com.ge.apm.dao.AssetInfoRepository;
+import com.ge.apm.domain.AssetInfo;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class SysRoleController extends GenericCRUDController<SysRole> {
+public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
-    SysRoleRepository dao = null;
+    AssetInfoRepository dao = null;
 
     @Override
     protected void init() {
-        dao = WebUtil.getBean(SysRoleRepository.class);
+        dao = WebUtil.getBean(AssetInfoRepository.class);
     }
 
     @Override
-    protected SysRoleRepository getDAO() {
+    protected AssetInfoRepository getDAO() {
         return dao;
     }
 
     @Override
-    protected Page<SysRole> loadData(PageRequest pageRequest) {
+    protected Page<AssetInfo> loadData(PageRequest pageRequest) {
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
@@ -36,38 +36,38 @@ public class SysRoleController extends GenericCRUDController<SysRole> {
     }
 
     @Override
-    public List<SysRole> getItemList() {
+    public List<AssetInfo> getItemList() {
         //to do: change the code if necessary
         return dao.find();
     }
 
 /*
     @Override
-    public void onBeforeNewObject(PRole object) {
+    public void onBeforeNewObject(AssetInfo object) {
     }
     
     @Override
-    public void onAfterNewObject(PRole object, boolean isOK) {
+    public void onAfterNewObject(AssetInfo object, boolean isOK) {
     }
 
     @Override
-    public void onBeforeUpdateObject(PRole object) {
+    public void onBeforeUpdateObject(AssetInfo object) {
     }
     
     @Override
-    public void onAfterUpdateObject(PRole object, boolean isOK) {
+    public void onAfterUpdateObject(AssetInfo object, boolean isOK) {
     }
     
     @Override
-    public void onBeforeDeleteObject(PRole object) {
+    public void onBeforeDeleteObject(AssetInfo object) {
     }
     
     @Override
-    public void onAfterDeleteObject(PRole object, boolean isOK) {
+    public void onAfterDeleteObject(AssetInfo object, boolean isOK) {
     }
     
     @Override
-    public void onBeforeSave(PRole object) {
+    public void onBeforeSave(AssetInfo object) {
     }
     
     @Override

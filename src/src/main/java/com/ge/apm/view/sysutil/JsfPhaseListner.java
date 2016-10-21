@@ -17,7 +17,6 @@ public class JsfPhaseListner implements PhaseListener {
  
     @Override
     public void beforePhase(PhaseEvent event) {
-        AppContextService.addActiveUser(UserContextService.getCurrentUserAccount());
     }
  
     @Override

@@ -15,15 +15,19 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import org.joda.time.DateTime;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import webapp.framework.util.StringUtil;
 
 /**
@@ -32,6 +36,9 @@ import webapp.framework.util.StringUtil;
  */
 @Entity
 @Table(name = "user_account")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@NamedQueries({
+    @NamedQuery(name = "UserAccount.findAll", query = "SELECT u FROM UserAccount u")})
 public class UserAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,62 +49,71 @@ public class UserAccount implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 16)
     @Column(name = "login_name")
     private String loginName;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 32)
     @Column(name = "name")
     private String name;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 40)
+    @Size(min = 1, max = 16)
     @Column(name = "password")
     private String password;
-    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @Size(min = 1, max = 50)
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 16)
     @Column(name = "email")
     private String email;
-    @Size(max = 20)
+    @Size(max = 16)
     @Column(name = "telephone")
     private String telephone;
-    @Column(name = "last_login_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastLoginTime;
     @Basic(optional = false)
     @NotNull
     @Column(name = "is_super_admin")
     private boolean isSuperAdmin;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "is_tenant_admin")
-    private boolean isTenantAdmin;
+    @Column(name = "is_site_admin")
+    private boolean isSiteAdmin;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "is_local_admin")
+    private boolean isLocalAdmin;
     @Basic(optional = false)
     @NotNull
     @Column(name = "is_active")
     private boolean isActive;
     @Column(name = "is_online")
     private Boolean isOnline;
-    @NotNull
-    @Column(name = "org_id")
-    private Integer orgId;
-    @NotNull
     @Column(name = "site_id")
     private Integer siteId;
-    
-    @Transient
-    private DateTime lastActiveTime;
-    
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount", fetch = FetchType.LAZY)
-    private List<UserRole> userRoles;
-    
-    public UserAccount() {
-    }
+    @Column(name = "last_login_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLoginTime;
 
-    public UserAccount(Integer id) {
-        this.id = id;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount", fetch = FetchType.EAGER)
+    private List<UserRole> userRoleList;
+
+    @Column(name = "org_id")
+    @Basic(optional = false)
+    @NotNull
+    private Integer orgInfoId;
+
+    @JoinColumn(insertable=false,updatable=false, name = "org_id", referencedColumnName = "id")
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    private OrgInfo orgInfo;
+
+    public UserAccount() {
+        isSuperAdmin = false;
+        isSiteAdmin = false;
+        isLocalAdmin = false;
+        isActive = true;
+        isOnline = false;
     }
 
     public Integer getId() {
@@ -124,10 +140,10 @@ public class UserAccount implements Serializable {
         this.name = name;
     }
 
-    public String getPassword2() {
+    public String getPasswordEncryped() {
         return password;
     }
-    
+
     public String getPassword() {
         return StringUtil.desDecrypt(password);
     }
@@ -152,36 +168,52 @@ public class UserAccount implements Serializable {
         this.telephone = telephone;
     }
 
-    public Date getLastLoginTime() {
-        return lastLoginTime;
-    }
-
-    public void setLastLoginTime(Date lastLoginTime) {
-        this.lastLoginTime = lastLoginTime;
-    }
-
-    public Integer getOrgId() {
-        return orgId;
-    }
-
-    public void setOrgId(Integer orgId) {
-        this.orgId = orgId;
-    }
-
-    public Boolean getIsSuperAdmin() {
+    public boolean getIsSuperAdmin() {
         return isSuperAdmin;
     }
 
-    public void setIsSuperAdmin(Boolean isSuperAdmin) {
+    public void setIsSuperAdmin(boolean isSuperAdmin) {
         this.isSuperAdmin = isSuperAdmin;
     }
 
-    public Boolean getIsTenantAdmin() {
-        return isTenantAdmin;
+    public boolean getIsSiteAdmin() {
+        return isSiteAdmin;
     }
 
-    public void setIsTenantAdmin(Boolean isTenantAdmin) {
-        this.isTenantAdmin = isTenantAdmin;
+    public void setIsSiteAdmin(boolean isSiteAdmin) {
+        this.isSiteAdmin = isSiteAdmin;
+    }
+
+    public boolean getIsLocalAdmin() {
+        return isLocalAdmin;
+    }
+
+    public void setIsLocalAdmin(boolean isLocalAdmin) {
+        this.isLocalAdmin = isLocalAdmin;
+    }
+
+    public Integer getOrgInfoId() {
+        return orgInfoId;
+    }
+
+    public void setOrgInfoId(Integer orgInfoId) {
+        this.orgInfoId = orgInfoId;
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public Boolean getIsOnline() {
+        return isOnline;
+    }
+
+    public void setIsOnline(Boolean isOnline) {
+        this.isOnline = isOnline;
     }
 
     public Integer getSiteId() {
@@ -192,20 +224,45 @@ public class UserAccount implements Serializable {
         this.siteId = siteId;
     }
 
-    public List<UserRole> getUserRoles() {
-        return userRoles;
+    public Date getLastLoginTime() {
+        return lastLoginTime;
     }
 
-    public void setUserRoles(List<UserRole> userRoles) {
-        this.userRoles = userRoles;
+    public void setLastLoginTime(Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
     }
 
-    public List<String> getUserRoleNames() {
+    public List<UserRole> getUserRoleList() {
+        return userRoleList;
+    }
+
+    public void setUserRoleList(List<UserRole> userRoleList) {
+        this.userRoleList = userRoleList;
+    }
+
+    public OrgInfo getOrgInfo() {
+        return orgInfo;
+    }
+
+    public void setOrgInfo(OrgInfo orgInfo) {
+        this.orgInfo = orgInfo;
+    }
+
+    @Transient
+    private List<String> userRoleNames;
+    public List<String> getRoleNames(){
+        if(userRoleNames==null) {
+            userRoleNames = new ArrayList<String>();
+            for(UserRole userRole: userRoleList){
+                userRoleNames.add(userRole.getRole().getName());
+            }
+
+            if(this.isSuperAdmin) userRoleNames.add("SuperAdmin");
+            if(this.isSiteAdmin) userRoleNames.add("SiteAdmin");
+            if(this.isLocalAdmin) userRoleNames.add("LocalAdmin");
+        }
+
         return userRoleNames;
-    }
-
-    public void setUserRoleNames(List<String> userRoleNames) {
-        this.userRoleNames = userRoleNames;
     }
 
     @Override
@@ -222,51 +279,15 @@ public class UserAccount implements Serializable {
             return false;
         }
         UserAccount other = (UserAccount) object;
-        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
-    }
-
-    @Transient
-    private List<String> userRoleNames;
-    public List<String> getRoleNames(){
-        if(userRoleNames==null) {
-            userRoleNames = new ArrayList<String>();
-            for(UserRole userRole: userRoles){
-                userRoleNames.add(userRole.getRole().getName());
-            }
-
-            try{
-                if(this.isSuperAdmin) userRoleNames.add("SuperAdmin");
-            }
-            catch(Exception ex){
-            }
-            try{
-                if(this.isTenantAdmin) userRoleNames.add("TenantAdmin");
-            }
-            catch(Exception ex){
-            }
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
         }
-
-        return userRoleNames;
+        return true;
     }
 
-    public DateTime getLastActiveTime() {
-        return lastActiveTime;
-    }
-
-    public void setLastActiveTime(DateTime lastActiveTime) {
-        this.lastActiveTime = lastActiveTime;
-    }
-
-    public Boolean getIsOnline() {
-            return isOnline;
-    }
-
-    public void setIsOnline(Boolean isOnline) {
-            this.isOnline = isOnline;
-    }
-    
     @Override
     public String toString() {
-        return "UserAccount[ id=" + id + ", lastActiveTime="+lastActiveTime+" ]";
+        return "com.ge.apm.domain.UserAccount[ id=" + id + " ]";
     }
+
 }

@@ -9,10 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  *
@@ -20,8 +20,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "site_info")
-@NamedQueries({
-    @NamedQuery(name = "SiteInfo.findAll", query = "SELECT s FROM SiteInfo s")})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SiteInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,36 +29,36 @@ public class SiteInfo implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Size(max = 100)
+    @Size(max = 64)
     @Column(name = "name")
     private String name;
-    @Size(max = 100)
+    @Size(max = 64)
     @Column(name = "name_en")
     private String nameEn;
-    @Size(max = 50)
+    @Size(max = 64)
     @Column(name = "alias")
     private String alias;
-    @Size(max = 200)
+    @Size(max = 256)
     @Column(name = "description")
     private String description;
-    @Size(max = 100)
+    @Size(max = 64)
     @Column(name = "contact_person")
     private String contactPerson;
-    @Size(max = 100)
+    @Size(max = 64)
     @Column(name = "contact_phone")
     private String contactPhone;
-    @Size(max = 100)
+    @Size(max = 64)
     @Column(name = "contact_email")
     private String contactEmail;
-    @Size(max = 100)
+    @Size(max = 64)
     @Column(name = "location")
     private String location;
-    @Size(max = 200)
+    @Size(max = 256)
     @Column(name = "location_en")
     private String locationEn;
     @Column(name = "time_zone")
     private Integer timeZone;
-    @Size(max = 20)
+    @Size(max = 16)
     @Column(name = "default_lang")
     private String defaultLang;
     @Column(name = "is_enabled")

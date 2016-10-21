@@ -72,7 +72,12 @@ public class UserContextService implements Serializable{
         if(UserContextService.isSuperAdmin()) return true;
         else if("SuperAdmin".equals(role)) return false;
 
-        if(UserContextService.isTenantAdmin()) return true;
+        if(UserContextService.isSiteAdmin()) return true;
+        else if("SiteAdmin".equals(role)) return false;
+        
+        if(UserContextService.isLocalAdmin()) return true;
+        else if("LocalAdmin".equals(role)) return false;
+
         return UserContext.getRoles().contains(role);
     }
 
@@ -93,9 +98,13 @@ public class UserContextService implements Serializable{
     }
     
     public boolean getIsTenantAdmin(){
-        return UserContextService.isTenantAdmin();
+        return UserContextService.isSiteAdmin();
     }
-
+    
+    public boolean getIsLocalAdmin(){
+        return UserContextService.isLocalAdmin();
+    }
+    
     public static UserAccount getCurrentUserAccount(){
         UserContextService userContextService = (UserContextService) WebUtil.getBean(UserContextService.class);
         return userContextService.getLoginUser();
@@ -106,11 +115,16 @@ public class UserContextService implements Serializable{
         return userAccount.getIsSuperAdmin();
     }
 
-    public static boolean isTenantAdmin(){
+    public static boolean isSiteAdmin(){
         UserAccount userAccount = getCurrentUserAccount();
-        return userAccount.getIsTenantAdmin();
+        return userAccount.getIsSiteAdmin();
     }
 
+    public static boolean isLocalAdmin(){
+        UserAccount userAccount = getCurrentUserAccount();
+        return userAccount.getIsLocalAdmin();
+    }
+    
     public static int getUserID(){
         UserAccount userAccount = getCurrentUserAccount();
         if (userAccount!=null) return userAccount.getId();
