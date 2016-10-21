@@ -11,7 +11,7 @@
         <p:dialog id="WorkOrderEditDlg" widgetVar="WorkOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderController.CRUDActionName} #{msg.WorkOrder}">
             <h:form id="WorkOrderEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderController.selected != null}">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderController.selected != null}">
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="id" value="#{workOrderController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
                             <label>#{msg.id}*</label>
@@ -74,7 +74,7 @@
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
                             <p:selectBooleanCheckbox id="isInternal" value="#{workOrderController.selected.isInternal}" required="true" requiredMessage="#{msg.isInternal} #{msg.ValidationRequire}"/>
-                            <label>#{msg.isInternal}*</label>
+                            <label style="margin-left: 20px;">#{msg.isInternal}*</label>
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="currentPersonId" value="#{workOrderController.selected.currentPersonId}"  required="true" requiredMessage="#{msg.currentPersonId} #{msg.ValidationRequire}"/>
@@ -90,7 +90,7 @@
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
                             <p:selectBooleanCheckbox id="isClosed" value="#{workOrderController.selected.isClosed}" required="true" requiredMessage="#{msg.isClosed} #{msg.ValidationRequire}"/>
-                            <label>#{msg.isClosed}*</label>
+                            <label style="margin-left: 20px;">#{msg.isClosed}*</label>
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="closeReason" value="#{workOrderController.selected.closeReason}" />
