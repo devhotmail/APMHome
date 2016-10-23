@@ -4,6 +4,7 @@ package com.ge.apm.domain;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,12 +23,13 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "chart_config")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable(true)
 public class ChartConfig implements Serializable {
     private static final long serialVersionUID = 1L;
     
-    public static final String CHART_PIE ="Pie";
-    public static final String CHART_BAR ="Bar";
-    public static final String CHART_LINE ="Line";
+    public static final String CHART_PIE ="pie";
+    public static final String CHART_BAR ="bar";
+    public static final String CHART_LINE ="line";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,6 +4,7 @@ package com.ge.apm.domain;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,6 +24,7 @@ import webapp.framework.web.service.UserContext;
 @Entity
 @Table(name = "i18n_message")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable(true)
 public class I18nMessage implements Serializable, Comparable {
 
     private static final long serialVersionUID = 1L;

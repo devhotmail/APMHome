@@ -2,6 +2,7 @@ package com.ge.apm.domain;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "data_table_config")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable(true)
 public class DataTableConfig implements Serializable {
     private static final long serialVersionUID = 1L;
     

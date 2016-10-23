@@ -5,6 +5,9 @@ import java.util.Enumeration;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ApplicationScoped;
 import javax.servlet.http.HttpServletRequestWrapper;
+import webapp.framework.web.mvc.SqlConfigurableChartController;
+import webapp.framework.web.mvc.SqlConfigurableDataController;
+import webapp.framework.web.service.DbMessageSource;
 
 @ManagedBean(name="appContextService")
 @ApplicationScoped
@@ -42,4 +45,17 @@ public class AppContextService implements Serializable{
 
         return queryStr;
     }
+    
+    public void reloadI18nMessage(){
+        DbMessageSource.reLoadMessages();
+    }
+
+    public void reloadChartConfig(){
+        SqlConfigurableChartController.reLoadChartConfig();
+    }
+
+    public void reloadDataTableConfig(){
+        SqlConfigurableDataController.reLoadDataTableConfig();
+    }
+    
 }

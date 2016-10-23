@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,6 +38,7 @@ import webapp.framework.util.StringUtil;
 @Entity
 @Table(name = "user_account")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable(true)
 @NamedQueries({
     @NamedQuery(name = "UserAccount.findAll", query = "SELECT u FROM UserAccount u")})
 public class UserAccount implements Serializable {

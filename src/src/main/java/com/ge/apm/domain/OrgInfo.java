@@ -4,6 +4,7 @@ package com.ge.apm.domain;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,6 +26,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "org_info")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable(true)
 public class OrgInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
