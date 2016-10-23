@@ -14,7 +14,7 @@
                         <div class="profile">
                             <div class="profile-image"></div>
                             <a id="profile-options" href="#">
-                                <span class="profile-name">Jane Williams</span>
+                                <span class="profile-name">#{userContextService.userName}</span>
                                 <i class="material-icons">&#xE313;</i>
                             </a>
                         </div>
@@ -105,10 +105,7 @@
                         </p:submenu>
                         <p:submenu label="SysAdmin" icon="&#xE884;">
                             <p:menuitem value="Code Tool for JPA" icon="&#xE226;" outcome="/admin/codegen/codegen.xhtml"/>
-                            <p:menuitem value="#{msg.DeviceKPIAnalysis}" icon="&#xE332;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceKPIForecast}" icon="&#xE32A;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceCostAnalysis}" icon="&#xE32A;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DevicePurchaseDecisionSupport}" icon="&#xE32A;" outcome="/home"/>
+                            <p:menuitem value="Demo Chart and DataTable" icon="&#xE226;" outcome="/ui/demo.xhtml"/>
                         </p:submenu>
                         
                         <p:menuitem value="Icon List" icon="&#xE869;" outcome="/utils"/>
