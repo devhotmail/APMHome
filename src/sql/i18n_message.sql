@@ -217,15 +217,14 @@ INSERT INTO "i18n_message" VALUES (305,'field_name','isSuperAdmin','超级管理
 INSERT INTO "i18n_message" VALUES (306,'field_name','lastLoginTime','上次登录时间','Last Login Time',null,-1);
 INSERT INTO "i18n_message" VALUES (307,'field_name','location','地点','Location',null,-1);
 INSERT INTO "i18n_message" VALUES (308,'field_name','locationEn','地点','Location En',null,-1);
-INSERT INTO "i18n_message" VALUES (309,'field_name','nameEn','名称','Name En',null,-1);
-INSERT INTO "i18n_message" VALUES (310,'field_name','nameEn','名称(En)','Name En',null,-1);
-INSERT INTO "i18n_message" VALUES (311,'field_name','orgId','所属部门','Org Id',null,-1);
-INSERT INTO "i18n_message" VALUES (312,'field_name','parentId','上级部门','Parent Id',null,-1);
-INSERT INTO "i18n_message" VALUES (313,'field_name','roleDesc','角色描述','Role Desc',null,-1);
-INSERT INTO "i18n_message" VALUES (314,'field_name','roleId','角色','Role Id',null,-1);
-INSERT INTO "i18n_message" VALUES (315,'field_name','telephone','电话','Telephone',null,-1);
-INSERT INTO "i18n_message" VALUES (316,'field_name','timeZone','时区','Time Zone',null,-1);
-INSERT INTO "i18n_message" VALUES (317,'field_name','site_description','详细描述','Description',null,-1);
+INSERT INTO "i18n_message" VALUES (309,'field_name','nameEn','名称(En)','Name En',null,-1);
+INSERT INTO "i18n_message" VALUES (310,'field_name','orgId','所属部门','Org Id',null,-1);
+INSERT INTO "i18n_message" VALUES (311,'field_name','parentId','上级部门','Parent Id',null,-1);
+INSERT INTO "i18n_message" VALUES (312,'field_name','roleDesc','角色描述','Role Desc',null,-1);
+INSERT INTO "i18n_message" VALUES (313,'field_name','roleId','角色','Role Id',null,-1);
+INSERT INTO "i18n_message" VALUES (314,'field_name','telephone','电话','Telephone',null,-1);
+INSERT INTO "i18n_message" VALUES (315,'field_name','timeZone','时区','Time Zone',null,-1);
+INSERT INTO "i18n_message" VALUES (316,'field_name','site_description','详细描述','Description',null,-1);
 
 
 SELECT setval('"public"."i18n_message_id_seq"', 317, false);
