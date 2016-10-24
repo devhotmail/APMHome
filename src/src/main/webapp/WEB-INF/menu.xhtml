@@ -103,6 +103,11 @@
                             <p:menuitem value="#{msg.DeviceCostAnalysis}" icon="&#xE32A;" outcome="/home"/>
                             <p:menuitem value="#{msg.DevicePurchaseDecisionSupport}" icon="&#xE32A;" outcome="/home"/>
                         </p:submenu>
+                        <p:submenu label="#{msg.OrgAdmin}" icon="person">
+                            <p:menuitem value="#{msg.SiteAdmin}" icon="person" outcome="/admin/uaa/siteInfo/List.xhtml"/>
+                            <p:menuitem value="#{msg.OrgAdmin}" icon="person" outcome="/portal/uaa/orgInfo/List.xhtml"/>
+                            <p:menuitem value="#{msg.UserAdmin}" icon="person" outcome="/portal/uaa/userAccount/List.xhtml"/>
+                        </p:submenu>
                         <p:submenu label="SysAdmin" icon="&#xE884;">
                             <p:menuitem value="Code Tool for JPA" icon="&#xE226;" outcome="/admin/codegen/codegen.xhtml"/>
                             <p:menuitem value="Demo Chart and DataTable" icon="&#xE226;" outcome="/ui/demo.xhtml"/>
