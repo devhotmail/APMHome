@@ -37,6 +37,11 @@ public class InspectionChecklist implements Serializable {
     @Column(name = "item")
     private String item;
 
+    @Column(name = "display_order")
+    @Basic(optional = false)
+    @NotNull
+    private Integer displayOrder;
+    
     @Column(name = "asset_id")
     @Basic(optional = false)
     @NotNull
@@ -67,6 +72,14 @@ public class InspectionChecklist implements Serializable {
 
     public void setItem(String item) {
         this.item = item;
+    }
+
+    public Integer getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(Integer displayOrder) {
+        this.displayOrder = displayOrder;
     }
 
     public Integer getAssetId() {
