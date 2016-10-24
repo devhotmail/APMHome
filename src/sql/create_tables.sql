@@ -179,7 +179,8 @@ create table inspection_checklist(
 id serial not null,
 site_id int not null,
 asset_id int not null,
-item varchar(64) not null);
+item varchar(64) not null,
+display_order int not null);
 
 create table inspection_order(
 id serial not null,
