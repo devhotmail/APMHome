@@ -34,6 +34,9 @@
                     <p:column headerText="#{msg.item}" sortBy="#{item.item}" filterBy="#{item.item}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.item}"/>
                     </p:column>
+                    <p:column headerText="#{msg.displayOrder}" sortBy="#{item.displayOrder}" filterBy="#{item.displayOrder}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.displayOrder}"/>
+                    </p:column>
                     <p:column headerText="#{msg.assetId}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
                         <h:outputText value="#{item.assetId}"/>
                     </p:column>

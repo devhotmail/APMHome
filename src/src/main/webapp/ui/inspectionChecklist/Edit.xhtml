@@ -25,6 +25,10 @@
                             <label>#{msg.item}*</label>
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="displayOrder" value="#{inspectionChecklistController.selected.displayOrder}"  required="true" requiredMessage="#{msg.displayOrder} #{msg.ValidationRequire}"/>
+                            <label>#{msg.displayOrder}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="assetId" value="#{inspectionChecklistController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
                             <label>#{msg.assetId}*</label>
                         </h:panelGroup>
