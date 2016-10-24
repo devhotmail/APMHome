@@ -19,3 +19,6 @@ z-index: 2000!important;
 .layout-wrapper.menu-layout-overlay .topbar {
 z-index: 1800!important;
 }
+.login-panel{
+min-height: 200px!important;
+}
