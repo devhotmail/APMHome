@@ -7,7 +7,6 @@
 
     <!-- public pages -->
     <http pattern="/login.xhtml" security="none" />
-    <http pattern="/ui/*" security="none" />
     <http pattern="/web/*" security="none" />
     <http pattern="/restful/*" security="none" />
     <http pattern="/ws/*" security="none" />
