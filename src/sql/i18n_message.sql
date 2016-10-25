@@ -92,7 +92,7 @@ INSERT INTO "i18n_message" VALUES (180,'field_name','accessory','备件','Access
 INSERT INTO "i18n_message" VALUES (181,'field_name','accessoryPrice','备件单价','Accessory Price',null,-1);
 INSERT INTO "i18n_message" VALUES (182,'field_name','accessoryQuantity','备件数量','Accessory Quantity',null,-1);
 INSERT INTO "i18n_message" VALUES (183,'field_name','address','地址','Address',null,-1);
-INSERT INTO "i18n_message" VALUES (184,'field_name','aliasName','设备别名','Alias Name',null,-1);
+INSERT INTO "i18n_message" VALUES (184,'field_name','aliasName','别名','Alias Name',null,-1);
 INSERT INTO "i18n_message" VALUES (185,'field_name','arriveDate','到货日期','Arrive Date',null,-1);
 INSERT INTO "i18n_message" VALUES (186,'field_name','assetDeptId','所属设备科','Asset Dept Id',null,-1);
 INSERT INTO "i18n_message" VALUES (187,'field_name','assetGroup','所属设备类型','Asset Group',null,-1);
