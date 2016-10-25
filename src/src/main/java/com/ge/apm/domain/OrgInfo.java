@@ -92,6 +92,22 @@ public class OrgInfo implements Serializable {
         this.parentOrg = parentOrg;
     }
 
+    public OrgInfo getHospital(){
+        OrgInfo org = this;
+        while(org!=null){
+            if(org.getParentOrg()!=null)
+                org = org.getParentOrg();
+            else
+                break;
+        }
+        
+        return org;
+    }
+    
+    public Integer getHospitalId(){
+        return this.getHospital().getId();
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

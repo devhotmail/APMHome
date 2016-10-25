@@ -267,6 +267,14 @@ public class UserAccount implements Serializable {
         return userRoleNames;
     }
 
+    public OrgInfo getHospital(){
+        return this.getOrgInfo().getHospital();
+    }
+    
+    public Integer getHospitalId(){
+        return this.getOrgInfo().getHospitalId();
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
