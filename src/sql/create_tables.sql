@@ -88,6 +88,7 @@ CREATE TABLE "site_info" (
 CREATE TABLE org_info (
 "id" serial NOT NULL,
 site_id int4 NOT NULL,
+hospital_id int4,
 "name" varchar(64) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
 "name_en" varchar(64) COLLATE "default",
 parent_id int
@@ -159,7 +160,9 @@ arrive_date date,
 install_date date,
 warranty_date date,
 terminate_date date,
-plan_date date,
+last_pm_date date,
+last_metering_date date,
+last_qa_date date,
 purchase_price float,
 salvage_value float,
 lifecycle int,
@@ -246,8 +249,8 @@ request_time timestamp not null,
 request_reason varchar(256) not null,
 case_owner_id int,
 case_owner_name varchar(16),
-case_type int not null,
-case_sub_type int not null,
+case_type int,
+case_sub_type int,
 case_priority int not null,
 is_internal bool not null,
 current_person_id int not null,
@@ -277,6 +280,7 @@ create table work_order_step(
 id serial not null,
 site_id int not null,
 work_order_id int not null,
+step_id int not null,
 step_name varchar(32) not null,
 owner_id int not null,
 owner_name varchar(16) not null,
@@ -332,6 +336,14 @@ zipcode varchar(16),
 contactor varchar(16),
 tel varchar(16));
 
+create table asset_depreciation(
+id serial not null,
+site_id int not null,
+asset_id int not null,
+deprecate_date date not null,
+deprecate_amount float not null
+);
+
 
 ALTER TABLE asset_info ADD PRIMARY KEY (id);
 ALTER TABLE asset_file_attachment ADD PRIMARY KEY (id);
@@ -353,7 +365,9 @@ ALTER TABLE user_role ADD PRIMARY KEY (id);
 ALTER TABLE i18n_message ADD PRIMARY KEY (id);
 ALTER TABLE chart_config ADD PRIMARY KEY (id);
 ALTER TABLE data_table_config ADD PRIMARY KEY (id);
+ALTER TABLE asset_deprecation ADD PRIMARY KEY (id);
 
+ALTER TABLE "user_account" ADD CONSTRAINT "uk_user_account_login_name" UNIQUE ("login_name");
 
 ALTER TABLE org_info ADD FOREIGN KEY (site_id) REFERENCES site_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE org_info ADD FOREIGN KEY (parent_id) REFERENCES org_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -373,3 +387,6 @@ ALTER TABLE work_order ADD FOREIGN KEY (asset_id) REFERENCES asset_info (id) ON 
 ALTER TABLE work_order_history ADD FOREIGN KEY (work_order_id) REFERENCES work_order (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE work_order_step ADD FOREIGN KEY (work_order_id) REFERENCES work_order (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE work_order_step_detail ADD FOREIGN KEY (step_id) REFERENCES work_order_step (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE asset_depreciation ADD FOREIGN KEY (asset_id) REFERENCES asset_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
