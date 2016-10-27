@@ -1,4 +1,4 @@
-package com.ge.apm.view;
+package com.ge.apm.view.uaa;
 
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -6,28 +6,28 @@ import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.GenericCRUDController;
-import com.ge.apm.dao.UserAccountRepository;
-import com.ge.apm.domain.UserAccount;
+import com.ge.apm.dao.UserRoleRepository;
+import com.ge.apm.domain.UserRole;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class UserAccountController extends GenericCRUDController<UserAccount> {
+public class UserRoleController extends GenericCRUDController<UserRole> {
 
-    UserAccountRepository dao = null;
+    UserRoleRepository dao = null;
 
     @Override
     protected void init() {
-        dao = WebUtil.getBean(UserAccountRepository.class);
+        dao = WebUtil.getBean(UserRoleRepository.class);
     }
 
     @Override
-    protected UserAccountRepository getDAO() {
+    protected UserRoleRepository getDAO() {
         return dao;
     }
 
     @Override
-    protected Page<UserAccount> loadData(PageRequest pageRequest) {
+    protected Page<UserRole> loadData(PageRequest pageRequest) {
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
@@ -36,38 +36,38 @@ public class UserAccountController extends GenericCRUDController<UserAccount> {
     }
 
     @Override
-    public List<UserAccount> getItemList() {
+    public List<UserRole> getItemList() {
         //to do: change the code if necessary
         return dao.find();
     }
 
 /*
     @Override
-    public void onBeforeNewObject(UserAccount object) {
+    public void onBeforeNewObject(UserRole object) {
     }
     
     @Override
-    public void onAfterNewObject(UserAccount object, boolean isOK) {
+    public void onAfterNewObject(UserRole object, boolean isOK) {
     }
 
     @Override
-    public void onBeforeUpdateObject(UserAccount object) {
+    public void onBeforeUpdateObject(UserRole object) {
     }
     
     @Override
-    public void onAfterUpdateObject(UserAccount object, boolean isOK) {
+    public void onAfterUpdateObject(UserRole object, boolean isOK) {
     }
     
     @Override
-    public void onBeforeDeleteObject(UserAccount object) {
+    public void onBeforeDeleteObject(UserRole object) {
     }
     
     @Override
-    public void onAfterDeleteObject(UserAccount object, boolean isOK) {
+    public void onAfterDeleteObject(UserRole object, boolean isOK) {
     }
     
     @Override
-    public void onBeforeSave(UserAccount object) {
+    public void onBeforeSave(UserRole object) {
     }
     
     @Override

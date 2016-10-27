@@ -11,10 +11,8 @@
         <p:dialog id="UserAccountViewDlg" widgetVar="UserAccountViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{userAccountController.CRUDActionName} #{msg.UserAccount}">
             <h:form id="UserAccountViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{userAccountController.selected != null}">
-                        <h:outputLabel value="#{msg.id}" for="id" />
-                        <h:outputText value="#{userAccountController.selected.id}"/>
-                        <h:outputLabel value="#{msg.loginName}" for="loginName" />
+                    <p:panelGrid columns="4" rendered="#{userAccountController.selected != null}">
+                        <h:outputLabel value="#{msg.login_name}" for="loginName" />
                         <h:outputText value="#{userAccountController.selected.loginName}"/>
                         <h:outputLabel value="#{msg.name}" for="name" />
                         <h:outputText value="#{userAccountController.selected.name}"/>

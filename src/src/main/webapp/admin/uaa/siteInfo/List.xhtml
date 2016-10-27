@@ -25,9 +25,6 @@
                     <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
                     <p:ajax event="filter" listener="#{siteInfoController.onFilter}" update="createButton editButton viewButton deleteButton"/>
                     
-                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.id}"/>
-                    </p:column>
                     <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.name}"/>
                     </p:column>

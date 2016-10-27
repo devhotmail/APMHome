@@ -11,9 +11,7 @@
         <p:dialog id="SiteInfoViewDlg" widgetVar="SiteInfoViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{siteInfoController.CRUDActionName} #{msg.SiteInfo}">
             <h:form id="SiteInfoViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{siteInfoController.selected != null}">
-                        <h:outputLabel value="#{msg.id}" for="id" />
-                        <h:outputText value="#{siteInfoController.selected.id}"/>
+                    <p:panelGrid columns="4" rendered="#{siteInfoController.selected != null}">
                         <h:outputLabel value="#{msg.name}" for="name" />
                         <h:outputText value="#{siteInfoController.selected.name}"/>
                         <h:outputLabel value="#{msg.nameEn}" for="nameEn" />

@@ -1,4 +1,4 @@
-package com.ge.apm.view;
+package com.ge.apm.view.uaa;
 
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.domain.OrgInfo;
+import com.ge.apm.view.sysutil.UserContextService;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -35,43 +36,13 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
         }
     }
 
-    @Override
-    public List<OrgInfo> getItemList() {
-        //to do: change the code if necessary
-        return dao.find();
+    public List<OrgInfo> getHospitalDeptList() {
+        return dao.getByHospitalId(UserContextService.getCurrentUserAccount().getHospitalId());
     }
 
-/*
     @Override
     public void onBeforeNewObject(OrgInfo object) {
+        object.setHospitalId(UserContextService.getCurrentUserAccount().getHospitalId());
     }
     
-    @Override
-    public void onAfterNewObject(OrgInfo object, boolean isOK) {
-    }
-
-    @Override
-    public void onBeforeUpdateObject(OrgInfo object) {
-    }
-    
-    @Override
-    public void onAfterUpdateObject(OrgInfo object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeDeleteObject(OrgInfo object) {
-    }
-    
-    @Override
-    public void onAfterDeleteObject(OrgInfo object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeSave(OrgInfo object) {
-    }
-    
-    @Override
-    public void onAfterDataChanged(){
-    };
-*/
 }

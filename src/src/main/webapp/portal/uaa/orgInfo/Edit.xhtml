@@ -11,11 +11,7 @@
         <p:dialog id="OrgInfoEditDlg" widgetVar="OrgInfoEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{orgInfoController.CRUDActionName} #{msg.OrgInfo}">
             <h:form id="OrgInfoEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{orgInfoController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="id" value="#{orgInfoController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
-                        </h:panelGroup>
+                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{orgInfoController.selected != null}">
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="name" value="#{orgInfoController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
                             <label>#{msg.name}*</label>
@@ -26,7 +22,7 @@
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="parentOrg" value="#{orgInfoController.selected.parentOrg}" />
-                            <label>#{msg.parentOrg}</label>
+                            <label>#{msg.parentId}</label>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

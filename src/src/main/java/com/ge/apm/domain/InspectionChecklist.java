@@ -46,6 +46,11 @@ public class InspectionChecklist implements Serializable {
     @Basic(optional = false)
     @NotNull
     private Integer assetId;
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "checklist_type")
+    private int checklistType;
     
     public InspectionChecklist() {
     }
@@ -88,6 +93,14 @@ public class InspectionChecklist implements Serializable {
 
     public void setAssetId(Integer assetId) {
         this.assetId = assetId;
+    }
+
+    public int getChecklistType() {
+        return checklistType;
+    }
+
+    public void setChecklistType(int checklistType) {
+        this.checklistType = checklistType;
     }
 
     @Override

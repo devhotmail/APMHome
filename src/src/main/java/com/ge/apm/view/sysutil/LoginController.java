@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -23,23 +24,22 @@ public class LoginController extends LoginService {
         UserContextService userContextService = (UserContextService) WebUtil.getBean(UserContextService.class);
         userContextService.processAfterLogin();
 
-        //AppContextService.addActiveUser(userContextService.getLoginUser());
-        
-        deleteUserReport();
-    }
-
-    private void deleteUserReport() {
         FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        ConfigurableNavigationHandler handler = (ConfigurableNavigationHandler)context.getApplication().getNavigationHandler();
 
-        String rootPath = request.getRealPath("/") + "/" + "report" + "/" + UserContext.getUsername();
+        String url;
+        System.out.println("userRoles="+userContextService.getLoginUser().getRoleNames());
+        if(userContextService.hasRole("HospitalHead"))
+            url = "/home.xhtml";
+        else if(userContextService.hasRole("AssetHead"))
+            url = "/home.xhtml";
+        else if(userContextService.hasRole("DeptHead"))
+            url = "/home.xhtml";
+        else if(userContextService.hasRole("DeptStuff"))
+            url = "/home.xhtml";
+        else
+            url = "/utils.xhtml";
         
-        File rootPathFile = new File(rootPath);
-        
-        try {
-            FileUtils.deleteDirectory(rootPathFile);
-        } catch (IOException ex) {
-            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        handler.performNavigation(url + "?faces-redirect=true");
     }
 }

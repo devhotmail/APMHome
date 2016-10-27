@@ -77,12 +77,8 @@ public class WorkOrder implements Serializable {
     @Size(max = 16)
     @Column(name = "case_owner_name")
     private String caseOwnerName;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "case_type")
     private int caseType;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "case_sub_type")
     private int caseSubType;
     @Basic(optional = false)

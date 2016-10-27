@@ -48,6 +48,11 @@ public class OrgInfo implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     private OrgInfo parentOrg;
 
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "hospital_id")
+    private Integer hospitalId;
+
     public OrgInfo() {
     }
 
@@ -103,11 +108,15 @@ public class OrgInfo implements Serializable {
         
         return org;
     }
-    
-    public Integer getHospitalId(){
-        return this.getHospital().getId();
+
+    public Integer getHospitalId() {
+        return hospitalId;
     }
-    
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

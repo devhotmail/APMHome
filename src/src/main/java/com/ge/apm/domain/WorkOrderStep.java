@@ -36,6 +36,10 @@ public class WorkOrderStep implements Serializable {
     private int siteId;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "step_id")
+    private String stepId;
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 32)
     @Column(name = "step_name")
     private String stepName;
@@ -105,6 +109,14 @@ public class WorkOrderStep implements Serializable {
 
     public String getStepName() {
         return stepName;
+    }
+
+    public String getStepId() {
+        return stepId;
+    }
+
+    public void setStepId(String stepId) {
+        this.stepId = stepId;
     }
 
     public void setStepName(String stepName) {

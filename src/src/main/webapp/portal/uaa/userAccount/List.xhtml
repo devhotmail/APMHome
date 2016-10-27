@@ -12,7 +12,6 @@
             <p align="center">
                 <b>#{msg.UserAccount}</b>
             </p>
-                <p:outputLabel id="test" value="#{userAccountController.selected.hospital}"/>
             <h:form id="UserAccountListForm">
                 <p:dataTable id="datalist" value="#{userAccountController.lazyModel}" var="item" widgetVar="varDataList"
                     selectionMode="single" selection="#{userAccountController.selected}"
@@ -23,13 +22,13 @@
                     rows="20" emptyMessage="#{msg.noRecordFound}"
                     rowsPerPageTemplate="20,40,60,90">
 
-                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton test"/>
-                    <p:ajax event="filter" listener="#{userAccountController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton roleButton"/>
+                    <p:ajax event="filter" listener="#{userAccountController.onFilter}" update="createButton editButton viewButton deleteButton roleButton"/>
                     
                     <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
                         <h:outputText value="#{item.id}"/>
                     </p:column>
-                    <p:column headerText="#{msg.loginName}" sortBy="#{item.loginName}" filterBy="#{item.loginName}" filterMatchMode="LIKE">
+                    <p:column headerText="#{msg.login_name}" sortBy="#{item.loginName}" filterBy="#{item.loginName}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.loginName}"/>
                     </p:column>
                     <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
@@ -117,10 +116,11 @@
                         <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
                             <p:dataExporter type="xls" target="datalist" fileName="UserAccount_export"/>
                         </p:commandButton>
-                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{userAccountController.prepareCreate}" update=":UserAccountEditDlg" oncomplete="PF('UserAccountEditDialog').show()"/>
-                        <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{userAccountController.prepareView}" update=":UserAccountViewDlg" oncomplete="PF('UserAccountViewDialog').show()" disabled="#{empty userAccountController.selected}"/>
-                        <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{userAccountController.prepareEdit}" update=":UserAccountEditDlg" oncomplete="PF('UserAccountEditDialog').show()" disabled="#{empty userAccountController.selected}"/>
-                        <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{userAccountController.prepareDelete}" update=":UserAccountViewDlg" oncomplete="PF('UserAccountViewDialog').show()" disabled="#{empty userAccountController.selected}"/>
+                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{userAccountController.prepareCreate}" update=":UserAccountEditDlg" oncomplete="PF('UserAccountEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{userAccountController.prepareView}" update=":UserAccountViewDlg" oncomplete="PF('UserAccountViewDialog').show()" disabled="#{empty userAccountController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{userAccountController.prepareEdit}" update=":UserAccountEditDlg" oncomplete="PF('UserAccountEditDialog').show()" disabled="#{empty userAccountController.selected}"/>
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash" title="#{msg.Delete}" actionListener="#{userAccountController.prepareDelete}" update=":UserAccountViewDlg" oncomplete="PF('UserAccountViewDialog').show()" disabled="#{empty userAccountController.selected}"/>
+                        <p:commandButton id="roleButton" icon="ui-icon-people"  title="#{msg.Delete}" actionListener="#{userAccountController.prepareDelete}" update=":UserAccountViewDlg" oncomplete="PF('UserAccountViewDialog').show()" disabled="#{empty userAccountController.selected}"/>
                     </f:facet>
                 </p:dataTable>
             </h:form>

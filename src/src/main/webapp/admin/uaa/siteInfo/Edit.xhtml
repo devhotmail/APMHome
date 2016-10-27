@@ -13,12 +13,8 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{siteInfoController.selected != null}">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="id" value="#{siteInfoController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="name" value="#{siteInfoController.selected.name}" />
-                            <label>#{msg.name}</label>
+                            <p:inputText id="name" value="#{siteInfoController.selected.name}" required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                            <label>#{msg.name}*</label>
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="nameEn" value="#{siteInfoController.selected.nameEn}" />
