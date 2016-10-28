@@ -39,6 +39,8 @@ INSERT INTO "i18n_message" VALUES (36, 'label', 'true', '是', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (37, 'label', 'false', '否', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (38, 'label', 'passwordIncorrect', '对不起，您输入的密码不正确', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (39, 'label', 'security_bad_credentials', '用户名或密码错误', 'incorrect user name or password', NULL, -1);
+INSERT INTO "i18n_message" VALUES (40, 'label', 'RowsPerPage', '每页行数', 'Rows/Page', NULL, -1);
+INSERT INTO "i18n_message" VALUES (41, 'label', 'AssignRole', '角色设置', 'Assign Role', NULL, -1);
 
 
 INSERT INTO "i18n_message" VALUES (100, 'label', 'HomePage', '我的主页', 'Dashboard', NULL, -1);
@@ -68,24 +70,28 @@ INSERT INTO "i18n_message" VALUES (123, 'label', 'SparePartsConsumptionAnalysis'
 INSERT INTO "i18n_message" VALUES (124, 'label', 'DeviceFailureAnalysis', '设备故障分类统计分析', 'Device Failure Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (125, 'label', 'DeviceOperationMonitor', '设备运营监控', 'Operation Monitor', NULL, -1);
 INSERT INTO "i18n_message" VALUES (126, 'label', 'PreventiveMaintainceMgmt', '预防性设备维护管理', 'Preventive Maint. Mgmt.', NULL, -1);
-INSERT INTO "i18n_message" VALUES (127, 'label', 'PreventiveMaintaincePlanning', '设备保养排期/跟踪/统计分析', 'Preventive Maint. Planning', NULL, -1);
-INSERT INTO "i18n_message" VALUES (128, 'label', 'DeviceMetrologyMgmt', '设备计量排期/跟踪/统计分析', 'Device Metrology Mgmt.', NULL, -1);
-INSERT INTO "i18n_message" VALUES (129, 'label', 'DeviceQualityControl', '设备质量控制（提供质控标准）', 'Device Quality Control', NULL, -1);
-INSERT INTO "i18n_message" VALUES (130, 'label', 'DeviceAdverseEventMgmt', '设备不良事件记录和上报', 'Device Adverse Event Mgmt.', NULL, -1);
-INSERT INTO "i18n_message" VALUES (131, 'label', 'DeviceMedicalAccidentMgmt', '设备医疗事故风险监控', 'Device Medical Accident Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (127, 'label', 'PreventiveMaintaincePlanning', '设备保养排期', 'Preventive Maint. Planning', NULL, -1);
+INSERT INTO "i18n_message" VALUES (128, 'label', 'DeviceMetrologyMgmt', '设备计量管理', 'Device Metrology Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (129, 'label', 'DeviceQualityControl', '设备质量控制', 'Device Quality Control', NULL, -1);
+INSERT INTO "i18n_message" VALUES (130, 'label', 'DeviceAdverseEventMgmt', '不良事件记录和上报', 'Adverse Event Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (131, 'label', 'DeviceMedicalAccidentMgmt', '医疗事故风险监控', 'Medical Accident Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (132, 'label', 'AssetKnowledgeBaseMgmt', '设备文档和知识库管理', 'Asset KM Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (133, 'label', 'AssetDocMgmt', '设备文档管理', 'Asset Documentation Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (134, 'label', 'AssetKMMgmt', '设备知识库管理', 'Asset KM Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (135, 'label', 'DeviceMgmtForum', '设备管理论坛', 'Device Mgmt. Forum', NULL, -1);
 INSERT INTO "i18n_message" VALUES (136, 'label', 'DeviceApplication', '设备应用/维修培训管理', 'Device Training Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (137, 'label', 'DeviceUpgradMgmt', '设备升级管理', 'DeviceUpgradMgmt', NULL, -1);
-INSERT INTO "i18n_message" VALUES (138, 'label', 'AdvancedDeviceInfoTracking', '先进设备信息收集跟踪', 'Advanced Device InfoTracking', NULL, -1);
-INSERT INTO "i18n_message" VALUES (139, 'label', 'DeviceOperationKPIAnalysis', '设备运营绩效智能化分析', 'Device Operation KPI Analysis', NULL, -1);
-INSERT INTO "i18n_message" VALUES (140, 'label', 'DeviceROIAnalysis', '设备平均投资回报分析（科室，功能品类）', 'Device ROI Analysis', NULL, -1);
-INSERT INTO "i18n_message" VALUES (141, 'label', 'DeviceKPIAnalysis', '设备绩效分析（周/月/年）', 'Device KPI Analysis', NULL, -1);
-INSERT INTO "i18n_message" VALUES (142, 'label', 'DeviceKPIForecast', '设备绩效预测（年）', 'Device KPI Forecast', NULL, -1);
-INSERT INTO "i18n_message" VALUES (143, 'label', 'DeviceCostAnalysis', '设备采购/维护成本统计分析', 'Device Cost Analysis', NULL, -1);
-INSERT INTO "i18n_message" VALUES (144, 'label', 'DevicePurchaseDecisionSupport', '设备采购辅助决策分析', 'Device Purchase Decision Support', NULL, -1);
+INSERT INTO "i18n_message" VALUES (138, 'label', 'AdvancedDeviceInfoTracking', '先进设备信息收集跟踪', 'Advanced Machine Data Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (139, 'label', 'DeviceOperationKPIAnalysis', '设备运营绩效智能化分析', 'Operation KPI Analysis', NULL, -1);
+INSERT INTO "i18n_message" VALUES (140, 'label', 'DeviceROIAnalysis', '设备平均投资回报分析', 'Device ROI Analysis', NULL, -1);
+INSERT INTO "i18n_message" VALUES (141, 'label', 'DeviceKPIAnalysis', '设备绩效分析', 'Device KPI Analysis', NULL, -1);
+INSERT INTO "i18n_message" VALUES (142, 'label', 'DeviceKPIForecast', '设备绩效预测', 'Device KPI Forecast', NULL, -1);
+INSERT INTO "i18n_message" VALUES (143, 'label', 'DeviceCostAnalysis', '设备成本统计分析', 'Device Cost Analysis', NULL, -1);
+INSERT INTO "i18n_message" VALUES (144, 'label', 'DevicePurchaseDecisionSupport', '设备采购辅助决策分析', 'Purchase Decision Support', NULL, -1);
+INSERT INTO "i18n_message" VALUES (145, 'label', 'UaaAdmin', '组织机构与用户管理', 'Organization & User Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (146, 'label', 'SiteAdmin', '租户管理', 'Site Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (147, 'label', 'OrgAdmin', '组织机构管理', 'Organization Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (148, 'label', 'UserAdmin', '用户管理', 'User Account Mgmt.', NULL, -1);
 
 
 INSERT INTO "i18n_message" VALUES (180,'field_name','accessory','备件','Accessory',null,-1);

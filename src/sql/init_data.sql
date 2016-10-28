@@ -36,11 +36,11 @@ INSERT INTO "data_table_config" VALUES (2, 'test2', 'select count(*) from demo_d
 INSERT INTO "data_table_config" VALUES (3, 'aaa', 'aaa', 'aaa', 'f', 't');
 
 
-SELECT setval('"site_info_id_seq"', 2, false);
-SELECT setval('"org_info_id_seq"', 6, false);
-SELECT setval('"sys_role_id_seq"', 5, false);
-SELECT setval('"user_account_id_seq"', 5, false);
-SELECT setval('"user_role_id_seq"', 4, false);
+SELECT setval('"site_info_id_seq"', 3, false);
+SELECT setval('"org_info_id_seq"', 7, false);
+SELECT setval('"sys_role_id_seq"', 6, false);
+SELECT setval('"user_account_id_seq"', 6, false);
+SELECT setval('"user_role_id_seq"', 5, false);
 SELECT setval('"chart_config_id_seq"', 4, false);
 SELECT setval('"data_table_config_id_seq"', 4, false);
 
