@@ -8,6 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.GenericCRUDController;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.domain.UserRole;
+import com.ge.apm.service.uaa.UaaService;
+import java.util.ArrayList;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -15,9 +18,11 @@ import webapp.framework.web.WebUtil;
 public class UserAccountController extends GenericCRUDController<UserAccount> {
 
     UserAccountRepository dao = null;
+    UaaService uaaService = WebUtil.getBean(UaaService.class);
 
     @Override
     protected void init() {
+        uaaService = WebUtil.getBean(UaaService.class);
         dao = WebUtil.getBean(UserAccountRepository.class);
     }
 
@@ -101,15 +106,19 @@ public class UserAccountController extends GenericCRUDController<UserAccount> {
     public void prepareRoleData() {
         if(selected == null) return;
         
-        //allRoles = userAccountService.getAllSysRoleNames();
-        //assignedRoles = userAccountService.getUserRoleNames(selected);
+        allRoles = uaaService.getSysRoleNames();
+        
+        assignedRoles = new ArrayList<String>();
+        for(UserRole userRole: selected.getUserRoleList()){
+            assignedRoles.add(userRole.getRole().getRoleDesc());
+        }
     }
 
     public void saveRoles() {
         if(selected == null) return;
         
-        //userAccountService.setUserRoles(selected, assignedRoles);
-        //WebUtil.addSuccessMessage("User's assigend roels have been updated successfully.");
+        uaaService.setUserRoles(selected, assignedRoles);
+        WebUtil.addSuccessMessage(WebUtil.getMessage("UserRole") + WebUtil.getMessage("Updated"));
     }
     
 

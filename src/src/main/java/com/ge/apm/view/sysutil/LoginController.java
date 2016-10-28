@@ -1,5 +1,6 @@
 package com.ge.apm.view.sysutil;
 
+import com.ge.apm.service.uaa.UaaService;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -24,22 +25,7 @@ public class LoginController extends LoginService {
         UserContextService userContextService = (UserContextService) WebUtil.getBean(UserContextService.class);
         userContextService.processAfterLogin();
 
-        FacesContext context = FacesContext.getCurrentInstance();
-        ConfigurableNavigationHandler handler = (ConfigurableNavigationHandler)context.getApplication().getNavigationHandler();
-
-        String url;
-        System.out.println("userRoles="+userContextService.getLoginUser().getRoleNames());
-        if(userContextService.hasRole("HospitalHead"))
-            url = "/home.xhtml";
-        else if(userContextService.hasRole("AssetHead"))
-            url = "/home.xhtml";
-        else if(userContextService.hasRole("DeptHead"))
-            url = "/home.xhtml";
-        else if(userContextService.hasRole("DeptStuff"))
-            url = "/home.xhtml";
-        else
-            url = "/utils.xhtml";
-        
-        handler.performNavigation(url + "?faces-redirect=true");
+        System.out.println("******* home page: " + userContextService.getUserDefaultHomePage());
+        WebUtil.redirectTo(userContextService.getUserDefaultHomePage());
     }
 }

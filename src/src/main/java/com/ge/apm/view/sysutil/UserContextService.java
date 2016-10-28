@@ -2,6 +2,7 @@ package com.ge.apm.view.sysutil;
 
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.service.uaa.UaaService;
 
 import java.io.Serializable;
 import java.util.List;
@@ -141,5 +142,10 @@ public class UserContextService implements Serializable{
     
     public static void setSiteFilter(List<SearchFilter> filters){
         filters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, UserContextService.getSiteId()));
+    }
+    
+    public String getUserDefaultHomePage(){
+        UaaService uaaService = WebUtil.getBean(UaaService.class);
+        return uaaService.getUserDefaultHomePage(userAccount);
     }
 }
