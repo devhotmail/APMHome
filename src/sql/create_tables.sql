@@ -365,7 +365,7 @@ ALTER TABLE user_role ADD PRIMARY KEY (id);
 ALTER TABLE i18n_message ADD PRIMARY KEY (id);
 ALTER TABLE chart_config ADD PRIMARY KEY (id);
 ALTER TABLE data_table_config ADD PRIMARY KEY (id);
-ALTER TABLE asset_deprecation ADD PRIMARY KEY (id);
+ALTER TABLE asset_depreciation ADD PRIMARY KEY (id);
 
 ALTER TABLE "user_account" ADD CONSTRAINT "uk_user_account_login_name" UNIQUE ("login_name");
 
