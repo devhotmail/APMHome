@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS work_order_step_detail CASCADE;
 DROP TABLE IF EXISTS asset_clinical_record CASCADE;
 DROP TABLE IF EXISTS supplier CASCADE;
 DROP TABLE IF EXISTS asset_info CASCADE;
-
+DROP TABLE IF EXISTS asset_depreciation CASCADE;
 
 CREATE TABLE i18n_message (
 "id" serial NOT NULL,
