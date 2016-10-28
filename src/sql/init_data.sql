@@ -16,11 +16,15 @@ INSERT INTO "public"."sys_role" VALUES ('4', 'DeptHead', '科室主任', '/homeD
 INSERT INTO "public"."sys_role" VALUES ('5', 'Guest', '一般用户', '/homeDefault.xhtml');
 
 INSERT INTO "public"."user_account" VALUES ('1', '1', 'admin', 'administrator', '5605ee4b362e9754', 'apm.admin@ge.com', '', 't', 't', 't', 't', 't', '1', '2016-10-17 10:57:00');
-INSERT INTO "public"."user_account" VALUES ('2', '6', 'assetHead', '设备科主任', '5605ee4b362e9754', 'assethead@a.com', '', 'f', 'f', 'f', 't', 'f', '2', null);
-INSERT INTO "public"."user_account" VALUES ('3', '5', 'radiologyHead', '放射科主任', '5605ee4b362e9754', 'radiologyHead@a.com', null, 'f', 'f', 'f', 't', 'f', '2', null);
+INSERT INTO "public"."user_account" VALUES ('2', '2', 'head', '院长', '5605ee4b362e9754', 'head@a.com', null, 'f', 'f', 'f', 't', 'f', '2', null);
+INSERT INTO "public"."user_account" VALUES ('3', '6', 'assetHead', '设备科主任', '5605ee4b362e9754', 'assethead@a.com', '', 'f', 'f', 'f', 't', 'f', '2', null);
+INSERT INTO "public"."user_account" VALUES ('4', '4', 'deptHead', '放射科主任', '5605ee4b362e9754', 'radiologyHead@a.com', null, 'f', 'f', 'f', 't', 'f', '2', null);
+INSERT INTO "public"."user_account" VALUES ('5', '6', 'user', '科员', '5605ee4b362e9754', 'asset.staff@a.com', null, 'f', 'f', 'f', 't', 'f', '2', null);
 
-INSERT INTO "public"."user_role" VALUES ('1', '2', '2');
-INSERT INTO "public"."user_role" VALUES ('2', '3', '4');
+INSERT INTO "public"."user_role" VALUES ('1', '2', '1');
+INSERT INTO "public"."user_role" VALUES ('2', '3', '2');
+INSERT INTO "public"."user_role" VALUES ('3', '4', '4');
+INSERT INTO "public"."user_role" VALUES ('4', '5', '5');
 
 
 INSERT INTO "chart_config" VALUES (1, 'dashboard_pie', 'select * from demo_data where id>=990 ', 't', 'pie', 'type', 'number1', 'number1', '饼图测试', 'e', NULL, 2, 't', 'x Label', NULL, NULL, NULL, NULL, NULL, NULL, 'y Label', NULL, NULL, 't');
@@ -35,8 +39,8 @@ INSERT INTO "data_table_config" VALUES (3, 'aaa', 'aaa', 'aaa', 'f', 't');
 SELECT setval('"site_info_id_seq"', 2, false);
 SELECT setval('"org_info_id_seq"', 6, false);
 SELECT setval('"sys_role_id_seq"', 5, false);
-SELECT setval('"user_account_id_seq"', 3, false);
-SELECT setval('"user_role_id_seq"', 2, false);
+SELECT setval('"user_account_id_seq"', 5, false);
+SELECT setval('"user_role_id_seq"', 4, false);
 SELECT setval('"chart_config_id_seq"', 4, false);
 SELECT setval('"data_table_config_id_seq"', 4, false);
 
