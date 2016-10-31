@@ -13,20 +13,20 @@ INSERT INTO "i18n_message" VALUES (10, 'label', 'security_error', '用户名或�
 INSERT INTO "i18n_message" VALUES (11, 'label', 'session_expired', '您的会话已经超时，请重新登录.', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (12, 'label', 'PersistenceErrorOccured', '保存数据出错.', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (13, 'label', 'PersistenceErrorDuplicateKey', '输入的数据与已有的记录重复.', NULL, NULL, -1);
-INSERT INTO "i18n_message" VALUES (14, 'label', 'Add', '添加', NULL, NULL, -1);
-INSERT INTO "i18n_message" VALUES (15, 'label', 'Create', '新增', NULL, NULL, -1);
-INSERT INTO "i18n_message" VALUES (16, 'label', 'View', '查看', NULL, NULL, -1);
-INSERT INTO "i18n_message" VALUES (17, 'label', 'Edit', '修改', NULL, NULL, -1);
-INSERT INTO "i18n_message" VALUES (18, 'label', 'Delete', '删除', NULL, NULL, -1);
-INSERT INTO "i18n_message" VALUES (19, 'label', 'Close', '关闭', NULL, NULL, -1);
-INSERT INTO "i18n_message" VALUES (20, 'label', 'Cancel', '取消', NULL, NULL, -1);
-INSERT INTO "i18n_message" VALUES (21, 'label', 'Return', '返回', NULL, NULL, -1);
-INSERT INTO "i18n_message" VALUES (22, 'label', 'Save', '保存', NULL, NULL, -1);
-INSERT INTO "i18n_message" VALUES (23, 'label', 'Submit', '提交', NULL, NULL, -1);
+INSERT INTO "i18n_message" VALUES (14, 'label', 'Add', '添加', 'Add', NULL, -1);
+INSERT INTO "i18n_message" VALUES (15, 'label', 'Create', '新增', 'Create', NULL, -1);
+INSERT INTO "i18n_message" VALUES (16, 'label', 'View', '查看', 'View', NULL, -1);
+INSERT INTO "i18n_message" VALUES (17, 'label', 'Edit', '修改', 'Edit', NULL, -1);
+INSERT INTO "i18n_message" VALUES (18, 'label', 'Delete', '删除', 'Delete', NULL, -1);
+INSERT INTO "i18n_message" VALUES (19, 'label', 'Close', '关闭', 'Close', NULL, -1);
+INSERT INTO "i18n_message" VALUES (20, 'label', 'Cancel', '取消', 'Cancel', NULL, -1);
+INSERT INTO "i18n_message" VALUES (21, 'label', 'Return', '返回', 'Return', NULL, -1);
+INSERT INTO "i18n_message" VALUES (22, 'label', 'Save', '保存', 'Save', NULL, -1);
+INSERT INTO "i18n_message" VALUES (23, 'label', 'Submit', '提交', 'Submit', NULL, -1);
 INSERT INTO "i18n_message" VALUES (24, 'label', 'Confirm', '确认', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (25, 'label', 'Refresh', '刷新', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (26, 'label', 'AssignRoles', '设置角色权限', NULL, NULL, -1);
-INSERT INTO "i18n_message" VALUES (27, 'label', 'SelectOneMessage', '请选择一个...', NULL, NULL, -1);
+INSERT INTO "i18n_message" VALUES (27, 'label', 'SelectOneMessage', '请选择...', 'Select....', NULL, -1);
 INSERT INTO "i18n_message" VALUES (28, 'label', 'NewPassword', '请输入新密码', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (29, 'label', 'ConfirmNewPassword', '请再次输入新密码', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (30, 'label', 'deleteConfirmation', '您确信要删除此条数据么？', NULL, NULL, -1);
@@ -230,7 +230,13 @@ INSERT INTO "i18n_message" VALUES (312,'field_name','roleDesc','角色描述','R
 INSERT INTO "i18n_message" VALUES (313,'field_name','roleId','角色','Role Id',null,-1);
 INSERT INTO "i18n_message" VALUES (314,'field_name','telephone','电话','Telephone',null,-1);
 INSERT INTO "i18n_message" VALUES (315,'field_name','timeZone','时区','Time Zone',null,-1);
-INSERT INTO "i18n_message" VALUES (316,'field_name','site_description','详细描述','Description',null,-1);
+INSERT INTO "i18n_message" VALUES (316,'field_name','siteDescription','详细描述','Description',null,-1);
 
 
-SELECT setval('"public"."i18n_message_id_seq"', 317, false);
+INSERT INTO "i18n_message" VALUES (400,'asset_group','1','CT','CT',null,-1);
+INSERT INTO "i18n_message" VALUES (401,'asset_group','2','MR','MR',null,-1);
+INSERT INTO "i18n_message" VALUES (402,'asset_group','3','XRay','XRay',null,-1);
+INSERT INTO "i18n_message" VALUES (403,'asset_group','4','DR','DR',null,-1);
+
+
+SELECT setval('"public"."i18n_message_id_seq"', 420, false);

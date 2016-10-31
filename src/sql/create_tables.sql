@@ -182,6 +182,7 @@ create table inspection_checklist(
 id serial not null,
 site_id int not null,
 asset_id int not null,
+checklist_type int not null,
 item varchar(64) not null,
 display_order int not null);
 
