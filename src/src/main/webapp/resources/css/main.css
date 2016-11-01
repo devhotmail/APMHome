@@ -22,3 +22,9 @@ z-index: 1800!important;
 .login-panel{
 min-height: 200px!important;
 }
+.ui-chkbox {
+width: 95%!important;
+}
+.ui-tree .ui-chkbox {
+width: 18px!important;
+}
