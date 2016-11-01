@@ -110,7 +110,10 @@ public class OrgInfo implements Serializable {
     }
 
     public Integer getHospitalId() {
-        return hospitalId;
+        if(hospitalId==null)
+            return id;
+        else
+            return hospitalId;
     }
 
     public void setHospitalId(Integer hospitalId) {
@@ -139,7 +142,7 @@ public class OrgInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "com.ge.apm.domain.OrgInfo[ id=" + id + " ]";
+        return name;
     }
     
 }

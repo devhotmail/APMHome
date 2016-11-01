@@ -1,8 +1,12 @@
 package com.ge.apm.service.uaa;
 
+import com.ge.apm.dao.AssetInfoRepository;
+import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.SysRoleRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.dao.UserRoleRepository;
+import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.SysRole;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.UserRole;
@@ -13,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.web.WebUtil;
@@ -105,4 +111,74 @@ public class UaaService {
                 userRoleDao.save(userRole);
             }
         }
-    }}
+    }
+    
+    public TreeNode getOrgTree(int hospitalId){
+        OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
+        List<OrgInfo> orgList = orgInfoDao.getByHospitalId(hospitalId);
+
+        //first create all nodes
+        Map<Integer, TreeNode> treeMap = new HashMap<>();
+        TreeNode root = new DefaultTreeNode("Root", null);
+        for(OrgInfo org: orgList){
+            TreeNode node;
+            node = new DefaultTreeNode("org", org, root);
+
+            treeMap.put(org.getId(), node);
+        }
+
+        //then update node's parent by org's parentOrg
+        for(Map.Entry<Integer, TreeNode> nodeItem: treeMap.entrySet()){
+            TreeNode node = nodeItem.getValue();
+            OrgInfo org = (OrgInfo)node.getData();
+            if(org.getParentOrg()!=null){
+                TreeNode parentNode = treeMap.get(org.getParentOrg().getId());
+                if(parentNode!=null){
+                    parentNode.getChildren().add(node);
+                }
+            }
+        }
+
+        return root;
+    }
+
+    private void addAssetToOrgNode(TreeNode node, Map<Integer, List<AssetInfo>> assetMap){
+        if("org".equals(node.getType())){
+            OrgInfo org = (OrgInfo)node.getData();
+            List<AssetInfo> assets = assetMap.get(org.getId());
+            
+            if(assets!=null) {
+                for(AssetInfo asset: assets){
+                    TreeNode assetNode = new DefaultTreeNode("asset", asset, node);
+                }
+            }
+        }
+        
+        for(TreeNode aNode: node.getChildren()){
+            addAssetToOrgNode(aNode, assetMap);
+        }
+    }
+    
+    public TreeNode getOrgAssetTree(int hospitalId){
+        AssetInfoRepository assetInfoDao = WebUtil.getBean(AssetInfoRepository.class);
+        List<AssetInfo> assetList = assetInfoDao.getByHospitalId(hospitalId);
+        
+        Map<Integer, List<AssetInfo>> assetMap = new HashMap<>();
+        for(AssetInfo asset: assetList){
+            List<AssetInfo> assets = assetMap.get(asset.getClinicalDeptId());
+
+            if(assets==null){
+                assets = new ArrayList<>();
+                assetMap.put(asset.getClinicalDeptId(), assets);
+            }
+            
+            assets.add(asset);
+        }
+        
+        TreeNode root = getOrgTree(hospitalId);
+        addAssetToOrgNode(root, assetMap);
+        
+        return root;
+    }
+    
+}

@@ -8,6 +8,7 @@ package com.ge.apm.view.sysutil;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.service.uaa.UaaService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,7 @@ public class OrgTreeService {
 
     private OrgInfo selectedOrg;
 
+/*    
     @PostConstruct
     public void init() {
         dao = WebUtil.getBean(OrgInfoRepository.class);
@@ -64,6 +66,7 @@ public class OrgTreeService {
             }
         }
     }
+*/
 
     public OrgInfo getSelectedOrg() {
         return selectedOrg;
@@ -77,7 +80,20 @@ public class OrgTreeService {
         selectedOrg = (OrgInfo) event.getTreeNode().getData();
     }
 
+/*
     public TreeNode getRoot() {
         return root;
     }
+*/
+    
+    public TreeNode getOrgTree(){
+        UaaService uaaService = WebUtil.getBean(UaaService.class);
+        return uaaService.getOrgTree(UserContextService.getCurrentUserAccount().getHospitalId());
+    }
+
+    public TreeNode getOrgAssetTree(){
+        UaaService uaaService = WebUtil.getBean(UaaService.class);
+        return uaaService.getOrgAssetTree(UserContextService.getCurrentUserAccount().getHospitalId());
+    }
+    
 }

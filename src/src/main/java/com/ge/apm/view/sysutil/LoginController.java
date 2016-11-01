@@ -25,7 +25,6 @@ public class LoginController extends LoginService {
         UserContextService userContextService = (UserContextService) WebUtil.getBean(UserContextService.class);
         userContextService.processAfterLogin();
 
-        System.out.println("******* home page: " + userContextService.getUserDefaultHomePage());
         WebUtil.redirectTo(userContextService.getUserDefaultHomePage());
     }
 }

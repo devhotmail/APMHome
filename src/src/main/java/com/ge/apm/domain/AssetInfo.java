@@ -537,7 +537,7 @@ public class AssetInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "com.ge.apm.domain.AssetInfo[ id=" + id + " ]";
+        return name;
     }
     
 }
