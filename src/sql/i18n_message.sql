@@ -1,4 +1,4 @@
-truncate table i18n_message;
+﻿truncate table i18n_message;
 
 INSERT INTO "i18n_message" VALUES (1, 'label', 'logout', '注销', 'Logout', NULL, -1);
 INSERT INTO "i18n_message" VALUES (2, 'label', 'login', '登录', 'Login', NULL, -1);
@@ -92,6 +92,9 @@ INSERT INTO "i18n_message" VALUES (145, 'label', 'UaaAdmin', '组织机构与用
 INSERT INTO "i18n_message" VALUES (146, 'label', 'SiteAdmin', '租户管理', 'Site Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (147, 'label', 'OrgAdmin', '组织机构管理', 'Organization Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (148, 'label', 'UserAdmin', '用户管理', 'User Account Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (149, 'label', 'InspectionChecklist', '巡检配置', 'Inspection Checklist', NULL, -1);
+INSERT INTO "i18n_message" VALUES (150, 'label', 'InspectionOrder', '巡检计划', 'Inspection Order', NULL, -1);
+INSERT INTO "i18n_message" VALUES (151, 'label', 'InspectionRecord', '巡检记录', 'Inspection Record', NULL, -1);
 
 
 INSERT INTO "i18n_message" VALUES (180,'field_name','accessory','备件','Accessory',null,-1);
