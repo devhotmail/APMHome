@@ -1,0 +1,19 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <p:tree value="#{orgTreeService.root}" var="node" dynamic="false" animate="true" selectionMode="single" selection="#{orgTreeService.selectedOrg}">
+            <p:ajax event="select" update="org" listener="#{orgTreeService.onNodeSelect}" />
+            <p:treeNode>
+                <h:outputText value="#{node.name}" />
+            </p:treeNode>
+        </p:tree>
+        <h:outputText id="org" value="#{orgTreeService.selectedOrg.name}"/>
+
+    </ui:define>
+
+</ui:composition>
