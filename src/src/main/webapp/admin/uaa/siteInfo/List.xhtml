@@ -20,7 +20,7 @@
                     paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
                     currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
                     rows="20" emptyMessage="#{msg.noRecordFound}"
-                    rowsPerPageTemplate="20,40,60,90">
+                    rowsPerPageTemplate="20,40,60,90"> 
 
                     <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
                     <p:ajax event="filter" listener="#{siteInfoController.onFilter}" update="createButton editButton viewButton deleteButton"/>
@@ -34,7 +34,7 @@
                     <p:column headerText="#{msg.aliasName}" sortBy="#{item.aliasName}" filterBy="#{item.aliasName}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.aliasName}"/>
                     </p:column>
-                    <p:column headerText="#{msg.description}" sortBy="#{item.description}" filterBy="#{item.description}" filterMatchMode="LIKE">
+                    <p:column headerText="#{msg.siteDescription}" sortBy="#{item.description}" filterBy="#{item.description}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.description}"/>
                     </p:column>
                     <p:column headerText="#{msg.contactPerson}" sortBy="#{item.contactPerson}" filterBy="#{item.contactPerson}" filterMatchMode="LIKE">
