@@ -41,6 +41,7 @@ INSERT INTO "i18n_message" VALUES (38, 'label', 'passwordIncorrect', '对不起�
 INSERT INTO "i18n_message" VALUES (39, 'label', 'security_bad_credentials', '用户名或密码错误', 'incorrect user name or password', NULL, -1);
 INSERT INTO "i18n_message" VALUES (40, 'label', 'RowsPerPage', '每页行数', 'Rows/Page', NULL, -1);
 INSERT INTO "i18n_message" VALUES (41, 'label', 'AssignRole', '角色设置', 'Assign Role', NULL, -1);
+INSERT INTO "i18n_message" VALUES (42, 'label', 'ChangePassword', '修改密码', 'Change Password', NULL, -1);
 
 
 INSERT INTO "i18n_message" VALUES (100, 'label', 'HomePage', '我的主页', 'Dashboard', NULL, -1);
@@ -96,6 +97,8 @@ INSERT INTO "i18n_message" VALUES (149, 'label', 'InspectionChecklist', '巡检�
 INSERT INTO "i18n_message" VALUES (150, 'label', 'InspectionOrder', '巡检计划', 'Inspection Order', NULL, -1);
 INSERT INTO "i18n_message" VALUES (151, 'label', 'InspectionRecord', '巡检记录', 'Inspection Record', NULL, -1);
 INSERT INTO "i18n_message" VALUES (152, 'label', 'ChecklistType', '检查类型', 'Checklist Type', NULL, -1);
+INSERT INTO "i18n_message" VALUES (153, 'label', 'Profile', '我的帐号', 'My Profile', NULL, -1);
+INSERT INTO "i18n_message" VALUES (154, 'label', 'Setting', '系统设置', 'Setting', NULL, -1);
 
 
 INSERT INTO "i18n_message" VALUES (180,'field_name','accessory','备件','Accessory',null,-1);
@@ -235,16 +238,18 @@ INSERT INTO "i18n_message" VALUES (313,'field_name','roleId','角色','Role Id',
 INSERT INTO "i18n_message" VALUES (314,'field_name','telephone','电话','Telephone',null,-1);
 INSERT INTO "i18n_message" VALUES (315,'field_name','timeZone','时区','Time Zone',null,-1);
 INSERT INTO "i18n_message" VALUES (316,'field_name','siteDescription','详细描述','Description',null,-1);
+INSERT INTO "i18n_message" VALUES (317,'field_name','userName','姓名','Name',null,-1);
+
+INSERT INTO "i18n_message" VALUES (400, 'message', 'ResetPassword', '重置密码', 'Reset Password', NULL, -1);
+
+INSERT INTO "i18n_message" VALUES (500,'asset_group','1','CT','CT',null,-1);
+INSERT INTO "i18n_message" VALUES (501,'asset_group','2','MR','MR',null,-1);
+INSERT INTO "i18n_message" VALUES (502,'asset_group','3','XRay','XRay',null,-1);
+INSERT INTO "i18n_message" VALUES (503,'asset_group','4','DR','DR',null,-1);
+
+INSERT INTO "i18n_message" VALUES (510,'checklist_type','1','巡检','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (511,'checklist_type','2','计量','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (512,'checklist_type','3','质控','Inspection',null,-1);
 
 
-INSERT INTO "i18n_message" VALUES (400,'asset_group','1','CT','CT',null,-1);
-INSERT INTO "i18n_message" VALUES (401,'asset_group','2','MR','MR',null,-1);
-INSERT INTO "i18n_message" VALUES (402,'asset_group','3','XRay','XRay',null,-1);
-INSERT INTO "i18n_message" VALUES (403,'asset_group','4','DR','DR',null,-1);
-
-INSERT INTO "i18n_message" VALUES (404, 'checklist_type', '1', '巡检', 'Inspection', NULL, -1);
-INSERT INTO "i18n_message" VALUES (405, 'checklist_type', '2', '质控', 'Quality Control', NULL, -1);
-INSERT INTO "i18n_message" VALUES (406, 'checklist_type', '3', '计量', 'Measure', NULL, -1);
-
-
-SELECT setval('"public"."i18n_message_id_seq"', 420, false);
+SELECT setval('"public"."i18n_message_id_seq"', 520, false);
