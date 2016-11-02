@@ -95,6 +95,7 @@ INSERT INTO "i18n_message" VALUES (148, 'label', 'UserAdmin', '用户管理', 'U
 INSERT INTO "i18n_message" VALUES (149, 'label', 'InspectionChecklist', '巡检配置', 'Inspection Checklist', NULL, -1);
 INSERT INTO "i18n_message" VALUES (150, 'label', 'InspectionOrder', '巡检计划', 'Inspection Order', NULL, -1);
 INSERT INTO "i18n_message" VALUES (151, 'label', 'InspectionRecord', '巡检记录', 'Inspection Record', NULL, -1);
+INSERT INTO "i18n_message" VALUES (152, 'label', 'ChecklistType', '检查类型', 'Checklist Type', NULL, -1);
 
 
 INSERT INTO "i18n_message" VALUES (180,'field_name','accessory','备件','Accessory',null,-1);
