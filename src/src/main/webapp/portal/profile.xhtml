@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p align="center">
+                    <b>#{msg.UserAccount}</b>
+                </p>
+
+                <p:messages id="messages" autoUpdate="true" closable="true"/>
+                <p:growl autoUpdate="true" life="3000"/>
+                <h:form>
+                    <p:fieldset id="display" legend="#{msg.Profile}">
+                        <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="loginName" value="#{profileController.myAccount.loginName}" readonly="true"/>
+                                <label>#{msg.login_name}*</label>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="name" value="#{profileController.myAccount.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                                <label>#{msg.userName}*</label>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="email" value="#{profileController.myAccount.email}"  required="true" requiredMessage="#{msg.email} #{msg.ValidationRequire}"/>
+                                <label>#{msg.email}*</label>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="telephone" value="#{profileController.myAccount.telephone}" />
+                                <label>#{msg.telephone}</label>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+
+                        <p:commandButton validateClient="true" actionListener="#{profileController.saveProfile}" value="#{msg.Save}" update="messages :growl" icon="ui-icon-check"/>
+                    </p:fieldset>
+                </h:form>
+
+                <br/>
+                <h:form id="PasswordForm">
+                    <p:fieldset id="changePassword" legend="#{msg.ResetPassword}">
+                        <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:password id="password1" match="password2" maxlength="20" value="#{profileController.newPassword}" feedback="true"  required="true" requiredMessage="#{msg.password} #{msg.ValidationRequire}"/>
+                                <label>#{msg.NewPassword}*</label>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:password id="password2" value="#{profileController.newPassword2}" required="true" />
+                                <label>#{msg.ConfirmNewPassword}*</label>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:commandButton validateClient="true" actionListener="#{profileController.resetPassword}" value="#{msg.ChangePassword}" update=":PasswordForm :growl"/>
+                    </p:fieldset>
+                </h:form>
+
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
