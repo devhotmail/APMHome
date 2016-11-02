@@ -241,5 +241,9 @@ INSERT INTO "i18n_message" VALUES (401,'asset_group','2','MR','MR',null,-1);
 INSERT INTO "i18n_message" VALUES (402,'asset_group','3','XRay','XRay',null,-1);
 INSERT INTO "i18n_message" VALUES (403,'asset_group','4','DR','DR',null,-1);
 
+INSERT INTO "i18n_message" VALUES (404, 'checklist_type', '1', '巡检', 'Inspection', NULL, -1);
+INSERT INTO "i18n_message" VALUES (405, 'checklist_type', '2', '质控', 'Quality Control', NULL, -1);
+INSERT INTO "i18n_message" VALUES (406, 'checklist_type', '3', '计量', 'Measure', NULL, -1);
+
 
 SELECT setval('"public"."i18n_message_id_seq"', 420, false);
