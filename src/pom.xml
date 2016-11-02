@@ -666,6 +666,7 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
+					<scanIntervalSeconds>5</scanIntervalSeconds>
                     <webAppConfig>                    
                         <contextPath>${application.contextpath}</contextPath>
                     </webAppConfig>
