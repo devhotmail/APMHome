@@ -35,7 +35,11 @@ color: #ffffff!important;
 width: 18px!important;
 }
 .labelOnTop {
-color: #3e464c!important;
-top: -41px!important;
+position: absolute!important;
+top: -0px!important;
+color: #999!important;
 font-size: 12px!important;
+}
+.md-inputfield label{
+color: #999!important;
 }
