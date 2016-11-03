@@ -25,6 +25,12 @@ min-height: 200px!important;
 .ui-chkbox {
 width: 95%!important;
 }
+.ui-chkbox .ui-state-focus .ui-icon-check{
+background-color: #3e464c!important;
+}
+.ui-chkbox .ui-chkbox-box .ui-icon-check{
+color: #ffffff!important;
+}
 .ui-tree .ui-chkbox {
 width: 18px!important;
 }
