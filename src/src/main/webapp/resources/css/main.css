@@ -2,7 +2,7 @@
 z-index: 9999!important;
 }
 .ui-growl-item{
-background-color: #ffff99!important;
+background-color: rgb(255, 193, 7)!important;
 }
 .ui-growl-message{
 color: black!important;
