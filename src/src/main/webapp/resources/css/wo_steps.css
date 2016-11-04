@@ -6,9 +6,10 @@ width: 700px!important;
 }
 .ui-steps .ui-steps-item .ui-menuitem-link {
 margin: 5px;
-width: 100px!important;
-height: 20px!important;
+width: 120px!important;
+height: 26px!important;
 background-color: #bdbdbd!important;
+cursor: pointer!important;
 }
 .ui-steps .ui-steps-item.ui-state-highlight .ui-menuitem-link {
 cursor: pointer!important;
@@ -23,6 +24,7 @@ text-align: center!important;
 }
 .ui-steps .ui-steps-item.ui-state-highlight .ui-steps-title {
 color: white!important;
+font-weight: normal!important;
 }
 .x-ui-steps-number {
 background-color: transparent!important;

@@ -17,18 +17,6 @@
                     <b>#{msg.WorkOrder}</b>
                 </p>
                 
-                <h:form>
-                    <p:steps activeIndex="5" styleClass="list" readonly="false">
-                        <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '1')}" url="/home1.xhtml"/>
-                        <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '2')}" url="/home2.xhtml"/>
-                        <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '3')}" url="/home3.xhtml"/>
-                        <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '4')}" url="/home4.xhtml"/>
-                        <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '5')}" url="/home5.xhtml"/>
-                        <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '6')}" url="/home6.xhtml"/>
-                    </p:steps>
-
-                </h:form>
-                <br/><br/><br/>
             <h:form id="WorkOrderListForm">
                 <p:dataTable id="datalist" value="#{workOrderController.lazyModel}" var="item" widgetVar="varDataList"
                     selectionMode="single" selection="#{workOrderController.selected}"
@@ -42,17 +30,8 @@
                     <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
                     <p:ajax event="filter" listener="#{workOrderController.onFilter}" update="createButton editButton viewButton deleteButton"/>
                     
-                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.id}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.siteId}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
+                    <p:column headerText="#{msg.workOrderName}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.name}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.creatorId}" sortBy="#{item.creatorId}" filterBy="#{item.creatorId}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.creatorId}"/>
                     </p:column>
                     <p:column headerText="#{msg.creatorName}" sortBy="#{item.creatorName}" filterBy="#{item.creatorName}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.creatorName}"/>
@@ -128,13 +107,13 @@
                         </f:facet>
                         <h:outputText value="#{item.isClosed? msg.True2Yes : msg.False2No }"/>
                     </p:column>
-                    <p:column headerText="#{msg.closeReason}" sortBy="#{item.closeReason}" filterBy="#{item.closeReason}" filterMatchMode="LIKE">
+                    <p:column headerText="#{msg.closeReason}" sortBy="#{item.closeReason}">
                         <h:outputText value="#{item.closeReason}"/>
                     </p:column>
-                    <p:column headerText="#{msg.comments}" sortBy="#{item.comments}" filterBy="#{item.comments}" filterMatchMode="LIKE">
+                    <p:column headerText="#{msg.comments}" sortBy="#{item.comments}">
                         <h:outputText value="#{item.comments}"/>
                     </p:column>
-                    <p:column headerText="#{msg.totalManHour}" sortBy="#{item.totalManHour}" filterBy="#{item.totalManHour}" filterMatchMode="EQ">
+                    <p:column headerText="#{msg.totalManHour}" sortBy="#{item.totalManHour}">
                         <h:outputText value="#{item.totalManHour}"/>
                     </p:column>
                     <p:column headerText="#{msg.totalPrice}" sortBy="#{item.totalPrice}" filterBy="#{item.totalPrice}" filterMatchMode="EQ">
@@ -171,6 +150,20 @@
                 </p:dataTable>
             </h:form>
 
+            <br/><br/><br/>
+
+            <h:form>
+                <p:steps activeIndex="1" styleClass="test" readonly="false">
+                    <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '1')}" url="/home1.xhtml"/>
+                    <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '2')}" url="/home2.xhtml"/>
+                    <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '3')}" url="/home3.xhtml"/>
+                    <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '4')}" url="/home4.xhtml"/>
+                    <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '5')}" url="/home5.xhtml"/>
+                    <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '6')}" url="/home6.xhtml"/>
+                </p:steps>
+
+            </h:form>
+                
             <ui:include src="Edit.xhtml"/>
             <ui:include src="View.xhtml"/>
 

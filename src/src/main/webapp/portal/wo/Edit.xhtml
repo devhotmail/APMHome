@@ -13,16 +13,8 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderController.selected != null}">
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="id" value="#{workOrderController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="siteId" value="#{workOrderController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.siteId}*</label>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="name" value="#{workOrderController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
-                            <label>#{msg.name}*</label>
+                            <label>#{msg.workOrderName}*</label>
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="creatorId" value="#{workOrderController.selected.creatorId}"  required="true" requiredMessage="#{msg.creatorId} #{msg.ValidationRequire}"/>
