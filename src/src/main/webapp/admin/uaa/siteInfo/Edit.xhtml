@@ -52,13 +52,16 @@
                             <p:inputText id="timeZone" value="#{siteInfoController.selected.timeZone}" />
                             <label>#{msg.timeZone}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="defaultLang" value="#{siteInfoController.selected.defaultLang}" />
-                            <label>#{msg.defaultLang}</label>
+                        <h:panelGroup>
+                            <p:selectOneMenu value="#{siteInfoController.selected.defaultLang}">
+                                <f:selectItem itemLabel="zh" itemValue="zh"/>
+                                <f:selectItem itemLabel="en" itemValue="en"/>
+                                <f:selectItem itemLabel="tw" itemValue="tw"/>
+                            </p:selectOneMenu>
+                            <label class="md-inputfield labelOnTop">#{msg.defaultLang}</label>
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:selectBooleanCheckbox id="isEnabled" value="#{siteInfoController.selected.isEnabled}"/>
-                            <label style="margin-left: 20px;">#{msg.isEnabled}</label>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.isEnabled}" value="#{siteInfoController.selected.isEnabled}"/>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

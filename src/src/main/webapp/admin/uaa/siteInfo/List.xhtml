@@ -12,6 +12,21 @@
                 <p align="center">
                     <b>#{msg.SiteInfo}</b>
                 </p>
+                
+                <h:form id="searchForm">
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="search_LIKE_name"/>
+                        <label>#{msg.name}</label>
+                        <p:spacer/><p:spacer/><p:spacer/>
+                        <p:commandButton value="#{msg.Search}" actionListener="#{siteInfoController.setSearchFilter()}" update="SiteInfoListForm:datalist"/>
+                        <p:spacer/><p:spacer/><p:spacer/>
+                        <p:commandButton value="#{msg.Reset}" update="searchForm">
+                            <p:resetInput target="searchForm" />
+                        </p:commandButton>
+                    </h:panelGroup>
+                </h:form>    
+                <br/>
+                
             <h:form id="SiteInfoListForm">
                 <p:dataTable id="datalist" value="#{siteInfoController.lazyModel}" var="item" widgetVar="varDataList"
                     selectionMode="single" selection="#{siteInfoController.selected}"
