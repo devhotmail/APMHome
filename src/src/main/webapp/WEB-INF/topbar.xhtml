@@ -26,6 +26,10 @@
             </a>
             <ul class="topbar-items fadeInDown animated" >
                 <ui:fragment rendered="#{guestPreferences.profileMode == 'overlay'||guestPreferences.menuLayout == 'menu-layout-static menu-layout-horizontal'}">
+                    <li class="search-item" style="top:-14px;">
+                        <h5><label>#{userContextService.userName}</label></h5>
+                    </li>
+
                     <li class="profile-item">
                         <a href="#">                            
                             <div class="profile-image" style="width:30px; height: 26px;background-size: 30px 30px"></div>
@@ -72,8 +76,7 @@
                     </li>
                 </ui:fragment>
                 <li class="search-item" style="top:-10px;">
-					<h3><label>基于 Predix 开发 </label></h3>
-                    
+                    <h3><label>基于 Predix 开发</label></h3>
                 </li>
             </ul>
         </div>

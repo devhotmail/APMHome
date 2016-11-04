@@ -66,7 +66,7 @@
                         </p:submenu>
                         <p:submenu label="#{msg.WorkOrderMgmt}" icon="&#xE8B8;">
                             <p:menuitem value="#{msg.ServiceRequestMgmt}" icon="&#xE5D2;" outcome="/empty"/>
-                            <p:menuitem value="#{msg.MyWorkOrder}" icon="&#xE879;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.MyWorkOrder}" icon="&#xE879;" outcome="/portal/wo/myWorkOrder.xhtml"/>
                             <p:menuitem value="#{msg.MaintainanceRecord}" icon="&#xE22C;" outcome="/empty"/>
                             <p:menuitem value="#{msg.ServiceQualityReview}" icon="&#xE893;" outcome="/empty"/>
                             <p:menuitem value="#{msg.Inspection}" icon="&#xE892;" outcome="/empty"/>
@@ -82,11 +82,11 @@
                             <p:menuitem value="#{msg.DeviceOperationMonitor}" icon="&#xE24B;" outcome="/home"/>
                         </p:submenu>
                         <p:submenu label="#{msg.PreventiveMaintainceMgmt}" icon="&#xE884;">
-                            <p:menuitem id="um_db_landing" value="#{msg.PreventiveMaintaincePlanning}" icon="&#xE904;" outcome="/home"/>
-                            <p:menuitem id="um_empty" value="#{msg.DeviceMetrologyMgmt}" icon="&#xE88B;" style="color: orange;" outcome="/home"/>
-                            <p:menuitem id="um_login" value="#{msg.DeviceQualityControl}" icon="&#xE8E8;" style="color: orange;" outcome="/home"/>
-                            <p:menuitem id="um_error" value="#{msg.DeviceAdverseEventMgmt}" icon="&#xE000;" style="color: orange;" outcome="/home"/>
-                            <p:menuitem id="um_404" value="#{msg.DeviceMedicalAccidentMgmt}" icon="&#xE001;" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.PreventiveMaintaincePlanning}" icon="&#xE904;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceMetrologyMgmt}" icon="&#xE88B;" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceQualityControl}" icon="&#xE8E8;" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceAdverseEventMgmt}" icon="&#xE000;" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceMedicalAccidentMgmt}" icon="&#xE001;" style="color: orange;" outcome="/home"/>
                         </p:submenu>
                         <p:submenu label="#{msg.AssetKnowledgeBaseMgmt}" icon="&#xE884;">
                             <p:menuitem value="#{msg.AssetDocMgmt}" icon="&#xE226;" outcome="/home"/>
