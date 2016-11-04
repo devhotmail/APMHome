@@ -36,6 +36,10 @@ public class AssetClinicalRecord implements Serializable {
     private int siteId;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "hospital_id")
+    private int hospitalId;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "modality_id")
     private int modalityId;
     @Basic(optional = false)
@@ -117,19 +121,12 @@ public class AssetClinicalRecord implements Serializable {
         this.id = id;
     }
 
-    public AssetClinicalRecord(Integer id, int siteId, int modalityId, int modalityTypeId, String modalityType, int procedureId, String procedureName, int procedureStepId, String procedureStepName, Date examDate, Date examStartTime, Date examEndTime) {
-        this.id = id;
-        this.siteId = siteId;
-        this.modalityId = modalityId;
-        this.modalityTypeId = modalityTypeId;
-        this.modalityType = modalityType;
-        this.procedureId = procedureId;
-        this.procedureName = procedureName;
-        this.procedureStepId = procedureStepId;
-        this.procedureStepName = procedureStepName;
-        this.examDate = examDate;
-        this.examStartTime = examStartTime;
-        this.examEndTime = examEndTime;
+    public int getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(int hospitalId) {
+        this.hospitalId = hospitalId;
     }
 
     public Integer getId() {

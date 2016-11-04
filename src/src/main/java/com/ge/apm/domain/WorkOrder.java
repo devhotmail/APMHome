@@ -36,6 +36,15 @@ public class WorkOrder implements Serializable {
     private int siteId;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "hospital_id")
+    private int hospitalId;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 64)
+    @Column(name = "asset_name")
+    private String assetName;
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 32)
     @Column(name = "name")
     private String name;
@@ -134,24 +143,20 @@ public class WorkOrder implements Serializable {
         this.id = id;
     }
 
-    public WorkOrder(Integer id, int siteId, String name, int creatorId, String creatorName, Date createTime, int requestorId, String requestorName, Date requestTime, String requestReason, int caseType, int caseSubType, int casePriority, boolean isInternal, int currentPersonId, int currentStep, boolean isClosed) {
-        this.id = id;
-        this.siteId = siteId;
-        this.name = name;
-        this.creatorId = creatorId;
-        this.creatorName = creatorName;
-        this.createTime = createTime;
-        this.requestorId = requestorId;
-        this.requestorName = requestorName;
-        this.requestTime = requestTime;
-        this.requestReason = requestReason;
-        this.caseType = caseType;
-        this.caseSubType = caseSubType;
-        this.casePriority = casePriority;
-        this.isInternal = isInternal;
-        this.currentPersonId = currentPersonId;
-        this.currentStep = currentStep;
-        this.isClosed = isClosed;
+    public int getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(int hospitalId) {
+        this.hospitalId = hospitalId;
+    }
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
     }
 
     public Integer getId() {
