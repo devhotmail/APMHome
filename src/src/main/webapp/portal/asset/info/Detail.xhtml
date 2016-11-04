@@ -1,0 +1,189 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <p align="center">
+            <b>#{msg.AssetDetail}</b>
+        </p>
+        <div class="ui-g dashboard">
+            <div class="ui-g-12 ui-md-4">
+                <div class="card overview">
+                    <div class="overview-content clearfix">
+                        <span class="overview-title">Sales</span>
+                        <span class="overview-badge">+%90</span>
+                        <span class="overview-detail">$22,650 / week</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+                <div class="card overview">
+                    <div class="overview-content clearfix">
+                        <span class="overview-title">Views</span>
+                        <span class="overview-badge">+%60</span>
+                        <span class="overview-detail">6,520 / day</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+                <div class="card overview">
+                    <div class="overview-content clearfix">
+                        <span class="overview-title">Users</span>
+                        <span class="overview-badge">+%45</span>
+                        <span class="overview-detail">5,200 / day</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <p:accordionPanel id="accordion" multiple="false" >
+            <p:tab title="#{msg.BasicInfo}">
+                <p:panelGrid columns="4"  layout="grid" styleClass="ui-panelgrid-blank">
+
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{assetInfoController.selected.name}" readonly="true"/>
+                        <label>#{msg.name}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{assetInfoController.selected.vendor}" readonly="true"/>
+                        <label>#{msg.vendor}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{assetInfoController.selected.departNum}" readonly="true"/>
+                        <label>#{msg.departNum}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{assetInfoController.selected.clinicalDeptName}" readonly="true"/>
+                        <label>#{msg.clinicalDeptName}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{assetInfoController.selected.purchaseDate}" readonly="true"/>
+                        <label>#{msg.purchaseDate}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{assetInfoController.selected.warrantyDate}" readonly="true"/>
+                        <label>#{msg.warrantyDate}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText value="#{assetInfoController.selected.purchasePrice}" readonly="true"/>
+                        <label>#{msg.purchasePrice}</label>
+                    </h:panelGroup>
+                    <h:panelGroup  styleClass="md-inputfield">
+                        <p:selectOneRadio id="status"  label="#{msg.status}" value="#{assetInfoController.selected.status}" disabled="true">
+                            <f:selectItem itemLabel="#{msg.statusUp}" itemValue="0" rendered="false"/>
+                            <f:selectItem itemLabel="#{msg.statusDown}" itemValue="1" />
+                            <f:selectItem itemLabel="#{msg.statusPartial}" itemValue="2" />
+                        </p:selectOneRadio>
+                        <label>#{msg.status}</label>
+                    </h:panelGroup>
+
+                </p:panelGrid>
+            </p:tab>
+        </p:accordionPanel>
+
+        <h:form>
+            <p:panelGrid columns="2"  layout="grid" styleClass="ui-panelgrid-blank">
+                <p:panel  header="#{msg.InspectionOrder}">
+                    <f:facet name="actions">
+                        <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"><h:outputText styleClass="ui-icon ui-icon-fullscreen" /></h:commandLink>
+                        <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"><h:outputText styleClass="ui-icon ui-icon-add" /></h:commandLink>
+                    </f:facet>
+
+                    <p:dataTable var="item" value="#{assetInfoController.ownerList}">
+                        <p:column headerText="#{msg.createTime}">
+                            <h:outputText value="#{item.id}" />
+                        </p:column>
+                        <p:column headerText="#{msg.creatorName}">
+                            <h:outputText value="#{item.email}" />
+                        </p:column>
+                        <p:column headerText="#{msg.ownerId}">
+                            <h:outputText value="#{item.hospitalId}" />
+                        </p:column>
+                        <p:column headerText="#{msg.examStartTime}">
+                            <h:outputText value="#{item.name}" />
+                        </p:column>
+                        <p:column headerText="#{msg.endTime}">
+                            <h:outputText value="#{item.name}" />
+                        </p:column>
+                        <p:column headerText="#{msg.status}">
+                            <h:outputText value="#{item.name}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+
+                <p:panel  header="#{msg.InspectionRecord}">
+                    <f:facet name="actions">
+                        <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"><h:outputText styleClass="ui-icon ui-icon-fullscreen" /></h:commandLink>
+                        <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"><h:outputText styleClass="ui-icon ui-icon-add" /></h:commandLink>
+                    </f:facet>
+
+                    <p:dataTable var="item" value="#{assetInfoController.ownerList}">
+                        <p:column headerText="#{msg.createTime}">
+                            <h:outputText value="#{item.id}" />
+                        </p:column>
+                        <p:column headerText="#{msg.creatorName}">
+                            <h:outputText value="#{item.email}" />
+                        </p:column>
+                        <p:column headerText="#{msg.ownerId}">
+                            <h:outputText value="#{item.hospitalId}" />
+                        </p:column>
+                        <p:column headerText="#{msg.examStartTime}">
+                            <h:outputText value="#{item.name}" />
+                        </p:column>
+                        <p:column headerText="#{msg.endTime}">
+                            <h:outputText value="#{item.name}" />
+                        </p:column>
+                        <p:column headerText="#{msg.status}">
+                            <h:outputText value="#{item.name}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </p:panelGrid>
+        </h:form>
+
+        <p:fieldset legend="#{msg.TBD}" style="margin-bottom:20px">
+
+
+        </p:fieldset>
+        <p:fieldset legend="#{msg.TBD}" style="margin-bottom:20px">
+            <p:commandButton id="imageBtn" value="#{fieldMsg.getFieldValueList('attachment_type').get(0).getValue()}" type="button" />
+            <p:overlayPanel id="imagePanel" for="imageBtn" hideEffect="fade">
+                <p:dataList value="#{assetFileAttachmentController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="ordered">
+                    <f:facet name="header">#{msg.manual}</f:facet>
+                    #{fileitem.name}, #{fileitem.id}
+                </p:dataList>
+            </p:overlayPanel>
+            
+            <p:commandButton id="imageBtn1" value="#{fieldMsg.getFieldValueList('attachment_type').get(1).getValue()}" type="button" />
+            <p:overlayPanel id="imagePane1" for="imageBtn1" hideEffect="fade">
+                <p:dataList value="#{assetFileAttachmentController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="ordered">
+                    <f:facet name="header">#{msg.manual}</f:facet>
+                    #{fileitem.name}, #{fileitem.id}
+                </p:dataList>
+            </p:overlayPanel>
+            
+            <p:commandButton id="imageBtn2" value="#{fieldMsg.getFieldValueList('attachment_type').get(2).getValue()}" type="button" />
+            <p:overlayPanel id="imagePanel2" for="imageBtn2" hideEffect="fade">
+                 <p:dataList value="#{assetFileAttachmentController.getAttachList(assetInfoController.selected.id,3)}" var="fileitem" type="ordered">
+                    <f:facet name="header">#{msg.manual}</f:facet>
+                    #{fileitem.name}, #{fileitem.id}
+                </p:dataList>
+            </p:overlayPanel>
+            
+            <p:commandButton id="imageBtn3" value="#{fieldMsg.getFieldValueList('attachment_type').get(3).getValue()}" type="button" />
+            <p:overlayPanel id="imagePanel3" for="imageBtn3" hideEffect="fade">
+                 <p:dataList value="#{assetFileAttachmentController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="ordered">
+                    <f:facet name="header">#{msg.manual}</f:facet>
+                    #{fileitem.name}, #{fileitem.id}
+                </p:dataList>
+            </p:overlayPanel>
+
+        </p:fieldset>
+
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,260 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <p align="center">
+            <b>#{msg.AssetInfo}</b>
+        </p>
+        <p:separator />
+        <h:form id="AssetInfoEditForm">
+            <p:fieldset legend="#{msg.basicInfo}" style="margin-bottom:20px">
+                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="serialNum" value="#{assetInfoController.selected.serialNum}" />
+                        <label>#{msg.serialNum}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="name" value="#{assetInfoController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                        <label>#{msg.name}*</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="aliasName" value="#{assetInfoController.selected.aliasName}" />
+                        <label>#{msg.aliasName}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                    </h:panelGroup>
+
+                    <h:panelGroup >
+                        <label class="md-inputfield labelOnTop">#{msg.functionGroup}</label>
+                        <p:selectOneMenu id="functionGroup" value="#{assetInfoController.selected.functionGroup}">
+                            <f:selectItem itemLabel="#{msg.selectOneMessage}" />
+                            <f:selectItems value="#{fieldMsg.getFieldValueList('asset_group')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}" />
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="functionType" value="#{assetInfoController.selected.functionType}" />
+                        <label>#{msg.functionType}</label>
+                        <p:commandButton type="button" icon="ui-icon-arrow-drop-down" class="popupIconButton"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="functionGrade" value="#{assetInfoController.selected.functionGrade}" />
+                        <label>#{msg.functionGrade}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="manufacture" value="#{assetInfoController.selected.manufacture}" />
+                        <label>#{msg.manufacture}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="vendor" value="#{assetInfoController.selected.vendor}" />
+                        <label>#{msg.vendor}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="maitanance" value="#{assetInfoController.selected.maitanance}" />
+                        <label>#{msg.maitanance}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="maitananceTel" value="#{assetInfoController.selected.maitananceTel}" />
+                        <label>#{msg.maitananceTel}</label>
+                    </h:panelGroup>
+                </p:panelGrid>
+            </p:fieldset>
+
+            <p:fieldset legend="#{msg.basicInfo}" style="margin-bottom:20px">
+                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="serialNum2" value="#{assetInfoController.selected.serialNum}" />
+                        <label>#{msg.serialNum}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="departNum2" value="#{assetInfoController.selected.departNum}" />
+                        <label>#{msg.departNum}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="financingNum2" value="#{assetInfoController.selected.financingNum}" />
+                        <label>#{msg.financingNum}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="barcode" value="#{assetInfoController.selected.barcode}" />
+                        <label>#{msg.barcode}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="modalityId" value="#{assetInfoController.selected.modalityId}" />
+                        <label>#{msg.modalityId}</label>
+                    </h:panelGroup>
+
+
+                </p:panelGrid>
+            </p:fieldset>
+
+            <p:fieldset legend="#{msg.basicInfo}" style="margin-bottom:20px">
+                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="locationCode" value="#{assetInfoController.selected.locationCode}" />
+                        <label>#{msg.locationCode}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="locationName" value="#{assetInfoController.selected.locationName}" />
+                        <label>#{msg.locationName}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="hospitalId" value="#{assetInfoController.selected.hospitalId}"  required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}"/>
+                        <label>#{msg.hospitalId}*</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptName}" />
+                        <label>#{msg.clinicalDeptName}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="assetGroup" value="#{assetInfoController.selected.assetGroup}" />
+                        <label>#{msg.assetGroup}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="assetDeptId" value="#{assetInfoController.selected.assetDeptId}"  required="true" requiredMessage="#{msg.assetDeptId} #{msg.ValidationRequire}"/>
+                        <label>#{msg.assetDeptId}*</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                    </h:panelGroup>
+                    <h:panelGroup >
+                        <p:outputLabel for="assetOwnerName" value="#{msg.assetOwnerName}    "  />
+                        <p:selectOneMenu id="assetOwnerName" value="#{assetInfoController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith">
+                            <p:ajax listener="#{assetInfoController.onOwnerChange}" update="assetOwnerTel" />
+                            <f:selectItem itemLabel=""  />
+                            <f:selectItems value="#{assetInfoController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}" />
+                            <p:column>
+                                <h:outputText value="#{t.name}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{t.id}" />
+                            </p:column>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="assetOwnerTel" value="#{assetInfoController.selected.assetOwnerTel}" readonly="true"/>
+                        <label>#{msg.assetOwnerTel}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isValid}" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
+                    </h:panelGroup>
+                    <h:panelGroup >
+                        <!--<p:inputText id="status" value="#{assetInfoController.selected.status}"  required="true" requiredMessage="#{msg.status} #{msg.ValidationRequire}"/>-->
+                        <label>#{msg.status}*</label>
+                        <p:selectOneRadio id="status" value="#{assetInfoController.selected.status}" required="true" requiredMessage="#{msg.status} #{msg.ValidationRequire}">
+                            <f:selectItem itemLabel="#{msg.statusUp}" itemValue="0" />
+                            <f:selectItem itemLabel="#{msg.statusDown}" itemValue="1" />
+                            <f:selectItem itemLabel="#{msg.statusPartial}" itemValue="2" />
+                        </p:selectOneRadio>
+                    </h:panelGroup>
+                </p:panelGrid>
+            </p:fieldset>
+            <p:fieldset legend="#{msg.basicInfo}" style="margin-bottom:20px">
+                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:calendar id="manufactDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.manufactDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                        <label>#{msg.manufactDate}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:calendar id="purchaseDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.purchaseDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                        <label>#{msg.purchaseDate}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:calendar id="arriveDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                        <label>#{msg.arriveDate}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:calendar id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                        <label>#{msg.installDate}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:calendar id="warrantyDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.warrantyDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                        <label>#{msg.warrantyDate}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:calendar id="terminateDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                        <label>#{msg.terminateDate}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:calendar id="lastetMaintanceDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                        <label>#{msg.lastetMaintanceDate}</label>
+                    </h:panelGroup>
+                </p:panelGrid>
+            </p:fieldset>
+            <p:fieldset legend="#{msg.basicInfo}" style="margin-bottom:20px">
+                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" />
+                        <label>#{msg.purchasePrice}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="salvageValue" value="#{assetInfoController.selected.salvageValue}" />
+                        <label>#{msg.salvageValue}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="lifecycle" value="#{assetInfoController.selected.lifecycle}" />
+                        <label>#{msg.lifecycle}</label>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}" />
+                        <label>#{msg.depreciationMethod}</label>
+                    </h:panelGroup>
+                </p:panelGrid>
+            </p:fieldset>
+
+            <p:fieldset legend="#{msg.basicInfo}" style="margin-bottom:20px">
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                    <h:panelGroup >
+                        <p:dataList id="pictureList" value="#{assetFileAttachmentController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="ordered">
+                            <f:facet name="header">#{fieldMsg.getFieldValueList('attachment_type').get(0).getValue()}</f:facet>
+                            #{fileitem.name}, #{fileitem.id}
+                        </p:dataList>
+                        <p:fileUpload fileUploadListener="#{AssetFileAttachmentController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                      multiple="true"  sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="pictureList" />
+                    </h:panelGroup>
+                    <h:panelGroup >
+                        <p:dataList id="contractList" value="#{assetFileAttachmentController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="ordered">
+                            <f:facet name="header">#{fieldMsg.getFieldValueList('attachment_type').get(1).getValue()}</f:facet>
+                            #{fileitem.name}, #{fileitem.id}
+                        </p:dataList>
+                        <p:fileUpload fileUploadListener="#{AssetFileAttachmentController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                      multiple="true"  sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="contractList" />
+                    </h:panelGroup>
+                    <h:panelGroup >
+                        <p:dataList id="manualList" value="#{assetFileAttachmentController.getAttachList(assetInfoController.selected.id,3)}" var="fileitem" type="ordered">
+                            <f:facet name="header">#{fieldMsg.getFieldValueList('attachment_type').get(2).getValue()}</f:facet>
+                            #{fileitem.name}, #{fileitem.id}
+                        </p:dataList>
+                        <p:fileUpload fileUploadListener="#{AssetFileAttachmentController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                      multiple="true"  sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="manualList" />
+                    </h:panelGroup>
+                    <h:panelGroup >
+                        <p:dataList id="guideList" value="#{assetFileAttachmentController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="ordered">
+                            <f:facet name="header">#{fieldMsg.getFieldValueList('attachment_type').get(3).getValue()}</f:facet>
+                            #{fileitem.name}, #{fileitem.id}
+                        </p:dataList>
+                        <p:fileUpload fileUploadListener="#{AssetFileAttachmentController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                      multiple="true"  sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="guideList" />
+                    </h:panelGroup>
+                    <h:panelGroup >
+                        <p:commandButton value="#{msg.Save}" action="#{assetInfoController.applyChange()}" validateClient="true" update=":growl" style="float:right"/>  
+                        <p:commandButton value="#{msg.Return}" action="#{assetInfoController.returnList()}" immediate="true"  update=":growl" style="float:right"/>  
+                    </h:panelGroup>
+                </p:panelGrid>
+            </p:fieldset>
+        </h:form>
+
+    </ui:define>
+</ui:composition>
