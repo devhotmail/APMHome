@@ -1,0 +1,41 @@
+.ui-steps:before {
+margin: 5px!important;
+content: ' ';
+left: 10px!important;
+width: 700px!important;
+}
+.ui-steps .ui-steps-item .ui-menuitem-link {
+margin: 5px;
+width: 100px!important;
+height: 20px!important;
+background-color: #bdbdbd!important;
+}
+.ui-steps .ui-steps-item.ui-state-highlight .ui-menuitem-link {
+cursor: pointer!important;
+background-color: #5180ce!important;
+}
+.ui-steps .ui-steps-item .ui-menuitem-link {
+text-decoration: none!important;
+display: block!important;
+padding: 1em!important;
+position: relative!important;
+text-align: center!important;
+}
+.ui-steps .ui-steps-item.ui-state-highlight .ui-steps-title {
+color: white!important;
+}
+.x-ui-steps-number {
+background-color: transparent!important;
+}
+
+.ui-steps.list .ui-steps-item.ui-state-highlight .ui-menuitem-link {
+cursor: pointer!important;
+background-color: #bdbdbd!important;
+}
+.ui-steps.list .ui-steps-item .ui-steps-title {
+color: white!important;
+font-weight: normal!important;
+}
+.ui-steps.list .ui-steps-item .ui-steps-number {
+background-color: #757575!important;
+}
