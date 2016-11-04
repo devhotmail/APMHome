@@ -57,15 +57,15 @@
                     <pu:menu widgetVar="me">
                         <p:menuitem id="um_dashboard" value="#{msg.HomePage}" icon="&#xE871;" outcome="#{userContextService.userDefaultHomePage}"/>
                         <p:submenu label="#{msg.AssetMDM}" icon="&#xE40A;">
-                            <p:menuitem value="#{msg.AssetList}" icon="&#xE3AE;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.AssetList}" icon="&#xE3AE;" outcome="/portal/asset/info/List"/>
                             <p:menuitem value="#{msg.AssetInventory}" icon="&#xE3AE;" outcome="/empty"/>
-                            <p:menuitem value="#{msg.AssetDocumentMgmt}" icon="&#xE3AE;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.AssetDocumentMgmt}" icon="&#xE3AE;" outcome="/portal/asset/fileAttachment/List"/>
                             <p:menuitem value="#{msg.AssetValueAnalysis}" icon="&#xE3AE;" outcome="/empty"/>
                             <p:menuitem value="#{msg.AssetContractMgmt}" icon="&#xE061;" style="color: orange;" outcome="/empty"/>
                             <p:menuitem value="#{msg.SupplierMgmt}" icon="&#xE062;" style="color: orange;" outcome="/empty"/>
                         </p:submenu>
                         <p:submenu label="#{msg.WorkOrderMgmt}" icon="&#xE8B8;">
-                            <p:menuitem value="#{msg.ServiceRequestMgmt}" icon="&#xE5D2;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.ServiceRequestMgmt}" icon="&#xE5D2;" outcome="/portal/wo/List"/>
                             <p:menuitem value="#{msg.MyWorkOrder}" icon="&#xE879;" outcome="/portal/wo/myWorkOrder.xhtml"/>
                             <p:menuitem value="#{msg.MaintainanceRecord}" icon="&#xE22C;" outcome="/empty"/>
                             <p:menuitem value="#{msg.ServiceQualityReview}" icon="&#xE893;" outcome="/empty"/>
