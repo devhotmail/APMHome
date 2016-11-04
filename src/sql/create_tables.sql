@@ -239,8 +239,10 @@ report_url varchar(128));
 create table work_order(
 id serial not null,
 site_id int not null,
+hospital_id int not null,
 asset_id int not null,
 name varchar(32) not null,
+asset_name varchar(64) not null,
 creator_id int not null,
 creator_name varchar(16) not null,
 create_time timestamp not null,
@@ -304,6 +306,7 @@ accessory_price float);
 create table asset_clinical_record(
 id serial not null,
 site_id int not null,
+hospital_id int not null,
 asset_id int not null,
 modality_id int not null,
 modality_type_id int not null,

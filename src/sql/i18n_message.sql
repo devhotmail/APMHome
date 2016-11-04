@@ -263,6 +263,7 @@ INSERT INTO "i18n_message" VALUES (734,'field_name','telephone','电话','Teleph
 INSERT INTO "i18n_message" VALUES (735,'field_name','timeZone','时区','Time Zone',null,-1);
 INSERT INTO "i18n_message" VALUES (736,'field_name','siteDescription','详细描述','Description',null,-1);
 INSERT INTO "i18n_message" VALUES (737,'field_name','userName','姓名','Name',null,-1);
+INSERT INTO "i18n_message" VALUES (738,'field_name','workOrderName','工单名称','work Order Name',null,-1);
 
 
 -- field value code types  ( id from 1500)
@@ -272,14 +273,21 @@ INSERT INTO "i18n_message" VALUES (1501,'asset_group','2','MR','MR',null,-1);
 INSERT INTO "i18n_message" VALUES (1502,'asset_group','3','XRay','XRay',null,-1);
 INSERT INTO "i18n_message" VALUES (1503,'asset_group','4','DR','DR',null,-1);
 
-INSERT INTO "i18n_message" VALUES (1510,'checklist_type','1','巡检','Inspection',null,-1);
-INSERT INTO "i18n_message" VALUES (1511,'checklist_type','2','计量','Inspection',null,-1);
-INSERT INTO "i18n_message" VALUES (1512,'checklist_type','3','质控','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1510,'wo_steps','1', '报修','Create',null,-1);
+INSERT INTO "i18n_message" VALUES (1511,'wo_steps','2', '审核/审批','Approve',null,-1);
+INSERT INTO "i18n_message" VALUES (1512,'wo_steps','3', '派工','Assign',null,-1);
+INSERT INTO "i18n_message" VALUES (1513,'wo_steps','4', '领工','Accept',null,-1);
+INSERT INTO "i18n_message" VALUES (1514,'wo_steps','5', '维修','Repair',null,-1);
+INSERT INTO "i18n_message" VALUES (1515,'wo_steps','6', '关单','Close',null,-1);
+
+INSERT INTO "i18n_message" VALUES (1520,'checklist_type','1','巡检','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1521,'checklist_type','2','计量','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1522,'checklist_type','3','质控','Inspection',null,-1);
 
 -- module's messages  (id from 3000)
+
 INSERT INTO "i18n_message" VALUES (3000,'message','devicePhoto', '设备照片文件','device Photo',null,-1);
 INSERT INTO "i18n_message" VALUES (3001,'message','deviceContract', '设备合同文件','deviceContract',null,-1);
-
 
 
 -- update id sequence value
