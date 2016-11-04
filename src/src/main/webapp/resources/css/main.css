@@ -35,11 +35,18 @@ color: #ffffff!important;
 width: 18px!important;
 }
 .labelOnTop {
-position: absolute!important;
-top: -0px!important;
+position: relative!important;
+top: -100%!important;
 color: #999!important;
 font-size: 12px!important;
 }
 .md-inputfield label{
 color: #999!important;
+}
+.popupIconButton{
+background-color: #757575!important;
+float: right!important; 
+top: -28px!important;
+height:26px!important;
+width: 16px!important;
 }
