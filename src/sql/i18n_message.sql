@@ -284,6 +284,11 @@ INSERT INTO "i18n_message" VALUES (1520,'checklist_type','1','巡检','Inspectio
 INSERT INTO "i18n_message" VALUES (1521,'checklist_type','2','计量','Inspection',null,-1);
 INSERT INTO "i18n_message" VALUES (1522,'checklist_type','3','质控','Inspection',null,-1);
 
+INSERT INTO "i18n_message" VALUES (1530,'attachment_type','1','照片','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1531,'attachment_type','2','合同','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1532,'attachment_type','3','用户手册','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1533,'attachment_type','4','培训资料','Inspection',null,-1);
+
 -- module's messages  (id from 3000)
 
 INSERT INTO "i18n_message" VALUES (3000,'message','devicePhoto', '设备照片文件','device Photo',null,-1);
