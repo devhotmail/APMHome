@@ -9,11 +9,11 @@ INSERT INTO "org_info" VALUES ('5', '2', 2, '超声室', 'cariology Dept', '2');
 INSERT INTO "org_info" VALUES ('6', '2', 2, '设备科', 'Asset Dept', '2');
 
 
-INSERT INTO "public"."sys_role" VALUES ('1', 'HospitalHead', '院长', '/home.xhtml');
+INSERT INTO "public"."sys_role" VALUES ('1', 'HospitalHead', '院长', '/homeHead.xhtml');
 INSERT INTO "public"."sys_role" VALUES ('2', 'AssetHead', '设备科主任', '/homeAssetHead.xhtml');
 INSERT INTO "public"."sys_role" VALUES ('3', 'AssetStuff', '设备科科员', '/homeAssetStuff.xhtml');
 INSERT INTO "public"."sys_role" VALUES ('4', 'DeptHead', '科室主任', '/homeDeptHead.xhtml');
-INSERT INTO "public"."sys_role" VALUES ('5', 'Guest', '一般用户', '/homeDefault.xhtml');
+INSERT INTO "public"."sys_role" VALUES ('5', 'Guest', '一般用户', '/home.xhtml');
 
 INSERT INTO "public"."user_account" VALUES ('1', '1', 'admin', 'administrator', '5605ee4b362e9754', 'apm.admin@ge.com', '', 't', 't', 't', 't', 't', '1', '2016-10-17 10:57:00');
 INSERT INTO "public"."user_account" VALUES ('2', '2', 'head', '院长', '5605ee4b362e9754', 'head@a.com', null, 'f', 'f', 'f', 't', 'f', '2', null);
