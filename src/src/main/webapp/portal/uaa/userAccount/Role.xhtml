@@ -8,14 +8,16 @@
 
     <ui:composition>
 
-        <p:dialog id="RoleEditDlg" widgetVar="RoleEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="Assign Role">
+        <p:dialog id="RoleEditDlg" widgetVar="RoleEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{msg.AssignRole}">
             <h:form id="UserRoleEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{userAccountController.selected != null}">
-                        <p:outputLabel value="#{msg.UserAccountField_loginName}"/>
-                        <p:outputLabel value="#{userAccountController.selected.email}"/>
+                        <p:outputLabel value="#{msg.login_name}"/>
+                        <p:outputLabel value="#{userAccountController.selected.loginName}"/>
+                        <p:outputLabel value="#{msg.userName}"/>
+                        <p:outputLabel value="#{userAccountController.selected.name}"/>
 
-                        <p:outputLabel value="Assigned Roles" for="roleNames" />
+                        <p:outputLabel value="#{msg.AssignRole}" for="roleNames" />
                         <p:selectManyCheckbox id="roleNames" value="#{userAccountController.assignedRoles}" layout="pageDirection">
                             <f:selectItems value="#{userAccountController.allRoles}" />
                         </p:selectManyCheckbox>

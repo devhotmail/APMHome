@@ -33,23 +33,16 @@
                             <label>#{msg.telephone}</label>
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:selectBooleanCheckbox id="isSuperAdmin" value="#{userAccountController.selected.isSuperAdmin}" required="true" requiredMessage="#{msg.isSuperAdmin} #{msg.ValidationRequire}"/>
-                            <label style="margin-left: 20px;">#{msg.isSuperAdmin}*</label>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.isSuperAdmin}*" value="#{userAccountController.selected.isSuperAdmin}" required="true" requiredMessage="#{msg.isSuperAdmin} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:selectBooleanCheckbox id="isSiteAdmin" value="#{userAccountController.selected.isSiteAdmin}" required="true" requiredMessage="#{msg.isSiteAdmin} #{msg.ValidationRequire}"/>
-                            <label style="margin-left: 20px;">#{msg.isSiteAdmin}*</label>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.isSiteAdmin}*" value="#{userAccountController.selected.isSiteAdmin}" required="true" requiredMessage="#{msg.isSiteAdmin} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
-                            <p:selectBooleanCheckbox id="isLocalAdmin" value="#{userAccountController.selected.isLocalAdmin}" required="true" requiredMessage="#{msg.isLocalAdmin} #{msg.ValidationRequire}"/>
-                            <label style="margin-left: 20px;">#{msg.isLocalAdmin}*</label>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.isLocalAdmin}*" value="#{userAccountController.selected.isLocalAdmin}" required="true" requiredMessage="#{msg.isLocalAdmin} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <p:selectBooleanCheckbox id="isActive" style="width: 100%!important;" itemLabel="#{msg.isActive}*" value="#{userAccountController.selected.isActive}" required="true" requiredMessage="#{msg.isActive} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:selectBooleanCheckbox id="isOnline" value="#{userAccountController.selected.isOnline}"/>
-                            <label style="margin-left: 20px;">#{msg.isOnline}</label>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.isActive}*" value="#{userAccountController.selected.isActive}" required="true" requiredMessage="#{msg.isActive} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="siteId" value="#{userAccountController.selected.siteId}" />
