@@ -55,7 +55,7 @@ public class ProfileController implements Serializable {
     public void saveProfile(){
         UserAccountRepository userAccountDao = WebUtil.getBean(UserAccountRepository.class);
         userAccountDao.save(myAccount);
-        WebUtil.addSuccessMessage(WebUtil.getMessage("userAccount")+WebUtil.getMessage("Updated"));
+        WebUtil.addSuccessMessage(WebUtil.getMessage("UserAccount")+WebUtil.getMessage("Updated"));
     }
     
     public void resetPassword(){

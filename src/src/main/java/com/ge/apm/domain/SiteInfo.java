@@ -70,6 +70,7 @@ public class SiteInfo implements Serializable {
     private Boolean isEnabled;
 
     public SiteInfo() {
+        isEnabled = true;
     }
 
     public SiteInfo(Integer id) {

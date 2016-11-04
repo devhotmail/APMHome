@@ -144,6 +144,10 @@ public class UserContextService implements Serializable{
         filters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, UserContextService.getSiteId()));
     }
     
+    public static void setHospitalFilter(List<SearchFilter> filters){
+        filters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, UserContextService.getCurrentUserAccount().getHospitalId()));
+    }
+    
     public String getUserDefaultHomePage(){
         UaaService uaaService = WebUtil.getBean(UaaService.class);
         return uaaService.getUserDefaultHomePage(userAccount);
