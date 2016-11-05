@@ -11,38 +11,38 @@
         <p:dialog id="SupplierEditDlg" widgetVar="SupplierEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{supplierController.CRUDActionName} #{msg.Supplier}">
             <h:form id="SupplierEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{supplierController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{supplierController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
                             <p:inputText id="id" value="#{supplierController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{supplierController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.siteId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{supplierController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
-                            <label>#{msg.name}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.city}</label>
                             <p:inputText id="city" value="#{supplierController.selected.city}" />
-                            <label>#{msg.city}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.address}</label>
                             <p:inputText id="address" value="#{supplierController.selected.address}" />
-                            <label>#{msg.address}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.zipcode}</label>
                             <p:inputText id="zipcode" value="#{supplierController.selected.zipcode}" />
-                            <label>#{msg.zipcode}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.contactor}</label>
                             <p:inputText id="contactor" value="#{supplierController.selected.contactor}" />
-                            <label>#{msg.contactor}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.tel}</label>
                             <p:inputText id="tel" value="#{supplierController.selected.tel}" />
-                            <label>#{msg.tel}</label>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

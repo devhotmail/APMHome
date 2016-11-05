@@ -11,7 +11,7 @@
         <p:dialog id="AssetFileAttachmentViewDlg" widgetVar="AssetFileAttachmentViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetFileAttachmentController.CRUDActionName} #{msg.AssetFileAttachment}">
             <h:form id="AssetFileAttachmentViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{assetFileAttachmentController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{assetFileAttachmentController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{assetFileAttachmentController.selected.id}"/>
                         <h:outputLabel value="#{msg.siteId}" for="siteId" />

@@ -11,22 +11,26 @@
         <p:dialog id="OrgInfoEditDlg" widgetVar="OrgInfoEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{orgInfoController.CRUDActionName} #{msg.OrgInfo}">
             <h:form id="OrgInfoEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{orgInfoController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{orgInfoController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
                             <p:inputText id="id" value="#{orgInfoController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{orgInfoController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
-                            <label>#{msg.name}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.nameEn}</label>
                             <p:inputText id="nameEn" value="#{orgInfoController.selected.nameEn}" />
-                            <label>#{msg.nameEn}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.parentOrg}</label>
                             <p:inputText id="parentOrg" value="#{orgInfoController.selected.parentOrg}" />
-                            <label>#{msg.parentOrg}</label>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.hospitalId}*</label>
+                            <p:inputText id="hospitalId" value="#{orgInfoController.selected.hospitalId}"  required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

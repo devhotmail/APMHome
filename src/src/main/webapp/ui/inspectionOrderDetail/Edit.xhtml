@@ -11,38 +11,38 @@
         <p:dialog id="InspectionOrderDetailEditDlg" widgetVar="InspectionOrderDetailEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionOrderDetailController.CRUDActionName} #{msg.InspectionOrderDetail}">
             <h:form id="InspectionOrderDetailEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionOrderDetailController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionOrderDetailController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
                             <p:inputText id="id" value="#{inspectionOrderDetailController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{inspectionOrderDetailController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.siteId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.deptId}*</label>
                             <p:inputText id="deptId" value="#{inspectionOrderDetailController.selected.deptId}"  required="true" requiredMessage="#{msg.deptId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.deptId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.deptName}*</label>
                             <p:inputText id="deptName" value="#{inspectionOrderDetailController.selected.deptName}"  required="true" requiredMessage="#{msg.deptName} #{msg.ValidationRequire}"/>
-                            <label>#{msg.deptName}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.itemId}*</label>
                             <p:inputText id="itemId" value="#{inspectionOrderDetailController.selected.itemId}"  required="true" requiredMessage="#{msg.itemId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.itemId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.itemName}*</label>
                             <p:inputText id="itemName" value="#{inspectionOrderDetailController.selected.itemName}"  required="true" requiredMessage="#{msg.itemName} #{msg.ValidationRequire}"/>
-                            <label>#{msg.itemName}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:selectBooleanCheckbox id="isPassed" value="#{inspectionOrderDetailController.selected.isPassed}" required="true" requiredMessage="#{msg.isPassed} #{msg.ValidationRequire}"/>
-                            <label style="margin-left: 20px;">#{msg.isPassed}*</label>
+                        <h:panelGroup>
+                            <label class="label">#{msg.isPassed}*</label>
+                            <p:selectBooleanCheckbox id="isPassed" itemLabel="#{msg.isPassed}" value="#{inspectionOrderDetailController.selected.isPassed}" required="true" requiredMessage="#{msg.isPassed} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.inspectionOrderId}*</label>
                             <p:inputText id="inspectionOrderId" value="#{inspectionOrderDetailController.selected.inspectionOrderId}"  required="true" requiredMessage="#{msg.inspectionOrderId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.inspectionOrderId}*</label>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

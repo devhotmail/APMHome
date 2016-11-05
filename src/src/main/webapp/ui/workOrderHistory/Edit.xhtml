@@ -11,38 +11,38 @@
         <p:dialog id="WorkOrderHistoryEditDlg" widgetVar="WorkOrderHistoryEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderHistoryController.CRUDActionName} #{msg.WorkOrderHistory}">
             <h:form id="WorkOrderHistoryEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderHistoryController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderHistoryController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
                             <p:inputText id="id" value="#{workOrderHistoryController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{workOrderHistoryController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.siteId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetId}*</label>
                             <p:inputText id="assetId" value="#{workOrderHistoryController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.assetId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.updatePersonId}*</label>
                             <p:inputText id="updatePersonId" value="#{workOrderHistoryController.selected.updatePersonId}"  required="true" requiredMessage="#{msg.updatePersonId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.updatePersonId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.updatePersonName}*</label>
                             <p:inputText id="updatePersonName" value="#{workOrderHistoryController.selected.updatePersonName}"  required="true" requiredMessage="#{msg.updatePersonName} #{msg.ValidationRequire}"/>
-                            <label>#{msg.updatePersonName}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:calendar id="updateTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderHistoryController.selected.updateTime}" required="true" requiredMessage="#{msg.updateTime} #{msg.ValidationRequire}" readonlyInput="true" showButtonPanel="true" navigator="true"/>
-                            <label>#{msg.updateTime}*</label>
+                        <h:panelGroup>
+                            <label class="label">#{msg.updateTime}*</label>
+                            <p:calendar id="updateTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderHistoryController.selected.updateTime}" required="true" requiredMessage="#{msg.updateTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.updateDetail}*</label>
                             <p:inputText id="updateDetail" value="#{workOrderHistoryController.selected.updateDetail}"  required="true" requiredMessage="#{msg.updateDetail} #{msg.ValidationRequire}"/>
-                            <label>#{msg.updateDetail}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.workOrderId}*</label>
                             <p:inputText id="workOrderId" value="#{workOrderHistoryController.selected.workOrderId}"  required="true" requiredMessage="#{msg.workOrderId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.workOrderId}*</label>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

@@ -11,26 +11,30 @@
         <p:dialog id="InspectionChecklistEditDlg" widgetVar="InspectionChecklistEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionChecklistController.CRUDActionName} #{msg.InspectionChecklist}">
             <h:form id="InspectionChecklistEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionChecklistController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionChecklistController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
                             <p:inputText id="id" value="#{inspectionChecklistController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{inspectionChecklistController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.siteId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.item}*</label>
                             <p:inputText id="item" value="#{inspectionChecklistController.selected.item}"  required="true" requiredMessage="#{msg.item} #{msg.ValidationRequire}"/>
-                            <label>#{msg.item}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.displayOrder}*</label>
                             <p:inputText id="displayOrder" value="#{inspectionChecklistController.selected.displayOrder}"  required="true" requiredMessage="#{msg.displayOrder} #{msg.ValidationRequire}"/>
-                            <label>#{msg.displayOrder}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetId}*</label>
                             <p:inputText id="assetId" value="#{inspectionChecklistController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.assetId}*</label>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.checklistType}*</label>
+                            <p:inputText id="checklistType" value="#{inspectionChecklistController.selected.checklistType}"  required="true" requiredMessage="#{msg.checklistType} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

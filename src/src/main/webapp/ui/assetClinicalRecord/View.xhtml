@@ -11,11 +11,13 @@
         <p:dialog id="AssetClinicalRecordViewDlg" widgetVar="AssetClinicalRecordViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetClinicalRecordController.CRUDActionName} #{msg.AssetClinicalRecord}">
             <h:form id="AssetClinicalRecordViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{assetClinicalRecordController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{assetClinicalRecordController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{assetClinicalRecordController.selected.id}"/>
                         <h:outputLabel value="#{msg.siteId}" for="siteId" />
                         <h:outputText value="#{assetClinicalRecordController.selected.siteId}"/>
+                        <h:outputLabel value="#{msg.hospitalId}" for="hospitalId" />
+                        <h:outputText value="#{assetClinicalRecordController.selected.hospitalId}"/>
                         <h:outputLabel value="#{msg.modalityId}" for="modalityId" />
                         <h:outputText value="#{assetClinicalRecordController.selected.modalityId}"/>
                         <h:outputLabel value="#{msg.modalityTypeId}" for="modalityTypeId" />

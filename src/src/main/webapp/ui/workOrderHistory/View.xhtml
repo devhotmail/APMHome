@@ -11,7 +11,7 @@
         <p:dialog id="WorkOrderHistoryViewDlg" widgetVar="WorkOrderHistoryViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderHistoryController.CRUDActionName} #{msg.WorkOrderHistory}">
             <h:form id="WorkOrderHistoryViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{workOrderHistoryController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{workOrderHistoryController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{workOrderHistoryController.selected.id}"/>
                         <h:outputLabel value="#{msg.siteId}" for="siteId" />

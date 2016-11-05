@@ -11,7 +11,7 @@
         <p:dialog id="SupplierViewDlg" widgetVar="SupplierViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{supplierController.CRUDActionName} #{msg.Supplier}">
             <h:form id="SupplierViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{supplierController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{supplierController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{supplierController.selected.id}"/>
                         <h:outputLabel value="#{msg.siteId}" for="siteId" />

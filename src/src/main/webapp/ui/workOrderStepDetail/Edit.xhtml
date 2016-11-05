@@ -11,34 +11,34 @@
         <p:dialog id="WorkOrderStepDetailEditDlg" widgetVar="WorkOrderStepDetailEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderStepDetailController.CRUDActionName} #{msg.WorkOrderStepDetail}">
             <h:form id="WorkOrderStepDetailEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderStepDetailController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderStepDetailController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
                             <p:inputText id="id" value="#{workOrderStepDetailController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{workOrderStepDetailController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.siteId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.manHours}</label>
                             <p:inputText id="manHours" value="#{workOrderStepDetailController.selected.manHours}" />
-                            <label>#{msg.manHours}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.accessory}</label>
                             <p:inputText id="accessory" value="#{workOrderStepDetailController.selected.accessory}" />
-                            <label>#{msg.accessory}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.accessoryQuantity}</label>
                             <p:inputText id="accessoryQuantity" value="#{workOrderStepDetailController.selected.accessoryQuantity}" />
-                            <label>#{msg.accessoryQuantity}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.accessoryPrice}</label>
                             <p:inputText id="accessoryPrice" value="#{workOrderStepDetailController.selected.accessoryPrice}" />
-                            <label>#{msg.accessoryPrice}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.workOrderStepId}*</label>
                             <p:inputText id="workOrderStepId" value="#{workOrderStepDetailController.selected.workOrderStepId}"  required="true" requiredMessage="#{msg.workOrderStepId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.workOrderStepId}*</label>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

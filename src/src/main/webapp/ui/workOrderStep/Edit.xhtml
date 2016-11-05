@@ -11,46 +11,50 @@
         <p:dialog id="WorkOrderStepEditDlg" widgetVar="WorkOrderStepEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderStepController.CRUDActionName} #{msg.WorkOrderStep}">
             <h:form id="WorkOrderStepEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderStepController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderStepController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
                             <p:inputText id="id" value="#{workOrderStepController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{workOrderStepController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.siteId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.stepId}*</label>
+                            <p:inputText id="stepId" value="#{workOrderStepController.selected.stepId}"  required="true" requiredMessage="#{msg.stepId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.stepName}*</label>
                             <p:inputText id="stepName" value="#{workOrderStepController.selected.stepName}"  required="true" requiredMessage="#{msg.stepName} #{msg.ValidationRequire}"/>
-                            <label>#{msg.stepName}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerId}*</label>
                             <p:inputText id="ownerId" value="#{workOrderStepController.selected.ownerId}"  required="true" requiredMessage="#{msg.ownerId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.ownerId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerName}*</label>
                             <p:inputText id="ownerName" value="#{workOrderStepController.selected.ownerName}"  required="true" requiredMessage="#{msg.ownerName} #{msg.ValidationRequire}"/>
-                            <label>#{msg.ownerName}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderStepController.selected.startTime}" required="true" requiredMessage="#{msg.startTime} #{msg.ValidationRequire}" readonlyInput="true" showButtonPanel="true" navigator="true"/>
-                            <label>#{msg.startTime}*</label>
+                        <h:panelGroup>
+                            <label class="label">#{msg.startTime}*</label>
+                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderStepController.selected.startTime}" required="true" requiredMessage="#{msg.startTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderStepController.selected.endTime}" required="true" requiredMessage="#{msg.endTime} #{msg.ValidationRequire}" readonlyInput="true" showButtonPanel="true" navigator="true"/>
-                            <label>#{msg.endTime}*</label>
+                        <h:panelGroup>
+                            <label class="label">#{msg.endTime}*</label>
+                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderStepController.selected.endTime}" required="true" requiredMessage="#{msg.endTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.description}</label>
                             <p:inputText id="description" value="#{workOrderStepController.selected.description}" />
-                            <label>#{msg.description}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.attachmentUrl}</label>
                             <p:inputText id="attachmentUrl" value="#{workOrderStepController.selected.attachmentUrl}" />
-                            <label>#{msg.attachmentUrl}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.workOrderId}*</label>
                             <p:inputText id="workOrderId" value="#{workOrderStepController.selected.workOrderId}"  required="true" requiredMessage="#{msg.workOrderId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.workOrderId}*</label>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

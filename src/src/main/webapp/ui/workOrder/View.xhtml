@@ -11,11 +11,15 @@
         <p:dialog id="WorkOrderViewDlg" widgetVar="WorkOrderViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderController.CRUDActionName} #{msg.WorkOrder}">
             <h:form id="WorkOrderViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{workOrderController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{workOrderController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{workOrderController.selected.id}"/>
                         <h:outputLabel value="#{msg.siteId}" for="siteId" />
                         <h:outputText value="#{workOrderController.selected.siteId}"/>
+                        <h:outputLabel value="#{msg.hospitalId}" for="hospitalId" />
+                        <h:outputText value="#{workOrderController.selected.hospitalId}"/>
+                        <h:outputLabel value="#{msg.assetName}" for="assetName" />
+                        <h:outputText value="#{workOrderController.selected.assetName}"/>
                         <h:outputLabel value="#{msg.name}" for="name" />
                         <h:outputText value="#{workOrderController.selected.name}"/>
                         <h:outputLabel value="#{msg.creatorId}" for="creatorId" />

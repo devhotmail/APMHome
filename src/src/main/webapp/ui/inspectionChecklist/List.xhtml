@@ -18,7 +18,7 @@
                     lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
                     rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
                     paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
-                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
                     rows="20" emptyMessage="#{msg.noRecordFound}"
                     rowsPerPageTemplate="20,40,60,90">
 
@@ -40,8 +40,11 @@
                     <p:column headerText="#{msg.assetId}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
                         <h:outputText value="#{item.assetId}"/>
                     </p:column>
+                    <p:column headerText="#{msg.checklistType}" sortBy="#{item.checklistType}" filterBy="#{item.checklistType}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.checklistType}"/>
+                    </p:column>
                     <f:facet name="{Toolbar}">
-                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
                             <p:dataExporter type="xls" target="datalist" fileName="InspectionChecklist_export"/>
                         </p:commandButton>
                         <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{inspectionChecklistController.prepareCreate}" update=":InspectionChecklistEditDlg" oncomplete="PF('InspectionChecklistEditDialog').show()"/>

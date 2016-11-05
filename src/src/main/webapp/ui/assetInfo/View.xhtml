@@ -11,7 +11,7 @@
         <p:dialog id="AssetInfoViewDlg" widgetVar="AssetInfoViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetInfoController.CRUDActionName} #{msg.AssetInfo}">
             <h:form id="AssetInfoViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{assetInfoController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{assetInfoController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{assetInfoController.selected.id}"/>
                         <h:outputLabel value="#{msg.siteId}" for="siteId" />
@@ -90,8 +90,16 @@
                         <h:outputText value="#{assetInfoController.selected.terminateDate}">
                             <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                         </h:outputText>
-                        <h:outputLabel value="#{msg.planDate}" for="planDate" />
-                        <h:outputText value="#{assetInfoController.selected.planDate}">
+                        <h:outputLabel value="#{msg.lastPmDate}" for="lastPmDate" />
+                        <h:outputText value="#{assetInfoController.selected.lastPmDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.lastMeteringDate}" for="lastMeteringDate" />
+                        <h:outputText value="#{assetInfoController.selected.lastMeteringDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.lastQaDate}" for="lastQaDate" />
+                        <h:outputText value="#{assetInfoController.selected.lastQaDate}">
                             <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.purchasePrice}" for="purchasePrice" />

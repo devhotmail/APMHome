@@ -11,58 +11,58 @@
         <p:dialog id="SiteInfoEditDlg" widgetVar="SiteInfoEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{siteInfoController.CRUDActionName} #{msg.SiteInfo}">
             <h:form id="SiteInfoEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{siteInfoController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{siteInfoController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
                             <p:inputText id="id" value="#{siteInfoController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="name" value="#{siteInfoController.selected.name}" />
-                            <label>#{msg.name}</label>
+                        <h:panelGroup>
+                            <label class="label">#{msg.name}*</label>
+                            <p:inputText id="name" value="#{siteInfoController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.nameEn}</label>
                             <p:inputText id="nameEn" value="#{siteInfoController.selected.nameEn}" />
-                            <label>#{msg.nameEn}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.aliasName}</label>
                             <p:inputText id="aliasName" value="#{siteInfoController.selected.aliasName}" />
-                            <label>#{msg.aliasName}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.description}</label>
                             <p:inputText id="description" value="#{siteInfoController.selected.description}" />
-                            <label>#{msg.description}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.contactPerson}</label>
                             <p:inputText id="contactPerson" value="#{siteInfoController.selected.contactPerson}" />
-                            <label>#{msg.contactPerson}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.contactPhone}</label>
                             <p:inputText id="contactPhone" value="#{siteInfoController.selected.contactPhone}" />
-                            <label>#{msg.contactPhone}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.contactEmail}</label>
                             <p:inputText id="contactEmail" value="#{siteInfoController.selected.contactEmail}" />
-                            <label>#{msg.contactEmail}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.location}</label>
                             <p:inputText id="location" value="#{siteInfoController.selected.location}" />
-                            <label>#{msg.location}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.locationEn}</label>
                             <p:inputText id="locationEn" value="#{siteInfoController.selected.locationEn}" />
-                            <label>#{msg.locationEn}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.timeZone}</label>
                             <p:inputText id="timeZone" value="#{siteInfoController.selected.timeZone}" />
-                            <label>#{msg.timeZone}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.defaultLang}</label>
                             <p:inputText id="defaultLang" value="#{siteInfoController.selected.defaultLang}" />
-                            <label>#{msg.defaultLang}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:selectBooleanCheckbox id="isEnabled" value="#{siteInfoController.selected.isEnabled}"/>
-                            <label style="margin-left: 20px;">#{msg.isEnabled}</label>
+                        <h:panelGroup>
+                            <label class="label">#{msg.isEnabled}</label>
+                            <p:selectBooleanCheckbox id="isEnabled" itemLabel="#{msg.isEnabled}" value="#{siteInfoController.selected.isEnabled}"/>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

@@ -11,7 +11,7 @@
         <p:dialog id="PmOrderViewDlg" widgetVar="PmOrderViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{pmOrderController.CRUDActionName} #{msg.PmOrder}">
             <h:form id="PmOrderViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{pmOrderController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{pmOrderController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{pmOrderController.selected.id}"/>
                         <h:outputLabel value="#{msg.siteId}" for="siteId" />

@@ -11,7 +11,7 @@
         <p:dialog id="InspectionChecklistViewDlg" widgetVar="InspectionChecklistViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionChecklistController.CRUDActionName} #{msg.InspectionChecklist}">
             <h:form id="InspectionChecklistViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{inspectionChecklistController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{inspectionChecklistController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{inspectionChecklistController.selected.id}"/>
                         <h:outputLabel value="#{msg.siteId}" for="siteId" />
@@ -22,6 +22,8 @@
                         <h:outputText value="#{inspectionChecklistController.selected.displayOrder}"/>
                         <h:outputLabel value="#{msg.assetId}" for="assetId" />
                         <h:outputText value="#{inspectionChecklistController.selected.assetId}"/>
+                        <h:outputLabel value="#{msg.checklistType}" for="checklistType" />
+                        <h:outputText value="#{inspectionChecklistController.selected.checklistType}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{inspectionChecklistController.deleteAction}" icon="ui-icon-trash" actionListener="#{inspectionChecklistController.delete}" value="#{msg.Delete}" update="display,:InspectionChecklistViewDlg, :InspectionChecklistListForm:datalist, :growl" oncomplete="handleSubmit(args, 'InspectionChecklistViewDialog');"/>

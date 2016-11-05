@@ -11,74 +11,74 @@
         <p:dialog id="PmOrderEditDlg" widgetVar="PmOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{pmOrderController.CRUDActionName} #{msg.PmOrder}">
             <h:form id="PmOrderEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{pmOrderController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{pmOrderController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
                             <p:inputText id="id" value="#{pmOrderController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{pmOrderController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.siteId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{pmOrderController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
-                            <label>#{msg.name}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.creatorId}*</label>
                             <p:inputText id="creatorId" value="#{pmOrderController.selected.creatorId}"  required="true" requiredMessage="#{msg.creatorId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.creatorId}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.creatorName}*</label>
                             <p:inputText id="creatorName" value="#{pmOrderController.selected.creatorName}"  required="true" requiredMessage="#{msg.creatorName} #{msg.ValidationRequire}"/>
-                            <label>#{msg.creatorName}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:calendar id="createTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.createTime}" required="true" requiredMessage="#{msg.createTime} #{msg.ValidationRequire}" readonlyInput="true" showButtonPanel="true" navigator="true"/>
-                            <label>#{msg.createTime}*</label>
+                        <h:panelGroup>
+                            <label class="label">#{msg.createTime}*</label>
+                            <p:calendar id="createTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.createTime}" required="true" requiredMessage="#{msg.createTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerId}</label>
                             <p:inputText id="ownerId" value="#{pmOrderController.selected.ownerId}" />
-                            <label>#{msg.ownerId}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerName}</label>
                             <p:inputText id="ownerName" value="#{pmOrderController.selected.ownerName}" />
-                            <label>#{msg.ownerName}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerOrgId}</label>
                             <p:inputText id="ownerOrgId" value="#{pmOrderController.selected.ownerOrgId}" />
-                            <label>#{msg.ownerOrgId}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerOrgName}</label>
                             <p:inputText id="ownerOrgName" value="#{pmOrderController.selected.ownerOrgName}" />
-                            <label>#{msg.ownerOrgName}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.startTime}" readonlyInput="true" showButtonPanel="true" navigator="true"/>
-                            <label>#{msg.startTime}</label>
+                        <h:panelGroup>
+                            <label class="label">#{msg.startTime}</label>
+                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.endTime}" readonlyInput="true" showButtonPanel="true" navigator="true"/>
-                            <label>#{msg.endTime}</label>
+                        <h:panelGroup>
+                            <label class="label">#{msg.endTime}</label>
+                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:selectBooleanCheckbox id="isFinished" value="#{pmOrderController.selected.isFinished}" required="true" requiredMessage="#{msg.isFinished} #{msg.ValidationRequire}"/>
-                            <label style="margin-left: 20px;">#{msg.isFinished}*</label>
+                        <h:panelGroup>
+                            <label class="label">#{msg.isFinished}*</label>
+                            <p:selectBooleanCheckbox id="isFinished" itemLabel="#{msg.isFinished}" value="#{pmOrderController.selected.isFinished}" required="true" requiredMessage="#{msg.isFinished} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.comments}</label>
                             <p:inputText id="comments" value="#{pmOrderController.selected.comments}" />
-                            <label>#{msg.comments}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:calendar id="nextTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.nextTime}" readonlyInput="true" showButtonPanel="true" navigator="true"/>
-                            <label>#{msg.nextTime}</label>
+                        <h:panelGroup>
+                            <label class="label">#{msg.nextTime}</label>
+                            <p:calendar id="nextTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.nextTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.reportUrl}</label>
                             <p:inputText id="reportUrl" value="#{pmOrderController.selected.reportUrl}" />
-                            <label>#{msg.reportUrl}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetId}*</label>
                             <p:inputText id="assetId" value="#{pmOrderController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.assetId}*</label>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

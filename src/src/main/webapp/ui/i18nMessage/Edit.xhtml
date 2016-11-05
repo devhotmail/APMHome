@@ -11,34 +11,34 @@
         <p:dialog id="I18nMessageEditDlg" widgetVar="I18nMessageEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{i18nMessageController.CRUDActionName} #{msg.I18nMessage}">
             <h:form id="I18nMessageEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{i18nMessageController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{i18nMessageController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
                             <p:inputText id="id" value="#{i18nMessageController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.msgType}*</label>
                             <p:inputText id="msgType" value="#{i18nMessageController.selected.msgType}"  required="true" requiredMessage="#{msg.msgType} #{msg.ValidationRequire}"/>
-                            <label>#{msg.msgType}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.msgKey}*</label>
                             <p:inputText id="msgKey" value="#{i18nMessageController.selected.msgKey}"  required="true" requiredMessage="#{msg.msgKey} #{msg.ValidationRequire}"/>
-                            <label>#{msg.msgKey}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.valueZh}</label>
                             <p:inputText id="valueZh" value="#{i18nMessageController.selected.valueZh}" />
-                            <label>#{msg.valueZh}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.valueEn}</label>
                             <p:inputText id="valueEn" value="#{i18nMessageController.selected.valueEn}" />
-                            <label>#{msg.valueEn}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.valueTw}</label>
                             <p:inputText id="valueTw" value="#{i18nMessageController.selected.valueTw}" />
-                            <label>#{msg.valueTw}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}</label>
                             <p:inputText id="siteId" value="#{i18nMessageController.selected.siteId}" />
-                            <label>#{msg.siteId}</label>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

@@ -11,7 +11,7 @@
         <p:dialog id="WorkOrderStepDetailViewDlg" widgetVar="WorkOrderStepDetailViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderStepDetailController.CRUDActionName} #{msg.WorkOrderStepDetail}">
             <h:form id="WorkOrderStepDetailViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{workOrderStepDetailController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{workOrderStepDetailController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{workOrderStepDetailController.selected.id}"/>
                         <h:outputLabel value="#{msg.siteId}" for="siteId" />

@@ -11,7 +11,7 @@
         <p:dialog id="I18nMessageViewDlg" widgetVar="I18nMessageViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{i18nMessageController.CRUDActionName} #{msg.I18nMessage}">
             <h:form id="I18nMessageViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{i18nMessageController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{i18nMessageController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{i18nMessageController.selected.id}"/>
                         <h:outputLabel value="#{msg.msgType}" for="msgType" />

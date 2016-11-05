@@ -11,13 +11,15 @@
         <p:dialog id="OrgInfoViewDlg" widgetVar="OrgInfoViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{orgInfoController.CRUDActionName} #{msg.OrgInfo}">
             <h:form id="OrgInfoViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{orgInfoController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{orgInfoController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{orgInfoController.selected.id}"/>
                         <h:outputLabel value="#{msg.name}" for="name" />
                         <h:outputText value="#{orgInfoController.selected.name}"/>
                         <h:outputLabel value="#{msg.nameEn}" for="nameEn" />
                         <h:outputText value="#{orgInfoController.selected.nameEn}"/>
+                        <h:outputLabel value="#{msg.hospitalId}" for="hospitalId" />
+                        <h:outputText value="#{orgInfoController.selected.hospitalId}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{orgInfoController.deleteAction}" icon="ui-icon-trash" actionListener="#{orgInfoController.delete}" value="#{msg.Delete}" update="display,:OrgInfoViewDlg, :OrgInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'OrgInfoViewDialog');"/>

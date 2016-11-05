@@ -18,7 +18,7 @@
                     lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
                     rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
                     paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
-                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
                     rows="20" emptyMessage="#{msg.noRecordFound}"
                     rowsPerPageTemplate="20,40,60,90">
 
@@ -30,6 +30,9 @@
                     </p:column>
                     <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
                         <h:outputText value="#{item.siteId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.stepId}" sortBy="#{item.stepId}" filterBy="#{item.stepId}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.stepId}"/>
                     </p:column>
                     <p:column headerText="#{msg.stepName}" sortBy="#{item.stepName}" filterBy="#{item.stepName}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.stepName}"/>
@@ -66,7 +69,7 @@
                         <h:outputText value="#{item.workOrderId}"/>
                     </p:column>
                     <f:facet name="{Toolbar}">
-                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
                             <p:dataExporter type="xls" target="datalist" fileName="WorkOrderStep_export"/>
                         </p:commandButton>
                         <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{workOrderStepController.prepareCreate}" update=":WorkOrderStepEditDlg" oncomplete="PF('WorkOrderStepEditDialog').show()"/>

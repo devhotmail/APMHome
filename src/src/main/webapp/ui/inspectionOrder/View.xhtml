@@ -11,7 +11,7 @@
         <p:dialog id="InspectionOrderViewDlg" widgetVar="InspectionOrderViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionOrderController.CRUDActionName} #{msg.InspectionOrder}">
             <h:form id="InspectionOrderViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{inspectionOrderController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{inspectionOrderController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{inspectionOrderController.selected.id}"/>
                         <h:outputLabel value="#{msg.siteId}" for="siteId" />
