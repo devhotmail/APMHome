@@ -40,13 +40,60 @@ top: -100%!important;
 color: #999!important;
 font-size: 12px!important;
 }
+.label {
+display: block!important;
+color: #999!important;
+font-size: 12px!important;
+}
 .md-inputfield label{
 color: #999!important;
 }
 .popupIconButton{
-background-color: #757575!important;
-float: right!important; 
-top: -28px!important;
+float: right!important;
+background-color: #7f8c8d!important;
+xright: 28px!important;
 height:26px!important;
-width: 16px!important;
+width: 22px!important;
+top: -4px!important;
+-webkit-box-shadow: none!important;
+box-shadow: none!important;
+}
+.popupIconButton2{
+float: right!important;
+background-color: #7f8c8d!important;
+height:26px!important;
+width: 22px!important;
+zoom: 0.8!important;
+}
+.inputWithPopupButton{
+width: 80%!important;
+}
+.ui-panelgrid .ui-selectonemenu{
+width: 100%!important;
+}
+.ui-calendar .ui-inputfield{
+width: 80%!important;
+padding: 0!important;
+}
+.ui-calendar .ui-button-text{
+padding: 0!important;
+}
+table.ui-selectoneradio{
+vertical-align: top!important;
+border-spacing: 1px!important;
+height: 17px!important;
+border-bottom: 1px solid rgb(189, 189, 189);
+}
+table.ui-selectoneradio .ui-state-focus{
+border-bottom: 1px solid rgb(189, 189, 189);
+}
+
+.ui-selectmanycheckbox.ui-widget td, .ui-selectoneradio.ui-widget td, .ui-selectoneradio.ui-widget label {
+border-width: 0px!important;
+margin: 0px!important;
+padding: 0px!important;
+vertical-align: top!important;
+height: 17px!important;
+line-height: 17px!important;
+border-image-width: 0!important;
 }
