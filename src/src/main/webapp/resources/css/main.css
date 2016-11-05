@@ -22,6 +22,17 @@ z-index: 1800!important;
 .login-panel{
 min-height: 200px!important;
 }
+.ui-widget-header{
+background-color: #e8e8e8!important;
+border: 0!important;
+color: black!important;
+}
+.ui-paginator, .ui-paginator .ui-paginator-page{
+color: black!important;
+}
+.ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-last, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-prev {
+color: black!important;
+}
 .ui-chkbox {
 width: 95%!important;
 }
