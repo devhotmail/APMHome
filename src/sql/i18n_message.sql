@@ -153,8 +153,8 @@ INSERT INTO "i18n_message" VALUES (624,'field_name','confirmedEndTime','确认�
 INSERT INTO "i18n_message" VALUES (625,'field_name','confirmedStartTime','确认的停机时间','Confirmed Start Time',null,-1);
 INSERT INTO "i18n_message" VALUES (626,'field_name','contactor','联系人姓名','Contactor',null,-1);
 INSERT INTO "i18n_message" VALUES (627,'field_name','createTime','创建时间','Create Time',null,-1);
-INSERT INTO "i18n_message" VALUES (628,'field_name','creatorId','创建方','Creator Id',null,-1);
-INSERT INTO "i18n_message" VALUES (629,'field_name','creatorName','创建方','Creator Name',null,-1);
+INSERT INTO "i18n_message" VALUES (628,'field_name','creatorId','创建者','Creator Id',null,-1);
+INSERT INTO "i18n_message" VALUES (629,'field_name','creatorName','创建者','Creator Name',null,-1);
 INSERT INTO "i18n_message" VALUES (630,'field_name','currentPersonId','当前处理人','Current Person Id',null,-1);
 INSERT INTO "i18n_message" VALUES (631,'field_name','currentPersonName','当前处理人','Current Person Name',null,-1);
 INSERT INTO "i18n_message" VALUES (632,'field_name','currentStep','当前处理步骤','Current Step',null,-1);
@@ -264,7 +264,9 @@ INSERT INTO "i18n_message" VALUES (735,'field_name','timeZone','时区','Time Zo
 INSERT INTO "i18n_message" VALUES (736,'field_name','siteDescription','详细描述','Description',null,-1);
 INSERT INTO "i18n_message" VALUES (737,'field_name','userName','姓名','Name',null,-1);
 INSERT INTO "i18n_message" VALUES (738,'field_name','workOrderName','工单名称','work Order Name',null,-1);
-
+INSERT INTO "i18n_message" VALUES (739,'field_name','lastPmDate','上次维护时间','Last Maintainance Date',null,-1);
+INSERT INTO "i18n_message" VALUES (740,'field_name','lastQaDate','上次质控时间','Last Quality Control Date',null,-1);
+INSERT INTO "i18n_message" VALUES (741,'field_name','lastMeteringDate','上次计量时间','Last Metering Date',null,-1);
 
 -- field value code types  ( id from 1500)
 
@@ -280,9 +282,19 @@ INSERT INTO "i18n_message" VALUES (1513,'wo_steps','4', '领工','Accept',null,-
 INSERT INTO "i18n_message" VALUES (1514,'wo_steps','5', '维修','Repair',null,-1);
 INSERT INTO "i18n_message" VALUES (1515,'wo_steps','6', '关单','Close',null,-1);
 
+INSERT INTO "i18n_message" VALUES (1517,'asset_status','1', '正常','Up',null,-1);
+INSERT INTO "i18n_message" VALUES (1518,'asset_status','2', '停机','Down',null,-1);
+INSERT INTO "i18n_message" VALUES (1519,'asset_status','3', '有异常','Partial',null,-1);
+
 INSERT INTO "i18n_message" VALUES (1520,'checklist_type','1','巡检','Inspection',null,-1);
 INSERT INTO "i18n_message" VALUES (1521,'checklist_type','2','计量','Inspection',null,-1);
 INSERT INTO "i18n_message" VALUES (1522,'checklist_type','3','质控','Inspection',null,-1);
+
+INSERT INTO "i18n_message" VALUES (1523,'case_priority','1','一般','Normal',null,-1);
+INSERT INTO "i18n_message" VALUES (1524,'case_priority','2','重要','Important',null,-1);
+INSERT INTO "i18n_message" VALUES (1525,'case_priority','3','紧急','Emergent',null,-1);
+
+
 
 INSERT INTO "i18n_message" VALUES (1530,'attachment_type','1','照片','Inspection',null,-1);
 INSERT INTO "i18n_message" VALUES (1531,'attachment_type','2','合同','Inspection',null,-1);
