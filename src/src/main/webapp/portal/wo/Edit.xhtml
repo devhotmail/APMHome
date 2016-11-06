@@ -113,6 +113,7 @@
                             <label>#{msg.assetId}*</label>
                         </h:panelGroup>
                     </p:panelGrid>
+                    
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{workOrderController.save}" value="#{msg.Save}" update="display,:WorkOrderEditDlg, :WorkOrderListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'WorkOrderEditDialog');"/>
                     &nbsp;&nbsp;

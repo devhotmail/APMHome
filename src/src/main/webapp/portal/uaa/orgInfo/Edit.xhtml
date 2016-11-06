@@ -12,17 +12,17 @@
             <h:form id="OrgInfoEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{orgInfoController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{orgInfoController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
-                            <label>#{msg.name}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.nameEn}</label>
                             <p:inputText id="nameEn" value="#{orgInfoController.selected.nameEn}" />
-                            <label>#{msg.nameEn}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.parentId}</label>
                             <p:inputText id="parentOrg" value="#{orgInfoController.selected.parentOrg}" />
-                            <label>#{msg.parentId}</label>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>
