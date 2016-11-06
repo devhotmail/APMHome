@@ -45,31 +45,12 @@ color: #ffffff!important;
 .ui-tree .ui-chkbox {
 width: 18px!important;
 }
-.labelOnTop {
-position: relative!important;
-top: -100%!important;
-color: #999!important;
-font-size: 12px!important;
-}
 .label {
 display: block!important;
 color: #999!important;
 font-size: 12px!important;
 }
-.md-inputfield label{
-color: #999!important;
-}
 .popupIconButton{
-float: right!important;
-background-color: #7f8c8d!important;
-xright: 28px!important;
-height:26px!important;
-width: 22px!important;
-top: -4px!important;
--webkit-box-shadow: none!important;
-box-shadow: none!important;
-}
-.popupIconButton2{
 float: right!important;
 background-color: #7f8c8d!important;
 height:26px!important;
@@ -93,12 +74,7 @@ table.ui-selectoneradio{
 vertical-align: top!important;
 border-spacing: 1px!important;
 height: 17px!important;
-border-bottom: 1px solid rgb(189, 189, 189);
 }
-table.ui-selectoneradio .ui-state-focus{
-border-bottom: 1px solid rgb(189, 189, 189);
-}
-
 .ui-selectmanycheckbox.ui-widget td, .ui-selectoneradio.ui-widget td, .ui-selectoneradio.ui-widget label {
 border-width: 0px!important;
 margin: 0px!important;
