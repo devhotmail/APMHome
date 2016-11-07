@@ -2,6 +2,7 @@ package com.ge.apm.view.analysis;
 
 import com.ge.apm.view.sysutil.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.PieChartModel;
 
 @ManagedBean
 @ViewScoped
@@ -37,7 +39,9 @@ public class HomeHeadController extends SqlConfigurableChartController {
     private int hospitalId = 0;
     private HashMap<String, Object> sqlParams = new HashMap<>();
     
-    private BarChartModel barAnnualRevenue = new BarChartModel();;
+    private BarChartModel barAnnualRevenue = new BarChartModel();
+    private PieChartModel pieAnnualRevenue = new PieChartModel();
+    
     
     
     private static final long serialVersionUID = 1L;
@@ -63,6 +67,23 @@ public class HomeHeadController extends SqlConfigurableChartController {
         createAnnualBar();
         return barAnnualRevenue;
     }
+    
+    public PieChartModel getPieAnnualRevenue() {
+        createAnnualPie();
+        return pieAnnualRevenue;
+    }
+    
+    private void createAnnualPie() {  
+         
+        pieAnnualRevenue.set("Brand 1", 540);
+        pieAnnualRevenue.set("Brand 2", 325);
+        pieAnnualRevenue.set("Brand 3", 702);
+        pieAnnualRevenue.set("Brand 4", 421);
+         
+        pieAnnualRevenue.setTitle("Simple Pie");
+        pieAnnualRevenue.setLegendPosition("w");
+    }
+    
     private List<Map<String, Object>> getAnnualRevenue() {
         hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
         this.logStr = "Current User Account is " +  UserContextService.getCurrentUserAccount().getName() + 
@@ -203,6 +224,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
         sqlParams.put("hospitalId", hospitalId);
         sqlParams.put("targetYear", this.targetYear);
 
+        // get revenue
         sql = "select a.function_type as key, "
             + "sum(r.price_amount) as value "
             + "from asset_info a left join asset_clinical_record r "
@@ -215,6 +237,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
         label = "re";
         drawBar(label, r);
         
+        // get asset deprecate value
         sql = "select a.function_type as key, "
             + "sum(d.deprecate_amount) as value "
             + "from asset_info a left join asset_depreciation d "
@@ -222,10 +245,10 @@ public class HomeHeadController extends SqlConfigurableChartController {
             + "group by a.function_type order by a.function_type asc;";
         
         List<Map<String, Object>> d = prepareData(sql, sqlParams);
-        label = "dep";
-        drawBar(label, d);
+//        label = "dep";
+//        drawBar(label, d);
         
-        
+        // get maintenance cost
         sql = "select a.function_type as key, "
             + "sum(w.total_price) as value "
             + "from asset_info a left join work_order w "
@@ -235,9 +258,40 @@ public class HomeHeadController extends SqlConfigurableChartController {
             + "group by a.function_type order by a.function_type asc;";
         
         List<Map<String, Object>> w = prepareData(sql, sqlParams);
-        label = "work";
-        drawBar(label, w);
-         
+        
+//        label = "work";
+//        drawBar(label, w);
+        
+        // Calcuate profile = revenue - deprecate - maintenance cost
+        int index = 0;
+        List<Map<String, Object>> profit = new ArrayList<>();
+        for (Map<String, Object> item : r) {
+            String key = item.get("key").toString();  
+            
+            double value = (Double) item.get("value");
+            if (d.get(index).get("key") == null) {
+                logger.debug("Cannot get key: " + key + "in deprecate sql query.");             
+            }
+            else {
+                 value = value - (Double) d.get(index).get("value");
+            }
+            
+            if (w.get(index).get("key") == null) {
+                logger.debug("Cannot get key: " + key + "in maintenance sql query.");             
+            }
+            else {
+                 value = value - (Double) w.get(index).get("value");
+            }
+            
+            HashMap<String, Object> node = new HashMap<>();
+            node.put("key", key);
+            node.put("value", value);
+            profit.add(node);
+            index++;
+        }
+        label = "profit";
+        printList(profit);
+        drawBar(label, profit);
     }
     
     private List<Map<String, Object>> prepareData(String sql, HashMap<String, Object> sqlParams) {
@@ -247,7 +301,8 @@ public class HomeHeadController extends SqlConfigurableChartController {
         
         if (result.size() == 0) {
             Map<String, Object> item = new HashMap<>();
-            item.put("key", 0);
+            item.put("key", 1);
+            item.put("value", 0.1);
             result.add(item);
         }
         else {
@@ -256,7 +311,20 @@ public class HomeHeadController extends SqlConfigurableChartController {
             }
         }
         
+          
         return result;
+    }
+    
+    private void printList (List<Map<String, Object>> result) {
+        for (Map<String, Object> item : result) {
+            if (item.get("value") == null) {
+
+                System.out.print("Print result, key = " + item.get("key").toString() + ", value is null");
+            }
+            else {
+                System.out.print("Print result, key = " + item.get("key").toString() + ", value = " + item.get("value").toString() + "\n");
+            }
+        }
     }
     
     private void drawBar(String label, List<Map<String, Object>> result) {
@@ -271,14 +339,14 @@ public class HomeHeadController extends SqlConfigurableChartController {
     }
     
     private void checkNull(Map<String, Object> item, String targetType) {        
-        if (item.get("vlaue") == null) {
+        if (item.get("value") == null) {
             
             // add targetType, if needed.
             // convert null to associated empty value for drawing
             switch (targetType) {
                 
                 case "Double":
-                    item.put(item.get("key").toString(), 0.0);
+                    item.put("value", 0.1);
                 default:
                     ;
             }            
