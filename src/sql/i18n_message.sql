@@ -45,6 +45,7 @@ INSERT INTO "i18n_message" VALUES (40, 'label', 'RowsPerPage', '每页行数', '
 INSERT INTO "i18n_message" VALUES (41, 'label', 'AssignRole', '角色设置', 'Assign Role', NULL, -1);
 INSERT INTO "i18n_message" VALUES (42, 'label', 'ChangePassword', '修改密码', 'Change Password', NULL, -1);
 INSERT INTO "i18n_message" VALUES (43, 'label', 'ResetPassword', '重置密码', 'Reset Password', NULL, -1);
+INSERT INTO "i18n_message" VALUES (44, 'label', 'exportToXLS', '导出到Excel', 'Export To Excel', NULL, -1);
 
 
 -- menu item names  ( id from 200 to  399)
@@ -345,6 +346,12 @@ INSERT INTO "i18n_message" VALUES (1575,'asset_function_type','42', '6866医用�
 INSERT INTO "i18n_message" VALUES (1576,'asset_function_type','43', '6870软件',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1577,'asset_function_type','44', '6877介入器材',null,null,-1);
 
+
+INSERT INTO "i18n_message" VALUES (1580,'case_type','1', '故障类型1',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1581,'case_type','2', '故障类型2',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1582,'case_type','3', '故障类型3',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1583,'case_type','4', '故障类型4',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1584,'case_type','5', '故障类型5',null,null,-1);
 
 -- module's messages  (id from 3000)
 
