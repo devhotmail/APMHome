@@ -31,7 +31,11 @@ public class HomeHeadController extends SqlConfigurableChartController {
     private int revenue = 0; 
     private static final Logger logger = Logger.getLogger(HomeHeadController.class);
     private String logStr;
-    private int targetYear = 0;
+    
+    // chart parameters
+    private int targetYear = 2015;
+    private int hospitalId = 0;
+    private HashMap<String, Object> sqlParams = new HashMap<>();
     
     private BarChartModel barAnnualRevenue = new BarChartModel();;
     
@@ -60,23 +64,21 @@ public class HomeHeadController extends SqlConfigurableChartController {
         return barAnnualRevenue;
     }
     private List<Map<String, Object>> getAnnualRevenue() {
-        int hospitalId;
         hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
         this.logStr = "Current User Account is " +  UserContextService.getCurrentUserAccount().getName() + 
                 ". Hospital id is " + hospitalId + ".";
         logger.debug(this.logStr);
         
-        this.targetYear = 2015;
         HashMap<String, Object> sqlParams = new HashMap<>();
         sqlParams.put("hospitalId", hospitalId);
         sqlParams.put("targetYear", this.targetYear);
         
-        List<Map<String, Object>> result = runSQLForAnualRevenu(sqlParams);
+        List<Map<String, Object>> result = runSQLForAnnualRevenu(sqlParams);
         
         return result;
     }
     
-    private List<Map<String, Object>> runSQLForAnualRevenu(HashMap<String, Object> sqlParams) {
+    private List<Map<String, Object>> runSQLForAnnualRevenu(HashMap<String, Object> sqlParams) {
         String sql = "select a.function_type as type, "
             + "sum(r.price_amount) as revenue "
             + "from asset_info a left join asset_clinical_record r "
@@ -89,17 +91,99 @@ public class HomeHeadController extends SqlConfigurableChartController {
         List<Map<String, Object>> result = NativeSqlUtil.queryForList(sql, sqlParams);
         return result;
     }
+
+    private List<Map<String, Object>> getAnnualDep() {
+        hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
+        this.logStr = "Current User Account is " +  UserContextService.getCurrentUserAccount().getName() + 
+                ". Hospital id is " + hospitalId + ".";
+        logger.debug(this.logStr);
+        
+        HashMap<String, Object> sqlParams = new HashMap<>();
+        sqlParams.put("hospitalId", hospitalId);
+        
+        List<Map<String, Object>> result = runSQLForAnnualDep(sqlParams);
+        
+        return result;
+    }
+    
+    private List<Map<String, Object>> runSQLForAnnualDep(HashMap<String, Object> sqlParams) {
+        String sql = "select a.function_type as type, "
+                    + "sum(d.deprecate_amount) as cost "
+                    + "from asset_info a left join asset_depreciation d "
+                    + "on a.id = d.asset_id and a.hospital_id = :#hospitalId "
+                    + "group by a.function_type order by a.function_type asc;";
+                
+        logger.debug(sql);
+        
+        List<Map<String, Object>> result = NativeSqlUtil.queryForList(sql, sqlParams);
+        return result;
+    }
+
+    private List<Map<String, Object>> getAnnualWorkOrderCost() {
+        hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
+        this.logStr = "Current User Account is " +  UserContextService.getCurrentUserAccount().getName() + 
+                ". Hospital id is " + hospitalId + ".";
+        logger.debug(this.logStr);
+        
+        HashMap<String, Object> sqlParams = new HashMap<>();
+        sqlParams.put("hospitalId", hospitalId);
+        sqlParams.put("targetYear", this.targetYear);
+        
+        List<Map<String, Object>> result = runSQLForAnnualWorkOrderCost(sqlParams);
+        
+        return result;
+    }
+    
+    private List<Map<String, Object>> runSQLForAnnualWorkOrderCost(HashMap<String, Object> sqlParams) {
+        String sql = "select a.function_type as type, "
+                    + "sum(w.total_price) as cost "
+                    + "from asset_info a left join work_order w "
+                    + "on w.asset_id = a.id and a.hospital_id = :#hospitalId "
+                    + "and extract(year from w.request_time) = :#targetYear "
+                    + "and w.is_closed = true "
+                    + "group by a.function_type order by a.function_type asc;";
+  
+        logger.debug(sql);
+        
+        List<Map<String, Object>> result = NativeSqlUtil.queryForList(sql, sqlParams);
+        return result;
+    }
     
     private void createAnnualBar() {
-        List<Map<String, Object>> result = getAnnualRevenue();
-        
-        if (result.size() == 0) {
-            logger.error("No result was select.");
-            return;
-        }
-        
-        String label = new String("revenue");
-        initBarAssetROIByType(label, result);
+//        // revenue
+//        List<Map<String, Object>> revenue = getAnnualRevenue();
+//        
+//        if (revenue.size() == 0) {
+//            logger.error("No revenue result was select.");
+//            return;
+//        }
+//        
+//        String label = new String("revenue");
+//        initBarAssetROIByType(label, revenue);
+//        
+//        // asset depreciation
+//        List<Map<String, Object>> dep = getAnnualDep();
+//        
+//        if (dep.size() == 0) {
+//            logger.error("No dep result was select.");
+//            return;
+//        }
+//        
+//        // work order cost
+//        List<Map<String, Object>> cost = getAnnualWorkOrderCost();
+//        
+//        if (cost.size() == 0) {
+//            logger.error("No work order cost result was select.");
+//            return;
+//        }
+//        
+//        for (Map<String, Object> item : cost) {
+//  
+//            System.out.print(item.get("type") + " : " + item.get("cost").getClass().getName());
+//        }
+//        
+//        String label = new String("revenue");
+//        initBarAssetROIByType(label, result);        
 
         barAnnualRevenue.setLegendPosition("ne");
          
@@ -109,11 +193,96 @@ public class HomeHeadController extends SqlConfigurableChartController {
         Axis yAxis = barAnnualRevenue.getAxis(AxisType.Y);
         yAxis.setLabel("CNY");
         
+        
+        
 //        yAxis.setMin(0);
 //        yAxis.setMax(500);
+
+        String label = new String("re");    
+        
+        sqlParams.put("hospitalId", hospitalId);
+        sqlParams.put("targetYear", this.targetYear);
+
+        sql = "select a.function_type as key, "
+            + "sum(r.price_amount) as value "
+            + "from asset_info a left join asset_clinical_record r "
+            + "on a.id = r.asset_id "
+            + "and a.hospital_id = :#hospitalId and extract(year from r.exam_date) = :#targetYear "
+            + "group by a.function_type "
+            + "order by a.function_type asc;";
+        
+        List<Map<String, Object>> r = prepareData(sql, sqlParams);
+        label = "re";
+        drawBar(label, r);
+        
+        sql = "select a.function_type as key, "
+            + "sum(d.deprecate_amount) as value "
+            + "from asset_info a left join asset_depreciation d "
+            + "on a.id = d.asset_id and a.hospital_id = :#hospitalId "
+            + "group by a.function_type order by a.function_type asc;";
+        
+        List<Map<String, Object>> d = prepareData(sql, sqlParams);
+        label = "dep";
+        drawBar(label, d);
         
         
+        sql = "select a.function_type as key, "
+            + "sum(w.total_price) as value "
+            + "from asset_info a left join work_order w "
+            + "on w.asset_id = a.id and a.hospital_id = :#hospitalId "
+            + "and extract(year from w.request_time) = :#targetYear "
+            + "and w.is_closed = true "
+            + "group by a.function_type order by a.function_type asc;";
+        
+        List<Map<String, Object>> w = prepareData(sql, sqlParams);
+        label = "work";
+        drawBar(label, w);
          
+    }
+    
+    private List<Map<String, Object>> prepareData(String sql, HashMap<String, Object> sqlParams) {
+        logger.debug(sql);
+        
+        List<Map<String, Object>> result = NativeSqlUtil.queryForList(sql, sqlParams);
+        
+        if (result.size() == 0) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("key", 0);
+            result.add(item);
+        }
+        else {
+            for (Map<String, Object> item : result) {
+                checkNull(item, "Double");
+            }
+        }
+        
+        return result;
+    }
+    
+    private void drawBar(String label, List<Map<String, Object>> result) {
+        ChartSeries revenue = new ChartSeries();
+        revenue.setLabel(label);
+      
+        for (Map<String, Object> item : result) {
+            revenue.set(item.get("key").toString(), (Double) item.get("value"));
+        }
+   
+        barAnnualRevenue.addSeries(revenue);
+    }
+    
+    private void checkNull(Map<String, Object> item, String targetType) {        
+        if (item.get("vlaue") == null) {
+            
+            // add targetType, if needed.
+            // convert null to associated empty value for drawing
+            switch (targetType) {
+                
+                case "Double":
+                    item.put(item.get("key").toString(), 0.0);
+                default:
+                    ;
+            }            
+        }
     }
     
     private void initBarAssetROIByType(String label, List<Map<String, Object>> result) {
