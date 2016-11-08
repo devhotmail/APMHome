@@ -14,21 +14,23 @@
             <div class="ui-g-12">
 
                 <p align="center">
-                    <b>#{msg.WorkOrder}</b>
+                    <b>#{msg.WorkOrder} #{msg.List}</b>
                 </p>
-
+                <p:messages autoUpdate="true" closable="true" showDetail="false"/>
+                <p:messages autoUpdate="true" closable="true" showDetail="false"/>                
+                
                 <h:form id="WorkOrderListForm">
                     <p:dataTable id="datalist" value="#{workOrderController.lazyModel}" var="item" widgetVar="varDataList"
                                  selectionMode="single" selection="#{workOrderController.selected}"
-                                 lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                 lazy="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
                                  rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
-                                 paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                 paginatorTemplate="{Toolbar} {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
                                  currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
-                                 rows="1" emptyMessage="#{msg.noRecordFound}"
+                                 rows="5" emptyMessage="#{msg.noRecordFound}"
                                  rowsPerPageTemplate="20,40,60,90">
 
-                        <p:ajax event="rowSelect" update="woForm"/>
-                        <p:ajax event="filter" listener="#{workOrderController.onFilter}" update="woForm"/>
+                        <p:ajax event="rowSelect" update="WorkOrderEditForm"/>
+                        <p:ajax event="filter" listener="#{workOrderController.onFilter}" update="WorkOrderEditForm"/>
 
                         <p:column styleClass="textCenter"  headerText="#{msg.casePriority}" sortBy="#{item.casePriority}" filterBy="#{item.casePriority}" filterMatchMode="EQ">
                             <center><h:outputText value="#{item.casePriority}" class="priorityItem priorityItem#{item.casePriority}"/></center>
@@ -74,26 +76,15 @@
                             <h:outputText value="#{item.isClosed? msg.True2Yes : msg.False2No }"/>
                         </p:column>
                         <f:facet name="{Toolbar}">
-                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrow-downward flatIcon" ajax="false" class="flatButton">
+                            <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" value="#{msg.Create}" actionListener="#{workOrderController.prepareCreate}" update=":WorkOrderEditForm"/>
+                            <p:commandButton value="#{msg.exportToXLS}" icon="ui-icon-arrow-downward" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="WorkOrder_export"/>
                             </p:commandButton>
                         </f:facet>
                     </p:dataTable>
                 </h:form>
 
-                <br/><br/><br/>
-
-                <h:form id="woForm">
-                    <p:steps activeIndex="1" styleClass="test" readonly="false">
-                        <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '1')}" url="/home1.xhtml"/>
-                        <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '2')}" url="/home2.xhtml"/>
-                        <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '3')}" url="/home3.xhtml"/>
-                        <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '4')}" url="/home4.xhtml"/>
-                        <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '5')}" url="/home5.xhtml"/>
-                        <p:menuitem value="#{fieldMsg.fieldValue('wo_steps', '6')}" url="/home6.xhtml"/>
-                    </p:steps>
-
-                </h:form>
+                <br/>
 
                 <ui:include src="woEdit.xhtml"/>
 

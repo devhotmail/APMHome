@@ -2,15 +2,16 @@
 margin: 5px!important;
 content: ' ';
 left: 10px!important;
-width: 700px!important;
+width: 600px!important;
 border: 0!important;
 }
 .ui-steps .ui-steps-item .ui-menuitem-link {
 margin: 5px;
-width: 120px!important;
-height: 26px!important;
+width: 100px!important;
+height: 25px!important;
 background-color: rgb(0, 188, 212)!important;
 cursor: pointer!important;
+xmargin: 0px!important;
 }
 .ui-steps .ui-steps-item.ui-state-disabled .ui-menuitem-link {
 background-color: #bdbdbd!important;
@@ -22,7 +23,7 @@ background-color: #5180ce!important;
 .ui-steps .ui-steps-item .ui-menuitem-link {
 text-decoration: none!important;
 display: block!important;
-padding: 1em!important;
+padding: 0!important;
 position: relative!important;
 text-align: center!important;
 }
