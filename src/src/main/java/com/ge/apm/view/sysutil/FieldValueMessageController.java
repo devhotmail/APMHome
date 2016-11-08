@@ -60,7 +60,7 @@ public class FieldValueMessageController implements Serializable{
         
         fieldName = fieldName.toLowerCase();
         for(Map.Entry<String, I18nMessage> item: cache.entrySet()){
-            if(item.getValue().getMsgType().equals(fieldName)){
+            if(item.getValue().getMsgType().toLowerCase().equals(fieldName)){
                 msgList.add(item.getValue());
             }
         }

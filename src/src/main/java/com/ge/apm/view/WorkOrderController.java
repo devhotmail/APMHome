@@ -18,6 +18,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
 
     @Override
     protected void init() {
+        this.filterByHospital = true;
         dao = WebUtil.getBean(WorkOrderRepository.class);
     }
 
@@ -41,6 +42,10 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         return dao.find();
     }
 
+    public void onSelectWorkOrder(){
+        
+    }
+    
 /*
     @Override
     public void onBeforeNewObject(WorkOrder object) {

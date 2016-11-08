@@ -33,11 +33,11 @@ public class WorkOrder implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "site_id")
-    private int siteId;
+    private Integer siteId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "hospital_id")
-    private int hospitalId;
+    private Integer hospitalId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
@@ -51,7 +51,7 @@ public class WorkOrder implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "creator_id")
-    private int creatorId;
+    private Integer creatorId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 16)
@@ -65,7 +65,7 @@ public class WorkOrder implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "requestor_id")
-    private int requestorId;
+    private Integer requestorId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 16)
@@ -87,13 +87,13 @@ public class WorkOrder implements Serializable {
     @Column(name = "case_owner_name")
     private String caseOwnerName;
     @Column(name = "case_type")
-    private int caseType;
+    private Integer caseType;
     @Column(name = "case_sub_type")
-    private int caseSubType;
+    private Integer caseSubType;
     @Basic(optional = false)
     @NotNull
     @Column(name = "case_priority")
-    private int casePriority;
+    private Integer casePriority;
     @Basic(optional = false)
     @NotNull
     @Column(name = "is_internal")
@@ -101,14 +101,14 @@ public class WorkOrder implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "current_person_id")
-    private int currentPersonId;
+    private Integer currentPersonId;
     @Size(max = 16)
     @Column(name = "current_person_name")
     private String currentPersonName;
     @Basic(optional = false)
     @NotNull
     @Column(name = "current_step")
-    private int currentStep;
+    private Integer currentStep;
     @Basic(optional = false)
     @NotNull
     @Column(name = "is_closed")
@@ -143,11 +143,11 @@ public class WorkOrder implements Serializable {
         this.id = id;
     }
 
-    public int getHospitalId() {
+    public Integer getHospitalId() {
         return hospitalId;
     }
 
-    public void setHospitalId(int hospitalId) {
+    public void setHospitalId(Integer hospitalId) {
         this.hospitalId = hospitalId;
     }
 
@@ -167,11 +167,11 @@ public class WorkOrder implements Serializable {
         this.id = id;
     }
 
-    public int getSiteId() {
+    public Integer getSiteId() {
         return siteId;
     }
 
-    public void setSiteId(int siteId) {
+    public void setSiteId(Integer siteId) {
         this.siteId = siteId;
     }
 
@@ -183,11 +183,11 @@ public class WorkOrder implements Serializable {
         this.name = name;
     }
 
-    public int getCreatorId() {
+    public Integer getCreatorId() {
         return creatorId;
     }
 
-    public void setCreatorId(int creatorId) {
+    public void setCreatorId(Integer creatorId) {
         this.creatorId = creatorId;
     }
 
@@ -207,11 +207,11 @@ public class WorkOrder implements Serializable {
         this.createTime = createTime;
     }
 
-    public int getRequestorId() {
+    public Integer getRequestorId() {
         return requestorId;
     }
 
-    public void setRequestorId(int requestorId) {
+    public void setRequestorId(Integer requestorId) {
         this.requestorId = requestorId;
     }
 
@@ -255,27 +255,27 @@ public class WorkOrder implements Serializable {
         this.caseOwnerName = caseOwnerName;
     }
 
-    public int getCaseType() {
+    public Integer getCaseType() {
         return caseType;
     }
 
-    public void setCaseType(int caseType) {
+    public void setCaseType(Integer caseType) {
         this.caseType = caseType;
     }
 
-    public int getCaseSubType() {
+    public Integer getCaseSubType() {
         return caseSubType;
     }
 
-    public void setCaseSubType(int caseSubType) {
+    public void setCaseSubType(Integer caseSubType) {
         this.caseSubType = caseSubType;
     }
 
-    public int getCasePriority() {
+    public Integer getCasePriority() {
         return casePriority;
     }
 
-    public void setCasePriority(int casePriority) {
+    public void setCasePriority(Integer casePriority) {
         this.casePriority = casePriority;
     }
 
@@ -287,11 +287,11 @@ public class WorkOrder implements Serializable {
         this.isInternal = isInternal;
     }
 
-    public int getCurrentPersonId() {
+    public Integer getCurrentPersonId() {
         return currentPersonId;
     }
 
-    public void setCurrentPersonId(int currentPersonId) {
+    public void setCurrentPersonId(Integer currentPersonId) {
         this.currentPersonId = currentPersonId;
     }
 
@@ -303,11 +303,11 @@ public class WorkOrder implements Serializable {
         this.currentPersonName = currentPersonName;
     }
 
-    public int getCurrentStep() {
+    public Integer getCurrentStep() {
         return currentStep;
     }
 
-    public void setCurrentStep(int currentStep) {
+    public void setCurrentStep(Integer currentStep) {
         this.currentStep = currentStep;
     }
 
@@ -377,7 +377,7 @@ public class WorkOrder implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
+        Integer hash = 0;
         hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
