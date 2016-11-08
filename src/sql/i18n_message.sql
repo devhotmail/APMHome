@@ -46,6 +46,7 @@ INSERT INTO "i18n_message" VALUES (41, 'label', 'AssignRole', '角色设置', 'A
 INSERT INTO "i18n_message" VALUES (42, 'label', 'ChangePassword', '修改密码', 'Change Password', NULL, -1);
 INSERT INTO "i18n_message" VALUES (43, 'label', 'ResetPassword', '重置密码', 'Reset Password', NULL, -1);
 INSERT INTO "i18n_message" VALUES (44, 'label', 'exportToXLS', '导出到Excel', 'Export To Excel', NULL, -1);
+INSERT INTO "i18n_message" VALUES (45, 'label', 'List', '列表', 'List', NULL, -1);
 
 
 -- menu item names  ( id from 200 to  399)
@@ -142,7 +143,7 @@ INSERT INTO "i18n_message" VALUES (612,'field_name','attachmentUrl','上传附�
 INSERT INTO "i18n_message" VALUES (613,'field_name','barcode','条码','Barcode',null,-1);
 INSERT INTO "i18n_message" VALUES (614,'field_name','caseOwnerId','负责人','Case Owner Id',null,-1);
 INSERT INTO "i18n_message" VALUES (615,'field_name','caseOwnerName','负责人','Case Owner Name',null,-1);
-INSERT INTO "i18n_message" VALUES (616,'field_name','casePriority','紧急程度','Case Priority',null,-1);
+INSERT INTO "i18n_message" VALUES (616,'field_name','casePriority','紧急度','Case Priority',null,-1);
 INSERT INTO "i18n_message" VALUES (617,'field_name','caseSubType','故障子类别','Case Sub Type',null,-1);
 INSERT INTO "i18n_message" VALUES (618,'field_name','caseType','故障类别','Case Type',null,-1);
 INSERT INTO "i18n_message" VALUES (619,'field_name','city','城市','City',null,-1);
@@ -179,11 +180,11 @@ INSERT INTO "i18n_message" VALUES (649,'field_name','functionType','设备类型
 INSERT INTO "i18n_message" VALUES (650,'field_name','hospitalId','所属院区','Hospital Id',null,-1);
 INSERT INTO "i18n_message" VALUES (651,'field_name','injectCount','注射量','Inject Count',null,-1);
 INSERT INTO "i18n_message" VALUES (652,'field_name','installDate','安装日期','Install Date',null,-1);
-INSERT INTO "i18n_message" VALUES (653,'field_name','isClosed','是否已关单','Is Closed',null,-1);
-INSERT INTO "i18n_message" VALUES (654,'field_name','isFinished','是否完成','Is Finished',null,-1);
-INSERT INTO "i18n_message" VALUES (655,'field_name','isInternal','是否内部工单？','Is Internal',null,-1);
-INSERT INTO "i18n_message" VALUES (656,'field_name','isPassed','是否通过','Is Passed',null,-1);
-INSERT INTO "i18n_message" VALUES (657,'field_name','isValid','是否有效（使用）','Is Valid',null,-1);
+INSERT INTO "i18n_message" VALUES (653,'field_name','isClosed','已关单？','Is Closed',null,-1);
+INSERT INTO "i18n_message" VALUES (654,'field_name','isFinished','完成？','Is Finished',null,-1);
+INSERT INTO "i18n_message" VALUES (655,'field_name','isInternal','内部工单？','Is Internal',null,-1);
+INSERT INTO "i18n_message" VALUES (656,'field_name','isPassed','通过?','Is Passed',null,-1);
+INSERT INTO "i18n_message" VALUES (657,'field_name','isValid','在用？','Is Valid',null,-1);
 INSERT INTO "i18n_message" VALUES (658,'field_name','item','巡检项目','Item',null,-1);
 INSERT INTO "i18n_message" VALUES (659,'field_name','itemId','巡检项目','Item Id',null,-1);
 INSERT INTO "i18n_message" VALUES (660,'field_name','itemName','巡检项目','Item Name',null,-1);
@@ -268,90 +269,97 @@ INSERT INTO "i18n_message" VALUES (738,'field_name','workOrderName','工单名�
 INSERT INTO "i18n_message" VALUES (739,'field_name','lastPmDate','上次维护时间','Last Maintainance Date',null,-1);
 INSERT INTO "i18n_message" VALUES (740,'field_name','lastQaDate','上次质控时间','Last Quality Control Date',null,-1);
 INSERT INTO "i18n_message" VALUES (741,'field_name','lastMeteringDate','上次计量时间','Last Metering Date',null,-1);
+INSERT INTO "i18n_message" VALUES (741,'field_name','assetName','资产名称','Asset Name',null,-1);
 
 -- field value code types  ( id from 1500)
 
-INSERT INTO "i18n_message" VALUES (1500,'asset_group','1','CT','CT',null,-1);
-INSERT INTO "i18n_message" VALUES (1501,'asset_group','2','MR','MR',null,-1);
-INSERT INTO "i18n_message" VALUES (1502,'asset_group','3','XRay','XRay',null,-1);
-INSERT INTO "i18n_message" VALUES (1503,'asset_group','4','DR','DR',null,-1);
+INSERT INTO "i18n_message" VALUES (1500,'assetGroup','1','CT','CT',null,-1);
+INSERT INTO "i18n_message" VALUES (1501,'assetGroup','2','MR','MR',null,-1);
+INSERT INTO "i18n_message" VALUES (1502,'assetGroup','3','XRay','XRay',null,-1);
+INSERT INTO "i18n_message" VALUES (1503,'assetGroup','4','DR','DR',null,-1);
 
-INSERT INTO "i18n_message" VALUES (1510,'wo_steps','1', '报修','Create',null,-1);
-INSERT INTO "i18n_message" VALUES (1511,'wo_steps','2', '审核/审批','Approve',null,-1);
-INSERT INTO "i18n_message" VALUES (1512,'wo_steps','3', '派工','Assign',null,-1);
-INSERT INTO "i18n_message" VALUES (1513,'wo_steps','4', '领工','Accept',null,-1);
-INSERT INTO "i18n_message" VALUES (1514,'wo_steps','5', '维修','Repair',null,-1);
-INSERT INTO "i18n_message" VALUES (1515,'wo_steps','6', '关单','Close',null,-1);
+INSERT INTO "i18n_message" VALUES (1510,'woSteps','1', '报修','Create',null,-1);
+INSERT INTO "i18n_message" VALUES (1511,'woSteps','2', '审核/审批','Approve',null,-1);
+INSERT INTO "i18n_message" VALUES (1512,'woSteps','3', '派工','Assign',null,-1);
+INSERT INTO "i18n_message" VALUES (1513,'woSteps','4', '领工','Accept',null,-1);
+INSERT INTO "i18n_message" VALUES (1514,'woSteps','5', '维修','Repair',null,-1);
+INSERT INTO "i18n_message" VALUES (1515,'woSteps','6', '关单','Close',null,-1);
 
-INSERT INTO "i18n_message" VALUES (1517,'asset_status','1', '正常','Up',null,-1);
-INSERT INTO "i18n_message" VALUES (1518,'asset_status','2', '停机','Down',null,-1);
-INSERT INTO "i18n_message" VALUES (1519,'asset_status','3', '有异常','Partial',null,-1);
+INSERT INTO "i18n_message" VALUES (1517,'assetStatus','1', '正常','Up',null,-1);
+INSERT INTO "i18n_message" VALUES (1518,'assetStatus','2', '停机','Down',null,-1);
+INSERT INTO "i18n_message" VALUES (1519,'assetStatus','3', '有异常','Partial',null,-1);
 
-INSERT INTO "i18n_message" VALUES (1520,'checklist_type','1','巡检','Inspection',null,-1);
-INSERT INTO "i18n_message" VALUES (1521,'checklist_type','2','计量','Inspection',null,-1);
-INSERT INTO "i18n_message" VALUES (1522,'checklist_type','3','质控','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1520,'checklistType','1','巡检','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1521,'checklistType','2','计量','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1522,'checklistType','3','质控','Inspection',null,-1);
 
-INSERT INTO "i18n_message" VALUES (1523,'case_priority','1','一般','Normal',null,-1);
-INSERT INTO "i18n_message" VALUES (1524,'case_priority','2','重要','Important',null,-1);
-INSERT INTO "i18n_message" VALUES (1525,'case_priority','3','紧急','Emergent',null,-1);
-
-
-
-INSERT INTO "i18n_message" VALUES (1530,'attachment_type','1','照片','Inspection',null,-1);
-INSERT INTO "i18n_message" VALUES (1531,'attachment_type','2','合同','Inspection',null,-1);
-INSERT INTO "i18n_message" VALUES (1532,'attachment_type','3','用户手册','Inspection',null,-1);
-INSERT INTO "i18n_message" VALUES (1533,'attachment_type','4','培训资料','Inspection',null,-1);
-
-INSERT INTO "i18n_message" VALUES (1535,'asset_function_type','2', '6801基础外科手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1536,'asset_function_type','3', '6802显微外科手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1537,'asset_function_type','4', '6803神经外科手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1538,'asset_function_type','5', '6804眼科手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1539,'asset_function_type','6', '6805耳鼻喉科手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1540,'asset_function_type','7', '6806口腔科手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1541,'asset_function_type','8', '6807胸腔心血管外科手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1542,'asset_function_type','9', '6808腹部外科手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1543,'asset_function_type','10', '6809泌尿肛肠外科手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1544,'asset_function_type','11', '6810矫形外科（骨科）手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1545,'asset_function_type','12', '6812妇产科用手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1546,'asset_function_type','13', '6813计划生育手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1547,'asset_function_type','14', '6815注射穿刺器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1548,'asset_function_type','15', '6816烧伤(整形)科手术器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1549,'asset_function_type','16', '6820普通诊察器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1550,'asset_function_type','17', '6821医用电子仪器设备',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1551,'asset_function_type','18', '6822医用光学器具、仪器及内窥镜设备',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1552,'asset_function_type','19', '6823医用超声仪器及有关设备',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1553,'asset_function_type','20', '6824医用激光仪器设备',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1554,'asset_function_type','21', '6825医用高频仪器设备',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1555,'asset_function_type','22', '6826物理治疗及康复设备',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1556,'asset_function_type','23', '6827中医器械',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1557,'asset_function_type','24', '6828医用磁共振设备',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1558,'asset_function_type','25', '6830医用X射线设备',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1559,'asset_function_type','26', '6831医用X射线附属设备及部件',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1560,'asset_function_type','27', '6832医用高能射线设备',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1561,'asset_function_type','28', '6833医用核素设备',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1562,'asset_function_type','29', '6834医用射线防护用品、装置',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1563,'asset_function_type','30', '6840临床检验分析仪器',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1564,'asset_function_type','31', '6841医用化验和基础设备器具',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1565,'asset_function_type','32', '6845体外循环及血液处理设备',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1566,'asset_function_type','33', '6846植入材料和人工器官',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1567,'asset_function_type','34', '6854手术室、急救室、诊疗室设备及器具',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1568,'asset_function_type','35', '6855口腔科设备及器具',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1569,'asset_function_type','36', '6856病房护理设备及器具',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1570,'asset_function_type','37', '6857消毒和灭菌设备及器具',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1571,'asset_function_type','38', '6858医用冷疗、低温、冷藏设备及器具',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1572,'asset_function_type','39', '6863口腔科材料',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1573,'asset_function_type','40', '6864医用卫生材料及敷料',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1574,'asset_function_type','41', '6865医用缝合材料及粘合剂',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1575,'asset_function_type','42', '6866医用高分子材料及制品',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1576,'asset_function_type','43', '6870软件',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1577,'asset_function_type','44', '6877介入器材',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1523,'casePriority','1','紧急','Normal',null,-1);
+INSERT INTO "i18n_message" VALUES (1524,'casePriority','2','重要','Important',null,-1);
+INSERT INTO "i18n_message" VALUES (1525,'casePriority','3','一般','Emergent',null,-1);
 
 
-INSERT INTO "i18n_message" VALUES (1580,'case_type','1', '故障类型1',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1581,'case_type','2', '故障类型2',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1582,'case_type','3', '故障类型3',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1583,'case_type','4', '故障类型4',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1584,'case_type','5', '故障类型5',null,null,-1);
+
+INSERT INTO "i18n_message" VALUES (1530,'attachmentType','1','照片','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1531,'attachmentType','2','合同','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1532,'attachmentType','3','用户手册','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1533,'attachmentType ','4','培训资料','Inspection',null,-1);
+
+INSERT INTO "i18n_message" VALUES (1535,'assetFunctionType','2', '6801基础外科手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1536,'assetFunctionType','3', '6802显微外科手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1537,'assetFunctionType','4', '6803神经外科手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1538,'assetFunctionType','5', '6804眼科手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1539,'assetFunctionType','6', '6805耳鼻喉科手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1540,'assetFunctionType','7', '6806口腔科手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1541,'assetFunctionType','8', '6807胸腔心血管外科手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1542,'assetFunctionType','9', '6808腹部外科手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1543,'assetFunctionType','10', '6809泌尿肛肠外科手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1544,'assetFunctionType','11', '6810矫形外科（骨科）手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1545,'assetFunctionType','12', '6812妇产科用手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1546,'assetFunctionType','13', '6813计划生育手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1547,'assetFunctionType','14', '6815注射穿刺器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1548,'assetFunctionType','15', '6816烧伤(整形)科手术器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1549,'assetFunctionType','16', '6820普通诊察器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1550,'assetFunctionType','17', '6821医用电子仪器设备',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1551,'assetFunctionType','18', '6822医用光学器具、仪器及内窥镜设备',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1552,'assetFunctionType','19', '6823医用超声仪器及有关设备',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1553,'assetFunctionType','20', '6824医用激光仪器设备',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1554,'assetFunctionType','21', '6825医用高频仪器设备',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1555,'assetFunctionType','22', '6826物理治疗及康复设备',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1556,'assetFunctionType','23', '6827中医器械',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1557,'assetFunctionType','24', '6828医用磁共振设备',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1558,'assetFunctionType','25', '6830医用X射线设备',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1559,'assetFunctionType','26', '6831医用X射线附属设备及部件',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1560,'assetFunctionType','27', '6832医用高能射线设备',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1561,'assetFunctionType','28', '6833医用核素设备',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1562,'assetFunctionType','29', '6834医用射线防护用品、装置',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1563,'assetFunctionType','30', '6840临床检验分析仪器',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1564,'assetFunctionType','31', '6841医用化验和基础设备器具',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1565,'assetFunctionType','32', '6845体外循环及血液处理设备',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1566,'assetFunctionType','33', '6846植入材料和人工器官',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1567,'assetFunctionType','34', '6854手术室、急救室、诊疗室设备及器具',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1568,'assetFunctionType','35', '6855口腔科设备及器具',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1569,'assetFunctionType','36', '6856病房护理设备及器具',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1570,'assetFunctionType','37', '6857消毒和灭菌设备及器具',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1571,'assetFunctionType','38', '6858医用冷疗、低温、冷藏设备及器具',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1572,'assetFunctionType','39', '6863口腔科材料',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1573,'assetFunctionType','40', '6864医用卫生材料及敷料',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1574,'assetFunctionType','41', '6865医用缝合材料及粘合剂',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1575,'assetFunctionType','42', '6866医用高分子材料及制品',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1576,'assetFunctionType','43', '6870软件',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1577,'assetFunctionType','44', '6877介入器材',null,null,-1);
+
+
+INSERT INTO "i18n_message" VALUES (1580,'caseType','1', '故障类型1',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1581,'caseType','2', '故障类型2',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1582,'caseType','3', '故障类型3',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1583,'caseType','4', '故障类型4',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1584,'caseType','5', '故障类型5',null,null,-1);
+
+INSERT INTO "i18n_message" VALUES (1585,'caseSubType','1', '故障子类型1',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1586,'caseSubType','2', '故障子类型2',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1587,'caseSubType','3', '故障子类型3',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1588,'caseSubType','4', '故障子类型4',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1589,'caseSubType','5', '故障子类型5',null,null,-1);
 
 -- module's messages  (id from 3000)
 
