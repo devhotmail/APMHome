@@ -269,7 +269,7 @@ INSERT INTO "i18n_message" VALUES (738,'field_name','workOrderName','工单名�
 INSERT INTO "i18n_message" VALUES (739,'field_name','lastPmDate','上次维护时间','Last Maintainance Date',null,-1);
 INSERT INTO "i18n_message" VALUES (740,'field_name','lastQaDate','上次质控时间','Last Quality Control Date',null,-1);
 INSERT INTO "i18n_message" VALUES (741,'field_name','lastMeteringDate','上次计量时间','Last Metering Date',null,-1);
-INSERT INTO "i18n_message" VALUES (741,'field_name','assetName','资产名称','Asset Name',null,-1);
+INSERT INTO "i18n_message" VALUES (742,'field_name','assetName','资产名称','Asset Name',null,-1);
 
 -- field value code types  ( id from 1500)
 
@@ -365,6 +365,7 @@ INSERT INTO "i18n_message" VALUES (1589,'caseSubType','5', '故障子类型5',nu
 
 INSERT INTO "i18n_message" VALUES (3000,'message','devicePhoto', '设备照片文件','device Photo',null,-1);
 INSERT INTO "i18n_message" VALUES (3001,'message','deviceContract', '设备合同文件','deviceContract',null,-1);
+INSERT INTO "i18n_message" VALUES (3002,'message','noAssetSelected', '请选择一个设备','Please select an asset',null,-1);
 
 
 -- update id sequence value
