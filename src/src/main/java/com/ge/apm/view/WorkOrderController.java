@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.WorkOrderRepository;
+import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.WorkOrder;
+import org.primefaces.event.SelectEvent;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -45,38 +47,14 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
     public void onSelectWorkOrder(){
         
     }
-    
-/*
-    @Override
-    public void onBeforeNewObject(WorkOrder object) {
-    }
-    
-    @Override
-    public void onAfterNewObject(WorkOrder object, boolean isOK) {
-    }
+    public void onAssetSelected(SelectEvent event) {
+        if(this.selected==null) return;
 
-    @Override
-    public void onBeforeUpdateObject(WorkOrder object) {
-    }
-    
-    @Override
-    public void onAfterUpdateObject(WorkOrder object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeDeleteObject(WorkOrder object) {
-    }
-    
-    @Override
-    public void onAfterDeleteObject(WorkOrder object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeSave(WorkOrder object) {
-    }
-    
-    @Override
-    public void onAfterDataChanged(){
-    };
-*/
+        AssetInfo asset = (AssetInfo) event.getObject();
+        this.selected.setAssetId(asset.getId());
+        this.selected.setAssetName(asset.getName());
+        this.selected.setCaseOwnerId(asset.getAssetOwnerId());
+        this.selected.setCaseOwnerName(asset.getAssetOwnerName());
+        
+    }    
 }
