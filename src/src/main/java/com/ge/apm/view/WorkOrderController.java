@@ -48,13 +48,19 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         
     }
     public void onAssetSelected(SelectEvent event) {
+        onServerEvent("assetSelected", event.getObject());
+    }
+    
+    @Override
+    public void onServerEvent(String eventName, Object eventObject){
+        AssetInfo asset = (AssetInfo) eventObject;
+        if(asset==null) return;
+        
         if(this.selected==null) return;
-
-        AssetInfo asset = (AssetInfo) event.getObject();
         this.selected.setAssetId(asset.getId());
         this.selected.setAssetName(asset.getName());
         this.selected.setCaseOwnerId(asset.getAssetOwnerId());
         this.selected.setCaseOwnerName(asset.getAssetOwnerName());
-        
-    }    
+    }
+    
 }

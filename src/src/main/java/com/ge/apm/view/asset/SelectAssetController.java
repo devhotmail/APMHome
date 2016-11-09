@@ -39,39 +39,15 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
         return dao.findBySearchFilter(searchFilters);
     }
 
-    private boolean isDialogResizable = true;
-    private boolean isDialogDraggable = true;
-
-    public boolean isIsDialogResizable() {
-        return isDialogResizable;
-    }
-
-    public void setIsDialogResizable(boolean isDialogResizable) {
-        this.isDialogResizable = isDialogResizable;
-    }
-
-    public boolean isIsDialogDraggable() {
-        return isDialogDraggable;
-    }
-
-    public void setIsDialogDraggable(boolean isDialogDraggable) {
-        this.isDialogDraggable = isDialogDraggable;
-    }
-    public void showDialog(){
+    public void showDialog(Integer contentWidth, Integer contentHeight, boolean isDialogResizable, boolean isDialogDraggable){
         Map<String,Object> options = new HashMap<String, Object>();
         options.put("resizable", isDialogResizable);
         options.put("draggable", isDialogDraggable);
         options.put("modal", true);
+        options.put("contentWidth", contentWidth);
+        options.put("contentHeight", contentHeight);
         
         RequestContext.getCurrentInstance().openDialog("/portal/asset/selectAsset.xhtml", options, null);
-    }
-    public void showDialog2(){
-        Map<String,Object> options = new HashMap<String, Object>();
-        options.put("resizable", isDialogResizable);
-        options.put("draggable", isDialogDraggable);
-        options.put("modal", true);
-        
-        RequestContext.getCurrentInstance().openDialog("/geapm/portal/asset/selectAsset.xhtml", options, null);
     }
     
     public void cencelDialog(){
@@ -79,12 +55,32 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
     }
 
     public void closeDialog() {
-        if(this.selected==null){
-            WebUtil.addErrorMessageKey("noAssetSelected");
-            return;
-        }
-
+        confirmSelection();
+        
         RequestContext.getCurrentInstance().closeDialog(this.selected);
     }    
+
+    public void confirmSelection(){
+        if(this.selected==null){
+            WebUtil.addErrorMessageKey("noAssetSelected");
+            RequestContext.getCurrentInstance().addCallbackParam("validationFailed", true);
+
+            return;
+        }
+        
+        if(callingController!=null){
+            callingController.onServerEvent("onAssetSelected", this.selected);
+        }
+    }
+
+    private String updateViewIDs;
+    public String getUpdateViewIDs() {
+        return updateViewIDs;
+    }
     
+    private JpaCRUDController callingController;
+    public void prepareDialogCallback(JpaCRUDController callingController, String updateViewIDs){
+        this.callingController = callingController;
+        this.updateViewIDs = updateViewIDs;
+    }
 }
