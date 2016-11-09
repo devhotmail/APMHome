@@ -5,53 +5,25 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
-    <ui:define name="title">Charts</ui:define>
+    <ui:define name="title">HomeAssetHead</ui:define>
 
     <ui:define name="head">
         <script type="text/javascript">
-        function skinChart() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                borderWidth: 0.1,
-                borderColor: 'bdbdbd',
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 1,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
         function skinBar() {
             this.cfg.shadow = false;
             this.cfg.title = '';
-            this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+            this.cfg.seriesColors = ['#4CAF50', '#5180ce','#4CAF50'];
             this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
+                background: '#3e464c',
+                borderColor: '#3e464c',
+                gridLineColor: '#3e464c',
                 shadow: false
             };
             this.cfg.axesDefaults = {
-                borderWidth: 0.1,
-                borderColor: 'bdbdbd',
+                borderWidth: 0.0,
+                borderColor: '3e464c',
                 rendererOptions: {
-                    textColor: '#666F77'
+                    textColor: '#3e464c'
                 }
             };
             this.cfg.seriesDefaults = {
@@ -60,222 +32,55 @@
                 renderer: $.jqplot.BarRenderer,
                 markerOptions: {
                     shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinArea() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#FFC107', '#4CAF50'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                borderWidth: 0.1,
-                borderColor: 'bdbdbd',
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 1,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinBubble() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 1,
-                renderer: $.jqplot.BubbleRenderer,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinZoom() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 1,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinPie() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                rendererOptions: {
-                    textColor: '#666F77',
-                }
-            };
-            this.cfg.seriesDefaults = {
-                renderer: $.jqplot.PieRenderer,
-                shadow: false,
-                lineWidth: 1,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinDonut() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                rendererOptions: {
-                    textColor: '#666F77',
-                }
-            };
-            this.cfg.seriesDefaults = {
-                renderer: $.jqplot.DonutRenderer,
-                shadow: false,
-                lineWidth: 1,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinBarAndLine() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#03A9F4', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                borderWidth: 0.1,
-                borderColor: 'bdbdbd',
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 5,
-                renderer: $.jqplot.BarRenderer,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinMeterGauge() {
-            this.cfg.title = '';
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 5,
-                renderer: $.jqplot.MeterGaugeRenderer,
-                rendererOptions: {
-                    shadow: false,
-                    min: 100,
-                    max: 800,
-                    intervals: [200, 300, 400, 500, 600, 700, 800],
-                    intervalColors: ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107', '#03A9F4', '#E91E63', '#4CAF50']
-                }
-            }
-        }
-
-        function skinMultiAxis() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                borderWidth: 0.1,
-                borderColor: 'bdbdbd',
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth:1,
-                renderer: $.jqplot.BarRenderer,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
+                    size: 1,
                     style: 'circle'
                 }
             }
         }
         </script>
         <style type="text/css">
+            .square {
+                color: black;
+                display: inline-block;
+                font-size: 1em;
+                width: 1em;
+                height: 1em;
+                margin: 0 5px;
+                vertical-align: baseline;
+            }
+
+            .square.black {
+                background-color: black;
+            }
+
+            .square.red {
+                background-color: red;
+            }
+
+            .square.blue {
+                background-color: blue;
+            }
+
+            .square.green {
+                background-color: green;
+            }
+
+            .square.yellow {
+                background-color: yellow;
+            }
+
+            .square.brown {
+                background-color: brown;
+            }
+
+            .layout-wrapper .layout-main {
+              padding-left:0;
+              padding-right:0;
+            }
+            .jq-summary {
+                background-color: #3e464c;
+            }
+
             .jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label, .jqplot-x2axis-label {
                 color: #757575; 
             }
@@ -285,70 +90,216 @@
                 color: #757575;
                 border-color: #bdbdbd;
             }
+
+            body.layout-compact .ui-contents .card {
+                min-height: 250px;
+                margin-bottom: 0;
+                border-radius: 0;
+            }
         </style>
     </ui:define>
 
     <ui:define name="content">
-    
-        <div class="ui-g ui-fluid">
-            <div class="ui-g-12" style="text-align: center;">
-                <span class="overview-title"><b>#{msg.HomePageAssetHead}</b></span>
-            </div>
-            
-            <div class="ui-g-12 ui-lg-4">
-                <div class="card">
-                    <h1 class="centerText">Linear Chart</h1>
-                    <p:chart id="line" type="line" model="#{chartDemoView.lineModel1}" responsive="true"/>
-                </div>
-                
-                <div class="card">
-                    <h1 class="centerText">Bar Chart</h1>
-                    <p:chart id="bar" type="bar" model="#{chartDemoView.barModel}" responsive="true"/>
-                </div>
-                
-                <div class="card">
-                    <h1 class="centerText">Area Chart</h1>
-                    <p:chart id="area" type="line" model="#{chartDemoView.areaModel}" responsive="true" />
-                </div>
-            </div>
+        <h:form>
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="ui-g-11" style="text-align: center;">
+                        <span class="overview-title"><b>#{msg.HomePageAssetHead}</b></span>
+                    </div>
 
-            <div class="ui-g-12 ui-lg-4">
-                <div class="card">
-                    <h1 class="centerText">Bubble Chart</h1>
-                    <p:chart id="bubble" type="bubble" model="#{chartDemoView.bubbleModel1}" responsive="true"/>
+                    <div class="ui-g-1">
+                        <span class="ui-icon ui-icon-more-vert"/>
+                    </div>
                 </div>
-                
-                <div class="card">
-                    <h1 class="centerText">Zoom Chart</h1>
-                    <p:chart id="date" type="line" model="#{chartDemoView.dateModel}" responsive="true"/>
-                </div>
- 
-                <div class="card">
-                    <h1 class="centerText">Pie Chart</h1>
-                    <p:chart id="pie" type="pie" model="#{chartDemoView.pieModel1}" responsive="true" />
-                </div>
-                
-            </div>
 
-            <div class="ui-g-12 ui-lg-4">
-                <div class="card">
-                    <h1 class="centerText">Donut Chart</h1>
-                    <p:chart id="donut" type="donut" model="#{chartDemoView.donutModel1}" responsive="true" />
+
+                <div class="ui-g-12 jq-summary" style="text-align: center">
+                    <p:chart id="statusBar" type="bar" model="#{homeAssetHeadController.barModel}" style="height:100px"
+                             responsive="true"/>
                 </div>
-                
-                <div class="card">
-                    <h1 class="centerText">Bar And Line Chart</h1>
-                    <p:chart id="combined" type="bar" model="#{chartDemoView.combinedModel}" responsive="true" />
+
+                <div class="ui-g-12">
+                    <div class="ui-g-11">
+                        <span class="overview-title"><b>设备状态</b></span>
+                    </div>
+
+                    <div class="ui-g-1">
+                        <span class="ui-icon ui-icon-more-vert"/>
+                    </div>
                 </div>
-                
-                <div class="card">
-                    <h1 class="centerText">Multi Axis Chart</h1>
-                    <p:chart id="multiAxis" type="line" model="#{chartDemoView.multiAxisModel}" responsive="true"/>
+
+
+                <div class="ui-g-12 ui-contents">
+                    <div class="ui-g">
+                        <div class="ui-g-4 ui-xl-4 card">
+                            <div class="ui-g-12">
+                                <br>维修中</br>
+                            </div>
+                            <div class="ui-g-12">
+                                <br>维修流程</br>
+                            </div>
+                            <div class="ui-g-12">
+                                <div class="ui-g-2">
+                                    <span class="square blue"/>申请
+                                </div>
+                                <div class="ui-g-2">
+                                    <span class="square brown"/>审核
+                                </div>
+                                <div class="ui-g-2">
+                                    <span class="square green"/>派工
+                                </div>
+                                <div class="ui-g-2">
+                                    <span class="square red"/>领工
+                                </div>
+                                <div class="ui-g-2">
+                                    <span class="square yellow"/>维修
+                                </div>
+                                <div class="ui-g-2">
+                                    <span class="square black"/>关单
+                                </div>
+                            </div>
+                            <div class="ui-g-12">
+                                <div class="ui-g-2">
+                                    (0)
+                                </div>
+                                <div class="ui-g-2">
+                                    (1)
+                                </div>
+                                <div class="ui-g-2">
+                                    (1)
+                                </div>
+                                <div class="ui-g-2">
+                                    (0)
+                                </div>
+                                <div class="ui-g-2">
+                                    (0)
+                                </div>
+                                <div class="ui-g-2">
+                                    (0)
+                                </div>
+                            </div>
+                            <h1>2</h1>
+                            <div class="ui-g-12">
+                                西门子核磁Avanto
+                            </div>
+                            <div class="ui-g-12">
+                                <div class="ui-g-6">
+                                    维修流程:<span class="square red"/>领工
+                                </div>
+                                <div class="ui-g-6">
+                                    维修人:张小小
+                                </div>
+                            </div>
+                            <div class="ui-g-12">
+                                通用电气彩超LOGIQ
+                            </div>
+                            <div class="ui-g-12">
+                                <div class="ui-g-6">
+                                    维修流程:<span class="square yellow"/>维修
+                                </div>
+                                <div class="ui-g-6">
+                                    维修人:王村
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui-g-4 ui-xl-4 card">
+                            <div class="ui-g-12">
+                                <br>停机中</br>
+                            </div>
+                            <h1>2</h1>
+                            <div class="ui-g-6">
+                                西门子核磁Avanto
+                            </div>
+                            <div class="ui-g-6">
+                                2016-08-10
+                            </div>
+                            <div class="ui-g-12">
+                                原因: 磁头损坏
+                            </div>
+                            <div class="ui-g-6">
+                                通用电气彩超LOGIQ
+                            </div>
+                            <div class="ui-g-6">
+                                2016-08-10
+                            </div>
+                            <div class="ui-g-12">
+                                原因: 电源故障
+                            </div>
+                        </div>
+
+                        <div class="ui-g-4 ui-xl-4 card">
+                            <div class="ui-g-12">
+                                <br>保修期到期（2个月内）</br>
+                            </div>
+                            <h1>2</h1>
+                            <div class="ui-g-6">
+                                西门子核磁Avanto
+                            </div>
+                            <div class="ui-g-6">
+                                2016-12-12
+                            </div>
+                            <div class="ui-g-6">
+                                通用电气彩超LOGIQ
+                            </div>
+                            <div class="ui-g-6">
+                                2016-12-12
+                            </div>
+                        </div>
+
+                        <div class="ui-g-4 ui-xl-4 card">
+                            <div class="ui-g-12">
+                                <br>预防性维护（1周内）</br>
+                            </div>
+                            <h1>3</h1>
+                            <div class="ui-g-6">
+                                西门子核磁Avanto
+                            </div>
+                            <div class="ui-g-6">
+                                2016-10-15
+                            </div>
+                            <div class="ui-g-6">
+                                通用电气彩超LOGIQ
+                            </div>
+                            <div class="ui-g-6">
+                                2016-10-17
+                            </div>
+                            <div class="ui-g-6">
+                                通用电气彩超ACUSON
+                            </div>
+                            <div class="ui-g-6">
+                                2016-10-19
+                            </div>
+                        </div>
+
+                        <div class="ui-g-4 ui-xrl-4 card">
+                            <div class="ui-g-12">
+                                <br>设备计量（2个月内）</br>
+                            </div>
+                            <h1>1</h1>
+                            <div class="ui-g-6">
+                                通用电气彩超LOGIQ
+                            </div>
+                            <div class="ui-g-6">
+                                2016-10-17
+                            </div>
+                        </div>
+
+                        <div class="ui-g-4 ui-xl-4 card">
+                            <div class="ui-g-12">
+                                <br>设备质控（2个月内）</br>
+                            </div>
+                            <h1>1</h1>
+                            <div class="ui-g-6">
+                                通用电气彩超LOGIQ
+                            </div>
+                            <div class="ui-g-6">
+                                2016-10-17
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-            
-        </div>
-
+        </h:form>
     </ui:define>
-
 </ui:composition>
