@@ -40,7 +40,7 @@
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.assetName}*</label>
-                        <p:inputText id="assetName" readonly="true" value="#{workOrderController.selected.assetName}" required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
+                        <p:inputText id="assetName" readonly="true" placeholder="#{msg.noAssetSelected}" value="#{workOrderController.selected.assetName}" required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
                         <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.showDialog()}" process="@this" icon="ui-icon-arrow-drop-down">
                              <p:ajax event="dialogReturn" listener="#{workOrderController.onAssetSelected}" update="WorkOrderEditForm" />
                         </p:commandButton>
