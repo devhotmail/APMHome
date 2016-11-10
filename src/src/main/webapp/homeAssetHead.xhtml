@@ -8,297 +8,133 @@
     <ui:define name="title">HomeAssetHead</ui:define>
 
     <ui:define name="head">
-        <script type="text/javascript">
-        function skinBar() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#4CAF50', '#5180ce','#4CAF50'];
-            this.cfg.grid = {
-                background: '#3e464c',
-                borderColor: '#3e464c',
-                gridLineColor: '#3e464c',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                borderWidth: 0.0,
-                borderColor: '3e464c',
-                rendererOptions: {
-                    textColor: '#3e464c'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 1,
-                renderer: $.jqplot.BarRenderer,
-                markerOptions: {
-                    shadow: false,
-                    size: 1,
-                    style: 'circle'
-                }
-            }
-        }
-        </script>
-        <style type="text/css">
-            .square {
-                color: black;
-                display: inline-block;
-                font-size: 1em;
-                width: 1em;
-                height: 1em;
-                margin: 0 5px;
-                vertical-align: baseline;
-            }
-
-            .square.black {
-                background-color: black;
-            }
-
-            .square.red {
-                background-color: red;
-            }
-
-            .square.blue {
-                background-color: blue;
-            }
-
-            .square.green {
-                background-color: green;
-            }
-
-            .square.yellow {
-                background-color: yellow;
-            }
-
-            .square.brown {
-                background-color: brown;
-            }
-
-            .layout-wrapper .layout-main {
-              padding-left:0;
-              padding-right:0;
-            }
-            .jq-summary {
-                background-color: #3e464c;
-            }
-
-            .jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label, .jqplot-x2axis-label {
-                color: #757575; 
-            }
-            
-            table.jqplot-table-legend {
-                background-color: #ffffff;
-                color: #757575;
-                border-color: #bdbdbd;
-            }
-
-            body.layout-compact .ui-contents .card {
-                min-height: 250px;
-                margin-bottom: 0;
-                border-radius: 0;
-            }
-        </style>
+        <h:outputStylesheet name="css/homeAssetHead.css"/>
+        <h:outputScript name="js/homeAssetHead.js"/>
     </ui:define>
 
     <ui:define name="content">
         <h:form>
             <div class="ui-g ui-fluid">
                 <div class="ui-g-12">
-                    <div class="ui-g-11" style="text-align: center;">
-                        <span class="overview-title"><b>#{msg.HomePageAssetHead}</b></span>
-                    </div>
-
-                    <div class="ui-g-1">
-                        <span class="ui-icon ui-icon-more-vert"/>
-                    </div>
+                    <span class="overview-title"><b>#{msg.HomePageAssetHead}</b></span>
                 </div>
 
-
-                <div class="ui-g-12 jq-summary" style="text-align: center">
-                    <p:chart id="statusBar" type="bar" model="#{homeAssetHeadController.barModel}" style="height:100px"
-                             responsive="true"/>
+                <div class="ui-g-12" style="text-align: center">
+                    <div class="card--summary">
+                        <p:chart id="statusBar" type="bar" model="#{homeAssetHeadController.barModel}"
+                                 style="height:100px"
+                                 responsive="true"/>
+                    </div>
                 </div>
 
                 <div class="ui-g-12">
-                    <div class="ui-g-11">
-                        <span class="overview-title"><b>设备状态</b></span>
-                    </div>
+                    <div class="card--device-status">
+                        <div><span class="overview-title"><b>设备状态</b></span></div>
+                        <br/>
+                        <div class="ui-g">
+                            <div class="ui-g-4 ui-xl-4 block">
+                                <p class="epsilon">维修中</p>
+                                <p class="epsilon text--secondary">维修流程</p>
+                                <ul class="list-inline list-bare">
+                                    <li><span class="status status--1">申请</span><span>(0)</span></li>
+                                    <li><span class="status status--2">审核</span><span>(1)</span></li>
+                                    <li><span class="status status--3">派工</span><span>(1)</span></li>
+                                    <li><span class="status status--4">领工</span><span>(1)</span></li>
+                                    <li><span class="status status--5">维修</span><span>(0)</span></li>
+                                    <li><span class="status status--6">关单</span><span>(0)</span></li>
+                                </ul>
+                                <h1 class="alpha text--center">2</h1>
+                                <div class="block-footer">
+                                    <p>西门子核磁Avanto</p>
+                                    <ul class="list-inline list-bare layout layout--middle layout--center">
+                                        <li class="layout__item u-1/2">维修流程:<span class="status status--4"/>领工</li>
+                                        <li class="layout__item u-1/2">维修人:<span/>张小小</li>
+                                    </ul>
+                                    <p>通用电气彩超LOGIQ</p>
+                                    <ul class="list-inline list-bare layout layout--middle layout--center">
+                                        <li class="layout__item u-1/2">维修流程:<span class="status status--5"/>维修</li>
+                                        <li class="layout__item u-1/2">维修人:<span/>王村</li>
+                                    </ul>
+                                </div>
+                            </div>
 
-                    <div class="ui-g-1">
-                        <span class="ui-icon ui-icon-more-vert"/>
-                    </div>
-                </div>
+                            <div class="ui-g-4 ui-xl-4 block">
+                                <p class="epsilon">停机中</p>
+                                <h1 class="alpha text--center">2</h1>
+                                <div class="block-footer">
+                                    <p>西门子核磁Avanto</p>
+                                    <ul class="list-inline list-bare layout layout--middle layout--center">
+                                        <li class="layout__item u-1/2">停机时间:<span>2016-08-10</span></li>
+                                        <li class="layout__item u-1/2">原因:<span>磁头坏损</span></li>
+                                    </ul>
+                                    <p>通用电气彩超LOGIQ</p>
+                                    <ul class="list-inline list-bare layout layout--middle layout--center">
+                                        <li class="layout__item u-1/2">停机时间:<span>2016-08-10</span></li>
+                                        <li class="layout__item u-1/2">原因:<span>电源故障</span></li>
+                                    </ul>
+                                </div>
+                            </div>
 
+                            <div class="ui-g-4 ui-xl-4 block">
+                                <p class="epsilon">保修期到期(2个月内)</p>
+                                <h1 class="alpha text--center">12</h1>
+                                <div class="block-footer">
+                                    <div class="layout layout--middle">
+                                        <p class="layout__item u-1/2">西门子核磁Avanto</p>
+                                        <p class="layout__item u-1/2"><span>2016-08-10</span></p>
+                                    </div>
+                                    <div class="layout layout--middle">
+                                        <p class="layout__item u-1/2">通用电气彩超LOGIQ</p>
+                                        <p class="layout__item u-1/2"><span>2016-08-10</span></p>
+                                    </div>
+                                </div>
+                            </div>
 
-                <div class="ui-g-12 ui-contents">
-                    <div class="ui-g">
-                        <div class="ui-g-4 ui-xl-4 card">
-                            <div class="ui-g-12">
-                                <br>维修中</br>
-                            </div>
-                            <div class="ui-g-12">
-                                <br>维修流程</br>
-                            </div>
-                            <div class="ui-g-12">
-                                <div class="ui-g-2">
-                                    <span class="square blue"/>申请
-                                </div>
-                                <div class="ui-g-2">
-                                    <span class="square brown"/>审核
-                                </div>
-                                <div class="ui-g-2">
-                                    <span class="square green"/>派工
-                                </div>
-                                <div class="ui-g-2">
-                                    <span class="square red"/>领工
-                                </div>
-                                <div class="ui-g-2">
-                                    <span class="square yellow"/>维修
-                                </div>
-                                <div class="ui-g-2">
-                                    <span class="square black"/>关单
+                            <div class="ui-g-4 ui-xl-4 block">
+                                <p class="epsilon">预防性维护(1周内)</p>
+                                <h1 class="alpha text--center">3</h1>
+                                <div class="block-footer">
+                                    <div class="layout layout--middle">
+                                        <p class="layout__item u-1/2">西门子核磁Avanto</p>
+                                        <p class="layout__item u-1/2"><span>2016-08-10</span></p>
+                                    </div>
+                                    <div class="layout layout--middle">
+                                        <p class="layout__item u-1/2">西门子彩超ACUSON</p>
+                                        <p class="layout__item u-1/2"><span>2016-10-17</span></p>
+                                    </div>
+                                    <div class="layout layout--middle">
+                                        <p class="layout__item u-1/2">通用电气彩超LOGIQ</p>
+                                        <p class="layout__item u-1/2"><span>2016-10-19</span></p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="ui-g-12">
-                                <div class="ui-g-2">
-                                    (0)
-                                </div>
-                                <div class="ui-g-2">
-                                    (1)
-                                </div>
-                                <div class="ui-g-2">
-                                    (1)
-                                </div>
-                                <div class="ui-g-2">
-                                    (0)
-                                </div>
-                                <div class="ui-g-2">
-                                    (0)
-                                </div>
-                                <div class="ui-g-2">
-                                    (0)
+
+                            <div class="ui-g-4 ui-xl-4 block">
+                                <p class="epsilon">设备计量(2个月内)</p>
+                                <h1 class="alpha text--center">1</h1>
+                                <div class="block-footer">
+                                    <div class="layout layout--middle">
+                                        <p class="layout__item u-1/2">西门子核磁Avanto</p>
+                                        <p class="layout__item u-1/2"><span>2016-08-10</span></p>
+                                    </div>
                                 </div>
                             </div>
-                            <h1>2</h1>
-                            <div class="ui-g-12">
-                                西门子核磁Avanto
-                            </div>
-                            <div class="ui-g-12">
-                                <div class="ui-g-6">
-                                    维修流程:<span class="square red"/>领工
-                                </div>
-                                <div class="ui-g-6">
-                                    维修人:张小小
-                                </div>
-                            </div>
-                            <div class="ui-g-12">
-                                通用电气彩超LOGIQ
-                            </div>
-                            <div class="ui-g-12">
-                                <div class="ui-g-6">
-                                    维修流程:<span class="square yellow"/>维修
-                                </div>
-                                <div class="ui-g-6">
-                                    维修人:王村
+
+                            <div class="ui-g-4 ui-xl-4 block">
+                                <p class="epsilon">设备质控(2个月内)</p>
+                                <h1 class="alpha text--center">1</h1>
+                                <div class="block-footer">
+                                    <div class="layout layout--middle">
+                                        <p class="layout__item u-1/2">西门子核磁Avanto</p>
+                                        <p class="layout__item u-1/2"><span>2016-08-10</span></p>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
-                        <div class="ui-g-4 ui-xl-4 card">
-                            <div class="ui-g-12">
-                                <br>停机中</br>
-                            </div>
-                            <h1>2</h1>
-                            <div class="ui-g-6">
-                                西门子核磁Avanto
-                            </div>
-                            <div class="ui-g-6">
-                                2016-08-10
-                            </div>
-                            <div class="ui-g-12">
-                                原因: 磁头损坏
-                            </div>
-                            <div class="ui-g-6">
-                                通用电气彩超LOGIQ
-                            </div>
-                            <div class="ui-g-6">
-                                2016-08-10
-                            </div>
-                            <div class="ui-g-12">
-                                原因: 电源故障
-                            </div>
-                        </div>
-
-                        <div class="ui-g-4 ui-xl-4 card">
-                            <div class="ui-g-12">
-                                <br>保修期到期（2个月内）</br>
-                            </div>
-                            <h1>2</h1>
-                            <div class="ui-g-6">
-                                西门子核磁Avanto
-                            </div>
-                            <div class="ui-g-6">
-                                2016-12-12
-                            </div>
-                            <div class="ui-g-6">
-                                通用电气彩超LOGIQ
-                            </div>
-                            <div class="ui-g-6">
-                                2016-12-12
-                            </div>
-                        </div>
-
-                        <div class="ui-g-4 ui-xl-4 card">
-                            <div class="ui-g-12">
-                                <br>预防性维护（1周内）</br>
-                            </div>
-                            <h1>3</h1>
-                            <div class="ui-g-6">
-                                西门子核磁Avanto
-                            </div>
-                            <div class="ui-g-6">
-                                2016-10-15
-                            </div>
-                            <div class="ui-g-6">
-                                通用电气彩超LOGIQ
-                            </div>
-                            <div class="ui-g-6">
-                                2016-10-17
-                            </div>
-                            <div class="ui-g-6">
-                                通用电气彩超ACUSON
-                            </div>
-                            <div class="ui-g-6">
-                                2016-10-19
-                            </div>
-                        </div>
-
-                        <div class="ui-g-4 ui-xrl-4 card">
-                            <div class="ui-g-12">
-                                <br>设备计量（2个月内）</br>
-                            </div>
-                            <h1>1</h1>
-                            <div class="ui-g-6">
-                                通用电气彩超LOGIQ
-                            </div>
-                            <div class="ui-g-6">
-                                2016-10-17
-                            </div>
-                        </div>
-
-                        <div class="ui-g-4 ui-xl-4 card">
-                            <div class="ui-g-12">
-                                <br>设备质控（2个月内）</br>
-                            </div>
-                            <h1>1</h1>
-                            <div class="ui-g-6">
-                                通用电气彩超LOGIQ
-                            </div>
-                            <div class="ui-g-6">
-                                2016-10-17
-                            </div>
-                        </div>
-
                     </div>
                 </div>
+
             </div>
         </h:form>
     </ui:define>
