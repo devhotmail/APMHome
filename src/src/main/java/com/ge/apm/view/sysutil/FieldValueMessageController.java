@@ -18,8 +18,8 @@ import webapp.framework.web.service.DbMessageSource;
 public class FieldValueMessageController implements Serializable{
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(FieldValueMessageController.class);
-    
-    public String fieldValue(String fieldName, String msgKey){
+
+    public static String doGetFieldValue(String fieldName, String msgKey){
         String key = fieldName+"-"+msgKey;
         String value = WebUtil.getMessage(key);
 
@@ -27,6 +27,10 @@ public class FieldValueMessageController implements Serializable{
             return "";  // this means the message not found.
         else
             return value;
+    }
+    
+    public String fieldValue(String fieldName, String msgKey){
+        return doGetFieldValue(fieldName, msgKey);
     }
     
     public List<I18nMessage> getFieldValueList(String fieldName){

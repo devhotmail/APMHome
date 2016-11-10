@@ -80,7 +80,19 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
     
     private JpaCRUDController callingController;
     public void prepareDialogCallback(JpaCRUDController callingController, String updateViewIDs){
+        showDialog = true;
+        
         this.callingController = callingController;
         this.updateViewIDs = updateViewIDs;
     }
+
+    public void cancelDialog(){
+        showDialog = false;
+    }
+    
+    private boolean showDialog = false;
+    public boolean isShowDialog() {
+        return showDialog;
+    }
+    
 }

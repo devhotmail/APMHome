@@ -7,10 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.WorkOrderRepository;
+import com.ge.apm.dao.WorkOrderStepRepository;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
+import com.ge.apm.domain.WorkOrderStep;
+import com.ge.apm.domain.WorkOrderStepDetail;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +56,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         //only show my tasks
         setSiteFilter();
         setHospitalFilter();
-        setLoginUserFilter();
+        //setLoginUserFilter();
         
         return dao.findBySearchFilter(this.searchFilters, pageRequest);
     }
@@ -99,8 +103,32 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
 
         UserAccount currentPerson = userDao.findById(workOrder.getCurrentPersonId());
         workOrder.setCurrentPersonName(currentPerson.getName());
+        
+        if(workOrder.getCurrentStep()==1)
+            workOrder.setCurrentStep(2);
     }
 
+    @Override
+    public void onAfterNewObject(WorkOrder wo, boolean isOK) {
+        if(!isOK){
+            System.out.println("********* onAfterNewObject failed");
+            return;
+        }
+        
+        //create workOrderStep for workOrder step
+        WorkOrderStep woStep = new WorkOrderStep();
+        woStep.setWorkOrderId(wo.getId());
+        woStep.setSiteId(wo.getSiteId());
+        woStep.setStepId(wo.getCurrentStep());
+        woStep.setStepName(FieldValueMessageController.doGetFieldValue("woSteps", wo.getCurrentStep().toString()));
+        woStep.setOwnerId(wo.getCurrentPersonId());
+        woStep.setOwnerName(wo.getCurrentPersonName());
+        
+        WorkOrderStepRepository woStepDao = WebUtil.getBean(WorkOrderStepRepository.class);
+        woStepDao.save(woStep);
+    }
+
+    
     @Override
     public void onServerEvent(String eventName, Object eventObject){
         AssetInfo asset = (AssetInfo) eventObject;

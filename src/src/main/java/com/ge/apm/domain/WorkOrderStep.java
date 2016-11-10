@@ -37,7 +37,7 @@ public class WorkOrderStep implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "step_id")
-    private String stepId;
+    private Integer stepId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 32)
@@ -52,13 +52,9 @@ public class WorkOrderStep implements Serializable {
     @Size(min = 1, max = 16)
     @Column(name = "owner_name")
     private String ownerName;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "start_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "end_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
@@ -111,11 +107,11 @@ public class WorkOrderStep implements Serializable {
         return stepName;
     }
 
-    public String getStepId() {
+    public Integer getStepId() {
         return stepId;
     }
 
-    public void setStepId(String stepId) {
+    public void setStepId(Integer stepId) {
         this.stepId = stepId;
     }
 
