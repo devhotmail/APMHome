@@ -93,6 +93,8 @@ public class UserAccount implements Serializable {
     private Boolean isOnline;
     @Column(name = "site_id")
     private Integer siteId;
+    @Column(name = "hospital_id")
+    private Integer hospitalId;
     @Column(name = "last_login_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginTime;
@@ -105,10 +107,6 @@ public class UserAccount implements Serializable {
     @Basic(optional = false)
     @NotNull
     private Integer orgInfoId;
-
-    @JoinColumn(insertable=false,updatable=false, name = "org_id", referencedColumnName = "id")
-    @ManyToOne(optional = true, fetch = FetchType.EAGER)
-    private OrgInfo orgInfo;
 
     public UserAccount() {
         isSuperAdmin = false;
@@ -242,14 +240,6 @@ public class UserAccount implements Serializable {
         this.userRoleList = userRoleList;
     }
 
-    public OrgInfo getOrgInfo() {
-        return orgInfo;
-    }
-
-    public void setOrgInfo(OrgInfo orgInfo) {
-        this.orgInfo = orgInfo;
-    }
-
     @Transient
     private List<String> userRoleNames;
     public List<String> getRoleNames(){
@@ -267,14 +257,14 @@ public class UserAccount implements Serializable {
         return userRoleNames;
     }
 
-    public OrgInfo getHospital(){
-        return this.getOrgInfo().getHospital();
+    public Integer getHospitalId() {
+        return hospitalId;
     }
-    
-    public Integer getHospitalId(){
-        return this.getOrgInfo().getHospitalId();
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;

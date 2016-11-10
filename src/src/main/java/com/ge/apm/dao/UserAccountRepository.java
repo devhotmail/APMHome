@@ -11,11 +11,13 @@ public interface UserAccountRepository extends GenericRepository<UserAccount> {
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     UserAccount getByLoginName(String loginName);
     
+    @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     UserAccount getById(int userId);
     
-    @Query("select u from UserAccount u, OrgInfo h where u.orgInfoId=h.id and h.hospitalId=?1")
-    List<UserAccount> getUserListByHospitalId(int hospitalId);
+    @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
+    List<UserAccount> getByHospitalId(int hospitalId);
     
-    @Query("select u from UserAccount u, OrgInfo h, UserRole r where u.orgInfoId=h.id and h.hospitalId=?1 and u.id=r.userId and r.roleId=3")
+    @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
+    @Query("select u from UserAccount u, UserRole r where u.hospitalId=?1 and u.id=r.userId and r.roleId=3")
     List<UserAccount> getUserListByHospitalIdWithAssetStuffRole(int hospitalId);
 }
