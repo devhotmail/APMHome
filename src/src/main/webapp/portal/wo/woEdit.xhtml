@@ -63,7 +63,11 @@
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.currentPersonName}</label>
-                        <p:inputText readonly="true" id="currentPersonName" value="#{workOrderController.selected.currentPersonName}" />
+                        <p:selectOneMenu disabled="#{workOrderController.isInViewMode}" id="currentPersonName" value="#{workOrderController.selected.currentPersonId}" required="true" requiredMessage="#{msg.currentPersonName} #{msg.ValidationRequire}">
+                            <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                            <f:selectItems value="#{workOrderController.hospitalUserList}" var="item"
+                                           itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                        </p:selectOneMenu>
                     </h:panelGroup>
                     
                     <p:spacer/>
@@ -116,9 +120,7 @@
 
                 <br/>
 
-                <p:commandButton validateClient="true" actionListener="#{workOrderController.save()}" value="#{msg.Save}"/>
-                &nbsp;&nbsp;
-                <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel"/>
+                <p:commandButton validateClient="true" icon="ui-icon-check" actionListener="#{workOrderController.save()}" value="#{msg.Submit}"/>
             </p:fieldset>
         </h:form>
         
