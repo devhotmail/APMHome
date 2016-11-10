@@ -1,0 +1,143 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Charts</ui:define>
+
+
+    <!-- TODO: the above is copied from homeHead.xhtml and should be centralized and reused. -->
+
+    <ui:define name="content">
+
+        <div class="ui-g card">
+            <div class="ui-g-12 title-section-header">
+                <div class="ui-g-3"><p>TODO-DropDown</p></div>
+                <div class="ui-g-6"><p>TODO设备维修事件统计分析</p></div>
+                <!--<div class="ui-g-3"><p:commandButton icon="fa fa-ellipsis-v" title="Icon Only"/></div>-->
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-3 tile">
+                    <p>TODO设备故障主要原因</p>
+                    <p>TODO-/未填</p>
+                </div>
+                <div class="ui-g-3 tile">
+                    <p>TODO设备故障处理流程最耗时步骤</p>
+                    <p>TODO-/派工</p>
+                </div>
+                <div class="ui-g-3 tile">
+                    <p>TODO设备故障主要发生的科室</p>
+                    <p>TODO-/放射科</p>
+                </div>
+                <div class="ui-g-3 tile">
+                    <p>TODO设备故障主要发生的设备类型</p>
+                    <p>TODO-/CT</p>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <p:calendar value="#{assetUsageController.fromDate}">
+                    <p:ajax event="dateSelect"
+                            listener="#{assetUsageController.onFromDateSelect}"
+                            showOn="button"/>
+                </p:calendar>
+                <p>TO</p>
+                <p:calendar value="#{assetUsageController.toDate}">
+                    <p:ajax event="dateSelect"
+                            listener="#{assetUsageController.onToDateSelect}"
+                            showOn="button"/>
+                </p:calendar>
+            </div>
+        </div>
+
+        <div class="ui-g card">
+            <div class="ui-g-12 chart-section-header">
+                <div class="ui-g-9">
+                    <p>TODO设备故障原因分析</p>
+                </div>
+                <div class="ui-g-3">
+                    <p:commandButton value="TODO导出"/>
+                </div>
+            </div>
+            <p:separator/>
+            <div class="ui-g-12">
+                <p:chart type="bar"
+                         model="#{assetUsageController.reasonDistributionChart}"
+                         responsive="true"/>
+            </div>
+        </div>
+
+        <div class="ui-g card">
+            <div class="ui-g-12 chart-section-header">
+                <div class="ui-g-9">
+                    <p>TODO设备故障流程响应时间分布</p>
+                </div>
+                <div class="ui-g-3">
+                    <p:commandButton value="TODO导出"/>
+                </div>
+            </div>
+            <p:separator/>
+            <div class="ui-g-12">
+                <!--<p:chart type="bar"-->
+                         <!--model="#{assetUsageController.responseTimeDistributionBarModel}"-->
+                         <!--responsive="true"/>-->
+            </div>
+            <div class="ui-g-12">
+                <p>耗时最长的三个步骤的具体响应时间分布</p>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <p>TODO</p>
+                    <!--<p:chart type="pie"-->
+                             <!--model="#{assetUsageController.topResponseTimePieModels[0]}"-->
+                             <!--responsive="true"/>-->
+                </div>
+                <div class="ui-g-4">
+                    <p>TODO</p>
+                    <!--<p:chart type="pie"-->
+                             <!--model="#{assetUsageController.topResponseTimePieModels[1]}"-->
+                             <!--responsive="true"/>-->
+                </div>
+                <div class="ui-g-4">
+                    <p>TODO</p>
+                    <!--<p:chart type="pie"-->
+                             <!--model="#{assetUsageController.topResponseTimePieModels[2]}"-->
+                             <!--responsive="true"/>-->
+                </div>
+            </div>
+        </div>
+
+        <div class="ui-g card">
+            <div class="ui-g-12 chart-section-header">
+                <div class="ui-g-9">
+                    <p>TODO设备故障分布</p>
+                </div>
+                <div class="ui-g-3">
+                    <p:commandButton value="TODO导出"/>
+                </div>
+            </div>
+            <p:separator/>
+            <div class="ui-g-12">
+                <p:tabView>
+                    <p:tab title="TODO按科室">
+                        <p:chart type="bar"
+                                 model="#{assetUsageController.roomDistributionChart}"
+                                 responsive="true"/>
+                    </p:tab>
+                    <p:tab title="TODO按设备类型">
+                        <p:chart type="bar"
+                                 model="#{assetUsageController.functionDistributionChart}"
+                                 responsive="true"/>
+                    </p:tab>
+                    <p:tab title="TODO按单台设备（前40台）">
+                        <p:chart type="bar"
+                                 model="#{assetUsageController.deviceDistributionChart}"
+                                 responsive="true"/>
+                    </p:tab>
+                </p:tabView>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
