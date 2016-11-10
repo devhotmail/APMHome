@@ -19,6 +19,8 @@
         <h:form id="searchForm">
             <p:outputLabel value="时间大于或等于(例如 2016-09-01):"/>
             <p:calendar id="search_GTE_the_date_DATETIME" pattern="yyyy-MM-dd" readonlyInput="true"/>
+            <p:outputLabel value="Type"/>
+            <p:inputText id="search_LIKE_type"/>
             <p:commandButton value="Search" actionListener="#{demoDataTableController.setSearchFilter}" update="demoForm"/>
         </h:form>
 

@@ -41,7 +41,7 @@
                     <h:panelGroup>
                         <label class="label">#{msg.assetName}*</label>
                         <p:inputText id="assetName" readonly="true" placeholder="#{msg.noAssetSelected}" value="#{workOrderController.selected.assetName}" required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
-                        <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.prepareDialogCallback(workOrderController, ':WorkOrderEditForm')}" process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg" oncomplete="PF('varSelectAssetDlg').show()"/>
+                        <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.prepareDialogCallback(workOrderController, ':WorkOrderEditForm:assetName :WorkOrderEditForm:caseOwnerName')}" process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg" oncomplete="PF('varSelectAssetDlg').show()"/>
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.casePriority}*</label>
