@@ -10,7 +10,7 @@
     </ui:define>
 
     <ui:define name="content">
-        <div class="ui-g">
+        <div class="ui-g card clearfix">
             <div class="ui-g-12">
 
                 <p align="center">
@@ -22,7 +22,7 @@
                 <h:form id="WorkOrderListForm">
                     <p:dataTable id="datalist" value="#{workOrderController.lazyModel}" var="item" widgetVar="varDataList"
                         selectionMode="single" selection="#{workOrderController.selected}"
-                        lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                        lazy="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
                         rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
                         paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"

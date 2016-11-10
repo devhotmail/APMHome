@@ -1,3 +1,6 @@
+.card{
+border-radius: 10px!important;
+}
 .ui-growl{
 z-index: 9999!important;
 }
