@@ -21,15 +21,15 @@
                 
                 <h:form id="WorkOrderListForm">
                     <p:dataTable id="datalist" value="#{workOrderController.lazyModel}" var="item" widgetVar="varDataList"
-                                 selectionMode="single" selection="#{workOrderController.selected}"
-                                 lazy="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
-                                 rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
-                                 paginatorTemplate="{Toolbar} {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
-                                 currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
-                                 rows="5" emptyMessage="#{msg.noRecordFound}"
-                                 rowsPerPageTemplate="20,40,60,90">
+                        selectionMode="single" selection="#{workOrderController.selected}"
+                        lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                        rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                        paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                        currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                        rows="20" emptyMessage="#{msg.noRecordFound}"
+                        rowsPerPageTemplate="20,40,60,90">
 
-                        <p:ajax event="rowSelect" update="WorkOrderEditForm"/>
+                        <p:ajax event="rowSelect" listener="#{workOrderController.onSelectWorkOrder}" update="WorkOrderEditForm"/>
                         <p:ajax event="filter" listener="#{workOrderController.onFilter}" update="WorkOrderEditForm"/>
 
                         <p:column styleClass="textCenter"  headerText="#{msg.casePriority}" sortBy="#{item.casePriority}" filterBy="#{item.casePriority}" filterMatchMode="EQ">

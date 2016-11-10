@@ -8,9 +8,9 @@
 
     <ui:composition>
 
-        <p:dialog id="selectAssetDlg" widgetVar="varSelectAssetDlg" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{msg.selectAsset}" width="80%">
+        <p:dialog id="selectAssetDlg" widgetVar="varSelectAssetDlg" modal="true" resizable="true" draggable="true" header="#{msg.selectAsset}" width="80%">
             <h:form id="selectAssetForm">
-                    <p:dataTable id="datalist" value="#{selectAssetController.lazyModel}" var="item" widgetVar="varDataList"
+                    <p:dataTable id="selectAssetDatalist" value="#{selectAssetController.lazyModel}" var="item" widgetVar="varSelectAssetDatalist"
                                  selectionMode="single" selection="#{selectAssetController.selected}"
                                  lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
                                  rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
