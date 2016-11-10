@@ -104,6 +104,7 @@ CREATE TABLE "sys_role" (
 CREATE TABLE "user_account" (
 "id" serial NOT NULL,
 org_id int4 NOT NULL,
+hospital_id int4 not null,
 "login_name" varchar(16) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
 "name" varchar(32) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
 "password" varchar(16) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
