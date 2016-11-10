@@ -288,8 +288,8 @@ step_id int not null,
 step_name varchar(32) not null,
 owner_id int not null,
 owner_name varchar(16) not null,
-start_time timestamp not null,
-end_time timestamp not null,
+start_time timestamp,
+end_time timestamp,
 description varchar(128),
 attachment_url varchar(128) );
 
