@@ -12,7 +12,6 @@ import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderStep;
-import com.ge.apm.domain.WorkOrderStepDetail;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
@@ -54,9 +53,9 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
     @Override
     protected Page<WorkOrder> loadData(PageRequest pageRequest) {
         //only show my tasks
-        setSiteFilter();
-        setHospitalFilter();
-        //setLoginUserFilter();
+        //setSiteFilter();
+        //setHospitalFilter();
+        setLoginUserFilter();
         
         return dao.findBySearchFilter(this.searchFilters, pageRequest);
     }
@@ -66,11 +65,14 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
     }
     
     public void onSelectWorkOrder(){
+        Integer workOrderId = selected.getId();
+        workOrderId = workOrderId!=null ? workOrderId : 0;
+        
         WorkOrderHistoryController woHistoryController = WebUtil.getBean(WorkOrderHistoryController.class);
-        woHistoryController.loadWorkOrderHistory(selected.getId());
+        woHistoryController.loadWorkOrderHistory(workOrderId);
         
         WorkOrderStepController woStepController = WebUtil.getBean(WorkOrderStepController.class);
-        woStepController.loadWorkOrderSteps(this.selected.getId());
+        woStepController.loadWorkOrderSteps(workOrderId);
     }
     
     public List<UserAccount> getHospitalUserList(){
@@ -80,6 +82,8 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
     
     @Override
     public void onBeforeNewObject(WorkOrder workOrder) {
+        onSelectWorkOrder();
+        
         workOrder.setSiteId(loginUser.getSiteId());
         workOrder.setHospitalId(loginUser.getHospitalId());
         workOrder.setCreatorId(loginUser.getId());

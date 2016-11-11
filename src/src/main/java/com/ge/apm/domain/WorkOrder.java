@@ -139,10 +139,6 @@ public class WorkOrder implements Serializable {
     public WorkOrder() {
     }
 
-    public WorkOrder(Integer id) {
-        this.id = id;
-    }
-
     public Integer getHospitalId() {
         return hospitalId;
     }
