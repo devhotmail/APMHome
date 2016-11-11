@@ -117,7 +117,7 @@ for i in 1..totalrecords
   is_internal   = [true, false].sample
 
   current_person_id = randnum.rand(1..10)
-  current_step      = randnum.rand(1..7)
+  current_step      = randnum.rand(1..6)
   is_closed         = [true, false].sample
 
   total_man_hour    = randnum.rand(1..24)

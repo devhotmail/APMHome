@@ -39,10 +39,6 @@
               destroy-method="close"
               lazy-init="true"
               p:defaultAutoCommit="true"
-              p:driverClassName="${jdbc.driver}"
-              p:url="${jdbc.url}"
-              p:username="${jdbc.user}"
-              p:password="${jdbc.password}"
               p:initialSize="5"
               p:maxActive="100"
               p:maxIdle="30"
@@ -51,7 +47,12 @@
               p:removeAbandoned="true"
               p:removeAbandonedTimeout="60"
               p:testOnBorrow="true" p:testOnReturn="true" p:testWhileIdle="true"
-              p:validationQuery="select 1" p:timeBetweenEvictionRunsMillis="1000" p:minEvictableIdleTimeMillis="1000"/>
+              p:validationQuery="select 1" p:timeBetweenEvictionRunsMillis="1000" p:minEvictableIdleTimeMillis="1000">
+        <property name="driverClassName" value="org.postgresql.Driver" />
+        <property name="url" value="jdbc:postgresql://127.0.0.1:5432/ge_apm" />
+        <property name="username" value="postgres" />
+        <property name="password" value="root" />
+    </bean>
 
     <!-- jmx -->
     <context:mbean-server/>
@@ -75,12 +76,38 @@
     <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
         <description>Allow spring to configure hibernate specific settings</description>
     </bean>
+
+
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
               p:dataSource-ref="risDataSource"
               p:persistenceUnitName="risSiPU"
-              p:jpaVendorAdapter-ref="hibernateJpaVendorAdapter"
-              p:jpaProperties="classpath:hibernate.properties">
-        <description>NA</description>
+              p:jpaVendorAdapter-ref="hibernateJpaVendorAdapter">
+        <property name="jpaProperties">
+            <props>
+                <!--#hibernate.dialect=org.hibernate.dialect.DerbyDialect-->
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+                <prop key="hibernate.connection.useUnicode">true</prop>
+                <prop key="hibernate.connection.charSet">UTF-8</prop>
+
+                <!--# 2d level cache-->
+                <prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.EhCacheRegionFactory</prop>
+                <prop key="hibernate.cache.provider_configuration_file_resource_path">ehcache.xml</prop>
+
+                <!--# misc-->
+                <prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
+                <prop key="hibernate.jdbc.use_scrollable_resultset">false</prop>
+                <prop key="hibernate.jdbc.use_streams_for_binary">true</prop>
+                <prop key="hibernate.jdbc.fetch_size">300</prop>
+
+                <!--# logging debug information-->
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.generate_statistics">false</prop>
+                <prop key="hibernate.use_sql_comments">false</prop>
+            </props>
+        </property>
     </bean>
     <util:property-path id="sessionFactory" path="entityManagerFactory.sessionFactory"/>
 
