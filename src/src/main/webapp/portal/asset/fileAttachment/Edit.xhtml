@@ -8,67 +8,43 @@
 
     <ui:composition>
 
-
-        <p:dialog id="AssetFileAttachmentEditDlg" widgetVar="AssetFileAttachmentEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetFileAttachmentController.CRUDActionName} #{msg.AssetFileAttachment}">
-            <h:form id="AssetFileAttachmentEditForm">
+        <h:form id="AssetFileAttachmentEditForm">
+            <p:fieldset  legend="#{msg.Edit}" style="margin-bottom:20px" rendered="#{assetFileAttachmentController.selected != null}">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetFileAttachmentController.selected != null}">
-                        <!--                        <h:panelGroup styleClass="md-inputfield">
-                                                    <p:inputText id="id" value="#{assetFileAttachmentController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                                                    <label>#{msg.id}*</label>
-                                                </h:panelGroup>
-                                                <h:panelGroup styleClass="md-inputfield">
-                                                    <p:inputText id="siteId" value="#{assetFileAttachmentController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
-                                                    <label>#{msg.siteId}*</label>
-                                                </h:panelGroup>-->
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="name" value="#{assetFileAttachmentController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+
+                        <h:panelGroup>
+                            <label class="label">#{msg.fileType}*</label>
+                            <p:selectOneMenu id="fileType" value="#{assetFileAttachmentController.selected.fileType}" required="true" requiredMessage="#{msg.fileType} #{msg.ValidationRequire}">
+                                <f:selectItem itemLabel="#{msg.selectOneMessage}" />
+                                <f:selectItems value="#{fieldMsg.getFieldValueList('attachmentType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}" />
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+
+                        <h:panelGroup >
+                            <label class="label">#{msg.assetName}*</label>
+                            <p:inputText id="assetName" readonly="true" value="#{assetFileAttachmentController.selectedAsset.name}" placeholder="#{msg.noAssetSelected}" required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
+                            <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.prepareDialogCallback(assetFileAttachmentController, ':AssetFileAttachmentEditForm:assetName')}" process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg" oncomplete="PF('varSelectAssetDlg').show()"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="md-inputfield" rendered="#{assetFileAttachmentController.isCreatAction()}">
+                            <p:fileUpload fileUploadListener="#{assetFileAttachmentController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                          multiple="true" update="messages name" sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png|txt|doc|pdf|docx|exe|zip|xml?)$/" />
+                            <p:growl id="messages" showDetail="true" />
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield" rendered="#{assetFileAttachmentController.isCreatAction()}">
+                            <p:inputText id="name" value="#{assetFileAttachmentController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}" readonly="true"/>
                             <label>#{msg.name}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <!--<p:inputText id="fileType" value="#{assetFileAttachmentController.selected.fileType}"  required="true" requiredMessage="#{msg.fileType} #{msg.ValidationRequire}"/>-->
-                            <label>#{msg.fileType}*</label>
-                            <p:selectOneMenu id="fileType" value="#{assetFileAttachmentController.selected.fileType}">
-                            <f:selectItem itemLabel="#{msg.selectOneMessage}" />
-                            <f:selectItems value="#{fieldMsg.getFieldValueList('attachment_type')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}" />
-                        </p:selectOneMenu>
-                        </h:panelGroup>
-                        <!-- <h:panelGroup styleClass="md-inputfield">
-                             <p:inputText id="fileUrl" value="#{assetFileAttachmentController.selected.fileUrl}"  required="true" requiredMessage="#{msg.fileUrl} #{msg.ValidationRequire}"/>
-                             <label>#{msg.fileUrl}*</label>
-                         </h:panelGroup>-->
-                        <h:panelGroup styleClass="md-inputfield">
-<!--                            <p:inputText id="assetId" value="#{assetFileAttachmentController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.assetId}*</label>-->
-
-<!--                            <p:selectOneMenu id="asset" value="#{assetFileAttachmentController.selectedAsset}" converter="assetInfoConverter"  var="t"  filter="false" filterMatchMode="startsWith">
-    <f:selectItems value="#{assetFileAttachmentController.assetList}" var="item" itemLabel="#{item.name}" itemValue="#{item}" />
-        <p:column>
-            <h:outputText value="#{t.name}" />
-        </p:column>
-        <p:column>
-            <h:outputText value="#{t.id}" />
-        </p:column>
-    </p:selectOneMenu>-->
-                            <p:inputText id="assetName" value="#{assetFileAttachmentController.selectedAsset.name}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
-                            <p:outputLabel for="assetName" value="#{msg.asset}"  />
-                            <p:commandButton id="asset" value="#{msg.selectasset}" icon="ui-icon-extlink" actionListener="#{assetFileAttachmentController.chooseAsset}" immediate="true">
-                                <p:ajax event="dialogReturn" listener="#{assetFileAttachmentController.onAssetChosen}" update="growl assetName" />
-                            </p:commandButton>
+                        <h:panelGroup>
+                            <p:commandButton validateClient="false" actionListener="#{assetFileAttachmentController.save}" value="#{msg.Save}" update="display,:AssetFileAttachmentEditForm :AssetFileAttachmentListForm:datalist, :growl" icon="ui-icon-check" />
+                            <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" actionListener="#{assetFileAttachmentController.cancel}" update=":AssetFileAttachmentEditForm :growl"/>
                         </h:panelGroup>
                     </p:panelGrid>
-                    <h:panelGroup styleClass="md-inputfield">
-                        <p:fileUpload fileUploadListener="#{assetFileAttachmentController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                      multiple="true" update="messages name" sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png|txt|doc|exe|zip|xml?)$/" />
-                        <p:growl id="messages" showDetail="true" />
-                    </h:panelGroup>
-                    <br/>
-                    <p:commandButton validateClient="true" actionListener="#{assetFileAttachmentController.save}" value="#{msg.Save}" update="display,:AssetFileAttachmentEditDlg, :AssetFileAttachmentListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'AssetFileAttachmentEditDialog');"/>
-                    &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('AssetFileAttachmentEditDialog').hide()"/>
+
                 </h:panelGroup>
-            </h:form>
-        </p:dialog>
+            </p:fieldset>
+        </h:form>
 
     </ui:composition>
 </html>

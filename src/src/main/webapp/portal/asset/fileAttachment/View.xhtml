@@ -15,11 +15,11 @@
                         <h:outputLabel value="#{msg.name}" for="name" />
                         <h:outputText value="#{assetFileAttachmentController.selected.name}"/>
                         <h:outputLabel value="#{msg.fileType}" for="fileType" />
-                        <h:outputText value="#{assetFileAttachmentController.selected.fileType}"/>
+                        <h:outputText value="#{fieldMsg.fieldValue('attachmentType', assetFileAttachmentController.selected.fileType)}"/>
                         <h:outputLabel value="#{msg.fileUrl}" for="fileUrl" />
                         <h:outputText value="#{assetFileAttachmentController.selected.fileUrl}"/>
-                        <h:outputLabel value="#{msg.assetId}" for="assetId" />
-                        <h:outputText value="#{assetFileAttachmentController.selected.assetId}"/>
+                        <h:outputLabel value="#{msg.assetName}" for="assetId" />
+                        <h:outputText value="#{assetInfoService.getAssetInfoName(assetFileAttachmentController.selected.assetId)}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{assetFileAttachmentController.deleteAction}" icon="ui-icon-trash" actionListener="#{assetFileAttachmentController.delete}" value="#{msg.Delete}" update="display,:AssetFileAttachmentViewDlg, :AssetFileAttachmentListForm:datalist, :growl" oncomplete="handleSubmit(args, 'AssetFileAttachmentViewDialog');"/>
