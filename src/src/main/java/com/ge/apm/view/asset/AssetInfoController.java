@@ -89,7 +89,6 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         this.currentUser = currentUser;
     }
 
-    
     public void setFileService(AttachmentFileService fileService) {
         this.fileService = fileService;
     }
@@ -121,7 +120,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void onAfterNewObject(AssetInfo object, boolean isOK) {
         resultStatus = isOK;
         if (isOK) {
-            addAttachements(object.getId());
+            saveAttachements(object.getId());
         }
     }
 
@@ -129,7 +128,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void onAfterUpdateObject(AssetInfo object, boolean isOK) {
         resultStatus = isOK;
         if (isOK) {
-            addAttachements(object.getId());
+            saveAttachements(object.getId());
         }
     }
 
@@ -219,10 +218,12 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         return result;
     }
 
-    private void addAttachements(int assetId) {
+    private void saveAttachements(int assetId) {
         for (AssetFileAttachment item : attachements) {
-            item.setAssetId(assetId);
-            fileService.addAttachment(item, currentUser.getHospitalId());
+            if (null == item.getId()) {
+                item.setAssetId(assetId);
+                fileService.addAttachment(item, currentUser.getHospitalId());
+            }
         }
         attachements.clear();
     }
