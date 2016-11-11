@@ -3,9 +3,7 @@ package com.ge.apm.view.analysis;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -204,11 +202,125 @@ public final class AssetUsageController {
             model.addSeries(series);
         }
 
+        /*String query2 = new StringBuilder(query).insert(0, "SELECT sum(value) AS sum FROM (").replace(query.length() + 24 - 1, query.length() + 24, ") AS t;").toString();
+        List<Map<String, Object>> result2 = NativeSqlUtil.queryForList(query2, null);
+
+        Axis x = model.getAxis(AxisType.X);
+        x.setMin(0);
+        x.setMax((Long)result2.get(0).get("sum"));
+*/
         this.timeSequenceChart = model;
     }
 
     // 耗时最长的三个步骤的具体响应时间分布#
     // 小于半小时、半小时到一小时、一小时到一天、一天以上、未响应
+
+    private PieChartModel top1TimeChart;
+
+    public PieChartModel getTop1TimeChart() {
+        this.createTop1TimeChart();
+        return this.top1TimeChart;
+    }
+
+    private void createTop1TimeChart() {
+        String template = "" +
+                "SELECT range AS key, count(*) AS value FROM (" +
+                "SELECT CASE " +
+                "WHEN (end_time - start_time) BETWEEN '0 minute' AND '30 minute' THEN '0-30 分钟' " +
+                "WHEN (end_time - start_time) BETWEEN '30 minute' AND '60 minute' THEN '30-60 分钟' " +
+                "ELSE '1 小时以上' END AS range " +
+                "FROM work_order_step " +
+                "WHERE work_order_step.step_id = (" +
+                "  SELECT step_id AS key " +
+                "  FROM work_order_step " +
+                "  GROUP BY key " +
+                "  ORDER BY avg (end_time - start_time) DESC " +
+                "  LIMIT 1 " +
+                "  )" +
+                ") AS t GROUP BY range;";
+        String query = String.format(template,
+                                     DATE_FORMATTER.format(this.fromDate),
+                                     DATE_FORMATTER.format(this.toDate));
+        List<Map<String, Object>> result = NativeSqlUtil.queryForList(query, null);
+
+        PieChartModel model = new PieChartModel();
+        for(Map<String, Object> m : result) {
+            model.set((String)m.get("key"), ((Long)m.get("value")).intValue());
+        }
+        this.top1TimeChart = model;
+    }
+
+    private PieChartModel top2TimeChart;
+
+    public PieChartModel getTop2TimeChart() {
+        this.createTop2TimeChart();
+        return this.top2TimeChart;
+    }
+
+    private void createTop2TimeChart() {
+        String template = "" +
+                "SELECT range AS key, count(*) AS value FROM (" +
+                "SELECT CASE " +
+                "WHEN (end_time - start_time) BETWEEN '0 minute' AND '30 minute' THEN '0-30 分钟' " +
+                "WHEN (end_time - start_time) BETWEEN '30 minute' AND '60 minute' THEN '30-60 分钟' " +
+                "ELSE '1 小时以上' END AS range " +
+                "FROM work_order_step " +
+                "WHERE work_order_step.step_id = (" +
+                "  SELECT step_id AS key " +
+                "  FROM work_order_step " +
+                "  GROUP BY key " +
+                "  ORDER BY avg (end_time - start_time) DESC " +
+                "  LIMIT 1 " +
+                "  OFFSET 1 " +
+                "  )" +
+                ") AS t GROUP BY range;";
+        String query = String.format(template,
+                DATE_FORMATTER.format(this.fromDate),
+                DATE_FORMATTER.format(this.toDate));
+        List<Map<String, Object>> result = NativeSqlUtil.queryForList(query, null);
+
+        PieChartModel model = new PieChartModel();
+        for(Map<String, Object> m : result) {
+            model.set((String)m.get("key"), ((Long)m.get("value")).intValue());
+        }
+        this.top2TimeChart = model;
+    }
+
+    private PieChartModel top3TimeChart;
+
+    public PieChartModel getTop3TimeChart() {
+        this.createTop3TimeChart();
+        return this.top3TimeChart;
+    }
+
+    private void createTop3TimeChart() {
+        String template = "" +
+                "SELECT range AS key, count(*) AS value FROM (" +
+                "SELECT CASE " +
+                "WHEN (end_time - start_time) BETWEEN '0 minute' AND '30 minute' THEN '0-30 分钟' " +
+                "WHEN (end_time - start_time) BETWEEN '30 minute' AND '60 minute' THEN '30-60 分钟' " +
+                "ELSE '1 小时以上' END AS range " +
+                "FROM work_order_step " +
+                "WHERE work_order_step.step_id = (" +
+                "  SELECT step_id AS key " +
+                "  FROM work_order_step " +
+                "  GROUP BY key " +
+                "  ORDER BY avg (end_time - start_time) DESC " +
+                "  LIMIT 1 " +
+                "  OFFSET 2" +
+                "  )" +
+                ") AS t GROUP BY range;";
+        String query = String.format(template,
+                DATE_FORMATTER.format(this.fromDate),
+                DATE_FORMATTER.format(this.toDate));
+        List<Map<String, Object>> result = NativeSqlUtil.queryForList(query, null);
+
+        PieChartModel model = new PieChartModel();
+        for(Map<String, Object> m : result) {
+            model.set((String)m.get("key"), ((Long)m.get("value")).intValue());
+        }
+        this.top3TimeChart = model;
+    }
 
     // （与原因分布类似）
 
