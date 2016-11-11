@@ -92,11 +92,11 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
     @Override
     public void save() {
         if (null == selectedAsset) {
-            WebUtil.addErrorMessage("Asset can not be null");
+            WebUtil.addErrorMessage(WebUtil.getMessage("assetName") + WebUtil.getMessage("ValidationRequire"));
         } else if (null == selected.getName() || selected.getName().isEmpty()) {
-            WebUtil.addErrorMessage("Please upload one file");
+            WebUtil.addErrorMessage(WebUtil.getMessage("name") + WebUtil.getMessage("ValidationRequire"));
         } else if (null == selected.getFileType() || selected.getFileType().isEmpty()) {
-            WebUtil.addErrorMessage("File type can not be null");
+            WebUtil.addErrorMessage(WebUtil.getMessage("fileType") + WebUtil.getMessage("ValidationRequire"));
         } else {
             selected.setAssetId(selectedAsset.getId());
             if (fileService.addAttachment(selected, selectedAsset.getHospitalId())) {
