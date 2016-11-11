@@ -30,8 +30,14 @@
                         </p:column>
                         <p:column headerText="#{msg.fileType}" sortBy="#{item.fileType}" filterBy="#{item.fileType}" filterMatchMode="LIKE">
                             <h:outputText value="#{fieldMsg.fieldValue('attachmentType', item.fileType)}"/>
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('attachmentType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                         </p:column>
-                        <p:column headerText="#{msg.assetName}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
+                        <p:column headerText="#{msg.assetName}" sortBy="#{item.assetId}" >
                             <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>
                         </p:column>
                         <p:column headerText="#{msg.download}" >
