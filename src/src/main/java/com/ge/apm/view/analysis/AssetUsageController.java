@@ -9,11 +9,11 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.print.DocFlavor;
+
+import org.postgresql.util.PGInterval;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.chart.Axis;
-import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.BarChartModel;
-import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.*;
 import webapp.framework.dao.NativeSqlUtil;
 
 @ManagedBean
@@ -24,7 +24,7 @@ public final class AssetUsageController {
         // TODO: Development Decision, Default Time
         LocalDate now = LocalDate.now();
         this.toDate = java.sql.Date.valueOf(now);
-        this.fromDate = java.sql.Date.valueOf(now.minusYears(2));
+        this.fromDate = java.sql.Date.valueOf(now.minusYears(5));
     }
 
     // （时间区间）
@@ -53,15 +53,109 @@ public final class AssetUsageController {
 
     private final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
 
-    // 设备故障最主要原因
+    // 设备故障最主要原因#
 
-    // 设备故障处理流程最耗时步骤
+    private String majorReason;
 
-    // 设备故障主要发生的科室
+    public String getMajorReason() {
+        this.createMajorReason();
+        return this.majorReason;
+    }
 
-    // 设备故障主要发生的设备类型
+    private void createMajorReason() {
+        String template = "" +
+                "SELECT request_reason AS key, COUNT(*) AS value " +
+                "FROM work_order " +
+                "WHERE request_time BETWEEN '%s' AND '%s' " +
+                "GROUP BY key " +
+                "ORDER BY value DESC " +
+                "LIMIT 1" +
+                ";";
+        String query = String.format(template,
+                                     DATE_FORMATTER.format(this.fromDate),
+                                     DATE_FORMATTER.format(this.toDate));
+        List<Map<String, Object>> list = NativeSqlUtil.queryForList(query, null);
+        this.majorReason = (String)list.get(0).get("key");
+    }
 
-    // 设备故障原因分布
+
+    // 设备故障处理流程最耗时步骤#
+
+    private String majorStep;
+
+    public String getMajorStep() {
+        this.createMajorStep();
+        return this.majorStep;
+    }
+
+    private void createMajorStep() {
+        String template = "" +
+                "SELECT step_name AS key, avg (end_time - start_time) AS value " +
+                "FROM work_order_step " +
+                "WHERE start_time BETWEEN '%s' AND '%s' " +
+                "GROUP BY key " +
+                "ORDER BY value DESC " +
+                "LIMIT 1" +
+                ";";
+        String query = String.format(template,
+                DATE_FORMATTER.format(this.fromDate),
+                DATE_FORMATTER.format(this.toDate));
+        List<Map<String, Object>> list = NativeSqlUtil.queryForList(query, null);
+        this.majorStep = (String)list.get(0).get("key");
+    }
+
+    // 设备故障主要发生的科室#
+
+    private String majorRoom;
+
+    public String getMajorRoom() {
+        this.createMajorRoom();
+        return this.majorRoom;
+    }
+
+    private void createMajorRoom() {
+        String template = "" +
+                "SELECT requestor_name AS key, COUNT(*) AS value " +
+                "FROM work_order " +
+                "WHERE request_time BETWEEN '%s' AND '%s' " +
+                "GROUP BY key " +
+                "ORDER BY value DESC " +
+                "LIMIT 1" +
+                ";";
+        String query = String.format(template,
+                DATE_FORMATTER.format(this.fromDate),
+                DATE_FORMATTER.format(this.toDate));
+        List<Map<String, Object>> list = NativeSqlUtil.queryForList(query, null);
+        this.majorRoom = (String)list.get(0).get("key");
+    }
+
+    // 设备故障主要发生的设备类型#
+
+    private String majorDevice;
+
+    public String getMajorDevice() {
+        this.createMajorDevice();
+        return this.majorDevice;
+    }
+
+    private void createMajorDevice() {
+        String template = "" +
+                "SELECT function_type AS key, COUNT(*) AS value " +
+                "FROM work_order " +
+                "LEFT OUTER JOIN asset_info ON (work_order.asset_id = asset_info.id) " +
+                "WHERE request_time BETWEEN '%s' AND '%s' " +
+                "GROUP BY key " +
+                "ORDER BY value DESC " +
+                "LIMIT 1" +
+                ";";
+        String query = String.format(template,
+                DATE_FORMATTER.format(this.fromDate),
+                DATE_FORMATTER.format(this.toDate));
+        List<Map<String, Object>> list = NativeSqlUtil.queryForList(query, null);
+        this.majorDevice = ((Integer)list.get(0).get("key")).toString();
+    }
+
+    // 设备故障原因分布#
     // X 故障原因
     // Y 故障次数
 
@@ -78,15 +172,47 @@ public final class AssetUsageController {
                                                                     "扫描量", "ne"); // TODO: i18n
     }
 
-    // 设备故障流程处理响应时间分布
+    // 设备故障流程处理响应时间分布#
     // 步骤、时间
 
-    // 耗时最长的三个步骤的具体响应时间分布
+    private HorizontalBarChartModel timeSequenceChart;
+
+    public HorizontalBarChartModel getTimeSequenceChart() {
+        this.createTimeSequenceChart();
+        return this.timeSequenceChart;
+    }
+
+    private void createTimeSequenceChart() {
+        HorizontalBarChartModel model = new HorizontalBarChartModel();
+        model.setStacked(true);
+
+        String template = "" +
+                "SELECT step_name AS key, " +
+                "       avg (end_time - start_time) AS value " +
+                "FROM work_order_step " +
+                "WHERE start_time BETWEEN '%s' AND '%s' " + // TODO: DC, start_time
+                "GROUP BY key " +
+                "ORDER BY key " +
+                ";";
+        String query = String.format(template,
+                                     DATE_FORMATTER.format(this.fromDate),
+                                     DATE_FORMATTER.format(this.toDate));
+
+        for (Map<String, Object> m : NativeSqlUtil.queryForList(query, null)) {
+            ChartSeries series = new ChartSeries();
+            series.set(m.get("key"), ((PGInterval)m.get("value")).getMinutes());
+            model.addSeries(series);
+        }
+
+        this.timeSequenceChart = model;
+    }
+
+    // 耗时最长的三个步骤的具体响应时间分布#
     // 小于半小时、半小时到一小时、一小时到一天、一天以上、未响应
 
     // （与原因分布类似）
 
-    // 设备故障分布（按科室）
+    // 设备故障分布（按科室）#
     // X 科室
     // Y 故障次数
 
@@ -104,7 +230,7 @@ public final class AssetUsageController {
     }
 
 
-    // 设备故障分布（按设备类型）
+    // 设备故障分布（按设备类型）#
     // X 设备类型
     // Y 故障次数
 
@@ -121,7 +247,7 @@ public final class AssetUsageController {
                                                                       "扫描量", null); // TODO: i18n
     }
 
-    // 设备故障分布（按单台设备）
+    // 设备故障分布（按单台设备）#
     // X 单台设备
     // Y 故障次数
 
@@ -138,7 +264,7 @@ public final class AssetUsageController {
                                                                       "扫描量", null); // TODO: i18n
     }
 
-    // 公用
+    // 公
 
     private List<Map<String, Object>> createDistribution(String key, int limit) {
         String template = "" +

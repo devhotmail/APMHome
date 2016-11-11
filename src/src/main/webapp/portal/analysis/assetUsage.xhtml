@@ -21,19 +21,19 @@
             <div class="ui-g-12">
                 <div class="ui-g-3 tile">
                     <p>TODO设备故障主要原因</p>
-                    <p>TODO-/未填</p>
+                    <p><h:outputText value="#{assetUsageController.majorReason}"/></p>
                 </div>
                 <div class="ui-g-3 tile">
                     <p>TODO设备故障处理流程最耗时步骤</p>
-                    <p>TODO-/派工</p>
+                    <p><h:outputText value="#{assetUsageController.majorStep}"/></p>
                 </div>
                 <div class="ui-g-3 tile">
                     <p>TODO设备故障主要发生的科室</p>
-                    <p>TODO-/放射科</p>
+                    <p><h:outputText value="#{assetUsageController.majorRoom}"/></p>
                 </div>
                 <div class="ui-g-3 tile">
                     <p>TODO设备故障主要发生的设备类型</p>
-                    <p>TODO-/CT</p>
+                    <p><h:outputText value="#{assetUsageController.majorDevice}"/></p>
                 </div>
             </div>
             <div class="ui-g-12">
@@ -79,9 +79,9 @@
             </div>
             <p:separator/>
             <div class="ui-g-12">
-                <!--<p:chart type="bar"-->
-                         <!--model="#{assetUsageController.responseTimeDistributionBarModel}"-->
-                         <!--responsive="true"/>-->
+                <p:chart type="bar"
+                         model="#{assetUsageController.timeSequenceChart}"
+                         responsive="true"/>
             </div>
             <div class="ui-g-12">
                 <p>耗时最长的三个步骤的具体响应时间分布</p>
