@@ -47,6 +47,7 @@ INSERT INTO "i18n_message" VALUES (42, 'label', 'ChangePassword', '修改密码'
 INSERT INTO "i18n_message" VALUES (43, 'label', 'ResetPassword', '重置密码', 'Reset Password', NULL, -1);
 INSERT INTO "i18n_message" VALUES (44, 'label', 'exportToXLS', '导出到Excel', 'Export To Excel', NULL, -1);
 INSERT INTO "i18n_message" VALUES (45, 'label', 'List', '列表', 'List', NULL, -1);
+INSERT INTO "i18n_message" VALUES (46, 'label', 'Download', '下载', 'Download', NULL, -1);
 
 
 -- menu item names  ( id from 200 to  399)
@@ -106,6 +107,9 @@ INSERT INTO "i18n_message" VALUES (251, 'label', 'InspectionRecord', '巡检记�
 INSERT INTO "i18n_message" VALUES (252, 'label', 'ChecklistType', '检查类型', 'Checklist Type', NULL, -1);
 INSERT INTO "i18n_message" VALUES (253, 'label', 'Profile', '我的帐号', 'My Profile', NULL, -1);
 INSERT INTO "i18n_message" VALUES (254, 'label', 'Setting', '系统设置', 'Setting', NULL, -1);
+INSERT INTO "i18n_message" VALUES (255, 'label', 'BasicInfo', '基本信息', 'Basic Info', NULL, -1);
+INSERT INTO "i18n_message" VALUES (256, 'label', 'UsageAmount', '使用量', 'Usage Amount', NULL, -1);
+INSERT INTO "i18n_message" VALUES (257, 'label', 'Attachment', '附件', 'Attachment', NULL, -1);
 
 
 -- Entity Object Names  ( id from 400 to  599)
@@ -299,10 +303,10 @@ INSERT INTO "i18n_message" VALUES (1525,'casePriority','3','一般','Emergent',n
 
 
 
-INSERT INTO "i18n_message" VALUES (1530,'attachmentType','1','照片','Inspection',null,-1);
-INSERT INTO "i18n_message" VALUES (1531,'attachmentType','2','合同','Inspection',null,-1);
-INSERT INTO "i18n_message" VALUES (1532,'attachmentType','3','用户手册','Inspection',null,-1);
-INSERT INTO "i18n_message" VALUES (1533,'attachmentType ','4','培训资料','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1530,'attachmentType','1','照片','Photo',null,-1);
+INSERT INTO "i18n_message" VALUES (1531,'attachmentType','2','合同','Contract',null,-1);
+INSERT INTO "i18n_message" VALUES (1532,'attachmentType','3','用户手册','User Manual',null,-1);
+INSERT INTO "i18n_message" VALUES (1533,'attachmentType','4','培训资料','Material for training',null,-1);
 
 INSERT INTO "i18n_message" VALUES (1535,'assetFunctionType','2', '6801基础外科手术器械',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1536,'assetFunctionType','3', '6802显微外科手术器械',null,null,-1);
