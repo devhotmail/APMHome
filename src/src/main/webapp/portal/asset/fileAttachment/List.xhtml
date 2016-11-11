@@ -25,8 +25,8 @@
                         <p:ajax event="rowSelect" listener="#{assetFileAttachmentController.onSelectedChange}" update="createButton editButton deleteButton :AssetFileAttachmentEditForm"/>
                         <p:ajax event="filter" listener="#{assetFileAttachmentController.onFilter}" update="createButton editButton deleteButton"/>
 
-                        <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.name}"/>
+                        <p:column headerText="#{msg.assetName}" sortBy="#{item.assetId}" >
+                            <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>
                         </p:column>
                         <p:column headerText="#{msg.fileType}" sortBy="#{item.fileType}" filterBy="#{item.fileType}" filterMatchMode="LIKE">
                             <h:outputText value="#{fieldMsg.fieldValue('attachmentType', item.fileType)}"/>
@@ -37,8 +37,8 @@
                                 </p:selectOneMenu>
                             </f:facet>
                         </p:column>
-                        <p:column headerText="#{msg.assetName}" sortBy="#{item.assetId}" >
-                            <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>
+                        <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.name}"/>
                         </p:column>
                         <p:column headerText="#{msg.download}" >
                             <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">

@@ -32,9 +32,9 @@
                                           multiple="true" update="messages name" sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png|txt|doc|pdf|docx|exe|zip|xml?)$/" />
                             <p:growl id="messages" showDetail="true" />
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield" rendered="#{assetFileAttachmentController.isCreatAction()}">
+                        <h:panelGroup  rendered="#{assetFileAttachmentController.isCreatAction()}">
+                            <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{assetFileAttachmentController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}" readonly="true"/>
-                            <label>#{msg.name}*</label>
                         </h:panelGroup>
                         <h:panelGroup>
                             <p:commandButton validateClient="false" actionListener="#{assetFileAttachmentController.save}" value="#{msg.Save}" update="display,:AssetFileAttachmentEditForm :AssetFileAttachmentListForm:datalist, :growl" icon="ui-icon-check" />
