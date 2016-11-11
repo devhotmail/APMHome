@@ -34,13 +34,17 @@
                         </p:selectOneMenu>
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">#{msg.functionType}</label>
-                        <p:inputText class="inputWithPopupButton" value="#{assetInfoController.selected.functionType}"/>
-                        <p:commandButton process="@this" update="@previous" icon="ui-icon-arrow-drop-down" class="popupIconButton"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
                         <label class="label">#{msg.functionGrade}</label>
                         <p:inputText id="functionGrade" value="#{assetInfoController.selected.functionGrade}"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.functionType}</label>
+                        <p:selectOneMenu id="functionType" value="#{assetInfoController.selected.functionType}">
+                            <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                            <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                        </p:selectOneMenu>
+                        <!--<p:inputText class="inputWithPopupButton" value="#{assetInfoController.selected.functionType}"/>-->
+                        <!--<p:commandButton process="@this" update="@previous" icon="ui-icon-arrow-drop-down" class="popupIconButton"/>-->
                     </h:panelGroup>
                     <p:spacer/>
                     <h:panelGroup>
