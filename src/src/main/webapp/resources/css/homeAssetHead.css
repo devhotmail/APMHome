@@ -1209,22 +1209,22 @@ sub {
   margin: 0 5px;
   vertical-align: baseline; }
 
-.status--1::before {
+.status--0::before {
   background-color: #60a5d7; }
 
-.status--2::before {
+.status--1::before {
   background-color: #f7a247; }
 
-.status--3::before {
+.status--2::before {
   background-color: #63bb6c; }
 
-.status--4::before {
+.status--3::before {
   background-color: #ee7eaf; }
 
-.status--5::before {
+.status--4::before {
   background-color: #b08f39; }
 
-.status--6::before {
+.status--5::before {
   background-color: #decf40; }
 
 .block {

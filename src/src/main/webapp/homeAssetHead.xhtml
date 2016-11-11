@@ -36,98 +36,89 @@
                                 <p class="epsilon">维修中</p>
                                 <p class="epsilon text--secondary">维修流程</p>
                                 <ul class="list-inline list-bare">
-                                    <li><span class="status status--1">申请</span><span>(0)</span></li>
-                                    <li><span class="status status--2">审核</span><span>(1)</span></li>
-                                    <li><span class="status status--3">派工</span><span>(1)</span></li>
-                                    <li><span class="status status--4">领工</span><span>(1)</span></li>
-                                    <li><span class="status status--5">维修</span><span>(0)</span></li>
-                                    <li><span class="status status--6">关单</span><span>(0)</span></li>
+                                    <ui:repeat value="#{homeAssetHeadController.stepCounts.entrySet().toArray()}" var="entry"
+                                               varStatus="status">
+                                        <li>
+                                            <span class="status status--#{status.index}">#{entry.key}</span><span>(#{entry.value})</span>
+                                        </li>
+                                    </ui:repeat>
                                 </ul>
-                                <h1 class="alpha text--center">2</h1>
+                                <h1 class="alpha text--center">#{homeAssetHeadController.assetNumberInMt}</h1>
                                 <div class="block-footer">
-                                    <p>西门子核磁Avanto</p>
-                                    <ul class="list-inline list-bare layout layout--middle layout--center">
-                                        <li class="layout__item u-1/2">维修流程:<span class="status status--4"/>领工</li>
-                                        <li class="layout__item u-1/2">维修人:<span/>张小小</li>
-                                    </ul>
-                                    <p>通用电气彩超LOGIQ</p>
-                                    <ul class="list-inline list-bare layout layout--middle layout--center">
-                                        <li class="layout__item u-1/2">维修流程:<span class="status status--5"/>维修</li>
-                                        <li class="layout__item u-1/2">维修人:<span/>王村</li>
-                                    </ul>
+                                    <ui:repeat value="#{homeAssetHeadController.assetsInMt}" var="asset">
+                                        <p>#{asset.asset}</p>
+                                        <ul class="list-inline list-bare layout layout--middle layout--center">
+                                            <li class="layout__item u-1/2">维修流程:<span class="status status--4"/>#{asset.step}
+                                            </li>
+                                            <li class="layout__item u-1/2">维修人:<span/>#{asset.owner}</li>
+                                        </ul>
+                                    </ui:repeat>
                                 </div>
                             </div>
 
                             <div class="ui-g-4 ui-xl-4 block">
                                 <p class="epsilon">停机中</p>
-                                <h1 class="alpha text--center">2</h1>
+                                <h1 class="alpha text--center">#{homeAssetHeadController.assetNumberStopped}</h1>
                                 <div class="block-footer">
-                                    <p>西门子核磁Avanto</p>
-                                    <ul class="list-inline list-bare layout layout--middle layout--center">
-                                        <li class="layout__item u-1/2">停机时间:<span>2016-08-10</span></li>
-                                        <li class="layout__item u-1/2">原因:<span>磁头坏损</span></li>
-                                    </ul>
-                                    <p>通用电气彩超LOGIQ</p>
-                                    <ul class="list-inline list-bare layout layout--middle layout--center">
-                                        <li class="layout__item u-1/2">停机时间:<span>2016-08-10</span></li>
-                                        <li class="layout__item u-1/2">原因:<span>电源故障</span></li>
-                                    </ul>
+                                    <ui:repeat value="#{homeAssetHeadController.assetsStopped}" var="asset">
+                                        <p>#{asset.asset}</p>
+                                        <ul class="list-inline list-bare layout layout--middle layout--center">
+                                            <li class="layout__item u-1/2">停机时间:<span>#{asset.downTime}</span></li>
+                                            <li class="layout__item u-1/2">原因:<span>#{asset.downReason}</span></li>
+                                        </ul>
+                                    </ui:repeat>
                                 </div>
                             </div>
 
                             <div class="ui-g-4 ui-xl-4 block">
                                 <p class="epsilon">保修期到期(2个月内)</p>
-                                <h1 class="alpha text--center">12</h1>
+                                <h1 class="alpha text--center">#{homeAssetHeadController.assetNumberWarrantyExpired}</h1>
                                 <div class="block-footer">
-                                    <div class="layout layout--middle">
-                                        <p class="layout__item u-1/2">西门子核磁Avanto</p>
-                                        <p class="layout__item u-1/2"><span>2016-08-10</span></p>
-                                    </div>
-                                    <div class="layout layout--middle">
-                                        <p class="layout__item u-1/2">通用电气彩超LOGIQ</p>
-                                        <p class="layout__item u-1/2"><span>2016-08-10</span></p>
-                                    </div>
+                                    <ui:repeat value="#{homeAssetHeadController.assetsWarrantyExpired}" var="asset">
+                                        <div class="layout layout--middle">
+                                            <p class="layout__item u-1/2">#{asset.asset}</p>
+                                            <p class="layout__item u-1/2"><span>#{asset.warrantyDate}</span></p>
+                                        </div>
+                                    </ui:repeat>
                                 </div>
                             </div>
 
                             <div class="ui-g-4 ui-xl-4 block">
                                 <p class="epsilon">预防性维护(1周内)</p>
-                                <h1 class="alpha text--center">3</h1>
+                                <h1 class="alpha text--center">#{homeAssetHeadController.assetNumberInPm}</h1>
                                 <div class="block-footer">
-                                    <div class="layout layout--middle">
-                                        <p class="layout__item u-1/2">西门子核磁Avanto</p>
-                                        <p class="layout__item u-1/2"><span>2016-08-10</span></p>
-                                    </div>
-                                    <div class="layout layout--middle">
-                                        <p class="layout__item u-1/2">西门子彩超ACUSON</p>
-                                        <p class="layout__item u-1/2"><span>2016-10-17</span></p>
-                                    </div>
-                                    <div class="layout layout--middle">
-                                        <p class="layout__item u-1/2">通用电气彩超LOGIQ</p>
-                                        <p class="layout__item u-1/2"><span>2016-10-19</span></p>
-                                    </div>
+                                    <ui:repeat value="#{homeAssetHeadController.assetsInPm}" var="asset">
+                                        <div class="layout layout--middle">
+                                            <p class="layout__item u-1/2">#{asset.asset}</p>
+                                            <p class="layout__item u-1/2"><span>#{asset.pmDate}</span></p>
+                                        </div>
+                                    </ui:repeat>
                                 </div>
                             </div>
 
                             <div class="ui-g-4 ui-xl-4 block">
                                 <p class="epsilon">设备计量(2个月内)</p>
-                                <h1 class="alpha text--center">1</h1>
+                                <h1 class="alpha text--center">#{homeAssetHeadController.assetNumberInMetering}</h1>
                                 <div class="block-footer">
-                                    <div class="layout layout--middle">
-                                        <p class="layout__item u-1/2">西门子核磁Avanto</p>
-                                        <p class="layout__item u-1/2"><span>2016-08-10</span></p>
-                                    </div>
+                                    <ui:repeat value="#{homeAssetHeadController.assetsInMetering}" var="asset">
+                                        <div class="layout layout--middle">
+                                            <p class="layout__item u-1/2">#{asset.asset}</p>
+                                            <p class="layout__item u-1/2"><span>#{asset.meteringDate}</span></p>
+                                        </div>
+                                    </ui:repeat>
                                 </div>
                             </div>
 
                             <div class="ui-g-4 ui-xl-4 block">
                                 <p class="epsilon">设备质控(2个月内)</p>
-                                <h1 class="alpha text--center">1</h1>
+                                <h1 class="alpha text--center">#{homeAssetHeadController.assetNumberInQa}</h1>
                                 <div class="block-footer">
-                                    <div class="layout layout--middle">
-                                        <p class="layout__item u-1/2">西门子核磁Avanto</p>
-                                        <p class="layout__item u-1/2"><span>2016-08-10</span></p>
-                                    </div>
+                                    <ui:repeat value="#{homeAssetHeadController.assetsInQa}" var="asset">
+                                        <div class="layout layout--middle">
+                                            <p class="layout__item u-1/2">#{asset.asset}</p>
+                                            <p class="layout__item u-1/2"><span>#{asset.qaDate}</span></p>
+                                        </div>
+                                    </ui:repeat>
                                 </div>
                             </div>
 
