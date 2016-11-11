@@ -34,7 +34,6 @@
                     <h:panelGroup>
                         <label class="label">#{msg.casePriority}*</label>
                         <p:selectOneMenu disabled="#{workOrderController.isInViewMode}" value="#{workOrderController.selected.casePriority}">
-                            <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
                             <f:selectItems value="#{fieldMsg.getFieldValueList('casePriority')}" var="item"
                                            itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                         </p:selectOneMenu>
@@ -122,6 +121,8 @@
 
                 <p:commandButton validateClient="true" icon="ui-icon-check" actionListener="#{workOrderController.save()}" value="#{msg.Submit}"/>
             </p:fieldset>
+            
+            
         </h:form>
         
         <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>

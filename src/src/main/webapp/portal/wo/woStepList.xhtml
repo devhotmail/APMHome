@@ -7,10 +7,10 @@
         <div class="ui-g">
             <div class="ui-g-12">
 
-                <p align="center">
-                    <b>#{msg.WorkOrderStep}</b>
-                </p>
             <h:form id="WorkOrderStepListForm">
+                <p align="center">
+                    <b><p:outputLabel value="#{msg.WorkOrderStep}" rendered="#{workOrderStepController.workOrderStepList.size() gt 0}"/></b>
+                </p>
                 <p:dataTable id="datalistWoStepWoStep" value="#{workOrderStepController.workOrderStepList}" var="item" widgetVar="varDataListWoStep"
                     selectionMode="single" selection="#{workOrderStepController.selected}"
                     lazy="false" paginator="false"
