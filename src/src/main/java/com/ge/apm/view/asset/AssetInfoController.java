@@ -12,7 +12,7 @@ import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AttachmentFileService;
-import com.ge.apm.service.asset.UserAccountService;
+import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -29,8 +29,6 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     AssetInfoRepository dao = null;
 
-    UserAccountRepository userDao = null;
-
     AssetFileAttachmentRepository attachDao = null;
 
     private boolean resultStatus;
@@ -44,15 +42,15 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     @ManagedProperty("#{attachmentFileService}")
     private AttachmentFileService fileService;
 
-    private UserAccountService userService;
+    private UaaService uuaService;
 
     @Override
     protected void init() {
         dao = WebUtil.getBean(AssetInfoRepository.class);
-        userDao = WebUtil.getBean(UserAccountRepository.class);
+        UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         currentUser = UserContextService.getCurrentUserAccount();
-        userService = (UserAccountService) WebUtil.getBean(UserAccountService.class);
+        uuaService = (UaaService) WebUtil.getBean(UaaService.class);
         this.filterBySite = true;
         this.setSiteFilter();
 
@@ -65,20 +63,19 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             }
         } else if ("View".equalsIgnoreCase(actionName)) {
             setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-            owner = userService.getUser(selected.getAssetOwnerId());
+            owner = userDao.findById(selected.getAssetOwnerId());
             prepareView();
         } else if ("Edit".equalsIgnoreCase(actionName)) {
             setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-            owner = userService.getUser(selected.getAssetOwnerId());
+            owner = userDao.findById(selected.getAssetOwnerId());
             prepareEdit();
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-            owner = userService.getUser(selected.getAssetOwnerId());
+            owner = userDao.findById(selected.getAssetOwnerId());
             prepareDelete();
         }
 
-        ownerList = userService.getUserList();
-
+        ownerList = uuaService.getUserList(currentUser.getHospitalId());
     }
 
     public UserAccount getCurrentUser() {
@@ -181,7 +178,6 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             selected.setAssetOwnerName(owner.getName());
             selected.setAssetOwnerTel(owner.getTelephone());
         }
-
     }
 
     public void handleFileUpload(FileUploadEvent event) {
