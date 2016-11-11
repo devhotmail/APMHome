@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+
+                <p align="center">
+                    <b>#{msg.WorkOrderStep}</b>
+                </p>
+            <h:form id="WorkOrderStepListForm">
+                <p:dataTable id="datalistWoStepWoStep" value="#{workOrderStepController.workOrderStepList}" var="item" widgetVar="varDataListWoStep"
+                    selectionMode="single" selection="#{workOrderStepController.selected}"
+                    lazy="false" paginator="false"
+                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                    rows="200" emptyMessage="#{msg.noRecordFound}"  rendered="#{workOrderStepController.workOrderStepList.size() gt 0}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <p:ajax event="rowSelect" update=""/>
+                    
+                    <p:column headerText="#{msg.stepName}">
+                        <h:outputText value="#{item.stepName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.ownerName}">
+                        <h:outputText value="#{item.ownerName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.startTime}">
+                        <h:outputText value="#{item.startTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.endTime}">
+                        <h:outputText value="#{item.endTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.description}">
+                        <h:outputText value="#{item.description}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.attachmentUrl}">
+                        <h:outputText value="#{item.attachmentUrl}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+            </div>
+        </div>
+        
+
+</ui:composition>

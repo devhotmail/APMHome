@@ -17,7 +17,6 @@
                     <b>#{msg.WorkOrder} #{msg.List}</b>
                 </p>
                 <p:messages autoUpdate="true" closable="true" showDetail="false"/>
-                <p:messages autoUpdate="true" closable="true" showDetail="false"/>                
                 
                 <h:form id="WorkOrderListForm">
                     <p:dataTable id="datalist" value="#{workOrderController.lazyModel}" var="item" widgetVar="varDataList"
@@ -29,8 +28,8 @@
                         rows="20" emptyMessage="#{msg.noRecordFound}"
                         rowsPerPageTemplate="20,40,60,90">
 
-                        <p:ajax event="rowSelect" listener="#{workOrderController.onSelectWorkOrder}" update="WorkOrderEditForm"/>
-                        <p:ajax event="filter" listener="#{workOrderController.onFilter}" update="WorkOrderEditForm"/>
+                        <p:ajax event="rowSelect" listener="#{workOrderController.onSelectWorkOrder}" update="WorkOrderEditForm WorkOrderStepListForm"/>
+                        <p:ajax event="filter" listener="#{workOrderController.onFilter}" update="WorkOrderEditForm WorkOrderStepListForm"/>
 
                         <p:column styleClass="textCenter"  headerText="#{msg.casePriority}" sortBy="#{item.casePriority}" filterBy="#{item.casePriority}" filterMatchMode="EQ">
                             <center><h:outputText value="#{item.casePriority}" class="priorityItem priorityItem#{item.casePriority}"/></center>
@@ -88,6 +87,7 @@
 
                 <ui:include src="woEdit.xhtml"/>
 
+                <ui:include src="woStepList.xhtml"/>
             </div>
         </div>
 
