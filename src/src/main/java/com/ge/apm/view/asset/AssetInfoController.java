@@ -1,59 +1,97 @@
 package com.ge.apm.view.asset;
 
+import com.ge.apm.dao.AssetFileAttachmentRepository;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.UserAccountRepository;
+import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.asset.UserAccountService;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+import org.primefaces.event.FileUploadEvent;
 import webapp.framework.web.WebUtil;
 import webapp.framework.dao.SearchFilter;
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     AssetInfoRepository dao = null;
 
     UserAccountRepository userDao = null;
 
+    AssetFileAttachmentRepository attachDao = null;
+
     private boolean resultStatus;
-    UserAccount currentUser;
+    private UserAccount currentUser;
+
+    private UserAccount owner;
+    private List<UserAccount> ownerList;
+
+    private List<AssetFileAttachment> attachements;
+
+    @ManagedProperty("#{attachmentFileService}")
+    private AttachmentFileService fileService;
+
+    private UserAccountService userService;
 
     @Override
     protected void init() {
-        System.out.println("=========AssetInfoController======init");
         dao = WebUtil.getBean(AssetInfoRepository.class);
         userDao = WebUtil.getBean(UserAccountRepository.class);
+        attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         currentUser = UserContextService.getCurrentUserAccount();
+        userService = (UserAccountService) WebUtil.getBean(UserAccountService.class);
         this.filterBySite = true;
         this.setSiteFilter();
 
-//        String actionName = WebUtil.getRequestParameter("actionName");
-//        if ("Create".equalsIgnoreCase(actionName)) {
-//            try {
-//                prepareCreate();
-//            } catch (InstantiationException | IllegalAccessException ex) {
-//                Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        } else if ("Delete".equalsIgnoreCase(actionName)) {
-//            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-//            prepareDelete();
-//        }
-        UserAccountService service = (UserAccountService) WebUtil.getBean(UserAccountService.class);
-        ownerList = service.getUserList();
+        String actionName = WebUtil.getRequestParameter("actionName");
+        if ("Create".equalsIgnoreCase(actionName)) {
+            try {
+                prepareCreate();
+            } catch (InstantiationException | IllegalAccessException ex) {
+                Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if ("View".equalsIgnoreCase(actionName)) {
+            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+            owner = userService.getUser(selected.getAssetOwnerId());
+            prepareView();
+        } else if ("Edit".equalsIgnoreCase(actionName)) {
+            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+            owner = userService.getUser(selected.getAssetOwnerId());
+            prepareEdit();
+        } else if ("Delete".equalsIgnoreCase(actionName)) {
+            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+            owner = userService.getUser(selected.getAssetOwnerId());
+            prepareDelete();
+        }
 
+        ownerList = userService.getUserList();
+
+    }
+
+    public UserAccount getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(UserAccount currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    
+    public void setFileService(AttachmentFileService fileService) {
+        this.fileService = fileService;
     }
 
     @Override
@@ -72,62 +110,32 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     @Override
     public List<AssetInfo> getItemList() {
-        //to do: change the code if necessary
         return dao.findBySearchFilter(searchFilters);
     }
 
-    /*
-    @Override
-    public void onBeforeNewObject(AssetInfo object) {
-    }
-    
-    @Override
-    public void onAfterNewObject(AssetInfo object, boolean isOK) {
+    public String getViewPage(String pageName, String actionName) {
+        return pageName + "?faces-redirect=true&actionName=" + actionName + "&selectedid=" + selected.getId();
     }
 
     @Override
-    public void onBeforeUpdateObject(AssetInfo object) {
-    }
-    
-    @Override
-    public void onAfterUpdateObject(AssetInfo object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeDeleteObject(AssetInfo object) {
-    }
-    
-    @Override
-    public void onAfterDeleteObject(AssetInfo object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeSave(AssetInfo object) {
-    }
-    
-    @Override
-    public void onAfterDataChanged(){
-    };
-     */
-    @Override
     public void onAfterNewObject(AssetInfo object, boolean isOK) {
         resultStatus = isOK;
+        if (isOK) {
+            addAttachements(object.getId());
+        }
     }
 
     @Override
     public void onAfterUpdateObject(AssetInfo object, boolean isOK) {
         resultStatus = isOK;
+        if (isOK) {
+            addAttachements(object.getId());
+        }
     }
 
     @Override
     public void onAfterDeleteObject(AssetInfo object, boolean isOK) {
         resultStatus = isOK;
-    }
-
-    public String returnList() {
-        this.selected = null;
-        this.owner = null;
-        return "List?faces-redirect=true";
     }
 
     public String removeOne() {
@@ -142,9 +150,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public String applyChange() {
         if ("Create".equalsIgnoreCase(this.crudActionName)) {
             selected.setSiteId(currentUser.getSiteId());
-            selected.setHospitalId(2);
-            selected.setAssetDeptId(123);
-            selected.setAssetOwnerName("aaa");
+            selected.setHospitalId(currentUser.getHospitalId());
         }
         this.save();
         if (resultStatus) {
@@ -152,23 +158,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         } else {
             return "";
         }
-
     }
-
-    public List<String> completeText(String query) {
-        List<String> results = new ArrayList<String>();
-        List<SearchFilter> usersSearchFilters = new ArrayList<>();
-        usersSearchFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, currentUser.getSiteId()));
-        usersSearchFilters.add(new SearchFilter("name", SearchFilter.Operator.LIKE, query));
-        List<UserAccount> userList = userDao.findBySearchFilter(usersSearchFilters);
-        for (int i = 0; i < (userList.size() > 10 ? 10 : userList.size()); i++) {
-            results.add(userList.get(i).getName());
-        }
-        return results;
-    }
-
-    private UserAccount owner;
-    private List<UserAccount> ownerList;
 
     public UserAccount getOwner() {
         return owner;
@@ -195,4 +185,55 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     }
 
+    public void handleFileUpload(FileUploadEvent event) {
+
+        String type = event.getComponent().getId();
+        type = type.substring(type.indexOf("type") + 4);
+        AssetFileAttachment attach = new AssetFileAttachment();
+        String fileName = fileService.getFileName(event.getFile());
+        attach.setName(fileName);
+        attach.setFileUrl(fileService.getFileUrl() + fileName);
+        attach.setFileType(type);
+        attach.setSiteId(currentUser.getSiteId());
+        if (fileService.uploadFile(event.getFile(), attach.getFileUrl())) {
+            WebUtil.addSuccessMessage("Succesful", fileName + " is uploaded.");
+            attachements.add(attach);
+        }
+    }
+
+    public List<AssetFileAttachment> getAttachList(Integer assetid, String type) {
+        if (attachements == null || attachements.isEmpty()) {
+            List<SearchFilter> sfs = new ArrayList();
+            sfs.addAll(this.searchFilters);
+            sfs.add(new SearchFilter("assetId", SearchFilter.Operator.EQ, assetid));
+            attachements = attachDao.findBySearchFilter(sfs);
+        }
+
+        List<AssetFileAttachment> result = new ArrayList();
+
+        for (AssetFileAttachment item : attachements) {
+            if (item.getFileType().equals(type)) {
+                result.add(item);
+            }
+        }
+        return result;
+    }
+
+    private void addAttachements(int assetId) {
+        for (AssetFileAttachment item : attachements) {
+            item.setAssetId(assetId);
+            fileService.addAttachment(item, currentUser.getHospitalId());
+        }
+        attachements.clear();
+    }
+
+    public void removeAttachment(String attachUrl) {
+        for (AssetFileAttachment item : attachements) {
+            if (attachUrl.equals(item.getFileUrl())) {
+                attachements.remove(item);
+                fileService.removeAttachment(item);
+                break;
+            }
+        }
+    }
 }
