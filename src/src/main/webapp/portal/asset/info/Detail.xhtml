@@ -38,8 +38,6 @@
                 </div>
             </div>
         </div>
-
-
         <p:accordionPanel id="accordion" multiple="false" >
             <p:tab title="#{msg.BasicInfo}">
                 <p:panelGrid columns="4"  layout="grid" styleClass="ui-panelgrid-blank">
@@ -72,15 +70,12 @@
                         <p:inputText value="#{assetInfoController.selected.purchasePrice}" readonly="true"/>
                         <label>#{msg.purchasePrice}</label>
                     </h:panelGroup>
-                    <h:panelGroup  styleClass="md-inputfield">
+                    <h:panelGroup>
+                        <label class="label">#{msg.status}</label>
                         <p:selectOneRadio id="status"  label="#{msg.status}" value="#{assetInfoController.selected.status}" disabled="true">
-                            <f:selectItem itemLabel="#{msg.statusUp}" itemValue="0" rendered="false"/>
-                            <f:selectItem itemLabel="#{msg.statusDown}" itemValue="1" />
-                            <f:selectItem itemLabel="#{msg.statusPartial}" itemValue="2" />
+                            <f:selectItems value="#{fieldMsg.getFieldValueList('assetStatus')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                         </p:selectOneRadio>
-                        <label>#{msg.status}</label>
                     </h:panelGroup>
-
                 </p:panelGrid>
             </p:tab>
         </p:accordionPanel>
@@ -147,43 +142,42 @@
 
         <p:fieldset legend="#{msg.TBD}" style="margin-bottom:20px">
 
-
         </p:fieldset>
-        <p:fieldset legend="#{msg.TBD}" style="margin-bottom:20px">
-            <p:commandButton id="imageBtn" value="#{fieldMsg.getFieldValueList('attachment_type').get(0).getValue()}" type="button" />
-            <p:overlayPanel id="imagePanel" for="imageBtn" hideEffect="fade">
-                <p:dataList value="#{assetFileAttachmentController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="ordered">
-                    <f:facet name="header">#{msg.manual}</f:facet>
-                    #{fileitem.name}, #{fileitem.id}
-                </p:dataList>
-            </p:overlayPanel>
-            
-            <p:commandButton id="imageBtn1" value="#{fieldMsg.getFieldValueList('attachment_type').get(1).getValue()}" type="button" />
-            <p:overlayPanel id="imagePane1" for="imageBtn1" hideEffect="fade">
-                <p:dataList value="#{assetFileAttachmentController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="ordered">
-                    <f:facet name="header">#{msg.manual}</f:facet>
-                    #{fileitem.name}, #{fileitem.id}
-                </p:dataList>
-            </p:overlayPanel>
-            
-            <p:commandButton id="imageBtn2" value="#{fieldMsg.getFieldValueList('attachment_type').get(2).getValue()}" type="button" />
-            <p:overlayPanel id="imagePanel2" for="imageBtn2" hideEffect="fade">
-                 <p:dataList value="#{assetFileAttachmentController.getAttachList(assetInfoController.selected.id,3)}" var="fileitem" type="ordered">
-                    <f:facet name="header">#{msg.manual}</f:facet>
-                    #{fileitem.name}, #{fileitem.id}
-                </p:dataList>
-            </p:overlayPanel>
-            
-            <p:commandButton id="imageBtn3" value="#{fieldMsg.getFieldValueList('attachment_type').get(3).getValue()}" type="button" />
-            <p:overlayPanel id="imagePanel3" for="imageBtn3" hideEffect="fade">
-                 <p:dataList value="#{assetFileAttachmentController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="ordered">
-                    <f:facet name="header">#{msg.manual}</f:facet>
-                    #{fileitem.name}, #{fileitem.id}
-                </p:dataList>
-            </p:overlayPanel>
-
-        </p:fieldset>
-
-
+        <h:form>
+            <p:tabView>
+                <p:tab title="#{fieldMsg.fieldValue('attachmentType', 1)}">
+                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="ordered">
+                        #{fileitem.name}
+                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
+                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem)}" />
+                        </p:commandButton>
+                    </p:dataList>
+                </p:tab>
+                <p:tab title="#{fieldMsg.fieldValue('attachmentType', 2)}">
+                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="ordered">
+                        #{fileitem.name}
+                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
+                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem)}" />
+                        </p:commandButton>
+                    </p:dataList>
+                </p:tab>
+                <p:tab title="#{fieldMsg.fieldValue('attachmentType', 3)}">
+                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,3)}" var="fileitem" type="ordered">
+                        #{fileitem.name}
+                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
+                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem)}" />
+                        </p:commandButton>
+                    </p:dataList>
+                </p:tab>
+                <p:tab title="#{fieldMsg.fieldValue('attachmentType', 4)}">
+                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="ordered">
+                        #{fileitem.name}
+                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
+                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem)}" />
+                        </p:commandButton>
+                    </p:dataList>
+                </p:tab>
+            </p:tabView>
+        </h:form>
     </ui:define>
 </ui:composition>
