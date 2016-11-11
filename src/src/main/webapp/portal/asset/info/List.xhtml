@@ -41,9 +41,21 @@
                         </p:column>
                         <p:column headerText="#{msg.functionGroup}" sortBy="#{item.functionGroup}" filterBy="#{item.functionGroup}" filterMatchMode="EQ">
                             <h:outputText value="#{fieldMsg.fieldValue('assetGroup',item.functionGroup)}"/>
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                         </p:column>
                         <p:column headerText="#{msg.functionType}" sortBy="#{item.functionType}" filterBy="#{item.functionType}" filterMatchMode="EQ">
                             <h:outputText value="#{fieldMsg.fieldValue('assetFunctionType',item.functionType)}"/>
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                         </p:column>
                         <p:column headerText="#{msg.functionGrade}" sortBy="#{item.functionGrade}" filterBy="#{item.functionGrade}" filterMatchMode="EQ">
                             <h:outputText value="#{item.functionGrade}"/>

@@ -39,7 +39,7 @@
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.functionType}</label>
-                        <p:selectOneMenu id="functionType" value="#{assetInfoController.selected.functionType}">
+                        <p:selectOneMenu id="functionType" value="#{assetInfoController.selected.functionType}" style="width: 100%">
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                         </p:selectOneMenu>
