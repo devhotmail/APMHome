@@ -118,11 +118,11 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.confirmedStartTime}</label>
-                            <p:calendar id="confirmedStartTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderController.selected.confirmedStartTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar id="confirmedStartTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderController.selected.confirmedDownTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.confirmedEndTime}</label>
-                            <p:calendar id="confirmedEndTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderController.selected.confirmedEndTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar id="confirmedEndTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderController.selected.confirmedUpTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.assetId}*</label>

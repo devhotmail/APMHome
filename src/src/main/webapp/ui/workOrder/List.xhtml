@@ -107,16 +107,6 @@
                     <p:column headerText="#{msg.totalPrice}" sortBy="#{item.totalPrice}">
                         <h:outputText value="#{item.totalPrice}"/>
                     </p:column>
-                    <p:column headerText="#{msg.confirmedStartTime}" sortBy="#{item.confirmedStartTime}">
-                        <h:outputText value="#{item.confirmedStartTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="#{msg.confirmedEndTime}" sortBy="#{item.confirmedEndTime}">
-                        <h:outputText value="#{item.confirmedEndTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
                     <p:column headerText="#{msg.assetId}" sortBy="#{item.assetId}">
                         <h:outputText value="#{item.assetId}"/>
                     </p:column>
