@@ -265,8 +265,8 @@ close_reason varchar(256),
 comments varchar(256),
 total_man_hour int,
 total_price float,
-confirmed_start_time timestamp,
-confirmed_end_time timestamp);
+confirmed_down_time timestamp,
+confirmed_up_time timestamp);
 
 
 create table work_order_history(
