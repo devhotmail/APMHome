@@ -124,12 +124,12 @@ public class WorkOrder implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "total_price")
     private Double totalPrice;
-    @Column(name = "confirmed_start_time")
+    @Column(name = "confirmed_down_time")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date confirmedStartTime;
-    @Column(name = "confirmed_end_time")
+    private Date confirmedDownTime;
+    @Column(name = "confirmed_up_time")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date confirmedEndTime;
+    private Date confirmedUpTime;
 
     @Column(name = "asset_id")
     @Basic(optional = false)
@@ -351,20 +351,20 @@ public class WorkOrder implements Serializable {
         this.totalPrice = totalPrice;
     }
 
-    public Date getConfirmedStartTime() {
-        return confirmedStartTime;
+    public Date getConfirmedDownTime() {
+        return confirmedDownTime;
     }
 
-    public void setConfirmedStartTime(Date confirmedStartTime) {
-        this.confirmedStartTime = confirmedStartTime;
+    public void setConfirmedDownTime(Date confirmedDownTime) {
+        this.confirmedDownTime = confirmedDownTime;
     }
 
-    public Date getConfirmedEndTime() {
-        return confirmedEndTime;
+    public Date getConfirmedUpTime() {
+        return confirmedUpTime;
     }
 
-    public void setConfirmedEndTime(Date confirmedEndTime) {
-        this.confirmedEndTime = confirmedEndTime;
+    public void setConfirmedUpTime(Date confirmedUpTime) {
+        this.confirmedUpTime = confirmedUpTime;
     }
 
     public Integer getAssetId() {

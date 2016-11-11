@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.springframework.stereotype.Component;
@@ -73,6 +73,8 @@ public class UaaService {
     }
     
     public List<SysRole> getSysRoles(){
+        loadSysRoles();        
+
         List<SysRole> roleList = new ArrayList<SysRole>();
         roleList.addAll(sysRoles.values());
 
@@ -80,6 +82,8 @@ public class UaaService {
     }
 
     public List<String> getSysRoleNames(){
+        loadSysRoles();
+        
         List<String> roleList = new ArrayList<String>();
 
         for(Map.Entry<String, SysRole> item: sysRoles.entrySet()){
@@ -87,6 +91,22 @@ public class UaaService {
         }
 
         return roleList;
+    }
+    
+    @Transactional
+    public UserAccount loadUserWithUserRoles(int userId){
+        UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
+        UserAccount user = userDao.getById(userId);
+        
+        try{
+            Hibernate.initialize(user.getUserRoleList());
+        }
+        catch(Exception ex){
+            System.err.println("********* loadUserWithUserRoles failed ************");
+            logger.error(ex.getMessage(), ex);
+        }
+        
+        return user;
     }
     
     @Transactional

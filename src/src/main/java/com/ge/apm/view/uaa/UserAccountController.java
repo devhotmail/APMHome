@@ -51,39 +51,6 @@ public class UserAccountController extends GenericCRUDController<UserAccount> {
         return dao.find();
     }
 
-/*
-    @Override
-    public void onBeforeNewObject(UserAccount object) {
-    }
-    
-    @Override
-    public void onAfterNewObject(UserAccount object, boolean isOK) {
-    }
-
-    @Override
-    public void onBeforeUpdateObject(UserAccount object) {
-    }
-    
-    @Override
-    public void onAfterUpdateObject(UserAccount object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeDeleteObject(UserAccount object) {
-    }
-    
-    @Override
-    public void onAfterDeleteObject(UserAccount object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeSave(UserAccount object) {
-    }
-    
-    @Override
-    public void onAfterDataChanged(){
-    };
-*/
     
     private List<String> allRoles;
     private List<String> assignedRoles;
@@ -105,6 +72,7 @@ public class UserAccountController extends GenericCRUDController<UserAccount> {
     
     public void prepareRoleData() {
         if(selected == null) return;
+        selected = uaaService.loadUserWithUserRoles(selected.getId());
         
         allRoles = uaaService.getSysRoleNames();
         

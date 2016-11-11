@@ -1,4 +1,4 @@
-package com.ge.apm.view;
+package com.ge.apm.view.wo;
 
 import com.ge.apm.dao.UserAccountRepository;
 import javax.faces.bean.ManagedBean;
@@ -66,7 +66,11 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
     }
     
     public void onSelectWorkOrder(){
-        System.err.println("**************** onSelectWorkOrder");
+        WorkOrderHistoryController woHistoryController = WebUtil.getBean(WorkOrderHistoryController.class);
+        woHistoryController.loadWorkOrderHistory(selected.getId());
+        
+        WorkOrderStepController woStepController = WebUtil.getBean(WorkOrderStepController.class);
+        woStepController.loadWorkOrderSteps(this.selected.getId());
     }
     
     public List<UserAccount> getHospitalUserList(){
@@ -111,7 +115,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
     @Override
     public void onAfterNewObject(WorkOrder wo, boolean isOK) {
         if(!isOK){
-            System.out.println("********* onAfterNewObject failed");
+            wo.setCurrentStep(1);
             return;
         }
         
