@@ -25,9 +25,16 @@
                         </p:scrollPanel>
                     </p:tab>
                     <p:tab title="#{msg.searchAsset}" id="tabSerch">
-                        <h:panelGrid id="searchGrid" columns="4">
+                        <h:panelGrid id="searchGrid" columns="8">
                             <p:inputText id="search_LIKE_name" placeholder="#{msg.assetName}"/>
                             <p:inputText id="search_LIKE_financingNum" placeholder="#{msg.financingNum}"/>
+
+                            <p:selectOneMenu id="search_EQ_assetOwnerId">
+                                <f:selectItem itemLabel="#{msg.selectAssetOwner}"/>
+                                <f:selectItems value="#{workOrderController.hospitalUserList}" var="item"
+                                               itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                            </p:selectOneMenu>
+                            
                             <p:commandButton value="#{msg.Search}" actionListener="#{selectAssetController.setSearchFilter}" update="selectAssetDatalist"/>
                             <p:commandButton value="#{msg.Reset}" actionListener="#{selectAssetController.setSearchFilter}" update="selectAssetDatalist searchGrid">
                                 <p:resetInput target="searchGrid"/>
