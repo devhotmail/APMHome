@@ -375,6 +375,7 @@ INSERT INTO "i18n_message" VALUES (3002,'message','noAssetSelected', '请选择�
 
 INSERT INTO "i18n_message" VALUES (3003,'message','searchAssetByDept', '按科室选设备','Select By Department',null,-1);
 INSERT INTO "i18n_message" VALUES (3004,'message','searchAsset', '高级查询','Advanced Search',null,-1);
+INSERT INTO "i18n_message" VALUES (3005,'message','selectAssetOwner', '请选择责任人...','Select Asset Owner...',null,-1);
 
 -- update id sequence value
 SELECT setval('"public"."i18n_message_id_seq"', 4000, false);
