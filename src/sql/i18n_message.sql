@@ -48,6 +48,8 @@ INSERT INTO "i18n_message" VALUES (43, 'label', 'ResetPassword', '重置密码',
 INSERT INTO "i18n_message" VALUES (44, 'label', 'exportToXLS', '导出到Excel', 'Export To Excel', NULL, -1);
 INSERT INTO "i18n_message" VALUES (45, 'label', 'List', '列表', 'List', NULL, -1);
 INSERT INTO "i18n_message" VALUES (46, 'label', 'Download', '下载', 'Download', NULL, -1);
+INSERT INTO "i18n_message" VALUES (47, 'label', 'Search', '查询', 'Search', NULL, -1);
+INSERT INTO "i18n_message" VALUES (48, 'label', 'Reset', '重置', 'Reset', NULL, -1);
 
 
 -- menu item names  ( id from 200 to  399)
@@ -371,6 +373,8 @@ INSERT INTO "i18n_message" VALUES (3000,'message','devicePhoto', '设备照片�
 INSERT INTO "i18n_message" VALUES (3001,'message','deviceContract', '设备合同文件','deviceContract',null,-1);
 INSERT INTO "i18n_message" VALUES (3002,'message','noAssetSelected', '请选择一个设备','Please select an asset',null,-1);
 
+INSERT INTO "i18n_message" VALUES (3003,'message','searchAssetByDept', '按科室选设备','Select By Department',null,-1);
+INSERT INTO "i18n_message" VALUES (3004,'message','searchAsset', '高级查询','Advanced Search',null,-1);
 
 -- update id sequence value
 SELECT setval('"public"."i18n_message_id_seq"', 4000, false);
