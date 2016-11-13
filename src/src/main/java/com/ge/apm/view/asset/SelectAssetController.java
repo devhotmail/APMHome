@@ -7,10 +7,12 @@ import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.domain.AssetInfo;
-import java.util.HashMap;
-import java.util.Map;
+import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.view.sysutil.UserContextService;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.model.TreeNode;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -18,7 +20,7 @@ import webapp.framework.web.WebUtil;
 public class SelectAssetController extends JpaCRUDController<AssetInfo> {
 
     AssetInfoRepository dao = null;
-
+ 
     @Override
     protected void init() {
         dao = WebUtil.getBean(AssetInfoRepository.class);
@@ -35,42 +37,46 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
         return super.loadData(pageRequest);
     }
 
-    public List<AssetInfo> getOrgAssetTree() {
-        return dao.findBySearchFilter(searchFilters);
+    private TreeNode orgAssetTree;
+    public TreeNode getOrgAssetTree() {
+        return orgAssetTree;
     }
 
-    public void showDialog(Integer contentWidth, Integer contentHeight, boolean isDialogResizable, boolean isDialogDraggable){
-        Map<String,Object> options = new HashMap<String, Object>();
-        options.put("resizable", isDialogResizable);
-        options.put("draggable", isDialogDraggable);
-        options.put("modal", true);
-        options.put("contentWidth", contentWidth);
-        options.put("contentHeight", contentHeight);
-        
-        RequestContext.getCurrentInstance().openDialog("/portal/asset/selectAsset.xhtml", options, null);
+    public void onSelectRow(){
+        selectedAsset = this.selected;
+    }
+
+    protected TreeNode selectedNode;
+    public TreeNode getSelectedNode() {
+        return selectedNode;
+    }
+    public void setSelectedNode(TreeNode selectedNode) {
+        this.selectedNode = selectedNode;
     }
     
-    public void cencelDialog(){
-        RequestContext.getCurrentInstance().closeDialog(null);
+    public void onSelectTreeNode(NodeSelectEvent event){
+        TreeNode node = event.getTreeNode();
+        node.setExpanded(!node.isExpanded());
+        
+        Object nodeData = node.getData();
+        if(nodeData instanceof AssetInfo)
+            selectedAsset = (AssetInfo)nodeData;
+        else
+            selectedAsset = null;
     }
 
-    public void closeDialog() {
-        confirmSelection();
-        
-        RequestContext.getCurrentInstance().closeDialog(this.selected);
-    }    
-
+    private AssetInfo selectedAsset = null;
+    
     public void confirmSelection(){
-        if(this.selected==null){
+        if(this.selectedAsset==null){
             WebUtil.addErrorMessageKey("noAssetSelected");
             RequestContext.getCurrentInstance().addCallbackParam("validationFailed", true);
-
             return;
         }
-        
-        if(callingController!=null){
-            callingController.onServerEvent("onAssetSelected", this.selected);
-        }
+
+        showDialog = false;
+        if(callingController!=null)
+            callingController.onServerEvent("onAssetSelected", this.selectedAsset);
     }
 
     private String updateViewIDs;
@@ -79,11 +85,15 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
     }
     
     private JpaCRUDController callingController;
+    
     public void prepareDialogCallback(JpaCRUDController callingController, String updateViewIDs){
         showDialog = true;
         
         this.callingController = callingController;
         this.updateViewIDs = updateViewIDs;
+
+        UaaService uaaService = WebUtil.getBean(UaaService.class);
+        orgAssetTree = uaaService.getOrgAssetTree(UserContextService.getCurrentUserAccount().getHospitalId());
     }
 
     public void cancelDialog(){

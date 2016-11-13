@@ -54,8 +54,8 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
     protected Page<WorkOrder> loadData(PageRequest pageRequest) {
         //only show my tasks
         //setSiteFilter();
-        //setHospitalFilter();
-        setLoginUserFilter();
+        setHospitalFilter();
+        //setLoginUserFilter();
         
         return dao.findBySearchFilter(this.searchFilters, pageRequest);
     }
