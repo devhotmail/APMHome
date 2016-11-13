@@ -122,8 +122,8 @@
                 <p:commandButton validateClient="true" icon="ui-icon-check" actionListener="#{workOrderController.save()}" value="#{msg.Submit}"/>
             </p:fieldset>
             
-            
         </h:form>
+        <ui:include src="woStepList.xhtml"/>
         
         <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
     </ui:composition>
