@@ -577,7 +577,7 @@
         </pluginRepository>
     </pluginRepositories>
     <repositories>
-        <repository>
+		<repository>
             <id>prime-repo</id>
             <name>Prime Technology Maven Repository</name>
             <url>http://repository.primefaces.org</url>
@@ -588,7 +588,8 @@
         </repository>
         <repository>
             <id>repository.jboss.org</id>
-            <url>http://repository.jboss.org/nexus/content/groups/public-jboss</url>
+            <!--<url>http://repository.jboss.org/nexus/content/groups/public-jboss</url>-->
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -671,7 +672,7 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
-					<scanIntervalSeconds>5</scanIntervalSeconds>
+                    <scanIntervalSeconds>5</scanIntervalSeconds>
                     <webAppConfig>                    
                         <contextPath>${application.contextpath}</contextPath>
                     </webAppConfig>
