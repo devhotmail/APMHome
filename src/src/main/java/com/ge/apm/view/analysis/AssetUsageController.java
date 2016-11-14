@@ -1,436 +1,399 @@
 package com.ge.apm.view.analysis;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.print.DocFlavor;
-
+import com.ge.apm.view.sysutil.UserContextService;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.postgresql.util.PGInterval;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webapp.framework.dao.NativeSqlUtil;
+
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ManagedBean
 @ViewScoped
-public final class AssetUsageController {
+public class AssetUsageController {
+
+    protected static final Logger log = LoggerFactory.getLogger(AssetUsageController.class);
+
+    private final Map<String, Object> parameters;
+
+    private int hospitalId;
+    private int assetId;
+
+    public AssetUsageController() {
+        parameters = new HashMap<>();
+    }
+
     @PostConstruct
-    protected void init() {
-        // TODO: Development Decision, Default Time
-        LocalDate now = LocalDate.now();
-        this.toDate = java.sql.Date.valueOf(now);
-        this.fromDate = java.sql.Date.valueOf(now.minusYears(5));
+    public void init() {
+        DateTime today = new DateTime();
+        this.startDate = today.minusYears(5).toDate();
+        this.endDate = today.toDate();
+        parameters.put("startDate", this.startDate);
+        parameters.put("endDate", this.endDate);
+
+        this.hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
+        parameters.put("hospitalId", this.hospitalId);
+
+        this.assetId = 0;
     }
 
-    // （时间区间）
+    // region Properties
 
-    private Date fromDate;
+    private Date startDate;
 
-    private Date toDate;
-
-    public Date getFromDate() {
-        return this.fromDate;
+    public final Date getStartDate() {
+        return this.startDate;
     }
 
-    public Date getToDate() {
-        return this.toDate;
+    public final void setStartDate(Date value) {
+        this.startDate = value;
     }
 
-    public void onFromDateSelect(SelectEvent event) {
-        this.fromDate = (Date)event.getObject();
-        // TODO: Refresh
+    public final void onStartDateSelect(SelectEvent event) {
+        this.setStartDate((Date)event.getObject());
     }
 
-    public void onToDateSelect(SelectEvent event) {
-        this.toDate = (Date)event.getObject();
-        // TODO: Refresh
+    private Date endDate;
+
+    public final Date getEndDate() {
+        return this.endDate;
     }
 
-    private final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
-
-    // 设备故障最主要原因#
-
-    private String majorReason;
-
-    public String getMajorReason() {
-        this.createMajorReason();
-        return this.majorReason;
+    public final void setEndDate(Date value) {
+        this.endDate = value;
     }
 
-    private void createMajorReason() {
-        String template = "" +
-                "SELECT request_reason AS key, COUNT(*) AS value " +
-                "FROM work_order " +
-                "WHERE request_time BETWEEN '%s' AND '%s' " +
-                "GROUP BY key " +
-                "ORDER BY value DESC " +
-                "LIMIT 1" +
-                ";";
-        String query = String.format(template,
-                                     DATE_FORMATTER.format(this.fromDate),
-                                     DATE_FORMATTER.format(this.toDate));
-        List<Map<String, Object>> list = NativeSqlUtil.queryForList(query, null);
-        this.majorReason = (String)list.get(0).get("key");
+    public final void onEndDateSelect(SelectEvent event) {
+        this.setEndDate((Date)event.getObject());
     }
 
 
-    // 设备故障处理流程最耗时步骤#
-
-    private String majorStep;
-
-    public String getMajorStep() {
-        this.createMajorStep();
-        return this.majorStep;
+    public final String getTopErrorReason() {
+        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_REASON));
     }
 
-    private void createMajorStep() {
-        String template = "" +
-                "SELECT step_name AS key, avg (end_time - start_time) AS value " +
-                "FROM work_order_step " +
-                "WHERE start_time BETWEEN '%s' AND '%s' " +
-                "GROUP BY key " +
-                "ORDER BY value DESC " +
-                "LIMIT 1" +
-                ";";
-        String query = String.format(template,
-                DATE_FORMATTER.format(this.fromDate),
-                DATE_FORMATTER.format(this.toDate));
-        List<Map<String, Object>> list = NativeSqlUtil.queryForList(query, null);
-        this.majorStep = (String)list.get(0).get("key");
+    public final String getTopErrorStep() {
+        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_STEP));
     }
 
-    // 设备故障主要发生的科室#
-
-    private String majorRoom;
-
-    public String getMajorRoom() {
-        this.createMajorRoom();
-        return this.majorRoom;
+    public final String getTopErrorRoom() {
+        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL));
     }
 
-    private void createMajorRoom() {
-        String template = "" +
-                "SELECT requestor_name AS key, COUNT(*) AS value " +
-                "FROM work_order " +
-                "WHERE request_time BETWEEN '%s' AND '%s' " +
-                "GROUP BY key " +
-                "ORDER BY value DESC " +
-                "LIMIT 1" +
-                ";";
-        String query = String.format(template,
-                DATE_FORMATTER.format(this.fromDate),
-                DATE_FORMATTER.format(this.toDate));
-        List<Map<String, Object>> list = NativeSqlUtil.queryForList(query, null);
-        this.majorRoom = (String)list.get(0).get("key");
+    public final String getTopErrorDeviceType() {
+        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL));
     }
 
-    // 设备故障主要发生的设备类型#
-
-    private String majorDevice;
-
-    public String getMajorDevice() {
-        this.createMajorDevice();
-        return this.majorDevice;
+    public final BarChartModel getErrorReasonChart() {
+        return convertToBarChartModel(this.query(SQL_LIST_ERROR_REASON),
+                                      "故障原因", "故障次数"); /* TODO: i18n */
     }
 
-    private void createMajorDevice() {
-        String template = "" +
-                "SELECT function_type AS key, COUNT(*) AS value " +
-                "FROM work_order " +
-                "LEFT OUTER JOIN asset_info ON (work_order.asset_id = asset_info.id) " +
-                "WHERE request_time BETWEEN '%s' AND '%s' " +
-                "GROUP BY key " +
-                "ORDER BY value DESC " +
-                "LIMIT 1" +
-                ";";
-        String query = String.format(template,
-                DATE_FORMATTER.format(this.fromDate),
-                DATE_FORMATTER.format(this.toDate));
-        List<Map<String, Object>> list = NativeSqlUtil.queryForList(query, null);
-        this.majorDevice = ((Integer)list.get(0).get("key")).toString();
-    }
+    public final HorizontalBarChartModel getErrorStepChart() {
+        List<Map<String, Object>> list = this.query(SQL_LIST_ERROR_STEP);
 
-    // 设备故障原因分布#
-    // X 故障原因
-    // Y 故障次数
+        HorizontalBarChartModel chart = new HorizontalBarChartModel();
+        chart.setStacked(true);
 
-    private BarChartModel reasonDistributionChart;
-
-    public BarChartModel getReasonDistributionChart() {
-        this.createReasonDistributionChart();
-        return this.reasonDistributionChart;
-    }
-
-    private void createReasonDistributionChart() {
-        this.reasonDistributionChart = this.createDistributionChart(this.createDistribution("request_reason", 0), // TODO: DC, request_reason
-                                                                    "故障原因", "故障次数",
-                                                                    "扫描量", "ne"); // TODO: i18n
-    }
-
-    // 设备故障流程处理响应时间分布#
-    // 步骤、时间
-
-    private HorizontalBarChartModel timeSequenceChart;
-
-    public HorizontalBarChartModel getTimeSequenceChart() {
-        this.createTimeSequenceChart();
-        return this.timeSequenceChart;
-    }
-
-    private void createTimeSequenceChart() {
-        HorizontalBarChartModel model = new HorizontalBarChartModel();
-        model.setStacked(true);
-
-        String template = "" +
-                "SELECT step_name AS key, " +
-                "       avg (end_time - start_time) AS value " +
-                "FROM work_order_step " +
-                "WHERE start_time BETWEEN '%s' AND '%s' " + // TODO: DC, start_time
-                "GROUP BY key " +
-                "ORDER BY key " +
-                ";";
-        String query = String.format(template,
-                                     DATE_FORMATTER.format(this.fromDate),
-                                     DATE_FORMATTER.format(this.toDate));
-
-        for (Map<String, Object> m : NativeSqlUtil.queryForList(query, null)) {
+        for (Map<String, Object> map: list) {
             ChartSeries series = new ChartSeries();
-            series.set(m.get("key"), ((PGInterval)m.get("value")).getMinutes());
-            model.addSeries(series);
+            series.set(map.get("key"), ((PGInterval)map.get("value")).getMinutes());
+            chart.addSeries(series);
         }
 
-        /*String query2 = new StringBuilder(query).insert(0, "SELECT sum(value) AS sum FROM (").replace(query.length() + 24 - 1, query.length() + 24, ") AS t;").toString();
-        List<Map<String, Object>> result2 = NativeSqlUtil.queryForList(query2, null);
-
-        Axis x = model.getAxis(AxisType.X);
-        x.setMin(0);
-        x.setMax((Long)result2.get(0).get("sum"));
-*/
-        this.timeSequenceChart = model;
+        return chart;
     }
 
-    // 耗时最长的三个步骤的具体响应时间分布#
-    // 小于半小时、半小时到一小时、一小时到一天、一天以上、未响应
-
-    private PieChartModel top1TimeChart;
-
-    public PieChartModel getTop1TimeChart() {
-        this.createTop1TimeChart();
-        return this.top1TimeChart;
+    public final BarChartModel getErrorRoomChart() {
+        return convertToBarChartModel(this.query(SQL_LIST_ERROR_ROOM_ALL),
+                                      "科室", "故障次数"); /* TODO: i18n */
     }
 
-    private void createTop1TimeChart() {
-        String template = "" +
-                "SELECT range AS key, count(*) AS value FROM (" +
-                "SELECT CASE " +
-                "WHEN (end_time - start_time) BETWEEN '0 minute' AND '30 minute' THEN '0-30 分钟' " +
-                "WHEN (end_time - start_time) BETWEEN '30 minute' AND '60 minute' THEN '30-60 分钟' " +
-                "ELSE '1 小时以上' END AS range " +
-                "FROM work_order_step " +
-                "WHERE work_order_step.step_id = (" +
-                "  SELECT step_id AS key " +
-                "  FROM work_order_step " +
-                "  GROUP BY key " +
-                "  ORDER BY avg (end_time - start_time) DESC " +
-                "  LIMIT 1 " +
-                "  )" +
-                ") AS t GROUP BY range;";
-        String query = String.format(template,
-                                     DATE_FORMATTER.format(this.fromDate),
-                                     DATE_FORMATTER.format(this.toDate));
-        List<Map<String, Object>> result = NativeSqlUtil.queryForList(query, null);
+    public final BarChartModel getErrorDeviceTypeChart() {
+        return convertToBarChartModel(this.query(SQL_LIST_ERROR_DEVICE_TYPE_ALL),
+                                      "设备类型", "故障次数"); /* TODO: i18n */
+    }
 
-        PieChartModel model = new PieChartModel();
-        for(Map<String, Object> m : result) {
-            model.set((String)m.get("key"), ((Long)m.get("value")).intValue());
+    public final BarChartModel getTopErrorDeviceChart() {
+        return convertToBarChartModel(this.query(SQL_LIST_TOP_ERROR_DEVICE_ALL),
+                                      "设备", "故障次数"); /* TODO: i18n */
+    }
+
+    public final PieChartModel[] getErrorTimePerStep() {
+        List<Map<String, Object>> list = this.query(SQL_LIST_TOP_ERROR_STEP);
+        PieChartModel[] charts = new PieChartModel[3];
+        int index = 0;
+        for (Map<String, Object> map : list) {
+            String scalar = map.get("scalar").toString();
+            if ("123456".indexOf(scalar) != -1) { // TODO: this is based on assumption
+                Map<String, Object> extra = new HashMap<>();
+                extra.put("stepId", scalar);
+                charts[index] = convertToPieChartModel(this.query(SQL_LIST_ERROR_TIME_PER_STEP, extra));
+                index++;
+            }
         }
-        this.top1TimeChart = model;
-    }
-
-    private PieChartModel top2TimeChart;
-
-    public PieChartModel getTop2TimeChart() {
-        this.createTop2TimeChart();
-        return this.top2TimeChart;
-    }
-
-    private void createTop2TimeChart() {
-        String template = "" +
-                "SELECT range AS key, count(*) AS value FROM (" +
-                "SELECT CASE " +
-                "WHEN (end_time - start_time) BETWEEN '0 minute' AND '30 minute' THEN '0-30 分钟' " +
-                "WHEN (end_time - start_time) BETWEEN '30 minute' AND '60 minute' THEN '30-60 分钟' " +
-                "ELSE '1 小时以上' END AS range " +
-                "FROM work_order_step " +
-                "WHERE work_order_step.step_id = (" +
-                "  SELECT step_id AS key " +
-                "  FROM work_order_step " +
-                "  GROUP BY key " +
-                "  ORDER BY avg (end_time - start_time) DESC " +
-                "  LIMIT 1 " +
-                "  OFFSET 1 " +
-                "  )" +
-                ") AS t GROUP BY range;";
-        String query = String.format(template,
-                DATE_FORMATTER.format(this.fromDate),
-                DATE_FORMATTER.format(this.toDate));
-        List<Map<String, Object>> result = NativeSqlUtil.queryForList(query, null);
-
-        PieChartModel model = new PieChartModel();
-        for(Map<String, Object> m : result) {
-            model.set((String)m.get("key"), ((Long)m.get("value")).intValue());
+        while (index < 3) {
+            charts[index] = new PieChartModel();
+            index++;
         }
-        this.top2TimeChart = model;
+        return charts;
     }
 
-    private PieChartModel top3TimeChart;
+    // endregion
 
-    public PieChartModel getTop3TimeChart() {
-        this.createTop3TimeChart();
-        return this.top3TimeChart;
+    // region SQL
+
+    private final List<Map<String, Object>> query(String template) {
+        return this.query(template, null);
     }
 
-    private void createTop3TimeChart() {
-        String template = "" +
-                "SELECT range AS key, count(*) AS value FROM (" +
-                "SELECT CASE " +
-                "WHEN (end_time - start_time) BETWEEN '0 minute' AND '30 minute' THEN '0-30 分钟' " +
-                "WHEN (end_time - start_time) BETWEEN '30 minute' AND '60 minute' THEN '30-60 分钟' " +
-                "ELSE '1 小时以上' END AS range " +
-                "FROM work_order_step " +
-                "WHERE work_order_step.step_id = (" +
-                "  SELECT step_id AS key " +
-                "  FROM work_order_step " +
-                "  GROUP BY key " +
-                "  ORDER BY avg (end_time - start_time) DESC " +
-                "  LIMIT 1 " +
-                "  OFFSET 2" +
-                "  )" +
-                ") AS t GROUP BY range;";
-        String query = String.format(template,
-                DATE_FORMATTER.format(this.fromDate),
-                DATE_FORMATTER.format(this.toDate));
-        List<Map<String, Object>> result = NativeSqlUtil.queryForList(query, null);
-
-        PieChartModel model = new PieChartModel();
-        for(Map<String, Object> m : result) {
-            model.set((String)m.get("key"), ((Long)m.get("value")).intValue());
+    private final List<Map<String, Object>> query(String template, Map<String, Object> extra) {
+        // TODO: replace may not be efficient
+        template = StringUtils.replace(template, ":#andHospitalFiler", "AND work.hospital_id = :#hospitalId");
+        template = StringUtils.replace(template, ":#andDateFilter", "AND work.request_time BETWEEN :#startDate AND :#endDate");
+        if (this.assetId == 0) {
+            template = StringUtils.replace(template, ":#andDeviceFilter", "");
         }
-        this.top3TimeChart = model;
-    }
-
-    // （与原因分布类似）
-
-    // 设备故障分布（按科室）#
-    // X 科室
-    // Y 故障次数
-
-    private BarChartModel roomDistributionChart;
-
-    public BarChartModel getRoomDistributionChart() {
-        this.createRoomDistributionChart();
-        return this.roomDistributionChart;
-    }
-
-    private void createRoomDistributionChart() {
-        this.roomDistributionChart = this.createDistributionChart(this.createDistribution("requestor_name", 0), // TODO: DC, requestor_name
-                                                                  "科室", "故障次数",
-                                                                  "扫描量", null); // TODO: i18n
-    }
-
-
-    // 设备故障分布（按设备类型）#
-    // X 设备类型
-    // Y 故障次数
-
-    private BarChartModel functionDistributionChart;
-
-    public BarChartModel getFunctionDistributionChart() {
-        this.createFunctionDistributionChart();
-        return this.functionDistributionChart;
-    }
-
-    private void createFunctionDistributionChart() {
-        this.functionDistributionChart = this.createDistributionChart(this.createDistribution("function_type", "asset_info", "asset_id"), // TODO: DC, function_type
-                                                                      "设备类型", "故障次数",
-                                                                      "扫描量", null); // TODO: i18n
-    }
-
-    // 设备故障分布（按单台设备）#
-    // X 单台设备
-    // Y 故障次数
-
-    private BarChartModel deviceDistributionChart;
-
-    public BarChartModel getDeviceDistributionChart() {
-        this.createDeviceDistributionChart();
-        return this.deviceDistributionChart;
-    }
-
-    private void createDeviceDistributionChart() {
-        this.deviceDistributionChart = this.createDistributionChart(this.createDistribution("asset_name", 40), // TODO: DC, asset_name
-                                                                      "设备", "故障次数",
-                                                                      "扫描量", null); // TODO: i18n
-    }
-
-    // 公
-
-    private List<Map<String, Object>> createDistribution(String key, int limit) {
-        String template = "" +
-                "SELECT %s AS key, " +
-                "       COUNT(*) AS value " +
-                "FROM work_order " +
-                "WHERE request_time BETWEEN '%s' AND '%s' " + // TODO: DC, request_time
-                "GROUP BY key " +
-                (limit > 0 ? "ORDER BY VALUE LIMIT %d " : "ORDER BY key ") +
-                ";";
-        String query = String.format(template, key,
-                                     DATE_FORMATTER.format(this.fromDate),
-                                     DATE_FORMATTER.format(this.toDate),
-                                     limit);
-        return NativeSqlUtil.queryForList(query, null);
-    }
-
-    private List<Map<String, Object>> createDistribution(String key, String foreignTable, String foreignKey) {
-        String template = "" +
-                "SELECT %s AS key, " +
-                "COUNT(*) AS value " +
-                "FROM work_order " +
-                "LEFT OUTER JOIN %s ON (work_order.%s = %s.id) " +
-                "WHERE request_time BETWEEN '%s' AND '%s' " + // TODO: DC, request_time
-                "GROUP BY key " +
-                "ORDER BY key " + // TODO: Development Decision
-                ";";
-        String query = String.format(template, key,
-                                     foreignTable, foreignKey, foreignTable,
-                                     DATE_FORMATTER.format(this.fromDate),
-                                     DATE_FORMATTER.format(this.toDate));
-        return NativeSqlUtil.queryForList(query, null);
-    }
-
-    private BarChartModel createDistributionChart(List<Map<String, Object>> distribution,
-                                         String xLabel, String yLabel,
-                                         String legend, String legendPosition) {
-        BarChartModel model = new BarChartModel();
-        if (legendPosition != null) {
-            model.setLegendPosition(legendPosition);
+        else {
+            template = StringUtils.replace(template, ":#andDeviceFilter", "AND work.asset_id = :#assetId");
         }
+        log.info("=> {}", template);
+        if (extra == null) {
+            return NativeSqlUtil.queryForList(template, this.parameters);
+        }
+        else {
+            // TODO: better approach?
+            Map<String, Object> temporary = new HashMap(this.parameters);
+            temporary.putAll(extra);
+            return NativeSqlUtil.queryForList(template, temporary);
+        }
+    }
+
+    // 设备故障最主要原因
+
+    private static final String SQL_SCALAR_TOP_ERROR_REASON = "" +
+            "SELECT work.case_type AS scalar " +
+            "FROM work_order AS work " +
+            "WHERE TRUE " +
+            ":#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
+            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            ":#andDeviceFilter " +  // AND work.asset_id = :#assetId
+            "GROUP BY work.case_type " +
+            "ORDER BY count(*) DESC " +
+            "LIMIT 1 " +
+            ";";
+
+    // 设备故障处理流程最耗时步骤
+
+    private static final String SQL_SCALAR_TOP_ERROR_STEP = "" +
+            "SELECT step.step_id AS scalar " +
+            "FROM work_order_step AS step, " +
+            "     work_order AS work " +
+            "WHERE step.work_order_id = work.id " +
+            "  AND step.start_time IS NOT NULL " +
+            "  AND step.end_time IS NOT NULL " +
+            ":#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
+            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            ":#andDeviceFilter " +  // AND work.asset_id = :#assetId
+            "GROUP BY step.step_id " +
+            "ORDER BY avg(step.end_time - step.start_time) DESC " +
+            "LIMIT 1 " +
+            ";";
+
+    // 设备故障主要发生的科室
+
+    private static final String SQL_SCALAR_TOP_ERROR_ROOM_ALL = "" +
+            "SELECT asset.clinical_dept_id AS scalar " +
+            "FROM work_order AS work, " +
+            "     asset_info AS asset " +
+            "WHERE work.asset_id = asset.id " +
+            ":#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
+            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "GROUP BY asset.clinical_dept_id " +
+            "ORDER BY count(*) DESC " +
+            "LIMIT 1 " +
+            ";";
+
+    // 设备故障主要发生的设备类型
+
+    private static final String SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL = "" +
+            "SELECT asset.asset_group AS scalar " +
+            "FROM work_order AS work, " +
+            "     asset_info AS asset " +
+            "WHERE work.asset_id = asset.id " +
+            ":#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
+            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "GROUP BY asset.asset_group " +
+            "ORDER BY count(*) DESC " +
+            "LIMIT 1 " +
+            ";";
+
+    // 设备故障数
+
+    private static final String SQL_SCALAR_ERROR_COUNT_SINGLE = "" +
+            "SELECT count(*) AS scalar " +
+            "FROM work_order AS work " +
+            ":#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
+            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            ":#andDeviceFilter " +  // AND work.asset_id = :#assetId
+            ";";
+
+    // 设备故障原因分析
+
+    private static final String SQL_LIST_ERROR_REASON = "" +
+            "SELECT work.case_type AS key, count(*) AS value " +
+            "FROM work_order AS work " +
+            "WHERE TRUE " +
+            ":#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
+            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            ":#andDeviceFilter " +  // AND work.asset_id = :#assetId
+            "GROUP BY work.case_type " +
+            ";";
+
+    // 设备故障处理流程响应时间分布
+
+    private static final String SQL_LIST_ERROR_STEP = "" +
+            "SELECT step.step_id AS key, avg(step.end_time - step.start_time) AS value " +
+            "FROM work_order_step AS step, " +
+            "     work_order AS work " +
+            "WHERE step.work_order_id = work.id " +
+            "  AND step.start_time IS NOT NULL " +
+            "  AND step.end_time IS NOT NULL " +
+            ":#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
+            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            ":#andDeviceFilter " +  // AND work.asset_id = :#assetId
+            "GROUP BY step.step_id " +
+            "ORDER BY step.step_id ASC" +
+            ";";
+
+    // （耗时最长的三个）步骤的具体响应时间分布
+
+    private static final String SQL_LIST_TOP_ERROR_STEP = "" +
+            "SELECT step.step_id AS scalar " +
+            "FROM work_order_step AS step, " +
+            "     work_order AS work " +
+            "WHERE step.work_order_id = work.id " +
+            "  AND step.start_time IS NOT NULL " +
+            "  AND step.end_time IS NOT NULL " +
+            ":#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
+            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            ":#andDeviceFilter " +  // AND work.asset_id = :#assetId
+            "GROUP BY step.step_id " +
+            "ORDER BY avg(step.end_time - step.start_time) DESC " +
+            "LIMIT 3 " +
+            ";";
+
+    private static final String SQL_LIST_ERROR_TIME_PER_STEP = "" +
+            "SELECT rate AS key, count(*) AS value " +
+            "FROM (" +
+            "        SELECT CASE " +
+            "                WHEN step.start_time IS NULL OR end_time IS NULL THEN CAST (0 AS integer) " + // 未响应
+            "                WHEN (step.end_time - step.start_time) BETWEEN '0 minute' AND '30 minute' THEN CAST (1 AS integer) " + // 小于 30 分钟
+            "                WHEN (step.end_time - step.start_time) BETWEEN '30 minute' AND '1 hour' THEN CAST (2 AS integer) " + // 30 分钟到 1 小时
+            "                WHEN (step.end_time - step.start_time) BETWEEN '1 hour' AND '1 day' THEN CAST (3 AS integer) " + // 1 小时到 1 天
+            "                ELSE CAST (4 AS integer) " + // 1天以上
+            "        END AS rate " +
+            "        FROM work_order_step AS step, " +
+            "             work_order AS work " +
+            "        WHERE step.work_order_id = work.id " +
+            "          AND to_char(step.step_id, '9') = :#stepId " + // TODO: because stepId is string...
+            "        :#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
+            "        :#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "        :#andDeviceFilter " +  // AND work.asset_id = :#assetId
+            ") AS temporary " +
+            "GROUP BY rate " +
+            "ORDER BY rate ASC " +
+            ";";
+
+    // 设备故障分布：按科室
+
+    private static final String SQL_LIST_ERROR_ROOM_ALL = "" +
+            "SELECT asset.clinical_dept_id AS key, count(*) AS value " +
+            "FROM work_order AS work, " +
+            "     asset_info AS asset " +
+            "WHERE work.asset_id = asset.id " +
+            ":#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
+            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "GROUP BY asset.clinical_dept_id " +
+            ";";
+
+    // 设备故障分布：按设备类型
+
+    private static final String SQL_LIST_ERROR_DEVICE_TYPE_ALL = "" +
+            "SELECT asset.asset_group AS key, count(*) AS value " +
+            "FROM work_order AS work, " +
+            "     asset_info AS asset " +
+            "WHERE work.asset_id = asset.id " +
+            ":#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
+            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "GROUP BY asset.asset_group " +
+            ";";
+
+    // 设备故障分布：按单台设备（前40台）
+
+    private static final String SQL_LIST_TOP_ERROR_DEVICE_ALL = "" +
+            "SELECT work.asset_id AS key, count(*) AS value " +
+            "FROM work_order AS work " +
+            "WHERE TRUE " +
+            ":#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
+            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "GROUP BY work.asset_id " +
+            "ORDER BY count(*) DESC " +
+            "LIMIT 40 " +
+            ";";
+
+    // 设备故障所占比例（和排名）
+
+    // endregion
+
+    // region Chart
+
+    private final static String convertToScalar(List<Map<String, Object>> list) {
+        FluentIterable<Map<String, Object>> iterable = FluentIterable.from(list);
+        return iterable.first().or(ImmutableMap.of("scalar", (Object)"N/A" /* TODO: i18n */)).get("scalar").toString();
+    }
+
+    private final static BarChartModel convertToBarChartModel(List<Map<String, Object>> list, String xLabel, String yLabel) {
+        BarChartModel chart = new BarChartModel();
 
         ChartSeries series = new ChartSeries();
-        series.setLabel(legend);
-        for (Map<String, Object> m : distribution) {
-            series.set(m.get("key"), ((Long)m.get("value")).intValue());
+        for (Map<String, Object> map : list) {
+            series.set(map.get("key"), (Number)map.get("value"));
         }
-        model.addSeries(series);
+        chart.addSeries(series);
 
-        Axis x = model.getAxis(AxisType.X);
-        x.setLabel(xLabel);
-        Axis y = model.getAxis(AxisType.Y);
-        y.setLabel(yLabel);
+        if (xLabel != null) {
+            Axis axis = chart.getAxis(AxisType.X);
+            axis.setLabel(xLabel);
+        }
+        if (yLabel != null) {
+            Axis axis = chart.getAxis(AxisType.Y);
+            axis.setLabel(yLabel);
+        }
 
-        return model;
+        return chart;
     }
+
+    private final static PieChartModel convertToPieChartModel(List<Map<String, Object>> list) {
+        PieChartModel chart = new PieChartModel();
+        for (Map<String, Object> map : list) {
+            chart.set(map.get("key").toString(), (Number)map.get("value"));
+        }
+        return chart;
+    }
+
+    // endregion
 }

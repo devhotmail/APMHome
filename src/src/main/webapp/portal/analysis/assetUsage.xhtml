@@ -5,11 +5,6 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
-    <ui:define name="title">Charts</ui:define>
-
-
-    <!-- TODO: the above is copied from homeHead.xhtml and should be centralized and reused. -->
-
     <ui:define name="content">
 
         <div class="ui-g card">
@@ -21,31 +16,31 @@
             <div class="ui-g-12">
                 <div class="ui-g-3 tile">
                     <p>TODO设备故障主要原因</p>
-                    <p><h:outputText value="#{assetUsageController.majorReason}"/></p>
+                    <p><h:outputText value="#{assetUsageController.topErrorReason}"/></p>
                 </div>
                 <div class="ui-g-3 tile">
                     <p>TODO设备故障处理流程最耗时步骤</p>
-                    <p><h:outputText value="#{assetUsageController.majorStep}"/></p>
+                    <p><h:outputText value="#{assetUsageController.topErrorStep}"/></p>
                 </div>
                 <div class="ui-g-3 tile">
                     <p>TODO设备故障主要发生的科室</p>
-                    <p><h:outputText value="#{assetUsageController.majorRoom}"/></p>
+                    <p><h:outputText value="#{assetUsageController.topErrorRoom}"/></p>
                 </div>
                 <div class="ui-g-3 tile">
                     <p>TODO设备故障主要发生的设备类型</p>
-                    <p><h:outputText value="#{assetUsageController.majorDevice}"/></p>
+                    <p><h:outputText value="#{assetUsageController.topErrorDeviceType}"/></p>
                 </div>
             </div>
             <div class="ui-g-12">
-                <p:calendar value="#{assetUsageController.fromDate}">
+                <p:calendar value="#{assetUsageController.startDate}">
                     <p:ajax event="dateSelect"
-                            listener="#{assetUsageController.onFromDateSelect}"
+                            listener="#{assetUsageController.onStartDateSelect}"
                             showOn="button"/>
                 </p:calendar>
                 <p>TO</p>
-                <p:calendar value="#{assetUsageController.toDate}">
+                <p:calendar value="#{assetUsageController.endDate}">
                     <p:ajax event="dateSelect"
-                            listener="#{assetUsageController.onToDateSelect}"
+                            listener="#{assetUsageController.onEndDateSelect}"
                             showOn="button"/>
                 </p:calendar>
             </div>
@@ -63,7 +58,7 @@
             <p:separator/>
             <div class="ui-g-12">
                 <p:chart type="bar"
-                         model="#{assetUsageController.reasonDistributionChart}"
+                         model="#{assetUsageController.errorReasonChart}"
                          responsive="true"/>
             </div>
         </div>
@@ -78,34 +73,35 @@
                 </div>
             </div>
             <p:separator/>
+            <!-- TODO: Bar to 100% -->
             <div class="ui-g-12">
                 <p:chart type="bar"
-                         model="#{assetUsageController.timeSequenceChart}"
+                         model="#{assetUsageController.errorStepChart}"
                          responsive="true"/>
             </div>
             <div class="ui-g-12">
                 <p>耗时最长的三个步骤的具体响应时间分布</p>
             </div>
-            <div class="ui-g-12">
+            <!--<div class="ui-g-12">
                 <div class="ui-g-4">
                     <p>TODO</p>
                     <p:chart type="pie"
-                             model="#{assetUsageController.top1TimeChart}"
+                             model="#{assetUsageController.errorTimePerStep[0]}"
                              style="width:300px;height:200px"/>
                 </div>
                 <div class="ui-g-4">
                     <p>TODO</p>
                     <p:chart type="pie"
-                             model="#{assetUsageController.top2TimeChart}"
+                             model="#{assetUsageController.errorTimePerStep[1]}"
                              style="width:300px;height:200px"/>
                 </div>
                 <div class="ui-g-4">
                     <p>TODO</p>
                     <p:chart type="pie"
-                             model="#{assetUsageController.top3TimeChart}"
+                             model="#{assetUsageController.errorTimePerStep[2]}"
                              style="width:300px;height:200px"/>
                 </div>
-            </div>
+            </div>-->
         </div>
 
         <div class="ui-g card">
@@ -119,20 +115,21 @@
             </div>
             <p:separator/>
             <div class="ui-g-12">
+                <!-- TODO: this is rather a OneButton -->
                 <p:tabView>
                     <p:tab title="TODO按科室">
                         <p:chart type="bar"
-                                 model="#{assetUsageController.roomDistributionChart}"
+                                 model="#{assetUsageController.errorRoomChart}"
                                  responsive="true"/>
                     </p:tab>
                     <p:tab title="TODO按设备类型">
                         <p:chart type="bar"
-                                 model="#{assetUsageController.functionDistributionChart}"
+                                 model="#{assetUsageController.errorDeviceTypeChart}"
                                  responsive="true"/>
                     </p:tab>
                     <p:tab title="TODO按单台设备（前40台）">
                         <p:chart type="bar"
-                                 model="#{assetUsageController.deviceDistributionChart}"
+                                 model="#{assetUsageController.topErrorDeviceChart}"
                                  responsive="true"/>
                     </p:tab>
                 </p:tabView>

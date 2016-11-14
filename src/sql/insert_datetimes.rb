@@ -158,27 +158,28 @@ end
 #   conn.exec(sql)
 # end
 
-# table = "work_order_step"
-# totalrecords = 500
-# for i in 0..totalrecords
-#   site_id         = randnum.rand(1..2)
-#   work_order_id   = randnum.rand(1..50)
-#   step_name       = ["start", "hospital approval", "vendor approval", "engineer onsite", "close"].sample
-#   owner_id    = randnum.rand(1..10)
-#   owner_name  = "owner-#{owner_id}"
-#
-#   randtime = (duration * rand).to_i + stime.to_i
-#   start_time = Time.at(randtime).strftime("%F %T")
-#   end_time = Time.at(randtime + randnum.rand(600..1800)).strftime("%F %T")
-#
-#
-#   sql = "insert into #{table} (site_id, work_order_id, step_name, owner_id, owner_name, start_time,
-#         end_time) values (\'#{site_id}\', \'#{work_order_id}\',
-#         \'#{step_name}\', \'#{owner_id}\',\'#{owner_name}\', \'#{start_time}\',
-#         \'#{end_time}\')"
-#   puts sql
-#   conn.exec(sql)
-# end
+table = "work_order_step"
+totalrecords = 500
+for i in 0..totalrecords
+  site_id         = randnum.rand(1..2)
+  work_order_id   = randnum.rand(1..50)
+  step_id         = randnum.rand(1..6) # from 1
+  step_name       = ["start", "hospital approval", "vendor approval", "engineer onsite", "close"].sample
+  owner_id    = randnum.rand(1..10)
+  owner_name  = "owner-#{owner_id}"
+
+  randtime = (duration * rand).to_i + stime.to_i
+  start_time = Time.at(randtime).strftime("%F %T")
+  end_time = Time.at(randtime + randnum.rand(600..1800)).strftime("%F %T")
+
+
+  sql = "insert into #{table} (site_id, work_order_id, step_id, step_name, owner_id, owner_name, start_time,
+        end_time) values (\'#{site_id}\', \'#{work_order_id}\', \'#{step_id}\',
+        \'#{step_name}\', \'#{owner_id}\',\'#{owner_name}\', \'#{start_time}\',
+        \'#{end_time}\')"
+  puts sql
+  conn.exec(sql)
+end
 
 
 table = "asset_clinical_record"
