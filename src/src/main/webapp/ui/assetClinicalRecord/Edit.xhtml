@@ -112,7 +112,7 @@
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{assetClinicalRecordController.save}" value="#{msg.Save}" update="display,:AssetClinicalRecordEditDlg, :AssetClinicalRecordListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'AssetClinicalRecordEditDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('AssetClinicalRecordEditDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('AssetClinicalRecordEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

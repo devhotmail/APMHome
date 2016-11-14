@@ -26,7 +26,7 @@
                     
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{userAccountController.saveRoles}" value="#{msg.Save}" update="display,:RoleEditDlg, :UserAccountListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'RoleEditDialog');"/>
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" onclick="PF('RoleEditDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" onclick="PF('RoleEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

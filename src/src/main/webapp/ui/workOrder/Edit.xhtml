@@ -132,7 +132,7 @@
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{workOrderController.save}" value="#{msg.Save}" update="display,:WorkOrderEditDlg, :WorkOrderListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'WorkOrderEditDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('WorkOrderEditDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('WorkOrderEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

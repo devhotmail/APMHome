@@ -38,7 +38,7 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <p:commandButton validateClient="false" actionListener="#{assetFileAttachmentController.save}" value="#{msg.Save}" update="display,:AssetFileAttachmentEditForm :AssetFileAttachmentListForm:datalist, :growl" icon="ui-icon-check" />
-                            <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" actionListener="#{assetFileAttachmentController.cancel}" update=":AssetFileAttachmentEditForm :growl"/>
+                            <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" actionListener="#{assetFileAttachmentController.cancel}" update=":AssetFileAttachmentEditForm :growl"/>
                         </h:panelGroup>
                     </p:panelGrid>
 

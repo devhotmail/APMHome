@@ -44,7 +44,7 @@
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{i18nMessageController.save}" value="#{msg.Save}" update="display,:I18nMessageEditDlg, :I18nMessageListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'I18nMessageEditDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('I18nMessageEditDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('I18nMessageEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

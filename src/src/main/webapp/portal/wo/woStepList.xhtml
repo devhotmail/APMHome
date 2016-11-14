@@ -4,49 +4,107 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-        <div class="ui-g">
-            <div class="ui-g-12">
+    <div class="ui-g">
+        <div class="ui-g-12">
 
             <h:form id="WorkOrderStepListForm">
                 <p align="center">
                     <b><p:outputLabel value="#{msg.WorkOrderStep}" rendered="#{workOrderStepController.workOrderStepList.size() gt 0}"/></b>
                 </p>
-                <p:dataTable id="datalistWoStepWoStep" value="#{workOrderStepController.workOrderStepList}" var="item" widgetVar="varDataListWoStep"
-                    selectionMode="single" selection="#{workOrderStepController.selected}"
-                    lazy="false" paginator="false"
-                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
-                    rows="200" emptyMessage="#{msg.noRecordFound}"  rendered="#{workOrderStepController.workOrderStepList.size() gt 0}"
-                    rowsPerPageTemplate="20,40,60,90">
+                
+                <style type="text/css">
+                    #stepDetailList .ui-column-title{
+                    font-weight: normal!important;
+                    }    
+                </style>
+                
+                <p:dataList value="#{workOrderStepController.workOrderStepList}" var="item" type="definition">
+                    <h:panelGrid columns="8">
+                        <h:panelGroup>
+                            <label class="label">#{msg.stepId}*</label>
+                            <p:inputText id="stepId" value="#{item.stepId}" readonly="true" size="2"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.stepName}*</label>
+                            <p:inputText id="stepName" value="#{item.stepName}" readonly="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerId}*</label>
+                            <p:inputText id="ownerId" value="#{item.ownerId}" readonly="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerName}*</label>
+                            <p:inputText id="ownerName" value="#{item.ownerName}" readonly="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.startTime}*</label>
+                            <p:inputText readonly="true" value="#{item.startTime}">
+                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            </p:inputText>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.endTime}*</label>
+                            <p:inputText readonly="true" value="#{item.endTime}">
+                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            </p:inputText>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.description}</label>
+                            <p:inputText id="description" value="#{item.description}" readonly="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.attachmentUrl}</label>
+                            <p:inputText id="attachmentUrl" value="#{item.attachmentUrl}" readonly="true"/>
+                        </h:panelGroup>
+                        
+                    </h:panelGrid>
+                    <f:facet name="description" rendered="#{item.stepDetails.size() gt 0}">
+                        <p:dataTable id="stepDetailList" value="#{item.stepDetails}" var="detailItem" widgetVar="varStepDetailList"
+                            lazy="false" paginator="false" rendered="#{item.stepDetails.size() gt 0}"
+                            rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{detailItem.id}"
+                            rows="200" emptyMessage="#{msg.noRecordFound}">
+                            
+                            <p:column headerText="#{msg.manHours}" sortBy="#{detailItem.manHours}">
+                                <h:outputText value="#{detailItem.manHours}"/>
+                            </p:column>
+                            <p:column headerText="#{msg.accessory}" sortBy="#{detailItem.accessory}">
+                                <h:outputText value="#{detailItem.accessory}"/>
+                            </p:column>
+                            <p:column headerText="#{msg.accessoryQuantity}" sortBy="#{detailItem.accessoryQuantity}">
+                                <h:outputText value="#{detailItem.accessoryQuantity}"/>
+                            </p:column>
+                            <p:column headerText="#{msg.accessoryPrice}" sortBy="#{detailItem.accessoryPrice}">
+                                <h:outputText value="#{detailItem.accessoryPrice}"/>
+                            </p:column>
+                        </p:dataTable>
 
-                    <p:ajax event="rowSelect" update=""/>
-                    
-                    <p:column headerText="#{msg.stepName}">
-                        <h:outputText value="#{item.stepName}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.ownerName}">
-                        <h:outputText value="#{item.ownerName}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.startTime}">
-                        <h:outputText value="#{item.startTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="#{msg.endTime}">
-                        <h:outputText value="#{item.endTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="#{msg.description}">
-                        <h:outputText value="#{item.description}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.attachmentUrl}">
-                        <h:outputText value="#{item.attachmentUrl}"/>
-                    </p:column>
-                </p:dataTable>
+                        <p:dataList value="#{item.stepDetails}" var="detailItem" style="border:0;float:right;width:60%;" rendered="#{item.stepDetails.size() gt 0}" type="definition">
+                            <h:panelGrid columns="8" style="border:0;float:right;width:60%;">
+                                <h:panelGroup>
+                                    <label class="label">#{msg.manHours}</label>
+                                    <p:inputText id="manHours" value="#{detailItem.manHours}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.accessory}</label>
+                                    <p:inputText id="accessory" value="#{detailItem.accessory}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.accessoryQuantity}</label>
+                                    <p:inputText id="accessoryQuantity" value="#{detailItem.accessoryQuantity}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.accessoryPrice}</label>
+                                    <p:inputText id="accessoryPrice" value="#{detailItem.accessoryPrice}"/>
+                                </h:panelGroup>
+                            </h:panelGrid>
+                        </p:dataList>
+                    </f:facet>
+                </p:dataList>
+                
             </h:form>
 
-            </div>
         </div>
-        
+    </div>
+
 
 </ui:composition>

@@ -36,7 +36,7 @@
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{orgInfoController.save}" value="#{msg.Save}" update="display,:OrgInfoEditDlg, :OrgInfoListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'OrgInfoEditDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('OrgInfoEditDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('OrgInfoEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

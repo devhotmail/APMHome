@@ -60,7 +60,7 @@
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{userAccountController.save}" value="#{msg.Save}" update="display,:UserAccountEditDlg, :UserAccountListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'UserAccountEditDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('UserAccountEditDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('UserAccountEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
