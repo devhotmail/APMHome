@@ -45,7 +45,7 @@
                                      selectionMode="single" selection="#{selectAssetController.selected}"
                                      lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false"
                                      rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
-                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                                      currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
                                      rows="5" emptyMessage="#{msg.noRecordFound}">
 

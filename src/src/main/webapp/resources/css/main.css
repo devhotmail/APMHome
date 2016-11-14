@@ -124,3 +124,6 @@ background-color: rgb(255, 193, 7);
 .priorityItem3{
 background-color: rgb(0, 188, 212); 
 }
+.ui-chkbox .ui-chkbox-box{
+opacity: 1!important;   
+}
