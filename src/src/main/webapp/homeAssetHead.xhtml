@@ -36,10 +36,11 @@
                                 <p class="epsilon">维修中</p>
                                 <p class="epsilon text--secondary">维修流程</p>
                                 <ul class="list-inline list-bare">
-                                    <ui:repeat value="#{homeAssetHeadController.stepCounts.entrySet().toArray()}" var="entry"
+                                    <ui:repeat value="#{homeAssetHeadController.stepCounts.entrySet().toArray()}"
+                                               var="entry"
                                                varStatus="status">
                                         <li>
-                                            <span class="status status--#{status.index}">#{entry.key}</span><span>(#{entry.value})</span>
+                                            <span class="status status--#{status.index+1}">#{entry.key}</span><span>(#{entry.value})</span>
                                         </li>
                                     </ui:repeat>
                                 </ul>
@@ -48,7 +49,8 @@
                                     <ui:repeat value="#{homeAssetHeadController.assetsInMt}" var="asset">
                                         <p>#{asset.asset}</p>
                                         <ul class="list-inline list-bare layout layout--middle layout--center">
-                                            <li class="layout__item u-1/2">维修流程:<span class="status status--4"/>#{asset.step}
+                                            <li class="layout__item u-1/2">维修流程:<span
+                                                    class="status status--#{asset.stepId}"/>#{asset.stepName}
                                             </li>
                                             <li class="layout__item u-1/2">维修人:<span/>#{asset.owner}</li>
                                         </ul>
@@ -72,7 +74,8 @@
 
                             <div class="ui-g-4 ui-xl-4 block">
                                 <p class="epsilon">保修期到期(2个月内)</p>
-                                <h1 class="alpha text--center">#{homeAssetHeadController.assetNumberWarrantyExpired}</h1>
+                                <h1 class="alpha text--center">
+                                    #{homeAssetHeadController.assetNumberWarrantyExpired}</h1>
                                 <div class="block-footer">
                                     <ui:repeat value="#{homeAssetHeadController.assetsWarrantyExpired}" var="asset">
                                         <div class="layout layout--middle">

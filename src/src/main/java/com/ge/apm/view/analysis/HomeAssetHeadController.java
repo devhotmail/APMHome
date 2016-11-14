@@ -9,11 +9,12 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Longs;
-import org.apache.log4j.Logger;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.SqlConfigurableChartController;
@@ -29,7 +30,7 @@ import java.util.Map;
 @ViewScoped
 @ManagedBean
 public class HomeAssetHeadController extends SqlConfigurableChartController {
-    private static final Logger logger = Logger.getLogger(HomeHeadController.class);
+    private static final Logger log = LoggerFactory.getLogger(HomeHeadController.class);
     private static final String STEP_APPLY = "申请";
     private static final String STEP_APPROVE = "审核";
     private static final String STEP_DISPATCH = "派工";
@@ -63,7 +64,7 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
     public HomeAssetHeadController() {
         queries = new HashMap<>();
         parameters = new HashMap<>();
-        queries.put("assetsInMt", "select w.asset_name, ws.step_name, ws.owner_name from work_order w, work_order_step as ws where w.id = ws.work_order_id and ws.id in (select w.current_step from asset_info a, work_order w, work_order_step s where a.is_valid = true and w.is_closed = false and a.id = w.asset_id and a.hospital_id = :#hospitalId)");
+        queries.put("assetsInMt", "select w.asset_name, ws.step_id, ws.step_name, ws.owner_name from work_order w, work_order_step as ws where w.id = ws.work_order_id and ws.id in (select w.current_step from asset_info a, work_order w, work_order_step s where a.is_valid = true and w.is_closed = false and a.id = w.asset_id and a.hospital_id = :#hospitalId)");
         queries.put("assetsStopped", "select a.name as asset_name, w.create_time as down_time, i.msg_key as down_reason from asset_info a right join work_order w on a.id = w.asset_id right join i18n_message i on w.case_type = i.id where a.is_valid = true and a.status =2 and a.hospital_id = :#hospitalId order by w.create_time");
         queries.put("assetsWarrantyExpired", "select a.name as asset_name, a.warranty_date as warranty_date from asset_info a where a.is_valid = true and a.warranty_date <= (now() + interval '2 months')  and a.hospital_id = :#hospitalId order by a.warranty_date");
         queries.put("assetsInPm", "select a.name as asset_name, a.last_pm_date as pm_date from asset_info a where a.hospital_id = :#hospitalId and a.last_pm_date < (now() + interval '1 weeks') order by last_pm_date");
@@ -154,18 +155,26 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
     }
 
     private void initAssetsInfoInMt() {
+        log.info("entering initAssetsInfoInMt");
+
+        log.info("fetching assetsInMt, sql= {}", queries.get("assetsInMt"));
         FluentIterable<Map<String, Object>> assets = FluentIterable.from(NativeSqlUtil.queryForList(queries.get("assetsInMt"), parameters));
+        log.info("assets = {}", assets);
+
         assetNumberInMt = (long) assets.size();
         assetsInMt = assets.limit(2).transform(new Function<Map<String, Object>, AssetViewInfo>() {
             @Override
             public AssetViewInfo apply(Map<String, Object> stringObjectMap) {
                 AssetViewInfo assetViewInfo = new AssetViewInfo();
                 assetViewInfo.setAsset(Optional.fromNullable(stringObjectMap.get("asset_name")).or("").toString());
-                assetViewInfo.setStep(Optional.fromNullable(stringObjectMap.get("step_name")).or("").toString());
+                assetViewInfo.setStepId(Optional.fromNullable(stringObjectMap.get("step_id")).or("").toString());
+                assetViewInfo.setStepName(Optional.fromNullable(stringObjectMap.get("step_name")).or("").toString());
                 assetViewInfo.setOwner(Optional.fromNullable(stringObjectMap.get("owner_name")).or("").toString());
                 return assetViewInfo;
             }
         }).toList();
+        log.info("assetsInMt = {}", assetsInMt);
+
         stepCounts = new ImmutableMap.Builder<String, Integer>()
                 .put(STEP_APPLY, countStep(assets, STEP_APPLY))
                 .put(STEP_APPROVE, countStep(assets, STEP_APPROVE))
@@ -173,10 +182,16 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
                 .put(STEP_ENGAGE, countStep(assets, STEP_ENGAGE))
                 .put(STEP_REPAIR, countStep(assets, STEP_REPAIR))
                 .put(STEP_CLOSE, countStep(assets, STEP_CLOSE)).build();
+        log.info("stepCounts = {}", stepCounts);
     }
 
     private void initAssetsStopped() {
+        log.info("entering initAssetsStopped");
+
+        log.info("fetching assetsStopped, sql= {}", queries.get("assetsStopped"));
         FluentIterable<Map<String, Object>> assets = FluentIterable.from(NativeSqlUtil.queryForList(queries.get("assetsStopped"), parameters));
+        log.info("assets = {}", assets);
+
         assetNumberStopped = (long) assets.size();
         assetsStopped = assets.limit(2).transform(new Function<Map<String, Object>, AssetViewInfo>() {
             @Override
@@ -188,10 +203,16 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
                 return assetViewInfo;
             }
         }).toList();
+        log.info("assetsStopped = {}", assetsStopped);
     }
 
     private void initAssetsWarrantyExpired() {
+        log.info("entering initAssetsWarrantyExpired");
+
+        log.info("fetching assetsWarrantyExpired, sql= {}", queries.get("assetsWarrantyExpired"));
         FluentIterable<Map<String, Object>> assets = FluentIterable.from(NativeSqlUtil.queryForList(queries.get("assetsWarrantyExpired"), parameters));
+        log.info("assets = {}", assets);
+
         assetNumberWarrantyExpired = (long) assets.size();
         assetsWarrantyExpired = assets.limit(2).transform(new Function<Map<String, Object>, AssetViewInfo>() {
             @Override
@@ -202,10 +223,16 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
                 return assetViewInfo;
             }
         }).toList();
+        log.info("assetsWarrantyExpired = {}", assetsWarrantyExpired);
     }
 
     private void initAssetsInPm() {
+        log.info("entering initAssetsInPm");
+
+        log.info("fetching assetsInPm, sql= {}", queries.get("assetsInPm"));
         FluentIterable<Map<String, Object>> assets = FluentIterable.from(NativeSqlUtil.queryForList(queries.get("assetsInPm"), parameters));
+        log.info("assets = {}", assets);
+
         assetNumberInPm = (long) assets.size();
         assetsInPm = assets.limit(2).transform(new Function<Map<String, Object>, AssetViewInfo>() {
             @Override
@@ -216,10 +243,16 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
                 return assetViewInfo;
             }
         }).toList();
+        log.info("assetsInPm = {}", assetsInPm);
     }
 
     private void initAssetsInMetering() {
+        log.info("entering initAssetsInMetering");
+
+        log.info("fetching assetsInMetering, sql= {}", queries.get("assetsInMetering"));
         FluentIterable<Map<String, Object>> assets = FluentIterable.from(NativeSqlUtil.queryForList(queries.get("assetsInMetering"), parameters));
+        log.info("assets = {}", assets);
+
         assetNumberInMetering = (long) assets.size();
         assetsInMetering = assets.limit(2).transform(new Function<Map<String, Object>, AssetViewInfo>() {
             @Override
@@ -230,10 +263,16 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
                 return assetViewInfo;
             }
         }).toList();
+        log.info("assetsInMetering = {}", assetsInMetering);
     }
 
     private void initAssetsInQa() {
+        log.info("entering initAssetsInQa");
+
+        log.info("fetching assetsInQa, sql= {}", queries.get("assetsInQa"));
         FluentIterable<Map<String, Object>> assets = FluentIterable.from(NativeSqlUtil.queryForList(queries.get("assetsInQa"), parameters));
+        log.info("assets = {}", assets);
+
         assetNumberInQa = (long) assets.size();
         assetsInQa = assets.limit(2).transform(new Function<Map<String, Object>, AssetViewInfo>() {
             @Override
@@ -244,6 +283,7 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
                 return assetViewInfo;
             }
         }).toList();
+        log.info("assetsInQa = {}", assetsInQa);
     }
 
     @PostConstruct

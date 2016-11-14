@@ -2,7 +2,8 @@ package com.ge.apm.view.analysis;
 
 public class AssetViewInfo {
     private String asset;
-    private String step;
+    private String stepId;
+    private String stepName;
     private String owner;
     private String downTime;
     private String downReason;
@@ -19,12 +20,20 @@ public class AssetViewInfo {
         this.asset = asset;
     }
 
-    public String getStep() {
-        return step;
+    public String getStepId() {
+        return stepId;
     }
 
-    public void setStep(String step) {
-        this.step = step;
+    public void setStepId(String stepId) {
+        this.stepId = stepId;
+    }
+
+    public String getStepName() {
+        return stepName;
+    }
+
+    public void setStepName(String stepName) {
+        this.stepName = stepName;
     }
 
     public String getOwner() {
