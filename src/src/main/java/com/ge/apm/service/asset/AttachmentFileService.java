@@ -31,7 +31,7 @@ import webapp.framework.web.WebUtil;
 public class AttachmentFileService {
 
     static String rootPath = AppContextService.getFileUploadFolder();
-    static String tempPath = "rootPath" + File.separator + "temp";
+    static String tempPath = System.getProperty("java.io.tmpdir");
 
     AssetFileAttachmentRepository attachDao = null;
 
