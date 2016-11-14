@@ -24,6 +24,10 @@
 		<level value="${log4j.level}" />
 	</logger>
 
+	<logger name="com.ge.apm.view">
+		<level value="${log4j.level}" />
+	</logger>
+
 	<logger name="com.demo.dao">
 		<level value="warn" />
 	</logger>
