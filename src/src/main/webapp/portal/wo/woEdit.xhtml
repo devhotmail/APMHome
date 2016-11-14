@@ -12,12 +12,12 @@
             <p:fieldset legend="#{msg.WorkOrder} #{msg.Detail}" rendered="#{workOrderController.selected != null}">
                 
                 <p:steps activeIndex="#{workOrderController.selected.currentStep-1}" styleClass="test" readonly="false">
-                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '1')}" url="/home1.xhtml"/>
-                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '2')}" url="/home2.xhtml"/>
-                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '3')}" url="/home3.xhtml"/>
-                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '4')}" url="/home4.xhtml"/>
-                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '5')}" url="/home5.xhtml"/>
-                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '6')}" url="/home6.xhtml"/>
+                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '1')}" onclick="return false;"/>
+                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '2')}" onclick="return false;"/>
+                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '3')}" onclick="return false;"/>
+                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '4')}" onclick="return false;"/>
+                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '5')}" onclick="return false;"/>
+                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '6')}" onclick="return false;"/>
                 </p:steps>
                 <br/>
                 

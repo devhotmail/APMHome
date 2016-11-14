@@ -48,6 +48,10 @@ background-color: #3e464c!important;
 .ui-chkbox .ui-chkbox-box .ui-icon-check{
 color: #ffffff!important;
 }
+.tree .ui-chkbox .ui-chkbox-box .ui-icon-check{
+color: black!important;
+}
+
 .ui-tree .ui-chkbox {
 width: 18px!important;
 }

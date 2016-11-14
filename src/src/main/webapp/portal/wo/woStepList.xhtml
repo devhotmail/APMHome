@@ -13,38 +13,44 @@
                 </p>
                 
                 <style type="text/css">
-                    #stepDetailList .ui-column-title{
+                    .stepDetailList .ui-column-title{
                     font-weight: normal!important;
-                    }    
+                    font-size: 12px!important;
+                    color: rgb(153, 153, 153)!important;
+                    }
+                    .stepDetailList tr.ui-datatable-even {
+                    background-color: transparent!important;
+                    }
+                    .stepDetailList tr.ui-widget-content{
+                    border-style: none!important;
+                    }
+                    .stepDetailList tr, .stepDetailList td, .stepDetailList th, .stepDetailList tbody {
+                    border: 0px none #bdbdbd!important;
+                    border-left: 0px none #bdbdbd!important;
+                    border-top: 0px solid #bdbdbd!important;
+                    text-align: center!important;
+                    }
                 </style>
                 
-                <p:dataList value="#{workOrderStepController.workOrderStepList}" var="item" type="definition">
+                <p:dataList value="#{workOrderStepController.workOrderStepList}" var="item" type="definition" rendered="#{(workOrderController.selected ne null) and (workOrderStepController.workOrderStepList.size() gt 0)}">
                     <h:panelGrid columns="8">
                         <h:panelGroup>
-                            <label class="label">#{msg.stepId}*</label>
-                            <p:inputText id="stepId" value="#{item.stepId}" readonly="true" size="2"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
                             <label class="label">#{msg.stepName}*</label>
-                            <p:inputText id="stepName" value="#{item.stepName}" readonly="true"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.ownerId}*</label>
-                            <p:inputText id="ownerId" value="#{item.ownerId}" readonly="true"/>
+                            <p:inputText id="stepName" value="#{item.stepId}. #{item.stepName}" readonly="true" size="8"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.ownerName}*</label>
-                            <p:inputText id="ownerName" value="#{item.ownerName}" readonly="true"/>
+                            <p:inputText id="ownerName" value="#{item.ownerName}" readonly="true" size="5"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.startTime}*</label>
-                            <p:inputText readonly="true" value="#{item.startTime}">
+                            <p:inputText readonly="true" value="#{item.startTime}" size="12">
                                 <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                             </p:inputText>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.endTime}*</label>
-                            <p:inputText readonly="true" value="#{item.endTime}">
+                            <p:inputText readonly="true" value="#{item.endTime}" size="12">
                                 <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                             </p:inputText>
                         </h:panelGroup>
@@ -60,24 +66,24 @@
                     </h:panelGrid>
                     <f:facet name="description" rendered="#{item.stepDetails.size() gt 0}">
                         <p:dataTable id="stepDetailList" value="#{item.stepDetails}" var="detailItem" widgetVar="varStepDetailList"
-                            lazy="false" paginator="false" rendered="#{item.stepDetails.size() gt 0}"
-                            rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{detailItem.id}"
+                            lazy="false" paginator="false" rendered="#{item.stepDetails.size() gt 0}" class="stepDetailList"
+                            rowKey="#{item.id}" sortOrder="ascending" sortBy="#{detailItem.id}" style="width: 70%;left: 50px;"
                             rows="200" emptyMessage="#{msg.noRecordFound}">
                             
-                            <p:column headerText="#{msg.manHours}" sortBy="#{detailItem.manHours}">
+                            <p:column headerText="#{msg.manHours}">
                                 <h:outputText value="#{detailItem.manHours}"/>
                             </p:column>
-                            <p:column headerText="#{msg.accessory}" sortBy="#{detailItem.accessory}">
+                            <p:column headerText="#{msg.accessory}">
                                 <h:outputText value="#{detailItem.accessory}"/>
                             </p:column>
-                            <p:column headerText="#{msg.accessoryQuantity}" sortBy="#{detailItem.accessoryQuantity}">
+                            <p:column headerText="#{msg.accessoryQuantity}">
                                 <h:outputText value="#{detailItem.accessoryQuantity}"/>
                             </p:column>
-                            <p:column headerText="#{msg.accessoryPrice}" sortBy="#{detailItem.accessoryPrice}">
+                            <p:column headerText="#{msg.accessoryPrice}">
                                 <h:outputText value="#{detailItem.accessoryPrice}"/>
                             </p:column>
                         </p:dataTable>
-
+<!--
                         <p:dataList value="#{item.stepDetails}" var="detailItem" style="border:0;float:right;width:60%;" rendered="#{item.stepDetails.size() gt 0}" type="definition">
                             <h:panelGrid columns="8" style="border:0;float:right;width:60%;">
                                 <h:panelGroup>
@@ -98,9 +104,9 @@
                                 </h:panelGroup>
                             </h:panelGrid>
                         </p:dataList>
+-->                
                     </f:facet>
                 </p:dataList>
-                
             </h:form>
 
         </div>
