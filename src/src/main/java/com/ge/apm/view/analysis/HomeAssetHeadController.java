@@ -84,24 +84,12 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
         return assetNumberInMt;
     }
 
-    public void setAssetNumberInMt(Long assetNumberInMt) {
-        this.assetNumberInMt = assetNumberInMt;
-    }
-
     public List<AssetViewInfo> getAssetsInMt() {
         return assetsInMt;
     }
 
-    public void setAssetsInMt(List<AssetViewInfo> assetsInMt) {
-        this.assetsInMt = assetsInMt;
-    }
-
     public Map<String, Integer> getStepCounts() {
         return stepCounts;
-    }
-
-    public void setStepCounts(Map<String, Integer> stepCounts) {
-        this.stepCounts = stepCounts;
     }
 
     public long getAssetNumberStopped() {
@@ -115,7 +103,6 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
     public long getAssetNumberWarrantyExpired() {
         return assetNumberWarrantyExpired;
     }
-
 
     public List<AssetViewInfo> getAssetsWarrantyExpired() {
         return assetsWarrantyExpired;
