@@ -16,14 +16,17 @@ import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class WorkOrderController extends JpaCRUDController<WorkOrder> {
+public class WoProcessController extends JpaCRUDController<WorkOrder> {
 
     WorkOrderRepository dao = null;
     UserAccount loginUser;
@@ -148,13 +151,5 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         this.selected.setCaseOwnerId(asset.getAssetOwnerId());
         this.selected.setCaseOwnerName(asset.getAssetOwnerName());
     }
-
-    public String getSelectedWorkOrderId() {
-        return null;
-    }
-    public void setSelectedWorkOrderId(String selectedWorkOrderId) {
-        this.selected = dao.findById(Integer.parseInt(selectedWorkOrderId));
-    }
-    
     
 }

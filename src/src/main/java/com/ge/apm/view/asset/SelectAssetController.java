@@ -56,7 +56,7 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
     
     public void onSelectTreeNode(NodeSelectEvent event){
         TreeNode node = event.getTreeNode();
-        node.setExpanded(!node.isExpanded());
+        node.setExpanded(true);
         
         Object nodeData = node.getData();
         if(nodeData instanceof AssetInfo)
@@ -97,7 +97,7 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
         this.updateViewIDs = updateViewIDs;
 
         UaaService uaaService = WebUtil.getBean(UaaService.class);
-        orgAssetTree = uaaService.getOrgAssetTree(UserContextService.getCurrentUserAccount().getHospitalId());
+        orgAssetTree = uaaService.getOrgAssetChecklistTree(UserContextService.getCurrentUserAccount().getHospitalId(), 1);
     }
 
     public void cancelDialog(){
@@ -108,5 +108,12 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
     public boolean isShowDialog() {
         return showDialog;
     }
-    
+
+    private TreeNode[] selectedNodes;
+    public TreeNode[] getSelectedNodes() {
+        return selectedNodes;
+    }
+    public void setSelectedNodes(TreeNode[] selectedNodes) {
+        this.selectedNodes = selectedNodes;
+    }
 }

@@ -1,11 +1,13 @@
 package com.ge.apm.service.uaa;
 
 import com.ge.apm.dao.AssetInfoRepository;
+import com.ge.apm.dao.InspectionChecklistRepository;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.SysRoleRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.dao.UserRoleRepository;
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.InspectionChecklist;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.SysRole;
 import com.ge.apm.domain.UserAccount;
@@ -143,7 +145,7 @@ public class UaaService {
         for(OrgInfo org: orgList){
             TreeNode node;
             node = new DefaultTreeNode("org", org, root);
-
+            node.setRowKey("org_"+org.getId());
             treeMap.put(org.getId(), node);
         }
 
@@ -168,8 +170,9 @@ public class UaaService {
             List<AssetInfo> assets = assetMap.get(org.getId());
             
             if(assets!=null) {
-                for(AssetInfo asset: assets){
-                    TreeNode assetNode = new DefaultTreeNode("asset", asset, node);
+                for(AssetInfo item: assets){
+                    TreeNode assetNode = new DefaultTreeNode("asset", item, node);
+                    assetNode.setRowKey("asset_"+item.getId());
                 }
             }
         }
@@ -197,6 +200,46 @@ public class UaaService {
         
         TreeNode root = getOrgTree(hospitalId);
         addAssetToOrgNode(root, assetMap);
+        
+        return root;
+    }
+
+    private void addChecklistToAssetNode(TreeNode node, Map<Integer, List<InspectionChecklist>> checklistMap){
+        if("asset".equals(node.getType())){
+            AssetInfo asset = (AssetInfo)node.getData();
+            List<InspectionChecklist> checkList = checklistMap.get(asset.getId());
+            
+            if(checkList!=null) {
+                for(InspectionChecklist item: checkList){
+                    TreeNode checklistNode = new DefaultTreeNode("checklist", item, node);
+                    checklistNode.setRowKey("checklist_"+item.getId());
+                }
+            }
+        }
+        
+        for(TreeNode aNode: node.getChildren()){
+            addChecklistToAssetNode(aNode, checklistMap);
+        }
+    }
+    
+    public TreeNode getOrgAssetChecklistTree(int hospitalId, int checklistType){
+        InspectionChecklistRepository checklistDao = WebUtil.getBean(InspectionChecklistRepository.class);
+        List<InspectionChecklist> checkList = checklistDao.getByHospitalIdAndChecklistType(hospitalId, checklistType);
+
+        Map<Integer, List<InspectionChecklist>> checklistMap = new HashMap<>();
+        for(InspectionChecklist item: checkList){
+            List<InspectionChecklist> checklist = checklistMap.get(item.getAssetId());
+
+            if(checklist==null){
+                checklist = new ArrayList<>();
+                checklistMap.put(item.getAssetId(), checklist);
+            }
+            
+            checklist.add(item);
+        }
+        
+        TreeNode root = getOrgAssetTree(hospitalId);
+        addChecklistToAssetNode(root, checklistMap);
         
         return root;
     }
