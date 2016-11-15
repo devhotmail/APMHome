@@ -374,7 +374,10 @@ public class WorkOrder implements Serializable {
     public String getRequestReasonInShort(){
         if(this.requestReason==null) return null;
         
-            return (this.requestReason==null)? "":this.requestReason.substring(1,20)+"...";
+        if(this.requestReason.length()<=20)
+            return this.requestReason;
+        else
+            return this.requestReason.substring(1,20)+"...";
     }
     
     @Override
