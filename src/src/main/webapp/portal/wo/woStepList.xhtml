@@ -64,7 +64,7 @@
                         </h:panelGroup>
                         
                     </h:panelGrid>
-                    <f:facet name="description" rendered="#{item.stepDetails.size() gt 0}">
+                    <f:facet name="description">
                         <p:dataTable id="stepDetailList" value="#{item.stepDetails}" var="detailItem" widgetVar="varStepDetailList"
                             lazy="false" paginator="false" rendered="#{item.stepDetails.size() gt 0}" class="stepDetailList"
                             rowKey="#{item.id}" sortOrder="ascending" sortBy="#{detailItem.id}" style="width: 70%;left: 50px;"
