@@ -21,6 +21,8 @@ DROP TABLE IF EXISTS asset_clinical_record CASCADE;
 DROP TABLE IF EXISTS supplier CASCADE;
 DROP TABLE IF EXISTS asset_info CASCADE;
 DROP TABLE IF EXISTS asset_depreciation CASCADE;
+DROP TABLE IF EXISTS file_uploaded CASCADE;
+
 
 CREATE TABLE i18n_message (
 "id" serial NOT NULL,
@@ -169,14 +171,21 @@ salvage_value float,
 lifecycle int,
 depreciation_method int);
 
-
 create table asset_file_attachment(
 id serial not null,
 site_id int not null,
 asset_id int not null,
 name varchar(64) not null,
 file_type varchar(64) not null,
-file_url varchar(128) not null);
+file_url varchar(128),
+file_id int
+);
+
+CREATE TABLE file_uploaded(
+   id serial NOT NULL,
+   file_name varchar(255) NOT NULL,
+   file_content bytea NOT NULL
+);
 
 
 create table inspection_checklist(
@@ -221,6 +230,7 @@ create table pm_order(
 id serial not null,
 site_id int not null,
 asset_id int not null,
+asset_name varchar(64) not null,
 name varchar(64) not null,
 creator_id int not null,
 creator_name varchar(16) not null,
@@ -371,6 +381,8 @@ ALTER TABLE i18n_message ADD PRIMARY KEY (id);
 ALTER TABLE chart_config ADD PRIMARY KEY (id);
 ALTER TABLE data_table_config ADD PRIMARY KEY (id);
 ALTER TABLE asset_depreciation ADD PRIMARY KEY (id);
+ALTER TABLE file_uploaded ADD PRIMARY KEY (id);
+
 
 ALTER TABLE "user_account" ADD CONSTRAINT "uk_user_account_login_name" UNIQUE ("login_name");
 
