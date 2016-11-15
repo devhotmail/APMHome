@@ -67,11 +67,14 @@ for i in 0..totalrecords
   randtime      = (duration * rand).to_i + stime.to_i
   last_metering_date = Time.at(randtime).strftime("%F")
 
+  randtime      = (duration * rand).to_i + stime.to_i
+  last_qa_date = Time.at(randtime).strftime("%F")
+
   sql = "insert into #{table} (site_id, name, function_type, hospital_id, clinical_dept_id, asset_group, asset_dept_id,
         asset_owner_id, asset_owner_name,
-        is_valid, status, warranty_date, last_pm_date, last_metering_date) values (\'#{site_id}\', \'#{name}\',
+        is_valid, status, warranty_date, last_pm_date, last_metering_date, last_qa_date) values (\'#{site_id}\', \'#{name}\',
         \'#{function_type}\', \'#{hospital_id}\', \'#{clinical_dept_id}\', \'#{asset_group}\', \'#{asset_dept_id}\', \'#{asset_owner_id}\', \'#{asset_owner_name}\',
-        \'#{is_valid}\', \'#{status}\', \'#{warranty_date}\', \'#{last_pm_date}\', \'#{last_metering_date}\')"
+        \'#{is_valid}\', \'#{status}\', \'#{warranty_date}\', \'#{last_pm_date}\', \'#{last_metering_date}\', \'#{last_qa_date}\')"
   puts sql
   conn.exec(sql)
 end
@@ -136,42 +139,42 @@ for i in 1..totalrecords
   conn.exec(sql)
 end
 
-# table = "pm_order"
-# totalrecords = 500
-# for i in 0..totalrecords
-#   site_id         = randnum.rand(1..2)
-#   asset_id        = randnum.rand(1..50)
-#   name            = "pm-order-#{asset_id}"
-#   creator_id    = randnum.rand(1..10)
-#   creator_name  = "creator-#{creator_id}"
-#
-#   randtime = (duration * rand).to_i + stime.to_i
-#   create_time = Time.at(randtime).strftime("%F %T")
-#
-#   is_finished   = [true, false].sample
-#
-#   sql = "insert into #{table} (site_id, asset_id, name, creator_id, creator_name, create_time,
-#         is_finished) values (\'#{site_id}\', \'#{asset_id}\',
-#         \'#{name}\', \'#{creator_id}\',\'#{creator_name}\', \'#{create_time}\',
-#         \'#{is_finished}\')"
-#   puts sql
-#   conn.exec(sql)
-# end
+table = "pm_order"
+totalrecords = 500
+for i in 0..totalrecords
+  site_id         = randnum.rand(1..2)
+  asset_id        = randnum.rand(1..50)
+  name            = "pm-order-#{asset_id}"
+  creator_id    = randnum.rand(1..10)
+  creator_name  = "creator-#{creator_id}"
+
+  randtime = (duration * rand).to_i + stime.to_i
+  create_time = Time.at(randtime).strftime("%F %T")
+
+  is_finished   = [true, false].sample
+
+  sql = "insert into #{table} (site_id, asset_id, name, creator_id, creator_name, create_time,
+        is_finished) values (\'#{site_id}\', \'#{asset_id}\',
+        \'#{name}\', \'#{creator_id}\',\'#{creator_name}\', \'#{create_time}\',
+        \'#{is_finished}\')"
+  puts sql
+  conn.exec(sql)
+end
+
 
 table = "work_order_step"
 totalrecords = 500
 for i in 0..totalrecords
   site_id         = randnum.rand(1..2)
   work_order_id   = randnum.rand(1..50)
-  step_id         = randnum.rand(1..6) # from 1
-  step_name       = ["start", "hospital approval", "vendor approval", "engineer onsite", "close"].sample
+  step_id = randnum.rand(1..6)
+  step_name       = ["申请", "审核", "派工", "领工", "维修","关单"][step_id - 1]
   owner_id    = randnum.rand(1..10)
   owner_name  = "owner-#{owner_id}"
 
   randtime = (duration * rand).to_i + stime.to_i
   start_time = Time.at(randtime).strftime("%F %T")
   end_time = Time.at(randtime + randnum.rand(600..1800)).strftime("%F %T")
-
 
   sql = "insert into #{table} (site_id, work_order_id, step_id, step_name, owner_id, owner_name, start_time,
         end_time) values (\'#{site_id}\', \'#{work_order_id}\', \'#{step_id}\',

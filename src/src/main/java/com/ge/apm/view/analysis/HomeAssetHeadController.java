@@ -64,7 +64,7 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
     public HomeAssetHeadController() {
         queries = new HashMap<>();
         parameters = new HashMap<>();
-        queries.put("assetsInMt", "select w.asset_name, ws.step_id, ws.step_name, ws.owner_name from work_order w, work_order_step as ws where w.id = ws.work_order_id and ws.id in (select w.current_step from asset_info a, work_order w, work_order_step s where a.is_valid = true and w.is_closed = false and a.id = w.asset_id and a.hospital_id = :#hospitalId)");
+        queries.put("assetsInMt", "select w.asset_name, ws.step_id, ws.step_name, ws.owner_name from work_order w, work_order_step as ws where w.id = ws.work_order_id and ws.id in (select w.current_step from asset_info a, work_order w, work_order_step s where a.is_valid = true and w.is_closed = false and a.id = w.asset_id and 1sdasd a.hospital_id = :#hospitalId)");
         queries.put("assetsStopped", "select a.name as asset_name, w.create_time as down_time, i.msg_key as down_reason from asset_info a right join work_order w on a.id = w.asset_id right join i18n_message i on w.case_type = i.id where a.is_valid = true and a.status =2 and a.hospital_id = :#hospitalId order by w.create_time");
         queries.put("assetsWarrantyExpired", "select a.name as asset_name, a.warranty_date as warranty_date from asset_info a where a.is_valid = true and a.warranty_date <= (now() + interval '2 months')  and a.hospital_id = :#hospitalId order by a.warranty_date");
         queries.put("assetsInPm", "select a.name as asset_name, a.last_pm_date as pm_date from asset_info a where a.hospital_id = :#hospitalId and a.last_pm_date < (now() + interval '1 weeks') order by last_pm_date");
@@ -314,17 +314,14 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
         model.addSeries(initChartSeries(placeholders));
         model.addSeries(initChartSeries(pairs));
         model.addSeries(initChartSeries(placeholders));
-
         return model;
     }
 
     private void createBarModel() {
         barModel = initBarModel();
-        Axis xAxis = barModel.getAxis(AxisType.X);
         Axis yAxis = barModel.getAxis(AxisType.Y);
         yAxis.setMin(0);
-        long y = Longs.max(assetNumberInMt, assetNumberStopped, assetNumberWarrantyExpired, assetNumberInPm, assetNumberInMetering, assetNumberInQa);
-        yAxis.setMax(y);
+        yAxis.setMax(Longs.max(assetNumberInMt, assetNumberStopped, assetNumberWarrantyExpired, assetNumberInPm, assetNumberInMetering, assetNumberInQa));
         barModel.setExtender("skinBar");
     }
 }

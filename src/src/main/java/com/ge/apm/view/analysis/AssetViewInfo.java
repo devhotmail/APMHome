@@ -1,5 +1,7 @@
 package com.ge.apm.view.analysis;
 
+import com.google.common.base.MoreObjects;
+
 public class AssetViewInfo {
     private String asset;
     private String stepId;
@@ -11,6 +13,14 @@ public class AssetViewInfo {
     private String pmDate;
     private String meteringDate;
     private String qaDate;
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this).omitNullValues()
+                .add("asset", asset).add("stepId", stepId).add("stepName", stepName).add("owner", owner)
+                .add("downTime", downTime).add("downReason", downReason).add("warrantyDate", warrantyDate)
+                .add("pmDate", pmDate).add("meteringDate", meteringDate).add("qaDate", qaDate).toString();
+    }
 
     public String getAsset() {
         return asset;
