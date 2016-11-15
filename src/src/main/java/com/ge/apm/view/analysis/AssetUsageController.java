@@ -309,7 +309,7 @@ public class AssetUsageController {
             "        FROM work_order_step AS step, " +
             "             work_order AS work " +
             "        WHERE step.work_order_id = work.id " +
-            "          AND to_char(step.step_id, '9') = :#stepId " + // TODO: because stepId is string...
+            "          AND CAST (step.step_id AS varchar (1)) = :#stepId " + // TODO: because stepId is string...
             "        :#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
             "        :#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
             "        :#andDeviceFilter " +  // AND work.asset_id = :#assetId
