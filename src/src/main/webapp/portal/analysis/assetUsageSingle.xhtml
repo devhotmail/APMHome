@@ -1,0 +1,200 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="assetId" value="#{assetUsageController.assetId}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="ui-g-3"><p>TODO-DropDown</p></div>
+                <div class="ui-g-6"><p class="i18n">设备维修事件统计分析</p></div>
+                <!--<div class="ui-g-3"><p:commandButton icon="fa fa-ellipsis-v" title="Icon Only"/></div>-->
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-3">
+                    <p class="i18n">设备故障最主要原因</p>
+                    <p><h:outputText value="#{assetUsageController.topErrorReason}"/></p>
+                </div>
+                <div class="ui-g-3">
+                    <p class="i18n">设备故障处理流程最耗时步骤</p>
+                    <p><h:outputText value="#{assetUsageController.topErrorStep}"/></p>
+                </div>
+                <div class="ui-g-3">
+                    <p class="i18n">设备故障数</p>
+                    <p><h:outputText value="#{assetUsageController.errorCount}"/></p>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <p:calendar value="#{assetUsageController.startDate}">
+                    <p:ajax event="dateSelect"
+                            listener="#{assetUsageController.onStartDateSelect}"
+                            showOn="button"/>
+                </p:calendar>
+                <p class="i18n">到</p>
+                <p:calendar value="#{assetUsageController.endDate}">
+                    <p:ajax event="dateSelect"
+                            listener="#{assetUsageController.onEndDateSelect}"
+                            showOn="button"/>
+                </p:calendar>
+            </div>
+        </div>
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="ui-g-9">
+                    <p class="i18n">设备故障原因分析</p>
+                </div>
+                <!--<div class="ui-g-3">
+                    <p:commandButton value="TODO导出"/>
+                </div>-->
+            </div>
+            <p:separator/>
+            <div class="ui-g-12">
+                <p:chart type="bar"
+                         model="#{assetUsageController.errorReasonChart}"
+                         responsive="true"/>
+            </div>
+        </div>
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="ui-g-9">
+                    <p class="i18n">设备故障流程响应时间分布</p>
+                </div>
+                <!--<div class="ui-g-3">
+                    <p:commandButton value="TODO导出"/>
+                </div>-->
+            </div>
+            <p:separator/>
+            <div class="ui-g-12">
+                <p:chart type="bar"
+                         model="#{assetUsageController.errorStepChart}"
+                         responsive="true"
+                         style="height:100px;"/>
+            </div>
+            <div class="ui-g-12">
+                <p class="i18n">耗时最长的三个步骤的具体响应时间分布</p>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <p:chart type="pie"
+                             model="#{assetUsageController.errorTimePerStep[0]}"
+                             style="width:300px;height:200px;"/>
+                </div>
+                <div class="ui-g-4">
+                    <p:chart type="pie"
+                             model="#{assetUsageController.errorTimePerStep[1]}"
+                             style="width:300px;height:200px;"/>
+                </div>
+                <div class="ui-g-4">
+                    <p:chart type="pie"
+                             model="#{assetUsageController.errorTimePerStep[2]}"
+                             style="width:300px;height:200px"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="ui-g-9">
+                    <p class="i18n">设备故障分布</p>
+                </div>
+                <!--<div class="ui-g-3">
+                    <p:commandButton value="TODO导出"/>
+                </div>-->
+            </div>
+            <p:separator/>
+            <div class="ui-g-12">
+                <div class="ui-g-2">
+                    <p class="i18n">此台设备故障占所在科室总故障比例</p>
+                    <p>
+                        <span class="i18n">所占比例：</span>
+                        <span><h:outputText value="#{assetUsageController.errorPercentageInRoomOfDevice}"/></span>
+                    </p>
+                    <p>
+                        <span class="i18n">此台设备故障数：</span>
+                        <span><h:outputText value="#{assetUsageController.errorCount}"/></span>
+                    </p>
+                    <p>
+                        <span class="i18n">此台设备所在科室故障数：</span>
+                        <span><h:outputText value="#{assetUsageController.errorCountInRoomOfDevice}"/></span>
+                    </p>
+                    <p>
+                        <span class="i18n">此台设备故障数在科室内排名：</span>
+                        <span><h:outputText value="#{assetUsageController.errorRankInRoomOfDevice}"/></span>
+                        <span>（</span>
+                        <span><h:outputText value="#{assetUsageController.deviceCountInRoomOfDevice}"/></span>
+                        <span>）</span>
+                    </p>
+                </div>
+                <div class="ui-g-2">
+                    <p:chart type="pie"
+                             model="#{assetUsageController.errorPercentageInRoomOfDeviceChart}"
+                             style="width:100px;height:100px"/>
+                </div>
+                <div class="ui-g-2">
+                    <p class="i18n">此台设备故障占所在设备类型故障比例</p>
+                    <p>
+                        <span class="i18n">所占比例：</span>
+                        <span><h:outputText value="#{assetUsageController.errorPercentageInDeviceTypeOfDevice}"/></span>
+                    </p>
+                    <p>
+                        <span class="i18n">此台设备故障数：</span>
+                        <span><h:outputText value="#{assetUsageController.errorCount}"/></span>
+                    </p>
+                    <p>
+                        <span class="i18n">此台设备所在类型故障数：</span>
+                        <span><h:outputText value="#{assetUsageController.errorCountInDeviceTypeOfDevice}"/></span>
+                    </p>
+                    <p>
+                        <span class="i18n">此台设备故障数在此类设备中排名：</span>
+                        <span><h:outputText value="#{assetUsageController.errorRankInDeviceTypeOfDevice}"/></span>
+                        <span>（</span>
+                        <span><h:outputText value="#{assetUsageController.deviceCountInDeviceTypeOfDevice}"/></span>
+                        <span>）</span>
+                    </p>
+                </div>
+                <div class="ui-g-2">
+                    <p:chart type="pie"
+                             model="#{assetUsageController.errorPercentageInDeviceTypeOfDeviceChart}"
+                             style="width:100px;height:100px"/>
+                </div>
+                <div class="ui-g-2">
+                    <p class="i18n">此台设备故障占所在设备类型故障比例</p>
+                    <p>
+                        <span class="i18n">所占比例：</span>
+                        <span><h:outputText value="#{assetUsageController.errorPercentageInTotalOfDevice}"/></span>
+                    </p>
+                    <p>
+                        <span class="i18n">此台设备故障数：</span>
+                        <span><h:outputText value="#{assetUsageController.errorCount}"/></span>
+                    </p>
+                    <p>
+                        <span class="i18n">此台设备所在类型故障数：</span>
+                        <span><h:outputText value="#{assetUsageController.errorCountInTotalOfDevice}"/></span>
+                    </p>
+                    <p>
+                        <span class="i18n">此台设备故障数在此类设备中排名：</span>
+                        <span><h:outputText value="#{assetUsageController.errorRankInTotalOfDevice}"/></span>
+                        <span>（</span>
+                        <span><h:outputText value="#{assetUsageController.deviceCountInTotalOfDevice}"/></span>
+                        <span>）</span>
+                    </p>
+                </div>
+                <div class="ui-g-2">
+                    <p:chart type="pie"
+                             model="#{assetUsageController.errorPercentageInTotalOfDeviceChart}"
+                             style="width:100px;height:100px"/>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
