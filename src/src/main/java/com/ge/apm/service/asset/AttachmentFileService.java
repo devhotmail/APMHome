@@ -55,13 +55,14 @@ public class AttachmentFileService {
         InputStream is = null;
         try {
             is = fileUploaddao.getAttachmentFile(attachFile.getFileId());
+            DefaultStreamedContent fileStream = new DefaultStreamedContent(is);
+            fileStream.setName(attachFile.getName());
+            return fileStream;
         } catch (SQLException ex) {
             WebUtil.addErrorMessage("file download error");
             Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
         }
-        DefaultStreamedContent fileStream = new DefaultStreamedContent(is);
-        fileStream.setName(attachFile.getName());
-        return fileStream;
+        return null;
     }
 
     private Integer saveFiletoDB(UploadedFile file) {
