@@ -12,7 +12,7 @@
                 <p:tabView style="height:460px;">
                     <p:tab title="#{msg.searchAssetByDept}">
                         <p:scrollPanel style="width:98%;height:400px;border: 0" mode="native">
-                            <p:tree id="assetTree" class="tree" style="border:0;" value="#{selectAssetController.orgAssetTree}" var="node" dynamic="false" cache="false" selectionMode="checkbox" selection="#{selectAssetController.selectedNodes}" highlight="true">
+                            <p:tree id="assetTree" class="tree" style="border:0;" value="#{selectAssetController.orgAssetTree}" var="node" dynamic="false" cache="false" selectionMode="single" selection="#{selectAssetController.selectedNode}" highlight="true">
                                 <p:ajax event="select" listener="#{selectAssetController.onSelectTreeNode}" update="assetTree"/>
 
                                 <p:treeNode type="org">
