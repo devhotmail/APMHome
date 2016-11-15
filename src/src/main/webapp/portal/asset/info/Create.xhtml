@@ -219,7 +219,7 @@
                             <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 1)}</f:facet>
 
                             #{fileitem.name}
-                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileUrl)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
+                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.id)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
                         </p:dataList>
                         <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
                                       multiple="true"  sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="pictureList"/>
@@ -228,7 +228,7 @@
                         <p:dataList id="contractList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="definition">
                             <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 2)}</f:facet>
                                 #{fileitem.name}
-                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileUrl)}" id="iconOnly" update="contractList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
+                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.id)}" id="iconOnly" update="contractList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
                         </p:dataList>
                         <p:fileUpload id="type2" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
                                       multiple="true"  sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="contractList"/>
@@ -237,7 +237,7 @@
                         <p:dataList id="manualList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,3)}" var="fileitem" type="definition">
                             <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 3)}</f:facet>
                             #{fileitem.name}, 
-                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileUrl)}" id="iconOnly" update="manualList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
+                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.id)}" id="iconOnly" update="manualList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
                         </p:dataList>
                         <p:fileUpload id="type3" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
                                       multiple="true"  sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="manualList"/>
@@ -246,7 +246,7 @@
                         <p:dataList id="guideList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="definition">
                             <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 4)}</f:facet>
                                 #{fileitem.name}
-                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileUrl)}" id="iconOnly" update="guideList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
+                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.id)}" id="iconOnly" update="guideList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
                         </p:dataList>
                         <p:fileUpload id="type4" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
                                       multiple="true"  sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="guideList"/>

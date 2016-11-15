@@ -187,13 +187,16 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         AssetFileAttachment attach = new AssetFileAttachment();
         String fileName = fileService.getFileName(event.getFile());
         attach.setName(fileName);
-        attach.setFileUrl(fileService.getFileUrl() + fileName);
         attach.setFileType(type);
         attach.setSiteId(currentUser.getSiteId());
-        if (fileService.uploadFile(event.getFile(), attach.getFileUrl())) {
+        Integer uploadFileId = fileService.uploadFile(event.getFile());
+        if(uploadFileId>0){
+            attach.setFileId(uploadFileId);
             WebUtil.addSuccessMessage("Succesful", fileName + " is uploaded.");
             attachements.add(attach);
         }
+
+
     }
 
     public List<AssetFileAttachment> getAttachList(Integer assetid, String type) {
@@ -218,17 +221,17 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         for (AssetFileAttachment item : attachements) {
             if (null == item.getId()) {
                 item.setAssetId(assetId);
-                fileService.addAttachment(item, currentUser.getHospitalId());
+                fileService.saveAttachment(item);
             }
         }
         attachements.clear();
     }
 
-    public void removeAttachment(String attachUrl) {
+    public void removeAttachment(Integer attachid) {
         for (AssetFileAttachment item : attachements) {
-            if (attachUrl.equals(item.getFileUrl())) {
+            if (attachid.equals(item.getId())) {
                 attachements.remove(item);
-                fileService.removeAttachment(item);
+                fileService.deleteAttachment(item);
                 break;
             }
         }

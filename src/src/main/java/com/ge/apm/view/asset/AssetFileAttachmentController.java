@@ -99,9 +99,8 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
             WebUtil.addErrorMessage(WebUtil.getMessage("fileType") + WebUtil.getMessage("ValidationRequire"));
         } else {
             selected.setAssetId(selectedAsset.getId());
-            if (fileService.addAttachment(selected, selectedAsset.getHospitalId())) {
-                cancel();
-            }
+            fileService.saveAttachment(selected);
+            cancel();
         }
     }
 
@@ -112,7 +111,7 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
 
     @Override
     public void delete() {
-        if (fileService.removeAttachment(selected)) {
+        if (fileService.deleteAttachment(selected)) {
             cancel();
         }
     }
@@ -120,11 +119,8 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
     public void handleFileUpload(FileUploadEvent event) {
         String fileName = fileService.getFileName(event.getFile());
         selected.setName(fileName);
-        selected.setFileUrl(fileService.getFileUrl() + fileName);
-        if (fileService.uploadFile(event.getFile(), selected.getFileUrl())) {
-            FacesMessage message = new FacesMessage("Succesful", fileName + " is uploaded.");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-        }
+        Integer id = fileService.uploadFile(event.getFile());
+        selected.setFileId(id);
     }
 
     public void onAssetSelected(SelectEvent event) {
