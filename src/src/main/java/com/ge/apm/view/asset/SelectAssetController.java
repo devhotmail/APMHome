@@ -97,7 +97,7 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
         this.updateViewIDs = updateViewIDs;
 
         UaaService uaaService = WebUtil.getBean(UaaService.class);
-        orgAssetTree = uaaService.getOrgAssetChecklistTree(UserContextService.getCurrentUserAccount().getHospitalId(), 1);
+        orgAssetTree = uaaService.getOrgAssetTree(UserContextService.getCurrentUserAccount().getHospitalId());
     }
 
     public void cancelDialog(){
