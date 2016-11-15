@@ -371,6 +371,12 @@ public class WorkOrder implements Serializable {
         this.assetId = assetId;
     }
 
+    public String getRequestReasonInShort(){
+        if(this.requestReason==null) return null;
+        
+            return (this.requestReason==null)? "":this.requestReason.substring(1,20)+"...";
+    }
+    
     @Override
     public int hashCode() {
         Integer hash = 0;

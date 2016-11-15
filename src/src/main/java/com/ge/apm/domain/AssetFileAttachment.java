@@ -41,15 +41,15 @@ public class AssetFileAttachment implements Serializable {
     @Size(min = 1, max = 64)
     @Column(name = "file_type")
     private String fileType;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 128)
+    @Size(min = 0, max = 128)
     @Column(name = "file_url")
     private String fileUrl;
     @Column(name = "asset_id")
     @Basic(optional = false)
     @NotNull
     private Integer assetId;
+    @Column(name = "file_id")
+    private Integer fileId;
 
     public AssetFileAttachment() {
     }
@@ -114,6 +114,14 @@ public class AssetFileAttachment implements Serializable {
         this.assetId = assetId;
     }
 
+    public Integer getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(Integer fileId) {
+        this.fileId = fileId;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

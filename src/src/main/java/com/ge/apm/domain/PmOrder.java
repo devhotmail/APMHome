@@ -87,6 +87,12 @@ public class PmOrder implements Serializable {
     @Basic(optional = false)
     @NotNull
     private Integer assetId;
+
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 64)
+    @Column(name = "asset_name")
+    private String assetName;
     
     public PmOrder() {
     }
@@ -239,6 +245,14 @@ public class PmOrder implements Serializable {
 
     public void setAssetId(Integer assetId) {
         this.assetId = assetId;
+    }
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
     }
 
     @Override
