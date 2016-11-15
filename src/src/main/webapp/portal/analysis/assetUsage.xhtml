@@ -7,27 +7,27 @@
 
     <ui:define name="content">
 
-        <div class="ui-g card">
-            <div class="ui-g-12 title-section-header">
+        <div class="ui-g">
+            <div class="ui-g-12">
                 <div class="ui-g-3"><p>TODO-DropDown</p></div>
-                <div class="ui-g-6"><p>TODO设备维修事件统计分析</p></div>
+                <div class="ui-g-6"><p class="i18n">设备维修事件统计分析</p></div>
                 <!--<div class="ui-g-3"><p:commandButton icon="fa fa-ellipsis-v" title="Icon Only"/></div>-->
             </div>
             <div class="ui-g-12">
-                <div class="ui-g-3 tile">
-                    <p>TODO设备故障主要原因</p>
+                <div class="ui-g-3">
+                    <p class="i18n">设备故障主要原因</p>
                     <p><h:outputText value="#{assetUsageController.topErrorReason}"/></p>
                 </div>
-                <div class="ui-g-3 tile">
-                    <p>TODO设备故障处理流程最耗时步骤</p>
+                <div class="ui-g-3">
+                    <p class="i18n">设备故障处理流程最耗时步骤</p>
                     <p><h:outputText value="#{assetUsageController.topErrorStep}"/></p>
                 </div>
-                <div class="ui-g-3 tile">
-                    <p>TODO设备故障主要发生的科室</p>
+                <div class="ui-g-3">
+                    <p class="i18n">设备故障主要发生的科室</p>
                     <p><h:outputText value="#{assetUsageController.topErrorRoom}"/></p>
                 </div>
-                <div class="ui-g-3 tile">
-                    <p>TODO设备故障主要发生的设备类型</p>
+                <div class="ui-g-3">
+                    <p class="i18n">设备故障主要发生的设备类型</p>
                     <p><h:outputText value="#{assetUsageController.topErrorDeviceType}"/></p>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                             listener="#{assetUsageController.onStartDateSelect}"
                             showOn="button"/>
                 </p:calendar>
-                <p>TO</p>
+                <p class="i18n">到</p>
                 <p:calendar value="#{assetUsageController.endDate}">
                     <p:ajax event="dateSelect"
                             listener="#{assetUsageController.onEndDateSelect}"
@@ -46,14 +46,14 @@
             </div>
         </div>
 
-        <div class="ui-g card">
-            <div class="ui-g-12 chart-section-header">
+        <div class="ui-g">
+            <div class="ui-g-12">
                 <div class="ui-g-9">
-                    <p>TODO设备故障原因分析</p>
+                    <p class="i18n">设备故障原因分析</p>
                 </div>
-                <div class="ui-g-3">
+                <!--<div class="ui-g-3">
                     <p:commandButton value="TODO导出"/>
-                </div>
+                </div>-->
             </div>
             <p:separator/>
             <div class="ui-g-12">
@@ -63,14 +63,14 @@
             </div>
         </div>
 
-        <div class="ui-g card">
-            <div class="ui-g-12 chart-section-header">
+        <div class="ui-g">
+            <div class="ui-g-12">
                 <div class="ui-g-9">
-                    <p>TODO设备故障流程响应时间分布</p>
+                    <p class="i18n">设备故障流程响应时间分布</p>
                 </div>
-                <div class="ui-g-3">
+                <!--<div class="ui-g-3">
                     <p:commandButton value="TODO导出"/>
-                </div>
+                </div>-->
             </div>
             <p:separator/>
             <!-- TODO: Bar to 100% -->
@@ -80,7 +80,7 @@
                          responsive="true"/>
             </div>
             <div class="ui-g-12">
-                <p>耗时最长的三个步骤的具体响应时间分布</p>
+                <p class="i18n">耗时最长的三个步骤的具体响应时间分布</p>
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-4">
@@ -104,30 +104,30 @@
             </div>
         </div>
 
-        <div class="ui-g card">
-            <div class="ui-g-12 chart-section-header">
+        <div class="ui-g">
+            <div class="ui-g-12">
                 <div class="ui-g-9">
-                    <p>TODO设备故障分布</p>
+                    <p class="i18n">设备故障分布</p>
                 </div>
-                <div class="ui-g-3">
+                <!--<div class="ui-g-3">
                     <p:commandButton value="TODO导出"/>
-                </div>
+                </div>-->
             </div>
             <p:separator/>
             <div class="ui-g-12">
                 <!-- TODO: this is rather a OneButton -->
                 <p:tabView>
-                    <p:tab title="TODO按科室">
+                    <p:tab class="i18n" title="按科室">
                         <p:chart type="bar"
                                  model="#{assetUsageController.errorRoomChart}"
                                  responsive="true"/>
                     </p:tab>
-                    <p:tab title="TODO按设备类型">
+                    <p:tab class="i18n" title="按设备类型">
                         <p:chart type="bar"
                                  model="#{assetUsageController.errorDeviceTypeChart}"
                                  responsive="true"/>
                     </p:tab>
-                    <p:tab title="TODO按单台设备（前40台）">
+                    <p:tab class="i18n" title="按单台设备（前40台）">
                         <p:chart type="bar"
                                  model="#{assetUsageController.topErrorDeviceChart}"
                                  responsive="true"/>
