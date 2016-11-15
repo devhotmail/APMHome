@@ -1,8 +1,6 @@
 package com.ge.apm.view.analysis;
 
 import com.ge.apm.view.sysutil.UserContextService;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.postgresql.util.PGInterval;
@@ -15,7 +13,6 @@ import webapp.framework.dao.NativeSqlUtil;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -82,19 +79,19 @@ public class AssetUsageController {
 
 
     public final String getTopErrorReason() {
-        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_REASON));
+        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_REASON)).toString();
     }
 
     public final String getTopErrorStep() {
-        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_STEP));
+        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_STEP)).toString();
     }
 
     public final String getTopErrorRoom() {
-        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL));
+        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL)).toString();
     }
 
     public final String getTopErrorDeviceType() {
-        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL));
+        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL)).toString();
     }
 
     public final BarChartModel getErrorReasonChart() {
@@ -104,18 +101,30 @@ public class AssetUsageController {
 
     public final HorizontalBarChartModel getErrorStepChart() {
         List<Map<String, Object>> list = this.query(SQL_LIST_ERROR_STEP);
-
-        HorizontalBarChartModel chart = new HorizontalBarChartModel();
-        chart.setStacked(true);
-
-        for (Map<String, Object> map: list) {
-            ChartSeries series = new ChartSeries();
-            series.set(map.get("key"), ((PGInterval)map.get("value")).getMinutes());
-            chart.addSeries(series);
-        }
-
-        return chart;
+        return convertToHorizontalBarChartModel(list);
     }
+
+    public final PieChartModel[] getErrorTimePerStep() {
+        List<Map<String, Object>> list = this.query(SQL_LIST_TOP_ERROR_STEP);
+        PieChartModel[] charts = new PieChartModel[3];
+        int index = 0;
+        for (Map<String, Object> map : list) {
+            Integer scalar = (Integer)map.get("scalar");
+            if ("123456".indexOf(scalar.toString()) != -1) { // TODO: this is based on assumption
+                Map<String, Object> extra = new HashMap<>();
+                extra.put("stepId", scalar);
+                charts[index] = convertToPieChartModel(this.query(SQL_LIST_ERROR_TIME_PER_STEP, extra));
+                charts[index].setTitle(scalar.toString());
+                index++;
+            }
+        }
+        while (index < 3) {
+            charts[index] = new PieChartModel();
+            index++;
+        }
+        return charts;
+    }
+
 
     public final BarChartModel getErrorRoomChart() {
         return convertToBarChartModel(this.query(SQL_LIST_ERROR_ROOM_ALL),
@@ -130,26 +139,6 @@ public class AssetUsageController {
     public final BarChartModel getTopErrorDeviceChart() {
         return convertToBarChartModel(this.query(SQL_LIST_TOP_ERROR_DEVICE_ALL),
                                       "设备", "故障次数"); /* TODO: i18n */
-    }
-
-    public final PieChartModel[] getErrorTimePerStep() {
-        List<Map<String, Object>> list = this.query(SQL_LIST_TOP_ERROR_STEP);
-        PieChartModel[] charts = new PieChartModel[3];
-        int index = 0;
-        for (Map<String, Object> map : list) {
-            String scalar = map.get("scalar").toString();
-            if ("123456".indexOf(scalar) != -1) { // TODO: this is based on assumption
-                Map<String, Object> extra = new HashMap<>();
-                extra.put("stepId", scalar);
-                charts[index] = convertToPieChartModel(this.query(SQL_LIST_ERROR_TIME_PER_STEP, extra));
-                index++;
-            }
-        }
-        while (index < 3) {
-            charts[index] = new PieChartModel();
-            index++;
-        }
-        return charts;
     }
 
     // endregion
@@ -266,7 +255,7 @@ public class AssetUsageController {
     // 设备故障处理流程响应时间分布
 
     private static final String SQL_LIST_ERROR_STEP = "" +
-            "SELECT step.step_id AS key, avg(step.end_time - step.start_time) AS value " +
+            "SELECT step.step_id AS key, avg(EXTRACT (epoch FROM (step.end_time - step.start_time)) / 60) AS value " +
             "FROM work_order_step AS step, " +
             "     work_order AS work " +
             "WHERE step.work_order_id = work.id " +
@@ -276,7 +265,7 @@ public class AssetUsageController {
             ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
             ":#andDeviceFilter " +  // AND work.asset_id = :#assetId
             "GROUP BY step.step_id " +
-            "ORDER BY step.step_id ASC" +
+            "ORDER BY step.step_id ASC " +
             ";";
 
     // （耗时最长的三个）步骤的具体响应时间分布
@@ -309,7 +298,7 @@ public class AssetUsageController {
             "        FROM work_order_step AS step, " +
             "             work_order AS work " +
             "        WHERE step.work_order_id = work.id " +
-            "          AND CAST (step.step_id AS varchar (1)) = :#stepId " + // TODO: because stepId is string...
+            "          AND step.step_id = :#stepId " +
             "        :#andHospitalFiler " + // AND work.hospital_id = :#hospitalId
             "        :#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
             "        :#andDeviceFilter " +  // AND work.asset_id = :#assetId
@@ -361,9 +350,8 @@ public class AssetUsageController {
 
     // region Chart
 
-    private final static String convertToScalar(List<Map<String, Object>> list) {
-        FluentIterable<Map<String, Object>> iterable = FluentIterable.from(list);
-        return iterable.first().or(ImmutableMap.of("scalar", (Object)"N/A" /* TODO: i18n */)).get("scalar").toString();
+    private final static Object convertToScalar(List<Map<String, Object>> list) {
+        return list.get(0).get("scalar");
     }
 
     private final static BarChartModel convertToBarChartModel(List<Map<String, Object>> list, String xLabel, String yLabel) {
@@ -383,6 +371,25 @@ public class AssetUsageController {
             Axis axis = chart.getAxis(AxisType.Y);
             axis.setLabel(yLabel);
         }
+
+        return chart;
+    }
+
+    private final static HorizontalBarChartModel convertToHorizontalBarChartModel(List<Map<String, Object>> list) {
+        HorizontalBarChartModel chart = new HorizontalBarChartModel();
+        chart.setStacked(true);
+
+        Double total = 0.0;
+        for (Map<String, Object> map: list) {
+            ChartSeries series = new ChartSeries();
+            series.set(map.get("key"), (Double)map.get("value"));
+            chart.addSeries(series);
+            total += (Double)map.get("value");
+        }
+
+        Axis axis = chart.getAxis(AxisType.X);
+        axis.setMin(0.0);
+        axis.setMax(total);
 
         return chart;
     }

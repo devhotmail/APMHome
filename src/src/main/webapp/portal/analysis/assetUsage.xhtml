@@ -15,7 +15,7 @@
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-3">
-                    <p class="i18n">设备故障主要原因</p>
+                    <p class="i18n">设备故障最主要原因</p>
                     <p><h:outputText value="#{assetUsageController.topErrorReason}"/></p>
                 </div>
                 <div class="ui-g-3">
@@ -73,30 +73,27 @@
                 </div>-->
             </div>
             <p:separator/>
-            <!-- TODO: Bar to 100% -->
             <div class="ui-g-12">
                 <p:chart type="bar"
                          model="#{assetUsageController.errorStepChart}"
-                         responsive="true"/>
+                         responsive="true"
+                         style="height:100px;"/>
             </div>
             <div class="ui-g-12">
                 <p class="i18n">耗时最长的三个步骤的具体响应时间分布</p>
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-4">
-                    <p>TODO</p>
                     <p:chart type="pie"
                              model="#{assetUsageController.errorTimePerStep[0]}"
-                             style="width:300px;height:200px"/>
+                             style="width:300px;height:200px;"/>
                 </div>
                 <div class="ui-g-4">
-                    <p>TODO</p>
                     <p:chart type="pie"
                              model="#{assetUsageController.errorTimePerStep[1]}"
-                             style="width:300px;height:200px"/>
+                             style="width:300px;height:200px;"/>
                 </div>
                 <div class="ui-g-4">
-                    <p>TODO</p>
                     <p:chart type="pie"
                              model="#{assetUsageController.errorTimePerStep[2]}"
                              style="width:300px;height:200px"/>
