@@ -25,9 +25,9 @@ import webapp.framework.web.WebUtil;
 public class FileUploadDao {
 
     JdbcTemplate template = WebUtil.getServiceBean("jdbcTemplate", JdbcTemplate.class);
-    static String SQL_SAVE = "insert into file_uploaded2(file_name,file_content) values(?,?) ";
-    static String SQL_DELETE = "delete from file_uploaded2 where id=?";
-    static String SQL_QUERY = "select file_content from file_uploaded2 where id=?";
+    static String SQL_SAVE = "insert into file_uploaded(file_name,file_content) values(?,?) ";
+    static String SQL_DELETE = "delete from file_uploaded where id=?";
+    static String SQL_QUERY = "select file_content from file_uploaded where id=?";
 
     private LobHandler lobHandler;
 

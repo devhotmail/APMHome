@@ -117,7 +117,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void onAfterNewObject(AssetInfo object, boolean isOK) {
         resultStatus = isOK;
         if (isOK) {
-            saveAttachements(object.getId());
+            saveAttachements();
         }
     }
 
@@ -125,7 +125,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void onAfterUpdateObject(AssetInfo object, boolean isOK) {
         resultStatus = isOK;
         if (isOK) {
-            saveAttachements(object.getId());
+            saveAttachements();
         }
     }
 
@@ -189,6 +189,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         attach.setName(fileName);
         attach.setFileType(type);
         attach.setSiteId(currentUser.getSiteId());
+        attach.setAssetId(selected.getId());
         Integer uploadFileId = fileService.uploadFile(event.getFile());
         if(uploadFileId>0){
             attach.setFileId(uploadFileId);
@@ -217,10 +218,10 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         return result;
     }
 
-    private void saveAttachements(int assetId) {
+    private void saveAttachements() {
         for (AssetFileAttachment item : attachements) {
             if (null == item.getId()) {
-                item.setAssetId(assetId);
+//                item.setAssetId(assetId);
                 fileService.saveAttachment(item);
             }
         }
@@ -229,9 +230,9 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     public void removeAttachment(Integer attachid) {
         for (AssetFileAttachment item : attachements) {
-            if (attachid.equals(item.getId())) {
-                attachements.remove(item);
+            if (attachid.equals(item.getFileId())) {
                 fileService.deleteAttachment(item);
+                attachements.remove(item);
                 break;
             }
         }
