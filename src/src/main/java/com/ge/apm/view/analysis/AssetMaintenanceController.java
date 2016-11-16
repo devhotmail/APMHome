@@ -1,6 +1,8 @@
 package com.ge.apm.view.analysis;
 
 import com.ge.apm.view.sysutil.UserContextService;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.primefaces.event.SelectEvent;
@@ -19,20 +21,20 @@ import java.util.Map;
 
 @ManagedBean
 @ViewScoped
-public class AssetMaintenanceController {
+public final class AssetMaintenanceController {
 
-    protected static final Logger log = LoggerFactory.getLogger(AssetMaintenanceController.class);
+    protected final static Logger log = LoggerFactory.getLogger(AssetMaintenanceController.class);
 
     private final Map<String, Object> parameters;
 
     private int hospitalId;
 
     public AssetMaintenanceController() {
-        parameters = new HashMap<>();
+        this.parameters = new HashMap<>();
     }
 
     @PostConstruct
-    public void init() {
+    public final void init() {
         DateTime today = new DateTime();
         this.setStartDate(today.minusYears(5).toDate());
         this.setEndDate(today.toDate());
@@ -89,23 +91,23 @@ public class AssetMaintenanceController {
     // region Properties
 
     public final String getTopErrorReason() {
-        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_REASON)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_REASON), Integer.valueOf(0)).toString();
     }
 
     public final String getTopErrorStep() {
-        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_STEP)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_STEP), Integer.valueOf(0)).toString();
     }
 
     public final String getTopErrorRoom() {
-        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL), Integer.valueOf(0)).toString();
     }
 
     public final String getTopErrorDeviceType() {
-        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL), Integer.valueOf(0)).toString();
     }
 
     public final String getErrorCount() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Long.valueOf(0)).toString();
     }
 
     public final BarChartModel getErrorReasonChart() {
@@ -155,20 +157,20 @@ public class AssetMaintenanceController {
     }
 
     public final double getErrorPercentageInRoomOfDevice() {
-        return ((Long)convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE))).doubleValue()
-             / ((Long)convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE))).doubleValue();
+        return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Long.valueOf(0))).doubleValue()
+             / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE), Long.valueOf(0))).doubleValue();
     }
 
     public final String getErrorCountInRoomOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
     }
 
     public final String getDeviceCountInRoomOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_DEVICE_COUNT_IN_ROOM_OF_DEVICE_SINGLE)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_DEVICE_COUNT_IN_ROOM_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
     }
 
     public final String getErrorRankInRoomOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_RANK_IN_ROOM_OF_DEVICE_SINGLE)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_RANK_IN_ROOM_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
     }
 
     public final PieChartModel getErrorPercentageInRoomOfDeviceChart() {
@@ -176,20 +178,20 @@ public class AssetMaintenanceController {
     }
 
     public final double getErrorPercentageInDeviceTypeOfDevice() {
-        return ((Long)convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE))).doubleValue()
-                / ((Long)convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE))).doubleValue();
+        return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Long.valueOf(0))).doubleValue()
+                / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Long.valueOf(0))).doubleValue();
     }
 
     public final String getErrorCountInDeviceTypeOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
     }
 
     public final String getDeviceCountInDeviceTypeOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_DEVICE_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_DEVICE_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
     }
 
     public final String getErrorRankInDeviceTypeOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_RANK_IN_DEVICE_TYPE_OF_DEVICE_SINGLE)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_RANK_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
     }
 
     public final PieChartModel getErrorPercentageInDeviceTypeOfDeviceChart() {
@@ -197,20 +199,20 @@ public class AssetMaintenanceController {
     }
 
     public final double getErrorPercentageInTotalOfDevice() {
-        return ((Long)convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE))).doubleValue()
-                / ((Long)convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE))).doubleValue();
+        return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Long.valueOf(0))).doubleValue()
+                / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE), Long.valueOf(0))).doubleValue();
     }
 
     public final String getErrorCountInTotalOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
     }
 
     public final String getDeviceCountInTotalOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_DEVICE_COUNT_IN_TOTAL_OF_DEVICE_SINGLE)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_DEVICE_COUNT_IN_TOTAL_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
     }
 
     public final String getErrorRankInTotalOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_RANK_IN_TOTAL_OF_DEVICE_SINGLE)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_RANK_IN_TOTAL_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
     }
 
     public final PieChartModel getErrorPercentageInTotalOfDeviceChart() {
@@ -253,7 +255,7 @@ public class AssetMaintenanceController {
 
     // 设备故障最主要原因
 
-    private static final String SQL_SCALAR_TOP_ERROR_REASON = "" +
+    private final static String SQL_SCALAR_TOP_ERROR_REASON = "" +
             "SELECT work.case_type AS scalar " +
             "FROM work_order AS work " +
             "WHERE TRUE " +
@@ -267,7 +269,7 @@ public class AssetMaintenanceController {
 
     // 设备故障处理流程最耗时步骤
 
-    private static final String SQL_SCALAR_TOP_ERROR_STEP = "" +
+    private final static String SQL_SCALAR_TOP_ERROR_STEP = "" +
             "SELECT step.step_id AS scalar " +
             "FROM work_order_step AS step, " +
             "     work_order AS work " +
@@ -284,7 +286,7 @@ public class AssetMaintenanceController {
 
     // 设备故障主要发生的科室
 
-    private static final String SQL_SCALAR_TOP_ERROR_ROOM_ALL = "" +
+    private final static String SQL_SCALAR_TOP_ERROR_ROOM_ALL = "" +
             "SELECT asset.clinical_dept_id AS scalar " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
@@ -298,7 +300,7 @@ public class AssetMaintenanceController {
 
     // 设备故障主要发生的设备类型
 
-    private static final String SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL = "" +
+    private final static String SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL = "" +
             "SELECT asset.asset_group AS scalar " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
@@ -312,7 +314,7 @@ public class AssetMaintenanceController {
 
     // 设备故障数
 
-    private static final String SQL_SCALAR_ERROR_COUNT_SINGLE = "" +
+    private final static String SQL_SCALAR_ERROR_COUNT_SINGLE = "" +
             "SELECT count(*) AS scalar " +
             "FROM work_order AS work " +
             "WHERE TRUE " +
@@ -323,7 +325,7 @@ public class AssetMaintenanceController {
 
     // 设备故障原因分析
 
-    private static final String SQL_LIST_ERROR_REASON = "" +
+    private final static String SQL_LIST_ERROR_REASON = "" +
             "SELECT work.case_type AS key, count(*) AS value " +
             "FROM work_order AS work " +
             "WHERE TRUE " +
@@ -336,7 +338,7 @@ public class AssetMaintenanceController {
 
     // 设备故障处理流程响应时间分布
 
-    private static final String SQL_LIST_ERROR_STEP = "" +
+    private final static String SQL_LIST_ERROR_STEP = "" +
             "SELECT step.step_id AS key, avg(EXTRACT (epoch FROM (step.end_time - step.start_time)) / 60) AS value " +
             "FROM work_order_step AS step, " +
             "     work_order AS work " +
@@ -352,7 +354,7 @@ public class AssetMaintenanceController {
 
     // （耗时最长的三个）步骤的具体响应时间分布
 
-    private static final String SQL_LIST_TOP_ERROR_STEP = "" +
+    private final static String SQL_LIST_TOP_ERROR_STEP = "" +
             "SELECT step.step_id AS scalar " +
             "FROM work_order_step AS step, " +
             "     work_order AS work " +
@@ -367,7 +369,7 @@ public class AssetMaintenanceController {
             "LIMIT 3 " +
             ";";
 
-    private static final String SQL_LIST_ERROR_TIME_PER_STEP = "" +
+    private final static String SQL_LIST_ERROR_TIME_PER_STEP = "" +
             "SELECT rate AS key, count(*) AS value " +
             "FROM ( " +
             "        SELECT CASE " +
@@ -392,7 +394,7 @@ public class AssetMaintenanceController {
 
     // 设备故障分布：按科室
 
-    private static final String SQL_LIST_ERROR_ROOM_ALL = "" +
+    private final static String SQL_LIST_ERROR_ROOM_ALL = "" +
             "SELECT asset.clinical_dept_id AS key, count(*) AS value " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
@@ -405,7 +407,7 @@ public class AssetMaintenanceController {
 
     // 设备故障分布：按设备类型
 
-    private static final String SQL_LIST_ERROR_DEVICE_TYPE_ALL = "" +
+    private final static String SQL_LIST_ERROR_DEVICE_TYPE_ALL = "" +
             "SELECT asset.asset_group AS key, count(*) AS value " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
@@ -418,7 +420,7 @@ public class AssetMaintenanceController {
 
     // 设备故障分布：按单台设备（前40台）
 
-    private static final String SQL_LIST_TOP_ERROR_DEVICE_ALL = "" +
+    private final static String SQL_LIST_TOP_ERROR_DEVICE_ALL = "" +
             "SELECT work.asset_id AS key, count(*) AS value " +
             "FROM work_order AS work " +
             "WHERE TRUE " +
@@ -431,7 +433,7 @@ public class AssetMaintenanceController {
 
     // 设备故障所占比例（和排名）
 
-    private static final String SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE = "" +
+    private final static String SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE = "" +
             "SELECT count(*) AS scalar " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
@@ -448,7 +450,7 @@ public class AssetMaintenanceController {
             ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
             ";";
 
-    private static final String SQL_SCALAR_DEVICE_COUNT_IN_ROOM_OF_DEVICE_SINGLE = "" +
+    private final static String SQL_SCALAR_DEVICE_COUNT_IN_ROOM_OF_DEVICE_SINGLE = "" +
             "SELECT count(*) AS scalar " +
             "FROM asset_info AS asset " +
             "WHERE asset.clinical_dept_id = ( " +
@@ -463,7 +465,7 @@ public class AssetMaintenanceController {
             // TODO: include a date filter?
             ";";
 
-    private static final String SQL_SCALAR_ERROR_RANK_IN_ROOM_OF_DEVICE_SINGLE = "" +
+    private final static String SQL_SCALAR_ERROR_RANK_IN_ROOM_OF_DEVICE_SINGLE = "" +
             "SELECT value AS scalar " +
             "FROM ( " +
             "        SELECT work.asset_id AS key, rank() OVER (ORDER BY count(*) DESC) AS value " +
@@ -485,7 +487,7 @@ public class AssetMaintenanceController {
             "WHERE key = :#assetId " +
             ";";
 
-    private static final String SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE = "" +
+    private final static String SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE = "" +
             "SELECT count(*) AS scalar " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
@@ -503,7 +505,7 @@ public class AssetMaintenanceController {
             ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
             ";";
 
-    private static final String SQL_SCALAR_DEVICE_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE = "" +
+    private final static String SQL_SCALAR_DEVICE_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE = "" +
             "SELECT count(*) AS scalar " +
             "FROM asset_info AS asset " +
             "WHERE TRUE " +
@@ -519,7 +521,7 @@ public class AssetMaintenanceController {
             // TODO: include a date filter?
             ";";
 
-    private static final String SQL_SCALAR_ERROR_RANK_IN_DEVICE_TYPE_OF_DEVICE_SINGLE = "" +
+    private final static String SQL_SCALAR_ERROR_RANK_IN_DEVICE_TYPE_OF_DEVICE_SINGLE = "" +
             "SELECT value AS scalar " +
             "FROM ( " +
             "        SELECT work.asset_id AS key, rank() OVER (ORDER BY count(*) DESC) AS value " +
@@ -541,7 +543,7 @@ public class AssetMaintenanceController {
             "WHERE key = :#assetId " +
             ";";
 
-    private static final String SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE = "" +
+    private final static String SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE = "" +
             "SELECT count(*) AS scalar " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
@@ -550,7 +552,7 @@ public class AssetMaintenanceController {
             ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
             ";";
 
-    private static final String SQL_SCALAR_DEVICE_COUNT_IN_TOTAL_OF_DEVICE_SINGLE = "" +
+    private final static String SQL_SCALAR_DEVICE_COUNT_IN_TOTAL_OF_DEVICE_SINGLE = "" +
             "SELECT count(*) AS scalar " +
             "FROM asset_info AS asset " +
             "WHERE TRUE " +
@@ -558,7 +560,7 @@ public class AssetMaintenanceController {
             // TODO: include a date filter?
             ";";
 
-    private static final String SQL_SCALAR_ERROR_RANK_IN_TOTAL_OF_DEVICE_SINGLE = "" +
+    private final static String SQL_SCALAR_ERROR_RANK_IN_TOTAL_OF_DEVICE_SINGLE = "" +
             "SELECT value AS scalar " +
             "FROM ( " +
             "        SELECT work.asset_id AS key, rank() OVER (ORDER BY count(*) DESC) AS value " +
@@ -577,8 +579,9 @@ public class AssetMaintenanceController {
 
     // region Chart
 
-    private final static Object convertToScalar(List<Map<String, Object>> list) {
-        return list.get(0).get("scalar");
+    private final static <T> T convertToScalar(List<Map<String, Object>> list, T fallback) {
+        FluentIterable<Map<String, Object>> iterable = FluentIterable.from(list);
+        return (T)iterable.first().or(ImmutableMap.of("scalar", (Object)fallback)).get("scalar");
     }
 
     private final static BarChartModel convertToBarChartModel(List<Map<String, Object>> list, String xLabel, String yLabel) {
