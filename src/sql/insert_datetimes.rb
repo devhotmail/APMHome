@@ -96,7 +96,7 @@ for i in 0..totalrecords
 end
 
 table = "work_order"
-totalrecords = 50
+totalrecords = 250
 for i in 1..totalrecords
   site_id   = randnum.rand(1..2)
   hospital_id = randnum.rand(1..10)
@@ -150,12 +150,13 @@ for i in 0..totalrecords
 
   randtime = (duration * rand).to_i + stime.to_i
   create_time = Time.at(randtime).strftime("%F %T")
+  start_time = create_time
 
   is_finished   = [true, false].sample
 
-  sql = "insert into #{table} (site_id, asset_id, name, creator_id, creator_name, create_time,
+  sql = "insert into #{table} (site_id, asset_id, name, creator_id, creator_name, create_time, start_time,
         is_finished) values (\'#{site_id}\', \'#{asset_id}\',
-        \'#{name}\', \'#{creator_id}\',\'#{creator_name}\', \'#{create_time}\',
+        \'#{name}\', \'#{creator_id}\',\'#{creator_name}\', \'#{create_time}\', \'#{start_time}\',
         \'#{is_finished}\')"
   puts sql
   conn.exec(sql)
