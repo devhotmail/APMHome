@@ -68,7 +68,6 @@ public final class AssetProactiveMaintenanceController {
             builder.append(i);
             builder.append("</td>");
         }
-        builder.append("</tr>");
 
         int index = 0;
         int currentMonth = 0;
@@ -78,16 +77,14 @@ public final class AssetProactiveMaintenanceController {
             // month
             if (currentDate.getMonthOfYear() > currentMonth) {
                 currentMonth++;
-                if (builder.length() != 0) {
-                    builder.append("</tr>");
-                }
+                builder.append("</tr>");
                 builder.append("<tr><td>");
                 builder.append(currentMonth);
                 builder.append("</td>");
             }
             // day
             if (index < list.size()
-                && ((Double)list.get(index).get("key")).intValue() == currentDate.getDayOfYear()) {
+                && ((int)list.get(index).get("key")) == currentDate.getDayOfYear()) {
                 if ((boolean)list.get(index).get("value")) {
                     builder.append("<td class=\"future-date\"/>");
                 }
@@ -104,22 +101,95 @@ public final class AssetProactiveMaintenanceController {
         return builder.toString();
     }
 
+    public final String getMaintenanceOnDateForDeviceTable() {
+        List<Map<String, Object>> listOfScalar = this.query(SQL_LIST_MAINTENANCE_DEVICE_ON_DATE_2);
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("<table>");
+        builder.append(/* TODO: DEMO only */ "<style> table { table-layout: fixed; } td { width: 0.09%; height: 10; margin: 0; background-color: gray; } td.future-date { background-color: red; } td.past-date {background-color: blue; } </style>");
+
+        for(Map<String, Object> scalar : listOfScalar) {
+            Map<String, Object> extra = new HashMap<>();
+            extra.put("assetId", scalar.get("scalar"));
+            List<Map<String, Object>> listOfMap = this.query(SQL_LIST_MAINTENANCE_ON_DATE_2_FOR_DEVICE, extra);
+
+            builder.append("<tr>");
+            int index = 0;
+            DateTime currentDate = this.firstDayOfThisYearMinus2;
+            int days = 0;
+            while (currentDate.isBefore(this.firstDayOfThisYearPlus1)) {
+                if (index < listOfMap.size()
+                    && ((int)listOfMap.get(index).get("key")) == days) {
+                    if ((boolean)listOfMap.get(index).get("value")) {
+                        builder.append("<td class=\"future-date\"/>");
+                    }
+                    else {
+                        builder.append("<td class=\"past-date\"/>");
+                    }
+                    index++;
+                }
+                else {
+                    builder.append("<td/>");
+                }
+                currentDate = currentDate.plusDays(1);
+                days++;
+            }
+            builder.append("</tr>");
+        }
+
+        return builder.toString();
+
+    }
+
     // endregion
 
     // region SQL
-    
+
     private final List<Map<String, Object>> query(String template) {
+        return this.query(template, null);
+    }
+    
+    private final List<Map<String, Object>> query(String template, Map<String, Object> extra) {
         log.info("=> {}", template);
-        return NativeSqlUtil.queryForList(template, this.parameters);
+        if (extra == null) {
+            return NativeSqlUtil.queryForList(template, this.parameters);
+        }
+        else {
+            // TODO: better approach?
+            Map<String, Object> temporary = new HashMap(this.parameters);
+            temporary.putAll(extra);
+            return NativeSqlUtil.queryForList(template, temporary);
+        }
     }
 
     private final static String SQL_LIST_MAINTENANCE_ON_DATE_1 = "" +
-            "SELECT DISTINCT EXTRACT(DOY FROM plan.start_time) AS key, plan.start_time > :#today AS value " +
+            "SELECT DISTINCT CAST (EXTRACT(DOY FROM plan.start_time) AS integer) AS key, plan.start_time > :#today AS value " +
             "FROM pm_order AS plan, " +
             "     asset_info AS asset " +
             "WHERE plan.asset_id = asset.id " +
             "  AND asset.hospital_id = :#hospitalId " +
             "  AND plan.start_time BETWEEN :#firstDayOfThisYear AND :#firstDayOfThisYearPlus1 " +
+            "ORDER BY key ASC " +
+            ";";
+
+    private final static String SQL_LIST_MAINTENANCE_DEVICE_ON_DATE_2 = "" +
+            "SELECT DISTINCT asset.id AS scalar " +
+            "FROM pm_order AS plan, " +
+            "     asset_info AS asset " +
+            "WHERE plan.asset_id = asset.id " +
+            "  AND asset.hospital_id = :#hospitalId " +
+            "  AND plan.start_time BETWEEN :#firstDayOfThisYearMinus2 AND :#firstDayOfThisYearPlus1 " +
+            "ORDER BY scalar ASC " +
+            ";";
+
+    private final static String SQL_LIST_MAINTENANCE_ON_DATE_2_FOR_DEVICE = "" +
+            "SELECT DISTINCT CAST (EXTRACT (epoch FROM (plan.start_time - :#firstDayOfThisYearMinus2)) / 60 / 60 / 24 AS integer) AS key, plan.start_time > :#today AS value " +
+            "FROM pm_order AS plan, " +
+            "     asset_info AS asset " +
+            "WHERE plan.asset_id = asset.id " +
+            "  AND asset.id = :#assetId " +
+            "  AND asset.hospital_id = :#hospitalId " +
+            "  AND plan.start_time BETWEEN :#firstDayOfThisYearMinus2 AND :#firstDayOfThisYearPlus1 " +
             "ORDER BY key ASC " +
             ";";
 

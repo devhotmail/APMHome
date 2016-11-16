@@ -18,7 +18,7 @@
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="ui-g-9">
-                    <p class="i18n">设备维护统计表</p>
+                    <p class="i18n">ＰＭ统计表</p>
                 </div>
                 <!--<div class="ui-g-3">
                     <p:commandButton value="TODO导出"/>
@@ -30,5 +30,23 @@
                               escape="false"/>
             </div>
         </div>
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="ui-g-9">
+                    <p class="i18n">设备维护预测</p>
+                </div>
+                <!--<div class="ui-g-3">
+                    <p:commandButton value="TODO导出"/>
+                </div>-->
+            </div>
+            <p:separator/>
+            <div class="ui-g-12">
+                <h:outputText value="#{assetProactiveMaintenanceController.maintenanceOnDateForDeviceTable}"
+                              escape="false"/>
+            </div>
+        </div>
+
     </ui:define>
+
 </ui:composition>
