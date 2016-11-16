@@ -75,12 +75,7 @@
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.currentPersonName}</label>
-                                <p:selectOneMenu rendered="#{workOrderController.isInViewMode ne true}" id="currentPersonName" value="#{workOrderController.selected.currentPersonId}" required="true" requiredMessage="#{msg.currentPersonName} #{msg.ValidationRequire}">
-                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
-                                    <f:selectItems value="#{workOrderController.hospitalUserList}" var="item"
-                                                   itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                </p:selectOneMenu>
-                                <p:inputText readonly="true" rendered="#{workOrderController.isInViewMode}" value="#{workOrderController.selected.currentPersonName}"/>
+                                <p:inputText readonly="true" rendered="true" value="#{workOrderController.selected.currentPersonName}"/>
                             </h:panelGroup>
 
                             <p:spacer/>
@@ -135,7 +130,7 @@
 
                         <br/>
 
-                        <p:commandButton rendered="#{workOrderController.isInViewMode ne true}" validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderController.save()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', '2')}"/>
+                        <p:commandButton rendered="#{workOrderController.isInViewMode ne true}" validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderController.save()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}"/>
                         <p:commandButton rendered="#{workOrderController.isInViewMode ne true}" validateClient="true" icon="ui-icon-swap-horiz" actionListener="#{workOrderController.save()}" value="#{msg.TransferOrder}"/>
                         <p:commandButton rendered="#{workOrderController.isInViewMode ne true}" validateClient="true" icon="ui-icon-done" actionListener="#{workOrderController.save()}" value="#{fieldMsg.fieldValue('woSteps', '6')}"/>
                         

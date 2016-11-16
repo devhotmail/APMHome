@@ -1,3 +1,9 @@
+.ultima-menu{
+margin-top: 0px!important;
+}
+#profile-menu li:last-child{
+margin-bottom: 2px!important;
+}
 .card{
 border-radius: 10px!important;
 }
@@ -24,6 +30,12 @@ z-index: 1800!important;
 }
 .login-panel{
 min-height: 200px!important;
+opacity: 0.9;
+}
+ .layout-menu .profile {
+padding-top: 10px!important; 
+height: 65px!important;
+background: none!important;
 }
 .ui-widget-header{
 background-color: #e8e8e8!important;

@@ -25,26 +25,25 @@
     <h:body styleClass="login-body">
         <h:form prependId="false">
             <p:focus/>
-            <div class="card login-panel ui-fluid" style="padding-top: 0px; padding-bottom: 0px;">
+            <div class="card login-panel ui-fluid" style="padding-top: 0px; padding-bottom: 0px;padding-top: 30px;">
                 <div class="ui-g">
-                    <div class="ui-g-12">
-                        <h:panelGrid columns="2">
-                            <p:graphicImage name="images/logo_black.png" library="ultima-layout" />
-                            <label><h1>GE APM</h1></label>
-                        </h:panelGrid>
+                    <div class="ui-g-12" style="padding: 0px; margin: 0px;">
+                        <center>
+                            <h:panelGrid columns="1">
+                                <p:graphicImage name="images/logo_black.png" library="ultima-layout" />
+                                <label><h1>GE APM</h1></label>
+                            </h:panelGrid>
+                        </center>
                     </div>
                     <div class="ui-g-12">
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="j_username" required="true" requiredMessage="#{msg.login_name}: #{msg.ValidationRequire}" placeholder="#{msg.login_name}"/>
-                        </h:panelGroup>
-                    </div>
-                    <div class="ui-g-12">
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:password id="j_password" required="true" requiredMessage="#{msg.password}: #{msg.ValidationRequire}" placeholder="#{msg.password}"/>
-                        </h:panelGroup>
+                        <p:inputText id="j_username" required="true" requiredMessage="#{msg.login_name}: #{msg.ValidationRequire}" placeholder="#{msg.login_name}"/>
+                        <i class="fa fa-user" style="height: 0px;float: left;left: -20px;top: -20px;position: relative;"/>
+                        <br/><br/>
+                        <p:password id="j_password" required="true" requiredMessage="#{msg.password}: #{msg.ValidationRequire}" placeholder="#{msg.password}"/>
+                        <i class="fa fa-lock" style="height: 0px;float: left;left: -20px;top: -20px;position: relative;"/>
                     </div>
                     <div class="ui-g-12" style="margin-bottom: 0px;">
-                        <p:commandButton validateClient="true" actionListener="#{loginController.doLogin()}" value="#{msg.login}" icon="ui-icon-person" update="loginMessages growl"/>
+                        <p:commandButton styleClass="secondary" validateClient="true" actionListener="#{loginController.doLogin()}" value="#{msg.login}" update="loginMessages growl"/>
                     </div>
                 </div>
             </div>

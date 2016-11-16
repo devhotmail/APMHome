@@ -12,7 +12,7 @@
                 <div class="nano-content menu-scroll-content">
                     <ui:fragment rendered="#{guestPreferences.profileMode == 'inline' and guestPreferences.menuLayout != 'menu-layout-static menu-layout-horizontal'}">
                         <div class="profile">
-                            <div class="profile-image"></div>
+                            <div class="profile-image" style="width:22px; height: 20px;background-size: 22px 20px"></div>
                             <a id="profile-options" href="#">
                                 <span class="profile-name">#{userContextService.userName}</span>
                                 <i class="material-icons">&#xE313;</i>
@@ -21,28 +21,26 @@
                     
                         <ul id="profile-menu" class="ultima-menu">
                             <li role="menuitem">
-                                <a href="#" class="ripplelink">
-                                    <i class="material-icons">&#xE7FD;</i>
+                                <a href="#{facesContext.externalContext.requestContextPath}/portal/profile.xhtml">
+                                    <i class="material-icons">person</i>
                                     <span>#{msg.Profile}</span>
                                 </a>
                             </li>
                             <li role="menuitem">
-                                <a href="#" class="ripplelink">
-                                    <i class="material-icons">&#xE8B9;</i>
-                                    <span>#{msg.Settings}</span>
-                                </a>
+                                <h:panelGroup rendered="#{localeService.language eq 'zh'}">
+                                    <a href="#{request.requestURL}?locale=en" class="ripplelink">
+                                        <i class="material-icons">translate</i>
+                                        <span>English</span>
+                                    </a>
+                                </h:panelGroup>
                             </li>
                             <li role="menuitem">
-                                <a href="#{facesContext.externalContext.requestContextPath}/logout.xhtml" class="ripplelink">
-                                    <i class="material-icons">&#xE8AC;</i>
-                                    <span>English</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#{facesContext.externalContext.requestContextPath}/logout.xhtml" class="ripplelink">
-                                    <i class="material-icons">&#xE8AC;</i>
-                                    <span>中文</span>
-                                </a>
+                                <h:panelGroup rendered="#{localeService.language eq 'en'}">
+                                    <a href="#{request.requestURL}?locale=zh" class="ripplelink">
+                                        <i class="material-icons">translate</i>
+                                        <span>中文</span>
+                                    </a>
+                                </h:panelGroup>
                             </li>
                             
                             <li role="menuitem">
@@ -66,7 +64,7 @@
                         </p:submenu>
                         <p:submenu label="#{msg.WorkOrderMgmt}" icon="&#xE8B8;">
                             <p:menuitem value="#{msg.ServiceRequestMgmt}" icon="&#xE5D2;" outcome="/portal/wo/woList"/>
-                            <p:menuitem value="#{msg.MyWorkOrder}" icon="&#xE879;" outcome="/portal/wo/myWorkOrder.xhtml"/>
+                            <p:menuitem value="#{msg.MyWorkOrder}" icon="&#xE879;" outcome="/portal/wo/woProcess.xhtml"/>
                             <p:menuitem value="#{msg.MaintainanceRecord}" icon="&#xE22C;" outcome="/empty"/>
                             <p:menuitem value="#{msg.ServiceQualityReview}" icon="&#xE893;" outcome="/empty" rendered="#{userContextService.hasRole('AssetStaff')}"/>
                             <p:menuitem value="#{msg.Inspection}" icon="&#xE892;" outcome="/empty"/>
