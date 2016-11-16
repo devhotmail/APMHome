@@ -19,15 +19,15 @@ import java.util.Map;
 
 @ManagedBean
 @ViewScoped
-public class AssetUsageController {
+public class AssetMaintenanceController {
 
-    protected static final Logger log = LoggerFactory.getLogger(AssetUsageController.class);
+    protected static final Logger log = LoggerFactory.getLogger(AssetMaintenanceController.class);
 
     private final Map<String, Object> parameters;
 
     private int hospitalId;
 
-    public AssetUsageController() {
+    public AssetMaintenanceController() {
         parameters = new HashMap<>();
     }
 

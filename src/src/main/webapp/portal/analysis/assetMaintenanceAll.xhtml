@@ -16,31 +16,31 @@
             <div class="ui-g-12">
                 <div class="ui-g-3">
                     <p class="i18n">设备故障最主要原因</p>
-                    <p><h:outputText value="#{assetUsageController.topErrorReason}"/></p>
+                    <p><h:outputText value="#{assetMaintenanceController.topErrorReason}"/></p>
                 </div>
                 <div class="ui-g-3">
                     <p class="i18n">设备故障处理流程最耗时步骤</p>
-                    <p><h:outputText value="#{assetUsageController.topErrorStep}"/></p>
+                    <p><h:outputText value="#{assetMaintenanceController.topErrorStep}"/></p>
                 </div>
                 <div class="ui-g-3">
                     <p class="i18n">设备故障主要发生的科室</p>
-                    <p><h:outputText value="#{assetUsageController.topErrorRoom}"/></p>
+                    <p><h:outputText value="#{assetMaintenanceController.topErrorRoom}"/></p>
                 </div>
                 <div class="ui-g-3">
                     <p class="i18n">设备故障主要发生的设备类型</p>
-                    <p><h:outputText value="#{assetUsageController.topErrorDeviceType}"/></p>
+                    <p><h:outputText value="#{assetMaintenanceController.topErrorDeviceType}"/></p>
                 </div>
             </div>
             <div class="ui-g-12">
-                <p:calendar value="#{assetUsageController.startDate}">
+                <p:calendar value="#{assetMaintenanceController.startDate}">
                     <p:ajax event="dateSelect"
-                            listener="#{assetUsageController.onStartDateSelect}"
+                            listener="#{assetMaintenanceController.onStartDateSelect}"
                             showOn="button"/>
                 </p:calendar>
                 <p class="i18n">到</p>
-                <p:calendar value="#{assetUsageController.endDate}">
+                <p:calendar value="#{assetMaintenanceController.endDate}">
                     <p:ajax event="dateSelect"
-                            listener="#{assetUsageController.onEndDateSelect}"
+                            listener="#{assetMaintenanceController.onEndDateSelect}"
                             showOn="button"/>
                 </p:calendar>
             </div>
@@ -58,7 +58,7 @@
             <p:separator/>
             <div class="ui-g-12">
                 <p:chart type="bar"
-                         model="#{assetUsageController.errorReasonChart}"
+                         model="#{assetMaintenanceController.errorReasonChart}"
                          responsive="true"/>
             </div>
         </div>
@@ -75,7 +75,7 @@
             <p:separator/>
             <div class="ui-g-12">
                 <p:chart type="bar"
-                         model="#{assetUsageController.errorStepChart}"
+                         model="#{assetMaintenanceController.errorStepChart}"
                          responsive="true"
                          style="height:100px;"/>
             </div>
@@ -85,17 +85,17 @@
             <div class="ui-g-12">
                 <div class="ui-g-4">
                     <p:chart type="pie"
-                             model="#{assetUsageController.errorTimePerStep[0]}"
+                             model="#{assetMaintenanceController.errorTimePerStep[0]}"
                              style="width:300px;height:200px;"/>
                 </div>
                 <div class="ui-g-4">
                     <p:chart type="pie"
-                             model="#{assetUsageController.errorTimePerStep[1]}"
+                             model="#{assetMaintenanceController.errorTimePerStep[1]}"
                              style="width:300px;height:200px;"/>
                 </div>
                 <div class="ui-g-4">
                     <p:chart type="pie"
-                             model="#{assetUsageController.errorTimePerStep[2]}"
+                             model="#{assetMaintenanceController.errorTimePerStep[2]}"
                              style="width:300px;height:200px"/>
                 </div>
             </div>
@@ -116,17 +116,17 @@
                 <p:tabView>
                     <p:tab class="i18n" title="按科室">
                         <p:chart type="bar"
-                                 model="#{assetUsageController.errorRoomChart}"
+                                 model="#{assetMaintenanceController.errorRoomChart}"
                                  responsive="true"/>
                     </p:tab>
                     <p:tab class="i18n" title="按设备类型">
                         <p:chart type="bar"
-                                 model="#{assetUsageController.errorDeviceTypeChart}"
+                                 model="#{assetMaintenanceController.errorDeviceTypeChart}"
                                  responsive="true"/>
                     </p:tab>
                     <p:tab class="i18n" title="按单台设备（前40台）">
                         <p:chart type="bar"
-                                 model="#{assetUsageController.topErrorDeviceChart}"
+                                 model="#{assetMaintenanceController.topErrorDeviceChart}"
                                  responsive="true"/>
                     </p:tab>
                 </p:tabView>
