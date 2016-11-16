@@ -17,6 +17,7 @@ import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.math.NumberUtils;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
@@ -60,8 +61,36 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         return dao.findBySearchFilter(this.searchFilters, pageRequest);
     }
 
+    private boolean isInViewMode = true;
     public boolean getIsInViewMode(){
-        return (this.selected==null || this.selected.getCurrentStep()!=1);
+        return isInViewMode;
+    }
+    
+    @Override
+    public void setSelected(WorkOrder workOrder){
+        isInViewMode = true;
+        this.selected = workOrder;
+    }
+
+    @Override
+    public void prepareCreate() throws InstantiationException, IllegalAccessException{
+        super.prepareCreate();
+        isInViewMode = false;
+    }
+
+    public String getMyWorkOrderId() {
+        return null;
+    }
+    public void setMyWorkOrderId(String selectedWorkOrderId) {
+        int workOrder = NumberUtils.toInt(selectedWorkOrderId, -1);
+        if(workOrder<0){
+            isInViewMode = true;
+            this.selected = null;
+        }
+        else{
+            isInViewMode = false;
+            this.selected = dao.getByIdAndCurrentPersonId(workOrder, loginUser.getId());
+        }
     }
     
     public void onSelectWorkOrder(){
@@ -136,7 +165,6 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         woStepDao.save(woStep);
     }
 
-    
     @Override
     public void onServerEvent(String eventName, Object eventObject){
         AssetInfo asset = (AssetInfo) eventObject;
@@ -148,13 +176,4 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         this.selected.setCaseOwnerId(asset.getAssetOwnerId());
         this.selected.setCaseOwnerName(asset.getAssetOwnerName());
     }
-
-    public String getSelectedWorkOrderId() {
-        return null;
-    }
-    public void setSelectedWorkOrderId(String selectedWorkOrderId) {
-        this.selected = dao.findById(Integer.parseInt(selectedWorkOrderId));
-    }
-    
-    
 }

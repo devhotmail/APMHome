@@ -1,14 +1,14 @@
 package com.ge.apm.view;
 
 import com.ge.apm.domain.ChartConfig;
-import com.ge.apm.view.sysutil.UserContextService;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.model.chart.PieChartModel;
-import webapp.framework.dao.SearchFilter;
-import webapp.framework.web.WebUtil;
+import webapp.framework.util.TimeUtil;
 import webapp.framework.web.mvc.SqlConfigurableChartController;
 
 @ManagedBean
@@ -38,10 +38,7 @@ public class DemoChartController extends SqlConfigurableChartController {
     public void setSearchFilter() {
         super.setSearchFilter();
 
-        this.searchFilterList.add(new SearchFilter("hospital_id", SearchFilter.Operator.EQ, UserContextService.getUserID()));
-        
-        DemoChartController demoChartController = WebUtil.getBean(DemoChartController.class);
-        demoChartController.setSearchFilter();
+        //this.searchFilterList.add(new SearchFilter("hospital_id", SearchFilter.Operator.EQ, UserContextService.getCurrentUserAccount().getHospitalId()));
     }
     
 }

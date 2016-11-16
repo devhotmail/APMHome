@@ -4,5 +4,7 @@ import com.ge.apm.domain.WorkOrder;
 import webapp.framework.dao.GenericRepository;
 
 public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
+    
+    public WorkOrder getByIdAndCurrentPersonId(int id, int currentPersonId);
 
 }
