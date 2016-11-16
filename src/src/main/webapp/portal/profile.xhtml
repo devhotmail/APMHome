@@ -17,21 +17,21 @@
                 <h:form>
                     <p:fieldset id="display" legend="#{msg.Profile}">
                         <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                            <h:panelGroup styleClass="md-inputfield">
+                            <h:panelGroup>
+                                <label class="label">#{msg.login_name}*</label>
                                 <p:inputText id="loginName" value="#{profileController.myAccount.loginName}" readonly="true"/>
-                                <label>#{msg.login_name}*</label>
                             </h:panelGroup>
-                            <h:panelGroup styleClass="md-inputfield">
+                            <h:panelGroup>
+                                <label class="label">#{msg.userName}*</label>
                                 <p:inputText id="name" value="#{profileController.myAccount.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
-                                <label>#{msg.userName}*</label>
                             </h:panelGroup>
-                            <h:panelGroup styleClass="md-inputfield">
+                            <h:panelGroup>
+                                <label class="label">#{msg.email}*</label>
                                 <p:inputText id="email" value="#{profileController.myAccount.email}"  required="true" requiredMessage="#{msg.email} #{msg.ValidationRequire}"/>
-                                <label>#{msg.email}*</label>
                             </h:panelGroup>
-                            <h:panelGroup styleClass="md-inputfield">
+                            <h:panelGroup>
+                                <label class="label">#{msg.telephone}</label>
                                 <p:inputText id="telephone" value="#{profileController.myAccount.telephone}" />
-                                <label>#{msg.telephone}</label>
                             </h:panelGroup>
                         </p:panelGrid>
                         <br/>
@@ -44,13 +44,13 @@
                 <h:form id="PasswordForm">
                     <p:fieldset id="changePassword" legend="#{msg.ResetPassword}">
                         <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                            <h:panelGroup styleClass="md-inputfield">
+                            <h:panelGroup>
+                                <label class="label">#{msg.NewPassword}*</label>
                                 <p:password id="password1" match="password2" maxlength="20" value="#{profileController.newPassword}" feedback="true"  required="true" requiredMessage="#{msg.password} #{msg.ValidationRequire}"/>
-                                <label>#{msg.NewPassword}*</label>
                             </h:panelGroup>
-                            <h:panelGroup styleClass="md-inputfield">
+                            <h:panelGroup>
+                                <label class="label">#{msg.ConfirmNewPassword}*</label>
                                 <p:password id="password2" value="#{profileController.newPassword2}" required="true" />
-                                <label>#{msg.ConfirmNewPassword}*</label>
                             </h:panelGroup>
                         </p:panelGrid>
                         <p:commandButton validateClient="true" actionListener="#{profileController.resetPassword}" value="#{msg.ChangePassword}" update=":PasswordForm :growl"/>
