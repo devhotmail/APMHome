@@ -24,6 +24,7 @@ import javax.validation.constraints.Size;
 @Table(name = "pm_order")
 public class PmOrder implements Serializable {
 
+	public static final int LENGTH = 20;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -253,6 +254,26 @@ public class PmOrder implements Serializable {
 
     public void setAssetName(String assetName) {
         this.assetName = assetName;
+    }
+    
+    public String getReportUrlInShort(){
+        if(this.reportUrl == null){
+        	return "";
+        }
+        if(this.reportUrl.length() < LENGTH){
+        	return this.reportUrl;
+        }
+        return   this.reportUrl.substring(0,LENGTH)+"...";
+    }
+    
+    public String getCommentsInShort(){
+        if(this.comments == null){
+        	return "";
+        }
+        if(this.comments.length() < LENGTH){
+        	return this.comments;
+        }
+        return   this.comments.substring(0,LENGTH)+"...";
     }
 
     @Override
