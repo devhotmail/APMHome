@@ -91,11 +91,13 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
             isInViewMode = false;
             this.selected = dao.getByIdAndCurrentPersonId(workOrder, loginUser.getId());
         }
+        
+        onSelectWorkOrder();
     }
     
     public void onSelectWorkOrder(){
-        Integer workOrderId = selected.getId();
-        workOrderId = workOrderId!=null ? workOrderId : 0;
+        Integer workOrderId = -1;
+        if(selected!=null) workOrderId = selected.getId();
         
         WorkOrderHistoryController woHistoryController = WebUtil.getBean(WorkOrderHistoryController.class);
         woHistoryController.loadWorkOrderHistory(workOrderId);
