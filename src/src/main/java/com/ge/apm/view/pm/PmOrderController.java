@@ -57,8 +57,8 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     	po.setSiteId(this.currentUser.getSiteId());//device site or currentUser site?
     	po.setCreatorId(this.currentUser.getId());
     	po.setCreatorName(this.currentUser.getName());
-    	po.setOwnerId(this.currentUser.getId());
-    	po.setOwnerName(this.currentUser.getName());
+//    	po.setOwnerId(this.currentUser.getId());
+//    	po.setOwnerName(this.currentUser.getName());
     	po.setOwnerOrgId(this.currentUser.getOrgInfoId());//orgId from where?
     	po.setCreateTime(TimeUtil.timeNowInDefaultTimeZone().toDate());
     }
@@ -82,6 +82,11 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     		this.selected = null;
     	}
     }
+    
+//    @Override
+//    public void onBeforeNewObject(PmOrder object) {
+//    	this.selected = null;
+//    }
 
     @Override
     public void onServerEvent(String eventName, Object eventObject){
