@@ -116,7 +116,7 @@
                                                    itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                             </h:panelGroup>
-                            
+
                             <h:panelGroup>
                                 <label class="label">#{msg.casePriority}*</label>
                                 <p:selectOneMenu value="#{workOrderController.selected.casePriority}" >
@@ -152,7 +152,7 @@
                                 <label class="label">#{msg.comments}</label>
                                 <p:inputTextarea readonly="#{workOrderController.isInViewMode}" cols="100" value="#{workOrderController.selected.comments}" />
                             </h:panelGroup>
-                            
+
                             <ui:include src="woStepDetail/List.xhtml"/>
 
                             <h:panelGroup>
@@ -173,7 +173,11 @@
                 </p:tabView>
             </div>
         </div>
-
+        
+        <p:confirmDialog global="true">
+            <p:commandButton process="@this" value="#{msg.Confirm}" type="button" styleClass="ui-confirmdialog-yes uiButton" icon="ui-icon-check"/>
+            <p:commandButton process="@this" value="#{msg.Cancel}" type="button" immediate="true" styleClass="ui-confirmdialog-no uiButton" icon="ui-icon-close"/>
+        </p:confirmDialog>
     </ui:define>
 
 </ui:composition>

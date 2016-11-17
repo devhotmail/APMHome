@@ -26,6 +26,9 @@
             .stepList .ui-widget-content{
                 border: 0 solid!important;
             }
+            .uiTransparent .ui-widget-header{
+            background-color: transparent;
+            }
         </style>
         <p:fieldset  class="stepList" legend="#{msg.WorkOrderStep}"  rendered="#{(workOrderController.selected ne null) and (workOrderStepController.workOrderStepList.size() gt 0)}">
             <p:dataList value="#{workOrderStepController.workOrderStepList}" var="item" type="definition">

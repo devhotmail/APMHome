@@ -37,8 +37,12 @@ padding-top: 10px!important;
 height: 65px!important;
 background: none!important;
 }
+.ui-datatable .ui-widget-header{
+background-color: transparent!important;
+text-align: right!important;
+}
 .ui-widget-header{
-background-color: #e8e8e8!important;
+background-color: transparent!important;/*#e8e8e8*/
 border: 0!important;
 color: black!important;
 }
@@ -142,4 +146,8 @@ background-color: rgb(0, 188, 212);
 }
 .ui-chkbox .ui-chkbox-box{
 opacity: 1!important;
+}
+.uiButton, .uiButton .ui-icon{
+background-color: rgb(62, 70, 76)!important;
+color: #fff!important;
 }
