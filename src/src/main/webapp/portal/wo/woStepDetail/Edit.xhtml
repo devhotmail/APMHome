@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="WorkOrderStepDetailEditDlg" widgetVar="WorkOrderStepDetailEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderStepDetailController.CRUDActionName} #{msg.WorkOrderStepDetail}">
+            <h:form id="WorkOrderStepDetailEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderStepDetailController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.manHours}</label>
+                            <p:inputNumber  id="manHours" value="#{workOrderStepDetailController.selected.manHours}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.accessory}</label>
+                            <p:inputText id="accessory" value="#{workOrderStepDetailController.selected.accessory}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.accessoryQuantity}</label>
+                            <p:inputNumber id="accessoryQuantity" value="#{workOrderStepDetailController.selected.accessoryQuantity}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.accessoryPrice}</label>
+                            <p:inputNumber id="accessoryPrice" value="#{workOrderStepDetailController.selected.accessoryPrice}" />
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" process="@parent" value="#{msg.Save}" update="display,:tabView:WorkOrderStepDetailEditDlg, :tabView:WorkOrderStepDetailListForm, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'WorkOrderStepDetailEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('WorkOrderStepDetailEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
