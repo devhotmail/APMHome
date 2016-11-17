@@ -230,6 +230,7 @@ is_passed bool not null);
 create table pm_order(
 id serial not null,
 site_id int not null,
+hospital_id int not null,
 asset_id int not null,
 asset_name varchar(64) not null,
 name varchar(64) not null,
