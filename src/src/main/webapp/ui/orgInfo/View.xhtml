@@ -24,7 +24,7 @@
                     <br/>
                     <p:commandButton rendered="#{orgInfoController.deleteAction}" icon="ui-icon-trash" actionListener="#{orgInfoController.delete}" value="#{msg.Delete}" update="display,:OrgInfoViewDlg, :OrgInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'OrgInfoViewDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('OrgInfoViewDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="ui-icon ui-icon-close" onclick="PF('OrgInfoViewDialog').hide()"/>
                     
                 </h:panelGroup>
             </h:form>

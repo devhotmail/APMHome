@@ -30,7 +30,7 @@
                     <br/>
                     <p:commandButton rendered="#{i18nMessageController.deleteAction}" icon="ui-icon-trash" actionListener="#{i18nMessageController.delete}" value="#{msg.Delete}" update="display,:I18nMessageViewDlg, :I18nMessageListForm:datalist, :growl" oncomplete="handleSubmit(args, 'I18nMessageViewDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('I18nMessageViewDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="ui-icon ui-icon-close" onclick="PF('I18nMessageViewDialog').hide()"/>
                     
                 </h:panelGroup>
             </h:form>

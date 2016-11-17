@@ -4,113 +4,84 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-    <div class="ui-g">
-        <div class="ui-g-12">
+    <h:form id="WorkOrderStepListForm">
+        <style type="text/css">
+            .stepDetailList .ui-column-title{
+                font-weight: normal!important;
+                font-size: 12px!important;
+                color: rgb(153, 153, 153)!important;
+            }
+            .stepDetailList tr.ui-datatable-even {
+                background-color: transparent!important;
+            }
+            .stepDetailList tr.ui-widget-content{
+                border-style: none!important;
+            }
+            .stepDetailList tr, .stepDetailList td, .stepDetailList th, .stepDetailList tbody {
+                border: 0px none #bdbdbd!important;
+                border-left: 0px none #bdbdbd!important;
+                border-top: 0px solid #bdbdbd!important;
+                text-align: center!important;
+            }
+            .stepList .ui-widget-content{
+                border: 0 solid!important;
+            }
+        </style>
+        <p:fieldset  class="stepList" legend="#{msg.WorkOrderStep}"  rendered="#{(workOrderController.selected ne null) and (workOrderStepController.workOrderStepList.size() gt 0)}">
+            <p:dataList value="#{workOrderStepController.workOrderStepList}" var="item" type="definition">
+                <h:panelGrid columns="8">
+                    <h:panelGroup>
+                        <label class="label">#{msg.stepName}*</label>
+                        <p:inputText id="stepName" value="#{item.stepId}. #{item.stepName}" readonly="true" size="8"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.ownerName}*</label>
+                        <p:inputText id="ownerName" value="#{item.ownerName}" readonly="true" size="5"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.startTime}*</label>
+                        <p:inputText readonly="true" value="#{item.startTime}" size="12">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </p:inputText>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.endTime}*</label>
+                        <p:inputText readonly="true" value="#{item.endTime}" size="12">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </p:inputText>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.description}</label>
+                        <p:inputText id="description" value="#{item.description}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.attachmentUrl}</label>
+                        <p:inputText id="attachmentUrl" value="#{item.attachmentUrl}" readonly="true"/>
+                    </h:panelGroup>
 
-            <h:form id="WorkOrderStepListForm">
-                <p align="center">
-                    <b><p:outputLabel value="#{msg.WorkOrderStep}" rendered="#{workOrderStepController.workOrderStepList.size() gt 0}"/></b>
-                </p>
-                
-                <style type="text/css">
-                    .stepDetailList .ui-column-title{
-                    font-weight: normal!important;
-                    font-size: 12px!important;
-                    color: rgb(153, 153, 153)!important;
-                    }
-                    .stepDetailList tr.ui-datatable-even {
-                    background-color: transparent!important;
-                    }
-                    .stepDetailList tr.ui-widget-content{
-                    border-style: none!important;
-                    }
-                    .stepDetailList tr, .stepDetailList td, .stepDetailList th, .stepDetailList tbody {
-                    border: 0px none #bdbdbd!important;
-                    border-left: 0px none #bdbdbd!important;
-                    border-top: 0px solid #bdbdbd!important;
-                    text-align: center!important;
-                    }
-                </style>
-                
-                <p:dataList value="#{workOrderStepController.workOrderStepList}" var="item" type="definition" rendered="#{(workOrderController.selected ne null) and (workOrderStepController.workOrderStepList.size() gt 0)}">
-                    <h:panelGrid columns="8">
-                        <h:panelGroup>
-                            <label class="label">#{msg.stepName}*</label>
-                            <p:inputText id="stepName" value="#{item.stepId}. #{item.stepName}" readonly="true" size="8"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.ownerName}*</label>
-                            <p:inputText id="ownerName" value="#{item.ownerName}" readonly="true" size="5"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.startTime}*</label>
-                            <p:inputText readonly="true" value="#{item.startTime}" size="12">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                            </p:inputText>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.endTime}*</label>
-                            <p:inputText readonly="true" value="#{item.endTime}" size="12">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                            </p:inputText>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.description}</label>
-                            <p:inputText id="description" value="#{item.description}" readonly="true"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.attachmentUrl}</label>
-                            <p:inputText id="attachmentUrl" value="#{item.attachmentUrl}" readonly="true"/>
-                        </h:panelGroup>
-                        
-                    </h:panelGrid>
-                    <f:facet name="description">
-                        <p:dataTable id="stepDetailList" value="#{item.stepDetails}" var="detailItem" widgetVar="varStepDetailList"
-                            lazy="false" paginator="false" rendered="#{item.stepDetails.size() gt 0}" class="stepDetailList"
-                            rowKey="#{item.id}" sortOrder="ascending" sortBy="#{detailItem.id}" style="width: 70%;left: 50px;"
-                            rows="200" emptyMessage="#{msg.noRecordFound}">
-                            
-                            <p:column headerText="#{msg.manHours}">
-                                <h:outputText value="#{detailItem.manHours}"/>
-                            </p:column>
-                            <p:column headerText="#{msg.accessory}">
-                                <h:outputText value="#{detailItem.accessory}"/>
-                            </p:column>
-                            <p:column headerText="#{msg.accessoryQuantity}">
-                                <h:outputText value="#{detailItem.accessoryQuantity}"/>
-                            </p:column>
-                            <p:column headerText="#{msg.accessoryPrice}">
-                                <h:outputText value="#{detailItem.accessoryPrice}"/>
-                            </p:column>
-                        </p:dataTable>
-<!--
-                        <p:dataList value="#{item.stepDetails}" var="detailItem" style="border:0;float:right;width:60%;" rendered="#{item.stepDetails.size() gt 0}" type="definition">
-                            <h:panelGrid columns="8" style="border:0;float:right;width:60%;">
-                                <h:panelGroup>
-                                    <label class="label">#{msg.manHours}</label>
-                                    <p:inputText id="manHours" value="#{detailItem.manHours}"/>
-                                </h:panelGroup>
-                                <h:panelGroup>
-                                    <label class="label">#{msg.accessory}</label>
-                                    <p:inputText id="accessory" value="#{detailItem.accessory}"/>
-                                </h:panelGroup>
-                                <h:panelGroup>
-                                    <label class="label">#{msg.accessoryQuantity}</label>
-                                    <p:inputText id="accessoryQuantity" value="#{detailItem.accessoryQuantity}"/>
-                                </h:panelGroup>
-                                <h:panelGroup>
-                                    <label class="label">#{msg.accessoryPrice}</label>
-                                    <p:inputText id="accessoryPrice" value="#{detailItem.accessoryPrice}"/>
-                                </h:panelGroup>
-                            </h:panelGrid>
-                        </p:dataList>
--->                
-                    </f:facet>
-                </p:dataList>
-            </h:form>
+                </h:panelGrid>
+                <f:facet name="description">
+                    <p:dataTable id="stepDetailList" value="#{item.stepDetails}" var="detailItem" widgetVar="varStepDetailList"
+                                 lazy="false" paginator="false" rendered="#{item.stepDetails.size() gt 0}" class="stepDetailList"
+                                 rowKey="#{item.id}" sortOrder="ascending" sortBy="#{detailItem.id}" style="width: 70%;left: 50px;"
+                                 rows="200" emptyMessage="#{msg.noRecordFound}">
 
-        </div>
-    </div>
-
+                        <p:column headerText="#{msg.manHours}">
+                            <h:outputText value="#{detailItem.manHours}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.accessory}">
+                            <h:outputText value="#{detailItem.accessory}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.accessoryQuantity}">
+                            <h:outputText value="#{detailItem.accessoryQuantity}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.accessoryPrice}">
+                            <h:outputText value="#{detailItem.accessoryPrice}"/>
+                        </p:column>
+                    </p:dataTable>
+                </f:facet>
+            </p:dataList>
+        </p:fieldset>
+    </h:form>
 
 </ui:composition>

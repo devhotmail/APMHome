@@ -34,7 +34,7 @@
                     <br/>
                     <p:commandButton rendered="#{workOrderHistoryController.deleteAction}" icon="ui-icon-trash" actionListener="#{workOrderHistoryController.delete}" value="#{msg.Delete}" update="display,:WorkOrderHistoryViewDlg, :WorkOrderHistoryListForm:datalist, :growl" oncomplete="handleSubmit(args, 'WorkOrderHistoryViewDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('WorkOrderHistoryViewDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="ui-icon ui-icon-close" onclick="PF('WorkOrderHistoryViewDialog').hide()"/>
                     
                 </h:panelGroup>
             </h:form>

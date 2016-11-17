@@ -41,104 +41,130 @@
                         <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup>
                                 <label class="label">#{msg.WorkOrder}#{msg.name}*</label>
-                                <p:inputText readonly="true" id="name" value="#{workOrderController.selected.name}"/>
+                                <p:outputLabel value="#{workOrderController.selected.name}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.assetName}*</label>
-                                <p:inputText id="assetName" readonly="true" placeholder="#{msg.noAssetSelected}" value="#{workOrderController.selected.assetName}"/>
+                                <p:outputLabel value="#{workOrderController.selected.assetName}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.casePriority}*</label>
-                                <p:selectOneMenu rendered="true" value="#{workOrderController.selected.casePriority}" >
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('casePriority')}" var="item"
-                                                   itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                </p:selectOneMenu>
+                                <p:outputLabel value="#{fieldMsg.fieldValue('casePriority',workOrderController.selected.casePriority)}"/>
                             </h:panelGroup>
 
                             <h:panelGroup>
                                 <label class="label">#{msg.requestorName}*</label>
-                                <p:inputText readonly="true" value="#{workOrderController.selected.requestorName}"/>
+                                <p:outputLabel value="#{workOrderController.selected.requestorName}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.requestTime}*</label>
-                                <p:inputText readonly="true" value="#{workOrderController.selected.requestTime}">
+                                <p:outputLabel value="#{workOrderController.selected.requestTime}">
                                     <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                                </p:inputText>
+                                </p:outputLabel>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.caseOwnerName}</label>
-                                <p:inputText readonly="true" id="caseOwnerName" value="#{workOrderController.selected.caseOwnerName}" />
+                                <p:outputLabel value="#{workOrderController.selected.caseOwnerName}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.creatorName}*</label>
-                                <p:inputText readonly="true" id="creatorName" value="#{workOrderController.selected.creatorName}" required="true" requiredMessage="#{msg.creatorName} #{msg.ValidationRequire}"/>
+                                <p:outputLabel value="#{workOrderController.selected.creatorName}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.currentPersonName}</label>
-                                <p:inputText readonly="true" rendered="true" value="#{workOrderController.selected.currentPersonName}"/>
+                                <p:outputLabel value="#{workOrderController.selected.currentPersonName}"/>
                             </h:panelGroup>
 
                             <p:spacer/>
 
                             <h:panelGroup>
                                 <label class="label">#{msg.caseType}</label>
-                                <p:selectOneMenu rendered="#{workOrderController.isInViewMode ne true}" value="#{workOrderController.selected.caseType}">
-                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('caseType')}" var="item"
-                                                   itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                </p:selectOneMenu>
-                                <p:inputText readonly="true" rendered="#{workOrderController.isInViewMode}" value="#{fieldMsg.fieldValue('caseType',workOrderController.selected.caseType)}"/>
+                                <p:outputLabel value="#{fieldMsg.fieldValue('caseType',workOrderController.selected.caseType)}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.caseSubType}</label>
-                                <p:selectOneMenu rendered="#{workOrderController.isInViewMode ne true}" value="#{workOrderController.selected.caseSubType}">
+                                <p:outputLabel value="#{fieldMsg.fieldValue('caseSubType',workOrderController.selected.caseSubType)}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.isInternal}*</label>
+                                <p:selectBooleanCheckbox disabled="true" itemLabel="#{msg.isInternal}" value="#{workOrderController.selected.isInternal}" required="true" requiredMessage="#{msg.isInternal} #{msg.ValidationRequire}"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="1" layout="grid" style="max-width: 80%" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup>
+                                <label class="label">#{msg.requestReason}*</label>
+                                <p:inputTextarea style="border-bottom: 0;" readonly="true" cols="100" value="#{workOrderController.selected.requestReason}" required="true" requiredMessage="#{msg.requestReason} #{msg.ValidationRequire}"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+                    </p:fieldset>
+
+                </h:form>
+
+                <ui:include src="woStepList.xhtml"/>
+                <br/><br/>
+                <p:tabView id="tabView" rendered="#{workOrderController.selected ne null}">
+                    <p:tab id="tabHandleTask" title="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}">
+                        <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                            <h:panelGroup>
+                                <label class="label">#{msg.nextStep}#{msg.taskOwner}</label>
+                                <p:selectOneMenu value="#{workOrderController.selected.currentPersonId}" required="true" requiredMessage="#{msg.currentPersonName} #{msg.ValidationRequire}">
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('caseSubType')}" var="item"
+                                    <f:selectItems value="#{workOrderController.hospitalUserList}" var="item"
+                                                   itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            
+                            <h:panelGroup>
+                                <label class="label">#{msg.casePriority}*</label>
+                                <p:selectOneMenu value="#{workOrderController.selected.casePriority}" >
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('casePriority')}" var="item"
                                                    itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
-                                <p:inputText readonly="true" rendered="#{workOrderController.isInViewMode}" value="#{fieldMsg.fieldValue('caseSubType',workOrderController.selected.caseSubType)}"/>
                             </h:panelGroup>
+
                             <h:panelGroup>
                                 <label class="label">#{msg.isInternal}*</label>
                                 <p:selectBooleanCheckbox disabled="#{workOrderController.isInViewMode}" id="isInternal" itemLabel="#{msg.isInternal}" value="#{workOrderController.selected.isInternal}" required="true" requiredMessage="#{msg.isInternal} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
 
                             <h:panelGroup>
-                                <label class="label">#{msg.totalManHour}</label>
-                                <p:inputText readonly="#{workOrderController.isInViewMode}" id="totalManHour" value="#{workOrderController.selected.totalManHour}" />
+                                <label class="label">#{msg.caseType}</label>
+                                <p:selectOneMenu value="#{workOrderController.selected.caseType}">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('caseType')}" var="item"
+                                                   itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
                             </h:panelGroup>
                             <h:panelGroup>
-                                <label class="label">#{msg.totalPrice}</label>
-                                <p:inputText readonly="#{workOrderController.isInViewMode}" id="totalPrice" value="#{workOrderController.selected.totalPrice}" />
+                                <label class="label">#{msg.caseSubType}</label>
+                                <p:selectOneMenu value="#{workOrderController.selected.caseSubType}">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('caseSubType')}" var="item"
+                                                   itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
                             </h:panelGroup>
                         </p:panelGrid>
-
                         <p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group">
-                            <h:panelGroup>
-                                <label class="label">#{msg.requestReason}*</label>
-                                <p:inputTextarea readonly="#{workOrderController.isInViewMode}" cols="100" value="#{workOrderController.selected.requestReason}" required="true" requiredMessage="#{msg.requestReason} #{msg.ValidationRequire}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.closeReason}</label>
-                                <p:inputTextarea readonly="#{workOrderController.isInViewMode}" cols="100" value="#{workOrderController.selected.closeReason}" />
-                            </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.comments}</label>
                                 <p:inputTextarea readonly="#{workOrderController.isInViewMode}" cols="100" value="#{workOrderController.selected.comments}" />
                             </h:panelGroup>
                         </p:panelGrid>
 
-                        <br/>
+                        <ui:include src="woStepDetail/List.xhtml"/>
 
-                        <p:commandButton rendered="#{workOrderController.isInViewMode ne true}" validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderController.save()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}"/>
-                        <p:commandButton rendered="#{workOrderController.isInViewMode ne true}" validateClient="true" icon="ui-icon-swap-horiz" actionListener="#{workOrderController.save()}" value="#{msg.TransferOrder}"/>
-                        <p:commandButton rendered="#{workOrderController.isInViewMode ne true}" validateClient="true" icon="ui-icon-done" actionListener="#{workOrderController.save()}" value="#{fieldMsg.fieldValue('woSteps', '6')}"/>
-                        
-                    </p:fieldset>
-
-                </h:form>
-                <ui:include src="woStepList.xhtml"/>
-
+                        <p:commandButton validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderController.finishWorkOrderStep()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}"/>
+                    </p:tab>
+                    <p:tab title="#{fieldMsg.fieldValue('woSteps', '6')}">
+                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderController.save()}" value="#{fieldMsg.fieldValue('woSteps', '6')}"/>
+                    </p:tab>
+                    <p:tab title="#{msg.TransferOrder}">
+                        <p:commandButton validateClient="true" icon="ui-icon-swap-horiz" actionListener="#{workOrderController.save()}" value="#{msg.TransferOrder}"/>
+                    </p:tab>
+                </p:tabView>
             </div>
         </div>
 
