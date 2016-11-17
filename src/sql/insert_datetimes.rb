@@ -87,7 +87,7 @@ for i in 0..totalrecords
 
   randtime      = (duration * rand).to_i + stime.to_i
   deprecate_date = Time.at(randtime).strftime("%F")
-  deprecate_amount = [1000, 2000, 3000, 4000, 5000].sample
+  deprecate_amount = [100, 200, 300, 400, 500].sample
 
   sql = "insert into #{table} (site_id, asset_id, deprecate_date, deprecate_amount)
         values (\'#{site_id}\', \'#{asset_id}\', \'#{deprecate_date}\', \'#{deprecate_amount}\')"
