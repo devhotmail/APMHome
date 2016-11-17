@@ -104,7 +104,7 @@
 
                 <ui:include src="woStepList.xhtml"/>
                 <br/><br/>
-                <p:tabView id="tabView" rendered="#{workOrderController.selected ne null}">
+                <p:tabView id="tabView" dynamic="true" rendered="#{workOrderController.selected ne null}">
                     <p:tab id="tabHandleTask" title="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}">
                         <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
@@ -152,9 +152,15 @@
                                 <label class="label">#{msg.comments}</label>
                                 <p:inputTextarea readonly="#{workOrderController.isInViewMode}" cols="100" value="#{workOrderController.selected.comments}" />
                             </h:panelGroup>
-                        </p:panelGrid>
+                            
+                            <ui:include src="woStepDetail/List.xhtml"/>
 
-                        <ui:include src="woStepDetail/List.xhtml"/>
+                            <h:panelGroup>
+                                <label class="label">#{msg.attachmentUrl}</label>
+                                <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                          multiple="true"  sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
 
                         <p:commandButton validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderController.finishWorkOrderStep()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}"/>
                     </p:tab>
