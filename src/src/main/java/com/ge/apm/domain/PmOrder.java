@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 @Table(name = "pm_order")
 public class PmOrder implements Serializable {
 
-	public static final int LENGTH = 20;
+    public static final int LENGTH = 20;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +35,10 @@ public class PmOrder implements Serializable {
     @NotNull
     @Column(name = "site_id")
     private int siteId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "hospital_id")
+    private int hospitalId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
@@ -98,8 +102,12 @@ public class PmOrder implements Serializable {
     public PmOrder() {
     }
 
-    public PmOrder(Integer id) {
-        this.id = id;
+    public int getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(int hospitalId) {
+        this.hospitalId = hospitalId;
     }
 
     public PmOrder(Integer id, int siteId, String name, int creatorId, String creatorName, Date createTime, boolean isFinished) {

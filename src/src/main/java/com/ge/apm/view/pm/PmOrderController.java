@@ -1,5 +1,6 @@
 package com.ge.apm.view.pm;
 
+import com.ge.apm.dao.OrgInfoRepository;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.PmOrderRepository;
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.PmOrder;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.uaa.UaaService;
@@ -30,26 +32,12 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     protected void init() {
         dao = WebUtil.getBean(PmOrderRepository.class);
         currentUser = UserContextService.getCurrentUserAccount();
+        this.filterByHospital = true;
     }
 
     @Override
     protected PmOrderRepository getDAO() {
         return dao;
-    }
-
-    @Override
-    protected Page<PmOrder> loadData(PageRequest pageRequest) {
-        if (this.searchFilters == null) {
-            return dao.findAll(pageRequest);
-        } else {
-            return dao.findBySearchFilter(this.searchFilters, pageRequest);
-        }
-    }
-
-    @Override
-    public List<PmOrder> getItemList() {
-        //to do: change the code if necessary
-        return dao.find();
     }
 
     @Override
@@ -61,6 +49,10 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 //    	po.setOwnerName(this.currentUser.getName());
     	po.setOwnerOrgId(this.currentUser.getOrgInfoId());//orgId from where?
     	po.setCreateTime(TimeUtil.timeNowInDefaultTimeZone().toDate());
+        
+        OrgInfoRepository orgDao = WebUtil.getBean(OrgInfoRepository.class);
+        OrgInfo org = orgDao.findById(this.currentUser.getOrgInfoId());
+        //....
     }
    
     
