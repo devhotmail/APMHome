@@ -26,8 +26,104 @@
             </div>
             <p:separator/>
             <div class="ui-g-12">
-                <h:outputText value="#{assetProactiveMaintenanceController.maintenanceOnDateTable}"
-                              escape="false"/>
+                <p:dataTable var="monthly" value="#{assetProactiveMaintenanceController.maintenanceOnDateTable}">
+                    <p:column headerText="全部设备" class="i18n">
+                        <h:outputText value="#{monthly[0]}" />
+                    </p:column>
+                    <p:column headerText="1">
+                        <h:outputText value="#{monthly[1]}" />
+                    </p:column>
+                    <p:column headerText="2">
+                        <h:outputText value="#{monthly[2]}" />
+                    </p:column>
+                    <p:column headerText="3">
+                        <h:outputText value="#{monthly[3]}" />
+                    </p:column>
+                    <p:column headerText="4">
+                        <h:outputText value="#{monthly[4]}" />
+                    </p:column>
+                    <p:column headerText="5">
+                        <h:outputText value="#{monthly[5]}" />
+                    </p:column>
+                    <p:column headerText="6">
+                        <h:outputText value="#{monthly[6]}" />
+                    </p:column>
+                    <p:column headerText="7">
+                        <h:outputText value="#{monthly[7]}" />
+                    </p:column>
+                    <p:column headerText="8">
+                        <h:outputText value="#{monthly[8]}" />
+                    </p:column>
+                    <p:column headerText="9">
+                        <h:outputText value="#{monthly[9]}" />
+                    </p:column>
+                    <p:column headerText="10">
+                        <h:outputText value="#{monthly[10]}" />
+                    </p:column>
+                    <p:column headerText="11">
+                        <h:outputText value="#{monthly[11]}" />
+                    </p:column>
+                    <p:column headerText="12">
+                        <h:outputText value="#{monthly[12]}" />
+                    </p:column>
+                    <p:column headerText="13">
+                        <h:outputText value="#{monthly[13]}" />
+                    </p:column>
+                    <p:column headerText="14">
+                        <h:outputText value="#{monthly[14]}" />
+                    </p:column>
+                    <p:column headerText="15">
+                        <h:outputText value="#{monthly[15]}" />
+                    </p:column>
+                    <p:column headerText="16">
+                        <h:outputText value="#{monthly[16]}" />
+                    </p:column>
+                    <p:column headerText="17">
+                        <h:outputText value="#{monthly[17]}" />
+                    </p:column>
+                    <p:column headerText="18">
+                        <h:outputText value="#{monthly[18]}" />
+                    </p:column>
+                    <p:column headerText="19">
+                        <h:outputText value="#{monthly[19]}" />
+                    </p:column>
+                    <p:column headerText="20">
+                        <h:outputText value="#{monthly[20]}" />
+                    </p:column>
+                    <p:column headerText="21">
+                        <h:outputText value="#{monthly[21]}" />
+                    </p:column>
+                    <p:column headerText="22">
+                        <h:outputText value="#{monthly[22]}" />
+                    </p:column>
+                    <p:column headerText="23">
+                        <h:outputText value="#{monthly[23]}" />
+                    </p:column>
+                    <p:column headerText="24">
+                        <h:outputText value="#{monthly[24]}" />
+                    </p:column>
+                    <p:column headerText="25">
+                        <h:outputText value="#{monthly[25]}" />
+                    </p:column>
+                    <p:column headerText="26">
+                        <h:outputText value="#{monthly[26]}" />
+                    </p:column>
+                    <p:column headerText="27">
+                        <h:outputText value="#{monthly[27]}" />
+                    </p:column>
+                    <p:column headerText="28">
+                        <h:outputText value="#{monthly[28]}" />
+                    </p:column>
+                    <p:column headerText="29">
+                        <h:outputText value="#{monthly[29]}" />
+                    </p:column>
+                    <p:column headerText="30">
+                        <h:outputText value="#{monthly[30]}" />
+                    </p:column>
+                    <p:column headerText="31">
+                        <h:outputText value="#{monthly[31]}" />
+                    </p:column>
+                </p:dataTable>
             </div>
         </div>
 
@@ -42,8 +138,18 @@
             </div>
             <p:separator/>
             <div class="ui-g-12">
-                <h:outputText value="#{assetProactiveMaintenanceController.maintenanceOnDateForDeviceTable}"
-                              escape="false"/>
+                <!--<p:timeline value="#{assetProactiveMaintenanceController.maintenanceOnDateTimeline}"
+
+                            height="250px"
+
+                            selectable="false"
+                            zoomable="false"
+                            moveable="false"
+                            stackEvents="true"
+                            axisOnTop="true"
+                            eventStyle="box"
+                            showCurrentTime="true"
+                            showNavigation="false"/>-->
             </div>
         </div>
 
