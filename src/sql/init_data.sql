@@ -36,6 +36,15 @@ INSERT INTO "data_table_config" VALUES (2, 'test2', 'select count(*) from demo_d
 INSERT INTO "data_table_config" VALUES (3, 'aaa', 'aaa', 'aaa', 'f', 't');
 
 
+INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (1,'casePriority','故障紧急程度');
+INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (2,'caseType','故障类别');
+INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (3,'caseSubType','故障子类别');
+INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (4,'assetGroup','资产分组');
+INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (5,'woSteps','维修工单步骤');
+INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (6,'assetStatus','资产状态');
+INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (7,'assetFunctionType','资产功能类别');
+
+
 SELECT setval('"site_info_id_seq"', 3, false);
 SELECT setval('"org_info_id_seq"', 7, false);
 SELECT setval('"sys_role_id_seq"', 6, false);
@@ -43,5 +52,6 @@ SELECT setval('"user_account_id_seq"', 6, false);
 SELECT setval('"user_role_id_seq"', 5, false);
 SELECT setval('"chart_config_id_seq"', 4, false);
 SELECT setval('"data_table_config_id_seq"', 4, false);
+SELECT setval('"field_code_type_id_seq"', 4, false);
 
 

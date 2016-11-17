@@ -50,7 +50,7 @@ INSERT INTO "i18n_message" VALUES (45, 'label', 'List', '列表', 'List', NULL, 
 INSERT INTO "i18n_message" VALUES (46, 'label', 'Download', '下载', 'Download', NULL, -1);
 INSERT INTO "i18n_message" VALUES (47, 'label', 'Search', '查询', 'Search', NULL, -1);
 INSERT INTO "i18n_message" VALUES (48, 'label', 'Reset', '重置', 'Reset', NULL, -1);
-
+INSERT INTO "i18n_message" VALUES (49, 'label','Finish', '完成','Finish ',null,-1);
 
 -- menu item names  ( id from 200 to  399)
 
@@ -156,14 +156,14 @@ INSERT INTO "i18n_message" VALUES (619,'field_name','city','城市','City',null,
 INSERT INTO "i18n_message" VALUES (620,'field_name','clinicalDeptId','所属科室','Clinical Dept Id',null,-1);
 INSERT INTO "i18n_message" VALUES (621,'field_name','clinicalDeptName','所属科室','Clinical Dept Name',null,-1);
 INSERT INTO "i18n_message" VALUES (622,'field_name','closeReason','关单原因','Close Reason',null,-1);
-INSERT INTO "i18n_message" VALUES (623,'field_name','comments','结论','Comments',null,-1);
+INSERT INTO "i18n_message" VALUES (623,'field_name','comments','备注','Comments',null,-1);
 INSERT INTO "i18n_message" VALUES (624,'field_name','confirmedEndTime','确认的恢复可用时间','Confirmed End Time',null,-1);
 INSERT INTO "i18n_message" VALUES (625,'field_name','confirmedStartTime','确认的停机时间','Confirmed Start Time',null,-1);
 INSERT INTO "i18n_message" VALUES (626,'field_name','contactor','联系人姓名','Contactor',null,-1);
 INSERT INTO "i18n_message" VALUES (627,'field_name','createTime','创建时间','Create Time',null,-1);
-INSERT INTO "i18n_message" VALUES (628,'field_name','creatorId','创建者','Creator Id',null,-1);
+INSERT INTO "i18n_message" VALUES (628,'field_name','nextStep','下一步','Next Step',null,-1);
 INSERT INTO "i18n_message" VALUES (629,'field_name','creatorName','创建者','Creator Name',null,-1);
-INSERT INTO "i18n_message" VALUES (630,'field_name','currentPersonId','当前处理人','Current Person Id',null,-1);
+INSERT INTO "i18n_message" VALUES (630,'field_name','taskOwner','处理人','Task Owner',null,-1);
 INSERT INTO "i18n_message" VALUES (631,'field_name','currentPersonName','当前处理人','Current Person Name',null,-1);
 INSERT INTO "i18n_message" VALUES (632,'field_name','currentStep','当前处理步骤','Current Step',null,-1);
 INSERT INTO "i18n_message" VALUES (633,'field_name','departNum','设备编号（院方）','Depart Num',null,-1);
@@ -376,6 +376,9 @@ INSERT INTO "i18n_message" VALUES (3002,'message','noAssetSelected', '请选择�
 INSERT INTO "i18n_message" VALUES (3003,'message','searchAssetByDept', '按科室选设备','Select By Department',null,-1);
 INSERT INTO "i18n_message" VALUES (3004,'message','searchAsset', '高级查询','Advanced Search',null,-1);
 INSERT INTO "i18n_message" VALUES (3005,'message','selectAssetOwner', '请选择责任人...','Select Asset Owner...',null,-1);
+
+INSERT INTO "i18n_message" VALUES (3006,'message','TransferOrder', '转单','Transfer To..',null,-1);
+
 
 -- update id sequence value
 SELECT setval('"public"."i18n_message_id_seq"', 4000, false);

@@ -22,6 +22,7 @@ DROP TABLE IF EXISTS supplier CASCADE;
 DROP TABLE IF EXISTS asset_info CASCADE;
 DROP TABLE IF EXISTS asset_depreciation CASCADE;
 DROP TABLE IF EXISTS file_uploaded CASCADE;
+DROP TABLE IF EXISTS field_code_type CASCADE;
 
 
 CREATE TABLE i18n_message (
@@ -359,6 +360,11 @@ deprecate_date date not null,
 deprecate_amount float not null
 );
 
+create table field_code_type(
+id serial not null,
+msg_type varchar(60) NOT NULL,
+msg_type_name varchar(60) NOT NULL
+);
 
 ALTER TABLE asset_info ADD PRIMARY KEY (id);
 ALTER TABLE asset_file_attachment ADD PRIMARY KEY (id);
@@ -382,6 +388,7 @@ ALTER TABLE chart_config ADD PRIMARY KEY (id);
 ALTER TABLE data_table_config ADD PRIMARY KEY (id);
 ALTER TABLE asset_depreciation ADD PRIMARY KEY (id);
 ALTER TABLE file_uploaded ADD PRIMARY KEY (id);
+ALTER TABLE field_code_type ADD PRIMARY KEY (id);
 
 
 ALTER TABLE "user_account" ADD CONSTRAINT "uk_user_account_login_name" UNIQUE ("login_name");
