@@ -7,9 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.WorkOrderStepRepository;
+import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderStep;
 import java.util.ArrayList;
 import webapp.framework.dao.SearchFilter;
+import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -54,5 +56,24 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
     private SearchFilter workOrderFilter;
     public void setWorkOrderIdFilter(int workOrderId){
         workOrderFilter = new SearchFilter("workOrderId", SearchFilter.Operator.EQ, workOrderId);
+    }
+    
+    public void setSelectedByWorkOrder(WorkOrder wo){
+        this.selected = null;
+        if(wo!=null){
+            List<WorkOrderStep> woStepList = dao.getByWorkOrderIdAndStepId(wo.getId(), wo.getCurrentStep());
+
+            if(woStepList.isEmpty()){
+                selected = new WorkOrderStep();
+                selected.setWorkOrderId(wo.getId());
+                selected.setSiteId(wo.getSiteId());
+                selected.setOwnerId(wo.getCurrentPersonId());
+                selected.setOwnerName(wo.getCurrentPersonName());
+                selected.setStartTime(TimeUtil.now());
+                selected.setStepId(wo.getCurrentStep());
+                selected.setStepName(WebUtil.getMessage("woSteps", wo.getCurrentStep()));
+                
+            }
+        }
     }
 }

@@ -82,6 +82,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         return null;
     }
     public void setMyWorkOrderId(String selectedWorkOrderId) {
+        System.out.println("********************* setMyWorkOrderId");
         int workOrder = NumberUtils.toInt(selectedWorkOrderId, -1);
         if(workOrder<0){
             isInViewMode = true;
@@ -177,5 +178,10 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         this.selected.setAssetName(asset.getName());
         this.selected.setCaseOwnerId(asset.getAssetOwnerId());
         this.selected.setCaseOwnerName(asset.getAssetOwnerName());
+    }
+    
+    public void prepareWorkOrderStep(){
+        WorkOrderStepController woStepController = WebUtil.getBean(WorkOrderStepController.class);
+        woStepController.setSelectedByWorkOrder(selected);
     }
 }
