@@ -58,6 +58,10 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
         workOrderFilter = new SearchFilter("workOrderId", SearchFilter.Operator.EQ, workOrderId);
     }
     
+    public boolean getHasStepDetails(){
+        return (this.selected!=null) && (this.selected.getStepDetails()!=null) && (!this.selected.getStepDetails().isEmpty());
+    }
+    
     public void setSelectedByWorkOrder(WorkOrder wo){
         this.selected = null;
         if(wo!=null){
@@ -65,6 +69,7 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
 
             if(woStepList.isEmpty()){
                 selected = new WorkOrderStep();
+                
                 selected.setWorkOrderId(wo.getId());
                 selected.setSiteId(wo.getSiteId());
                 selected.setOwnerId(wo.getCurrentPersonId());
@@ -72,8 +77,11 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
                 selected.setStartTime(TimeUtil.now());
                 selected.setStepId(wo.getCurrentStep());
                 selected.setStepName(WebUtil.getMessage("woSteps", wo.getCurrentStep()));
-                
+            }
+            else{
+                this.selected = woStepList.get(0);
             }
         }
     }
+
 }

@@ -94,12 +94,14 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         }
         
         onSelectWorkOrder();
+        prepareEditWorkOrderStep();
     }
     
     public void onSelectWorkOrder(){
         Integer workOrderId = -1;
-        if(selected!=null) workOrderId = selected.getId();
-        
+        if(selected!=null && selected.getId()!=null)
+            workOrderId = selected.getId();
+
         WorkOrderHistoryController woHistoryController = WebUtil.getBean(WorkOrderHistoryController.class);
         woHistoryController.loadWorkOrderHistory(workOrderId);
         
@@ -180,7 +182,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         this.selected.setCaseOwnerName(asset.getAssetOwnerName());
     }
     
-    public void prepareWorkOrderStep(){
+    public void prepareEditWorkOrderStep(){
         WorkOrderStepController woStepController = WebUtil.getBean(WorkOrderStepController.class);
         woStepController.setSelectedByWorkOrder(selected);
     }
