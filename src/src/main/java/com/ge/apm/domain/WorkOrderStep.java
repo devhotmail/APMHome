@@ -76,7 +76,7 @@ public class WorkOrderStep implements Serializable {
     private Integer workOrderId;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workOrderStep", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workOrderStep", fetch = FetchType.EAGER, orphanRemoval=true)
     private List<WorkOrderStepDetail> stepDetails;
     
     public WorkOrderStep() {

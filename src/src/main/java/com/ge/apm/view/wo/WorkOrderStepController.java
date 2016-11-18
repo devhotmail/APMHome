@@ -9,6 +9,7 @@ import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.WorkOrderStepRepository;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderStep;
+import com.ge.apm.service.wo.WorkOrderService;
 import java.util.ArrayList;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.util.TimeUtil;
@@ -62,21 +63,16 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
         return (this.selected!=null) && (this.selected.getStepDetails()!=null) && (!this.selected.getStepDetails().isEmpty());
     }
     
+    private WorkOrder wo;
     public void setSelectedByWorkOrder(WorkOrder wo){
         this.selected = null;
+        this.wo = wo;
         if(wo!=null){
             List<WorkOrderStep> woStepList = dao.getByWorkOrderIdAndStepId(wo.getId(), wo.getCurrentStep());
 
             if(woStepList.isEmpty()){
-                selected = new WorkOrderStep();
-                
-                selected.setWorkOrderId(wo.getId());
-                selected.setSiteId(wo.getSiteId());
-                selected.setOwnerId(wo.getCurrentPersonId());
-                selected.setOwnerName(wo.getCurrentPersonName());
-                selected.setStartTime(TimeUtil.now());
-                selected.setStepId(wo.getCurrentStep());
-                selected.setStepName(WebUtil.getMessage("woSteps", wo.getCurrentStep()));
+                WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
+                WorkOrderStep woStep = woService.initWorkOrderCurrentStep(wo);
             }
             else{
                 this.selected = woStepList.get(0);
@@ -84,4 +80,19 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
         }
     }
 
+    public void finishWorkOrderStep(){
+        WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
+        woService.finishWorkOrderStep(wo, this.selected);
+    }
+    
+    public void closeWorkOrder(){
+        WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
+        woService.closeWorkOrder(wo, this.selected);
+    }
+
+    public void transferWorkOrder(){
+        WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
+        woService.transferWorkOrder(wo, this.selected);
+    }
+    
 }

@@ -188,31 +188,22 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         woStepController.setSelectedByWorkOrder(selected);
     }
     
-    private int activeTabId = 1;
+    private int activeTabId = 0;
     public int getActiveTabId() {
         return activeTabId;
+    }
+    public void setActiveTabId(int activeTabId) {
+        this.activeTabId = activeTabId;
     }
     
     public void onTabChanged(TabChangeEvent event) {
         String tabName = event.getTab().getId();
         if("tabCloseOrder".equals(tabName))
-            activeTabId = 2;
-        else if("TransferOrder".equals(tabName))
-            activeTabId = 3;
-        else
             activeTabId = 1;
-    }
-
-    public void finishWorkOrderStep(){
-        
-    }
-    
-    public void closeWorkOrder(){
-        
-    }
-
-    public void transferWorkOrder(){
-        
+        else if("TransferOrder".equals(tabName))
+            activeTabId = 2;
+        else
+            activeTabId = 0;
     }
     
 }
