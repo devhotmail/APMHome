@@ -4,7 +4,6 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-    <h:form id="WorkOrderStepDetailListForm" style="width:80%;">
         <p:dataTable id="datalist" class="uiTransparent" value="#{workOrderStepController.selected.stepDetails}" var="item" widgetVar="varStepDetailDataList"
                      lazy="false" paginator="true" paginatorPosition="top"
                      paginatorAlwaysVisible="#{workOrderStepController.hasStepDetails ne true}" rowKey="#{item.id}" rows="1000" emptyMessage="#{msg.noRecordFound}"
@@ -30,15 +29,10 @@
             <p:column headerText="#{msg.Actions}">
                 <p:commandButton process="@this" icon="ui-icon-add" style="zoom:0.8;" title="#{msg.Create}" actionListener="#{workOrderStepDetailController.prepareCreate(workOrderStepController.selected)}" update=":WorkOrderStepDetailEditDlg" oncomplete="PF('WorkOrderStepDetailEditDialog').show()"/>
                 <p:commandButton process="@this" icon="ui-icon-pencil" style="zoom:0.8;" title="#{msg.Edit}" actionListener="#{workOrderStepDetailController.prepareEdit(item)}" update=":WorkOrderStepDetailEditDlg" oncomplete="PF('WorkOrderStepDetailEditDialog').show()"/>
-                <p:commandButton process="@this" icon="ui-icon-close" style="zoom:0.8;" title="#{msg.Delete}" actionListener="#{workOrderStepDetailController.delete(workOrderStepController.selected,item)}" update=":WorkOrderStepDetailListForm">
+                <p:commandButton process="@this" icon="ui-icon-close" style="zoom:0.8;" title="#{msg.Delete}" actionListener="#{workOrderStepDetailController.delete(workOrderStepController.selected,item)}" update=":formStepData:datalist">
                     <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
                 </p:commandButton>
             </p:column>
         </p:dataTable>
-
-    </h:form>
-
-    <ui:include src="Edit.xhtml"/>
-    <ui:include src="View.xhtml"/>
 
 </ui:composition>

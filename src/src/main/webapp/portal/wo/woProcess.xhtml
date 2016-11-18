@@ -26,7 +26,7 @@
                 <p:messages autoUpdate="true" closable="true" showDetail="false"/>
 
                 <p:outputLabel value="#{msg.noWorkOrderSelected}" rendered="#{workOrderController.selected eq null}"/>
-                
+
                 <h:form id="WorkOrderListForm" rendered="#{workOrderController.selected ne null}">
                     <p:fieldset legend="#{msg.WorkOrder} #{msg.Detail}" rendered="#{workOrderController.selected != null}">
 
@@ -106,78 +106,86 @@
 
                 <ui:include src="woStepList.xhtml"/>
                 <br/><br/>
-                <p:fieldset id="panelHandleOrder" rendered="#{workOrderController.selected ne null}">
-                    <p:tabView id="tabView" style="border: none;padding: 0;margin: 0;top:-2px;" rendered="#{workOrderController.selected ne null}" activeIndex="#{workOrderController.activeTabId-1}">
-                        <p:ajax event="tabChange" listener="#{workOrderController.onTabChanged}" update="panelHandleOrder"/>
-                        
-                        <p:tab id="tabHandleOrder" title="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}">
-                        </p:tab>
-                        <p:tab id="tabCloseOrder" title="#{fieldMsg.fieldValue('woSteps', '6')}"> 
-                        </p:tab>
-                        <p:tab id="TransferOrder" title="#{msg.TransferOrder}">
-                        </p:tab>
-                    </p:tabView>
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderController.activeTabId lt 3}">
-                        <h:panelGroup>
-                            <label class="label">#{msg.nextStep}#{msg.taskOwner}</label>
-                            <p:selectOneMenu value="#{workOrderController.selected.currentPersonId}" required="true" requiredMessage="#{msg.currentPersonName} #{msg.ValidationRequire}">
-                                <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
-                                <f:selectItems value="#{workOrderController.hospitalUserList}" var="item"
-                                               itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                            </p:selectOneMenu>
-                        </h:panelGroup>
+                <h:form id="formStepData">
+                    <p:fieldset id="panelProcessOrder" rendered="#{workOrderController.selected ne null}">
+                        <p:tabView id="tabView" style="border: none;padding: 0;margin: 0;top:-2px;" rendered="#{workOrderController.selected ne null}" activeIndex="#{workOrderController.activeTabId}">
+                            <p:ajax event="tabChange" listener="#{workOrderController.onTabChanged}" update="@parent"/>
 
-                        <h:panelGroup>
-                            <label class="label">#{msg.casePriority}</label>
-                            <p:selectOneMenu value="#{workOrderController.selected.casePriority}" >
-                                <f:selectItems value="#{fieldMsg.getFieldValueList('casePriority')}" var="item"
-                                               itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                            </p:selectOneMenu>
-                        </h:panelGroup>
+                            <p:tab id="tabHandleOrder" title="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}">
+                            </p:tab>
+                            <p:tab id="tabCloseOrder" title="#{fieldMsg.fieldValue('woSteps', '6')}">
+                            </p:tab>
+                            <p:tab id="TransferOrder" title="#{msg.TransferOrder}">
+                            </p:tab>
+                        </p:tabView>
+                        <p:panelGrid id="panelStepDataInput" columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderController.activeTabId lt 2}">
+                            <h:panelGroup>
+                                <label class="label">#{msg.nextStep}#{msg.taskOwner}</label>
+                                <p:selectOneMenu value="#{workOrderController.selected.currentPersonId}" required="true" requiredMessage="#{msg.currentPersonName} xx #{msg.ValidationRequire}">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                                    <f:selectItems value="#{workOrderController.hospitalUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
 
-                        <h:panelGroup>
-                            <label class="label">#{msg.isInternal}</label>
-                            <p:selectBooleanCheckbox disabled="#{workOrderController.isInViewMode}" id="isInternal" itemLabel="#{msg.isInternal}" value="#{workOrderController.selected.isInternal}" required="true" requiredMessage="#{msg.isInternal} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.casePriority}</label>
+                                <p:selectOneMenu value="#{workOrderController.selected.casePriority}" >
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('casePriority')}" var="item"
+                                                   itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
 
-                        <h:panelGroup>
-                            <label class="label">#{msg.caseType}</label>
-                            <p:selectOneMenu value="#{workOrderController.selected.caseType}">
-                                <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
-                                <f:selectItems value="#{fieldMsg.getFieldValueList('caseType')}" var="item"
-                                               itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                            </p:selectOneMenu>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.caseSubType}</label>
-                            <p:selectOneMenu value="#{workOrderController.selected.caseSubType}">
-                                <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
-                                <f:selectItems value="#{fieldMsg.getFieldValueList('caseSubType')}" var="item"
-                                               itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                            </p:selectOneMenu>
-                        </h:panelGroup>
-                    </p:panelGrid>
-                    <p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderController.activeTabId lt 3}">
-                        <h:panelGroup>
-                            <label class="label">#{msg.comments}</label>
-                            <p:inputTextarea readonly="#{workOrderController.isInViewMode}" cols="100" value="#{workOrderStepController.selected.description}" />
-                        </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.isInternal}</label>
+                                <p:selectBooleanCheckbox id="isInternal" itemLabel="#{msg.isInternal}" value="#{workOrderController.selected.isInternal}" required="true" requiredMessage="#{msg.isInternal} #{msg.ValidationRequire}"/>
+                            </h:panelGroup>
 
-                        <ui:include src="woStepDetail/List.xhtml"/>
+                            <h:panelGroup>
+                                <label class="label">#{msg.caseType}</label>
+                                <p:selectOneMenu value="#{workOrderController.selected.caseType}">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('caseType')}" var="item"
+                                                   itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.caseSubType}</label>
+                                <p:selectOneMenu value="#{workOrderController.selected.caseSubType}">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('caseSubType')}" var="item"
+                                                   itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderController.activeTabId lt 2}">
+                            <h:panelGroup>
+                                <label class="label">#{msg.comments}</label>
+                                <p:inputTextarea cols="100" value="#{workOrderStepController.selected.description}" />
+                            </h:panelGroup>
 
-                        <h:panelGroup>
-                            <label class="label">#{msg.attachmentUrl}</label>
-                            <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                          multiple="true"  sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
-                        </h:panelGroup>
-                    </p:panelGrid>
+                        </p:panelGrid>
 
-                    <p:commandButton validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderController.finishWorkOrderStep()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}" rendered="#{workOrderController.activeTabId eq 1}"/>
-                    <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderController.closeWorkOrder()}" value="#{fieldMsg.fieldValue('woSteps', '6')}" rendered="#{workOrderController.activeTabId eq 2}"/>
-                    <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderController.transferOrder()}" value="#{msg.TransferOrder}" rendered="#{workOrderController.activeTabId eq 3}"/>
-                </p:fieldset>
+                        <p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderController.activeTabId lt 2}">
+                            <ui:include src="woStepDetail/List.xhtml"/>
+
+                            <h:panelGroup>
+                                <label class="label">#{msg.attachmentUrl}</label>
+                                <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                              multiple="true" sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+                        <p:commandButton validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderStepController.finishWorkOrderStep()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}" rendered="#{workOrderController.activeTabId eq 0}"/>
+                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.closeWorkOrder()}" value="#{fieldMsg.fieldValue('woSteps', '6')}" rendered="#{workOrderController.activeTabId eq 1}"/>
+                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.transferWorkOrder()}" value="#{msg.TransferOrder}" rendered="#{workOrderController.activeTabId eq 2}"/>
+                    </p:fieldset>
+                </h:form>
             </div>
         </div>
+
+        <ui:include src="woStepDetail/Edit.xhtml"/>
+        <ui:include src="woStepDetail/View.xhtml"/>
+        
     </ui:define>
 
 </ui:composition>
