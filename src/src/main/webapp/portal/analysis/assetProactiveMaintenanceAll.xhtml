@@ -138,15 +138,501 @@
             </div>
             <p:separator/>
             <div class="ui-g-12">
-                <p:timeline value="#{assetProactiveMaintenanceController.maintenanceForecast}"
-                            selectable="false"
-                            zoomable="false"
-                            moveable="false"
-                            stackEvents="true"
-                            axisOnTop="true"
-                            eventStyle="box"
-                            showCurrentTime="true"
-                            showNavigation="false"/>
+                <p:dataTable var="weekly" value="#{assetProactiveMaintenanceController.maintenanceForecast}">
+                    <p:column headerText="设备名称" class="i18n">
+                        <h:outputText value="#{weekly[0]}" />
+                    </p:column>
+                    <!-- 0 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[1]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[2]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[3]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[4]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[5]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[6]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[7]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[8]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[9]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[10]}" />
+                    </p:column>
+                    <!-- 10 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[11]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[12]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[13]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[14]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[15]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[16]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[17]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[18]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[19]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[20]}" />
+                    </p:column>
+                    <!-- 20 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[21]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[22]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[23]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[24]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[25]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[26]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[27]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[28]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[29]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[30]}" />
+                    </p:column>
+                    <!-- 30 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[31]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[32]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[33]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[34]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[35]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[36]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[37]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[38]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[39]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[40]}" />
+                    </p:column>
+                    <!-- 40 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[41]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[42]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[43]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[44]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[45]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[46]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[47]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[48]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[49]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[50]}" />
+                    </p:column>
+                    <!-- 50 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[51]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[52]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[53]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[54]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[55]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[56]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[57]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[58]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[59]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[60]}" />
+                    </p:column>
+                    <!-- 60 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[61]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[62]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[63]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[64]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[65]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[66]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[67]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[68]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[69]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[70]}" />
+                    </p:column>
+                    <!-- 70 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[71]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[72]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[73]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[74]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[75]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[76]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[77]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[78]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[79]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[80]}" />
+                    </p:column>
+                    <!-- 80 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[81]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[82]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[83]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[84]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[85]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[86]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[87]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[88]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[89]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[90]}" />
+                    </p:column>
+                    <!-- 90 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[91]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[92]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[93]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[94]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[95]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[96]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[97]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[98]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[99]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[100]}" />
+                    </p:column>
+                    <!-- 100 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[101]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[102]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[103]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[104]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[105]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[106]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[107]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[108]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[109]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[110]}" />
+                    </p:column>
+                    <!-- 10 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[111]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[112]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[113]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[114]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[115]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[116]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[117]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[118]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[119]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[120]}" />
+                    </p:column>
+                    <!-- 20 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[121]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[122]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[123]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[124]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[125]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[126]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[127]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[128]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[129]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[130]}" />
+                    </p:column>
+                    <!-- 30 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[131]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[132]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[133]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[134]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[135]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[136]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[137]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[138]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[139]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[140]}" />
+                    </p:column>
+                    <!-- 40 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[141]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[142]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[143]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[144]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[145]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[146]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[147]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[148]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[149]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[150]}" />
+                    </p:column>
+                    <!-- 50 -->
+                    <p:column>
+                        <h:outputText value="#{weekly[151]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[152]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[153]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[154]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[155]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[156]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[157]}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{weekly[158]}" />
+                    </p:column>
+                </p:dataTable>
             </div>
         </div>
 

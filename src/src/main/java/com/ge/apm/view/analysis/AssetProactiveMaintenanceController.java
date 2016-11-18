@@ -1,10 +1,10 @@
 package com.ge.apm.view.analysis;
 
 import com.ge.apm.view.sysutil.UserContextService;
-import com.google.common.collect.FluentIterable;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.postgresql.jdbc4.Jdbc4Array;
+import org.primefaces.model.timeline.TimelineEvent;
 import org.primefaces.model.timeline.TimelineModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ManagedBean
 @ViewScoped
@@ -72,17 +69,25 @@ public final class AssetProactiveMaintenanceController {
                 ret.add(((Jdbc4Array) map.get("scalar")).getArray());
             }
             catch (SQLException exception) {
-                ret.add(new String[31]);
+                ret.add(new String[31 + 1]);
             }
         }
         return ret;
     }
 
-    public final TimelineModel getMaintenanceForecast() {
+    public final List<Object> getMaintenanceForecast() {
         List<Map<String, Object>> list = this.query(SQL_LIST_MAINTENANCE_FORECAST);
 
-        TimelineModel timeline = new TimelineModel();
-        return timeline;
+        List<Object> ret = new ArrayList<>();
+        for (Map<String, Object> map : list) {
+            try {
+                ret.add(((Jdbc4Array) map.get("scalar")).getArray());
+            }
+            catch (SQLException exception) {
+                ret.add(new String[157 + 1]);
+            }
+        }
+        return ret;
     }
 
     // endregion
@@ -129,7 +134,9 @@ public final class AssetProactiveMaintenanceController {
     private final static String SQL_LIST_MAINTENANCE_FORECAST = "" +
             "WITH " +
             "maintenance_schedule AS ( " +
-            "        SELECT asset.id AS asset_id, date(plan.start_time) AS start_time, text('+') AS hint " +
+            "        SELECT asset.id AS asset_id, " +
+            "               CAST (EXTRACT (EPOCH FROM (plan.start_time - :#firstDayOfThisYearMinus1)) / 60 / 60 / 24 / 7 AS integer) AS start_time, " +
+            "               text('+') AS hint " +
             "        FROM pm_order AS plan, " +
             "             asset_info AS asset " +
             "        WHERE plan.asset_id = asset.id " +
@@ -143,17 +150,22 @@ public final class AssetProactiveMaintenanceController {
             "maintenance_schedule_time_list AS ( " +
             "        SELECT DISTINCT start_time " +
             "        FROM maintenance_schedule " +
+            "), " +
+            "temporary AS ( " +
+            "        SELECT maintenance_schedule_asset_list.asset_id AS asset_id, " +
+            "               maintenance_schedule_time_list.start_time AS start_time, " +
+            "               COALESCE(maintenance_schedule.hint, '') AS hint " +
+            "        FROM maintenance_schedule_asset_list " +
+            "        CROSS JOIN maintenance_schedule_time_list " +
+            "        LEFT OUTER JOIN maintenance_schedule " +
+            "        ON maintenance_schedule_asset_list.asset_id = maintenance_schedule.asset_id " +
+            "        AND maintenance_schedule_time_list.start_time = maintenance_schedule.start_time " +
+            "        ORDER BY maintenance_schedule_asset_list.asset_id ASC, " +
+            "                 maintenance_schedule_time_list.start_time ASC " +
             ") " +
-            "SELECT maintenance_schedule_asset_list.asset_id, " +
-            "       maintenance_schedule_time_list.start_time, " +
-            "       COALESCE(maintenance_schedule.hint, '') AS hint " +
-            "FROM maintenance_schedule_asset_list " +
-            "CROSS JOIN maintenance_schedule_time_list " +
-            "LEFT OUTER JOIN maintenance_schedule " +
-            "ON maintenance_schedule_asset_list.asset_id = maintenance_schedule.asset_id " +
-            "AND maintenance_schedule_time_list.start_time = maintenance_schedule.start_time " +
-            "ORDER BY maintenance_schedule_asset_list.asset_id ASC, " +
-            "         maintenance_schedule_time_list.start_time ASC " +
+            "SELECT array_prepend(text(temporary.asset_id), array_agg(temporary.hint)) AS scalar " +
+            "FROM temporary " +
+            "GROUP BY temporary.asset_id " +
             ";";
 
     // endregion
