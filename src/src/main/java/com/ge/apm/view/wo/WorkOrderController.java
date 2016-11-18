@@ -108,6 +108,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         
         WorkOrderStepController woStepController = WebUtil.getBean(WorkOrderStepController.class);
         woStepController.loadWorkOrderSteps(workOrderId);
+        woStepController.setSelectedByWorkOrder(selected);
     }
     
     public List<UserAccount> getHospitalUserList(){

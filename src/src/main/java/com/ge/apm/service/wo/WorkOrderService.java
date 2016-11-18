@@ -27,13 +27,13 @@ public class WorkOrderService {
         woStep.setOwnerName(wo.getCurrentPersonName());
         woStep.setStartTime(TimeUtil.now());
         woStep.setStepId(wo.getCurrentStep());
-        woStep.setStepName(WebUtil.getMessage("woSteps", wo.getCurrentStep()));
+        woStep.setStepName(WebUtil.getMessage("woSteps"+"-"+wo.getCurrentStep()));
         
         return woStep;
     }
     
     @Transactional
-    protected void saveWorkOrderStep(WorkOrder wo, WorkOrderStep currentWoStep, WorkOrderStep nextWoStep){
+    public void saveWorkOrderStep(WorkOrder wo, WorkOrderStep currentWoStep, WorkOrderStep nextWoStep){
         WorkOrderRepository woDao = WebUtil.getBean(WorkOrderRepository.class);
         WorkOrderStepRepository woStepDao = WebUtil.getBean(WorkOrderStepRepository.class);
         
