@@ -135,8 +135,8 @@ public final class AssetProactiveMaintenanceController {
             "WITH " +
             "maintenance_schedule AS ( " +
             "        SELECT asset.id AS asset_id, " +
-            "               CAST (EXTRACT (EPOCH FROM (plan.start_time - :#firstDayOfThisYearMinus1)) / 60 / 60 / 24 / 7 / 2 AS integer) AS start_time, " +
-            "               text('+') AS hint " +
+            "               CAST (EXTRACT (EPOCH FROM (plan.start_time - :#firstDayOfThisYearMinus1)) / 60 / 60 / 24 / 7 AS integer) AS start_time, " +
+            "               text('tinted') AS hint " +
             "        FROM pm_order AS plan, " +
             "             asset_info AS asset " +
             "        WHERE plan.asset_id = asset.id " +
