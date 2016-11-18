@@ -304,7 +304,7 @@ table.jqplot-table-legend {
 			<!-- Statistics Overview -->
 			<div class="ui-g-12 ui-md-2">
 					
-				<p:panel id="value_scan" header="#{msg.deviceScanlg}">
+				<p:panel id="value_scan" header="#{msg.deviceScanStat}">
 					<h:outputText value="#{assetUsageAllController.valueScan}"/>
 				</p:panel>
 						<!-- span class="overview-title">Device Scan (Times)</span> 
@@ -314,26 +314,40 @@ table.jqplot-table-legend {
 
 			<div class="ui-g-12 ui-md-2">
 
-				<p:panel id="value_expo" header="#{msg.deviceExpolg_1}">
+				<p:panel id="value_expo" header="#{msg.deviceExpoStat}">
 					<h:outputText value="#{assetUsageAllController.valueExpo}"/>
 				</p:panel>
 						<!--<span class="overview-title">Device Exposure (Hours)</span> 
 						<span class="overview-detail"><b>#{homeDeptHeadController.valueDeviceExposure}</b></span-->
 			</div>
 
-			<div class="ui-g-12 ui-md-6">
+			<div class="ui-g-12 ui-md-2">
+				<p:panel id="value_usage_1" header="#{msg.deviceUsageStat_1}">
+					<h:outputText value="#{assetUsageAllController.valueWait}"/>
+				</p:panel>
+			</div>
 
-				<p:panel id="value_usage" header="#{msg.deviceUsagelg_1}">
+			<div class="ui-g-12 ui-md-2">
+				<p:panel id="value_usage_2" header="#{msg.deviceUsageStat_2}">
 					<h:outputText value="#{assetUsageAllController.valueInuse}"/>
-				</p:panel>			
+				</p:panel>
+			</div>
 
+			<div class="ui-g-12 ui-md-2">
+				<p:panel id="value_usage_3" header="#{msg.deviceUsageStat_3}">
+					<h:outputText value="#{assetUsageAllController.valueDT}"/>
+				</p:panel>
+			</div>
+
+			<div class="ui-g-12 ui-md-4">
+			</div>
+
+			<div class="ui-g-12 ui-md-6">
 				<p:chart id="value_usage_bar" type="bar"
-						model="#{assetUsageAllController.deviceUsage}" responsive="true" />
-						
-						<!--<span class="overview-title">Device Profit (CNY)</span> 
-						<span class="overview-detail"><b>#{homeDeptHeadController.valueDeviceProfit}</b></span-->
+						model="#{assetUsageAllController.deviceStat}" style="height:100px"/>
 			</div>
            
+
 		<h:form id="form2">
 			<p:growl id="calendar_submit" showDetail="true" />
 
@@ -347,7 +361,7 @@ table.jqplot-table-legend {
 
 			</h:panelGrid>
 
-			<p:commandButton value="Submit" update="calendar_submit value_scan value_expo value_usage scan_bar exposure_bar usage_bar dt_bar"
+			<p:commandButton value="Submit" update="calendar_submit value_scan value_expo value_usage_1 value_usage_2 value_usage_3 value_usage_bar scan_bar exposure_bar usage_bar dt_bar"
 				actionListener="#{assetUsageAllController.submit}" icon="ui-icon-check" />
 
 		</h:form>      

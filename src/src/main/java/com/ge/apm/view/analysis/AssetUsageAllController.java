@@ -10,13 +10,14 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.view.ViewScoped;
+import javax.faces.bean.ViewScoped;
 
 import org.postgresql.util.PGInterval;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.BarChartSeries;
 import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
 import com.ge.apm.view.sysutil.UserContextService;
@@ -28,10 +29,7 @@ import webapp.framework.web.WebUtil;
 @ViewScoped
 public class AssetUsageAllController implements Serializable{
 
-	/** REPLACE last_pm_date WITH install_date
-	 * 
-	 */
-	private static final long serialVersionUID = -3146075905788041271L;
+	private static final long serialVersionUID = 1L;
 	private static final String devicelb = WebUtil.getMessage("devicelb");
 	private static final String deviceScanlg = WebUtil.getMessage("deviceScanlg");
 	private static final String deviceExpolg_1 = WebUtil.getMessage("deviceExpolg_1");
@@ -43,7 +41,7 @@ public class AssetUsageAllController implements Serializable{
 	private static final String countlb = WebUtil.getMessage("countlb");
 	private static final String hourslb = WebUtil.getMessage("hourslb");
 	private static final String pctlb = WebUtil.getMessage("pctlb");
-	private static final int HOURS_DAY = 24;
+	private static final int HOURS_DAY = 6;
 	private static final int SMLTH = 10;
 
 	private int hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
@@ -61,6 +59,7 @@ public class AssetUsageAllController implements Serializable{
 	private BarChartModel deviceExpo = null;
 	private BarChartModel deviceUsage = null;
 	private BarChartModel deviceDT = null;
+	private BarChartModel deviceStat = null;
 	private Date startDate = null;
 	private Date endDate = null;
 	private Date currentDate = null;
@@ -73,7 +72,6 @@ public class AssetUsageAllController implements Serializable{
 	@PostConstruct
 	public void init() {
 		
-		System.out.println("[ ON INIT ]");
 		Calendar currentCal = Calendar.getInstance();
 		Calendar startCal = Calendar.getInstance();
 		startCal.add(Calendar.YEAR, -1);
@@ -176,14 +174,12 @@ public class AssetUsageAllController implements Serializable{
 
 	// Getters & Setters
 	
-    public Date getStartDate() {
-    	System.out.println("[ ON START GET ]");    	
+    public Date getStartDate() { 	
+
         return startDate;
     }
  
     public void setStartDate(Date startDate) {
-    	
-    	System.out.println("[ ON START SET ]");
 
         this.startDate = startDate;
         
@@ -196,14 +192,12 @@ public class AssetUsageAllController implements Serializable{
     }
     
     public Date getEndDate() {
-
-    	System.out.println("[ ON END GET ]");   	
+	
         return endDate;
     }
  
     public void setEndDate(Date endDate) {
-    	
-     	System.out.println("[ ON END SET ]");   	
+    		
         this.endDate = endDate;
         
     	end_bool = true;
@@ -234,6 +228,11 @@ public class AssetUsageAllController implements Serializable{
 		return deviceDT;
 	}
 	
+	public BarChartModel getDeviceStat() {
+
+		return deviceStat;
+	}
+
 	public String getValueScan() {
 
 		return valueScan;
@@ -264,8 +263,6 @@ public class AssetUsageAllController implements Serializable{
 		
 		if ( (null==startDate )|| null==endDate | null ==currentDate ) {
 			
-			System.out.println("NULL");
-			System.exit(0);
 			Calendar startCal = Calendar.getInstance();
 			Calendar endCal = startCal;
 			startCal.add(Calendar.YEAR, -1);
@@ -285,7 +282,6 @@ public class AssetUsageAllController implements Serializable{
 		sqlParams.put("currentDate", currentDate);
 		
 		// Panel Components
-		System.out.println(startDate.toString() + endDate.toString() + currentDate.toString());
 		rs_panel = NativeSqlUtil.queryForList(VALUESCANTL, sqlParams);
 		valueScan = (rs_panel.get(0).get("sum")  != null ? rs_panel.get(0).get("sum").toString() : "");
 
@@ -309,7 +305,7 @@ public class AssetUsageAllController implements Serializable{
 			List<Map<String, Object>> rs_scan = NativeSqlUtil.queryForList(SCANTL, sqlParams);
 
 			for (Map<String, Object> item : rs_scan) {
-				cst_scan.set(item.get("name").toString().substring(0, SMLTH), 
+				cst_scan.set(item.get("name") != null ? item.get("name").toString().substring(0, SMLTH) : "", 
 						item.get("count") != null ? (Long) item.get("count") : 0);
 			}
 
@@ -328,7 +324,7 @@ public class AssetUsageAllController implements Serializable{
 
 			List<Map<String, Object>> rs_expo = NativeSqlUtil.queryForList(EXPOTL, sqlParams);
 			for (Map<String, Object> item : rs_expo) {
-				cst_expo.set(item.get("name").toString().substring(0, SMLTH),
+				cst_expo.set(item.get("name") != null ? item.get("name").toString().substring(0, SMLTH) : "",
 						item.get("hours") != null ? (Double) item.get("hours") : (Double) 0.0);
 			}
 	
@@ -365,7 +361,7 @@ public class AssetUsageAllController implements Serializable{
 				bench_day = (Integer) (item_bench_day.get("bench_day") != null ? item_bench_day.get("bench_day") : 1);
 				if (bench_day < 1)	bench_day = 1;
 				
-				cst_expo_bench.set(item_expo_all.get("name").toString().substring(0, SMLTH),
+				cst_expo_bench.set(item_expo_all.get("name") != null ? item_expo_all.get("name").toString().substring(0, SMLTH) : "",
 						expo_all * serve_day / bench_day);
 			}
 
@@ -379,7 +375,7 @@ public class AssetUsageAllController implements Serializable{
 			deviceUsage.getAxis(AxisType.X).setTickAngle(-60);
 			deviceUsage.setBarWidth(25);
 			deviceUsage.setLegendPosition("ne");
-			//deviceUsage.setStacked(true);	
+			deviceUsage.setStacked(true);	
 
 			deviceDT = new BarChartModel();
 			deviceDT.getAxis(AxisType.X).setLabel(devicelb);
@@ -419,15 +415,14 @@ public class AssetUsageAllController implements Serializable{
 			Integer dt_all;
 			Integer wait; // wait = serve - downtime - inuse
 
-			Double inuse_total = 0.0;
-			Double dt_total = 0.0;
-			Double wait_total = 0.0; // wait = serve - downtime - inuse
+			Long inuse_total = new Long(0);
+			Long dt_total= new Long(0);
+			Long wait_total = new Long(0); // wait = serve - downtime - inuse
 
 
 			for ( it_inuse = rs_inuse.iterator(), it_dt = rs_dt.iterator(), it_dt_all = rs_dt_all.iterator(), it_serve_day = rs_serve_day.iterator(), it_bench_day = rs_bench_day.iterator(); 
 					it_inuse.hasNext() && it_dt.hasNext() && it_dt_all.hasNext() && it_serve_day.hasNext() && it_bench_day.hasNext(); ) {
 				
-				System.out.println("FOR ROUND");
 				item_inuse = it_inuse.next();
 				item_dt = it_dt.next();
 				item_dt_all = it_dt_all.next();
@@ -435,6 +430,9 @@ public class AssetUsageAllController implements Serializable{
 				item_bench_day = it_bench_day.next();
 
 				inuse = item_inuse.get("inuse") != null ? ((PGInterval)item_inuse.get("inuse")).getHours() : 0;
+
+				if (inuse < 0)	inuse *= -1;
+
 				dt =  item_dt.get("dt") != null ? ((PGInterval)item_dt.get("dt")).getHours() : 0;
 				dt_all =  item_dt_all.get("dt") != null ? ((PGInterval)item_dt_all.get("dt")).getHours() : 0;
 				serve_hour = (Integer) (item_serve_day.get("serve_day") != null ? item_serve_day.get("serve_day") : 0) * HOURS_DAY;
@@ -443,21 +441,20 @@ public class AssetUsageAllController implements Serializable{
 				if (bench_hour < HOURS_DAY)	bench_hour = HOURS_DAY;
 				wait = serve_hour - dt - inuse;
 				
-				cst_inuse.set(item_serve_day.get("name").toString().substring(0, SMLTH), inuse);
-				cst_dt.set(item_dt.get("name").toString().substring(0, SMLTH), dt);
-				cst_wait.set(item_serve_day.get("name").toString().substring(0, SMLTH), wait);
-				cst_dt_bench.set(item_dt_all.get("name").toString().substring(0, SMLTH),
+				cst_inuse.set(item_serve_day.get("name") != null ? item_serve_day.get("name").toString().substring(0, SMLTH) : "",
+					 inuse);
+				cst_dt.set(item_dt.get("name") != null ? item_dt.get("name").toString().substring(0, SMLTH) : "", 
+						dt);
+				cst_wait.set(item_serve_day.get("name") != null ? item_serve_day.get("name").toString().substring(0, SMLTH) : "", 
+						wait);
+				cst_dt_bench.set(item_dt_all.get("name") != null ? item_dt_all.get("name").toString().substring(0, SMLTH) : "",
 						dt_all * serve_hour / bench_hour);
 
-				inuse_total += inuse;
-				dt_total += dt;
-				wait_total += wait;
+				inuse_total += (long) inuse;
+				dt_total += (long) dt;
+				wait_total += (long) wait;
 
-				System.out.println("serve = " + serve_hour + " downtime = " + dt + " inuse = " + inuse + " wait = " + wait);
 			}
-
-				System.out.println("inuse_total = " + inuse_total + " dt_total = " + dt_total + " wait_total = " + wait_total);
-
 
 			valueInuse = inuse_total.toString();
 			valueDT = dt_total.toString();
@@ -468,15 +465,20 @@ public class AssetUsageAllController implements Serializable{
 			deviceDT.addSeries(cst_dt);
 			deviceDT.addSeries(cst_dt_bench);
 
-			System.out.println("[scan: ]" + rs_scan.size());
-			System.out.println("[expo: ]" + rs_expo.size());
-			System.out.println("[serve_day: ]" + rs_serve_day.size());
-			System.out.println("[bench_day: ]" + rs_bench_day.size());			
-			System.out.println("[expo_all: ]" + rs_expo_all.size());
-			System.out.println("[inuse: ]" + rs_inuse.size());
-			System.out.println("[dt: ]" + rs_dt.size());
-			System.out.println("[dt_all: ]" + rs_dt_all.size());
+			// **********************************************************************************************
+			deviceStat = new HorizontalBarChartModel();
+			deviceStat.setStacked(true);	
 
+			ChartSeries cst_stat_1 = new BarChartSeries();
+			cst_stat_1.set("total", wait_total);
+			ChartSeries cst_stat_2 = new BarChartSeries();
+			cst_stat_2.set("total", inuse_total);
+			ChartSeries cst_stat_3 = new BarChartSeries();
+			cst_stat_3.set("total", dt_total);
+
+			deviceStat.addSeries(cst_stat_1);
+			deviceStat.addSeries(cst_stat_2);
+			deviceStat.addSeries(cst_stat_3);
 
 		}
 		

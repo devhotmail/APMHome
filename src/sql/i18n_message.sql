@@ -381,5 +381,30 @@ INSERT INTO "i18n_message" VALUES (3008,'message','TransferOrder', '转单','Tra
 INSERT INTO "i18n_message" VALUES (3009,'message','noWorkOrderSelected', '请选择一个工单','Please select a Work Order.',null,-1);
 
 
+-- Chart label/lengend （id from 5000 to 5500）
+INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描','Device Scan',null,-1);
+INSERT INTO "i18n_message" VALUES (5001,'label','deviceScanlg', '扫描次数','Scan',null,-1);
+INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光','Device Exposure',null,-1);
+INSERT INTO "i18n_message" VALUES (5003,'label','deviceExpolg_1', '曝光时长','Exposure',null,-1);
+INSERT INTO "i18n_message" VALUES (5004,'label','deviceExpolg_2', '基准曝光时长','Device Scan (Baseline)',null,-1);
+INSERT INTO "i18n_message" VALUES (5005,'label','deviceROIhd', '设备投资回报','Device ROI',null,-1);
+INSERT INTO "i18n_message" VALUES (5006,'label','deviceROIlg_1', '收入','Revenue',null,-1);
+INSERT INTO "i18n_message" VALUES (5007,'label','deviceROIlg_2', '利润','Profit',null,-1);
+INSERT INTO "i18n_message" VALUES (5008,'label','countlb', '次','Count',null,-1);
+INSERT INTO "i18n_message" VALUES (5009,'label','hourslb', '小时','Hours',null,-1);
+INSERT INTO "i18n_message" VALUES (5010,'label','CNYlb', '元','CNY',null,-1);
+INSERT INTO "i18n_message" VALUES (5011,'label','deviceUsagehd', '设备使用','Device Usage',null,-1);
+INSERT INTO "i18n_message" VALUES (5012,'label','deviceUsagelg_1', '使用','In-Use',null,-1);
+INSERT INTO "i18n_message" VALUES (5013,'label','deviceUsagelg_2', '空闲','Idle',null,-1);
+INSERT INTO "i18n_message" VALUES (5014,'label','deviceDThd', '设备停机率','Device Downtime',null,-1);
+INSERT INTO "i18n_message" VALUES (5015,'label','deviceDTlg_1', '停机率','Downtime',null,-1);
+INSERT INTO "i18n_message" VALUES (5016,'label','deviceDTlg_2', '基准停机率','Downtime (Baseline)',null,-1);
+INSERT INTO "i18n_message" VALUES (5017,'label','pctlb', '百分比','Percent',null,-1);
+INSERT INTO "i18n_message" VALUES (5018,'label','devicelb', '设备','Device',null,-1);
+INSERT INTO "i18n_message" VALUES (5019,'label','deviceUsageStat_1', '设备总等待时间 (小时)','In-use (Hours)',null,-1);
+INSERT INTO "i18n_message" VALUES (5020,'label','deviceUsageStat_2', '设备总使用时间 (小时)','Idle (Hours)',null,-1);
+INSERT INTO "i18n_message" VALUES (5021,'label','deviceUsageStat_3', '设备总停机时间 (小时)','Downtime (Hours)',null,-1);
+INSERT INTO "i18n_message" VALUES (5022,'label','deviceScanStat', '设备总扫描次数 (次)','Device Scan (Times)',null,-1);
+INSERT INTO "i18n_message" VALUES (5023,'label','deviceExpoStat', '设备总曝光时间 (小时)','Device Exposure (Hours)',null,-1);
 -- update id sequence value
-SELECT setval('"public"."i18n_message_id_seq"', 4000, false);
+SELECT setval('"public"."i18n_message_id_seq"', 10000, false);

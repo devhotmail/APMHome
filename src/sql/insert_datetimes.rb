@@ -13,7 +13,7 @@ table     = "debug"
 
 # data generation
 startdate = "2011-1-16"
-enddate   = "2016-5-6"
+enddate   = "2016-11-18"
 type      = ["CT", "MRI", "xRay", "DR", "XYZ", "ABC", "DEF", "LMN"]
 totalrecords  = 6
 # totalrecords  = 5
@@ -62,6 +62,9 @@ for i in 0..totalrecords
   warranty_date = Time.at(randtime).strftime("%F")
 
   randtime      = (duration * rand).to_i + stime.to_i
+  install_date = Time.at(randtime).strftime("%F")
+
+  randtime      = (duration * rand).to_i + stime.to_i
   last_pm_date = Time.at(randtime).strftime("%F")
 
   randtime      = (duration * rand).to_i + stime.to_i
@@ -72,9 +75,9 @@ for i in 0..totalrecords
 
   sql = "insert into #{table} (site_id, name, function_type, hospital_id, clinical_dept_id, asset_group, asset_dept_id,
         asset_owner_id, asset_owner_name,
-        is_valid, status, warranty_date, last_pm_date, last_metering_date, last_qa_date) values (\'#{site_id}\', \'#{name}\',
+        is_valid, status, warranty_date, last_pm_date, last_metering_date, last_qa_date, install_date) values (\'#{site_id}\', \'#{name}\',
         \'#{function_type}\', \'#{hospital_id}\', \'#{clinical_dept_id}\', \'#{asset_group}\', \'#{asset_dept_id}\', \'#{asset_owner_id}\', \'#{asset_owner_name}\',
-        \'#{is_valid}\', \'#{status}\', \'#{warranty_date}\', \'#{last_pm_date}\', \'#{last_metering_date}\', \'#{last_qa_date}\')"
+        \'#{is_valid}\', \'#{status}\', \'#{warranty_date}\', \'#{last_pm_date}\', \'#{last_metering_date}\', \'#{last_qa_date}\', \'#{install_date}\')"
   puts sql
   conn.exec(sql)
 end
@@ -96,7 +99,7 @@ for i in 0..totalrecords
 end
 
 table = "work_order"
-totalrecords = 250
+totalrecords = 10000
 for i in 1..totalrecords
   site_id   = randnum.rand(1..2)
   hospital_id = randnum.rand(1..10)
@@ -114,6 +117,9 @@ for i in 1..totalrecords
   request_time  = Time.at(randtime + randnum.rand(600..1800)).strftime("%F %T")
   request_reason  = ["attrition", "broken", "user error", "unknown", "out of date", "planned maintenance"].sample
 
+  confirmed_down_time  = Time.at(randtime + randnum.rand(600..1800)).strftime("%F %T")
+  confirmed_up_time  = Time.at(randtime + randnum.rand(102000..208000)).strftime("%F %T")
+
   case_type     = randnum.rand(1..10)
   case_sub_type = randnum.rand(1..10)
   case_priority = randnum.rand(1..4)
@@ -130,11 +136,11 @@ for i in 1..totalrecords
   sql = "insert into #{table} (site_id, hospital_id, asset_id, name, asset_name, creator_id, creator_name, create_time,
         requestor_id, requestor_name, request_time, request_reason, case_type, case_sub_type,
         case_priority, is_internal, current_person_id, current_step,
-        is_closed, total_man_hour, total_price) values (\'#{site_id}\', \'#{hospital_id}\', \'#{asset_id}\',
+        is_closed, total_man_hour, total_price, confirmed_down_time, confirmed_up_time) values (\'#{site_id}\', \'#{hospital_id}\', \'#{asset_id}\',
         \'#{name}\', \'#{asset_name}\', \'#{creator_id}\',\'#{creator_name}\', \'#{create_time}\',
         \'#{requestor_id}\', \'#{requestor_name}\',\'#{request_time}\', \'#{request_reason}\',
         \'#{case_type}\', \'#{case_sub_type}\',\'#{case_priority}\', \'#{is_internal}\',
-        \'#{current_person_id}\', \'#{current_step}\', \'#{is_closed}\', \'#{total_man_hour}\', \'#{total_price}\')"
+        \'#{current_person_id}\', \'#{current_step}\', \'#{is_closed}\', \'#{total_man_hour}\', \'#{total_price}\', \'#{confirmed_down_time}\', \'#{confirmed_up_time}\')"
   puts sql
   conn.exec(sql)
 end
@@ -166,7 +172,7 @@ end
 
 
 table = "work_order_step"
-totalrecords = 500
+totalrecords = 10000
 for i in 0..totalrecords
   site_id         = randnum.rand(1..2)
   work_order_id   = randnum.rand(1..50)
@@ -212,7 +218,7 @@ for i in 1..totalrecords
   puts Time.at(randtime).to_s
   exam_date = Time.at(randtime).strftime("%F")
   exam_stime = Time.at(randtime).strftime("%F %T")
-  exam_etime = Time.at(randtime + randnum.rand(600..1800)).strftime("%F %T")
+  exam_etime = Time.at(randtime + randnum.rand(200600..521000)).strftime("%F %T")
 
   sql = "insert into #{table} (site_id, hospital_id, asset_id, price_amount, inject_count, expose_count, film_count,
         exam_date, exam_start_time, exam_end_time, modality_id, modality_type_id, modality_type,
