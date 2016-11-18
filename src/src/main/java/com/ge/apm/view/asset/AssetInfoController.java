@@ -221,8 +221,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     private void saveAttachements() {
         for (AssetFileAttachment item : attachements) {
             if (null == item.getId()) {
-//                item.setAssetId(assetId);
-                fileService.saveAttachment(item);
+                attachDao.save(item);
             }
         }
         attachements.clear();
@@ -231,7 +230,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void removeAttachment(Integer attachid) {
         for (AssetFileAttachment item : attachements) {
             if (attachid.equals(item.getFileId())) {
-                fileService.deleteAttachment(item);
+                fileService.deleteAttachment(item.getFileId());
+                attachDao.delete(item);
                 attachements.remove(item);
                 break;
             }

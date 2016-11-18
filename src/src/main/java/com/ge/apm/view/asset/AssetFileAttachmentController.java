@@ -99,7 +99,7 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
             WebUtil.addErrorMessage(WebUtil.getMessage("fileType") + WebUtil.getMessage("ValidationRequire"));
         } else {
             selected.setAssetId(selectedAsset.getId());
-            fileService.saveAttachment(selected);
+            dao.save(selected);
             cancel();
         }
     }
@@ -111,7 +111,8 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
 
     @Override
     public void delete() {
-        if (fileService.deleteAttachment(selected)) {
+        if (fileService.deleteAttachment(selected.getFileId())) {
+            dao.delete(selected);
             cancel();
         }
     }

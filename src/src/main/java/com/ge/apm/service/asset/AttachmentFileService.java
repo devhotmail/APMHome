@@ -51,12 +51,13 @@ public class AttachmentFileService {
         return fileName;
     }
 
-    public StreamedContent getFile(AssetFileAttachment attachFile) {
+    
+    public StreamedContent getFile(Integer fileId) {
         InputStream is = null;
         try {
-            is = fileUploaddao.getAttachmentFile(attachFile.getFileId());
-            DefaultStreamedContent fileStream = new DefaultStreamedContent(is);
-            fileStream.setName(attachFile.getName());
+            Object[] result = fileUploaddao.getAttachmentFile(fileId);
+            DefaultStreamedContent fileStream = new DefaultStreamedContent((InputStream)result[1]);
+            fileStream.setName((String)result[0]);
             return fileStream;
         } catch (SQLException ex) {
             WebUtil.addErrorMessage("file download error");
@@ -64,6 +65,7 @@ public class AttachmentFileService {
         }
         return null;
     }
+    
 
     private Integer saveFiletoDB(UploadedFile file) {
 
@@ -77,14 +79,11 @@ public class AttachmentFileService {
         return returnId;
     }
 
-    public void saveAttachment(AssetFileAttachment item) {
-        attachDao.save(item);
-    }
 
-    public boolean deleteAttachment(AssetFileAttachment item) {
-        fileUploaddao.deleteUploadFile(item.getFileId());
-        attachDao.delete(item);
+    public boolean deleteAttachment(Integer fileId) {
+        fileUploaddao.deleteUploadFile(fileId);
         return true;
     }
+    
 
 }
