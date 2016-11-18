@@ -14,6 +14,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.ServerEventInterface;
 
 @ManagedBean
 @ViewScoped
@@ -84,9 +85,9 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
         return updateViewIDs;
     }
     
-    private JpaCRUDController callingController;
-    
-    public void prepareDialogCallback(JpaCRUDController callingController, String updateViewIDs){
+    private ServerEventInterface callingController;
+
+    public void prepareDialogCallback(ServerEventInterface callingController, String updateViewIDs){
         showDialog = true;
 
         this.selected = null;

@@ -18,6 +18,7 @@ import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.math.NumberUtils;
+import org.primefaces.event.TabChangeEvent;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
@@ -186,4 +187,32 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         WorkOrderStepController woStepController = WebUtil.getBean(WorkOrderStepController.class);
         woStepController.setSelectedByWorkOrder(selected);
     }
+    
+    private int activeTabId = 1;
+    public int getActiveTabId() {
+        return activeTabId;
+    }
+    
+    public void onTabChanged(TabChangeEvent event) {
+        String tabName = event.getTab().getId();
+        if("tabCloseOrder".equals(tabName))
+            activeTabId = 2;
+        else if("TransferOrder".equals(tabName))
+            activeTabId = 3;
+        else
+            activeTabId = 1;
+    }
+
+    public void finishWorkOrderStep(){
+        
+    }
+    
+    public void closeWorkOrder(){
+        
+    }
+
+    public void transferWorkOrder(){
+        
+    }
+    
 }
