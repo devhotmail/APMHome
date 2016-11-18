@@ -15,14 +15,6 @@
                 <h:form id="checkListQueryForm">
                     <p:panelGrid columns="2"  layout="grid" styleClass="ui-panelgrid-blank">
 
-                        <!--<p:fieldset legend="#{msg.selectOneMessage}">-->
-                        <!--                            <h:panelGroup >
-                                                        <label class="label">#{msg.checklistType}</label>
-                                                        <p:selectOneMenu id="functionGroup" value="#{inspectionChecklistController.checklistType}">
-                                                            <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                                            <f:selectItems value="#{fieldMsg.getFieldValueList('checklistType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                                        </p:selectOneMenu>
-                                                    </h:panelGroup>-->
                         <p:scrollPanel style="width:98%;height:400px;border: 0" mode="native" >
                             <label class="label">#{msg.assetName}</label>
                             <p:tree id="assetTree" class="tree" style="border:0;" value="#{inspectionChecklistController.orgAssetTree}" var="node" dynamic="false" cache="false" selectionMode="single" selection="#{inspectionChecklistController.selectedNode}" highlight="true">
@@ -41,26 +33,6 @@
                                 </p:treeNode>
                             </p:tree>
                         </p:scrollPanel>
-<!--                            <p:orderList id="checkListItems" value="#{inspectionChecklistController.checklistitemList}" var="item" itemValue="#{item}"  converter="inspectionChecklistConverter" controlsLocation="right" responsive="true" >
-                                <p:ajax event="select" listener="#{inspectionChecklistController.onSelect}" update="createButton editButton deleteButton"/>
-                                <p:ajax event="unselect" listener="#{inspectionChecklistController.onUnselect}" update=""/>
-                                <p:ajax event="reorder" listener="#{inspectionChecklistController.onReorder}" update=""/>
-
-                                <f:facet name="caption">#{msg.InspectionChecklist}</f:facet>
-                                <p:column style="width:32px">
-                                    <h:outputText value ="#{item.displayOrder}" />
-                                </p:column>
-
-                                <p:column>
-                                    <h:outputText value="#{item.item}" />
-                                </p:column>
-                            </p:orderList>-->
-                            <!--<p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{inspectionChecklistController.prepareCreate}" update=":InspectionChecklistEditDlg" oncomplete="PF('InspectionChecklistEditDialog').show()" disabled="#{0 == inspectionChecklistController.checklistType}"/>-->
-                            <!--<p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{inspectionChecklistController.prepareView}" update=":InspectionChecklistViewDlg" oncomplete="PF('InspectionChecklistViewDialog').show()" disabled="#{empty inspectionChecklistController.selected}"/>-->
-<!--                            <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{inspectionChecklistController.prepareEdit}" update=":InspectionChecklistEditDlg" oncomplete="PF('InspectionChecklistEditDialog').show()" disabled="#{empty inspectionChecklistController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{inspectionChecklistController.prepareDelete}" update=":InspectionChecklistViewDlg" oncomplete="PF('InspectionChecklistViewDialog').show()" disabled="#{empty inspectionChecklistController.selected}"/>-->
-
-
 
                             <p:dataTable id="datalist" value="#{inspectionChecklistController.checklistitemList}" var="item" widgetVar="varDataList" 
                                          selectionMode="single" selection="#{inspectionChecklistController.selected}"
@@ -81,7 +53,6 @@
                                         <p:dataExporter type="xls" target="datalist" fileName="InspectionChecklist_export"/>
                                     </p:commandButton>
                                     <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{inspectionChecklistController.prepareCreate}" update=":InspectionChecklistEditDlg" oncomplete="PF('InspectionChecklistEditDialog').show()" disabled="#{0 == inspectionChecklistController.checklistType}"/>
-                                    <!--<p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{inspectionChecklistController.prepareView}" update=":InspectionChecklistViewDlg" oncomplete="PF('InspectionChecklistViewDialog').show()" disabled="#{empty inspectionChecklistController.selected}"/>-->
                                     <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{inspectionChecklistController.prepareEdit}" update=":InspectionChecklistEditDlg" oncomplete="PF('InspectionChecklistEditDialog').show()" disabled="#{empty inspectionChecklistController.selected}"/>
                                     <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{inspectionChecklistController.prepareDelete}" update=":InspectionChecklistViewDlg" oncomplete="PF('InspectionChecklistViewDialog').show()" disabled="#{empty inspectionChecklistController.selected}"/>
                                     <p:commandButton id="saveOrder" icon="ui-icon-save" class="btn btn-sm btn-gray" title="#{msg.saveOrder}" actionListener="#{inspectionChecklistController.saveOrder}"  update="saveOrder datalist" disabled="#{not inspectionChecklistController.isOrderChange}"/>
