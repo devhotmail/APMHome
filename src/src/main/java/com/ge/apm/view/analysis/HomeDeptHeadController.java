@@ -250,6 +250,8 @@ public class HomeDeptHeadController implements Serializable {
             deviceScan.getAxis(AxisType.Y).setLabel(TIMES);
             deviceScan.setBarWidth(50);
             deviceScan.setLegendPosition("ne");
+            deviceScan.setExtender("deviceScan");
+
 
             ChartSeries chartSeriesTypeS = new BarChartSeries();
             chartSeriesTypeS.setLabel(DVSC);
@@ -269,6 +271,7 @@ public class HomeDeptHeadController implements Serializable {
             deviceExposure.getAxis(AxisType.Y).setLabel(HOURS);
             deviceExposure.setBarWidth(50);
             deviceExposure.setLegendPosition("ne");
+            deviceExposure.setExtender("deviceExposure");
 
             ChartSeries chartSeriesTypeE = new BarChartSeries();
             chartSeriesTypeE.setLabel(DVEP);
@@ -297,6 +300,7 @@ public class HomeDeptHeadController implements Serializable {
             deviceProfit.getAxis(AxisType.Y).setLabel(CNY);
             deviceProfit.setBarWidth(50);
             deviceProfit.setLegendPosition("ne");
+            deviceProfit.setExtender("deviceProfit");
 
             ChartSeries chartSeriesTypeR = new BarChartSeries();
             chartSeriesTypeR.setLabel(DVRN);
