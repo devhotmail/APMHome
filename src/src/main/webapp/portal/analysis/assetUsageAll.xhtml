@@ -1,0 +1,400 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Charts</ui:define>
+
+	<ui:define name="head">
+		<script type="text/javascript">
+			function skinChart() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#03A9F4', '#E91E63', '#4CAF50',
+						'#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					borderWidth : 0.1,
+					borderColor : 'bdbdbd',
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinBar() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#4CAF50', '#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					borderWidth : 0.1,
+					borderColor : 'bdbdbd',
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					renderer : $.jqplot.BarRenderer,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinArea() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#FFC107', '#4CAF50' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					borderWidth : 0.1,
+					borderColor : 'bdbdbd',
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinBubble() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#4CAF50', '#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					renderer : $.jqplot.BubbleRenderer,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinZoom() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#4CAF50', '#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinPie() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#03A9F4', '#E91E63', '#4CAF50',
+						'#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					rendererOptions : {
+						textColor : '#666F77',
+					}
+				};
+				this.cfg.seriesDefaults = {
+					renderer : $.jqplot.PieRenderer,
+					shadow : false,
+					lineWidth : 1,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinDonut() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#03A9F4', '#E91E63', '#4CAF50',
+						'#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					rendererOptions : {
+						textColor : '#666F77',
+					}
+				};
+				this.cfg.seriesDefaults = {
+					renderer : $.jqplot.DonutRenderer,
+					shadow : false,
+					lineWidth : 1,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinBarAndLine() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#03A9F4', '#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					borderWidth : 0.1,
+					borderColor : 'bdbdbd',
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 5,
+					renderer : $.jqplot.BarRenderer,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinMeterGauge() {
+				this.cfg.title = '';
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 5,
+					renderer : $.jqplot.MeterGaugeRenderer,
+					rendererOptions : {
+						shadow : false,
+						min : 100,
+						max : 800,
+						intervals : [ 200, 300, 400, 500, 600, 700, 800 ],
+						intervalColors : [ '#03A9F4', '#E91E63', '#4CAF50',
+								'#FFC107', '#03A9F4', '#E91E63', '#4CAF50' ]
+					}
+				}
+			}
+
+			function skinMultiAxis() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#4CAF50', '#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					borderWidth : 0.1,
+					borderColor : 'bdbdbd',
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					renderer : $.jqplot.BarRenderer,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+		</script>
+		<style type="text/css">
+.jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label,
+	.jqplot-x2axis-label {
+	color: #757575;
+}
+
+table.jqplot-table-legend {
+	background-color: #ffffff;
+	color: #757575;
+	border-color: #bdbdbd;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+			
+		<div class="ui-g dashboard">
+
+			<!-- Title -->
+			<div class="ui-g-12" style="text-align: center;">
+				<span class="overview-title"><b>#{msg.DeviceUtilizationAnalysis}</b></span>
+			</div>
+
+			<!-- Statistics Overview -->
+			<div class="ui-g-12 ui-md-2">
+					
+				<p:panel id="value_scan" header="#{msg.deviceScanlg}">
+					<h:outputText value="#{assetUsageAllController.valueScan}"/>
+				</p:panel>
+						<!-- span class="overview-title">Device Scan (Times)</span> 
+						<span class="overview-detail"><b>#{homeDeptHeadController.valueDeviceScan}</b></span-->
+
+			</div>
+
+			<div class="ui-g-12 ui-md-2">
+
+				<p:panel id="value_expo" header="#{msg.deviceExpolg_1}">
+					<h:outputText value="#{assetUsageAllController.valueExpo}"/>
+				</p:panel>
+						<!--<span class="overview-title">Device Exposure (Hours)</span> 
+						<span class="overview-detail"><b>#{homeDeptHeadController.valueDeviceExposure}</b></span-->
+			</div>
+
+			<div class="ui-g-12 ui-md-6">
+
+				<p:panel id="value_usage" header="#{msg.deviceUsagelg_1}">
+					<h:outputText value="#{assetUsageAllController.valueInuse}"/>
+				</p:panel>			
+
+				<p:chart id="value_usage_bar" type="bar"
+						model="#{assetUsageAllController.deviceUsage}" responsive="true" />
+						
+						<!--<span class="overview-title">Device Profit (CNY)</span> 
+						<span class="overview-detail"><b>#{homeDeptHeadController.valueDeviceProfit}</b></span-->
+			</div>
+           
+		<h:form id="form2">
+			<p:growl id="calendar_submit" showDetail="true" />
+
+			<h:panelGrid columns="2" cellpadding="5">
+
+        	<p:outputLabel for="start_date_button" value="Start Date:" />
+        	<p:calendar id="start_date_button" value="#{assetUsageAllController.startDate}" showOn="button" />
+        	
+        	<p:outputLabel for="end_date_button" value="End Date:" />
+        	<p:calendar id="end_date_button" value="#{assetUsageAllController.endDate}" showOn="button" />
+
+			</h:panelGrid>
+
+			<p:commandButton value="Submit" update="calendar_submit value_scan value_expo value_usage scan_bar exposure_bar usage_bar dt_bar"
+				actionListener="#{assetUsageAllController.submit}" icon="ui-icon-check" />
+
+		</h:form>      
+            
+            
+			<!-- Chart 1: Device Scan -->
+			<div class="ui-g-12">
+				<div class="card">
+					<h1 class="centerText">#{msg.deviceScanhd}</h1>
+					<p:commandButton type="button" value="Export" icon="ui-icon-extlink" onclick="exportChart()"/>
+					<p:chart id="scan_bar" type="bar"
+						model="#{assetUsageAllController.deviceScan}" responsive="true" />
+				</div>
+			</div>
+
+			<!-- Chart 2: Device Exposure -->
+			<div class="ui-g-12">
+				<div class="card">
+					<h1 class="centerText">#{msg.deviceExpohd}</h1>
+					<p:commandButton type="button" value="Export" icon="ui-icon-extlink" onclick="exportChart()"/>
+					<p:chart id="exposure_bar" type="bar"
+						model="#{assetUsageAllController.deviceExpo}" responsive="true" />
+				</div>
+			</div>
+
+			<!-- Chart 3: Device Usage -->
+			<div class="ui-g-12">
+				<div class="card">
+					<h1 class="centerText">#{msg.deviceUsagehd}</h1>
+					<p:commandButton type="button" value="Export" icon="ui-icon-extlink" onclick="exportChart()"/>
+					<p:chart id="usage_bar" type="bar"
+						model="#{assetUsageAllController.deviceUsage}" responsive="true" />
+				</div>
+			</div>
+
+			<!-- Chart 3: Device Downtime -->
+			<div class="ui-g-12">
+				<div class="card">
+					<h1 class="centerText">#{msg.deviceDThd}</h1>
+					<p:commandButton type="button" value="Export" icon="ui-icon-extlink" onclick="exportChart()"/>
+					<p:chart id="dt_bar" type="bar"
+						model="#{assetUsageAllController.deviceDT}" responsive="true" />
+				</div>
+			</div>
+
+		</div>
+
+	</ui:define>
+
+</ui:composition>
