@@ -12,30 +12,14 @@
             <h:form id="InspectionChecklistEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionChecklistController.selected != null}">
-<!--                        <h:panelGroup>
-                            <label class="label">#{msg.id}*</label>
-                            <p:inputText id="id" value="#{inspectionChecklistController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.siteId}*</label>
-                            <p:inputText id="siteId" value="#{inspectionChecklistController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>-->
                         <h:panelGroup>
                             <label class="label">#{msg.item}*</label>
                             <p:inputText id="item" value="#{inspectionChecklistController.selected.item}"  required="true" requiredMessage="#{msg.item} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
-<!--                        <h:panelGroup>
-                            <label class="label">#{msg.displayOrder}*</label>
-                            <p:inputText id="displayOrder" value="#{inspectionChecklistController.selected.displayOrder}"  />
-                        </h:panelGroup>-->
                         <h:panelGroup rendered="not empty inspectionChecklistController.selected.assetId">
                             <label class="label">#{msg.assetId}*</label>
                             <p:inputText id="assetId" value="#{inspectionChecklistController.selected.assetId}" readonly="true" rendered="not empty inspectionChecklistController.selected.assetId"/>
                         </h:panelGroup>
-<!--                        <h:panelGroup rendered="not empty inspectionChecklistController.selected.checklistType">
-                            <label class="label">#{msg.checklistType}*</label>
-                            <p:inputText id="checklistType" value="#{inspectionChecklistController.selected.checklistType}"  required="true" requiredMessage="#{msg.checklistType} #{msg.ValidationRequire}" readonly="true"/>
-                        </h:panelGroup>-->
                     </p:panelGrid>
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{inspectionChecklistController.save}" value="#{msg.Save}" update="display,:InspectionChecklistEditDlg, :checkListQueryForm :checkListQueryForm:datalist, :growl " icon="ui-icon-check" oncomplete="handleSubmit(args, 'InspectionChecklistEditDialog');"/>

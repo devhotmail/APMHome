@@ -12,16 +12,10 @@
             <h:form id="InspectionChecklistViewForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="6" rendered="#{inspectionChecklistController.selected != null}">
-<!--                        <h:outputLabel value="#{msg.id}" for="id" />
-                        <h:outputText value="#{inspectionChecklistController.selected.id}"/>-->
-<!--                        <h:outputLabel value="#{msg.siteId}" for="siteId" />
-                        <h:outputText value="#{inspectionChecklistController.selected.siteId}"/>-->
                         <h:outputLabel value="#{msg.item}" for="item" />
                         <h:outputText value="#{inspectionChecklistController.selected.item}"/>
                         <h:outputLabel value="#{msg.displayOrder}" for="displayOrder" />
                         <h:outputText value="#{inspectionChecklistController.selected.displayOrder}"/>
-<!--                        <h:outputLabel value="#{msg.assetId}" for="assetId" />
-                        <h:outputText value="#{inspectionChecklistController.selected.assetId}"/>-->
                         <h:outputLabel value="#{msg.checklistType}" for="checklistType" />
                         <h:outputText value="#{inspectionChecklistController.selected.checklistType}"/>
                     </p:panelGrid>
