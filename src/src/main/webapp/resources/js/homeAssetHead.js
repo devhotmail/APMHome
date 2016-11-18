@@ -3,8 +3,9 @@ function skinBar() {
     shadow: false,
     title: '',
     seriesColors: ['rgba(93, 165, 218, 1)'],
+    animate: !$.jqplot.use_excanvas,
     grid: {
-      background: 'rgba(124, 126, 128, 1)',
+      background: 'transparent',
       borderColor: 'transparent',
       shadow: false
     },
@@ -31,14 +32,30 @@ function skinBar() {
       shadow: false,
       lineWidth: 1,
       renderer: $.jqplot.BarRenderer,
+      pointLabels: {
+        show: true
+      },
       rendererOptions: {
-        barWidth: 20
+        barWidth: 20,
+        animation: {
+          speed: 500
+        },
       },
       markerOptions: {
         shadow: false,
         size: 1,
         style: 'circle'
       }
+    },
+    series: [{
+      show: false
+    }, {
+      show: true
+    }, {
+      show: false
+    }],
+    highlighter: {
+      show: false
     }
   });
 }
