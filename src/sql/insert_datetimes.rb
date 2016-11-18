@@ -143,7 +143,9 @@ table = "pm_order"
 totalrecords = 500
 for i in 0..totalrecords
   site_id         = randnum.rand(1..2)
+  hospital_id     = randnum.rand(1..10)
   asset_id        = randnum.rand(1..50)
+  asset_name      = "asset-name-#{SecureRandom.uuid}"
   name            = "pm-order-#{asset_id}"
   creator_id    = randnum.rand(1..10)
   creator_name  = "creator-#{creator_id}"
@@ -154,9 +156,9 @@ for i in 0..totalrecords
 
   is_finished   = [true, false].sample
 
-  sql = "insert into #{table} (site_id, asset_id, name, creator_id, creator_name, create_time, start_time,
-        is_finished) values (\'#{site_id}\', \'#{asset_id}\',
-        \'#{name}\', \'#{creator_id}\',\'#{creator_name}\', \'#{create_time}\', \'#{start_time}\',
+  sql = "insert into #{table} (site_id, hospital_id, asset_id, name, asset_name, creator_id, creator_name, create_time, start_time,
+        is_finished) values (\'#{site_id}\', \'#{hospital_id}\', \'#{asset_id}\',
+        \'#{name}\', \'#{asset_name}\', \'#{creator_id}\',\'#{creator_name}\', \'#{create_time}\', \'#{start_time}\',
         \'#{is_finished}\')"
   puts sql
   conn.exec(sql)
