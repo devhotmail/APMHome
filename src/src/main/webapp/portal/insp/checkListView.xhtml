@@ -17,7 +17,7 @@
                         <h:outputLabel value="#{msg.displayOrder}" for="displayOrder" />
                         <h:outputText value="#{inspectionChecklistController.selected.displayOrder}"/>
                         <h:outputLabel value="#{msg.checklistType}" for="checklistType" />
-                        <h:outputText value="#{inspectionChecklistController.selected.checklistType}"/>
+                        <h:outputText value="#{fieldMsg.fieldValue('checklistType',inspectionChecklistController.selected.checklistType)}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{inspectionChecklistController.deleteAction}" icon="ui-icon-trash" actionListener="#{inspectionChecklistController.delete}" value="#{msg.Delete}" update="display,:InspectionChecklistViewDlg, :checkListQueryForm:datalist, :growl" oncomplete="handleSubmit(args, 'InspectionChecklistViewDialog');"/>
