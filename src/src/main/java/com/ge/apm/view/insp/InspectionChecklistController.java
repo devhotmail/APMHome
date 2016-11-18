@@ -41,7 +41,6 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
 
     boolean isOrderChange = false;
 
-//    List<InspectionChecklist> itemList;
     @Override
     protected void init() {
         dao = WebUtil.getBean(InspectionChecklistRepository.class);
@@ -89,16 +88,7 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
 
     @Override
     public List<InspectionChecklist> getItemList() {
-        //to do: change the code if necessary
         if (null != selectedAsset && null != checklistType) {
-
-//            Iterator iterator = searchFilters.iterator();
-//            while (iterator.hasNext()) {
-//                SearchFilter item = (SearchFilter) iterator.next();
-//                if (item.fieldName.equals("assetId") || item.fieldName.equals("checklistType")) {
-//                    iterator.remove();
-//                }
-//            }
             this.searchFilters.clear();
             this.setSiteFilter();
             this.searchFilters.add(new SearchFilter("assetId", SearchFilter.Operator.EQ, selectedAsset.getId()));
@@ -131,33 +121,6 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
         }
     }
 
-    /*
-   
-    
-   
-
-    @Override
-    public void onBeforeUpdateObject(InspectionChecklist object) {
-    }
-    
-    @Override
-    public void onAfterUpdateObject(InspectionChecklist object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeDeleteObject(InspectionChecklist object) {
-    }
-    
-   
-    
-    @Override
-    public void onBeforeSave(InspectionChecklist object) {
-    }
-    
-    @Override
-    public void onAfterDataChanged(){
-    };
-     */
     public void onExpandTreeNode(NodeExpandEvent event) {
         event.getTreeNode().setExpanded(true);
     }
@@ -202,7 +165,6 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
         this.selected = (InspectionChecklist) event.getObject();
     }
 
-    //getter and setter
     public AssetInfo getSelectedAsset() {
         return selectedAsset;
     }
