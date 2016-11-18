@@ -41,7 +41,6 @@
                                 </p:treeNode>
                             </p:tree>
                         </p:scrollPanel>
-                        <p:scrollPanel>
 <!--                            <p:orderList id="checkListItems" value="#{inspectionChecklistController.checklistitemList}" var="item" itemValue="#{item}"  converter="inspectionChecklistConverter" controlsLocation="right" responsive="true" >
                                 <p:ajax event="select" listener="#{inspectionChecklistController.onSelect}" update="createButton editButton deleteButton"/>
                                 <p:ajax event="unselect" listener="#{inspectionChecklistController.onUnselect}" update=""/>
@@ -65,16 +64,16 @@
 
                             <p:dataTable id="datalist" value="#{inspectionChecklistController.checklistitemList}" var="item" widgetVar="varDataList" 
                                          selectionMode="single" selection="#{inspectionChecklistController.selected}"
-                                         lazy="false" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                         paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
                                          rowKey="#{item.id}" sortMode="single"  sortOrder="ascending" sortBy="#{item.displayOrder}"
-                                         paginatorTemplate="{Toolbar}" rowIndexVar="rowIndex" emptyMessage="#{msg.noRecordFound}"
+                                         paginatorTemplate="{Toolbar} {CurrentPageReport}" rowIndexVar="rowIndex" emptyMessage="#{msg.noRecordFound}"
                                          currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
                                            draggableRows="true" scrollable="true" scrollHeight="400">
 
                                 <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
                                 <p:ajax event="rowReorder" listener="#{inspectionChecklistController.onRowReorder}" update="saveOrder"/>
 
-                                <p:column headerText="#{msg.item}">
+                                <p:column >
                                     <h:outputText value="#{item.item}" />
                                 </p:column>
                                 <f:facet name="{Toolbar}">
@@ -88,7 +87,6 @@
                                     <p:commandButton id="saveOrder" icon="ui-icon-save" class="btn btn-sm btn-gray" title="#{msg.saveOrder}" actionListener="#{inspectionChecklistController.saveOrder}"  update="saveOrder datalist" disabled="#{not inspectionChecklistController.isOrderChange}"/>
                                 </f:facet>
                             </p:dataTable>
-                        </p:scrollPanel>
 
                     </p:panelGrid>
                 </h:form>
