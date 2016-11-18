@@ -5,6 +5,7 @@ import com.google.common.collect.FluentIterable;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.postgresql.jdbc4.Jdbc4Array;
+import org.primefaces.model.timeline.TimelineModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webapp.framework.dao.NativeSqlUtil;
@@ -62,8 +63,8 @@ public final class AssetProactiveMaintenanceController {
 
     // region Properties
 
-    public List<Object> getMaintenanceOnDateTable() {
-        List<Map<String, Object>> list = this.query(SQL_LIST_MAINTENANCE_ON_DATE_1);
+    public final List<Object> getMaintenanceSchedule() {
+        List<Map<String, Object>> list = this.query(SQL_LIST_MAINTENANCE_SCHEDULE);
 
         List<Object> ret = new ArrayList<>(13);
         for (Map<String, Object> map : list) {
@@ -77,29 +78,25 @@ public final class AssetProactiveMaintenanceController {
         return ret;
     }
 
+    public final TimelineModel getMaintenanceForecast() {
+        List<Map<String, Object>> list = this.query(SQL_LIST_MAINTENANCE_FORECAST);
+
+        TimelineModel timeline = new TimelineModel();
+        return timeline;
+    }
 
     // endregion
 
     // region SQL
 
     private final List<Map<String, Object>> query(String template) {
-        return this.query(template, null);
+        return NativeSqlUtil.queryForList(template, this.parameters);
     }
 
-    private final List<Map<String, Object>> query(String template, Map<String, Object> extra) {
-        log.info("=> {}", template);
-        if (extra == null) {
-            return NativeSqlUtil.queryForList(template, this.parameters);
-        } else {
-            // TODO: better approach?
-            Map<String, Object> temporary = new HashMap(this.parameters);
-            temporary.putAll(extra);
-            return NativeSqlUtil.queryForList(template, temporary);
-        }
-    }
-
-    private final static String SQL_LIST_MAINTENANCE_ON_DATE_1 = "" +
-            "SELECT array_prepend(to_char(temporary.month, '99'), array_agg(temporary.hint)) AS scalar " +
+    private final static String SQL_LIST_MAINTENANCE_SCHEDULE = "" +
+            "SELECT array_prepend(to_char(temporary.month, '99'), " +
+            "                     array_agg(temporary.hint) " +
+            "                    ) AS scalar " +
             "FROM ( " +
             "        SELECT twelve.month AS month, thirty_one.day AS day, COALESCE(temporary.hint, '') AS hint " +
             "        FROM (VALUES  (1),  (2),  (3),  (4),  (5),  (6),  (7),  (8),  (9), (10), " +
@@ -121,10 +118,42 @@ public final class AssetProactiveMaintenanceController {
             "                AND asset.hospital_id = :#hospitalId " +
             "                AND plan.start_time BETWEEN :#firstDayOfThisYear AND :#firstDayOfThisYearPlus1 " +
             "             ) AS temporary " +
-            "             ON twelve.month = temporary.month AND thirty_one.day = temporary.day " +
-            "             ORDER BY twelve.month ASC, thirty_one.day ASC " +
+            "             ON twelve.month = temporary.month " +
+            "            AND thirty_one.day = temporary.day " +
+            "        ORDER BY twelve.month ASC, " +
+            "                 thirty_one.day ASC " +
             ") AS temporary " +
             "GROUP BY temporary.month " +
+            ";";
+
+    private final static String SQL_LIST_MAINTENANCE_FORECAST = "" +
+            "WITH " +
+            "maintenance_schedule AS ( " +
+            "        SELECT asset.id AS asset_id, date(plan.start_time) AS start_time, text('+') AS hint " +
+            "        FROM pm_order AS plan, " +
+            "             asset_info AS asset " +
+            "        WHERE plan.asset_id = asset.id " +
+            "          AND asset.hospital_id = :#hospitalId " +
+            "          AND plan.start_time BETWEEN :#firstDayOfThisYearMinus1 AND :#firstDayOfThisYearPlus2 " +
+            "), " +
+            "maintenance_schedule_asset_list AS ( " +
+            "        SELECT DISTINCT asset_id " +
+            "        FROM maintenance_schedule " +
+            "), " +
+            "maintenance_schedule_time_list AS ( " +
+            "        SELECT DISTINCT start_time " +
+            "        FROM maintenance_schedule " +
+            ") " +
+            "SELECT maintenance_schedule_asset_list.asset_id, " +
+            "       maintenance_schedule_time_list.start_time, " +
+            "       COALESCE(maintenance_schedule.hint, '') AS hint " +
+            "FROM maintenance_schedule_asset_list " +
+            "CROSS JOIN maintenance_schedule_time_list " +
+            "LEFT OUTER JOIN maintenance_schedule " +
+            "ON maintenance_schedule_asset_list.asset_id = maintenance_schedule.asset_id " +
+            "AND maintenance_schedule_time_list.start_time = maintenance_schedule.start_time " +
+            "ORDER BY maintenance_schedule_asset_list.asset_id ASC, " +
+            "         maintenance_schedule_time_list.start_time ASC " +
             ";";
 
     // endregion

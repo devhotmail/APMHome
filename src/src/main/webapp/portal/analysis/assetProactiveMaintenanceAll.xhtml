@@ -26,7 +26,7 @@
             </div>
             <p:separator/>
             <div class="ui-g-12">
-                <p:dataTable var="monthly" value="#{assetProactiveMaintenanceController.maintenanceOnDateTable}">
+                <p:dataTable var="monthly" value="#{assetProactiveMaintenanceController.maintenanceSchedule}">
                     <p:column headerText="全部设备" class="i18n">
                         <h:outputText value="#{monthly[0]}" />
                     </p:column>
@@ -138,10 +138,7 @@
             </div>
             <p:separator/>
             <div class="ui-g-12">
-                <!--<p:timeline value="#{assetProactiveMaintenanceController.maintenanceOnDateTimeline}"
-
-                            height="250px"
-
+                <p:timeline value="#{assetProactiveMaintenanceController.maintenanceForecast}"
                             selectable="false"
                             zoomable="false"
                             moveable="false"
@@ -149,7 +146,7 @@
                             axisOnTop="true"
                             eventStyle="box"
                             showCurrentTime="true"
-                            showNavigation="false"/>-->
+                            showNavigation="false"/>
             </div>
         </div>
 
