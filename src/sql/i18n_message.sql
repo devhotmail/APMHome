@@ -51,6 +51,7 @@ INSERT INTO "i18n_message" VALUES (46, 'label', 'Download', '下载', 'Download'
 INSERT INTO "i18n_message" VALUES (47, 'label', 'Search', '查询', 'Search', NULL, -1);
 INSERT INTO "i18n_message" VALUES (48, 'label', 'Reset', '重置', 'Reset', NULL, -1);
 INSERT INTO "i18n_message" VALUES (49, 'label','Finish', '完成','Finish ',null,-1);
+INSERT INTO "i18n_message" VALUES (50, 'label','Actions', '操作','Actions ',null,-1);
 
 -- menu item names  ( id from 200 to  399)
 
@@ -134,8 +135,8 @@ INSERT INTO "i18n_message" VALUES (413, 'label', 'Supplier', '供应商信息', 
 -- Entity Object field Names  (id from 600 to  1499)
 
 INSERT INTO "i18n_message" VALUES (600,'field_name','accessory','备件','Accessory',null,-1);
-INSERT INTO "i18n_message" VALUES (601,'field_name','accessoryPrice','备件单价','Accessory Price',null,-1);
-INSERT INTO "i18n_message" VALUES (602,'field_name','accessoryQuantity','备件数量','Accessory Quantity',null,-1);
+INSERT INTO "i18n_message" VALUES (601,'field_name','accessoryPrice','单价','Accessory Price',null,-1);
+INSERT INTO "i18n_message" VALUES (602,'field_name','accessoryQuantity','数量','Accessory Quantity',null,-1);
 INSERT INTO "i18n_message" VALUES (603,'field_name','address','地址','Address',null,-1);
 INSERT INTO "i18n_message" VALUES (604,'field_name','aliasName','别名','Alias Name',null,-1);
 INSERT INTO "i18n_message" VALUES (605,'field_name','arriveDate','到货日期','Arrive Date',null,-1);
@@ -368,16 +369,16 @@ INSERT INTO "i18n_message" VALUES (1588,'caseSubType','4', '故障子类型4',nu
 INSERT INTO "i18n_message" VALUES (1589,'caseSubType','5', '故障子类型5',null,null,-1);
 
 -- module's messages  (id from 3000)
-
-INSERT INTO "i18n_message" VALUES (3000,'message','devicePhoto', '设备照片文件','device Photo',null,-1);
-INSERT INTO "i18n_message" VALUES (3001,'message','deviceContract', '设备合同文件','deviceContract',null,-1);
-INSERT INTO "i18n_message" VALUES (3002,'message','noAssetSelected', '请选择一个设备','Please select an asset',null,-1);
-
-INSERT INTO "i18n_message" VALUES (3003,'message','searchAssetByDept', '按科室选设备','Select By Department',null,-1);
-INSERT INTO "i18n_message" VALUES (3004,'message','searchAsset', '高级查询','Advanced Search',null,-1);
-INSERT INTO "i18n_message" VALUES (3005,'message','selectAssetOwner', '请选择责任人...','Select Asset Owner...',null,-1);
-
-INSERT INTO "i18n_message" VALUES (3006,'message','TransferOrder', '转单','Transfer To..',null,-1);
+INSERT INTO "i18n_message" VALUES (3000,'message','DeleteConformation', '删除确认','Delete Confirmation',null,-1);
+INSERT INTO "i18n_message" VALUES (3001,'message','DeleteConformationMsg', '您确定要删除选定的记录么?','Are you sure to delete selected record?',null,-1);
+INSERT INTO "i18n_message" VALUES (3002,'message','devicePhoto', '设备照片文件','device Photo',null,-1);
+INSERT INTO "i18n_message" VALUES (3003,'message','deviceContract', '设备合同文件','deviceContract',null,-1);
+INSERT INTO "i18n_message" VALUES (3004,'message','noAssetSelected', '请选择一个设备','Please select an asset',null,-1);
+INSERT INTO "i18n_message" VALUES (3005,'message','searchAssetByDept', '按科室选设备','Select By Department',null,-1);
+INSERT INTO "i18n_message" VALUES (3006,'message','searchAsset', '高级查询','Advanced Search',null,-1);
+INSERT INTO "i18n_message" VALUES (3007,'message','selectAssetOwner', '请选择责任人...','Select Asset Owner...',null,-1);
+INSERT INTO "i18n_message" VALUES (3008,'message','TransferOrder', '转单','Transfer To..',null,-1);
+INSERT INTO "i18n_message" VALUES (3009,'message','noWorkOrderSelected', '请选择一个工单','Please select a Work Order.',null,-1);
 
 
 -- update id sequence value
