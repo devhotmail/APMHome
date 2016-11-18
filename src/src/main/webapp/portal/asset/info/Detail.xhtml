@@ -149,7 +149,7 @@
                     <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="ordered">
                         #{fileitem.name}
                         <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
-                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem)}" />
+                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem.fileId)}" />
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>
@@ -157,7 +157,7 @@
                     <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="ordered">
                         #{fileitem.name}
                         <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
-                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem)}" />
+                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem.fileId)}" />
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>
@@ -165,7 +165,7 @@
                     <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,3)}" var="fileitem" type="ordered">
                         #{fileitem.name}
                         <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
-                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem)}" />
+                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem.fileId)}" />
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>
@@ -173,7 +173,7 @@
                     <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="ordered">
                         #{fileitem.name}
                         <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
-                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem)}" />
+                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem.fileId)}" />
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>

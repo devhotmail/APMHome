@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.lob.LobHandler;
 import org.springframework.stereotype.Repository;
@@ -27,7 +29,7 @@ public class FileUploadDao {
     JdbcTemplate template = WebUtil.getServiceBean("jdbcTemplate", JdbcTemplate.class);
     static String SQL_SAVE = "insert into file_uploaded(file_name,file_content) values(?,?) ";
     static String SQL_DELETE = "delete from file_uploaded where id=?";
-    static String SQL_QUERY = "select file_content from file_uploaded where id=?";
+    static String SQL_QUERY = "select file_name,file_content from file_uploaded where id=?";
 
     private LobHandler lobHandler;
 
@@ -56,14 +58,14 @@ public class FileUploadDao {
         return template.update(SQL_DELETE, id);
     }
 
-    public InputStream getAttachmentFile(Integer id) throws SQLException {
+    public Object[] getAttachmentFile(Integer id) throws SQLException {
 
         PreparedStatement ps = template.getDataSource().getConnection().prepareStatement(SQL_QUERY);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         rs.next();
-        InputStream is = rs.getBinaryStream(1);
-        return is;
+        InputStream is = rs.getBinaryStream(2);
+        return new Object[]{rs.getString(1),is};
 
     }
 

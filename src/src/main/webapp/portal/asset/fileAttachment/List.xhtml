@@ -42,7 +42,7 @@
                         </p:column>
                         <p:column headerText="#{msg.download}" >
                             <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
-                                <p:fileDownload value="#{attachmentFileService.getFile(item)}" />
+                                <p:fileDownload value="#{attachmentFileService.getFile(item.fileId)}" />
                             </p:commandButton>
                         </p:column>
                         <f:facet name="{Toolbar}">
