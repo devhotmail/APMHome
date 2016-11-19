@@ -324,6 +324,10 @@ public class HomeHeadController extends SqlConfigurableChartController {
     private void createMonthlyBar() {
 
         barMonthlyRevenue.setLegendPosition("ne");
+        barMonthlyRevenue.setExtender("barMonthlyRevenue");
+        barMonthlyForecast.setExtender("barMonthlyForecast");
+        pieAnnualRevenue.setExtender("pieAnnualRevenue");
+        barAnnualRevenue.setExtender("barAnnualRevenue");
 
         Axis xAxis = barMonthlyRevenue.getAxis(AxisType.X);
         xAxis.setLabel("Assets Type");
@@ -586,7 +590,6 @@ public class HomeHeadController extends SqlConfigurableChartController {
     private void createAnnualBar() {
 
         barAnnualRevenue.setLegendPosition("ne");
-         
         Axis xAxis = barAnnualRevenue.getAxis(AxisType.X);
         xAxis.setLabel("Assets Type");
          

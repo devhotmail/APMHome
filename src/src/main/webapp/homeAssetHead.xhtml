@@ -14,18 +14,17 @@
 
     <ui:define name="content">
         <h:form>
+
             <div class="ui-g ui-fluid">
                 <div class="ui-g-12">
-                    <div class="text--center u-mv-">
+                    <div class="text--center u-mv+">
                         <span class="epsilon">#{msg.HomePageDeptHead}</span>
                     </div>
                 </div>
 
                 <div class="ui-g-12" style="text-align: center">
                     <div class="card--summary">
-                        <p:chart id="statusBar" type="bar" model="#{homeAssetHeadController.barModel}"
-                                 style="height:100px"
-                                 responsive="true"/>
+                        <p:chart id="statusBar" type="bar" model="#{homeAssetHeadController.barModel}" responsive="true"/>
                     </div>
                 </div>
 
@@ -34,7 +33,7 @@
                         <div><span class="overview-title"><b>设备状态</b></span></div>
                         <br/>
                         <div class="ui-g">
-                            <div class="ui-g-4 ui-xl-4 block">
+                            <div class="ui-g-4 ui-md-6 ui-lg-4 block">
                                 <p class="epsilon">维修中</p>
                                 <p class="epsilon text--secondary">维修流程</p>
                                 <ul class="list-inline list-bare">
@@ -46,7 +45,7 @@
                                         </li>
                                     </ui:repeat>
                                 </ul>
-                                <h1 class="alpha text--center">#{homeAssetHeadController.assetNumberInMt}</h1>
+                                <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInMt}</h1>
                                 <div class="block-footer">
                                     <ui:repeat value="#{homeAssetHeadController.assetsInMt}" var="asset">
                                         <p>#{asset.asset}</p>
@@ -60,9 +59,9 @@
                                 </div>
                             </div>
 
-                            <div class="ui-g-4 ui-xl-4 block">
+                            <div class="ui-g-4 ui-md-6 ui-lg-4 block">
                                 <p class="epsilon">停机中</p>
-                                <h1 class="alpha text--center">#{homeAssetHeadController.assetNumberStopped}</h1>
+                                <h1 class="beta text--center">#{homeAssetHeadController.assetNumberStopped}</h1>
                                 <div class="block-footer">
                                     <ui:repeat value="#{homeAssetHeadController.assetsStopped}" var="asset">
                                         <p>#{asset.asset}</p>
@@ -74,9 +73,9 @@
                                 </div>
                             </div>
 
-                            <div class="ui-g-4 ui-xl-4 block">
+                            <div class="ui-g-4 ui-md-6 ui-lg-4 block">
                                 <p class="epsilon">保修期到期(2个月内)</p>
-                                <h1 class="alpha text--center">
+                                <h1 class="beta text--center">
                                     #{homeAssetHeadController.assetNumberWarrantyExpired}</h1>
                                 <div class="block-footer">
                                     <ui:repeat value="#{homeAssetHeadController.assetsWarrantyExpired}" var="asset">
@@ -88,9 +87,9 @@
                                 </div>
                             </div>
 
-                            <div class="ui-g-4 ui-xl-4 block">
+                            <div class="ui-g-4 ui-md-6 ui-lg-4 block">
                                 <p class="epsilon">预防性维护(1周内)</p>
-                                <h1 class="alpha text--center">#{homeAssetHeadController.assetNumberInPm}</h1>
+                                <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInPm}</h1>
                                 <div class="block-footer">
                                     <ui:repeat value="#{homeAssetHeadController.assetsInPm}" var="asset">
                                         <div class="layout layout--middle">
@@ -101,9 +100,9 @@
                                 </div>
                             </div>
 
-                            <div class="ui-g-4 ui-xl-4 block">
+                            <div class="ui-g-4 ui-md-6 ui-lg-4 block">
                                 <p class="epsilon">设备计量(2个月内)</p>
-                                <h1 class="alpha text--center">#{homeAssetHeadController.assetNumberInMetering}</h1>
+                                <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInMetering}</h1>
                                 <div class="block-footer">
                                     <ui:repeat value="#{homeAssetHeadController.assetsInMetering}" var="asset">
                                         <div class="layout layout--middle">
@@ -114,9 +113,9 @@
                                 </div>
                             </div>
 
-                            <div class="ui-g-4 ui-xl-4 block">
+                            <div class="ui-g-4 ui-md-6 ui-lg-4 block">
                                 <p class="epsilon">设备质控(2个月内)</p>
-                                <h1 class="alpha text--center">#{homeAssetHeadController.assetNumberInQa}</h1>
+                                <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInQa}</h1>
                                 <div class="block-footer">
                                     <ui:repeat value="#{homeAssetHeadController.assetsInQa}" var="asset">
                                         <div class="layout layout--middle">

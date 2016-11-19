@@ -8,337 +8,80 @@
     <ui:define name="title">Charts</ui:define>
 
     <ui:define name="head">
-        <script type="text/javascript">
-        function skinChart() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                borderWidth: 0.1,
-                borderColor: 'bdbdbd',
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 1,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinBar() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                borderWidth: 0.1,
-                borderColor: 'bdbdbd',
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 1,
-                renderer: $.jqplot.BarRenderer,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinArea() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#FFC107', '#4CAF50'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                borderWidth: 0.1,
-                borderColor: 'bdbdbd',
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 1,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinBubble() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 1,
-                renderer: $.jqplot.BubbleRenderer,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinZoom() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 1,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinPie() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                rendererOptions: {
-                    textColor: '#666F77',
-                }
-            };
-            this.cfg.seriesDefaults = {
-                renderer: $.jqplot.PieRenderer,
-                shadow: false,
-                lineWidth: 1,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinDonut() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                rendererOptions: {
-                    textColor: '#666F77',
-                }
-            };
-            this.cfg.seriesDefaults = {
-                renderer: $.jqplot.DonutRenderer,
-                shadow: false,
-                lineWidth: 1,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinBarAndLine() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#03A9F4', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                borderWidth: 0.1,
-                borderColor: 'bdbdbd',
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 5,
-                renderer: $.jqplot.BarRenderer,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-
-        function skinMeterGauge() {
-            this.cfg.title = '';
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth: 5,
-                renderer: $.jqplot.MeterGaugeRenderer,
-                rendererOptions: {
-                    shadow: false,
-                    min: 100,
-                    max: 800,
-                    intervals: [200, 300, 400, 500, 600, 700, 800],
-                    intervalColors: ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107', '#03A9F4', '#E91E63', '#4CAF50']
-                }
-            }
-        }
-
-        function skinMultiAxis() {
-            this.cfg.shadow = false;
-            this.cfg.title = '';
-            this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
-            this.cfg.grid = {
-                background: '#ffffff',
-                borderColor: '#ffffff',
-                gridLineColor: '#F5F5F5',
-                shadow: false
-            };
-            this.cfg.axesDefaults = {
-                borderWidth: 0.1,
-                borderColor: 'bdbdbd',
-                rendererOptions: {
-                    textColor: '#666F77'
-                }
-            };
-            this.cfg.seriesDefaults = {
-                shadow: false,
-                lineWidth:1,
-                renderer: $.jqplot.BarRenderer,
-                markerOptions: {
-                    shadow: false,
-                    size: 7,
-                    style: 'circle'
-                }
-            }
-        }
-        </script>
-        <style type="text/css">
-            .jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label, .jqplot-x2axis-label {
-                color: #757575; 
-            }
-            
-            table.jqplot-table-legend {
-                background-color: #ffffff;
-                color: #757575;
-                border-color: #bdbdbd;
-            }
-        </style>
+        <h:outputStylesheet name="css/homeHead.css"/>
+        <h:outputScript name="js/homeHead.js"/>
     </ui:define>
 
     <ui:define name="content">
-    
-        <div class="ui-g dashboard">
-            <div class="ui-g-12" style="text-align: center;">
-                <span class="overview-title"><b>#{msg.HomePageHospitalHead}</b></span>
-            </div>
-            
-            <div class="ui-g-12 ui-md-4">
-                <div class="card overview">
-                    <div class="overview-content clearfix">
-                        <span class="overview-title">Revenue</span>
-                        <span class="overview-detail">#{homeHeadController.totalProfit}</span>
-                    </div>
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="text--center u-mv-">
+                    <span class="epsilon">#{msg.HomePageDeptHead}</span>
                 </div>
             </div>
-            
-            <div class="ui-g-12 ui-md-4">
-                <div class="card overview">
-                    <div class="overview-content clearfix">
-                        <span class="overview-title">Profit</span>
-                        <span class="overview-detail">#{homeHeadController.profitForecast}</span>
+
+            <div class="ui-g-12">
+                <!-- Statistics Overview -->
+                <div class="card--summary ui-g ui-fluid">
+                    <div class="ui-g-12 ui-md-4">
+                        <div class="epsilon u-mv-">设备总利润</div>
+                        <p:outputPanel id="value_scan" header="Device Scan (Times)">
+                            <div class="text--banner delta">
+                                <h:outputText value="#{homeHeadController.totalProfit}"/>
+                                <span class="text--unit text--secondary">元</span>
+                            </div>
+                        </p:outputPanel>
+                    </div>
+                    <div class="ui-g-12 ui-md-6">
+                        <div class="epsilon u-mv-">设备总利润预测</div>
+                        <p:outputPanel id="value_expo" header="Device Exposure (Hours)">
+                            <div class="text--banner delta">
+                                <h:outputText value="#{homeHeadController.profitForecast}"/>
+                                <span class="text--unit text--secondary">元</span>
+                            </div>
+                        </p:outputPanel>
                     </div>
                 </div>
             </div>
 
-            <div class="ui-g-12 ui-xl-12">
-                <div class="card">
-                    <p:selectOneMenu id="selectedYear" value="#{homeHeadController.selectedYear}" style="width:150px">
+            <div class="ui-g-12">
+                <div class="block">
+                    <p:selectOneMenu id="selectedYear" value="#{homeHeadController.selectedYear}">
                         <p:ajax listener="#{homeHeadController.onSelectedYearChange}" onchange="submit()"
-                                update="selectedYear barAnnualRevenue pieAnnualRevenue barMonthlyRevenue" />
-                        <f:selectItem itemLabel="Select Year" itemValue="" noSelectionOption="true" />
-                        <f:selectItems value="#{homeHeadController.yearList}" />
+                                update="selectedYear barAnnualRevenue pieAnnualRevenue barMonthlyRevenue"/>
+                        <f:selectItem itemLabel="Select Year" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{homeHeadController.yearList}"/>
                     </p:selectOneMenu>
                 </div>
             </div>
 
             <div class="ui-g-12">
-                <div class="card">
-                    <p:chart id="barAnnualRevenue" type="bar" model="#{homeHeadController.barAnnualRevenue}" style="height:300px width: 60%" responsive="true"/>
-                </div>
-                <div class="card">
-                    <p:chart id="pieAnnualRevenue" type="pie" model="#{homeHeadController.pieAnnualRevenue}" style="height:300px" responsive="true"/>
-                </div>
-                <div class="ui-g-12">
-                    <div class="card">
-                        <p:chart id="barMonthlyRevenue" type="bar" model="#{homeHeadController.barMonthlyRevenue}" style="height:300px" responsive="true"/>
+                <div class="block">
+                    <h3 class="block-title">设备平均投资回报</h3>
+                    <div class="layout">
+                        <div class="widget layout__item u-2/3 divide-line-right divide-line-bottom u-p">
+                            <h4 class="widget-title">设备投资回报</h4>
+                            <p:chart id="barAnnualRevenue" type="bar" model="#{homeHeadController.barAnnualRevenue}" responsive="true"/>
+                        </div>
+                        <div class="widget layout__item u-1/3 divide-line-bottom u-p">
+                            <h4 class="widget-title">利润科室分布</h4>
+                            <p:chart id="pieAnnualRevenue" type="pie" model="#{homeHeadController.pieAnnualRevenue}" responsive="true"/>
+                        </div>
                     </div>
                 </div>
                 <div class="ui-g-12">
-                    <div class="card">
-                        <p:chart id="barAnnualRevenue3" type="bar" model="#{homeHeadController.barAnnualRevenue}" style="height:300px" responsive="true"/>
+                    <div class="block">
+                        <h3 class="block-title">设备绩效年报</h3>
+                        <p:chart id="barMonthlyRevenue" type="bar" model="#{homeHeadController.barMonthlyRevenue}"
+                                 style="height:300px" responsive="true"/>
+                    </div>
+                </div>
+                <div class="ui-g-12">
+                    <div class="block">
+                        <h3 class="block-title">设备绩效年报预测</h3>
+                        <p:chart id="barAnnualRevenue3" type="bar" model="#{homeHeadController.barAnnualRevenue}"
+                                 style="height:300px" responsive="true"/>
                     </div>
                 </div>
             </div>

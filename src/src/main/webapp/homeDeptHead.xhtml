@@ -61,9 +61,9 @@
 					<p:calendar id="start_date_button" value="#{homeDeptHeadController.startDate}" showOn="button"/>
 					<label>到</label>
 					<p:calendar id="end_date_button" value="#{homeDeptHeadController.endDate}" showOn="button"/>
-					<!--<p:commandButton value="Submit"-->
-									 <!--update="calendar_submit value_scan value_expo value_profit scan_bar exposure_bar profit_bar"-->
-									 <!--actionListener="#{homeDeptHeadController.submit}" icon="ui-icon-check"/>-->
+					<label> </label>
+					<p:commandButton id="submit_date" class="btn btn--large" value="确定" update="calendar_submit value_scan value_expo value_profit scan_bar exposure_bar profit_bar"
+									 actionListener="#{homeDeptHeadController.submit}"/>
 				</div>
 
 			</div>
@@ -91,7 +91,7 @@
 			<!-- Chart 3: Device Profit -->
 			<div class="ui-g-12">
 				<div class="block">
-					<h3 class="block-title">设备投资回报</h3>
+					<h3 class="block-title">设备投资回报</h3>>
 					<p:chart id="profit_bar" type="bar"
 						model="#{homeDeptHeadController.deviceProfit}" responsive="true" />
 				</div>
