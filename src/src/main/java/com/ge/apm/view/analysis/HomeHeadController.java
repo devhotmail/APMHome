@@ -13,20 +13,14 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.LocalDate;
 
+import org.primefaces.model.chart.*;
 import org.slf4j.LoggerFactory;
 
 import webapp.framework.web.mvc.SqlConfigurableChartController;
 import webapp.framework.dao.NativeSqlUtil;
 
-
-import org.primefaces.model.chart.Axis;
-import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.BarChartModel;
-import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.PieChartModel;
-
-@ViewScoped
 @ManagedBean
+@ViewScoped
 public class HomeHeadController extends SqlConfigurableChartController {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
 
@@ -51,6 +45,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
     private int targetYear = Year.now().getValue();
     private int hospitalId = 0;
     private String selectedYear = Integer.toString(targetYear);
+//    private String selectedYear = "";
 
     private String sql;
     private HashMap<String, Object> sqlParams = new HashMap<>();
@@ -63,7 +58,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
     private List<Map<String, Object>> monthMaint = new ArrayList<>();
     private List<Map<String, Object>> monthProfit = new ArrayList<>();
 
-    private DateTime forecastMonth = new DateTime();
+    private DateTime fcStartMonth = new DateTime();
     private List<Map<String, Object>> forecastRevenue = new ArrayList<>();
     private List<Map<String, Object>> forecastDep = new ArrayList<>();
     private List<Map<String, Object>> forecastMaint = new ArrayList<>();
@@ -197,7 +192,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
     }
 
     private void queryForecastProfit() {
-        forecastMonth = forecastMonth.withYear(forecastMonth.getYear() - 2);
+        fcStartMonth = fcStartMonth.withYear(fcStartMonth.getYear() - 2);
 
         forecastRevenue = queryForecastRevenue();
         forecastDep = queryForecastDep();
@@ -205,11 +200,15 @@ public class HomeHeadController extends SqlConfigurableChartController {
 
         forecastProfit = calcProfit(forecastRevenue, forecastDep, forecastMaint);
 
-        predict(forecastRevenue, forecastProfit, forecastMonth);
+        predict(forecastRevenue, forecastProfit, fcStartMonth);
 
         for (Map<String, Object> item : predictPro) {
             profitForecast = profitForecast + (double) item.get("value");
         }
+
+        forecastRevenue.addAll(predictRev);
+        forecastProfit.addAll(predictPro);
+
     }
 
     private void predict(List<Map<String, Object>> revenue, List<Map<String, Object>> profit, DateTime startMonth) {
@@ -295,23 +294,24 @@ public class HomeHeadController extends SqlConfigurableChartController {
         Axis yAxis = barMonthlyForecast.getAxis(AxisType.Y);
         yAxis.setLabel("CNY");
 
+
+        xAxis.setTickAngle(-50);
+        xAxis.setTickFormat("%y-%m");
+        barMonthlyForecast.setBarWidth(11);
+        barMonthlyForecast.setBarMargin(3);
+        barMonthlyForecast.getAxes().put(AxisType.X, xAxis);
+
         String label = "re";
         drawBar(barMonthlyForecast, label, forecastRevenue);
 
         label = "profit";
         drawBar(barMonthlyForecast, label, forecastProfit);
-
-        label = "predict re";
-        drawBar(barMonthlyForecast, label, predictRev);
-
-        label = "predict profit";
-        drawBar(barMonthlyForecast, label, predictPro);
     }
 
     private List<Map<String, Object>> queryForecastRevenue() {
         sql = forecastMonthRevenue;
         logger.info("Get 24 months revenue by month");
-        forecastRevenue = queryMonthDate(sql, sqlParams, 24, forecastMonth);
+        forecastRevenue = queryMonthDate(sql, sqlParams, 24, fcStartMonth);
 
         return forecastRevenue;
     }
@@ -320,7 +320,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
         sql = forecastMonthMaint;
 
         logger.info("Get 24 months maint cost by month");
-        forecastMaint = queryMonthDate(sql, sqlParams, 24, forecastMonth);
+        forecastMaint = queryMonthDate(sql, sqlParams, 24, fcStartMonth);
 
         return forecastMaint;
     }
@@ -328,7 +328,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
     private List<Map<String, Object>> queryForecastDep() {
         sql = depMonth;
         logger.info("Get 24 months by month");
-        monthDep = queryMonthDepDate(sql, sqlParams, 24, forecastMonth);
+        monthDep = queryMonthDepDate(sql, sqlParams, 24, fcStartMonth);
 
         return monthDep;
     }
@@ -569,24 +569,30 @@ public class HomeHeadController extends SqlConfigurableChartController {
         for (Map<String, Object> item : revenue) {
             String key = item.get("key").toString();
 
-            double value = (Double) item.get("value");
-            if (dep.get(index).get("key") == null) {
-                logger.debug("Cannot get key: " + key + "in deprecate sql query.");
-            }
-            else {
-                value = value - (Double) dep.get(index).get("value");
-            }
-
-            if (maintenance.get(index).get("key") == null) {
-                logger.debug("Cannot get key: " + key + "in maintenance sql query.");
-            }
-            else {
-                value = value - (Double) maintenance.get(index).get("value");
-            }
-
             HashMap<String, Object> node = new HashMap<>();
+
+            double value = (Double) item.get("value");
+            if ((value > -0.00001) && (value < 0.00001)) {
+                // revenue equals zero, it should be data input error, therefore, profit will be zero too
+                node.put("value", 0.0);
+            } else {
+
+                // revenue did not equal to zero, let us calculate profit
+                if (dep.get(index).get("key") == null) {
+                    logger.debug("Cannot get key: " + key + "in deprecate sql query.");
+                } else {
+                    value = value - (Double) dep.get(index).get("value");
+                }
+
+                if (maintenance.get(index).get("key") == null) {
+                    logger.debug("Cannot get key: " + key + "in maintenance sql query.");
+                } else {
+                    value = value - (Double) maintenance.get(index).get("value");
+                }
+                node.put("value", value);
+            }
+
             node.put("key", key);
-            node.put("value", value);
             profit.add(node);
             index++;
         }

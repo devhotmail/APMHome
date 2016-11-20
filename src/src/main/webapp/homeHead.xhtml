@@ -22,7 +22,6 @@
             </div>
 
             <div class="ui-g-12">
-                <!-- Statistics Overview -->
                 <div class="card--summary ui-g ui-fluid">
                     <div class="ui-g-12 ui-md-4">
                         <div class="epsilon u-mv-">设备总利润</div>
@@ -47,12 +46,16 @@
 
             <div class="ui-g-12">
                 <div class="block">
-                    <p:selectOneMenu id="selectedYear" value="#{homeHeadController.selectedYear}">
-                        <p:ajax listener="#{homeHeadController.onSelectedYearChange}" onchange="submit()"
-                                update="selectedYear barAnnualRevenue pieAnnualRevenue barMonthlyRevenue"/>
-                        <f:selectItem itemLabel="Select Year" itemValue="" noSelectionOption="true"/>
-                        <f:selectItems value="#{homeHeadController.yearList}"/>
-                    </p:selectOneMenu>
+                    <h:form>
+                        <p:selectOneMenu id="selectedYear" value="#{homeHeadController.selectedYear}">
+                            <p:ajax listener="#{homeHeadController.onSelectedYearChange}"
+                            />
+                            <!--update="selectedYear barAnnualRevenue pieAnnualRevenue barMonthlyRevenue"/>-->
+
+                            <f:selectItem itemLabel="Select Year" itemValue="" noSelectionOption="true"/>
+                            <f:selectItems value="#{homeHeadController.yearList}"/>
+                        </p:selectOneMenu>
+                    </h:form>
                 </div>
             </div>
 
@@ -80,7 +83,7 @@
                 <div class="ui-g-12">
                     <div class="block">
                         <h3 class="block-title">设备绩效年报预测</h3>
-                        <p:chart id="barAnnualRevenue3" type="bar" model="#{homeHeadController.barAnnualRevenue}"
+                        <p:chart id="barForecast" type="bar" model="#{homeHeadController.barMonthlyForecast}"
                                  style="height:300px" responsive="true"/>
                     </div>
                 </div>
