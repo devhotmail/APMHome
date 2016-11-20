@@ -52,6 +52,7 @@ INSERT INTO "i18n_message" VALUES (47, 'label', 'Search', '查询', 'Search', NU
 INSERT INTO "i18n_message" VALUES (48, 'label', 'Reset', '重置', 'Reset', NULL, -1);
 INSERT INTO "i18n_message" VALUES (49, 'label','Finish', '完成','Finish ',null,-1);
 INSERT INTO "i18n_message" VALUES (50, 'label','Actions', '操作','Actions ',null,-1);
+INSERT INTO "i18n_message" VALUES (51, 'label','DataSavedOK', '数据已经保存成功.','data saved successfully ',null,-1);
 
 -- menu item names  ( id from 200 to  399)
 
@@ -379,6 +380,7 @@ INSERT INTO "i18n_message" VALUES (3006,'message','searchAsset', '高级查询',
 INSERT INTO "i18n_message" VALUES (3007,'message','selectAssetOwner', '请选择责任人...','Select Asset Owner...',null,-1);
 INSERT INTO "i18n_message" VALUES (3008,'message','TransferOrder', '转单','Transfer To..',null,-1);
 INSERT INTO "i18n_message" VALUES (3009,'message','noWorkOrderSelected', '请选择一个工单','Please select a Work Order.',null,-1);
+INSERT INTO "i18n_message" VALUES (3010,'message','ProcessWorkOrder', '处理工单','Process Work Order',null,-1);
 
 
 -- Chart label/lengend （id from 5000 to 5500）
