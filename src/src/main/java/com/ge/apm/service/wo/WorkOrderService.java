@@ -2,8 +2,10 @@ package com.ge.apm.service.wo;
 
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.dao.WorkOrderStepRepository;
+import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderStep;
+import com.ge.apm.service.uaa.UaaService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,33 +25,95 @@ public class WorkOrderService {
 
         woStep.setWorkOrderId(wo.getId());
         woStep.setSiteId(wo.getSiteId());
-        woStep.setOwnerId(wo.getCurrentPersonId());
-        woStep.setOwnerName(wo.getCurrentPersonName());
-        woStep.setStartTime(TimeUtil.now());
+        
+        if(wo.getCurrentPersonId()!=null) woStep.setOwnerId(wo.getCurrentPersonId());
+        if(wo.getCurrentPersonName()!=null) woStep.setOwnerName(wo.getCurrentPersonName());
+        
         woStep.setStepId(wo.getCurrentStep());
         woStep.setStepName(WebUtil.getMessage("woSteps"+"-"+wo.getCurrentStep()));
+
+        woStep.setStartTime(TimeUtil.now());
         
         return woStep;
     }
     
     @Transactional
-    public void saveWorkOrderStep(WorkOrder wo, WorkOrderStep currentWoStep, WorkOrderStep nextWoStep){
+    public void saveWorkOrderStep(WorkOrder wo, WorkOrderStep currentWoStep, WorkOrderStep nextWoStep) throws RuntimeException{
         WorkOrderRepository woDao = WebUtil.getBean(WorkOrderRepository.class);
         WorkOrderStepRepository woStepDao = WebUtil.getBean(WorkOrderStepRepository.class);
         
-        if(wo!=null)  woDao.save(wo);
-        if(currentWoStep!=null)  woStepDao.save(currentWoStep);
-        if(nextWoStep!=null)  woStepDao.save(nextWoStep);
+        if(wo!=null){
+            try{
+                woDao.save(wo);
+            }
+            catch(Exception ex){
+                throw new RuntimeException("Failed to save WorkOrder:"+ex.getMessage());
+            }
+        }
+        
+        if(currentWoStep!=null){
+            if(wo!=null){
+                currentWoStep.setWorkOrderId(wo.getId());
+                currentWoStep.setOwnerId(wo.getCaseOwnerId());
+                currentWoStep.setOwnerName(wo.getCaseOwnerName());
+            }
+            
+            try{
+                woStepDao.save(currentWoStep);
+            }
+            catch(Exception ex){
+                throw new RuntimeException("Failed to save current WorkOrderStep:"+ex.getMessage());
+            }
+        }
+        if(nextWoStep!=null){
+            if(wo!=null){
+                nextWoStep.setWorkOrderId(wo.getId());
+                nextWoStep.setOwnerId(wo.getCaseOwnerId());
+                nextWoStep.setOwnerName(wo.getCaseOwnerName());
+            }
+            
+            try{
+                woStepDao.save(nextWoStep);
+            }
+            catch(Exception ex){
+                throw new RuntimeException("Failed to save next WorkOrderStep:"+ex.getMessage());
+            }
+        }
+    }
+
+    protected void checkWorkOrderPersonNames(WorkOrder wo){
+        UaaService uaaService = WebUtil.getBean(UaaService.class);
+        UserAccount user;
+        
+        user = uaaService.getUserById(wo.getRequestorId());
+        if(user!=null)
+            wo.setRequestorName(user.getName());
+        else 
+            wo.setRequestorName("N/A");
+        
+        if(wo.getCaseOwnerId().equals(wo.getCurrentPersonId())){
+            wo.setCurrentPersonName(wo.getCaseOwnerName());
+        }
+        else{
+            user = uaaService.getUserById(wo.getCurrentPersonId());
+            if(user!=null)
+                wo.setCurrentPersonName(user.getName());
+            else
+                wo.setCurrentPersonName("N/A");
+        }
     }
     
-    public void finishWorkOrderStep(WorkOrder wo, WorkOrderStep currentWoStep){
+    public void createWorkOrderStep(WorkOrder wo, WorkOrderStep currentWoStep) throws Exception{
+        finishWorkOrderStep(wo, currentWoStep);
+    }
+
+    public void finishWorkOrderStep(WorkOrder wo, WorkOrderStep currentWoStep) throws Exception{
         // update current Work Order Step
         currentWoStep.setEndTime(TimeUtil.now());
         
         // initiate next Work Order Step
         wo.setCurrentStep(currentWoStep.getStepId()+1);
-        wo.setCurrentPersonId(wo.getCaseOwnerId());
-        wo.setCurrentPersonName(wo.getCaseOwnerName());
+        checkWorkOrderPersonNames(wo);
         
         WorkOrderStep nextWoStep = initWorkOrderCurrentStep(wo);
         
@@ -66,7 +130,7 @@ public class WorkOrderService {
         }
     }
 
-    public void closeWorkOrder(WorkOrder wo, WorkOrderStep currentWoStep){
+    public void closeWorkOrder(WorkOrder wo, WorkOrderStep currentWoStep) throws Exception{
         wo.setCurrentStep(6);
         wo.setIsClosed(true);
         currentWoStep.setEndTime(TimeUtil.now());
@@ -86,7 +150,8 @@ public class WorkOrderService {
     }
 
     @Transactional
-    public void transferWorkOrder(WorkOrder wo, WorkOrderStep currentWoStep){
+    public void transferWorkOrder(WorkOrder wo, WorkOrderStep currentWoStep) throws Exception{
+        checkWorkOrderPersonNames(wo);
         WorkOrderStep nextWoStep = initWorkOrderCurrentStep(wo);
         
         try{

@@ -51,7 +51,7 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
     }
     
     public  void loadWorkOrderSteps(int workId) {
-        workOrderStepList = dao.getByWorkOrderId(workId);
+        workOrderStepList = dao.getByWorkOrderIdOrderByIdAsc(workId);
     }
 
     private SearchFilter workOrderFilter;
@@ -68,12 +68,22 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
         this.selected = null;
         this.wo = wo;
         if(wo!=null){
-            List<WorkOrderStep> woStepList = dao.getByWorkOrderIdAndStepId(wo.getId(), wo.getCurrentStep());
+            List<WorkOrderStep> woStepList = null;
+            if(wo.getId()!=null)
+                 woStepList = dao.getByWorkOrderIdAndStepId(wo.getId(), wo.getCurrentStep());
 
-            if(woStepList.isEmpty()){
+            if( (woStepList==null) || woStepList.isEmpty()){
                 WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
                 selected = woService.initWorkOrderCurrentStep(wo);
-                woService.saveWorkOrderStep(null, selected, null);
+                
+                if(wo.getId()!=null)
+                    try{
+                        woService.saveWorkOrderStep(null, selected, null);
+                    }
+                    catch(Exception ex){
+                        logger.error(ex.getMessage(), ex);
+                        WebUtil.addErrorMessageKey("PersistenceErrorOccured");
+                    }
             }
             else{
                 this.selected = woStepList.get(0);
@@ -81,19 +91,52 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
         }
     }
 
+    public void createWorkOrderStep(){
+        WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
+        try{
+            woService.createWorkOrderStep(wo, this.selected);
+            WebUtil.navigateTo("woSaved");
+        }
+        catch(Exception ex){
+            logger.error(ex.getMessage(), ex);
+            WebUtil.addErrorMessageKey("PersistenceErrorOccured");
+        }
+    }
+
     public void finishWorkOrderStep(){
         WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
-        woService.finishWorkOrderStep(wo, this.selected);
+        try{
+            woService.finishWorkOrderStep(wo, this.selected);
+            WebUtil.navigateTo("woSaved");
+        }
+        catch(Exception ex){
+            logger.error(ex.getMessage(), ex);
+            WebUtil.addErrorMessageKey("PersistenceErrorOccured");
+        }
     }
     
     public void closeWorkOrder(){
         WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
-        woService.closeWorkOrder(wo, this.selected);
+        try{
+            woService.closeWorkOrder(wo, this.selected);
+            WebUtil.navigateTo("woSaved");
+        }
+        catch(Exception ex){
+            logger.error(ex.getMessage(), ex);
+            WebUtil.addErrorMessageKey("PersistenceErrorOccured");
+        }
     }
 
     public void transferWorkOrder(){
         WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
-        woService.transferWorkOrder(wo, this.selected);
-    }
+         try{
+            woService.transferWorkOrder(wo, this.selected);
+             WebUtil.navigateTo("woSaved");
+        }
+        catch(Exception ex){
+            logger.error(ex.getMessage(), ex);
+            WebUtil.addErrorMessageKey("PersistenceErrorOccured");
+        }
+   }
     
 }

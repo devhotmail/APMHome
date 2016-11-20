@@ -45,52 +45,43 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         return dao;
     }
 
-    public void setLoginUserFilter(){
-        if (this.searchFilters == null) 
-            this.searchFilters = new ArrayList<SearchFilter>();
-        
-        this.searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, loginUser.getId()));
+    private boolean filterByLoginUser = false;
+    public boolean isFilterByLoginUser() {
+        return filterByLoginUser;
+    }
+    public void setFilterByLoginUser(boolean filterByLoginUser) {
+        this.filterByLoginUser = filterByLoginUser;
     }
     
+    public void setLoginUserFilter(){
+        if(filterByLoginUser){
+            if (this.searchFilters == null) 
+                this.searchFilters = new ArrayList<SearchFilter>();
+        
+            this.searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, loginUser.getId()));
+        }
+    }
+
     @Override
     protected Page<WorkOrder> loadData(PageRequest pageRequest) {
         //only show my tasks
         //setSiteFilter();
         setHospitalFilter();
-        //setLoginUserFilter();
+        setLoginUserFilter();
         
         return dao.findBySearchFilter(this.searchFilters, pageRequest);
-    }
-
-    private boolean isInViewMode = true;
-    public boolean getIsInViewMode(){
-        return isInViewMode;
-    }
-    
-    @Override
-    public void setSelected(WorkOrder workOrder){
-        isInViewMode = true;
-        this.selected = workOrder;
-    }
-
-    @Override
-    public void prepareCreate() throws InstantiationException, IllegalAccessException{
-        super.prepareCreate();
-        isInViewMode = false;
     }
 
     public String getMyWorkOrderId() {
         return null;
     }
+    
     public void setMyWorkOrderId(String selectedWorkOrderId) {
-        System.out.println("********************* setMyWorkOrderId");
         int workOrder = NumberUtils.toInt(selectedWorkOrderId, -1);
         if(workOrder<0){
-            isInViewMode = true;
             this.selected = null;
         }
         else{
-            isInViewMode = false;
             this.selected = dao.getByIdAndCurrentPersonId(workOrder, loginUser.getId());
         }
         
@@ -116,61 +107,30 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         return uaaService.getUserList(loginUser.getHospitalId());
     }
     
-    @Override
-    public void onBeforeNewObject(WorkOrder workOrder) {
+    public void prepareCreateWorkOrder() throws InstantiationException, IllegalAccessException {
+        if(!WebUtil.isHttpGetRequest()) return;
+
+        this.prepareCreate();
+        
+        selected.setSiteId(loginUser.getSiteId());
+        selected.setHospitalId(loginUser.getHospitalId());
+        selected.setCreatorId(loginUser.getId());
+        selected.setCreatorName(loginUser.getName());
+        
+        selected.setCreateTime(TimeUtil.now());
+        selected.setCurrentStep(1);
+        
+        selected.setCasePriority(3);
+
+        selected.setTotalManHour(0);
+        selected.setTotalPrice(0.0);
+        
+        selected.setIsInternal(true);
+        selected.setIsClosed(false);
+
         onSelectWorkOrder();
-        
-        workOrder.setSiteId(loginUser.getSiteId());
-        workOrder.setHospitalId(loginUser.getHospitalId());
-        workOrder.setCreatorId(loginUser.getId());
-        workOrder.setCreatorName(loginUser.getName());
-        
-        workOrder.setCreateTime(TimeUtil.now());
-        workOrder.setCurrentStep(1);
-        
-        workOrder.setCasePriority(3);
-
-        workOrder.setTotalManHour(0);
-        workOrder.setTotalPrice(0.0);
-        
-        workOrder.setIsInternal(true);
-        workOrder.setIsClosed(false);
     }
 
-    @Override
-    public void onBeforeSave(WorkOrder workOrder) {
-        UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
-
-        UserAccount requestor = userDao.findById(workOrder.getRequestorId());
-        workOrder.setRequestorName(requestor.getName());
-        workOrder.getCurrentPersonId();
-
-        UserAccount currentPerson = userDao.findById(workOrder.getCurrentPersonId());
-        workOrder.setCurrentPersonName(currentPerson.getName());
-        
-        if(workOrder.getCurrentStep()==1)
-            workOrder.setCurrentStep(2);
-    }
-
-    @Override
-    public void onAfterNewObject(WorkOrder wo, boolean isOK) {
-        if(!isOK){
-            wo.setCurrentStep(1);
-            return;
-        }
-        
-        //create workOrderStep for workOrder step
-        WorkOrderStep woStep = new WorkOrderStep();
-        woStep.setWorkOrderId(wo.getId());
-        woStep.setSiteId(wo.getSiteId());
-        woStep.setStepId(wo.getCurrentStep());
-        woStep.setStepName(FieldValueMessageController.doGetFieldValue("woSteps", wo.getCurrentStep().toString()));
-        woStep.setOwnerId(wo.getCurrentPersonId());
-        woStep.setOwnerName(wo.getCurrentPersonName());
-        
-        WorkOrderStepRepository woStepDao = WebUtil.getBean(WorkOrderStepRepository.class);
-        woStepDao.save(woStep);
-    }
 
     @Override
     public void onServerEvent(String eventName, Object eventObject){
@@ -199,9 +159,9 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
     
     public void onTabChanged(TabChangeEvent event) {
         String tabName = event.getTab().getId();
-        if("tabCloseOrder".equals(tabName))
+        if("TransferOrder".equals(tabName))
             activeTabId = 1;
-        else if("TransferOrder".equals(tabName))
+        else if("tabCloseOrder".equals(tabName))
             activeTabId = 2;
         else
             activeTabId = 0;
