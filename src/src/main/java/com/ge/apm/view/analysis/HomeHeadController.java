@@ -1,6 +1,8 @@
 package com.ge.apm.view.analysis;
 
 import com.ge.apm.view.sysutil.*;
+
+import java.text.NumberFormat;
 import java.time.Year;
 
 import java.util.*;
@@ -30,8 +32,8 @@ public class HomeHeadController extends SqlConfigurableChartController {
     private List<Map<String, Object>> profit = new ArrayList<>();
 
     //UI Params
-    private double totalProfit = 0;
-    private double profitForecast = 0;
+    private String totalProfit = "";
+    private String profitForecast = "";
 
     private HashMap<String, String> yearList = new HashMap<>();
 
@@ -111,7 +113,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
             "select to_char(w.request_time, 'yyyy-mm') as key, " +
                     "sum(w.total_price) as value " +
                     "from asset_info a, work_order w " +
-                    "where extract(year from w.request_time) = :#targetYear" +
+                    "where extract(year from w.request_time) = :#targetYear " +
                     "and a.id = w.asset_id and w.is_closed = true " +
                     "and a.hospital_id = :#hospitalId " +
                     "group by key order by key;";
@@ -160,10 +162,6 @@ public class HomeHeadController extends SqlConfigurableChartController {
         createMonthlyBar();
 
         createForecastBar();
-
-        ;
-
-
     }
 
     private DateTime getStartMonth() {
@@ -171,8 +169,10 @@ public class HomeHeadController extends SqlConfigurableChartController {
         DateTime startMonth = new DateTime();
         if (targetYear == startMonth.getYear()) {
             // start from last 12 month
+            isYearly = false;
             startMonth = startMonth.withYear(startMonth.getYear() - 1);
         } else {
+            isYearly = true;
             startMonth = startMonth.withYear(targetYear).withMonthOfYear(1); // start from first month
         }
 
@@ -180,6 +180,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
     }
 
     private void queryTotalProfit() {
+        double pro = 0.0;
         monthRevenue = queryMonthRevenue();
         monthDep = queryMonthDep();
         monthMaint = queryMonthMaint();
@@ -187,11 +188,16 @@ public class HomeHeadController extends SqlConfigurableChartController {
         monthProfit = calcProfit(monthRevenue, monthDep, monthMaint);
 
         for (Map<String, Object> item : monthProfit) {
-            totalProfit = totalProfit + (double) item.get("value");
+            pro = pro + (double) item.get("value");
         }
+
+        NumberFormat cf = NumberFormat.getCurrencyInstance();
+        totalProfit = cf.format(pro);
     }
 
     private void queryForecastProfit() {
+        double value = 0.0;
+
         fcStartMonth = fcStartMonth.withYear(fcStartMonth.getYear() - 2);
 
         forecastRevenue = queryForecastRevenue();
@@ -203,8 +209,11 @@ public class HomeHeadController extends SqlConfigurableChartController {
         predict(forecastRevenue, forecastProfit, fcStartMonth);
 
         for (Map<String, Object> item : predictPro) {
-            profitForecast = profitForecast + (double) item.get("value");
+            value = value + (double) item.get("value");
         }
+
+        NumberFormat cf = NumberFormat.getCurrencyInstance();
+        profitForecast = cf.format(value);
 
         forecastRevenue.addAll(predictRev);
         forecastProfit.addAll(predictPro);
@@ -269,20 +278,22 @@ public class HomeHeadController extends SqlConfigurableChartController {
 
 
     private void createMonthlyBar() {
+        BarChartModel bc = new BarChartModel();
+        bc.setLegendPosition("ne");
 
-        barMonthlyRevenue.setLegendPosition("ne");
-
-        Axis xAxis = barMonthlyRevenue.getAxis(AxisType.X);
+        Axis xAxis = bc.getAxis(AxisType.X);
         xAxis.setLabel("Assets Type");
 
-        Axis yAxis = barMonthlyRevenue.getAxis(AxisType.Y);
+        Axis yAxis = bc.getAxis(AxisType.Y);
         yAxis.setLabel("CNY");
 
         String label = "re";
-        drawBar(barMonthlyRevenue, label, monthRevenue);
+        drawBar(bc, label, monthRevenue);
 
         label = "profit";
-        drawBar(barMonthlyRevenue, label, monthProfit);
+        drawBar(bc, label, monthProfit);
+
+        barMonthlyRevenue = bc;
     }
 
     private void createForecastBar() {
@@ -341,7 +352,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
             sql = last12MonthRevenue;
         }
 
-        logger.info("Get revenue by month");
+        logger.info("Get revenue by month.");
         monthRevenue = queryMonthDate(sql, sqlParams, 12, startMonth);
 
         return monthRevenue;
@@ -386,9 +397,9 @@ public class HomeHeadController extends SqlConfigurableChartController {
     }
 
     // Get-Set methods
-    public double getTotalProfit() {return totalProfit;}
+    public String getTotalProfit() {return totalProfit;}
 
-    public double getProfitForecast() { return profitForecast; }
+    public String getProfitForecast() { return profitForecast; }
 
     public String getSelectedYear() {
         logger.debug("get selectdYear: {}", selectedYear);
@@ -420,7 +431,24 @@ public class HomeHeadController extends SqlConfigurableChartController {
     }
 
     public void onSelectedYearChange() {
+
         logger.debug("target year : {}", this.selectedYear);
+        targetYear = Integer.parseInt(selectedYear);
+        sqlParams.put("targetYear", this.targetYear);
+        startMonth = getStartMonth();
+        
+        logger.debug("target year : {}, " +
+                "isYearly: {}, " +
+                "startMonth: {}, " +
+                "sqlParams: {}", targetYear, isYearly, startMonth, sqlParams);
+
+        queryTotalProfit();
+
+        createAnnualBar();
+
+        createAnnualPie();
+
+        createMonthlyBar();
     }
 
     private void initYearList() {
@@ -470,6 +498,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
 
         // init expected result list
         DateTime targetMonth = startMonth;
+        logger.debug("startMonth: {}.", startMonth);
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM");
         for (int index = 0; index < size; index++) {
             Map<String, Object> item = new HashMap<>();
@@ -479,6 +508,8 @@ public class HomeHeadController extends SqlConfigurableChartController {
             targetMonth = targetMonth.plusMonths(1);
         }
 
+        logger.debug("result size: {}", result.size());
+        logger.debug("print input result: {}", result);
         for (Map<String, Object> item : li) {
 
             if (result.size() == 0) {
@@ -549,13 +580,17 @@ public class HomeHeadController extends SqlConfigurableChartController {
     }
 
     private void drawPie(String title, List<Map<String, Object>> data) {
+        PieChartModel pc = new PieChartModel();
+
         for (Map<String, Object> item : data) {
-            pieAnnualRevenue.set(item.get("key").toString(), (Double) item.get("value"));
+            pc.set(item.get("key").toString(), (Double) item.get("value"));
         }
 
-        pieAnnualRevenue.setTitle(title);
-        pieAnnualRevenue.setShowDataLabels(true);
-        pieAnnualRevenue.setLegendPosition("w");
+        pc.setTitle(title);
+        pc.setShowDataLabels(true);
+        pc.setLegendPosition("w");
+
+        pieAnnualRevenue = pc;
     }
 
     private List<Map<String, Object>> calcProfit(List<Map<String, Object>> revenue,
@@ -601,12 +636,13 @@ public class HomeHeadController extends SqlConfigurableChartController {
     }
     
     private void createAnnualBar() {
+        BarChartModel bc = new BarChartModel();
 
-        barAnnualRevenue.setLegendPosition("ne");
-        Axis xAxis = barAnnualRevenue.getAxis(AxisType.X);
+        bc.setLegendPosition("ne");
+        Axis xAxis = bc.getAxis(AxisType.X);
         xAxis.setLabel("Assets Type");
          
-        Axis yAxis = barAnnualRevenue.getAxis(AxisType.Y);
+        Axis yAxis = bc.getAxis(AxisType.Y);
         yAxis.setLabel("CNY");
 
         hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
@@ -628,7 +664,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
         
         List<Map<String, Object>> r = prepareData(sql, sqlParams);
         String label = "re";
-        drawBar(barAnnualRevenue, label, r);
+        drawBar(bc, label, r);
         
         // get asset deprecate value
         sql = "select a.asset_group as key, "
@@ -654,7 +690,8 @@ public class HomeHeadController extends SqlConfigurableChartController {
         List<Map<String, Object>> profit = calcProfit(r, d, w);
         label = "profit";
         printList(profit);
-        drawBar(barAnnualRevenue, label, profit);
+        drawBar(bc, label, profit);
+        barAnnualRevenue = bc;
     }
 
     private List<Map<String, Object>> prepareData(String sql, HashMap<String, Object> sqlParams) {
