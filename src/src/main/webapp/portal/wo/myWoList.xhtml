@@ -4,6 +4,10 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
+    
+    <ui:define name="preRenderView">
+        <f:event type="preRenderView" listener="#{workOrderController.setFilterByLoginUser(true)}"/>
+    </ui:define>
 
     <ui:define name="head">
         <h:outputStylesheet name="css/wo_steps.css" />
@@ -14,7 +18,7 @@
             <div class="ui-g-12">
 
                 <p align="center">
-                    <b>#{msg.WorkOrder} #{msg.List}</b>
+                    <b>#{msg.myWorkOrder} #{msg.List}</b>
                 </p>
                 <p:messages autoUpdate="true" closable="true" showDetail="false"/>
                 
@@ -28,8 +32,8 @@
                         rows="20" emptyMessage="#{msg.noRecordFound}"
                         rowsPerPageTemplate="20,40,60,90">
 
-                        <p:ajax event="rowSelect" listener="#{workOrderController.onSelectWorkOrder}" update="WorkOrderEditForm WorkOrderStepListForm"/>
-                        <p:ajax event="filter" listener="#{workOrderController.onFilter}" update="WorkOrderEditForm WorkOrderStepListForm"/>
+                        <p:ajax event="rowSelect" listener="#{workOrderController.onSelectWorkOrder}" update="processButton"/>
+                        <p:ajax event="filter" listener="#{workOrderController.onFilter}" update="processButton"/>
 
                         <p:column styleClass="textCenter"  headerText="#{msg.casePriority}" sortBy="#{item.casePriority}" filterBy="#{item.casePriority}" filterMatchMode="EQ">
                             <center><h:outputText value="#{item.casePriority}" class="priorityItem priorityItem#{item.casePriority}"/></center>
@@ -75,17 +79,13 @@
                             <h:outputText value="#{item.isClosed? msg.True2Yes : msg.False2No }"/>
                         </p:column>
                         <f:facet name="{Toolbar}">
-                            <p:button id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" value="#{msg.Create}" outcome="woCreate" />
+                            <p:button id="processButton" icon="ui-icon-arrow-forward" value="#{msg.ProcessWorkOrder}" outcome="woProcess.xhtml?woId=#{workOrderController.selected.getId()}" disabled="#{workOrderController.selected eq null}"/>
                             <p:commandButton value="#{msg.exportToXLS}" icon="ui-icon-arrow-downward" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="WorkOrder_export"/>
                             </p:commandButton>
                         </f:facet>
                     </p:dataTable>
                 </h:form>
-
-                <br/>
-
-                <ui:include src="woView.xhtml"/>
             </div>
         </div>
 

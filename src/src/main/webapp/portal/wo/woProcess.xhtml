@@ -96,7 +96,7 @@
                         <p:panelGrid columns="1" layout="grid" style="max-width: 80%" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup>
                                 <label class="label">#{msg.requestReason}</label>
-                                <p:inputTextarea style="border-bottom: 0;" readonly="true" cols="100" value="#{workOrderController.selected.requestReason}" required="true" requiredMessage="#{msg.requestReason} #{msg.ValidationRequire}"/>
+                                <p:inputTextarea style="border-bottom: 0;" readonly="true" cols="100" value="#{workOrderController.selected.requestReason}"/>
                             </h:panelGroup>
                         </p:panelGrid>
 
@@ -113,13 +113,13 @@
 
                             <p:tab id="tabHandleOrder" title="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}">
                             </p:tab>
-                            <p:tab id="tabCloseOrder" title="#{fieldMsg.fieldValue('woSteps', '6')}">
-                            </p:tab>
                             <p:tab id="TransferOrder" title="#{msg.TransferOrder}">
                             </p:tab>
+                            <p:tab id="tabCloseOrder" title="#{fieldMsg.fieldValue('woSteps', '6')}" rendered="#{(workOrderController.selected.currentStep ne 6)}">
+                            </p:tab>
                         </p:tabView>
-                        <p:panelGrid id="panelStepDataInput" columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderController.activeTabId lt 2}">
-                            <h:panelGroup>
+                        <p:panelGrid id="panelStepDataInput" columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup rendered="#{workOrderController.activeTabId ne 2}">
                                 <label class="label">#{msg.nextStep}#{msg.taskOwner}</label>
                                 <p:selectOneMenu value="#{workOrderController.selected.currentPersonId}" required="true" requiredMessage="#{msg.currentPersonName} xx #{msg.ValidationRequire}">
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
@@ -139,7 +139,9 @@
                                 <label class="label">#{msg.isInternal}</label>
                                 <p:selectBooleanCheckbox id="isInternal" itemLabel="#{msg.isInternal}" value="#{workOrderController.selected.isInternal}" required="true" requiredMessage="#{msg.isInternal} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
-
+                            
+                            <p:spacer  rendered="#{workOrderController.activeTabId eq 2}"/>
+                            
                             <h:panelGroup>
                                 <label class="label">#{msg.caseType}</label>
                                 <p:selectOneMenu value="#{workOrderController.selected.caseType}">
@@ -157,7 +159,7 @@
                                 </p:selectOneMenu>
                             </h:panelGroup>
                         </p:panelGrid>
-                        <p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderController.activeTabId lt 2}">
+                        <p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup>
                                 <label class="label">#{msg.comments}</label>
                                 <p:inputTextarea cols="100" value="#{workOrderStepController.selected.description}" />
@@ -165,7 +167,7 @@
 
                         </p:panelGrid>
 
-                        <p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderController.activeTabId lt 2}">
+                        <p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group">
                             <ui:include src="woStepDetail/List.xhtml"/>
 
                             <h:panelGroup>
@@ -176,8 +178,8 @@
                         </p:panelGrid>
 
                         <p:commandButton validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderStepController.finishWorkOrderStep()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}" rendered="#{workOrderController.activeTabId eq 0}"/>
-                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.closeWorkOrder()}" value="#{fieldMsg.fieldValue('woSteps', '6')}" rendered="#{workOrderController.activeTabId eq 1}"/>
-                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.transferWorkOrder()}" value="#{msg.TransferOrder}" rendered="#{workOrderController.activeTabId eq 2}"/>
+                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.transferWorkOrder()}" value="#{msg.TransferOrder}" rendered="#{workOrderController.activeTabId eq 1}"/>
+                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.closeWorkOrder()}" value="#{fieldMsg.fieldValue('woSteps', '6')}" rendered="#{workOrderController.activeTabId eq 2}"/>
                     </p:fieldset>
                 </h:form>
             </div>
