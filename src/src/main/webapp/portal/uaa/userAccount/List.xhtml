@@ -108,7 +108,9 @@
                         <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{userAccountController.prepareCreate}" update=":UserAccountEditDlg" oncomplete="PF('UserAccountEditDialog').show()"/>
                         <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{userAccountController.prepareView}" update=":UserAccountViewDlg" oncomplete="PF('UserAccountViewDialog').show()" disabled="#{empty userAccountController.selected}"/>
                         <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{userAccountController.prepareEdit}" update=":UserAccountEditDlg" oncomplete="PF('UserAccountEditDialog').show()" disabled="#{empty userAccountController.selected}"/>
-                        <p:commandButton id="deleteButton" icon="ui-icon-trash" title="#{msg.Delete}" actionListener="#{userAccountController.prepareDelete}" update=":UserAccountViewDlg" oncomplete="PF('UserAccountViewDialog').show()" disabled="#{empty userAccountController.selected}"/>
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{userAccountController.delete}" update="datalist" disabled="#{empty userAccountController.selected}">
+                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                        </p:commandButton>
                         <p:commandButton id="roleButton" icon="ui-icon-people"  title="#{msg.AssignRole}" actionListener="#{userAccountController.prepareRoleData}" update=":RoleEditDlg" oncomplete="PF('RoleEditDialog').show()" disabled="#{empty userAccountController.selected}"/>
                     </f:facet>
                 </p:dataTable>
