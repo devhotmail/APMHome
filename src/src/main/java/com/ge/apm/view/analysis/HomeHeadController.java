@@ -1,19 +1,10 @@
 package com.ge.apm.view.analysis;
 
 import com.ge.apm.view.sysutil.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.Year;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -22,24 +13,20 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.LocalDate;
 
-
-import java.time.Month;
 import org.slf4j.LoggerFactory;
-import webapp.framework.broker.SiBroker;
-import webapp.framework.codegen.CodeGenEngine;
-import webapp.framework.web.WebUtil;
-import webapp.framework.web.mvc.SqlConfigurableChartController;
 
+import webapp.framework.web.mvc.SqlConfigurableChartController;
 import webapp.framework.dao.NativeSqlUtil;
-import org.apache.log4j.Logger;
+
+
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.PieChartModel;
 
-@ManagedBean
 @ViewScoped
+@ManagedBean
 public class HomeHeadController extends SqlConfigurableChartController {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
 
@@ -47,7 +34,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
     private int revenue = 0;
     private String logStr;
     private List<Map<String, Object>> profit = new ArrayList<>();
-    
+
     //UI Params
     private double totalProfit = 0;
     private double profitForecast = 0;
@@ -71,84 +58,89 @@ public class HomeHeadController extends SqlConfigurableChartController {
     private boolean isYearly = false;
     private DateTime startMonth = new DateTime();
 
-    private List<Map<String, Object>> monthRevenue  = new ArrayList<>();
-    private List<Map<String, Object>> monthDep      = new ArrayList<>();
-    private List<Map<String, Object>> monthMaint    = new ArrayList<>();
-    private List<Map<String, Object>> monthProfit   = new ArrayList<>();
+    private List<Map<String, Object>> monthRevenue = new ArrayList<>();
+    private List<Map<String, Object>> monthDep = new ArrayList<>();
+    private List<Map<String, Object>> monthMaint = new ArrayList<>();
+    private List<Map<String, Object>> monthProfit = new ArrayList<>();
 
-    private List<Map<String, Object>> olderRevenue  = new ArrayList<>();
-    private List<Map<String, Object>> olderDep      = new ArrayList<>();
-    private List<Map<String, Object>> olderMaint    = new ArrayList<>();
-    private List<Map<String, Object>> olderProfit   = new ArrayList<>();
+    private DateTime forecastMonth = new DateTime();
+    private List<Map<String, Object>> forecastRevenue = new ArrayList<>();
+    private List<Map<String, Object>> forecastDep = new ArrayList<>();
+    private List<Map<String, Object>> forecastMaint = new ArrayList<>();
+    private List<Map<String, Object>> forecastProfit = new ArrayList<>();
+
+    private List<Map<String, Object>> predictRev = new ArrayList<>();
+    private List<Map<String, Object>> predictPro = new ArrayList<>();
+
 
     // SQL script
     private String last12MonthRevenue =
             "select sum(r.price_amount) as value, " +
-            "to_char(r.exam_date, 'yyyy-mm') as key " +
-            "from asset_info a, asset_clinical_record r " +
-            "where to_char(r.exam_date, 'yyyy-mm') between to_char(now() - interval '1 year', 'yyyy-mm') " +
-            "and to_char(now(), 'yyyy-mm') " +
-            "and a.id = r.asset_id " +
-            "and a.hospital_id = :#hospitalId " +
-            "group by key order by key;";
+                    "to_char(r.exam_date, 'yyyy-mm') as key " +
+                    "from asset_info a, asset_clinical_record r " +
+                    "where to_char(r.exam_date, 'yyyy-mm') between to_char(now() - interval '1 year', 'yyyy-mm') " +
+                    "and to_char(now(), 'yyyy-mm') " +
+                    "and a.id = r.asset_id " +
+                    "and a.hospital_id = :#hospitalId " +
+                    "group by key order by key;";
 
     private String targetYearMonthRevenue =
             "select sum(r.price_amount) as value, " +
-            "to_char(r.exam_date, 'yyyy-mm') as key " +
-            "from asset_info a, asset_clinical_record r " +
-            "where extract(year from r.exam_date) = :#targetYear " +
-            "and a.id = r.asset_id " +
-            "and a.hospital_id = :#hospitalId " +
-            "group by key order by key;";
+                    "to_char(r.exam_date, 'yyyy-mm') as key " +
+                    "from asset_info a, asset_clinical_record r " +
+                    "where extract(year from r.exam_date) = :#targetYear " +
+                    "and a.id = r.asset_id " +
+                    "and a.hospital_id = :#hospitalId " +
+                    "group by key order by key;";
 
     private String depMonth =
             "select a.hospital_id as key, " +
-            "sum(d.deprecate_amount) as value " +
-            "from asset_info a, asset_depreciation d " +
-            "where a.id = d.asset_id " +
-            "and a.hospital_id = :#hospitalId " +
-            "group by key;";
+                    "sum(d.deprecate_amount) as value " +
+                    "from asset_info a, asset_depreciation d " +
+                    "where a.id = d.asset_id " +
+                    "and a.hospital_id = :#hospitalId " +
+                    "group by key;";
 
     private String maintLast12MonthCost =
             "select to_char(w.request_time, 'yyyy-mm') as key, " +
-            "sum(w.total_price) as value " +
-            "from asset_info a, work_order w " +
-            "where to_char(w.request_time, 'yyyy-mm') " +
-            "between to_char(now() - interval '1 year', 'yyyy-mm') " +
-            "and to_char(now(), 'yyyy-mm') " +
-            "and a.id = w.asset_id and w.is_closed = true " +
-            "and a.hospital_id = :#hospitalId " +
-            "group by key order by key;";
+                    "sum(w.total_price) as value " +
+                    "from asset_info a, work_order w " +
+                    "where to_char(w.request_time, 'yyyy-mm') " +
+                    "between to_char(now() - interval '1 year', 'yyyy-mm') " +
+                    "and to_char(now(), 'yyyy-mm') " +
+                    "and a.id = w.asset_id and w.is_closed = true " +
+                    "and a.hospital_id = :#hospitalId " +
+                    "group by key order by key;";
 
     private String maintTargetYearMonthCost =
             "select to_char(w.request_time, 'yyyy-mm') as key, " +
-            "sum(w.total_price) as value " +
-            "from asset_info a, work_order w " +
-            "where extract(year from w.request_time) = :#targetYear" +
-            "and a.id = w.asset_id and w.is_closed = true " +
-            "and a.hospital_id = :#hospitalId " +
-            "group by key order by key;";
+                    "sum(w.total_price) as value " +
+                    "from asset_info a, work_order w " +
+                    "where extract(year from w.request_time) = :#targetYear" +
+                    "and a.id = w.asset_id and w.is_closed = true " +
+                    "and a.hospital_id = :#hospitalId " +
+                    "group by key order by key;";
 
-    private String olderMonthRevenue =
+    private String forecastMonthRevenue =
             "select sum(r.price_amount) as value, " +
-            "to_char(r.exam_date, 'yyyy-mm') as key " +
-            "from asset_info a, asset_clinical_record r " +
-            "where to_char(r.exam_date, 'yyyy-mm') between to_char(now() - interval '2 year', 'yyyy-mm') " +
-            "and to_char(now() - interval '1 year', 'yyyy-mm') " +
-            "and a.id = r.asset_id " +
-            "and a.hospital_id = :#hospitalId " +
-            "group by key order by key;";
+                    "to_char(r.exam_date, 'yyyy-mm') as key " +
+                    "from asset_info a, asset_clinical_record r " +
+                    "where to_char(r.exam_date, 'yyyy-mm') between to_char(now() - interval '2 year', 'yyyy-mm') " +
+                    "and to_char(now(), 'yyyy-mm') " +
+                    "and a.id = r.asset_id " +
+                    "and a.hospital_id = :#hospitalId " +
+                    "group by key order by key;";
 
-    private String olderMaintCost =
+    private String forecastMonthMaint =
             "select to_char(w.request_time, 'yyyy-mm') as key, " +
-            "sum(w.total_price) as value " +
-            "from asset_info a, work_order w " +
-            "where to_char(w.request_time, 'yyyy-mm') " +
-            "between to_char(now() - interval '1 year', 'yyyy-mm') " +
-            "and to_char(now(), 'yyyy-mm') " +
-            "and a.id = w.asset_id and w.is_closed = true " +
-            "and a.hospital_id = :#hospitalId " +
-            "group by key order by key;";
+                    "sum(w.total_price) as value " +
+                    "from asset_info a, work_order w " +
+                    "where to_char(w.request_time, 'yyyy-mm') " +
+                    "between to_char(now() - interval '2 year', 'yyyy-mm') " +
+                    "and to_char(now(), 'yyyy-mm') " +
+                    "and a.id = w.asset_id and w.is_closed = true " +
+                    "and a.hospital_id = :#hospitalId " +
+                    "group by key order by key;";
 
     @PostConstruct
     protected void init() {
@@ -164,14 +156,17 @@ public class HomeHeadController extends SqlConfigurableChartController {
 
         queryTotalProfit();
 
+        queryForecastProfit();
+
         createAnnualBar();
 
         createAnnualPie();
 
         createMonthlyBar();
 
+        createForecastBar();
 
-
+        ;
 
 
     }
@@ -191,8 +186,8 @@ public class HomeHeadController extends SqlConfigurableChartController {
 
     private void queryTotalProfit() {
         monthRevenue = queryMonthRevenue();
-        monthDep     = queryMonthDep();
-        monthMaint   = queryMonthMaint();
+        monthDep = queryMonthDep();
+        monthMaint = queryMonthMaint();
 
         monthProfit = calcProfit(monthRevenue, monthDep, monthMaint);
 
@@ -200,6 +195,144 @@ public class HomeHeadController extends SqlConfigurableChartController {
             totalProfit = totalProfit + (double) item.get("value");
         }
     }
+
+    private void queryForecastProfit() {
+        forecastMonth = forecastMonth.withYear(forecastMonth.getYear() - 2);
+
+        forecastRevenue = queryForecastRevenue();
+        forecastDep = queryForecastDep();
+        forecastMaint = queryForecastMaint();
+
+        forecastProfit = calcProfit(forecastRevenue, forecastDep, forecastMaint);
+
+        predict(forecastRevenue, forecastProfit, forecastMonth);
+
+        for (Map<String, Object> item : predictPro) {
+            profitForecast = profitForecast + (double) item.get("value");
+        }
+    }
+
+    private void predict(List<Map<String, Object>> revenue, List<Map<String, Object>> profit, DateTime startMonth) {
+        int offset = revenue.size() / 2;
+        DateTime predictMonth = startMonth;
+        predictMonth = predictMonth.plusMonths(revenue.size());
+
+        for (int index = 0; index < offset; index++) {
+            Map<String, Object> item = predictNextItem(revenue.get(index), revenue.get(index + offset), predictMonth);
+            predictRev.add(item);
+
+            item = predictNextItem(profit.get(index), profit.get(index + offset), predictMonth);
+            predictPro.add(item);
+
+            predictMonth = predictMonth.plusMonths(1);
+        }
+    }
+
+    private Map<String, Object> predictNextItem(Map<String, Object> last, Map<String, Object> recent, DateTime month) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM");
+        Map<String, Object> item    = new HashMap<>();
+        double value = 0.0;
+        double result = 0.0;
+
+        double lastValue = (double) last.get("value");
+        double recentValue = (double) recent.get("value");
+
+        if ((recentValue > - 0.00001) && (recentValue < 0.00001)) {
+            result = 0.0;
+        } else {
+            result = (recentValue - lastValue) / recentValue;
+        }
+
+        if (result > 0.05) {
+
+            value = recentValue * (1 + result);
+
+        } else if ((result > 0) && (result < 0.05)) {
+            // assume we will be better to reach 5%
+            value = recentValue * (1 + 0.05);
+
+        } else if ((result > - 0.05) && (result < 0)) {
+            // assume we will be better to reach 5%
+            value = recentValue * (1 + 0.05 + result);
+
+        } else if (result < -0.05) {
+            // assume little improve
+            value = recentValue * (1 + result / 2);
+        } else {
+            value = recentValue;
+        }
+
+        item.put("key", formatter.print(month));
+        item.put("value", value);
+
+        return item;
+    }
+
+
+    private void createMonthlyBar() {
+
+        barMonthlyRevenue.setLegendPosition("ne");
+
+        Axis xAxis = barMonthlyRevenue.getAxis(AxisType.X);
+        xAxis.setLabel("Assets Type");
+
+        Axis yAxis = barMonthlyRevenue.getAxis(AxisType.Y);
+        yAxis.setLabel("CNY");
+
+        String label = "re";
+        drawBar(barMonthlyRevenue, label, monthRevenue);
+
+        label = "profit";
+        drawBar(barMonthlyRevenue, label, monthProfit);
+    }
+
+    private void createForecastBar() {
+        barMonthlyForecast.setLegendPosition("ne");
+
+        Axis xAxis = barMonthlyForecast.getAxis(AxisType.X);
+        xAxis.setLabel("Forecast");
+
+        Axis yAxis = barMonthlyForecast.getAxis(AxisType.Y);
+        yAxis.setLabel("CNY");
+
+        String label = "re";
+        drawBar(barMonthlyForecast, label, forecastRevenue);
+
+        label = "profit";
+        drawBar(barMonthlyForecast, label, forecastProfit);
+
+        label = "predict re";
+        drawBar(barMonthlyForecast, label, predictRev);
+
+        label = "predict profit";
+        drawBar(barMonthlyForecast, label, predictPro);
+    }
+
+    private List<Map<String, Object>> queryForecastRevenue() {
+        sql = forecastMonthRevenue;
+        logger.info("Get 24 months revenue by month");
+        forecastRevenue = queryMonthDate(sql, sqlParams, 24, forecastMonth);
+
+        return forecastRevenue;
+    }
+
+    private List<Map<String, Object>> queryForecastMaint() {
+        sql = forecastMonthMaint;
+
+        logger.info("Get 24 months maint cost by month");
+        forecastMaint = queryMonthDate(sql, sqlParams, 24, forecastMonth);
+
+        return forecastMaint;
+    }
+
+    private List<Map<String, Object>> queryForecastDep() {
+        sql = depMonth;
+        logger.info("Get 24 months by month");
+        monthDep = queryMonthDepDate(sql, sqlParams, 24, forecastMonth);
+
+        return monthDep;
+    }
+
 
     private List<Map<String, Object>> queryMonthRevenue() {
         if (isYearly) {
@@ -209,7 +342,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
         }
 
         logger.info("Get revenue by month");
-        monthRevenue = queryMonthDate(sql, sqlParams);
+        monthRevenue = queryMonthDate(sql, sqlParams, 12, startMonth);
 
         return monthRevenue;
     }
@@ -222,7 +355,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
         }
 
         logger.info("Get maintenance cost by month");
-        monthMaint = queryMonthDate(sql, sqlParams);
+        monthMaint = queryMonthDate(sql, sqlParams, 12, startMonth);
 
         return monthMaint;
     }
@@ -230,46 +363,27 @@ public class HomeHeadController extends SqlConfigurableChartController {
     private List<Map<String, Object>> queryMonthDep() {
         sql = depMonth;
         logger.info("Get dep by month");
-        monthDep = queryMonthDepDate(sql, sqlParams);
+        monthDep = queryMonthDepDate(sql, sqlParams, 12, startMonth);
 
         return monthDep;
     }
 
-    private List<Map<String, Object>> queryMonthDepDate(String sql, HashMap<String, Object> sqlParams) {
+    private List<Map<String, Object>> queryMonthDepDate(String sql, HashMap<String, Object> sqlParams, int months, DateTime startMonth) {
         logger.info("Get dep by month, sql: {}, sqlParams: {}", sql, sqlParams);
         List<Map<String, Object>> li = NativeSqlUtil.queryForList(sql, sqlParams);
         if (li.size() == 0) {
-            li = calcMonthlyDep(0.0, startMonth);
+            li = calcMonthlyDep(0.0, months, startMonth);
         } else {
-            li = calcMonthlyDep((double) li.get(0).get("value"), startMonth);
+            li = calcMonthlyDep((double) li.get(0).get("value"), months, startMonth);
         }
         return li;
     }
 
-    private List<Map<String, Object>> queryMonthDate(String sql, HashMap<String, Object> sqlParams) {
+    private List<Map<String, Object>> queryMonthDate(String sql, HashMap<String, Object> sqlParams, int months, DateTime startMonth) {
         logger.info("Get data by month, sql: {}, sqlParams: {}", sql, sqlParams);
         List<Map<String, Object>> li = NativeSqlUtil.queryForList(sql, sqlParams);
-        return formatMonthlyData(li, 12, startMonth);
+        return formatMonthlyData(li, months, startMonth);
     }
-
-//    private List<Map<String, Object>> queryMonthRevenue() {
-//        if (isYearly) {
-//            sql = targetYearMonthRevenue;
-//        } else {
-//            sql = last12MonthRevenue;
-//        }
-//
-//        // format revenue if there is no perfect 12 month
-//        logger.info("Get revenue by month, sql: {}, sqlParams: {}", sql, sqlParams);
-//        monthRevenue = NativeSqlUtil.queryForList(sql, sqlParams);
-//        monthRevenue = formatMonthlyData(monthRevenue, 12, startMonth);
-//
-//        return monthRevenue;
-//    }
-
-//    private List<Map<String, Object>> queryRevenue
-
-
 
     // Get-Set methods
     public double getTotalProfit() {return totalProfit;}
@@ -318,121 +432,14 @@ public class HomeHeadController extends SqlConfigurableChartController {
         }
     }
 
-
-
-
-    private void createMonthlyBar() {
-
-        barMonthlyRevenue.setLegendPosition("ne");
-        barMonthlyRevenue.setExtender("barMonthlyRevenue");
-        barMonthlyForecast.setExtender("barMonthlyForecast");
-        pieAnnualRevenue.setExtender("pieAnnualRevenue");
-        barAnnualRevenue.setExtender("barAnnualRevenue");
-
-        Axis xAxis = barMonthlyRevenue.getAxis(AxisType.X);
-        xAxis.setLabel("Assets Type");
-
-        Axis yAxis = barMonthlyRevenue.getAxis(AxisType.Y);
-        yAxis.setLabel("CNY");
-
-        hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
-        this.logStr = "Current User Account is " +  UserContextService.getCurrentUserAccount().getName() +
-                ". Hospital id is " + hospitalId + ".";
-        logger.debug(this.logStr);
-
-        sqlParams.put("hospitalId", hospitalId);
-        sqlParams.put("targetYear", this.targetYear);
-
-        // get revenue
-        LocalDate date = LocalDate.now();
-        DateTime startMonth = getStartMonth(date);
-        if (targetYear == date.getYear()) {
-            // query last 12 months record, since cannot get full-size 12 months record for current year.
-            sql = "select sum(r.price_amount) as value, " +
-                    "to_char(r.exam_date, 'yyyy-mm') as key " +
-                    "from asset_info a, asset_clinical_record r " +
-                    "where to_char(r.exam_date, 'yyyy-mm') between to_char(now() - interval '1 year', 'yyyy-mm') " +
-                    "and to_char(now(), 'yyyy-mm') " +
-                    "and a.id = r.asset_id " +
-                    "and a.hospital_id = :#hospitalId " +
-                    "group by key order by key;";
-        } else {
-            sql = "select sum(r.price_amount) as value, " +
-                    "to_char(r.exam_date, 'yyyy-mm') as key " +
-                    "from asset_info a, asset_clinical_record r " +
-                    "where extract(year from r.exam_date) = :#targetYear " +
-                    "and a.id = r.asset_id " +
-                    "and a.hospital_id = :#hospitalId " +
-                    "group by key order by key;";
-        }
-
-//        List<Map<String, Object>> r = prepareData(sql, sqlParams);
-
-        // format revenue if there is no perfect 12 month
-        logger.info("Get revenue by month, sql: {}, sqlParams: {}", sql, sqlParams);
-        List<Map<String, Object>> r = NativeSqlUtil.queryForList(sql, sqlParams);
-        r = formatMonthlyData(r, 12, startMonth);
-
-
-
-        String label = "re";
-        drawBar(barMonthlyRevenue, label, r);
-
-        // get asset deprecate value
-        sql = "select a.hospital_id as key, " +
-                "sum(d.deprecate_amount) as value " +
-                "from asset_info a, asset_depreciation d " +
-                "where a.id = d.asset_id " +
-                "and a.hospital_id = :#hospitalId " +
-                "group by key;";
-
-        logger.info("get dep value, sql: {}, sqlParams: {}", sql, sqlParams);
-        List<Map<String, Object>> d = NativeSqlUtil.queryForList(sql, sqlParams);
-        d = calcMonthlyDep((double) d.get(0).get("value"), startMonth);
-
-
-        // get maintenance cost
-        if (targetYear == date.getYear()) {
-            // query last 12 months record, since cannot get full-size 12 months record for current year.
-            sql = "select to_char(w.request_time, 'yyyy-mm') as key, " +
-                    "sum(w.total_price) as value " +
-                    "from asset_info a, work_order w " +
-                    "where to_char(w.request_time, 'yyyy-mm') " +
-                    "between to_char(now() - interval '1 year 1 month', 'yyyy-mm') " +
-                    "and to_char(now() - interval '1 month', 'yyyy-mm') " +
-                    "and a.id = w.asset_id and w.is_closed = true " +
-                    "and a.hospital_id = :#hospitalId " +
-                    "group by key order by key;";
-        } else {
-            sql = "select to_char(w.request_time, 'yyyy-mm') as key, " +
-                    "sum(w.total_price) as value " +
-                    "from asset_info a, work_order w " +
-                    "where extract(year from w.request_time) = :#targetYear" +
-                    "and a.id = w.asset_id and w.is_closed = true " +
-                    "and a.hospital_id = :#hospitalId " +
-                    "group by key order by key;";
-        }
-
-        // format revenue if there is no perfect 12 month
-        logger.info("get work order cost, sql: {}, sqlParams: {}", sql, sqlParams);
-        List<Map<String, Object>> w = NativeSqlUtil.queryForList(sql, sqlParams);
-        w = formatMonthlyData(w, 12, startMonth);
-
-        // Calcuate profile = revenue - depreciation - maintenance cost
-        profit = calcProfit(r, d, w);
-        label = "profit";
-        printList(profit);
-        drawBar(barMonthlyRevenue, label, profit);
-    }
-
-    private List<Map<String, Object>> calcMonthlyDep(double annualDepValue, DateTime startMonth) {
+    private List<Map<String, Object>> calcMonthlyDep(double annualDepValue, int months, DateTime startMonth) {
         List<Map<String, Object>> li = new ArrayList<>();
         double value = annualDepValue / 12;
 
         // calc monthly dep value
         DateTime targetMonth = startMonth;
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM");
-        for (int index = 0; index < 12; index++) {
+        for (int index = 0; index < months; index++) {
             Map<String, Object> item = new HashMap<>();
             item.put("key", formatter.print(targetMonth));
             item.put("value", value);
@@ -678,14 +685,14 @@ public class HomeHeadController extends SqlConfigurableChartController {
     }
 
     private void drawBar(BarChartModel barChart, String label, List<Map<String, Object>> result) {
-        ChartSeries revenue = new ChartSeries();
-        revenue.setLabel(label);
+        ChartSeries cs = new ChartSeries();
+        cs.setLabel(label);
 
         for (Map<String, Object> item : result) {
-            revenue.set(item.get("key").toString(), (Double) item.get("value"));
+            cs.set(item.get("key").toString(), (Double) item.get("value"));
         }
 
-        barChart.addSeries(revenue);
+        barChart.addSeries(cs);
     }
 
     private void checkNull(Map<String, Object> item, String targetType) {
