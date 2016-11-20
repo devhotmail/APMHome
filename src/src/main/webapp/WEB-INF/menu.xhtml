@@ -64,7 +64,7 @@
                         </p:submenu>
                         <p:submenu label="#{msg.WorkOrderMgmt}" icon="&#xE8B8;">
                             <p:menuitem value="#{msg.ServiceRequestMgmt}" icon="&#xE5D2;" outcome="/portal/wo/woList"/>
-                            <p:menuitem value="#{msg.MyWorkOrder}" icon="&#xE879;" outcome="/portal/wo/woProcess.xhtml"/>
+                            <p:menuitem value="#{msg.MyWorkOrder}" icon="&#xE879;" outcome="/portal/wo/myWoList.xhtml"/>
                             <p:menuitem value="#{msg.MaintainanceRecord}" icon="&#xE22C;" outcome="/empty"/>
                             <p:menuitem value="#{msg.ServiceQualityReview}" icon="&#xE893;" outcome="/empty" rendered="#{userContextService.hasRole('AssetStaff')}"/>
                             <p:menuitem value="#{msg.Inspection}" icon="&#xE892;" outcome="/empty"/>

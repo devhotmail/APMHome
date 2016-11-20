@@ -25,7 +25,7 @@
     </h:head>
 
     <h:body styleClass="main-body #{guestPreferences.compact ? 'layout-compact' : null}">
-        <p:growl id="growl" autoUpdate="true"/>
+        <p:growl id="growl" autoUpdate="true" showDetail="false"  showSummary="true"/>
         <div class="layout-wrapper #{guestPreferences.menuLayout}">
             <ui:include src="./topbar.xhtml" />
             <ui:include src="./menu.xhtml" />
