@@ -21,6 +21,10 @@
                             <p:inputText id="siteId" value="#{pmOrderController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
+                            <label class="label">#{msg.hospitalId}*</label>
+                            <p:inputText id="hospitalId" value="#{pmOrderController.selected.hospitalId}"  required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
                             <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{pmOrderController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
@@ -80,11 +84,15 @@
                             <label class="label">#{msg.assetId}*</label>
                             <p:inputText id="assetId" value="#{pmOrderController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetName}*</label>
+                            <p:inputText id="assetName" value="#{pmOrderController.selected.assetName}"  required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{pmOrderController.save}" value="#{msg.Save}" update="display,:PmOrderEditDlg, :PmOrderListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'PmOrderEditDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('PmOrderEditDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('PmOrderEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

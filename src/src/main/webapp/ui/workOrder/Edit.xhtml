@@ -117,12 +117,12 @@
                             <p:inputText id="totalPrice" value="#{workOrderController.selected.totalPrice}" />
                         </h:panelGroup>
                         <h:panelGroup>
-                            <label class="label">#{msg.confirmedStartTime}</label>
-                            <p:calendar id="confirmedStartTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderController.selected.confirmedDownTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <label class="label">#{msg.confirmedDownTime}</label>
+                            <p:calendar id="confirmedDownTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderController.selected.confirmedDownTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <label class="label">#{msg.confirmedEndTime}</label>
-                            <p:calendar id="confirmedEndTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderController.selected.confirmedUpTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <label class="label">#{msg.confirmedUpTime}</label>
+                            <p:calendar id="confirmedUpTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderController.selected.confirmedUpTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.assetId}*</label>
@@ -132,7 +132,7 @@
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{workOrderController.save}" value="#{msg.Save}" update="display,:WorkOrderEditDlg, :WorkOrderListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'WorkOrderEditDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('WorkOrderEditDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('WorkOrderEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

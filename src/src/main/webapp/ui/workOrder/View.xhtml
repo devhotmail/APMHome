@@ -68,12 +68,12 @@
                         <h:outputText value="#{workOrderController.selected.totalManHour}"/>
                         <h:outputLabel value="#{msg.totalPrice}" for="totalPrice" />
                         <h:outputText value="#{workOrderController.selected.totalPrice}"/>
-                        <h:outputLabel value="#{msg.confirmedStartTime}" for="confirmedStartTime" />
-                        <h:outputText value="#{workOrderController.selected.confirmedStartTime}">
+                        <h:outputLabel value="#{msg.confirmedDownTime}" for="confirmedDownTime" />
+                        <h:outputText value="#{workOrderController.selected.confirmedDownTime}">
                             <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                         </h:outputText>
-                        <h:outputLabel value="#{msg.confirmedEndTime}" for="confirmedEndTime" />
-                        <h:outputText value="#{workOrderController.selected.confirmedEndTime}">
+                        <h:outputLabel value="#{msg.confirmedUpTime}" for="confirmedUpTime" />
+                        <h:outputText value="#{workOrderController.selected.confirmedUpTime}">
                             <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.assetId}" for="assetId" />
@@ -82,7 +82,7 @@
                     <br/>
                     <p:commandButton rendered="#{workOrderController.deleteAction}" icon="ui-icon-trash" actionListener="#{workOrderController.delete}" value="#{msg.Delete}" update="display,:WorkOrderViewDlg, :WorkOrderListForm:datalist, :growl" oncomplete="handleSubmit(args, 'WorkOrderViewDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Close}" icon="ui-icon ui-icon-close" onclick="PF('WorkOrderViewDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('WorkOrderViewDialog').hide()"/>
                     
                 </h:panelGroup>
             </h:form>

@@ -68,7 +68,7 @@
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{siteInfoController.save}" value="#{msg.Save}" update="display,:SiteInfoEditDlg, :SiteInfoListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'SiteInfoEditDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('SiteInfoEditDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('SiteInfoEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

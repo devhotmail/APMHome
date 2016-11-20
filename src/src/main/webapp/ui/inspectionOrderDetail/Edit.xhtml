@@ -48,7 +48,7 @@
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{inspectionOrderDetailController.save}" value="#{msg.Save}" update="display,:InspectionOrderDetailEditDlg, :InspectionOrderDetailListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'InspectionOrderDetailEditDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('InspectionOrderDetailEditDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('InspectionOrderDetailEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

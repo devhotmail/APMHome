@@ -97,10 +97,12 @@
                         <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
                             <p:dataExporter type="xls" target="datalist" fileName="InspectionOrder_export"/>
                         </p:commandButton>
-                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{inspectionOrderController.prepareCreate}" update=":InspectionOrderEditDlg" oncomplete="PF('InspectionOrderEditDialog').show()"/>
-                        <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{inspectionOrderController.prepareView}" update=":InspectionOrderViewDlg" oncomplete="PF('InspectionOrderViewDialog').show()" disabled="#{empty inspectionOrderController.selected}"/>
-                        <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{inspectionOrderController.prepareEdit}" update=":InspectionOrderEditDlg" oncomplete="PF('InspectionOrderEditDialog').show()" disabled="#{empty inspectionOrderController.selected}"/>
-                        <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{inspectionOrderController.prepareDelete}" update=":InspectionOrderViewDlg" oncomplete="PF('InspectionOrderViewDialog').show()" disabled="#{empty inspectionOrderController.selected}"/>
+                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{inspectionOrderController.prepareCreate}" update=":InspectionOrderEditDlg" oncomplete="PF('InspectionOrderEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{inspectionOrderController.prepareView}" update=":InspectionOrderViewDlg" oncomplete="PF('InspectionOrderViewDialog').show()" disabled="#{empty inspectionOrderController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{inspectionOrderController.prepareEdit}" update=":InspectionOrderEditDlg" oncomplete="PF('InspectionOrderEditDialog').show()" disabled="#{empty inspectionOrderController.selected}"/>
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{inspectionOrderController.delete}" update="datalist" disabled="#{empty inspectionOrderController.selected}">
+                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                        </p:commandButton>
                     </f:facet>
                 </p:dataTable>
             </h:form>

@@ -37,12 +37,12 @@
                             <p:inputText id="ownerName" value="#{workOrderStepController.selected.ownerName}"  required="true" requiredMessage="#{msg.ownerName} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <label class="label">#{msg.startTime}*</label>
-                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderStepController.selected.startTime}" required="true" requiredMessage="#{msg.startTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <label class="label">#{msg.startTime}</label>
+                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderStepController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <label class="label">#{msg.endTime}*</label>
-                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderStepController.selected.endTime}" required="true" requiredMessage="#{msg.endTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <label class="label">#{msg.endTime}</label>
+                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderStepController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.description}</label>
@@ -60,7 +60,7 @@
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{workOrderStepController.save}" value="#{msg.Save}" update="display,:WorkOrderStepEditDlg, :WorkOrderStepListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'WorkOrderStepEditDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('WorkOrderStepEditDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('WorkOrderStepEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

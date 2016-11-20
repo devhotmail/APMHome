@@ -116,10 +116,12 @@
                         <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
                             <p:dataExporter type="xls" target="datalist" fileName="AssetClinicalRecord_export"/>
                         </p:commandButton>
-                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetClinicalRecordController.prepareCreate}" update=":AssetClinicalRecordEditDlg" oncomplete="PF('AssetClinicalRecordEditDialog').show()"/>
-                        <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{assetClinicalRecordController.prepareView}" update=":AssetClinicalRecordViewDlg" oncomplete="PF('AssetClinicalRecordViewDialog').show()" disabled="#{empty assetClinicalRecordController.selected}"/>
-                        <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{assetClinicalRecordController.prepareEdit}" update=":AssetClinicalRecordEditDlg" oncomplete="PF('AssetClinicalRecordEditDialog').show()" disabled="#{empty assetClinicalRecordController.selected}"/>
-                        <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{assetClinicalRecordController.prepareDelete}" update=":AssetClinicalRecordViewDlg" oncomplete="PF('AssetClinicalRecordViewDialog').show()" disabled="#{empty assetClinicalRecordController.selected}"/>
+                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{assetClinicalRecordController.prepareCreate}" update=":AssetClinicalRecordEditDlg" oncomplete="PF('AssetClinicalRecordEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{assetClinicalRecordController.prepareView}" update=":AssetClinicalRecordViewDlg" oncomplete="PF('AssetClinicalRecordViewDialog').show()" disabled="#{empty assetClinicalRecordController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{assetClinicalRecordController.prepareEdit}" update=":AssetClinicalRecordEditDlg" oncomplete="PF('AssetClinicalRecordEditDialog').show()" disabled="#{empty assetClinicalRecordController.selected}"/>
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{assetClinicalRecordController.delete}" update="datalist" disabled="#{empty assetClinicalRecordController.selected}">
+                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                        </p:commandButton>
                     </f:facet>
                 </p:dataTable>
             </h:form>

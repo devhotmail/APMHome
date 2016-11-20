@@ -24,11 +24,13 @@
                         <h:outputText value="#{assetFileAttachmentController.selected.fileUrl}"/>
                         <h:outputLabel value="#{msg.assetId}" for="assetId" />
                         <h:outputText value="#{assetFileAttachmentController.selected.assetId}"/>
+                        <h:outputLabel value="#{msg.fileId}" for="fileId" />
+                        <h:outputText value="#{assetFileAttachmentController.selected.fileId}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{assetFileAttachmentController.deleteAction}" icon="ui-icon-trash" actionListener="#{assetFileAttachmentController.delete}" value="#{msg.Delete}" update="display,:AssetFileAttachmentViewDlg, :AssetFileAttachmentListForm:datalist, :growl" oncomplete="handleSubmit(args, 'AssetFileAttachmentViewDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Close}" icon="ui-icon ui-icon-close" onclick="PF('AssetFileAttachmentViewDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('AssetFileAttachmentViewDialog').hide()"/>
                     
                 </h:panelGroup>
             </h:form>

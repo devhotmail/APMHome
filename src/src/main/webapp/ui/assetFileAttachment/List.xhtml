@@ -43,14 +43,19 @@
                     <p:column headerText="#{msg.assetId}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
                         <h:outputText value="#{item.assetId}"/>
                     </p:column>
+                    <p:column headerText="#{msg.fileId}" sortBy="#{item.fileId}" filterBy="#{item.fileId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.fileId}"/>
+                    </p:column>
                     <f:facet name="{Toolbar}">
                         <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
                             <p:dataExporter type="xls" target="datalist" fileName="AssetFileAttachment_export"/>
                         </p:commandButton>
-                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetFileAttachmentController.prepareCreate}" update=":AssetFileAttachmentEditDlg" oncomplete="PF('AssetFileAttachmentEditDialog').show()"/>
-                        <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{assetFileAttachmentController.prepareView}" update=":AssetFileAttachmentViewDlg" oncomplete="PF('AssetFileAttachmentViewDialog').show()" disabled="#{empty assetFileAttachmentController.selected}"/>
-                        <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{assetFileAttachmentController.prepareEdit}" update=":AssetFileAttachmentEditDlg" oncomplete="PF('AssetFileAttachmentEditDialog').show()" disabled="#{empty assetFileAttachmentController.selected}"/>
-                        <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{assetFileAttachmentController.prepareDelete}" update=":AssetFileAttachmentViewDlg" oncomplete="PF('AssetFileAttachmentViewDialog').show()" disabled="#{empty assetFileAttachmentController.selected}"/>
+                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{assetFileAttachmentController.prepareCreate}" update=":AssetFileAttachmentEditDlg" oncomplete="PF('AssetFileAttachmentEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{assetFileAttachmentController.prepareView}" update=":AssetFileAttachmentViewDlg" oncomplete="PF('AssetFileAttachmentViewDialog').show()" disabled="#{empty assetFileAttachmentController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{assetFileAttachmentController.prepareEdit}" update=":AssetFileAttachmentEditDlg" oncomplete="PF('AssetFileAttachmentEditDialog').show()" disabled="#{empty assetFileAttachmentController.selected}"/>
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{assetFileAttachmentController.delete}" update="datalist" disabled="#{empty assetFileAttachmentController.selected}">
+                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                        </p:commandButton>
                     </f:facet>
                 </p:dataTable>
             </h:form>

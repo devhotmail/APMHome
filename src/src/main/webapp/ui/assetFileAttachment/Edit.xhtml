@@ -29,18 +29,22 @@
                             <p:inputText id="fileType" value="#{assetFileAttachmentController.selected.fileType}"  required="true" requiredMessage="#{msg.fileType} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <label class="label">#{msg.fileUrl}*</label>
-                            <p:inputText id="fileUrl" value="#{assetFileAttachmentController.selected.fileUrl}"  required="true" requiredMessage="#{msg.fileUrl} #{msg.ValidationRequire}"/>
+                            <label class="label">#{msg.fileUrl}</label>
+                            <p:inputText id="fileUrl" value="#{assetFileAttachmentController.selected.fileUrl}" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.assetId}*</label>
                             <p:inputText id="assetId" value="#{assetFileAttachmentController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.fileId}</label>
+                            <p:inputText id="fileId" value="#{assetFileAttachmentController.selected.fileId}" />
+                        </h:panelGroup>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{assetFileAttachmentController.save}" value="#{msg.Save}" update="display,:AssetFileAttachmentEditDlg, :AssetFileAttachmentListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'AssetFileAttachmentEditDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('AssetFileAttachmentEditDialog').hide()"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('AssetFileAttachmentEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
