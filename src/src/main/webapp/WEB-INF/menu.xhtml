@@ -54,61 +54,61 @@
                     
                     <pu:menu widgetVar="me">
                         <p:menuitem id="um_dashboard" value="#{msg.HomePage}" icon="&#xE871;" outcome="#{userContextService.userDefaultHomePage}"/>
-                        <p:submenu label="#{msg.AssetMDM}" icon="&#xE40A;">
-                            <p:menuitem value="#{msg.AssetList}" icon="&#xE3AE;" outcome="/portal/asset/info/List"/>
-                            <p:menuitem value="#{msg.AssetInventory}" icon="&#xE3AE;" outcome="/empty"/>
-                            <p:menuitem value="#{msg.AssetDocumentMgmt}" icon="&#xE3AE;" outcome="/portal/asset/fileAttachment/List"/>
-                            <p:menuitem value="#{msg.AssetValueAnalysis}" icon="&#xE3AE;" outcome="/empty"/>
-                            <p:menuitem value="#{msg.AssetContractMgmt}" icon="&#xE061;" style="color: orange;" outcome="/empty"/>
-                            <p:menuitem value="#{msg.SupplierMgmt}" icon="&#xE062;" style="color: orange;" outcome="/empty"/>
+                        <p:submenu label="#{msg.AssetMDM}" icon="fa fa-folder-open-o">
+                            <p:menuitem value="#{msg.AssetList}" outcome="/portal/asset/info/List"/>
+                            <p:menuitem value="#{msg.AssetInventory}" outcome="/empty"/>
+                            <p:menuitem value="#{msg.AssetDocumentMgmt}" outcome="/portal/asset/fileAttachment/List"/>
+                            <p:menuitem value="#{msg.AssetValueAnalysis}" outcome="/empty"/>
+                            <p:menuitem value="#{msg.AssetContractMgmt}" rendered="false" style="color: orange;" outcome="/empty"/>
+                            <p:menuitem value="#{msg.SupplierMgmt}" rendered="false" style="color: orange;" outcome="/empty"/>
                         </p:submenu>
-                        <p:submenu label="#{msg.WorkOrderMgmt}" icon="&#xE8B8;">
-                            <p:menuitem value="#{msg.ServiceRequestMgmt}" icon="&#xE5D2;" outcome="/portal/wo/woList"/>
-                            <p:menuitem value="#{msg.MyWorkOrder}" icon="&#xE879;" outcome="/portal/wo/myWoList.xhtml"/>
-                            <p:menuitem value="#{msg.MaintainanceRecord}" icon="&#xE22C;" outcome="/empty"/>
-                            <p:menuitem value="#{msg.ServiceQualityReview}" icon="&#xE893;" outcome="/empty" rendered="#{userContextService.hasRole('AssetStaff')}"/>
-                            <p:menuitem value="#{msg.Inspection}" icon="&#xE892;" outcome="/empty"/>
+                        <p:submenu label="#{msg.WorkOrderMgmt}" icon="fa fa-wrench">
+                            <p:menuitem value="#{msg.ServiceRequestMgmt}" outcome="/portal/wo/woList"/>
+                            <p:menuitem value="#{msg.MyWorkOrder}" outcome="/portal/wo/myWoList.xhtml"/>
+                            <p:menuitem value="#{msg.MaintainanceRecord}" outcome="/empty"/>
+                            <p:menuitem value="#{msg.ServiceQualityReview}" outcome="/empty" rendered="#{userContextService.hasRole('AssetStaff')}"/>
+                            <p:menuitem value="#{msg.Inspection}" outcome="/empty"/>
                         </p:submenu>
-                        <p:submenu label="#{msg.DeviceMonitor}" icon="&#xE896;">
-                            <p:menuitem value="#{msg.DeviceStatusMonitor}" icon="&#xE30B;" outcome="/empty"/>
-                            <p:menuitem value="#{msg.DeviceDowntimeAnalysis}" icon="&#xE890;" outcome="/empty"/>
-                            <p:menuitem value="#{msg.DeviceMaintainanceEventAnalysis}" icon="&#xE3EC;" outcome="/portal/analysis/assetMaintenanceAll"/>
-                            <p:menuitem value="#{msg.DeviceMaintainanceCostAnalysis}" icon="&#xE14F;" outcome="/empty"/>
-                            <p:menuitem value="#{msg.DeviceUtilizationAnalysis}" icon="&#xE14D;" outcome="/portal/analysis/assetUsageAll"/>
-                            <p:menuitem value="#{msg.SparePartsConsumptionAnalysis}" icon="&#xE5D2;" style="color: orange;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceFailureAnalysis}" icon="&#xE0C9;" style="color: orange;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceOperationMonitor}" icon="&#xE24B;" outcome="/home"/>
+                        <p:submenu label="#{msg.DeviceMonitor}" icon="fa fa-bell-o">
+                            <p:menuitem value="#{msg.DeviceStatusMonitor}" outcome="/empty"/>
+                            <p:menuitem value="#{msg.DeviceDowntimeAnalysis}" outcome="/empty"/>
+                            <p:menuitem value="#{msg.DeviceMaintainanceEventAnalysis}" outcome="/portal/analysis/assetMaintenanceAll"/>
+                            <p:menuitem value="#{msg.DeviceMaintainanceCostAnalysis}" outcome="/empty"/>
+                            <p:menuitem value="#{msg.DeviceUtilizationAnalysis}" outcome="/portal/analysis/assetUsageAll"/>
+                            <p:menuitem value="#{msg.SparePartsConsumptionAnalysis}" rendered="false" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceFailureAnalysis}" rendered="false" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceOperationMonitor}" outcome="/home"/>
                         </p:submenu>
-                        <p:submenu label="#{msg.PreventiveMaintainceMgmt}" icon="&#xE884;">
-                            <p:menuitem value="#{msg.PmRecord}" icon="&#xE904;" outcome="/portal/pm/List.xhtml"/>
-                            <p:menuitem value="#{msg.PreventiveMaintaincePlanning}" icon="&#xE904;" outcome="/portal/analysis/assetProactiveMaintenanceAll"/>
-                            <p:menuitem value="#{msg.DeviceMetrologyMgmt}" icon="&#xE88B;" style="color: orange;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceQualityControl}" icon="&#xE8E8;" style="color: orange;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceAdverseEventMgmt}" icon="&#xE000;" style="color: orange;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceMedicalAccidentMgmt}" icon="&#xE001;" style="color: orange;" outcome="/home"/>
+                        <p:submenu label="#{msg.PreventiveMaintainceMgmt}" icon="fa fa-check-square-o">
+                            <p:menuitem value="#{msg.PmRecord}" outcome="/portal/pm/List.xhtml"/>
+                            <p:menuitem value="#{msg.PreventiveMaintaincePlanning}" outcome="/portal/analysis/assetProactiveMaintenanceAll"/>
+                            <p:menuitem value="#{msg.DeviceMetrologyMgmt}" rendered="false" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceQualityControl}" rendered="false" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceAdverseEventMgmt}" rendered="false" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceMedicalAccidentMgmt}" rendered="false" style="color: orange;" outcome="/home"/>
                         </p:submenu>
-                        <p:submenu label="#{msg.AssetKnowledgeBaseMgmt}" icon="&#xE884;">
-                            <p:menuitem value="#{msg.AssetDocMgmt}" icon="&#xE226;" outcome="/home"/>
-                            <p:menuitem value="#{msg.AssetKMMgmt}" icon="&#xE332;" style="color: orange;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceMgmtForum}" icon="&#xE32A;" style="color: orange;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceApplication}" icon="&#xE32A;" style="color: orange;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceUpgradMgmt}" icon="&#xE32A;" style="color: orange;" outcome="/home"/>
-                            <p:menuitem value="#{msg.AdvancedDeviceInfoTracking}" icon="&#xE32A;" style="color: orange;" outcome="/home"/>
+                        <p:submenu label="#{msg.AssetKnowledgeBaseMgmt}" icon="fa fa-book">
+                            <p:menuitem value="#{msg.AssetDocMgmt}" outcome="/home"/>
+                            <p:menuitem value="#{msg.AssetKMMgmt}" rendered="false" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceMgmtForum}" rendered="false" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceApplication}" rendered="false" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceUpgradMgmt}" rendered="false" style="color: orange;" outcome="/home"/>
+                            <p:menuitem value="#{msg.AdvancedDeviceInfoTracking}" rendered="false" style="color: orange;" outcome="/home"/>
                         </p:submenu>
-                        <p:submenu label="#{msg.DeviceOperationKPIAnalysis}" icon="&#xE884;">
-                            <p:menuitem value="#{msg.DeviceROIAnalysis}" icon="&#xE226;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceKPIAnalysis}" icon="&#xE332;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceKPIForecast}" icon="&#xE32A;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DeviceCostAnalysis}" icon="&#xE32A;" outcome="/home"/>
-                            <p:menuitem value="#{msg.DevicePurchaseDecisionSupport}" icon="&#xE32A;" outcome="/home"/>
+                        <p:submenu label="#{msg.DeviceOperationKPIAnalysis}" icon="fa fa-bar-chart">
+                            <p:menuitem value="#{msg.DeviceROIAnalysis}" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceKPIAnalysis}" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceKPIForecast}" outcome="/home"/>
+                            <p:menuitem value="#{msg.DeviceCostAnalysis}" outcome="/home"/>
+                            <p:menuitem value="#{msg.DevicePurchaseDecisionSupport}" outcome="/home"/>
                         </p:submenu>
-                        <p:submenu label="#{msg.SysAdmin}" icon="person">
-                            <p:menuitem value="#{msg.SiteAdmin}" icon="person" outcome="/admin/uaa/siteInfo/List.xhtml"/>
-                            <p:menuitem value="#{msg.OrgAdmin}" icon="person" outcome="/portal/uaa/orgInfo/List.xhtml"/>
-                            <p:menuitem value="#{msg.UserAdmin}" icon="person" outcome="/portal/uaa/userAccount/List.xhtml"/>
-                            <p:menuitem value="Code Tool" icon="&#xE226;" outcome="/admin/codegen/codegen.xhtml"/>
-                            <p:menuitem value="Demo Chart" icon="&#xE226;" outcome="/ui/demo.xhtml"/>
-                            <p:menuitem value="Icon List" icon="&#xE869;" outcome="/utils"/>
+                        <p:submenu label="#{msg.SysAdmin}" icon="fa fa-user">
+                            <p:menuitem value="#{msg.SiteAdmin}" outcome="/admin/uaa/siteInfo/List.xhtml"/>
+                            <p:menuitem value="#{msg.OrgAdmin}" outcome="/portal/uaa/orgInfo/List.xhtml"/>
+                            <p:menuitem value="#{msg.UserAdmin}" outcome="/portal/uaa/userAccount/List.xhtml"/>
+                            <p:menuitem value="Code Tool" outcome="/admin/codegen/codegen.xhtml"/>
+                            <p:menuitem value="Demo Chart" outcome="/ui/demo.xhtml"/>
+                            <p:menuitem value="Icon List" outcome="/utils"/>
                         </p:submenu>
                     </pu:menu>
                 </div>
