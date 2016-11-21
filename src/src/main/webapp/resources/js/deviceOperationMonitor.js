@@ -42,3 +42,9 @@ function skinBar() {
     }
   });
 }
+
+function skinHeaderBar() {
+
+}
+
+

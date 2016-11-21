@@ -14,7 +14,7 @@ table     = "debug"
 # data generation
 startdate = "2011-1-16"
 enddate   = "2016-11-18"
-type      = ["CT", "MRI", "xRay", "DR", "XYZ", "ABC", "DEF", "LMN"]
+type      = ["CT", "MR", "xRay", "DR"]
 totalrecords  = 6
 # totalrecords  = 5
 
@@ -45,13 +45,14 @@ table = "asset_info"
 totalrecords = 300
 for i in 0..totalrecords
   site_id = randnum.rand(1..2)
-  name    = "#{type.sample}-#{SecureRandom.uuid}"
+  asset_group   = randnum.rand(1..4)
+  name    = "#{type[asset_group-1]}-#{SecureRandom.uuid}"
 
   function_type = randnum.rand(1..10)
   hospital_id   = randnum.rand(1..10)
 
   clinical_dept_id = randnum.rand(1..10)
-  asset_group   = randnum.rand(1..10)
+
   asset_dept_id = 100
   asset_owner_id = randnum.rand(1..5)
   asset_owner_name  = "asset-owner-#{asset_owner_id}"
@@ -204,8 +205,8 @@ for i in 1..totalrecords
   modality_id       = randnum.rand(1..50)
   modality_type_id  = randnum.rand(1..10)
   modality_type     = type.sample
-  procedure_id      = randnum.rand(1..50)
-  procedure_name    = SecureRandom.hex
+  procedure_id      = randnum.rand(1..5)
+  procedure_name    = ["头部", "胸部", "腹部", "四肢", "其他"][procedure_id - 1]
   procedure_step_id = randnum.rand(1..6)
   procedure_step_name = ["Step One", "Step Two", "Step Three", "Step Four", "Step Five"].sample
 
