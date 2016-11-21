@@ -9,25 +9,25 @@
 
         <div class="ui-g">
             <div class="ui-g-12">
-                <div class="ui-g-3"><p>TODO-DropDown</p></div>
-                <div class="ui-g-6"><p class="i18n">设备维修事件统计分析</p></div>
+                <div class="ui-g-3"></div>
+                <div class="ui-g-6"><p>#{msg.maintenanceAnalysis_title}</p></div>
                 <!--<div class="ui-g-3"><p:commandButton icon="fa fa-ellipsis-v" title="Icon Only"/></div>-->
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-3">
-                    <p class="i18n">设备故障最主要原因</p>
+                    <p>#{msg.maintenanceAnalysis_reasonTile}</p>
                     <p><h:outputText value="#{assetMaintenanceController.topErrorReason}"/></p>
                 </div>
                 <div class="ui-g-3">
-                    <p class="i18n">设备故障处理流程最耗时步骤</p>
+                    <p>#{msg.maintenanceAnalysis_stepTile}</p>
                     <p><h:outputText value="#{assetMaintenanceController.topErrorStep}"/></p>
                 </div>
                 <div class="ui-g-3">
-                    <p class="i18n">设备故障主要发生的科室</p>
+                    <p>#{msg.maintenanceAnalysis_roomTile}</p>
                     <p><h:outputText value="#{assetMaintenanceController.topErrorRoom}"/></p>
                 </div>
                 <div class="ui-g-3">
-                    <p class="i18n">设备故障主要发生的设备类型</p>
+                    <p>#{msg.maintenanceAnalysis_categoryTile}</p>
                     <p><h:outputText value="#{assetMaintenanceController.topErrorDeviceType}"/></p>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                             listener="#{assetMaintenanceController.onStartDateSelect}"
                             showOn="button"/>
                 </p:calendar>
-                <p class="i18n">到</p>
+                <p class="i18n">TO</p>
                 <p:calendar value="#{assetMaintenanceController.endDate}">
                     <p:ajax event="dateSelect"
                             listener="#{assetMaintenanceController.onEndDateSelect}"
@@ -49,7 +49,7 @@
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="ui-g-9">
-                    <p class="i18n">设备故障原因分析</p>
+                    <p>#{msg.maintenanceAnalysis_reasonChart}</p>
                 </div>
                 <!--<div class="ui-g-3">
                     <p:commandButton value="TODO导出"/>
@@ -66,7 +66,7 @@
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="ui-g-9">
-                    <p class="i18n">设备故障流程响应时间分布</p>
+                    <p>#{msg.maintenanceAnalysis_timeChart}</p>
                 </div>
                 <!--<div class="ui-g-3">
                     <p:commandButton value="TODO导出"/>
@@ -80,7 +80,7 @@
                          style="height:100px;"/>
             </div>
             <div class="ui-g-12">
-                <p class="i18n">耗时最长的三个步骤的具体响应时间分布</p>
+                <p>#{msg.maintenanceAnalysis_timeChart_section}</p>
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-4">
@@ -104,7 +104,7 @@
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="ui-g-9">
-                    <p class="i18n">设备故障分布</p>
+                    <p>#{msg.maintenanceAnalysis_distributionChart}</p>
                 </div>
                 <!--<div class="ui-g-3">
                     <p:commandButton value="TODO导出"/>
@@ -112,19 +112,18 @@
             </div>
             <p:separator/>
             <div class="ui-g-12">
-                <!-- TODO: this is rather a OneButton -->
                 <p:tabView>
-                    <p:tab class="i18n" title="按科室">
+                    <p:tab title="#{msg.maintenanceAnalysis_distributionChart_room}">
                         <p:chart type="bar"
                                  model="#{assetMaintenanceController.errorRoomChart}"
                                  responsive="true"/>
                     </p:tab>
-                    <p:tab class="i18n" title="按设备类型">
+                    <p:tab title="#{msg.maintenanceAnalysis_distributionChart_category}">
                         <p:chart type="bar"
                                  model="#{assetMaintenanceController.errorDeviceTypeChart}"
                                  responsive="true"/>
                     </p:tab>
-                    <p:tab class="i18n" title="按单台设备（前40台）">
+                    <p:tab title="#{msg.maintenanceAnalysis_distributionChart_device}">
                         <p:chart type="bar"
                                  model="#{assetMaintenanceController.topErrorDeviceChart}"
                                  responsive="true"/>

@@ -10,6 +10,7 @@ import org.primefaces.model.chart.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webapp.framework.dao.NativeSqlUtil;
+import webapp.framework.web.WebUtil;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -29,6 +30,10 @@ public final class AssetMaintenanceController {
 
     private int hospitalId;
 
+    private final int knownCaseTypes = 5;
+    private final int knownWorkOrderSteps = 6;
+    private final int knownAssetGroups = 4;
+
     public AssetMaintenanceController() {
         this.parameters = new HashMap<>();
     }
@@ -41,6 +46,10 @@ public final class AssetMaintenanceController {
 
         this.hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
         this.parameters.put("hospitalId", this.hospitalId);
+
+        this.parameters.put("knownCaseTypes", this.knownCaseTypes);
+        this.parameters.put("knownWorkOrderSteps", this.knownWorkOrderSteps);
+        this.parameters.put("knownAssetGroups", this.knownAssetGroups);
     }
 
     // region Parameters
@@ -91,52 +100,147 @@ public final class AssetMaintenanceController {
     // region Properties
 
     public final String getTopErrorReason() {
-        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_REASON), Integer.valueOf(0)).toString();
+        Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_REASON), Integer.valueOf(0));
+        if (id == null || id.intValue() == 0) {
+            return "未填"; // TODO: i18n
+        }
+        if (id > 99) {
+            return "其他原因"; // TODO: i18n
+        }
+        return WebUtil.getFieldValueMessage("caseType", id.toString());
     }
 
     public final String getTopErrorStep() {
-        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_STEP), Integer.valueOf(0)).toString();
+        Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_STEP), Integer.valueOf(0));
+        if (id == null || id.intValue() == 0) {
+            return "未填"; // TODO: i18n
+        }
+        return WebUtil.getFieldValueMessage("woSteps", id.toString());
     }
 
-    public final String getTopErrorRoom() {
-        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL), Integer.valueOf(0)).toString();
+    public final String getTopErrorRoom() { // TODO: no room info
+        Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL), Integer.valueOf(0));
+        if (id == null || id.intValue() == 0) {
+            return "未填";
+        }
+        return String.format("第%d科室", id.intValue());
     }
 
     public final String getTopErrorDeviceType() {
-        return convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL), Integer.valueOf(0)).toString();
+        Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL), Integer.valueOf(0));
+        if (id == null || id.intValue() == 0) {
+            return "未填"; // TODO: i18n
+        }
+        if (id < 0) {
+            return "其他设备"; // TODO: i18n
+        }
+        return WebUtil.getFieldValueMessage("assetGroup", id.toString());
     }
 
+    // TODO: single
     public final String getErrorCount() {
         return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Long.valueOf(0)).toString();
     }
 
     public final BarChartModel getErrorReasonChart() {
-        return convertToBarChartModel(this.query(SQL_LIST_ERROR_REASON),
-                                      "故障原因", "故障次数"); /* TODO: i18n */
+        List<Map<String, Object>> list = this.query(SQL_LIST_ERROR_REASON);
+        BarChartModel chart = new BarChartModel();
+        ChartSeries series = new ChartSeries();
+        for (Map<String, Object> map : list) {
+            Integer id = (Integer)map.get("key");
+            String key;
+            if (id == null || id.intValue() == 0) {
+                key = "未填"; // TODO: i18n
+            }
+            else if (id > 99) {
+                key = "其他原因"; // TODO: i18n
+            }
+            else {
+                key = WebUtil.getFieldValueMessage("caseType", id.toString());
+            }
+            series.set(key, (Number)map.get("value"));
+        }
+        chart.addSeries(series);
+        chart.getAxis(AxisType.X).setLabel(WebUtil.getMessage("maintenanceAnalysis_reasonChart_xAxis"));
+        chart.getAxis(AxisType.Y).setLabel(WebUtil.getMessage("maintenanceAnalysis_reasonChart_yAxis"));
+        return chart;
     }
 
     public final HorizontalBarChartModel getErrorStepChart() {
-        List<Map<String, Object>> list = this.query(SQL_LIST_ERROR_STEP);
-        return convertToHorizontalBarChartModel(list);
+        List<Map<String, Object>> data = this.query(SQL_LIST_ERROR_STEP);
+        int[] raw = new int[this.knownWorkOrderSteps];
+        int count = 0;
+        int total = 0;
+        for (Map<String, Object> map : data) {
+            int key = (int)map.get("key");
+            int value = (int)map.get("value");
+            count++;
+            raw[key - 1] = value;
+            total += value;
+        }
+        int[] ext = new int[this.knownWorkOrderSteps];
+        int average = 0;
+        if (count > 0) {
+            average = total / count;
+        }
+        if (average < 1) {
+            average = 1;
+        }
+        for (int i = 0; i < this.knownWorkOrderSteps; i++) {
+            if (raw[i] == 0) {
+                ext[i] = average;
+            }
+            else {
+                ext[i] = raw[i];
+            }
+        }
+
+        HorizontalBarChartModel chart = new HorizontalBarChartModel();
+        chart.setStacked(true);
+        total = 0;
+        for (int i = 0; i < this.knownWorkOrderSteps; i++) {
+            ChartSeries series = new ChartSeries();
+            String key = WebUtil.getFieldValueMessage("woSteps", Integer.toString(i + 1));
+            int value = ext[i];
+            key = String.format("%s%n%d分钟", key, value); // TODO: i18n
+            series.set(key, value);
+            chart.addSeries(series);
+            total += value;
+        }
+        Axis axis = chart.getAxis(AxisType.X);
+        axis.setMin(0);
+        axis.setMax(total);
+        return chart;
     }
 
     public final PieChartModel[] getErrorTimePerStep() {
         List<Map<String, Object>> list = this.query(SQL_LIST_TOP_ERROR_STEP);
-        PieChartModel[] charts = new PieChartModel[3];
-        int index = 0;
-        for (Map<String, Object> map : list) {
-            Integer scalar = (Integer)map.get("scalar");
-            if ("123456".indexOf(scalar.toString()) != -1) { // TODO: this is based on assumption
-                Map<String, Object> extra = new HashMap<>();
-                extra.put("stepId", scalar);
-                charts[index] = convertToPieChartModel(this.query(SQL_LIST_ERROR_TIME_PER_STEP, extra));
-                charts[index].setTitle(scalar.toString());
-                index++;
-            }
+        if (list.size() < this.knownWorkOrderSteps) {
+            return new PieChartModel[] { new PieChartModel(), new PieChartModel(), new PieChartModel() };
         }
-        while (index < 3) {
-            charts[index] = new PieChartModel();
-            index++;
+
+        PieChartModel[] charts = new PieChartModel[3];
+        for (int index = 0; index < 3; index++) {
+            int scalar = (int)list.get(index).get("scalar");
+            Map<String, Object> extra = new HashMap<>();
+            extra.put("stepId", scalar);
+            List<Map<String, Object>> innerList = this.query(SQL_LIST_ERROR_TIME_PER_STEP, extra);
+            PieChartModel chart = new PieChartModel();
+            int total = 0;
+            for (Map<String, Object> map : innerList) {
+                int value = (int)map.get("value");
+                total += value;
+            }
+            for (Map<String, Object> map : innerList) {
+                String key = Integer.toString((int)map.get("key"));
+                int value = (int)map.get("value");
+                key = WebUtil.getMessage(String.format("maintenanceAnalysis_timeChart_legend_%s", key));
+                key = String.format(key, Integer.toString((int)(((double)value)/total)*100));
+                chart.set(key, value);
+            }
+            chart.setTitle(WebUtil.getFieldValueMessage("woSteps", Integer.toString(index + 1)));
+            chart.setLegendPosition("w");
+            charts[index] = chart;
         }
         return charts;
     }
@@ -256,13 +360,16 @@ public final class AssetMaintenanceController {
     // 设备故障最主要原因
 
     private final static String SQL_SCALAR_TOP_ERROR_REASON = "" +
-            "SELECT work.case_type AS scalar " +
+            "SELECT CASE " +
+            "        WHEN work.case_type > 0 AND work.case_type <= :#knownCaseTypes THEN work.case_type " +
+            "        WHEN work.case_type > :#knownCaseTypes THEN CAST(100 AS INTEGER) " +
+            "        ELSE CAST(0 AS INTEGER) " +
+            "END AS scalar " +
             "FROM work_order AS work " +
-            "WHERE TRUE " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "WHERE work.hospital_id = :#hospitalId" +
+            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ":#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
-            "GROUP BY work.case_type " +
+            "GROUP BY scalar " +
             "ORDER BY count(*) DESC " +
             "LIMIT 1 " +
             ";";
@@ -274,12 +381,13 @@ public final class AssetMaintenanceController {
             "FROM work_order_step AS step, " +
             "     work_order AS work " +
             "WHERE step.work_order_id = work.id " +
+            "  AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
             "  AND step.start_time IS NOT NULL " +
             "  AND step.end_time IS NOT NULL " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "  AND work.hospital_id = :#hospitalId" +
+            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ":#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
-            "GROUP BY step.step_id " +
+            "GROUP BY scalar " +
             "ORDER BY avg(step.end_time - step.start_time) DESC " +
             "LIMIT 1 " +
             ";";
@@ -291,8 +399,8 @@ public final class AssetMaintenanceController {
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "      AND work.hospital_id = :#hospitalId " +
+            "      AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "GROUP BY asset.clinical_dept_id " +
             "ORDER BY count(*) DESC " +
             "LIMIT 1 " +
@@ -301,13 +409,17 @@ public final class AssetMaintenanceController {
     // 设备故障主要发生的设备类型
 
     private final static String SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL = "" +
-            "SELECT asset.asset_group AS scalar " +
+            "SELECT CASE " +
+            "        WHEN asset.asset_group > 0 AND asset.asset_group <= :#knownAssetGroups THEN asset.asset_group " +
+            "        WHEN asset.asset_group > :#knownAssetGroups THEN CAST(-1 AS INTEGER) " +
+            "        ELSE CAST (0 AS INTEGER)" +
+            "END AS scalar " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
-            "GROUP BY asset.asset_group " +
+            "  AND work.hospital_id = :#hospitalId " +
+            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
+            "GROUP BY scalar " +
             "ORDER BY count(*) DESC " +
             "LIMIT 1 " +
             ";";
@@ -326,30 +438,39 @@ public final class AssetMaintenanceController {
     // 设备故障原因分析
 
     private final static String SQL_LIST_ERROR_REASON = "" +
-            "SELECT work.case_type AS key, count(*) AS value " +
-            "FROM work_order AS work " +
-            "WHERE TRUE " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
-            ":#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
-            "GROUP BY work.case_type " +
-            "ORDER BY work.case_type ASC " +
+            "SELECT COALESCE(extended.key, partial.key) AS key, COALESCE(partial.value, CAST(0 AS INTEGER)) AS value " +
+            "FROM generate_series(0, :#knownCaseTypes) AS extended(key) " +
+            "     FULL OUTER JOIN (" +
+            "        SELECT CASE " +
+            "                WHEN work.case_type > 0 AND work.case_type <= :#knownCaseTypes THEN work.case_type " +
+            "                WHEN work.case_type > :#knownCaseTypes THEN CAST(100 AS INTEGER) " +
+            "                ELSE CAST(0 AS INTEGER) " +
+            "        END AS key, count(*) AS value " +
+            "        FROM work_order AS work " +
+            "        WHERE work.hospital_id = :#hospitalId " +
+            "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
+            "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
+            "        GROUP BY key " +
+            "     ) AS partial " +
+            "     ON extended.key = partial.key " +
+            "ORDER BY key ASC " +
             ";";
 
     // 设备故障处理流程响应时间分布
 
     private final static String SQL_LIST_ERROR_STEP = "" +
-            "SELECT step.step_id AS key, avg(EXTRACT (epoch FROM (step.end_time - step.start_time)) / 60) AS value " +
+            "SELECT step.step_id AS key, CAST(avg(EXTRACT (epoch FROM (step.end_time - step.start_time)) / 60) AS INTEGER) AS value " +
             "FROM work_order_step AS step, " +
             "     work_order AS work " +
             "WHERE step.work_order_id = work.id " +
+            "  AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
             "  AND step.start_time IS NOT NULL " +
             "  AND step.end_time IS NOT NULL " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "  AND work.hospital_id = :#hospitalId " +
+            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ":#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
-            "GROUP BY step.step_id " +
-            "ORDER BY step.step_id ASC " +
+            "GROUP BY key " +
+            "ORDER BY key ASC " +
             ";";
 
     // （耗时最长的三个）步骤的具体响应时间分布
@@ -359,18 +480,18 @@ public final class AssetMaintenanceController {
             "FROM work_order_step AS step, " +
             "     work_order AS work " +
             "WHERE step.work_order_id = work.id " +
+            "  AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
             "  AND step.start_time IS NOT NULL " +
             "  AND step.end_time IS NOT NULL " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "  AND work.hospital_id = :#hospitalId " +
+            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ":#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
             "GROUP BY step.step_id " +
             "ORDER BY avg(step.end_time - step.start_time) DESC " +
-            "LIMIT 3 " +
             ";";
 
     private final static String SQL_LIST_ERROR_TIME_PER_STEP = "" +
-            "SELECT rate AS key, count(*) AS value " +
+            "SELECT rate AS key, CAST(count(*) AS INTEGER) AS value " +
             "FROM ( " +
             "        SELECT CASE " +
             "                WHEN step.start_time IS NULL OR end_time IS NULL THEN CAST (0 AS integer) " + // 未响应
@@ -381,8 +502,7 @@ public final class AssetMaintenanceController {
             "        END AS rate " +
             "        FROM work_order_step AS step, " +
             "             work_order AS work " +
-            "        WHERE TRUE " +
-            "          AND step.work_order_id = work.id " +
+            "        WHERE step.work_order_id = work.id " +
             "          AND step.step_id = :#stepId " +
             "        :#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
             "        :#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
@@ -602,33 +722,6 @@ public final class AssetMaintenanceController {
             axis.setLabel(yLabel);
         }
 
-        return chart;
-    }
-
-    private final static HorizontalBarChartModel convertToHorizontalBarChartModel(List<Map<String, Object>> list) {
-        HorizontalBarChartModel chart = new HorizontalBarChartModel();
-        chart.setStacked(true);
-
-        Double total = 0.0;
-        for (Map<String, Object> map: list) {
-            ChartSeries series = new ChartSeries();
-            series.set(map.get("key"), (Double)map.get("value"));
-            chart.addSeries(series);
-            total += (Double)map.get("value");
-        }
-
-        Axis axis = chart.getAxis(AxisType.X);
-        axis.setMin(0.0);
-        axis.setMax(total);
-
-        return chart;
-    }
-
-    private final static PieChartModel convertToPieChartModel(List<Map<String, Object>> list) {
-        PieChartModel chart = new PieChartModel();
-        for (Map<String, Object> map : list) {
-            chart.set(map.get("key").toString(), (Number)map.get("value"));
-        }
         return chart;
     }
 
