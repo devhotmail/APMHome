@@ -294,10 +294,12 @@ public class HomeHeadController extends SqlConfigurableChartController {
         drawBar(bc, label, monthProfit);
 
         barMonthlyRevenue = bc;
+        barMonthlyRevenue.setExtender("barMonthlyRevenue");
     }
 
     private void createForecastBar() {
         barMonthlyForecast.setLegendPosition("ne");
+        barMonthlyForecast.setExtender("barMonthlyForecast");
 
         Axis xAxis = barMonthlyForecast.getAxis(AxisType.X);
         xAxis.setLabel("Forecast");
@@ -591,6 +593,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
         pc.setLegendPosition("w");
 
         pieAnnualRevenue = pc;
+        pieAnnualRevenue.setExtender("pieAnnualRevenue");
     }
 
     private List<Map<String, Object>> calcProfit(List<Map<String, Object>> revenue,
@@ -692,6 +695,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
         printList(profit);
         drawBar(bc, label, profit);
         barAnnualRevenue = bc;
+        barAnnualRevenue.setExtender("barAnnualRevenue");
     }
 
     private List<Map<String, Object>> prepareData(String sql, HashMap<String, Object> sqlParams) {
