@@ -133,7 +133,7 @@ public class AssetUsageAllController implements Serializable{
 			//Integer
 	private String SERVETL = 
 			"SELECT DISTINCT a.name, "
-			+ "( Date(:#endDate) - CASE WHEN Date(:#startDate) > last_pm_date THEN Date(:#startDate) ELSE last_pm_date END ) serve_day " 
+			+ "( Date(:#endDate) - CASE WHEN Date(:#startDate) > a.install_date THEN Date(:#startDate) ELSE a.install_date END ) serve_day " 
 			+ "FROM asset_info a "
 			+ "WHERE a.hospital_id = :#hospitalId "
 			+ "ORDER BY a.name";
@@ -141,7 +141,7 @@ public class AssetUsageAllController implements Serializable{
 			//Integer
 	private String BENCHSERVETL = 
 			"SELECT DISTINCT a.name, "
-			+ "current_date - a.last_pm_date bench_day " 
+			+ "current_date - a.install_date bench_day " 
 			+ "FROM asset_info a "
 			+ "WHERE a.hospital_id = :#hospitalId "
 			+ "ORDER BY a.name";			
@@ -298,6 +298,7 @@ public class AssetUsageAllController implements Serializable{
 			deviceScan.getAxis(AxisType.Y).setLabel(countlb);
 			deviceScan.setBarWidth(25);
 			deviceScan.setLegendPosition("ne");
+            deviceScan.setExtender("deviceScan");			
 
 			ChartSeries cst_scan = new BarChartSeries();
 			cst_scan.setLabel(deviceScanlg);
@@ -318,6 +319,7 @@ public class AssetUsageAllController implements Serializable{
 			deviceExpo.getAxis(AxisType.X).setTickAngle(-60);
 			deviceExpo.setBarWidth(25);
 			deviceExpo.setLegendPosition("ne");
+            deviceExpo.setExtender("deviceExpo");
 
 			ChartSeries cst_expo = new BarChartSeries();
 			cst_expo.setLabel(deviceExpolg_1);
@@ -375,7 +377,8 @@ public class AssetUsageAllController implements Serializable{
 			deviceUsage.getAxis(AxisType.X).setTickAngle(-60);
 			deviceUsage.setBarWidth(25);
 			deviceUsage.setLegendPosition("ne");
-			deviceUsage.setStacked(true);	
+			deviceUsage.setStacked(true);
+			deviceUsage.setExtender("deviceUsage");	
 
 			deviceDT = new BarChartModel();
 			deviceDT.getAxis(AxisType.X).setLabel(devicelb);
@@ -383,6 +386,7 @@ public class AssetUsageAllController implements Serializable{
 			deviceDT.getAxis(AxisType.X).setTickAngle(-60);
 			deviceDT.setBarWidth(25);
 			deviceDT.setLegendPosition("ne");
+			deviceDT.setExtender("deviceDT");
 
 
 			ChartSeries cst_inuse = new BarChartSeries();
