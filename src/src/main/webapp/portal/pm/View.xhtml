@@ -11,49 +11,64 @@
         <p:dialog id="PmOrderViewDlg" widgetVar="PmOrderViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{pmOrderController.CRUDActionName} #{msg.PmOrder}">
             <h:form id="PmOrderViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="6" rendered="#{pmOrderController.selected != null}">
-                        <h:outputLabel value="#{msg.id}" for="id" />
-                        <h:outputText value="#{pmOrderController.selected.id}"/>
-                        <h:outputLabel value="#{msg.siteId}" for="siteId" />
-                        <h:outputText value="#{pmOrderController.selected.siteId}"/>
-                        <h:outputLabel value="#{msg.name}" for="name" />
-                        <h:outputText value="#{pmOrderController.selected.name}"/>
-                        <h:outputLabel value="#{msg.creatorId}" for="creatorId" />
-                        <h:outputText value="#{pmOrderController.selected.creatorId}"/>
-                        <h:outputLabel value="#{msg.creatorName}" for="creatorName" />
-                        <h:outputText value="#{pmOrderController.selected.creatorName}"/>
-                        <h:outputLabel value="#{msg.createTime}" for="createTime" />
-                        <h:outputText value="#{pmOrderController.selected.createTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                        </h:outputText>
-                        <h:outputLabel value="#{msg.ownerId}" for="ownerId" />
-                        <h:outputText value="#{pmOrderController.selected.ownerId}"/>
-                        <h:outputLabel value="#{msg.ownerName}" for="ownerName" />
-                        <h:outputText value="#{pmOrderController.selected.ownerName}"/>
-                        <h:outputLabel value="#{msg.ownerOrgId}" for="ownerOrgId" />
-                        <h:outputText value="#{pmOrderController.selected.ownerOrgId}"/>
-                        <h:outputLabel value="#{msg.ownerOrgName}" for="ownerOrgName" />
-                        <h:outputText value="#{pmOrderController.selected.ownerOrgName}"/>
-                        <h:outputLabel value="#{msg.startTime}" for="startTime" />
-                        <h:outputText value="#{pmOrderController.selected.startTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                        </h:outputText>
-                        <h:outputLabel value="#{msg.endTime}" for="endTime" />
-                        <h:outputText value="#{pmOrderController.selected.endTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                        </h:outputText>
-                        <h:outputLabel value="#{msg.isFinished}" for="isFinished" />
+                    <p:panelGrid columns="5" rendered="#{pmOrderController.selected != null}">
+                        <h:outputLabel value="#{msg.name} : " for="name">
+                        	<h:outputText value="#{pmOrderController.selected.name}"/>
+                       	</h:outputLabel>
+                        
+                        <h:outputLabel value="#{msg.assetName} : " for="assetName" >
+                        		<h:outputText value="#{pmOrderController.selected.assetName}"/>
+                        </h:outputLabel>
+                        
+                        <h:outputLabel value="#{msg.creatorName} : " for="creatorName" >
+                        	<h:outputText value="#{pmOrderController.selected.creatorName}"/>
+                       </h:outputLabel>	
+                        	
+                        <h:outputLabel value="#{msg.createTime} : " for="createTime" >
+	                        <h:outputText value="#{pmOrderController.selected.createTime}">
+	                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+	                        </h:outputText>
+                        </h:outputLabel>
+                        
+                        <h:outputLabel value="#{msg.ownerName} : " for="ownerName" >
+                        	<h:outputText value="#{pmOrderController.selected.ownerName}"/>
+                      	</h:outputLabel>
+
+                        <h:outputLabel value="#{msg.ownerOrgName} : " for="ownerOrgName" >
+                        	<h:outputText value="#{pmOrderController.selected.ownerOrgName}"/>
+                        </h:outputLabel>
+                        
+                        <h:outputLabel value="#{msg.startTime} : " for="startTime" >
+	                        <h:outputText value="#{pmOrderController.selected.startTime}">
+	                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+	                        </h:outputText>
+	                     </h:outputLabel>
+                        
+                        <h:outputLabel value="#{msg.endTime} : " for="endTime" >
+	                        <h:outputText value="#{pmOrderController.selected.endTime}">
+	                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+	                        </h:outputText>
+	                    </h:outputLabel>
+                        
+                        <h:outputLabel value="#{msg.isFinished} " for="isFinished" >
                         <p:selectBooleanCheckbox id="isFinished" value="#{pmOrderController.selected.isFinished}" required="true" requiredMessage="#{msg.isFinished} #{msg.ValidationRequire}" disabled="true"/>
-                        <h:outputLabel value="#{msg.comments}" for="comments" />
-                        <h:outputText value="#{pmOrderController.selected.comments}"/>
-                        <h:outputLabel value="#{msg.nextTime}" for="nextTime" />
-                        <h:outputText value="#{pmOrderController.selected.nextTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                        </h:outputText>
-                        <h:outputLabel value="#{msg.reportUrl}" for="reportUrl" />
-                        <h:outputText value="#{pmOrderController.selected.reportUrl}"/>
-                        <h:outputLabel value="#{msg.assetId}" for="assetId" />
-                        <h:outputText value="#{pmOrderController.selected.assetId}"/>
+                        </h:outputLabel>
+                        
+                        <h:outputLabel value="#{msg.nextTime} : " for="nextTime" >
+	                        <h:outputText value="#{pmOrderController.selected.nextTime}">
+	                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+	                        </h:outputText>
+	                     </h:outputLabel>   
+                        
+                        <h:outputLabel value="#{msg.comments} : " for="comments" >
+                        	<h:outputText value="#{pmOrderController.selected.getCommentsInShort()}"/>
+                        </h:outputLabel>
+                        
+	                        
+                        <h:outputLabel value="#{msg.reportUrl}" for="reportUrl" >
+                        	<h:outputText value="#{pmOrderController.selected.getReportUrlInShort()}"/>
+                        </h:outputLabel>
+
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{pmOrderController.deleteAction}" icon="ui-icon-trash" actionListener="#{pmOrderController.delete}" value="#{msg.Delete}" update="display,:PmOrderViewDlg, :PmOrderListForm:datalist, :growl" oncomplete="handleSubmit(args, 'PmOrderViewDialog');"/>

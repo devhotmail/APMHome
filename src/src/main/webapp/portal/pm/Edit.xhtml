@@ -8,8 +8,6 @@
 
     <ui:composition>
 
-        <!--  <p:dialog id="PmOrderEditDlg" widgetVar="PmOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)"
-         header="#{pmOrderController.CRUDActionName} #{msg.PmOrder}"/>-->
         <h:form id="PmOrderEditForm">
             <p:fieldset legend="#{pmOrderController.CRUDActionName} #{msg.PmOrder}" rendered="#{pmOrderController.selected !=null}">
                 <h:panelGroup id="display">
@@ -24,42 +22,56 @@
                             <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.prepareDialogCallback(pmOrderController, ':PmOrderEditForm:assetName :PmOrderEditForm:ownerName')}"
                                              process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg" oncomplete="PF('varSelectAssetDlg').show()"/>
                         </h:panelGroup>
+                        
                         <h:panelGroup>
-                            <label class="label">#{msg.caseOwnerName}</label>
+                            <label class="label">#{msg.creatorName}*</label>
+                            <p:inputText id="creatorName" value="#{pmOrderController.selected.creatorName}" readonly="true"  required="true" requiredMessage="#{msg.creatorName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetOwnerName}</label>
                             <p:inputText readonly="true" id="ownerName" value="#{pmOrderController.selected.ownerName}" />
+                        </h:panelGroup>
+						 <h:panelGroup>
+                            <label class="label">#{msg.ownerOrgName}</label>
+                            <p:inputText id="ownerOrgName" value="#{pmOrderController.selected.ownerOrgName}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label" >#{msg.startTime}</label>
+                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.endTime}</label>
+                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.nextTime}</label>
+                            <p:calendar id="nextTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.nextTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isFinished}" value="#{pmOrderController.selected.isFinished}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
-                        <h:panelGroup>
-                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
-                            <label >#{msg.startTime}</label>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
-                            <label >#{msg.endTime}</label>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <!-- <p:inputText id="comments" value="#{pmOrderController.selected.comments}" /> -->
-                            <p:inputTextarea id="comments" value="#{pmOrderController.selected.comments}" />
-                            <label >#{msg.comments}</label>
-                        </h:panelGroup>
-
-                        <h:panelGroup>
-                            <p:inputTextarea id="reportUrl" value="#{pmOrderController.selected.reportUrl}" />
-                            <label >#{msg.reportUrl}</label>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <p:calendar id="nextTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.nextTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
-                            <label >#{msg.nextTime}</label>
-                        </h:panelGroup>
-                    </p:panelGrid>
+	                 </p:panelGrid>
                     <br/>
-
+					
+					<p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup>
+	                            <label class="label">#{msg.comments}</label>
+	                            <p:inputTextarea id="comments" cols="100"  value="#{pmOrderController.selected.comments}" />
+	                        </h:panelGroup>
+	                        <h:panelGroup>
+	                            <label class="label" >#{msg.reportUrl}</label>
+	                            <p:inputTextarea id="reportUrl"  cols="100" value="#{pmOrderController.selected.reportUrl}" />
+	                        </h:panelGroup>	
+					</p:panelGrid>
+					
                     <p:commandButton validateClient="true"  actionListener="#{pmOrderController.save()}"  value="#{msg.Save}"  update=":PmOrderEditForm,:PmOrderListForm:datalist, :growl"  icon="ui-icon-check" />
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" actionListener="#{pmOrderController.onCancel()}"   value="#{msg.Cancel}" update=":PmOrderEditForm,:PmOrderListForm"  icon="ui-icon-cancel" />
                 </h:panelGroup>
+                
+                
+                
             </p:fieldset>
         </h:form>
 
