@@ -27,55 +27,69 @@
             </f:metadata>
         </h:head>
 
-        <h:body styleClass="login-body">
-            <h:form prependId="false">
-                <style type="text/css">
-                    html {
-                        -webkit-background-size: cover;
-                        -moz-background-size: cover;
-                        -o-background-size: cover;
-                        background-size: cover;
-
-                        background-position: center center;
-
-                        height: 100%;
-                    }
-                    .login-body {
-                        background-size: auto!important;
-                    }
-                </style>
-
-                <p:focus/>
-                <div class="card login-panel ui-fluid" style="padding-top: 0px; padding-bottom: 0px;padding-top: 30px;">
-                    <div class="ui-g">
-                        <div class="ui-g-12" style="padding: 0px; margin: 0px;">
-                            <center>
-                                <h:panelGrid columns="1">
-                                    <p:graphicImage name="images/logo_black.png" library="ultima-layout" />
-                                    <label><h1>GE APM</h1></label>
-                                </h:panelGrid>
-                            </center>
-                        </div>
-                        <div class="ui-g-12">
-                            <p:inputText id="j_username" required="true" requiredMessage="#{msg.login_name}: #{msg.ValidationRequire}" placeholder="#{msg.login_name}"/>
-                            <i class="fa fa-user" style="height: 0px;float: left;left: -20px;top: -20px;position: relative;"/>
-                            <br/><br/>
-                            <p:password id="j_password" required="true" requiredMessage="#{msg.password}: #{msg.ValidationRequire}" placeholder="#{msg.password}"/>
-                            <i class="fa fa-lock" style="height: 0px;float: left;left: -20px;top: -20px;position: relative;"/>
-                        </div>
-                        <div class="ui-g-12" style="margin-bottom: 0px;">
-                            <p:commandButton styleClass="secondary" validateClient="true" actionListener="#{loginController.doLogin()}" value="#{msg.login}" update="loginMessages growl"/>
-                        </div>
-                    </div>
-                </div>
-                <div style="width: 40%; margin: 0 auto; float: top; top: -100px;">
-                    <p:messages closable="true" showSummary="true" id="loginMessages" showDetail="false"/>
-                </div>
-                <p:growl id="growl" autoUpdate="true"/>
-
-            </h:form>
+        <h:body styleClass="login-body" onload="PF('loginDialog').show()">
             <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
             <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout" />
+
+            <p:dialog id="loginDlg" widgetVar="loginDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" showHeader="false">
+                <h:form prependId="false">
+                    <style type="text/css">
+                        html {
+                            -webkit-background-size: cover;
+                            -moz-background-size: cover;
+                            -o-background-size: cover;
+                            background-size: cover;
+
+                            background-position: center center;
+
+                            height: 100%;
+                        }
+                        .login-body {
+                            background-size: auto!important;
+                        }
+                        .ui-dialog-mask{
+                        opacity: 0!important;
+                        } 
+                        .ui-dialog-content, .ui-dialog {
+                            box-shadow: none!important;
+                            padding-top: 0!important;
+                            background: none!important;
+                            border: none!important;
+                        }
+                        .login-panel{
+                            margin-top: 0!important;
+                            padding-bottom: 0px!important;
+                            padding-top: 20px!important;
+                        }
+                    </style>
+
+                    <p:focus/>
+                    <div class="card login-panel ui-fluid">
+                        <div class="ui-g">
+                            <div class="ui-g-12" style="padding: 0px; margin: 0px;">
+                                <center>
+                                    <h:panelGrid columns="1">
+                                        <p:graphicImage name="images/logo_black.png" library="ultima-layout" />
+                                        <label><h1>GE APM</h1></label>
+                                    </h:panelGrid>
+                                </center>
+                            </div>
+                            <div class="ui-g-12">
+                                <p:inputText id="j_username" required="true" requiredMessage="#{msg.login_name}: #{msg.ValidationRequire}" placeholder="#{msg.login_name}"/>
+                                <i class="fa fa-user" style="height: 0px;float: left;left: -20px;top: -20px;position: relative;"/>
+                                <br/><br/>
+                                <p:password id="j_password" required="true" requiredMessage="#{msg.password}: #{msg.ValidationRequire}" placeholder="#{msg.password}"/>
+                                <i class="fa fa-lock" style="height: 0px;float: left;left: -20px;top: -20px;position: relative;"/>
+                            </div>
+                            <div class="ui-g-12" style="margin-bottom: 0px;">
+                                <p:commandButton styleClass="secondary" validateClient="true" actionListener="#{loginController.doLogin()}" value="#{msg.login}" update="growl"/>
+                            </div>
+                        </div>
+                    </div>
+
+                </h:form>
+            </p:dialog>
+            <p:growl id="growl" autoUpdate="true"/>
         </h:body>
 
     </html>
