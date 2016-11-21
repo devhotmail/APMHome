@@ -432,11 +432,11 @@ INSERT INTO "i18n_message" VALUES (5531,'label','maintenanceAnalysis_timeChart',
 
 
 INSERT INTO "i18n_message" VALUES (5532,'label','maintenanceAnalysis_timeChart_section', '耗时最长的三个步骤的具体响应时间分布',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5535,'label','maintenanceAnalysis_timeChart_legend_0', '未响应：%s',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5536,'label','maintenanceAnalysis_timeChart_legend_1', '小于30分钟：%s',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5537,'label','maintenanceAnalysis_timeChart_legend_2', '30分钟到1小时以内：%s',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5538,'label','maintenanceAnalysis_timeChart_legend_3', '1小时到1天以内：%s',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5539,'label','maintenanceAnalysis_timeChart_legend_4', '1天以上：%s',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5535,'label','maintenanceAnalysis_timeChart_legend_0', '未响应：%s%%',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5536,'label','maintenanceAnalysis_timeChart_legend_1', '小于30分钟：%s%%',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5537,'label','maintenanceAnalysis_timeChart_legend_2', '30分钟到1小时以内：%s%%',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5538,'label','maintenanceAnalysis_timeChart_legend_3', '1小时到1天以内：%s%%',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5539,'label','maintenanceAnalysis_timeChart_legend_4', '1天以上：%s%%',null,null,-1);
 
 INSERT INTO "i18n_message" VALUES (5541,'label','maintenanceAnalysis_distributionChart', '设备故障分布',null,null,-1);
 INSERT INTO "i18n_message" VALUES (5543,'label','maintenanceAnalysis_distributionChart_yAxis', '故障次数',null,null,-1);
@@ -448,7 +448,7 @@ INSERT INTO "i18n_message" VALUES (5548,'label','maintenanceAnalysis_distributio
 INSERT INTO "i18n_message" VALUES (5549,'label','maintenanceAnalysis_distributionChart_device_xAxis', '设备',null,null,-1);
 
 INSERT INTO "i18n_message" VALUES (5551,'label','maintenanceAnalysis_percentageChart', '设备故障所占比例',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5555,'label','maintenanceAnalysis_percentageChart_percentage', '所占比例：%s',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5555,'label','maintenanceAnalysis_percentageChart_percentage', '所占比例：%s%%',null,null,-1);
 INSERT INTO "i18n_message" VALUES (5556,'label','maintenanceAnalysis_percentageChart_occurrence', '此台设备故障数：%s',null,null,-1);
 INSERT INTO "i18n_message" VALUES (5561,'label','maintenanceAnalysis_percentageChart_room', '此台设备故障占所在科室总故障比例',null,null,-1);
 INSERT INTO "i18n_message" VALUES (5562,'label','maintenanceAnalysis_percentageChart_room_occurrence', '此台设备所在科室故障数：%s',null,null,-1);
