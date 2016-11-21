@@ -472,6 +472,7 @@ public class AssetUsageAllController implements Serializable{
 			// **********************************************************************************************
 			deviceStat = new HorizontalBarChartModel();
 			deviceStat.setStacked(true);	
+			deviceStat.setExtender("deviceStat");
 
 			ChartSeries cst_stat_1 = new BarChartSeries();
 			cst_stat_1.set("total", wait_total);
