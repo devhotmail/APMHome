@@ -31,7 +31,7 @@ public final class AssetMaintenanceController {
     private int hospitalId;
 
     private final int knownCaseTypes = 5;
-    private final int knownWorkOrderSteps = 6; // TODO:
+    private final int knownWorkOrderSteps = 6;
     private final int knownAssetGroups = 4;
 
     public AssetMaintenanceController() {
@@ -50,6 +50,10 @@ public final class AssetMaintenanceController {
         this.parameters.put("knownCaseTypes", this.knownCaseTypes);
         this.parameters.put("knownWorkOrderSteps", this.knownWorkOrderSteps);
         this.parameters.put("knownAssetGroups", this.knownAssetGroups);
+    }
+
+    public final void submit() {
+
     }
 
     // region Parameters
@@ -119,11 +123,11 @@ public final class AssetMaintenanceController {
     }
 
     public final String getTopErrorRoom() {
-        Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL), Integer.valueOf(0));
-        if (id == null || id.intValue() == 0) {
+        String id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL), "");
+        if (id == null || id.length() == 0) {
             return WebUtil.getMessage("maintenanceAnalysis_empty");
         }
-        return String.format("第%d科室", id.intValue()); // TODO: no room info, i18n
+        return id;
     }
 
     public final String getTopErrorDeviceType() {
@@ -205,7 +209,12 @@ public final class AssetMaintenanceController {
             String key = WebUtil.getFieldValueMessage("woSteps", Integer.toString(i + 1));
             int value = ext[i];
             if (raw[i] != 0) {
-                key = String.format(WebUtil.getMessage("maintenanceAnalysis_timeChart_minute"), key, value);
+                if (value < 60) {
+                    key = String.format(WebUtil.getMessage("maintenanceAnalysis_timeChart_minute"), key, value);
+                }
+                else {
+                    key = String.format(WebUtil.getMessage("maintenanceAnalysis_timeChart_hour"), key, value/(double)60);
+                }
             }
             series.set(key, value);
             chart.addSeries(series);
@@ -249,11 +258,14 @@ public final class AssetMaintenanceController {
                 String key = Integer.toString((int)map.get("key"));
                 int value = (int)map.get("value");
                 key = WebUtil.getMessage(String.format("maintenanceAnalysis_timeChart_legend_%s", key));
-                key = String.format(key, Integer.toString((int)(((double)value)/total*100)));
+                key = String.format(key, "" /*Integer.toString((int)(((double)value)/total*100))*/);
+                key = key.replace("：", "");
+                key = key.replace("%", "");
                 chart.set(key, value);
             }
             chart.setTitle(WebUtil.getFieldValueMessage("woSteps", Integer.toString(scalar)));
-            chart.setLegendPosition("w");
+            chart.setLegendPosition("e");
+            chart.setShowDataLabels(true);
             charts[index] = chart;
         }
         return charts;
@@ -442,17 +454,22 @@ public final class AssetMaintenanceController {
             "LIMIT 1 " +
             ";";
 
-    // 设备故障主要发生的科室 // TODO: no room info
+    // 设备故障主要发生的科室
 
     private final static String SQL_SCALAR_TOP_ERROR_ROOM_ALL = "" +
-            "SELECT asset.clinical_dept_id AS scalar " +
-            "FROM work_order AS work, " +
-            "     asset_info AS asset " +
-            "WHERE work.asset_id = asset.id " +
-            "      AND work.hospital_id = :#hospitalId " +
-            "      AND work.request_time BETWEEN :#startDate AND :#endDate " +
-            "GROUP BY asset.clinical_dept_id " +
-            "ORDER BY count(*) DESC " +
+            "SELECT asset.clinical_dept_name " +
+            "FROM asset_info AS asset " +
+            "WHERE asset.clinical_dept_id = ( " +
+            "        SELECT asset.clinical_dept_id AS scalar " +
+            "        FROM work_order AS work, " +
+            "             asset_info AS asset " +
+            "        WHERE work.asset_id = asset.id " +
+            "              AND work.hospital_id = :#hospitalId " +
+            "              AND work.request_time BETWEEN :#startDate AND :#endDate " +
+            "        GROUP BY asset.clinical_dept_id " +
+            "        ORDER BY count(*) DESC " +
+            "        LIMIT 1 " +
+            ") " +
             "LIMIT 1 " +
             ";";
 
@@ -565,14 +582,25 @@ public final class AssetMaintenanceController {
     // 设备故障分布：按科室 // TODO: no room info, possibly ZERO
 
     private final static String SQL_LIST_ERROR_ROOM_ALL = "" +
-            "SELECT asset.clinical_dept_id AS key, count(*) AS value " +
-            "FROM work_order AS work, " +
-            "     asset_info AS asset " +
-            "WHERE work.asset_id = asset.id " +
-            "  AND work.hospital_id = :#hospitalId " +
-            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
-            "GROUP BY asset.clinical_dept_id " +
-            "ORDER BY asset.clinical_dept_id ASC " +
+            "WITH " +
+            "dept_info AS ( " +
+            "        SELECT DISTINCT ON (id) asset.clinical_dept_id AS id, asset.clinical_dept_name AS name " +
+            "        FROM asset_info AS asset " +
+            "), " +
+            "temporary AS ( " +
+            "        SELECT asset.clinical_dept_id AS key, count(*) AS value " +
+            "        FROM work_order AS work, " +
+            "             asset_info AS asset " +
+            "        WHERE work.asset_id = asset.id " +
+            "          AND work.hospital_id = :#hospitalId " +
+            "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
+            "        GROUP BY asset.clinical_dept_id " +
+            "        ORDER BY asset.clinical_dept_id ASC " +
+            ") " +
+            "SELECT COALESCE(dept_info.name, text(dept_info.id)) AS key, CAST(COALESCE(temporary.value, 0) AS INTEGER) AS value " +
+            "FROM dept_info " +
+            "LEFT OUTER JOIN temporary " +
+            "ON dept_info.id = temporary.key " +
             ";";
 
     // 设备故障分布：按设备类型
@@ -595,14 +623,20 @@ public final class AssetMaintenanceController {
     // 设备故障分布：按单台设备（前40台） // TODO: possibly ZERO
 
     private final static String SQL_LIST_TOP_ERROR_DEVICE_ALL = "" +
-            "SELECT asset.name AS key, CAST(count(*) AS INTEGER) AS value " +
-            "FROM work_order AS work, " +
-            "     asset_info AS asset " +
-            "WHERE work.asset_id = asset.id " +
-            "  AND work.hospital_id = :#hospitalId" +
-            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
-            "GROUP BY asset.id " +
-            "ORDER BY count(*) DESC " +
+            "SELECT asset.name AS key, COALESCE(temporary.value, 0) AS value " +
+            "FROM asset_info AS asset " +
+            "LEFT OUTER JOIN ( " +
+            "        SELECT asset.id AS key, CAST(count(*) AS INTEGER) AS value " +
+            "        FROM work_order AS work, " +
+            "             asset_info AS asset " +
+            "        WHERE work.asset_id = asset.id " +
+            "          AND work.hospital_id = :#hospitalId" +
+            "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
+            "        GROUP BY asset.id " +
+            //"        ORDER BY count(*) DESC " +
+            ") AS temporary " +
+            "ON asset.id = temporary.key " +
+            "ORDER BY value DESC " +
             "LIMIT 40 " +
             ";";
 

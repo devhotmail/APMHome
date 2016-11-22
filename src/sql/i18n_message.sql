@@ -456,6 +456,7 @@ INSERT INTO "i18n_message" VALUES (5531,'label','maintenanceAnalysis_timeChart',
 INSERT INTO "i18n_message" VALUES (5532,'label','maintenanceAnalysis_timeChart_section', '耗时最长的三个步骤的具体响应时间分布',null,null,-1);
 
 INSERT INTO "i18n_message" VALUES (5533,'label','maintenanceAnalysis_timeChart_minute', '%s%d分钟',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5534,'label','maintenanceAnalysis_timeChart_hour', '%s%.1f小时',null,null,-1);
 
 INSERT INTO "i18n_message" VALUES (5535,'label','maintenanceAnalysis_timeChart_legend_0', '未响应：%s%%',null,null,-1);
 INSERT INTO "i18n_message" VALUES (5536,'label','maintenanceAnalysis_timeChart_legend_1', '小于30分钟：%s%%',null,null,-1);

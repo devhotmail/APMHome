@@ -16,21 +16,26 @@
             <div class="ui-g-12">
                 <div class="ui-g-3">
                     <p>#{msg.maintenanceAnalysis_reasonTile}</p>
-                    <p><h:outputText value="#{assetMaintenanceController.topErrorReason}"/></p>
+                    <p><h:outputText id="r11"
+                                     value="#{assetMaintenanceController.topErrorReason}"/></p>
                 </div>
                 <div class="ui-g-3">
                     <p>#{msg.maintenanceAnalysis_stepTile}</p>
-                    <p><h:outputText value="#{assetMaintenanceController.topErrorStep}"/></p>
+                    <p><h:outputText id="r12"
+                                     value="#{assetMaintenanceController.topErrorStep}"/></p>
                 </div>
                 <div class="ui-g-3">
                     <p>#{msg.maintenanceAnalysis_roomTile}</p>
-                    <p><h:outputText value="#{assetMaintenanceController.topErrorRoom}"/></p>
+                    <p><h:outputText id="r13"
+                                     value="#{assetMaintenanceController.topErrorRoom}"/></p>
                 </div>
                 <div class="ui-g-3">
                     <p>#{msg.maintenanceAnalysis_categoryTile}</p>
-                    <p><h:outputText value="#{assetMaintenanceController.topErrorDeviceType}"/></p>
+                    <p><h:outputText id="r14"
+                                     value="#{assetMaintenanceController.topErrorDeviceType}"/></p>
                 </div>
             </div>
+
             <div class="ui-g-12">
                 <p:calendar value="#{assetMaintenanceController.startDate}">
                     <p:ajax event="dateSelect"
@@ -43,6 +48,9 @@
                             listener="#{assetMaintenanceController.onEndDateSelect}"
                             showOn="button"/>
                 </p:calendar>
+                <p:commandButton value="#{msg.Refresh}"
+                                 update="r11 r12 r13 r14 r2 r3 r41 r42 r43 r5 "
+                                 actionListener="#{assetMaintenanceController.submit}"/>
             </div>
         </div>
 
@@ -57,7 +65,8 @@
             </div>
             <p:separator/>
             <div class="ui-g-12">
-                <p:chart type="bar"
+                <p:chart id="r2"
+                         type="bar"
                          model="#{assetMaintenanceController.errorReasonChart}"
                          responsive="true"/>
             </div>
@@ -74,7 +83,8 @@
             </div>
             <p:separator/>
             <div class="ui-g-12">
-                <p:chart type="bar"
+                <p:chart id="r3"
+                         type="bar"
                          model="#{assetMaintenanceController.errorStepChart}"
                          responsive="true"
                          style="height:100px;"/>
@@ -84,17 +94,19 @@
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-4">
-                    <p:chart type="pie"
+                    <p:chart id="r41"
+                             type="pie"
                              model="#{assetMaintenanceController.errorTimePerStep[0]}"
                              style="width:300px;height:200px;"/>
                 </div>
                 <div class="ui-g-4">
-                    <p:chart type="pie"
+                    <p:chart id="r42"
+                             type="pie"
                              model="#{assetMaintenanceController.errorTimePerStep[1]}"
                              style="width:300px;height:200px;"/>
                 </div>
                 <div class="ui-g-4">
-                    <p:chart type="pie"
+                    <p:chart id="r43" type="pie"
                              model="#{assetMaintenanceController.errorTimePerStep[2]}"
                              style="width:300px;height:200px"/>
                 </div>
@@ -112,7 +124,7 @@
             </div>
             <p:separator/>
             <div class="ui-g-12">
-                <p:tabView>
+                <p:tabView id="r5">
                     <p:tab title="#{msg.maintenanceAnalysis_distributionChart_room}">
                         <p:chart type="bar"
                                  model="#{assetMaintenanceController.errorRoomChart}"
