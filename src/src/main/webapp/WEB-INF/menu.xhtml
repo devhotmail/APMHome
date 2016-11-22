@@ -11,7 +11,7 @@
             <div class="nano">
                 <div class="nano-content menu-scroll-content">
                     <ui:fragment rendered="#{guestPreferences.profileMode == 'inline' and guestPreferences.menuLayout != 'menu-layout-static menu-layout-horizontal'}">
-                        <ul id="profile-menu" class="ultima-menu">
+                        <ul id="profile-menu" class="ultima-menu" style="display: block;">
                             <li role="menuitem">
                                 <a>
                                     <span class="profile-name">#{msg.Welcome}, #{userContextService.userName}</span>
