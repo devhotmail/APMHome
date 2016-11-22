@@ -102,10 +102,10 @@ public final class AssetMaintenanceController {
     public final String getTopErrorReason() {
         Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_REASON), Integer.valueOf(0));
         if (id == null || id.intValue() == 0) {
-            return "未填"; // TODO: i18n
+            return WebUtil.getMessage("maintenanceAnalysis_empty");
         }
         if (id > 99) {
-            return "其他原因"; // TODO: i18n
+            return WebUtil.getMessage("maintenanceAnalysis_otherReason");
         }
         return WebUtil.getFieldValueMessage("caseType", id.toString());
     }
@@ -113,7 +113,7 @@ public final class AssetMaintenanceController {
     public final String getTopErrorStep() {
         Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_STEP), Integer.valueOf(0));
         if (id == null || id.intValue() == 0) {
-            return "未填"; // TODO: i18n
+            return WebUtil.getMessage("maintenanceAnalysis_empty");
         }
         return WebUtil.getFieldValueMessage("woSteps", id.toString());
     }
@@ -121,18 +121,18 @@ public final class AssetMaintenanceController {
     public final String getTopErrorRoom() {
         Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL), Integer.valueOf(0));
         if (id == null || id.intValue() == 0) {
-            return "未填";
+            return WebUtil.getMessage("maintenanceAnalysis_empty");
         }
-        return String.format("第%d科室", id.intValue());
+        return String.format("第%d科室", id.intValue()); // TODO: no room info, i18n
     }
 
     public final String getTopErrorDeviceType() {
         Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL), Integer.valueOf(0));
         if (id == null || id.intValue() == 0) {
-            return "未填"; // TODO: i18n
+            return WebUtil.getMessage("maintenanceAnalysis_empty");
         }
         if (id > 99) {
-            return "其他设备类型"; // TODO: i18n
+            return WebUtil.getMessage("maintenanceAnalysis_otherCategory");
         }
         return WebUtil.getFieldValueMessage("assetGroup", id.toString());
     }
@@ -149,10 +149,10 @@ public final class AssetMaintenanceController {
             Integer id = (Integer)map.get("key");
             String key;
             if (id == null || id.intValue() == 0) {
-                key = "未填"; // TODO: i18n
+                key = WebUtil.getMessage("maintenanceAnalysis_empty");
             }
             else if (id > 99) {
-                key = "其他原因"; // TODO: i18n
+                key = WebUtil.getMessage("maintenanceAnalysis_otherReason");
             }
             else {
                 key = WebUtil.getFieldValueMessage("caseType", id.toString());
@@ -205,7 +205,7 @@ public final class AssetMaintenanceController {
             String key = WebUtil.getFieldValueMessage("woSteps", Integer.toString(i + 1));
             int value = ext[i];
             if (raw[i] != 0) {
-                key = String.format("%s%d分钟", key, value); // TODO: i18n
+                key = String.format(WebUtil.getMessage("maintenanceAnalysis_timeChart_minute"), key, value);
             }
             series.set(key, value);
             chart.addSeries(series);
@@ -252,7 +252,7 @@ public final class AssetMaintenanceController {
                 key = String.format(key, Integer.toString((int)(((double)value)/total*100)));
                 chart.set(key, value);
             }
-            chart.setTitle(WebUtil.getFieldValueMessage("woSteps", Integer.toString(index + 1)));
+            chart.setTitle(WebUtil.getFieldValueMessage("woSteps", Integer.toString(scalar)));
             chart.setLegendPosition("w");
             charts[index] = chart;
         }
@@ -273,10 +273,10 @@ public final class AssetMaintenanceController {
             Integer id = (Integer)map.get("key");
             String key;
             if (id == null || id.intValue() == 0) {
-                key = "未填"; // TODO: i18n
+                key = WebUtil.getMessage("maintenanceAnalysis_empty");
             }
             else if (id > 99) {
-                key = "其他设备类型"; // TODO: i18n
+                key = WebUtil.getMessage("maintenanceAnalysis_otherCategory");
             }
             else {
                 key = WebUtil.getFieldValueMessage("assetGroup", id.toString());
