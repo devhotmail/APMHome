@@ -370,6 +370,21 @@ INSERT INTO "i18n_message" VALUES (1587,'caseSubType','3', '故障子类型3',nu
 INSERT INTO "i18n_message" VALUES (1588,'caseSubType','4', '故障子类型4',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1589,'caseSubType','5', '故障子类型5',null,null,-1);
 
+INSERT INTO "i18n_message" VALUES (1595,'assetFunctionGrade','1', '功能等级1',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1596,'assetFunctionGrade','2', '功能等级2',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1597,'assetFunctionGrade','3', '功能等级3',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1598,'assetFunctionGrade','4', '功能等级4',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1599,'assetFunctionGrade','5', '功能等级5',null,null,-1);
+
+INSERT INTO "i18n_message" VALUES (1601,'ownAssetGroup','1', '所属设备类型1',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1602,'ownAssetGroup','2', '所属设备类型2',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1603,'ownAssetGroup','3', '所属设备类型3',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1604,'ownAssetGroup','4', '所属设备类型4',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1605,'ownAssetGroup','5', '所属设备类型5',null,null,-1);
+
+
+
+
 -- module's messages  (id from 3000)
 INSERT INTO "i18n_message" VALUES (3000,'message','DeleteConformation', '删除确认','Delete Confirmation',null,-1);
 INSERT INTO "i18n_message" VALUES (3001,'message','DeleteConformationMsg', '您确定要删除选定的记录么?','Are you sure to delete selected record?',null,-1);
@@ -382,6 +397,9 @@ INSERT INTO "i18n_message" VALUES (3007,'message','selectAssetOwner', '请选择
 INSERT INTO "i18n_message" VALUES (3008,'message','TransferOrder', '转单','Transfer To..',null,-1);
 INSERT INTO "i18n_message" VALUES (3009,'message','noWorkOrderSelected', '请选择一个工单','Please select a Work Order.',null,-1);
 INSERT INTO "i18n_message" VALUES (3010,'message','ProcessWorkOrder', '处理工单','Process Work Order',null,-1);
+INSERT INTO "i18n_message" VALUES (3011,'message','shouldEarly', '{0}应该早于{1}!','{0} should be earlier than {1}!',null,-1);
+INSERT INTO "i18n_message" VALUES (3012,'message','shouldLate', '{0}应该晚于{1}!','{0} should be later than {1}!',null,-1);
+INSERT INTO "i18n_message" VALUES (3013,'message','todayDate', '当前日期',' current date',null,-1);
 
 
 -- Chart label/lengend （id from 5000 to 5500）
