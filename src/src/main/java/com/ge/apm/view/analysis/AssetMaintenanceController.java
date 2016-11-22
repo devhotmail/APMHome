@@ -132,7 +132,7 @@ public final class AssetMaintenanceController {
             return "未填"; // TODO: i18n
         }
         if (id > 99) {
-            return "其他设备"; // TODO: i18n
+            return "其他设备类型"; // TODO: i18n
         }
         return WebUtil.getFieldValueMessage("assetGroup", id.toString());
     }
@@ -295,19 +295,24 @@ public final class AssetMaintenanceController {
 
     public final double getErrorPercentageInRoomOfDevice() {
         return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Integer.valueOf(0))).doubleValue()
-             / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE), Long.valueOf(0))).doubleValue();
+             / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE), Integer.valueOf(0))).doubleValue();
+    }
+
+    public final String getErrorPercentageInRoomOfDeviceString() {
+        return String.format(WebUtil.getMessage("%s%%"),
+                             Integer.toString((int)Math.round(this.getErrorPercentageInRoomOfDevice()*100)));
     }
 
     public final String getErrorCountInRoomOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE), Integer.valueOf(0)).toString();
     }
 
     public final String getDeviceCountInRoomOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_DEVICE_COUNT_IN_ROOM_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_DEVICE_COUNT_IN_ROOM_OF_DEVICE_SINGLE), Integer.valueOf(0)).toString();
     }
 
     public final String getErrorRankInRoomOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_RANK_IN_ROOM_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_RANK_IN_ROOM_OF_DEVICE_SINGLE), Integer.valueOf(0)).toString();
     }
 
     public final PieChartModel getErrorPercentageInRoomOfDeviceChart() {
@@ -316,19 +321,24 @@ public final class AssetMaintenanceController {
 
     public final double getErrorPercentageInDeviceTypeOfDevice() {
         return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Integer.valueOf(0))).doubleValue()
-                / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Long.valueOf(0))).doubleValue();
+                / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Integer.valueOf(0))).doubleValue();
+    }
+
+    public final String getErrorPercentageInDeviceTypeOfDeviceString() {
+        return String.format(WebUtil.getMessage("%s%%"),
+                             Integer.toString((int)Math.round(this.getErrorPercentageInDeviceTypeOfDevice()*100)));
     }
 
     public final String getErrorCountInDeviceTypeOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Integer.valueOf(0)).toString();
     }
 
     public final String getDeviceCountInDeviceTypeOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_DEVICE_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_DEVICE_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Integer.valueOf(0)).toString();
     }
 
     public final String getErrorRankInDeviceTypeOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_RANK_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_RANK_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Integer.valueOf(0)).toString();
     }
 
     public final PieChartModel getErrorPercentageInDeviceTypeOfDeviceChart() {
@@ -337,19 +347,24 @@ public final class AssetMaintenanceController {
 
     public final double getErrorPercentageInTotalOfDevice() {
         return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Integer.valueOf(0))).doubleValue()
-                / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE), Long.valueOf(0))).doubleValue();
+                / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE), Integer.valueOf(0))).doubleValue();
+    }
+
+    public final String getErrorPercentageInTotalOfDeviceString() {
+        return String.format(WebUtil.getMessage("%s%%"),
+                Integer.toString((int)Math.round(this.getErrorPercentageInTotalOfDevice()*100)));
     }
 
     public final String getErrorCountInTotalOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE), Integer.valueOf(0)).toString();
     }
 
     public final String getDeviceCountInTotalOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_DEVICE_COUNT_IN_TOTAL_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_DEVICE_COUNT_IN_TOTAL_OF_DEVICE_SINGLE), Integer.valueOf(0)).toString();
     }
 
     public final String getErrorRankInTotalOfDevice() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_RANK_IN_TOTAL_OF_DEVICE_SINGLE), Long.valueOf(0)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_RANK_IN_TOTAL_OF_DEVICE_SINGLE), Integer.valueOf(0)).toString();
     }
 
     public final PieChartModel getErrorPercentageInTotalOfDeviceChart() {
@@ -519,7 +534,7 @@ public final class AssetMaintenanceController {
             "  AND work.hospital_id = :#hospitalId " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ":#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
-            "GROUP BY step.step_id " +
+            "GROUP BY scalar " +
             "ORDER BY avg(step.end_time - step.start_time) DESC " +
             ";";
 
@@ -578,7 +593,7 @@ public final class AssetMaintenanceController {
     // 设备故障分布：按单台设备（前40台） // TODO: possibly ZERO
 
     private final static String SQL_LIST_TOP_ERROR_DEVICE_ALL = "" +
-            "SELECT asset.name AS key, count(*) AS value " +
+            "SELECT asset.name AS key, CAST(count(*) AS INTEGER) AS value " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
@@ -592,39 +607,35 @@ public final class AssetMaintenanceController {
     // 设备故障所占比例（和排名）
 
     private final static String SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE = "" +
-            "SELECT count(*) AS scalar " +
+            "SELECT CAST(count(*) AS INTEGER) AS scalar " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
             "  AND asset.clinical_dept_id = ( " +
             "              SELECT asset.clinical_dept_id " +
             "              FROM asset_info AS asset " +
-            "              WHERE TRUE " +
+            "              WHERE asset.hospital_id = :#hospitalId " +
             "              :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
-            "              :#andHospitalFilterForAssetInfo " + // AND asset.hospital_id = :#hospitalId
-                           // TODO: include a date filter?
             "      ) " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "  AND work.hospital_id = :#hospitalId " +
+            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ";";
 
     private final static String SQL_SCALAR_DEVICE_COUNT_IN_ROOM_OF_DEVICE_SINGLE = "" +
-            "SELECT count(*) AS scalar " +
+            "SELECT CAST(count(*) AS INTEGER) AS scalar " +
             "FROM asset_info AS asset " +
             "WHERE asset.clinical_dept_id = ( " +
             "              SELECT asset.clinical_dept_id " +
             "              FROM asset_info AS asset " +
-            "              WHERE TRUE " +
+            "              WHERE asset.hospital_id = :#hospitalId " +
             "              :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
-            "              :#andHospitalFilterForAssetInfo " + // AND asset.hospital_id = :#hospitalId
-                           // TODO: include a date filter?
             "      ) " +
-            ":#andHospitalFilterForAssetInfo " + // AND asset.hospital_id = :#hospitalId
+            "  AND asset.hospital_id = :#hospitalId " +
             // TODO: include a date filter?
             ";";
 
     private final static String SQL_SCALAR_ERROR_RANK_IN_ROOM_OF_DEVICE_SINGLE = "" +
-            "SELECT value AS scalar " +
+            "SELECT CAST(value AS INTEGER) AS scalar " +
             "FROM ( " +
             "        SELECT work.asset_id AS key, rank() OVER (ORDER BY count(*) DESC) AS value " +
             "        FROM work_order AS work, " +
@@ -633,20 +644,18 @@ public final class AssetMaintenanceController {
             "          AND asset.clinical_dept_id = ( " +
             "                      SELECT asset.clinical_dept_id " +
             "                      FROM asset_info AS asset " +
-            "                      WHERE TRUE " +
+            "                      WHERE asset.hospital_id = :#hospitalId " +
             "                      :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
-            "                      :#andHospitalFilterForAssetInfo " + // AND asset.hospital_id = :#hospitalId
-                                   // TODO: include a date filter?
             "              ) " +
-            "        :#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            "        :#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "          AND work.hospital_id = :#hospitalId " +
+            "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY work.asset_id " +
             ") AS temporary " +
             "WHERE key = :#assetId " +
             ";";
 
     private final static String SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE = "" +
-            "SELECT count(*) AS scalar " +
+            "SELECT CAST(count(*) AS INTEGER) AS scalar " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE TRUE " +
@@ -654,33 +663,29 @@ public final class AssetMaintenanceController {
             "  AND asset.asset_group = ( " +
             "              SELECT asset.asset_group " +
             "              FROM asset_info AS asset " +
-            "              WHERE TRUE " +
+            "              WHERE asset.hospital_id = :#hospitalId " +
             "              :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
-            "              :#andHospitalFilterForAssetInfo " + // AND asset.hospital_id = :#hospitalId
-                           // TODO: include a date filter?
             "      ) " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "  AND work.hospital_id = :#hospitalId " +
+            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ";";
 
     private final static String SQL_SCALAR_DEVICE_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE = "" +
-            "SELECT count(*) AS scalar " +
+            "SELECT CAST(count(*) AS INTEGER) AS scalar " +
             "FROM asset_info AS asset " +
             "WHERE TRUE " +
             "  AND asset.asset_group = ( " +
             "              SELECT asset.asset_group " +
             "              FROM asset_info AS asset " +
-            "              WHERE TRUE " +
+            "              WHERE asset.hospital_id = :#hospitalId " +
             "              :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
-            "              :#andHospitalFilterForAssetInfo " + // AND asset.hospital_id = :#hospitalId
-                           // TODO: include a date filter?
             "      ) " +
-            ":#andHospitalFilterForAssetInfo " + // AND asset.hospital_id = :#hospitalId
+            "  AND asset.hospital_id = :#hospitalId " +
             // TODO: include a date filter?
             ";";
 
     private final static String SQL_SCALAR_ERROR_RANK_IN_DEVICE_TYPE_OF_DEVICE_SINGLE = "" +
-            "SELECT value AS scalar " +
+            "SELECT CAST(value AS INTEGER) AS scalar " +
             "FROM ( " +
             "        SELECT work.asset_id AS key, rank() OVER (ORDER BY count(*) DESC) AS value " +
             "        FROM work_order AS work, " +
@@ -689,45 +694,42 @@ public final class AssetMaintenanceController {
             "          AND asset.asset_group = ( " +
             "                      SELECT asset.asset_group " +
             "                      FROM asset_info AS asset " +
-            "                      WHERE TRUE " +
+            "                      WHERE asset.hospital_id = :#hospitalId " +
             "                      :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
-            "                      :#andHospitalFilterForAssetInfo " + // AND asset.hospital_id = :#hospitalId
-                                   // TODO: include a date filter?
             "              ) " +
-            "        :#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            "        :#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "        AND work.hospital_id = :#hospitalId " +
+            "        AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY work.asset_id " +
             ") AS temporary " +
             "WHERE key = :#assetId " +
             ";";
 
     private final static String SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE = "" +
-            "SELECT count(*) AS scalar " +
+            "SELECT CAST(count(*) AS INTEGER) AS scalar " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "  AND work.hospital_id = :#hospitalId " +
+            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ";";
 
     private final static String SQL_SCALAR_DEVICE_COUNT_IN_TOTAL_OF_DEVICE_SINGLE = "" +
-            "SELECT count(*) AS scalar " +
+            "SELECT CAST(count(*) AS INTEGER) AS scalar " +
             "FROM asset_info AS asset " +
-            "WHERE TRUE " +
-            ":#andHospitalFilterForAssetInfo " + // AND asset.hospital_id = :#hospitalId
+            "WHERE asset.hospital_id = :#hospitalId " +
             // TODO: include a date filter?
             ";";
 
     private final static String SQL_SCALAR_ERROR_RANK_IN_TOTAL_OF_DEVICE_SINGLE = "" +
-            "SELECT value AS scalar " +
+            "SELECT CAST(value AS INTEGER) AS scalar " +
             "FROM ( " +
             "        SELECT work.asset_id AS key, rank() OVER (ORDER BY count(*) DESC) AS value " +
             "        FROM work_order AS work, " +
             "             asset_info AS asset " +
             "        WHERE TRUE " +
             "          AND work.asset_id = asset.id " +
-            "        :#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            "        :#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "          AND work.hospital_id = :#hospitalId " +
+            "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY work.asset_id " +
             ") AS temporary " +
             "WHERE key = :#assetId " +
