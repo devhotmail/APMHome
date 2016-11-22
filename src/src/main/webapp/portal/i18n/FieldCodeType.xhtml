@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-5" >
+	          <h:form id="I18nMessageListForm">
+	          	<h:panelGrid columns="2" >
+	          	
+				        <p:selectOneListbox id="selectBox"  value="#{fieldCodeTypeController.selectedType.msgType}" >
+				        	<p:ajax update="SystemDataList,CustomerDataList,I18nMessageEditDlg"  listener="#{i18nMessageController.onSelect()}" />
+				        	<f:selectItems value="#{fieldCodeTypeController.getFieldCodeTypeList()}"  var="item"  itemLabel="#{item.msgTypeName}"  itemValue="#{item.msgType}"/>
+				        </p:selectOneListbox>
+				 	
+				        <h:panelGroup>
+				        
+			        	    <h:panelGrid  columns="1" >
+   								  <p:dataTable id="SystemDataList"  value="#{i18nMessageController.getSysFieldValueList(fieldCodeTypeController.selectedType.msgType)}"
+   								    var="item" widgetVar="varDataList" selectionMode="single" 
+   								    				                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+				                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+				                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+				                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+				                    rows="5" emptyMessage="#{msg.noRecordFound}" rowsPerPageTemplate="5,10,15,20">
+				                   
+						              <p:column headerText="#{msg.name}" >
+	                        				<h:outputText value="#{item.valueZh}"/>
+	                    			   </p:column>
+
+   								  </p:dataTable>
+                     		</h:panelGrid>
+                     		
+                     		<br/>
+                     		
+                     		<h:panelGrid columns="1" >
+   								  <p:dataTable id="CustomerDataList" value="#{i18nMessageController.getCustomerFieldValueList(fieldCodeTypeController.selectedType.msgType)}"
+   								    var="item" widgetVar="varDataList" selectionMode="single" 
+   								     lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+				                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+				                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+				                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+				                    rows="5" emptyMessage="#{msg.noRecordFound}" rowsPerPageTemplate="5,10,15,20">
+				                <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
+                                <p:ajax event="filter" listener="#{i18nMessageController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+						         <p:column headerText="#{msg.name}" >
+	                        		<h:outputText value="#{item.valueZh}"/>
+	                    		</p:column>
+	                    		<f:facet name="{Toolbar}">
+					                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{i18nMessageController.getMsgType(fieldCodeTypeController.selectedType.msgType)}" update=":I18nMessageEditDlg" oncomplete="PF('I18nMessageEditDialog').show()"/>
+					                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{i18nMessageController.prepareView}" update=":I18nMessageViewDlg" oncomplete="PF('I18nMessageViewDialog').show()" disabled="#{empty i18nMessageController.selected}"/>
+					                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{i18nMessageController.prepareEdit}" update=":I18nMessageEditDlg" oncomplete="PF('I18nMessageEditDialog').show()" disabled="#{empty i18nMessageController.selected}"/>
+					                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{i18nMessageController.delete}" update="CustomerDataList" disabled="#{empty i18nMessageController.selected}">
+					                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+					                        </p:commandButton>
+				                   </f:facet>
+   								  </p:dataTable>
+	                        </h:panelGrid>
+	                        
+	                    	</h:panelGroup>
+			        </h:panelGrid>
+			    </h:form>  
+
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
