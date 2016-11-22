@@ -90,9 +90,19 @@ public class FieldCodeType implements Serializable {
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
-    @Override
-    public String toString() {
-        return "FieldCodeType[ id=" + id + " ]";
-    }
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("FieldCodeType [id=");
+		builder.append(id);
+		builder.append(", msgType=");
+		builder.append(msgType);
+		builder.append(", msgTypeName=");
+		builder.append(msgTypeName);
+		builder.append("]");
+		return builder.toString();
+	}
+
+
     
 }

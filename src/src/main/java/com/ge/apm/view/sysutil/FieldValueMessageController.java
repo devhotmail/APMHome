@@ -33,7 +33,7 @@ public class FieldValueMessageController implements Serializable{
         return doGetFieldValue(fieldName, msgKey);
     }
     
-    public List<I18nMessage> getFieldValueList(String fieldName){
+    public  List<I18nMessage> getFieldValueList(String fieldName){
         Integer instId = -1;
         try{
             instId = UserContextService.getCurrentUserAccount().getSiteId();
@@ -44,7 +44,7 @@ public class FieldValueMessageController implements Serializable{
         return getFieldValueList(fieldName, instId);
     }
     
-    public List<I18nMessage> getFieldValueList(String fieldName, int institutionId){
+    public static List<I18nMessage> getFieldValueList(String fieldName, int institutionId){
         List<I18nMessage> msgList = doGetFieldValueList(fieldName, institutionId);
         if(msgList.isEmpty() && institutionId!=-1){
             msgList = doGetFieldValueList(fieldName, -1);
@@ -53,7 +53,7 @@ public class FieldValueMessageController implements Serializable{
         return msgList;
     }
     
-    private List<I18nMessage> doGetFieldValueList(String fieldName, int institutionId){
+    public static List<I18nMessage> doGetFieldValueList(String fieldName, int institutionId){
         List<I18nMessage> msgList = new ArrayList<I18nMessage>();
         
         Map<String, I18nMessage> cache = DbMessageSource.getMessageCache(institutionId);
