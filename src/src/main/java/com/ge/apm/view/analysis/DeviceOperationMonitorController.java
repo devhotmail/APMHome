@@ -2,6 +2,7 @@ package com.ge.apm.view.analysis;
 
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableTable;
@@ -39,10 +40,10 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     public final static String ABDOMEN = "腹部";
     public final static String LIMBS = "四肢";
     public final static String OTHER = "其他";
-    private final static ImmutableMap<Integer, String> parts = ImmutableMap.of(1, HEAD, 2, CHEST, 3, ABDOMEN, 4, LIMBS, 5, OTHER);
-    private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     public final static String TIME = "时间";
     public final static String NUMBER = "检查次数";
+    private final static ImmutableMap<Integer, String> parts = ImmutableMap.of(1, HEAD, 2, CHEST, 3, ABDOMEN, 4, LIMBS, 5, OTHER);
+    private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     private final Map<String, String> queries;
     private final Map<String, Object> parameters;
     private final JdbcTemplate jdbcTemplate;
@@ -72,7 +73,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         queries.put("examsPerProcedure", "select ac.procedure_id, ac.procedure_name, count(*) from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ai.asset_group = ? and ac.exam_date between ? and ? group by ac.procedure_name, ac.procedure_id order by ac.procedure_id");
         queries.put("examsPerProcedurePerMonth", "select a.ts_month as exam_time,a.part_id as exam_id, COALESCE(b.exam_count, 0) as exam_count from (select * from  (select generate_series(date_trunc('month',to_date(?,'yyyy-MM-dd')), date_trunc('month',to_date(?,'yyyy-MM-dd')), '1 months') as ts_month) as ts  cross join (select generate_series(1,5) as part_id) as pi order by ts_month, part_id) as a left join (select date_trunc('month', ac.exam_date) as exam_month, ac.procedure_id as procedure_id, ac.procedure_name as procedure_name, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id  where ai.site_id = ? and ai.hospital_id = ? and ai.asset_group = ? and ac.exam_date between ? and ? group by exam_month, ac.procedure_id, ac.procedure_name order by exam_month, procedure_id) as b on a.ts_month = b.exam_month and a.part_id = b.procedure_id");
         queries.put("examsPerProcedurePerWeek", "select a.ts_week as exam_time,a.part_id as exam_id, COALESCE(b.exam_count, 0) as exam_count from (select * from  (select generate_series(date_trunc('week',to_date(?,'yyyy-MM-dd')), date_trunc('week',to_date(?,'yyyy-MM-dd')), '1 weeks') as ts_week) as ts  cross join (select generate_series(1,5) as part_id) as pi order by ts_week, part_id) as a left join (select date_trunc('week', ac.exam_date) as exam_week, ac.procedure_id as procedure_id, ac.procedure_name as procedure_name, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id  where ai.site_id = ? and ai.hospital_id = ? and ai.asset_group = ? and ac.exam_date between ? and ? group by exam_week, ac.procedure_id, ac.procedure_name order by exam_week, procedure_id) as b on a.ts_week = b.exam_week and a.part_id = b.procedure_id");
-        queries.put("examsPerProcedurePerDay", "select date_trunc('day', ac.exam_date) as exam_day, ac.procedure_id, ac.procedure_name, count(*) from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id  where ai.site_id = ? and ai.hospital_id = ? and ai.asset_group = ? and ac.exam_date between '?' and '?' group by exam_day, ac.procedure_id, ac.procedure_name order by exam_day, procedure_id;");
+        queries.put("examsPerProcedurePerDay", "select a.ts_day as exam_time,a.part_id as exam_id, COALESCE(b.exam_count, 0) as exam_count from (select * from  (select generate_series(date_trunc('day',to_date(?,'yyyy-MM-dd')), date_trunc('day',to_date(?,'yyyy-MM-dd')), '1 days') as ts_day) as ts  cross join (select generate_series(1,5) as part_id) as pi order by ts_day, part_id) as a left join (select date_trunc('day', ac.exam_date) as exam_day, ac.procedure_id as procedure_id, ac.procedure_name as procedure_name, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id  where ai.site_id = ? and ai.hospital_id = ? and ai.asset_group = ? and ac.exam_date between ? and ? group by exam_day, ac.procedure_id, ac.procedure_name order by exam_day, procedure_id) as b on a.ts_day = b.exam_day and a.part_id = b.procedure_id");
     }
 
     @PostConstruct
@@ -106,8 +107,30 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     public void renderTabView(int tabIndex) {
+        String query = "";
+        if (tabIndex == 0) {
+            query = queries.get("examsPerProcedurePerDay");
+        } else if (tabIndex == 1) {
+            query = queries.get("examsPerProcedurePerWeek");
+        } else if (tabIndex == 2) {
+            query = queries.get("examsPerProcedurePerMonth");
+        }
+        List<DeviceOperationInfo> exams = jdbcTemplate.query(query, new RowMapper<DeviceOperationInfo>() {
+            @Override
+            public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+                DeviceOperationInfo info = new DeviceOperationInfo();
+                info.setProcedureName(parts.get(rs.getInt("exam_id")));
+                info.setExamCount(rs.getInt("exam_count"));
+                info.setExamDate(rs.getDate("exam_time"));
+                return info;
+            }
+        }, from(startDate), from(endDate), siteId, hospitalId, selectedGroupId, startDate, endDate);
+
         activeTabIndex = tabIndex;
-        log.info("tabIndex = {}", activeTabIndex);
+        tabAreaModelData = initTable(exams);
+        log.info("tabAreaModelData: {}", tabAreaModelData);
+        tabAreaModel = initLineCharModel(null, true, "ne", "tabAreaSkin", tabIndex == 2 ? "%y-%m" : null, tabAreaModelData);
+        bottomLeftBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomLeftBarSkin", ImmutableMap.of(HEAD, average(tabAreaModelData.row(HEAD)), CHEST, average(tabAreaModelData.row(CHEST)), ABDOMEN, average(tabAreaModelData.row(ABDOMEN)), LIMBS, average(tabAreaModelData.row(LIMBS)), OTHER, average(tabAreaModelData.row(OTHER))));
     }
 
 
@@ -165,24 +188,19 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     private void initTabView() {
-        activeTabIndex = 2;
-        List<DeviceOperationInfo> exams = jdbcTemplate.query(queries.get("examsPerProcedurePerMonth"), new RowMapper<DeviceOperationInfo>() {
-            @Override
-            public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
-                DeviceOperationInfo info = new DeviceOperationInfo();
-                info.setProcedureName(parts.get(rs.getInt("exam_id")));
-                info.setExamCount(rs.getInt("exam_count"));
-                info.setExamDate(rs.getDate("exam_time"));
-                return info;
-            }
-        }, from(startDate), from(endDate), siteId, hospitalId, selectedGroupId, startDate, endDate);
-        log.info("infos: {}", exams);
-        tabAreaModelData = initTable(exams);
-        tabAreaModel = initLineCharModel(null, true, "ne", "tabAreaSkin", "%y-%m", tabAreaModelData);
+        renderTabView(2);
     }
 
     private int average(ImmutableMap<String, Integer> series) {
         return (int) Stats.of(series.values()).sum() / series.size();
+    }
+
+    private String seriesStart(ImmutableMap<String, Integer> series) {
+        return FluentIterable.from(series.keySet()).first().get();
+    }
+
+    private String seriesEnd(ImmutableMap<String, Integer> series) {
+        return FluentIterable.from(series.keySet()).last().get();
     }
 
     private void initBottomView() {
@@ -221,6 +239,8 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         areaModel.addSeries(initChartSeries(new LineChartSeries(), CHEST, true, table.row(CHEST)));
         areaModel.addSeries(initChartSeries(new LineChartSeries(), HEAD, true, table.row(HEAD)));
         DateAxis xAxis = new DateAxis(TIME);
+        xAxis.setMin(seriesStart(table.row(HEAD)));
+        xAxis.setMax(seriesEnd(table.row(HEAD)));
         xAxis.setTickFormat(tickFormat);
         Axis yAxis = areaModel.getAxis(AxisType.Y);
         yAxis.setLabel(NUMBER);
@@ -330,14 +350,14 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
 
         @Override
         public String toString() {
-            return "DeviceOperationInfo{" +
-                    "groupId='" + groupId + '\'' +
-                    ", groupName='" + groupName + '\'' +
-                    ", procedureId='" + procedureId + '\'' +
-                    ", procedureName='" + procedureName + '\'' +
-                    ", examCount=" + examCount +
-                    ", examDate=" + examDate +
-                    '}';
+            return MoreObjects.toStringHelper(DeviceOperationInfo.class)
+                    .omitNullValues()
+                    .add("groupId", groupId)
+                    .add("groupName", groupName)
+                    .add("procedureId", procedureId)
+                    .add("procedureName", procedureName)
+                    .add("examCount", examCount)
+                    .add("examDate", examDate).toString();
         }
 
         public int getGroupId() {
