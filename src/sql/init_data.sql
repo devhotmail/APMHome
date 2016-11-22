@@ -1,3 +1,13 @@
+truncate table site_info cascade;
+truncate table org_info cascade;
+truncate table sys_role cascade;
+truncate table user_account cascade;
+truncate table user_role cascade;
+truncate table chart_config cascade;
+truncate table data_table_config cascade;
+truncate table field_code_type cascade;
+
+
 INSERT INTO "site_info" VALUES ('1', 'GE', 'GE', 'GE', 'GE', null, null, null, null, null, null, null, null);
 INSERT INTO "site_info" VALUES ('2', 'Demo医联体', 'DemoHospitalGrup', '医联体', '医联体', null, null, null, null, null, null, null, null);
 

@@ -246,7 +246,9 @@ end_time timestamp,
 is_finished bool not null,
 comments varchar(256),
 next_time timestamp,
-report_url varchar(128));
+report_url varchar(128),
+file_id int
+);
 
 
 create table work_order(
