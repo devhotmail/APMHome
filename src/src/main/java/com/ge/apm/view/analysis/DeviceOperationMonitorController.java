@@ -67,9 +67,9 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     @PostConstruct
     public void init() {
         parameters.put("hospitalId", hospitalId);
-        tabAreaModel = initLineCharModel(null, true, "ne", initTable());
-        tabBarModel = initBarModel(new BarChartModel(), null, true, 50, "ne", null, ImmutableMap.of(HEAD, 800, CHEST, 900, ABDOMEN, 2700, LIMBS, 900, OTHER, 900));
-        selectedBarModel = initBarModel(new BarChartModel(), null, true, 50, "ne", null, ImmutableMap.of(HEAD, 800, CHEST, 900, ABDOMEN, 2700, LIMBS, 900, OTHER, 900));
+        tabAreaModel = initLineCharModel(null, true, "ne", "tabAreaSkin", initTable());
+        tabBarModel = initBarModel(new BarChartModel(), null, true, 50, "ne", "tabBarSkin", ImmutableMap.of(HEAD, 800, CHEST, 900, ABDOMEN, 2700, LIMBS, 900, OTHER, 900));
+        selectedBarModel = initBarModel(new BarChartModel(), null, true, 50, "ne", "selectedBarSkin", ImmutableMap.of(HEAD, 800, CHEST, 900, ABDOMEN, 2700, LIMBS, 900, OTHER, 900));
         assetGroups = initAssetGroups();
         selectedGroupId = FluentIterable.from(assetGroups.keySet()).first().or(1);
         initExamsPerProcedure();
@@ -201,10 +201,11 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         return chartSeries;
     }
 
-    private LineChartModel initLineCharModel(String title, boolean stacked, String legendPosition, ImmutableTable<String, String, Integer> table) {
+    private LineChartModel initLineCharModel(String title, boolean stacked, String legendPosition, String skin, ImmutableTable<String, String, Integer> table) {
         LineChartModel areaModel = new LineChartModel();
         areaModel.setTitle(title);
         areaModel.setStacked(stacked);
+        areaModel.setExtender(skin);
         areaModel.setLegendPosition(legendPosition);
         areaModel.addSeries(initChartSeries(new LineChartSeries(), HEAD, true, table.row(HEAD)));
         areaModel.addSeries(initChartSeries(new LineChartSeries(), CHEST, true, table.row(CHEST)));
