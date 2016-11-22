@@ -7,14 +7,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.AssetInfoRepository;
+import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedProperty;
@@ -32,7 +36,6 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     AssetFileAttachmentRepository attachDao = null;
 
     private boolean resultStatus;
-    private UserAccount currentUser;
 
     private UserAccount owner;
     private List<UserAccount> ownerList;
@@ -44,12 +47,14 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     private UaaService uuaService;
 
+    private OrgInfoRepository orgDao;
+
     @Override
     protected void init() {
         dao = WebUtil.getBean(AssetInfoRepository.class);
         UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
-        currentUser = UserContextService.getCurrentUserAccount();
+        orgDao = WebUtil.getBean(OrgInfoRepository.class);
         uuaService = (UaaService) WebUtil.getBean(UaaService.class);
         this.filterBySite = true;
         this.setSiteFilter();
@@ -75,15 +80,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             prepareDelete();
         }
 
-        ownerList = uuaService.getUserList(currentUser.getHospitalId());
-    }
-
-    public UserAccount getCurrentUser() {
-        return currentUser;
-    }
-
-    public void setCurrentUser(UserAccount currentUser) {
-        this.currentUser = currentUser;
+        ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
     }
 
     public void setFileService(AttachmentFileService fileService) {
@@ -122,6 +119,19 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     @Override
+    public void onBeforeNewObject(AssetInfo object) {
+        object.setSiteId(UserContextService.getSiteId());
+        object.setHospitalId(UserContextService.getCurrentUserAccount().getHospitalId());
+        object.setIsValid(true);
+        object.setStatus(1);
+    }
+
+    @Override
+    public void onBeforeSave(AssetInfo object) {
+        object.setClinicalDeptName(this.getHospital(object.getClinicalDeptId()).getName());
+    }
+
+    @Override
     public void onAfterUpdateObject(AssetInfo object, boolean isOK) {
         resultStatus = isOK;
         if (isOK) {
@@ -144,9 +154,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public String applyChange() {
-        if ("Create".equalsIgnoreCase(this.crudActionName)) {
-            selected.setSiteId(currentUser.getSiteId());
-            selected.setHospitalId(currentUser.getHospitalId());
+        if (!isTimeValidate()){
+            return "";
         }
         this.save();
         if (resultStatus) {
@@ -188,15 +197,14 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         String fileName = fileService.getFileName(event.getFile());
         attach.setName(fileName);
         attach.setFileType(type);
-        attach.setSiteId(currentUser.getSiteId());
+        attach.setSiteId(UserContextService.getCurrentUserAccount().getSiteId());
         attach.setAssetId(selected.getId());
         Integer uploadFileId = fileService.uploadFile(event.getFile());
-        if(uploadFileId>0){
+        if (uploadFileId > 0) {
             attach.setFileId(uploadFileId);
             WebUtil.addSuccessMessage("Succesful", fileName + " is uploaded.");
             attachements.add(attach);
         }
-
 
     }
 
@@ -237,4 +245,48 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             }
         }
     }
+
+    public OrgInfo getHospital(Integer id) {
+        if (id == 0) {
+            return orgDao.findById(UserContextService.getCurrentUserAccount().getHospitalId());
+        } else {
+            return orgDao.findById(id);
+        }
+    }
+
+    public List<OrgInfo> getClinicalList() {
+        List<SearchFilter> OrgInfoFilters = new ArrayList<>();
+        UserContextService.setHospitalFilter(OrgInfoFilters);
+        return orgDao.findBySearchFilter(OrgInfoFilters);
+    }
+
+    public boolean isTimeValidate() {
+        String message = "{0} must before {1}!";
+        AssetInfo input = this.selected;
+        Date todaydate = new Date();
+        boolean isError = false;
+        
+        if (null!=input.getManufactDate() && null!=input.getPurchaseDate() && input.getManufactDate().after(input.getPurchaseDate())) {
+            isError = true;
+            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("manufactDate"), WebUtil.getMessage("purchaseDate")));
+        }
+        
+        if (null!=input.getArriveDate() && null!=input.getPurchaseDate() && input.getPurchaseDate().after(input.getArriveDate())) {
+            isError = true;
+            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("purchaseDate"), WebUtil.getMessage("arriveDate")));
+        }
+        
+        if (null!=input.getArriveDate() && null!=input.getInstallDate() && input.getArriveDate().after(input.getInstallDate())) {
+            isError = true;
+            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("arriveDate"), WebUtil.getMessage("installDate")));
+        }
+        if (null!=input.getInstallDate() && input.getArriveDate().after(todaydate)) {
+            isError = true;
+            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("todayDate")));
+        }
+        
+        
+        return !isError;
+    }
+
 }
