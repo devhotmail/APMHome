@@ -448,21 +448,21 @@ INSERT INTO "i18n_message" VALUES (5548,'label','maintenanceAnalysis_distributio
 INSERT INTO "i18n_message" VALUES (5549,'label','maintenanceAnalysis_distributionChart_device_xAxis', '设备',null,null,-1);
 
 INSERT INTO "i18n_message" VALUES (5551,'label','maintenanceAnalysis_percentageChart', '设备故障所占比例',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5555,'label','maintenanceAnalysis_percentageChart_percentage', '所占比例：%s%%',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5556,'label','maintenanceAnalysis_percentageChart_occurrence', '此台设备故障数：%s',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5555,'label','maintenanceAnalysis_percentageChart_percentage', '所占比例：',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5556,'label','maintenanceAnalysis_percentageChart_occurrence', '此台设备故障数：',null,null,-1);
 INSERT INTO "i18n_message" VALUES (5561,'label','maintenanceAnalysis_percentageChart_room', '此台设备故障占所在科室总故障比例',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5562,'label','maintenanceAnalysis_percentageChart_room_occurrence', '此台设备所在科室故障数：%s',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5563,'label','maintenanceAnalysis_percentageChart_room_rank', '此台设备故障数在科室内排名：%s（%s台）',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5562,'label','maintenanceAnalysis_percentageChart_room_occurrence', '此台设备所在科室故障数：',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5563,'label','maintenanceAnalysis_percentageChart_room_rank', '此台设备故障数在科室内排名：',null,null,-1);
 INSERT INTO "i18n_message" VALUES (5564,'label','maintenanceAnalysis_percentageChart_category', '此台设备占所在设备类型故障比例',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5565,'label','maintenanceAnalysis_percentageChart_category_occurrence', '此台设备所在类型（%s）故障数：%s',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5566,'label','maintenanceAnalysis_percentageChart_category_rank', '此台设备故障数在此类设备中排名：%s（%s台）',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5565,'label','maintenanceAnalysis_percentageChart_category_occurrence', '此台设备所在类型故障数：',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5566,'label','maintenanceAnalysis_percentageChart_category_rank', '此台设备故障数在此类设备中排名：',null,null,-1);
 INSERT INTO "i18n_message" VALUES (5567,'label','maintenanceAnalysis_percentageChart_device', '此台设备故障占所有设备故障比例',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5568,'label','maintenanceAnalysis_percentageChart_device_occurrence', '所有设备故障数：%s',null,null,-1);
-INSERT INTO "i18n_message" VALUES (5569,'label','maintenanceAnalysis_percentageChart_device_rank', '此台设备故障数在所有设备中排名：%s（%s台）',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5568,'label','maintenanceAnalysis_percentageChart_device_occurrence', '所有设备故障数：',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5569,'label','maintenanceAnalysis_percentageChart_device_rank', '此台设备故障数在所有设备中排名：',null,null,-1);
 
 -- device maintenance (preventive)
 
-INSERT INTO "i18n_message" VALUES (5571,'label','preventiveMaintenanceAnalysis_title', '此台设备故障数在所有设备中排名：%s（%s台）',null,null,-1);
+INSERT INTO "i18n_message" VALUES (5571,'label','preventiveMaintenanceAnalysis_title', '设备保养排期／跟踪／统计分析',null,null,-1);
 
 INSERT INTO "i18n_message" VALUES (5581,'label','preventiveMaintenanceAnalysis_planChart', 'PM统计表',null,null,-1);
 INSERT INTO "i18n_message" VALUES (5582,'label','preventiveMaintenanceAnalysis_predicationChart', '设备维护预测',null,null,-1);
