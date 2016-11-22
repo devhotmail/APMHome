@@ -75,7 +75,7 @@
                         </f:facet>
                         <h:outputText value="#{item.isFinished? msg.True2Yes : msg.False2No }"/>
                     </p:column>
-                    <p:column headerText="#{msg.comments}" sortBy="#{item.comments}" filterBy="#{item.comments}" filterMatchMode="LIKE">
+                    <!-- <p:column headerText="#{msg.comments}" sortBy="#{item.comments}" filterBy="#{item.comments}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.getCommentsInShort()}" title="#{item.comments}"  />
                     </p:column>
 					<p:column headerText="#{msg.nextTime}" sortBy="#{item.nextTime}" filterBy="#{item.nextTime}" filterMatchMode="GTE">
@@ -88,7 +88,7 @@
                     </p:column>
                     <p:column headerText="#{msg.reportUrl}" sortBy="#{item.reportUrl}" filterBy="#{item.reportUrl}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.getReportUrlInShort()}" title = "#{item.reportUrl}" />
-                    </p:column>
+                    </p:column> -->
                     <f:facet name="{Toolbar}">
                         <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
                             <p:dataExporter type="xls" target="datalist" fileName="PmOrder_export"/>
