@@ -13,21 +13,21 @@
 
         <div class="ui-g">
             <div class="ui-g-12">
-                <div class="ui-g-3"><p>TODO-DropDown</p></div>
-                <div class="ui-g-6"><p class="i18n">设备维修事件统计分析</p></div>
+                <div class="ui-g-3"></div>
+                <div class="ui-g-6"><p>#{msg.maintenanceAnalysis_title}</p></div>
                 <!--<div class="ui-g-3"><p:commandButton icon="fa fa-ellipsis-v" title="Icon Only"/></div>-->
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-3">
-                    <p class="i18n">设备故障最主要原因</p>
+                    <p>#{msg.maintenanceAnalysis_reasonTile}</p>
                     <p><h:outputText value="#{assetMaintenanceController.topErrorReason}"/></p>
                 </div>
                 <div class="ui-g-3">
-                    <p class="i18n">设备故障处理流程最耗时步骤</p>
+                    <p>#{msg.maintenanceAnalysis_stepTile}</p>
                     <p><h:outputText value="#{assetMaintenanceController.topErrorStep}"/></p>
                 </div>
                 <div class="ui-g-3">
-                    <p class="i18n">设备故障数</p>
+                    <p>#{msg.maintenanceAnalysis_occurrenceTile}</p>
                     <p><h:outputText value="#{assetMaintenanceController.errorCount}"/></p>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                             listener="#{assetMaintenanceController.onStartDateSelect}"
                             showOn="button"/>
                 </p:calendar>
-                <p class="i18n">到</p>
+                <p class="i18n">TO</p>
                 <p:calendar value="#{assetMaintenanceController.endDate}">
                     <p:ajax event="dateSelect"
                             listener="#{assetMaintenanceController.onEndDateSelect}"
@@ -49,7 +49,7 @@
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="ui-g-9">
-                    <p class="i18n">设备故障原因分析</p>
+                    <p>#{msg.maintenanceAnalysis_reasonChart}</p>
                 </div>
                 <!--<div class="ui-g-3">
                     <p:commandButton value="TODO导出"/>
@@ -66,7 +66,7 @@
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="ui-g-9">
-                    <p class="i18n">设备故障流程响应时间分布</p>
+                    <p>#{msg.maintenanceAnalysis_timeChart}</p>
                 </div>
                 <!--<div class="ui-g-3">
                     <p:commandButton value="TODO导出"/>
@@ -80,7 +80,7 @@
                          style="height:100px;"/>
             </div>
             <div class="ui-g-12">
-                <p class="i18n">耗时最长的三个步骤的具体响应时间分布</p>
+                <p>#{msg.maintenanceAnalysis_timeChart_section}</p>
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-4">
@@ -104,7 +104,7 @@
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="ui-g-9">
-                    <p class="i18n">设备故障分布</p>
+                    <p>#{msg.maintenanceAnalysis_distributionChart}</p>
                 </div>
                 <!--<div class="ui-g-3">
                     <p:commandButton value="TODO导出"/>
@@ -113,7 +113,7 @@
             <p:separator/>
             <div class="ui-g-12">
                 <div class="ui-g-2">
-                    <p class="i18n">此台设备故障占所在科室总故障比例</p>
+                    <p class="i18n">#{msg.maintenanceAnalysis_percentageChart_room}</p>
                     <p>
                         <span class="i18n">所占比例：</span>
                         <span><h:outputText value="#{assetMaintenanceController.errorPercentageInRoomOfDevice}"/></span>
@@ -140,7 +140,7 @@
                              style="width:100px;height:100px"/>
                 </div>
                 <div class="ui-g-2">
-                    <p class="i18n">此台设备故障占所在设备类型故障比例</p>
+                    <p class="i18n">#{msg.maintenanceAnalysis_percentageChart_category}</p>
                     <p>
                         <span class="i18n">所占比例：</span>
                         <span><h:outputText value="#{assetMaintenanceController.errorPercentageInDeviceTypeOfDevice}"/></span>
@@ -167,7 +167,7 @@
                              style="width:100px;height:100px"/>
                 </div>
                 <div class="ui-g-2">
-                    <p class="i18n">此台设备故障占所有设备故障比例</p>
+                    <p class="i18n">#{msg.maintenanceAnalysis_percentageChart_device}</p>
                     <p>
                         <span class="i18n">所占比例：</span>
                         <span><h:outputText value="#{assetMaintenanceController.errorPercentageInTotalOfDevice}"/></span>

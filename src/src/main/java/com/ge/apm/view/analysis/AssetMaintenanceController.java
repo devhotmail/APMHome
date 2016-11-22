@@ -31,7 +31,7 @@ public final class AssetMaintenanceController {
     private int hospitalId;
 
     private final int knownCaseTypes = 5;
-    private final int knownWorkOrderSteps = 6;
+    private final int knownWorkOrderSteps = 6; // TODO:
     private final int knownAssetGroups = 4;
 
     public AssetMaintenanceController() {
@@ -118,7 +118,7 @@ public final class AssetMaintenanceController {
         return WebUtil.getFieldValueMessage("woSteps", id.toString());
     }
 
-    public final String getTopErrorRoom() { // TODO: no room info
+    public final String getTopErrorRoom() {
         Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL), Integer.valueOf(0));
         if (id == null || id.intValue() == 0) {
             return "未填";
@@ -131,15 +131,14 @@ public final class AssetMaintenanceController {
         if (id == null || id.intValue() == 0) {
             return "未填"; // TODO: i18n
         }
-        if (id < 0) {
+        if (id > 99) {
             return "其他设备"; // TODO: i18n
         }
         return WebUtil.getFieldValueMessage("assetGroup", id.toString());
     }
 
-    // TODO: single
     public final String getErrorCount() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Long.valueOf(0)).toString();
+        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Integer.valueOf(0)).toString();
     }
 
     public final BarChartModel getErrorReasonChart() {
@@ -166,6 +165,8 @@ public final class AssetMaintenanceController {
         return chart;
     }
 
+    private final static String[] COLORS = new String[] { "5da5da", "faa43a", "60bd68", "f17cb0", "b2912f", "decf13" };
+
     public final HorizontalBarChartModel getErrorStepChart() {
         List<Map<String, Object>> data = this.query(SQL_LIST_ERROR_STEP);
         int[] raw = new int[this.knownWorkOrderSteps];
@@ -183,8 +184,8 @@ public final class AssetMaintenanceController {
         if (count > 0) {
             average = total / count;
         }
-        if (average < 1) {
-            average = 1;
+        if (average < 2) {
+            average = 2;
         }
         for (int i = 0; i < this.knownWorkOrderSteps; i++) {
             if (raw[i] == 0) {
@@ -198,18 +199,29 @@ public final class AssetMaintenanceController {
         HorizontalBarChartModel chart = new HorizontalBarChartModel();
         chart.setStacked(true);
         total = 0;
+        StringBuilder builder = new StringBuilder();
         for (int i = 0; i < this.knownWorkOrderSteps; i++) {
             ChartSeries series = new ChartSeries();
             String key = WebUtil.getFieldValueMessage("woSteps", Integer.toString(i + 1));
             int value = ext[i];
-            key = String.format("%s%n%d分钟", key, value); // TODO: i18n
+            key = String.format("%s%d分钟", key, value); // TODO: i18n
             series.set(key, value);
             chart.addSeries(series);
             total += value;
+            if (builder.length() != 0) {
+                builder.append(",");
+            }
+            if (raw[i] == 0) {
+                builder.append("CCCCCC");
+            }
+            else {
+                builder.append(COLORS[i % 6]);
+            }
         }
         Axis axis = chart.getAxis(AxisType.X);
         axis.setMin(0);
         axis.setMax(total);
+        chart.setSeriesColors(builder.toString());
         return chart;
     }
 
@@ -235,7 +247,7 @@ public final class AssetMaintenanceController {
                 String key = Integer.toString((int)map.get("key"));
                 int value = (int)map.get("value");
                 key = WebUtil.getMessage(String.format("maintenanceAnalysis_timeChart_legend_%s", key));
-                key = String.format(key, Integer.toString((int)(((double)value)/total)*100));
+                key = String.format(key, Integer.toString((int)(((double)value)/total*100)));
                 chart.set(key, value);
             }
             chart.setTitle(WebUtil.getFieldValueMessage("woSteps", Integer.toString(index + 1)));
@@ -247,21 +259,42 @@ public final class AssetMaintenanceController {
 
     public final BarChartModel getErrorRoomChart() {
         return convertToBarChartModel(this.query(SQL_LIST_ERROR_ROOM_ALL),
-                                      "科室", "故障次数"); /* TODO: i18n */
+                                      WebUtil.getMessage("maintenanceAnalysis_distributionChart_room_xAxis"),
+                                      WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
     }
 
     public final BarChartModel getErrorDeviceTypeChart() {
-        return convertToBarChartModel(this.query(SQL_LIST_ERROR_DEVICE_TYPE_ALL),
-                                      "设备类型", "故障次数"); /* TODO: i18n */
+        List<Map<String, Object>> list = this.query(SQL_LIST_ERROR_DEVICE_TYPE_ALL);
+        BarChartModel chart = new BarChartModel();
+        ChartSeries series = new ChartSeries();
+        for (Map<String, Object> map : list) {
+            Integer id = (Integer)map.get("key");
+            String key;
+            if (id == null || id.intValue() == 0) {
+                key = "未填"; // TODO: i18n
+            }
+            else if (id > 99) {
+                key = "其他设备类型"; // TODO: i18n
+            }
+            else {
+                key = WebUtil.getFieldValueMessage("assetGroup", id.toString());
+            }
+            series.set(key, (Number)map.get("value"));
+        }
+        chart.addSeries(series);
+        chart.getAxis(AxisType.X).setLabel(WebUtil.getMessage("maintenanceAnalysis_distributionChart_category_xAxis"));
+        chart.getAxis(AxisType.Y).setLabel(WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
+        return chart;
     }
 
     public final BarChartModel getTopErrorDeviceChart() {
         return convertToBarChartModel(this.query(SQL_LIST_TOP_ERROR_DEVICE_ALL),
-                                      "设备", "故障次数"); /* TODO: i18n */
+                                      WebUtil.getMessage("maintenanceAnalysis_distributionChart_device_xAxis"),
+                                      WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
     }
 
     public final double getErrorPercentageInRoomOfDevice() {
-        return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Long.valueOf(0))).doubleValue()
+        return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Integer.valueOf(0))).doubleValue()
              / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE), Long.valueOf(0))).doubleValue();
     }
 
@@ -282,7 +315,7 @@ public final class AssetMaintenanceController {
     }
 
     public final double getErrorPercentageInDeviceTypeOfDevice() {
-        return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Long.valueOf(0))).doubleValue()
+        return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Integer.valueOf(0))).doubleValue()
                 / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Long.valueOf(0))).doubleValue();
     }
 
@@ -303,7 +336,7 @@ public final class AssetMaintenanceController {
     }
 
     public final double getErrorPercentageInTotalOfDevice() {
-        return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Long.valueOf(0))).doubleValue()
+        return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Integer.valueOf(0))).doubleValue()
                 / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE), Long.valueOf(0))).doubleValue();
     }
 
@@ -392,7 +425,7 @@ public final class AssetMaintenanceController {
             "LIMIT 1 " +
             ";";
 
-    // 设备故障主要发生的科室
+    // 设备故障主要发生的科室 // TODO: no room info
 
     private final static String SQL_SCALAR_TOP_ERROR_ROOM_ALL = "" +
             "SELECT asset.clinical_dept_id AS scalar " +
@@ -411,7 +444,7 @@ public final class AssetMaintenanceController {
     private final static String SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL = "" +
             "SELECT CASE " +
             "        WHEN asset.asset_group > 0 AND asset.asset_group <= :#knownAssetGroups THEN asset.asset_group " +
-            "        WHEN asset.asset_group > :#knownAssetGroups THEN CAST(-1 AS INTEGER) " +
+            "        WHEN asset.asset_group > :#knownAssetGroups THEN CAST(100 AS INTEGER) " +
             "        ELSE CAST (0 AS INTEGER)" +
             "END AS scalar " +
             "FROM work_order AS work, " +
@@ -427,11 +460,11 @@ public final class AssetMaintenanceController {
     // 设备故障数
 
     private final static String SQL_SCALAR_ERROR_COUNT_SINGLE = "" +
-            "SELECT count(*) AS scalar " +
+            "SELECT CAST(count(*) AS INTEGER) AS scalar " +
             "FROM work_order AS work " +
             "WHERE TRUE " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "  AND work.hospital_id = :#hospitalId " +
+            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ":#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
             ";";
 
@@ -512,15 +545,15 @@ public final class AssetMaintenanceController {
             "ORDER BY rate ASC " +
             ";";
 
-    // 设备故障分布：按科室
+    // 设备故障分布：按科室 // TODO: no room info, possibly ZERO
 
     private final static String SQL_LIST_ERROR_ROOM_ALL = "" +
             "SELECT asset.clinical_dept_id AS key, count(*) AS value " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "  AND work.hospital_id = :#hospitalId " +
+            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "GROUP BY asset.clinical_dept_id " +
             "ORDER BY asset.clinical_dept_id ASC " +
             ";";
@@ -528,25 +561,30 @@ public final class AssetMaintenanceController {
     // 设备故障分布：按设备类型
 
     private final static String SQL_LIST_ERROR_DEVICE_TYPE_ALL = "" +
-            "SELECT asset.asset_group AS key, count(*) AS value " +
+            "SELECT CASE " +
+            "        WHEN asset.asset_group > 0 AND asset.asset_group <= :#knownAssetGroups THEN asset.asset_group " +
+            "        WHEN asset.asset_group > :#knownAssetGroups THEN CAST(100 AS INTEGER) " +
+            "        ELSE CAST (0 AS INTEGER)" +
+            "END AS key, count(*) AS value " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
-            "GROUP BY asset.asset_group " +
-            "ORDER BY asset.asset_group ASC " +
+            "  AND work.hospital_id = :#hospitalId " +
+            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
+            "GROUP BY key " +
+            "ORDER BY key ASC " +
             ";";
 
-    // 设备故障分布：按单台设备（前40台）
+    // 设备故障分布：按单台设备（前40台） // TODO: possibly ZERO
 
     private final static String SQL_LIST_TOP_ERROR_DEVICE_ALL = "" +
-            "SELECT work.asset_id AS key, count(*) AS value " +
-            "FROM work_order AS work " +
-            "WHERE TRUE " +
-            ":#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            ":#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
-            "GROUP BY work.asset_id " +
+            "SELECT asset.name AS key, count(*) AS value " +
+            "FROM work_order AS work, " +
+            "     asset_info AS asset " +
+            "WHERE work.asset_id = asset.id " +
+            "  AND work.hospital_id = :#hospitalId" +
+            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
+            "GROUP BY asset.id " +
             "ORDER BY count(*) DESC " +
             "LIMIT 40 " +
             ";";
@@ -715,6 +753,7 @@ public final class AssetMaintenanceController {
 
         if (xLabel != null) {
             Axis axis = chart.getAxis(AxisType.X);
+            axis.setTickAngle(-90);
             axis.setLabel(xLabel);
         }
         if (yLabel != null) {
