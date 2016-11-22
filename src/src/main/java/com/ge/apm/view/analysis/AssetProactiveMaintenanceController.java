@@ -81,7 +81,24 @@ public final class AssetProactiveMaintenanceController {
         List<Object> ret = new ArrayList<>();
         for (Map<String, Object> map : list) {
             try {
-                ret.add(((Jdbc4Array) map.get("scalar")).getArray());
+                String[] array =(String[])((Jdbc4Array) map.get("scalar")).getArray();
+                // backward
+                int l2 = array.length - 1;
+                while (l2 >= 0 && array[l2].length() == 0) {
+                    l2--;
+                }
+                int l1 = l2 - 1;
+                while (l1 >= 0 && array[l1].length() == 0) {
+                    l1--;
+                }
+                int interval = l2 - l1;
+                // forward
+                l2 += interval;
+                while (l2 < array.length) {
+                    array[l2] = "tinted lightly-tinted";
+                    l2 += interval;
+                }
+                ret.add(array);
             }
             catch (SQLException exception) {
                 ret.add(new String[157 + 1]);
