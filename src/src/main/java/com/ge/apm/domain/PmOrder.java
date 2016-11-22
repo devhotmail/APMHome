@@ -98,6 +98,9 @@ public class PmOrder implements Serializable {
     @Size(min = 1, max = 64)
     @Column(name = "asset_name")
     private String assetName;
+
+    @Column(name = "file_id")
+    private Integer fileId;
     
     public PmOrder() {
     }
@@ -262,6 +265,14 @@ public class PmOrder implements Serializable {
 
     public void setAssetName(String assetName) {
         this.assetName = assetName;
+    }
+
+    public Integer getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(Integer fileId) {
+        this.fileId = fileId;
     }
     
     public String getReportUrlInShort(){
