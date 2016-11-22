@@ -43,14 +43,14 @@ for i in 0..totalrecords
 end
 
 table = "asset_info"
-totalrecords = 3000
+totalrecords = 60
 for i in 0..totalrecords
   site_id = randnum.rand(1..2)
   asset_group   = randnum.rand(1..12)
   name    = "#{type[asset_group-1]}-#{SecureRandom.uuid}"
 
   function_type = randnum.rand(1..10)
-  hospital_id   = [1,2,2,3].sample
+  hospital_id   = [1,2,3].sample
 
   clinical_dept_id = randnum.rand(1..10)
 
@@ -85,7 +85,7 @@ for i in 0..totalrecords
 end
 
 table = "asset_depreciation"
-totalrecords = 3000
+totalrecords = 60
 for i in 0..totalrecords
   site_id = randnum.rand(1..2)
   asset_id = i + 1
@@ -105,7 +105,7 @@ totalrecords = 10000
 for i in 1..totalrecords
   site_id   = randnum.rand(1..2)
   hospital_id = [1, 2, 2, 3].sample
-  asset_id  = randnum.rand(1..300)
+  asset_id  = randnum.rand(1..60)
   name      = "repair-asset-#{asset_id}"
   asset_name = "asset-name-#{SecureRandom.uuid}"
   creator_id    = randnum.rand(1..10)
@@ -209,7 +209,7 @@ totalrecords = 100000
 for i in 1..totalrecords
   site_id = randnum.rand(1..2)
   hospital_id = [1, 2, 2, 3].sample
-  asset_id = randnum.rand(1..300)
+  asset_id = randnum.rand(1..60)
 
   modality_id       = randnum.rand(1..50)
   modality_type_id  = randnum.rand(1..10)
