@@ -45,8 +45,8 @@
                             </p:outputPanel>
                         </div>
                         <div class="ui-lg-8">
-                            <p:chart id="statusBar" widgetVar="headerBar" class="chart-device-stat horizontal" type="bar"
-                                     model="#{deviceOperationMonitorController.headerBarModel}"
+                            <p:chart id="statusBar" widgetVar="topBar" class="chart-device-stat horizontal" type="bar"
+                                     model="#{deviceOperationMonitorController.topBar}"
                                      style="height:100px"
                                      responsive="true"/>
                         </div>
@@ -67,23 +67,14 @@
                     </div>
                 </div>
 
-
                 <div class="ui-g-12">
-                    <div class="block">
-                        <h3 class="block-title">设备检查部位统计</h3>
-                        <p:tabMenu activeIndex="#{param.i}">
-                            <p:menuitem value="天" outcome="deviceOperationMonitor">
-                                <f:param name="i" value="0"/>
-                            </p:menuitem>
-                            <p:menuitem value="周" outcome="deviceOperationMonitor">
-                                <f:param name="i" value="1"/>
-                            </p:menuitem>
-                            <p:menuitem value="月" outcome="deviceOperationMonitor">
-                                <f:param name="i" value="2"/>
-                            </p:menuitem>
-                        </p:tabMenu>
-                        <p:chart type="line" class="chart-device-statbytime" model="#{deviceOperationMonitorController.tabAreaModel}" responsive="true"/>
-                    </div>
+                    <h3 class="block-title">设备检查部位统计</h3>
+                    <p:tabMenu id="tabMenu" activeIndex="#{deviceOperationMonitorController.activeTabIndex}">
+                        <p:menuitem value="天" actionListener="#{deviceOperationMonitorController.renderTabView('0')}" update="tabMenu"/>
+                        <p:menuitem value="周" actionListener="#{deviceOperationMonitorController.renderTabView('1')}" update="tabMenu"/>
+                        <p:menuitem value="月" actionListener="#{deviceOperationMonitorController.renderTabView('2')}" update="tabMenu"/>
+                    </p:tabMenu>
+                    <p:chart type="line" model="#{deviceOperationMonitorController.tabAreaModel}" responsive="true"/>
                 </div>
 
                 <div class="ui-g-12">
@@ -92,14 +83,14 @@
                         <div class="ui-g">
                             <div class="ui-md-12 ui-lg-6 divide-line-right">
                                 <div class="flex flex--row flex--center">
-                                    <ui:include src="bodyModel.xhtml" class="foo"/>
-                                    <p:chart type="bar" class="chart-device-stat vertical" widgetVar="tabBar"  model="#{deviceOperationMonitorController.tabBarModel}" responsive="true"/>
+                                    <!--<ui:include src="bodyModel.xhtml" class="foo"/>-->
+                                    <p:chart type="bar" class="chart-device-stat vertical" widgetVar="bottomLeftBar"  model="#{deviceOperationMonitorController.bottomLeftBar}" responsive="true"/>
                                 </div>
                             </div>
                             <div class="ui-md-12 ui-lg-6">
                                 <div class="flex flex--row flex--center">
-                                    <ui:include src="bodyModel.xhtml"/>
-                                    <p:chart type="bar" class="chart-device-stat vertical" widgetVar="selectedBar" model="#{deviceOperationMonitorController.selectedBarModel}" responsive="true"/>
+                                    <!--<ui:include src="bodyModel.xhtml"/>-->
+                                    <p:chart type="bar" class="chart-device-stat vertical" widgetVar="bottomRightBar" model="#{deviceOperationMonitorController.bottomRightBar}" responsive="true"/>
                                 </div>
                             </div>
                         </div>

@@ -127,7 +127,7 @@
 
   var BODY_PART_COLORS = ['rgba(176, 143, 56, 1)', 'rgba(238, 126, 175, 1)', 'rgba(99, 187, 108, 1)', 'rgba(246, 162, 70, 1)', 'rgba(96, 165, 215, 1)'];
 
-  window.skinHeaderBar = function() {
+  window.topBarSkin = function() {
     var deviceSum = seriesSum(this.cfg.data);
     $.extend(true/*recursive*/, this.cfg, {
       animate: false,
@@ -230,18 +230,18 @@
     });
   }
 
-  window.tabBarSkin = function() {
+  window.bottomLeftBarSkin = function() {
     $.extend(true/*recursive*/, this.cfg, verticalStackConfig(this.cfg.data));
   }
 
-  window.selectedBarSkin = function() {
+  window.bottomRightBarSkin = function() {
     $.extend(true/*recursive*/, this.cfg, verticalStackConfig(this.cfg.data));
   }
 
   // Responsive charts
   $(window).resize(function() {
     var widgets = PrimeFaces.widgets;
-    ['headerBar','tabBar', 'selectedBar'].forEach(function(key) {
+    ['topBar','bottomLeftBar', 'bottomRightBar'].forEach(function(key) {
       var _chart = widgets[key].plot;
       _chart.replot({resetAxes: true});
     });
