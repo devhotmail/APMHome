@@ -204,7 +204,9 @@ public final class AssetMaintenanceController {
             ChartSeries series = new ChartSeries();
             String key = WebUtil.getFieldValueMessage("woSteps", Integer.toString(i + 1));
             int value = ext[i];
-            key = String.format("%s%d分钟", key, value); // TODO: i18n
+            if (raw[i] != 0) {
+                key = String.format("%s%d分钟", key, value); // TODO: i18n
+            }
             series.set(key, value);
             chart.addSeries(series);
             total += value;

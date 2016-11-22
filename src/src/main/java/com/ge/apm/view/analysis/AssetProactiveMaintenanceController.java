@@ -116,7 +116,7 @@ public final class AssetProactiveMaintenanceController {
             "             LEFT OUTER JOIN " +
             "             (SELECT DISTINCT EXTRACT (MONTH FROM plan.start_time) AS month, " +
             "                              EXTRACT (DAY FROM plan.start_time) AS day, " +
-            "                              '+' AS hint " +
+            "                              'tinted' AS hint " +
             "              FROM pm_order AS plan, " +
             "                   asset_info AS asset " +
             "              WHERE plan.asset_id = asset.id " +
@@ -163,9 +163,11 @@ public final class AssetProactiveMaintenanceController {
             "        ORDER BY maintenance_schedule_asset_list.asset_id ASC, " +
             "                 maintenance_schedule_time_list.start_time ASC " +
             ") " +
-            "SELECT array_prepend(text(temporary.asset_id), array_agg(temporary.hint)) AS scalar " +
-            "FROM temporary " +
-            "GROUP BY temporary.asset_id " +
+            "SELECT array_prepend(text(asset.name), array_agg(temporary.hint)) AS scalar " +
+            "FROM temporary," +
+            "     asset_info AS asset " +
+            "WHERE temporary.asset_id = asset.id " +
+            "GROUP BY asset.id " +
             ";";
 
     // endregion
