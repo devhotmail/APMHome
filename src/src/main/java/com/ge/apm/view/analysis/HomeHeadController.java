@@ -438,7 +438,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
         targetYear = Integer.parseInt(selectedYear);
         sqlParams.put("targetYear", this.targetYear);
         startMonth = getStartMonth();
-        
+
         logger.debug("target year : {}, " +
                 "isYearly: {}, " +
                 "startMonth: {}, " +

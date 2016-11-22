@@ -12,8 +12,9 @@ hostaddr  = "127.0.0.1"
 table     = "debug"
 
 # data generation
-startdate = "2011-1-16"
-enddate   = "2016-11-18"
+startdate = "2013-1-1"
+enddate   = DateTime.now
+
 type      = ["CT", "MR", "xRay", "DR"]
 totalrecords  = 6
 # totalrecords  = 5
@@ -24,7 +25,7 @@ conn = PG::Connection.new(:hostaddr => hostaddr, :dbname => dbname,
                           :user => user, :password => password)
 
 stime = DateTime.parse(startdate).to_time
-etime = DateTime.parse(enddate).to_time
+etime = enddate.to_time
 duration  = etime.to_i - stime.to_i
 
 randnum = Random.new()
@@ -42,14 +43,14 @@ for i in 0..totalrecords
 end
 
 table = "asset_info"
-totalrecords = 300
+totalrecords = 3000
 for i in 0..totalrecords
   site_id = randnum.rand(1..2)
-  asset_group   = randnum.rand(1..4)
+  asset_group   = randnum.rand(1..12)
   name    = "#{type[asset_group-1]}-#{SecureRandom.uuid}"
 
   function_type = randnum.rand(1..10)
-  hospital_id   = randnum.rand(1..10)
+  hospital_id   = [1,2,2,3].sample
 
   clinical_dept_id = randnum.rand(1..10)
 
@@ -57,7 +58,7 @@ for i in 0..totalrecords
   asset_owner_id = randnum.rand(1..5)
   asset_owner_name  = "asset-owner-#{asset_owner_id}"
   is_valid      = true
-  status        = randnum.rand(1..10)
+  status        = randnum.rand(1..3)
 
   randtime      = (duration * rand).to_i + stime.to_i
   warranty_date = Time.at(randtime).strftime("%F")
@@ -84,7 +85,7 @@ for i in 0..totalrecords
 end
 
 table = "asset_depreciation"
-totalrecords = 300
+totalrecords = 3000
 for i in 0..totalrecords
   site_id = randnum.rand(1..2)
   asset_id = i + 1
@@ -103,7 +104,7 @@ table = "work_order"
 totalrecords = 10000
 for i in 1..totalrecords
   site_id   = randnum.rand(1..2)
-  hospital_id = randnum.rand(1..10)
+  hospital_id = [1, 2, 2, 3].sample
   asset_id  = randnum.rand(1..300)
   name      = "repair-asset-#{asset_id}"
   asset_name = "asset-name-#{SecureRandom.uuid}"
@@ -150,7 +151,7 @@ table = "pm_order"
 totalrecords = 500
 for i in 0..totalrecords
   site_id         = randnum.rand(1..2)
-  hospital_id     = randnum.rand(1..10)
+  hospital_id     = [1, 2, 2, 3].sample
   asset_id        = randnum.rand(1..50)
   asset_name      = "asset-name-#{SecureRandom.uuid}"
   name            = "pm-order-#{asset_id}"
@@ -170,8 +171,8 @@ for i in 0..totalrecords
   puts sql
   conn.exec(sql)
 end
-
-
+#
+#
 table = "work_order_step"
 totalrecords = 10000
 for i in 0..totalrecords
@@ -184,12 +185,20 @@ for i in 0..totalrecords
 
   randtime = (duration * rand).to_i + stime.to_i
   start_time = Time.at(randtime).strftime("%F %T")
-  end_time = Time.at(randtime + randnum.rand(600..1800)).strftime("%F %T")
+  tmp = [600, 1900, 2600, 3700, 6000, 12000, 70000, 86300, 90000, nil].sample
 
-  sql = "insert into #{table} (site_id, work_order_id, step_id, step_name, owner_id, owner_name, start_time,
-        end_time) values (\'#{site_id}\', \'#{work_order_id}\', \'#{step_id}\',
-        \'#{step_name}\', \'#{owner_id}\',\'#{owner_name}\', \'#{start_time}\',
-        \'#{end_time}\')"
+  if tmp == nil
+    sql = "insert into #{table} (site_id, work_order_id, step_id, step_name, owner_id, owner_name, start_time)
+          values (\'#{site_id}\', \'#{work_order_id}\', \'#{step_id}\',
+          \'#{step_name}\', \'#{owner_id}\',\'#{owner_name}\', \'#{start_time}\')"
+  else
+    end_time = Time.at(randtime + tmp).strftime("%F %T")
+    sql = "insert into #{table} (site_id, work_order_id, step_id, step_name, owner_id, owner_name, start_time,
+          end_time) values (\'#{site_id}\', \'#{work_order_id}\', \'#{step_id}\',
+          \'#{step_name}\', \'#{owner_id}\',\'#{owner_name}\', \'#{start_time}\',
+          \'#{end_time}\')"
+  end
+
   puts sql
   conn.exec(sql)
 end
@@ -199,7 +208,7 @@ table = "asset_clinical_record"
 totalrecords = 100000
 for i in 1..totalrecords
   site_id = randnum.rand(1..2)
-  hospital_id = randnum.rand(1..10)
+  hospital_id = [1, 2, 2, 3].sample
   asset_id = randnum.rand(1..300)
 
   modality_id       = randnum.rand(1..50)
@@ -230,9 +239,9 @@ for i in 1..totalrecords
   puts sql
   conn.exec(sql)
 end
-
-# table = "asset_info"
-# res = conn.exec("select id, purchase_price, lifecycle from #{table} where purchase_price is null")
-# res.each do |item|
-#   conn.exec("update #{table} set purchase_price = \'#{randnum.rand(4000..8000)}\',
-#             lifecycle = \'#{randnum.rand(3..5)}\' where id = \'#{item[id]}\'")
+#
+# # table = "asset_info"
+# # res = conn.exec("select id, purchase_price, lifecycle from #{table} where purchase_price is null")
+# # res.each do |item|
+# #   conn.exec("update #{table} set purchase_price = \'#{randnum.rand(4000..8000)}\',
+# #             lifecycle = \'#{randnum.rand(3..5)}\' where id = \'#{item[id]}\'")
