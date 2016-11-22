@@ -29,6 +29,7 @@ etime = enddate.to_time
 duration  = etime.to_i - stime.to_i
 
 randnum = Random.new()
+rand2   = Random.new(123456)
 
 
 table = "org_info"
@@ -43,11 +44,12 @@ for i in 0..totalrecords
 end
 
 table = "asset_info"
-totalrecords = 60
+asset_accounts = 90
+totalrecords = asset_accounts
 for i in 0..totalrecords
   site_id = randnum.rand(1..2)
   asset_group   = randnum.rand(1..12)
-  name    = "#{type[asset_group-1]}-#{SecureRandom.uuid}"
+  name    = "#{type[asset_group-1]}-#{i}-#{SecureRandom.uuid[0..4]}"
 
   function_type = randnum.rand(1..10)
   hospital_id   = [1,2,3].sample
@@ -105,7 +107,7 @@ totalrecords = 10000
 for i in 1..totalrecords
   site_id   = randnum.rand(1..2)
   hospital_id = [1, 2, 2, 3].sample
-  asset_id  = randnum.rand(1..60)
+  asset_id  = randnum.rand(1..asset_accounts)
   name      = "repair-asset-#{asset_id}"
   asset_name = "asset-name-#{SecureRandom.uuid}"
   creator_id    = randnum.rand(1..10)
@@ -122,7 +124,7 @@ for i in 1..totalrecords
   confirmed_down_time  = Time.at(randtime + randnum.rand(600..1800)).strftime("%F %T")
   confirmed_up_time  = Time.at(randtime + randnum.rand(102000..208000)).strftime("%F %T")
 
-  case_type     = randnum.rand(1..10)
+  case_type     = (randnum.rand(1..10) * rand2.rand).to_i
   case_sub_type = randnum.rand(1..10)
   case_priority = randnum.rand(1..4)
   is_internal   = [true, false].sample
@@ -152,7 +154,7 @@ totalrecords = 500
 for i in 0..totalrecords
   site_id         = randnum.rand(1..2)
   hospital_id     = [1, 2, 2, 3].sample
-  asset_id        = randnum.rand(1..50)
+  asset_id        = randnum.rand(1..asset_accounts)
   asset_name      = "asset-name-#{SecureRandom.uuid}"
   name            = "pm-order-#{asset_id}"
   creator_id    = randnum.rand(1..10)
@@ -178,7 +180,7 @@ totalrecords = 10000
 for i in 0..totalrecords
   site_id         = randnum.rand(1..2)
   work_order_id   = randnum.rand(1..50)
-  step_id = randnum.rand(1..6)
+  step_id = (randnum.rand(1..6) * rand2.rand).to_i
   step_name       = ["申请", "审核", "派工", "领工", "维修","关单"][step_id - 1]
   owner_id    = randnum.rand(1..10)
   owner_name  = "owner-#{owner_id}"
@@ -192,7 +194,7 @@ for i in 0..totalrecords
           values (\'#{site_id}\', \'#{work_order_id}\', \'#{step_id}\',
           \'#{step_name}\', \'#{owner_id}\',\'#{owner_name}\', \'#{start_time}\')"
   else
-    end_time = Time.at(randtime + tmp).strftime("%F %T")
+    end_time = Time.at(randtime + tmp * rand2.rand * 2).strftime("%F %T")
     sql = "insert into #{table} (site_id, work_order_id, step_id, step_name, owner_id, owner_name, start_time,
           end_time) values (\'#{site_id}\', \'#{work_order_id}\', \'#{step_id}\',
           \'#{step_name}\', \'#{owner_id}\',\'#{owner_name}\', \'#{start_time}\',
@@ -209,7 +211,7 @@ totalrecords = 100000
 for i in 1..totalrecords
   site_id = randnum.rand(1..2)
   hospital_id = [1, 2, 2, 3].sample
-  asset_id = randnum.rand(1..60)
+  asset_id = randnum.rand(1..asset_accounts)
 
   modality_id       = randnum.rand(1..50)
   modality_type_id  = randnum.rand(1..10)
@@ -219,7 +221,7 @@ for i in 1..totalrecords
   procedure_step_id = randnum.rand(1..6)
   procedure_step_name = ["Step One", "Step Two", "Step Three", "Step Four", "Step Five"].sample
 
-  price_amount = randnum.rand(50..400)
+  price_amount = randnum.rand(50..400) * rand2.rand * 2
   inject_count = randnum.rand(600.0..1800.0).round(2)
   expose_count = randnum.rand(200.0..400.0).round(2)
   film_count   = randnum.rand(1..6)
@@ -239,6 +241,8 @@ for i in 1..totalrecords
   puts sql
   conn.exec(sql)
 end
+
+
 #
 # # table = "asset_info"
 # # res = conn.exec("select id, purchase_price, lifecycle from #{table} where purchase_price is null")
