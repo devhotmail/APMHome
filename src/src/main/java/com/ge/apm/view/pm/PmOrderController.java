@@ -1,30 +1,28 @@
 package com.ge.apm.view.pm;
 
-import com.ge.apm.dao.OrgInfoRepository;
-import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-
-import org.primefaces.model.TreeNode;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
+import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.PmOrderRepository;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.PmOrder;
 import com.ge.apm.domain.UserAccount;
-import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
-
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.JpaCRUDController;
 
 @ManagedBean
 @ViewScoped
 public class PmOrderController extends JpaCRUDController<PmOrder> {
 
-    PmOrderRepository dao = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	PmOrderRepository dao = null;
     
     UserAccount currentUser;
 
@@ -33,6 +31,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         dao = WebUtil.getBean(PmOrderRepository.class);
         currentUser = UserContextService.getCurrentUserAccount();
         this.filterByHospital = true;
+        this.filterBySite = true;
     }
 
     @Override
@@ -42,17 +41,11 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 
     @Override
     public void onBeforeSave(PmOrder po) {
-    	po.setSiteId(this.currentUser.getSiteId());//device site or currentUser site?
+    	po.setSiteId(this.currentUser.getSiteId());
+    	po.setHospitalId(this.currentUser.getHospitalId());
     	po.setCreatorId(this.currentUser.getId());
     	po.setCreatorName(this.currentUser.getName());
-//    	po.setOwnerId(this.currentUser.getId());
-//    	po.setOwnerName(this.currentUser.getName());
-    	po.setOwnerOrgId(this.currentUser.getOrgInfoId());//orgId from where?
     	po.setCreateTime(TimeUtil.timeNowInDefaultTimeZone().toDate());
-        
-        OrgInfoRepository orgDao = WebUtil.getBean(OrgInfoRepository.class);
-        OrgInfo org = orgDao.findById(this.currentUser.getOrgInfoId());
-        //....
     }
    
     
@@ -74,11 +67,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     		this.selected = null;
     	}
     }
-    
-//    @Override
-//    public void onBeforeNewObject(PmOrder object) {
-//    	this.selected = null;
-//    }
+   
 
     @Override
     public void onServerEvent(String eventName, Object eventObject){
@@ -90,6 +79,12 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         this.selected.setAssetName(asset.getName());
         this.selected.setOwnerId(asset.getAssetOwnerId());
         this.selected.setOwnerName(asset.getAssetOwnerName());
+    	this.selected.setOwnerOrgId(asset.getAssetOwnerId());
+        OrgInfoRepository orgInfoRepository = WebUtil.getBean(OrgInfoRepository.class);
+        OrgInfo orgInfo = orgInfoRepository.findById(asset.getAssetOwnerId());
+        if(orgInfo != null){
+        	this.selected.setOwnerOrgName(orgInfo.getName());
+        }
     }
     
     
