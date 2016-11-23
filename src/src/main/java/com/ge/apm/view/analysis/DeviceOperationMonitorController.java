@@ -3,10 +3,7 @@ package com.ge.apm.view.analysis;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableTable;
-import com.google.common.collect.Maps;
+import com.google.common.collect.*;
 import com.google.common.math.Stats;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -130,7 +127,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         tabAreaModelData = initTable(exams);
         log.info("tabAreaModelData: {}", tabAreaModelData);
         tabAreaModel = initLineCharModel(null, true, "ne", "tabAreaSkin", tabIndex == 2 ? "%y-%m" : null, tabAreaModelData);
-        bottomLeftBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomLeftBarSkin", ImmutableMap.of(HEAD, average(tabAreaModelData.row(HEAD)), CHEST, average(tabAreaModelData.row(CHEST)), ABDOMEN, average(tabAreaModelData.row(ABDOMEN)), LIMBS, average(tabAreaModelData.row(LIMBS)), OTHER, average(tabAreaModelData.row(OTHER))));
+        bottomLeftBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomLeftBarSkin", ImmutableMap.of(HEAD, average(tabAreaModelData.row(HEAD)), CHEST, average(tabAreaModelData.row(CHEST)), ABDOMEN, average(tabAreaModelData.row(ABDOMEN)), LIMBS, average(tabAreaModelData.row(LIMBS)), OTHER, average(tabAreaModelData.row(OTHER))), true);
     }
 
 
@@ -179,7 +176,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         }
         topBarData = reportBuilder.build();
         totalExamCount = (int) Stats.of(topBarData.values()).sum();
-        topBar = initBarModel(new HorizontalBarChartModel(), null, true, 0, "ne", "topBarSkin", reportBuilder.build());
+        topBar = initBarModel(new HorizontalBarChartModel(), null, true, 0, "ne", "topBarSkin", topBarData, false);
     }
 
     private void initStartEndDate() {
@@ -204,8 +201,8 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     private void initBottomView() {
-        bottomLeftBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomLeftBarSkin", ImmutableMap.of(HEAD, average(tabAreaModelData.row(HEAD)), CHEST, average(tabAreaModelData.row(CHEST)), ABDOMEN, average(tabAreaModelData.row(ABDOMEN)), LIMBS, average(tabAreaModelData.row(LIMBS)), OTHER, average(tabAreaModelData.row(OTHER))));
-        bottomRightBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomRightBarSkin", topBarData);
+        bottomLeftBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomLeftBarSkin", ImmutableMap.of(HEAD, average(tabAreaModelData.row(HEAD)), CHEST, average(tabAreaModelData.row(CHEST)), ABDOMEN, average(tabAreaModelData.row(ABDOMEN)), LIMBS, average(tabAreaModelData.row(LIMBS)), OTHER, average(tabAreaModelData.row(OTHER))), true);
+        bottomRightBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomRightBarSkin", topBarData, true);
     }
 
 
@@ -252,7 +249,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         return areaModel;
     }
 
-    private <T extends BarChartModel> T initBarModel(T barChartModel, String title, boolean stacked, int barWidth, String legendPostion, String skin, Map<String, Integer> renderData) {
+    private <T extends BarChartModel> T initBarModel(T barChartModel, String title, boolean stacked, int barWidth, String legendPostion, String skin, Map<String, Integer> renderData, boolean seriesReversed) {
         barChartModel.setTitle(title);
         barChartModel.setStacked(stacked);
         barChartModel.setBarWidth(barWidth);
@@ -260,11 +257,9 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         barChartModel.setExtender(skin);
         barChartModel.setShowDatatip(false);
         barChartModel.setShadow(false);
-        barChartModel.addSeries(initChartSeries(new ChartSeries(), OTHER, false, ImmutableMap.of(OTHER, renderData.get(OTHER))));
-        barChartModel.addSeries(initChartSeries(new ChartSeries(), LIMBS, false, ImmutableMap.of(LIMBS, renderData.get(LIMBS))));
-        barChartModel.addSeries(initChartSeries(new ChartSeries(), ABDOMEN, false, ImmutableMap.of(ABDOMEN, renderData.get(ABDOMEN))));
-        barChartModel.addSeries(initChartSeries(new ChartSeries(), CHEST, false, ImmutableMap.of(CHEST, renderData.get(CHEST))));
-        barChartModel.addSeries(initChartSeries(new ChartSeries(), HEAD, false, ImmutableMap.of(HEAD, renderData.get(HEAD))));
+        for (Map.Entry<Integer, String> entry : ImmutableSortedMap.copyOf(parts, seriesReversed ? Ordering.natural().reverse() : Ordering.natural()).entrySet()) {
+            barChartModel.addSeries(initChartSeries(new ChartSeries(), entry.getValue(), false, ImmutableMap.of(entry.getValue(), renderData.get(entry.getValue()))));
+        }
         Axis xAxis = barChartModel.getAxis(AxisType.X);
         Axis yAxis = barChartModel.getAxis(AxisType.Y);
         if (barChartModel instanceof HorizontalBarChartModel) {
