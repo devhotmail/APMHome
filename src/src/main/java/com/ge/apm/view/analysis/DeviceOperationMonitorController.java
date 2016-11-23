@@ -3,6 +3,7 @@ package com.ge.apm.view.analysis;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Optional;
 import com.google.common.collect.*;
 import com.google.common.math.Stats;
 import org.joda.time.DateTime;
@@ -67,7 +68,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         parameters = Maps.newLinkedHashMap();
         jdbcTemplate = WebUtil.getServiceBean("jdbcTemplate", JdbcTemplate.class);
         queries.put("assetGroups", "select msg_key as assetGroupId, value_zh as assetGroupName from i18n_message where msg_type = ?");
-        queries.put("examsPerProcedure", "select ac.procedure_id, ac.procedure_name, count(*) from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ai.asset_group = ? and ac.exam_date between ? and ? group by ac.procedure_name, ac.procedure_id order by ac.procedure_id");
+        queries.put("examsPerProcedure", "select a.part_id as exam_id, COALESCE(b.count, 0) as exam_count from (select generate_series(1,5) as part_id) as a left join (select ac.procedure_id, ac.procedure_name, count(*) from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ai.asset_group = ? and ac.exam_date between ? and ? group by ac.procedure_name, ac.procedure_id order by ac.procedure_id) as b on a.part_id = b.procedure_id");
         queries.put("examsPerProcedurePerMonth", "select a.ts_month as exam_time,a.part_id as exam_id, COALESCE(b.exam_count, 0) as exam_count from (select * from  (select generate_series(date_trunc('month',to_date(?,'yyyy-MM-dd')), date_trunc('month',to_date(?,'yyyy-MM-dd')), '1 months') as ts_month) as ts  cross join (select generate_series(1,5) as part_id) as pi order by ts_month, part_id) as a left join (select date_trunc('month', ac.exam_date) as exam_month, ac.procedure_id as procedure_id, ac.procedure_name as procedure_name, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id  where ai.site_id = ? and ai.hospital_id = ? and ai.asset_group = ? and ac.exam_date between ? and ? group by exam_month, ac.procedure_id, ac.procedure_name order by exam_month, procedure_id) as b on a.ts_month = b.exam_month and a.part_id = b.procedure_id");
         queries.put("examsPerProcedurePerWeek", "select a.ts_week as exam_time,a.part_id as exam_id, COALESCE(b.exam_count, 0) as exam_count from (select * from  (select generate_series(date_trunc('week',to_date(?,'yyyy-MM-dd')), date_trunc('week',to_date(?,'yyyy-MM-dd')), '1 weeks') as ts_week) as ts  cross join (select generate_series(1,5) as part_id) as pi order by ts_week, part_id) as a left join (select date_trunc('week', ac.exam_date) as exam_week, ac.procedure_id as procedure_id, ac.procedure_name as procedure_name, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id  where ai.site_id = ? and ai.hospital_id = ? and ai.asset_group = ? and ac.exam_date between ? and ? group by exam_week, ac.procedure_id, ac.procedure_name order by exam_week, procedure_id) as b on a.ts_week = b.exam_week and a.part_id = b.procedure_id");
         queries.put("examsPerProcedurePerDay", "select a.ts_day as exam_time,a.part_id as exam_id, COALESCE(b.exam_count, 0) as exam_count from (select * from  (select generate_series(date_trunc('day',to_date(?,'yyyy-MM-dd')), date_trunc('day',to_date(?,'yyyy-MM-dd')), '1 days') as ts_day) as ts  cross join (select generate_series(1,5) as part_id) as pi order by ts_day, part_id) as a left join (select date_trunc('day', ac.exam_date) as exam_day, ac.procedure_id as procedure_id, ac.procedure_name as procedure_name, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id  where ai.site_id = ? and ai.hospital_id = ? and ai.asset_group = ? and ac.exam_date between ? and ? group by exam_day, ac.procedure_id, ac.procedure_name order by exam_day, procedure_id) as b on a.ts_day = b.exam_day and a.part_id = b.procedure_id");
@@ -154,19 +155,13 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         return assetGroups;
     }
 
-
-    private String initSelectedGroup(int groupId) {
-        return assetGroups.get(groupId);
-    }
-
     private void initTopBar() {
         List<DeviceOperationInfo> list = jdbcTemplate.query(queries.get("examsPerProcedure"), new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
                 DeviceOperationInfo deviceOperationInfo = new DeviceOperationInfo();
-                deviceOperationInfo.setProcedureId(rs.getInt("procedure_id"));
-                deviceOperationInfo.setProcedureName(rs.getString("procedure_name"));
-                deviceOperationInfo.setExamCount(rs.getInt("count"));
+                deviceOperationInfo.setProcedureName(parts.get(rs.getInt("exam_id")));
+                deviceOperationInfo.setExamCount(rs.getInt("exam_count"));
                 return deviceOperationInfo;
             }
         }, siteId, hospitalId, selectedGroupId, startDate, endDate);
@@ -258,7 +253,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         barChartModel.setShowDatatip(false);
         barChartModel.setShadow(false);
         for (Map.Entry<Integer, String> entry : ImmutableSortedMap.copyOf(parts, seriesReversed ? Ordering.natural().reverse() : Ordering.natural()).entrySet()) {
-            barChartModel.addSeries(initChartSeries(new ChartSeries(), entry.getValue(), false, ImmutableMap.of(entry.getValue(), renderData.get(entry.getValue()))));
+            barChartModel.addSeries(initChartSeries(new ChartSeries(), entry.getValue(), false, ImmutableMap.of(entry.getValue(), Optional.fromNullable(renderData.get(entry.getValue())).or(0))));
         }
         Axis xAxis = barChartModel.getAxis(AxisType.X);
         Axis yAxis = barChartModel.getAxis(AxisType.Y);
