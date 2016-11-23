@@ -199,6 +199,7 @@ display_order int not null);
 
 create table inspection_order(
 id serial not null,
+order_type int not null,
 site_id int not null,
 asset_id int not null,
 name varchar(64) not null,
