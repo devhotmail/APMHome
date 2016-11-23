@@ -1,4 +1,4 @@
-﻿truncate table i18n_message;
+truncate table i18n_message;
 
 -- common i18n messages ( id from 1 to  199)
 
@@ -383,6 +383,11 @@ INSERT INTO "i18n_message" VALUES (1603,'ownAssetGroup','3', '所属设备类型
 INSERT INTO "i18n_message" VALUES (1604,'ownAssetGroup','4', '所属设备类型4',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1605,'ownAssetGroup','5', '所属设备类型5',null,null,-1);
 
+INSERT INTO "i18n_message" VALUES (1611,'inspectionPeriod','1', '每日',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1612,'inspectionPeriod','2', '每周',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1613,'inspectionPeriod','3', '每两周',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1614,'inspectionPeriod','4', '每月',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1615,'inspectionPeriod','5', '每季度',null,null,-1);
 
 
 
