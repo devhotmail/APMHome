@@ -12,36 +12,36 @@
             <p:fieldset legend="#{pmOrderController.CRUDActionName} #{msg.PmOrder}" rendered="#{pmOrderController.selected !=null}">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{pmOrderController.selected != null}">
-                    
+
                         <h:panelGroup>
                             <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{pmOrderController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
-                        
+
                         <h:panelGroup>
                             <label class="label">#{msg.assetName}*</label>
                             <p:inputText id="assetName" readonly="true" placeholder="#{msg.noAssetSelected}" value="#{pmOrderController.selected.assetName}" required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
                             <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.prepareDialogCallback(pmOrderController, ':PmOrderEditForm:assetName')}"
                                              process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg" oncomplete="PF('varSelectAssetDlg').show()"/>
                         </h:panelGroup>
-                        
+
                         <h:panelGroup >
-		                        <label class="label">#{msg.ownerId}*</label>
-		                        <p:selectOneMenu id="assetOwnerName" value="#{pmOrderController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="true" requiredMessage="#{msg.ownerId} #{msg.ValidationRequire}" >
-		                            <p:ajax listener="#{pmOrderController.onOwnerChange()}" process="@this"  update=":PmOrderEditForm:ownerName,:PmOrderEditForm:ownerOrgName" />
-		                            <f:selectItem itemLabel="" />
-		                            <f:selectItems value="#{pmOrderController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
-		                            <p:column>
-		                                <h:outputText value="#{t.name}"/>
-		                            </p:column>
-		                        </p:selectOneMenu>
-		                 </h:panelGroup>
-                        
+                            <label class="label">#{msg.ownerId}*</label>
+                            <p:selectOneMenu id="assetOwnerName" value="#{pmOrderController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="true" requiredMessage="#{msg.ownerId} #{msg.ValidationRequire}" >
+                                <p:ajax listener="#{pmOrderController.onOwnerChange()}" process="@this"  update=":PmOrderEditForm:ownerName,:PmOrderEditForm:ownerOrgName" />
+                                <f:selectItem itemLabel="" />
+                                <f:selectItems value="#{pmOrderController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                <p:column>
+                                    <h:outputText value="#{t.name}"/>
+                                </p:column>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+
                         <h:panelGroup>
                             <label class="label">#{msg.ownerId}</label>
                             <p:inputText readonly="true"  id="ownerName" value="#{pmOrderController.selected.ownerName}" />
                         </h:panelGroup>
-						 <h:panelGroup>
+                        <h:panelGroup>
                             <label class="label">#{msg.ownerOrgName}</label>
                             <p:inputText readonly="true"  id="ownerOrgName" value="#{pmOrderController.selected.ownerOrgName}" />
                         </h:panelGroup>
@@ -61,33 +61,35 @@
                         <h:panelGroup>
                             <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isFinished}" value="#{pmOrderController.selected.isFinished}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
-	                 </p:panelGrid>
+                    </p:panelGrid>
                     <br/>
-					
-					<p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group">
-							<h:panelGroup>
-	                            <label class="label">#{msg.comments}</label>
-	                            <p:inputTextarea id="comments" cols="100"  value="#{pmOrderController.selected.comments}" />
-	                        </h:panelGroup>
-	                        
- 	                        <h:panelGroup>
-			                     <p:dataList id="pictureList" value="#{pmOrderController.getReportList(pmOrderController.selected.id)}"  var="fileitem"  type="definition">
-		                            <f:facet name="header">#{msg.reportUrl}</f:facet>
-		                            #{fileitem.name}
-		                            <p:commandButton immediate="true" actionListener="#{pmOrderController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
-		                        </p:dataList>
-		                        <p:fileUpload id="type5" fileUploadListener="#{pmOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-		                                      multiple="true"  sizeLimit="1000000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="pictureList"/>
-	                        </h:panelGroup>
-					</p:panelGrid>
-					
+
+                    <p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group">
+                        <h:panelGroup>
+                            <label class="label">#{msg.comments}</label>
+                            <p:inputTextarea id="comments" cols="100"  value="#{pmOrderController.selected.comments}" />
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:dataList id="pictureList" value="#{pmOrderController.getReportList(pmOrderController.selected.id)}"  var="fileitem"  type="definition"
+                                    emptyMessage="#{msg.noRecordFound}">
+                                <f:facet name="header">#{msg.attachmentUrl}</f:facet>
+                                    #{fileitem.name}
+                                <p:commandButton immediate="true" actionListener="#{pmOrderController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
+                            </p:dataList>
+                            <p:fileUpload id="type5" fileUploadListener="#{pmOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                          label="#{msg.SelectFile}" uploadLabel="#{msg.Upload}" cancelLabel="#{msg.Cancel}"
+                                          multiple="true"  sizeLimit="1000000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="pictureList"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+
                     <p:commandButton validateClient="true"  actionListener="#{pmOrderController.save()}"  value="#{msg.Save}"  update=":PmOrderEditForm,:PmOrderListForm:datalist, :growl"  icon="ui-icon-check" />
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" actionListener="#{pmOrderController.onCancel()}"   value="#{msg.Cancel}" update=":PmOrderEditForm,:PmOrderListForm"  icon="ui-icon-cancel" />
                 </h:panelGroup>
-                
-                
-                
+
+
+
             </p:fieldset>
         </h:form>
 
