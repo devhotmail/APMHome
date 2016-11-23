@@ -154,7 +154,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     	}
 	}
     
-/*    @Override
+    @Override
     public void onServerEvent(String eventName, Object eventObject){
         AssetInfo asset = (AssetInfo) eventObject;
         if(asset==null) return;
@@ -170,7 +170,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         if(orgInfo != null){
         	this.selected.setOwnerOrgName(orgInfo.getName());
         }
-    }*/
+    }
     
     // file operate
 /*    public List<AssetFileAttachment> getReportList(Integer assetid, String type) {
