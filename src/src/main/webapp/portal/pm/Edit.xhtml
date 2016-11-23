@@ -9,7 +9,7 @@
     <ui:composition>
 
         <h:form id="PmOrderEditForm">
-            <p:fieldset legend="#{pmOrderController.CRUDActionName} #{msg.PmOrder}" rendered="#{pmOrderController.selected !=null}">
+            <p:fieldset legend="#{pmOrderController.CRUDActionName} #{msg.PmRecord}" rendered="#{pmOrderController.selected !=null}">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{pmOrderController.selected != null}">
 
@@ -75,11 +75,14 @@
                                     emptyMessage="#{msg.noRecordFound}">
                                 <f:facet name="header">#{msg.attachmentUrl}</f:facet>
                                     #{fileitem.fileName}
+<!--                                  <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"  icon="ui-icon-arrowthick-1-s"  >
+		                                <p:fileDownload value="#{fileService.getFile(fileitem.id)}" />
+		                         </p:commandButton> -->
                                 <p:commandButton process="@this"  immediate="true" actionListener="#{pmOrderController.removeAttachment(fileitem.id)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
                             </p:dataList>
                             <p:fileUpload fileUploadListener="#{pmOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
                                           label="#{msg.SelectFile}" uploadLabel="#{msg.Upload}" cancelLabel="#{msg.Cancel}"
-                                          multiple="true"  sizeLimit="1000000" fileLimit="1" allowTypes="*.*" update="pictureList"/>
+                                          multiple="true"  sizeLimit="1000000" fileLimit="1"  update="pictureList"/>
                         </h:panelGroup>
                     </p:panelGrid>
 

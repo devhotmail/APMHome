@@ -75,17 +75,22 @@
                         </f:facet>
                         <h:outputText value="#{item.isFinished? msg.True2Yes : msg.False2No }"/>
                     </p:column>
+<!--                    <p:column headerText="#{msg.download}" >
+                            <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" 
+                            icon="ui-icon-arrowthick-1-s"  >
+                                <p:fileDownload value="#{fileService.getFile(item.fileId)}" />
+                            </p:commandButton>
+                    </p:column> -->
+                    
                     <f:facet name="{Toolbar}">
                         <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
                             <p:dataExporter type="xls" target="datalist" fileName="PmOrder_export"/>
                         </p:commandButton>
                         <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{pmOrderController.prepareCreate}" update=":PmOrderEditForm"  />
-                        <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{pmOrderController.prepareDelete}" update=":PmOrderViewDlg"  
-                        oncomplete="PF('PmOrderViewDialog').show()" disabled="#{empty pmOrderController.selected}" />
-<!--                          <p:commandButton  id="deleteButton"   icon="ui-icon-close" style="zoom:0.8;" title="#{msg.Delete}" actionListener="#{pmOrderController.prepareDelete}" 
+                       <p:commandButton  id="deleteButton"   icon="ui-icon-close"  title="#{msg.Delete}" actionListener="#{pmOrderController.delete}" 
                          update=":PmOrderListForm,:PmOrderEditForm"  > 
 		                    <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
-		                </p:commandButton> -->
+		                </p:commandButton> 
                     </f:facet>
                 </p:dataTable>
             </h:form>

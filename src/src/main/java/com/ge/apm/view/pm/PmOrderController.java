@@ -100,11 +100,14 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
    
     @Override
     public void prepareEdit(){
-    	owner = userDao.findById(selected.getOwnerId());
-    	FileUploaded fu =  fileUploadedRepository.findById(this.selected.getFileId());
-		if(fu != null){
-			attachements.add(fu);
-		}
+    	attachements.clear();
+    	if(selected.getFileId() != null){
+    		owner = userDao.findById(selected.getOwnerId());
+    		FileUploaded fu =  fileUploadedRepository.findById(this.selected.getFileId());
+    		if(fu != null){
+    			attachements.add(fu);
+    		}
+    	}
     	super.prepareEdit();
     }
     
@@ -134,43 +137,6 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         }
     }
     
-    // file operate
-/*    public List<AssetFileAttachment> getReportList(Integer assetid, String type) {
-        if (attachements == null || attachements.isEmpty()) {
-            List<SearchFilter> sfs = new ArrayList<SearchFilter>();
-            UserContextService.setSiteFilter(sfs);
-            sfs.add(new SearchFilter("assetId", SearchFilter.Operator.EQ, assetid));
-            attachements = attachDao.findBySearchFilter(sfs);
-        }
-
-        List<AssetFileAttachment> result = new ArrayList<AssetFileAttachment>();
-
-        for (AssetFileAttachment item : attachements) {
-            if (item.getFileType().equals(type)) {
-                result.add(item);
-            }
-        }
-        return result;
-    }*/
-    
-/*    public List<AssetFileAttachment> getReportList(Integer pmOrderId) {
-    	if(pmOrderId != null && pmOrderId > 0){
-    		PmOrder pmOrder = dao.findById(pmOrderId);
-    		if(pmOrder.getFileId() == null || pmOrder.getFileId() <= 0){
-    			return attachements;
-    		}
-    		FileUploaded fu =  fileUploadedRepository.findById(pmOrder.getFileId());
-    		if(fu != null){
-    			AssetFileAttachment aft = new AssetFileAttachment();
-    			aft.setFileId(fu.getId());
-    			aft.setName(fu.getFileName());
-    			attachements.add(aft);
-    		}
-    		return attachements;
-    	}
-    	return attachements;
-    }*/
-    
     public List<FileUploaded> getReportList(Integer pmOrderId) {
     	if(pmOrderId != null && pmOrderId > 0){
     		PmOrder pmOrder = dao.findById(pmOrderId);
@@ -179,24 +145,12 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     		}
     		FileUploaded fu =  fileUploadedRepository.findById(pmOrder.getFileId());
     		if(fu != null){
-//    			AssetFileAttachment aft = new AssetFileAttachment();
-//    			aft.setFileId(fu.getId());
-//    			aft.setName(fu.getFileName());
     			attachements.add(fu);
     		}
     		return attachements;
     	}
     	return attachements;
     }
-
-/*    public void saveAttachements() {
-        for (AssetFileAttachment item : attachements) {
-            if (null == item.getId()) {
-                attachDao.save(item);
-            }
-        }
-        attachements.clear();
-    }*/
 
     public void removeAttachment(Integer fileId) {
     	if(fileId == null || fileId <= 0){
@@ -209,6 +163,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
                 break;
             }
         }
+        attachements.clear();
     }
     
     public void handleFileUpload(FileUploadEvent event) {
@@ -235,6 +190,14 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
             	this.selected.setOwnerOrgName(orgInfo.getName());
             }
         }
+    }
+    
+    public int isHaveFile(PmOrder pmOrder){
+    	PmOrder pmOrderFromDB = dao.findById(pmOrder.getId());
+		if(pmOrderFromDB.getFileId() == null || pmOrderFromDB.getFileId() <= 0){
+			return 0;
+		}
+		return 1;
     }
 
 	public UserAccount getOwner() {
