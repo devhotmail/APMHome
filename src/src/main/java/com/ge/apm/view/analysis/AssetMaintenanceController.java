@@ -41,7 +41,7 @@ public final class AssetMaintenanceController {
     @PostConstruct
     public final void init() {
         DateTime today = new DateTime();
-        this.setStartDate(today.minusYears(5).toDate());
+        this.setStartDate(today.minusYears(2).toDate());
         this.setEndDate(today.toDate());
 
         this.hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
@@ -166,6 +166,7 @@ public final class AssetMaintenanceController {
         chart.addSeries(series);
         chart.getAxis(AxisType.X).setLabel(WebUtil.getMessage("maintenanceAnalysis_reasonChart_xAxis"));
         chart.getAxis(AxisType.Y).setLabel(WebUtil.getMessage("maintenanceAnalysis_reasonChart_yAxis"));
+//        chart.setExtender("r2");
         return chart;
     }
 
@@ -233,6 +234,7 @@ public final class AssetMaintenanceController {
         axis.setMin(0);
         axis.setMax(total);
         chart.setSeriesColors(builder.toString());
+//        chart.setExtender("r3");
         return chart;
     }
 
@@ -266,15 +268,18 @@ public final class AssetMaintenanceController {
             chart.setTitle(WebUtil.getFieldValueMessage("woSteps", Integer.toString(scalar)));
             chart.setLegendPosition("e");
             chart.setShowDataLabels(true);
+//            chart.setExtender("r" + Integer.toString(index + 1));
             charts[index] = chart;
         }
         return charts;
     }
 
     public final BarChartModel getErrorRoomChart() {
-        return convertToBarChartModel(this.query(SQL_LIST_ERROR_ROOM_ALL),
-                                      WebUtil.getMessage("maintenanceAnalysis_distributionChart_room_xAxis"),
-                                      WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
+        BarChartModel chart = convertToBarChartModel(this.query(SQL_LIST_ERROR_ROOM_ALL),
+                                                     WebUtil.getMessage("maintenanceAnalysis_distributionChart_room_xAxis"),
+                                                     WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
+//        chart.setExtender("r51");
+        return chart;
     }
 
     public final BarChartModel getErrorDeviceTypeChart() {
@@ -298,13 +303,16 @@ public final class AssetMaintenanceController {
         chart.addSeries(series);
         chart.getAxis(AxisType.X).setLabel(WebUtil.getMessage("maintenanceAnalysis_distributionChart_category_xAxis"));
         chart.getAxis(AxisType.Y).setLabel(WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
+//        chart.setExtender("r52");
         return chart;
     }
 
     public final BarChartModel getTopErrorDeviceChart() {
-        return convertToBarChartModel(this.query(SQL_LIST_TOP_ERROR_DEVICE_ALL),
-                                      WebUtil.getMessage("maintenanceAnalysis_distributionChart_device_xAxis"),
-                                      WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
+        BarChartModel chart = convertToBarChartModel(this.query(SQL_LIST_TOP_ERROR_DEVICE_ALL),
+                                                     WebUtil.getMessage("maintenanceAnalysis_distributionChart_device_xAxis"),
+                                                     WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
+//        chart.setExtender("r53");
+        return chart;
     }
 
     public final double getErrorPercentageInRoomOfDevice() {

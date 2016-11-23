@@ -5,6 +5,11 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
+    <ui:define name="head">
+        <!--<h:outputStylesheet name="css/assetMaintenanceAll.css"/>-->
+        <h:outputScript name="js/assetMaintenance.js"/>
+    </ui:define>
+
     <ui:define name="content">
 
         <div class="ui-g">
@@ -126,17 +131,20 @@
             <div class="ui-g-12">
                 <p:tabView id="r5">
                     <p:tab title="#{msg.maintenanceAnalysis_distributionChart_room}">
-                        <p:chart type="bar"
+                        <p:chart id="r51"
+                                 type="bar"
                                  model="#{assetMaintenanceController.errorRoomChart}"
                                  responsive="true"/>
                     </p:tab>
                     <p:tab title="#{msg.maintenanceAnalysis_distributionChart_category}">
-                        <p:chart type="bar"
+                        <p:chart id="r52"
+                                 type="bar"
                                  model="#{assetMaintenanceController.errorDeviceTypeChart}"
                                  responsive="true"/>
                     </p:tab>
                     <p:tab title="#{msg.maintenanceAnalysis_distributionChart_device}">
-                        <p:chart type="bar"
+                        <p:chart id="r53"
+                                 type="bar"
                                  model="#{assetMaintenanceController.topErrorDeviceChart}"
                                  responsive="true"
                                  style="height:500px;"/>
