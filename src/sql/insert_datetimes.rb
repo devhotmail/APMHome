@@ -180,7 +180,7 @@ totalrecords = 10000
 for i in 0..totalrecords
   site_id         = randnum.rand(1..2)
   work_order_id   = randnum.rand(1..50)
-  step_id = (randnum.rand(1..6) * rand2.rand).to_i
+  step_id = randnum.rand(1..6)
   step_name       = ["申请", "审核", "派工", "领工", "维修","关单"][step_id - 1]
   owner_id    = randnum.rand(1..10)
   owner_name  = "owner-#{owner_id}"
