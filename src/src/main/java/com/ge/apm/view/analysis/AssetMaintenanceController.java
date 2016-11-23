@@ -234,7 +234,7 @@ public final class AssetMaintenanceController {
         axis.setMin(0);
         axis.setMax(total);
         chart.setSeriesColors(builder.toString());
-//        chart.setExtender("r3");
+        chart.setExtender("chartR3");
         return chart;
     }
 
