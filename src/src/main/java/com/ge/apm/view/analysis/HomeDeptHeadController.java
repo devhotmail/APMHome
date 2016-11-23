@@ -36,7 +36,6 @@ public class HomeDeptHeadController implements Serializable {
     private static String DVEB = "Device Exposure (baseline)";
     private static String DVRN = "Device Revenue";
     private static String DVPF = "Device Profit";
-    private int SMLTH = 10;
 
     // Dashboard Parameters
     private String valueDeviceScan = null;
@@ -259,7 +258,7 @@ public class HomeDeptHeadController implements Serializable {
             resultSet = NativeSqlUtil.queryForList(SCANTL, sqlParams);
 
             for (Map<String, Object> item : resultSet) {
-                chartSeriesTypeS.set(item.get("name").toString().substring(0, SMLTH),
+                chartSeriesTypeS.set(item.get("name").toString(),
                         item.get("count") != null ? (Long) item.get("count") : 0);
             }
 
@@ -278,7 +277,7 @@ public class HomeDeptHeadController implements Serializable {
 
             resultSet = NativeSqlUtil.queryForList(EXPOTL, sqlParams);
             for (Map<String, Object> item : resultSet) {
-                chartSeriesTypeE.set(item.get("name").toString().substring(0, SMLTH),
+                chartSeriesTypeE.set(item.get("name").toString(),
                         item.get("hours") != null ? (Double) item.get("hours") : (Double) 0.0);
             }
 
@@ -287,7 +286,7 @@ public class HomeDeptHeadController implements Serializable {
 
             resultSet = NativeSqlUtil.queryForList(BENCHEXPOTL, sqlParams);
             for (Map<String, Object> item : resultSet) {
-                chartSeriesTypeB.set(item.get("name").toString().substring(0, SMLTH),
+                chartSeriesTypeB.set(item.get("name").toString(),
                         item.get("bench") != null ? (Double) item.get("bench") : (Double) 0.0);
             }
 
@@ -307,7 +306,7 @@ public class HomeDeptHeadController implements Serializable {
 
             resultSet = NativeSqlUtil.queryForList(REVENUETL, sqlParams);
             for (Map<String, Object> item : resultSet) {
-                chartSeriesTypeR.set(item.get("name").toString().substring(0, SMLTH),
+                chartSeriesTypeR.set(item.get("name").toString(),
                         item.get("revenue") != null ? (Double) item.get("revenue") : (Double) 0.0);
             }
 
@@ -336,7 +335,7 @@ public class HomeDeptHeadController implements Serializable {
                         - (item_x.get("depre") != null ? (Double) item_x.get("depre") : (Double) 10000.0)
                         - (item_y.get("total_price") != null ? (Double) item_y.get("total_price") : (Double) 2000.0);
 
-                chartSeriesTypeP.set(item_a.get("name").toString().substring(0, SMLTH), tmpDouble);
+                chartSeriesTypeP.set(item_a.get("name").toString(), tmpDouble);
                 valueDeviceProfitDouble += tmpDouble;
             }
             valueDeviceProfit = valueDeviceProfitDouble.toString();

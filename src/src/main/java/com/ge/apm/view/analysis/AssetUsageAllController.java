@@ -41,8 +41,7 @@ public class AssetUsageAllController implements Serializable{
 	private static final String countlb = WebUtil.getMessage("countlb");
 	private static final String hourslb = WebUtil.getMessage("hourslb");
 	private static final String pctlb = WebUtil.getMessage("pctlb");
-	private static final int HOURS_DAY = 6;
-	private static final int SMLTH = 10;
+	private static final int HOURS_DAY = 12;
 
 	private int hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
 	private int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
@@ -306,7 +305,7 @@ public class AssetUsageAllController implements Serializable{
 			List<Map<String, Object>> rs_scan = NativeSqlUtil.queryForList(SCANTL, sqlParams);
 
 			for (Map<String, Object> item : rs_scan) {
-				cst_scan.set(item.get("name") != null ? item.get("name").toString().substring(0, SMLTH) : "", 
+				cst_scan.set(item.get("name") != null ? item.get("name").toString() : "", 
 						item.get("count") != null ? (Long) item.get("count") : 0);
 			}
 
@@ -326,7 +325,7 @@ public class AssetUsageAllController implements Serializable{
 
 			List<Map<String, Object>> rs_expo = NativeSqlUtil.queryForList(EXPOTL, sqlParams);
 			for (Map<String, Object> item : rs_expo) {
-				cst_expo.set(item.get("name") != null ? item.get("name").toString().substring(0, SMLTH) : "",
+				cst_expo.set(item.get("name") != null ? item.get("name").toString() : "",
 						item.get("hours") != null ? (Double) item.get("hours") : (Double) 0.0);
 			}
 	
@@ -363,7 +362,7 @@ public class AssetUsageAllController implements Serializable{
 				bench_day = (Integer) (item_bench_day.get("bench_day") != null ? item_bench_day.get("bench_day") : 1);
 				if (bench_day < 1)	bench_day = 1;
 				
-				cst_expo_bench.set(item_expo_all.get("name") != null ? item_expo_all.get("name").toString().substring(0, SMLTH) : "",
+				cst_expo_bench.set(item_expo_all.get("name") != null ? item_expo_all.get("name").toString() : "",
 						expo_all * serve_day / bench_day);
 			}
 
@@ -445,13 +444,13 @@ public class AssetUsageAllController implements Serializable{
 				if (bench_hour < HOURS_DAY)	bench_hour = HOURS_DAY;
 				wait = serve_hour - dt - inuse;
 				
-				cst_inuse.set(item_serve_day.get("name") != null ? item_serve_day.get("name").toString().substring(0, SMLTH) : "",
+				cst_inuse.set(item_serve_day.get("name") != null ? item_serve_day.get("name").toString() : "",
 					 inuse);
-				cst_dt.set(item_dt.get("name") != null ? item_dt.get("name").toString().substring(0, SMLTH) : "", 
+				cst_dt.set(item_dt.get("name") != null ? item_dt.get("name").toString() : "", 
 						dt);
-				cst_wait.set(item_serve_day.get("name") != null ? item_serve_day.get("name").toString().substring(0, SMLTH) : "", 
+				cst_wait.set(item_serve_day.get("name") != null ? item_serve_day.get("name").toString() : "", 
 						wait);
-				cst_dt_bench.set(item_dt_all.get("name") != null ? item_dt_all.get("name").toString().substring(0, SMLTH) : "",
+				cst_dt_bench.set(item_dt_all.get("name") != null ? item_dt_all.get("name").toString() : "",
 						dt_all * serve_hour / bench_hour);
 
 				inuse_total += (long) inuse;
