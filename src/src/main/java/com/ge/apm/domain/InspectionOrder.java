@@ -30,6 +30,12 @@ public class InspectionOrder implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "order_type")
+    private int orderType;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "site_id")
@@ -108,6 +114,14 @@ public class InspectionOrder implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public int getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(int orderType) {
+        this.orderType = orderType;
     }
 
     public int getSiteId() {
