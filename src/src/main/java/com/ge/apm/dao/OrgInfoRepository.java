@@ -17,6 +17,10 @@ public interface OrgInfoRepository extends GenericRepository<OrgInfo> {
     @Query("select t from OrgInfo t where t.siteId=?1 and t.parentOrg is null")
     public List<OrgInfo> getHospitalBySiteId(int siteId);
 
+    @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
+    @Query("select t from OrgInfo t where t.siteId=?1")
+    public List<OrgInfo> getFullOrgListBySiteId(int siteId);
+    
     public Page<OrgInfo> getByHospitalId(Pageable pageRequest, int hospitalId);
     
 }

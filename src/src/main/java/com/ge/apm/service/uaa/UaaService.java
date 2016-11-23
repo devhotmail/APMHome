@@ -144,14 +144,22 @@ public class UaaService {
         OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
         return orgInfoDao.getByHospitalId(hospitalId);
     }    
-    
-    public TreeNode getOrgTree(int hospitalId){
-        OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
-        List<OrgInfo> orgList = orgInfoDao.getByHospitalId(hospitalId);
 
+    public TreeNode getFullOrgTreeBySiteId(int siteId){
+        OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
+        List<OrgInfo> fullOrgList = orgInfoDao.getFullOrgListBySiteId(siteId);
+
+        TreeNode root = new DefaultTreeNode("Root", null);
+        TreeNode treeRoot = root;
+        
+        buildOrgTree(fullOrgList, root);
+        
+        return null;
+    }
+    
+    private void buildOrgTree(List<OrgInfo> orgList, TreeNode root){
         //first create all nodes
         Map<Integer, TreeNode> treeMap = new HashMap<>();
-        TreeNode root = new DefaultTreeNode("Root", null);
         for(OrgInfo org: orgList){
             TreeNode node;
             node = new DefaultTreeNode("org", org, root);
@@ -171,7 +179,31 @@ public class UaaService {
             }
         }
 
-        return root;
+    }
+    
+    public TreeNode getOrgTree(int hospitalId, boolean showHospitalAsRoot){
+        OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
+        List<OrgInfo> orgList = orgInfoDao.getByHospitalId(hospitalId);
+
+        TreeNode root = new DefaultTreeNode("Root", null);
+        TreeNode treeRoot = root;
+        
+        if(showHospitalAsRoot){
+            OrgInfo hospitalInfo = orgInfoDao.findById(hospitalId);
+            if(hospitalInfo!=null){
+                TreeNode node = new DefaultTreeNode("org", hospitalInfo, root);
+                node.setRowKey("org_"+hospitalInfo.getId());
+                root = node;
+            }
+        }
+
+        buildOrgTree(orgList, root);
+        
+        return treeRoot;
+    }
+    
+    public TreeNode getOrgTree(int hospitalId){
+        return getOrgTree(hospitalId, false);
     }
 
     private void addAssetToOrgNode(TreeNode node, Map<Integer, List<AssetInfo>> assetMap){
@@ -191,7 +223,7 @@ public class UaaService {
             addAssetToOrgNode(aNode, assetMap);
         }
     }
-    
+
     public TreeNode getOrgAssetTree(int hospitalId){
         AssetInfoRepository assetInfoDao = WebUtil.getBean(AssetInfoRepository.class);
         List<AssetInfo> assetList = assetInfoDao.getByHospitalId(hospitalId);

@@ -8,9 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
@@ -31,6 +33,7 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
         UserAccount loginUser = UserContextService.getCurrentUserAccount();
         siteId = loginUser.getSiteId();
         hospitalId =  loginUser.getHospitalId();
+        buildOrdTree();
     }
 
     @Override
@@ -60,10 +63,12 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
     }
     public void setHospitalId(int hospitalId) {
         this.hospitalId = hospitalId;
+        buildOrdTree();        
     }
     
     public void buildOrdTree(){
-        orgTree = uaaService.getOrgAssetTree(this.hospitalId);
+        //orgTree = uaaService.getOrgTree(this.hospitalId, true);
+        orgTree = uaaService.getFullOrgTreeBySiteId(this.siteId);
     }
 
     public List<OrgInfo> getHospitalListBySiteId(){
