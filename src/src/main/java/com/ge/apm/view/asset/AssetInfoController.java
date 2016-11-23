@@ -128,7 +128,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     @Override
     public void onBeforeSave(AssetInfo object) {
-        object.setClinicalDeptName(this.getHospital(object.getClinicalDeptId()).getName());
+        OrgInfo org = orgDao.findById(object.getClinicalDeptId());
+        object.setClinicalDeptName(org.getName());
     }
 
     @Override
@@ -280,7 +281,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("arriveDate"), WebUtil.getMessage("installDate")));
         }
-        if (null!=input.getInstallDate() && input.getArriveDate().after(todaydate)) {
+        if (null!=input.getArriveDate() && input.getArriveDate().after(todaydate)) {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("todayDate")));
         }
