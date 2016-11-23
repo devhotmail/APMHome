@@ -287,6 +287,11 @@ INSERT INTO "i18n_message" VALUES (1500,'assetGroup','1','CT','CT',null,-1);
 INSERT INTO "i18n_message" VALUES (1501,'assetGroup','2','MR','MR',null,-1);
 INSERT INTO "i18n_message" VALUES (1502,'assetGroup','3','XRay','XRay',null,-1);
 INSERT INTO "i18n_message" VALUES (1503,'assetGroup','4','DR','DR',null,-1);
+INSERT INTO "i18n_message" VALUES (1504,'assetGroup','5','心血管照影',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1505,'assetGroup','6','乳腺仪',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1506,'assetGroup','7','胃肠X光机','Stomach XRay',null,-1);
+INSERT INTO "i18n_message" VALUES (1507,'assetGroup','8','彩超','Color B-ultrasonic',null,-1);
+
 
 INSERT INTO "i18n_message" VALUES (1510,'woSteps','1', '报修','Create',null,-1);
 INSERT INTO "i18n_message" VALUES (1511,'woSteps','2', '审核/审批','Approve',null,-1);
@@ -497,6 +502,30 @@ INSERT INTO "i18n_message" VALUES (5571,'label','preventiveMaintenanceAnalysis_t
 
 INSERT INTO "i18n_message" VALUES (5581,'label','preventiveMaintenanceAnalysis_planChart', 'PM统计表','Preventive Maintenance Schedule',null,-1);
 INSERT INTO "i18n_message" VALUES (5582,'label','preventiveMaintenanceAnalysis_predicationChart', '设备维护预测','Preventive Maintenance Forecast',null,-1);
+
+-- Home pages start from 5601 to 5700
+
+-- Hospital head home page
+INSERT INTO "i18n_message" VALUES (5601,'label','assetTotalProfit', '设备总利润','Asset Total Profit',null,-1);
+INSERT INTO "i18n_message" VALUES (5602,'label','assetTotalProfitForecast', '设备总利润预测','Asset Total Profit Forecast',null,-1);
+INSERT INTO "i18n_message" VALUES (5603,'label','assetAveROI', '设备平均投资回报（单位：元）','Asset Ave ROI',null,-1);
+INSERT INTO "i18n_message" VALUES (5604,'label','assetROI', '设备投资回报','Asset ROI',null,-1);
+INSERT INTO "i18n_message" VALUES (5605,'label','profitDistro', '利润科室分布（单位：元）','Profit Distribution by Department',null,-1);
+INSERT INTO "i18n_message" VALUES (5606,'label','assetType', '设备类型','Asset Type',null,-1);
+
+INSERT INTO "i18n_message" VALUES (5607,'clinicalDeptId','1', '放射科','Radiation Dept',null,-1);
+INSERT INTO "i18n_message" VALUES (5608,'clinicalDeptId','2', '肿瘤中心','Tumour Dept',null,-1);
+INSERT INTO "i18n_message" VALUES (5609,'clinicalDeptId','3', '心超室','Heart Ultrasonic Dept',null,-1);
+INSERT INTO "i18n_message" VALUES (5610,'clinicalDeptId','4', '超声诊断室','Ultrasonic Dept',null,-1);
+INSERT INTO "i18n_message" VALUES (5611,'clinicalDeptId','5', '心导管室','Heart Dept',null,-1);
+
+INSERT INTO "i18n_message" VALUES (5612,'label','assetAnnual', '设备绩效年报（单位：元）','Asset Performance Annual Report',null,-1);
+INSERT INTO "i18n_message" VALUES (5613,'label','assetAnnualForecast', '设备绩效年报预测（单位：元）','Asset Performance Forecast Report',null,-1);
+
+
+
+
+
 
 -- update id sequence value
 SELECT setval('"public"."i18n_message_id_seq"', 10000, false);

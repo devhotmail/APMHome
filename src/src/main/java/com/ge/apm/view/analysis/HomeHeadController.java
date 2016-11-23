@@ -18,12 +18,21 @@ import org.joda.time.LocalDate;
 import org.primefaces.model.chart.*;
 import org.slf4j.LoggerFactory;
 
+import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.SqlConfigurableChartController;
 import webapp.framework.dao.NativeSqlUtil;
 
 @ManagedBean
 @ViewScoped
 public class HomeHeadController extends SqlConfigurableChartController {
+    // I18n string
+    private static final String assetTypeStr = WebUtil.getMessage("assetType");
+    private static final String revenueStr = WebUtil.getMessage("deviceROIlg_1");
+    private static final String profitStr = WebUtil.getMessage("deviceROIlg_2");
+
+
+
+
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
 
     private double anualCost = 0.0;
@@ -282,15 +291,13 @@ public class HomeHeadController extends SqlConfigurableChartController {
         bc.setLegendPosition("ne");
 
         Axis xAxis = bc.getAxis(AxisType.X);
-        xAxis.setLabel("Assets Type");
 
         Axis yAxis = bc.getAxis(AxisType.Y);
-        yAxis.setLabel("CNY");
 
-        String label = "re";
+        String label = revenueStr;
         drawBar(bc, label, monthRevenue);
 
-        label = "profit";
+        label = profitStr;
         drawBar(bc, label, monthProfit);
 
         barMonthlyRevenue = bc;
@@ -302,22 +309,21 @@ public class HomeHeadController extends SqlConfigurableChartController {
         barMonthlyForecast.setExtender("barMonthlyForecast");
 
         Axis xAxis = barMonthlyForecast.getAxis(AxisType.X);
-        xAxis.setLabel("Forecast");
-
         Axis yAxis = barMonthlyForecast.getAxis(AxisType.Y);
-        yAxis.setLabel("CNY");
-
 
         xAxis.setTickAngle(-50);
         xAxis.setTickFormat("%y-%m");
+
+        long interval = 1000 * 60 * 60 * 24 * 30 * 3;
+        xAxis.setTickInterval(String.valueOf(interval));
         barMonthlyForecast.setBarWidth(11);
-        barMonthlyForecast.setBarMargin(3);
+        barMonthlyForecast.setBarMargin(6);
         barMonthlyForecast.getAxes().put(AxisType.X, xAxis);
 
-        String label = "re";
+        String label = revenueStr;
         drawBar(barMonthlyForecast, label, forecastRevenue);
 
-        label = "profit";
+        label = profitStr;
         drawBar(barMonthlyForecast, label, forecastProfit);
     }
 
@@ -643,10 +649,9 @@ public class HomeHeadController extends SqlConfigurableChartController {
 
         bc.setLegendPosition("ne");
         Axis xAxis = bc.getAxis(AxisType.X);
-        xAxis.setLabel("Assets Type");
+        xAxis.setLabel(assetTypeStr);
          
         Axis yAxis = bc.getAxis(AxisType.Y);
-        yAxis.setLabel("CNY");
 
         hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
         this.logStr = "Current User Account is " +  UserContextService.getCurrentUserAccount().getName() +
@@ -666,7 +671,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
             + "order by a.asset_group asc;";
         
         List<Map<String, Object>> r = prepareData(sql, sqlParams);
-        String label = "re";
+        String label = revenueStr;
         drawBar(bc, label, r);
         
         // get asset deprecate value
@@ -691,7 +696,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
         
         // Calcuate profile = revenue - depreciation - maintenance cost
         List<Map<String, Object>> profit = calcProfit(r, d, w);
-        label = "profit";
+        label = profitStr;
         printList(profit);
         drawBar(bc, label, profit);
         barAnnualRevenue = bc;
