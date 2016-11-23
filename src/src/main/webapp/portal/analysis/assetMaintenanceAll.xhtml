@@ -6,152 +6,119 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="head">
-        <!--<h:outputStylesheet name="css/assetMaintenanceAll.css"/>-->
+        <h:outputStylesheet name="css/assetMaintenanceAll.css"/>
         <h:outputScript name="js/assetMaintenance.js"/>
     </ui:define>
 
     <ui:define name="content">
-
         <div class="ui-g">
             <div class="ui-g-12">
-                <div class="ui-g-3"></div>
-                <div class="ui-g-6"><p>#{msg.maintenanceAnalysis_title}</p></div>
-                <!--<div class="ui-g-3"><p:commandButton icon="fa fa-ellipsis-v" title="Icon Only"/></div>-->
-            </div>
-            <div class="ui-g-12">
-                <div class="ui-g-3">
-                    <p>#{msg.maintenanceAnalysis_reasonTile}</p>
-                    <p><h:outputText id="maintenanceR11"
-                                     value="#{assetMaintenanceController.topErrorReason}"/></p>
-                </div>
-                <div class="ui-g-3">
-                    <p>#{msg.maintenanceAnalysis_stepTile}</p>
-                    <p><h:outputText id="maintenanceR12"
-                                     value="#{assetMaintenanceController.topErrorStep}"/></p>
-                </div>
-                <div class="ui-g-3">
-                    <p>#{msg.maintenanceAnalysis_roomTile}</p>
-                    <p><h:outputText id="maintenanceR13"
-                                     value="#{assetMaintenanceController.topErrorRoom}"/></p>
-                </div>
-                <div class="ui-g-3">
-                    <p>#{msg.maintenanceAnalysis_categoryTile}</p>
-                    <p><h:outputText id="maintenanceR14"
-                                     value="#{assetMaintenanceController.topErrorDeviceType}"/></p>
+                <div class="text--center u-mv-">
+                    <span class="epsilon">#{msg.maintenanceAnalysis_title}</span>
                 </div>
             </div>
 
             <div class="ui-g-12">
-                <p:calendar value="#{assetMaintenanceController.startDate}">
-                    <p:ajax event="dateSelect"
-                            listener="#{assetMaintenanceController.onStartDateSelect}"
-                            showOn="button"/>
-                </p:calendar>
-                <p class="i18n">TO</p>
-                <p:calendar value="#{assetMaintenanceController.endDate}">
-                    <p:ajax event="dateSelect"
-                            listener="#{assetMaintenanceController.onEndDateSelect}"
-                            showOn="button"/>
-                </p:calendar>
-                <p:commandButton value="#{msg.Refresh}"
-                                 update="maintenanceR11 maintenanceR12 maintenanceR13 maintenanceR14 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR5 "
-                                 actionListener="#{assetMaintenanceController.submit}"/>
+                <div class="card--summary ui-g">
+                    <div class="ui-lg-3">
+                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_reasonTile}</div>
+                        <div class="text--banner u-mt- gamma">
+                            <h:outputText id="maintenanceR11" value="#{assetMaintenanceController.topErrorReason}"/>
+                        </div>
+                    </div>
+                    <div class="ui-lg-3">
+                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_stepTile}</div>
+                        <div class="text--banner u-mt- gamma">
+                            <h:outputText id="maintenanceR12" value="#{assetMaintenanceController.topErrorStep}"/>
+                        </div>
+                    </div>
+                    <div class="ui-lg-3">
+                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_roomTile}</div>
+                        <div class="text--banner u-mt- gamma">
+                            <h:outputText id="maintenanceR13" value="#{assetMaintenanceController.topErrorRoom}"/>
+                        </div>
+                    </div>
+                    <div class="ui-lg-3">
+                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_categoryTile}</div>
+                        <div class="text--banner u-mt- gamma">
+                            <h:outputText id="maintenanceR14" value="#{assetMaintenanceController.topErrorDeviceType}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="calendar-range-picker flex flex--row flex--center flex--justify">
+                    <p:calendar id="start_date_button" value="#{assetMaintenanceController.startDate}" showOn="button">
+                        <p:ajax event="dateSelect" listener="#{assetMaintenanceController.onStartDateSelect}"
+                                showOn="button"/>
+                    </p:calendar>
+
+                    <label>到</label>
+                    <p:calendar id="end_date_button" value="#{assetMaintenanceController.endDate}" showOn="button">
+                        <p:ajax event="dateSelect" listener="#{assetMaintenanceController.onEndDateSelect}"
+                                showOn="button"/>
+                    </p:calendar>
+                    <p:commandButton value="确定" update="maintenanceR11 maintenanceR12 maintenanceR13 maintenanceR14 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR5" actionListener="#{assetMaintenanceController.submit}"/>
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="block">
+                    <h3 class="block-title">#{msg.maintenanceAnalysis_reasonChart}</h3>
+                    <p:chart id="maintenanceR2" class="maintenance-chart2" type="bar" model="#{assetMaintenanceController.errorReasonChart}" responsive="true"/>
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="block">
+                    <h3 class="block-title">#{msg.maintenanceAnalysis_timeChart}</h3>
+                    <div class="chart-device-stat horizontal">
+                        <p:chart id="maintenanceR3" class="maintenance-chart3" type="bar"
+                                 model="#{assetMaintenanceController.errorStepChart}" responsive="true"/>
+                    </div>
+                    <div class="u-mh++">
+                        <div class="maintenance-chart4">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <p>#{msg.maintenanceAnalysis_timeChart_section}</p>
+                                </div>
+                                <div class="ui-g-4 col-1 divide-line-right">
+                                    <p:chart id="maintenanceR41" type="pie"
+                                             model="#{assetMaintenanceController.errorTimePerStep[0]}"/>
+                                </div>
+                                <div class="ui-g-4 col-2 divide-line-right">
+                                    <p:chart id="maintenanceR42" type="pie"
+                                             model="#{assetMaintenanceController.errorTimePerStep[1]}"/>
+                                </div>
+                                <div class="ui-g-4 col-3">
+                                    <p:chart id="maintenanceR43" type="pie"
+                                             model="#{assetMaintenanceController.errorTimePerStep[2]}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="block maintenance-chart5">
+                    <h3 class="block-title">#{msg.maintenanceAnalysis_timeChart_section}</h3>
+                    <p:tabView id="maintenanceR5">
+                        <p:tab title="#{msg.maintenanceAnalysis_distributionChart_room}">
+                            <p:chart id="maintenanceR51" type="bar" model="#{assetMaintenanceController.errorRoomChart}" responsive="true"/>
+                        </p:tab>
+                        <p:tab title="#{msg.maintenanceAnalysis_distributionChart_category}">
+                            <p:chart id="maintenanceR52" type="bar" model="#{assetMaintenanceController.errorDeviceTypeChart}" responsive="true"/>
+                        </p:tab>
+                        <p:tab title="#{msg.maintenanceAnalysis_distributionChart_device}">
+                            <p:chart id="maintenanceR53" type="bar" model="#{assetMaintenanceController.topErrorDeviceChart}" responsive="true"/>
+                        </p:tab>
+                    </p:tabView>
+                </div>
             </div>
         </div>
 
-        <div class="ui-g">
-            <div class="ui-g-12">
-                <div class="ui-g-9">
-                    <p>#{msg.maintenanceAnalysis_reasonChart}</p>
-                </div>
-                <!--<div class="ui-g-3">
-                    <p:commandButton value="TODO导出"/>
-                </div>-->
-            </div>
-            <p:separator/>
-            <div class="ui-g-12">
-                <p:chart id="maintenanceR2"
-                         type="bar"
-                         model="#{assetMaintenanceController.errorReasonChart}"
-                         responsive="true"/>
-            </div>
-        </div>
-
-        <div class="ui-g">
-            <div class="ui-g-12">
-                <div class="ui-g-9">
-                    <p>#{msg.maintenanceAnalysis_timeChart}</p>
-                </div>
-                <!--<div class="ui-g-3">
-                    <p:commandButton value="TODO导出"/>
-                </div>-->
-            </div>
-            <p:separator/>
-            <div class="ui-g-12">
-                <p:chart id="maintenanceR3"
-                         type="bar"
-                         model="#{assetMaintenanceController.errorStepChart}"
-                         responsive="true"
-                         style="height:100px;"/>
-            </div>
-            <div class="ui-g-12">
-                <p>#{msg.maintenanceAnalysis_timeChart_section}</p>
-            </div>
-            <div class="ui-g-12">
-                <div class="ui-g-4">
-                    <p:chart id="maintenanceR41"
-                             type="pie"
-                             model="#{assetMaintenanceController.errorTimePerStep[0]}"
-                             style="width:300px;height:200px;"/>
-                </div>
-                <div class="ui-g-4">
-                    <p:chart id="maintenanceR42"
-                             type="pie"
-                             model="#{assetMaintenanceController.errorTimePerStep[1]}"
-                             style="width:300px;height:200px;"/>
-                </div>
-                <div class="ui-g-4">
-                    <p:chart id="maintenanceR43" type="pie"
-                             model="#{assetMaintenanceController.errorTimePerStep[2]}"
-                             style="width:300px;height:200px"/>
-                </div>
-            </div>
-        </div>
-
-        <div class="ui-g">
-            <div class="ui-g-12">
-                <div class="ui-g-9">
-                    <p>#{msg.maintenanceAnalysis_distributionChart}</p>
-                </div>
-                <!--<div class="ui-g-3">
-                    <p:commandButton value="TODO导出"/>
-                </div>-->
-            </div>
-            <p:separator/>
-            <div class="ui-g-12">
-                <p:tabView id="maintenanceR5">
-                    <p:tab title="#{msg.maintenanceAnalysis_distributionChart_room}">
-                        <p:chart id="maintenanceR51"
-                                 type="bar"
-                                 model="#{assetMaintenanceController.errorRoomChart}"
-                                 responsive="true"/>
-                    </p:tab>
-                    <p:tab title="#{msg.maintenanceAnalysis_distributionChart_category}">
-                        <p:chart id="maintenanceR52"
-                                 type="bar"
-                                 model="#{assetMaintenanceController.errorDeviceTypeChart}"
-                                 responsive="true"/>
-                    </p:tab>
-                    <p:tab title="#{msg.maintenanceAnalysis_distributionChart_device}">
-                        <p:chart id="maintenanceR53"
-                                 type="bar"
-                                 model="#{assetMaintenanceController.topErrorDeviceChart}"
-                                 responsive="true"
-                                 style="height:500px;"/>
-                    </p:tab>
-                </p:tabView>
-            </div>
-        </div>
     </ui:define>
 
 </ui:composition>

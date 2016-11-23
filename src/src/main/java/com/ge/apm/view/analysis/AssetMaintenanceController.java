@@ -166,7 +166,7 @@ public final class AssetMaintenanceController {
         chart.addSeries(series);
         chart.getAxis(AxisType.X).setLabel(WebUtil.getMessage("maintenanceAnalysis_reasonChart_xAxis"));
         chart.getAxis(AxisType.Y).setLabel(WebUtil.getMessage("maintenanceAnalysis_reasonChart_yAxis"));
-//        chart.setExtender("maintenanceE2");
+        chart.setExtender("maintenanceE2");
         return chart;
     }
 
@@ -269,7 +269,7 @@ public final class AssetMaintenanceController {
             chart.setTitle(WebUtil.getFieldValueMessage("woSteps", Integer.toString(scalar)));
             chart.setLegendPosition("e");
             chart.setShowDataLabels(true);
-//            chart.setExtender("maintenanceE4" + Integer.toString(index + 1));
+            chart.setExtender("maintenanceE4" + Integer.toString(index + 1));
             charts[index] = chart;
         }
         return charts;
@@ -279,7 +279,7 @@ public final class AssetMaintenanceController {
         BarChartModel chart = convertToBarChartModel(this.query(SQL_LIST_ERROR_ROOM_ALL),
                                                      WebUtil.getMessage("maintenanceAnalysis_distributionChart_room_xAxis"),
                                                      WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
-//        chart.setExtender("maintenanceE51");
+        chart.setExtender("maintenanceE51");
         return chart;
     }
 
@@ -304,7 +304,7 @@ public final class AssetMaintenanceController {
         chart.addSeries(series);
         chart.getAxis(AxisType.X).setLabel(WebUtil.getMessage("maintenanceAnalysis_distributionChart_category_xAxis"));
         chart.getAxis(AxisType.Y).setLabel(WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
-//        chart.setExtender("maintenanceE52");
+        chart.setExtender("maintenanceE52");
         return chart;
     }
 
@@ -312,7 +312,7 @@ public final class AssetMaintenanceController {
         BarChartModel chart = convertToBarChartModel(this.query(SQL_LIST_TOP_ERROR_DEVICE_ALL),
                                                      WebUtil.getMessage("maintenanceAnalysis_distributionChart_device_xAxis"),
                                                      WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
-//        chart.setExtender("maintenanceE53");
+        chart.setExtender("maintenanceE53");
         return chart;
     }
 

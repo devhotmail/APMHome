@@ -4,7 +4,7 @@
   var DEVICE_LIST = ['MRI', 'CT', 'DR', '心血管照影', '乳腺仪', '胃肠X逛机', '彩超', 'GE骨密度测定仪', '超声刀', '电子胃肠镜', '胶囊内窥镜', '电子鼻咽喉镜'];
   var DEPT_LIST = ['心导管室', '超声诊断科', '心超室', '放射科', '肿瘤中心', '呼吸内科', '消化内科', '血液科', '心胸外科', '神经内科'];
   var SERIES_LABEL = ['收入', '利润'];
-  var CURRENCY = "%'.2f";
+  var CURRENCY = "%'.2f 元";
 
   var base = {
     shadow: false,
@@ -77,7 +77,13 @@
     legend: {
       labels: SERIES_LABEL,
     },
+    highlighter: {
+      show: true
+    },
     seriesDefaults: {
+      pointLabels: {
+        show: false
+      },
       rendererOptions: {
         animation: {
           speed: 1500
@@ -106,10 +112,15 @@
 
   function generateSeriesColorForTicks(ticks, rgba1, rgba2) {
     return ticks.map(function(timeTick) {
-      if (Date.parse(timeTick) < Date.now()) {
-        return rgba1;
-      } else {
+      var time = new Date(Date.parse(timeTick));
+      var now = new Date(Date.now());
+      if (
+          (time.getYear() > now.getYear()) || 
+          (time.getYear() == now.getYear() && time.getMonth() >= now.getMonth())
+      ) {
         return rgba2;
+      } else {
+        return rgba1;
       }
     });
   }
@@ -182,15 +193,20 @@
         location: 'e',
         renderer: $.jqplot.EnhancedPieLegendRenderer
       },
+      highlighter: {
+        show: true,
+        sizeAdjust: 3,
+        tooltipAxes: 'y',
+        formatString: null,
+        tooltipFormatString: CURRENCY
+      },
       series: [{
         renderer: $.jqplot.pieRenderer,
         rendererOptions: {
           sliceMargin: 5,
-          dataLabels: 'value',
+          dataLabels: 'percent',
           highlightMouseOver: true,
-          dataLabelPositionFactor: 1.2,
-          dataLabelCenterOn: true,
-          dataLabelFormatString: CURRENCY
+          dataLabelCenterOn: true
         },
       }],
       seriesColors: [

@@ -360,13 +360,20 @@ button.btn{-webkit-appearance:button}
 .divide-line-bottom{width:100%;border-bottom:1px solid #b1b1bc}
 .widget-title{font-size:15px;font-weight:400;padding:5px 0;margin:0 0 10px 0}
 .block .jqplot-target{margin-top:40px}
-.block .jqplot-table-legend{border-width:0;color:inherit;font-size:15px;top:-40px!important;right:0;left:auto!important}
+.block table.jqplot-table-legend{border-width:0;color:inherit;font-size:15px;top:-40px!important;right:0;left:auto!important}
 .layout-compact .layout-wrapper .layout-main{padding:75px 0 0 0}
 .layout-compact .layout-main .ui-tabmenu{padding:0;display:table;border:0}
 .layout-compact .layout-main .ui-tabmenu .ui-tabmenu-nav>.ui-tabmenuitem{margin:0;border-radius:0;border-bottom:2px solid #b1b1bc}
 .layout-compact .layout-main .ui-tabmenu .ui-tabmenu-nav>.ui-tabmenuitem>.ui-menuitem-link{min-width:3em;text-align:center;padding:7.5px 15px}
 .layout-compact .layout-main .ui-tabmenu .ui-tabmenu-nav>.ui-tabmenuitem.ui-state-hover{border-color:#9999a3;box-shadow:0 1px 0 rgba(0,0,0,.15);background-color:#b1b1bc}
 .layout-compact .layout-main .ui-tabmenu .ui-tabmenu-nav>.ui-tabmenuitem.ui-state-active{border-bottom-color:#525156}
+.layout-compact .layout-main .ui-tabs{padding:0;border:0}
+.layout-compact .layout-main .ui-tabs ul.ui-tabs-nav{display:table}
+.layout-compact .layout-main .ui-tabs ul.ui-tabs-nav>li{margin:0;border-radius:0;border-bottom:2px solid #b1b1bc}
+.layout-compact .layout-main .ui-tabs ul.ui-tabs-nav>li>a{min-width:3em;text-align:center;padding:7.5px 15px}
+.layout-compact .layout-main .ui-tabs ul.ui-tabs-nav>li.ui-state-hover{border-color:#9999a3;box-shadow:0 1px 0 rgba(0,0,0,.15);background-color:#b1b1bc}
+.layout-compact .layout-main .ui-tabs ul.ui-tabs-nav>li.ui-state-active{border-bottom-color:#525156}
+.layout-compact .layout-main .jqplot-highlighter-tooltip{padding:.5em 1em;font-size:12px;background-color:#7c7c84;color:#fff;border:0;border-radius:5px}
 .layout-compact .layout-main .jqplot-x2axis-label,.layout-compact .layout-main .jqplot-xaxis-label,.layout-compact .layout-main .jqplot-y2axis-label,.layout-compact .layout-main .jqplot-yaxis-label{color:#757575}
 .layout-compact .layout-main .ui-button{display:inline-block;overflow:visible;height:30px;margin:0;border:1px solid #b1b1bc;border-radius:3px;padding:0 15px;box-shadow:0 1px 0 rgba(0,0,0,.1);font:inherit;line-height:calc(30px - 2px);-webkit-font-smoothing:antialiased;cursor:pointer;text-align:center;text-decoration:none;text-transform:none;white-space:nowrap;background-color:#e4e4ea}
 .layout-compact .layout-main .ui-button .ui-icon{color:#000}

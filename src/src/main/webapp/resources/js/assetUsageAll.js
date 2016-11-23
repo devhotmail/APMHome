@@ -56,6 +56,9 @@
       location: 'ne',
       renderer: $.jqplot.EnhancedPieLegendRenderer
     },
+    highlighter: {
+      show: true
+    },
     axes: {
       xaxis: {
         tickOptions: {
@@ -66,9 +69,7 @@
     },
     seriesDefaults: {
       pointLabels: {
-        show: true,
-        edgeTolerance: 10,
-        hideZeros: true,
+        show: false
       },
       rendererOptions: {
         highlightMouseOver: true,
@@ -78,18 +79,6 @@
         },
       }
     },
-    series: [
-      {
-        pointLabels: {
-          location: 'n',
-          ypadding: 10
-        }
-      }, {
-        pointLabels: {
-          location: 's',
-          ypadding: 10
-        }
-      }]
   };
 
   window.deviceStat = function() {
@@ -104,6 +93,11 @@
         borderColor: 'transparent',
         drawBorder: false,
         shadow: false
+      },
+      seriesDefaults: {
+        pointLabels: {
+          show: false
+        }
       },
       axesDefault: {
         tickOptions: {
