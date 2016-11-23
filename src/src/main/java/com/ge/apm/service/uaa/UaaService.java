@@ -135,6 +135,16 @@ public class UaaService {
         }
     }
     
+    public List<OrgInfo> getHospitalListBySiteId(int siteId){
+        OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
+        return orgInfoDao.getHospitalBySiteId(siteId);
+    }
+    
+    public List<OrgInfo> getOrgListByHospitalId(int hospitalId){
+        OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
+        return orgInfoDao.getByHospitalId(hospitalId);
+    }    
+    
     public TreeNode getOrgTree(int hospitalId){
         OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
         List<OrgInfo> orgList = orgInfoDao.getByHospitalId(hospitalId);

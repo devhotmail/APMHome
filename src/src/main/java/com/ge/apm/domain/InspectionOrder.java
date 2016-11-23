@@ -39,11 +39,17 @@ public class InspectionOrder implements Serializable {
     @Size(min = 1, max = 64)
     @Column(name = "name")
     private String name;
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "creator_id")
+    private int creatorId;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
-    @Column(name = "creator")
-    private String creator;
+    @Column(name = "creator_name")
+    private String creatorName;
     @Basic(optional = false)
     @NotNull
     @Column(name = "create_time")
@@ -96,19 +102,6 @@ public class InspectionOrder implements Serializable {
         this.id = id;
     }
 
-    public InspectionOrder(Integer id, int siteId, String name, String creator, Date createTime, int ownerId, String ownerName, int ownerOrgId, String ownerOrgName, boolean isFinished) {
-        this.id = id;
-        this.siteId = siteId;
-        this.name = name;
-        this.creator = creator;
-        this.createTime = createTime;
-        this.ownerId = ownerId;
-        this.ownerName = ownerName;
-        this.ownerOrgId = ownerOrgId;
-        this.ownerOrgName = ownerOrgName;
-        this.isFinished = isFinished;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -133,12 +126,20 @@ public class InspectionOrder implements Serializable {
         this.name = name;
     }
 
-    public String getCreator() {
-        return creator;
+    public int getCreatorId() {
+        return creatorId;
     }
 
-    public void setCreator(String creator) {
-        this.creator = creator;
+    public void setCreatorId(int creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 
     public Date getCreateTime() {

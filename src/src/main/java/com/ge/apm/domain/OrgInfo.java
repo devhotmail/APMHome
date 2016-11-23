@@ -53,16 +53,12 @@ public class OrgInfo implements Serializable {
     @Column(name = "hospital_id")
     private Integer hospitalId;
 
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "site_id")
+    private Integer siteId;
+    
     public OrgInfo() {
-    }
-
-    public OrgInfo(Integer id) {
-        this.id = id;
-    }
-
-    public OrgInfo(Integer id, String name) {
-        this.id = id;
-        this.name = name;
     }
 
     public Integer getId() {
@@ -118,6 +114,14 @@ public class OrgInfo implements Serializable {
 
     public void setHospitalId(Integer hospitalId) {
         this.hospitalId = hospitalId;
+    }
+
+    public Integer getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(Integer siteId) {
+        this.siteId = siteId;
     }
 
     @Override
