@@ -503,6 +503,12 @@ INSERT INTO "i18n_message" VALUES (5571,'label','preventiveMaintenanceAnalysis_t
 INSERT INTO "i18n_message" VALUES (5581,'label','preventiveMaintenanceAnalysis_planChart', 'PM统计表','Preventive Maintenance Schedule',null,-1);
 INSERT INTO "i18n_message" VALUES (5582,'label','preventiveMaintenanceAnalysis_predicationChart', '设备维护预测','Preventive Maintenance Forecast',null,-1);
 
+INSERT INTO "i18n_message" VALUES (5585,'label','preventiveMaintenanceAnalysis_year', '%d年','%dY',null,-1);
+INSERT INTO "i18n_message" VALUES (5586,'label','preventiveMaintenanceAnalysis_month', '%d月','%dM',null,-1);
+INSERT INTO "i18n_message" VALUES (5587,'label','preventiveMaintenanceAnalysis_allDevices', '全部设备','All',null,-1);
+INSERT INTO "i18n_message" VALUES (5588,'label','preventiveMaintenanceAnalysis_deviceName', '设备名称','Name',null,-1);
+
+
 -- Home pages start from 5601 to 5700
 
 -- Hospital head home page
