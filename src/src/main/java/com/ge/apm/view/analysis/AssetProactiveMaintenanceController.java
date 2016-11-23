@@ -3,6 +3,7 @@ package com.ge.apm.view.analysis;
 import com.ge.apm.view.sysutil.UserContextService;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.joda.time.Weeks;
 import org.postgresql.jdbc4.Jdbc4Array;
 import org.primefaces.model.timeline.TimelineEvent;
 import org.primefaces.model.timeline.TimelineModel;
@@ -31,7 +32,7 @@ public final class AssetProactiveMaintenanceController {
         this.hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
         this.parameters.put("hospitalId", this.hospitalId);
 
-        DateMidnight midnight = new DateMidnight().minusYears(1); // TODO: the minus is for DEMO
+        DateMidnight midnight = new DateMidnight().minusYears(0);
         this.today = midnight.toDateTime();
         this.firstDayOfThisYear = midnight.withDayOfYear(1).toDateTime();
         this.firstDayOfThisYearPlus1 = this.firstDayOfThisYear.plusYears(1);
@@ -60,6 +61,15 @@ public final class AssetProactiveMaintenanceController {
 
     // region Properties
 
+    public final List<String> getGeneratedMonth() {
+        List<String> list = new ArrayList<>();
+        list.add("全部设备"); // TODO: i18n
+        for (int i = 1; i <= 31; i++) {
+            list.add(Integer.toString(i));
+        }
+        return list;
+    }
+
     public final List<Object> getMaintenanceSchedule() {
         List<Map<String, Object>> list = this.query(SQL_LIST_MAINTENANCE_SCHEDULE);
 
@@ -73,6 +83,25 @@ public final class AssetProactiveMaintenanceController {
             }
         }
         return ret;
+    }
+
+    public final List<String> getGeneratedYear() {
+        List<String> list = new ArrayList<>();
+        list.add("设备名称");
+        for (int i = 0; i < 157; i++) {
+            DateTime current = this.firstDayOfThisYearMinus1.plusWeeks(i);
+            DateTime previous = current.minusWeeks(1);
+            if (current.getYear() != previous.getYear()) {
+                list.add(String.format("%d年", current.getYear()));
+            }
+            else if (current.getMonthOfYear() != previous.getMonthOfYear() && (current.getMonthOfYear() == 4 || current.getMonthOfYear() == 7 || current.getMonthOfYear() == 10)) {
+                list.add(String.format("%d月", current.getMonthOfYear()));
+            }
+            else {
+                list.add("");
+            }
+        }
+        return list;
     }
 
     public final List<Object> getMaintenanceForecast() {
@@ -91,7 +120,8 @@ public final class AssetProactiveMaintenanceController {
                 while (l1 >= 0 && array[l1].length() == 0) {
                     l1--;
                 }
-                int interval = l2 - l1;
+                int interval = Math.max(l2 - l1,
+                                        Weeks.weeksBetween(this.today, this.firstDayOfThisYearMinus1).getWeeks() - l2);
                 // forward
                 l2 += interval;
                 while (l2 < array.length) {
@@ -165,20 +195,19 @@ public final class AssetProactiveMaintenanceController {
             "        FROM maintenance_schedule " +
             "), " +
             "maintenance_schedule_time_list AS ( " +
-            "        SELECT DISTINCT start_time " +
-            "        FROM maintenance_schedule " +
+            "        SELECT * FROM generate_series(0, 156) AS temporary(week) " +
             "), " +
             "temporary AS ( " +
             "        SELECT maintenance_schedule_asset_list.asset_id AS asset_id, " +
-            "               maintenance_schedule_time_list.start_time AS start_time, " +
+            "               maintenance_schedule_time_list.week AS start_time, " +
             "               COALESCE(maintenance_schedule.hint, '') AS hint " +
             "        FROM maintenance_schedule_asset_list " +
             "        CROSS JOIN maintenance_schedule_time_list " +
             "        LEFT OUTER JOIN maintenance_schedule " +
             "        ON maintenance_schedule_asset_list.asset_id = maintenance_schedule.asset_id " +
-            "        AND maintenance_schedule_time_list.start_time = maintenance_schedule.start_time " +
+            "        AND maintenance_schedule_time_list.week = maintenance_schedule.start_time " +
             "        ORDER BY maintenance_schedule_asset_list.asset_id ASC, " +
-            "                 maintenance_schedule_time_list.start_time ASC " +
+            "                 maintenance_schedule_time_list.week ASC " +
             ") " +
             "SELECT array_prepend(text(asset.name), array_agg(temporary.hint)) AS scalar " +
             "FROM temporary," +
