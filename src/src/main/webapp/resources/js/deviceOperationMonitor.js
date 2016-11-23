@@ -253,6 +253,14 @@
     }, 0);
   }
 
+  window.topBarAllSkin = function() {
+
+  }
+
+  window.middleBarSkin = function() {
+
+  }
+
   // Responsive charts
   $(window).resize(function() {
     var widgets = PrimeFaces.widgets;
