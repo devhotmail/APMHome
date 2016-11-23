@@ -51,15 +51,25 @@
                 </div>-->
             </div>
             <p:separator/>
+
             <div class="ui-g-12">
                 <p:dataTable var="forecast"
                              value="#{assetProactiveMaintenanceController.maintenanceForecast}">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <ui:repeat var="mega"
+                                       value="#{assetProactiveMaintenanceController.megaColumns}">
+                                <p:column colspan="#{mega.span}"
+                                          headerText="#{mega.name}" />
+                            </ui:repeat>
+                        </p:row>
+                    </p:columnGroup>
                     <p:columns value="#{assetProactiveMaintenanceController.generatedYear}"
                                var="column"
                                columnIndexVar="colIndex">
-                        <f:facet name="header">
+                        <!--<f:facet name="header">
                             <h:outputText value="#{column}" />
-                        </f:facet>
+                        </f:facet>-->
                         <h:outputText value="#{colIndex == 0 ? forecast[colIndex] : ''}"
                                       styleClass="#{colIndex == 0 ? '' : forecast[colIndex]}"/>
                     </p:columns>

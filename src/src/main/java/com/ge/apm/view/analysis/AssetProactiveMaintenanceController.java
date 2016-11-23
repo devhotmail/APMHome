@@ -10,6 +10,7 @@ import org.primefaces.model.timeline.TimelineModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webapp.framework.dao.NativeSqlUtil;
+import webapp.framework.web.WebUtil;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -63,7 +64,7 @@ public final class AssetProactiveMaintenanceController {
 
     public final List<String> getGeneratedMonth() {
         List<String> list = new ArrayList<>();
-        list.add("全部设备"); // TODO: i18n
+        list.add(WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices"));
         for (int i = 1; i <= 31; i++) {
             list.add(Integer.toString(i));
         }
@@ -87,20 +88,64 @@ public final class AssetProactiveMaintenanceController {
 
     public final List<String> getGeneratedYear() {
         List<String> list = new ArrayList<>();
-        list.add("设备名称");
+        list.add(WebUtil.getMessage("preventiveMaintenanceAnalysis_deviceName"));
         for (int i = 0; i < 157; i++) {
             DateTime current = this.firstDayOfThisYearMinus1.plusWeeks(i);
             DateTime previous = current.minusWeeks(1);
             if (current.getYear() != previous.getYear()) {
-                list.add(String.format("%d年", current.getYear()));
+                list.add(String.format(WebUtil.getMessage("preventiveMaintenanceAnalysis_year"), current.getYear()));
             }
             else if (current.getMonthOfYear() != previous.getMonthOfYear() && (current.getMonthOfYear() == 4 || current.getMonthOfYear() == 7 || current.getMonthOfYear() == 10)) {
-                list.add(String.format("%d月", current.getMonthOfYear()));
+                list.add(String.format(WebUtil.getMessage("preventiveMaintenanceAnalysis_month"), current.getMonthOfYear()));
             }
             else {
                 list.add("");
             }
         }
+        return list;
+    }
+
+    public final class MegaColumn {
+        private String name;
+        private int span;
+
+        public MegaColumn(String name, int span) {
+            this.name = name;
+            this.span = span;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public int getSpan() {
+            return this.span;
+        }
+    }
+
+    public final List<MegaColumn> getMegaColumns() {
+        List<MegaColumn> list = new ArrayList<>();
+        int mega = 1;
+        String last = WebUtil.getMessage("preventiveMaintenanceAnalysis_deviceName");
+        for (int i = 0; i < 157; i++) {
+            DateTime current = this.firstDayOfThisYearMinus1.plusWeeks(i);
+            DateTime previous = current.minusWeeks(1);
+            if (current.getYear() != previous.getYear()) {
+                list.add(new MegaColumn(last, mega));
+                mega = 1;
+                last = String.format(WebUtil.getMessage("preventiveMaintenanceAnalysis_year"), current.getYear());
+
+            }
+            else if (current.getMonthOfYear() != previous.getMonthOfYear() && (current.getMonthOfYear() == 4 || current.getMonthOfYear() == 7 || current.getMonthOfYear() == 10)) {
+                list.add(new MegaColumn(last, mega));
+                mega = 1;
+                last = String.format(WebUtil.getMessage("preventiveMaintenanceAnalysis_month"), current.getMonthOfYear());
+            }
+            else {
+                mega++;
+            }
+        }
+        list.add(new MegaColumn(last, mega));
         return list;
     }
 
