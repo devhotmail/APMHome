@@ -154,7 +154,7 @@ public class UaaService {
         
         buildOrgTree(fullOrgList, root);
         
-        return null;
+        return treeRoot;
     }
     
     private void buildOrgTree(List<OrgInfo> orgList, TreeNode root){

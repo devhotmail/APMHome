@@ -43,7 +43,7 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
 
     @Override
     protected Page<OrgInfo> loadData(PageRequest pageRequest) {
-        return dao.getByHospitalId(pageRequest, hospitalId);
+        return dao.getBySiteId(pageRequest, hospitalId);
     }
 
     public List<OrgInfo> getHospitalDeptList() {

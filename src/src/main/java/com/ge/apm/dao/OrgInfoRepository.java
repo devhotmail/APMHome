@@ -22,5 +22,6 @@ public interface OrgInfoRepository extends GenericRepository<OrgInfo> {
     public List<OrgInfo> getFullOrgListBySiteId(int siteId);
     
     public Page<OrgInfo> getByHospitalId(Pageable pageRequest, int hospitalId);
+    public Page<OrgInfo> getBySiteId(Pageable pageRequest, int siteId);
     
 }
