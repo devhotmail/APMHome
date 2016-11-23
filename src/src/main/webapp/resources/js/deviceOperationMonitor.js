@@ -1,4 +1,6 @@
 (function() {
+  var BODY_PART_COLORS = ["rgba(96, 165, 215, 1)", "rgba(246, 162, 70, 1)", "rgba(99, 187, 108, 1)", "rgba(238, 126, 175, 1)", "rgba(176, 143, 56, 1)"];
+  var BODY_PART_COLORS_REVERTED = BODY_PART_COLORS.slice(0).reverse();
 
   function seriesSum(data) {
     return data.reduce(function(sum, serie) {
@@ -69,8 +71,17 @@
           }
         },
       },
-      seriesColors: BODY_PART_COLORS
+      seriesColors: BODY_PART_COLORS_REVERTED
     };
+  }
+
+  function flipLegendRows(name) {
+    var chart = PrimeFaces.widgets[name];
+    chart.jq.find('.jqplot-table-legend tbody').each(function(elem, index) {
+      var arr = $.makeArray($("tr", this).detach());
+      arr.reverse();
+      $(this).append(arr);
+    });
   }
 
   var base = {
@@ -124,8 +135,6 @@
       show: false
     }
   };
-
-  var BODY_PART_COLORS = ['rgba(176, 143, 56, 1)', 'rgba(238, 126, 175, 1)', 'rgba(99, 187, 108, 1)', 'rgba(246, 162, 70, 1)', 'rgba(96, 165, 215, 1)'];
 
   window.topBarSkin = function() {
     var deviceSum = seriesSum(this.cfg.data);
@@ -226,16 +235,22 @@
           },
         }
       },
-      seriesColors: BODY_PART_COLORS
+      seriesColors: BODY_PART_COLORS_REVERTED
     });
   }
 
   window.bottomLeftBarSkin = function() {
     $.extend(true/*recursive*/, this.cfg, verticalStackConfig(this.cfg.data));
+    setTimeout(function() {
+      flipLegendRows('bottomLeftBar');
+    }, 0);
   }
 
   window.bottomRightBarSkin = function() {
     $.extend(true/*recursive*/, this.cfg, verticalStackConfig(this.cfg.data));
+    setTimeout(function() {
+      flipLegendRows('bottomRightBar');
+    }, 0);
   }
 
   // Responsive charts
