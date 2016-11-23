@@ -2,21 +2,13 @@ package com.ge.apm.view.pm;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-
 import org.primefaces.event.FileUploadEvent;
-
-import com.ge.apm.dao.AssetFileAttachmentRepository;
 import com.ge.apm.dao.FileUploadedRepository;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.PmOrderRepository;
 import com.ge.apm.dao.UserAccountRepository;
-import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.FileUploaded;
 import com.ge.apm.domain.OrgInfo;
@@ -24,10 +16,7 @@ import com.ge.apm.domain.PmOrder;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
-import com.ge.apm.view.asset.AssetInfoController;
 import com.ge.apm.view.sysutil.UserContextService;
-
-import webapp.framework.dao.SearchFilter;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
@@ -36,65 +25,37 @@ import webapp.framework.web.mvc.JpaCRUDController;
 @ViewScoped
 public class PmOrderController extends JpaCRUDController<PmOrder> {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	PmOrderRepository dao = null;
+	private PmOrderRepository dao = null;
     
-    UserAccount currentUser;
+    private UserAccount currentUser;
     
-    private List<AssetFileAttachment> attachements ;
+    private List<FileUploaded> attachements ;
     
-    //AssetFileAttachmentRepository attachDao = null;
-
-    //@ManagedProperty("{attachmentFileService}")
     private AttachmentFileService fileService;
     
     private UserAccount owner;
     
     private List<UserAccount> ownerList;
     
-    UserAccountRepository userDao ;
+    private UserAccountRepository userDao ;
     
     private UaaService uuaService;
     
-    FileUploadedRepository fileUploadDao;
+    private FileUploadedRepository fileUploadedRepository;
     
     @Override
     protected void init() {
 		this.filterByHospital = true;
 		this.filterBySite = true;
 		dao = WebUtil.getBean(PmOrderRepository.class);
-//		attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
 		currentUser = UserContextService.getCurrentUserAccount();
 		fileService = WebUtil.getBean(AttachmentFileService.class);
 		userDao = WebUtil.getBean(UserAccountRepository.class);
-		fileUploadDao = WebUtil.getBean(FileUploadedRepository.class);
+		fileUploadedRepository = WebUtil.getBean(FileUploadedRepository.class);
 		uuaService = (UaaService) WebUtil.getBean(UaaService.class);
-		attachements = new ArrayList<AssetFileAttachment>();
-//        String actionName = WebUtil.getRequestParameter("actionName");
-//        if ("Create".equalsIgnoreCase(actionName)) {
-//            try {
-//                prepareCreate();
-//            } catch (InstantiationException | IllegalAccessException ex) {
-//                Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        } else if ("View".equalsIgnoreCase(actionName)) {
-//            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-//            owner = userDao.findById(selected.getOwnerId());
-//            prepareView();
-//        } else if ("Edit".equalsIgnoreCase(actionName)) {
-//            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-//            owner = userDao.findById(selected.getOwnerId());
-//            prepareEdit();
-//        } else if ("Delete".equalsIgnoreCase(actionName)) {
-//            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-//            owner = userDao.findById(selected.getOwnerId());
-//            prepareDelete();
-//        }
-
+		attachements = new ArrayList<FileUploaded>();
         ownerList = uuaService.getUserList(currentUser.getHospitalId());
     }
 
@@ -139,11 +100,12 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
    
     @Override
     public void prepareEdit(){
-    	System.out.println("1prepareEdit ......id is "+selected);
     	owner = userDao.findById(selected.getOwnerId());
-    	System.out.println("2prepareEdit ......id is "+selected);
+    	FileUploaded fu =  fileUploadedRepository.findById(this.selected.getFileId());
+		if(fu != null){
+			attachements.add(fu);
+		}
     	super.prepareEdit();
-    	System.out.println("3prepareEdit ......id is "+selected);
     }
     
     @Override
@@ -191,19 +153,36 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         return result;
     }*/
     
-    public List<AssetFileAttachment> getReportList(Integer pmOrderId) {
-//    	List<AssetFileAttachment> result = new ArrayList<AssetFileAttachment>();
+/*    public List<AssetFileAttachment> getReportList(Integer pmOrderId) {
     	if(pmOrderId != null && pmOrderId > 0){
     		PmOrder pmOrder = dao.findById(pmOrderId);
     		if(pmOrder.getFileId() == null || pmOrder.getFileId() <= 0){
     			return attachements;
     		}
-    		FileUploaded fu =  fileUploadDao.findById(pmOrder.getFileId());
+    		FileUploaded fu =  fileUploadedRepository.findById(pmOrder.getFileId());
     		if(fu != null){
     			AssetFileAttachment aft = new AssetFileAttachment();
     			aft.setFileId(fu.getId());
     			aft.setName(fu.getFileName());
     			attachements.add(aft);
+    		}
+    		return attachements;
+    	}
+    	return attachements;
+    }*/
+    
+    public List<FileUploaded> getReportList(Integer pmOrderId) {
+    	if(pmOrderId != null && pmOrderId > 0){
+    		PmOrder pmOrder = dao.findById(pmOrderId);
+    		if(pmOrder.getFileId() == null || pmOrder.getFileId() <= 0){
+    			return attachements;
+    		}
+    		FileUploaded fu =  fileUploadedRepository.findById(pmOrder.getFileId());
+    		if(fu != null){
+//    			AssetFileAttachment aft = new AssetFileAttachment();
+//    			aft.setFileId(fu.getId());
+//    			aft.setName(fu.getFileName());
+    			attachements.add(fu);
     		}
     		return attachements;
     	}
@@ -223,9 +202,9 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     	if(fileId == null || fileId <= 0){
     		return;
     	}
-        for (AssetFileAttachment item : attachements) {
-            if (fileId.equals(item.getFileId())) {
- //               fileService.deleteAttachment(item.getFileId());
+        for (FileUploaded item : attachements) {
+            if (fileId.equals(item.getId())) {
+                fileService.deleteAttachment(item.getId());
                 attachements.remove(item);
                 break;
             }
@@ -233,9 +212,9 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     }
     
     public void handleFileUpload(FileUploadEvent event) {
-        AssetFileAttachment attach = new AssetFileAttachment();
+    	FileUploaded attach = new FileUploaded();
         String fileName = fileService.getFileName(event.getFile());
-        attach.setName(fileName);
+        attach.setFileName(fileName);
         Integer uploadFileId = fileService.uploadFile(event.getFile());
         if(uploadFileId>0){
         	attach.setId(uploadFileId);
@@ -272,6 +251,14 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 
 	public void setOwnerList(List<UserAccount> ownerList) {
 		this.ownerList = ownerList;
+	}
+
+	public List<FileUploaded> getAttachements() {
+		return attachements;
+	}
+
+	public void setAttachements(List<FileUploaded> attachements) {
+		this.attachements = attachements;
 	}
     
 

@@ -71,15 +71,15 @@
                         </h:panelGroup>
 
                         <h:panelGroup>
-                            <p:dataList id="pictureList" value="#{pmOrderController.getReportList(pmOrderController.selected.id)}"  var="fileitem"  type="definition"
+                            <p:dataList id="pictureList" value="#{pmOrderController.attachements}"  var="fileitem"  type="definition"
                                     emptyMessage="#{msg.noRecordFound}">
                                 <f:facet name="header">#{msg.attachmentUrl}</f:facet>
-                                    #{fileitem.name}
-                                <p:commandButton immediate="true" actionListener="#{pmOrderController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
+                                    #{fileitem.fileName}
+                                <p:commandButton process="@this"  immediate="true" actionListener="#{pmOrderController.removeAttachment(fileitem.id)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
                             </p:dataList>
-                            <p:fileUpload id="type5" fileUploadListener="#{pmOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                            <p:fileUpload fileUploadListener="#{pmOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
                                           label="#{msg.SelectFile}" uploadLabel="#{msg.Upload}" cancelLabel="#{msg.Cancel}"
-                                          multiple="true"  sizeLimit="1000000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="pictureList"/>
+                                          multiple="true"  sizeLimit="1000000" fileLimit="1" allowTypes="*.*" update="pictureList"/>
                         </h:panelGroup>
                     </p:panelGrid>
 
