@@ -233,6 +233,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         areaModel.setTitle(title);
         areaModel.setStacked(stacked);
         areaModel.setLegendPosition(legendPosition);
+        areaModel.setExtender(skin);
         areaModel.addSeries(initChartSeries(new LineChartSeries(), OTHER, true, table.row(OTHER)));
         areaModel.addSeries(initChartSeries(new LineChartSeries(), LIMBS, true, table.row(LIMBS)));
         areaModel.addSeries(initChartSeries(new LineChartSeries(), ABDOMEN, true, table.row(ABDOMEN)));
