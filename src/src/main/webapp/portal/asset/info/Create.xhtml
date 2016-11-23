@@ -111,7 +111,7 @@
                     <h:panelGroup>
                         <label class="label">#{msg.clinicalDeptName}</label>
                         <!--<p:inputText id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptName}"/>-->
-                        <p:selectOneMenu id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptId}">
+                        <p:selectOneMenu id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptId}" required="true" requiredMessage="#{msg.clinicalDeptName} #{msg.ValidationRequire}">
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{assetInfoController.getClinicalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                         </p:selectOneMenu>
