@@ -15,6 +15,7 @@ import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
 import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import webapp.framework.web.WebUtil;
 
@@ -68,15 +69,24 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
     
     public void buildOrdTree(){
         //orgTree = uaaService.getOrgTree(this.hospitalId, true);
-        orgTree = uaaService.getFullOrgTreeBySiteId(this.siteId);
+        if(selected!=null)
+            orgTree = uaaService.getFullOrgTreeBySiteId(this.siteId, selected.getId());
+        else
+            orgTree = uaaService.getFullOrgTreeBySiteId(this.siteId, null);
+        
+        try{
+            this.selectedNode = (TreeNode)orgTree.getData();
+        }
+        catch(Exception ex){
+        }
     }
 
     public List<OrgInfo> getHospitalListBySiteId(){
         return uaaService.getHospitalListBySiteId(siteId);
     }
     
-    private TreeNode orgTree;
-    public TreeNode getOrgTree(){
+    private DefaultTreeNode orgTree;
+    public DefaultTreeNode getOrgTree(){
         return orgTree;
     }
     private TreeNode selectedNode;
@@ -88,14 +98,45 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
         this.selectedNode = selectedNode;
     }
     
+    public void prepareCreateHospital(){
+        OrgInfo org = new OrgInfo();
+        org.setSiteId(siteId);
+        this.selected = org;
+    }
+    
+    public void prepareCreateDepartment(){
+        OrgInfo hospital = null;
+        OrgInfo org = this.selected;
+        while( org!=null) {
+            hospital = org;
+            org = org.getParentOrg();
+        }
+        
+        OrgInfo newOrg = new OrgInfo();
+        newOrg.setSiteId(siteId);
+        newOrg.setHospitalId(hospitalId);
+        newOrg.setParentOrg(hospital);
+        
+        this.selected = newOrg;
+    }
+
+    public void saveSelectedOrg(){
+        super.save();
+        buildOrdTree();
+    }
+    
+    public void deleteSelectedOrg(){
+        super.delete();
+        buildOrdTree();
+    }
 
     public void onSelectTreeNode(NodeSelectEvent event){
         TreeNode node = event.getTreeNode();
-        node.setExpanded(true);
+        node.setExpanded(!node.isExpanded());
         
-        OrgInfo selectedOrg = (OrgInfo)node.getData();
-        this.siteId = selectedOrg.getSiteId();
-        this.hospitalId = selectedOrg.getHospitalId();
+        selected = (OrgInfo)node.getData();
+        this.siteId = selected.getSiteId();
+        this.hospitalId = selected.getHospitalId();
     }
  
     @Override

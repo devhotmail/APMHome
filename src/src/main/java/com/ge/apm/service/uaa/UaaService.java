@@ -104,7 +104,6 @@ public class UaaService {
             Hibernate.initialize(user.getUserRoleList());
         }
         catch(Exception ex){
-            System.err.println("********* loadUserWithUserRoles failed ************");
             logger.error(ex.getMessage(), ex);
         }
         
@@ -143,28 +142,29 @@ public class UaaService {
     public List<OrgInfo> getOrgListByHospitalId(int hospitalId){
         OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
         return orgInfoDao.getByHospitalId(hospitalId);
-    }    
+    }
 
-    public TreeNode getFullOrgTreeBySiteId(int siteId){
+    public DefaultTreeNode getFullOrgTreeBySiteId(int siteId, Integer selectedOrgId){
         OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
         List<OrgInfo> fullOrgList = orgInfoDao.getFullOrgListBySiteId(siteId);
 
-        TreeNode root = new DefaultTreeNode("Root", null);
-        TreeNode treeRoot = root;
-        
-        buildOrgTree(fullOrgList, root);
-        
-        return treeRoot;
+        DefaultTreeNode root = new DefaultTreeNode("Root", null);
+        buildOrgTree(fullOrgList, root, selectedOrgId);
+        return root;
     }
     
-    private void buildOrgTree(List<OrgInfo> orgList, TreeNode root){
+    private void buildOrgTree(List<OrgInfo> orgList, DefaultTreeNode root, Integer selectedOrgId){
         //first create all nodes
+        TreeNode selectedNode = null;
         Map<Integer, TreeNode> treeMap = new HashMap<>();
         for(OrgInfo org: orgList){
             TreeNode node;
             node = new DefaultTreeNode("org", org, root);
             node.setRowKey("org_"+org.getId());
             treeMap.put(org.getId(), node);
+            
+            if(org.getId().equals(selectedOrgId))
+                selectedNode = node;
         }
 
         //then update node's parent by org's parentOrg
@@ -179,31 +179,45 @@ public class UaaService {
             }
         }
 
+        if(selectedNode!=null){
+            TreeNode node = selectedNode.getParent();
+            while(node!=null) {
+                node.setExpanded(true);
+                node = node.getParent();
+            }
+        }
+        
+        //store selectedNode into root.data property
+        if(selectedNode!=null) {
+            selectedNode.setSelected(true);
+            
+            root.setData(selectedNode);
+        }        
     }
     
-    public TreeNode getOrgTree(int hospitalId, boolean showHospitalAsRoot){
+    public DefaultTreeNode getOrgTree(int hospitalId, boolean showHospitalAsRoot, Integer selectedOrgId){
         OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
         List<OrgInfo> orgList = orgInfoDao.getByHospitalId(hospitalId);
 
-        TreeNode root = new DefaultTreeNode("Root", null);
-        TreeNode treeRoot = root;
+        DefaultTreeNode root = new DefaultTreeNode("Root", null);
+        DefaultTreeNode treeRoot = root;
         
         if(showHospitalAsRoot){
             OrgInfo hospitalInfo = orgInfoDao.findById(hospitalId);
             if(hospitalInfo!=null){
-                TreeNode node = new DefaultTreeNode("org", hospitalInfo, root);
+                DefaultTreeNode node = new DefaultTreeNode("org", hospitalInfo, root);
                 node.setRowKey("org_"+hospitalInfo.getId());
                 root = node;
             }
         }
 
-        buildOrgTree(orgList, root);
+        buildOrgTree(orgList, root, selectedOrgId);
         
         return treeRoot;
     }
     
-    public TreeNode getOrgTree(int hospitalId){
-        return getOrgTree(hospitalId, false);
+    public DefaultTreeNode getOrgTree(int hospitalId){
+        return getOrgTree(hospitalId, false, null);
     }
 
     private void addAssetToOrgNode(TreeNode node, Map<Integer, List<AssetInfo>> assetMap){

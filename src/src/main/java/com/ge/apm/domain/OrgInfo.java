@@ -48,8 +48,6 @@ public class OrgInfo implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     private OrgInfo parentOrg;
 
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "hospital_id")
     private Integer hospitalId;
 
