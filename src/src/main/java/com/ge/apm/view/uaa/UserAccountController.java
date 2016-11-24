@@ -7,10 +7,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.GenericCRUDController;
 import com.ge.apm.dao.UserAccountRepository;
+import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.UserRole;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -24,6 +29,16 @@ public class UserAccountController extends GenericCRUDController<UserAccount> {
     protected void init() {
         uaaService = WebUtil.getBean(UaaService.class);
         dao = WebUtil.getBean(UserAccountRepository.class);
+        
+        orgTree = uaaService.getFullOrgTreeBySiteId(UserContextService.getSiteId(), UserContextService.getCurrentUserAccount().getOrgInfoId());
+        try{
+            DefaultTreeNode selectedNode = (DefaultTreeNode)orgTree.getData();
+            this.selectedOrg = (OrgInfo) selectedNode.getData();
+            System.out.println("******************* selectedOrg="+selectedOrg);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -33,10 +48,10 @@ public class UserAccountController extends GenericCRUDController<UserAccount> {
 
     @Override
     protected Page<UserAccount> loadData(PageRequest pageRequest) {
-        if (this.searchFilters == null) {
-            return dao.findAll(pageRequest);
+        if ( selectedOrg == null) {
+            return dao.getBySiteId(pageRequest, UserContextService.getSiteId());
         } else {
-            return dao.findBySearchFilter(this.searchFilters, pageRequest);
+            return dao.getByOrgInfoId(pageRequest, selectedOrg.getId());
         }
     }
 
@@ -88,6 +103,31 @@ public class UserAccountController extends GenericCRUDController<UserAccount> {
         uaaService.setUserRoles(selected, assignedRoles);
         WebUtil.addSuccessMessage(WebUtil.getMessage("UserRole") + WebUtil.getMessage("Updated"));
     }
-    
+ 
+    private OrgInfo selectedOrg = null;
+    public OrgInfo getSelectedOrg() {
+        return selectedOrg;
+    }
+ 
+    private TreeNode orgTree;
+    public TreeNode getOrgTree() {
+        return orgTree;
+    }
 
+    public void onSelectTreeNode(NodeSelectEvent event){
+        TreeNode node = event.getTreeNode();
+        //node.setExpanded(!node.isExpanded());
+        
+        selectedOrg = (OrgInfo)node.getData();
+    }
+    
+    @Override
+    public void prepareCreate() throws InstantiationException, IllegalAccessException{
+        super.prepareCreate();
+        
+        selected.setSiteId(selectedOrg.getSiteId());
+        selected.setHospitalId(selectedOrg.getHospitalId());
+        selected.setOrgInfoId(selectedOrg.getId());
+        
+    }
 }

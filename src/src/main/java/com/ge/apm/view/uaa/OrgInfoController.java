@@ -7,12 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.OrgInfoRepository;
-import com.ge.apm.domain.AssetInfo;
-import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.uaa.UaaService;
-import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -132,7 +129,7 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
 
     public void onSelectTreeNode(NodeSelectEvent event){
         TreeNode node = event.getTreeNode();
-        node.setExpanded(!node.isExpanded());
+        //node.setExpanded(!node.isExpanded());
         
         selected = (OrgInfo)node.getData();
         this.siteId = selected.getSiteId();
