@@ -41,7 +41,7 @@ public final class AssetMaintenanceController {
     @PostConstruct
     public final void init() {
         DateTime today = new DateTime();
-        this.setStartDate(today.minusYears(2).toDate());
+        this.setStartDate(today.minusYears(1).toDate());
         this.setEndDate(today.toDate());
 
         this.hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
@@ -69,10 +69,6 @@ public final class AssetMaintenanceController {
         this.parameters.put("startDate", value);
     }
 
-    public final void onStartDateSelect(SelectEvent event) {
-        this.setStartDate((Date)event.getObject());
-    }
-
     private Date endDate;
 
     public final Date getEndDate() {
@@ -82,10 +78,6 @@ public final class AssetMaintenanceController {
     public final void setEndDate(Date value) {
         this.endDate = value;
         this.parameters.put("endDate", value);
-    }
-
-    public final void onEndDateSelect(SelectEvent event) {
-        this.setEndDate((Date)event.getObject());
     }
 
     private int assetId;
@@ -209,6 +201,7 @@ public final class AssetMaintenanceController {
             ChartSeries series = new ChartSeries();
             String key = WebUtil.getFieldValueMessage("woSteps", Integer.toString(i + 1));
             int value = ext[i];
+            /*
             if (raw[i] != 0) {
                 if (value < 60) {
                     key = String.format(WebUtil.getMessage("maintenanceAnalysis_timeChart_minute"), key, value);
@@ -217,6 +210,7 @@ public final class AssetMaintenanceController {
                     key = String.format(WebUtil.getMessage("maintenanceAnalysis_timeChart_hour"), key, value/(double)60);
                 }
             }
+            */
             series.set(key, value);
             series.setLabel(key);
             chart.addSeries(series);
@@ -225,7 +219,7 @@ public final class AssetMaintenanceController {
                 builder.append(",");
             }
             if (raw[i] == 0) {
-                builder.append("CCCCCC");
+                builder.append("ffffff");
             }
             else {
                 builder.append(COLORS[i % 6]);

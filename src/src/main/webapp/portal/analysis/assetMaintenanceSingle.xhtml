@@ -42,20 +42,14 @@
         </div>
 
         <div class="ui-g-12">
-            <p:calendar value="#{assetMaintenanceController.startDate}">
-                <p:ajax event="dateSelect"
-                        listener="#{assetMaintenanceController.onStartDateSelect}"
-                        showOn="button"/>
-            </p:calendar>
-            <p class="i18n">TO</p>
-            <p:calendar value="#{assetMaintenanceController.endDate}">
-                <p:ajax event="dateSelect"
-                        listener="#{assetMaintenanceController.onEndDateSelect}"
-                        showOn="button"/>
-            </p:calendar>
-            <p:commandButton value="#{msg.Refresh}"
-                             update="maintenanceR11 maintenanceR12 maintenanceR15 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR611 maintenanceR612 maintenanceR613 maintenanceR614 maintenanceR615 maintenanceR62 maintenanceR631 maintenanceR632 maintenanceR633 maintenanceR634 maintenanceR635 maintenanceR64 maintenanceR651 maintenanceR652 maintenanceR653 maintenanceR654 maintenanceR655 maintenanceR66 "
-                             actionListener="#{assetMaintenanceController.submit}"/>
+            <h:form>
+                <p:calendar value="#{assetMaintenanceController.startDate}" showOn="button"/>
+                <p class="i18n">TO</p>
+                <p:calendar value="#{assetMaintenanceController.endDate}" showOn="button"/>
+                <p:commandButton value="#{msg.Refresh}"
+                                 update="maintenanceR11 maintenanceR12 maintenanceR15 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR611 maintenanceR612 maintenanceR613 maintenanceR614 maintenanceR615 maintenanceR62 maintenanceR631 maintenanceR632 maintenanceR633 maintenanceR634 maintenanceR635 maintenanceR64 maintenanceR651 maintenanceR652 maintenanceR653 maintenanceR654 maintenanceR655 maintenanceR66 "
+                                 actionListener="#{assetMaintenanceController.submit}"/>
+            </h:form>
         </div>
 
         <div class="ui-g">

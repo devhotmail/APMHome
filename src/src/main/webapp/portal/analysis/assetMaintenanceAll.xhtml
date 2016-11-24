@@ -48,19 +48,14 @@
             </div>
 
             <div class="ui-g-12">
-                <div class="calendar-range-picker flex flex--row flex--center flex--justify">
-                    <p:calendar id="start_date_button" value="#{assetMaintenanceController.startDate}" showOn="button">
-                        <p:ajax event="dateSelect" listener="#{assetMaintenanceController.onStartDateSelect}"
-                                showOn="button"/>
-                    </p:calendar>
-
-                    <label>到</label>
-                    <p:calendar id="end_date_button" value="#{assetMaintenanceController.endDate}" showOn="button">
-                        <p:ajax event="dateSelect" listener="#{assetMaintenanceController.onEndDateSelect}"
-                                showOn="button"/>
-                    </p:calendar>
-                    <p:commandButton value="确定" update="maintenanceR11 maintenanceR12 maintenanceR13 maintenanceR14 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR5" actionListener="#{assetMaintenanceController.submit}"/>
-                </div>
+                <h:form>
+                    <div class="calendar-range-picker flex flex--row flex--center flex--justify">
+                        <p:calendar id="start_date_button" value="#{assetMaintenanceController.startDate}" showOn="button"/>
+                        <label>到</label>
+                        <p:calendar id="end_date_button" value="#{assetMaintenanceController.endDate}" showOn="button"/>
+                        <p:commandButton value="确定" update="maintenanceR11 maintenanceR12 maintenanceR13 maintenanceR14 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR5" actionListener="#{assetMaintenanceController.submit}"/>
+                    </div>
+                </h:form>
             </div>
 
             <div class="ui-g-12">
