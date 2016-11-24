@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -36,8 +37,13 @@ public class InspectionOrderDetail implements Serializable {
     private int deptId;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 64)
     @Column(name = "dept_name")
-    private int deptName;
+    private String deptName;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "order_id")
+    private int orderId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "item_id")
@@ -61,16 +67,6 @@ public class InspectionOrderDetail implements Serializable {
 
     public InspectionOrderDetail(Integer id) {
         this.id = id;
-    }
-
-    public InspectionOrderDetail(Integer id, int siteId, int deptId, int deptName, int itemId, int itemName, boolean isPassed) {
-        this.id = id;
-        this.siteId = siteId;
-        this.deptId = deptId;
-        this.deptName = deptName;
-        this.itemId = itemId;
-        this.itemName = itemName;
-        this.isPassed = isPassed;
     }
 
     public Integer getId() {
@@ -97,12 +93,20 @@ public class InspectionOrderDetail implements Serializable {
         this.deptId = deptId;
     }
 
-    public int getDeptName() {
+    public String getDeptName() {
         return deptName;
     }
 
-    public void setDeptName(int deptName) {
+    public void setDeptName(String deptName) {
         this.deptName = deptName;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     public int getItemId() {
