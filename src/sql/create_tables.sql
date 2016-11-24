@@ -222,9 +222,9 @@ id serial not null,
 site_id int not null,
 order_id int not null,
 dept_id int not null,
-dept_name int not null,
+dept_name varchar(64) not null,
 item_id int not null,
-item_name int not null,
+item_name varchar(64) not null,
 is_passed bool not null);
 
 
@@ -306,7 +306,8 @@ owner_name varchar(16) not null,
 start_time timestamp,
 end_time timestamp,
 description varchar(128),
-attachment_url varchar(128) );
+attachment_url varchar(128),
+file_id int );
 
 
 create table work_order_step_detail(

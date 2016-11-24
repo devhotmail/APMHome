@@ -411,6 +411,8 @@ INSERT INTO "i18n_message" VALUES (3010,'message','ProcessWorkOrder', '处理工
 INSERT INTO "i18n_message" VALUES (3011,'message','shouldEarly', '{0}应该早于{1}!','{0} should be earlier than {1}!',null,-1);
 INSERT INTO "i18n_message" VALUES (3012,'message','shouldLate', '{0}应该晚于{1}!','{0} should be later than {1}!',null,-1);
 INSERT INTO "i18n_message" VALUES (3013,'message','todayDate', '当前日期',' current date',null,-1);
+INSERT INTO "i18n_message" VALUES (3014,'message','Hospital', '院区','Hospital',null,-1);
+INSERT INTO "i18n_message" VALUES (3015,'message','Department', '科室','Department',null,-1);
 
 
 -- Chart label/lengend （id from 5000 to 5500）
