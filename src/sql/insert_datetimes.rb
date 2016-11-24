@@ -187,7 +187,8 @@ for i in 0..totalrecords
 
   randtime = (duration * rand).to_i + stime.to_i
   start_time = Time.at(randtime).strftime("%F %T")
-  tmp = [600, 1900, 2600, 3700, 6000, 12000, 70000, 86300, 90000, nil].sample
+  durations = [600, 1900, 2600, 3700, 6000, 12000, 70000, 86300, 90000, nil]
+  tmp = durations[work_order_id % durations.size]
 
   if tmp == nil
     sql = "insert into #{table} (site_id, work_order_id, step_id, step_name, owner_id, owner_name, start_time)
