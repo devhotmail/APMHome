@@ -6,7 +6,7 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="head">
-        <!--<h:outputStylesheet name="css/assetMaintenanceAll.css"/>-->
+        <h:outputStylesheet name="css/assetMaintenanceAll.css"/>
         <h:outputScript name="js/assetMaintenance.js"/>
     </ui:define>
 
@@ -18,202 +18,208 @@
 
         <div class="ui-g">
             <div class="ui-g-12">
-                <div class="ui-g-3"></div>
-                <div class="ui-g-6"><p>#{msg.maintenanceAnalysis_title}</p></div>
-                <!--<div class="ui-g-3"><p:commandButton icon="fa fa-ellipsis-v" title="Icon Only"/></div>-->
-            </div>
-            <div class="ui-g-12">
-                <div class="ui-g-3">
-                    <p>#{msg.maintenanceAnalysis_reasonTile}</p>
-                    <p><h:outputText id="maintenanceR11"
-                                     value="#{assetMaintenanceController.topErrorReason}"/></p>
-                </div>
-                <div class="ui-g-3">
-                    <p>#{msg.maintenanceAnalysis_stepTile}</p>
-                    <p><h:outputText id="maintenanceR12"
-                                     value="#{assetMaintenanceController.topErrorStep}"/></p>
-                </div>
-                <div class="ui-g-3">
-                    <p>#{msg.maintenanceAnalysis_occurrenceTile}</p>
-                    <p><h:outputText id="maintenanceR15"
-                                     value="#{assetMaintenanceController.errorCount}"/></p>
+                <div class="text--center u-mv-">
+                    <span class="epsilon">#{msg.maintenanceAnalysis_title}</span>
                 </div>
             </div>
-        </div>
 
-        <div class="ui-g-12">
-            <h:form>
-                <p:calendar value="#{assetMaintenanceController.startDate}" showOn="button"/>
-                <p class="i18n">TO</p>
-                <p:calendar value="#{assetMaintenanceController.endDate}" showOn="button"/>
-                <p:commandButton value="#{msg.Refresh}"
-                                 update="maintenanceR11 maintenanceR12 maintenanceR15 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR611 maintenanceR612 maintenanceR613 maintenanceR614 maintenanceR615 maintenanceR62 maintenanceR631 maintenanceR632 maintenanceR633 maintenanceR634 maintenanceR635 maintenanceR64 maintenanceR651 maintenanceR652 maintenanceR653 maintenanceR654 maintenanceR655 maintenanceR66 "
-                                 actionListener="#{assetMaintenanceController.submit}"/>
-            </h:form>
-        </div>
+            <div class="ui-g-12">
+                <div class="card--summary ui-g">
+                    <div class="ui-lg-3">
+                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_reasonTile}</div>
+                        <div class="text--banner u-mt- gamma">
+                            <h:outputText id="maintenanceR11" value="#{assetMaintenanceController.topErrorReason}"/>
+                        </div>
+                    </div>
+                    <div class="ui-lg-3">
+                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_stepTile}</div>
+                        <div class="text--banner u-mt- gamma">
+                            <h:outputText id="maintenanceR12" value="#{assetMaintenanceController.topErrorStep}"/>
+                        </div>
+                    </div>
+                    <div class="ui-lg-3">
+                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_occurrenceTile}</div>
+                        <div class="text--banner u-mt- gamma">
+                            <h:outputText id="maintenanceR15" value="#{assetMaintenanceController.errorCount}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="ui-g">
             <div class="ui-g-12">
-                <div class="ui-g-9">
-                    <p>#{msg.maintenanceAnalysis_reasonChart}</p>
+                <div class="calendar-range-picker flex flex--row flex--center flex--justify">
+                    <p:calendar id="start_date_button" value="#{assetMaintenanceController.startDate}" showOn="button">
+                        <p:ajax event="dateSelect" listener="#{assetMaintenanceController.onStartDateSelect}"
+                                showOn="button"/>
+                    </p:calendar>
+                    <label>到</label>
+                    <p:calendar id="end_date_button" value="#{assetMaintenanceController.endDate}" showOn="button">
+                        <p:ajax event="dateSelect" listener="#{assetMaintenanceController.onEndDateSelect}"
+                                showOn="button"/>
+                    </p:calendar>
+                    <p:commandButton value="确定"
+                                     update="maintenanceR11 maintenanceR12 maintenanceR15 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR611 maintenanceR612 maintenanceR613 maintenanceR614 maintenanceR615 maintenanceR62 maintenanceR631 maintenanceR632 maintenanceR633 maintenanceR634 maintenanceR635 maintenanceR64 maintenanceR651 maintenanceR652 maintenanceR653 maintenanceR654 maintenanceR655 maintenanceR66"
+                                     actionListener="#{assetMaintenanceController.submit}"/>
                 </div>
-                <!--<div class="ui-g-3">
-                    <p:commandButton value="TODO导出"/>
-                </div>-->
             </div>
-            <p:separator/>
-            <div class="ui-g-12">
-                <p:chart id="maintenanceR2"
-                         type="bar"
-                         model="#{assetMaintenanceController.errorReasonChart}"
-                         responsive="true"/>
-            </div>
-        </div>
 
-        <div class="ui-g">
             <div class="ui-g-12">
-                <div class="ui-g-9">
-                    <p>#{msg.maintenanceAnalysis_timeChart}</p>
+                <div class="block">
+                    <h3 class="block-title">#{msg.maintenanceAnalysis_reasonChart}</h3>
+                    <p:chart id="maintenanceR2" type="bar" model="#{assetMaintenanceController.errorReasonChart}"
+                             responsive="true"/>
                 </div>
-                <!--<div class="ui-g-3">
-                    <p:commandButton value="TODO导出"/>
-                </div>-->
             </div>
-            <p:separator/>
-            <div class="ui-g-12">
-                <p:chart id="maintenanceR3"
-                         type="bar"
-                         model="#{assetMaintenanceController.errorStepChart}"
-                         responsive="true"
-                         style="height:100px;"/>
-            </div>
-            <div class="ui-g-12">
-                <p>#{msg.maintenanceAnalysis_timeChart_section}</p>
-            </div>
-            <div class="ui-g-4 col-1 divide-line-right">
-                <p:chart id="maintenanceR41" type="pie"
-                         rendered="#{not empty assetMaintenanceController.errorTimePerStep[0]}"
-                         model="#{assetMaintenanceController.errorTimePerStep[0]}"/>
-            </div>
-            <div class="ui-g-4 col-2 divide-line-right">
-                <p:chart id="maintenanceR42" type="pie"
-                         rendered="#{not empty assetMaintenanceController.errorTimePerStep[1]}"
-                         model="#{assetMaintenanceController.errorTimePerStep[1]}"/>
-            </div>
-            <div class="ui-g-4 col-3">
-                <p:chart id="maintenanceR43" type="pie"
-                         rendered="#{not empty assetMaintenanceController.errorTimePerStep[2]}"
-                         model="#{assetMaintenanceController.errorTimePerStep[2]}"/>
-            </div>
-        </div>
 
-        <div class="ui-g">
             <div class="ui-g-12">
-                <div class="ui-g-9">
-                    <p>#{msg.maintenanceAnalysis_distributionChart}</p>
+                <div class="block">
+                    <h3 class="block-title">#{msg.maintenanceAnalysis_timeChart}</h3>
+                    <div class="chart-device-stat horizontal">
+                        <p:chart id="maintenanceR3" class="maintenance-chart3" type="bar"
+                                 model="#{assetMaintenanceController.errorStepChart}" responsive="true"/>
+                    </div>
+                    <div class="u-mh++">
+                        <div class="maintenance-chart4">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <p>#{msg.maintenanceAnalysis_timeChart_section}</p>
+                                </div>
+                                <div class="ui-g-4 col-1 divide-line-right">
+                                    <p:chart id="maintenanceR41" type="pie"
+                                             rendered="#{not empty assetMaintenanceController.errorTimePerStep[0]}"
+                                             model="#{assetMaintenanceController.errorTimePerStep[0]}"/>
+                                </div>
+                                <div class="ui-g-4 col-2 divide-line-right">
+                                    <p:chart id="maintenanceR42" type="pie"
+                                             rendered="#{not empty assetMaintenanceController.errorTimePerStep[1]}"
+                                             model="#{assetMaintenanceController.errorTimePerStep[1]}"/>
+                                </div>
+                                <div class="ui-g-4 col-3">
+                                    <p:chart id="maintenanceR43" type="pie"
+                                             rendered="#{not empty assetMaintenanceController.errorTimePerStep[2]}"
+                                             model="#{assetMaintenanceController.errorTimePerStep[2]}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!--<div class="ui-g-3">
-                    <p:commandButton value="TODO导出"/>
-                </div>-->
             </div>
-            <p:separator/>
+
             <div class="ui-g-12">
-                <div class="ui-g-2">
-                    <p>#{msg.maintenanceAnalysis_percentageChart_room}</p>
-                    <p>
-                        <span>#{msg.maintenanceAnalysis_percentageChart_percentage}</span>
-                        <span><h:outputText id="maintenanceR611"
-                                            value="#{assetMaintenanceController.errorPercentageInRoomOfDeviceString}"/></span>
-                    </p>
-                    <p>
-                        <span>#{msg.maintenanceAnalysis_percentageChart_occurrence}</span>
-                        <span><h:outputText id="maintenanceR612"
-                                            value="#{assetMaintenanceController.errorCount}"/></span>
-                    </p>
-                    <p>
-                        <span>#{msg.maintenanceAnalysis_percentageChart_room_occurrence}</span>
-                        <span><h:outputText id="maintenanceR613"
-                                            value="#{assetMaintenanceController.errorCountInRoomOfDevice}"/></span>
-                    </p>
-                    <p>
-                        <span>#{msg.maintenanceAnalysis_percentageChart_room_rank}</span>
-                        <span><h:outputText id="maintenanceR614"
-                                            value="#{assetMaintenanceController.errorRankInRoomOfDevice}"/></span>
-                        <span>（</span>
-                        <span><h:outputText id="maintenanceR615" value="#{assetMaintenanceController.deviceCountInRoomOfDevice}"/></span>
-                        <span>）</span>
-                    </p>
-                </div>
-                <div class="ui-g-2">
-                    <p:chart id="maintenanceR62"
-                             type="pie"
-                             model="#{assetMaintenanceController.errorPercentageInRoomOfDeviceChart}"
-                             style="width:100px;height:100px"/>
-                </div>
-                <div class="ui-g-2">
-                    <p>#{msg.maintenanceAnalysis_percentageChart_category}</p>
-                    <p>
-                        <span>#{msg.maintenanceAnalysis_percentageChart_percentage}</span>
-                        <span><h:outputText id="maintenanceR631"
-                                            value="#{assetMaintenanceController.errorPercentageInDeviceTypeOfDeviceString}"/></span>
-                    </p>
-                    <p>
-                        <span>#{msg.maintenanceAnalysis_percentageChart_occurrence}</span>
-                        <span><h:outputText id="maintenanceR632"
-                                            value="#{assetMaintenanceController.errorCount}"/></span>
-                    </p>
-                    <p>
-                        <span>#{msg.maintenanceAnalysis_percentageChart_category_occurrence}</span>
-                        <span><h:outputText id="maintenanceR633"
-                                            value="#{assetMaintenanceController.errorCountInDeviceTypeOfDevice}"/></span>
-                    </p>
-                    <p>
-                        <span>#{msg.maintenanceAnalysis_percentageChart_category_rank}</span>
-                        <span><h:outputText id="maintenanceR634"
-                                            value="#{assetMaintenanceController.errorRankInDeviceTypeOfDevice}"/></span>
-                        <span>（</span>
-                        <span><h:outputText id="maintenanceR635"
-                                            value="#{assetMaintenanceController.deviceCountInDeviceTypeOfDevice}"/></span>
-                        <span>）</span>
-                    </p>
-                </div>
-                <div class="ui-g-2">
-                    <p:chart id="maintenanceR64"
-                             type="pie"
-                             model="#{assetMaintenanceController.errorPercentageInDeviceTypeOfDeviceChart}"
-                             style="width:100px;height:100px"/>
-                </div>
-                <div class="ui-g-2">
-                    <p>#{msg.maintenanceAnalysis_percentageChart_device}</p>
-                    <p>
-                        <span>#{msg.maintenanceAnalysis_percentageChart_percentage}</span>
-                        <span><h:outputText id="maintenanceR651"
-                                            value="#{assetMaintenanceController.errorPercentageInTotalOfDeviceString}"/></span>
-                    </p>
-                    <p>
-                        <span>#{msg.maintenanceAnalysis_percentageChart_occurrence}</span>
-                        <span><h:outputText id="maintenanceR652"
-                                            value="#{assetMaintenanceController.errorCount}"/></span>
-                    </p>
-                    <p>
-                        <span>#{msg.maintenanceAnalysis_percentageChart_device_occurrence}</span>
-                        <span><h:outputText id="maintenanceR653"
-                                            value="#{assetMaintenanceController.errorCountInTotalOfDevice}"/></span>
-                    </p>
-                    <p>
-                        <span>#{msg.maintenanceAnalysis_percentageChart_device_rank}</span>
-                        <span><h:outputText id="maintenanceR654"
-                                            value="#{assetMaintenanceController.errorRankInTotalOfDevice}"/></span>
-                        <span>（</span>
-                        <span><h:outputText id="maintenanceR655" value="#{assetMaintenanceController.deviceCountInTotalOfDevice}"/></span>
-                        <span>）</span>
-                    </p>
-                </div>
-                <div class="ui-g-2">
-                    <p:chart id="maintenanceR66"
-                             type="pie"
-                             model="#{assetMaintenanceController.errorPercentageInTotalOfDeviceChart}"
-                             style="width:100px;height:100px"/>
+                <div class="block">
+                    <h3 class="block-title">#{msg.maintenanceAnalysis_distributionChart}</h3>
+                    <div class="maintenance-chart6">
+                        <div class="ui-g">
+                            <div class="ui-g-4 divide-line-right">
+                                <p>#{msg.maintenanceAnalysis_percentageChart_room}</p>
+                                <div class="ui-g-6">
+                                    <table class="table table--small">
+                                        <tr>
+                                            <td>#{msg.maintenanceAnalysis_percentageChart_percentage}</td>
+                                            <td>
+                                                <h:outputText id="maintenanceR611" value="#{assetMaintenanceController.errorPercentageInRoomOfDeviceString}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#{msg.maintenanceAnalysis_percentageChart_occurrence}</td>
+                                            <td>
+                                                <h:outputText id="maintenanceR612" value="#{assetMaintenanceController.errorCount}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#{msg.maintenanceAnalysis_percentageChart_room_occurrence}</td>
+                                            <td>
+                                                <h:outputText id="maintenanceR613" value="#{assetMaintenanceController.errorCountInRoomOfDevice}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#{msg.maintenanceAnalysis_percentageChart_room_rank}</td>
+                                            <td>
+                                                <h:outputText id="maintenanceR614" value="#{assetMaintenanceController.errorRankInRoomOfDevice}"/>(<h:outputText id="maintenanceR615" value="#{assetMaintenanceController.deviceCountInRoomOfDevice}"/>)
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="ui-g-6">
+                                    <p:chart id="maintenanceR62" type="pie" model="#{assetMaintenanceController.errorPercentageInRoomOfDeviceChart}"/>
+                                </div>
+                            </div>
+                            <div class="ui-g-4 divide-line-right">
+                                <p>#{msg.maintenanceAnalysis_percentageChart_category}</p>
+                                <div class="ui-g-6">
+                                    <table class="table table--small">
+                                        <tr>
+                                            <td>#{msg.maintenanceAnalysis_percentageChart_percentage}</td>
+                                            <td>
+                                                <h:outputText id="maintenanceR631"
+                                                              value="#{assetMaintenanceController.errorPercentageInDeviceTypeOfDeviceString}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#{msg.maintenanceAnalysis_percentageChart_occurrence}</td>
+                                            <td>
+                                                <h:outputText id="maintenanceR632"
+                                                              value="#{assetMaintenanceController.errorCount}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#{msg.maintenanceAnalysis_percentageChart_category_occurrence}
+                                            </td>
+                                            <td>
+                                                <h:outputText id="maintenanceR633"
+                                                              value="#{assetMaintenanceController.errorCountInDeviceTypeOfDevice}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#{msg.maintenanceAnalysis_percentageChart_category_rank}</td>
+                                            <td>
+                                                <h:outputText id="maintenanceR634" value="#{assetMaintenanceController.errorRankInDeviceTypeOfDevice}"/>(<h:outputText id="maintenanceR635" value="#{assetMaintenanceController.deviceCountInDeviceTypeOfDevice}"/>)
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="ui-g-6">
+                                    <p:chart id="maintenanceR64" type="pie" model="#{assetMaintenanceController.errorPercentageInDeviceTypeOfDeviceChart}"/>
+                                </div>
+                            </div>
+                            <div class="ui-g-4">
+                                <p>#{msg.maintenanceAnalysis_percentageChart_device}</p>
+                                <div class="ui-g-6">
+                                    <table class="table table--small">
+                                        <tr>
+                                            <td>#{msg.maintenanceAnalysis_percentageChart_percentage}</td>
+                                            <td>
+                                                <h:outputText id="maintenanceR651"
+                                                              value="#{assetMaintenanceController.errorPercentageInTotalOfDeviceString}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>#{msg.maintenanceAnalysis_percentageChart_occurrence}</td>
+                                            <td>
+                                                <h:outputText id="maintenanceR652"
+                                                              value="#{assetMaintenanceController.errorCount}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#{msg.maintenanceAnalysis_percentageChart_category_occurrence}</td>
+                                            <td>
+                                                <h:outputText id="maintenanceR653"
+                                                              value="#{assetMaintenanceController.errorCountInTotalOfDevice}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#{msg.maintenanceAnalysis_percentageChart_category_rank}</td>
+                                            <td>
+                                                <h:outputText id="maintenanceR654" value="#{assetMaintenanceController.errorRankInTotalOfDevice}"/>(<h:outputText id="maintenanceR655" value="#{assetMaintenanceController.deviceCountInTotalOfDevice}"/>)
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="ui-g-6">
+                                    <p:chart id="maintenanceR66" type="pie" model="#{assetMaintenanceController.errorPercentageInTotalOfDeviceChart}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

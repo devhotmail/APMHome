@@ -1,14 +1,36 @@
 (function() {
-  var bar_chart_base = {
-    height: 300,
+  var base = {
     shadow: false,
-    title: '',
-    animate: !$.jqplot.use_excanvas,
     grid: {
       background: 'transparent',
       borderColor: 'transparent',
       shadow: false
     },
+    seriesDefaults: {
+      shadow: false,
+      rendererOptions: {
+        highlightMouseOver: true
+      }
+    },
+    axes: {
+      yaxis: {
+        tickOptions: {
+          show: true,
+          textColor: 'rgb(36,35,38)'
+        },
+        rendererOptions: {
+          drawBaseline: true,
+        }
+      },
+      xaxis: {
+        drawMajorGridlines: false,
+        drawMajorTickMarks: true,
+        showTickMarks: true
+      },
+    },
+  };
+
+  var base_pie_chart = {
     axes: {
       xaxis: {
         drawMajorGridlines: false,
@@ -19,7 +41,8 @@
       }
     },
     highlighter: {
-      show: false
+      show: true,
+      sizeAdjust: 3,
     },
     legend: {
       show: true,
@@ -30,8 +53,6 @@
       renderer: $.jqplot.EnhancedPieLegendRenderer
     },
     seriesDefaults: {
-      shadow: false,
-      lineWidth: 1,
       pointLabels: {
         show: true,
         edgeTolerance: 10,
@@ -56,19 +77,34 @@
           location: 's',
           ypadding: 10
         }
-      }],
-    legend: {
-      labels: ['扫描量'],
-    },
-    seriesColors: ['rgba(93, 165, 218, 1)'],
+      }]
   };
 
   window.maintenanceE2 = function() {
-    $.extend(true/*recursive*/, this.cfg, bar_chart_base);
+    $.extend(true/*recursive*/, this.cfg, base, {
+      animate: !$.jqplot.use_excanvas,
+      seriesDefaults: {
+        rendererOptions: {
+          barWidth: 20,
+          animation: {
+            speed: 1500
+          }
+        }
+      },
+      highlighter: {
+        tooltipAxes: 'y',
+        formatString: null,
+        tooltipFormatString: '%d 次'
+      },
+      legend: {
+        labels: ['扫描量'],
+      },
+      seriesColors: ['rgba(93, 165, 218, 1)']
+    });
   }
 
   window.maintenanceE3 = function() {
-    $.extend(true/*recursive*/, this.cfg, {
+    $.extend(true/*recursive*/, this.cfg, base, {
       shadow: false,
       seriesColors: ['rgba(241, 124, 176, 1)', 'rgba(178, 145, 46, 1)', 'rgba(229, 17, 111, 1)'],
       legend: {
@@ -89,8 +125,11 @@
         },
         rendererOptions: {
           barWidth: 30,
-          highlightMouseOver: true,
+          highlightMouseOver: false,
         }
+      },
+      highlighter: {
+        show: false
       },
       axes: {
         xaxis: {
@@ -115,8 +154,13 @@
     });
   };
 
-  window.maintenanceE41 = window.maintenanceE42 = window.maintenanceE43 = function() {
-    $.extend(true/*recursive*/, this.cfg, {
+  window.maintenanceE62 = window.maintenanceE64 = window.maintenanceE66 = window.maintenanceE41 = window.maintenanceE42 = window.maintenanceE43 = function() {
+    $.extend(true/*recursive*/, this.cfg, base, base_pie_chart, {
+      highlighter: {
+        tooltipAxes: 'x',
+        formatString: null,
+        tooltipFormatString: '%s'
+      },
       legend: {
         show: false,
       },
@@ -145,7 +189,16 @@
   };
 
   window.maintenanceE51 = window.maintenanceE52 = window.maintenanceE53 = function() {
-    $.extend(true/*recursive*/, this.cfg, bar_chart_base, {
+    $.extend(true/*recursive*/, this.cfg, base, {
+      highlighter: {
+        tooltipAxes: 'y',
+        formatString: null,
+        tooltipFormatString: '%s'
+      },
+      legend: {
+        show: false
+      },
+      seriesColors: ['rgba(93, 165, 218, 1)'],
       seriesDefaults: {
         rendererOptions: {
           barWidth: 10,
