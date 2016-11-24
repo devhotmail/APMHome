@@ -165,8 +165,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         }
         middleBarData = builder.build();
         log.info("middleBarData: {}", middleBarData);
-        //middleBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "middleBarSkin", middleBarData, true);
-        middleBar = initBarModel(new BarChartModel(), null, true, "ne", null, middleBarData, true);
+        middleBar = initBarModel(new BarChartModel(), null, true, "ne", "middleBarSkin", middleBarData, true);
     }
 
     public void initBottomBars() {
@@ -185,14 +184,10 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
             builder.put(info.getGroupName(), info.getProcedureName(), info.getExamCount());
         }
         bottomBarsData = builder.build();
-//        bottomCtBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomCtBarSkin", bottomBarsData.row(assetGroups.get(1)), true);
-//        bottomMrBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomMrBarSkin", bottomBarsData.row(assetGroups.get(2)), true);
-//        bottomXrayBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomXrayBarSkin", bottomBarsData.row(assetGroups.get(3)), true);
-//        bottomDrBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomDrBarSkin", bottomBarsData.row(assetGroups.get(4)), true);
-        bottomCtBar = initBarModel(new BarChartModel(), null, true, 50, "ne", null, bottomBarsData.row(assetGroups.get(1)), true);
-        bottomMrBar = initBarModel(new BarChartModel(), null, true, 50, "ne", null, bottomBarsData.row(assetGroups.get(2)), true);
-        bottomXrayBar = initBarModel(new BarChartModel(), null, true, 50, "ne", null, bottomBarsData.row(assetGroups.get(3)), true);
-        bottomDrBar = initBarModel(new BarChartModel(), null, true, 50, "ne", null, bottomBarsData.row(assetGroups.get(4)), true);
+        bottomCtBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomCtBarSkin", bottomBarsData.row(assetGroups.get(1)), true);
+        bottomMrBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomMrBarSkin", bottomBarsData.row(assetGroups.get(2)), true);
+        bottomXrayBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomXrayBarSkin", bottomBarsData.row(assetGroups.get(3)), true);
+        bottomDrBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomDrBarSkin", bottomBarsData.row(assetGroups.get(4)), true);
     }
 
 
@@ -254,8 +249,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         }
         topBarAllData = reportBuilder.build();
         totalExamAllCount = (int) Stats.of(topBarAllData.values()).sum();
-        //topBarAll = initBarModel(new HorizontalBarChartModel(), null, true, 0, "ne", "topBarAllSkin", topBarAllData, false);
-        topBarAll = initBarModel(new HorizontalBarChartModel(), null, true, 0, "ne", null, topBarAllData, false);
+        topBarAll = initBarModel(new HorizontalBarChartModel(), null, true, 0, "ne", "topBarAllSkin", topBarAllData, false);
     }
 
     private void initStartEndDate() {

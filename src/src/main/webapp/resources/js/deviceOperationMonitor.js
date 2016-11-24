@@ -75,9 +75,8 @@
     };
   }
 
-  function flipLegendRows(name) {
-    var chart = PrimeFaces.widgets[name];
-    chart.jq.find('.jqplot-table-legend tbody').each(function(elem, index) {
+  function flipLegendRows($el) {
+    $el.find('.jqplot-table-legend tbody').each(function(elem, index) {
       var arr = $.makeArray($("tr", this).detach());
       arr.reverse();
       $(this).append(arr);
@@ -86,7 +85,6 @@
 
   var base = {
     shadow: false,
-    title: '',
     animate: !$.jqplot.use_excanvas,
     grid: {
       background: 'transparent',
@@ -136,7 +134,8 @@
     }
   };
 
-  window.topBarSkin = function() {
+  window.topBarAllSkin = window.topBarSkin = function() {
+    var lastVal = 0;
     var deviceSum = seriesSum(this.cfg.data);
     $.extend(true/*recursive*/, this.cfg, {
       animate: false,
@@ -155,6 +154,9 @@
           formatString: '%d 个',
           escapeHTML: false,
           formatter: function(format, val) {
+            var newVal = val - lastVal;
+            lastVal = val;
+            val = newVal;
             return $.jqplot.sprintf(format, val) + '<br />' + Math.round(val / deviceSum * 100) + '%';
           }
         },
@@ -201,14 +203,21 @@
     });
   }
 
-  window.tabAreaSkin = function() {
-    $.extend(true/*recursive*/, this.cfg, {
+  window.middleBarSkin = window.tabAreaSkin = function() {
+    $.extend(true/*recursive*/, this.cfg, base, {
       shadow: false,
       animate: false,
       grid: {
         background: 'transparent',
         borderColor: 'transparent',
         shadow: false
+      },
+      highlighter: {
+        show: true,
+        sizeAdjust: 3,
+        tooltipAxes: 'y',
+        formatString: null,
+        tooltipFormatString: '%d'
       },
       legend: {
         show: true,
@@ -239,50 +248,28 @@
     });
   }
 
-  window.bottomLeftBarSkin = function() {
-    $.extend(true/*recursive*/, this.cfg, verticalStackConfig(this.cfg.data));
-    setTimeout(function() {
-      flipLegendRows('bottomLeftBar');
-    }, 0);
-  }
-
+  window.bottomDrBarSkin =
+  window.bottomXrayBarSkin =
+  window.bottomCtBarSkin =
+  window.bottomLeftBarSkin =
+  window.bottomMrBarSkin =
   window.bottomRightBarSkin = function() {
-    $.extend(true/*recursive*/, this.cfg, verticalStackConfig(this.cfg.data));
+    var _this = this;
+    $.extend(true/*recursive*/, this.cfg, verticalStackConfig(_this.cfg.data));
     setTimeout(function() {
-      flipLegendRows('bottomRightBar');
+      flipLegendRows(_this.jq);
     }, 0);
   }
 
-  window.topBarAllSkin = function() {
-
-  }
-
-  window.middleBarSkin = function() {
-
-  }
-
-  window.bottomCtBarSkin = function() {
-
-  }
-
-  window.bottomMrBarSkin = function() {
-
-  }
-
-  window.bottomXrayBarSkin = function() {
-
-  }
-
-  window.bottomDrBarSkin = function() {
-
-  }
 
   // Responsive charts
   $(window).resize(function() {
     var widgets = PrimeFaces.widgets;
     ['topBar','bottomLeftBar', 'bottomRightBar'].forEach(function(key) {
-      var _chart = widgets[key].plot;
-      _chart.replot({resetAxes: true});
+      if(key in widgets) {
+        var _chart = widgets[key].plot;
+        _chart.replot({resetAxes: true});
+      }
     });
   });
 
