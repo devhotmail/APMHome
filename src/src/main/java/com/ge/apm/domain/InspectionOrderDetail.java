@@ -50,8 +50,9 @@ public class InspectionOrderDetail implements Serializable {
     private int itemId;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 64)
     @Column(name = "item_name")
-    private int itemName;
+    private String itemName;
     @Basic(optional = false)
     @NotNull
     @Column(name = "is_passed")
@@ -112,11 +113,11 @@ public class InspectionOrderDetail implements Serializable {
         this.itemId = itemId;
     }
 
-    public int getItemName() {
+    public String getItemName() {
         return itemName;
     }
 
-    public void setItemName(int itemName) {
+    public void setItemName(String itemName) {
         this.itemName = itemName;
     }
 
