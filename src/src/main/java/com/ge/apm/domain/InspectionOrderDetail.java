@@ -57,11 +57,6 @@ public class InspectionOrderDetail implements Serializable {
     @Column(name = "is_passed")
     private boolean isPassed;
 
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "order_id")
-    private Integer inspectionOrderId;
-
     public InspectionOrderDetail() {
     }
 
@@ -131,14 +126,6 @@ public class InspectionOrderDetail implements Serializable {
 
     public void setIsPassed(boolean isPassed) {
         this.isPassed = isPassed;
-    }
-
-    public Integer getInspectionOrderId() {
-        return inspectionOrderId;
-    }
-
-    public void setInspectionOrderId(Integer inspectionOrderId) {
-        this.inspectionOrderId = inspectionOrderId;
     }
 
     @Override
