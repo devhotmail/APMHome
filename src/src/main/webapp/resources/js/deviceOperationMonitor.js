@@ -261,6 +261,22 @@
 
   }
 
+  window.bottomCtBarSkin = function() {
+
+  }
+
+  window.bottomMrBarSkin = function() {
+
+  }
+
+  window.bottomXrayBarSkin = function() {
+
+  }
+
+  window.bottomDrBarSkin = function() {
+
+  }
+
   // Responsive charts
   $(window).resize(function() {
     var widgets = PrimeFaces.widgets;
