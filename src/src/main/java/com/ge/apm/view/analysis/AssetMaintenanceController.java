@@ -235,12 +235,8 @@ public final class AssetMaintenanceController {
 
     public final PieChartModel[] getErrorTimePerStep() {
         List<Map<String, Object>> list = this.query(SQL_LIST_TOP_ERROR_STEP);
-        if (list.size() < this.knownWorkOrderSteps) {
-            return new PieChartModel[] { new PieChartModel(), new PieChartModel(), new PieChartModel() };
-        }
-
-        PieChartModel[] charts = new PieChartModel[3];
-        for (int index = 0; index < 3; index++) {
+        PieChartModel[] charts = new PieChartModel[] { null, null, null };
+        for (int index = 0; index < 3 && index < list.size(); index++) {
             int scalar = (int)list.get(index).get("scalar");
             Map<String, Object> extra = new HashMap<>();
             extra.put("stepId", scalar);
@@ -334,7 +330,7 @@ public final class AssetMaintenanceController {
 
     public final PieChartModel getErrorPercentageInRoomOfDeviceChart() {
         PieChartModel chart = convertToPieChartModel(this.getErrorPercentageInRoomOfDevice());
-        chart.setExtender("maintenanceE62");
+//        chart.setExtender("maintenanceE62");
         return chart;
     }
 

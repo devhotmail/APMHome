@@ -80,14 +80,17 @@
                                 </div>
                                 <div class="ui-g-4 col-1 divide-line-right">
                                     <p:chart id="maintenanceR41" type="pie"
+                                             rendered="#{not empty assetMaintenanceController.errorTimePerStep[0]}"
                                              model="#{assetMaintenanceController.errorTimePerStep[0]}"/>
                                 </div>
                                 <div class="ui-g-4 col-2 divide-line-right">
                                     <p:chart id="maintenanceR42" type="pie"
+                                             rendered="#{not empty assetMaintenanceController.errorTimePerStep[1]}"
                                              model="#{assetMaintenanceController.errorTimePerStep[1]}"/>
                                 </div>
                                 <div class="ui-g-4 col-3">
                                     <p:chart id="maintenanceR43" type="pie"
+                                             rendered="#{not empty assetMaintenanceController.errorTimePerStep[2]}"
                                              model="#{assetMaintenanceController.errorTimePerStep[2]}"/>
                                 </div>
                             </div>
