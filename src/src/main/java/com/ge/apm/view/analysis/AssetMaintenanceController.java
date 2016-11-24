@@ -115,11 +115,11 @@ public final class AssetMaintenanceController {
     }
 
     public final String getTopErrorRoom() {
-        String id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL), "");
-        if (id == null || id.length() == 0) {
+        Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL), Integer.valueOf(0));
+        if (id == null || id.intValue() == 0) {
             return WebUtil.getMessage("maintenanceAnalysis_empty");
         }
-        return id;
+        return id.toString();
     }
 
     public final String getTopErrorDeviceType() {
@@ -158,7 +158,7 @@ public final class AssetMaintenanceController {
         chart.addSeries(series);
         chart.getAxis(AxisType.X).setLabel(WebUtil.getMessage("maintenanceAnalysis_reasonChart_xAxis"));
         chart.getAxis(AxisType.Y).setLabel(WebUtil.getMessage("maintenanceAnalysis_reasonChart_yAxis"));
-        chart.setExtender("maintenanceE2");
+//        chart.setExtender("maintenanceE2");
         return chart;
     }
 
@@ -469,20 +469,15 @@ public final class AssetMaintenanceController {
     // 设备故障主要发生的科室
 
     private final static String SQL_SCALAR_TOP_ERROR_ROOM_ALL = "" +
-            "SELECT asset.clinical_dept_name " +
-            "FROM asset_info AS asset " +
-            "WHERE asset.clinical_dept_id = ( " +
             "        SELECT asset.clinical_dept_id AS scalar " +
             "        FROM work_order AS work, " +
             "             asset_info AS asset " +
             "        WHERE work.asset_id = asset.id " +
-            "              AND work.hospital_id = :#hospitalId " +
+            "              AND asset.hospital_id = :#hospitalId " +
             "              AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY asset.clinical_dept_id " +
             "        ORDER BY count(*) DESC " +
             "        LIMIT 1 " +
-            ") " +
-            "LIMIT 1 " +
             ";";
 
     // 设备故障主要发生的设备类型
@@ -496,7 +491,7 @@ public final class AssetMaintenanceController {
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            "  AND work.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospitalId " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "GROUP BY scalar " +
             "ORDER BY count(*) DESC " +
@@ -626,15 +621,20 @@ public final class AssetMaintenanceController {
             "        FROM work_order AS work, " +
             "             asset_info AS asset " +
             "        WHERE work.asset_id = asset.id " +
-            "          AND work.hospital_id = :#hospitalId " +
+            "          AND asset.hospital_id = :#hospitalId " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY asset.clinical_dept_id " +
             "        ORDER BY asset.clinical_dept_id ASC " +
             ") " +
-            "SELECT COALESCE(dept_info.name, text(dept_info.id)) AS key, CAST(COALESCE(temporary.value, 0) AS INTEGER) AS value " +
+            "SELECT CASE " +
+            "        WHEN dept_info.id IS NOT NULL THEN dept_info.id " +
+            "        WHEN temporary.key IS NOT NULL THEN CAST(100 AS INTEGER) " +
+            "        ELSE CAST (0 AS INTEGER) " +
+            "END AS key, CAST(COALESCE(temporary.value, 0) AS INTEGER) AS value " +
             "FROM dept_info " +
-            "LEFT OUTER JOIN temporary " +
+            "FULL JOIN temporary " +
             "ON dept_info.id = temporary.key " +
+            "ORDER BY key " +
             ";";
 
     // 设备故障分布：按设备类型
@@ -643,12 +643,12 @@ public final class AssetMaintenanceController {
             "SELECT CASE " +
             "        WHEN asset.asset_group > 0 AND asset.asset_group <= :#knownAssetGroups THEN asset.asset_group " +
             "        WHEN asset.asset_group > :#knownAssetGroups THEN CAST(100 AS INTEGER) " +
-            "        ELSE CAST (0 AS INTEGER)" +
+            "        ELSE CAST (0 AS INTEGER) " +
             "END AS key, count(*) AS value " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            "  AND work.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospitalId " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "GROUP BY key " +
             "ORDER BY key ASC " +
@@ -664,7 +664,7 @@ public final class AssetMaintenanceController {
             "        FROM work_order AS work, " +
             "             asset_info AS asset " +
             "        WHERE work.asset_id = asset.id " +
-            "          AND work.hospital_id = :#hospitalId" +
+            "          AND asset.hospital_id = :#hospitalId" +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY asset.id " +
             //"        ORDER BY count(*) DESC " +
@@ -687,7 +687,7 @@ public final class AssetMaintenanceController {
             "              WHERE asset.hospital_id = :#hospitalId " +
             "              :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
             "      ) " +
-            "  AND work.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospitalId " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ";";
 
@@ -717,7 +717,7 @@ public final class AssetMaintenanceController {
             "                      WHERE asset.hospital_id = :#hospitalId " +
             "                      :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
             "              ) " +
-            "          AND work.hospital_id = :#hospitalId " +
+            "          AND asset.hospital_id = :#hospitalId " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY work.asset_id " +
             ") AS temporary " +
@@ -728,23 +728,21 @@ public final class AssetMaintenanceController {
             "SELECT CAST(count(*) AS INTEGER) AS scalar " +
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
-            "WHERE TRUE " +
-            "  AND work.asset_id = asset.id " +
+            "WHERE work.asset_id = asset.id " +
             "  AND asset.asset_group = ( " +
             "              SELECT asset.asset_group " +
             "              FROM asset_info AS asset " +
             "              WHERE asset.hospital_id = :#hospitalId " +
             "              :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
             "      ) " +
-            "  AND work.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospitalId " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ";";
 
     private final static String SQL_SCALAR_DEVICE_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE = "" +
             "SELECT CAST(count(*) AS INTEGER) AS scalar " +
             "FROM asset_info AS asset " +
-            "WHERE TRUE " +
-            "  AND asset.asset_group = ( " +
+            "WHERE asset.asset_group = ( " +
             "              SELECT asset.asset_group " +
             "              FROM asset_info AS asset " +
             "              WHERE asset.hospital_id = :#hospitalId " +
@@ -767,8 +765,8 @@ public final class AssetMaintenanceController {
             "                      WHERE asset.hospital_id = :#hospitalId " +
             "                      :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
             "              ) " +
-            "        AND work.hospital_id = :#hospitalId " +
-            "        AND work.request_time BETWEEN :#startDate AND :#endDate " +
+            "          AND asset.hospital_id = :#hospitalId " +
+            "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY work.asset_id " +
             ") AS temporary " +
             "WHERE key = :#assetId " +
@@ -779,7 +777,7 @@ public final class AssetMaintenanceController {
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            "  AND work.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospitalId " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ";";
 
@@ -798,7 +796,7 @@ public final class AssetMaintenanceController {
             "             asset_info AS asset " +
             "        WHERE TRUE " +
             "          AND work.asset_id = asset.id " +
-            "          AND work.hospital_id = :#hospitalId " +
+            "          AND asset.hospital_id = :#hospitalId " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY work.asset_id " +
             ") AS temporary " +
