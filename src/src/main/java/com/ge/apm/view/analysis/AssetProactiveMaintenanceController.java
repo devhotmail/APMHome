@@ -166,7 +166,7 @@ public final class AssetProactiveMaintenanceController {
                     l1--;
                 }
                 int interval = Math.max(l2 - l1,
-                                        Weeks.weeksBetween(this.today, this.firstDayOfThisYearMinus1).getWeeks() - l2);
+                                        Weeks.weeksBetween(this.firstDayOfThisYearMinus1, this.today).getWeeks() - l2);
                 // forward
                 l2 += interval;
                 while (l2 < array.length) {
