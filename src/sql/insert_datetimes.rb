@@ -179,7 +179,7 @@ table = "work_order_step"
 totalrecords = 10000
 for i in 0..totalrecords
   site_id         = randnum.rand(1..2)
-  work_order_id   = randnum.rand(1..50)
+  work_order_id   = randnum.rand(1..400)
   step_id = randnum.rand(1..6)
   step_name       = ["申请", "审核", "派工", "领工", "维修","关单"][step_id - 1]
   owner_id    = randnum.rand(1..10)
@@ -187,7 +187,7 @@ for i in 0..totalrecords
 
   randtime = (duration * rand).to_i + stime.to_i
   start_time = Time.at(randtime).strftime("%F %T")
-  durations = [600, 1900, 2600, 3700, 6000, 12000, 70000, 86300, 90000, nil]
+  durations = [600, 1900, 2600, 3700, 6000, 12000, 30000, 60000, 390000, nil]
   tmp = durations[work_order_id % durations.size]
 
   if tmp == nil
@@ -195,6 +195,7 @@ for i in 0..totalrecords
           values (\'#{site_id}\', \'#{work_order_id}\', \'#{step_id}\',
           \'#{step_name}\', \'#{owner_id}\',\'#{owner_name}\', \'#{start_time}\')"
   else
+    tmp = tmp / (totalrecords / 200)
     end_time = Time.at(randtime + tmp * rand2.rand * 2).strftime("%F %T")
     sql = "insert into #{table} (site_id, work_order_id, step_id, step_name, owner_id, owner_name, start_time,
           end_time) values (\'#{site_id}\', \'#{work_order_id}\', \'#{step_id}\',

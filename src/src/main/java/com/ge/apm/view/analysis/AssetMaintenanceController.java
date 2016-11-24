@@ -32,7 +32,7 @@ public final class AssetMaintenanceController {
 
     private final int knownCaseTypes = 5;
     private final int knownWorkOrderSteps = 6;
-    private final int knownAssetGroups = 4;
+    private final int knownAssetGroups = 8;
 
     public AssetMaintenanceController() {
         this.parameters = new HashMap<>();
@@ -448,18 +448,25 @@ public final class AssetMaintenanceController {
     // 设备故障处理流程最耗时步骤
 
     private final static String SQL_SCALAR_TOP_ERROR_STEP = "" +
-            "SELECT step.step_id AS scalar " +
-            "FROM work_order_step AS step, " +
-            "     work_order AS work " +
-            "WHERE step.work_order_id = work.id " +
-            "  AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
-            "  AND step.start_time IS NOT NULL " +
-            "  AND step.end_time IS NOT NULL " +
-            "  AND work.hospital_id = :#hospitalId" +
-            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
-            ":#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
+            "WITH " + // same with step clause
+            "cumulative AS ( " +
+            "        SELECT work.id AS work_id, step.step_id AS step_id, sum(EXTRACT (epoch FROM (step.end_time - step.start_time)) / 60) AS minutes " +
+            "        FROM work_order_step AS step, " +
+            "             work_order AS work " +
+            "        WHERE step.work_order_id = work.id " +
+            "          AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
+            "          AND step.start_time IS NOT NULL " +
+            "          AND step.end_time IS NOT NULL " +
+            "          AND work.is_closed = true " +
+            "          AND work.hospital_id = :#hospitalId " +
+            "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
+            "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
+            "        GROUP BY step.step_id, work.id " +
+            ") " +
+            "SELECT step_id AS scalar " +
+            "FROM cumulative " +
             "GROUP BY scalar " +
-            "ORDER BY avg(step.end_time - step.start_time) DESC " +
+            "ORDER BY avg(minutes) DESC " +
             "LIMIT 1 " +
             ";";
 
@@ -535,16 +542,23 @@ public final class AssetMaintenanceController {
     // 设备故障处理流程响应时间分布
 
     private final static String SQL_LIST_ERROR_STEP = "" +
-            "SELECT step.step_id AS key, CAST(avg(EXTRACT (epoch FROM (step.end_time - step.start_time)) / 60) AS INTEGER) AS value " +
-            "FROM work_order_step AS step, " +
-            "     work_order AS work " +
-            "WHERE step.work_order_id = work.id " +
-            "  AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
-            "  AND step.start_time IS NOT NULL " +
-            "  AND step.end_time IS NOT NULL " +
-            "  AND work.hospital_id = :#hospitalId " +
-            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
-            ":#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
+            "WITH " + // same with step clause
+            "cumulative AS ( " +
+            "        SELECT work.id AS work_id, step.step_id AS step_id, sum(EXTRACT (epoch FROM (step.end_time - step.start_time)) / 60) AS minutes " +
+            "        FROM work_order_step AS step, " +
+            "             work_order AS work " +
+            "        WHERE step.work_order_id = work.id " +
+            "          AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
+            "          AND step.start_time IS NOT NULL " +
+            "          AND step.end_time IS NOT NULL " +
+            "          AND work.is_closed = true " +
+            "          AND work.hospital_id = :#hospitalId " +
+            "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
+            "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
+            "        GROUP BY step.step_id, work.id " +
+            ") " +
+            "SELECT step_id AS key, CAST(avg(minutes) AS INTEGER) AS value " +
+            "FROM cumulative " +
             "GROUP BY key " +
             "ORDER BY key ASC " +
             ";";
@@ -552,43 +566,58 @@ public final class AssetMaintenanceController {
     // （耗时最长的三个）步骤的具体响应时间分布
 
     private final static String SQL_LIST_TOP_ERROR_STEP = "" +
-            "SELECT step.step_id AS scalar " +
-            "FROM work_order_step AS step, " +
-            "     work_order AS work " +
-            "WHERE step.work_order_id = work.id " +
-            "  AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
-            "  AND step.start_time IS NOT NULL " +
-            "  AND step.end_time IS NOT NULL " +
-            "  AND work.hospital_id = :#hospitalId " +
-            "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
-            ":#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
-            "GROUP BY scalar " +
-            "ORDER BY avg(step.end_time - step.start_time) DESC " +
-            ";";
-
-    private final static String SQL_LIST_ERROR_TIME_PER_STEP = "" +
-            "SELECT rate AS key, CAST(count(*) AS INTEGER) AS value " +
-            "FROM ( " +
-            "        SELECT CASE " +
-            "                WHEN step.start_time IS NULL OR end_time IS NULL THEN CAST (0 AS integer) " + // 未响应
-            "                WHEN (step.end_time - step.start_time) BETWEEN '0 minute' AND '30 minute' THEN CAST (1 AS integer) " + // 小于 30 分钟
-            "                WHEN (step.end_time - step.start_time) BETWEEN '30 minute' AND '1 hour' THEN CAST (2 AS integer) " + // 30 分钟到 1 小时
-            "                WHEN (step.end_time - step.start_time) BETWEEN '1 hour' AND '1 day' THEN CAST (3 AS integer) " + // 1 小时到 1 天
-            "                ELSE CAST (4 AS integer) " + // 1天以上
-            "        END AS rate " +
+            "WITH " + // same with step clause
+            "cumulative AS ( " +
+            "        SELECT work.id AS work_id, step.step_id AS step_id, sum(EXTRACT (epoch FROM (step.end_time - step.start_time)) / 60) AS minutes " +
             "        FROM work_order_step AS step, " +
             "             work_order AS work " +
             "        WHERE step.work_order_id = work.id " +
-            "          AND step.step_id = :#stepId " +
-            "        :#andHospitalFilterForWorkOrder " + // AND work.hospital_id = :#hospitalId
-            "        :#andDateFilter " +    // AND work.request_time BETWEEN :#startDate AND :#endDate
+            "          AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
+            "          AND step.start_time IS NOT NULL " +
+            "          AND step.end_time IS NOT NULL " +
+            "          AND work.is_closed = true " +
+            "          AND work.hospital_id = :#hospitalId " +
+            "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
+            "        GROUP BY step.step_id, work.id " +
+            ") " +
+            "SELECT step_id AS scalar " +
+            "FROM cumulative " +
+            "GROUP BY scalar " +
+            "ORDER BY avg(minutes) DESC " +
+            ";";
+
+    private final static String SQL_LIST_ERROR_TIME_PER_STEP = "" +
+            "WITH " + // same with step clause
+            "cumulative AS ( " +
+            "        SELECT work.id AS work_id, step.step_id AS step_id, sum(EXTRACT (epoch FROM (step.end_time - step.start_time)) / 60) AS minutes " +
+            "        FROM work_order_step AS step, " +
+            "             work_order AS work " +
+            "        WHERE step.work_order_id = work.id " +
+            "          AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
+            "          AND step.start_time IS NOT NULL " +
+            "          AND step.end_time IS NOT NULL " +
+            "          AND work.is_closed = true " +
+            "          AND work.hospital_id = :#hospitalId " +
+            "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
+            "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
+            "        GROUP BY step.step_id, work.id " +
+            ") " +
+            "SELECT rate AS key, CAST(count(*) AS INTEGER) AS value " +
+            "FROM ( " +
+            "        SELECT CASE " +
+            "                WHEN minutes BETWEEN 0 AND 30 THEN CAST (1 AS INTEGER) " + // 小于 30 分钟
+            "                WHEN minutes BETWEEN 30 AND 60 THEN CAST (2 AS INTEGER) " + // 30 分钟到 1 小时
+            "                WHEN minutes BETWEEN 60 AND 1440 THEN CAST (3 AS INTEGER) " + // 1 小时到 1 天
+            "                ELSE CAST (4 AS INTEGER) " + // 1天以上
+            "        END AS rate " +
+            "        FROM cumulative " +
             ") AS temporary " +
             "GROUP BY rate " +
             "ORDER BY rate ASC " +
             ";";
 
-    // 设备故障分布：按科室 // TODO: no room info, possibly ZERO
+    // 设备故障分布：按科室
 
     private final static String SQL_LIST_ERROR_ROOM_ALL = "" +
             "WITH " +
