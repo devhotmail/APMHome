@@ -1,6 +1,8 @@
 package com.ge.apm.view.pm;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -101,8 +103,8 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     @Override
     public void prepareEdit(){
     	attachements.clear();
+    	owner = userDao.findById(selected.getOwnerId());
     	if(selected.getFileId() != null){
-    		owner = userDao.findById(selected.getOwnerId());
     		FileUploaded fu =  fileUploadedRepository.findById(this.selected.getFileId());
     		if(fu != null){
     			attachements.add(fu);
@@ -117,6 +119,12 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     		this.selected = null;
     		this.owner = null;
     	}
+	}
+    
+    @Override
+	public void prepareCreate() throws InstantiationException, IllegalAccessException {
+    	attachements.clear();
+    	super.prepareCreate();
 	}
     
     @Override
@@ -198,6 +206,35 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 			return 0;
 		}
 		return 1;
+    }
+    
+    public void applyChange() {
+        if (!isTimeValidate()){
+        	return;
+        }
+        this.save();
+    }
+    
+    public boolean isTimeValidate() {
+        String message =  WebUtil.getMessage("shouldEarly");
+        PmOrder input = this.selected;
+        Date todaydate = new Date();
+        boolean isError = false;
+        
+        if (null!=input.getStartTime() && null!=input.getEndTime() && input.getEndTime().after(input.getStartTime())) {
+            isError = true;
+            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("startTime"), WebUtil.getMessage("endTime")));
+        }
+        
+        if (null!=input.getNextTime() && null!=input.getStartTime() && input.getStartTime().after(input.getNextTime())) {
+            isError = true;
+            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("startTime"), WebUtil.getMessage("nextTime")));
+        }
+//        if(null != input.getNextTime() && todaydate.after(input.getNextTime())){
+//        	isError = true;
+//        	 WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("todayDate"), WebUtil.getMessage("nextTime")));
+//        }
+        return !isError;
     }
 
 	public UserAccount getOwner() {

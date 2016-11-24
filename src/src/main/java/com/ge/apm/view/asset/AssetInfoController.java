@@ -262,7 +262,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public boolean isTimeValidate() {
-        String message = "{0} must before {1}!";
+        String message = WebUtil.getMessage("shouldEarly"); //"{0} must before {1}!";
         AssetInfo input = this.selected;
         Date todaydate = new Date();
         boolean isError = false;

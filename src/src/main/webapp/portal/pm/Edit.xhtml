@@ -75,9 +75,9 @@
                                     emptyMessage="#{msg.noRecordFound}">
                                 <f:facet name="header">#{msg.attachmentUrl}</f:facet>
                                     #{fileitem.fileName}
-<!--                                  <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"  icon="ui-icon-arrowthick-1-s"  >
-		                                <p:fileDownload value="#{fileService.getFile(fileitem.id)}" />
-		                         </p:commandButton> -->
+                               <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"  icon="ui-icon-arrowthick-1-s"  >
+		                                <p:fileDownload value="#{attachmentFileService.getFile(fileitem.id)}" />
+		                         </p:commandButton>
                                 <p:commandButton process="@this"  immediate="true" actionListener="#{pmOrderController.removeAttachment(fileitem.id)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
                             </p:dataList>
                             <p:fileUpload fileUploadListener="#{pmOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
@@ -86,7 +86,7 @@
                         </h:panelGroup>
                     </p:panelGrid>
 
-                    <p:commandButton validateClient="true"  actionListener="#{pmOrderController.save()}"  value="#{msg.Save}"  update=":PmOrderEditForm,:PmOrderListForm:datalist, :growl"  icon="ui-icon-check" />
+                    <p:commandButton validateClient="true"  actionListener="#{pmOrderController.applyChange()}"  value="#{msg.Save}"  update=":PmOrderEditForm,:PmOrderListForm:datalist, :growl"  icon="ui-icon-check" />
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" actionListener="#{pmOrderController.onCancel()}"   value="#{msg.Cancel}" update=":PmOrderEditForm,:PmOrderListForm"  icon="ui-icon-cancel" />
                 </h:panelGroup>
