@@ -415,5 +415,5 @@ table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbd
 .chart-device-stat.vertical .jqplot-table-legend-label:before{content:'';display:block;width:100px;position:absolute;right:0;top:0;height:1px;background-color:#7c7c84}
 .chart-device-stat.vertical tr.jqplot-table-legend:last-child .jqplot-table-legend-label:before{display:none}
 .chart-device-stat.vertical table.jqplot-table-legend{direction:rtl;margin:50px 0 0 0;height:100%;position:static!important;background:0 0;margin-left:.5em;margin-right:0}
-body.layout-compact .chart-device-statbytime{height:400px}
+body.layout-compact .chart-device-stat-bypart,body.layout-compact .chart-device-statbytime{height:400px}
 body.layout-compact .body-shape{height:400px}
