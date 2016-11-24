@@ -21,7 +21,7 @@
             <div class="ui-g-12">
                 <div class="block">
                     <h3 class="block-title">#{msg.preventiveMaintenanceAnalysis_planChart}</h3>
-                    <p:dataTable var="schedule"
+                    <p:dataTable class="maintenance-pmstats" var="schedule"
                                  value="#{assetProactiveMaintenanceController.maintenanceSchedule}">
                         <p:columns value="#{assetProactiveMaintenanceController.generatedMonth}"
                                    var="column"
