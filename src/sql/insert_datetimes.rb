@@ -48,7 +48,7 @@ asset_accounts = 90
 totalrecords = asset_accounts
 for i in 0..totalrecords
   site_id = randnum.rand(1..2)
-  asset_group   = randnum.rand(1..12)
+  asset_group   = randnum.rand(1..4)
   name    = "#{type[asset_group-1]}-#{i}-#{SecureRandom.uuid[0..4]}"
 
   function_type = randnum.rand(1..10)
