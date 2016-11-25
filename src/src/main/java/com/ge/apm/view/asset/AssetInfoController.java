@@ -55,7 +55,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         orgDao = WebUtil.getBean(OrgInfoRepository.class);
-        uuaService = (UaaService) WebUtil.getBean(UaaService.class);
+        uuaService = WebUtil.getBean(UaaService.class);
         this.filterBySite = true;
         this.setSiteFilter();
 
