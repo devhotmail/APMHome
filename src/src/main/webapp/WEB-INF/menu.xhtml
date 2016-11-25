@@ -37,39 +37,39 @@
                     </ui:fragment>
                     
                     <pu:menu widgetVar="me">
-                        <p:menuitem id="um01" value="#{msg.HomePage}" icon="&#xE871;" outcome="#{userContextService.userDefaultHomePage}"/>
-                        <p:submenu id="um02" label="#{msg.AssetMDM}" icon="fa fa-folder-open-o">
-                            <p:menuitem id="um03" value="#{msg.AssetList}" outcome="/portal/asset/info/List"/>
+                        <p:menuitem style=" font-size: 30" id="um01" value="#{msg.HomePage}" icon="&#xE871;" outcome="#{userContextService.userDefaultHomePage}"/>
+                        <p:submenu id="um02" label="#{msg.AssetMDM}" icon="fa fa-folder-open-o" >
+                            <p:menuitem id="um03" value="#{msg.AssetList}" outcome="/portal/asset/info/List" />
                             <p:menuitem id="um04" value="#{msg.AssetInventory}" outcome="/empty"/>
-                            <p:menuitem id="um05" value="#{msg.AssetDocumentMgmt}" outcome="/portal/asset/fileAttachment/List"/>
-                            <p:menuitem id="um06" value="#{msg.AssetValueAnalysis}" outcome="/empty"/>
-                            <p:menuitem id="um07" value="#{msg.AssetContractMgmt}" rendered="false" style="color: orange;" outcome="/empty"/>
-                            <p:menuitem id="um08" value="#{msg.SupplierMgmt}" rendered="false" style="color: orange;" outcome="/empty"/>
+                            <p:menuitem id="um05" value="#{msg.AssetDocumentMgmt}" rendered="false" outcome="/portal/asset/fileAttachment/List"/>
+                            <p:menuitem id="um06" value="#{msg.AssetValueAnalysis}" rendered="false" outcome="/empty"/>
+                            <p:menuitem id="um07" value="#{msg.AssetContractMgmt}"  style="color: orange;" outcome="/empty"/>
+                            <p:menuitem id="um08" value="#{msg.SupplierMgmt}"  style="color: orange;" outcome="/empty"/>
                         </p:submenu>
                         <p:submenu id="um09" label="#{msg.WorkOrderMgmt}" icon="fa fa-wrench">
                             <p:menuitem id="um10" value="#{msg.ServiceRequestMgmt}" outcome="/portal/wo/woList"/>
                             <p:menuitem id="um11" value="#{msg.MyWorkOrder}" outcome="/portal/wo/myWoList.xhtml"/>
                             <p:menuitem id="um12" value="#{msg.MaintainanceRecord}" outcome="/empty"/>
-                            <p:menuitem id="um13" value="#{msg.ServiceQualityReview}" outcome="/empty" rendered="#{userContextService.hasRole('AssetStaff')}"/>
-                            <p:menuitem id="um14" value="#{msg.Inspection}" outcome="/empty"/>
+                            <p:menuitem id="um13" value="#{msg.ServiceQualityReview}" outcome="/empty" rendered="false"/>
+                            <p:menuitem id="um14" value="#{msg.Inspection}" rendered="false" outcome="/empty"/>
                         </p:submenu>
                         <p:submenu id="um15" label="#{msg.DeviceMonitor}" icon="fa fa-bell-o">
-                            <p:menuitem id="um16" value="#{msg.DeviceStatusMonitor}" outcome="/empty"/>
-                            <p:menuitem id="um17" value="#{msg.DeviceDowntimeAnalysis}" outcome="/empty"/>
+                            <p:menuitem id="um16" value="#{msg.DeviceStatusMonitor}" outcome="/empty" />
+                            <p:menuitem id="um17" value="#{msg.DeviceDowntimeAnalysis}" outcome="/empty"  rendered="false"/>
                             <p:menuitem id="um18" value="#{msg.DeviceMaintainanceEventAnalysis}" outcome="/portal/analysis/assetMaintenanceAll"/>
                             <p:menuitem id="um19" value="#{msg.DeviceMaintainanceCostAnalysis}" outcome="/empty"/>
-                            <p:menuitem id="um20" value="#{msg.DeviceUtilizationAnalysis}" outcome="/portal/analysis/assetUsageAll"/>
-                            <p:menuitem id="um21" value="#{msg.SparePartsConsumptionAnalysis}" rendered="false" style="color: orange;" outcome="/home"/>
-                            <p:menuitem id="um22" value="#{msg.DeviceFailureAnalysis}" rendered="false" style="color: orange;" outcome="/home"/>
-                            <p:menuitem id="um23" value="#{msg.DeviceOperationMonitor}" outcome="/portal/analysis/deviceOperationMonitorAll"/>
+                            <p:menuitem id="um20" value="#{msg.DeviceUtilizationAnalysis}" outcome="/portal/analysis/assetUsageAll"  rendered="false"/>
+                            <p:menuitem id="um21" value="#{msg.SparePartsConsumptionAnalysis}"  style="color: orange;" outcome="/home"/>
+                            <p:menuitem id="um22" value="#{msg.DeviceUtilizationAnalysis}" style="color: orange;" outcome="/home"/>
+                            <p:menuitem id="um23" value="#{msg.AdvancedDeviceInfoTracking}" outcome="/portal/analysis/deviceOperationMonitorAll"/>
                         </p:submenu>
                         <p:submenu id="um24" label="#{msg.PreventiveMaintainceMgmt}" icon="fa fa-check-square-o">
-                            <p:menuitem id="um25" value="#{msg.PmRecord}" outcome="/portal/pm/List.xhtml"/>
+                            <p:menuitem id="um25" value="#{msg.Inspection}" outcome="/portal/pm/List.xhtml"/>
                             <p:menuitem id="um26" value="#{msg.PreventiveMaintaincePlanning}" outcome="/portal/analysis/assetProactiveMaintenanceAll"/>
-                            <p:menuitem id="um27" value="#{msg.DeviceMetrologyMgmt}" rendered="false" style="color: orange;" outcome="/home"/>
-                            <p:menuitem id="um28" value="#{msg.DeviceQualityControl}" rendered="false" style="color: orange;" outcome="/home"/>
-                            <p:menuitem id="um29" value="#{msg.DeviceAdverseEventMgmt}" rendered="false" style="color: orange;" outcome="/home"/>
-                            <p:menuitem id="um30" value="#{msg.DeviceMedicalAccidentMgmt}" rendered="false" style="color: orange;" outcome="/home"/>
+                            <p:menuitem id="um27" value="#{msg.DeviceMetrologyMgmt}"  style="color: orange;" outcome="/home"/>
+                            <p:menuitem id="um28" value="#{msg.DeviceQualityControl}"  style="color: orange;" outcome="/home"/>
+                            <p:menuitem id="um29" value="#{msg.DeviceAdverseEventMgmt}"  style="color: orange;" outcome="/home"/>
+                            <p:menuitem id="um30" value="#{msg.DeviceMedicalAccidentMgmt}" rendered="false" style="color: orange;" outcome="/home" />
                         </p:submenu>
                         <p:submenu id="um31" label="#{msg.AssetKnowledgeBaseMgmt}" icon="fa fa-book">
                             <p:menuitem id="um32" value="#{msg.AssetDocMgmt}" outcome="/home"/>
@@ -80,10 +80,10 @@
                             <p:menuitem id="um37" value="#{msg.AdvancedDeviceInfoTracking}" rendered="false" style="color: orange;" outcome="/home"/>
                         </p:submenu>
                         <p:submenu id="um38" label="#{msg.DeviceOperationKPIAnalysis}" icon="fa fa-bar-chart">
-                            <p:menuitem id="um39" value="#{msg.DeviceROIAnalysis}" outcome="/home"/>
+                            <p:menuitem id="um39" value="#{msg.DeviceROIAnalysis}" rendered="false" outcome="/home"/>
                             <p:menuitem id="um40" value="#{msg.DeviceKPIAnalysis}" outcome="/home"/>
                             <p:menuitem id="um41" value="#{msg.DeviceKPIForecast}" outcome="/portal/analysis/assetForecastAll"/>
-                            <p:menuitem id="um42" value="#{msg.DeviceCostAnalysis}" outcome="/home"/>
+                            <p:menuitem id="um42" value="#{msg.DeviceCostAnalysis}" rendered="false" outcome="/home"/>
                             <p:menuitem id="um43" value="#{msg.DevicePurchaseDecisionSupport}" outcome="/home"/>
                         </p:submenu>
                         <p:submenu id="um44" label="#{msg.SysAdmin}" icon="settings"  rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('SiteAdmin') or userContextService.hasRole('LocalAdmin')}">
