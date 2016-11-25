@@ -40,6 +40,15 @@ public class InspectionOrderDetail implements Serializable {
     @Size(min = 1, max = 64)
     @Column(name = "dept_name")
     private String deptName;
+    @Column(name = "asset_id")
+    @Basic(optional = false)
+    @NotNull
+    private Integer assetId;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 64)
+    @Column(name = "asset_name")
+    private String assetName;
     @Basic(optional = false)
     @NotNull
     @Column(name = "order_id")
@@ -127,6 +136,22 @@ public class InspectionOrderDetail implements Serializable {
 
     public void setIsPassed(boolean isPassed) {
         this.isPassed = isPassed;
+    }
+
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
+    }
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
     }
 
     @Override

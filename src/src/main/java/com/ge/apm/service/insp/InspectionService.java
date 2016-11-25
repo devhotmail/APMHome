@@ -10,53 +10,55 @@ import com.ge.apm.dao.InspectionChecklistRepository;
 import com.ge.apm.dao.InspectionOrderDetailRepository;
 import com.ge.apm.dao.InspectionOrderRepository;
 import com.ge.apm.dao.UserAccountRepository;
-import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.InspectionChecklist;
 import com.ge.apm.domain.InspectionOrder;
 import com.ge.apm.domain.InspectionOrderDetail;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import java.util.Map;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import webapp.framework.dao.SearchFilter;
-import webapp.framework.web.WebUtil;
 
 /**
  *
  * @author 212579464
  */
-@ManagedBean
-@ViewScoped
+@Component
 public class InspectionService {
-
-    AssetInfoRepository assetInfoDao = WebUtil.getBean(AssetInfoRepository.class);
-    InspectionOrderRepository orderDao = WebUtil.getBean(InspectionOrderRepository.class);
-    InspectionChecklistRepository checkListdao = WebUtil.getBean(InspectionChecklistRepository.class);
-    InspectionOrderDetailRepository detaildao = WebUtil.getBean(InspectionOrderDetailRepository.class);
-    UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
+    @Autowired
+    AssetInfoRepository assetInfoDao;
+    @Autowired
+    InspectionOrderRepository orderDao;
+    @Autowired
+    InspectionChecklistRepository checkListdao;
+    @Autowired
+    InspectionOrderDetailRepository detailDao;
+    @Autowired
+    UserAccountRepository userDao;
     
-
     public UserAccount getUserAccountById(Integer id){
        return userDao.getById(id);
     }
     
-    
     public boolean deleteOrder(InspectionOrder order){
 //        detaildao.deleteInspectionOrderDetails(order.getId());
-        List<InspectionOrderDetail> details = detaildao.findByOrderId(order.getId());
+        List<InspectionOrderDetail> details = detailDao.findByOrderId(order.getId());
         for(InspectionOrderDetail item: details){
-            detaildao.delete(item);
+            detailDao.delete(item);
         }
         orderDao.delete(order);
         return true;
     }
     
     public boolean createOrder(InspectionOrder order, int orderType) {
-
+        return false;
+/*
         AssetInfo asset = assetInfoDao.findById(order.getAssetId());
 
         List<InspectionChecklist> itemList = getCheckItemList(order.getAssetId(), order.getOrderType());
@@ -112,6 +114,7 @@ public class InspectionService {
         }
 
         return true;
+*/
     }
 
     public List<InspectionChecklist> getCheckItemList(Integer assetId, Integer type) {
@@ -124,7 +127,7 @@ public class InspectionService {
     }
 
     public List<InspectionOrderDetail> getDetailList(Integer id) {
-        List<?> list = detaildao.searchByOrder(id);
+        List<?> list = detailDao.searchByOrder(id);
         List<InspectionOrderDetail> detailList = new ArrayList();
         for(Object item :list){
             Object[] objectArray = (Object[])item;
@@ -136,7 +139,7 @@ public class InspectionService {
     public void excuteOrder(InspectionOrder selected, List<InspectionOrderDetail> orderDetailItemList) {
         
         for(InspectionOrderDetail item: orderDetailItemList){
-            detaildao.save(item);
+            detailDao.save(item);
         }
         orderDao.save(selected);
     }
@@ -146,9 +149,38 @@ public class InspectionService {
         for(InspectionOrderDetail item: orderDetailItemList){
             item.setDeptId(selected.getOwnerOrgId());
             item.setDeptName(selected.getOwnerOrgName());
-            detaildao.save(item);
+            detailDao.save(item);
         }
         orderDao.save(selected);
     }
 
+    public TreeNode getInspectionOrderDetailAsTree(int orderId, boolean expandAll){
+        List<InspectionOrderDetail> orderDetail = detailDao.findByOrderId(orderId);
+        Map<Integer, TreeNode> deptNodes = new HashMap();
+        Map<Integer, TreeNode> assetNodes = new HashMap();
+
+        DefaultTreeNode root = new DefaultTreeNode("Root", null);
+        
+        for(InspectionOrderDetail item: orderDetail){
+            TreeNode deptNode = deptNodes.get(item.getDeptId());
+            if(deptNode==null){
+                deptNode = new DefaultTreeNode(item.getDeptName(), root);
+                deptNodes.put(item.getDeptId(), deptNode);
+
+                deptNode.setExpanded(expandAll);
+            }
+            
+            TreeNode assetNode = assetNodes.get(item.getAssetId());
+            if(assetNode==null){
+                assetNode = new DefaultTreeNode(item.getAssetName(), deptNode);
+                assetNodes.put(item.getAssetId(), assetNode);
+
+                assetNode.setExpanded(expandAll);
+            }
+            
+            TreeNode node = new DefaultTreeNode(item.getItemName(), assetNode);
+        }
+
+        return root;
+    }
 }

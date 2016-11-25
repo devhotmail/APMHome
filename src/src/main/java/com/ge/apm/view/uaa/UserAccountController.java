@@ -5,7 +5,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.GenericCRUDController;
+import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
@@ -20,7 +20,7 @@ import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class UserAccountController extends GenericCRUDController<UserAccount> {
+public class UserAccountController extends JpaCRUDController<UserAccount> {
 
     UserAccountRepository dao = null;
     UaaService uaaService = WebUtil.getBean(UaaService.class);
@@ -55,6 +55,11 @@ public class UserAccountController extends GenericCRUDController<UserAccount> {
         }
     }
 
+    @Override
+    public String getErrorMessageForDuplicateKey(UserAccount userAccount){
+        return String.format(WebUtil.getMessage("DuplicateLoginName"), userAccount.getLoginName());
+    }
+    
     @Override
     public String getKeyFieldNameValue(UserAccount obj){
         return WebUtil.getMessage("login_name")+"="+obj.getLoginName();
@@ -113,11 +118,19 @@ public class UserAccountController extends GenericCRUDController<UserAccount> {
     public TreeNode getOrgTree() {
         return orgTree;
     }
+    private TreeNode selectedNode;
+    public TreeNode getSelectedNode() {
+        return selectedNode;
+    }
+
+    public void setSelectedNode(TreeNode selectedNode) {
+        this.selectedNode = selectedNode;
+    }
 
     public void onSelectTreeNode(NodeSelectEvent event){
         TreeNode node = event.getTreeNode();
         //node.setExpanded(!node.isExpanded());
-        
+
         selectedOrg = (OrgInfo)node.getData();
     }
     
@@ -128,6 +141,6 @@ public class UserAccountController extends GenericCRUDController<UserAccount> {
         selected.setSiteId(selectedOrg.getSiteId());
         selected.setHospitalId(selectedOrg.getHospitalId());
         selected.setOrgInfoId(selectedOrg.getId());
-        
+        selected.setPassword("123456");
     }
 }

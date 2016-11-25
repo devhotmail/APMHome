@@ -136,9 +136,6 @@ public class WorkOrder implements Serializable {
     @NotNull
     private Integer assetId;
 
-    @Column(name = "file_id")
-    private Integer fileId;
-    
     public WorkOrder() {
     }
 
@@ -372,14 +369,6 @@ public class WorkOrder implements Serializable {
 
     public void setAssetId(Integer assetId) {
         this.assetId = assetId;
-    }
-
-    public Integer getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(Integer fileId) {
-        this.fileId = fileId;
     }
 
     public String getRequestReasonInShort(){

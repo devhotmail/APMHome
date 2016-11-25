@@ -96,16 +96,7 @@ public class InspectionOrder implements Serializable {
     @Column(name = "paper_url")
     private String paperUrl;
     
-    @Column(name = "asset_id")
-    @Basic(optional = false)
-    @NotNull
-    private Integer assetId;
-
     public InspectionOrder() {
-    }
-
-    public InspectionOrder(Integer id) {
-        this.id = id;
     }
 
     public Integer getId() {
@@ -234,14 +225,6 @@ public class InspectionOrder implements Serializable {
 
     public void setPaperUrl(String paperUrl) {
         this.paperUrl = paperUrl;
-    }
-
-    public Integer getAssetId() {
-        return assetId;
-    }
-
-    public void setAssetId(Integer assetId) {
-        this.assetId = assetId;
     }
 
     @Override

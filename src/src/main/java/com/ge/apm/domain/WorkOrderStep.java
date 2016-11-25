@@ -1,4 +1,4 @@
-/*
+ /*
  */
 package com.ge.apm.domain;
 
@@ -74,6 +74,9 @@ public class WorkOrderStep implements Serializable {
     @Basic(optional = false)
     @NotNull
     private Integer workOrderId;
+
+    @Column(name = "file_id")
+    private Integer fileId;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "workOrderStep", fetch = FetchType.EAGER, orphanRemoval=true)
@@ -190,6 +193,14 @@ public class WorkOrderStep implements Serializable {
 
     public void setStepDetails(List<WorkOrderStepDetail> stepDetails) {
         this.stepDetails = stepDetails;
+    }
+
+    public Integer getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(Integer fileId) {
+        this.fileId = fileId;
     }
     
     @Override

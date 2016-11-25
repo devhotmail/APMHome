@@ -207,7 +207,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         boolean isSuccess = true;
         for (TreeNode item : selectedNodesList) {
             AssetInfo asset = (AssetInfo) item.getData();
-            selected.setAssetId(asset.getId());
+//            selected.setAssetId(asset.getId());
             isSuccess = isSuccess && inspectionService.createOrder(selected, period);
         }
         if (isSuccess) {
