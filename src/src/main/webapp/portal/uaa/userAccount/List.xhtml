@@ -14,11 +14,11 @@
             </p>
             <h:form id="UserAccountListForm">
 
-                <p:commandButton id="btnOrg" value="SelectOrg" type="button" icon="fa fa-angle-down" iconPos="right"/>
-                <p:overlayPanel widgetVar="varPanelOrg" id="moviePanel" for="btnOrg" hideEffect="fade" dynamic="false" style="width:200px" modal="false">
+                <p:commandButton id="btnOrg" value="#{userAccountController.selectedOrg.name}" type="button" icon="fa fa-angle-down" iconPos="right"/>
+                <p:overlayPanel widgetVar="varPanelOrg" id="moviePanel" for="btnOrg" hideEffect="fade" dynamic="false" style="width:300px" modal="false">
                     <p:scrollPanel style="height:300px;border: 0" mode="native">
-                        <p:tree id="orgTree" class="tree" style="width:98%;border:0;" value="#{userAccountController.orgTree}" var="node" dynamic="true" cache="true" selectionMode="single" highlight="true">
-                            <p:ajax process="@this" event="select" update=":UserAccountListForm" listener="#{userAccountController.onSelectTreeNode}" oncomplete="PF('varPanelOrg').hide();"/>
+                        <p:tree id="orgTree" class="tree" style="width:98%;border:0;" value="#{userAccountController.orgTree}" selection="#{userAccountController.selectedNode}" var="node" selectionMode="single">
+                            <p:ajax process="@this" event="select" update=":UserAccountListForm:datalist" listener="#{userAccountController.onSelectTreeNode}" oncomplete="PF('varPanelOrg').hide();"/>
 
                             <p:treeNode type="org">
                                 <h:outputText value="#{node.name}"/>
@@ -52,6 +52,17 @@
                     <p:column headerText="#{msg.telephone}" sortBy="#{item.telephone}" filterBy="#{item.telephone}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.telephone}"/>
                     </p:column>
+                    <p:column headerText="#{msg.isSiteAdmin}" sortBy="#{item.isSiteAdmin}" filterBy="#{item.isSiteAdmin}" filterMatchMode="EQ">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('varDataList').filter()">
+                                <f:converter converterId="javax.faces.Boolean" />
+                                <f:selectItem itemLabel="#{msg.All}" itemValue="" />
+                                <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
+                                <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{item.isSiteAdmin? msg.True2Yes : msg.False2No }"/>
+                    </p:column>
                     <p:column headerText="#{msg.isActive}" sortBy="#{item.isActive}" filterBy="#{item.isActive}" filterMatchMode="EQ">
                         <f:facet name="filter">
                             <p:selectOneMenu onchange="PF('varDataList').filter()">
@@ -68,7 +79,7 @@
                             <p:dataExporter type="xls" target="datalist" fileName="UserAccount_export"/>
                         </p:commandButton>
                         <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{userAccountController.prepareCreate}" update=":UserAccountEditDlg" oncomplete="PF('UserAccountEditDialog').show()"/>
-                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{userAccountController.prepareView}" update=":UserAccountViewDlg" oncomplete="PF('UserAccountViewDialog').show()" disabled="#{empty userAccountController.selected}"/>
+                        <p:commandButton id="viewButton" rendered="false" icon="ui-icon-search" title="#{msg.View}" actionListener="#{userAccountController.prepareView}" update=":UserAccountViewDlg" oncomplete="PF('UserAccountViewDialog').show()" disabled="#{empty userAccountController.selected}"/>
                         <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{userAccountController.prepareEdit}" update=":UserAccountEditDlg" oncomplete="PF('UserAccountEditDialog').show()" disabled="#{empty userAccountController.selected}"/>
                         <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{userAccountController.delete}" update="datalist" disabled="#{empty userAccountController.selected}">
                             <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>

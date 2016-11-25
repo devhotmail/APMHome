@@ -11,50 +11,28 @@
         <p:dialog id="UserAccountEditDlg" widgetVar="UserAccountEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{userAccountController.CRUDActionName} #{msg.UserAccount}">
             <h:form id="UserAccountEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{userAccountController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{userAccountController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.login_name}*</label>
                             <p:inputText id="loginName" value="#{userAccountController.selected.loginName}" required="true" requiredMessage="#{msg.login_name} #{msg.ValidationRequire}"/>
-                            <label>#{msg.login_name}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.userName}*</label>
                             <p:inputText id="name" value="#{userAccountController.selected.name}"  required="true" requiredMessage="#{msg.userName} #{msg.ValidationRequire}"/>
-                            <label>#{msg.userName}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="password" value="#{userAccountController.selected.password}"  required="true" requiredMessage="#{msg.password} #{msg.ValidationRequire}"/>
-                            <label>#{msg.password}*</label>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.email}*</label>
                             <p:inputText id="email" value="#{userAccountController.selected.email}"  required="true" requiredMessage="#{msg.email} #{msg.ValidationRequire}"/>
-                            <label>#{msg.email}*</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.telephone}</label>
                             <p:inputText id="telephone" value="#{userAccountController.selected.telephone}" />
-                            <label>#{msg.telephone}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:selectBooleanCheckbox itemLabel="#{msg.isSuperAdmin}*" value="#{userAccountController.selected.isSuperAdmin}" required="true" requiredMessage="#{msg.isSuperAdmin} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
                             <p:selectBooleanCheckbox itemLabel="#{msg.isSiteAdmin}*" value="#{userAccountController.selected.isSiteAdmin}" required="true" requiredMessage="#{msg.isSiteAdmin} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:selectBooleanCheckbox itemLabel="#{msg.isLocalAdmin}*" value="#{userAccountController.selected.isLocalAdmin}" required="true" requiredMessage="#{msg.isLocalAdmin} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <p:selectBooleanCheckbox itemLabel="#{msg.isActive}*" value="#{userAccountController.selected.isActive}" required="true" requiredMessage="#{msg.isActive} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="siteId" value="#{userAccountController.selected.siteId}" />
-                            <label>#{msg.siteId}</label>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:calendar id="lastLoginTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{userAccountController.selected.lastLoginTime}" readonlyInput="true" showButtonPanel="true" navigator="true"/>
-                            <label>#{msg.lastLoginTime}</label>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="orgInfoId" value="#{userAccountController.selected.orgInfoId}"  required="true" requiredMessage="#{msg.orgInfoId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.orgInfoId}*</label>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

@@ -12,8 +12,8 @@
                 <div class="ui-g-12 ui-lg-3">
                     <div class="card" style="height:400px;">
                         <p:scrollPanel style="height:98%;border: 0" mode="native">
-                            <p:tree id="orgTree" class="tree" style="width:98%;border:0;" value="#{orgInfoController.orgTree}" var="node" dynamic="true" cache="true" selectionMode="single" selection="#{orgInfoController.selectedNode}" highlight="true">
-                                <p:ajax process="@this" event="select" listener="#{orgInfoController.onSelectTreeNode}" update="orgTree :editForm:editPanel"/>
+                            <p:tree id="orgTree" class="tree" style="width:98%;border:0;" value="#{orgInfoController.orgTree}" var="node" selectionMode="single" selection="#{orgInfoController.selectedNode}" highlight="true">
+                                <p:ajax process="@this" event="select" listener="#{orgInfoController.onSelectTreeNode}" update=":editForm:editPanel"/>
 
                                 <p:treeNode type="org">
                                     <h:outputText value="#{node.name}"/>
