@@ -95,7 +95,7 @@ INSERT INTO "i18n_message" VALUES (234, 'label', 'AssetKMMgmt', '知识库管理
 INSERT INTO "i18n_message" VALUES (235, 'label', 'DeviceMgmtForum', '管理论坛', 'Device Mgmt. Forum', NULL, -1);
 INSERT INTO "i18n_message" VALUES (236, 'label', 'DeviceApplication', '应用/维修培训管理', 'Device Training Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (237, 'label', 'DeviceUpgradMgmt', '升级管理', 'DeviceUpgradMgmt', NULL, -1);
-INSERT INTO "i18n_message" VALUES (238, 'label', 'AdvancedDeviceInfoTracking', '先进设备信息收集跟踪', 'Advanced Machine Data Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (238, 'label', 'AdvancedDeviceInfoTracking', '扫描详情统计', 'Advanced Machine Data Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (239, 'label', 'DeviceOperationKPIAnalysis', '绩效分析', 'Operation KPI Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (240, 'label', 'DeviceROIAnalysis', '平均投资回报分析', 'Device ROI Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (241, 'label', 'DeviceKPIAnalysis', '绩效分析', 'Device KPI Analysis', NULL, -1);
