@@ -517,8 +517,11 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		cst_stat_3.set("total", dt_total);
 
 		valueInuse = new Double(inuse_total).toString();
+		valueInuse = valueInuse.substring(0, valueInuse.indexOf(".")+2);
 		valueDT = new Double(dt_total).toString();
+		valueDT = valueDT.substring(0, valueDT.indexOf(".")+2);
 		valueWait = new Double(wait_total).toString();
+		valueWait = valueWait.substring(0, valueWait.indexOf(".")+2);
 
 		deviceStat.addSeries(cst_stat_3);
 		deviceStat.addSeries(cst_stat_1);
