@@ -416,9 +416,9 @@ INSERT INTO "i18n_message" VALUES (3015,'message','Department', '科室','Depart
 
 
 -- Chart label/lengend （id from 5000 to 5500）
-INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描','Device Scan',null,-1);
+INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描 (次)','Device Scan',null,-1);
 INSERT INTO "i18n_message" VALUES (5001,'label','deviceScanlg', '扫描次数','Scan',null,-1);
-INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光','Device Exposure',null,-1);
+INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光 (小时)','Device Exposure',null,-1);
 INSERT INTO "i18n_message" VALUES (5003,'label','deviceExpolg_1', '曝光时长','Exposure',null,-1);
 INSERT INTO "i18n_message" VALUES (5004,'label','deviceExpolg_2', '基准曝光时长','Device Scan (Baseline)',null,-1);
 INSERT INTO "i18n_message" VALUES (5005,'label','deviceROIhd', '设备投资回报','Device ROI',null,-1);
@@ -427,7 +427,7 @@ INSERT INTO "i18n_message" VALUES (5007,'label','deviceROIlg_2', '利润','Profi
 INSERT INTO "i18n_message" VALUES (5008,'label','countlb', '次','Count',null,-1);
 INSERT INTO "i18n_message" VALUES (5009,'label','hourslb', '小时','Hours',null,-1);
 INSERT INTO "i18n_message" VALUES (5010,'label','CNYlb', '元','CNY',null,-1);
-INSERT INTO "i18n_message" VALUES (5011,'label','deviceUsagehd', '设备使用','Device Usage',null,-1);
+INSERT INTO "i18n_message" VALUES (5011,'label','deviceUsagehd', '设备使用 (小时)','Device Usage',null,-1);
 INSERT INTO "i18n_message" VALUES (5012,'label','deviceUsagelg_1', '使用','In-Use',null,-1);
 INSERT INTO "i18n_message" VALUES (5013,'label','deviceUsagelg_2', '空闲','Idle',null,-1);
 INSERT INTO "i18n_message" VALUES (5014,'label','deviceDThd', '设备停机率','Device Downtime',null,-1);
@@ -440,6 +440,7 @@ INSERT INTO "i18n_message" VALUES (5020,'label','deviceUsageStat_2', '设备总�
 INSERT INTO "i18n_message" VALUES (5021,'label','deviceUsageStat_3', '设备总停机时间 (小时)','Downtime (Hours)',null,-1);
 INSERT INTO "i18n_message" VALUES (5022,'label','deviceScanStat', '设备总扫描次数 (次)','Device Scan (Times)',null,-1);
 INSERT INTO "i18n_message" VALUES (5023,'label','deviceExpoStat', '设备总曝光时间 (小时)','Device Exposure (Hours)',null,-1);
+INSERT INTO "i18n_message" VALUES (5025,'label','deviceDTlg_3', '停机','Downtime',null,-1);
 
 -- device maintenance
 
