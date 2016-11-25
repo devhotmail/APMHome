@@ -161,7 +161,7 @@
       seriesColors: ['rgba(96, 189, 103, 1)', 'rgba(250, 164, 58, 1)'],
       axes: {
         xaxis: {
-          ticks: DEVICE_LIST,
+//          ticks: DEVICE_LIST,
           tickOptions: {
             labelPosition: 'middle',
             angle: -90
@@ -189,7 +189,7 @@
         rendererOptions: {
           numberRows: 0
         },
-        labels: DEPT_LIST,
+//        labels: DEPT_LIST,
         location: 'e',
         renderer: $.jqplot.EnhancedPieLegendRenderer
       },

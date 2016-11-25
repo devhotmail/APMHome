@@ -1,5 +1,6 @@
 package com.ge.apm.view.analysis;
 
+import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.view.sysutil.*;
 
 import java.text.NumberFormat;
@@ -582,6 +583,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
 
         // Calcuate profile = revenue - depreciation - maintenance cost
         profit = calcProfit(r, d, w);
+        localizeAxis(profit, "clinicalDeptId");
 
         String title = new String("Annual Profit Distribution");
         drawPie(title, profit);
@@ -671,9 +673,13 @@ public class HomeHeadController extends SqlConfigurableChartController {
             + "order by a.asset_group asc;";
         
         List<Map<String, Object>> r = prepareData(sql, sqlParams);
+        localizeAxis(r, "assetGroup");
+
         String label = revenueStr;
+
         drawBar(bc, label, r);
-        
+
+
         // get asset deprecate value
         sql = "select a.asset_group as key, "
             + "sum(d.deprecate_amount) as value "
@@ -701,6 +707,25 @@ public class HomeHeadController extends SqlConfigurableChartController {
         drawBar(bc, label, profit);
         barAnnualRevenue = bc;
         barAnnualRevenue.setExtender("barAnnualRevenue");
+    }
+
+    private void localizeAxis(List<Map<String, Object>> results, String key) {
+
+        FieldValueMessageController fieldMsg = WebUtil.getBean(FieldValueMessageController.class, "fieldMsg");
+        List<I18nMessage> messages = fieldMsg.getFieldValueList(key);
+        for (int index = 0; index < messages.size(); index ++) {
+            String msgKey   = messages.get(index).getMsgKey();
+            String value    = messages.get(index).getValue();
+            if (index < results.size()) {
+                Map<String, Object> res = results.get(index);
+
+                if (res.get("key").toString().equals(msgKey)) {
+                    res.put("key", value);
+                }
+            } else {
+                break;  // do not check results parameter, since index is out of results range.
+            }
+        }
     }
 
     private List<Map<String, Object>> prepareData(String sql, HashMap<String, Object> sqlParams) {

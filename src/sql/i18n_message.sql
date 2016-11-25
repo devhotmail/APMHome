@@ -515,8 +515,8 @@ INSERT INTO "i18n_message" VALUES (5588,'label','preventiveMaintenanceAnalysis_d
 -- Home pages start from 5601 to 5700
 
 -- Hospital head home page
-INSERT INTO "i18n_message" VALUES (5601,'label','assetTotalProfit', '设备总利润','Asset Total Profit',null,-1);
-INSERT INTO "i18n_message" VALUES (5602,'label','assetTotalProfitForecast', '设备总利润预测','Asset Total Profit Forecast',null,-1);
+INSERT INTO "i18n_message" VALUES (5601,'label','assetTotalProfit', '设备总利润（单位：元）','Asset Total Profit',null,-1);
+INSERT INTO "i18n_message" VALUES (5602,'label','assetTotalProfitForecast', '设备总利润预测（单位：元）','Asset Total Profit Forecast',null,-1);
 INSERT INTO "i18n_message" VALUES (5603,'label','assetAveROI', '设备平均投资回报（单位：元）','Asset Ave ROI',null,-1);
 INSERT INTO "i18n_message" VALUES (5604,'label','assetROI', '设备投资回报','Asset ROI',null,-1);
 INSERT INTO "i18n_message" VALUES (5605,'label','profitDistro', '利润科室分布（单位：元）','Profit Distribution by Department',null,-1);
@@ -530,10 +530,6 @@ INSERT INTO "i18n_message" VALUES (5611,'clinicalDeptId','5', '心导管室','He
 
 INSERT INTO "i18n_message" VALUES (5612,'label','assetAnnual', '设备绩效年报（单位：元）','Asset Performance Annual Report',null,-1);
 INSERT INTO "i18n_message" VALUES (5613,'label','assetAnnualForecast', '设备绩效年报预测（单位：元）','Asset Performance Forecast Report',null,-1);
-
-
-
-
 
 
 -- update id sequence value
