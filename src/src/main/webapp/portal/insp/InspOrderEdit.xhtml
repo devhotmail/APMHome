@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <p align="center">
+            <b>#{msg.InspectionOrder}</b>
+        </p>
+
+        <h:form id="InspectionOrderEditForm">
+            <p:fieldset legend="#{msg.BasicInfo}" style="margin-bottom:20px">
+                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                    <h:panelGroup>
+                        <label class="label">#{msg.name}*</label>
+                        <p:inputText id="name" value="#{inspectionOrderController.selected.name}" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.creator}*</label>
+                        <p:inputText id="creator" value="#{inspectionOrderController.selected.creatorName}"  readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.createTime}*</label>
+                        <p:calendar id="createTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{inspectionOrderController.selected.createTime}" readonly="true" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.ownerName}*</label>
+                        <!--<p:inputText id="ownerName" value="#{inspectionOrderController.selected.ownerName}" readonly="true"/>-->
+                        <p:selectOneMenu id="ownerName" value="#{inspectionOrderController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith"   >
+                            <p:ajax listener="#{inspectionOrderController.onOwnerChange}" process="@this" update="ownerOrgId"/>
+                            <f:selectItem itemLabel="" />
+                            <f:selectItems value="#{inspectionOrderController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                            <p:column>
+                                <h:outputText value="#{t.name}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{t.telephone}"/>
+                            </p:column>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.ownerOrgId}*</label>
+                        <p:inputText id="ownerOrgId" value="#{inspectionOrderController.selected.ownerOrgName}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.startTime}</label>
+                        <p:calendar id="startTime" pattern="yyyy/MM/dd" value="#{inspectionOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"  readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.endTime}</label>
+                        <p:calendar id="endTime" pattern="yyyy/MM/dd" value="#{inspectionOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"  readonly="true"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <label class="label">#{msg.comments}</label>
+                        <p:inputText id="comments" value="#{inspectionOrderController.selected.comments}" />
+                    </h:panelGroup>
+
+                </p:panelGrid>
+            </p:fieldset>
+
+
+            <p:fieldset legend="#{msg.BasicInfo}" style="margin-bottom:20px">
+                <p:dataTable id="datalist" value="#{inspectionOrderController.orderDetailItemList}" var="item" widgetVar="varDataList" 
+                             paginator="true" rowKey="#{item.id}" 
+                             paginatorTemplate="{CurrentPageReport}" rowIndexVar="rowIndex" emptyMessage="#{msg.noRecordFound}"
+                             currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                             scrollable="true" scrollHeight="400">
+
+                    <p:column  style="width: 10%">
+                        <h:outputText value="#{rowIndex}" />
+                    </p:column>
+                    <p:column headerText="#{msg.itemName}">
+                        <h:outputText value="#{item.itemName}" />
+                    </p:column>
+                    <p:column headerText="#{msg.isPassed}" style="align-content: center; width: 10%">
+                        <p:selectBooleanCheckbox value="#{item.isPassed}"   disabled="true" />
+                    </p:column>
+                </p:dataTable>
+
+
+            </p:fieldset>
+            <p:fieldset legend="#{msg.attachmentUrl}" style="margin-bottom:20px">
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                    <h:panelGroup >
+<!--                        <p:dataList id="pictureList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="definition">
+                            <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 1)}</f:facet>
+
+                        #{fileitem.name}
+                        <p:commandButton immediate="true" actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton">
+                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
+                        </p:commandButton>
+                    </p:dataList>-->
+<!--                        <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                  multiple="true"  sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="pictureList"/>-->
+                    </h:panelGroup>
+                </p:panelGrid>
+
+            </p:fieldset>
+
+<!--<p:dialog id="InspectionOrderEditDlg" widgetVar="InspectionOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionOrderController.CRUDActionName} #{msg.InspectionOrder}">-->
+            <h:panelGroup id="display">
+                <h:panelGroup >
+                    <p:commandButton value="#{msg.Save}" action="#{inspectionOrderController.updateOrder()}" validateClient="true" style="float:right"/>  
+                    <!--<p:commandButton rendered="#{inspectionOrderController.deleteAction}" icon="ui-icon-trash" action="#{inspectionOrderController.removeOne()}" value="#{msg.Delete}" style="float:right"/>-->
+                    <p:commandButton value="#{msg.Return}" action="InspOrderList?faces-redirect=true" immediate="true" style="float:right"/>  
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:form>
+        <br/>
+        <br/>
+        <br/>
+        <!--</p:dialog>-->
+
+    </ui:define>
+</ui:composition>
