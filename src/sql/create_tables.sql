@@ -201,7 +201,6 @@ create table inspection_order(
 id serial not null,
 order_type int not null,
 site_id int not null,
-asset_id int not null,
 name varchar(64) not null,
 creator_id int not null,
 creator_name varchar(16) not null,
@@ -223,6 +222,8 @@ site_id int not null,
 order_id int not null,
 dept_id int not null,
 dept_name varchar(64) not null,
+asset_id int not null,
+asset_name varchar(64) not null,
 item_id int not null,
 item_name varchar(64) not null,
 is_passed bool not null);
@@ -418,4 +419,3 @@ ALTER TABLE work_order_step ADD FOREIGN KEY (work_order_id) REFERENCES work_orde
 ALTER TABLE work_order_step_detail ADD FOREIGN KEY (step_id) REFERENCES work_order_step (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE asset_depreciation ADD FOREIGN KEY (asset_id) REFERENCES asset_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
-

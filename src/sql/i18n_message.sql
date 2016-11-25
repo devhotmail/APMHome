@@ -54,6 +54,7 @@ INSERT INTO "i18n_message" VALUES (49, 'label','Finish', '完成','Finish ',null
 INSERT INTO "i18n_message" VALUES (50, 'label','Actions', '操作','Actions ',null,-1);
 INSERT INTO "i18n_message" VALUES (51, 'label','DataSavedOK', '数据已经保存成功.','data saved successfully ',null,-1);
 INSERT INTO "i18n_message" VALUES (52, 'label','Welcome', '欢迎您','Welcome',null,-1);
+INSERT INTO "i18n_message" VALUES (53, 'label','DuplicateLoginName', '登录用户名 "%s" 已有人使用，请更换登录用户名.','Login name already used by others, please change to another login name.',null,-1);
 
 -- menu item names  ( id from 200 to  399)
 
