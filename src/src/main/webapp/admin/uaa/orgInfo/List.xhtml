@@ -6,55 +6,66 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="content">
-        <div class="ui-g">
-            <div class="ui-g-12">
+        <h:form id="editForm">
 
-                <p align="center">
-                    <b>#{msg.OrgInfo}</b>
-                </p>
-            <h:form id="OrgInfoListForm">
-                <p:dataTable id="datalist" value="#{orgInfoController.lazyModel}" var="item" widgetVar="varDataList"
-                    selectionMode="single" selection="#{orgInfoController.selected}"
-                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
-                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
-                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
-                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
-                    rows="20" emptyMessage="#{msg.noRecordFound}"
-                    rowsPerPageTemplate="20,40,60,90">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12 ui-lg-3">
+                    <div class="card" style="height:400px;">
 
-                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
-                    <p:ajax event="filter" listener="#{orgInfoController.onFilter}" update="createButton editButton viewButton deleteButton"/>
-                    
-                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.id}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.name}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.nameEn}" sortBy="#{item.nameEn}" filterBy="#{item.nameEn}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.nameEn}"/>
-                    </p:column>
-                    <f:facet name="{Toolbar}">
-                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
-                            <p:dataExporter type="xls" target="datalist" fileName="OrgInfo_export"/>
-                        </p:commandButton>
-                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{orgInfoController.prepareCreate}" update=":OrgInfoEditDlg" oncomplete="PF('OrgInfoEditDialog').show()"/>
-                        <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{orgInfoController.prepareView}" update=":OrgInfoViewDlg" oncomplete="PF('OrgInfoViewDialog').show()" disabled="#{empty orgInfoController.selected}"/>
-                        <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{orgInfoController.prepareEdit}" update=":OrgInfoEditDlg" oncomplete="PF('OrgInfoEditDialog').show()" disabled="#{empty orgInfoController.selected}"/>
-                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{orgInfoController.delete}" update="datalist" disabled="#{empty orgInfoController.selected}">
-                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
-                        </p:commandButton>
-                        
-                    </f:facet>
-                </p:dataTable>
-            </h:form>
+                        <p:commandButton id="btnSite" style="max-width:160px;" value="#{orgInfoController.selectedSite.name}" type="button" icon="fa fa-angle-down" iconPos="right"/>
+                        <p:overlayPanel widgetVar="varPanelSite" for="btnSite" hideEffect="fade" dynamic="false" modal="false">
+                            <p:selectOneListbox style="border: none;" value="#{orgInfoController.siteId}">
+                                <p:ajax process="@this" event="click" update=":editForm" oncomplete="PF('varPanelSite').hide();"/>
 
-            <ui:include src="Edit.xhtml"/>
-            <ui:include src="View.xhtml"/>
+                                <f:selectItems value="#{siteInfoController.itemList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                            </p:selectOneListbox>
+                        </p:overlayPanel>
 
+                        <p:scrollPanel style="height:95%;border: 0" mode="native">
+                            <p:tree id="orgTree" class="tree" style="width:98%;border:0;" value="#{orgInfoController.orgTree}" var="node" selectionMode="single" selection="#{orgInfoController.selectedNode}" highlight="true">
+                                <p:ajax process="@this" event="select" listener="#{orgInfoController.onSelectTreeNode}" update=":editForm:editPanel"/>
+
+                                <p:treeNode type="org">
+                                    <h:outputText value="#{node.name}"/>
+                                </p:treeNode>
+                            </p:tree>
+                        </p:scrollPanel>
+                    </div>
+                </div>
+
+                <div class="ui-g-12 ui-lg-9">
+                    <div class="card" style="height:400px;">
+                        <h:panelGroup id="editPanel">
+                            <h:panelGrid columns="8">
+                                <p:commandButton id="createButton" process="@this" icon="ui-icon-plus" value="#{msg.Create} #{msg.Hospital}" actionListener="#{orgInfoController.prepareCreateHospital}" update=":editForm:editPanel"/>
+                                <p:commandButton id="createButton2" process="@this" icon="ui-icon-plus" value="#{msg.Create} #{msg.Department}" disabled="#{orgInfoController.selected eq null}" actionListener="#{orgInfoController.prepareCreateDepartment}" update=":editForm:editPanel"/>
+                                <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" value="#{msg.Delete}" actionListener="#{orgInfoController.deleteSelectedOrg}" update=":editForm" disabled="#{empty orgInfoController.selected}">
+                                    <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                                </p:commandButton>
+                            </h:panelGrid>
+                            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="width: 30%" rendered="#{orgInfoController.selected ne null}">
+                                <h:panelGroup>
+                                    <label class="label">#{msg.parentId}</label>
+                                    <p:outputLabel value="#{orgInfoController.selected.parentOrg}" rendered="#{orgInfoController.selected.parentOrg ne null}"/>
+                                    <p:outputLabel value="N/A" rendered="#{orgInfoController.selected.parentOrg eq null}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.name}*</label>
+                                    <p:inputText id="name" value="#{orgInfoController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.nameEn}</label>
+                                    <p:inputText id="nameEn" value="#{orgInfoController.selected.nameEn}" />
+                                </h:panelGroup>
+
+                                <p:commandButton style="width: 90px;" process=":editForm:editPanel" validateClient="true" icon="ui-icon-check" actionListener="#{orgInfoController.saveSelectedOrg}" value="#{msg.Save}" update="orgTree"/>
+                            </p:panelGrid>
+
+                        </h:panelGroup>
+                    </div>
+                </div>
             </div>
-        </div>
-        
+        </h:form>
     </ui:define>
 
 </ui:composition>

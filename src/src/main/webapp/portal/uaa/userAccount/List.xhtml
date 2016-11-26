@@ -15,10 +15,12 @@
             <h:form id="UserAccountListForm">
 
                 <p:commandButton id="btnOrg" value="#{userAccountController.selectedOrg.name}" type="button" icon="fa fa-angle-down" iconPos="right"/>
-                <p:overlayPanel widgetVar="varPanelOrg" id="moviePanel" for="btnOrg" hideEffect="fade" dynamic="false" style="width:300px" modal="false">
+                <p:overlayPanel widgetVar="varPanelOrg" id="panelOrg" for="btnOrg" hideEffect="fade" dynamic="false" style="width:300px" modal="false">
                     <p:scrollPanel style="height:300px;border: 0" mode="native">
-                        <p:tree id="orgTree" class="tree" style="width:98%;border:0;" value="#{userAccountController.orgTree}" selection="#{userAccountController.selectedNode}" var="node" selectionMode="single">
-                            <p:ajax process="@this" event="select" update=":UserAccountListForm:datalist" listener="#{userAccountController.onSelectTreeNode}" oncomplete="PF('varPanelOrg').hide();"/>
+                        <p:tree id="orgTree" class="tree" style="width:98%;border:0;" value="#{userAccountController.orgTree}" selection="#{userAccountController.selectedNode}" cache="false" dynamic="false" var="node" selectionMode="single">
+                            <p:ajax process="@this" event="select" update=":UserAccountListForm" listener="#{userAccountController.onSelectTreeNode}" oncomplete="PF('varPanelOrg').hide();"/>
+                            <p:ajax process="@this" event="expand"/>
+                            <p:ajax process="@this" event="collapse"/>
 
                             <p:treeNode type="org">
                                 <h:outputText value="#{node.name}"/>
