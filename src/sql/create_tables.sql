@@ -106,8 +106,9 @@ CREATE TABLE "sys_role" (
 
 CREATE TABLE "user_account" (
 "id" serial NOT NULL,
-org_id int4 NOT NULL,
+site_id int4,
 hospital_id int4 not null,
+org_id int4 NOT NULL,
 "login_name" varchar(16) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
 "name" varchar(32) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
 "password" varchar(16) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
@@ -118,7 +119,6 @@ hospital_id int4 not null,
 "is_local_admin" bool DEFAULT false NOT NULL,
 "is_active" bool DEFAULT true NOT NULL,
 "is_online" bool DEFAULT false,
-site_id int4,
 "last_login_time" timestamp(6)
 );
 
