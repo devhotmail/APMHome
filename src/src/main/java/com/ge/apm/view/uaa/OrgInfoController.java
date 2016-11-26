@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.OrgInfoRepository;
+import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.domain.OrgInfo;
+import com.ge.apm.domain.SiteInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
@@ -29,8 +31,8 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
         uaaService = WebUtil.getBean(UaaService.class);
         
         UserAccount loginUser = UserContextService.getCurrentUserAccount();
-        siteId = loginUser.getSiteId();
-        hospitalId =  loginUser.getHospitalId();
+        setSiteId(loginUser.getSiteId());
+        setHospitalId(loginUser.getHospitalId());
         buildOrdTree();
     }
 
@@ -55,7 +57,23 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
     }
     public void setSiteId(int siteId) {
         this.siteId = siteId;
+        SiteInfoRepository siteDao = WebUtil.getBean(SiteInfoRepository.class);
+        selectedSite = siteDao.findById(siteId);
+        
+        this.selected = null;
+        buildOrdTree();
     }
+    
+    private SiteInfo selectedSite;
+
+    public SiteInfo getSelectedSite() {
+        return selectedSite;
+    }
+
+    public void setSelectedSite(SiteInfo selectedSite) {
+        this.selectedSite = selectedSite;
+    }
+    
     public int getHospitalId() {
         return hospitalId;
     }
@@ -118,6 +136,7 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
     }
 
     public void saveSelectedOrg(){
+        System.out.println("*************** this.selected="+this.selected);
         super.save();
         buildOrdTree();
     }

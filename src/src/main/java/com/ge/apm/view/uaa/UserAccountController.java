@@ -1,5 +1,6 @@
 package com.ge.apm.view.uaa;
 
+import com.ge.apm.dao.SiteInfoRepository;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.OrgInfo;
+import com.ge.apm.domain.SiteInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.UserRole;
 import com.ge.apm.service.uaa.UaaService;
@@ -29,18 +31,48 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     protected void init() {
         uaaService = WebUtil.getBean(UaaService.class);
         dao = WebUtil.getBean(UserAccountRepository.class);
+
+        UserAccount loginUser = UserContextService.getCurrentUserAccount();
+        setSiteId(loginUser.getSiteId());
         
-        orgTree = uaaService.getFullOrgTreeBySiteId(UserContextService.getSiteId(), UserContextService.getCurrentUserAccount().getOrgInfoId());
+        orgTree = buildOrgTree(UserContextService.getSiteId(), loginUser.getOrgInfoId());
         try{
             DefaultTreeNode selectedNode = (DefaultTreeNode)orgTree.getData();
             this.selectedOrg = (OrgInfo) selectedNode.getData();
-            System.out.println("******************* selectedOrg="+selectedOrg);
         }
         catch(Exception ex){
-            ex.printStackTrace();
         }
     }
-
+    private int siteId;
+    public int getSiteId() {
+        return siteId;
+    }
+    public void setSiteId(int siteId) {
+        this.siteId = siteId;
+        SiteInfoRepository siteDao = WebUtil.getBean(SiteInfoRepository.class);
+        selectedSite = siteDao.findById(siteId);
+        buildOrgTree(siteId, null);
+    }
+    
+    private SiteInfo selectedSite;
+    public SiteInfo getSelectedSite() {
+        return selectedSite;
+    }
+    
+    public TreeNode buildOrgTree(int siteId, Integer selectedOrgId){
+        orgTree = uaaService.getFullOrgTreeBySiteId(siteId, selectedOrgId);
+        try{
+            selectedOrg = null;
+            DefaultTreeNode selectedNode = (DefaultTreeNode)orgTree.getData();
+            selectedOrg = (OrgInfo) selectedNode.getData();
+        }
+        catch(Exception ex){
+        }
+        if(selectedOrg==null)
+            selectedOrg = (OrgInfo)((DefaultTreeNode)orgTree.getChildren().get(0)).getData();
+        
+        return orgTree;
+    }    
     @Override
     protected UserAccountRepository getDAO() {
         return dao;
@@ -64,13 +96,6 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     public String getKeyFieldNameValue(UserAccount obj){
         return WebUtil.getMessage("login_name")+"="+obj.getLoginName();
     }
-
-    @Override
-    public List<UserAccount> getItemList() {
-        //to do: change the code if necessary
-        return dao.find();
-    }
-
     
     private List<String> allRoles;
     private List<String> assignedRoles;
@@ -133,7 +158,7 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
 
         selectedOrg = (OrgInfo)node.getData();
     }
-    
+
     @Override
     public void prepareCreate() throws InstantiationException, IllegalAccessException{
         super.prepareCreate();
