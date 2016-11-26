@@ -9,6 +9,7 @@ import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.InspectionOrderRepository;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.InspectionChecklist;
 import com.ge.apm.domain.InspectionOrder;
 import com.ge.apm.domain.InspectionOrderDetail;
 import com.ge.apm.domain.OrgInfo;
@@ -22,11 +23,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.bean.ManagedProperty;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.TreeNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -36,11 +37,12 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
     InspectionOrderRepository dao = null;
 
     private TreeNode orgAssetTree;
-
-    List<TreeNode> selectedNodesList;
+    List<Object[]> selectedNodesList;
     TreeNode[] selectedNodes;
 
-    @ManagedProperty("#{inspectionService}")
+    private TreeNode excuteItemTree;
+    TreeNode[] excutedItemArray;
+
     InspectionService inspectionService;
 
     int assetGrossCount;
@@ -54,16 +56,15 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
 
     List<InspectionOrderDetail> orderDetailItemList;
 
-    private boolean allPass;
-
     AttachmentFileService fileService;
 
     @Override
     protected void init() {
         dao = WebUtil.getBean(InspectionOrderRepository.class);
         fileService = WebUtil.getBean(AttachmentFileService.class);
+        inspectionService = WebUtil.getBean(InspectionService.class);
         uuaService = WebUtil.getBean(UaaService.class);
-        orgAssetTree = uuaService.getOrgAssetTree(UserContextService.getCurrentUserAccount().getHospitalId());
+        orgAssetTree = inspectionService.getPlanTree(1);
         assetGrossCount = getTreeCount(orgAssetTree);
 
         String actionName = WebUtil.getRequestParameter("actionName");
@@ -89,14 +90,33 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
             owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareDelete();
+        } else if ("Excute".equalsIgnoreCase(actionName)) {
+            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+            owner = inspectionService.getUserAccountById(selected.getOwnerId());
+            excuteItemTree = inspectionService.getInspectionOrderDetailAsTree(selected.getId(), true);
+            setTreeStatus(excuteItemTree);
         }
 
         ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
     }
 
+    private void setTreeStatus(TreeNode node) {
+        int sum = 0;
+        if ("checklist".equals(node.getType())) {
+            boolean status = ((InspectionOrderDetail) node.getData()).getIsPassed();
+            if (status) {
+                node.setSelected(true);
+                node.setSelectable(false);
+            }
+        }
+        for (TreeNode item : node.getChildren()) {
+            setTreeStatus(item);
+        }
+    }
+
     private int getTreeCount(TreeNode node) {
         int sum = 0;
-        if ("asset".equals(node.getType())) {
+        if ("checklist".equals(node.getType())) {
             return 1;
         } else if (node.getChildCount() == 0) {
             return 0;
@@ -123,93 +143,46 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
 
     @Override
     public List<InspectionOrder> getItemList() {
-        //to do: change the code if necessary
         return dao.find();
     }
 
     public void onUnselectTreeNode(NodeUnselectEvent event) {
-//        if (!event.getTreeNode().getType().equals("asset")) {
-//            for (TreeNode item : event.getTreeNode().getChildren()) {
-//                item.setSelected(false);
-//            }
-//        }
-        selectedNodesList = getSelectedAsset();
+        //for create page unselected asset
+        selectedNodesList = getSelectedItem();
     }
 
     public void onSelectTreeNode(NodeSelectEvent event) {
-//        if (event.getTreeNode().getType() == "org") {
-//            for (TreeNode item : event.getTreeNode().getChildren()) {
-//                item.setSelected(true);
-//            }
-//        }
-
-        selectedNodesList = getSelectedAsset();
+        //for create page selected asset
+        selectedNodesList = getSelectedItem();
     }
 
-    public void removeSelectedAsset(TreeNode node) {
-
-        selectedNodesList.remove(node);
-
-//        for(TreeNode item: selectedNodesList){
-//            if(((AssetInfo)item.getData()).getId()!=((AssetInfo)node.getData()).getId()){
-//                selectedNodesList.remove(item);
-//            }
-//        }
-        node.setSelected(false);
-//        AssetInfo assetData = (AssetInfo)node.getData();
-//        List<TreeNode> tempList = Arrays.asList(selectedNodes);
-//        for (TreeNode item : selectedNodes) {
-//            if (item.getType().equals("asset") && assetData.getId()!= ((AssetInfo)item.getData()).getId()) {
-//                tempList.remove(item);
-//            }
-//        }
-//        
+//    public void removeSelectedAsset(TreeNode node) {
+//        selectedNodesList.remove(node);
 //        node.setSelected(false);
-//        selectedNodes = tempList.toArray(selectedNodes);
-    }
+//    }
 
-    public List<TreeNode> getSelectedAsset() {
-        List<TreeNode> tempList = new ArrayList();
+    public List<Object[]> getSelectedItem() {
+        //for create page datalist
+        List<Object[]> tempList = new ArrayList();
         for (TreeNode item : selectedNodes) {
-            if (item.getType() == "asset") {
-                tempList.add(item);
+            if (item.getType().equals("checklist")) {
+                Object[] content = new Object[3];
+                content[0] = (InspectionChecklist) item.getData();
+                content[1] = (AssetInfo) item.getParent().getData();
+                content[2] = (OrgInfo) item.getParent().getParent().getData();
+                tempList.add(content);
             }
         }
         return tempList;
     }
-
-//    public List<TreeNode> getSelectedAsset(TreeNode treeNode) {
-//
-//        List<TreeNode> tempList = new ArrayList();
-//
-//        if (treeNode.getType() == "asset") {
-//            if (treeNode.isSelected()) {
-//                tempList.add(treeNode);
-//            }
-//            return tempList;
-//        } else {
-//            for (TreeNode item : treeNode.getChildren()) {
-//                if (treeNode.isSelected()) {
-//                    item.setSelected(true);
-//                }
-//                tempList.addAll(getSelectedAsset(item));
-//            }
-//        }
-//        return tempList;
-//    }
+    
     public String createOrder() {
-
+        //for create page submit
         if (selectedNodesList.isEmpty()) {
             WebUtil.addErrorMessage(WebUtil.getMessage("noAssetSelected"));
             return "";
         }
-
-        boolean isSuccess = true;
-        for (TreeNode item : selectedNodesList) {
-            AssetInfo asset = (AssetInfo) item.getData();
-//            selected.setAssetId(asset.getId());
-            isSuccess = isSuccess && inspectionService.createOrder(selected, period);
-        }
+        boolean isSuccess = inspectionService.createOrder(selected, period, selectedNodesList);
         if (isSuccess) {
             return "InspOrderList";
         } else {
@@ -224,7 +197,6 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         object.setCreatorName(UserContextService.getCurrentUserAccount().getName());
         object.setOrderType(1);
         object.setCreateTime(new Date());
-
     }
 
     public void onOwnerChange() {
@@ -247,74 +219,45 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         }
     }
 
-    public void selectAllPass() {
-        for (InspectionOrderDetail item : orderDetailItemList) {
-            item.setIsPassed(allPass);
-        }
-    }
+//    public void selectAllPass() {
+//        for (InspectionOrderDetail item : orderDetailItemList) {
+//            item.setIsPassed(allPass);
+//        }
+//    }
 
     public String excuteOrder() {
-        boolean isFinished = true;
-        for (InspectionOrderDetail item : orderDetailItemList) {
-            isFinished = isFinished && item.getIsPassed();
+        List<InspectionOrderDetail> checkItemList = new ArrayList();
+        int excutedCount = 0;
+        for (TreeNode item : excutedItemArray) {
+            if (item.getType().equals("checklist")) {
+                InspectionOrderDetail checkItem = (InspectionOrderDetail) item.getData();
+                checkItem.setIsPassed(true);
+                checkItemList.add(checkItem);
+                excutedCount++;
+            }
         }
-        this.selected.setIsFinished(isFinished);
-        inspectionService.excuteOrder(this.selected, orderDetailItemList);
-
+        this.selected.setIsFinished(getTreeCount(excuteItemTree) == excutedCount);
+        inspectionService.excuteOrder(this.selected, checkItemList);
         return "InspOrderList";
     }
 
-    public String updateOrder() {
-        inspectionService.updateOrder(this.selected, orderDetailItemList);
-        return "InspOrderList";
-    }
+//    public String updateOrder() {
+//        inspectionService.updateOrder(this.selected, orderDetailItemList);
+//        return "InspOrderList";
+//    }
 
     public void handleFileUpload(FileUploadEvent event) {
-//        String fileName = fileService.getFileName(event.getFile());
-//        selected.setName(fileName);
         Integer id = fileService.uploadFile(event.getFile());
         selected.setPaperUrl(id.toString());
     }
-    
-    public void removeAttach(){
+
+    public void removeAttach() {
         fileService.deleteAttachment(Integer.valueOf(selected.getPaperUrl()));
         selected.setPaperUrl(null);
-        
+
     }
 
-    /*
-    @Override
-    public void onBeforeNewObject(InspectionOrder object) {
-    }
-    
-    @Override
-    public void onAfterNewObject(InspectionOrder object, boolean isOK) {
-    }
-
-    @Override
-    public void onBeforeUpdateObject(InspectionOrder object) {
-    }
-    
-    @Override
-    public void onAfterUpdateObject(InspectionOrder object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeDeleteObject(InspectionOrder object) {
-    }
-    
-    @Override
-    public void onAfterDeleteObject(InspectionOrder object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeSave(InspectionOrder object) {
-    }
-    
-    @Override
-    public void onAfterDataChanged(){
-    };
-     */
+    //getter and setter
     public TreeNode getOrgAssetTree() {
         return orgAssetTree;
     }
@@ -331,11 +274,11 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         this.selectedNodes = selectedNodes;
     }
 
-    public List<TreeNode> getSelectedNodesList() {
+    public List<Object[]> getSelectedNodesList() {
         return selectedNodesList;
     }
 
-    public void setSelectedNodesList(List<TreeNode> selectedNodesList) {
+    public void setSelectedNodesList(List<Object[]> selectedNodesList) {
         this.selectedNodesList = selectedNodesList;
     }
 
@@ -387,12 +330,20 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         this.orderDetailItemList = orderDetailItemList;
     }
 
-    public boolean isAllPass() {
-        return allPass;
+    public TreeNode getExcuteItemTree() {
+        return excuteItemTree;
     }
 
-    public void setAllPass(boolean allPass) {
-        this.allPass = allPass;
+    public void setExcuteItemTree(TreeNode excuteItemTree) {
+        this.excuteItemTree = excuteItemTree;
+    }
+
+    public TreeNode[] getExcutedItemArray() {
+        return excutedItemArray;
+    }
+
+    public void setExcutedItemArray(TreeNode[] excutedItemArray) {
+        this.excutedItemArray = excutedItemArray;
     }
 
 }

@@ -22,8 +22,8 @@
                     rows="20" emptyMessage="#{msg.noRecordFound}"
                     rowsPerPageTemplate="20,40,60,90">
 
-                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton excuteButton"/>
-                    <p:ajax event="filter" listener="#{inspectionOrderController.onFilter}" update="createButton editButton viewButton deleteButton excuteButton"/>
+                    <p:ajax event="rowSelect" update="createButton  viewButton deleteButton excuteButton"/>
+                    <p:ajax event="filter" listener="#{inspectionOrderController.onFilter}" update="createButton  viewButton deleteButton excuteButton"/>
                     
 <!--                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
                         <h:outputText value="#{item.id}"/>
@@ -90,17 +90,17 @@
                     <p:column headerText="#{msg.paperUrl}" sortBy="#{item.paperUrl}" filterBy="#{item.paperUrl}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.paperUrl}"/>
                     </p:column>
-                    <p:column headerText="#{msg.assetName}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
+<!--                    <p:column headerText="#{msg.assetName}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
                         <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>
-                    </p:column>
+                    </p:column>-->
                     <f:facet name="{Toolbar}">
                         <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
                             <p:dataExporter type="xls" target="datalist" fileName="InspectionOrder_export"/>
                         </p:commandButton>
                         <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}"  action="InspOrderCreate?faces-redirect=true&amp;actionName=Create"/>
                         <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}"  action="#{inspectionOrderController.getViewPage('InspOrderDetail','View')}"  disabled="#{empty inspectionOrderController.selected}"/>
-                        <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}"  action="#{inspectionOrderController.getViewPage('InspOrderEdit','Edit')}" disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>
-                        <p:commandButton id="excuteButton" icon="ui-icon-run" class="btn btn-sm btn-gray" title="#{msg.Excute}"  action="#{inspectionOrderController.getViewPage('InspOrderExcute','Edit')}" disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>
+                        <!--<p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}"  action="#{inspectionOrderController.getViewPage('InspOrderEdit','Edit')}" disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>-->
+                        <p:commandButton id="excuteButton" icon="ui-icon-run" class="btn btn-sm btn-gray" title="#{msg.Excute}"  action="#{inspectionOrderController.getViewPage('InspOrderExcute','Excute')}" disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>
                         <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}"  action="#{inspectionOrderController.getViewPage('InspOrderDetail','Delete')}" disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>
                     </f:facet>
                 </p:dataTable>

@@ -58,32 +58,19 @@
 
 
             <p:fieldset legend="#{msg.BasicInfo}" style="margin-bottom:20px">
-                <p:dataTable id="datalist" value="#{inspectionOrderController.orderDetailItemList}" var="item" widgetVar="varDataList" 
-                             paginator="true" rowKey="#{item.id}" 
-                             paginatorTemplate="{CurrentPageReport}" rowIndexVar="rowIndex" emptyMessage="#{msg.noRecordFound}"
-                             currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
-                             scrollable="true" scrollHeight="400">
 
-                    <p:column  style="width: 10%">
-                        <h:outputText value="#{rowIndex}" />
-                    </p:column>
-                    <p:column headerText="#{msg.itemName}">
-                        <h:outputText value="#{item.itemName}" />
-                    </p:column>
-                    <p:column headerText="#{msg.isPassed}" style="align-content: center; width: 15%">
-                        <f:facet name="header">
-                            <p:selectBooleanCheckbox id="selectAll" value="#{inspectionOrderController.allPass}" itemLabel="#{msg.isPassed}" onchange="alert(this.value);" >
-                                <p:ajax update=":InspectionOrderEditForm:datalist" process="@this" listener="#{inspectionOrderController.selectAllPass()}" />
-                            </p:selectBooleanCheckbox>
-                        </f:facet>
-                        <p:selectBooleanCheckbox id="items" value="#{item.isPassed}">
-                            <p:ajax update="datalist" />
-                        </p:selectBooleanCheckbox>
-                    </p:column>
-
-
-                </p:dataTable>
-
+                <p:tree id="assetTree" class="tree" style="border:0;" value="#{inspectionOrderController.excuteItemTree}" selection="#{inspectionOrderController.excutedItemArray}" var="node" dynamic="true" cache="false" selectionMode="checkbox"  highlight="true">
+                    <p:ajax event="select" listener="#{inspectionOrderController.onSelectCheckItemNode}" />
+                    <p:treeNode type="org">
+                        <h:outputText value="#{node}"/>
+                    </p:treeNode>
+                    <p:treeNode type="asset" icon="ui-icon-wifi-tethering">
+                        <h:outputText value="#{node}"/>
+                    </p:treeNode>
+                    <p:treeNode type="checklist">
+                        <h:outputText value="#{node.itemName}"/>
+                    </p:treeNode>
+                </p:tree>
 
             </p:fieldset>
             <p:fieldset legend="#{msg.Attachment}" style="margin-bottom:20px">
@@ -92,25 +79,18 @@
                         <h:panelGroup  rendered="#{inspectionOrderController.selected.paperUrl != null}">
                             <h:outputText value="file"  />
                             <p:commandButton  id="iconOnly" actionListener="#{inspectionOrderController.removeAttach()}" update=":InspectionOrderEditForm:attchmentFile" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton">
-                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
+                                <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
                             </p:commandButton>
                         </h:panelGroup>
-    <!--                        <p:dataList id="attchFile" value="#{inspectionOrderController.selected.paperUrl}" var="fileitem" type="definition">
-                                <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 1)}</f:facet>
-    
-                        #{fileitem.name}
-                        <p:commandButton immediate="true" actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton">
-                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
-                        </p:commandButton>
-                    </p:dataList>-->
-                        <p:fileUpload id="type1" fileUploadListener="#{inspectionOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                  multiple="false"  sizeLimit="1000000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update=":InspectionOrderEditForm:attchmentFile"/>
+                        <h:panelGroup rendered="#{inspectionOrderController.selected.paperUrl == null}">
+                            <p:fileUpload id="type1" fileUploadListener="#{inspectionOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                          multiple="false"  sizeLimit="1000000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update=":InspectionOrderEditForm:attchmentFile"/>
+                        </h:panelGroup>
                     </h:panelGroup>
                 </p:panelGrid>
 
             </p:fieldset>
 
-<!--<p:dialog id="InspectionOrderEditDlg" widgetVar="InspectionOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionOrderController.CRUDActionName} #{msg.InspectionOrder}">-->
             <h:panelGroup id="display">
                 <h:panelGroup >
                     <p:commandButton icon="ui-icon-save" action="#{inspectionOrderController.excuteOrder()}" value="#{msg.save}" style="float:right"/>
@@ -121,7 +101,6 @@
         <br/>
         <br/>
         <br/>
-        <!--</p:dialog>-->
 
     </ui:define>
 </ui:composition>
