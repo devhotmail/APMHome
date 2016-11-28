@@ -214,10 +214,10 @@
                                 <p:dataExporter type="xls" target="datalist" fileName="AssetInfo_export"/>
                             </p:commandButton>
                             <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetInfoController.prepareCreate}" action="Create?faces-redirect=true&amp;actionName=Create" />
-                            <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" action="#{assetInfoController.getViewPage('Detail','View')}"  disabled="#{empty assetInfoController.selected}" >
+                            <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" action="#{assetInfoController.getViewPage('Detail','View')}"  disabled="#{empty assetInfoController.selected}" >
                             </p:commandButton>
                             <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" action="#{assetInfoController.getViewPage('Create','Edit')}" disabled="#{empty assetInfoController.selected}" />
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" action="#{assetInfoController.getViewPage('View','Delete')}" disabled="#{empty assetInfoController.selected}"/>
+                            <p:commandButton rendered="false" id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" action="#{assetInfoController.getViewPage('View','Delete')}" disabled="#{empty assetInfoController.selected}"/>
                         </f:facet>
                     </p:dataTable>
                 </h:form>
