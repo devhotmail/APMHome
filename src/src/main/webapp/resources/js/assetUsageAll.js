@@ -73,6 +73,7 @@
       },
       rendererOptions: {
         highlightMouseOver: true,
+        smooth: false,
         barWidth: 10,
         animation: {
           speed: 500
@@ -81,9 +82,25 @@
     },
   };
 
+  function seriesSum(data) {
+    return data.reduce(function(sum, serie) {
+      var val = serie[0];
+      return sum + (typeof val === 'number' ? val : serie.reduce(function(serieSum, slot) {
+                return serieSum + slot[0];
+              }, 0)
+          );
+    }, 0);
+  }
+
   window.deviceStat = function() {
+    var _this = this;
+    var data = this.cfg.data;
+    var total = seriesSum(data);
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
       legend: {
+        show: false
+      },
+      highlighter: {
         show: false
       },
       height: 50,
@@ -95,6 +112,10 @@
         shadow: false
       },
       seriesDefaults: {
+        rendererOptions: {
+          barWidth: 10,
+          highlightMouseOver: false,
+        },
         pointLabels: {
           show: false
         }
@@ -110,6 +131,8 @@
           drawMajorTickMarks: false,
           showTickMarks: false,
           pad: 0,
+          min: 0,
+          max: total,
           rendererOptions: {
             drawBaseline: false
           }
@@ -123,17 +146,7 @@
           }
         },
       },
-      seriesColors: ['rgba(241, 124, 176, 1)', 'rgba(178, 145, 46, 1)', 'rgba(229, 17, 111, 1)'],
-      series: [
-        {
-          pointLabels: {
-            location: 'n',
-          }
-        }, {
-          pointLabels: {
-            location: 's',
-          }
-        }]
+      seriesColors: ['rgba(241, 124, 176, 1)', 'rgba(178, 145, 46, 1)', 'rgba(229, 17, 111, 1)']
     });
   }
 
@@ -141,6 +154,12 @@
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
       legend: {
         labels: ['扫描量'],
+      },
+      highlighter: {
+        show: true,
+        tooltipAxes: 'y',
+        formatString: null,
+        tooltipFormatString: '%d 次'
       },
       seriesColors: ['rgba(93, 165, 218, 1)'],
     });
@@ -150,6 +169,12 @@
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
       legend: {
         labels: ['扫描量'],
+      },
+      highlighter: {
+        show: true,
+        tooltipAxes: 'y',
+        formatString: null,
+        tooltipFormatString: '%f 小时'
       },
       series: [
         {}, {
@@ -166,6 +191,12 @@
   window.deviceUsage = function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
       stackSeries: true,
+      highlighter: {
+        show: true,
+        tooltipAxes: 'y',
+        formatString: null,
+        tooltipFormatString: '%f 小时'
+      },
       legend: {
         labels: ['使用','等待'],
       },
@@ -178,6 +209,12 @@
       legend: {
         labels: ['停机率','基准停机率'],
       },
+      highlighter: {
+        show: true,
+        tooltipAxes: 'y',
+        formatString: null,
+        tooltipFormatString: '%f 小时'
+      },
       series: [
         {}, {
           showLine: false,
@@ -189,11 +226,5 @@
       seriesColors: ['rgba(229, 17, 111, 1)', 'rgba(178, 118, 178, 1)'],
     });
   }
-
-  // Responsive charts
-  $(window).resize(function() {
-    var widgets = PrimeFaces.widgets;
-    widgets.deviceStat.plot.replot({resetAxes: true});
-  });
 
 })();

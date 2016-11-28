@@ -378,6 +378,7 @@ button.btn{-webkit-appearance:button}
 .layout-compact .layout-main .jqplot-highlighter-tooltip{padding:.5em 1em;font-size:12px;background-color:#7c7c84;color:#fff;border:0;border-radius:5px}
 .layout-compact .layout-main .jqplot-x2axis-label,.layout-compact .layout-main .jqplot-xaxis-label,.layout-compact .layout-main .jqplot-y2axis-label,.layout-compact .layout-main .jqplot-yaxis-label{color:#757575}
 .layout-compact .layout-main .ui-button{display:inline-block;overflow:visible;height:30px;margin:0;border:1px solid #b1b1bc;border-radius:3px;padding:0 15px;box-shadow:0 1px 0 rgba(0,0,0,.1);font:inherit;line-height:calc(30px - 2px);-webkit-font-smoothing:antialiased;cursor:pointer;text-align:center;text-decoration:none;text-transform:none;white-space:nowrap;background-color:#e4e4ea}
+.layout-compact .layout-main .ui-button+.ui-inputfield{height:30px}
 .layout-compact .layout-main .ui-button .ui-icon{color:#000}
 .layout-compact .layout-main .ui-button-icon-left{left:5px}
 .layout-compact .layout-main .ui-button-icon-right{right:5px}
