@@ -75,12 +75,6 @@
                         </f:facet>
                         <h:outputText value="#{item.isFinished? msg.True2Yes : msg.False2No }"/>
                     </p:column>
-<!--                    <p:column headerText="#{msg.download}" >
-                            <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" 
-                            icon="ui-icon-arrowthick-1-s"  >
-                                <p:fileDownload value="#{fileService.getFile(item.fileId)}" />
-                            </p:commandButton>
-                    </p:column> -->
                     
                     <f:facet name="{Toolbar}">
                         <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">

@@ -221,7 +221,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         Date todaydate = new Date();
         boolean isError = false;
         
-        if (null!=input.getStartTime() && null!=input.getEndTime() && input.getEndTime().after(input.getStartTime())) {
+        if (null!=input.getStartTime() && null!=input.getEndTime() && input.getEndTime().before(input.getStartTime())) {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("startTime"), WebUtil.getMessage("endTime")));
         }

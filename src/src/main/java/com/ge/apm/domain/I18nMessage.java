@@ -179,12 +179,30 @@ public class I18nMessage implements Serializable, Comparable {
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
-    @Override
-    public String toString() {
-        return "I18nMessage{" + "msgType=" + msgType + ", msgKey=" + msgKey + ", valueZh=" + valueZh + ", valueEn=" + valueEn + ", getSiteId=" + siteId + '}';
-    }
+
 
     @Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("I18nMessage [id=");
+		builder.append(id);
+		builder.append(", msgType=");
+		builder.append(msgType);
+		builder.append(", msgKey=");
+		builder.append(msgKey);
+		builder.append(", valueZh=");
+		builder.append(valueZh);
+		builder.append(", valueEn=");
+		builder.append(valueEn);
+		builder.append(", valueTw=");
+		builder.append(valueTw);
+		builder.append(", siteId=");
+		builder.append(siteId);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	@Override
     public int compareTo(Object t) {
         I18nMessage otherMsg = (I18nMessage)t;
         return this.getMsgKey().compareTo(otherMsg.getMsgKey());

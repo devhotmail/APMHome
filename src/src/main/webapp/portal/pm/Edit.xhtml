@@ -75,10 +75,11 @@
                                     emptyMessage="#{msg.noRecordFound}">
                                 <f:facet name="header">#{msg.attachmentUrl}</f:facet>
                                     #{fileitem.fileName}
-                               <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"  icon="ui-icon-arrowthick-1-s"  >
+                               <p:commandButton icon="ui-icon-cloud-download" style="zoom:0.7;" title="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"   >
 		                                <p:fileDownload value="#{attachmentFileService.getFile(fileitem.id)}" />
 		                         </p:commandButton>
-                                <p:commandButton process="@this"  immediate="true" actionListener="#{pmOrderController.removeAttachment(fileitem.id)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
+                                <p:commandButton process="@this"  immediate="true" actionListener="#{pmOrderController.removeAttachment(fileitem.id)}" id="iconOnly" update="pictureList"
+                                	style="zoom:0.7;"  icon="ui-icon-clear" title="#{msg.Delete}" />
                             </p:dataList>
                             <p:fileUpload fileUploadListener="#{pmOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
                                           label="#{msg.SelectFile}" uploadLabel="#{msg.Upload}" cancelLabel="#{msg.Cancel}"
