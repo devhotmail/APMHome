@@ -23,13 +23,13 @@ INSERT INTO "public"."sys_role" VALUES ('1', 'HospitalHead', '院长', '/homeHea
 INSERT INTO "public"."sys_role" VALUES ('2', 'AssetHead', '设备科主任', '/homeAssetHead.xhtml');
 INSERT INTO "public"."sys_role" VALUES ('3', 'AssetStuff', '设备科科员', '/homeAssetStuff.xhtml');
 INSERT INTO "public"."sys_role" VALUES ('4', 'DeptHead', '科室主任', '/homeDeptHead.xhtml');
-INSERT INTO "public"."sys_role" VALUES ('5', 'Guest', '一般用户', '/home.xhtml');
+INSERT INTO "public"."sys_role" VALUES ('5', 'ITAdmin', 'IT管理员', '/home.xhtml');
 
 INSERT INTO "public"."user_account" VALUES ('1', '1', '1', '1', 'admin', 'administrator', '5605ee4b362e9754', 'apm.admin@ge.com', '', 't', 't', 't', 't', 't', '2016-10-17 10:57:00');
 INSERT INTO "public"."user_account" VALUES ('2', '2', '2', '2', 'head', '院长', '5605ee4b362e9754', 'head@a.com', null, 'f', 'f', 'f', 't', 'f', null);
-INSERT INTO "public"."user_account" VALUES ('3', '6', '2', '2', 'assetHead', '设备科主任', '5605ee4b362e9754', 'assethead@a.com', '', 'f', 'f', 'f', 't', 'f', null);
-INSERT INTO "public"."user_account" VALUES ('4', '4', '2', '2', 'deptHead', '放射科主任', '5605ee4b362e9754', 'radiologyHead@a.com', null, 'f', 'f', 'f', 't', 'f', null);
-INSERT INTO "public"."user_account" VALUES ('5', '6', '2', '2', 'user', '科员', '5605ee4b362e9754', 'asset.staff@a.com', null, 'f', 'f', 'f', 't', 'f', null);
+INSERT INTO "public"."user_account" VALUES ('3', '2', '2', '6', 'assetHead', '设备科主任', '5605ee4b362e9754', 'assethead@a.com', '', 'f', 'f', 'f', 't', 'f', null);
+INSERT INTO "public"."user_account" VALUES ('4', '2', '2', '4', 'deptHead', '放射科主任', '5605ee4b362e9754', 'radiologyHead@a.com', null, 'f', 'f', 'f', 't', 'f', null);
+INSERT INTO "public"."user_account" VALUES ('5', '2', '2', '6', 'user', '科员', '5605ee4b362e9754', 'asset.staff@a.com', null, 'f', 'f', 'f', 't', 'f', null);
 
 INSERT INTO "public"."user_role" VALUES ('1', '2', '1');
 INSERT INTO "public"."user_role" VALUES ('2', '3', '2');
