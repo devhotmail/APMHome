@@ -36,7 +36,7 @@ table = "org_info"
 totalrecords = 10
 for i in 0..totalrecords
   site_id = randnum.rand(1..2)
-  name    = "Hosptial-#{SecureRandom.uuid}"
+  name    = "Hosptial-#{i}"
 
   sql = "insert into #{table} (site_id, name) values (\'#{site_id}\', \'#{name}\')"
   puts sql
@@ -49,12 +49,12 @@ totalrecords = asset_accounts
 for i in 0..totalrecords
   site_id = randnum.rand(1..2)
   asset_group   = randnum.rand(1..4)
-  name    = "#{type[asset_group-1]}-#{i}-#{SecureRandom.uuid[0..4]}"
+  name    = "#{type[asset_group-1]}-#{i}"
 
   function_type = randnum.rand(1..10)
-  hospital_id   = [1,2,3].sample
+  hospital_id   = [1,2,2,3].sample
 
-  clinical_dept_id = randnum.rand(1..10)
+  clinical_dept_id = [1,2,3,4,4,4,4,4,5].sample
 
   asset_dept_id = 100
   asset_owner_id = randnum.rand(1..5)
@@ -62,7 +62,7 @@ for i in 0..totalrecords
   is_valid      = true
   status        = randnum.rand(1..3)
 
-  randtime      = (duration * rand).to_i + stime.to_i
+  randtime      = (duration * rand).to_i + etime.to_i
   warranty_date = Time.at(randtime).strftime("%F")
 
   randtime      = (duration * rand).to_i + stime.to_i
@@ -94,7 +94,7 @@ for i in 0..totalrecords
 
   randtime      = (duration * rand).to_i + stime.to_i
   deprecate_date = Time.at(randtime).strftime("%F")
-  deprecate_amount = [100, 200, 300, 400, 500].sample
+  deprecate_amount = [1000, 2000, 3000, 4000, 5000].sample
 
   sql = "insert into #{table} (site_id, asset_id, deprecate_date, deprecate_amount)
         values (\'#{site_id}\', \'#{asset_id}\', \'#{deprecate_date}\', \'#{deprecate_amount}\')"
@@ -109,7 +109,7 @@ for i in 1..totalrecords
   hospital_id = [1, 2, 2, 3].sample
   asset_id  = randnum.rand(1..asset_accounts)
   name      = "repair-asset-#{asset_id}"
-  asset_name = "asset-name-#{SecureRandom.uuid}"
+  asset_name = "asset-#{asset_id}"
   creator_id    = randnum.rand(1..10)
   creator_name  = "creator-#{creator_id}"
 
@@ -155,7 +155,7 @@ for i in 0..totalrecords
   site_id         = randnum.rand(1..2)
   hospital_id     = [1, 2, 2, 3].sample
   asset_id        = randnum.rand(1..asset_accounts)
-  asset_name      = "asset-name-#{SecureRandom.uuid}"
+  asset_name      = "asset-#{asset_id}"
   name            = "pm-order-#{asset_id}"
   creator_id    = randnum.rand(1..10)
   creator_name  = "creator-#{creator_id}"

@@ -1,5 +1,6 @@
 package com.ge.apm.view.analysis;
 
+import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.view.sysutil.UserContextService;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -8,6 +9,7 @@ import org.primefaces.model.chart.*;
 import org.slf4j.LoggerFactory;
 import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.ServerEventInterface;
 import webapp.framework.web.mvc.SqlConfigurableChartController;
 
 import javax.annotation.PostConstruct;
@@ -19,7 +21,9 @@ import java.util.*;
 
 @ManagedBean
 @ViewScoped
-public class AssetForecastController extends SqlConfigurableChartController {
+public class AssetForecastController extends SqlConfigurableChartController implements ServerEventInterface {
+//public class AssetForecastController extends SqlConfigurableChartController {
+
     // I18n string
     private static final String revenueStr = WebUtil.getMessage("deviceROIlg_1");
     private static final String profitStr = WebUtil.getMessage("deviceROIlg_2");
@@ -31,6 +35,12 @@ public class AssetForecastController extends SqlConfigurableChartController {
     private BarChartModel barMonthlyForecast = new BarChartModel();
 
     // chart parameters
+    private int assetId         = 1;
+    private String assetName    = "全部设备";
+    private boolean isSingleAsset  = false;
+
+
+
     private int targetYear = Year.now().getValue();
     private int hospitalId = 0;
     private String selectedYear = Integer.toString(targetYear);
@@ -48,7 +58,6 @@ public class AssetForecastController extends SqlConfigurableChartController {
 
     private List<Map<String, Object>> predictRev = new ArrayList<>();
     private List<Map<String, Object>> predictPro = new ArrayList<>();
-
 
     // SQL script
     private String depMonth =
@@ -79,6 +88,47 @@ public class AssetForecastController extends SqlConfigurableChartController {
                     "and a.id = w.asset_id and w.is_closed = true " +
                     "and a.hospital_id = :#hospitalId " +
                     "group by key order by key;";
+
+    // SQL for single asset
+    private String assetDep =
+            "select a.hospital_id as key, " +
+                    "sum(d.deprecate_amount) as value " +
+                    "from asset_info a, asset_depreciation d " +
+                    "where a.id = d.asset_id " +
+                    "and a.hospital_id = :#hospitalId " +
+                    "and a.id = :#assetId " +
+                    "group by key;";
+
+    private String assetRevenue =
+            "select sum(r.price_amount) as value, " +
+                    "to_char(r.exam_date, 'yyyy-mm') as key " +
+                    "from asset_info a, asset_clinical_record r " +
+                    "where to_char(r.exam_date, 'yyyy-mm') between to_char(now() - interval '2 year', 'yyyy-mm') " +
+                    "and to_char(now(), 'yyyy-mm') " +
+                    "and a.id = r.asset_id " +
+                    "and a.hospital_id = :#hospitalId " +
+                    "and a.id = :#assetId " +
+                    "group by key order by key;";
+
+    private String assetMaint =
+            "select to_char(w.request_time, 'yyyy-mm') as key, " +
+                    "sum(w.total_price) as value " +
+                    "from asset_info a, work_order w " +
+                    "where to_char(w.request_time, 'yyyy-mm') " +
+                    "between to_char(now() - interval '2 year', 'yyyy-mm') " +
+                    "and to_char(now(), 'yyyy-mm') " +
+                    "and a.id = w.asset_id and w.is_closed = true " +
+                    "and a.hospital_id = :#hospitalId " +
+                    "and a.id = :#assetId " +
+                    "group by key order by key;";
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String name) {
+        assetName = name;
+    }
 
     @PostConstruct
     protected void init() {
@@ -406,5 +456,15 @@ public class AssetForecastController extends SqlConfigurableChartController {
                     ;
             }
         }
+    }
+
+    @Override
+    public void onServerEvent(String eventName, Object eventObject){
+        AssetInfo asset = (AssetInfo) eventObject;
+        if(asset == null) return;
+
+        this.assetId    = asset.getId();
+        this.setAssetName(asset.getName());
+        logger.debug("Selected asset Id: {}, asset name: {}", assetId, assetName);
     }
 }
