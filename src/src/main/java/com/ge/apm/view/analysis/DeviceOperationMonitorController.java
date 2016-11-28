@@ -38,7 +38,6 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     public final static String ABDOMEN = "腹部";
     public final static String LIMBS = "四肢";
     public final static String OTHER = "其他";
-    public final static String TIME = "时间";
     public final static String NUMBER = "检查次数";
     private final static ImmutableMap<Integer, String> parts = ImmutableMap.of(1, HEAD, 2, CHEST, 3, ABDOMEN, 4, LIMBS, 5, OTHER);
     private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
@@ -262,7 +261,8 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     private int average(ImmutableMap<String, Integer> series) {
-        return (int) Stats.of(series.values()).sum() / series.size();
+        int sum = (int) Stats.of(series.values()).sum();
+        return sum / series.size();
     }
 
     private String seriesStart(ImmutableMap<String, Integer> series) {
@@ -293,7 +293,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     private ImmutableTable<String, String, Integer> initTable(List<DeviceOperationInfo> list) {
         ImmutableTable.Builder<String, String, Integer> table = new ImmutableTable.Builder<>();
         for (DeviceOperationInfo info : list) {
-            table.put(info.getProcedureName(), from(info.getExamDate()), info.getExamCount());
+            table.put(info.getProcedureName(), from(info.getExamDate()), Optional.of(info.getExamCount()).or(0));
         }
         return table.build();
     }
@@ -309,10 +309,13 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         areaModel.addSeries(initChartSeries(new LineChartSeries(), ABDOMEN, true, table.row(ABDOMEN)));
         areaModel.addSeries(initChartSeries(new LineChartSeries(), CHEST, true, table.row(CHEST)));
         areaModel.addSeries(initChartSeries(new LineChartSeries(), HEAD, true, table.row(HEAD)));
-        DateAxis xAxis = new DateAxis(TIME);
+        DateAxis xAxis = new DateAxis();
         xAxis.setMin(seriesStart(table.row(HEAD)));
         xAxis.setMax(seriesEnd(table.row(HEAD)));
-        xAxis.setTickFormat(tickFormat);
+        if (Optional.fromNullable(tickFormat).isPresent()) {
+            xAxis.setTickFormat(tickFormat);
+            xAxis.setTickCount(table.row(HEAD).size());
+        }
         Axis yAxis = areaModel.getAxis(AxisType.Y);
         yAxis.setLabel(NUMBER);
         yAxis.setMin(0);
@@ -331,16 +334,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         barChartModel.setShowDatatip(false);
         barChartModel.setShadow(false);
         for (Map.Entry<Integer, String> entry : ImmutableSortedMap.copyOf(parts, seriesReversed ? Ordering.natural().reverse() : Ordering.natural()).entrySet()) {
-            barChartModel.addSeries(initChartSeries(new ChartSeries(), entry.getValue(), false, ImmutableMap.of(entry.getValue(), Optional.fromNullable(renderData.get(entry.getValue())).or(0))));
-        }
-        Axis xAxis = barChartModel.getAxis(AxisType.X);
-        Axis yAxis = barChartModel.getAxis(AxisType.Y);
-        if (barChartModel instanceof HorizontalBarChartModel) {
-            xAxis.setMin(0);
-            xAxis.setMax((int) Stats.of(renderData.values()).sum());
-        } else {
-            yAxis.setMin(0);
-            yAxis.setMax((int) Stats.of(renderData.values()).sum());
+            barChartModel.addSeries(initChartSeries(new ChartSeries(), entry.getValue(), false, ImmutableMap.of(entry.getValue(), Optional.of(renderData.get(entry.getValue())).or(0))));
         }
         return barChartModel;
     }
