@@ -6,13 +6,13 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="content">
-        <h:form id="I18nMessageListForm" >
-            <h:panelGrid columns="2" >
-
-                <p:selectOneListbox id="selectBox"  value="#{fieldCodeTypeController.selectedType.msgType}" >
-                    <p:ajax update="SystemDataList,CustomerDataList,I18nMessageEditDlg"  listener="#{i18nMessageController.onSelect(fieldCodeTypeController.selectedType.msgType)}" />
-                    <f:selectItems value="#{fieldCodeTypeController.getFieldCodeTypeList()}"  var="item"  itemLabel="#{item.msgTypeName}"  itemValue="#{item.msgType}"/>
-                </p:selectOneListbox>
+	          <h:form id="I18nMessageListForm" >
+	          	<h:panelGrid columns="2" >
+	          	
+			        <p:selectOneListbox id="selectBox"  value="#{fieldCodeTypeController.selectedType.msgType}" >
+			        	<p:ajax update="SystemDataList,CustomerDataList,I18nMessageEditDlg"  listener="#{i18nMessageController.onSelect(fieldCodeTypeController.selectedType.msgType)}" />
+			        	<f:selectItems value="#{fieldCodeTypeController.getFieldCodeTypeList()}"  var="item"  itemLabel="#{item.msgTypeName}"  itemValue="#{item.msgType}"/>
+			        </p:selectOneListbox>
 
                 <h:panelGrid  columns="1" >
                     <h:panelGroup>
@@ -27,7 +27,7 @@
                             <p:column headerText="#{msg.name}" style="text-align: center;">
                                 <h:outputText value="#{item.valueZh}"/>
                             </p:column>
-                            <p:column headerText="#{msg.valueEn}" >
+                            <p:column headerText="#{msg.valueEn}"  style="text-align: center;">
                                 <center><h:outputText value="#{item.valueEn}"/></center>
                             </p:column>
                         </p:dataTable>
@@ -35,7 +35,7 @@
 
                     <h:panelGroup>
                         <p:dataTable id="CustomerDataList"
-                                     value="#{i18nMessageController.customConfig}"
+                                     value="#{i18nMessageController.customConfig}" 
                                      var="item" widgetVar="varDataList2" selectionMode="single"  selection="#{i18nMessageController.selected}"
                                      lazy="false" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
                                      rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
@@ -48,16 +48,17 @@
                             <p:column headerText="#{msg.name}" style="text-align: center;">
                                 <h:outputText value="#{item.valueZh}"/>
                             </p:column>
-                            <p:column headerText="#{msg.valueEn}" >
+                            <p:column headerText="#{msg.valueEn}"  style="text-align: center;">
                                 <h:outputText value="#{item.valueEn}" />
                             </p:column>
                             <f:facet name="{exportbar}">
                                 <p:commandButton id="batchImport" icon="ui-icon-import-export"  title="#{msg.BatchImport}"
-                                                 actionListener="#{i18nMessageController.batchImport(fieldCodeTypeController.selectedType.msgType)}"  update=":I18nMessageListForm" />
+                                                 actionListener="#{i18nMessageController.batchImport(fieldCodeTypeController.selectedType.msgType)}"  
+                                                 update=":I18nMessageListForm" disabled="#{empty i18nMessageController.selected}" />
                             </f:facet>
                             <f:facet name="{Toolbar}">
-                                <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{i18nMessageController.getMsgType(fieldCodeTypeController.selectedType.msgType)}" update=":I18nMessageListForm"  oncomplete="PF('I18nMessageEditDialog').show()"/>
-                                <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{i18nMessageController.prepareEdit}" update=":I18nMessageListForm:CustomerDataList" oncomplete="PF('I18nMessageEditDialog').show()" disabled="#{empty i18nMessageController.selected}"/>
+                                <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{i18nMessageController.getMsgType(fieldCodeTypeController.selectedType.msgType)}" update=":I18nMessageListForm"  oncomplete="PF('I18nMessageEditDialog').show()" disabled="#{empty i18nMessageController.selected}"/>
+                                <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{i18nMessageController.prepareEdit}" update=":I18nMessageListForm:CustomerDataList,:I18nMessageEditDlg" oncomplete="PF('I18nMessageEditDialog').show()" disabled="#{empty i18nMessageController.selected}"/>
                                 <p:commandButton id="deleteButton" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{i18nMessageController.delete}" update=":I18nMessageListForm:CustomerDataList" disabled="#{empty i18nMessageController.selected}">
                                     <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
                                 </p:commandButton>

@@ -52,8 +52,25 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
     };
     
     @Override
+    public void delete(){
+    	String msgType = selected.getMsgType();
+    	super.delete();
+    	customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
+    }
+    
+    @Override
+    public void save(){
+    	String msgType = selected.getMsgType();
+    	super.save();
+    	customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
+    }
+    
+    @Override
     public void prepareEdit(){
     	logger.info("before edit, selected i18n is "+  selected);
+    	String msgType = selected.getMsgType();
+    	super.prepareEdit();
+    	customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
     }
     
     @Override
@@ -98,6 +115,7 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
 		  this.selected.setMsgType(msgType);
 		  this.selected.setMsgKey(this.currentUser.getName());
    		}
+	   customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
    }
    
    public void batchImport(String msgType){
@@ -110,8 +128,10 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
 			   i18nMessage.setId(null);
 			   dao.save(i18nMessage);
 		}
+		   customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
 	   }
    }
+   
    
 	public void onSelect(String msgType) {
 		if (logger.isDebugEnabled()) {

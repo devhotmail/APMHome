@@ -103,7 +103,9 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     @Override
     public void prepareEdit(){
     	attachements.clear();
-    	owner = userDao.findById(selected.getOwnerId());
+    	if(selected.getOwnerId() != null){
+    		owner = userDao.findById(selected.getOwnerId());
+    	}
     	if(selected.getFileId() != null){
     		FileUploaded fu =  fileUploadedRepository.findById(this.selected.getFileId());
     		if(fu != null){
