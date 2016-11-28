@@ -97,7 +97,10 @@
                             <h:outputText value="#{item.comments}"/>
                         </p:column>
                         <p:column headerText="#{msg.paperUrl}" sortBy="#{item.paperUrl}" filterBy="#{item.paperUrl}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.paperUrl}"/>
+                            <!--<h:outputText value="#{item.paperUrl}"/>-->
+                            <p:commandButton value="#{msg.Attachment}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s" rendered="#{item.paperUrl gt 0}">
+                                <p:fileDownload value="#{attachmentFileService.getFile(item.paperUrl)}" />
+                            </p:commandButton>
                         </p:column>
     <!--                    <p:column headerText="#{msg.assetName}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
                             <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>

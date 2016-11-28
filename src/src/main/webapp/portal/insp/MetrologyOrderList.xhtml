@@ -33,17 +33,10 @@
 
                         <p:ajax event="rowSelect" update="createButton  viewButton deleteButton excuteButton"/>
                         <p:ajax event="filter" listener="#{metrologyOrderController.onFilter}" update="createButton  viewButton deleteButton excuteButton"/>
-
-<!--                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
-    <h:outputText value="#{item.id}"/>
-</p:column>-->
-<!--                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
-    <h:outputText value="#{item.siteId}"/>
-</p:column>-->
                         <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.name}"/>
                         </p:column>
-                        <p:column headerText="#{msg.creator}" sortBy="#{item.creatorName}" filterBy="#{item.creatorName}" filterMatchMode="LIKE">
+                        <p:column headerText="#{msg.creatorName}" sortBy="#{item.creatorName}" filterBy="#{item.creatorName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.creatorName}"/>
                         </p:column>
                         <p:column headerText="#{msg.createTime}" sortBy="#{item.createTime}" filterBy="#{item.createTime}" filterMatchMode="GTE">
@@ -54,15 +47,9 @@
                                 <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                             </h:outputText>
                         </p:column>
-    <!--                    <p:column headerText="#{msg.ownerId}" sortBy="#{item.ownerId}" filterBy="#{item.ownerId}" filterMatchMode="EQ">
-                            <h:outputText value="#{item.ownerId}"/>
-                        </p:column>-->
                         <p:column headerText="#{msg.ownerName}" sortBy="#{item.ownerName}" filterBy="#{item.ownerName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.ownerName}"/>
                         </p:column>
-    <!--                    <p:column headerText="#{msg.ownerOrgId}" sortBy="#{item.ownerOrgId}" filterBy="#{item.ownerOrgId}" filterMatchMode="EQ">
-                            <h:outputText value="#{item.ownerOrgId}"/>
-                        </p:column>-->
                         <p:column headerText="#{msg.ownerOrgName}" sortBy="#{item.ownerOrgName}" filterBy="#{item.ownerOrgName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.ownerOrgName}"/>
                         </p:column>
@@ -97,11 +84,11 @@
                             <h:outputText value="#{item.comments}"/>
                         </p:column>
                         <p:column headerText="#{msg.paperUrl}" sortBy="#{item.paperUrl}" filterBy="#{item.paperUrl}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.paperUrl}"/>
+                            <!--<h:outputText value="#{item.paperUrl}"/>-->
+                            <p:commandButton value="#{msg.Attachment}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s" rendered="#{item.paperUrl gt 0}">
+                                <p:fileDownload value="#{attachmentFileService.getFile(item.paperUrl)}" />
+                            </p:commandButton>
                         </p:column>
-    <!--                    <p:column headerText="#{msg.assetName}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
-                            <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>
-                        </p:column>-->
                         <f:facet name="{Toolbar}">
                             <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="InspectionOrder_export"/>
