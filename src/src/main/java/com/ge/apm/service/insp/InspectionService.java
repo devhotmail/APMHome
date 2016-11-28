@@ -185,24 +185,7 @@ public class InspectionService {
 
     public TreeNode getPlanTree(Integer orderType) {
         UaaService uuaService = WebUtil.getBean(UaaService.class);
-        TreeNode planTree = uuaService.getOrgAssetTree(UserContextService.getCurrentUserAccount().getHospitalId());
-        addCheckListItem(planTree, orderType);
+        TreeNode planTree = uuaService.getOrgAssetChecklistTree(UserContextService.getCurrentUserAccount().getHospitalId(), orderType);
         return planTree;
-    }
-
-    private void addCheckListItem(TreeNode node, Integer type) {
-
-        Object nodeData = node.getData();
-        if (nodeData instanceof AssetInfo) {
-
-            List<InspectionChecklist> itemList = getCheckItemList(((AssetInfo) nodeData).getId(), type);
-            for (InspectionChecklist item : itemList) {
-                new DefaultTreeNode("checklist", item, node);
-            }
-        } else {
-            for (TreeNode item : node.getChildren()) {
-                addCheckListItem(item, type);
-            }
-        }
     }
 }

@@ -33,6 +33,10 @@ public class InspectionChecklist implements Serializable {
     private int siteId;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "hospital_id")
+    private int hospitalId;
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "item")
     private String item;
@@ -101,6 +105,14 @@ public class InspectionChecklist implements Serializable {
 
     public void setChecklistType(int checklistType) {
         this.checklistType = checklistType;
+    }
+
+    public int getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(int hospitalId) {
+        this.hospitalId = hospitalId;
     }
 
     @Override
