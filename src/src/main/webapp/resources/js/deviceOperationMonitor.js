@@ -72,8 +72,18 @@
   };
 
   window.topBarAllSkin = window.topBarSkin = function() {
-    var total = seriesSum(this.cfg.data);
+    var data = this.cfg.data;
+    var total = seriesSum(data);
+    // special placeholder value
+    this.cfg.data = data.map(function(slot) {
+      if (slot[0] === 0) {
+        slot[0] = .9;
+      }
+      return slot;
+    });
+
     var _this = this;
+    _this.lastVal = 0;
     $.extend(true/*recursive*/, this.cfg, {
       animate: false,
       legend: {
@@ -95,7 +105,10 @@
             var newVal = val - (_this.lastVal || 0);
             _this.lastVal = val;
             val = newVal;
-            return $.jqplot.sprintf(format, val) + '<br />' + Math.round(val / total * 100) + '%';
+            if (val < 1) {
+              val = 0;
+            }
+            return $.jqplot.sprintf(format, val) + (val ? ('<br />' + Math.round(val / total * 100) + '%') : '');
           }
         },
         rendererOptions: {
@@ -211,7 +224,10 @@
             var newVal = val - (_this.lastVal || 0);
             _this.lastVal = val;
             val = newVal;
-            return $.jqplot.sprintf(format, val) + '<br />' + Math.round(val / deviceSum * 100) + '%';
+            if (val < 1) {
+              val = 0;
+            }
+            return $.jqplot.sprintf(format, val) + (val? ('<br />' + Math.round(val / deviceSum * 100) + '%') : '');
           }
         },
         rendererOptions: {
@@ -260,6 +276,16 @@
   window.bottomMrBarSkin =
   window.bottomRightBarSkin = function() {
     var _this = this;
+    _this.lastVal = 0;
+    var data = this.cfg.data;
+    // special placeholder value
+    this.cfg.data = data.map(function(slot) {
+      if (slot[0] === 0) {
+        slot[0] = .9;
+      }
+      return slot;
+    });
+
     $.extend(true/*recursive*/, this.cfg, verticalStackConfig.call(this, _this.cfg.data));
     _this.jq.on('jqplotPreReplot', function() {
       _this.lastVal = 0;
