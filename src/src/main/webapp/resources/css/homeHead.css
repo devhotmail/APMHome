@@ -412,12 +412,12 @@ table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbd
 .chart-device-stat.horizontal .jqplot-point-label{font-size:1rem;line-height:1.33333}
 .chart-device-stat.horizontal .jqplot-table-legend-label{background-color:transparent;color:#fff;font-size:1.33333rem;line-height:1}
 .chart-device-stat.horizontal table.jqplot-table-legend{border:0;width:100%;position:static!important;background:0 0;margin-top:.5em;margin-bottom:0}
-.chart-device-stat.vertical{width:80px;height:420px;margin-top:0}
+.chart-device-stat.vertical{width:80px;height:420px;margin-top:-20px}
 .chart-device-stat.vertical .jqplot-point-label{font-size:.86667rem;line-height:1.53846}
 .chart-device-stat.vertical .jqplot-table-legend-label{background-color:transparent;vertical-align:top;position:relative;font-size:1rem;line-height:1.33333}
 .chart-device-stat.vertical .jqplot-table-legend-label:before{content:'';display:block;width:100px;position:absolute;right:0;top:0;height:1px;background-color:#7c7c84}
 .chart-device-stat.vertical tr.jqplot-table-legend:last-child .jqplot-table-legend-label:before{display:none}
-.chart-device-stat.vertical table.jqplot-table-legend{margin:50px 0 0 0;height:100%;position:absolute!important;right:auto!important;left:-30px!important;background:0 0;margin-right:0}
+.chart-device-stat.vertical table.jqplot-table-legend{margin:65px 0 0 0;height:100%;position:absolute!important;right:auto!important;left:-30px!important;background:0 0;margin-right:0}
 .card--summary{min-height:100px;color:#fff}
 .card--summary>:not(:last-child){border-right:1px solid #3b3b3f}
 .text--unit{font-size:70%}
