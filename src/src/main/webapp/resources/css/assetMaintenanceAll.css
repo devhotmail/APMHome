@@ -361,6 +361,8 @@ button.btn{-webkit-appearance:button}
 .widget-title{font-size:15px;font-weight:400;padding:5px 0;margin:0 0 10px 0}
 .block .jqplot-target{margin-top:40px}
 .block table.jqplot-table-legend{border-width:0;color:inherit;font-size:15px;top:-40px!important;right:0;left:auto!important}
+.block table.jqplot-table-legend .jqplot-table-legend-swatch.jqplot-series-hidden{opacity:.4}
+.block table.jqplot-table-legend .jqplot-table-legend-label.jqplot-series-hidden{text-decoration:none}
 .layout-compact .layout-wrapper .layout-main{padding:75px 0 0 0}
 .layout-compact .layout-main .ui-tabmenu{padding:0;display:table;border:0}
 .layout-compact .layout-main .ui-tabmenu .ui-tabmenu-nav>.ui-tabmenuitem{margin:0;border-radius:0;border-bottom:2px solid #b1b1bc}
@@ -392,7 +394,7 @@ button.btn{-webkit-appearance:button}
 .layout-compact .layout-main .ui-selectonemenu{background-color:#efeff4;padding:5px;box-shadow:inset 0 0 1px #525156}
 .layout-compact .layout-main .ui-selectonemenu .ui-selectonemenu-trigger{top:8px}
 .layout-compact .layout-main .ui-calendar.ui-trigger-calendar{background-color:#efeff4;padding:5px;box-shadow:inset 0 0 1px #525156}
-.layout-compact .layout-main .ui-calendar.ui-trigger-calendar .ui-button{border:0;background:0 0}
+.layout-compact .layout-main .ui-calendar.ui-trigger-calendar .ui-button{border:0;background:0 0;box-shadow:none}
 .layout-compact .layout-main .ui-calendar.ui-trigger-calendar .ui-inputfield{width:70px}
 .layout-compact .layout-main .ui-calendar.ui-trigger-calendar .ui-datepicker-trigger{float:left;width:20px;padding:0;margin:0;right:inherit;top:inherit}
 .layout-compact .layout-main .ui-calendar.ui-trigger-calendar .ui-icon-calendar{left:inherit}
@@ -401,6 +403,7 @@ table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbd
 .card--summary>:not(:last-child){border-right:1px solid #3b3b3f}
 .card--summary .divide-line-bottom{border-bottom:1px solid #3b3b3f}
 .jqplot-pie-series.jqplot-data-label,.jqplot-point-label{color:var(--px-base-text-color,#000);font-size:11px}
+.chart-device-stat{height:100px}
 .chart-device-stat .jqplot-target{margin:0}
 .chart-device-stat .jqplot-grid-canvas{display:none}
 .chart-device-stat .jqplot-axis.jqplot-xaxis,.chart-device-stat .jqplot-axis.jqplot-yaxis,.chart-device-stat .jqplot-title{display:none}
@@ -409,12 +412,12 @@ table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbd
 .chart-device-stat.horizontal .jqplot-point-label{font-size:1rem;line-height:1.33333}
 .chart-device-stat.horizontal .jqplot-table-legend-label{background-color:transparent;color:#fff;font-size:1.33333rem;line-height:1}
 .chart-device-stat.horizontal table.jqplot-table-legend{border:0;width:100%;position:static!important;background:0 0;margin-top:.5em;margin-bottom:0}
-.chart-device-stat.vertical{width:200px;height:420px;margin-top:0}
+.chart-device-stat.vertical{width:80px;height:420px;margin-top:0}
 .chart-device-stat.vertical .jqplot-point-label{font-size:.86667rem;line-height:1.53846}
 .chart-device-stat.vertical .jqplot-table-legend-label{background-color:transparent;vertical-align:top;position:relative;font-size:1rem;line-height:1.33333}
 .chart-device-stat.vertical .jqplot-table-legend-label:before{content:'';display:block;width:100px;position:absolute;right:0;top:0;height:1px;background-color:#7c7c84}
 .chart-device-stat.vertical tr.jqplot-table-legend:last-child .jqplot-table-legend-label:before{display:none}
-.chart-device-stat.vertical table.jqplot-table-legend{direction:rtl;margin:50px 0 0 0;height:100%;position:static!important;background:0 0;margin-left:.5em;margin-right:0}
+.chart-device-stat.vertical table.jqplot-table-legend{margin:50px 0 0 0;height:100%;position:absolute!important;right:auto!important;left:-30px!important;background:0 0;margin-right:0}
 .table{width:100%;border-collapse:collapse;border-spacing:0}
 .table td,.table th{border:1px solid var(--px-table-border-color,#d1d0d8);padding:.66667rem}
 .table th{text-align:left}

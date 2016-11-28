@@ -49,7 +49,6 @@
                         <div class="ui-lg-8">
                             <p:chart id="statusBar" widgetVar="topBar" class="chart-device-stat horizontal" type="bar"
                                      model="#{deviceOperationMonitorController.topBarAll}"
-                                     style="height:100px"
                                      responsive="true"/>
                         </div>
                     </div>
@@ -80,28 +79,28 @@
                     <div class="block">
                         <h3 class="block-title">设备检查部位统计</h3>
                         <div class="ui-g">
-                            <div class="ui-lg-3 ui-md-6 divide-line-right">
+                            <div class="ui-xl-3 ui-lg-6 divide-line-right">
                                 <div class="flex flex--row flex--center">
                                     <ui:include src="bodyModel.xhtml"/>
-                                    <p:chart id="bottomCtBar" type="bar" class="chart-device-stat vertical" model="#{deviceOperationMonitorController.bottomCtBar}" responsive="true"/>
+                                    <p:chart id="bottomCtBar" type="bar" widgetVar="body-chart-1" class="chart-device-stat vertical" model="#{deviceOperationMonitorController.bottomCtBar}" responsive="true"/>
                                 </div>
                             </div>
-                            <div class="ui-lg-3 ui-md-6 divide-line-right">
+                            <div class="ui-xl-3 ui-lg-6 divide-line-right">
                                 <div class="flex flex--row flex--center">
                                     <ui:include src="bodyModel.xhtml"/>
-                                    <p:chart id="bottomMrBar" type="bar" class="chart-device-stat vertical" model="#{deviceOperationMonitorController.bottomMrBar}" responsive="true"/>
+                                    <p:chart id="bottomMrBar" type="bar" widgetVar="body-chart-2" class="chart-device-stat vertical" model="#{deviceOperationMonitorController.bottomMrBar}" responsive="true"/>
                                 </div>
                             </div>
-                            <div class="ui-lg-3 ui-md-6 divide-line-right">
+                            <div class="ui-xl-3 ui-lg-6 divide-line-right">
                                 <div class="flex flex--row flex--center">
                                     <ui:include src="bodyModel.xhtml" />
-                                    <p:chart id="bottomXrayBar" type="bar" class="chart-device-stat vertical" model="#{deviceOperationMonitorController.bottomXrayBar}" responsive="true"/>
+                                    <p:chart id="bottomXrayBar" type="bar" widgetVar="body-chart-3" class="chart-device-stat vertical" model="#{deviceOperationMonitorController.bottomXrayBar}" responsive="true"/>
                                 </div>
                             </div>
-                            <div class="ui-lg-3 ui-md-6">
+                            <div class="ui-xl-3 ui-lg-6">
                                 <div class="flex flex--row flex--center">
                                     <ui:include src="bodyModel.xhtml" />
-                                    <p:chart id="bottomDrBar" type="bar" class="chart-device-stat vertical" model="#{deviceOperationMonitorController.bottomDrBar}" responsive="true"/>
+                                    <p:chart id="bottomDrBar" type="bar" widgetVar="body-chart-4" class="chart-device-stat vertical" model="#{deviceOperationMonitorController.bottomDrBar}" responsive="true"/>
                                 </div>
                             </div>
                         </div>

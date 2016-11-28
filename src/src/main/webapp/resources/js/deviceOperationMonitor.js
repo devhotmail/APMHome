@@ -9,70 +9,7 @@
                 return serieSum + slot[0];
               }, 0)
           );
-    }, 0);  
-  }
-
-  function verticalStackConfig(data) {
-    var deviceSum = seriesSum(data);
-    var lastVal = 0;
-    return {
-      legend: {
-        rendererOptions: {
-          seriesToggle: false,
-        }
-      },
-      animate: true,
-      seriesDefaults: {
-        pointLabels: {
-          show: true,
-          location: 's',
-          formatString: '%d 个',
-          escapeHTML: false,
-          formatter: function(format, val) {
-            var newVal = val - lastVal;
-            lastVal = val;
-            val = newVal;
-            return $.jqplot.sprintf(format, val) + '<br />' + Math.round(val / deviceSum * 100) + '%';
-          }
-        },
-        rendererOptions: {
-          barWidth: 60,
-          animation: {
-            speed: 500
-          }
-        }
-      },
-      grid: {
-        background: 'transparent',
-        borderColor: 'transparent',
-        drawBorder: false,
-        shadow: false
-      },
-      axesDefault: {
-        drawMajorGridlines: false,
-        drawMajorTickMarks: false,
-        pad: 0,
-        tickOptions: {
-          show: false,
-        },
-      },
-      axes: {
-        xaxis: {
-          pad: 0,
-          max: deviceSum,
-          rendererOptions: {}
-        },
-        yaxis: {
-          tickOptions: {
-            show: false,
-          },
-          rendererOptions: {
-            drawBaseline: true
-          }
-        },
-      },
-      seriesColors: BODY_PART_COLORS_REVERTED
-    };
+    }, 0);
   }
 
   function flipLegendRows($el) {
@@ -135,8 +72,8 @@
   };
 
   window.topBarAllSkin = window.topBarSkin = function() {
-    var lastVal = 0;
-    var deviceSum = seriesSum(this.cfg.data);
+    var total = seriesSum(this.cfg.data);
+    var _this = this;
     $.extend(true/*recursive*/, this.cfg, {
       animate: false,
       legend: {
@@ -147,6 +84,7 @@
         location: 'n',
         placement: 'outsideGrid',
       },
+      resetAxesOnResize: false,
       seriesDefaults: {
         pointLabels: {
           show: true,
@@ -154,10 +92,10 @@
           formatString: '%d 个',
           escapeHTML: false,
           formatter: function(format, val) {
-            var newVal = val - lastVal;
-            lastVal = val;
+            var newVal = val - (_this.lastVal || 0);
+            _this.lastVal = val;
             val = newVal;
-            return $.jqplot.sprintf(format, val) + '<br />' + Math.round(val / deviceSum * 100) + '%';
+            return $.jqplot.sprintf(format, val) + '<br />' + Math.round(val / total * 100) + '%';
           }
         },
         rendererOptions: {
@@ -181,11 +119,12 @@
       },
       axes: {
         xaxis: {
-          max: deviceSum,
+          //pad: 0,
+          max: total,
+          min: 0,
           drawMajorGridlines: false,
           drawMajorTickMarks: false,
           showTickMarks: false,
-          pad: 0,
           rendererOptions: {
             drawBaseline: false
           }
@@ -200,6 +139,9 @@
         },
       },
       seriesColors: BODY_PART_COLORS
+    });
+    _this.jq.on('jqplotPreReplot', function() {
+      _this.lastVal = 0;
     });
   }
 
@@ -248,6 +190,69 @@
     });
   }
 
+  function verticalStackConfig(data) {
+    var deviceSum = seriesSum(data);
+    var _this = this;
+    return {
+      resetAxesOnResize: false,
+      legend: {
+        rendererOptions: {
+          seriesToggle: false,
+        }
+      },
+      animate: false,
+      seriesDefaults: {
+        pointLabels: {
+          show: true,
+          location: 's',
+          formatString: '%d 个',
+          escapeHTML: false,
+          formatter: function(format, val) {
+            var newVal = val - (_this.lastVal || 0);
+            _this.lastVal = val;
+            val = newVal;
+            return $.jqplot.sprintf(format, val) + '<br />' + Math.round(val / deviceSum * 100) + '%';
+          }
+        },
+        rendererOptions: {
+          barWidth: 60,
+          animation: {
+            speed: 500
+          }
+        }
+      },
+      grid: {
+        background: 'transparent',
+        borderColor: 'transparent',
+        drawBorder: false,
+        shadow: false
+      },
+      axesDefault: {
+        drawMajorGridlines: false,
+        drawMajorTickMarks: false,
+        tickOptions: {
+          show: false,
+        },
+      },
+      axes: {
+        xaxis: {
+          pad: 0
+        },
+        yaxis: {
+          max: deviceSum,
+          min: 0,
+          tickOptions: {
+            show: false,
+          },
+          rendererOptions: {
+            drawBaseline: true
+          }
+        },
+      },
+      seriesColors: BODY_PART_COLORS_REVERTED
+    };
+  }
+
   window.bottomDrBarSkin =
   window.bottomXrayBarSkin =
   window.bottomCtBarSkin =
@@ -255,22 +260,16 @@
   window.bottomMrBarSkin =
   window.bottomRightBarSkin = function() {
     var _this = this;
-    $.extend(true/*recursive*/, this.cfg, verticalStackConfig(_this.cfg.data));
+    $.extend(true/*recursive*/, this.cfg, verticalStackConfig.call(this, _this.cfg.data));
+    _this.jq.on('jqplotPreReplot', function() {
+      _this.lastVal = 0;
+    });
+    _this.jq.on('jqplotPostReplot', function() {
+      flipLegendRows(_this.jq);
+    });
     setTimeout(function() {
       flipLegendRows(_this.jq);
     }, 0);
-  }
-
-
-  // Responsive charts
-  $(window).resize(function() {
-    var widgets = PrimeFaces.widgets;
-    ['topBar','bottomLeftBar', 'bottomRightBar'].forEach(function(key) {
-      if(key in widgets) {
-        var _chart = widgets[key].plot;
-        _chart.replot({resetAxes: true});
-      }
-    });
-  });
+  };
 
 })();
