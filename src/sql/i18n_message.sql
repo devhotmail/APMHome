@@ -118,6 +118,7 @@ INSERT INTO "i18n_message" VALUES (255, 'label', 'BasicInfo', '基本信息', 'B
 INSERT INTO "i18n_message" VALUES (256, 'label', 'UsageAmount', '使用量', 'Usage Amount', NULL, -1);
 INSERT INTO "i18n_message" VALUES (257, 'label', 'Attachment', '附件', 'Attachment', NULL, -1);
 INSERT INTO "i18n_message" VALUES (259, 'label', 'ChecklistAdmin', '巡检/质控/计量条目维护', 'Checklist Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (260, 'label', 'checkListSetting', '检查项配置', 'Checklist Configure', NULL, -1);
 
 
 -- Entity Object Names  ( id from 400 to  599)
