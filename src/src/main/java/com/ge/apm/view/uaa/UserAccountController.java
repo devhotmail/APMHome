@@ -68,8 +68,14 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
         }
         catch(Exception ex){
         }
-        if(selectedOrg==null)
-            selectedOrg = (OrgInfo)((DefaultTreeNode)orgTree.getChildren().get(0)).getData();
+        try{
+            System.out.println("************** orgTree.getChildCount()="+orgTree.getChildCount());
+            if(selectedOrg==null)
+                selectedOrg = (OrgInfo)((DefaultTreeNode)orgTree.getChildren().get(0)).getData();
+        }
+        catch(Exception ex){
+            
+        }
         
         return orgTree;
     }    
