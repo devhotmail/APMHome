@@ -115,7 +115,7 @@
                             <p:dataExporter type="xls" target="datalist" fileName="PmOrder_export"/>
                         </p:commandButton>
                         <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{pmOrderController.prepareCreate}" update=":PmOrderEditDlg" oncomplete="PF('PmOrderEditDialog').show()"/>
-                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{pmOrderController.prepareView}" update=":PmOrderViewDlg" oncomplete="PF('PmOrderViewDialog').show()" disabled="#{empty pmOrderController.selected}"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}" actionListener="#{pmOrderController.prepareView}" update=":PmOrderViewDlg" oncomplete="PF('PmOrderViewDialog').show()" disabled="#{empty pmOrderController.selected}"/>
                         <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{pmOrderController.prepareEdit}" update=":PmOrderEditDlg" oncomplete="PF('PmOrderEditDialog').show()" disabled="#{empty pmOrderController.selected}"/>
                         <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{pmOrderController.delete}" update="datalist" disabled="#{empty pmOrderController.selected}">
                             <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>

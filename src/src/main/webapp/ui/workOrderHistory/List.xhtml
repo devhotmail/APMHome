@@ -59,7 +59,7 @@
                             <p:dataExporter type="xls" target="datalist" fileName="WorkOrderHistory_export"/>
                         </p:commandButton>
                         <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{workOrderHistoryController.prepareCreate}" update=":WorkOrderHistoryEditDlg" oncomplete="PF('WorkOrderHistoryEditDialog').show()"/>
-                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{workOrderHistoryController.prepareView}" update=":WorkOrderHistoryViewDlg" oncomplete="PF('WorkOrderHistoryViewDialog').show()" disabled="#{empty workOrderHistoryController.selected}"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}" actionListener="#{workOrderHistoryController.prepareView}" update=":WorkOrderHistoryViewDlg" oncomplete="PF('WorkOrderHistoryViewDialog').show()" disabled="#{empty workOrderHistoryController.selected}"/>
                         <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{workOrderHistoryController.prepareEdit}" update=":WorkOrderHistoryEditDlg" oncomplete="PF('WorkOrderHistoryEditDialog').show()" disabled="#{empty workOrderHistoryController.selected}"/>
                         <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{workOrderHistoryController.delete}" update="datalist" disabled="#{empty workOrderHistoryController.selected}">
                             <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>

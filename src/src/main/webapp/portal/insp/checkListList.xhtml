@@ -6,16 +6,15 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="content">
-        <div class="ui-g">
-            <div class="ui-g-12">
-
                 <h:form id="checkListQueryForm">
                 <p align="center" id="title">
                     <b>#{msg.checkListSetting}</b>
                 </p>
-                    <p:panelGrid columns="2"  layout="grid" styleClass="ui-panelgrid-blank">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12 ui-lg-4">
+                    <div class="card" style="height:400px;">
 
-                        <p:scrollPanel style="width:98%;height:400px;border: 0" mode="native" >
+                        <p:scrollPanel style="width:98%;height:95%;border: 0" mode="native" >
                             <label class="label">#{msg.searchAssetByDept} #{msg.ChecklistType}</label>
                             <p:tree id="assetTree" class="tree" style="border:0;" value="#{inspectionChecklistController.orgAssetTree}" var="node" dynamic="false" cache="false" selectionMode="single" selection="#{inspectionChecklistController.selectedNode}" highlight="true">
                                 <p:ajax event="select" listener="#{inspectionChecklistController.onSelectTreeNode}" update=":checkListQueryForm :checkListQueryForm:datalist"/>
@@ -33,13 +32,18 @@
                                 </p:treeNode>
                             </p:tree>
                         </p:scrollPanel>
+                    </div>
+                </div>
+
+                <div class="ui-g-12 ui-lg-8">
+                    <div class="card" style="height:400px;">
 
                             <p:dataTable id="datalist" value="#{inspectionChecklistController.checklistitemList}" var="item" widgetVar="varDataList" 
                                          selectionMode="single" selection="#{inspectionChecklistController.selected}"
-                                         paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                         paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true" style="height:95%;"
                                          rowKey="#{item.id}" sortMode="single"  sortOrder="ascending" sortBy="#{item.displayOrder}"
                                          paginatorTemplate="{Toolbar} {CurrentPageReport}" rowIndexVar="rowIndex" emptyMessage="#{msg.noRecordFound}"
-                                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" draggableRows="true" scrollable="true" scrollHeight="400">
+                                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" draggableRows="true" scrollable="true">
 
                                 <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
                                 <p:ajax event="rowReorder" listener="#{inspectionChecklistController.onRowReorder}" update="saveOrder"/>
@@ -58,14 +62,12 @@
                                 </f:facet>
                             </p:dataTable>
 
-                    </p:panelGrid>
-                </h:form>
-
+                    </div>
+                </div>
+            </div>
+            </h:form>
                 <ui:include src="checkListEdit.xhtml"/>
                 <ui:include src="checkListView.xhtml"/>
-
-            </div>
-        </div>
 
         <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
     </ui:define>

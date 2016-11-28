@@ -206,7 +206,7 @@
                             <p:dataExporter type="xls" target="datalist" fileName="AssetInfo_export"/>
                         </p:commandButton>
                         <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{assetInfoController.prepareCreate}" update=":AssetInfoEditDlg" oncomplete="PF('AssetInfoEditDialog').show()"/>
-                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{assetInfoController.prepareView}" update=":AssetInfoViewDlg" oncomplete="PF('AssetInfoViewDialog').show()" disabled="#{empty assetInfoController.selected}"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}" actionListener="#{assetInfoController.prepareView}" update=":AssetInfoViewDlg" oncomplete="PF('AssetInfoViewDialog').show()" disabled="#{empty assetInfoController.selected}"/>
                         <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{assetInfoController.prepareEdit}" update=":AssetInfoEditDlg" oncomplete="PF('AssetInfoEditDialog').show()" disabled="#{empty assetInfoController.selected}"/>
                         <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{assetInfoController.delete}" update="datalist" disabled="#{empty assetInfoController.selected}">
                             <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
