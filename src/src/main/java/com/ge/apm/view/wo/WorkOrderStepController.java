@@ -78,7 +78,7 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
                 
                 if(wo.getId()!=null)
                     try{
-                        woService.saveWorkOrderStep(null, selected, null);
+                        woService.saveWorkOrderStep(wo, selected, null);
                     }
                     catch(Exception ex){
                         logger.error(ex.getMessage(), ex);
