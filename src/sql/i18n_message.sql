@@ -298,7 +298,7 @@ INSERT INTO "i18n_message" VALUES (1507,'assetGroup','8','彩超','Color B-ultra
 
 
 INSERT INTO "i18n_message" VALUES (1510,'woSteps','1', '报修','Create',null,-1);
-INSERT INTO "i18n_message" VALUES (1511,'woSteps','2', '审核/审批','Approve',null,-1);
+INSERT INTO "i18n_message" VALUES (1511,'woSteps','2', '审核','Approve',null,-1);
 INSERT INTO "i18n_message" VALUES (1512,'woSteps','3', '派工','Assign',null,-1);
 INSERT INTO "i18n_message" VALUES (1513,'woSteps','4', '领工','Accept',null,-1);
 INSERT INTO "i18n_message" VALUES (1514,'woSteps','5', '维修','Repair',null,-1);

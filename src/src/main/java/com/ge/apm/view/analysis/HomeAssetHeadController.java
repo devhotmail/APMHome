@@ -1,5 +1,6 @@
 package com.ge.apm.view.analysis;
 
+import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
 import com.google.common.base.*;
 import com.google.common.collect.FluentIterable;
@@ -43,7 +44,6 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
     private final Map<String, String> queries;
     private final Map<String, Object> parameters;
     private BarChartModel barModel;
-    private int hospitalId = 0;
     private Long assetNumberInMt = 0L;
     private List<AssetViewInfo> assetsInMt = ImmutableList.of();
     private Map<String, Integer> stepCounts = ImmutableMap.of();
@@ -61,18 +61,19 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
     public HomeAssetHeadController() {
         queries = new HashMap<>();
         parameters = new HashMap<>();
-        queries.put("assetsInMt", "select w.asset_name, ws.step_id, ws.step_name, ws.owner_name from work_order w, work_order_step as ws where w.id = ws.work_order_id and ws.id in (select w.current_step from asset_info a, work_order w, work_order_step s where a.is_valid = true and w.is_closed = false and a.id = w.asset_id and a.hospital_id = :#hospitalId)");
-        queries.put("assetsStopped", "select a.name as asset_name, w.create_time as down_time, i.msg_key as down_reason from asset_info a right join work_order w on a.id = w.asset_id right join i18n_message i on w.case_type = i.id where a.is_valid = true and a.status =2 and a.hospital_id = :#hospitalId order by w.create_time"); //TODO: i18n_message should not be feached directly
-        queries.put("assetsWarrantyExpired", "select a.name as asset_name, a.warranty_date as warranty_date from asset_info a where a.is_valid = true and a.warranty_date <= (now() + interval '2 months')  and a.hospital_id = :#hospitalId order by a.warranty_date");
-        queries.put("assetsInPm", "select a.name as asset_name, a.last_pm_date as pm_date from asset_info a where a.hospital_id = :#hospitalId and a.last_pm_date < (now() + interval '1 weeks') order by last_pm_date");
-        queries.put("assetsInMetering", "select a.name as asset_name, a.last_metering_date as metering_date from asset_info a where a.hospital_id = 1 and a.last_pm_date < (now() + interval '2 months') order by a.last_metering_date");
-        queries.put("assetsInQa", "select a.name as asset_name, a.last_qa_date as qa_date from asset_info a where a.hospital_id = 1 and a.last_qa_date < (now() + interval '2 months') order by a.last_qa_date");
+        queries.put("assetsInMt", "select ai.name as asset_name, wo.step_id as step_id, wo.step_name as step_name, wo.owner_name as owner_name from (select w.asset_id, ws.step_id, ws.step_name, ws.owner_name from work_order w, work_order_step as ws where w.id = ws.work_order_id and ws.id in (select w.current_step from asset_info a, work_order w where a.is_valid = true and w.is_closed = false and a.id = w.asset_id and a.site_id = :#siteId and a.hospital_id = :#hospitalId)) wo join asset_info ai on wo.asset_id = ai.id");
+        queries.put("assetsStopped", "select ai.name as asset_name, wo.create_time as create_time, wo.case_type as case_type from asset_info ai join (select tw.asset_id, tw.create_time, wkod.case_type  from (select asset_id, max(create_time) as create_time from work_order group by asset_id) tw join work_order wkod on tw.asset_id = wkod.asset_id where tw.create_time = wkod.create_time) as wo on ai.id = wo.asset_id where ai.is_valid = true and ai.status = 2 and ai.site_id = :#siteId and ai.hospital_id = :#hospitalId order by create_time,asset_name,case_type");
+        queries.put("assetsWarrantyExpired", "select a.name as asset_name, a.warranty_date as warranty_date from asset_info a where a.is_valid = true and a.warranty_date <= (now() + interval '2 months')  and a.site_id = :#siteId and a.hospital_id = :#hospitalId order by a.warranty_date");
+        queries.put("assetsInPm", "select a.name as asset_name, a.last_pm_date as pm_date from asset_info a where a.site_id = :#siteId and a.hospital_id = :#hospitalId and a.last_pm_date < (now() + interval '1 weeks') order by last_pm_date");
+        queries.put("assetsInMetering", "select a.name as asset_name, a.last_metering_date as metering_date from asset_info a where a.site_id = :#siteId and a.hospital_id = :#hospitalId and a.last_pm_date < (now() + interval '2 months') order by a.last_metering_date");
+        queries.put("assetsInQa", "select a.name as asset_name, a.last_qa_date as qa_date from asset_info a where a.site_id = :#siteId and a.hospital_id = :#hospitalId and a.last_qa_date < (now() + interval '2 months') order by a.last_qa_date");
     }
 
     @PostConstruct
     public void init() {
-        hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
-        parameters.put("hospitalId", hospitalId);
+        UserAccount user = UserContextService.getCurrentUserAccount();
+        parameters.put("hospitalId", user.getHospitalId());
+        parameters.put("siteId", user.getSiteId());
         initAssetsInfoInMt();
         initAssetsStopped();
         initAssetsWarrantyExpired();
@@ -84,10 +85,6 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
 
     public BarChartModel getBarModel() {
         return barModel;
-    }
-
-    public int getHospitalId() {
-        return hospitalId;
     }
 
     public Long getAssetNumberInMt() {
@@ -196,7 +193,7 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
                 AssetViewInfo assetViewInfo = new AssetViewInfo();
                 assetViewInfo.setAsset(Optional.fromNullable(input.get("asset_name")).or("").toString());
                 assetViewInfo.setDownTime(FluentIterable.from(Splitter.on(" ").split(Optional.fromNullable(input.get("down_time")).or("").toString())).first().or(""));
-                assetViewInfo.setDownReason(WebUtil.getMessage(Optional.fromNullable(input.get("down_reason")).or("").toString()));
+                assetViewInfo.setDownReason(WebUtil.getMessage(Optional.fromNullable(input.get("case_type")).or("").toString()));
                 return assetViewInfo;
             }
         }).toList();

@@ -124,8 +124,8 @@ for i in 1..totalrecords
   confirmed_down_time  = Time.at(randtime + randnum.rand(600..1800)).strftime("%F %T")
   confirmed_up_time  = Time.at(randtime + randnum.rand(102000..208000)).strftime("%F %T")
 
-  case_type     = (randnum.rand(1..10) * rand2.rand).to_i
-  case_sub_type = randnum.rand(1..10)
+  case_type     = randnum.rand(1..5)
+  case_sub_type = randnum.rand(1..5)
   case_priority = randnum.rand(1..4)
   is_internal   = [true, false].sample
 

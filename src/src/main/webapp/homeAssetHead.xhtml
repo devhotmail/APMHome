@@ -67,7 +67,7 @@
                                         <p>#{asset.asset}</p>
                                         <ul class="list-inline list-bare layout layout--middle layout--center">
                                             <li class="layout__item u-1/2">停机时间:<span>#{asset.downTime}</span></li>
-                                            <li class="layout__item u-1/2">原因:<span>#{asset.downReason}</span></li>
+                                            <li class="layout__item u-1/2">原因:<span>#{fieldMsg.fieldValue('caseType', asset.downReason)}</span></li>
                                         </ul>
                                     </ui:repeat>
                                 </div>
