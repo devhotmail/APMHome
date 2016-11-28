@@ -85,7 +85,8 @@ INSERT INTO "i18n_message" VALUES (223, 'label', 'SparePartsConsumptionAnalysis'
 INSERT INTO "i18n_message" VALUES (224, 'label', 'DeviceFailureAnalysis', '故障分类统计', 'Device Failure Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (225, 'label', 'DeviceOperationMonitor', '运营监控', 'Operation Monitor', NULL, -1);
 INSERT INTO "i18n_message" VALUES (226, 'label', 'PreventiveMaintainceMgmt', '预防维护', 'Preventive Maint. Mgmt.', NULL, -1);
-INSERT INTO "i18n_message" VALUES (227, 'label', 'PreventiveMaintaincePlanning', '保养管理', 'Preventive Maint. Planning', NULL, -1);
+INSERT INTO "i18n_message" VALUES (227, 'label', 'PreventiveMaintaincePlanning', '保养统计', 'Preventive Maint. Planning', NULL, -1);
+INSERT INTO "i18n_message" VALUES (258, 'label', 'PmRecord', '保养记录', 'Checklist Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (228, 'label', 'DeviceMetrologyMgmt', '计量管理', 'Device Metrology Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (229, 'label', 'DeviceQualityControl', '质控管理', 'Device Quality Control', NULL, -1);
 INSERT INTO "i18n_message" VALUES (230, 'label', 'DeviceAdverseEventMgmt', '不良事件上报', 'Adverse Event Mgmt.', NULL, -1);
@@ -103,7 +104,7 @@ INSERT INTO "i18n_message" VALUES (241, 'label', 'DeviceKPIAnalysis', '绩效分
 INSERT INTO "i18n_message" VALUES (242, 'label', 'DeviceKPIForecast', '绩效预测', 'Device KPI Forecast', NULL, -1);
 INSERT INTO "i18n_message" VALUES (243, 'label', 'DeviceCostAnalysis', '成本统计分析', 'Device Cost Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (244, 'label', 'DevicePurchaseDecisionSupport', '辅助决策分析', 'Purchase Decision Support', NULL, -1);
-INSERT INTO "i18n_message" VALUES (245, 'label', 'SysAdmin', '系统管理', 'System Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (245, 'label', 'SysAdmin', '系统配置', 'System Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (246, 'label', 'SiteAdmin', '租户管理', 'Site Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (247, 'label', 'OrgAdmin', '组织机构管理', 'Organization Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (248, 'label', 'UserAdmin', '用户管理', 'User Account Mgmt.', NULL, -1);
@@ -116,7 +117,7 @@ INSERT INTO "i18n_message" VALUES (254, 'label', 'Setting', '系统设置', 'Set
 INSERT INTO "i18n_message" VALUES (255, 'label', 'BasicInfo', '基本信息', 'Basic Info', NULL, -1);
 INSERT INTO "i18n_message" VALUES (256, 'label', 'UsageAmount', '使用量', 'Usage Amount', NULL, -1);
 INSERT INTO "i18n_message" VALUES (257, 'label', 'Attachment', '附件', 'Attachment', NULL, -1);
-INSERT INTO "i18n_message" VALUES (258, 'label', 'PmRecord', '预防性维护记录', 'Pm Record', NULL, -1);
+INSERT INTO "i18n_message" VALUES (259, 'label', 'ChecklistAdmin', '巡检/质控/计量条目维护', 'Checklist Mgmt.', NULL, -1);
 
 
 -- Entity Object Names  ( id from 400 to  599)
