@@ -9,14 +9,14 @@
         <div class="ui-g">
             <div class="ui-g-12">
 
-                <p align="center">
-                    <b>#{msg.InspectionChecklist}</b>
-                </p>
                 <h:form id="checkListQueryForm">
+                <p align="center" id="title">
+                    <b>#{msg.checkListSetting}</b>
+                </p>
                     <p:panelGrid columns="2"  layout="grid" styleClass="ui-panelgrid-blank">
 
                         <p:scrollPanel style="width:98%;height:400px;border: 0" mode="native" >
-                            <label class="label">#{msg.assetName}</label>
+                            <label class="label">#{msg.searchAssetByDept} #{msg.ChecklistType}</label>
                             <p:tree id="assetTree" class="tree" style="border:0;" value="#{inspectionChecklistController.orgAssetTree}" var="node" dynamic="false" cache="false" selectionMode="single" selection="#{inspectionChecklistController.selectedNode}" highlight="true">
                                 <p:ajax event="select" listener="#{inspectionChecklistController.onSelectTreeNode}" update=":checkListQueryForm :checkListQueryForm:datalist"/>
                                 <p:ajax event="expand" listener="#{inspectionChecklistController.onExpandTreeNode}" />
@@ -39,13 +39,12 @@
                                          paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
                                          rowKey="#{item.id}" sortMode="single"  sortOrder="ascending" sortBy="#{item.displayOrder}"
                                          paginatorTemplate="{Toolbar} {CurrentPageReport}" rowIndexVar="rowIndex" emptyMessage="#{msg.noRecordFound}"
-                                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
-                                           draggableRows="true" scrollable="true" scrollHeight="400">
+                                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" draggableRows="true" scrollable="true" scrollHeight="400">
 
                                 <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
                                 <p:ajax event="rowReorder" listener="#{inspectionChecklistController.onRowReorder}" update="saveOrder"/>
 
-                                <p:column >
+                                <p:column headerText="#{fieldMsg.fieldValue('checklistType', inspectionChecklistController.checklistType)} #{msg.checkListSetting}">
                                     <h:outputText value="#{item.item}" />
                                 </p:column>
                                 <f:facet name="{Toolbar}">

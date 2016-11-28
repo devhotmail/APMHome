@@ -11,15 +11,16 @@
         <p:dialog id="InspectionChecklistEditDlg" widgetVar="InspectionChecklistEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionChecklistController.CRUDActionName} #{msg.InspectionChecklist}">
             <h:form id="InspectionChecklistEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionChecklistController.selected != null}">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionChecklistController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.item}*</label>
                             <p:inputText id="item" value="#{inspectionChecklistController.selected.item}"  required="true" requiredMessage="#{msg.item} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
-                        <h:panelGroup rendered="not empty inspectionChecklistController.selected.assetId">
+                        <p:spacer/>
+<!--                        <h:panelGroup rendered="not empty inspectionChecklistController.selected.assetId">
                             <label class="label">#{msg.assetId}*</label>
                             <p:inputText id="assetId" value="#{inspectionChecklistController.selected.assetId}" readonly="true" rendered="not empty inspectionChecklistController.selected.assetId"/>
-                        </h:panelGroup>
+                        </h:panelGroup>-->
                     </p:panelGrid>
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{inspectionChecklistController.save}" value="#{msg.Save}" update="display,:InspectionChecklistEditDlg, :checkListQueryForm :checkListQueryForm:datalist, :growl " icon="ui-icon-check" oncomplete="handleSubmit(args, 'InspectionChecklistEditDialog');"/>
