@@ -40,7 +40,7 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
     private TreeNode orgAssetTree;
 
     boolean isOrderChange = false;
-
+    
     @Override
     protected void init() {
         dao = WebUtil.getBean(InspectionChecklistRepository.class);
