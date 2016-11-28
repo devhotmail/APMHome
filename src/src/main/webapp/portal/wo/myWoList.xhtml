@@ -52,6 +52,9 @@
                         <p:column headerText="#{msg.workOrderName}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.name}"/>
                         </p:column>
+                        <p:column headerText="#{msg.assetName}" sortBy="#{item.assetName}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.assetName}"/>
+                        </p:column>
                         <p:column headerText="#{msg.caseOwnerName}" sortBy="#{item.caseOwnerName}" filterBy="#{item.caseOwnerName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.caseOwnerName}"/>
                         </p:column>
