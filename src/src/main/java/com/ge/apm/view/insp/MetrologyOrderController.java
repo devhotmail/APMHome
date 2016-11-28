@@ -27,13 +27,12 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.TreeNode;
-import org.springframework.beans.factory.annotation.Autowired;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class InspectionOrderController extends JpaCRUDController<InspectionOrder> {
+public class MetrologyOrderController extends JpaCRUDController<InspectionOrder> {
 
     InspectionOrderRepository dao = null;
 
@@ -65,7 +64,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         fileService = WebUtil.getBean(AttachmentFileService.class);
         inspectionService = WebUtil.getBean(InspectionService.class);
         uuaService = WebUtil.getBean(UaaService.class);
-        orgAssetTree = inspectionService.getPlanTree(1);
+        orgAssetTree = inspectionService.getPlanTree(2);
         assetGrossCount = getTreeCount(orgAssetTree);
         this.filterBySite = true;
         this.setSiteFilter();
@@ -140,15 +139,15 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
-            searchFilters.add(new SearchFilter("orderType",SearchFilter.Operator.EQ,1));
+            searchFilters.add(new SearchFilter("orderType",SearchFilter.Operator.EQ,2));
             return dao.findBySearchFilter(this.searchFilters, pageRequest);
         }
     }
 
     @Override
     public List<InspectionOrder> getItemList() {
-        searchFilters.add(new SearchFilter("orderType",SearchFilter.Operator.EQ,1));
-        return dao.find();
+        searchFilters.add(new SearchFilter("orderType",SearchFilter.Operator.EQ,2));
+        return dao.findBySearchFilter(searchFilters);
     }
 
     public void onUnselectTreeNode(NodeUnselectEvent event) {
@@ -189,7 +188,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         }
         boolean isSuccess = inspectionService.createOrder(selected, period, selectedNodesList);
         if (isSuccess) {
-            return "InspOrderList?faces-redirect=true";
+            return "MetrologyOrderList?faces-redirect=true";
         } else {
             return "";
         }
@@ -200,7 +199,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         object.setSiteId(UserContextService.getSiteId());
         object.setCreatorId(UserContextService.getCurrentUserAccount().getId());
         object.setCreatorName(UserContextService.getCurrentUserAccount().getName());
-        object.setOrderType(1);
+        object.setOrderType(2);
         object.setCreateTime(new Date());
     }
 
@@ -218,7 +217,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
 
     public String removeOne() {
         if (inspectionService.deleteOrder(this.selected)) {
-            return "InspOrderList?faces-redirect=true";
+            return "MetrologyOrderList?faces-redirect=true";
         } else {
             return "";
         }
@@ -243,7 +242,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         }
         this.selected.setIsFinished(getTreeCount(excuteItemTree) == excutedCount);
         inspectionService.excuteOrder(this.selected, checkItemList);
-        return "InspOrderList?faces-redirect=true";
+        return "MetrologyOrderList?faces-redirect=true";
     }
 
 //    public String updateOrder() {
