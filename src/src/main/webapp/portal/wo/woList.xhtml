@@ -21,7 +21,7 @@
                 <h:form id="WorkOrderListForm">
                     <p:dataTable id="datalist" value="#{workOrderController.lazyModel}" var="item" widgetVar="varDataList"
                         selectionMode="single" selection="#{workOrderController.selected}"
-                        lazy="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
+                        lazy="true" paginator="true" paginatorPosition="both" paginatorAlwaysVisible="true"
                         rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
                         paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"

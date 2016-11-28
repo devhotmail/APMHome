@@ -14,9 +14,9 @@
                 </p>
                 
                 <h:form id="searchForm">
-                    <h:panelGroup styleClass="md-inputfield">
-                        <p:inputText id="search_LIKE_name"/>
+                    <h:panelGroup>
                         <label>#{msg.name}</label>
+                        <p:inputText id="search_LIKE_name"/>
                         <p:spacer/><p:spacer/><p:spacer/>
                         <p:commandButton value="#{msg.Search}" actionListener="#{siteInfoController.setSearchFilter()}" update="SiteInfoListForm:datalist"/>
                         <p:spacer/><p:spacer/><p:spacer/>
