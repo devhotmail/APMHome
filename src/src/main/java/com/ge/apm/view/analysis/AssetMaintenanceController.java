@@ -158,7 +158,7 @@ public final class AssetMaintenanceController {
         chart.addSeries(series);
         chart.getAxis(AxisType.X).setLabel(WebUtil.getMessage("maintenanceAnalysis_reasonChart_xAxis"));
         chart.getAxis(AxisType.Y).setLabel(WebUtil.getMessage("maintenanceAnalysis_reasonChart_yAxis"));
-//        chart.setExtender("maintenanceE2");
+        chart.setExtender("maintenanceE2");
         return chart;
     }
 

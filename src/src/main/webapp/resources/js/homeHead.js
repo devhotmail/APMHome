@@ -1,8 +1,6 @@
 (function() {
 
   // TODO: label ist from database
-  var DEVICE_LIST = ['MRI', 'CT', 'DR', '心血管照影', '乳腺仪', '胃肠X逛机', '彩超', 'GE骨密度测定仪', '超声刀', '电子胃肠镜', '胶囊内窥镜', '电子鼻咽喉镜'];
-  var DEPT_LIST = ['心导管室', '超声诊断科', '心超室', '放射科', '肿瘤中心', '呼吸内科', '消化内科', '血液科', '心胸外科', '神经内科'];
   var SERIES_LABEL = ['收入', '利润'];
   var CURRENCY = "%'.2f 元";
 
@@ -159,15 +157,6 @@
   window.barAnnualRevenue= function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
       seriesColors: ['rgba(96, 189, 103, 1)', 'rgba(250, 164, 58, 1)'],
-      axes: {
-        xaxis: {
-//          ticks: DEVICE_LIST,
-          tickOptions: {
-            labelPosition: 'middle',
-            angle: -90
-          },
-        }
-      },
       series: [
         {
           pointLabels: {
@@ -189,7 +178,6 @@
         rendererOptions: {
           numberRows: 0
         },
-//        labels: DEPT_LIST,
         location: 'e',
         renderer: $.jqplot.EnhancedPieLegendRenderer
       },
@@ -201,9 +189,9 @@
         tooltipFormatString: CURRENCY
       },
       series: [{
-        renderer: $.jqplot.pieRenderer,
+        renderer: $.jqplot.DonutRenderer,
         rendererOptions: {
-          sliceMargin: 5,
+          sliceMargin: 1,
           dataLabels: 'percent',
           highlightMouseOver: true,
           dataLabelCenterOn: true
