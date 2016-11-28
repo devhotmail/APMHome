@@ -61,7 +61,7 @@
             </p:fieldset>
 
 
-            <p:fieldset legend="#{msg.BasicInfo}" style="margin-bottom:20px">
+            <p:fieldset legend="#{fieldMsg.fieldValue('checklistType', 1)}" style="margin-bottom:20px">
                 <p:dataTable id="datalist" value="#{inspectionOrderController.orderDetailItemList}" var="item" widgetVar="varDataList" 
                              paginator="true" rowKey="#{item.id}" 
                              paginatorTemplate="{CurrentPageReport}" rowIndexVar="rowIndex" emptyMessage="#{msg.noRecordFound}"
@@ -70,6 +70,9 @@
 
                     <p:column  style="width: 10%">
                         <h:outputText value="#{rowIndex}" />
+                    </p:column>
+                    <p:column headerText="#{msg.assetName}">
+                        <h:outputText value="#{item.assetName}" />
                     </p:column>
                     <p:column headerText="#{msg.itemName}">
                         <h:outputText value="#{item.itemName}" />

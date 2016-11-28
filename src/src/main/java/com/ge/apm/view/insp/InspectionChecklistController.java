@@ -12,8 +12,6 @@ import com.ge.apm.domain.InspectionChecklist;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map.Entry;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -31,7 +29,7 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
     InspectionChecklistRepository dao = null;
 
     AssetInfo selectedAsset;
-    Integer checklistType = 0;
+    Integer checklistType;
 
     TreeNode selectedNode;
 
@@ -40,7 +38,8 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
     private TreeNode orgAssetTree;
 
     boolean isOrderChange = false;
-    
+    private String type;
+
     @Override
     protected void init() {
         dao = WebUtil.getBean(InspectionChecklistRepository.class);
@@ -48,8 +47,15 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
         this.setSiteFilter();
         UaaService uaaService = WebUtil.getBean(UaaService.class);
         orgAssetTree = uaaService.getOrgAssetTree(UserContextService.getCurrentUserAccount().getHospitalId());
-        setCheckType(orgAssetTree);
         checklistitemList = new ArrayList();
+        type = WebUtil.getRequestParameter("type");
+        checklistType = (null == type ? null : Integer.valueOf(type));
+        if (null == type || type.isEmpty()) {
+            setCheckType(orgAssetTree);
+        }else{
+            checklistType = Integer.valueOf(type);
+        }
+
     }
 
     private void setCheckType(TreeNode node) {
@@ -137,6 +143,9 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
             selectedAsset = (AssetInfo) node.getParent().getData();
             Object[] data = (Object[]) node.getData();
             checklistType = (Integer) data[0];
+            checklistitemList = this.getItemList();
+        } else if (node.getType().equals("asset") && null!=type) {
+            selectedAsset = (AssetInfo) node.getData();
             checklistitemList = this.getItemList();
         } else {
             selected = null;

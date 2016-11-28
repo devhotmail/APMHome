@@ -8,7 +8,7 @@
 
     <ui:composition>
 
-        <p:dialog id="InspectionChecklistEditDlg" widgetVar="InspectionChecklistEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionChecklistController.CRUDActionName} #{msg.InspectionChecklist}">
+        <p:dialog id="InspectionChecklistEditDlg" widgetVar="InspectionChecklistEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionChecklistController.CRUDActionName} #{fieldMsg.fieldValue('checklistType', inspectionChecklistController.checklistType)} #{msg.checkListSetting}">
             <h:form id="InspectionChecklistEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionChecklistController.selected != null}">
