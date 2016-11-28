@@ -66,6 +66,8 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         uuaService = WebUtil.getBean(UaaService.class);
         orgAssetTree = inspectionService.getPlanTree(1);
         assetGrossCount = getTreeCount(orgAssetTree);
+        this.filterBySite = true;
+        this.setSiteFilter();
 
         String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
