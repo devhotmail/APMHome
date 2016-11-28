@@ -72,7 +72,7 @@ INSERT INTO "i18n_message" VALUES (209, 'label', 'SupplierMgmt', '供应商管�
 INSERT INTO "i18n_message" VALUES (210, 'label', 'AssetValueAnalysis', '设备价值统计', 'Asset Value Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (211, 'label', 'WorkOrderMgmt', '维修流程', 'Work Order Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (212, 'label', 'ServiceRequestMgmt', '报修管理', 'Service Request Mgmt.', NULL, -1);
-INSERT INTO "i18n_message" VALUES (213, 'label', 'MyWorkOrder', '保修处理', 'Work Order', NULL, -1);
+INSERT INTO "i18n_message" VALUES (213, 'label', 'MyWorkOrder', '报修处理', 'Work Order', NULL, -1);
 INSERT INTO "i18n_message" VALUES (214, 'label', 'MaintainanceRecord', '维修记录', 'Maintainance Record', NULL, -1);
 INSERT INTO "i18n_message" VALUES (215, 'label', 'ServiceQualityReview', '维修质量评估', 'Service Quality Review', NULL, -1);
 INSERT INTO "i18n_message" VALUES (216, 'label', 'Inspection', '巡检管理', 'Inspection', NULL, -1);
