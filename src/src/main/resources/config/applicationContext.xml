@@ -51,7 +51,7 @@
         <property name="driverClassName" value="org.postgresql.Driver" />
         <property name="url" value="jdbc:postgresql://127.0.0.1:5432/ge_apm" />
         <property name="username" value="postgres" />
-        <property name="password" value="gzp110" />
+        <property name="password" value="root" />
     </bean>
 
     <!-- jmx -->
