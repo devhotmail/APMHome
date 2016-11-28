@@ -13,14 +13,6 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{supplierController.selected != null}">
                         <h:panelGroup>
-                            <label class="label">#{msg.id}*</label>
-                            <p:inputText id="id" value="#{supplierController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.siteId}*</label>
-                            <p:inputText id="siteId" value="#{supplierController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
                             <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{supplierController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
                         </h:panelGroup>

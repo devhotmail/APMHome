@@ -22,15 +22,9 @@
                     rows="20" emptyMessage="#{msg.noRecordFound}"
                     rowsPerPageTemplate="20,40,60,90">
 
-                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
-                    <p:ajax event="filter" listener="#{supplierController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{supplierController.onFilter}" update="createButton editButton deleteButton"/>
                     
-                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.id}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.siteId}"/>
-                    </p:column>
                     <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.name}"/>
                     </p:column>
@@ -54,7 +48,6 @@
                             <p:dataExporter type="xls" target="datalist" fileName="Supplier_export"/>
                         </p:commandButton>
                         <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{supplierController.prepareCreate}" update=":SupplierEditDlg" oncomplete="PF('SupplierEditDialog').show()"/>
-                        <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}" actionListener="#{supplierController.prepareView}" update=":SupplierViewDlg" oncomplete="PF('SupplierViewDialog').show()" disabled="#{empty supplierController.selected}"/>
                         <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{supplierController.prepareEdit}" update=":SupplierEditDlg" oncomplete="PF('SupplierEditDialog').show()" disabled="#{empty supplierController.selected}"/>
                         <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{supplierController.delete}" update="datalist" disabled="#{empty supplierController.selected}">
                             <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
@@ -64,8 +57,6 @@
             </h:form>
 
             <ui:include src="Edit.xhtml"/>
-            <ui:include src="View.xhtml"/>
-
             </div>
         </div>
         

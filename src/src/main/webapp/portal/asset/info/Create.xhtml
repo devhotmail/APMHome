@@ -54,7 +54,11 @@
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.vendor}</label>
-                        <p:inputText id="vendor" value="#{assetInfoController.selected.vendor}"/>
+                        <p:selectOneMenu id="vendor" value="#{assetInfoController.selected.vendor}">
+                            <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                            <f:selectItems value="#{supplierController.supplierList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                        </p:selectOneMenu>
+                        
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.maitanance}</label>

@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.SupplierRepository;
 import com.ge.apm.domain.Supplier;
+import com.ge.apm.view.sysutil.UserContextService;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -19,6 +20,7 @@ public class SupplierController extends JpaCRUDController<Supplier> {
     @Override
     protected void init() {
         dao = WebUtil.getBean(SupplierRepository.class);
+        this.filterBySite = true;
     }
 
     @Override
@@ -26,52 +28,12 @@ public class SupplierController extends JpaCRUDController<Supplier> {
         return dao;
     }
 
-    @Override
-    protected Page<Supplier> loadData(PageRequest pageRequest) {
-        if (this.searchFilters == null) {
-            return dao.findAll(pageRequest);
-        } else {
-            return dao.findBySearchFilter(this.searchFilters, pageRequest);
-        }
+    public List<Supplier> getSupplierList() {
+        return dao.getBySiteId(UserContextService.getSiteId());
     }
 
     @Override
-    public List<Supplier> getItemList() {
-        //to do: change the code if necessary
-        return dao.find();
+    public void onBeforeNewObject(Supplier supplier) {
+        supplier.setSiteId(UserContextService.getSiteId());
     }
-
-/*
-    @Override
-    public void onBeforeNewObject(Supplier object) {
-    }
-    
-    @Override
-    public void onAfterNewObject(Supplier object, boolean isOK) {
-    }
-
-    @Override
-    public void onBeforeUpdateObject(Supplier object) {
-    }
-    
-    @Override
-    public void onAfterUpdateObject(Supplier object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeDeleteObject(Supplier object) {
-    }
-    
-    @Override
-    public void onAfterDeleteObject(Supplier object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeSave(Supplier object) {
-    }
-    
-    @Override
-    public void onAfterDataChanged(){
-    };
-*/
 }
