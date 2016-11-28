@@ -80,24 +80,40 @@
                         <h3 class="block-title">设备检查部位统计</h3>
                         <div class="ui-g">
                             <div class="ui-xl-3 ui-lg-6 divide-line-right">
+                                <p>
+                                    <span>${deviceOperationMonitorController.bottomCtBarTitle}</span>
+                                    <span>${deviceOperationMonitorController.bottomCtTotal}个</span>
+                                </p>
                                 <div class="flex flex--row flex--center">
                                     <ui:include src="bodyModel.xhtml"/>
                                     <p:chart id="bottomCtBar" type="bar" widgetVar="body-chart-1" class="chart-device-stat vertical" model="#{deviceOperationMonitorController.bottomCtBar}" responsive="true"/>
                                 </div>
                             </div>
                             <div class="ui-xl-3 ui-lg-6 divide-line-right">
+                                <p>
+                                    <span>${deviceOperationMonitorController.bottomMrBarTitle}</span>
+                                    <span>${deviceOperationMonitorController.bottomMrTotal}个</span>
+                                </p>
                                 <div class="flex flex--row flex--center">
                                     <ui:include src="bodyModel.xhtml"/>
                                     <p:chart id="bottomMrBar" type="bar" widgetVar="body-chart-2" class="chart-device-stat vertical" model="#{deviceOperationMonitorController.bottomMrBar}" responsive="true"/>
                                 </div>
                             </div>
                             <div class="ui-xl-3 ui-lg-6 divide-line-right">
+                                <p>
+                                    <span>${deviceOperationMonitorController.bottomXrayBarTitle}</span>
+                                    <span>${deviceOperationMonitorController.bottomXrayTotal}个</span>
+                                </p>
                                 <div class="flex flex--row flex--center">
                                     <ui:include src="bodyModel.xhtml" />
                                     <p:chart id="bottomXrayBar" type="bar" widgetVar="body-chart-3" class="chart-device-stat vertical" model="#{deviceOperationMonitorController.bottomXrayBar}" responsive="true"/>
                                 </div>
                             </div>
                             <div class="ui-xl-3 ui-lg-6">
+                                <p>
+                                    <span>${deviceOperationMonitorController.bottomDrBarTitle}</span>
+                                    <span>${deviceOperationMonitorController.bottomDrTotal}个</span>
+                                </p>
                                 <div class="flex flex--row flex--center">
                                     <ui:include src="bodyModel.xhtml" />
                                     <p:chart id="bottomDrBar" type="bar" widgetVar="body-chart-4" class="chart-device-stat vertical" model="#{deviceOperationMonitorController.bottomDrBar}" responsive="true"/>

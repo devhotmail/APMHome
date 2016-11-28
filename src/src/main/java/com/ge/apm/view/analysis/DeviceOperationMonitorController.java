@@ -39,6 +39,10 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     public final static String LIMBS = "四肢";
     public final static String OTHER = "其他";
     public final static String NUMBER = "检查次数";
+    public final static String DAY_AVERAGE = "日平均总数";
+    public final static String WEEK_AVERAGE = "周平均总数";
+    public final static String MONTH_AVERAGE = "月平均总数";
+    public final static String OVERALL = "选定时间总数";
     private final static ImmutableMap<Integer, String> parts = ImmutableMap.of(1, HEAD, 2, CHEST, 3, ABDOMEN, 4, LIMBS, 5, OTHER);
     private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     private final Map<String, String> queries;
@@ -53,11 +57,23 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     private ImmutableTable<String, String, Integer> tabAreaModelData;
     private BarChartModel middleBar;
     private ImmutableTable<String, String, Integer> middleBarData;
+    private String bottomLeftBarTitle = "";
+    private int bottomLeftTotal = 0;
     private BarChartModel bottomLeftBar;
+    private String bottomRightBarTitle = "";
+    private int bottomRightTotal = 0;
     private BarChartModel bottomRightBar;
+    private String bottomCtBarTitle = "";
+    private int bottomCtTotal = 0;
     private BarChartModel bottomCtBar;
+    private String bottomMrBarTitle = "";
+    private int bottomMrTotal = 0;
     private BarChartModel bottomMrBar;
+    private String bottomXrayBarTitle = "";
+    private int bottomXrayTotal = 0;
     private BarChartModel bottomXrayBar;
+    private String bottomDrBarTitle = "";
+    private int bottomDrTotal = 0;
     private BarChartModel bottomDrBar;
     private ImmutableTable<String, String, Integer> bottomBarsData;
     private Map<Integer, String> assetGroups = ImmutableMap.of();
@@ -89,6 +105,10 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         int parmSelectGroupId = Integer.valueOf(Optional.fromNullable(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedGroupId")).or("0"));
         selectedGroupId = parmSelectGroupId == 0 ? FluentIterable.from(assetGroups.keySet()).first().or(1) : parmSelectGroupId;
         assetGroups = initAssetGroups();
+        bottomCtBarTitle = assetGroups.get(1);
+        bottomMrBarTitle = assetGroups.get(2);
+        bottomXrayBarTitle = assetGroups.get(3);
+        bottomDrBarTitle = assetGroups.get(4);
         initStartEndDate();
         initTopBar();
         initTopBarAll();
@@ -124,10 +144,13 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         String query = "";
         if (tabIndex == 0) {
             query = queries.get("examsPerProcedurePerDay");
+            bottomLeftBarTitle = DAY_AVERAGE;
         } else if (tabIndex == 1) {
             query = queries.get("examsPerProcedurePerWeek");
+            bottomLeftBarTitle = WEEK_AVERAGE;
         } else if (tabIndex == 2) {
             query = queries.get("examsPerProcedurePerMonth");
+            bottomLeftBarTitle = MONTH_AVERAGE;
         }
         List<DeviceOperationInfo> exams = jdbcTemplate.query(query, new RowMapper<DeviceOperationInfo>() {
             @Override
@@ -144,7 +167,9 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         tabAreaModelData = initTable(exams);
         log.info("tabAreaModelData: {}", tabAreaModelData);
         tabAreaModel = initLineCharModel(null, true, "ne", "tabAreaSkin", tabIndex == 2 ? "%y-%m" : null, tabAreaModelData);
-        bottomLeftBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomLeftBarSkin", ImmutableMap.of(HEAD, average(tabAreaModelData.row(HEAD)), CHEST, average(tabAreaModelData.row(CHEST)), ABDOMEN, average(tabAreaModelData.row(ABDOMEN)), LIMBS, average(tabAreaModelData.row(LIMBS)), OTHER, average(tabAreaModelData.row(OTHER))), true);
+        ImmutableMap<String, Integer> bottomLeftBarData = ImmutableMap.of(HEAD, average(tabAreaModelData.row(HEAD)), CHEST, average(tabAreaModelData.row(CHEST)), ABDOMEN, average(tabAreaModelData.row(ABDOMEN)), LIMBS, average(tabAreaModelData.row(LIMBS)), OTHER, average(tabAreaModelData.row(OTHER)));
+        bottomLeftTotal = (int) Stats.of(bottomLeftBarData.values()).sum();
+        bottomLeftBar = initBarModel(new BarChartModel(), bottomLeftBarTitle, true, 50, "ne", "bottomLeftBarSkin", bottomLeftBarData, true);
     }
 
     public void initMiddleBar() {
@@ -183,10 +208,14 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
             builder.put(info.getGroupName(), info.getProcedureName(), info.getExamCount());
         }
         bottomBarsData = builder.build();
-        bottomCtBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomCtBarSkin", bottomBarsData.row(assetGroups.get(1)), true);
-        bottomMrBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomMrBarSkin", bottomBarsData.row(assetGroups.get(2)), true);
-        bottomXrayBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomXrayBarSkin", bottomBarsData.row(assetGroups.get(3)), true);
-        bottomDrBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomDrBarSkin", bottomBarsData.row(assetGroups.get(4)), true);
+        bottomCtTotal = (int) Stats.of(bottomBarsData.row(assetGroups.get(1)).values()).sum();
+        bottomMrTotal = (int) Stats.of(bottomBarsData.row(assetGroups.get(2)).values()).sum();
+        bottomXrayTotal = (int) Stats.of(bottomBarsData.row(assetGroups.get(3)).values()).sum();
+        bottomDrTotal = (int) Stats.of(bottomBarsData.row(assetGroups.get(4)).values()).sum();
+        bottomCtBar = initBarModel(new BarChartModel(), bottomCtBarTitle, true, 50, "ne", "bottomCtBarSkin", bottomBarsData.row(assetGroups.get(1)), true);
+        bottomMrBar = initBarModel(new BarChartModel(), bottomMrBarTitle, true, 50, "ne", "bottomMrBarSkin", bottomBarsData.row(assetGroups.get(2)), true);
+        bottomXrayBar = initBarModel(new BarChartModel(), bottomXrayBarTitle, true, 50, "ne", "bottomXrayBarSkin", bottomBarsData.row(assetGroups.get(3)), true);
+        bottomDrBar = initBarModel(new BarChartModel(), bottomDrBarTitle, true, 50, "ne", "bottomDrBarSkin", bottomBarsData.row(assetGroups.get(4)), true);
     }
 
 
@@ -274,8 +303,9 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     private void initBottomView() {
-        bottomLeftBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomLeftBarSkin", ImmutableMap.of(HEAD, average(tabAreaModelData.row(HEAD)), CHEST, average(tabAreaModelData.row(CHEST)), ABDOMEN, average(tabAreaModelData.row(ABDOMEN)), LIMBS, average(tabAreaModelData.row(LIMBS)), OTHER, average(tabAreaModelData.row(OTHER))), true);
-        bottomRightBar = initBarModel(new BarChartModel(), null, true, 50, "ne", "bottomRightBarSkin", topBarData, true);
+        bottomRightBarTitle = OVERALL;
+        bottomRightTotal = totalExamCount;
+        bottomRightBar = initBarModel(new BarChartModel(), bottomRightBarTitle, true, 50, "ne", "bottomRightBarSkin", topBarData, true);
     }
 
 
@@ -447,6 +477,54 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
 
     public int getTotalExamAllCount() {
         return totalExamAllCount;
+    }
+
+    public String getBottomLeftBarTitle() {
+        return bottomLeftBarTitle;
+    }
+
+    public int getBottomLeftTotal() {
+        return bottomLeftTotal;
+    }
+
+    public String getBottomRightBarTitle() {
+        return bottomRightBarTitle;
+    }
+
+    public int getBottomRightTotal() {
+        return bottomRightTotal;
+    }
+
+    public String getBottomCtBarTitle() {
+        return bottomCtBarTitle;
+    }
+
+    public int getBottomCtTotal() {
+        return bottomCtTotal;
+    }
+
+    public String getBottomMrBarTitle() {
+        return bottomMrBarTitle;
+    }
+
+    public int getBottomMrTotal() {
+        return bottomMrTotal;
+    }
+
+    public String getBottomXrayBarTitle() {
+        return bottomXrayBarTitle;
+    }
+
+    public int getBottomXrayTotal() {
+        return bottomXrayTotal;
+    }
+
+    public String getBottomDrBarTitle() {
+        return bottomDrBarTitle;
+    }
+
+    public int getBottomDrTotal() {
+        return bottomDrTotal;
     }
 
     public static class DeviceOperationInfo {
