@@ -150,7 +150,7 @@
     });
   }
 
-  window.deviceScan = function() {
+  window.deviceScan = function() x
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
       legend: {
         labels: ['扫描量'],
