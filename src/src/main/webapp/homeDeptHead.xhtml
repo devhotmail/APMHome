@@ -24,29 +24,29 @@
 				<!-- Statistics Overview -->
 				<div class="card--summary ui-g">
 					<div class="ui-g-12 ui-md-4">
-						<div class="epsilon u-mv-">设备扫描量</div>
-						<p:outputPanel id="value_scan" header="Device Scan (Times)">
+						<div class="epsilon u-mv-">#{msg.deviceValueScanhd}</div>
+						<p:outputPanel id="value_scan">
 							<div class="text--banner gamma">
-								<h:outputText value="#{homeDeptHeadController.valueDeviceScan}"/>
-								<span class="text--unit text--secondary">次</span>
+								<h:outputText value="#{homeDeptHeadController.valueScan}"/>
+								<span class="text--unit text--secondary"></span>
 							</div>
 						</p:outputPanel>
 					</div>
 					<div class="ui-g-12 ui-md-4">
-						<div class="epsilon u-mv-">设备总曝光量</div>
-						<p:outputPanel id="value_expo" header="Device Exposure (Hours)">
+						<div class="epsilon u-mv-">#{msg.deviceValueExpohd}</div>
+						<p:outputPanel id="value_expo">
 							<div class="text--banner gamma">
-								<h:outputText value="#{homeDeptHeadController.valueDeviceExposure}"/>
-								<span class="text--unit text--secondary">小时</span>
+								<h:outputText value="#{homeDeptHeadController.valueExpo}"/>
+								<span class="text--unit text--secondary"></span>
 							</div>
 						</p:outputPanel>
 					</div>
 					<div class="ui-g-12 ui-md-4">
-						<div class="epsilon u-mv-">设备总利润</div>
-						<p:outputPanel id="value_profit" header="Device Profit (CNY)">
+						<div class="epsilon u-mv-">#{msg.deviceValueROIhd}</div>
+						<p:outputPanel id="value_profit">
 							<div class="text--banner gamma">
-								<h:outputText value="#{homeDeptHeadController.valueDeviceProfit}"/>
-								<span class="text--unit text--secondary">元</span>
+								<h:outputText value="#{homeDeptHeadController.valueProfit}"/>
+								<span class="text--unit text--secondary"></span>
 							</div>
 						</p:outputPanel>
 					</div>
@@ -73,7 +73,7 @@
 			<!-- Chart 1: Device Scan -->
 			<div class="ui-g-12">
 				<div class="block">
-					<h3 class="block-title">设备扫描量</h3>
+					<h3 class="block-title">#{msg.deviceScanhd}</h3>
 					<p:chart id="scan_bar" type="bar"
 						model="#{homeDeptHeadController.deviceScan}" responsive="true" />
 				</div>
@@ -82,16 +82,16 @@
 			<!-- Chart 2: Device Exposure -->
 			<div class="ui-g-12">
 				<div class="block">
-					<h3 class="block-title">设备曝光量</h3>
+					<h3 class="block-title">#{msg.deviceExpohd}</h3>
 					<p:chart id="exposure_bar" type="bar"
-						model="#{homeDeptHeadController.deviceExposure}" responsive="true" />
+						model="#{homeDeptHeadController.deviceExpo}" responsive="true" />
 				</div>
 			</div>
 
-			<!-- Chart 3: Device Profit -->
+			<!-- Chart 3: Device ROI -->
 			<div class="ui-g-12">
 				<div class="block">
-					<h3 class="block-title">设备投资回报</h3>
+					<h3 class="block-title">#{msg.deviceROIhd}</h3>
 					<p:chart id="profit_bar" type="bar"
 						model="#{homeDeptHeadController.deviceProfit}" responsive="true" />
 				</div>
