@@ -57,6 +57,14 @@ INSERT INTO "i18n_message" VALUES (52, 'label','Welcome', '欢迎您','Welcome',
 INSERT INTO "i18n_message" VALUES (53, 'label','DuplicateLoginName', '登录用户名 "%s" 已有人使用，请更换登录用户名.','Login name already used by others, please change to another login name.',null,-1);
 INSERT INTO "i18n_message" VALUES (54, 'label','BatchImport', '批量导入系统配置','BatchImport',null,-1);
 INSERT INTO "i18n_message" VALUES (55, 'label','ClearAll', '清空自定义配置','ClearAll',null,-1);
+INSERT INTO "i18n_message" VALUES (55, 'label','Execute', '执行','Execute',null,-1);
+INSERT INTO "i18n_message" VALUES (56,'message','Http500ErrorTitle', '系统发生异常','Exception Occured',null,-1);
+INSERT INTO "i18n_message" VALUES (57,'message','Http500ErrorMsg', '请联系系统管理员.','Please contact system administrator.',null,-1);
+INSERT INTO "i18n_message" VALUES (58,'message','Http404NotFoundTitle', '网页不存在','Page Not Found',null,-1);
+INSERT INTO "i18n_message" VALUES (59,'message','Http404NotFoundMsg', '您想访问的网页不存在.','The resource you are looking for does not exist.',null,-1);
+INSERT INTO "i18n_message" VALUES (60,'message','Http401AccessDeniedTitle', '权限受限','Access Denied',null,-1);
+INSERT INTO "i18n_message" VALUES (61,'message','Http401AccessDeniedMsg', '对不起，您未获得访问此网页的授权.','You are not authorized to access this resource.',null,-1);
+
 
 -- menu item names  ( id from 200 to  399)
 
