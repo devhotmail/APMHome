@@ -72,14 +72,6 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
     	super.prepareEdit();
     	customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
     }
-    
-    @Override
-	public void onBeforeNewObject(I18nMessage i18nMessage) {
-    	logger.info("this.selected is "+ i18nMessage);
-    	i18nMessage.setMsgType(this.selectedType.getMsgType());
-		i18nMessage.setSiteId(this.currentUser.getSiteId());
-		i18nMessage.setMsgKey(this.currentUser.getName());
-	}
 
 
 	public List<I18nMessage> getFieldValueList(String msgType, Integer siteId) {
@@ -107,14 +99,13 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
 		List<I18nMessage> result = dao.findBySearchFilter(filter);
 		return result;
 	}
-   
-   public void getMsgType(String msgType) throws InstantiationException, IllegalAccessException {
+
+   public void prepareCreate(String msgType) throws InstantiationException, IllegalAccessException{
+	   this.selected = null;
 	   super.prepareCreate();
-	   if(this.selected.hashCode() == 0){
-		  this.selected.setSiteId(this.currentUser.getSiteId());
-		  this.selected.setMsgType(msgType);
-		  this.selected.setMsgKey(this.currentUser.getName());
-   		}
+	   this.selected.setSiteId(this.currentUser.getSiteId());
+	   this.selected.setMsgType(msgType);
+	   this.selected.setMsgKey(this.currentUser.getName());
 	   customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
    }
    
@@ -127,6 +118,19 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
 			   i18nMessage.setMsgKey(i18nMessage.getMsgKey().concat(currentUser.getName()));
 			   i18nMessage.setId(null);
 			   dao.save(i18nMessage);
+		}
+		   customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
+	   }
+   }
+   
+   public void clearAll(String msgType){
+	   List<I18nMessage> result = fetchI18nMessageList(this.currentUser.getSiteId(),msgType);
+	   if(!CollectionUtils.isEmpty(result)){
+		   logger.info("msgType is "+msgType+ "get "+result.size()+"条system记录");
+		   for (I18nMessage i18nMessage : result) {
+			   i18nMessage.setSiteId(this.currentUser.getSiteId());
+			   i18nMessage.setMsgKey(i18nMessage.getMsgKey().concat(currentUser.getName()));
+			  dao.delete(i18nMessage);
 		}
 		   customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
 	   }
