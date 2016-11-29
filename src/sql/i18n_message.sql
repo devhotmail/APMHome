@@ -56,6 +56,7 @@ INSERT INTO "i18n_message" VALUES (51, 'label','DataSavedOK', '数据已经保�
 INSERT INTO "i18n_message" VALUES (52, 'label','Welcome', '欢迎您','Welcome',null,-1);
 INSERT INTO "i18n_message" VALUES (53, 'label','DuplicateLoginName', '登录用户名 "%s" 已有人使用，请更换登录用户名.','Login name already used by others, please change to another login name.',null,-1);
 INSERT INTO "i18n_message" VALUES (54, 'label','BatchImport', '批量导入系统配置','BatchImport',null,-1);
+INSERT INTO "i18n_message" VALUES (55, 'label','ClearAll', '清空自定义配置','ClearAll',null,-1);
 
 -- menu item names  ( id from 200 to  399)
 
@@ -417,6 +418,7 @@ INSERT INTO "i18n_message" VALUES (3012,'message','shouldLate', '{0}应该晚于
 INSERT INTO "i18n_message" VALUES (3013,'message','todayDate', '当前日期',' current date',null,-1);
 INSERT INTO "i18n_message" VALUES (3014,'message','Hospital', '院区','Hospital',null,-1);
 INSERT INTO "i18n_message" VALUES (3015,'message','Department', '科室','Department',null,-1);
+INSERT INTO "i18n_message" VALUES (3016,'message','DeleteAllConformation', '您确定要删除所有的自定义配置么？','Are you sure to delete all config created by yourself?',null,-1);
 
 
 -- Chart label/lengend （id from 5000 to 5500）
