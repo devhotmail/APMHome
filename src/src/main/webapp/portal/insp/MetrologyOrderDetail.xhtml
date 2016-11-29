@@ -7,7 +7,7 @@
 
     <ui:define name="content">
         <p align="center">
-            <b>#{msg.InspectionOrder}</b>
+            <b>#{msg.MetrologOrder}</b>
         </p>
 
         <h:form id="InspectionOrderEditForm">
@@ -61,7 +61,7 @@
             </p:fieldset>
 
 
-            <p:fieldset legend="#{fieldMsg.fieldValue('checklistType', 1)}" style="margin-bottom:20px">
+            <p:fieldset legend="#{fieldMsg.fieldValue('checklistType', 2)}" style="margin-bottom:20px">
                 <p:dataTable id="datalist" value="#{metrologyOrderController.orderDetailItemList}" var="item" widgetVar="varDataList" 
                              paginator="true" rowKey="#{item.id}" 
                              paginatorTemplate="{CurrentPageReport}" rowIndexVar="rowIndex" emptyMessage="#{msg.noRecordFound}"
