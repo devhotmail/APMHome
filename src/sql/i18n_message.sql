@@ -294,16 +294,20 @@ INSERT INTO "i18n_message" VALUES (740,'field_name','lastQaDate','上次质控�
 INSERT INTO "i18n_message" VALUES (741,'field_name','lastMeteringDate','上次计量时间','Last Metering Date',null,-1);
 INSERT INTO "i18n_message" VALUES (742,'field_name','assetName','资产名称','Asset Name',null,-1);
 
--- field value code types  ( id from 1500)
+-- field value code types  ( id from 1400)
 
-INSERT INTO "i18n_message" VALUES (1500,'assetGroup','1','CT','CT',null,-1);
-INSERT INTO "i18n_message" VALUES (1501,'assetGroup','2','MR','MR',null,-1);
-INSERT INTO "i18n_message" VALUES (1502,'assetGroup','3','XRay','XRay',null,-1);
-INSERT INTO "i18n_message" VALUES (1503,'assetGroup','4','DR','DR',null,-1);
-INSERT INTO "i18n_message" VALUES (1504,'assetGroup','5','心血管照影',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1505,'assetGroup','6','乳腺仪',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1506,'assetGroup','7','胃肠X光机','Stomach XRay',null,-1);
-INSERT INTO "i18n_message" VALUES (1507,'assetGroup','8','彩超','Color B-ultrasonic',null,-1);
+INSERT INTO "i18n_message" VALUES (1400,'assetGroup','1','CT','CT',null,-1);
+INSERT INTO "i18n_message" VALUES (1401,'assetGroup','2','MR','MR',null,-1);
+INSERT INTO "i18n_message" VALUES (1402,'assetGroup','3','DR','DR',null,-1);
+INSERT INTO "i18n_message" VALUES (1403,'assetGroup','4','CR','CR',null,-1);
+INSERT INTO "i18n_message" VALUES (1404,'assetGroup','5','RF','RF',null,-1);
+INSERT INTO "i18n_message" VALUES (1405,'assetGroup','6','DSA','DSA',null,-1);
+INSERT INTO "i18n_message" VALUES (1406,'assetGroup','7','乳腺机','乳腺机',null,-1);
+INSERT INTO "i18n_message" VALUES (1407,'assetGroup','8','PET','PET',null,-1);
+INSERT INTO "i18n_message" VALUES (1408,'assetGroup','9','NM','NM',null,-1);
+INSERT INTO "i18n_message" VALUES (1409,'assetGroup','10','PET-CT','PET-CT',null,-1);
+INSERT INTO "i18n_message" VALUES (1410,'assetGroup','11','PET-MR','PET-MR',null,-1);
+INSERT INTO "i18n_message" VALUES (1411,'assetGroup','12','US','US',null,-1);
 
 
 INSERT INTO "i18n_message" VALUES (1510,'woSteps','1', '报修','Create',null,-1);
