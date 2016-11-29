@@ -81,6 +81,12 @@ public class InspectionService {
         Calendar calender = Calendar.getInstance();
         Date startDate = order.getStartTime();
         Date endDate = order.getEndTime();
+        //setting the endTime as the end of a day.
+        calender.setTime(endDate);
+        calender.add(Calendar.HOUR_OF_DAY, 23);
+        calender.add(Calendar.MINUTE, 59);
+        calender.add(Calendar.SECOND, 59);
+        endDate = calender.getTime();
         Date itemstartDate = startDate;
         Date itemendDate = startDate;
         while (itemendDate.before(endDate)) {

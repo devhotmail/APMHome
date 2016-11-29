@@ -293,6 +293,7 @@ INSERT INTO "i18n_message" VALUES (739,'field_name','lastPmDate','上次维护�
 INSERT INTO "i18n_message" VALUES (740,'field_name','lastQaDate','上次质控时间','Last Quality Control Date',null,-1);
 INSERT INTO "i18n_message" VALUES (741,'field_name','lastMeteringDate','上次计量时间','Last Metering Date',null,-1);
 INSERT INTO "i18n_message" VALUES (742,'field_name','assetName','资产名称','Asset Name',null,-1);
+INSERT INTO "i18n_message" VALUES (743,'field_name','period','周期','Period',null,-1);
 
 -- field value code types  ( id from 1400)
 

@@ -182,7 +182,7 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
     
     public String createOrder() {
         //for create page submit
-        if (selectedNodesList.isEmpty()) {
+        if (null==selectedNodesList || selectedNodesList.isEmpty()) {
             WebUtil.addErrorMessage(WebUtil.getMessage("noAssetSelected"));
             return "";
         }
