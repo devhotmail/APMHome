@@ -221,7 +221,11 @@
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.depreciationMethod}</label>
-                        <p:inputText id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}"/>
+                        <!--<p:inputText id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}"/>-->
+                         <p:selectOneMenu id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}">
+                            <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                            <f:selectItems value="#{fieldMsg.getFieldValueList('depreciationMethodList')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                        </p:selectOneMenu>
                     </h:panelGroup>
                 </p:panelGrid>
             </p:fieldset>
