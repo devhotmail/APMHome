@@ -136,7 +136,6 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
     }
 
     public void saveSelectedOrg(){
-        System.out.println("*************** this.selected="+this.selected);
         super.save();
         buildOrdTree();
     }

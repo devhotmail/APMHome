@@ -4,14 +4,16 @@ import com.ge.apm.domain.I18nMessage;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ApplicationScoped;
 import org.apache.log4j.Logger;
 import webapp.framework.web.WebUtil;
+import static webapp.framework.web.WebUtil.getServiceBean;
 import webapp.framework.web.service.DbMessageSource;
+import webapp.framework.web.service.DbResourcesUtil;
 
 @ManagedBean(name="fieldMsg")
 @ApplicationScoped
@@ -19,6 +21,11 @@ public class FieldValueMessageController implements Serializable{
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(FieldValueMessageController.class);
 
+    public String msgValueZh(String msgKey){
+        DbResourcesUtil resourcesUtil = (DbResourcesUtil) getServiceBean(DbResourcesUtil.class);
+        return resourcesUtil.getMsgValue(msgKey, new Locale("zh", "CN"));
+    }
+    
     public static String doGetFieldValue(String fieldName, String msgKey){
         String key = fieldName+"-"+msgKey;
         String value = WebUtil.getMessage(key);
