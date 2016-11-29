@@ -143,9 +143,11 @@ INSERT INTO "i18n_message" VALUES (407, 'label', 'WorkOrderStepDetail', '工单�
 
 INSERT INTO "i18n_message" VALUES (409, 'label', 'AssetClinicalRecord', '检查记录', 'Work Order Step Details', NULL, -1);
 INSERT INTO "i18n_message" VALUES (410, 'label', 'InspectionChecklist', '巡检Checklist', 'Inspection Checklist', NULL, -1);
-INSERT INTO "i18n_message" VALUES (411, 'label', 'InspectionOrder', '巡检工单', 'Inspection Order', NULL, -1);
 INSERT INTO "i18n_message" VALUES (412, 'label', 'InspectionOrderDetail', '巡检工单详情', 'Inspection Order Detail', NULL, -1);
 INSERT INTO "i18n_message" VALUES (413, 'label', 'Supplier', '供应商信息', 'Supplier', NULL, -1);
+INSERT INTO "i18n_message" VALUES (414, 'label', 'InspectionOrder', '质检工单', 'Inspection Order', NULL, -1);
+INSERT INTO "i18n_message" VALUES (415, 'label', 'MetrologOrder', '计量工单', 'Inspection Order', NULL, -1);
+INSERT INTO "i18n_message" VALUES (416, 'label', 'QualityCtrlOrder', '巡检工单', 'Inspection Order', NULL, -1);
 
 
 -- Entity Object field Names  (id from 600 to  1499)
@@ -411,6 +413,12 @@ INSERT INTO "i18n_message" VALUES (1612,'inspectionPeriod','2', '每周',null,nu
 INSERT INTO "i18n_message" VALUES (1613,'inspectionPeriod','3', '每两周',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1614,'inspectionPeriod','4', '每月',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1615,'inspectionPeriod','5', '每季度',null,null,-1);
+
+INSERT INTO "i18n_message" VALUES (1621,'depreciationMethodList','1', '折旧算法1',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1622,'depreciationMethodList','2', '折旧算法2',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1623,'depreciationMethodList','3', '折旧算法3',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1624,'depreciationMethodList','4', '折旧算法4',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1625,'depreciationMethodList','5', '折旧算法5',null,null,-1);
 
 
 
