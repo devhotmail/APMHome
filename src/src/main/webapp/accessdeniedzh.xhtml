@@ -16,17 +16,17 @@
         <h:outputScript name="js/ripple.js" library="ultima-layout" />
     </h:head>
 
-    <h:body styleClass="exception-body error-page">
+    <h:body styleClass="exception-body accessdenied-page">
     
         <div class="exception-type">
-            <p:graphicImage name="images/error.svg" library="ultima-layout" />
+            <p:graphicImage name="images/401.svg" library="ultima-layout" />
         </div>
         
         <div class="card exception-panel" style="padding-top: 10px;padding-left: 0px; padding-right: 0px; margin-top: -150px;">
-            <i class="material-icons">&#xE000;</i>
-            <h1>#{msg.Http500ErrorTitle}</h1>
-            <div class="exception-detail">#{msg.Http500ErrorMsg}</div>
-            <p:button outcome="#{userContextService.userDefaultHomePage}" value="#{msg.Return} #{msg.Homepage}" styleClass="secondary"/>
+            <i class="material-icons">&#xE32A;</i>
+            <h1>#{fieldMsg.msgValueZh('Http401AccessDeniedTitle')}</h1>
+            <div class="exception-detail">#{fieldMsg.msgValueZh('Http401AccessDeniedMsg')}</div>
+            <p:button outcome="#{userContextService.userDefaultHomePage}" value="#{fieldMsg.msgValueZh('Return')} #{fieldMsg.msgValueZh('Homepage')}" styleClass="secondary"/>
         </div>
         
         <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />

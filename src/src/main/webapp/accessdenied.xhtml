@@ -22,11 +22,11 @@
             <p:graphicImage name="images/401.svg" library="ultima-layout" />
         </div>
         
-        <div class="card exception-panel" style="padding-top: 10px;margin-top: -280px;">
+        <div class="card exception-panel" style="padding-top: 10px;padding-left: 0px; padding-right: 0px; margin-top: -150px;">
             <i class="material-icons">&#xE32A;</i>
-            <h1>Access Denied</h1>
-            <div class="exception-detail">You are not authorized to access this resource.</div>
-            <p:button outcome="/home" value="Homepage" styleClass="secondary"/>
+            <h1>#{msg.Http401AccessDeniedTitle}</h1>
+            <div class="exception-detail">#{msg.Http401AccessDeniedMsg}</div>
+            <p:button outcome="#{userContextService.userDefaultHomePage}" value="#{msg.Return} #{msg.Homepage}" styleClass="secondary"/>
         </div>
         
         <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
