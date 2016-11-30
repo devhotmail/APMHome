@@ -30,10 +30,44 @@
         <intercept-url pattern="/portal/**" access="isAuthenticated()"/>
         <intercept-url pattern="/sysadmin/**" access="hasRole('SuperAdmin')"/>
         <intercept-url pattern="/admin/**" access="hasRole('SuperAdmin')" />
-        <intercept-url pattern="/layout/**" access="hasRole('ADMIN')"/>
-        <intercept-url pattern="/**/*.xhtml*" access="isAuthenticated()"/>
 
-        <access-denied-handler error-page="/accessdenied.xhtml" />
+        <!-- 首页 -->
+        <intercept-url pattern="/homeHead**" access="hasAnyRole('SuperAdmin','HospitalHead')"/>
+        <intercept-url pattern="/homeAssetHead**" access="hasAnyRole('SuperAdmin','AssetHead')"/>
+        <intercept-url pattern="/homeDeptHead**" access="hasAnyRole('SuperAdmin','DeptHead')"/>
+        
+        <!-- 设备档案 -->
+        <intercept-url pattern="/portal/asset/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStuff')"/> 
+        
+        <!-- 维修管理 -->
+        <intercept-url pattern="/portal/wo/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStuff')"/> <!-- 维修管理 -->
+
+        <!-- 设备监控 -->
+        <intercept-url pattern="/portal/analysis/assetStatus**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStuff')"/> <!-- 状态监控 -->
+        <intercept-url pattern="/portal/analysis/assetMaintenance**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','AssetStuff')"/>   <!-- 维修事件统计 -->
+        <intercept-url pattern="/portal/analysis/assetUsage**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','AssetStuff','DeptHead')"/> <!-- 使用情况统计 -->
+        <intercept-url pattern="/portal/analysis/assetScan**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead')"/> <!-- 扫描详情统计 -->
+
+        <!-- 预防维护 -->
+        <intercept-url pattern="/portal/insp/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStuff')"/> <!-- 巡检管理 -->
+        <intercept-url pattern="/portal/pm/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStuff')"/> <!-- 保养管理 -->
+        <intercept-url pattern="/portal/metering/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStuff')"/> <!-- 计量管理 -->
+        <intercept-url pattern="/portal/qc/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStuff')"/> <!-- 质控管理 -->
+        <intercept-url pattern="/portal/adverseEvent/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStuff')"/> <!-- 不良事件上报 -->
+
+        <!-- 知识文档 -->
+        <intercept-url pattern="/portal/asset/fileAttachment/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStuff')"/> <!-- 文档管理 -->
+        
+        <!-- 绩效分析 -->
+        <intercept-url pattern="/portal/analysis/assetPerf**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 绩效分析 -->
+        <intercept-url pattern="/portal/analysis/assetForecast**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 绩效预测 -->
+        <intercept-url pattern="/portal/analysis/assetDecision**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 辅助决策 -->
+
+        <!-- 系统管理 -->
+        <intercept-url pattern="/portal/uaa/**" access="hasRole('ITAdmin')"/>
+        
+        <intercept-url pattern="/**/*.xhtml*" access="isAuthenticated()"/>
+        <access-denied-handler error-page="/accessdeniedzh.xhtml" />
         <!--
         <port-mappings>
             <port-mapping http="80" https="443"/>

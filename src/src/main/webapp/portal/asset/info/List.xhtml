@@ -4,6 +4,12 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
+    <ui:define name="preRenderView">
+        <f:metadata>
+            <f:viewParam name="assetStatus" value="#{assetInfoController.filterAssetStatus}"/>
+        </f:metadata>
+        <f:event type="preRenderView" listener="#{assetInfoController.setAssetStatusFilter()}"/>
+    </ui:define>
 
     <ui:define name="content">
         <div class="ui-g">
@@ -66,149 +72,15 @@
                         <p:column headerText="#{msg.vendor}" sortBy="#{item.vendor}" filterBy="#{item.vendor}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.vendor}"/>
                         </p:column>
-                        <!--
-                        <p:column headerText="#{msg.maitanance}" sortBy="#{item.maitanance}" filterBy="#{item.maitanance}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.maitanance}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.maitananceTel}" sortBy="#{item.maitananceTel}" filterBy="#{item.maitananceTel}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.maitananceTel}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.serialNum}" sortBy="#{item.serialNum}" filterBy="#{item.serialNum}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.serialNum}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.departNum}" sortBy="#{item.departNum}" filterBy="#{item.departNum}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.departNum}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.financingNum}" sortBy="#{item.financingNum}" filterBy="#{item.financingNum}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.financingNum}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.barcode}" sortBy="#{item.barcode}" filterBy="#{item.barcode}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.barcode}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.modalityId}" sortBy="#{item.modalityId}" filterBy="#{item.modalityId}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.modalityId}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.locationCode}" sortBy="#{item.locationCode}" filterBy="#{item.locationCode}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.locationCode}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.locationName}" sortBy="#{item.locationName}" filterBy="#{item.locationName}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.locationName}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.clinicalDeptId}" sortBy="#{item.clinicalDeptId}" filterBy="#{item.clinicalDeptId}" filterMatchMode="EQ">
-                            <h:outputText value="#{item.clinicalDeptId}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.clinicalDeptName}" sortBy="#{item.clinicalDeptName}" filterBy="#{item.clinicalDeptName}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.clinicalDeptName}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.assetGroup}" sortBy="#{item.assetGroup}" filterBy="#{item.assetGroup}" filterMatchMode="EQ">
-                            <h:outputText value="#{item.assetGroup}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.assetDeptId}" sortBy="#{item.assetDeptId}" filterBy="#{item.assetDeptId}" filterMatchMode="EQ">
-                            <h:outputText value="#{item.assetDeptId}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.assetOwnerId}" sortBy="#{item.assetOwnerId}" filterBy="#{item.assetOwnerId}" filterMatchMode="EQ">
-                            <h:outputText value="#{item.assetOwnerId}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.assetOwnerName}" sortBy="#{item.assetOwnerName}" filterBy="#{item.assetOwnerName}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.assetOwnerName}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.assetOwnerTel}" sortBy="#{item.assetOwnerTel}" filterBy="#{item.assetOwnerTel}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.assetOwnerTel}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.isValid}" sortBy="#{item.isValid}" filterBy="#{item.isValid}" filterMatchMode="EQ">
-                            <f:facet name="filter">
-                                <p:selectOneMenu onchange="PF('varDataList').filter()">
-                                    <f:converter converterId="javax.faces.Boolean" />
-                                    <f:selectItem itemLabel="#{msg.All}" itemValue="" />
-                                    <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
-                                    <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
-                                </p:selectOneMenu>
-                            </f:facet>
-                            <h:outputText value="#{item.isValid? msg.True2Yes : msg.False2No }"/>
-                        </p:column>
-                        -->
                         <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
                             <f:facet name="filter">
-                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" value="#{assetInfoController.filterAssetStatus}" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('assetStatus')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
                             </f:facet>
                             <h:outputText value="#{fieldMsg.fieldValue('assetStatus',item.status)}"/>
                         </p:column>
-                        <!--
-                        <p:column headerText="#{msg.manufactDate}" sortBy="#{item.manufactDate}" filterBy="#{item.manufactDate}" filterMatchMode="GTE">
-                            <f:facet name="filter">
-                                <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
-                            </f:facet>
-                            <h:outputText value="#{item.manufactDate}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="#{msg.purchaseDate}" sortBy="#{item.purchaseDate}" filterBy="#{item.purchaseDate}" filterMatchMode="GTE">
-                            <f:facet name="filter">
-                                <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
-                            </f:facet>
-                            <h:outputText value="#{item.purchaseDate}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="#{msg.arriveDate}" sortBy="#{item.arriveDate}" filterBy="#{item.arriveDate}" filterMatchMode="GTE">
-                            <f:facet name="filter">
-                                <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
-                            </f:facet>
-                            <h:outputText value="#{item.arriveDate}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="#{msg.installDate}" sortBy="#{item.installDate}" filterBy="#{item.installDate}" filterMatchMode="GTE">
-                            <f:facet name="filter">
-                                <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
-                            </f:facet>
-                            <h:outputText value="#{item.installDate}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="#{msg.warrantyDate}" sortBy="#{item.warrantyDate}" filterBy="#{item.warrantyDate}" filterMatchMode="GTE">
-                            <f:facet name="filter">
-                                <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
-                            </f:facet>
-                            <h:outputText value="#{item.warrantyDate}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="#{msg.terminateDate}" sortBy="#{item.terminateDate}" filterBy="#{item.terminateDate}" filterMatchMode="GTE">
-                            <f:facet name="filter">
-                                <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
-                            </f:facet>
-                            <h:outputText value="#{item.terminateDate}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="#{msg.planDate}" sortBy="#{item.planDate}" filterBy="#{item.planDate}" filterMatchMode="GTE">
-                            <f:facet name="filter">
-                                <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
-                            </f:facet>
-                            <h:outputText value="#{item.planDate}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="#{msg.purchasePrice}" sortBy="#{item.purchasePrice}" filterBy="#{item.purchasePrice}" filterMatchMode="EQ">
-                            <h:outputText value="#{item.purchasePrice}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.salvageValue}" sortBy="#{item.salvageValue}" filterBy="#{item.salvageValue}" filterMatchMode="EQ">
-                            <h:outputText value="#{item.salvageValue}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.lifecycle}" sortBy="#{item.lifecycle}" filterBy="#{item.lifecycle}" filterMatchMode="EQ">
-                            <h:outputText value="#{item.lifecycle}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.depreciationMethod}" sortBy="#{item.depreciationMethod}" filterBy="#{item.depreciationMethod}" filterMatchMode="EQ">
-                            <h:outputText value="#{item.depreciationMethod}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.hospitalId}" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
-                            <h:outputText value="#{item.hospitalId}"/>
-                        </p:column>
-                        -->
                         <f:facet name="{Toolbar}">
                             <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="AssetInfo_export"/>

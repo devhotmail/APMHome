@@ -101,11 +101,6 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
-    @Override
-    public List<AssetInfo> getItemList() {
-        return dao.findBySearchFilter(searchFilters);
-    }
-
     public String getViewPage(String pageName, String actionName) {
         return pageName + "?faces-redirect=true&actionName=" + actionName + "&selectedid=" + selected.getId();
     }
@@ -290,4 +285,19 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         return !isError;
     }
 
+    private String filterAssetStatus = null;
+    public String getFilterAssetStatus() {
+        return filterAssetStatus;
+    }
+    public void setFilterAssetStatus(String filterAssetStatus) {
+        this.filterAssetStatus = filterAssetStatus;
+    }
+
+    public void setAssetStatusFilter(){
+        if(filterAssetStatus==null) return;
+        
+        if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+        
+        searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, filterAssetStatus));
+    }
 }

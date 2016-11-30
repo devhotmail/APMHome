@@ -245,7 +245,7 @@
                                       multiple="true"  sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="pictureList"/>
                     </h:panelGroup>
                     <h:panelGroup >
-                        <p:dataList id="contractList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="definition">
+                        <p:dataList id="contractList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
                             <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 2)}</f:facet>
                                 #{fileitem.name}
                             <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="contractList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton">
@@ -278,8 +278,8 @@
                                       multiple="true"  sizeLimit="1000000" fileLimit="3" update="guideList"/>
                     </h:panelGroup>
                     <h:panelGroup >
-                        <p:commandButton value="#{msg.Save}" action="#{assetInfoController.applyChange()}" validateClient="true" update=":growl" style="float:right"/>  
-                        <p:commandButton value="#{msg.Return}" action="List?faces-redirect=true" immediate="true"  update=":growl" style="float:right"/>  
+                        <p:commandButton value="#{msg.Save}" icon="ui-icon-check" action="#{assetInfoController.applyChange()}" validateClient="true" update=":growl" style="float:right"/>  
+                        <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="List?faces-redirect=true" immediate="true"  update=":growl" style="float:right"/>  
                     </h:panelGroup>
                 </p:panelGrid>
             </p:fieldset>

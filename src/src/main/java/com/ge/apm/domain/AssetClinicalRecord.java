@@ -104,11 +104,8 @@ public class AssetClinicalRecord implements Serializable {
     @Column(name = "exam_start_time")
     @Temporal(TemporalType.TIME)
     private Date examStartTime;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "exam_end_time")
-    @Temporal(TemporalType.TIME)
-    private Date examEndTime;
+    @Column(name = "exam_duration")
+    private Integer examDuration;
     @Column(name = "asset_id")
     @Basic(optional = false)
     @NotNull
@@ -297,12 +294,12 @@ public class AssetClinicalRecord implements Serializable {
         this.examStartTime = examStartTime;
     }
 
-    public Date getExamEndTime() {
-        return examEndTime;
+    public Integer getExamDuration() {
+        return examDuration;
     }
 
-    public void setExamEndTime(Date examEndTime) {
-        this.examEndTime = examEndTime;
+    public void setExamDuration(Integer examDuration) {
+        this.examDuration = examDuration;
     }
 
     public Integer getAssetId() {
