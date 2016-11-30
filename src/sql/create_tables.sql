@@ -346,7 +346,7 @@ expose_count float,
 film_count int,
 exam_date date not null,
 exam_start_time time not null,
-exam_end_time time not null);
+exam_duration int not null);
 
 
 create table supplier(
