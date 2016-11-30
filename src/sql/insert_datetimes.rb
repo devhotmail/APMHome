@@ -232,13 +232,13 @@ for i in 1..totalrecords
   puts Time.at(randtime).to_s
   exam_date = Time.at(randtime).strftime("%F")
   exam_stime = Time.at(randtime).strftime("%F %T")
-  exam_etime = Time.at(randtime + randnum.rand(200600..521000)).strftime("%F %T")
+  exam_duration = randtime + randnum.rand(200600..521000)
 
   sql = "insert into #{table} (site_id, hospital_id, asset_id, price_amount, inject_count, expose_count, film_count,
-        exam_date, exam_start_time, exam_end_time, modality_id, modality_type_id, modality_type,
+        exam_date, exam_start_time, exam_duration, modality_id, modality_type_id, modality_type,
         procedure_id, procedure_name, procedure_step_id, procedure_step_name) values (\'#{site_id}\', \'#{hospital_id}\', \'#{asset_id}\',
         \'#{price_amount}\', \'#{inject_count}\',\'#{expose_count}\', \'#{film_count}\',
-        \'#{exam_date}\', \'#{exam_stime}\', \'#{exam_etime}\', \'#{modality_id}\', \'#{modality_type_id}\', \'#{modality_type}\',
+        \'#{exam_date}\', \'#{exam_stime}\', \'#{exam_duration}\', \'#{modality_id}\', \'#{modality_type_id}\', \'#{modality_type}\',
         \'#{procedure_id}\', \'#{procedure_name}\', \'#{procedure_step_id}\',\'#{procedure_step_name}\')"
   puts sql
   conn.exec(sql)
@@ -251,3 +251,57 @@ end
 # # res.each do |item|
 # #   conn.exec("update #{table} set purchase_price = \'#{randnum.rand(4000..8000)}\',
 # #             lifecycle = \'#{randnum.rand(3..5)}\' where id = \'#{item[id]}\'")
+
+
+table = "inspection_order"
+totalrecords = 3000
+for i in 1..totalrecords
+  order_type = randnum.rand(1..3)
+  site_id = randnum.rand(1..2)
+  name = ["巡检","计量","质控"][order_type - 1]
+  creator_id    = randnum.rand(1..10)
+  creator_name  = "creator-#{creator_id}"
+
+  owner_id = randnum.rand(1..50)
+  owner_name  = "task-owner-#{owner_id}"
+  owner_org_id = randnum.rand(1..10)
+  owner_org_name  = "org-#{owner_id}"
+
+  randtime = (duration * rand).to_i + stime.to_i
+  create_time = Time.at(randtime).strftime("%F %T")
+  start_time = create_time
+  end_time = Time.at(randtime + randnum.rand(1200..2400)).strftime("%F %T")
+  is_finished = [true, false].sample
+
+
+
+  sql = "insert into #{table} (order_type, site_id, name, creator_id, creator_name, create_time, owner_id, owner_name,
+         owner_org_id, owner_org_name, start_time, end_time, is_finished) values (\'#{order_type}\', \'#{site_id}\', \'#{name}\',
+        \'#{creator_id}\', \'#{creator_name}\',\'#{create_time}\', \'#{owner_id}\',
+        \'#{owner_name}\', \'#{owner_org_id}\', \'#{owner_org_name}\', \'#{start_time}\', \'#{end_time}\',
+        \'#{is_finished}\')"
+  puts sql
+  conn.exec(sql)
+end
+
+
+table = "inspection_order_detail"
+totalrecords = 9000
+for i in 3..totalrecords
+  site_id = randnum.rand(1..2)
+  order_id = i / 3
+  dept_id = [1,2,3,4,4,5].sample
+  dept_name = ["超声诊断室","肿瘤中心","心超室","放射科","心导管室"][dept_id - 1]
+  asset_id       = randnum.rand(1..asset_accounts)
+  asset_name     = "asset-#{asset_id}"
+  item_id        = i
+  item_name      = "item-#{i}"
+
+  is_passed = [true, true, true, false].sample
+
+  sql = "insert into #{table} (site_id, order_id, dept_id, dept_name, asset_id, asset_name, item_id, item_name, is_passed) values
+        (\'#{site_id}\', \'#{order_id}\', \'#{dept_id}\',  \'#{dept_name}\', \'#{asset_id}\',
+        \'#{asset_name}\', \'#{item_id}\',\'#{item_name}\', \'#{is_passed}\')"
+  puts sql
+  conn.exec(sql)
+end
