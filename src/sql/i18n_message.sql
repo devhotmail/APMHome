@@ -64,7 +64,8 @@ INSERT INTO "i18n_message" VALUES (58,'message','Http404NotFoundTitle', '网页�
 INSERT INTO "i18n_message" VALUES (59,'message','Http404NotFoundMsg', '您想访问的网页不存在.','The resource you are looking for does not exist.',null,-1);
 INSERT INTO "i18n_message" VALUES (60,'message','Http401AccessDeniedTitle', '权限受限','Access Denied',null,-1);
 INSERT INTO "i18n_message" VALUES (61,'message','Http401AccessDeniedMsg', '对不起，您未获得访问此网页的授权.','You are not authorized to access this resource.',null,-1);
-
+INSERT INTO "i18n_message" VALUES (62, 'label','ClearAll', '清空自定义配置','ClearAll',null,-1);
+INSERT INTO "i18n_message" VALUES (63, 'label','Upload', '上传','Upload',null,-1);
 
 -- menu item names  ( id from 200 to  399)
 
