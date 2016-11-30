@@ -237,7 +237,7 @@ for i in 1..totalrecords
   puts Time.at(randtime).to_s
   exam_date = Time.at(randtime).strftime("%F")
   exam_stime = Time.at(randtime).strftime("%F %T")
-  exam_duration = randtime + randnum.rand(200600..521000)
+  exam_duration = randnum.rand(1800..36000)
 
   sql = "insert into #{table} (site_id, hospital_id, asset_id, price_amount, inject_count, expose_count, film_count,
         exam_date, exam_start_time, exam_duration, modality_id, modality_type_id, modality_type,

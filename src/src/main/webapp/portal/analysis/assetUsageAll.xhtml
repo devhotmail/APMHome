@@ -12,7 +12,7 @@
 	</ui:define>
 
 	<ui:define name="content">
-
+        <h:form id="Forecast">
 		<div class="ui-g">
 
 			<div class="ui-g-12">
@@ -20,6 +20,22 @@
 					<span class="epsilon">#{msg.DeviceUtilizationAnalysis}</span>
 				</div>
 			</div>
+
+                <div class="ui-g-12">
+                    <div class="block">
+                        <p:menuButton id="selAsset" placeholder="全部设备" value="#{assetUsageAllController.assetName}">
+                            <!--p:menuitem value="选择单台设备... "
+                                        actionListener="#{selectAssetController.prepareDialogCallback(assetUsageSingleController,
+                                            ':Forecast:selAsset')}"
+                                        process="@this"
+                                        update=":selectAssetDlg"
+                                        oncomplete="PF('varSelectAssetDlg').show()"/>
+                            <p:separator/-->
+                            <p:menuitem value="全部设备" actionListener="#{assetForecastController.submit}" update="Forecast"/>
+                        </p:menuButton>
+                    </div>
+                </div>
+
 
 			<div class="ui-g-12">
 				<div class="card--summary ui-g ui-fluid">
@@ -78,7 +94,7 @@
 				</div>
 			</div>
 
-			<h:form id="form2">
+
 				<p:growl id="calendar_submit" showDetail="true"/>
 				<div class="ui-g-12">
 					<div class="calendar-range-picker flex flex--row flex--center flex--justify">
@@ -91,7 +107,7 @@
 										 actionListener="#{assetUsageAllController.submit}"/>
 					</div>
 				</div>
-			</h:form>
+
             
             
 			<!-- Chart 1: Device Scan -->
@@ -128,7 +144,9 @@
 			</div>
 
 		</div>
+        </h:form>
 
+		<ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
 	</ui:define>
 
 </ui:composition>

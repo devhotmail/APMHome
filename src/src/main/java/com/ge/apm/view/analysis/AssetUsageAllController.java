@@ -17,6 +17,8 @@ import org.primefaces.model.chart.BarChartSeries;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.LineChartSeries;
+import webapp.framework.web.mvc.ServerEventInterface;
+import com.ge.apm.domain.AssetInfo;
 
 import com.ge.apm.view.sysutil.UserContextService;
 
@@ -25,7 +27,7 @@ import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class AssetUsageAllController implements Serializable{
+public class AssetUsageAllController implements Serializable, ServerEventInterface {
 
 	private static final long serialVersionUID = 1L;
 	private static final String deviceScanlg = WebUtil.getMessage("deviceScanlg");
@@ -35,6 +37,7 @@ public class AssetUsageAllController implements Serializable{
 	private static final String deviceUsagelg_2 = WebUtil.getMessage("deviceUsagelg_2");
 	private static final String deviceDTlg_1 = WebUtil.getMessage("deviceDTlg_1");
 	private static final String deviceDTlg_2 = WebUtil.getMessage("deviceDTlg_2");
+	private String assetName = WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");	
 	private static final int HOURS_DAY = 24;
 
 	private int hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
@@ -155,29 +158,25 @@ public class AssetUsageAllController implements Serializable{
 
 			//double
 	private String INUSETL
-            = "SELECT left_table.name, "
-			+ "24 * EXTRACT ( DAY FROM SUM(diff) ) " 
-			+ "+ EXTRACT ( HOUR FROM SUM(diff) ) "
-			+ "+ EXTRACT ( MINUTE FROM SUM(diff) ) / 60 inuse "
+            = "SELECT left_table.name, right_table.sum/3600 inuse "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
-            + "LEFT JOIN (SELECT CASE WHEN exam_end_time-exam_start_time > interval'0 hour' THEN exam_end_time-exam_start_time ELSE exam_end_time-exam_start_time + interval'24 hour' END diff, asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
+            + "LEFT JOIN (SELECT SUM(exam_duration), asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY left_table.name "
             + "ORDER BY left_table.name ";
 
 			 //double
 	private String DTTL
-            = "SELECT left_table.name, 365* 24 * EXTRACT (YEAR FROM diff) + 24 * EXTRACT (DAY FROM diff) + EXTRACT (HOUR FROM diff) + EXTRACT (MINUTE FROM diff)/60 dt "
+            = "SELECT left_table.name, right_table.diff/3600 dt "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
-            + "LEFT JOIN (SELECT SUM(confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
+            + "LEFT JOIN (SELECT SUM(EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time)) diff, asset_id FROM work_order WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "ORDER BY left_table.name ";
 
 			 //double
 	private String BENCHDTTL
-            = "SELECT left_table.name, left_table.asset_group, 365* 24 * EXTRACT (YEAR FROM bench) + 24 * EXTRACT (DAY FROM bench) + EXTRACT (HOUR FROM bench) + EXTRACT (MINUTE FROM bench)/60 dtbench "
+            = "SELECT left_table.name, left_table.asset_group, right_table.diff/36/(date(:#endDate) - date(:#startDate))/24 dtbench "
             + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
-            + "LEFT JOIN (SELECT asset_group, SUM(confirmed_up_time-confirmed_down_time) / COUNT(DISTINCT(asset_id)) bench FROM asset_info JOIN work_order ON asset_info.id = work_order.asset_id WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_group) right_table "
+            + "LEFT JOIN (SELECT asset_group, SUM(EXTRACT(EPOCH FROM(confirmed_up_time-confirmed_down_time))) / COUNT(DISTINCT(asset_id)) diff FROM asset_info JOIN work_order ON asset_info.id = work_order.asset_id WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_group) right_table "
             + "ON left_table.asset_group = right_table.asset_group "
             + "ORDER BY left_table.name ";
 
@@ -267,7 +266,17 @@ public class AssetUsageAllController implements Serializable{
 
 		return valueWait;
 	}
-	
+
+	public String getAssetName() {
+
+		return assetName;
+	}
+
+	public void setAssetName(String assetName) {
+
+		this.assetName = assetName;
+	}
+
 	private void devicePanel(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
 		
 		List<Map<String, Object>> rs_panel;
@@ -276,7 +285,7 @@ public class AssetUsageAllController implements Serializable{
 		rs_panel = NativeSqlUtil.queryForList(VALUESCANTL, sqlParams);
 		if (!rs_panel.isEmpty()) {
 			valueScan = (rs_panel.get(0).get("count")  != null ? rs_panel.get(0).get("count").toString() : "");
-			valueExpo = (rs_panel.get(0).get("sum")  != null ? rs_panel.get(0).get("sum").toString().substring(0, rs_panel.get(0).get("sum").toString().indexOf(".")+2) : "");
+			valueExpo = (rs_panel.get(0).get("sum")  != null ? rs_panel.get(0).get("sum").toString().substring(0, rs_panel.get(0).get("sum").toString().indexOf(".")) : "");
 		}
 			
 
@@ -290,7 +299,6 @@ public class AssetUsageAllController implements Serializable{
 			cst_expo.setLabel(deviceExpolg_1);
 
 			List<Map<String, Object>> rs_scan = NativeSqlUtil.queryForList(SCANTL, sqlParams);
-			System.out.println("SCAN" + rs_scan.size());
 
 			for (Map<String, Object> item : rs_scan) {
 				cst_scan.set(item.get("name") != null ? item.get("name").toString() : "", 
@@ -307,7 +315,6 @@ public class AssetUsageAllController implements Serializable{
 			cst_expo_bench.setLabel(deviceExpolg_2);
 
 			List<Map<String, Object>> rs_expo_bench = NativeSqlUtil.queryForList(BENCHEXPOTL, sqlParams);
-			System.out.println("EXPOBENCH" + rs_expo_bench.size());
 
 			for (Map<String, Object> item : rs_expo_bench) {
 				cst_expo_bench.set(item.get("name") != null ? item.get("name").toString() : "",
@@ -337,11 +344,6 @@ public class AssetUsageAllController implements Serializable{
 			List<Map<String, Object>> rs_dt = NativeSqlUtil.queryForList(DTTL, sqlParams);
 			List<Map<String, Object>> rs_dt_bench = NativeSqlUtil.queryForList(BENCHDTTL, sqlParams);
 
-			System.out.println("SERVE" + rs_serve.size());
-			System.out.println("INUSE" + rs_inuse.size());
-			System.out.println("DT" + rs_dt.size());
-			System.out.println("DTBENCH" + rs_dt_bench.size());
-
 
 			Iterator <Map<String, Object>> it_serve;
 			Iterator <Map<String, Object>> it_inuse;
@@ -355,7 +357,7 @@ public class AssetUsageAllController implements Serializable{
 
 
 			String asset_name;
-			int serve;
+			long serve;
 			double inuse;
 			double dt;
 			double dt_bench;
@@ -378,10 +380,11 @@ public class AssetUsageAllController implements Serializable{
 				serve = item_serve.get("serve") != null ? (int)item_serve.get("serve") : 0;
 
 				if (serve > 0) {
-					inuse = item_inuse.get("inuse") != null ? (double)item_inuse.get("inuse") : 0;
+					inuse = item_inuse.get("inuse") != null ? (long)item_inuse.get("inuse") : 0;
 					dt =  item_dt.get("dt") != null ? (double)item_dt.get("dt") : 0;
 					dt_bench = item_dt_bench.get("dtbench") != null ? (double)item_dt_bench.get("dtbench") : 0;
 					wait = serve - dt - inuse;	
+					if (wait < 0)	wait = 0;
 				}
 				else {
 					inuse = 0;
@@ -398,16 +401,13 @@ public class AssetUsageAllController implements Serializable{
 				wait_total += wait;
 
 				dt /= serve;
-				if (dt > 1) dt = 1;
 				dt *= 100;
-				dt_bench /= serve;
-				if (dt_bench > 1) dt_bench = 1;
-				dt_bench *= 100;
+
+				if (dt > 100) dt = 100;
+				if (dt_bench > 100) dt_bench = 100;
 				
 				cst_dt.set(asset_name, dt);
 				cst_dt_bench.set(asset_name, dt_bench);		
-
-				System.out.println(dt + " " + dt_bench);
 
 			}
 
@@ -460,6 +460,19 @@ public class AssetUsageAllController implements Serializable{
 
 	}
 
+    @Override
+    public void onServerEvent(String eventName, Object eventObject){
+        AssetInfo asset = (AssetInfo) eventObject;
+
+        if(asset == null) return;
+        /*
+        this.assetId    = asset.getId();
+        this.setAssetName(asset.getName());
+        this.isSingleAsset = true;
+        logger.debug("Selected asset Id: {}, asset name: {}", assetId, assetName);
+        update();
+        */
+    }
 
 
 }

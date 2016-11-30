@@ -196,7 +196,7 @@ public class HomeDeptHeadController implements Serializable {
         resultSet = NativeSqlUtil.queryForList(VALUESCANTL, sqlParams);
         if(!resultSet.isEmpty()) {
             valueScan = (resultSet.get(0).get("count") != null ? resultSet.get(0).get("count").toString() : "");
-            valueExpo = (resultSet.get(0).get("sum") != null ? resultSet.get(0).get("sum").toString().substring(0, resultSet.get(0).get("sum").toString().indexOf(".")+2) : "");
+            valueExpo = (resultSet.get(0).get("sum") != null ? resultSet.get(0).get("sum").toString().substring(0, resultSet.get(0).get("sum").toString().indexOf(".")) : "");
         }
 
     }
