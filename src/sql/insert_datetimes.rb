@@ -62,6 +62,9 @@ for i in 0..totalrecords
   is_valid      = true
   status        = randnum.rand(1..3)
 
+  location_code = clinical_dept_id
+  location_name = ["一楼","二楼","三楼","四楼","五楼"][location_code - 1]
+
   randtime      = (duration * rand).to_i + etime.to_i
   warranty_date = Time.at(randtime).strftime("%F")
 
@@ -78,10 +81,10 @@ for i in 0..totalrecords
   last_qa_date = Time.at(randtime).strftime("%F")
 
   sql = "insert into #{table} (site_id, name, function_type, hospital_id, clinical_dept_id, asset_group, asset_dept_id,
-        asset_owner_id, asset_owner_name,
+        asset_owner_id, asset_owner_name, location_code, location_name,
         is_valid, status, warranty_date, last_pm_date, last_metering_date, last_qa_date, install_date) values (\'#{site_id}\', \'#{name}\',
         \'#{function_type}\', \'#{hospital_id}\', \'#{clinical_dept_id}\', \'#{asset_group}\', \'#{asset_dept_id}\', \'#{asset_owner_id}\', \'#{asset_owner_name}\',
-        \'#{is_valid}\', \'#{status}\', \'#{warranty_date}\', \'#{last_pm_date}\', \'#{last_metering_date}\', \'#{last_qa_date}\', \'#{install_date}\')"
+        \'#{location_code}\', \'#{location_name}\', \'#{is_valid}\', \'#{status}\', \'#{warranty_date}\', \'#{last_pm_date}\', \'#{last_metering_date}\', \'#{last_qa_date}\', \'#{install_date}\')"
   puts sql
   conn.exec(sql)
 end
@@ -159,6 +162,8 @@ for i in 0..totalrecords
   name            = "pm-order-#{asset_id}"
   creator_id    = randnum.rand(1..10)
   creator_name  = "creator-#{creator_id}"
+  owner_id    = randnum.rand(1..5)
+  owner_name  = "owner-#{owner_id}"
 
   randtime = (duration * rand).to_i + stime.to_i
   create_time = Time.at(randtime).strftime("%F %T")
@@ -166,9 +171,9 @@ for i in 0..totalrecords
 
   is_finished   = [true, false].sample
 
-  sql = "insert into #{table} (site_id, hospital_id, asset_id, name, asset_name, creator_id, creator_name, create_time, start_time,
+  sql = "insert into #{table} (site_id, hospital_id, asset_id, name, asset_name, creator_id, creator_name, owner_id, owner_name, create_time, start_time,
         is_finished) values (\'#{site_id}\', \'#{hospital_id}\', \'#{asset_id}\',
-        \'#{name}\', \'#{asset_name}\', \'#{creator_id}\',\'#{creator_name}\', \'#{create_time}\', \'#{start_time}\',
+        \'#{name}\', \'#{asset_name}\', \'#{creator_id}\',\'#{creator_name}\', \'#{owner_id}\',\'#{owner_name}\', \'#{create_time}\', \'#{start_time}\',
         \'#{is_finished}\')"
   puts sql
   conn.exec(sql)
@@ -182,7 +187,7 @@ for i in 0..totalrecords
   work_order_id   = randnum.rand(1..400)
   step_id = randnum.rand(1..6)
   step_name       = ["申请", "审核", "派工", "领工", "维修","关单"][step_id - 1]
-  owner_id    = randnum.rand(1..10)
+  owner_id    = randnum.rand(1..5)
   owner_name  = "owner-#{owner_id}"
 
   randtime = (duration * rand).to_i + stime.to_i
@@ -258,13 +263,13 @@ totalrecords = 3000
 for i in 1..totalrecords
   order_type = randnum.rand(1..3)
   site_id = randnum.rand(1..2)
-  name = ["巡检","计量","质控"][order_type - 1]
+  name = "#{["巡检","计量","质控"][order_type - 1]}-#{i}"
   creator_id    = randnum.rand(1..10)
   creator_name  = "creator-#{creator_id}"
 
-  owner_id = randnum.rand(1..50)
+  owner_id = randnum.rand(1..5)
   owner_name  = "task-owner-#{owner_id}"
-  owner_org_id = randnum.rand(1..10)
+  owner_org_id = randnum.rand(1..5)
   owner_org_name  = "org-#{owner_id}"
 
   randtime = (duration * rand).to_i + stime.to_i
