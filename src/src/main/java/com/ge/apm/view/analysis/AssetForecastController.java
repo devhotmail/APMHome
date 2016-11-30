@@ -170,21 +170,29 @@ public class AssetForecastController extends SqlConfigurableChartController impl
 
     private void predict(List<Map<String, Object>> revenue, List<Map<String, Object>> profit, DateTime startMonth) {
         int offset = revenue.size() / 2;
+
+        List<Map<String, Object>> prdRev = new ArrayList<>();
+        List<Map<String, Object>> prdPro = new ArrayList<>();
+
         DateTime predictMonth = startMonth;
         predictMonth = predictMonth.plusMonths(revenue.size());
 
         for (int index = 0; index < offset; index++) {
-            Map<String, Object> item = predictNextItem(revenue.get(index), revenue.get(index + offset), predictMonth);
-            predictRev.add(item);
+            Map<String, Object> item = predictNextItem(revenue.get(index), revenue.get(index + offset), predictMonth, false);
+            prdRev.add(item);
 
-            item = predictNextItem(profit.get(index), profit.get(index + offset), predictMonth);
-            predictPro.add(item);
+            item = predictNextItem(profit.get(index), profit.get(index + offset), predictMonth, true);
+            prdPro.add(item);
 
             predictMonth = predictMonth.plusMonths(1);
         }
+
+        // evaluate to private parameters every time, in order to avoid dirty data during ajax call
+        predictRev = prdRev;
+        predictPro = prdPro;
     }
 
-    private Map<String, Object> predictNextItem(Map<String, Object> last, Map<String, Object> recent, DateTime month) {
+    private Map<String, Object> predictNextItem(Map<String, Object> last, Map<String, Object> recent, DateTime month, boolean allowNeg) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM");
         Map<String, Object> item    = new HashMap<>();
         double value = 0.0;
@@ -218,6 +226,9 @@ public class AssetForecastController extends SqlConfigurableChartController impl
             value = recentValue;
         }
 
+        // logically revenue cannot be negative value
+        if ((!allowNeg) && (value < 0.0)) { value = 0.0; }
+
         item.put("key", formatter.print(month));
         item.put("value", value);
 
@@ -225,30 +236,41 @@ public class AssetForecastController extends SqlConfigurableChartController impl
     }
 
     private void createForecastBar() {
-        barMonthlyForecast.setLegendPosition("ne");
-        barMonthlyForecast.setExtender("barMonthlyForecast");
+        BarChartModel bc = new BarChartModel();
 
-        Axis xAxis = barMonthlyForecast.getAxis(AxisType.X);
-        Axis yAxis = barMonthlyForecast.getAxis(AxisType.Y);
+        bc.setLegendPosition("ne");
+
+        Axis xAxis = bc.getAxis(AxisType.X);
+        Axis yAxis = bc.getAxis(AxisType.Y);
 
         xAxis.setTickAngle(-50);
         xAxis.setTickFormat("%y-%m");
 
         long interval = 1000 * 60 * 60 * 24 * 30 * 3;
         xAxis.setTickInterval(String.valueOf(interval));
-        barMonthlyForecast.setBarWidth(11);
-        barMonthlyForecast.setBarMargin(6);
-        barMonthlyForecast.getAxes().put(AxisType.X, xAxis);
+        bc.setBarWidth(11);
+        bc.setBarMargin(6);
+        bc.getAxes().put(AxisType.X, xAxis);
 
         String label = revenueStr;
-        drawBar(barMonthlyForecast, label, forecastRevenue);
+        drawBar(bc, label, forecastRevenue);
 
         label = profitStr;
-        drawBar(barMonthlyForecast, label, forecastProfit);
+        drawBar(bc, label, forecastProfit);
+
+        bc.setExtender("barMonthlyForecast");
+
+        barMonthlyForecast = bc;
+
     }
 
     private List<Map<String, Object>> queryForecastRevenue() {
-        sql = forecastMonthRevenue;
+        if (isSingleAsset) {
+            sql = assetRevenue;
+        } else {
+            sql = forecastMonthRevenue;
+        }
+
         logger.info("Get 24 months revenue by month");
         forecastRevenue = queryMonthDate(sql, sqlParams, 24, fcStartMonth);
 
@@ -256,7 +278,11 @@ public class AssetForecastController extends SqlConfigurableChartController impl
     }
 
     private List<Map<String, Object>> queryForecastMaint() {
-        sql = forecastMonthMaint;
+        if (isSingleAsset) {
+            sql = assetMaint;
+        } else {
+            sql = forecastMonthMaint;
+        }
 
         logger.info("Get 24 months maint cost by month");
         forecastMaint = queryMonthDate(sql, sqlParams, 24, fcStartMonth);
@@ -265,7 +291,11 @@ public class AssetForecastController extends SqlConfigurableChartController impl
     }
 
     private List<Map<String, Object>> queryForecastDep() {
-        sql = depMonth;
+        if (isSingleAsset) {
+            sql = assetDep;
+        } else {
+            sql = depMonth;
+        }
         logger.info("Get 24 months by month");
         monthDep = queryMonthDepDate(sql, sqlParams, 24, fcStartMonth);
 
@@ -458,6 +488,24 @@ public class AssetForecastController extends SqlConfigurableChartController impl
         }
     }
 
+    private void update() {
+        logger.debug("update associated value");
+        if (isSingleAsset) {
+            sqlParams.put("assetId", assetId);
+        }
+
+        fcStartMonth = new DateTime();
+
+        queryForecastProfit();
+
+        createForecastBar();
+    }
+
+    public void onAssetsChange() {
+        isSingleAsset = false;
+        update();
+    }
+
     @Override
     public void onServerEvent(String eventName, Object eventObject){
         AssetInfo asset = (AssetInfo) eventObject;
@@ -465,6 +513,8 @@ public class AssetForecastController extends SqlConfigurableChartController impl
 
         this.assetId    = asset.getId();
         this.setAssetName(asset.getName());
+        this.isSingleAsset = true;
         logger.debug("Selected asset Id: {}, asset name: {}", assetId, assetName);
+        update();
     }
 }

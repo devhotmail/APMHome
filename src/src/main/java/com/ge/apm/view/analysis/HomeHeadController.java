@@ -236,17 +236,17 @@ public class HomeHeadController extends SqlConfigurableChartController {
         predictMonth = predictMonth.plusMonths(revenue.size());
 
         for (int index = 0; index < offset; index++) {
-            Map<String, Object> item = predictNextItem(revenue.get(index), revenue.get(index + offset), predictMonth);
+            Map<String, Object> item = predictNextItem(revenue.get(index), revenue.get(index + offset), predictMonth, false);
             predictRev.add(item);
 
-            item = predictNextItem(profit.get(index), profit.get(index + offset), predictMonth);
+            item = predictNextItem(profit.get(index), profit.get(index + offset), predictMonth, true);
             predictPro.add(item);
 
             predictMonth = predictMonth.plusMonths(1);
         }
     }
 
-    private Map<String, Object> predictNextItem(Map<String, Object> last, Map<String, Object> recent, DateTime month) {
+    private Map<String, Object> predictNextItem(Map<String, Object> last, Map<String, Object> recent, DateTime month, boolean allowNeg) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM");
         Map<String, Object> item    = new HashMap<>();
         double value = 0.0;
@@ -279,6 +279,9 @@ public class HomeHeadController extends SqlConfigurableChartController {
         } else {
             value = recentValue;
         }
+
+        // logically revenue cannot be negative value
+        if ((!allowNeg) && (value < 0.0)) { value = 0.0; }
 
         item.put("key", formatter.print(month));
         item.put("value", value);
