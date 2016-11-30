@@ -3,7 +3,7 @@ truncate table i18n_message;
 -- common i18n messages ( id from 1 to  199)
 
 INSERT INTO "i18n_message" VALUES (1, 'label', 'logout', '注销', 'Logout', NULL, -1);
-INSERT INTO "i18n_message" VALUES (2, 'label', 'login', '登录', 'Login', NULL, -1);
+INSERT INTO "i18n_message" VALUES (2, 'label', 'login', '登录系统', 'Login', NULL, -1);
 INSERT INTO "i18n_message" VALUES (3, 'label', 'login_name', '登录用户名', 'Login Name', NULL, -1);
 INSERT INTO "i18n_message" VALUES (4, 'label', 'password', '密码', 'Password', NULL, -1);
 INSERT INTO "i18n_message" VALUES (5, 'label', 'home', '首页', 'Home', NULL, -1);
@@ -57,7 +57,7 @@ INSERT INTO "i18n_message" VALUES (52, 'label','Welcome', '欢迎您','Welcome',
 INSERT INTO "i18n_message" VALUES (53, 'label','DuplicateLoginName', '登录用户名 "%s" 已有人使用，请更换登录用户名.','Login name already used by others, please change to another login name.',null,-1);
 INSERT INTO "i18n_message" VALUES (54, 'label','BatchImport', '批量导入系统配置','BatchImport',null,-1);
 INSERT INTO "i18n_message" VALUES (55, 'label','ClearAll', '清空自定义配置','ClearAll',null,-1);
-INSERT INTO "i18n_message" VALUES (55, 'label','Execute', '执行','Execute',null,-1);
+INSERT INTO "i18n_message" VALUES (64, 'label','Execute', '执行','Execute',null,-1);
 INSERT INTO "i18n_message" VALUES (56,'message','Http500ErrorTitle', '系统发生异常','Exception Occured',null,-1);
 INSERT INTO "i18n_message" VALUES (57,'message','Http500ErrorMsg', '请联系系统管理员.','Please contact system administrator.',null,-1);
 INSERT INTO "i18n_message" VALUES (58,'message','Http404NotFoundTitle', '网页不存在','Page Not Found',null,-1);
@@ -66,6 +66,7 @@ INSERT INTO "i18n_message" VALUES (60,'message','Http401AccessDeniedTitle', '权
 INSERT INTO "i18n_message" VALUES (61,'message','Http401AccessDeniedMsg', '对不起，您未获得访问此网页的授权.','You are not authorized to access this resource.',null,-1);
 INSERT INTO "i18n_message" VALUES (62, 'label','ClearAll', '清空自定义配置','ClearAll',null,-1);
 INSERT INTO "i18n_message" VALUES (63, 'label','Upload', '上传','Upload',null,-1);
+INSERT INTO "i18n_message" VALUES (64, 'label','All', '全部','All',null,-1);
 
 -- menu item names  ( id from 200 to  399)
 
