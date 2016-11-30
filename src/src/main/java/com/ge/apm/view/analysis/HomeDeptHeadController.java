@@ -94,65 +94,47 @@ public class HomeDeptHeadController implements Serializable {
 
             //bigint
     private String SCANTL
-            = "SELECT left_table.name, COUNT(right_table) "
+            = "SELECT left_table.name, COUNT(right_table), SUM(expose_count) "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
-            + "LEFT JOIN (SELECT asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
+            + "LEFT JOIN (SELECT expose_count, asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY left_table.name "
             + "ORDER BY left_table.name ";
 
             //bigint
     private String VALUESCANTL
-            = "SELECT COUNT(right_table) "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
-            + "LEFT JOIN (SELECT id, asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
-            + "ON left_table.id = right_table.asset_id ";
-
-            //double
-    private String EXPOTL
-            = "SELECT left_table.name, SUM(right_table.expose_count) "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
-            + "LEFT JOIN (SELECT expose_count, asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
-            + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY left_table.name "
-            + "ORDER BY left_table.name ";
-
-            //double
-    private String VALUEEXPOTL
-            = "SELECT SUM(right_table.expose_count) "
+            = "SELECT COUNT(right_table), SUM(expose_count) "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN (SELECT expose_count, asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
             + "ON left_table.id = right_table.asset_id ";
 
             //double
     private String REVENUETL
-            = "SELECT left_table.name, SUM(right_table.price_amount) "
+            = "SELECT left_table.name, right_table.sum "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
-            + "LEFT JOIN (SELECT price_amount, asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
+            + "LEFT JOIN (SELECT SUM(price_amount), asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY left_table.name "
             + "ORDER BY left_table.name ";
 
     private String DEPRETL
-            = "SELECT DISTINCT name, salvage_value / 365 * (Date(:#endDate) - Date(:#startDate)) depre "
-            + "FROM asset_info "
-            + "WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id "        
-            + "ORDER BY a.name";
+            = "SELECT left_table.name, deprecate_amount / 365 * (Date(:#endDate) - Date(:#startDate)) depre "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
+            + "LEFT JOIN asset_depreciation "    
+            + "ON left_table.id = asset_depreciation.asset_id "    
+            + "ORDER BY left_table.name";
 
     private String MAINTAINTL
-            = "SELECT left_table.name, SUM(right_table.total_price) "
+            = "SELECT left_table.name, right_table.sum "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
-            + "LEFT JOIN (SELECT total_price, asset_id FROM work_order WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate) right_table "
+            + "LEFT JOIN (SELECT SUM(total_price), asset_id FROM work_order WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY left_table.name "
             + "ORDER BY left_table.name ";
 
     private String BENCHEXPOTL
-            = "SELECT left_table.name, SUM(right_table.sum) "
+            = "SELECT left_table.name, left_table.asset_group, bench "
             + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
-            + "LEFT JOIN (SELECT asset_id, SUM(expose_count) FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
-            + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY left_table.name "
+            + "LEFT JOIN (SELECT asset_group, SUM(expose_count) / COUNT(DISTINCT(asset_id)) bench FROM asset_info JOIN asset_clinical_record ON asset_info.id = asset_clinical_record.asset_id WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_group) right_table "
+            + "ON left_table.asset_group = right_table.asset_group "
             + "ORDER BY left_table.name ";
 
     // Getters & Setters
@@ -212,42 +194,33 @@ public class HomeDeptHeadController implements Serializable {
 
         // Panel Components
         resultSet = NativeSqlUtil.queryForList(VALUESCANTL, sqlParams);
-        if(!resultSet.isEmpty())
-            valueScan = (resultSet.get(0).get("sum") != null ? resultSet.get(0).get("sum").toString() : "");
-
-        resultSet = NativeSqlUtil.queryForList(VALUEEXPOTL, sqlParams);
-        if(!resultSet.isEmpty())
-            valueExpo = (resultSet.get(0).get("sum") != null ? resultSet.get(0).get("sum").toString().substring(0, resultSet.get(0).get("sum").toString().indexOf(".")) : "");
+        if(!resultSet.isEmpty()) {
+            valueScan = (resultSet.get(0).get("count") != null ? resultSet.get(0).get("count").toString() : "");
+            valueExpo = (resultSet.get(0).get("sum") != null ? resultSet.get(0).get("sum").toString().substring(0, resultSet.get(0).get("sum").toString().indexOf(".")+2) : "");
+        }
 
     }
 
 
-    private void deviceChart_1 (Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
+    private void deviceChart_12 (Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
 
             ChartSeries chartSeriesTypeS = new BarChartSeries();
             chartSeriesTypeS.setLabel(deviceScanlg);
+            ChartSeries chartSeriesTypeE = new BarChartSeries();
+            chartSeriesTypeE.setLabel(deviceExpolg_1);
 
             List<Map<String, Object>> resultSet = NativeSqlUtil.queryForList(SCANTL, sqlParams);
 
             for (Map<String, Object> item : resultSet) {
                 chartSeriesTypeS.set(item.get("name").toString(),
                         item.get("count") != null ? (Long) item.get("count") : 0);
+                chartSeriesTypeE.set(item.get("name").toString(),
+                        item.get("sum") != null ? (Double) item.get("sum") : (Double) 0.0);    
             }
 
             deviceScan.clear();
             deviceScan.addSeries(chartSeriesTypeS);
-    }
 
-    private void deviceChart_2 (Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
-
-            ChartSeries chartSeriesTypeE = new BarChartSeries();
-            chartSeriesTypeE.setLabel(deviceExpolg_1);
-
-            List<Map<String, Object>> resultSet = NativeSqlUtil.queryForList(EXPOTL, sqlParams);
-            for (Map<String, Object> item : resultSet) {
-                chartSeriesTypeE.set(item.get("name").toString(),
-                        item.get("hours") != null ? (Double) item.get("hours") : (Double) 0.0);
-            }
 
             ChartSeries chartSeriesTypeB = new LineChartSeries();
             chartSeriesTypeB.setLabel(deviceExpolg_2);
@@ -255,7 +228,7 @@ public class HomeDeptHeadController implements Serializable {
             resultSet = NativeSqlUtil.queryForList(BENCHEXPOTL, sqlParams);
             for (Map<String, Object> item : resultSet) {
                 chartSeriesTypeB.set(item.get("name").toString(),
-                        item.get("sum") != null ? (Double) item.get("sum") : (Double) 0.0);
+                        item.get("bench") != null ? (Double) item.get("bench") : (Double) 0.0);
             }
 
             deviceExpo.clear();
@@ -297,7 +270,7 @@ public class HomeDeptHeadController implements Serializable {
                 item_x = it_x.next();
                 item_y = it_y.next();
 
-                asset_name = (item_a.get("name") != null ? (String) item_a.get("sum") : "");
+                asset_name = (item_a.get("name") != null ? (String) item_a.get("name") : "");
 
                 profit_loop = (item_a.get("sum") != null ? (double) item_a.get("sum") : (double) 0.0)
                         - (item_x.get("depre") != null ? (double) item_x.get("depre") : (double) 0.0)
@@ -328,9 +301,7 @@ public class HomeDeptHeadController implements Serializable {
 
         devicePanel(startDate, endDate, currentDate, sqlParams);
 
-        deviceChart_1(startDate, endDate, currentDate, sqlParams);
-        
-        deviceChart_2(startDate, endDate, currentDate, sqlParams);
+        deviceChart_12(startDate, endDate, currentDate, sqlParams);
 
         deviceChart_3(startDate, endDate, currentDate, sqlParams);
 

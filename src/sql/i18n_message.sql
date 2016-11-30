@@ -443,12 +443,12 @@ INSERT INTO "i18n_message" VALUES (3016,'message','DeleteAllConformation', '您�
 
 
 -- Chart label/lengend （id from 5000 to 5500）
-INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量(次)','Device Scan (Times)',null,-1);
+INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量 (次)','Device Scan (Times)',null,-1);
 INSERT INTO "i18n_message" VALUES (5001,'label','deviceScanlg', '扫描次数','Device Scan',null,-1);
-INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光量(小时)','Device Exposure (Hours)',null,-1);
+INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光量 (小时)','Device Exposure (Hours)',null,-1);
 INSERT INTO "i18n_message" VALUES (5003,'label','deviceExpolg_1', '曝光时长','Exposure',null,-1);
 INSERT INTO "i18n_message" VALUES (5004,'label','deviceExpolg_2', '基准曝光时长','Device Scan (Baseline)',null,-1);
-INSERT INTO "i18n_message" VALUES (5005,'label','deviceROIhd', '设备投资回报（元）','Device ROI (CNY）',null,-1);
+INSERT INTO "i18n_message" VALUES (5005,'label','deviceROIhd', '设备投资回报 （元）','Device ROI (CNY）',null,-1);
 INSERT INTO "i18n_message" VALUES (5006,'label','deviceROIlg_1', '收入','Revenue',null,-1);
 INSERT INTO "i18n_message" VALUES (5007,'label','deviceROIlg_2', '利润','Profit',null,-1);
 INSERT INTO "i18n_message" VALUES (5008,'label','countlb', '次','Count',null,-1);
@@ -457,7 +457,7 @@ INSERT INTO "i18n_message" VALUES (5010,'label','CNYlb', '元','CNY',null,-1);
 INSERT INTO "i18n_message" VALUES (5011,'label','deviceUsagehd', '设备使用 (小时)','Device Usage',null,-1);
 INSERT INTO "i18n_message" VALUES (5012,'label','deviceUsagelg_1', '使用','In-Use',null,-1);
 INSERT INTO "i18n_message" VALUES (5013,'label','deviceUsagelg_2', '空闲','Idle',null,-1);
-INSERT INTO "i18n_message" VALUES (5014,'label','deviceDThd', '设备停机率','Device Downtime',null,-1);
+INSERT INTO "i18n_message" VALUES (5014,'label','deviceDThd', '设备停机率 （百分比）','Device Downtime (Percent)',null,-1);
 INSERT INTO "i18n_message" VALUES (5015,'label','deviceDTlg_1', '停机率','Downtime',null,-1);
 INSERT INTO "i18n_message" VALUES (5016,'label','deviceDTlg_2', '基准停机率','Downtime (Baseline)',null,-1);
 INSERT INTO "i18n_message" VALUES (5017,'label','pctlb', '百分比','Percent',null,-1);
