@@ -25,27 +25,27 @@
                 <div class="ui-g-12" style="text-align: center">
                     <div class="card--summary">
                         <div class="ui-g-3">
-                            <span>3</span>
+                            <span>#{woScheduleController.inspectionNum}</span>
                             <br/>
                             <span>巡检</span>
                         </div>
                         <div class="ui-g-2">
-                            <span>2</span>
-                            <br/>
-                            <span>质控</span>
-                        </div>
-                        <div class="ui-g-2">
-                            <span>1</span>
+                            <span>#{woScheduleController.meterNum}</span>
                             <br/>
                             <span>计量</span>
                         </div>
                         <div class="ui-g-2">
-                            <span>4</span>
+                            <span>#{woScheduleController.qaNum}</span>
+                            <br/>
+                            <span>质控</span>
+                        </div>
+                        <div class="ui-g-2">
+                            <span>#{woScheduleController.mtMum}</span>
                             <br/>
                             <span>维修</span>
                         </div>
                         <div class="ui-g-3">
-                            <span>5</span>
+                            <span>#{woScheduleController.pmNum}</span>
                             <br/>
                             <span>保养</span>
                         </div>
@@ -55,7 +55,6 @@
             <div class="ui-g-12">
                 <p:schedule id="schedule" value="#{woScheduleController.model}" widgetVar="myschedule"
                             timeZone="GMT+8" tooltip="true">
-
                     <p:ajax event="dateSelect" listener="#{scheduleView.onDateSelect}" update="eventDetails"
                             oncomplete="PF('eventDialog').show();"/>
                     <p:ajax event="eventSelect" listener="#{scheduleView.onEventSelect}"
@@ -63,7 +62,6 @@
                             oncomplete="PF('eventDialog').show();"/>
                     <p:ajax event="eventMove" listener="#{scheduleView.onEventMove}" update="messages"/>
                     <p:ajax event="eventResize" listener="#{scheduleView.onEventResize}" update="messages"/>
-
                 </p:schedule>
 
                 <p:dialog widgetVar="eventDialog" header="Event Details" showEffect="clip" hideEffect="clip">
