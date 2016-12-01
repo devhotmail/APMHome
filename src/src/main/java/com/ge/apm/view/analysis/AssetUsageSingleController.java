@@ -13,7 +13,6 @@ import javax.faces.bean.ViewScoped;
 
 import org.joda.time.DateTime;
 import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.BarChartSeries;
 import org.primefaces.model.chart.LineChartSeries;
@@ -66,8 +65,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 	@PostConstruct
 	public void init() {
-		
-		System.out.println("[ POST CONSTRUCT ]");
 
 		hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
 		clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
@@ -88,14 +85,12 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		deviceScan.setLegendPosition("ne");
         deviceScan.getAxes().put(AxisType.X, axis);	
         deviceScan.setZoom(true);
-        deviceScan.setSeriesColors("35989c");
         deviceScan.setExtender("deviceScan");
         
 		deviceExpo = new LineChartModel();
 		deviceExpo.setLegendPosition("ne");
         deviceExpo.getAxes().put(AxisType.X, axis);	
         deviceExpo.setZoom(true);
-        deviceExpo.setSeriesColors("35989c");
         deviceExpo.setExtender("deviceExpo");
 		
 		deviceUsage = new LineChartModel();
@@ -104,8 +99,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
         deviceUsage.getAxes().put(AxisType.X, axis);	
         deviceUsage.setZoom(true);
         deviceUsage.getAxis(AxisType.Y).setMin(0);
-        deviceUsage.getAxis(AxisType.Y).setMax(HOURS_DAY + 6);
-        deviceUsage.setSeriesColors("aa3b4e,35989c,fdc59e");
+        deviceUsage.getAxis(AxisType.Y).setMax(HOURS_DAY);
         deviceUsage.setExtender("deviceUsage");
 
 		deviceStat = new HorizontalBarChartModel();
@@ -146,18 +140,16 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 	
 	// Chart SQL
-
-	private String SCANTL = 
-			"SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, COUNT(asset_id) count " 
+	private String SCANTL
+			= "SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, COUNT(asset_id) count " 
 			+ "FROM asset_clinical_record "
 			+ "WHERE asset_id = :#filter_id " 
 			+ "AND exam_date BETWEEN :#startDate AND :#endDate " 
-			//+ "AND a.hospital_id = :#hospitalId " 
 			+ "GROUP BY exam_date "
 			+ "ORDER BY exam_date";
 	
-	private String VALUESCANTL = 
-			"SELECT COUNT(asset_id) sum " 
+	private String VALUESCANTL
+			= "SELECT COUNT(asset_id) sum " 
 			+ "FROM asset_clinical_record "
 			+ "WHERE asset_id = :#filter_id " 
 			+ "AND exam_date BETWEEN :#startDate AND :#endDate " 
@@ -165,8 +157,8 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "GROUP BY asset_id";
 
 			//Double
-	private String EXPOTL =
-			"SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, SUM(expose_count) hours " 
+	private String EXPOTL
+			= "SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, SUM(expose_count) hours " 
 			+ "FROM asset_clinical_record "
 			+ "WHERE asset_id = :#filter_id " 
 			+ "AND exam_date BETWEEN :#startDate AND :#endDate " 
@@ -174,32 +166,28 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "GROUP BY exam_date "
 			+ "ORDER BY exam_date";
 	
-	private String VALUEEXPOTL = 
-			"SELECT SUM(expose_count) sum " 
+	private String VALUEEXPOTL
+			= "SELECT SUM(expose_count) sum " 
 			+ "FROM asset_clinical_record "
 			+ "WHERE asset_id = :#filter_id " 
 			+ "AND exam_date BETWEEN :#startDate AND :#endDate " 
 			//+ "AND hospital_id = :#hospitalId " 
 			+ "GROUP BY asset_id";
 
-			//PGInterval
-	private String INUSETL = 
-			"SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, " 
-			+ "365 * 24 * EXTRACT ( YEAR FROM SUM(exam_end_time - exam_start_time) )  "
-			+ "+ 24 * EXTRACT ( DAY FROM SUM(exam_end_time - exam_start_time) ) " 
-			+ "+ EXTRACT ( HOUR FROM SUM(exam_end_time - exam_start_time) ) "
-			+ "+ ( EXTRACT ( MINUTE FROM SUM(exam_end_time - exam_start_time) ) ) / 60 inuse " 
+			//Integer
+	private String INUSETL 
+			= "SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, " 
+			+ "SUM(exam_duration)/60 inuse " 
 			+ "FROM asset_clinical_record "
 			+ "WHERE asset_id = :#filter_id " 
 			+ "AND exam_date BETWEEN :#startDate AND :#endDate " 
-			//+ "AND a.hospital_id = :#hospitalId " 
 			+ "GROUP BY exam_date "
 			+ "ORDER BY exam_date";
 
 
 			//Double
-	private String DTTL = 
-			"SELECT to_char(confirmed_down_time, 'YYYY-MM-DD') timeline,  "
+	private String DTTL 
+			= "SELECT to_char(confirmed_down_time, 'YYYY-MM-DD') timeline,  "
 			+ "CASE WHEN EXTRACT (DAY FROM confirmed_up_time) - EXTRACT (DAY FROM confirmed_down_time) >= 1 "
 			+ "THEN 24 - EXTRACT (HOUR FROM confirmed_down_time) "
 			+ "- ( EXTRACT (MINUTE FROM confirmed_up_time - confirmed_down_time) ) / 60 "
@@ -211,7 +199,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "FROM work_order "
 			+ "WHERE asset_id = :#filter_id " 
 			+ "AND confirmed_down_time > :#startDate AND confirmed_up_time < :#endDate " 
-			//+ "AND a.hospital_id = :#hospitalId " 
 			+ "ORDER BY to_char(confirmed_up_time, 'YYYY-MM-DD')";
 
 
@@ -299,8 +286,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		
 		DateTime startJoda = new DateTime(startDate);
 		DateTime endJoda = new DateTime(endDate);
-		
-		deviceScan.clear();
 
 		ChartSeries cst_scan = new LineChartSeries();
 		cst_scan.setLabel(deviceScanlg);
@@ -337,6 +322,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			
 		}
 
+		deviceScan.clear();
 		deviceScan.addSeries(cst_scan);
 		b = System.currentTimeMillis();
 		System.out.println("ChartSeries Prepare for Chart 1: " + (b-a));		
@@ -347,8 +333,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		
 		DateTime startJoda = new DateTime(startDate);
 		DateTime endJoda = new DateTime(endDate);
-		
-		deviceExpo.clear();
 
 		ChartSeries cst_expo = new LineChartSeries();
 		cst_expo.setLabel(deviceExpolg_1);
@@ -378,6 +362,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			
 		}
 
+		deviceExpo.clear();
 		deviceExpo.addSeries(cst_expo);
 		b = System.currentTimeMillis();
 		System.out.println("ChartSeries Prepare for Chart 2: " + (b-a));
@@ -388,8 +373,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		
 		DateTime startJoda = new DateTime(startDate);
 		DateTime endJoda = new DateTime(endDate);
-		
-		deviceUsage.clear();
 
 		LineChartSeries cst_inuse = new LineChartSeries();
 		cst_inuse.setLabel(deviceUsagelg_1);
@@ -401,7 +384,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		cst_dt.setLabel(deviceDTlg_3);
 		cst_dt.setFill(true);
 
-		//int serve_hour;
 		double inuse;
 		double dt;
 		double wait; // wait = serve - downtime - inuse
@@ -428,7 +410,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		
 		if (!rs_inuse.isEmpty())
 			for (Map<String, Object> item : rs_inuse) {
-				rs_inuse_map.put(item.get("timeline").toString(), item.get("inuse") != null ? (double) item.get("inuse") : 0.0);
+				rs_inuse_map.put(item.get("timeline").toString(), item.get("inuse") != null ? ((long)item.get("inuse"))/60.0 : 0.0);
 
 		}
 
@@ -474,47 +456,33 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 			if ( rs_inuse_map.containsKey(idate)) {	
 				inuse = (double) rs_inuse_map.get(idate);
-				if (inuse < 0)	inuse *= -1;
-				//System.out.println(idate + " inuse " + inuse);	
 				inuse_total += inuse;
 				cst_inuse.set(idate, inuse);
 			}
 			else {
-				//System.out.println(idate + " inuse " + 0.0);
 				cst_inuse.set(idate, 0.0);
 			}
 
 			if ( rs_dt_map.containsKey(idate)) {		
 				dt = (double) rs_dt_map.get(idate);
-				//System.out.println(idate + " dt " + dt);
 				dt_total += dt;
 				cst_dt.set(idate, dt);
 			}
 			else {
-				//System.out.println(idate + " dt " + 0.0);
 				cst_dt.set(idate, 0.0);
 			}
 
 			wait = HOURS_DAY - inuse - dt;
 			if (wait < 0)	wait = 0.0;
-			//System.out.println(idate + " wait " + wait);
 			wait_total += wait;
 			cst_wait.set(idate, wait);
 		}
 
+		deviceUsage.clear();
 		deviceUsage.addSeries(cst_dt);
 		deviceUsage.addSeries(cst_inuse);
 		deviceUsage.addSeries(cst_wait);
-		
 
-		deviceStat.clear();
-
-		ChartSeries cst_stat_1 = new BarChartSeries();
-		cst_stat_1.set("total", wait_total);
-		ChartSeries cst_stat_2 = new BarChartSeries();
-		cst_stat_2.set("total", inuse_total);
-		ChartSeries cst_stat_3 = new BarChartSeries();
-		cst_stat_3.set("total", dt_total);
 
 		valueInuse = new Double(inuse_total).toString();
 		valueInuse = valueInuse.substring(0, valueInuse.indexOf(".")+2);
@@ -523,6 +491,14 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		valueWait = new Double(wait_total).toString();
 		valueWait = valueWait.substring(0, valueWait.indexOf(".")+2);
 
+		ChartSeries cst_stat_1 = new BarChartSeries();
+		cst_stat_1.set("total", wait_total);
+		ChartSeries cst_stat_2 = new BarChartSeries();
+		cst_stat_2.set("total", inuse_total);
+		ChartSeries cst_stat_3 = new BarChartSeries();
+		cst_stat_3.set("total", dt_total);
+
+		deviceStat.clear();
 		deviceStat.addSeries(cst_stat_3);
 		deviceStat.addSeries(cst_stat_1);
 		deviceStat.addSeries(cst_stat_2);		

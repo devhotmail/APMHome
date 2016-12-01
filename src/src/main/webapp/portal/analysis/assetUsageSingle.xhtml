@@ -15,22 +15,27 @@
 	<ui:define name="content">
 
 		<h:form id="WorkOrderEditForm">
-			<div class="ui-g">
-				<div class="ui-g-2">
-					<label class="label">#{msg.assetName}:</label>
-					<p:commandButton value="选择设备"
-									 actionListener="#{selectAssetController.prepareDialogCallback(assetUsageSingleController, ':WorkOrderEditForm:assetName')}"
+
+			<div class="ui-g-12">
+				<div class="text--center u-mv-">
+					<span class="epsilon">#{msg.DeviceUtilizationAnalysis}</span>
+				</div>
+			</div>
+
+				<div class="ui-g-12">
+                    <div class="block">
+                        <p:menuButton id="selAsset" placeholder="选择设备" value="#{assetUsageSingleController.assetName}">
+
+                            <p:menuitem value="选择单台设备... "
+									 actionListener="#{selectAssetController.prepareDialogCallback(assetUsageSingleController, ':WorkOrderEditForm:selAsset')}"
 									 process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
 									 oncomplete="PF('varSelectAssetDlg').show()"/>
-					<p:inputText id="assetName" readonly="true" placeholder="#{msg.noAssetSelected}"
-								 value="#{assetUsageSingleController.assetName}" required="true"
-								 requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
-				</div>
-				<div class="ui-g-10">
-					<div class="text--center u-mv-">
-						<span class="epsilon">#{msg.DeviceUtilizationAnalysis}</span>
-					</div>
-				</div>
+                            <p:separator/>
+
+                            <p:menuitem value="全部设备" actionListener="#{assetUsageSingleController.submit}" update=""/>
+
+                        </p:menuButton>
+                </div>
 
 				<div class="ui-g-12">
 					<div class="card--summary ui-g ui-fluid">

@@ -156,9 +156,9 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			+ "AND is_valid = true "
 			+ "ORDER BY name";
 
-			//double
+			//bigint
 	private String INUSETL
-            = "SELECT left_table.name, right_table.sum/3600 inuse "
+            = "SELECT left_table.name, right_table.sum/60 inuse "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
             + "LEFT JOIN (SELECT SUM(exam_duration), asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
@@ -380,7 +380,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 				serve = item_serve.get("serve") != null ? (int)item_serve.get("serve") : 0;
 
 				if (serve > 0) {
-					inuse = item_inuse.get("inuse") != null ? (long)item_inuse.get("inuse") : 0;
+					inuse = item_inuse.get("inuse") != null ? ((long)item_inuse.get("inuse"))/60.0 : 0;
 					dt =  item_dt.get("dt") != null ? (double)item_dt.get("dt") : 0;
 					dt_bench = item_dt_bench.get("dtbench") != null ? (double)item_dt_bench.get("dtbench") : 0;
 					wait = serve - dt - inuse;	
