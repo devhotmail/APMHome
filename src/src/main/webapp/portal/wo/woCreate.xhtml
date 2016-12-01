@@ -21,7 +21,6 @@
                 </p>
 
                 <h:form id="WorkOrderEditForm">
-                    <p:messages id="messages" autoUpdate="true" closable="true" showDetail="false"/>
                     <p:fieldset legend="#{msg.WorkOrder} #{msg.Detail}" rendered="#{workOrderController.selected != null}">
 
                         <p:steps activeIndex="#{workOrderController.selected.currentStep-1}" styleClass="test" readonly="false">
@@ -127,7 +126,7 @@
 
                         <br/>
 
-                        <p:commandButton validateClient="true" icon="ui-icon-check" actionListener="#{workOrderStepController.createWorkOrderStep()}" value="#{msg.Submit}" update="messages growl"/>
+                        <p:commandButton validateClient="true" icon="ui-icon-check" actionListener="#{workOrderStepController.createWorkOrderStep()}" value="#{msg.Submit}" update="growl"/>
                     </p:fieldset>
                 </h:form>
                 <ui:include src="woStepList.xhtml"/>

@@ -58,7 +58,7 @@
                         <p:column headerText="#{msg.functionType}" sortBy="#{item.functionType}" filterBy="#{item.functionType}" filterMatchMode="EQ">
                             <h:outputText value="#{fieldMsg.fieldValue('assetFunctionType',item.functionType)}"/>
                             <f:facet name="filter">
-                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
@@ -73,7 +73,7 @@
                         <p:column headerText="#{msg.vendor}" sortBy="#{item.vendor}" filterBy="#{item.vendor}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.vendor}"/>
                         </p:column>
-                        <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
+                        <p:column headerText="#{msg.status}" width="80" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" value="#{assetInfoController.filterAssetStatus}" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
@@ -83,14 +83,14 @@
                             <h:outputText value="#{fieldMsg.fieldValue('assetStatus',item.status)}"/>
                         </p:column>
                         <f:facet name="{Toolbar}">
-                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
-                                <p:dataExporter type="xls" target="datalist" fileName="AssetInfo_export"/>
-                            </p:commandButton>
                             <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetInfoController.prepareCreate}" action="Create?faces-redirect=true&amp;actionName=Create" />
                             <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" action="#{assetInfoController.getViewPage('Detail','View')}"  disabled="#{empty assetInfoController.selected}" >
                             </p:commandButton>
                             <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" action="#{assetInfoController.getViewPage('Create','Edit')}" disabled="#{empty assetInfoController.selected}" />
                             <p:commandButton rendered="false" id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" action="#{assetInfoController.getViewPage('View','Delete')}" disabled="#{empty assetInfoController.selected}"/>
+                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                                <p:dataExporter type="xls" target="datalist" fileName="AssetInfo_export"/>
+                            </p:commandButton>
                         </f:facet>
                     </p:dataTable>
                 </h:form>

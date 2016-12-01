@@ -24,16 +24,16 @@
                 
                 <h:form id="WorkOrderListForm">
                     <p:dataTable id="datalist" value="#{workOrderController.lazyModel}" var="item" widgetVar="varDataList"
-                        selectionMode="single" selection="#{workOrderController.selected}"
-                        lazy="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
+                        selectionMode="single" selection="#{workOrderController.selected}" stickyHeader="true"
+                        lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
                         rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
                         paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
                         rows="10" emptyMessage="#{msg.noRecordFound}"
                         rowsPerPageTemplate="10,20,30,90">
 
-                        <p:ajax event="rowSelect" listener="#{workOrderController.onSelectWorkOrder}" update="processButton"/>
-                        <p:ajax event="filter" listener="#{workOrderController.onFilter}" update="processButton"/>
+                        <p:ajax event="rowSelect" listener="#{workOrderController.onSelectWorkOrder}" update=":WorkOrderListForm:processButton"/>
+                        <p:ajax event="filter" listener="#{workOrderController.onFilter}" update=":WorkOrderListForm:processButton"/>
 
                         <p:column width="70" styleClass="textCenter"  headerText="#{msg.casePriority}" sortBy="#{item.casePriority}" filterBy="#{item.casePriority}" filterMatchMode="EQ">
                             <center><h:outputText value="#{item.casePriority}" class="priorityItem priorityItem#{item.casePriority}"/></center>
@@ -82,12 +82,14 @@
                             <h:outputText value="#{item.isClosed? msg.True2Yes : msg.False2No }"/>
                         </p:column>
                         <f:facet name="{Toolbar}">
-                            <p:button id="processButton" icon="ui-icon-arrow-forward" value="#{msg.ProcessWorkOrder}" outcome="woProcess.xhtml?woId=#{workOrderController.selected.getId()}" disabled="#{(workOrderController.selected eq null) or (workOrderController.selected.isClosed eq true)}"/>
-                            <p:commandButton value="#{msg.exportToXLS}" icon="ui-icon-arrow-downward" ajax="false">
+                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="WorkOrder_export"/>
                             </p:commandButton>
                         </f:facet>
                     </p:dataTable>
+                    <br/>
+                    <p:button id="processButton" icon="ui-icon-arrow-forward" value="#{msg.ProcessWorkOrder}" outcome="woProcess.xhtml?woId=#{workOrderController.selected.getId()}" disabled="#{(workOrderController.selected eq null) or (workOrderController.selected.isClosed eq true)}"/>
+                    
                 </h:form>
             </div>
         </div>

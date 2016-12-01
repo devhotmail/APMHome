@@ -31,8 +31,8 @@
                                  rows="20" emptyMessage="#{msg.noRecordFound}"
                                  rowsPerPageTemplate="20,40,60,90">
 
-                        <p:ajax event="rowSelect" update="createButton  viewButton deleteButton excuteButton"/>
-                        <p:ajax event="filter" listener="#{inspectionOrderController.onFilter}" update="createButton  viewButton deleteButton excuteButton"/>
+                        <p:ajax event="rowSelect" update="createButton  viewButton deleteButton :InspectionOrderListForm:excuteButton"/>
+                        <p:ajax event="filter" listener="#{inspectionOrderController.onFilter}" update="createButton  viewButton deleteButton :InspectionOrderListForm:excuteButton"/>
 
 <!--                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
     <h:outputText value="#{item.id}"/>
@@ -112,10 +112,11 @@
                             <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}"  action="InspOrderCreate?faces-redirect=true&amp;actionName=Create"/>
                             <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}"  action="#{inspectionOrderController.getViewPage('InspOrderDetail','View')}"  disabled="#{empty inspectionOrderController.selected}"/>
                             <!--<p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}"  action="#{inspectionOrderController.getViewPage('InspOrderEdit','Edit')}" disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>-->
-                            <p:commandButton id="excuteButton" icon="ui-icon-playlist-add-check" title="#{msg.Execute}"  action="#{inspectionOrderController.getViewPage('InspOrderExcute','Excute')}" disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>
                             <p:commandButton id="deleteButton" icon="ui-icon-trash" title="#{msg.Delete}"  action="#{inspectionOrderController.getViewPage('InspOrderDetail','Delete')}" disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>
                         </f:facet>
                     </p:dataTable>
+                    <br/>
+                    <p:commandButton id="excuteButton" icon="ui-icon-playlist-add-check" value="#{msg.Execute}"  action="#{inspectionOrderController.getViewPage('InspOrderExcute','Excute')}" disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>
                 </h:form>
 
 

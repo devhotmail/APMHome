@@ -9,12 +9,26 @@ border-radius: 10px!important;
 }
 .ui-growl{
 z-index: 9999!important;
+width: auto!important;
+height: auto!important;
 }
 .ui-growl-item{
 background-color: rgb(255, 193, 7)!important;
+opacity: 0.8;
+padding-left: 30px!important;
+float: left!important;
+width: 200px!important;
+height: auto!important;
+}
+.ui-growl-title{
+padding-bottom: 0px!important;
 }
 .ui-growl-message{
 color: black!important;
+}
+.ui-growl-message p, .ui-growl-image{
+display: none!important;
+height: 0!important;
 }
 .ui-dialog{
 z-index: 1900!important;
@@ -49,6 +63,10 @@ color: black!important;
 .ui-paginator, .ui-paginator .ui-paginator-page{
 color: black!important;
 }
+.ui-paginator .ui-state-active{
+color: white!important;
+}
+
 .ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-last, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-prev {
 color: black!important;
 }
