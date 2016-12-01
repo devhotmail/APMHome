@@ -51,9 +51,9 @@
                             <p:dataExporter type="xls" target="datalist" fileName="WorkOrderStepDetail_export"/>
                         </p:commandButton>
                         <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{workOrderStepDetailController.prepareCreate}" update=":WorkOrderStepDetailEditDlg" oncomplete="PF('WorkOrderStepDetailEditDialog').show()"/>
-                        <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}" actionListener="#{workOrderStepDetailController.prepareView}" update=":WorkOrderStepDetailViewDlg" oncomplete="PF('WorkOrderStepDetailViewDialog').show()" disabled="#{empty workOrderStepDetailController.selected}"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{workOrderStepDetailController.prepareView}" update=":WorkOrderStepDetailViewDlg" oncomplete="PF('WorkOrderStepDetailViewDialog').show()" disabled="#{empty workOrderStepDetailController.selected}"/>
                         <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{workOrderStepDetailController.prepareEdit}" update=":WorkOrderStepDetailEditDlg" oncomplete="PF('WorkOrderStepDetailEditDialog').show()" disabled="#{empty workOrderStepDetailController.selected}"/>
-                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{workOrderStepDetailController.delete}" update="datalist" disabled="#{empty workOrderStepDetailController.selected}">
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Delete}" actionListener="#{workOrderStepDetailController.delete}" update="datalist" disabled="#{empty workOrderStepDetailController.selected}">
                             <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
                         </p:commandButton>
                     </f:facet>
@@ -65,6 +65,7 @@
 
             </div>
         </div>
+
         
     </ui:define>
 

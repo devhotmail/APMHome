@@ -56,6 +56,10 @@
                             <label class="label">#{msg.workOrderId}*</label>
                             <p:inputText id="workOrderId" value="#{workOrderStepController.selected.workOrderId}"  required="true" requiredMessage="#{msg.workOrderId} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.fileId}</label>
+                            <p:inputText id="fileId" value="#{workOrderStepController.selected.fileId}" />
+                        </h:panelGroup>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{workOrderStepController.save}" value="#{msg.Save}" update="display,:WorkOrderStepEditDlg, :WorkOrderStepListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'WorkOrderStepEditDialog');"/>

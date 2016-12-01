@@ -38,6 +38,8 @@
                         <h:outputText value="#{workOrderStepController.selected.attachmentUrl}"/>
                         <h:outputLabel value="#{msg.workOrderId}" for="workOrderId" />
                         <h:outputText value="#{workOrderStepController.selected.workOrderId}"/>
+                        <h:outputLabel value="#{msg.fileId}" for="fileId" />
+                        <h:outputText value="#{workOrderStepController.selected.fileId}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{workOrderStepController.deleteAction}" icon="ui-icon-trash" actionListener="#{workOrderStepController.delete}" value="#{msg.Delete}" update="display,:WorkOrderStepViewDlg, :WorkOrderStepListForm:datalist, :growl" oncomplete="handleSubmit(args, 'WorkOrderStepViewDialog');"/>
