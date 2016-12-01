@@ -79,6 +79,7 @@
       show: true
     },
     seriesDefaults: {
+      useNegativeColors: false,
       pointLabels: {
         show: false
       },
