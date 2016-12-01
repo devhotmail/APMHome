@@ -29,6 +29,18 @@
                             <p:inputText id="deptName" value="#{inspectionOrderDetailController.selected.deptName}"  required="true" requiredMessage="#{msg.deptName} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
+                            <label class="label">#{msg.assetId}*</label>
+                            <p:inputText id="assetId" value="#{inspectionOrderDetailController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetName}*</label>
+                            <p:inputText id="assetName" value="#{inspectionOrderDetailController.selected.assetName}"  required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.orderId}*</label>
+                            <p:inputText id="orderId" value="#{inspectionOrderDetailController.selected.orderId}"  required="true" requiredMessage="#{msg.orderId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
                             <label class="label">#{msg.itemId}*</label>
                             <p:inputText id="itemId" value="#{inspectionOrderDetailController.selected.itemId}"  required="true" requiredMessage="#{msg.itemId} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
@@ -39,10 +51,6 @@
                         <h:panelGroup>
                             <label class="label">#{msg.isPassed}*</label>
                             <p:selectBooleanCheckbox id="isPassed" itemLabel="#{msg.isPassed}" value="#{inspectionOrderDetailController.selected.isPassed}" required="true" requiredMessage="#{msg.isPassed} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.inspectionOrderId}*</label>
-                            <p:inputText id="inspectionOrderId" value="#{inspectionOrderDetailController.selected.inspectionOrderId}"  required="true" requiredMessage="#{msg.inspectionOrderId} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

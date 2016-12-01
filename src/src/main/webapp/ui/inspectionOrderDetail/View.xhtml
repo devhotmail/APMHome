@@ -20,14 +20,18 @@
                         <h:outputText value="#{inspectionOrderDetailController.selected.deptId}"/>
                         <h:outputLabel value="#{msg.deptName}" for="deptName" />
                         <h:outputText value="#{inspectionOrderDetailController.selected.deptName}"/>
+                        <h:outputLabel value="#{msg.assetId}" for="assetId" />
+                        <h:outputText value="#{inspectionOrderDetailController.selected.assetId}"/>
+                        <h:outputLabel value="#{msg.assetName}" for="assetName" />
+                        <h:outputText value="#{inspectionOrderDetailController.selected.assetName}"/>
+                        <h:outputLabel value="#{msg.orderId}" for="orderId" />
+                        <h:outputText value="#{inspectionOrderDetailController.selected.orderId}"/>
                         <h:outputLabel value="#{msg.itemId}" for="itemId" />
                         <h:outputText value="#{inspectionOrderDetailController.selected.itemId}"/>
                         <h:outputLabel value="#{msg.itemName}" for="itemName" />
                         <h:outputText value="#{inspectionOrderDetailController.selected.itemName}"/>
                         <h:outputLabel value="#{msg.isPassed}" for="isPassed" />
                         <p:selectBooleanCheckbox id="isPassed" value="#{inspectionOrderDetailController.selected.isPassed}" required="true" requiredMessage="#{msg.isPassed} #{msg.ValidationRequire}" disabled="true"/>
-                        <h:outputLabel value="#{msg.inspectionOrderId}" for="inspectionOrderId" />
-                        <h:outputText value="#{inspectionOrderDetailController.selected.inspectionOrderId}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{inspectionOrderDetailController.deleteAction}" icon="ui-icon-trash" actionListener="#{inspectionOrderDetailController.delete}" value="#{msg.Delete}" update="display,:InspectionOrderDetailViewDlg, :InspectionOrderDetailListForm:datalist, :growl" oncomplete="handleSubmit(args, 'InspectionOrderDetailViewDialog');"/>

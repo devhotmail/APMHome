@@ -29,8 +29,12 @@
                             <p:inputText id="parentOrg" value="#{orgInfoController.selected.parentOrg}" />
                         </h:panelGroup>
                         <h:panelGroup>
-                            <label class="label">#{msg.hospitalId}*</label>
-                            <p:inputText id="hospitalId" value="#{orgInfoController.selected.hospitalId}"  required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}"/>
+                            <label class="label">#{msg.hospitalId}</label>
+                            <p:inputText id="hospitalId" value="#{orgInfoController.selected.hospitalId}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
+                            <p:inputText id="siteId" value="#{orgInfoController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

@@ -157,6 +157,10 @@
                             <p:calendar id="lastQaDate" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetInfoController.selected.lastQaDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
+                            <label class="label">#{msg.lastStockTakeDate}</label>
+                            <p:calendar id="lastStockTakeDate" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetInfoController.selected.lastStockTakeDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
                             <label class="label">#{msg.purchasePrice}</label>
                             <p:inputText id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" />
                         </h:panelGroup>

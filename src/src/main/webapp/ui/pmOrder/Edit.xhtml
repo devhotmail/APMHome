@@ -88,6 +88,10 @@
                             <label class="label">#{msg.assetName}*</label>
                             <p:inputText id="assetName" value="#{pmOrderController.selected.assetName}"  required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.fileId}</label>
+                            <p:inputText id="fileId" value="#{pmOrderController.selected.fileId}" />
+                        </h:panelGroup>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{pmOrderController.save}" value="#{msg.Save}" update="display,:PmOrderEditDlg, :PmOrderListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'PmOrderEditDialog');"/>

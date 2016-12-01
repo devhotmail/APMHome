@@ -58,6 +58,8 @@
                         <h:outputText value="#{pmOrderController.selected.assetId}"/>
                         <h:outputLabel value="#{msg.assetName}" for="assetName" />
                         <h:outputText value="#{pmOrderController.selected.assetName}"/>
+                        <h:outputLabel value="#{msg.fileId}" for="fileId" />
+                        <h:outputText value="#{pmOrderController.selected.fileId}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{pmOrderController.deleteAction}" icon="ui-icon-trash" actionListener="#{pmOrderController.delete}" value="#{msg.Delete}" update="display,:PmOrderViewDlg, :PmOrderListForm:datalist, :growl" oncomplete="handleSubmit(args, 'PmOrderViewDialog');"/>

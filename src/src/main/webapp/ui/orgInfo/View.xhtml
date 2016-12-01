@@ -20,6 +20,8 @@
                         <h:outputText value="#{orgInfoController.selected.nameEn}"/>
                         <h:outputLabel value="#{msg.hospitalId}" for="hospitalId" />
                         <h:outputText value="#{orgInfoController.selected.hospitalId}"/>
+                        <h:outputLabel value="#{msg.siteId}" for="siteId" />
+                        <h:outputText value="#{orgInfoController.selected.siteId}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{orgInfoController.deleteAction}" icon="ui-icon-trash" actionListener="#{orgInfoController.delete}" value="#{msg.Delete}" update="display,:OrgInfoViewDlg, :OrgInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'OrgInfoViewDialog');"/>

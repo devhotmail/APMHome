@@ -102,6 +102,10 @@
                         <h:outputText value="#{assetInfoController.selected.lastQaDate}">
                             <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                         </h:outputText>
+                        <h:outputLabel value="#{msg.lastStockTakeDate}" for="lastStockTakeDate" />
+                        <h:outputText value="#{assetInfoController.selected.lastStockTakeDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
                         <h:outputLabel value="#{msg.purchasePrice}" for="purchasePrice" />
                         <h:outputText value="#{assetInfoController.selected.purchasePrice}"/>
                         <h:outputLabel value="#{msg.salvageValue}" for="salvageValue" />

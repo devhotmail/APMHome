@@ -101,8 +101,8 @@
                             <p:calendar id="examStartTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetClinicalRecordController.selected.examStartTime}" required="true" requiredMessage="#{msg.examStartTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <label class="label">#{msg.examEndTime}*</label>
-                            <p:calendar id="examEndTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetClinicalRecordController.selected.examEndTime}" required="true" requiredMessage="#{msg.examEndTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <label class="label">#{msg.examDuration}</label>
+                            <p:inputText id="examDuration" value="#{assetClinicalRecordController.selected.examDuration}" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.assetId}*</label>

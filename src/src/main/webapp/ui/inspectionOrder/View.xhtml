@@ -14,12 +14,16 @@
                     <p:panelGrid columns="6" rendered="#{inspectionOrderController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{inspectionOrderController.selected.id}"/>
+                        <h:outputLabel value="#{msg.orderType}" for="orderType" />
+                        <h:outputText value="#{inspectionOrderController.selected.orderType}"/>
                         <h:outputLabel value="#{msg.siteId}" for="siteId" />
                         <h:outputText value="#{inspectionOrderController.selected.siteId}"/>
                         <h:outputLabel value="#{msg.name}" for="name" />
                         <h:outputText value="#{inspectionOrderController.selected.name}"/>
-                        <h:outputLabel value="#{msg.creator}" for="creator" />
-                        <h:outputText value="#{inspectionOrderController.selected.creator}"/>
+                        <h:outputLabel value="#{msg.creatorId}" for="creatorId" />
+                        <h:outputText value="#{inspectionOrderController.selected.creatorId}"/>
+                        <h:outputLabel value="#{msg.creatorName}" for="creatorName" />
+                        <h:outputText value="#{inspectionOrderController.selected.creatorName}"/>
                         <h:outputLabel value="#{msg.createTime}" for="createTime" />
                         <h:outputText value="#{inspectionOrderController.selected.createTime}">
                             <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
@@ -46,8 +50,6 @@
                         <h:outputText value="#{inspectionOrderController.selected.comments}"/>
                         <h:outputLabel value="#{msg.paperUrl}" for="paperUrl" />
                         <h:outputText value="#{inspectionOrderController.selected.paperUrl}"/>
-                        <h:outputLabel value="#{msg.assetId}" for="assetId" />
-                        <h:outputText value="#{inspectionOrderController.selected.assetId}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{inspectionOrderController.deleteAction}" icon="ui-icon-trash" actionListener="#{inspectionOrderController.delete}" value="#{msg.Delete}" update="display,:InspectionOrderViewDlg, :InspectionOrderListForm:datalist, :growl" oncomplete="handleSubmit(args, 'InspectionOrderViewDialog');"/>

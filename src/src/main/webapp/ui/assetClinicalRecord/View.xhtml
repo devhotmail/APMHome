@@ -60,10 +60,8 @@
                         <h:outputText value="#{assetClinicalRecordController.selected.examStartTime}">
                             <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                         </h:outputText>
-                        <h:outputLabel value="#{msg.examEndTime}" for="examEndTime" />
-                        <h:outputText value="#{assetClinicalRecordController.selected.examEndTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                        </h:outputText>
+                        <h:outputLabel value="#{msg.examDuration}" for="examDuration" />
+                        <h:outputText value="#{assetClinicalRecordController.selected.examDuration}"/>
                         <h:outputLabel value="#{msg.assetId}" for="assetId" />
                         <h:outputText value="#{assetClinicalRecordController.selected.assetId}"/>
                     </p:panelGrid>

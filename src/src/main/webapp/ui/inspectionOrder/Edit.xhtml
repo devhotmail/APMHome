@@ -17,6 +17,10 @@
                             <p:inputText id="id" value="#{inspectionOrderController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
+                            <label class="label">#{msg.orderType}*</label>
+                            <p:inputText id="orderType" value="#{inspectionOrderController.selected.orderType}"  required="true" requiredMessage="#{msg.orderType} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
                             <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{inspectionOrderController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
@@ -25,8 +29,12 @@
                             <p:inputText id="name" value="#{inspectionOrderController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <label class="label">#{msg.creator}*</label>
-                            <p:inputText id="creator" value="#{inspectionOrderController.selected.creator}"  required="true" requiredMessage="#{msg.creator} #{msg.ValidationRequire}"/>
+                            <label class="label">#{msg.creatorId}*</label>
+                            <p:inputText id="creatorId" value="#{inspectionOrderController.selected.creatorId}"  required="true" requiredMessage="#{msg.creatorId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.creatorName}*</label>
+                            <p:inputText id="creatorName" value="#{inspectionOrderController.selected.creatorName}"  required="true" requiredMessage="#{msg.creatorName} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.createTime}*</label>
@@ -67,10 +75,6 @@
                         <h:panelGroup>
                             <label class="label">#{msg.paperUrl}</label>
                             <p:inputText id="paperUrl" value="#{inspectionOrderController.selected.paperUrl}" />
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.assetId}*</label>
-                            <p:inputText id="assetId" value="#{inspectionOrderController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>
