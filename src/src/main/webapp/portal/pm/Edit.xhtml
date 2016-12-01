@@ -87,7 +87,7 @@
                         </h:panelGroup>
                     </p:panelGrid>
 
-                    <p:commandButton validateClient="true"  actionListener="#{pmOrderController.applyChange()}"  value="#{msg.Save}"  update=":PmOrderEditForm,:PmOrderListForm:datalist, :growl"  icon="ui-icon-check" />
+                    <p:commandButton validateClient="true"  actionListener="#{pmOrderController.applyChange()}"  value="#{msg.Save}"  update=":PmOrderEditForm, :growl"  icon="ui-icon-check" />
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" actionListener="#{pmOrderController.onCancel()}"   value="#{msg.Cancel}" update=":PmOrderEditForm,:PmOrderListForm"  icon="ui-icon-cancel" />
                 </h:panelGroup>

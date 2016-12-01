@@ -40,7 +40,7 @@
                         <p:menuitem style=" font-size: 30" id="um01" value="#{msg.HomePage}" icon="&#xE871;" outcome="#{userContextService.userDefaultHomePage}"/>
                         <p:submenu id="um02" label="#{msg.AssetMDM}" icon="fa fa-folder-open-o" >
                             <p:menuitem id="um03" value="#{msg.AssetList}" outcome="/portal/asset/info/List" />
-                            <p:menuitem id="um04" value="#{msg.AssetInventory}" outcome="/empty"/>
+                            <p:menuitem id="um04" value="#{msg.AssetInventory}" outcome="/portal/insp/DeviceCheck.xhtml"/>
                             <p:menuitem id="um05" value="#{msg.AssetDocumentMgmt}" rendered="false" outcome="/portal/asset/fileAttachment/List"/>
                             <p:menuitem id="um06" value="#{msg.AssetValueAnalysis}" rendered="false" outcome="/empty"/>
                             <p:menuitem id="um07" rendered="false" value="#{msg.AssetContractMgmt}"  style="color: orange;" outcome="/empty"/>

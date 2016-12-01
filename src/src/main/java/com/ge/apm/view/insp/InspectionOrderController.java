@@ -5,6 +5,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.util.CollectionUtils;
+
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.InspectionOrderRepository;
 import com.ge.apm.dao.OrgInfoRepository;
@@ -58,7 +60,12 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
     List<InspectionOrderDetail> orderDetailItemList;
 
     AttachmentFileService fileService;
-
+    
+    private TreeNode deviceNode;
+    private UserAccount currentUser;
+    List<Object[]> unSelectedDeviceNodesList;
+    private TreeNode[] unSelectedDeviceNodes;
+    
     @Override
     protected void init() {
         dao = WebUtil.getBean(InspectionOrderRepository.class);
@@ -69,7 +76,11 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         assetGrossCount = getTreeCount(orgAssetTree);
         this.filterBySite = true;
         this.setSiteFilter();
-
+        
+        currentUser = UserContextService.getCurrentUserAccount();
+        deviceNode = initDeviceNode();
+        unSelectedDeviceNodes =new TreeNode[10000];
+        
         String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
             try {
@@ -101,6 +112,50 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         }
 
         ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
+    }
+    
+    public TreeNode initDeviceNode(){
+    	TreeNode deviceNode = uuaService.getOrgAssetTree(this.currentUser.getHospitalId());
+    	if(deviceNode != null && deviceNode.getChildCount() > 0){
+    		recursion(deviceNode,true);
+    	}
+    	return deviceNode;
+    }
+    
+    /**
+     * 
+     * @param node
+     * @param isSelected
+     * @return
+     */
+    public void recursion(TreeNode node,boolean isSelected){
+    	if(node == null || node.isLeaf()){
+    		return ;
+    	}
+    	if(!CollectionUtils.isEmpty(node.getChildren())){
+    		List<TreeNode> childNodes = node.getChildren();
+    		for (TreeNode treeNode : childNodes) {
+				if(isSelected){
+					treeNode.setSelected(true);
+					recursion(treeNode,true);
+				}
+			}
+    	}
+    }
+    
+    public void onSelectDeviceTreeNode(NodeSelectEvent event){
+    	unSelectedDeviceNodesList = getUnSelectedDeviceNodes();
+    }
+    
+    public void onUnSelectDeviceTreeNode(NodeUnselectEvent event){
+    	TreeNode removeNode = event.getTreeNode();
+    	removeNode.setSelected(false);
+//    	if(removeNode.getType().equals("asset")){
+//    		this.unSelectedDeviceNodesList.get(0)
+//    	}else if(removeNode.getType().equals("asset")){
+//
+//    	}
+    	
     }
 
     private void setTreeStatus(TreeNode node) {
@@ -165,6 +220,11 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
 //        selectedNodesList.remove(node);
 //        node.setSelected(false);
 //    }
+    
+	  public void removeSelectedAssetDevice(TreeNode node) {
+		  unSelectedDeviceNodesList.remove(node);
+		  node.setSelected(true);
+	  }
 
     public List<Object[]> getSelectedItem() {
         //for create page datalist
@@ -180,6 +240,19 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         }
         return tempList;
     }
+    
+/*    public List<Object[]> getUnSelectedDeviceItem() {
+        List<Object[]> tempList = new ArrayList<Object[]>();
+        for (TreeNode node : unSelectedDeviceNodes) {
+        	Object[] content = new Object[2];
+        	if("asset".equalsIgnoreCase(node.getType())){
+        		content[0] = (AssetInfo) node.getParent().getData();
+        		content[1] = (OrgInfo) node.getParent().getParent().getData();
+        	}
+        	tempList.add(content);
+        }
+        return tempList;
+    }*/
     
     public String createOrder() {
         //for create page submit
@@ -350,5 +423,40 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
     public void setExcutedItemArray(TreeNode[] excutedItemArray) {
         this.excutedItemArray = excutedItemArray;
     }
+
+	public TreeNode getDeviceNode() {
+		return deviceNode;
+	}
+
+	public void setDeviceNode(TreeNode deviceNode) {
+		this.deviceNode = deviceNode;
+	}
+
+	public List<Object[]> getUnSelectedDeviceNodesList() {
+		return unSelectedDeviceNodesList;
+	}
+
+	public void setUnSelectedDeviceNodesList(List<Object[]> unSelectedDeviceNodesList) {
+		this.unSelectedDeviceNodesList = unSelectedDeviceNodesList;
+	}
+
+	public List<Object[]> getUnSelectedDeviceNodes() {
+        List<Object[]> tempList = new ArrayList<Object[]>();
+        for (TreeNode node : unSelectedDeviceNodes) {
+        	Object[] content = new Object[2];
+        	if("asset".equalsIgnoreCase(node.getType())){
+        		content[0] = (AssetInfo) node.getParent().getData();
+        		content[1] = (OrgInfo) node.getParent().getParent().getData();
+        	}
+        	tempList.add(content);
+        }
+		return tempList;
+	}
+
+	public void setUnSelectedDeviceNodes(TreeNode[] unSelectedDeviceNodes) {
+		this.unSelectedDeviceNodes = unSelectedDeviceNodes;
+	}
+
+
 
 }
