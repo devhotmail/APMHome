@@ -163,4 +163,23 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
             activeTabId = 0;
     }
     
+    private String filterIsClosed = null;
+
+    public String getFilterIsClosed() {
+        return filterIsClosed;
+    }
+
+    public void setFilterIsClosed(String filterIsClosed) {
+        this.filterIsClosed = filterIsClosed;
+    }
+    
+    public void setIsClosedFilter(){
+        if(filterIsClosed==null) return;
+        if (!("true".equals(filterIsClosed) || "false".equals(filterIsClosed))) return;
+        
+        if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+        setSiteFilter();
+        searchFilters.add(new SearchFilter("isClosed", SearchFilter.Operator.EQ, Boolean.parseBoolean(filterIsClosed)));
+    }
+    
 }

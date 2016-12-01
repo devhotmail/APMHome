@@ -4,6 +4,13 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
+    
+    <ui:define name="preRenderView">
+        <f:metadata>
+            <f:viewParam name="isClosed" value="#{workOrderController.filterIsClosed}"/>
+        </f:metadata>
+        <f:event type="preRenderView" listener="#{workOrderController.setIsClosedFilter()}"/>
+    </ui:define>
 
     <ui:define name="head">
         <h:outputStylesheet name="css/wo_steps.css" />
@@ -68,7 +75,7 @@
                         </p:column>
                         <p:column headerText="#{msg.isClosed}" sortBy="#{item.isClosed}" filterBy="#{item.isClosed}" filterMatchMode="EQ">
                             <f:facet name="filter">
-                                <p:selectOneMenu onchange="PF('varDataList').filter()">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" value="#{workOrderController.filterIsClosed}">
                                     <f:converter converterId="javax.faces.Boolean" />
                                     <f:selectItem itemLabel="#{msg.All}" itemValue="" />
                                     <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
