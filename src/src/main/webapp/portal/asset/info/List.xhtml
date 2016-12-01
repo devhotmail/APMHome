@@ -7,6 +7,7 @@
     <ui:define name="preRenderView">
         <f:metadata>
             <f:viewParam name="assetStatus" value="#{assetInfoController.filterAssetStatus}"/>
+            <f:viewParam name="lastStocktakeDate" value="#{assetInfoController.filterLastStocktakeDate}"/>
         </f:metadata>
         <f:event type="preRenderView" listener="#{assetInfoController.setAssetStatusFilter()}"/>
     </ui:define>
