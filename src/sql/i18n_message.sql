@@ -66,7 +66,9 @@ INSERT INTO "i18n_message" VALUES (60,'message','Http401AccessDeniedTitle', '权
 INSERT INTO "i18n_message" VALUES (61,'message','Http401AccessDeniedMsg', '对不起，您未获得访问此网页的授权.','You are not authorized to access this resource.',null,-1);
 INSERT INTO "i18n_message" VALUES (62, 'label','ClearAll', '清空自定义配置','ClearAll',null,-1);
 INSERT INTO "i18n_message" VALUES (63, 'label','Upload', '上传','Upload',null,-1);
-INSERT INTO "i18n_message" VALUES (64, 'label','All', '全部','All',null,-1);
+INSERT INTO "i18n_message" VALUES (65, 'label','All', '全部','All',null,-1);
+INSERT INTO "i18n_message" VALUES (66, 'label','From', '从','From',null,-1);
+INSERT INTO "i18n_message" VALUES (67, 'label','To', '到','To',null,-1);
 
 -- menu item names  ( id from 200 to  399)
 
