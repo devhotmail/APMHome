@@ -15,24 +15,22 @@
     <ui:define name="content">
         <h:form id="Forecast">
             <div class="ui-g">
-                <div class="ui-g-12">
+                <div class="ui-g-1">
+                    <p:menuButton id="selAsset" placeholder="全部设备" value="#{assetForecastController.assetName}">
+                        <p:menuitem value="选择单台设备... "
+                                    actionListener="#{selectAssetController.prepareDialogCallback(assetForecastController,
+                                            ':Forecast:selAsset :Forecast:value_expo :Forecast:barForecast')}"
+                                    process="@this"
+                                    update=":selectAssetDlg"
+                                    oncomplete="PF('varSelectAssetDlg').show()"/>
+                        <p:separator/>
+                        <p:menuitem value="全部设备" actionListener="#{assetForecastController.onAssetsChange}"
+                                    update="selAsset value_expo barForecast"/>
+                    </p:menuButton>
+                </div>
+                <div class="ui-g-11">
                     <div class="text--center u-mv-">
                         <span class="epsilon">设备绩效预测</span>
-                    </div>
-                </div>
-
-                <div class="ui-g-12">
-                    <div class="block">
-                        <p:menuButton id="selAsset" placeholder="全部设备" value="#{assetForecastController.assetName}">
-                            <p:menuitem value="选择单台设备... "
-                                        actionListener="#{selectAssetController.prepareDialogCallback(assetForecastController,
-                                            ':Forecast:selAsset :Forecast:value_expo :Forecast:barForecast')}"
-                                        process="@this"
-                                        update=":selectAssetDlg"
-                                        oncomplete="PF('varSelectAssetDlg').show()"/>
-                            <p:separator/>
-                            <p:menuitem value="全部设备" actionListener="#{assetForecastController.onAssetsChange}" update="selAsset value_expo barForecast"/>
-                        </p:menuButton>
                     </div>
                 </div>
 
