@@ -1,0 +1,82 @@
+@import "predix";
+@import "objects";
+@import "charts";
+@import 'px-tables-design/_base.tables.scss';
+
+.chart-device-stat.horizontal .maintenance-chart3 {
+  .jqplot-table-legend-label {
+    font-size: $inuit-base-font-size;
+    color: $black;
+  }
+  .jqplot-axis.jqplot-xaxis, .jqplot-axis.jqplot-yaxis, .jqplot-title {
+    display: none;
+  }
+}
+
+.maintenance-chart3,
+.maintenance-chart4,
+.maintenance-chart6 {
+  .jqplot-grid-canvas {
+    display: none;
+  }
+}
+
+.maintenance-chart5 {
+  .jqplot-target {
+    height: 300px;
+  }
+}
+
+.maintenance-chart6 {
+  .table {
+    td, th {
+      border-width: 0;
+    }
+  }
+  .jqplot-target {
+    margin-top: -70px !important;
+    height: 300px;
+  }
+}
+
+.maintenance-chart3 {
+  height: 100px;
+}
+
+.block {
+  .maintenance-chart4, .maintenance-chart6 {
+    table.jqplot-table-legend {
+      top: 0 !important;
+    }
+
+    .jqplot-target {
+      margin-top: 0;
+    }
+
+    .jqplot-title {
+      display: inline-block;
+      position: static !important;
+      width: auto !important;
+      text-align: left !important;
+      color: $black;
+
+      @include squareBefore();
+    }
+  }
+}
+
+.col-1 .jqplot-title::before {
+  background-color: rgba(99, 187, 108, 1);
+}
+
+.col-2 .jqplot-title::before {
+  background-color: rgba(238, 126, 175, 1);
+}
+
+.col-3 .jqplot-title::before {
+  background-color: rgba(176, 143, 57, 1);
+}
+
+.text--unit {
+  font-size: 70%;
+}

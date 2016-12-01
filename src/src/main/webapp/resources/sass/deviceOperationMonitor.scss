@@ -1,0 +1,20 @@
+@import "predix";
+@import "objects";
+@import "charts";
+
+body.layout-compact {
+  .chart-device-statbytime, .chart-device-stat-bypart {
+    height: 400px;
+  }
+  .body-shape {
+    height: 400px;
+    min-width: 200px;
+  }
+
+  .chart-device-stat.chart-device-2.vertical {
+    margin-top: -40px;
+    table.jqplot-table-legend {
+      margin-top: 83px;
+    }
+  }
+}

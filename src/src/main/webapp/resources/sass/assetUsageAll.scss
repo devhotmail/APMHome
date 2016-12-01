@@ -1,0 +1,14 @@
+@import "predix";
+@import "objects";
+@import "charts";
+
+.chart-device-stat {
+  height: 50px;
+  .jqplot-axis.jqplot-xaxis, .jqplot-axis.jqplot-yaxis, .jqplot-title {
+    display: none;
+  }
+}
+
+.text--unit {
+  font-size: 70%;
+}

@@ -1,0 +1,338 @@
+.layout-wrapper .layout-main {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+// Meta
+.text--secondary {
+  color: $gray6;
+}
+
+@mixin squareBefore() {
+  &::before {
+    content: '';
+    color: black;
+    display: inline-block;
+    position: relative;
+    top: 2px;
+    font-size: 1em;
+    width: 1em;
+    height: 1em;
+    margin: 0 5px;
+    vertical-align: baseline;
+  }
+
+  &--1::before {
+    background-color: rgba(96, 165, 215, 1);
+  }
+  &--2::before {
+    background-color: rgba(247, 162, 71, 1);
+  }
+  &--3::before {
+    background-color: rgba(99, 187, 108, 1);
+  }
+  &--4::before {
+    background-color: rgba(238, 126, 175, 1);
+  }
+  &--5::before {
+    background-color: rgba(176, 143, 57, 1);
+  }
+  &--6::before {
+    background-color: rgba(222, 207, 64, 1);
+  }
+}
+
+.status {
+  @include squareBefore();
+}
+
+.block {
+  padding: 20px !important;
+  margin-bottom: 1px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+}
+
+.block-title {
+  font-size: 16px;
+  font-weight: normal;
+  padding: 10px 0;
+  margin: 0 0 20px 0;
+  border-bottom: 1px solid $gray6;
+}
+
+.layout {
+  margin-left: 0;
+}
+
+.visible-portable {
+  display: none;
+  @include media-query(portable) {
+    display: block;
+  }
+}
+
+.divide-line-right {
+  width: 100%;
+  border-right: 1px solid $gray5;
+}
+
+.divide-line-left {
+  width: 100%;
+  border-left: 1px solid $gray5;
+}
+
+.divide-line-bottom {
+  width: 100%;
+  border-bottom: 1px solid $gray5;
+}
+
+.widget-title {
+  font-size: 15px;
+  font-weight: normal;
+  padding: 5px 0;
+  margin: 0 0 10px 0;
+}
+
+.block {
+  .jqplot-target {
+    margin-top: 40px;
+  }
+
+  table.jqplot-table-legend {
+    border-width: 0;
+    color: inherit;
+    font-size: $inuit-base-font-size;
+    top: -40px !important;
+    right: 0;
+    left: auto !important;
+
+    .jqplot-table-legend-swatch.jqplot-series-hidden {
+      opacity: .4;
+    }
+
+    .jqplot-table-legend-label.jqplot-series-hidden {
+      text-decoration: none;
+    }
+  }
+}
+
+.layout-compact .layout-wrapper .layout-main {
+  padding: 75px 0 0 0;
+}
+
+.layout-compact .layout-main {
+
+  $ui-btn-height: 30px;
+
+  .ui-tabmenu {
+    padding: 0;
+    display: table;
+    border: 0;
+    .ui-tabmenu-nav > .ui-tabmenuitem {
+      margin: 0;
+      border-radius: 0;
+      border-bottom: 2px solid $inuit-btn-border-color;
+
+      > .ui-menuitem-link {
+        min-width: 3em;
+        text-align: center;
+        padding: $ui-btn-height/4 $ui-btn-height/2;
+      }
+
+      &.ui-state-hover {
+        border-color: $inuit-btn-border-color--hover;
+        box-shadow: $inuit-btn-shadow;
+        background-color: $inuit-btn-background--hover;
+      }
+
+      &.ui-state-active {
+        border-bottom-color: $gray8;
+      }
+    }
+  }
+
+  .ui-tabs {
+    padding: 0;
+    border: 0;
+    ul.ui-tabs-nav {
+      display: table;
+    }
+
+    ul.ui-tabs-nav > li {
+      margin: 0;
+      border-radius: 0;
+      border-bottom: 2px solid $inuit-btn-border-color;
+
+      > a {
+        min-width: 3em;
+        text-align: center;
+        padding: $ui-btn-height/4 $ui-btn-height/2;
+      }
+
+      &.ui-state-hover {
+        border-color: $inuit-btn-border-color--hover;
+        box-shadow: $inuit-btn-shadow;
+        background-color: $inuit-btn-background--hover;
+      }
+
+      &.ui-state-active {
+        border-bottom-color: $gray8;
+      }
+    }
+  }
+
+  .jqplot-highlighter-tooltip {
+    padding: .5em 1em;
+    font-size: $inuit-heading-size-6;
+    background-color: $gray7;
+    color: $white;
+    border: 0;
+    border-radius: 5px;
+  }
+
+  .jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label, .jqplot-x2axis-label {
+    color: #757575;
+  }
+
+  .ui-button {
+    + .ui-inputfield {
+      height: $ui-btn-height;
+    }
+
+    .ui-icon {
+      color: $inuit-btn-color;
+    }
+
+    &-icon {
+
+      &-left {
+        left: 5px;
+      }
+      &-right {
+        right: 5px;
+      }
+    }
+
+    display: inline-block;
+    overflow: visible;
+    height: $ui-btn-height;
+    margin: 0;
+    border: 1px solid $inuit-btn-border-color;
+    border-radius: 3px;
+    padding: 0 $ui-btn-height/2;
+    box-shadow: $inuit-btn-shadow--light;
+    font: inherit;
+    line-height: calc(#{$ui-btn-height} - 2px);
+    -webkit-font-smoothing: antialiased;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    white-space: nowrap;
+    background-color: $inuit-btn-background;
+    &,
+    &:link,
+    &:visited,
+    &:hover,
+    &:active {
+      color: $inuit-btn-color;
+    }
+    &:hover {
+      border-color: $inuit-btn-border-color--hover;
+      box-shadow: $inuit-btn-shadow;
+      background-color: $inuit-btn-background--hover;
+    }
+    &:active {
+      border-color: $inuit-btn-border-color--pressed;
+      box-shadow: none;
+      background-color: $inuit-btn-background--pressed;
+    }
+    &:active {
+      outline: none;
+    }
+  }
+
+  .ui-button.ui-button-text-icon {
+    &-left {
+      padding-left: 30px;
+    }
+    &-right {
+      padding-left: 30px;
+    }
+  }
+  .calendar-range-picker {
+    padding: 10px;
+    max-width: 320px;
+    > label {
+      padding: 0 5px;
+      line-height: 30px;
+    }
+  }
+  .ui-calendar.ui-trigger-calendar .ui-inputfield {
+    border-bottom-width: 0 !important;
+  }
+
+  .ui-selectonemenu .ui-selectonemenu-label {
+    font-size: inherit;
+  }
+
+  .ui-selectonemenu {
+    background-color: $gray2;
+    padding: 5px;
+    box-shadow: inset 0 0 1px $gray8;
+    .ui-selectonemenu-trigger {
+      top: 8px;
+    }
+  }
+
+  .ui-calendar.ui-trigger-calendar {
+    background-color: $gray2;
+    padding: 5px;
+    box-shadow: inset 0 0 1px $gray8;
+
+    .ui-button {
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .ui-inputfield {
+      width: 70px;
+    }
+
+    .ui-datepicker-trigger {
+      float: left;
+      width: 20px;
+      padding: 0;
+      margin: 0;
+      right: inherit;
+      top: inherit;
+    }
+
+    .ui-icon-calendar {
+      left: inherit;
+    }
+  }
+}
+
+table.jqplot-table-legend {
+
+  background-color: #ffffff;
+  color: #757575;
+  border-color: #bdbdbd;
+}
+
+.card--summary {
+  background-color: $gray8;
+  min-height: 100px;
+  color: white;
+  > *:not(:last-child) {
+    border-right: 1px solid $gray9;
+  }
+  .divide-line-bottom {
+    border-bottom: 1px solid $gray9;
+  }
+}

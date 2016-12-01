@@ -1,0 +1,51 @@
+@import "predix";
+@import "objects";
+
+.layout-wrapper .layout-main {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label, .jqplot-x2axis-label {
+  color: #757575;
+}
+
+table.jqplot-table-legend {
+  background-color: #ffffff;
+  color: #757575;
+  border-color: #bdbdbd;
+}
+
+.jqplot-point-label {
+  color: #ffffff
+}
+
+.card--summary {
+  min-height: 128px;
+}
+
+body.layout-compact .card--device-status .card {
+  height: 250px;
+  margin-bottom: 1px;
+  border-radius: 0;
+}
+
+.block {
+  position: relative;
+  min-height: 450px;
+  .text--center {
+    margin: 0;
+    position: absolute;
+    font-weight: 200;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.block-footer {
+  width: calc(100% - 20px * 2);
+  min-height: 130px;
+  position: absolute;
+  bottom: 20px;
+}

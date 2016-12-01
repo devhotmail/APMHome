@@ -1,0 +1,40 @@
+@import "predix";
+@import "objects";
+@import "charts";
+
+.card--summary {
+  min-height: 100px;
+  color: white;
+  > *:not(:last-child) {
+    border-right: 1px solid $gray9;
+  }
+}
+
+.text--unit {
+  font-size: 70%;
+}
+
+body.layout-compact .card--device-status .card {
+  height: 250px;
+  margin-bottom: 1px;
+  border-radius: 0;
+}
+
+.block {
+  position: relative;
+  min-height: 450px;
+  h1 {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.block-footer {
+  width: calc(100% - 20px * 2);
+  min-height: 130px;
+  position: absolute;
+  bottom: 20px;
+}

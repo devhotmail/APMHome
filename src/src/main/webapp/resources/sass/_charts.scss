@@ -1,0 +1,95 @@
+.jqplot-point-label, .jqplot-pie-series.jqplot-data-label {
+  color: $inuit-base-text-color;
+  font-size: 11px;
+}
+
+.chart-device-stat {
+  height: 100px;
+
+  .jqplot-target {
+    margin: 0;
+  }
+
+  .jqplot-grid-canvas {
+    display: none;
+  }
+
+  .jqplot-axis.jqplot-xaxis, .jqplot-axis.jqplot-yaxis, .jqplot-title {
+    display: none;
+  }
+
+  .jqplot-table-legend-swatch {
+    display: none;
+  }
+
+  .jqplot-highlighter-tooltip {
+    padding: 1em;
+    font-size: 16px;
+    background-color: $gray10;
+    color: $white;
+  }
+
+  &.horizontal {
+    .jqplot-point-label {
+      @include inuit-font-size($inuit-base-font-size);
+    }
+    .jqplot-table-legend-label {
+      background-color: transparent;
+      color: $white;
+      @include inuit-font-size($inuit-heading-size-5);
+    }
+
+    table.jqplot-table-legend {
+      border: 0;
+      width: 100%;
+      position: static !important;
+      background: transparent;
+      margin-top: .5em;
+      margin-bottom: 0;
+    }
+  }
+
+  &.vertical {
+    width: 80px;
+    height: 420px;
+    margin-top: -20px;
+
+    .jqplot-point-label {
+      @include inuit-font-size(13px);
+    }
+
+    .jqplot-table-legend-label {
+      background-color: transparent;
+      vertical-align: top;
+      position: relative;
+      @include inuit-font-size($inuit-base-font-size);
+
+      &:before {
+        content: '';
+        display: block;
+        width: 100px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 1px;
+        background-color: $gray7;
+      }
+    }
+    tr.jqplot-table-legend:last-child {
+      .jqplot-table-legend-label:before {
+        display: none;
+      }
+    }
+
+    table.jqplot-table-legend {
+      margin: 65px 0 0 0;
+      height: 100%;
+      position: absolute !important;
+      right: auto !important;
+      left: -30px !important;
+      background: transparent;
+      margin-right: 0;
+
+    }
+  }
+}

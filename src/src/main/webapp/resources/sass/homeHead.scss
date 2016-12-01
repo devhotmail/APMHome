@@ -1,0 +1,29 @@
+@import "predix";
+@import "objects";
+@import "charts";
+
+.card--summary {
+  min-height: 100px;
+  color: white;
+  > *:not(:last-child) {
+    border-right: 1px solid $gray9;
+  }
+}
+
+.text--unit {
+  font-size: 70%;
+}
+
+body.layout-compact .card--device-status .card {
+  height: 250px;
+  margin-bottom: 1px;
+  border-radius: 0;
+}
+
+.block {
+  position: relative;
+}
+
+.jqplot-point-label {
+  transform: translateX(10px);
+}
