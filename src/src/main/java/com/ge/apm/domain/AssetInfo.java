@@ -142,6 +142,10 @@ public class AssetInfo implements Serializable {
     @Column(name = "last_qa_date")
     @Temporal(TemporalType.DATE)
     private Date lastQaDate;
+    @Column(name = "last_stocktake_date")
+    @Temporal(TemporalType.DATE)
+    private Date lastStockTakeDate;
+    
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "purchase_price")
     private Double purchasePrice;
@@ -481,6 +485,14 @@ public class AssetInfo implements Serializable {
 
     public void setLastQaDate(Date lastQaDate) {
         this.lastQaDate = lastQaDate;
+    }
+
+    public Date getLastStockTakeDate() {
+        return lastStockTakeDate;
+    }
+
+    public void setLastStockTakeDate(Date lastStockTakeDate) {
+        this.lastStockTakeDate = lastStockTakeDate;
     }
 
     public Double getPurchasePrice() {
