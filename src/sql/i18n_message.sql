@@ -68,7 +68,7 @@ INSERT INTO "i18n_message" VALUES (63, 'label','Upload', '上传','Upload',null,
 INSERT INTO "i18n_message" VALUES (65, 'label','All', '全部','All',null,-1);
 INSERT INTO "i18n_message" VALUES (66, 'label','From', '从','From',null,-1);
 INSERT INTO "i18n_message" VALUES (67, 'label','To', '到','To',null,-1);
-INSERT INTO "i18n_message" VALUES (65, 'label','Execute', '执行','Execute',null,-1);
+INSERT INTO "i18n_message" VALUES (68, 'label','Execute', '执行','Execute',null,-1);
 
 -- menu item names  ( id from 200 to  399)
 
