@@ -7,7 +7,7 @@
     
     <ui:define name="preRenderView">
         <f:metadata>
-            <f:viewParam name="startTime" value="#{pmOrderController.filterStartTime}"/>
+            <f:viewParam name="model" value="#{pmOrderController.filterStartTime}"/>
         </f:metadata>
         <f:event type="preRenderView" listener="#{pmOrderController.setStartTimeFilter()}"/>
     </ui:define>
@@ -115,7 +115,7 @@
         <p:overlayPanel widgetVar="panelFilterStartTime" for=":PmOrderListForm:datalist:filterStartTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varStartTimeFrom" value="#{pmOrderController.varStartTimeFrom}" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar widgetVar="varStartTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
                 <p:calendar widgetVar="varStartTimeTo" value="#{pmOrderController.varStartTimeTo}" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>

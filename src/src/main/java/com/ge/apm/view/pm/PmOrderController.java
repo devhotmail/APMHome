@@ -18,13 +18,9 @@ import com.ge.apm.domain.PmOrder;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
-import com.ge.apm.view.asset.AssetInfoController;
 import com.ge.apm.view.sysutil.UserContextService;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
@@ -290,20 +286,12 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         }
 
         public void setStartTimeFilter(){
-            if(filterStartTime==null)  return;
+            if(filterStartTime==null || !"1".equals(filterStartTime))  return;
             if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            //Date startTime = new Date();
-            try {
-                varStartTimeFrom = sdf.parse(filterStartTime);
-            } catch (ParseException ex) {
-                Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
-                return;
-            }
-            searchFilters.add(new SearchFilter("startTime", SearchFilter.Operator.GTE, varStartTimeFrom));
-            //一周内，则是保修到期时间在当前时间和一周后时间之间
+            Date startTime = new Date();
+            //一周内，则是在一周后时间之前所有
             Calendar c = Calendar.getInstance();
-            c.setTime(varStartTimeFrom);
+            c.setTime(startTime);
             c.add(Calendar.DAY_OF_WEEK, 7);
             varStartTimeTo = c.getTime();
             searchFilters.add(new SearchFilter("startTime", SearchFilter.Operator.LTE, varStartTimeTo));
@@ -312,17 +300,8 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
             filterIsFinished = "false";
         }
         
-        private Date varStartTimeFrom = null;
         private Date varStartTimeTo = null;
         private String startFormatTime = null;
-
-        public Date getVarStartTimeFrom() {
-            return varStartTimeFrom;
-        }
-
-        public void setVarStartTimeFrom(Date varStartTimeFrom) {
-            this.varStartTimeFrom = varStartTimeFrom;
-        }
 
         public Date getVarStartTimeTo() {
             return varStartTimeTo;
@@ -334,15 +313,11 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 
         public String getStartFormatTime() {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-            if (varStartTimeFrom==null && varStartTimeTo==null){
+            if (varStartTimeTo==null){
                 return startFormatTime;
-            } else if (varStartTimeFrom==null){
-                return "~"+sdf.format(varStartTimeTo);
-            } else if (varStartTimeTo==null) {
-                return sdf.format(varStartTimeFrom)+"~";
             } else {
-                return  sdf.format(varStartTimeFrom)+"~"+sdf.format(varStartTimeTo);
-            }
+                return "~"+sdf.format(varStartTimeTo);
+            } 
         }
 
         public void setStartFormatTime(String startFormatTime) {

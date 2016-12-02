@@ -7,7 +7,7 @@
     <ui:define name="preRenderView">
         <f:metadata>
             <f:viewParam name="assetStatus" value="#{assetInfoController.filterAssetStatus}"/>
-            <f:viewParam name="lastPmDate" value="#{assetInfoController.filterLastPmDate}"/>
+            <f:viewParam name="model" value="#{assetInfoController.filterWarrantyDate}"/>
         </f:metadata>
         <f:event type="preRenderView" listener="#{assetInfoController.setAssetStatusFilter()}"/>
     </ui:define>
@@ -82,6 +82,14 @@
                             </f:facet>
                             <h:outputText value="#{fieldMsg.fieldValue('assetStatus',item.status)}"/>
                         </p:column>
+                        <p:column headerText="#{msg.warrantyDate}" sortBy="#{item.warrantyDate}" filterBy="#{item.warrantyDate}" filterMatchMode="GTE">
+                            <f:facet name="filter">
+                                <p:inputText id="filterWarrantyDate" widgetVar="varFilterWarrantyDate" value="#{assetInfoController.warrantyFormatTime}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.warrantyDate}">
+                                <f:convertDateTime pattern="yyyy/MM/dd" />
+                            </h:outputText>
+                        </p:column>
                         <f:facet name="{Toolbar}">
                             <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetInfoController.prepareCreate}" action="Create?faces-redirect=true&amp;actionName=Create" />
                             <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" action="#{assetInfoController.getViewPage('Detail','View')}"  disabled="#{empty assetInfoController.selected}" >
@@ -96,6 +104,17 @@
                 </h:form>
             </div>
         </div>
+        
+        <p:overlayPanel widgetVar="panelFilterWarrantyDate" for=":AssetInfoListForm:datalist:filterWarrantyDate" dismissable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{msg.From}"/>
+                <p:calendar widgetVar="varWarrantyDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:outputLabel value="#{msg.To}"/>
+                <p:calendar widgetVar="varWarrantyDateTo" value="#{assetInfoController.varWarrantyDateTo}" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+            </h:panelGrid>
+            <p:commandButton onclick="setDateFilter('varDataList','varFilterWarrantyDate','varWarrantyDateFrom','varWarrantyDateTo'); PF('panelFilterWarrantyDate').hide();" title="#{msg.Confirm}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="PF('panelFilterWarrantyDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
+        </p:overlayPanel>
 
     </ui:define>
 

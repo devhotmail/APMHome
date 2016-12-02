@@ -19,7 +19,6 @@ import com.ge.apm.service.insp.InspectionService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.asset.AssetInfoController;
 import com.ge.apm.view.sysutil.UserContextService;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -373,19 +372,12 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
     }
 
     public void setStartTimeFilter(){
-        if(filterStartTime==null)  return;
+        if(filterStartTime==null || !"1".equals(filterStartTime))  return;
         if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            varStartTimeFrom = sdf.parse(filterStartTime);
-        } catch (ParseException ex) {
-            Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
-        searchFilters.add(new SearchFilter("startTime", SearchFilter.Operator.GTE, varStartTimeFrom));
-        //2个月内，则是保修到期时间在当前时间和2个月后时间之间
+        //2个月内，则是在2个月后时间之前所有
+        Date startTime = new Date();
         Calendar c = Calendar.getInstance();
-        c.setTime(varStartTimeFrom);
+        c.setTime(startTime);
         c.add(Calendar.MONTH, 2);
         varStartTimeTo = c.getTime();
         searchFilters.add(new SearchFilter("startTime", SearchFilter.Operator.LTE, varStartTimeTo));
@@ -394,17 +386,8 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
         filterIsFinished = "false";
     }
 
-    private Date varStartTimeFrom = null;
     private Date varStartTimeTo = null;
     private String startFormatTime = null;
-
-    public Date getVarStartTimeFrom() {
-        return varStartTimeFrom;
-    }
-
-    public void setVarStartTimeFrom(Date varStartTimeFrom) {
-        this.varStartTimeFrom = varStartTimeFrom;
-    }
 
     public Date getVarStartTimeTo() {
         return varStartTimeTo;
@@ -416,15 +399,11 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
 
     public String getStartFormatTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        if (varStartTimeFrom==null && varStartTimeTo==null){
+        if (varStartTimeTo==null){
             return startFormatTime;
-        } else if (varStartTimeFrom==null){
-            return "~"+sdf.format(varStartTimeTo);
-        } else if (varStartTimeTo==null) {
-            return sdf.format(varStartTimeFrom)+"~";
         } else {
-            return  sdf.format(varStartTimeFrom)+"~"+sdf.format(varStartTimeTo);
-        }
+            return "~"+sdf.format(varStartTimeTo);
+        } 
     }
 
     public void setStartFormatTime(String startFormatTime) {

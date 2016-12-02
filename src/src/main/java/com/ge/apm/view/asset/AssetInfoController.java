@@ -17,7 +17,6 @@ import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.text.MessageFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -300,37 +299,55 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public void setAssetStatusFilter(){
-        if(filterAssetStatus==null && filterLastPmDate == null)  return;
+        if(filterAssetStatus==null && filterWarrantyDate == null)  return;
         if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
         if (filterAssetStatus != null) {
             searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, filterAssetStatus));
         }
-        if (filterLastPmDate != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date lastPmDate = new Date();
-            try {
-                lastPmDate = sdf.parse(filterLastPmDate);
-            } catch (ParseException ex) {
-                Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
-                return;
-            }
-            searchFilters.add(new SearchFilter("lastPmDate", SearchFilter.Operator.GTE, lastPmDate));
-            //2个月内，则是保修到期时间在当前时间和2个月后时间之间
+        if (filterWarrantyDate != null && "1".equals(filterWarrantyDate)) {
+            Date warrantyDate = new Date();
+            //2个月内，则是保修到期时间在2个月后时间之前所有
             Calendar c = Calendar.getInstance();
-            c.setTime(lastPmDate);
+            c.setTime(warrantyDate);
             c.add(Calendar.MONTH, 2);
-            searchFilters.add(new SearchFilter("lastPmDate", SearchFilter.Operator.LTE, c.getTime()));
+            varWarrantyDateTo = c.getTime();
+            searchFilters.add(new SearchFilter("warrantyDate", SearchFilter.Operator.LTE, varWarrantyDateTo));
+            filterWarrantyDate = null;
         }
     }
     
-    private String filterLastPmDate = null;
+    private String filterWarrantyDate = null;
 
-    public String getFilterLastPmDate() {
-        return filterLastPmDate;
+    public String getFilterWarrantyDate() {
+        return filterWarrantyDate;
     }
 
-    public void setFilterLastPmDate(String filterLastPmDate) {
-        this.filterLastPmDate = filterLastPmDate;
+    public void setFilterWarrantyDate(String filterWarrantyDate) {
+        this.filterWarrantyDate = filterWarrantyDate;
+    }
+    
+    private Date varWarrantyDateTo = null;
+    private String warrantyFormatTime = null;
+
+    public Date getVarWarrantyDateTo() {
+        return varWarrantyDateTo;
+    }
+
+    public void setVarWarrantyDateTo(Date varWarrantyDateTo) {
+        this.varWarrantyDateTo = varWarrantyDateTo;
+    }
+
+    public String getWarrantyFormatTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        if (varWarrantyDateTo==null){
+            return warrantyFormatTime;
+        } else {
+            return "~"+sdf.format(varWarrantyDateTo);
+        } 
+    }
+
+    public void setWarrantyFormatTime(String warrantyFormatTime) {
+        this.warrantyFormatTime = warrantyFormatTime;
     }
 
 }
