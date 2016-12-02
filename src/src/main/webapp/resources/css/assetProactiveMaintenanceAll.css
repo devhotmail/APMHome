@@ -1,5 +1,6 @@
 @charset "UTF-8";
-html{font-size:.9375em;line-height:1.33333;background-color:var(--px-base-background-color,#fff);color:var(--px-base-text-color,#000);overflow-y:scroll;min-height:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;text-size-adjust:100%;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+html{font-size:.9375em;line-height:1.33333;overflow-y:scroll;min-height:100%}
+:host,html{background-color:#fff;color:#000;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;text-size-adjust:100%;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
 body{margin:0}
 article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}
 audio,canvas,progress,video{display:inline-block;vertical-align:baseline}
@@ -325,19 +326,19 @@ small{font-size:80%}
 sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
 sup{top:-.5em}
 sub{bottom:-.25em}
-.btn{display:inline-block;overflow:visible;height:2em;margin:0;border:1px solid var(--px-btn-border-color,#b1b1bc);border-radius:3px;padding:0 1em;box-shadow:var(--px-btn-shadow--light,0 1px 0 rgba(0,0,0,.1));font:inherit;line-height:calc(2em - 2px);-webkit-font-smoothing:antialiased;cursor:pointer;text-align:center;text-decoration:none;text-transform:none;white-space:nowrap;background-color:var(--px-btn-background,#e4e4ea)}
-.btn,.btn:active,.btn:hover,.btn:link,.btn:visited{color:var(--px-btn-color,#000)}
-.btn:hover{border-color:var(--px-btn-border-color--hover,#9999a3);box-shadow:var(--px-btn-shadow,0 1px 0 rgba(0,0,0,.15));background-color:var(--px-btn-background--hover,#b1b1bc)}
-.btn:active{border-color:var(--px-btn-border-color--pressed,#7c7c84);box-shadow:none;background-color:var(--px-btn-background--pressed,#9999a3)}
+.btn{display:inline-block;overflow:visible;height:2em;margin:0;border:1px solid #b1b1bc;border-radius:3px;padding:0 1em;box-shadow:0 1px 0 rgba(0,0,0,.1);font:inherit;line-height:calc(2em - 2px);-webkit-font-smoothing:antialiased;cursor:pointer;text-align:center;text-decoration:none;text-transform:none;white-space:nowrap;background-color:#e4e4ea}
+.btn,.btn:active,.btn:hover,.btn:link,.btn:visited{color:#000}
+.btn:hover{border-color:#9999a3;box-shadow:0 1px 0 rgba(0,0,0,.15);background-color:#b1b1bc}
+.btn:active{border-color:#7c7c84;box-shadow:none;background-color:#9999a3}
 .btn:active{outline:0}
 @-moz-document url-prefix(){.btn:not(button){line-height:1.8em}
 }
 button.btn{-webkit-appearance:button}
 .btn+.btn{margin-left:.66667rem}
-.btn--primary{border-color:var(--px-btn-primary-border-color,#2b5ea2);box-shadow:var(--px-btn-shadow,0 1px 0 rgba(0,0,0,.15));background-color:var(--px-btn-primary-background,#3e87e8)}
-.btn--primary,.btn--primary:active,.btn--primary:hover,.btn--primary:link,.btn--primary:visited{color:var(--px-btn-primary-color,#fff)}
-.btn--primary:hover{border-color:transparent;background-color:var(--px-btn-primary-background--hover,#3573c5)}
-.btn--primary:active{border-color:transparent;background-color:var(--px-btn-primary-background--pressed,#2b5ea2)}
+.btn--primary{border-color:#2b5ea2;box-shadow:0 1px 0 rgba(0,0,0,.15);background-color:#3e87e8}
+.btn--primary,.btn--primary:active,.btn--primary:hover,.btn--primary:link,.btn--primary:visited{color:#fff}
+.btn--primary:hover{border-color:transparent;background-color:#3573c5}
+.btn--primary:active{border-color:transparent;background-color:#2b5ea2}
 .btn--large{font-size:1.33333rem}
 .clearfix:after{content:"";display:table;clear:both}
 .layout-wrapper .layout-main{padding-left:0;padding-right:0}
@@ -403,7 +404,7 @@ table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbd
 .card--summary{background-color:#525156;min-height:100px;color:#fff}
 .card--summary>:not(:last-child){border-right:1px solid #3b3b3f}
 .card--summary .divide-line-bottom{border-bottom:1px solid #3b3b3f}
-.jqplot-pie-series.jqplot-data-label,.jqplot-point-label{color:var(--px-base-text-color,#000);font-size:11px}
+.jqplot-pie-series.jqplot-data-label,.jqplot-point-label{color:#000;font-size:11px}
 .chart-device-stat{height:100px}
 .chart-device-stat .jqplot-target{margin:0}
 .chart-device-stat .jqplot-grid-canvas{display:none}

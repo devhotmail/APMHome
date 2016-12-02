@@ -23,29 +23,3 @@ table.jqplot-table-legend {
 .card--summary {
   min-height: 128px;
 }
-
-body.layout-compact .card--device-status .card {
-  height: 250px;
-  margin-bottom: 1px;
-  border-radius: 0;
-}
-
-.block {
-  position: relative;
-  min-height: 450px;
-  .text--center {
-    margin: 0;
-    position: absolute;
-    font-weight: 200;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-}
-
-.block-footer {
-  width: calc(100% - 20px * 2);
-  min-height: 130px;
-  position: absolute;
-  bottom: 20px;
-}
