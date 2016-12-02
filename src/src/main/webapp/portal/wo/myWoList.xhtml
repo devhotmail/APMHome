@@ -36,7 +36,7 @@
                         <p:ajax event="filter" listener="#{workOrderController.onFilter}" update=":WorkOrderListForm:processButton"/>
 
                         <p:column width="70" styleClass="textCenter"  headerText="#{msg.casePriority}" sortBy="#{item.casePriority}" filterBy="#{item.casePriority}" filterMatchMode="EQ">
-                            <center><h:outputText value="#{item.casePriority}" class="priorityItem priorityItem#{item.casePriority}"/></center>
+                            <h:outputText value="#{item.casePriority}" class="priorityItem priorityItem#{item.casePriority}"/>
                         </p:column>
                         <p:column headerText="#{msg.requestTime}" sortBy="#{item.requestTime}" filterBy="#{item.requestTime}" filterMatchMode="GTE">
                             <f:facet name="filter">

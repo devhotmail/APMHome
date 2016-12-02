@@ -33,7 +33,7 @@
                     <p:ajax event="filter" listener="#{pmOrderController.onFilter}" update="createButton deleteButton"/>
 
                       <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
-                        	<center><h:outputText value="#{item.name}" /></center>
+                        	<h:outputText value="#{item.name}" />
                     </p:column>
                     <p:column headerText="#{msg.assetName}" sortBy="#{item.assetName}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.assetName}"/>
