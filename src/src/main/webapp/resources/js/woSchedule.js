@@ -1,4 +1,4 @@
-funcion scheduleSkin() {
+function scheduleSkin() {
 
 
 }

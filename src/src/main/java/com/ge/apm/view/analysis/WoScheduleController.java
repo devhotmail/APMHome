@@ -1,5 +1,6 @@
 package com.ge.apm.view.analysis;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
 import com.google.common.base.Function;
@@ -9,7 +10,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import org.joda.time.DateTime;
-import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.primefaces.model.DefaultScheduleEvent;
@@ -28,6 +28,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +36,8 @@ import java.util.Map;
 @ManagedBean
 @ViewScoped
 public class WoScheduleController extends SqlConfigurableChartController {
-    private static final Logger log = LoggerFactory.getLogger(WoScheduleController.class);
-    private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+    private final static Logger log = LoggerFactory.getLogger(WoScheduleController.class);
+    private final static DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     private final Map<String, String> queries;
     private final JdbcTemplate jdbcTemplate;
     private final Map<Integer, String> eventTypes;
@@ -105,6 +106,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
                                 event.setData(input);
                                 event.setAllDay(false);
                                 event.setEditable(false);
+                                event.setStyleClass(String.format("event-type-%s %s", input.getTypeId(), input.isClosed() ? "closed" : ""));
                                 return event;
                             }
                         });
@@ -120,7 +122,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
         return jdbcTemplate.query(queries.get("inspection"), new RowMapper<Event>() {
             @Override
             public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new Event(rs.getInt("order_type"), eventTypes.get(rs.getInt("order_type")), rs.getBoolean("is_finished"), rs.getString("name"), rs.getTimestamp("start_time"), rs.getTimestamp("end_time"), rs.getTimestamp("create_time"), rs.getString("creator_name"), rs.getString("location_name"));
+                return new Event(rs.getInt("order_type"), eventTypes.get(rs.getInt("order_type")), rs.getBoolean("is_finished"), rs.getString("name"), rs.getTimestamp("start_time"), Optional.fromNullable(rs.getTimestamp("end_time")).or(new Timestamp(new DateTime(rs.getTimestamp("start_time")).plusHours(1).getMillis())), Optional.fromNullable(rs.getTimestamp("create_time")).or(rs.getTimestamp("start_time")), rs.getString("creator_name"), rs.getString("location_name"));
             }
         }, start, end, siteId, hospitalId, userId);
     }
@@ -129,7 +131,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
         return jdbcTemplate.query(queries.get("maintenance"), new RowMapper<Event>() {
             @Override
             public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new Event(4, eventTypes.get(4), rs.getBoolean("is_closed"), String.format("WorkOrder: %s, Step: %s", rs.getString("name"), rs.getString("step_name")), rs.getTimestamp("start_time"), rs.getTimestamp("end_time"), rs.getTimestamp("create_time"), rs.getString("creator_name"), rs.getString("location_name"));
+                return new Event(4, eventTypes.get(4), rs.getBoolean("is_closed"), String.format("WorkOrder: %s, Step: %s", rs.getString("name"), rs.getString("step_name")), rs.getTimestamp("start_time"), Optional.fromNullable(rs.getTimestamp("end_time")).or(new Timestamp(new DateTime(rs.getTimestamp("start_time")).plusHours(1).getMillis())), Optional.fromNullable(rs.getTimestamp("create_time")).or(rs.getTimestamp("start_time")), rs.getString("creator_name"), rs.getString("location_name"));
             }
         }, start, end, siteId, hospitalId, userId);
     }
@@ -138,16 +140,21 @@ public class WoScheduleController extends SqlConfigurableChartController {
         return jdbcTemplate.query(queries.get("preventiveMaintenance"), new RowMapper<Event>() {
             @Override
             public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new Event(5, eventTypes.get(5), rs.getBoolean("is_finished"), rs.getString("name"), rs.getTimestamp("start_time"), rs.getTimestamp("end_time"), rs.getTimestamp("create_time"), rs.getString("creator_name"), rs.getString("location_name"));
+                return new Event(5, eventTypes.get(5), rs.getBoolean("is_finished"), rs.getString("name"), rs.getTimestamp("start_time"), Optional.fromNullable(rs.getTimestamp("end_time")).or(new Timestamp(new DateTime(rs.getTimestamp("start_time")).plusHours(1).getMillis())), Optional.fromNullable(rs.getTimestamp("create_time")).or(rs.getTimestamp("start_time")), rs.getString("creator_name"), rs.getString("location_name"));
             }
         }, start, end, siteId, hospitalId, userId);
     }
 
+
     private String from(Date date) {
-        return new DateTime(date).toString(formatter);
+        return from(date, "yyyy-MM-dd");
     }
 
-    private Date from(String date) {
+    private static String from(Date date, String format) {
+        return new DateTime(date).toString(DateTimeFormat.forPattern(format));
+    }
+
+    private static Date from(String date) {
         return formatter.parseDateTime(date).toDate();
     }
 
@@ -180,8 +187,11 @@ public class WoScheduleController extends SqlConfigurableChartController {
         private String typeName;
         private boolean isClosed;
         private String title;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private Date start;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private Date end;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private Date created;
         private String creator;
         private String location;
@@ -200,7 +210,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
 
         @Override
         public String toString() {
-            return JsonMapper.nonEmptyMapper().toJson(this);
+            return String.format("<div class=\"event-tooltip u-p-\"><div class=\"title u-mb--\">%s</div><div>%s</div><div>%s-%s</div><div class=\"u-mv-\">任务于 %s 由 %s 创建</div><div>%s</div></div>", title, from(start, "yyyy-MM-dd"), from(start, "HH:mm"), from(end, "HH:mm"), from(created, "yyyy-MM-dd"), creator, location);
         }
 
         public int getTypeId() {

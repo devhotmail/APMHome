@@ -54,40 +54,8 @@
             </div>
             <div class="ui-g-12">
                 <p:schedule id="schedule" value="#{woScheduleController.model}" widgetVar="myschedule"
-                            timeZone="GMT+8" tooltip="true">
-                    <p:ajax event="dateSelect" listener="#{scheduleView.onDateSelect}" update="eventDetails"
-                            oncomplete="PF('eventDialog').show();"/>
-                    <p:ajax event="eventSelect" listener="#{scheduleView.onEventSelect}"
-                            update="eventDetails"
-                            oncomplete="PF('eventDialog').show();"/>
-                    <p:ajax event="eventMove" listener="#{scheduleView.onEventMove}" update="messages"/>
-                    <p:ajax event="eventResize" listener="#{scheduleView.onEventResize}" update="messages"/>
+                            timeZone="GMT+8" tooltip="true" extender="scheduleSkin">
                 </p:schedule>
-
-                <p:dialog widgetVar="eventDialog" header="Event Details" showEffect="clip" hideEffect="clip">
-                    <h:panelGrid id="eventDetails" columns="2">
-                        <p:outputLabel for="title" value="Titles:"/>
-                        <p:inputText id="title" value="#{scheduleView.event.title}" required="true"/>
-
-                        <p:outputLabel for="desc" value="Description:"/>
-                        <p:inputText id="desc" value="#{scheduleView.event.description}" required="true"/>
-
-                        <p:outputLabel for="from" value="From:"/>
-                        <p:calendar id="from" value="#{scheduleView.event.startDate}" timeZone="GMT+2"
-                                    pattern="dd/MM/yyyy HH:mm"/>
-
-                        <p:outputLabel for="to" value="To:"/>
-                        <p:calendar id="to" value="#{scheduleView.event.endDate}" timeZone="GMT+2"
-                                    pattern="dd/MM/yyyy HH:mm"/>
-
-                        <p:outputLabel for="allDay" value="All Day:"/>
-                        <h:selectBooleanCheckbox id="allDay" value="#{scheduleView.event.allDay}"/>
-
-                        <p:commandButton type="reset" value="Reset"/>
-                        <p:commandButton id="addButton" value="Save" actionListener="#{scheduleView.addEvent}"
-                                         oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
-                    </h:panelGrid>
-                </p:dialog>
             </div>
             <div class="ui-g-12" align="right">
                 <span class="status status--1">巡检</span>
