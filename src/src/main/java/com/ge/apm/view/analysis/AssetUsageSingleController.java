@@ -25,6 +25,9 @@ import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.ServerEventInterface;
 
+import java.text.NumberFormat;
+import java.text.DecimalFormat;
+
 @ManagedBean
 @ViewScoped
 public class AssetUsageSingleController implements ServerEventInterface {
@@ -58,6 +61,8 @@ public class AssetUsageSingleController implements ServerEventInterface {
 	private Date endDate = null;
 	private Date currentDate = null;
 	private String assetName = null;
+
+	private NumberFormat cf = new DecimalFormat(",###.##");
     
 	//debug param
 	private long a;
@@ -399,12 +404,8 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			serve_hour = (int) (rs_serve_hour.get(0).get("serve_hour") != null ? rs_serve_hour.get(0).get("serve_hour") : 0);
 		else serve_hour = 0;
 		*/
-
-		a = System.currentTimeMillis();
 		List<Map<String, Object>> rs_inuse = NativeSqlUtil.queryForList(INUSETL, sqlParams);
 		List<Map<String, Object>> rs_dt = NativeSqlUtil.queryForList(DTTL, sqlParams);
-		b = System.currentTimeMillis();
-		System.out.println("SQL Query for Chart 3: " + (b-a));
 
 		Map<String, Object> rs_inuse_map = new HashMap<String, Object>();
 		
@@ -483,13 +484,9 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		deviceUsage.addSeries(cst_inuse);
 		deviceUsage.addSeries(cst_wait);
 
-
-		valueInuse = new Double(inuse_total).toString();
-		valueInuse = valueInuse.substring(0, valueInuse.indexOf(".")+2);
-		valueDT = new Double(dt_total).toString();
-		valueDT = valueDT.substring(0, valueDT.indexOf(".")+2);
-		valueWait = new Double(wait_total).toString();
-		valueWait = valueWait.substring(0, valueWait.indexOf(".")+2);
+		valueInuse =cf.format(inuse_total);
+		valueDT = cf.format(dt_total);
+		valueWait = cf.format(wait_total);
 
 		ChartSeries cst_stat_1 = new BarChartSeries();
 		cst_stat_1.set("total", wait_total);
@@ -502,9 +499,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		deviceStat.addSeries(cst_stat_3);
 		deviceStat.addSeries(cst_stat_1);
 		deviceStat.addSeries(cst_stat_2);		
-
-		b = System.currentTimeMillis();
-		System.out.println("ChartSeries Prepare for Chart 3: " + (b-a));
 	}	
 
 	private void devicePanel(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
@@ -515,12 +509,12 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		rs_panel = NativeSqlUtil.queryForList(VALUESCANTL, sqlParams);
 	
 		if (!rs_panel.isEmpty())	
-			valueScan = (rs_panel.get(0).get("sum")  != null ? rs_panel.get(0).get("sum").toString() : "");
+			valueScan = cf.format(rs_panel.get(0).get("sum")  != null ? (long)rs_panel.get(0).get("sum") : 0);
 
 		rs_panel = NativeSqlUtil.queryForList(VALUEEXPOTL, sqlParams);
 
 		if (!rs_panel.isEmpty())	
-			valueExpo = (rs_panel.get(0).get("sum")  != null ? rs_panel.get(0).get("sum").toString().substring(0, rs_panel.get(0).get("sum").toString().indexOf(".")) : "");
+			valueExpo = cf.format(rs_panel.get(0).get("sum")  != null ? (double)rs_panel.get(0).get("sum") : 0.0);
 		
 	}
 

@@ -16,6 +16,8 @@ import javax.faces.bean.ViewScoped;
 
 import webapp.framework.dao.NativeSqlUtil;
 import java.time.Year;
+import java.text.NumberFormat;
+import java.text.DecimalFormat;
 
 @ManagedBean
 @ViewScoped
@@ -43,17 +45,17 @@ public class AssetPerfAllController implements Serializable {
         private String name;
         private String serial_num;
         private String clinical_dept_name;
-        private double revenue;
-        private long scan;
-        private double expo;
-        private double cost;
-        private double profit;
-        private long repair;
-        private double dt;
+        private String revenue;
+        private String scan;
+        private String expo;
+        private String cost;
+        private String profit;
+        private String repair;
+        private String dt;
 
 
-        public Row (String name, String serial_num, String clinical_dept_name, double revenue, long scan,
-                    double expo, double cost, double profit, long repair, double dt) {
+        public Row (String name, String serial_num, String clinical_dept_name, String revenue, String scan,
+                    String expo, String cost, String profit, String repair, String dt) {
 
             this.name = name;
             this.serial_num = serial_num;
@@ -82,41 +84,41 @@ public class AssetPerfAllController implements Serializable {
             return clinical_dept_name;
         }
 
-        public double getRevenue() {
+        public String getRevenue() {
             
             return revenue;
         }
 
-        public long getScan() {
+        public String getScan() {
             
             return scan;
         }
 
-        public double getExpo() {
+        public String getExpo() {
             
             return expo;
         }
 
-        public double getCost() {
+        public String getCost() {
             
             return cost;
         }
 
-        public double getProfit() {
+        public String getProfit() {
             
             return profit;
         }
 
-        public long getRepair() {
+        public String getRepair() {
             
             return repair;
         }
 
-        public double getDt() {
+        public String getDt() {
             
             return dt;
         }
-
+        
     }
 
 
@@ -278,6 +280,8 @@ public class AssetPerfAllController implements Serializable {
             long repair;
             double dt;
 
+            NumberFormat cf = new DecimalFormat(",###.##");
+
             assetDashBoard.clear();
 
             for (it_1 = rs_db1.iterator(), it_2 = rs_db2.iterator(), it_3 = rs_db3.iterator();
@@ -298,7 +302,7 @@ public class AssetPerfAllController implements Serializable {
                 repair = item_3.get("repair")!=null ? (long)item_3.get("repair") : 0;
                 dt = item_3.get("dt")!=null ? (double)item_3.get("dt") : 0.0;
 
-                assetDashBoard.add(new Row(name, serial_num, clinical_dept_name, revenue, scan, expo, cost, profit, repair, dt));   
+                assetDashBoard.add(new Row(name, serial_num, clinical_dept_name, cf.format(revenue), cf.format(scan), cf.format(expo), cf.format(cost), cf.format(profit), cf.format(repair), cf.format(dt)));   
             }
 
     }

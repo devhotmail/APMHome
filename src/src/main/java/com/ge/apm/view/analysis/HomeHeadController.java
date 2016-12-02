@@ -4,6 +4,7 @@ import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.view.sysutil.*;
 
 import java.text.NumberFormat;
+import java.text.DecimalFormat;
 import java.time.Year;
 
 import java.util.*;
@@ -201,7 +202,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
             pro = pro + (double) item.get("value");
         }
 
-        NumberFormat cf = NumberFormat.getCurrencyInstance(Locale.CHINA);
+        NumberFormat cf = new DecimalFormat(",###.##");//NumberFormat.getCurrencyInstance(Locale.CHINA);
         totalProfit = cf.format(pro);
     }
 
@@ -222,7 +223,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
             value = value + (double) item.get("value");
         }
 
-        NumberFormat cf = NumberFormat.getCurrencyInstance(Locale.CHINA);
+        NumberFormat cf = new DecimalFormat(",###.##");//NumberFormat.getCurrencyInstance(Locale.CHINA);
         profitForecast = cf.format(value);
 
         forecastRevenue.addAll(predictRev);

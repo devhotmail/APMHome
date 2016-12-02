@@ -21,6 +21,9 @@ import javax.faces.bean.ViewScoped;
 import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
 
+import java.text.NumberFormat;
+import java.text.DecimalFormat;
+
 @ManagedBean
 @ViewScoped
 public class HomeDeptHeadController implements Serializable {
@@ -46,6 +49,8 @@ public class HomeDeptHeadController implements Serializable {
     private Date currentDate = null;
     private int hospitalId = -1;
     private int clinical_dept_id = -1;
+
+    private NumberFormat cf = new DecimalFormat(",###.##");
 
     @PostConstruct
     public void init() {
@@ -195,8 +200,8 @@ public class HomeDeptHeadController implements Serializable {
         // Panel Components
         resultSet = NativeSqlUtil.queryForList(VALUESCANTL, sqlParams);
         if(!resultSet.isEmpty()) {
-            valueScan = (resultSet.get(0).get("count") != null ? resultSet.get(0).get("count").toString() : "");
-            valueExpo = (resultSet.get(0).get("sum") != null ? resultSet.get(0).get("sum").toString().substring(0, resultSet.get(0).get("sum").toString().indexOf(".")) : "");
+            valueScan = cf.format(resultSet.get(0).get("count") != null ? (long)resultSet.get(0).get("count") : 0);
+            valueExpo = cf.format(resultSet.get(0).get("sum") != null ? (double)resultSet.get(0).get("sum") : 0.0);
         }
 
     }
@@ -280,8 +285,7 @@ public class HomeDeptHeadController implements Serializable {
                 profit_total += profit_loop;
             }
 
-            valueProfit = new Double(profit_total).toString();
-            valueProfit = valueProfit.substring(0, valueProfit.indexOf(".")+2);
+            valueProfit = cf.format(profit_total);
 
             deviceProfit.clear();
             deviceProfit.addSeries(chartSeriesTypeR);

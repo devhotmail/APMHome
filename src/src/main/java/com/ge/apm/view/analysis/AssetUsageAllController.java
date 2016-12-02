@@ -25,6 +25,9 @@ import com.ge.apm.view.sysutil.UserContextService;
 import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
 
+import java.text.NumberFormat;
+import java.text.DecimalFormat;
+
 @ManagedBean
 @ViewScoped
 public class AssetUsageAllController implements Serializable, ServerEventInterface {
@@ -61,6 +64,8 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 	private Date currentDate = null;
 	private boolean start_bool = false;
 	private boolean end_bool = false;
+
+	private NumberFormat cf = new DecimalFormat(",###.##");
 
 	
 	//debug param
@@ -284,8 +289,9 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 		// Panel Components
 		rs_panel = NativeSqlUtil.queryForList(VALUESCANTL, sqlParams);
 		if (!rs_panel.isEmpty()) {
-			valueScan = (rs_panel.get(0).get("count")  != null ? rs_panel.get(0).get("count").toString() : "");
-			valueExpo = (rs_panel.get(0).get("sum")  != null ? rs_panel.get(0).get("sum").toString().substring(0, rs_panel.get(0).get("sum").toString().indexOf(".")) : "");
+
+			valueScan = cf.format(rs_panel.get(0).get("count")  != null ? (long)rs_panel.get(0).get("count") : 0);
+			valueExpo = cf.format(rs_panel.get(0).get("sum")  != null ? (double)rs_panel.get(0).get("sum") : 0.0);
 		}
 			
 
@@ -411,12 +417,9 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 
 			}
 
-			valueInuse = new Double(inuse_total).toString();
-			valueInuse = valueInuse.substring(0, valueInuse.indexOf(".")+2);
-			valueDT = new Double(dt_total).toString();
-			valueDT = valueDT.substring(0, valueDT.indexOf(".")+2);
-			valueWait = new Double(wait_total).toString();
-			valueWait = valueWait.substring(0, valueWait.indexOf(".")+2);
+			valueInuse =cf.format(inuse_total);
+			valueDT = cf.format(dt_total);
+			valueWait = cf.format(wait_total);
 
 			deviceUsage.clear();
 			deviceUsage.addSeries(cst_inuse);
