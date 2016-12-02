@@ -9,16 +9,9 @@
         <div class="ui-g">
             <div class="ui-g-12">
 
-                <div class="ui-g-5">
-                    <p:link outcome="checkListList" value="#{msg.checkListSetting}">
-                        <f:param name="type" value="1" />
-                    </p:link>
-                </div>
-                <div class="ui-g-7">
-                    <p align="left">
-                        <b>#{msg.InspectionOrder}</b>
+                    <p align="center">
+                        <b>#{msg.Inspection}</b>
                     </p>
-                </div>
 
 
                 <h:form id="InspectionOrderListForm">
@@ -94,11 +87,11 @@
                             <h:outputText value="#{item.isFinished? msg.True2Yes : msg.False2No }"/>
                         </p:column>
                         <p:column headerText="#{msg.comments}" sortBy="#{item.comments}" filterBy="#{item.comments}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.comments}"/>
+                            <h:outputText value="#{item.comments}"  />
                         </p:column>
-                        <p:column headerText="#{msg.paperUrl}" sortBy="#{item.paperUrl}" filterBy="#{item.paperUrl}" filterMatchMode="LIKE">
+                        <p:column headerText="#{msg.paperUrl}" sortBy="#{item.paperUrl}" style="width: 80px">
                             <!--<h:outputText value="#{item.paperUrl}"/>-->
-                            <p:commandButton value="#{msg.Attachment}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s" rendered="#{item.paperUrl gt 0}">
+                            <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" rendered="#{item.paperUrl gt 0}">
                                 <p:fileDownload value="#{attachmentFileService.getFile(item.paperUrl)}" />
                             </p:commandButton>
                         </p:column>

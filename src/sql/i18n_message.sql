@@ -444,6 +444,8 @@ INSERT INTO "i18n_message" VALUES (3013,'message','todayDate', '当前日期',' 
 INSERT INTO "i18n_message" VALUES (3014,'message','Hospital', '院区','Hospital',null,-1);
 INSERT INTO "i18n_message" VALUES (3015,'message','Department', '科室','Department',null,-1);
 INSERT INTO "i18n_message" VALUES (3016,'message','DeleteAllConformation', '您确定要删除所有的自定义配置么？','Are you sure to delete all config created by yourself?',null,-1);
+INSERT INTO "i18n_message" VALUES (3017,'message','invalidSizeMessage', '文件内容不能大于','File size must less than ',null,-1);
+INSERT INTO "i18n_message" VALUES (3018,'message','remainingCharacters', '还有{0}字','{0} characters remaining.',null,-1);
 
 
 -- Chart label/lengend （id from 5000 to 5500）
