@@ -88,7 +88,7 @@
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                         <h:panelGroup  rendered="#{inspectionOrderController.selected.paperUrl != null}">
                             <h:outputText value="#{msg.Attachment}"  />
-                            <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
+                            <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" title="#{msg.download}" class="popupIconButton">
                             <p:fileDownload value="#{attachmentFileService.getFile(inspectionOrderController.selected.paperUrl)}" />
                         </p:commandButton>
                         </h:panelGroup>
@@ -99,8 +99,8 @@
 <!--<p:dialog id="InspectionOrderEditDlg" widgetVar="InspectionOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionOrderController.CRUDActionName} #{msg.InspectionOrder}">-->
             <h:panelGroup id="display">
                 <h:panelGroup >
-                    <p:commandButton rendered="#{inspectionOrderController.deleteAction}" icon="ui-icon-trash" action="#{inspectionOrderController.removeOne()}" value="#{msg.Delete}" style="float:right"/>
-                    <p:commandButton value="#{msg.Return}" action="InspOrderList?faces-redirect=true" immediate="true" style="float:right"/>  
+                    <p:commandButton rendered="#{inspectionOrderController.deleteAction}" icon="ui-icon-trash" action="#{inspectionOrderController.removeOne()}" value="#{msg.Delete}" style="float:left"/>
+                    <p:commandButton value="#{msg.Return}" action="InspOrderList?faces-redirect=true" immediate="true" style="float:left"/>  
                 </h:panelGroup>
             </h:panelGroup>
         </h:form>

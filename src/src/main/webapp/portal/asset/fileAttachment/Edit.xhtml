@@ -9,7 +9,7 @@
     <ui:composition>
 
         <h:form id="AssetFileAttachmentEditForm">
-            <p:fieldset  legend="#{msg.Edit}" style="margin-bottom:20px" rendered="#{assetFileAttachmentController.selected != null}">
+            <p:fieldset  id="editSet" legend="#{msg.Edit}" style="margin-bottom:20px" rendered="#{assetFileAttachmentController.selected != null}">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
 
@@ -27,20 +27,23 @@
                             <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.prepareDialogCallback(assetFileAttachmentController, ':AssetFileAttachmentEditForm:assetName')}" process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg" oncomplete="PF('varSelectAssetDlg').show()"/>
                         </h:panelGroup>
 
-                        <h:panelGroup styleClass="md-inputfield" rendered="#{assetFileAttachmentController.isCreatAction()}">
-                            <p:fileUpload fileUploadListener="#{assetFileAttachmentController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                          multiple="true" update="messages name" sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png|txt|doc|pdf|docx|exe|zip|xml?)$/" />
+                        <h:panelGroup id="upload" rendered="#{assetFileAttachmentController.isCreatAction() and assetFileAttachmentController.selected.name==null}">
+                            <p:fileUpload fileUploadListener="#{assetFileAttachmentController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%" 
+                                          multiple="false" sizeLimit="10000000" update="messages name :AssetFileAttachmentEditForm" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M"  label="#{msg.Add}" />
                             <p:growl id="messages" showDetail="true" />
                         </h:panelGroup>
-                        <h:panelGroup  rendered="#{assetFileAttachmentController.isCreatAction()}">
+                        <h:panelGroup id="namepanel" rendered="#{assetFileAttachmentController.selected.name!=null}">
                             <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{assetFileAttachmentController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}" readonly="true"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <p:commandButton validateClient="false" actionListener="#{assetFileAttachmentController.save}" value="#{msg.Save}" update="display,:AssetFileAttachmentEditForm :AssetFileAttachmentListForm:datalist, :growl" icon="ui-icon-check" />
-                            <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" actionListener="#{assetFileAttachmentController.cancel}" update=":AssetFileAttachmentEditForm :growl"/>
+                            <p:commandButton actionListener="#{assetFileAttachmentController.removeAttachment(assetFileAttachmentController.selected.fileId)}" id="iconOnly" update=":AssetFileAttachmentEditForm" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this" rendered="#{assetFileAttachmentController.isCreatAction()}">
+                                <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
+                            </p:commandButton>
                         </h:panelGroup>
                     </p:panelGrid>
+                        <h:panelGroup>
+                            <p:commandButton validateClient="true" actionListener="#{assetFileAttachmentController.save}" value="#{msg.Save}" update="display,:AssetFileAttachmentEditForm :AssetFileAttachmentListForm:datalist, :growl" icon="ui-icon-check" />
+                            <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-arrow-back" actionListener="#{assetFileAttachmentController.cancel}" update="display,:AssetFileAttachmentEditForm :growl"/>
+                        </h:panelGroup>
 
                 </h:panelGroup>
             </p:fieldset>

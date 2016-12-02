@@ -5,9 +5,13 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
+    <ui:define name="head">
+        <h:outputStylesheet name="css/inspection.css"/>
+    </ui:define>
+    
     <ui:define name="content">
         <p align="center">
-            <b>#{msg.InspectionOrder}</b>
+            <b>#{msg.Inspection}</b>
         </p>
 
         <h:form id="InspectionOrderEditForm">
@@ -41,19 +45,19 @@
                         </p:selectOneMenu>
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">#{msg.ownerOrgId}*</label>
-                        <p:inputText id="ownerOrgId" value="#{inspectionOrderController.selected.ownerOrgName}" readonly="true"/>
+                        <label class="label">#{msg.ownerOrgId}</label>
+                        <p:inputText id="ownerOrgId"   placeholder="#{inspectionOrderController.selected.ownerOrgName}" readonly="true"/>
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">#{msg.startTime}</label>
+                        <label class="label">#{msg.startTime}*</label>
                         <p:calendar id="startTime" pattern="yyyy/MM/dd" value="#{inspectionOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.startTime} #{msg.ValidationRequire}"/>
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">#{msg.endTime}</label>
+                        <label class="label">#{msg.endTime}*</label>
                         <p:calendar id="endTime" pattern="yyyy/MM/dd" value="#{inspectionOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.endTime} #{msg.ValidationRequire}"/>
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">#{msg.period}</label>
+                        <label class="label">#{msg.period}*</label>
                          <p:selectOneMenu id="functionType" value="#{inspectionOrderController.period}" style="width: 100%" required="true" requiredMessage="#{msg.period} #{msg.ValidationRequire}" >
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{fieldMsg.getFieldValueList('inspectionPeriod')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
@@ -61,10 +65,10 @@
                         <!--<p:calendar id="period" pattern="yyyy/MM/dd" value="#{inspectionOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>-->
                     </h:panelGroup>
 
-                    <h:panelGroup>
+<!--                    <h:panelGroup>
                         <label class="label">#{msg.comments}</label>
                         <p:inputText id="comments" value="#{inspectionOrderController.selected.comments}" />
-                    </h:panelGroup>
+                    </h:panelGroup>-->
 
                 </p:panelGrid>
             </p:fieldset>
@@ -73,8 +77,8 @@
             <p:fieldset legend="#{msg.InspectionOrderDetail}" style="margin-bottom:20px">
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                     <h:panelGroup>
-                        <label class="label">#{msg.assetName}</label>
-                        <p:tree id="assetTree" class="tree" style="border:0;" value="#{inspectionOrderController.orgAssetTree}" selection="#{inspectionOrderController.selectedNodes}"  var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
+                        <!--<label class="label">#{msg.assetName}</label>-->
+                        <p:tree id="assetTree" class="tree" style="border:1;height:400px" value="#{inspectionOrderController.orgAssetTree}" selection="#{inspectionOrderController.selectedNodes}"  var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
                             <p:ajax event="select" listener="#{inspectionOrderController.onSelectTreeNode}" update=":InspectionOrderEditForm:dataList"/>
                             <p:ajax event="unselect" listener="#{inspectionOrderController.onUnselectTreeNode}" update=":InspectionOrderEditForm:dataList"/>
 
@@ -90,7 +94,7 @@
                         </p:tree>
                     </h:panelGroup>
 
-                    <p:dataList id="dataList" value="#{inspectionOrderController.selectedNodesList}" var="item"   type="unordered">
+                    <p:dataList id="dataList" value="#{inspectionOrderController.selectedNodesList}" var="item"   type="unordered" emptyMessage="#{msg.noRecordFound}">
                         <f:facet name="header">
                             #{msg.InspectionOrderDetail}
                         </f:facet>
@@ -105,8 +109,8 @@
             <h:panelGroup id="display">
 
                 <h:panelGroup >
-                    <p:commandButton value="#{msg.Save}" action="#{inspectionOrderController.createOrder()}" validateClient="true" style="float:right"/>  
-                    <p:commandButton value="#{msg.Return}" action="InspOrderList?faces-redirect=true" immediate="true" style="float:right"/>  
+                    <p:commandButton value="#{msg.Save}" action="#{inspectionOrderController.createOrder()}" validateClient="true" style="float:left" icon="ui-icon-check" update=":growl"/>  
+                    <p:commandButton value="#{msg.Return}" action="InspOrderList?faces-redirect=true" immediate="true" style="float:left" icon="ui-icon-arrow-back"/>  
                 </h:panelGroup>
             </h:panelGroup>
         </h:form>
