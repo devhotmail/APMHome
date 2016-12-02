@@ -26,9 +26,9 @@
                         <p:inputText id="aliasName" value="#{assetInfoController.selected.aliasName}"/>
                     </h:panelGroup>
                     <p:spacer/>
-                    <h:panelGroup >
-                        <label class="label">#{msg.functionGroup}</label>
-                        <p:selectOneMenu id="functionGroup" value="#{assetInfoController.selected.functionGroup}">
+                    <h:panelGroup>
+                        <label class="label">#{msg.functionType}</label>
+                        <p:selectOneMenu id="functionType" value="#{assetInfoController.selected.functionType}">
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                         </p:selectOneMenu>
@@ -40,9 +40,9 @@
                             <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionGrade')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                         </p:selectOneMenu>
                     </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.functionType}</label>
-                        <p:selectOneMenu id="functionType" value="#{assetInfoController.selected.functionType}" style="width: 100%">
+                    <h:panelGroup >
+                        <label class="label">#{msg.functionGroup}</label>
+                        <p:selectOneMenu id="functionGroup" value="#{assetInfoController.selected.functionGroup}" style="width: 100%">
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                         </p:selectOneMenu>
@@ -58,7 +58,7 @@
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{supplierController.supplierList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                         </p:selectOneMenu>
-                        
+
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.maitanance}</label>
@@ -124,13 +124,17 @@
                         <label class="label">#{msg.assetGroup}</label>
                         <!--<p:inputText id="assetGroup" value="#{assetInfoController.selected.assetGroup}"/>-->
                         <p:selectOneMenu id="assetGroup" value="#{assetInfoController.selected.assetGroup}">
-                            <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                            <f:selectItem itemLabel="#{msg.selectOneMessage}" />
                             <f:selectItems value="#{fieldMsg.getFieldValueList('ownAssetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                         </p:selectOneMenu>
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.assetDeptId}</label>
-                        <p:inputText id="assetDeptId" value="#{assetInfoController.selected.assetDeptId}"/>
+                        <!--<p:inputText id="assetDeptId" value="#{assetInfoController.selected.assetDeptId}"/>-->
+                        <p:selectOneMenu id="assetDeptId" value="#{assetInfoController.selected.assetDeptId}" required="false">
+                            <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue="0"/>
+                            <f:selectItems value="#{assetInfoController.getClinicalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                        </p:selectOneMenu>
                     </h:panelGroup>
                     <p:spacer/>
                     <h:panelGroup >
@@ -222,7 +226,7 @@
                     <h:panelGroup>
                         <label class="label">#{msg.depreciationMethod}</label>
                         <!--<p:inputText id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}"/>-->
-                         <p:selectOneMenu id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}">
+                        <p:selectOneMenu id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}">
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{fieldMsg.getFieldValueList('depreciationMethodList')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                         </p:selectOneMenu>
@@ -233,49 +237,49 @@
             <p:fieldset legend="#{msg.Attachment}" style="margin-bottom:20px">
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                     <h:panelGroup >
-                        <p:dataList id="pictureList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="definition">
+                        <p:dataList id="pictureList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
                             <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 1)}</f:facet>
 
                             #{fileitem.name}
-                            <p:commandButton immediate="true" actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton">
+                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
                                 <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
                             </p:commandButton>
                         </p:dataList>
                         <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                      multiple="true"  sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="pictureList"/>
+                                      multiple="false"  sizeLimit="10000000"  update="pictureList" auto="true" invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
                     </h:panelGroup>
                     <h:panelGroup >
                         <p:dataList id="contractList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
                             <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 2)}</f:facet>
                                 #{fileitem.name}
-                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="contractList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton">
+                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="contractList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
                                 <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
                             </p:commandButton>
                         </p:dataList>
                         <p:fileUpload id="type2" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                      multiple="true"  sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="contractList"/>
+                                      multiple="false"  sizeLimit="10000000"  update="contractList" auto="true" invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
                     </h:panelGroup>
                     <h:panelGroup >
-                        <p:dataList id="manualList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,3)}" var="fileitem" type="definition">
+                        <p:dataList id="manualList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,3)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
                             <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 3)}</f:facet>
                             #{fileitem.name}, 
-                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="manualList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton">
-                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
+                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="manualList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
+                                <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
                             </p:commandButton>
                         </p:dataList>
                         <p:fileUpload id="type3" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                      multiple="true"  sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="manualList"/>
+                                      multiple="false"  sizeLimit="10000000"  update="manualList" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
                     </h:panelGroup>
                     <h:panelGroup >
-                        <p:dataList id="guideList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="definition">
+                        <p:dataList id="guideList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
                             <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 4)}</f:facet>
                                 #{fileitem.name}
-                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="guideList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton">
-                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
+                            <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="guideList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
+                                <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
                             </p:commandButton>
                         </p:dataList>
                         <p:fileUpload id="type4" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                      multiple="true"  sizeLimit="1000000" fileLimit="3" update="guideList"/>
+                                      multiple="false"  sizeLimit="10000000"  update="guideList" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M"  label="#{msg.Add}"/>
                     </h:panelGroup>
                     <h:panelGroup >
                         <p:commandButton value="#{msg.Save}" icon="ui-icon-check" action="#{assetInfoController.applyChange()}" validateClient="true" update=":growl" style="float:right"/>  

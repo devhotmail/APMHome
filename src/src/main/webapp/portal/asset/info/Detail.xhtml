@@ -42,33 +42,33 @@
             <p:tab title="#{msg.BasicInfo}">
                 <p:panelGrid columns="4"  layout="grid" styleClass="ui-panelgrid-blank">
 
-                    <h:panelGroup styleClass="md-inputfield">
+                    <h:panelGroup>
+                        <label class="label">#{msg.name}</label>
                         <p:inputText value="#{assetInfoController.selected.name}" readonly="true"/>
-                        <label>#{msg.name}</label>
                     </h:panelGroup>
-                    <h:panelGroup styleClass="md-inputfield">
+                    <h:panelGroup>
+                        <label class="label">#{msg.vendor}</label>
                         <p:inputText value="#{assetInfoController.selected.vendor}" readonly="true"/>
-                        <label>#{msg.vendor}</label>
                     </h:panelGroup>
-                    <h:panelGroup styleClass="md-inputfield">
+                    <h:panelGroup>
+                        <label class="label">#{msg.departNum}</label>
                         <p:inputText value="#{assetInfoController.selected.departNum}" readonly="true"/>
-                        <label>#{msg.departNum}</label>
                     </h:panelGroup>
-                    <h:panelGroup styleClass="md-inputfield">
+                    <h:panelGroup>
+                        <label class="label">#{msg.clinicalDeptName}</label>
                         <p:inputText value="#{assetInfoController.selected.clinicalDeptName}" readonly="true"/>
-                        <label>#{msg.clinicalDeptName}</label>
                     </h:panelGroup>
-                    <h:panelGroup styleClass="md-inputfield">
+                    <h:panelGroup>
+                        <label class="label">#{msg.purchaseDate}</label>
                         <p:inputText value="#{assetInfoController.selected.purchaseDate}" readonly="true"/>
-                        <label>#{msg.purchaseDate}</label>
                     </h:panelGroup>
-                    <h:panelGroup styleClass="md-inputfield">
+                    <h:panelGroup>
+                        <label class="label">#{msg.warrantyDate}</label>
                         <p:inputText value="#{assetInfoController.selected.warrantyDate}" readonly="true"/>
-                        <label>#{msg.warrantyDate}</label>
                     </h:panelGroup>
-                    <h:panelGroup styleClass="md-inputfield">
+                    <h:panelGroup >
+                        <label class="label">#{msg.purchasePrice}</label>
                         <p:inputText value="#{assetInfoController.selected.purchasePrice}" readonly="true"/>
-                        <label>#{msg.purchasePrice}</label>
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.status}</label>
@@ -146,33 +146,33 @@
         <h:form>
             <p:tabView>
                 <p:tab title="#{fieldMsg.fieldValue('attachmentType', 1)}">
-                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="ordered">
+                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="ordered" emptyMessage="#{msg.noRecordFound}">
                         #{fileitem.name}
-                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
+                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" title="#{msg.download}" class="popupIconButton">
                             <p:fileDownload value="#{attachmentFileService.getFile(fileitem.fileId)}" />
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>
                 <p:tab title="#{fieldMsg.fieldValue('attachmentType', 2)}">
-                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="ordered">
+                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="ordered" emptyMessage="#{msg.noRecordFound}">
                         #{fileitem.name}
-                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
+                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" title="#{msg.download}" class="popupIconButton">
                             <p:fileDownload value="#{attachmentFileService.getFile(fileitem.fileId)}" />
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>
                 <p:tab title="#{fieldMsg.fieldValue('attachmentType', 3)}">
-                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,3)}" var="fileitem" type="ordered">
+                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,3)}" var="fileitem" type="ordered" emptyMessage="#{msg.noRecordFound}">
                         #{fileitem.name}
-                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
+                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" title="#{msg.download}" class="popupIconButton">
                             <p:fileDownload value="#{attachmentFileService.getFile(fileitem.fileId)}" />
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>
                 <p:tab title="#{fieldMsg.fieldValue('attachmentType', 4)}">
-                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="ordered">
+                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="ordered" emptyMessage="#{msg.noRecordFound}">
                         #{fileitem.name}
-                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
+                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" title="#{msg.download}" class="popupIconButton">
                             <p:fileDownload value="#{attachmentFileService.getFile(fileitem.fileId)}" />
                         </p:commandButton>
                     </p:dataList>

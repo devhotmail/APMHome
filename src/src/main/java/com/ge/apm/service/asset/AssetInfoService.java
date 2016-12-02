@@ -27,6 +27,9 @@ public class AssetInfoService {
     AssetInfoRepository assetInfoDao = WebUtil.getBean(AssetInfoRepository.class);
 
     public String getAssetInfoName(Integer id) {
+        if(null==id || id==0)
+            return "";
+        else
             return assetInfoDao.findById(id).getName();
     }
 
