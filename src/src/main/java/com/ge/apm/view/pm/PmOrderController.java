@@ -271,6 +271,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 	}
     
         private String filterStartTime = null;
+        private String filterIsFinished = null;
 
         public String getFilterStartTime() {
             return filterStartTime;
@@ -278,6 +279,14 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 
         public void setFilterStartTime(String filterStartTime) {
             this.filterStartTime = filterStartTime;
+        }
+        
+        public String getFilterIsFinished() {
+            return filterIsFinished;
+        }
+
+        public void setFilterIsFinished(String filterIsFinished) {
+            this.filterIsFinished = filterIsFinished;
         }
 
         public void setStartTimeFilter(){
@@ -292,12 +301,15 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
                 return;
             }
             searchFilters.add(new SearchFilter("startTime", SearchFilter.Operator.GTE, varStartTimeFrom));
-            //2个月内，则是保修到期时间在当前时间和2个月后时间之间
+            //一周内，则是保修到期时间在当前时间和一周后时间之间
             Calendar c = Calendar.getInstance();
             c.setTime(varStartTimeFrom);
             c.add(Calendar.DAY_OF_WEEK, 7);
             varStartTimeTo = c.getTime();
             searchFilters.add(new SearchFilter("startTime", SearchFilter.Operator.LTE, varStartTimeTo));
+            searchFilters.add(new SearchFilter("isFinished", SearchFilter.Operator.EQ, false));
+            filterStartTime = null;
+            filterIsFinished = "false";
         }
         
         private Date varStartTimeFrom = null;
@@ -322,7 +334,15 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 
         public String getStartFormatTime() {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-            return  sdf.format(varStartTimeFrom)+"~"+sdf.format(varStartTimeTo);
+            if (varStartTimeFrom==null && varStartTimeTo==null){
+                return startFormatTime;
+            } else if (varStartTimeFrom==null){
+                return "~"+sdf.format(varStartTimeTo);
+            } else if (varStartTimeTo==null) {
+                return sdf.format(varStartTimeFrom)+"~";
+            } else {
+                return  sdf.format(varStartTimeFrom)+"~"+sdf.format(varStartTimeTo);
+            }
         }
 
         public void setStartFormatTime(String startFormatTime) {

@@ -73,7 +73,7 @@
                     </p:column>
                     <p:column headerText="#{msg.isFinished}" sortBy="#{item.isFinished}" filterBy="#{item.isFinished}" filterMatchMode="EQ">
                         <f:facet name="filter">
-                            <p:selectOneMenu onchange="PF('varDataList').filter()">
+                            <p:selectOneMenu onchange="PF('varDataList').filter()" value="#{pmOrderController.filterIsFinished}">
                                 <f:converter converterId="javax.faces.Boolean" />
                                 <f:selectItem itemLabel="#{msg.All}" itemValue="" />
                                 <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
