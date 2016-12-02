@@ -52,26 +52,32 @@ public class AssetCheckController extends JpaCRUDController<AssetInfo>{
      */
     private List<TreeNode> toNodeList(TreeNode treeNode) {
     	List<TreeNode> nodes = new ArrayList<TreeNode>();
-		if(treeNode.getType().equals("Root")){
+		//if(treeNode.getType().equals("default")){
+    	logger.warn("1current node type is "+ treeNode.getType());
+    	logger.warn("1current rowkey is "+ treeNode.getRowKey());
 			List<TreeNode> orgNodes = treeNode.getChildren();
 			if(!CollectionUtils.isEmpty(orgNodes)){
 				for (TreeNode orgNode : orgNodes) {
+					logger.warn("2current node type is "+ orgNode.getType());
+					logger.warn("2current rowkey is "+ orgNode.getRowKey());
 					if(orgNode.getType().equals("org")){
 						List<TreeNode> assetNodes = orgNode.getChildren();
 						if(!CollectionUtils.isEmpty(assetNodes)){
 							for (TreeNode assetNode : assetNodes) {
+								logger.warn("3current node type is "+ assetNode.getType());
+								logger.warn("3current rowkey is "+ assetNode.getRowKey());
 								nodes.add(assetNode);
 							}
 						}
 					}
 				}
 			}
-		}
+		//}
 		return nodes;
 	}
     
     /**
-     * 
+     *  
      * @param node
      * @param isSelected
      * @return
@@ -103,7 +109,6 @@ public class AssetCheckController extends JpaCRUDController<AssetInfo>{
     				recursion(treeNode,true);
 				}
     		}
-    		
     	}else if(selectedNode.getType().equals("asset")){
         	if(unValidDeviceList.contains(selectedNode)){
         		unValidDeviceList.remove(selectedNode);
@@ -134,19 +139,15 @@ public class AssetCheckController extends JpaCRUDController<AssetInfo>{
     }
     
     public void updateDeviceCheck(List<TreeNode> treeNodes , Date date,boolean isValid){
-
     	if(!CollectionUtils.isEmpty(treeNodes)){
     		if(date == null){
     			date = new Date();
     		}
     		for (TreeNode treeNode : treeNodes) {
-				AssetInfo ai = new AssetInfo();
-				logger.info("current node is "+ treeNode.getRowKey());
-				ai.setId(Integer.parseInt(treeNode.getRowKey().substring("asset_".length())));
-				ai.setHospitalId(this.currentUser.getHospitalId());
-				ai.setLastStockTakeDate(date);
-				ai.setIsValid(isValid);
-				assetInfoDao.save(ai);
+				AssetInfo assetInfo = (AssetInfo) treeNode.getData();
+				assetInfo.setIsValid(isValid);
+				assetInfo.setLastStockTakeDate(date);
+				assetInfoDao.save(assetInfo);
 			}
     	}
     

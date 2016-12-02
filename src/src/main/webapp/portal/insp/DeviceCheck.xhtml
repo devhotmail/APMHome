@@ -11,9 +11,9 @@
                     <div class="card" style="height:400px;">
                         <p:scrollPanel style="width:98%;height:95%;border: 0" mode="native" >
                             <label class="label">#{msg.assetName}</label>
-	 							<p:tree id="deviceTree" class="tree" style="border:0;" value="#{inspectionOrderController.deviceNode}" selection="#{inspectionOrderController.selectedNodes}"  var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
-		                            <p:ajax event="select" listener="#{inspectionOrderController.onSelectDeviceTreeNode}" update=":dataList"/>
-		                            <p:ajax event="unselect" listener="#{inspectionOrderController.onUnSelectDeviceTreeNode}" update=":dataList"/>
+	 							<p:tree id="deviceTree" class="tree" style="border:0;" value="#{assetCheckController.deviceNode}" var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
+		                            <p:ajax event="select" listener="#{assetCheckController.onSelectDeviceTreeNode}" update=":dataList"/>
+		                            <p:ajax event="unselect" listener="#{assetCheckController.onUnSelectDeviceTreeNode}" update=":dataList"/>
 		
 		                            <p:treeNode type="org">
 		                                <h:outputText value="#{node.name}"/>
@@ -29,19 +29,42 @@
                     </div>
                 </div>
                 
-                <div class="ui-g-12 ui-lg-8">
-                    <div class="card" style="height:400px;">
-                    <p:dataList id="dataList" value="#{inspectionOrderController.unSelectedDeviceNodesList}" var="item"   type="unordered">
+                <div class="ui-g-12 ui-lg-4">
+                  <div class="card" style="height:400px;">
+                  	<h:panelGroup>
+                        <label class="label">#{msg.DeviceCheckDate}</label>
+                        <p:calendar id="manufactDate" pattern="yyyy/MM/dd" value="#{assetCheckController.lastStockTakeDate}" 
+                        showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />
+                    </h:panelGroup>
+                   <p:scrollPanel style="width:98%;height:95%;border: 0" mode="native" >
+                    <p:dataList id="dataList" value="#{assetCheckController.unValidDeviceList}" var="item"   type="unordered">
 	                       <f:facet name="header">
-	                            #{msg.InspectionOrderDetail}
+	                            #{msg.AssetInventory}
 	                        </f:facet>
-	                        <h:outputText value="#{item[1].name} #{item[0].name}" />
-	                        <!--#{asset.data.name}-->
-	                        <p:commandButton process="@this" actionListener="#{inspectionOrderController.removeSelectedAssetDevice(asset)}" id="iconOnly" update=":dataList ,:deviceTree" 
-	                        icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>
-	                    </p:dataList>
-                    </div>
+	                        <h:outputText value="#{item.data.name}" />
+	                 </p:dataList>
+               		</p:scrollPanel>
+               		<h:panelGroup >
+	                   	<p:commandButton value="#{msg.Save}" action="#{assetCheckController.deviceCheck(assetCheckController.lastStockTakeDate,assetCheckController.unValidDeviceList)}"
+	                   	 validateClient="true" style="float:right"/>  
+	               	</h:panelGroup>
+                  </div>
                 </div>
+                
+<!--                 <div class="ui-g-12 ui-lg-4">
+                  <div class="card" style="height:400px;">
+                    <h:panelGroup>
+                        <label class="label">#{msg.DeviceCheckDate}</label>
+                        <p:calendar id="manufactDate" pattern="yyyy/MM/dd" value="#{assetCheckController.lastStockTakeDate}" 
+                        showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />
+                    </h:panelGroup>
+                    <BR /> <BR /> <BR />
+                   	<h:panelGroup >
+                    	<p:commandButton value="#{msg.Save}" action="#{assetCheckController.deviceCheck(assetCheckController.lastStockTakeDate,assetCheckController.unValidDeviceList.data)}"
+                    	 validateClient="true" style="float:right"/>  
+               		</h:panelGroup>
+                  </div>
+                </div> -->
                 
               </div>
        </ui:define>        
