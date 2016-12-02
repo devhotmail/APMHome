@@ -36,11 +36,13 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
 }
 
 .event-counts {
-  height: 50px;
+  height: 60px;
 }
 
 .event-count {
-  font-size: 36px;
+  font-size: 50px;
+  font-weight: bold;
+  font-family: "GE Inspira Sans";
 }
 
 @each $num in (1,2,3,4,5,6) {
@@ -54,9 +56,24 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
   border-radius: 5px;
 }
 
+// date prev/next btn
+
+.date-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  color: $dv-basic-blue;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 1px solid $gray4;
+}
+
 .main-body {
 
   .fc {
+    // different event type class
 
     @each $num in (1,2,3,4,5,6) {
       .fc-event.event-type-#{$num} {
@@ -76,10 +93,113 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
         opacity: .5;
       }
     }
+
+    .fc-toolbar {
+      margin-top: 10px;
+      height: 40px;
+      position: relative;
+    }
+
+    .fc-center {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translate3d(-50%, 0, 0);
+    }
+
+    .fc-left {
+      position: absolute;
+      left: 0;
+      top: 0;
+
+      > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        > h2 {
+          width: 170px;
+          text-align: center;
+        }
+      }
+
+      .fc-prev-button {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .fc-next-button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      .fc-today-button {
+        border-radius: 0;
+        border-left-width: 0 !important;
+        border-right-width: 0 !important;
+        box-shadow: none !important;
+      }
+
+      .fc-next-button,
+      .fc-prev-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        color: $dv-basic-blue;
+        background-color: #fff;
+        border: 1px solid $gray4;
+        outline: none!important;
+        box-shadow: none;
+
+        .ink {
+          display: none;
+        }
+      }
+    }
+
+    .ui-widget-header {
+      background-color: #fff!important;
+    }
+
+    .fc-bg .fc-today {
+      background-color: transparent;
+    }
+
+    .fc-row {
+      height: calc((100vh - 450px) / 6)!important;
+    }
+
+    .fc-content-skeleton {
+      .fc-day-number {
+        padding-left: 15px;
+        padding-top: 12px;
+        text-align: left;
+        font-size: 24px;
+      }
+
+      .fc-today {
+        position: relative;
+
+        &::after {
+          position: absolute;
+          left: 10px;
+          top: 5px;
+          z-index: -1;
+          display: block;
+          content: '';
+          border-radius: 50%;
+          background-color: $dv-basic-blue;
+          width: 35px;
+          height: 35px;
+        }
+      }
+    }
   }
 
-  .fc-right {
-    display: none;
+  .calendar-footer {
+    text-align: right;
   }
 
   // reset ui-tooltip default styles

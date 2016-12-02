@@ -52,15 +52,16 @@
             </div>
 
             <div class="u-m u-p calendar card">
-                <p:schedule id="schedule" value="#{woScheduleController.model}" widgetVar="myschedule"
-                            timeZone="GMT+8" tooltip="true" extender="scheduleSkin">
+                <p:schedule id="schedule" value="#{woScheduleController.model}"
+                    widgetVar="myschedule" timeZone="GMT+8" tooltip="true"
+                    leftHeaderTemplate="prev,today,next" centerHeaderTemplate="title" rightHeaderTemplate="">
                 </p:schedule>
-                <div style="text-align: right">
-                  <span class="status status--1">巡检</span>
-                  <span class="status status--2">质控</span>
-                  <span class="status status--3">计量</span>
-                  <span class="status status--4">维修</span>
-                  <span class="status status--5">保养</span>
+                <div class="calendar-footer">
+                  <span class="u-m status status--1">巡检</span>
+                  <span class="u-m status status--2">质控</span>
+                  <span class="u-m status status--3">计量</span>
+                  <span class="u-m status status--4">维修</span>
+                  <span class="u-m status status--5">保养</span>
                 </div>
             </div>
         </h:form>
