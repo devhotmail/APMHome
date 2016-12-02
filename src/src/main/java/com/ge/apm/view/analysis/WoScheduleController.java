@@ -8,11 +8,13 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleModel;
@@ -114,6 +116,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
                 for (DefaultScheduleEvent event : events) {
                     model.addEvent(event);
                 }
+                RequestContext.getCurrentInstance().execute(String.format("updateTopPanel([%s,%s,%s,%s,%s])", inspectionNum, meterNum, qaNum, mtMum, pmNum));
             }
         };
 
