@@ -1,0 +1,17 @@
+@import "predix";
+@import "objects";
+@import "charts";
+
+.block {
+  position: relative;
+}
+
+.jqplot-point-label {
+  transform: translateX(10px);
+}
+
+body.layout-compact {
+  .ui-datatable thead th {
+    border-width: 0;
+  }
+}

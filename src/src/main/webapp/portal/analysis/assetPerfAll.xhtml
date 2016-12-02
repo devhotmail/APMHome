@@ -8,35 +8,31 @@
     <ui:define name="title">Charts</ui:define>
 
     <ui:define name="head">
-        <h:outputStylesheet name="css/homeHead.css"/>
-        <h:outputScript name="js/homeHead.js"/>
+        <h:outputStylesheet name="css/assetPerf.css"/>
+        <h:outputScript name="js/assetPerf.js"/>
     </ui:define>
 
     <ui:define name="content">
         <h:form id="WorkOrderEditForm">
         <div class="ui-g">
-            <div class="ui-g-12">
+            <div class="ui-g-2">
+                <p:menuButton id="selAsset" placeholder="选择设备" value="#{assetPerfAllController.assetName}">
+                    <p:menuitem value="选择单台设备... "
+                                actionListener="#{selectAssetController.prepareDialogCallback(assetUsagePerfController, ':WorkOrderEditForm:selAsset')}"
+                                process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+                                oncomplete="PF('varSelectAssetDlg').show()"
+                                url="/portal/analysis/assetPerfSingle.xhtml"/>
+                    <p:separator/>
+
+                    <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
+                                actionListener="#{assetPerfAllController.submit}" update="WorkOrderEditForm"/>
+                </p:menuButton>
+            </div>
+            <div class="ui-g-10">
                 <div class="text--center u-mv-">
                     <span class="epsilon">#{msg.devicePerfhd}</span>
                 </div>
             </div>
-
-            <div class="ui-g-12">
-                    <div class="block">
-                        <p:menuButton id="selAsset" placeholder="选择设备" value="#{assetPerfAllController.assetName}">
-
-                            <p:menuitem value="选择单台设备... "
-									 actionListener="#{selectAssetController.prepareDialogCallback(assetUsagePerfController, ':WorkOrderEditForm:selAsset')}"
-									 process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
-									 oncomplete="PF('varSelectAssetDlg').show()"
-									 url="/portal/analysis/assetPerfSingle.xhtml"/>
-                            <p:separator/>
-
-                            <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}" actionListener="#{assetPerfAllController.submit}" update="WorkOrderEditForm"/>
-                        </p:menuButton>
-                    </div>
-            </div>
-
 
             <div class="ui-g-12">
                 <div class="card--summary ui-g ui-fluid">
@@ -68,15 +64,13 @@
             </div>
 
             <div class="ui-g-12">
-                <div class="block">
-                        <p:selectOneMenu id="selectedYear" value="#{homeHeadController.selectedYear}">
-                            <p:ajax listener="#{homeHeadController.onSelectedYearChange}" 
-                                    update="value_profit selectedYear barAnnualRevenue pieAnnualRevenue barMonthlyRevenue"/>
-                             <p:ajax listener="#{assetPerfAllController.submit(homeHeadController.selectedYear)}" 
-                                    update="AssetInfoListForm value_top_asset value_top_dept"/>
-                            <f:selectItems value="#{homeHeadController.yearList}"/>
-                        </p:selectOneMenu>
-                </div>
+                <p:selectOneMenu id="selectedYear" value="#{homeHeadController.selectedYear}">
+                    <p:ajax listener="#{homeHeadController.onSelectedYearChange}"
+                            update="value_profit selectedYear barAnnualRevenue pieAnnualRevenue barMonthlyRevenue"/>
+                    <p:ajax listener="#{assetPerfAllController.submit(homeHeadController.selectedYear)}"
+                            update="AssetInfoListForm value_top_asset value_top_dept"/>
+                    <f:selectItems value="#{homeHeadController.yearList}"/>
+                </p:selectOneMenu>
             </div>
 
             <div class="ui-g-12">
@@ -106,7 +100,7 @@
                         <h:form id="AssetInfoListForm">
                         <p:dataTable id="datalist" var="item" value="#{assetPerfAllController.assetDashboard}" 
                                  lazy="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
-                                 rowKey="#{item.name}" sortMode="single" sortOrder="descending" sortBy="#{item.name}" 
+                                 rowKey="#{item.name}" sortMode="single" sortOrder="descending" sortBy="#{item.name}"
                                  rows="20" emptyMessage="#{msg.noRecordFound}"
                                  rowsPerPageTemplate="10,20,30">
 

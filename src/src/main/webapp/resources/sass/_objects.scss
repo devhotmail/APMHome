@@ -316,6 +316,50 @@
       left: inherit;
     }
   }
+
+  $paginator-size: 2rem;
+
+  .ui-paginator {
+
+    .ui-paginator-pages {
+      padding: 0;
+      margin: 0;
+    }
+
+    .ui-paginator-first,
+    .ui-paginator-prev,
+    .ui-paginator-next,
+    .ui-paginator-last,
+    .ui-paginator-pages a {
+      padding: 0;
+      width: $paginator-size;
+      height: $paginator-size;
+      line-height: $paginator-size;
+      text-align: center;
+    }
+
+    .ui-paginator-first,
+    .ui-paginator-prev,
+    .ui-paginator-next,
+    .ui-paginator-last {
+      &:before {
+        left: auto;
+      }
+    }
+
+    select {
+      height: 2rem;
+      min-width: 60px;
+      background-color: transparent;
+      border: 1px solid $inuit-btn-border-color;
+      border-radius: 3px;
+      cursor: pointer;
+      padding: 0 10px;
+      margin: 0 10px;
+      font-size: 14px;
+      appearance: none;
+    }
+  }
 }
 
 table.jqplot-table-legend {

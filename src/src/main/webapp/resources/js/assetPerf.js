@@ -98,12 +98,6 @@
       }]
   };
 
-  window.barMonthlyRevenue = function() {
-    $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
-      seriesColors: ['rgba(96, 189, 103, 1)', 'rgba(250, 164, 58, 1)'],
-    });
-  }
-
   function generateSeriesColorForTicks(ticks, rgba1, rgba2) {
     return ticks.map(function(timeTick) {
       var time = new Date(Date.parse(timeTick));
@@ -119,34 +113,9 @@
     });
   }
 
-  window.barMonthlyForecast = function() {
+  window.barMonthlyRevenue = function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
-      // Provide a custom seriesColors array to override the default colors.
-      seriesDefaults: {
-        pointLabels: {
-          show: false,
-        },
-        rendererOptions: {
-          varyBarColor: true,
-          barWidth: 15
-        }
-      },
       seriesColors: ['rgba(96, 189, 103, 1)', 'rgba(250, 164, 58, 1)'],
-      series: [{
-        // income
-        seriesColors: generateSeriesColorForTicks(this.cfg.ticks, 'rgba(96, 189, 103, 1)', 'rgba(96, 189, 103, .4)'),
-      }, {
-        // revenue
-        seriesColors: generateSeriesColorForTicks(this.cfg.ticks, 'rgba(250, 164, 58, 1)', 'rgba(250, 164, 58, .4)')
-      }],
-      axes: {
-        xaxis: {
-          tickOptions: {
-            labelPosition: 'middle',
-            angle: -90
-          }
-        }
-      }
     });
   }
 
