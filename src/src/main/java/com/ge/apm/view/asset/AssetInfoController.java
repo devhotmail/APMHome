@@ -300,37 +300,37 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public void setAssetStatusFilter(){
-        if(filterAssetStatus==null && filterLastStocktakeDate == null)  return;
+        if(filterAssetStatus==null && filterLastPmDate == null)  return;
         if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
         if (filterAssetStatus != null) {
             searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, filterAssetStatus));
         }
-        if (filterLastStocktakeDate != null) {
+        if (filterLastPmDate != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date lastStocktakeDate = new Date();
+            Date lastPmDate = new Date();
             try {
-                lastStocktakeDate = sdf.parse(filterLastStocktakeDate);
+                lastPmDate = sdf.parse(filterLastPmDate);
             } catch (ParseException ex) {
                 Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
                 return;
             }
-            searchFilters.add(new SearchFilter("lastStockTakeDate", SearchFilter.Operator.GTE, lastStocktakeDate));
+            searchFilters.add(new SearchFilter("lastPmDate", SearchFilter.Operator.GTE, lastPmDate));
             //2个月内，则是保修到期时间在当前时间和2个月后时间之间
             Calendar c = Calendar.getInstance();
-            c.setTime(lastStocktakeDate);
+            c.setTime(lastPmDate);
             c.add(Calendar.MONTH, 2);
-            searchFilters.add(new SearchFilter("lastStockTakeDate", SearchFilter.Operator.LTE, c.getTime()));
+            searchFilters.add(new SearchFilter("lastPmDate", SearchFilter.Operator.LTE, c.getTime()));
         }
     }
     
-    private String filterLastStocktakeDate = null;
+    private String filterLastPmDate = null;
 
-    public String getFilterLastStocktakeDate() {
-        return filterLastStocktakeDate;
+    public String getFilterLastPmDate() {
+        return filterLastPmDate;
     }
 
-    public void setFilterLastStocktakeDate(String filterLastStocktakeDate) {
-        this.filterLastStocktakeDate = filterLastStocktakeDate;
+    public void setFilterLastPmDate(String filterLastPmDate) {
+        this.filterLastPmDate = filterLastPmDate;
     }
 
 }
