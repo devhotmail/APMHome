@@ -6,14 +6,15 @@
                 template="/WEB-INF/template.xhtml">
 
 <ui:define name="content">
+		<h:form id ="deviceCheckForm">
              <div class="ui-g ui-fluid">
                 <div class="ui-g-12 ui-lg-4">
                     <div class="card" style="height:400px;">
                         <p:scrollPanel style="width:98%;height:95%;border: 0" mode="native" >
                             <label class="label">#{msg.assetName}</label>
 	 							<p:tree id="deviceTree" class="tree" style="border:0;" value="#{assetCheckController.deviceNode}" var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
-		                            <p:ajax event="select" listener="#{assetCheckController.onSelectDeviceTreeNode}" update=":dataList"/>
-		                            <p:ajax event="unselect" listener="#{assetCheckController.onUnSelectDeviceTreeNode}" update=":dataList"/>
+		                            <p:ajax event="select" listener="#{assetCheckController.onSelectDeviceTreeNode}" update=":deviceCheckForm:dataList"/>
+		                            <p:ajax event="unselect" listener="#{assetCheckController.onUnSelectDeviceTreeNode}" update=":deviceCheckForm:dataList"/>
 		
 		                            <p:treeNode type="org">
 		                                <h:outputText value="#{node.name}"/>
@@ -21,9 +22,6 @@
 		                            <p:treeNode type="asset" icon="ui-icon-wifi-tethering">
 		                                <h:outputText value="#{node.name}"/>
 		                            </p:treeNode>
-<!-- 		                            <p:treeNode type="checklist" icon="ui-icon-wifi-tethering">
-		                                <h:outputText value="#{node.item}"/>
-		                            </p:treeNode> -->
 	                        	</p:tree>
                         </p:scrollPanel>
                     </div>
@@ -44,30 +42,13 @@
 	                        <h:outputText value="#{item.data.name}" />
 	                 </p:dataList>
 	                <h:panelGroup >
-	                   	<p:commandButton value="#{msg.Save}" actionListener="#{assetCheckController.deviceCheck()}"
-	                   	 validateClient="true" style="float:right"/>  
-	                   <!-- 	action="#{assetCheckController.deviceCheck(assetCheckController.lastStockTakeDate,assetCheckController.unValidDeviceList)}" -->
+	                   	<p:commandButton value="#{msg.Save}" actionListener="#{assetCheckController.deviceCheck()}" validateClient="true" style="float:right"/>  
 	               	</h:panelGroup>
                		</p:scrollPanel>
 
                   </div>
                 </div>
-                
-<!--                 <div class="ui-g-12 ui-lg-4">
-                  <div class="card" style="height:400px;">
-                    <h:panelGroup>
-                        <label class="label">#{msg.DeviceCheckDate}</label>
-                        <p:calendar id="manufactDate" pattern="yyyy/MM/dd" value="#{assetCheckController.lastStockTakeDate}" 
-                        showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />
-                    </h:panelGroup>
-                    <BR /> <BR /> <BR />
-                   	<h:panelGroup >
-                    	<p:commandButton value="#{msg.Save}" action="#{assetCheckController.deviceCheck(assetCheckController.lastStockTakeDate,assetCheckController.unValidDeviceList.data)}"
-                    	 validateClient="true" style="float:right"/>  
-               		</h:panelGroup>
-                  </div>
-                </div> -->
-                
               </div>
+             </h:form>
        </ui:define>        
 </ui:composition>

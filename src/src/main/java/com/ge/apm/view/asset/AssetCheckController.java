@@ -15,6 +15,7 @@ import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
 import webapp.framework.dao.GenericRepository;
+import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
 
@@ -38,6 +39,7 @@ public class AssetCheckController extends JpaCRUDController<AssetInfo>{
         unValidDeviceList = new ArrayList<TreeNode>();
         assetInfoDao = WebUtil.getBean(AssetInfoRepository.class);
         assetTreeNodes = toNodeList(deviceNode);
+        lastStockTakeDate = TimeUtil.now();
     }
     
 	@Override
@@ -181,6 +183,7 @@ public class AssetCheckController extends JpaCRUDController<AssetInfo>{
 	}
 
 	public Date getLastStockTakeDate() {
+		logger.info("last time is " +lastStockTakeDate );
 		return lastStockTakeDate;
 	}
 
