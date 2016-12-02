@@ -70,6 +70,7 @@ INSERT INTO "i18n_message" VALUES (66, 'label','From', '从','From',null,-1);
 INSERT INTO "i18n_message" VALUES (67, 'label','To', '到','To',null,-1);
 INSERT INTO "i18n_message" VALUES (68, 'label','Execute', '执行','Execute',null,-1);
 
+
 -- menu item names  ( id from 200 to  399)
 
 INSERT INTO "i18n_message" VALUES (200, 'label', 'HomePage', '我的主页', 'Dashboard', NULL, -1);
@@ -152,7 +153,7 @@ INSERT INTO "i18n_message" VALUES (413, 'label', 'Supplier', '供应商信息', 
 INSERT INTO "i18n_message" VALUES (414, 'label', 'InspectionOrder', '质检工单', 'Inspection Order', NULL, -1);
 INSERT INTO "i18n_message" VALUES (415, 'label', 'MetrologOrder', '计量工单', 'Inspection Order', NULL, -1);
 INSERT INTO "i18n_message" VALUES (416, 'label', 'QualityCtrlOrder', '巡检工单', 'Inspection Order', NULL, -1);
-
+INSERT INTO "i18n_message" VALUES (417,'label','DeviceCheck', '设备盘点','device check',null,-1);
 
 -- Entity Object field Names  (id from 600 to  1499)
 
