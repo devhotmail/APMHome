@@ -21,7 +21,7 @@
             <div class="flex u-m++ event-counts">
               <div class="flex__item flex flex--col flex--center flex--middle">
                 <div class="flex__item event-count event-type-1">
-                  #{woScheduleController.inspectionNum}
+                  #{woScheduleController.inspNum}
                 </div>
                 <div>巡检</div>
               </div>
@@ -53,7 +53,7 @@
 
             <div class="u-m u-p calendar card">
                 <p:schedule id="schedule" value="#{woScheduleController.model}"
-                    widgetVar="myschedule" timeZone="GMT+8" tooltip="true"
+                    widgetVar="myschedule" timeZone="GMT+8" tooltip="true" timeFormat="HH:mm"
                     leftHeaderTemplate="prev,today,next" centerHeaderTemplate="title" rightHeaderTemplate="">
                 </p:schedule>
                 <div class="calendar-footer">

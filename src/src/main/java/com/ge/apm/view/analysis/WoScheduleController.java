@@ -8,13 +8,11 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleModel;
@@ -47,7 +45,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
     private final int hospitalId;
     private final int userId;
     private ScheduleModel model;
-    private int inspectionNum;
+    private int inspNum;
     private int meterNum;
     private int qaNum;
     private int mtMum;
@@ -63,6 +61,11 @@ public class WoScheduleController extends SqlConfigurableChartController {
         queries.put("inspection", "select distinct io.order_type, io.name, io.start_time, io.end_time, io.create_time, io.creator_name, ai.location_name, io.is_finished from inspection_order_detail iod join inspection_order io on iod.site_id = io.site_id and iod.order_id = io.id join asset_info ai on iod.site_id = ai.site_id and iod.asset_id = ai.id where io.start_time between ? and ? and ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and io.owner_id = ? and io.start_time is not null order by io.start_time");
         queries.put("maintenance", "select wo.name, ws.step_name, ws.start_time, ws.end_time, wo.create_time, wo.creator_name, ai.location_name, wo.is_closed from work_order_step ws join work_order wo on ws.site_id = wo.site_id and ws.work_order_id = wo.id join asset_info ai on wo.site_id = ai.site_id and wo.hospital_id = ai.hospital_id and wo.asset_id = ai.id where ws.start_time between ? and ? and ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and ws.owner_id = ? and ws.start_time is not null order by ws.start_time");
         queries.put("preventiveMaintenance", "select po.name, po.start_time, po.end_time, po.create_time, po.creator_name, ai.location_name, po.is_finished from pm_order po join asset_info ai on po.site_id = ai.site_id and po.hospital_id = ai.hospital_id and po.asset_id = ai.id where po.start_time between ? and ? and ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and po.owner_id = ? and po.start_time is not null order by po.start_time");
+        queries.put("inspNum", "select count(*) from (select distinct io.order_type, io.name, io.start_time, io.end_time, io.create_time, io.creator_name, ai.location_name, io.is_finished from inspection_order_detail iod join inspection_order io on iod.site_id = io.site_id and iod.order_id = io.id join asset_info ai on iod.site_id = ai.site_id and iod.asset_id = ai.id where ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and io.owner_id = ? and io.is_finished = false and io.start_time is not null order by io.start_time) insp where order_type = 1");
+        queries.put("meterNum", "select count(*) from (select distinct io.order_type, io.name, io.start_time, io.end_time, io.create_time, io.creator_name, ai.location_name, io.is_finished from inspection_order_detail iod join inspection_order io on iod.site_id = io.site_id and iod.order_id = io.id join asset_info ai on iod.site_id = ai.site_id and iod.asset_id = ai.id where ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and io.owner_id = ? and io.is_finished = false and io.start_time is not null order by io.start_time) insp where order_type = 1");
+        queries.put("qaNum", "select count(*) from (select distinct io.order_type, io.name, io.start_time, io.end_time, io.create_time, io.creator_name, ai.location_name, io.is_finished from inspection_order_detail iod join inspection_order io on iod.site_id = io.site_id and iod.order_id = io.id join asset_info ai on iod.site_id = ai.site_id and iod.asset_id = ai.id where ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and io.owner_id = ? and io.is_finished = false and io.start_time is not null order by io.start_time) insp where order_type = 1");
+        queries.put("mtMum", "select count(*) from work_order_step ws join work_order wo on ws.site_id = wo.site_id and ws.work_order_id = wo.id join asset_info ai on wo.site_id = ai.site_id and wo.hospital_id = ai.hospital_id and wo.asset_id = ai.id where ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and ws.owner_id = ? and ws.start_time is not null and wo.is_closed = false");
+        queries.put("pmNum", "select count(*) from pm_order po join asset_info ai on po.site_id = ai.site_id and po.hospital_id = ai.hospital_id and po.asset_id = ai.id where ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and po.owner_id = ? and po.start_time is not null and po.is_finished = false");
         eventTypes = ImmutableMap.of(1, "巡检", 2, "计量", 3, "质控", 4, "维修", 5, "保养");
     }
 
@@ -74,26 +77,6 @@ public class WoScheduleController extends SqlConfigurableChartController {
                 List<Event> inspectionEvents = initInspectionEvents(start, end);
                 List<Event> maintenanceEvents = initMaintenanceEvents(start, end);
                 List<Event> preventiveMaintenanceEvents = initPreventiveMaintenanceEvents(start, end);
-                inspectionNum = FluentIterable.from(inspectionEvents).filter(new Predicate<Event>() {
-                    @Override
-                    public boolean apply(Event input) {
-                        return input.getTypeId() == 1;
-                    }
-                }).size();
-                meterNum = FluentIterable.from(inspectionEvents).filter(new Predicate<Event>() {
-                    @Override
-                    public boolean apply(Event input) {
-                        return input.getTypeId() == 2;
-                    }
-                }).size();
-                qaNum = FluentIterable.from(inspectionEvents).filter(new Predicate<Event>() {
-                    @Override
-                    public boolean apply(Event input) {
-                        return input.getTypeId() == 3;
-                    }
-                }).size();
-                mtMum = maintenanceEvents.size();
-                pmNum = preventiveMaintenanceEvents.size();
                 Iterable<DefaultScheduleEvent> events = FluentIterable.from(inspectionEvents)
                         .append(maintenanceEvents)
                         .append(preventiveMaintenanceEvents)
@@ -116,10 +99,19 @@ public class WoScheduleController extends SqlConfigurableChartController {
                 for (DefaultScheduleEvent event : events) {
                     model.addEvent(event);
                 }
-                RequestContext.getCurrentInstance().execute(String.format("updateTopPanel([%s,%s,%s,%s,%s])", inspectionNum, meterNum, qaNum, mtMum, pmNum));
+                //RequestContext.getCurrentInstance().execute(String.format("updateTopPanel([%s,%s,%s,%s,%s])", inspNum, meterNum, qaNum, mtMum, pmNum));
             }
         };
-
+        inspNum = jdbcTemplate.queryForObject(queries.get("inspNum"), Integer.TYPE, siteId, hospitalId, userId);
+        log.info("result: {} for query: {}", inspNum, queries.get("inspNum"));
+        meterNum = jdbcTemplate.queryForObject(queries.get("meterNum"), Integer.TYPE, siteId, hospitalId, userId);
+        log.info("result: {} for query: {}", meterNum, queries.get("meterNum"));
+        qaNum = jdbcTemplate.queryForObject(queries.get("qaNum"), Integer.TYPE, siteId, hospitalId, userId);
+        log.info("result: {} for query: {}", qaNum, queries.get("qaNum"));
+        mtMum = jdbcTemplate.queryForObject(queries.get("mtMum"), Integer.TYPE, siteId, hospitalId, userId);
+        log.info("result: {} for query: {}", mtMum, queries.get("mtMum"));
+        pmNum = jdbcTemplate.queryForObject(queries.get("pmNum"), Integer.TYPE, siteId, hospitalId, userId);
+        log.info("result: {} for query: {}", pmNum, queries.get("pmNum"));
     }
 
     private List<Event> initInspectionEvents(Date start, Date end) {
@@ -166,8 +158,8 @@ public class WoScheduleController extends SqlConfigurableChartController {
         return model;
     }
 
-    public int getInspectionNum() {
-        return inspectionNum;
+    public int getInspNum() {
+        return inspNum;
     }
 
     public int getMeterNum() {

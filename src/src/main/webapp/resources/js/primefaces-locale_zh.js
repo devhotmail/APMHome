@@ -17,7 +17,7 @@ PrimeFaces.locales ['zh'] = {
     hourText: '时',
     minuteText: '分',
     secondText: '秒',
-    currentText: '转到今天',
+    currentText: '今天',
     ampm: false,
     month: '月',
     week: '星期',
