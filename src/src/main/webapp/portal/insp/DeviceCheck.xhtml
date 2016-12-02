@@ -43,11 +43,13 @@
 	                        </f:facet>
 	                        <h:outputText value="#{item.data.name}" />
 	                 </p:dataList>
-               		</p:scrollPanel>
-               		<h:panelGroup >
-	                   	<p:commandButton value="#{msg.Save}" action="#{assetCheckController.deviceCheck(assetCheckController.lastStockTakeDate,assetCheckController.unValidDeviceList)}"
+	                <h:panelGroup >
+	                   	<p:commandButton value="#{msg.Save}" actionListener="#{assetCheckController.deviceCheck()}"
 	                   	 validateClient="true" style="float:right"/>  
+	                   <!-- 	action="#{assetCheckController.deviceCheck(assetCheckController.lastStockTakeDate,assetCheckController.unValidDeviceList)}" -->
 	               	</h:panelGroup>
+               		</p:scrollPanel>
+
                   </div>
                 </div>
                 

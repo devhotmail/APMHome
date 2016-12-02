@@ -52,27 +52,25 @@ public class AssetCheckController extends JpaCRUDController<AssetInfo>{
      */
     private List<TreeNode> toNodeList(TreeNode treeNode) {
     	List<TreeNode> nodes = new ArrayList<TreeNode>();
-		//if(treeNode.getType().equals("default")){
-    	logger.warn("1current node type is "+ treeNode.getType());
-    	logger.warn("1current rowkey is "+ treeNode.getRowKey());
+    	logger.info("1current node type is "+ treeNode.getType());
+    	logger.info("1current rowkey is "+ treeNode.getRowKey());
 			List<TreeNode> orgNodes = treeNode.getChildren();
 			if(!CollectionUtils.isEmpty(orgNodes)){
 				for (TreeNode orgNode : orgNodes) {
-					logger.warn("2current node type is "+ orgNode.getType());
-					logger.warn("2current rowkey is "+ orgNode.getRowKey());
+					logger.info("2current node type is "+ orgNode.getType());
+					logger.info("2current rowkey is "+ orgNode.getRowKey());
 					if(orgNode.getType().equals("org")){
 						List<TreeNode> assetNodes = orgNode.getChildren();
 						if(!CollectionUtils.isEmpty(assetNodes)){
 							for (TreeNode assetNode : assetNodes) {
-								logger.warn("3current node type is "+ assetNode.getType());
-								logger.warn("3current rowkey is "+ assetNode.getRowKey());
+								logger.info("3current node type is "+ assetNode.getType());
+								logger.info("3current rowkey is "+ assetNode.getRowKey());
 								nodes.add(assetNode);
 							}
 						}
 					}
 				}
 			}
-		//}
 		return nodes;
 	}
     
@@ -133,25 +131,23 @@ public class AssetCheckController extends JpaCRUDController<AssetInfo>{
     	}
     }
     
-    public void deviceCheck(Date lastStocktakeDate,List<TreeNode> unValidDevice){
-    		updateDeviceCheck(unValidDevice,lastStocktakeDate,false);
-    		updateDeviceCheck((List<TreeNode>) CollectionUtils.diff(this.assetTreeNodes, unValidDevice),lastStocktakeDate,true);
+    //Date lastStocktakeDate,List<TreeNode> unValidDevice
+    public void deviceCheck(){
+    		updateDeviceCheck(unValidDeviceList,lastStockTakeDate,false);
+    		updateDeviceCheck((List<TreeNode>) CollectionUtils.diff(this.assetTreeNodes, unValidDeviceList),lastStockTakeDate,true);
     }
     
-    public void updateDeviceCheck(List<TreeNode> treeNodes , Date date,boolean isValid){
-    	if(!CollectionUtils.isEmpty(treeNodes)){
-    		if(date == null){
-    			date = new Date();
-    		}
-    		for (TreeNode treeNode : treeNodes) {
-				AssetInfo assetInfo = (AssetInfo) treeNode.getData();
-				assetInfo.setIsValid(isValid);
-				assetInfo.setLastStockTakeDate(date);
-				assetInfoDao.save(assetInfo);
-			}
-    	}
-    
-    }
+	public void updateDeviceCheck(List<TreeNode> treeNodes, Date date, boolean isValid) {
+		if (date == null) {
+			date = new Date();
+		}
+		for (TreeNode treeNode : treeNodes) {
+			AssetInfo assetInfo = (AssetInfo) treeNode.getData();
+			assetInfo.setIsValid(isValid);
+			assetInfo.setLastStockTakeDate(date);
+			assetInfoDao.save(assetInfo);
+		}
+	}
     
 	public TreeNode initDeviceNode(){
     	TreeNode deviceNode = uuaService.getOrgAssetTree(this.currentUser.getHospitalId());
