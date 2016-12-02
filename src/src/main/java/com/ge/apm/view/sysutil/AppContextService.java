@@ -58,4 +58,14 @@ public class AppContextService implements Serializable{
         SqlConfigurableDataController.reLoadDataTableConfig();
     }
     
+     public String getStringHeader(String str, int length) {
+        if (null == str) {
+            return null;
+        }
+        else if (str.length() <= length) {
+            return str;
+        }else {
+            return str.substring(0,length)+"...";
+        }
+    }
 }
