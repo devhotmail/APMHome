@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+
+import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.io.Serializable;
 import javax.faces.bean.ViewScoped;
@@ -22,6 +24,7 @@ import java.text.DecimalFormat;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.ServerEventInterface;
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.I18nMessage;
 
 @ManagedBean
 @ViewScoped
@@ -258,15 +261,30 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
             topAsset = "";
             topDept = "";
 
+            FieldValueMessageController fieldMsg = WebUtil.getBean(FieldValueMessageController.class, "fieldMsg");
+            List<I18nMessage> messages1 = fieldMsg.getFieldValueList("assetGroup");
+            List<I18nMessage> messages2 = fieldMsg.getFieldValueList("clinicalDeptId");
+
+            Map<Integer, String> messages_map1 = new HashMap<Integer, String>();
+            Map<Integer, String> messages_map2 = new HashMap<Integer, String>();
+
+            int i = 0;
+            for (I18nMessage local1 : messages1) 
+                messages_map1.put(++i, local1.getValue());
+
+            i = 0;    
+            for (I18nMessage local2 : messages2) 
+                messages_map2.put(++i, local2.getValue());
+
             List<Map<String, Object>> rs_mx1 = NativeSqlUtil.queryForList(MAX1TL, sqlParams);
             for (Map<String, Object> item : rs_mx1)
                 if (item.get("asset_group") != null)
-                    topAsset += ((Integer) item.get("asset_group")).toString();
+                    topAsset += (messages_map1.get((Integer)item.get("asset_group")) + " ");
 
             List<Map<String, Object>> rs_mx2 = NativeSqlUtil.queryForList(MAX2TL, sqlParams);
             for (Map<String, Object> item : rs_mx2)
                 if (item.get("clinical_dept_id") != null)
-                    topDept += ((Integer) item.get("clinical_dept_id")).toString();
+                    topDept += (messages_map2.get((Integer)item.get("clinical_dept_id")) + " ");
     }
 
 
