@@ -50,7 +50,6 @@
                         <p:selectOneMenu id="selectedYear" value="#{homeHeadController.selectedYear}">
                             <p:ajax listener="#{homeHeadController.onSelectedYearChange}"
                                     update="value_scan selectedYear barAnnualRevenue pieAnnualRevenue barMonthlyRevenue"/>
-                            <f:selectItem itemLabel="Select Year" itemValue="" noSelectionOption="true"/>
                             <f:selectItems value="#{homeHeadController.yearList}"/>
                         </p:selectOneMenu>
                     </h:form>

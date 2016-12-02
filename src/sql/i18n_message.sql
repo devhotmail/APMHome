@@ -485,10 +485,10 @@ INSERT INTO "i18n_message" VALUES (5033,'label','assetsDashboardclm4', '所在�
 INSERT INTO "i18n_message" VALUES (5034,'label','assetsDashboardclm5', '收入 （元）','Top Department',null,-1);
 INSERT INTO "i18n_message" VALUES (5035,'label','assetsDashboardclm6', '运营成本 （元）','Top Department',null,-1);
 INSERT INTO "i18n_message" VALUES (5036,'label','assetsDashboardclm7', '利润 （元）','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5037,'label','assetsDashboardclm7', '扫描量 （次）','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5038,'label','assetsDashboardclm7', '曝光量 （次）','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5039,'label','assetsDashboardclm7', '维修 （次）','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5040,'label','assetsDashboardclm7', '停机时长 （小时） ','Top Department',null,-1);
+INSERT INTO "i18n_message" VALUES (5037,'label','assetsDashboardclm8', '扫描量 （次）','Top Department',null,-1);
+INSERT INTO "i18n_message" VALUES (5038,'label','assetsDashboardclm9', '曝光量 （次）','Top Department',null,-1);
+INSERT INTO "i18n_message" VALUES (5039,'label','assetsDashboardclm10', '维修 （次）','Top Department',null,-1);
+INSERT INTO "i18n_message" VALUES (5040,'label','assetsDashboardclm11', '停机时长 （小时） ','Top Department',null,-1);
 INSERT INTO "i18n_message" VALUES (5041,'label','deviceValueScanhd', '设备总扫描量 (次)','Device Scan (Times)',null,-1);
 INSERT INTO "i18n_message" VALUES (5042,'label','deviceValueExpohd', '设备总曝光量 (次)','Device Exposure (Times)',null,-1);
 INSERT INTO "i18n_message" VALUES (5043,'label','deviceValueROIhd', '设备总利润 （元）','Device ROI （CNY)',null,-1);
