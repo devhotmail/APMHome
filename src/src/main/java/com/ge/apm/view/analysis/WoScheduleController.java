@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
 import com.google.common.base.Function;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
@@ -19,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import webapp.framework.broker.JsonMapper;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.SqlConfigurableChartController;
 
@@ -102,7 +102,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
                                 event.setTitle(input.getTitle());
                                 event.setStartDate(input.getEnd());
                                 event.setEndDate(Optional.fromNullable(input.getEnd()).or(new DateTime(input.getStart()).plusHours(1).toDate()));
-                                event.setDescription(input.toString());
+                                event.setDescription(input.toHtml());
                                 event.setData(input);
                                 event.setAllDay(false);
                                 event.setEditable(false);
@@ -110,6 +110,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
                                 return event;
                             }
                         });
+                log.info("loadedEvents: {}", events);
                 for (DefaultScheduleEvent event : events) {
                     model.addEvent(event);
                 }
@@ -131,7 +132,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
         return jdbcTemplate.query(queries.get("maintenance"), new RowMapper<Event>() {
             @Override
             public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new Event(4, eventTypes.get(4), rs.getBoolean("is_closed"), String.format("WorkOrder: %s, Step: %s", rs.getString("name"), rs.getString("step_name")), rs.getTimestamp("start_time"), Optional.fromNullable(rs.getTimestamp("end_time")).or(new Timestamp(new DateTime(rs.getTimestamp("start_time")).plusHours(1).getMillis())), Optional.fromNullable(rs.getTimestamp("create_time")).or(rs.getTimestamp("start_time")), rs.getString("creator_name"), rs.getString("location_name"));
+                return new Event(4, eventTypes.get(4), rs.getBoolean("is_closed"), String.format("%s-%s", rs.getString("name"), rs.getString("step_name")), rs.getTimestamp("start_time"), Optional.fromNullable(rs.getTimestamp("end_time")).or(new Timestamp(new DateTime(rs.getTimestamp("start_time")).plusHours(1).getMillis())), Optional.fromNullable(rs.getTimestamp("create_time")).or(rs.getTimestamp("start_time")), rs.getString("creator_name"), rs.getString("location_name"));
             }
         }, start, end, siteId, hospitalId, userId);
     }
@@ -146,7 +147,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
     }
 
 
-    private String from(Date date) {
+    private static String from(Date date) {
         return from(date, "yyyy-MM-dd");
     }
 
@@ -210,6 +211,21 @@ public class WoScheduleController extends SqlConfigurableChartController {
 
         @Override
         public String toString() {
+            return MoreObjects.toStringHelper(this)
+                    .omitNullValues()
+                    .add("typeId", typeId)
+                    .add("typeName", typeName)
+                    .add("isClosed", isClosed)
+                    .add("title", title)
+                    .add("start", start)
+                    .add("end", end)
+                    .add("created", created)
+                    .add("creator", creator)
+                    .add("location", location)
+                    .toString();
+        }
+
+        public String toHtml() {
             return String.format("<div class=\"event-tooltip u-p-\"><div class=\"title u-mb--\">%s</div><div>%s</div><div>%s-%s</div><div class=\"u-mv-\">任务于 %s 由 %s 创建</div><div>%s</div></div>", title, from(start, "yyyy-MM-dd"), from(start, "HH:mm"), from(end, "HH:mm"), from(created, "yyyy-MM-dd"), creator, location);
         }
 
