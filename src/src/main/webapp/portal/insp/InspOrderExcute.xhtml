@@ -59,7 +59,7 @@
             <p:fieldset legend="#{fieldMsg.fieldValue('checklistType', 1)}" style="margin-bottom:20px">
 
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                    <h:panelGroup>
+                    <p:scrollPanel style="width:98%;height:380px;border: 0" mode="native" >
                         <p:tree id="assetTree" class="tree" style="border:0;" value="#{inspectionOrderController.excuteItemTree}" selection="#{inspectionOrderController.excutedItemArray}" var="node" dynamic="true" cache="false" selectionMode="checkbox"  highlight="false">
                             <!--<p:ajax event="select" listener="#{inspectionOrderController.onSelectCheckItemNode}" />-->
                             <p:treeNode type="org">
@@ -72,7 +72,7 @@
                                 <h:outputText value="#{node.itemName}"/>
                             </p:treeNode>
                         </p:tree>
-                    </h:panelGroup>
+                    </p:scrollPanel>
 
                     <h:panelGroup>
                         <label class="label">#{msg.comments}</label>

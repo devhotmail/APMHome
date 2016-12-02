@@ -22,8 +22,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +117,7 @@ public class InspectionService {
             order.setEndTime(itemendDate);
             order.setId(null);
             order = orderDao.save(order);
-             for (InspectionOrderDetail item : detailList) {
+            for (InspectionOrderDetail item : detailList) {
                 item.setId(null);
                 item.setOrderId(order.getId());
             }
@@ -169,7 +172,7 @@ public class InspectionService {
         for (InspectionOrderDetail item : orderDetail) {
             TreeNode deptNode = deptNodes.get(item.getDeptId());
             if (deptNode == null) {
-                deptNode = new DefaultTreeNode("org",item.getDeptName(), root);
+                deptNode = new DefaultTreeNode("org", item.getDeptName(), root);
                 deptNodes.put(item.getDeptId(), deptNode);
 
                 deptNode.setExpanded(expandAll);
@@ -177,13 +180,13 @@ public class InspectionService {
 
             TreeNode assetNode = assetNodes.get(item.getAssetId());
             if (assetNode == null) {
-                assetNode = new DefaultTreeNode("asset",item.getAssetName(), deptNode);
+                assetNode = new DefaultTreeNode("asset", item.getAssetName(), deptNode);
                 assetNodes.put(item.getAssetId(), assetNode);
 
                 assetNode.setExpanded(expandAll);
             }
 
-            TreeNode node = new DefaultTreeNode("checklist",item, assetNode);
+            TreeNode node = new DefaultTreeNode("checklist", item, assetNode);
         }
 
         return root;
@@ -192,6 +195,24 @@ public class InspectionService {
     public TreeNode getPlanTree(Integer orderType) {
         UaaService uuaService = WebUtil.getBean(UaaService.class);
         TreeNode planTree = uuaService.getOrgAssetChecklistTree(UserContextService.getCurrentUserAccount().getHospitalId(), orderType);
+        planTree = cleanTree(planTree, "checklist");
         return planTree;
+    }
+
+    private TreeNode cleanTree(TreeNode node, String type) {
+        Iterator<TreeNode> iterator = node.getChildren().iterator();
+        Set<TreeNode> remomveset = new HashSet();
+        while (iterator.hasNext()) {
+            TreeNode subNode = iterator.next();
+            if (subNode.getType().equals(type)) {
+                return node;
+            }
+            subNode = cleanTree(subNode, type);
+            if (subNode.isLeaf()) {
+                remomveset.add(subNode);
+            }
+        }
+        node.getChildren().removeAll(remomveset);
+        return node;
     }
 }

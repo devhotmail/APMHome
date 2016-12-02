@@ -76,7 +76,6 @@
 
             <p:fieldset legend="#{msg.InspectionOrderDetail}" style="margin-bottom:20px">
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                    <!--<h:panelGroup>-->
                         <p:scrollPanel style="width:98%;height:380px;border: 0" mode="native" >
                         <!--<label class="label">#{msg.assetName}</label>-->
                         <p:tree id="assetTree" class="tree" style="border:0;height:378px" value="#{inspectionOrderController.orgAssetTree}" selection="#{inspectionOrderController.selectedNodes}"  var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
@@ -94,7 +93,6 @@
                             </p:treeNode>
                         </p:tree>
                         </p:scrollPanel>
-                    <!--</h:panelGroup>-->
                     <p:scrollPanel style="width:98%;height:380px;border: 0" mode="native" >
                     <p:dataList id="dataList" value="#{inspectionOrderController.selectedNodesList}" var="item"   type="unordered" emptyMessage="#{msg.noRecordFound}" >
                         <f:facet name="header">
