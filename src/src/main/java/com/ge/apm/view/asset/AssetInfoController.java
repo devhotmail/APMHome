@@ -228,6 +228,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     private void saveAttachements() {
         for (AssetFileAttachment item : attachements) {
             if (null == item.getId()) {
+                item.setAssetId(selected.getId());
                 attachDao.save(item);
             }
         }
@@ -238,7 +239,9 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         for (AssetFileAttachment item : attachements) {
             if (attachid.equals(item.getFileId())) {
                 fileService.deleteAttachment(item.getFileId());
-                attachDao.delete(item);
+                if(item.getId() != null){
+                    attachDao.delete(item);
+                }
                 attachements.remove(item);
                 break;
             }
@@ -329,5 +332,5 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void setFilterLastStocktakeDate(String filterLastStocktakeDate) {
         this.filterLastStocktakeDate = filterLastStocktakeDate;
     }
-    
+
 }
