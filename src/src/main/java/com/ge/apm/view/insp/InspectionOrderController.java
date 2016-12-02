@@ -26,6 +26,8 @@ import com.ge.apm.service.insp.InspectionService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.asset.AssetInfoController;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
@@ -104,7 +106,6 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
     }
 
     private void setTreeStatus(TreeNode node) {
-        int sum = 0;
         if ("checklist".equals(node.getType())) {
             boolean status = ((InspectionOrderDetail) node.getData()).getIsPassed();
             if (status) {
@@ -148,7 +149,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
     @Override
     public List<InspectionOrder> getItemList() {
         searchFilters.add(new SearchFilter("orderType", SearchFilter.Operator.EQ, 1));
-        return dao.find();
+        return dao.findBySearchFilter(searchFilters);
     }
 
     public void onUnselectTreeNode(NodeUnselectEvent event) {
@@ -333,6 +334,64 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
 
     public void setExcutedItemArray(TreeNode[] excutedItemArray) {
         this.excutedItemArray = excutedItemArray;
+    }
+
+private String filterStartTime = null;
+    private String filterIsFinished = null;
+
+    public String getFilterStartTime() {
+        return filterStartTime;
+    }
+
+    public void setFilterStartTime(String filterStartTime) {
+        this.filterStartTime = filterStartTime;
+    }
+    
+    public String getFilterIsFinished() {
+        return filterIsFinished;
+    }
+
+    public void setFilterIsFinished(String filterIsFinished) {
+        this.filterIsFinished = filterIsFinished;
+    }
+
+    public void setStartTimeFilter(){
+        if(filterStartTime==null || !"1".equals(filterStartTime))  return;
+        if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+        //2个月内，则是在2个月后时间之前所有
+        Date startTime = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(startTime);
+        c.add(Calendar.MONTH, 2);
+        varStartTimeTo = c.getTime();
+        searchFilters.add(new SearchFilter("startTime", SearchFilter.Operator.LTE, varStartTimeTo));
+        searchFilters.add(new SearchFilter("isFinished", SearchFilter.Operator.EQ, false));
+        filterStartTime = null;
+        filterIsFinished = "false";
+    }
+
+    private Date varStartTimeTo = null;
+    private String startFormatTime = null;
+
+    public Date getVarStartTimeTo() {
+        return varStartTimeTo;
+    }
+
+    public void setVarStartTimeTo(Date varStartTimeTo) {
+        this.varStartTimeTo = varStartTimeTo;
+    }
+
+    public String getStartFormatTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        if (varStartTimeTo==null){
+            return startFormatTime;
+        } else {
+            return "~"+sdf.format(varStartTimeTo);
+        } 
+    }
+
+    public void setStartFormatTime(String startFormatTime) {
+        this.startFormatTime = startFormatTime;
     }
 
 }
