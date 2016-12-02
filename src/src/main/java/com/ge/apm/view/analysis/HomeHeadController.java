@@ -718,20 +718,19 @@ public class HomeHeadController extends SqlConfigurableChartController {
         FieldValueMessageController fieldMsg = WebUtil.getBean(FieldValueMessageController.class, "fieldMsg");
         List<I18nMessage> messages = fieldMsg.getFieldValueList(key);
 
-        
-        for (int index = 0; index < messages.size(); index ++) {
-            String msgKey   = messages.get(index).getMsgKey();
-            String value    = messages.get(index).getValue();
-            if (index < results.size()) {
-                Map<String, Object> res = results.get(index);
+        Map<String, String> messages_map = new HashMap<String, String>();
 
-                if (res.get("key").toString().equals(msgKey)) {
-                    res.put("key", value);
-                }
-            } else {
-                break;  // do not check results parameter, since index is out of results range.
-            }
+        for (I18nMessage local : messages) {
+                System.out.println(local.getMsgKey() + ":" + local.getValue());
+                messages_map.put(local.getMsgKey(), local.getValue());
         }
+
+
+        for (Map<String, Object> res : results) 
+            if (messages_map.containsKey(res.get("key").toString())) 
+                    res.put("key", messages_map.get(res.get("key").toString()));
+                
+
     }
 
     private List<Map<String, Object>> prepareData(String sql, HashMap<String, Object> sqlParams) {
