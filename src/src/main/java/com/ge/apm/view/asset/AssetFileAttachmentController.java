@@ -123,6 +123,11 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
         Integer id = fileService.uploadFile(event.getFile());
         selected.setFileId(id);
     }
+    
+    public void removeAttachment(Integer fileId){
+        fileService.deleteAttachment(fileId);
+        selected.setName(null);
+    }
 
     public void onAssetSelected(SelectEvent event) {
         onServerEvent("assetSelected", event.getObject());
