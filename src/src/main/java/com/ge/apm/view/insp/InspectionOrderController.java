@@ -1,13 +1,18 @@
 package com.ge.apm.view.insp;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.NodeUnselectEvent;
+import org.primefaces.model.TreeNode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.util.CollectionUtils;
-
-import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.InspectionOrderRepository;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.domain.AssetInfo;
@@ -21,23 +26,17 @@ import com.ge.apm.service.insp.InspectionService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.asset.AssetInfoController;
 import com.ge.apm.view.sysutil.UserContextService;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.event.NodeUnselectEvent;
-import org.primefaces.model.TreeNode;
-import org.springframework.beans.factory.annotation.Autowired;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.JpaCRUDController;
 
 @ManagedBean
 @ViewScoped
 public class InspectionOrderController extends JpaCRUDController<InspectionOrder> {
 
-    InspectionOrderRepository dao = null;
+	private static final long serialVersionUID = 1L;
+
+	InspectionOrderRepository dao = null;
 
     private TreeNode orgAssetTree;
     List<Object[]> selectedNodesList;
@@ -60,11 +59,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
     List<InspectionOrderDetail> orderDetailItemList;
 
     AttachmentFileService fileService;
-    
-    private TreeNode deviceNode;
-    private UserAccount currentUser;
-    List<Object[]> unSelectedDeviceNodesList;
-    private TreeNode[] unSelectedDeviceNodes;
+
     
     @Override
     protected void init() {
@@ -76,10 +71,6 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         assetGrossCount = getTreeCount(orgAssetTree);
         this.filterBySite = true;
         this.setSiteFilter();
-        
-        currentUser = UserContextService.getCurrentUserAccount();
-        deviceNode = initDeviceNode();
-        unSelectedDeviceNodes =new TreeNode[10000];
         
         String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
@@ -112,50 +103,6 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         }
 
         ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
-    }
-    
-    public TreeNode initDeviceNode(){
-    	TreeNode deviceNode = uuaService.getOrgAssetTree(this.currentUser.getHospitalId());
-    	if(deviceNode != null && deviceNode.getChildCount() > 0){
-    		recursion(deviceNode,true);
-    	}
-    	return deviceNode;
-    }
-    
-    /**
-     * 
-     * @param node
-     * @param isSelected
-     * @return
-     */
-    public void recursion(TreeNode node,boolean isSelected){
-    	if(node == null || node.isLeaf()){
-    		return ;
-    	}
-    	if(!CollectionUtils.isEmpty(node.getChildren())){
-    		List<TreeNode> childNodes = node.getChildren();
-    		for (TreeNode treeNode : childNodes) {
-				if(isSelected){
-					treeNode.setSelected(true);
-					recursion(treeNode,true);
-				}
-			}
-    	}
-    }
-    
-    public void onSelectDeviceTreeNode(NodeSelectEvent event){
-    	unSelectedDeviceNodesList = getUnSelectedDeviceNodes();
-    }
-    
-    public void onUnSelectDeviceTreeNode(NodeUnselectEvent event){
-    	TreeNode removeNode = event.getTreeNode();
-    	removeNode.setSelected(false);
-//    	if(removeNode.getType().equals("asset")){
-//    		this.unSelectedDeviceNodesList.get(0)
-//    	}else if(removeNode.getType().equals("asset")){
-//
-//    	}
-    	
     }
 
     private void setTreeStatus(TreeNode node) {
@@ -221,10 +168,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
 //        node.setSelected(false);
 //    }
     
-	  public void removeSelectedAssetDevice(TreeNode node) {
-		  unSelectedDeviceNodesList.remove(node);
-		  node.setSelected(true);
-	  }
+
 
     public List<Object[]> getSelectedItem() {
         //for create page datalist
@@ -240,19 +184,6 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         }
         return tempList;
     }
-    
-/*    public List<Object[]> getUnSelectedDeviceItem() {
-        List<Object[]> tempList = new ArrayList<Object[]>();
-        for (TreeNode node : unSelectedDeviceNodes) {
-        	Object[] content = new Object[2];
-        	if("asset".equalsIgnoreCase(node.getType())){
-        		content[0] = (AssetInfo) node.getParent().getData();
-        		content[1] = (OrgInfo) node.getParent().getParent().getData();
-        	}
-        	tempList.add(content);
-        }
-        return tempList;
-    }*/
     
     public String createOrder() {
         //for create page submit
@@ -423,40 +354,5 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
     public void setExcutedItemArray(TreeNode[] excutedItemArray) {
         this.excutedItemArray = excutedItemArray;
     }
-
-	public TreeNode getDeviceNode() {
-		return deviceNode;
-	}
-
-	public void setDeviceNode(TreeNode deviceNode) {
-		this.deviceNode = deviceNode;
-	}
-
-	public List<Object[]> getUnSelectedDeviceNodesList() {
-		return unSelectedDeviceNodesList;
-	}
-
-	public void setUnSelectedDeviceNodesList(List<Object[]> unSelectedDeviceNodesList) {
-		this.unSelectedDeviceNodesList = unSelectedDeviceNodesList;
-	}
-
-	public List<Object[]> getUnSelectedDeviceNodes() {
-        List<Object[]> tempList = new ArrayList<Object[]>();
-        for (TreeNode node : unSelectedDeviceNodes) {
-        	Object[] content = new Object[2];
-        	if("asset".equalsIgnoreCase(node.getType())){
-        		content[0] = (AssetInfo) node.getParent().getData();
-        		content[1] = (OrgInfo) node.getParent().getParent().getData();
-        	}
-        	tempList.add(content);
-        }
-		return tempList;
-	}
-
-	public void setUnSelectedDeviceNodes(TreeNode[] unSelectedDeviceNodes) {
-		this.unSelectedDeviceNodes = unSelectedDeviceNodes;
-	}
-
-
 
 }
