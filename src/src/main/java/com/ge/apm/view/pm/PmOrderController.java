@@ -18,7 +18,14 @@ import com.ge.apm.domain.PmOrder;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.view.asset.AssetInfoController;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import webapp.framework.dao.SearchFilter;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
@@ -263,5 +270,63 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 		this.attachements = attachements;
 	}
     
+        private String filterStartTime = null;
+
+        public String getFilterStartTime() {
+            return filterStartTime;
+        }
+
+        public void setFilterStartTime(String filterStartTime) {
+            this.filterStartTime = filterStartTime;
+        }
+
+        public void setStartTimeFilter(){
+            if(filterStartTime==null)  return;
+            if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            //Date startTime = new Date();
+            try {
+                varStartTimeFrom = sdf.parse(filterStartTime);
+            } catch (ParseException ex) {
+                Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
+                return;
+            }
+            searchFilters.add(new SearchFilter("startTime", SearchFilter.Operator.GTE, varStartTimeFrom));
+            //2个月内，则是保修到期时间在当前时间和2个月后时间之间
+            Calendar c = Calendar.getInstance();
+            c.setTime(varStartTimeFrom);
+            c.add(Calendar.DAY_OF_WEEK, 7);
+            varStartTimeTo = c.getTime();
+            searchFilters.add(new SearchFilter("startTime", SearchFilter.Operator.LTE, varStartTimeTo));
+        }
+        
+        private Date varStartTimeFrom = null;
+        private Date varStartTimeTo = null;
+        private String startFormatTime = null;
+
+        public Date getVarStartTimeFrom() {
+            return varStartTimeFrom;
+        }
+
+        public void setVarStartTimeFrom(Date varStartTimeFrom) {
+            this.varStartTimeFrom = varStartTimeFrom;
+        }
+
+        public Date getVarStartTimeTo() {
+            return varStartTimeTo;
+        }
+
+        public void setVarStartTimeTo(Date varStartTimeTo) {
+            this.varStartTimeTo = varStartTimeTo;
+        }
+
+        public String getStartFormatTime() {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            return  sdf.format(varStartTimeFrom)+"~"+sdf.format(varStartTimeTo);
+        }
+
+        public void setStartFormatTime(String startFormatTime) {
+            this.startFormatTime = startFormatTime;
+        }
 
 }
