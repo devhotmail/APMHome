@@ -430,4 +430,6 @@ table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbd
 .main-body .fc .fc-event.event-type-5{background-color:#b08f39}
 .main-body .fc .fc-event.event-type-6{background-color:#decf40}
 .main-body .fc .fc-event{line-height:2;color:#fff;border-radius:0;border-width:0}
+.main-body .fc .fc-event.closed{opacity:.5}
+.main-body .fc-right{display:none}
 .main-body .ui-tooltip.ui-widget.ui-shadow.ui-corner-all{box-shadow:none}

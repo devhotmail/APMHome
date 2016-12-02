@@ -71,7 +71,15 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
       color: #fff;
       border-radius: 0;
       border-width: 0;
+
+      &.closed {
+        opacity: .5;
+      }
     }
+  }
+
+  .fc-right {
+    display: none;
   }
 
   // reset ui-tooltip default styles
