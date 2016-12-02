@@ -1,0 +1,18 @@
+@charset "UTF-8";
+.ui-icon-carat-2-n-s:before {
+/* content: ""; }*/
+content: ""; }
+/* content: ""; }*/
+/*content: ""; }*/
+.ui-icon-triangle-1-n:before {
+/*  content: ""; }*/
+  content: ""; }
+.ui-icon-triangle-1-e:before {
+  content: ""; }
+.ui-icon-triangle-1-s:before {
+/*  content: ""; }*/
+  content: ""; }
+.ui-icon-triangle-1-w:before {
+  content: ""; }
+.ui-selectonemenu-trigger > .ui-icon-triangle-1-s:before {
+content: ""; }
