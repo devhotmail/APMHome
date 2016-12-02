@@ -19,9 +19,13 @@ import java.time.Year;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
 
+import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.ServerEventInterface;
+import com.ge.apm.domain.AssetInfo;
+
 @ManagedBean
 @ViewScoped
-public class AssetPerfAllController implements Serializable {
+public class AssetPerfAllController implements Serializable, ServerEventInterface {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,6 +43,7 @@ public class AssetPerfAllController implements Serializable {
 	private Date currentDate;
     private int targetYear = Year.now().getValue();
 
+    private String assetName = WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices"); 
 
     public class Row {
 
@@ -142,13 +147,11 @@ public class AssetPerfAllController implements Serializable {
 
     }
 
-    public void submit(String sTargetYear) {
+    
+    public void submit() {
 
-        this.targetYear = Integer.parseInt(sTargetYear);
         currentDate = Calendar.getInstance().getTime(); 
-
         deviceQuery(startDate, endDate, currentDate);
-
     }
 
             //bigint
@@ -239,6 +242,17 @@ public class AssetPerfAllController implements Serializable {
         return assetDashBoard;
     }
 
+    public String getAssetName() {
+
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+
+        this.assetName = assetName;
+    }
+
+
     private void devicePanel(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
 
             topAsset = "";
@@ -323,5 +337,21 @@ public class AssetPerfAllController implements Serializable {
         deviceTable(startDate, endDate, currentDate, sqlParams);
 
     }
+
+    @Override
+    public void onServerEvent(String eventName, Object eventObject){
+        AssetInfo asset = (AssetInfo) eventObject;
+
+        if(asset == null) return;
+        /*
+        this.assetId    = asset.getId();
+        this.setAssetName(asset.getName());
+        this.isSingleAsset = true;
+        logger.debug("Selected asset Id: {}, asset name: {}", assetId, assetName);
+        update();
+        */
+    }
+
+
 
 }

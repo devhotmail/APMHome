@@ -717,6 +717,8 @@ public class HomeHeadController extends SqlConfigurableChartController {
 
         FieldValueMessageController fieldMsg = WebUtil.getBean(FieldValueMessageController.class, "fieldMsg");
         List<I18nMessage> messages = fieldMsg.getFieldValueList(key);
+
+        
         for (int index = 0; index < messages.size(); index ++) {
             String msgKey   = messages.get(index).getMsgKey();
             String value    = messages.get(index).getValue();
