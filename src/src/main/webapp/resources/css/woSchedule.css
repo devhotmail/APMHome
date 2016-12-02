@@ -448,7 +448,6 @@ table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbd
 .main-body .fc .fc-left .fc-next-button .ink,.main-body .fc .fc-left .fc-prev-button .ink{display:none}
 .main-body .fc .ui-widget-header{background-color:#fff!important}
 .main-body .fc .fc-bg .fc-today{background-color:transparent}
-.main-body .fc .fc-row{height:calc((100vh - 450px)/ 6)!important}
 .main-body .fc .fc-content-skeleton .fc-day-number{padding-left:15px;padding-top:12px;text-align:left;font-size:24px}
 .main-body .fc .fc-content-skeleton .fc-today{position:relative}
 .main-body .fc .fc-content-skeleton .fc-today::after{position:absolute;left:10px;top:5px;z-index:-1;display:block;content:'';border-radius:50%;background-color:#5da5da;width:35px;height:35px}
