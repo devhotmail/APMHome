@@ -34,9 +34,9 @@ import webapp.framework.web.mvc.JpaCRUDController;
 @ViewScoped
 public class InspectionOrderController extends JpaCRUDController<InspectionOrder> {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	InspectionOrderRepository dao = null;
+    InspectionOrderRepository dao = null;
 
     private TreeNode orgAssetTree;
     List<Object[]> selectedNodesList;
@@ -47,7 +47,6 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
 
     InspectionService inspectionService;
 
-    int assetGrossCount;
     int period;
 
     UserAccount owner;
@@ -60,23 +59,23 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
 
     AttachmentFileService fileService;
 
-    
     @Override
     protected void init() {
         dao = WebUtil.getBean(InspectionOrderRepository.class);
         fileService = WebUtil.getBean(AttachmentFileService.class);
         inspectionService = WebUtil.getBean(InspectionService.class);
         uuaService = WebUtil.getBean(UaaService.class);
-        orgAssetTree = inspectionService.getPlanTree(1);
-        assetGrossCount = getTreeCount(orgAssetTree);
+
         this.filterBySite = true;
         this.setSiteFilter();
-        
+
         String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
             try {
                 prepareCreate();
+                orgAssetTree = inspectionService.getPlanTree(1);
                 owner = new UserAccount();
+                ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
             } catch (InstantiationException | IllegalAccessException ex) {
                 Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -102,7 +101,6 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
             setTreeStatus(excuteItemTree);
         }
 
-        ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
     }
 
     private void setTreeStatus(TreeNode node) {
@@ -142,14 +140,14 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
-            searchFilters.add(new SearchFilter("orderType",SearchFilter.Operator.EQ,1));
+            searchFilters.add(new SearchFilter("orderType", SearchFilter.Operator.EQ, 1));
             return dao.findBySearchFilter(this.searchFilters, pageRequest);
         }
     }
 
     @Override
     public List<InspectionOrder> getItemList() {
-        searchFilters.add(new SearchFilter("orderType",SearchFilter.Operator.EQ,1));
+        searchFilters.add(new SearchFilter("orderType", SearchFilter.Operator.EQ, 1));
         return dao.find();
     }
 
@@ -162,13 +160,6 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         //for create page selected asset
         selectedNodesList = getSelectedItem();
     }
-
-//    public void removeSelectedAsset(TreeNode node) {
-//        selectedNodesList.remove(node);
-//        node.setSelected(false);
-//    }
-    
-
 
     public List<Object[]> getSelectedItem() {
         //for create page datalist
@@ -184,10 +175,10 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         }
         return tempList;
     }
-    
+
     public String createOrder() {
         //for create page submit
-        if (null==selectedNodesList || selectedNodesList.isEmpty()) {
+        if (null == selectedNodesList || selectedNodesList.isEmpty()) {
             WebUtil.addErrorMessage(WebUtil.getMessage("noAssetSelected"));
             return "";
         }
@@ -228,12 +219,6 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         }
     }
 
-//    public void selectAllPass() {
-//        for (InspectionOrderDetail item : orderDetailItemList) {
-//            item.setIsPassed(allPass);
-//        }
-//    }
-
     public String excuteOrder() {
         List<InspectionOrderDetail> checkItemList = new ArrayList();
         int excutedCount = 0;
@@ -249,11 +234,6 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         inspectionService.excuteOrder(this.selected, checkItemList);
         return "InspOrderList?faces-redirect=true";
     }
-
-//    public String updateOrder() {
-//        inspectionService.updateOrder(this.selected, orderDetailItemList);
-//        return "InspOrderList";
-//    }
 
     public void handleFileUpload(FileUploadEvent event) {
         Integer id = fileService.uploadFile(event.getFile());
