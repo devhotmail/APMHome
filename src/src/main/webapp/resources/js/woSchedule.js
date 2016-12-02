@@ -4,5 +4,7 @@ function scheduleSkin() {
 }
 
 function updateTopPanel(array) {
-    console.log(array)
+    for (var i = 0; i < 5; i++) {
+        $('.event-count.event-type-' + (i + 1)).text(array[i]);
+    }
 }

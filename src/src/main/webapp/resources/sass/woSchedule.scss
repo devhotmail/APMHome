@@ -6,17 +6,9 @@
 }
 
 // event tooltip styles
-
-.ui-tooltip {
-  box-shadow: none;
-  border-width: 0;
-}
-
 .event-tooltip {
   background-color: #fff;
-  border: 1px solid $gray6;
   color: $gray8;
-  position: relative;
 
   .title {
     color: #000;
@@ -34,21 +26,45 @@ $type-6: rgba(222, 207, 64, 1);
 
 $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
 
-@mixin get-color($num) {
+
+@mixin get-bgc($num) {
   background-color: nth($type-color, $num);
+}
+
+@mixin get-color($num) {
+  color: nth($type-color, $num);
+}
+
+.event-counts {
+  height: 50px;
+}
+
+.event-count {
+  font-size: 36px;
+}
+
+@each $num in (1,2,3,4,5,6) {
+  .event-type-#{$num} {
+    @include get-color($num);
+  }
+}
+
+.calendar {
+  background-color: #fff;
+  border-radius: 5px;
 }
 
 .main-body {
 
   .fc {
 
-    @each $num in (
-    1,2,3,4,5,6
-    ) {
+    @each $num in (1,2,3,4,5,6) {
       .fc-event.event-type-#{$num} {
-        @include get-color($num);
+        @include get-bgc($num);
       }
     }
+
+    // reset fc-event default styles
 
     .fc-event {
       line-height: 2;
@@ -56,5 +72,10 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
       border-radius: 0;
       border-width: 0;
     }
+  }
+
+  // reset ui-tooltip default styles
+  .ui-tooltip.ui-widget.ui-shadow.ui-corner-all {
+    box-shadow: none;
   }
 }
