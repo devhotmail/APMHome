@@ -152,7 +152,7 @@ public class UserContextService implements Serializable{
         this.getLoginUser();
         
         if(userAccount==null)
-            return "/";
+            return "/login.xhtml";
         else{
             UaaService uaaService = WebUtil.getBean(UaaService.class);
             return uaaService.getUserDefaultHomePage(userAccount);

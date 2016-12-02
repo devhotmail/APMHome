@@ -21,7 +21,7 @@
                 </p>
 
                 <h:form id="WorkOrderEditForm">
-                    <p:fieldset legend="#{msg.WorkOrder} #{msg.Detail}" rendered="#{workOrderController.selected != null}">
+                    <p:fieldset legend="#{msg.WorkOrder}" rendered="#{workOrderController.selected != null}">
 
                         <p:steps activeIndex="#{workOrderController.selected.currentStep-1}" styleClass="test" readonly="false">
                             <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '1')}" onclick="return false;"/>

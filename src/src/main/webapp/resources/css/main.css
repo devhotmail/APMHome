@@ -173,3 +173,23 @@ color: #fff!important;
 td{
 text-align:center;
 }
+.ui-datatable thead th.ui-state-active{
+background-color: rgb(255, 255, 255)!important;
+color: black!important;
+border-color:  #bdbdbd!important;
+border-top-width: 3px!important;
+border-top-style: solid!important;
+border-top-color: #5180ce!important;
+outline-color: transparent!important;
+}
+.ui-datatable thead th.ui-state-active .ui-inputfield, body .ui-datatable thead th.ui-state-highlight .ui-inputfield{
+color: black!important;
+}
+.ui-column-title{
+white-space: nowrap!important;
+word-wrap: break-word!important;
+overflow: hidden!important;
+}
+.ui-tree-container{
+overflow: visible!important;
+}

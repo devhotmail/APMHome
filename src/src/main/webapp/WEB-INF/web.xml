@@ -98,7 +98,7 @@
     </filter>
     <filter-mapping>
         <filter-name>fixResourcesExpirationFilter</filter-name>
-        <url-pattern>/app/javax.faces.resource/*</url-pattern>
+        <url-pattern>/javax.faces.resource/*</url-pattern>
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
