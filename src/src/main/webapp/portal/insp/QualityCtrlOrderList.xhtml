@@ -83,14 +83,13 @@
                         <p:column headerText="#{msg.comments}" sortBy="#{item.comments}" filterBy="#{item.comments}" filterMatchMode="LIKE">
                             <h:outputText value="#{appContextService.getStringHeader(item.comments, 15)}"  />
                         </p:column>
-                        <p:column headerText="#{msg.paperUrl}" sortBy="#{item.paperUrl}" filterBy="#{item.paperUrl}" filterMatchMode="LIKE">
-                            <!--<h:outputText value="#{item.paperUrl}"/>-->
-                            <p:commandButton value="#{msg.Attachment}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s" rendered="#{item.paperUrl gt 0}">
+                        <p:column headerText="#{msg.paperUrl}" sortBy="#{item.paperUrl}" style="width: 80px">
+                            <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" rendered="#{item.paperUrl gt 0}">
                                 <p:fileDownload value="#{attachmentFileService.getFile(item.paperUrl)}" />
                             </p:commandButton>
                         </p:column>
                         <f:facet name="{Toolbar}">
-                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" ajax="false">
+                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="InspectionOrder_export"/>
                             </p:commandButton>
                             <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}"  action="QualityCtrlOrderCreate?faces-redirect=true&amp;actionName=Create"/>

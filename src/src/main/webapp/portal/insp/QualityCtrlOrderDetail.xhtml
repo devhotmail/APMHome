@@ -74,7 +74,7 @@
                     <p:column headerText="#{msg.assetName}">
                         <h:outputText value="#{item.assetName}" />
                     </p:column>
-                    <p:column headerText="#{msg.itemName}">
+                    <p:column headerText="#{msg.checkListItem}">
                         <h:outputText value="#{item.itemName}" />
                     </p:column>
                     <p:column headerText="#{msg.isPassed}" style="align-content: center; width: 10%">
@@ -99,8 +99,10 @@
 <!--<p:dialog id="InspectionOrderEditDlg" widgetVar="InspectionOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionOrderController.CRUDActionName} #{msg.InspectionOrder}">-->
             <h:panelGroup id="display">
                 <h:panelGroup >
-                    <p:commandButton rendered="#{qualityCtrlOrderController.deleteAction}" icon="ui-icon-trash" action="#{qualityCtrlOrderController.removeOne()}" value="#{msg.Delete}" style="float:right"/>
-                    <p:commandButton value="#{msg.Return}" action="QualityCtrlOrderList?faces-redirect=true" immediate="true" style="float:right"/>  
+                    <p:commandButton rendered="#{qualityCtrlOrderController.deleteAction}" icon="ui-icon-trash" action="#{qualityCtrlOrderController.removeOne()}" value="#{msg.Delete}" style="float:left">
+                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
+                    </p:commandButton>
+                    <p:commandButton value="#{msg.Return}" action="QualityCtrlOrderList?faces-redirect=true" icon="ui-icon-arrow-back" immediate="true" style="float:left"/>  
                 </h:panelGroup>
             </h:panelGroup>
         </h:form>

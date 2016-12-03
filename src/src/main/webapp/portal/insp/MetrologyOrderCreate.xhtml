@@ -5,6 +5,10 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
+    <ui:define name="head">
+        <h:outputStylesheet name="css/inspection.css"/>
+    </ui:define>
+    
     <ui:define name="content">
         <p align="center">
             <b>#{msg.MetrologOrder}</b>
@@ -45,15 +49,15 @@
                         <p:inputText id="ownerOrgId" value="#{metrologyOrderController.selected.ownerOrgName}" readonly="true"/>
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">#{msg.startTime}</label>
+                        <label class="label">#{msg.startTime}*</label>
                         <p:calendar id="startTime" pattern="yyyy/MM/dd" value="#{metrologyOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.startTime} #{msg.ValidationRequire}"/>
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">#{msg.endTime}</label>
+                        <label class="label">#{msg.endTime}*</label>
                         <p:calendar id="endTime" pattern="yyyy/MM/dd" value="#{metrologyOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.endTime} #{msg.ValidationRequire}"/>
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">#{msg.period}</label>
+                        <label class="label">#{msg.period}*</label>
                          <p:selectOneMenu id="functionType" value="#{metrologyOrderController.period}" style="width: 100%" required="true" requiredMessage="#{msg.period} #{msg.ValidationRequire}" >
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{fieldMsg.getFieldValueList('inspectionPeriod')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
@@ -61,20 +65,20 @@
                         <!--<p:calendar id="period" pattern="yyyy/MM/dd" value="#{metrologyOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>-->
                     </h:panelGroup>
 
-                    <h:panelGroup>
+<!--                    <h:panelGroup>
                         <label class="label">#{msg.comments}</label>
                         <p:inputText id="comments" value="#{metrologyOrderController.selected.comments}" />
-                    </h:panelGroup>
+                    </h:panelGroup>-->
 
                 </p:panelGrid>
             </p:fieldset>
 
 
-            <p:fieldset legend="#{msg.InspectionOrderDetail}" style="margin-bottom:20px">
+            <p:fieldset legend="#{msg.MetrologyOrderDetail}" style="margin-bottom:20px">
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                    <h:panelGroup>
-                        <label class="label">#{msg.assetName}</label>
-                        <p:tree id="assetTree" class="tree" style="border:0;" value="#{metrologyOrderController.orgAssetTree}" selection="#{metrologyOrderController.selectedNodes}"  var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
+                        <p:scrollPanel style="width:98%;height:380px;border: 0" mode="native" >
+                        <!--<label class="label">#{msg.assetName}</label>-->
+                        <p:tree id="assetTree" class="tree" style="border:0;height:378px" value="#{metrologyOrderController.orgAssetTree}" selection="#{metrologyOrderController.selectedNodes}"  var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
                             <p:ajax event="select" listener="#{metrologyOrderController.onSelectTreeNode}" update=":InspectionOrderEditForm:dataList"/>
                             <p:ajax event="unselect" listener="#{metrologyOrderController.onUnselectTreeNode}" update=":InspectionOrderEditForm:dataList"/>
 
@@ -88,16 +92,17 @@
                                 <h:outputText value="#{node.item}"/>
                             </p:treeNode>
                         </p:tree>
-                    </h:panelGroup>
-
-                    <p:dataList id="dataList" value="#{metrologyOrderController.selectedNodesList}" var="item"   type="unordered">
+                        </p:scrollPanel>
+                    <p:scrollPanel style="width:98%;height:380px;border: 0" mode="native" >
+                    <p:dataList id="dataList" value="#{metrologyOrderController.selectedNodesList}" var="item"   type="unordered" emptyMessage="#{msg.noRecordFound}" >
                         <f:facet name="header">
-                            #{msg.InspectionOrderDetail}
+                            #{msg.MetrologyOrderDetail}
                         </f:facet>
                         <h:outputText value="#{item[2].name} #{item[1].name} #{item[0].item}" />
                         <!--#{asset.data.name}-->
                         <!--<p:commandButton process="@this" actionListener="#{metrologyOrderController.removeSelectedAsset(asset)}" id="iconOnly" update="dataList :InspectionOrderEditForm:assetTree" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton"/>-->
                     </p:dataList>
+                    </p:scrollPanel>
                 </p:panelGrid>
 
 
@@ -105,8 +110,8 @@
             <h:panelGroup id="display">
 
                 <h:panelGroup >
-                    <p:commandButton value="#{msg.Save}" action="#{metrologyOrderController.createOrder()}" validateClient="true" style="float:right"/>  
-                    <p:commandButton value="#{msg.Return}" action="MetrologyOrderList?faces-redirect=true" immediate="true" style="float:right"/>  
+                    <p:commandButton value="#{msg.Save}" action="#{metrologyOrderController.createOrder()}" validateClient="true" style="float:left" icon="ui-icon-check" update=":growl"/>  
+                    <p:commandButton value="#{msg.Return}" action="MetrologyOrderList?faces-redirect=true" immediate="true" style="float:left" icon="ui-icon-arrow-back"/>  
                 </h:panelGroup>
             </h:panelGroup>
         </h:form>

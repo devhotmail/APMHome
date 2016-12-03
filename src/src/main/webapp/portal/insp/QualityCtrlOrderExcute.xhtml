@@ -4,7 +4,9 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
-
+    <ui:define name="head">
+        <h:outputStylesheet name="css/inspection.css"/>
+    </ui:define>
     <ui:define name="content">
         <p align="center">
             <b>#{msg.QualityCtrlOrder}</b>
@@ -57,10 +59,9 @@
             <p:fieldset legend="#{fieldMsg.fieldValue('checklistType', 3)}" style="margin-bottom:20px">
 
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                    <h:panelGroup>
-                    <label class="label">#{msg.assetName}</label>
-                    <p:tree id="assetTree" class="tree" style="border:0;" value="#{qualityCtrlOrderController.excuteItemTree}" selection="#{qualityCtrlOrderController.excutedItemArray}" var="node" dynamic="true" cache="false" selectionMode="checkbox"  highlight="false">
-                        <!--<p:ajax event="select" listener="#{qualityCtrlOrderController.onSelectCheckItemNode}" />-->
+                    <p:scrollPanel style="width:98%;height:380px;border: 0" mode="native" >
+                        <p:tree id="assetTree" class="tree" style="border:0;" value="#{qualityCtrlOrderController.excuteItemTree}" selection="#{qualityCtrlOrderController.excutedItemArray}" var="node" dynamic="true" cache="false" selectionMode="checkbox"  highlight="false">
+                            <!--<p:ajax event="select" listener="#{qualityCtrlOrderController.onSelectCheckItemNode}" />-->
                         <p:treeNode type="org">
                             <h:outputText value="#{node}"/>
                         </p:treeNode>
@@ -71,12 +72,12 @@
                             <h:outputText value="#{node.itemName}"/>
                         </p:treeNode>
                     </p:tree>
-                    </h:panelGroup>
+                    </p:scrollPanel>
 
                     <h:panelGroup>
                         <label class="label">#{msg.comments}</label>
                         <!--<p:inputText id="comments" value="#{qualityCtrlOrderController.selected.comments}" />-->
-                        <p:inputTextarea rows="10" cols="50" counter="comentsCounts" counterTemplate="{0} characters remaining." maxlength="255"  autoResize="false" value="#{qualityCtrlOrderController.selected.comments}" />
+                        <p:inputTextarea rows="10" cols="50" counter="comentsCounts" counterTemplate="#{msg.remainingCharacters}" maxlength="255"  autoResize="false" value="#{qualityCtrlOrderController.selected.comments}" />
                         <p><h:outputText id="comentsCounts" /></p>
                     </h:panelGroup>
                 </p:panelGrid>
@@ -94,7 +95,7 @@
                         </h:panelGroup>
                         <h:panelGroup rendered="#{qualityCtrlOrderController.selected.paperUrl == null}">
                             <p:fileUpload id="type1" fileUploadListener="#{qualityCtrlOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                          multiple="false"  sizeLimit="1000000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update=":InspectionOrderEditForm:attchmentFile"/>
+                                          multiple="false"  sizeLimit="10000000"  update=":InspectionOrderEditForm:attchmentFile" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M"  label="#{msg.Add}"/>
                         </h:panelGroup>
                     </h:panelGroup>
                 </p:panelGrid>
@@ -103,8 +104,8 @@
 
             <h:panelGroup id="display">
                 <h:panelGroup >
-                    <p:commandButton icon="ui-icon-save" action="#{qualityCtrlOrderController.excuteOrder()}" value="#{msg.save}" style="float:right"/>
-                    <p:commandButton value="#{msg.Return}" action="QualityCtrlOrderList?faces-redirect=true" immediate="true" style="float:right"/>  
+                    <p:commandButton icon="ui-icon-save" action="#{qualityCtrlOrderController.excuteOrder()}" value="#{msg.save}" style="float:left"/>
+                    <p:commandButton icon="ui-icon-arrow-back" value="#{msg.Return}" action="QualityCtrlOrderList?faces-redirect=true" immediate="true" style="float:left"/>  
                 </h:panelGroup>
             </h:panelGroup>
         </h:form>
