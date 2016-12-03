@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+<ui:define name="content">
+		<h:form id ="deviceCheckForm">
+             <div class="ui-g ui-fluid">
+                <div class="ui-g-12 ui-lg-4">
+                    <div class="card" style="height:400px;">
+                        <p:scrollPanel style="width:98%;height:95%;border: 0" mode="native" >
+                            <label class="label">#{msg.assetName}</label>
+	 							<p:tree id="deviceTree" class="tree" style="border:0;" value="#{assetInventoryController.deviceNode}" var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
+		                            <p:ajax event="select" listener="#{assetInventoryController.onSelectDeviceTreeNode}" update=":deviceCheckForm:dataList"/>
+		                            <p:ajax event="unselect" listener="#{assetInventoryController.onUnSelectDeviceTreeNode}" update=":deviceCheckForm:dataList"/>
+		
+		                            <p:treeNode type="org">
+		                                <h:outputText value="#{node.name}"/>
+		                            </p:treeNode>
+		                            <p:treeNode type="asset" icon="ui-icon-wifi-tethering">
+		                                <h:outputText value="#{node.name}"/>
+		                            </p:treeNode>
+	                        	</p:tree>
+                        </p:scrollPanel>
+                    </div>
+                </div>
+                
+                <div class="ui-g-12 ui-lg-4">
+                  <div class="card" style="height:400px;">
+                  	<h:panelGroup>
+                        <label class="label">#{msg.DeviceCheckDate}</label>
+                        <p:calendar id="manufactDate" pattern="yyyy/MM/dd" value="#{assetInventoryController.lastStockTakeDate}" 
+                        showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />
+                    </h:panelGroup>
+                    <BR />
+                   <p:scrollPanel style="width:98%;height:95%;border: 0" mode="native" >
+                    <p:dataList id="dataList" value="#{assetInventoryController.unValidDeviceList}" var="item"   type="unordered" emptyMessage="#{msg.noRecordFound}">
+	                       <f:facet name="header">
+	                            #{msg.AssetInventory}
+	                        </f:facet>
+	                        <h:outputText value="#{item.data.name}" />
+	                 </p:dataList>
+               		</p:scrollPanel>
+               		<BR />
+	                <h:panelGroup >
+	                   	<p:commandButton value="#{msg.Save}" actionListener="#{assetInventoryController.deviceCheck()}" 
+	                   	validateClient="true" style="float:center" update=":growl" icon="ui-icon-check" />  
+	               	</h:panelGroup>
+
+                  </div>
+                </div>
+              </div>
+             </h:form>
+       </ui:define>        
+</ui:composition>

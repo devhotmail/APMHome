@@ -48,15 +48,15 @@
 
                         <h:panelGroup>
                             <label class="label" >#{msg.startTime}</label>
-                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar id="startTime" pattern="yyyy/MM/dd" value="#{pmOrderController.selected.startTime}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.endTime}</label>
-                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar id="endTime" pattern="yyyy/MM/dd" value="#{pmOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.nextTime}</label>
-                            <p:calendar id="nextTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderController.selected.nextTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar id="nextTime" pattern="yyyy/MM/dd" value="#{pmOrderController.selected.nextTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isFinished}" value="#{pmOrderController.selected.isFinished}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
@@ -82,12 +82,13 @@
                                 	style="zoom:0.7;"  icon="ui-icon-clear" title="#{msg.Delete}" />
                             </p:dataList>
                             <p:fileUpload fileUploadListener="#{pmOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                          label="#{msg.SelectFile}" uploadLabel="#{msg.Upload}" cancelLabel="#{msg.Cancel}"
-                                          multiple="true"  sizeLimit="1000000" fileLimit="1"  update="pictureList"/>
+                                uploadLabel="#{msg.Upload}" cancelLabel="#{msg.Cancel}"
+                                multiple="true"  sizeLimit="1000000" fileLimit="1"  update="pictureList"
+                                auto="true" invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
                         </h:panelGroup>
                     </p:panelGrid>
 
-                    <p:commandButton validateClient="true"  actionListener="#{pmOrderController.applyChange()}"  value="#{msg.Save}"  update=":PmOrderEditForm, :growl"  icon="ui-icon-check" />
+                    <p:commandButton action="#{pmOrderController.applyChange()}" validateClient="true" value="#{msg.Save}"  update=":PmOrderEditForm, :growl,:PmOrderListForm"  icon="ui-icon-check" />
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" actionListener="#{pmOrderController.onCancel()}"   value="#{msg.Cancel}" update=":PmOrderEditForm,:PmOrderListForm"  icon="ui-icon-cancel" />
                 </h:panelGroup>

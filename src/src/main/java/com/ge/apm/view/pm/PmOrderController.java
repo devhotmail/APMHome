@@ -217,6 +217,10 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         if (!isTimeValidate()){
         	return;
         }
+        if (selected.getAssetName() == null || selected.getAssetName().trim().equals("") ) {
+            WebUtil.addErrorMessage(WebUtil.getMessage("noAssetSelected"));
+            return ;
+        }
         this.save();
     }
     
