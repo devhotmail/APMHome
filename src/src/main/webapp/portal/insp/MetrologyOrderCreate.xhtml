@@ -11,7 +11,7 @@
     
     <ui:define name="content">
         <p align="center">
-            <b>#{msg.MetrologOrder}</b>
+            <b>#{msg.MetrologWorkOrder}</b>
         </p>
 
         <h:form id="InspectionOrderEditForm">
@@ -45,8 +45,8 @@
                         </p:selectOneMenu>
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">#{msg.ownerOrgId}*</label>
-                        <p:inputText id="ownerOrgId" value="#{metrologyOrderController.selected.ownerOrgName}" readonly="true"/>
+                        <label class="label">#{msg.ownerOrgId}</label>
+                        <p:inputText id="ownerOrgId" placeholder="#{inspectionOrderController.selected.ownerOrgName}" readonly="true"/>
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.startTime}*</label>
