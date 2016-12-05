@@ -84,14 +84,15 @@
                     </p:column>
                     
                     <f:facet name="{Toolbar}">
-                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
-                            <p:dataExporter type="xls" target="datalist" fileName="PmOrder_export"/>
-                        </p:commandButton>
+
                         <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{pmOrderController.prepareCreate}" update=":PmOrderEditForm" />
                         <p:commandButton  id="deleteButton"   icon="ui-icon-close"  title="#{msg.Delete}" actionListener="#{pmOrderController.delete}" disabled="#{empty pmOrderController.selected or pmOrderController.selected.isFinished eq true}"
                          update=":PmOrderListForm,:PmOrderEditForm"  > 
 		                    <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
 		                </p:commandButton> 
+		                <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="PmOrder_export"/>
+                        </p:commandButton>
                     </f:facet>
                 </p:dataTable>
             </h:form>

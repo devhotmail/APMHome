@@ -77,8 +77,8 @@
                                     #{fileitem.fileName}
                                <p:commandButton icon="ui-icon-cloud-download" style="zoom:0.7;" title="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"   >
 		                                <p:fileDownload value="#{attachmentFileService.getFile(fileitem.id)}" />
-		                         </p:commandButton>
-                                <p:commandButton process="@this"  immediate="true" actionListener="#{pmOrderController.removeAttachment(fileitem.id)}" id="iconOnly" update="pictureList"
+		                       </p:commandButton>
+                               <p:commandButton process="@this"  immediate="true" actionListener="#{pmOrderController.removeAttachment(fileitem.id)}" id="iconOnly" update="pictureList"
                                 	style="zoom:0.7;"  icon="ui-icon-clear" title="#{msg.Delete}" />
                             </p:dataList>
                             <p:fileUpload fileUploadListener="#{pmOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
