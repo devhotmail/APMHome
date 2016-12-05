@@ -1,22 +1,21 @@
 @charset "UTF-8";
 .ui-icon-carat-2-n-s:before {
-/* content: ""; */
-content: ""; 
-/* content: ""; */
+/*content: ""; */
+ content: ""; 
 /*content: ""; */
-float: top;
-position: absolute;
-color:#bdbdbd;}
+color:#dcdada;}
 
 .ui-icon-triangle-1-n:before {
 /*  content: ""; */
-content: ""; 
-color:#bdbdbd;}
+content: ""; 
+/*content: ""; */
+color:#dcdada;}
 
 .ui-icon-triangle-1-s:before {
 /*  content: ""; }*/
-content: "";
-color:#bdbdbd;}
+content: ""; 
+color:#dcdada;}
 
 .ui-selectonemenu-trigger > .ui-icon-triangle-1-s:before {
-content: ""; }
+content: "";
+color: #8a8383!important;}

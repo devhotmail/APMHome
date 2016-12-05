@@ -73,7 +73,7 @@
                         <p:column headerText="#{msg.vendor}" sortBy="#{item.vendor}" filterBy="#{item.vendor}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.vendor}"/>
                         </p:column>
-                        <p:column headerText="#{msg.status}" width="80" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
+                        <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" value="#{assetInfoController.filterAssetStatus}" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
