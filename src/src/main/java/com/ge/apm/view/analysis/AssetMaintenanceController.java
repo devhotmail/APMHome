@@ -206,14 +206,18 @@ public final class AssetMaintenanceController {
                 int value = (int)map.get("value");
                 total += value;
             }
+            int[] raw = new int[4];
             for (Map<String, Object> map : innerList) {
-                String key = Integer.toString((int)map.get("key"));
+                int key = (int)map.get("key");
                 int value = (int)map.get("value");
-                key = WebUtil.getMessage(String.format("maintenanceAnalysis_timeChart_legend_%s", key));
+                raw[key - 1] = value;
+            }
+            for (int i = 1; i <= 4; i++) {
+                String key = WebUtil.getMessage(String.format("maintenanceAnalysis_timeChart_legend_%s", i));
                 key = String.format(key, "" /*Integer.toString((int)(((double)value)/total*100))*/);
                 key = key.replace("：", "");
                 key = key.replace("%", "");
-                chart.set(key, value);
+                chart.set(key, raw[i - 1]);
             }
             chart.setTitle(WebUtil.getFieldValueMessage("woSteps", Integer.toString(scalar)));
             chart.setLegendPosition("e");
@@ -582,7 +586,7 @@ public final class AssetMaintenanceController {
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
             "        GROUP BY step.step_id, work.id " +
             ") " +
-            "SELECT four.rate AS key, CAST(count(*) AS INTEGER) AS value " +
+            "SELECT rate AS key, CAST(count(*) AS INTEGER) AS value " +
             "FROM ( " +
             "        SELECT CASE " +
             "                WHEN minutes BETWEEN 0 AND 30 THEN CAST (1 AS INTEGER) " + // 小于 30 分钟
@@ -592,10 +596,8 @@ public final class AssetMaintenanceController {
             "        END AS rate " +
             "        FROM cumulative " +
             ") AS temporary " +
-            "RIGHT OUTER JOIN generate_series(1,4) AS four(rate) " +
-            "ON temporary.rate = four.rate " +
-            "GROUP BY four.rate " +
-            "ORDER BY four.rate ASC " +
+            "GROUP BY rate " +
+            "ORDER BY rate ASC " +
             ";";
 
     // 设备故障分布：按科室
