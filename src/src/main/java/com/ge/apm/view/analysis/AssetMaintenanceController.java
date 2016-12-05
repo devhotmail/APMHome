@@ -292,8 +292,10 @@ public final class AssetMaintenanceController {
     }
 
     public final String getErrorPercentageInRoomOfDeviceString() {
+        int value = (int)Math.round(this.getErrorPercentageInRoomOfDevice()*100);
+        value = (value < 0 || value > 100) ? 0 : value;
         return String.format(WebUtil.getMessage("%s%%"),
-                             Integer.toString((int)Math.round(this.getErrorPercentageInRoomOfDevice()*100)));
+                             Integer.toString(value));
     }
 
     public final String getErrorCountInRoomOfDevice() {
@@ -320,8 +322,10 @@ public final class AssetMaintenanceController {
     }
 
     public final String getErrorPercentageInDeviceTypeOfDeviceString() {
+        int value = (int)Math.round(this.getErrorPercentageInDeviceTypeOfDevice()*100);
+        value = (value < 0 || value > 100) ? 0 : value;
         return String.format(WebUtil.getMessage("%s%%"),
-                             Integer.toString((int)Math.round(this.getErrorPercentageInDeviceTypeOfDevice()*100)));
+                Integer.toString(value));
     }
 
     public final String getErrorCountInDeviceTypeOfDevice() {
@@ -348,8 +352,10 @@ public final class AssetMaintenanceController {
     }
 
     public final String getErrorPercentageInTotalOfDeviceString() {
+        int value = (int)Math.round(this.getErrorPercentageInTotalOfDevice()*100);
+        value = (value < 0 || value > 100) ? 0 : value;
         return String.format(WebUtil.getMessage("%s%%"),
-                Integer.toString((int)Math.round(this.getErrorPercentageInTotalOfDevice()*100)));
+                Integer.toString(value));
     }
 
     public final String getErrorCountInTotalOfDevice() {
