@@ -172,8 +172,15 @@
 
                             <h:panelGroup>
                                 <label class="label">#{msg.attachmentUrl}</label>
-                                <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                              multiple="true" sizeLimit="1000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                                <p:dataList id="pictureList" value="#{workOrderStepController.getAttachList(workOrderStepController.selected.id)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
+                                    #{fileitem.attachmentUrl}
+                                    <p:commandButton actionListener="#{workOrderStepController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
+                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
+                                    </p:commandButton>
+                                </p:dataList>
+                                <p:fileUpload id="type1" fileUploadListener="#{workOrderStepController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                              multiple="false"  sizeLimit="10000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="pictureList" auto="true" 
+                                              invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
                             </h:panelGroup>
                         </p:panelGrid>
 

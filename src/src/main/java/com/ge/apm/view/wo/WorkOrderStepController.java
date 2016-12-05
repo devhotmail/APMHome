@@ -9,10 +9,12 @@ import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.WorkOrderStepRepository;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderStep;
+import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.wo.WorkOrderService;
 import java.util.ArrayList;
+import javax.faces.bean.ManagedProperty;
+import org.primefaces.event.FileUploadEvent;
 import webapp.framework.dao.SearchFilter;
-import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -20,6 +22,9 @@ import webapp.framework.web.WebUtil;
 public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
 
     WorkOrderStepRepository dao = null;
+    
+    @ManagedProperty("#{attachmentFileService}")
+    private AttachmentFileService fileService;
 
     @Override
     protected void init() {
@@ -138,5 +143,46 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
             WebUtil.addErrorMessageKey("PersistenceErrorOccured");
         }
    }
+    
+    public void setFileService(AttachmentFileService fileService) {
+        this.fileService = fileService;
+    }
+    
+    public List<WorkOrderStep> getAttachList(Integer orderStepId) {
+        if (orderStepId == null) return null;
+        WorkOrderStep step = dao.findById(orderStepId);
+
+        List<WorkOrderStep> result = new ArrayList();
+        if (step != null && step.getFileId() != null) {
+            result.add(step);
+        }
+        return result;
+    }
+    
+    public void removeAttachment(Integer attachid) {
+        if (attachid == null) return;
+        fileService.deleteAttachment(attachid);
+        WorkOrderStep step = dao.findById(this.selected.getId());
+        step.setFileId(null);
+        step.setAttachmentUrl(null);
+        dao.save(step);
+    }
+    
+    public void handleFileUpload(FileUploadEvent event) {
+        Integer uploadFileId = fileService.uploadFile(event.getFile());
+        String fileName = fileService.getFileName(event.getFile());
+        WorkOrderStep step = dao.findById(this.selected.getId());
+        if (step == null) return;
+        //如果有文件则删除以前的文件
+        if (step.getFileId() != null) {
+            fileService.deleteAttachment(step.getFileId());
+        }
+        step.setAttachmentUrl(fileName);
+        if (uploadFileId > 0) {
+            step.setFileId(uploadFileId);
+            WebUtil.addSuccessMessage("文件上传成功。", fileName + " is uploaded.");
+        }
+        dao.save(step);
+    }
     
 }
