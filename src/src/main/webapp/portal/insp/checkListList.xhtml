@@ -17,10 +17,7 @@
                         <p:scrollPanel style="width:98%;height:95%;border: 0" mode="native" >
                             <label class="label">#{msg.searchAssetByDept} #{msg.ChecklistType}</label>
                             <p:tree id="assetTree" class="tree" style="border:0;" value="#{inspectionChecklistController.orgAssetTree}" var="node" dynamic="false" cache="false" selectionMode="single" selection="#{inspectionChecklistController.selectedNode}" highlight="true">
-                                <p:ajax event="select" listener="#{inspectionChecklistController.onSelectTreeNode}" update=":checkListQueryForm :checkListQueryForm:datalist"/>
-                                <p:ajax event="expand" listener="#{inspectionChecklistController.onExpandTreeNode}" />
-                                <p:ajax event="collapse" listener="#{inspectionChecklistController.onCollapseTreeNode}" />
-
+                                <p:ajax event="select" listener="#{inspectionChecklistController.onSelectTreeNode}" update=":checkListQueryForm:datalist"/>
                                 <p:treeNode type="org">
                                     <h:outputText value="#{node.name}"/>
                                 </p:treeNode>

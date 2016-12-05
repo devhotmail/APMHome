@@ -127,14 +127,6 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
         }
     }
 
-    public void onExpandTreeNode(NodeExpandEvent event) {
-        event.getTreeNode().setExpanded(true);
-    }
-
-    public void onCollapseTreeNode(NodeCollapseEvent event) {
-        event.getTreeNode().setExpanded(false);
-    }
-
     public void onSelectTreeNode(NodeSelectEvent event) {
         TreeNode node = event.getTreeNode();
         node.setExpanded(true);

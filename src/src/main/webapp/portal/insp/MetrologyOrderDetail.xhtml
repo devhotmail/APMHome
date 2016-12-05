@@ -7,7 +7,7 @@
 
     <ui:define name="content">
         <p align="center">
-            <b>#{msg.MetrologOrder}</b>
+            <b>#{msg.MetrologWorkOrder}</b>
         </p>
 
         <h:form id="InspectionOrderEditForm">
@@ -90,7 +90,7 @@
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                         <h:panelGroup  rendered="#{metrologyOrderController.selected.paperUrl != null}">
                             <h:outputText value="#{msg.Attachment}"  />
-                            <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrow-downward" title="#{msg.download}" class="popupIconButton">
+                            <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" title="#{msg.download}" class="popupIconButton">
                             <p:fileDownload value="#{attachmentFileService.getFile(metrologyOrderController.selected.paperUrl)}" />
                         </p:commandButton>
                         </h:panelGroup>
