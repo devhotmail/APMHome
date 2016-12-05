@@ -57,12 +57,12 @@ public class AttachmentFileService {
         try {
             Object[] result = fileUploaddao.getAttachmentFile(fileId);
             DefaultStreamedContent fileStream = new DefaultStreamedContent((InputStream)result[1]);
-            fileStream.setName((String)result[0]);
+            fileStream.setName(new String(((String)result[0]).getBytes("utf-8"),"ISO8859-1"));
             return fileStream;
-        } catch (SQLException ex) {
+        } catch (SQLException | UnsupportedEncodingException ex) {
             WebUtil.addErrorMessage("file download error");
             Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
         return null;
     }
     
