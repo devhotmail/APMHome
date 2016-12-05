@@ -507,6 +507,7 @@ INSERT INTO "i18n_message" VALUES (5501,'label','maintenanceAnalysis_title', '�
 INSERT INTO "i18n_message" VALUES (5506,'label','maintenanceAnalysis_empty', '未填','Unspecified',null,-1);
 INSERT INTO "i18n_message" VALUES (5507,'label','maintenanceAnalysis_otherReason', '其他原因','Others',null,-1);
 INSERT INTO "i18n_message" VALUES (5508,'label','maintenanceAnalysis_otherCategory', '其他设备类型','Others',null,-1);
+INSERT INTO "i18n_message" VALUES (5509,'label','maintenanceAnalysis_otherRoom', '其他科室','Others',null,-1);
 
 INSERT INTO "i18n_message" VALUES (5511,'label','maintenanceAnalysis_reasonTile', '设备故障主要原因','Most Common Reason',null,-1);
 INSERT INTO "i18n_message" VALUES (5512,'label','maintenanceAnalysis_stepTile', '设备故障处理流程最耗时步骤','Most Time-Consuming Step',null,-1);

@@ -33,6 +33,7 @@ public final class AssetMaintenanceController {
     private final int knownCaseTypes = 5;
     private final int knownWorkOrderSteps = 6;
     private final int knownAssetGroups = 8;
+    private final int knownRooms = 5;
 
     public AssetMaintenanceController() {
         this.parameters = new HashMap<>();
@@ -50,6 +51,7 @@ public final class AssetMaintenanceController {
         this.parameters.put("knownCaseTypes", this.knownCaseTypes);
         this.parameters.put("knownWorkOrderSteps", this.knownWorkOrderSteps);
         this.parameters.put("knownAssetGroups", this.knownAssetGroups);
+        this.parameters.put("knownRooms", this.knownRooms);
     }
 
     public final void submit() {
@@ -119,7 +121,10 @@ public final class AssetMaintenanceController {
         if (id == null || id.intValue() == 0) {
             return WebUtil.getMessage("maintenanceAnalysis_empty");
         }
-        return id.toString();
+        if (id > 99) {
+            return WebUtil.getMessage("maintenanceAnalysis_otherRoom");
+        }
+        return WebUtil.getFieldValueMessage("clinicalDeptId", id.toString());
     }
 
     public final String getTopErrorDeviceType() {
@@ -220,9 +225,26 @@ public final class AssetMaintenanceController {
     }
 
     public final BarChartModel getErrorRoomChart() {
-        BarChartModel chart = convertToBarChartModel(this.query(SQL_LIST_ERROR_ROOM_ALL),
-                                                     WebUtil.getMessage("maintenanceAnalysis_distributionChart_room_xAxis"),
-                                                     WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
+        List<Map<String, Object>> list = this.query(SQL_LIST_ERROR_ROOM_ALL);
+        BarChartModel chart = new BarChartModel();
+        ChartSeries series = new ChartSeries();
+        for (Map<String, Object> map : list) {
+            Integer id = (Integer)map.get("key");
+            String key;
+            if (id == null || id.intValue() == 0) {
+                key = WebUtil.getMessage("maintenanceAnalysis_empty");
+            }
+            else if (id > 99) {
+                key = WebUtil.getMessage("maintenanceAnalysis_otherRoom");
+            }
+            else {
+                key = WebUtil.getFieldValueMessage("clinicalDeptId", id.toString());
+            }
+            series.set(key, (Number)map.get("value"));
+        }
+        chart.addSeries(series);
+        chart.getAxis(AxisType.X).setLabel(WebUtil.getMessage("maintenanceAnalysis_distributionChart_room_xAxis"));
+        chart.getAxis(AxisType.Y).setLabel(WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
         chart.setExtender("maintenanceE51");
         return chart;
     }
@@ -423,15 +445,27 @@ public final class AssetMaintenanceController {
     // 设备故障主要发生的科室
 
     private final static String SQL_SCALAR_TOP_ERROR_ROOM_ALL = "" +
-            "        SELECT asset.clinical_dept_id AS scalar " +
+            "WITH " +
+            "temporary AS ( " +
+            "        SELECT asset.clinical_dept_id AS key, count(*) AS value " +
             "        FROM work_order AS work, " +
             "             asset_info AS asset " +
             "        WHERE work.asset_id = asset.id " +
-            "              AND asset.hospital_id = :#hospitalId " +
-            "              AND work.request_time BETWEEN :#startDate AND :#endDate " +
+            "          AND asset.hospital_id = :#hospitalId " +
+            "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY asset.clinical_dept_id " +
-            "        ORDER BY count(*) DESC " +
-            "        LIMIT 1 " +
+            "        ORDER BY asset.clinical_dept_id ASC " +
+            ") " +
+            "SELECT CASE " +
+            "        WHEN dept_info.id IS NOT NULL THEN dept_info.id " +
+            "        WHEN temporary.key IS NOT NULL THEN CAST(100 AS INTEGER) " +
+            "        ELSE CAST (0 AS INTEGER) " +
+            "END AS scalar " +
+            "FROM generate_series(1, :#knownRooms) AS dept_info(id) " +
+            "FULL JOIN temporary " +
+            "ON dept_info.id = temporary.key " +
+            "ORDER BY COALESCE(temporary.value, 0) DESC " +
+            "LIMIT 1 " +
             ";";
 
     // 设备故障主要发生的设备类型
@@ -548,7 +582,7 @@ public final class AssetMaintenanceController {
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
             "        GROUP BY step.step_id, work.id " +
             ") " +
-            "SELECT rate AS key, CAST(count(*) AS INTEGER) AS value " +
+            "SELECT four.rate AS key, CAST(count(*) AS INTEGER) AS value " +
             "FROM ( " +
             "        SELECT CASE " +
             "                WHEN minutes BETWEEN 0 AND 30 THEN CAST (1 AS INTEGER) " + // 小于 30 分钟
@@ -558,18 +592,16 @@ public final class AssetMaintenanceController {
             "        END AS rate " +
             "        FROM cumulative " +
             ") AS temporary " +
-            "GROUP BY rate " +
-            "ORDER BY rate ASC " +
+            "RIGHT OUTER JOIN generate_series(1,4) AS four(rate) " +
+            "ON temporary.rate = four.rate " +
+            "GROUP BY four.rate " +
+            "ORDER BY four.rate ASC " +
             ";";
 
     // 设备故障分布：按科室
 
     private final static String SQL_LIST_ERROR_ROOM_ALL = "" +
             "WITH " +
-            "dept_info AS ( " +
-            "        SELECT DISTINCT ON (id) asset.clinical_dept_id AS id, asset.clinical_dept_name AS name " +
-            "        FROM asset_info AS asset " +
-            "), " +
             "temporary AS ( " +
             "        SELECT asset.clinical_dept_id AS key, count(*) AS value " +
             "        FROM work_order AS work, " +
@@ -585,7 +617,7 @@ public final class AssetMaintenanceController {
             "        WHEN temporary.key IS NOT NULL THEN CAST(100 AS INTEGER) " +
             "        ELSE CAST (0 AS INTEGER) " +
             "END AS key, CAST(COALESCE(temporary.value, 0) AS INTEGER) AS value " +
-            "FROM dept_info " +
+            "FROM generate_series(1, :#knownRooms) AS dept_info(id) " +
             "FULL JOIN temporary " +
             "ON dept_info.id = temporary.key " +
             "ORDER BY key " +
