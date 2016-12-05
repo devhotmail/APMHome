@@ -162,73 +162,27 @@ public final class AssetMaintenanceController {
         return chart;
     }
 
-    private final static String[] COLORS = new String[] { "5da5da", "faa43a", "60bd68", "f17cb0", "b2912f", "decf13" };
-
     public final HorizontalBarChartModel getErrorStepChart() {
         List<Map<String, Object>> data = this.query(SQL_LIST_ERROR_STEP);
         int[] raw = new int[this.knownWorkOrderSteps];
-        int count = 0;
-        int total = 0;
+
         for (Map<String, Object> map : data) {
             int key = (int)map.get("key");
             int value = (int)map.get("value");
-            count++;
             raw[key - 1] = value;
-            total += value;
-        }
-        int[] ext = new int[this.knownWorkOrderSteps];
-        int average = 0;
-        if (count > 0) {
-            average = total / count;
-        }
-        if (average < 2) {
-            average = 2;
-        }
-        for (int i = 0; i < this.knownWorkOrderSteps; i++) {
-            if (raw[i] == 0) {
-                ext[i] = average;
-            }
-            else {
-                ext[i] = raw[i];
-            }
         }
 
         HorizontalBarChartModel chart = new HorizontalBarChartModel();
         chart.setStacked(true);
-        total = 0;
-        StringBuilder builder = new StringBuilder();
         for (int i = 0; i < this.knownWorkOrderSteps; i++) {
             ChartSeries series = new ChartSeries();
             String key = WebUtil.getFieldValueMessage("woSteps", Integer.toString(i + 1));
-            int value = ext[i];
-            /*
-            if (raw[i] != 0) {
-                if (value < 60) {
-                    key = String.format(WebUtil.getMessage("maintenanceAnalysis_timeChart_minute"), key, value);
-                }
-                else {
-                    key = String.format(WebUtil.getMessage("maintenanceAnalysis_timeChart_hour"), key, value/(double)60);
-                }
-            }
-            */
+            int value = raw[i];
             series.set(key, value);
             series.setLabel(key);
             chart.addSeries(series);
-            total += value;
-            if (builder.length() != 0) {
-                builder.append(",");
-            }
-            if (raw[i] == 0) {
-                builder.append("ffffff");
-            }
-            else {
-                builder.append(COLORS[i % 6]);
-            }
         }
-        Axis axis = chart.getAxis(AxisType.X);
-        axis.setMin(0);
-        axis.setMax(total);
-        chart.setSeriesColors(builder.toString());
+        chart.getAxis(AxisType.X).setMin(0);
         chart.setExtender("maintenanceE3");
         return chart;
     }
