@@ -5,6 +5,15 @@
   @include squareBefore();
 }
 
+// remove border-radius in card
+.calendar {
+  border-radius: 0 !important;
+}
+
+.calendar-footer {
+  text-align: right;
+}
+
 // event tooltip styles
 .event-tooltip {
   background-color: #fff;
@@ -26,7 +35,6 @@ $type-6: rgba(222, 207, 64, 1);
 
 $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
 
-
 @mixin get-bgc($num) {
   background-color: nth($type-color, $num);
 }
@@ -42,7 +50,7 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
 .event-count {
   font-size: 50px;
   font-weight: bold;
-  font-family: "GE Inspira Sans";
+  line-height: 1;
 }
 
 @each $num in (1,2,3,4,5,6) {
@@ -51,26 +59,14 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
   }
 }
 
-.calendar {
-  background-color: #fff;
-  border-radius: 5px;
-}
-
-// date prev/next btn
-
-.date-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 30px;
-  height: 30px;
-  color: $dv-basic-blue;
-  border-radius: 50%;
-  background-color: #fff;
-  border: 1px solid $gray4;
-}
+// reset part
 
 .main-body {
+
+  // reset ui-tooltip default styles
+  .ui-tooltip.ui-widget.ui-shadow.ui-corner-all {
+    box-shadow: none;
+  }
 
   .fc {
     // different event type class
@@ -79,6 +75,11 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
       .fc-event.event-type-#{$num} {
         @include get-bgc($num);
       }
+    }
+
+    // hide event time
+    .fc-content .fc-time {
+      display: none;
     }
 
     // reset fc-event default styles
@@ -93,7 +94,7 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
         opacity: .5;
       }
     }
-
+    // reset layout of toolbar
     .fc-toolbar {
       margin-top: 10px;
       height: 40px;
@@ -123,16 +124,6 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
         }
       }
 
-      .fc-prev-button {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-      }
-
-      .fc-next-button {
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-      }
-
       .fc-today-button {
         border-radius: 0;
         border-left-width: 0 !important;
@@ -140,6 +131,7 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
         box-shadow: none !important;
       }
 
+      // reset for next/prev button
       .fc-next-button,
       .fc-prev-button {
         display: flex;
@@ -152,10 +144,29 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
         border: 1px solid $gray4;
         outline: none!important;
         box-shadow: none;
+        background-size: auto 15px;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        .ui-icon {
+          display: none;
+        }
 
         .ink {
           display: none;
         }
+      }
+
+      .fc-prev-button {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATwAAAIAAgMAAABiOzjeAAAACVBMVEUAAABAh+k+h+jQbC3AAAAAAnRSTlMAgJsrThgAAAJHSURBVHja7d2xbcMwFAZhs/EQmcbzZJo3hBtxypQHpJCLHCAhOA5wAD/WxP/441mvh3qe4/a+3m7v+1Bza28V8Ln3qHx7v1W+vQ+XD0CHD0CHD0CHD0CFD0CHD0CHD0CHD0CFD0CHD0CHD0CHD0CFTwV80huJD0CHD0CHD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CLD0CDD0CHj57Lt98u3x6Xb7/iiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvvwfepdft8P73H5/+8AAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMM8L8CHtfvbZ8CzvV75WeAxx323k8A5w57+daeP4AOH4AOH4ASH4AOH4AOH4AOH4ASH4AOH4AOH4AOH4ASH4AOH4AOH4AOH4ASH4AOH4AOH4AOH4AuH4DwOYDwOYDwOYDwKYDwOYDwOYDwOYDwKYDwOYDwqYBj9JbFByB8DiB8KuA4vSXxAQifAwifCThWb8EnAcLnAMLnAY7XW/BJgPA5gPBZgGP2FnwSIHwOIHwO4Li99YvvB7j7Lr4VMsfwAAAAAElFTkSuQmCC');
+      }
+
+      .fc-next-button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATwAAAIAAgMAAABiOzjeAAAACVBMVEUAAABAh+k+h+jQbC3AAAAAAnRSTlMAgJsrThgAAAJFSURBVHja7d2xbcMwAAVRs+EQnibzZBoO4UacMuUhjWzAB0jFcYAD+Mj+P/6f8fNQz1xu7/lye7+Hmht7q4Bz76Xy7f1S+fY+XD4AHT4AHT4AHT4AFT4AHT4AHT4AHT4AFT4AHT4AHT4AHT4AFT4VcNJbEh+ADh+ADh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+AFh+AX/AJgPQswOd2Aed2AccOMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAP8qHf5fd+8h/1f4osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7778J33juv3tucp3/V75WeAxx323ucJ3x328q09fwAdPgAdPgAlPgAdPgAdPgAdPgAlPgAdPgAdPgAdPgAlPgAdPgAdPgAdPgAlPgAdPgAdPgAdPgBdPgDhcwDhcwDhcwDhUwDhcwDhcwDhcwDhUwDhcwDhUwGX0RsWH4DwOYDwqYDL6Q2JD0D4HED4TMBl9QZ8EiB8DiB8HuDyegM+CRA+BxA+C3CZvQGfBAifAwifA7jc3viW7w+Qti6+KYuXiQAAAABJRU5ErkJggg==');
       }
     }
 
@@ -163,6 +174,7 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
       background-color: #fff!important;
     }
 
+    // reset the way of highlight today
     .fc-bg .fc-today {
       background-color: transparent;
     }
@@ -194,12 +206,16 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
     }
   }
 
-  .calendar-footer {
-    text-align: right;
+  // keep calendar in one screen
+  @media(min-width: 1335px) {
+    .fc-row:not(.ui-widget-header) {
+      height: 120px!important;
+    }
   }
 
-  // reset ui-tooltip default styles
-  .ui-tooltip.ui-widget.ui-shadow.ui-corner-all {
-    box-shadow: none;
+  @media(max-height: 960px) {
+    .fc-row:not(.ui-widget-header) {
+      max-height:90px!important;
+    }
   }
 }
