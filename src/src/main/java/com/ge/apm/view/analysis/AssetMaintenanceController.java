@@ -511,7 +511,7 @@ public final class AssetMaintenanceController {
 
     private final static String SQL_LIST_ERROR_REASON = "" +
             "SELECT COALESCE(extended.key, partial.key) AS key, COALESCE(partial.value, CAST(0 AS INTEGER)) AS value " +
-            "FROM generate_series(0, :#knownCaseTypes) AS extended(key) " +
+            "FROM generate_series(1, :#knownCaseTypes) AS extended(key) " +
             "     FULL OUTER JOIN (" +
             "        SELECT CASE " +
             "                WHEN work.case_type > 0 AND work.case_type <= :#knownCaseTypes THEN work.case_type " +

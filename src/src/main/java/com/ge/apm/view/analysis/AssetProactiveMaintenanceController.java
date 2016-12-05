@@ -196,15 +196,9 @@ public final class AssetProactiveMaintenanceController {
             "                    ) AS scalar " +
             "FROM ( " +
             "        SELECT twelve.month AS month, thirty_one.day AS day, COALESCE(temporary.hint, '') AS hint " +
-            "        FROM (VALUES  (1),  (2),  (3),  (4),  (5),  (6),  (7),  (8),  (9), (10), " +
-            "                     (11), (12) " +
-            "             ) AS twelve(month) " +
+            "        FROM generate_series(1, 12) AS twelve(month) " +
             "             CROSS JOIN " +
-            "             (VALUES  (1),  (2),  (3),  (4),  (5),  (6),  (7),  (8),  (9), (10), " +
-            "                     (11), (12), (13), (14), (15), (16), (17), (18), (19), (20), " +
-            "                     (21), (22), (23), (24), (25), (26), (27), (28), (29), (30), " +
-            "                     (31) " +
-            "             ) AS thirty_one(day) " +
+            "             generate_series(1, 31) AS thirty_one(day) " +
             "             LEFT OUTER JOIN " +
             "             (SELECT DISTINCT EXTRACT (MONTH FROM plan.start_time) AS month, " +
             "                              EXTRACT (DAY FROM plan.start_time) AS day, " +
