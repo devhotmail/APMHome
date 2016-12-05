@@ -432,6 +432,8 @@ INSERT INTO "i18n_message" VALUES (1623,'depreciationMethodList','3', '折旧算
 INSERT INTO "i18n_message" VALUES (1624,'depreciationMethodList','4', '折旧算法4',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1625,'depreciationMethodList','5', '折旧算法5',null,null,-1);
 
+INSERT INTO "i18n_message" VALUES (1626, 'label', 'SysConfig', '系统配置项', 'system config', NULL, -1);
+INSERT INTO "i18n_message" VALUES (1627, 'label', 'UserConfig', '自定义配置项', 'config by user', NULL, -1);
 
 
 -- module's messages  (id from 3000)
