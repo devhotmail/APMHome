@@ -1,4 +1,15 @@
 (function() {
+  var VIS_COLORS = [
+    'rgba(96, 165, 215, 1)',
+    'rgba(247, 162, 69, 1)',
+    'rgba(99, 187, 108, 1)',
+    'rgba(238, 126, 175, 1)',
+    'rgba(176, 143, 57, 1)',
+    'rgba(222, 206, 64, 1)'
+  ];
+
+  var VIS_COLOR_BLANK = 'rgba(153, 153, 163, .5)';
+
   var base = {
     resetAxesOnResize: false,
     shadow: false,
@@ -91,6 +102,49 @@
     }, 0);
   }
 
+  function displayValues(data) {
+    var sum = data.reduce(function(sum, serie) {
+      var item = serie[0];
+      var val = (typeof val === 'number' ? val : serie.reduce(function(serieSum, slot) {
+        return serieSum + slot[0];
+      }, 0) );
+
+      return {
+        total: val + sum.total,
+        num: val !== 0 ? sum.num + 1 : sum.num
+      };
+    }, {total: 0, num: 0});
+
+    var avg = sum.total/sum.num;
+
+    return data.map(function(slot) {
+      var item = slot[0];
+      if (item[0] === 0) {
+        item[0] = avg;
+      }
+      return slot;
+    });
+  }
+
+  function displaySeries(data) {
+    return data.map(function(slot) {
+      var item = slot[0];
+      var label = item[0] || '';
+      return {
+        pointLabels: {
+          labels: [label]
+        }
+      };
+    });
+  }
+
+  function displayColors(data) {
+    return data.map(function(slot, i) {
+      var item = slot[0];
+      return item[0] ? VIS_COLORS[i] : VIS_COLOR_BLANK;
+    });
+  }
+
   window.maintenanceE2 = function() {
     $.extend(true/*recursive*/, this.cfg, base, {
       animate: !$.jqplot.use_excanvas,
@@ -118,24 +172,15 @@
     var _this = this;
     _this.lastVal = 0;
     var data = this.cfg.data;
-    var total = seriesSum(data);
+    var series = displaySeries(data);
+    var colors = displayColors(data);
     // special placeholder value
-    this.cfg.data = data.map(function(slot) {
-      if (slot[0] === 0) {
-        slot[0] = .9;
-      }
-      return slot;
-    });
+    data = displayValues(data);
+    this.cfg.data = data;
+    var total = seriesSum(data);
     $.extend(true/*recursive*/, this.cfg, base, {
       shadow: false,
-      seriesColors: [
-        'rgba(96, 165, 215, 1)',
-        'rgba(247, 162, 69, 1)',
-        'rgba(99, 187, 108, 1)',
-        'rgba(238, 126, 175, 1)',
-        'rgba(176, 143, 57, 1)',
-        'rgba(222, 206, 64, 1)'
-      ],
+      seriesColors: colors,
       legend: {
         renderer: $.jqplot.EnhancedLegendRenderer,
         show: true,
@@ -152,12 +197,6 @@
           formatString: '%d 分钟',
           escapeHTML: false,
           formatter: function(format, val) {
-            var newVal = val - (_this.lastVal || 0);
-            _this.lastVal = val;
-            val = newVal;
-            if (val < 1) {
-              val = 0;
-            }
             return $.jqplot.sprintf(format, val);
           }
         },
@@ -166,6 +205,7 @@
           highlightMouseOver: false,
         },
       },
+      series: series,
       highlighter: {
         show: false
       },
