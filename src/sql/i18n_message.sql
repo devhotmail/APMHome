@@ -160,6 +160,7 @@ INSERT INTO "i18n_message" VALUES (418, 'label', 'MetrologyOrderDetail', '计量
 INSERT INTO "i18n_message" VALUES (419, 'label', 'QualityCtrlOrderDetail', '质检工单详情', 'Quality Control Order Detail', NULL, -1);
 INSERT INTO "i18n_message" VALUES (420, 'label', 'QualityCtrlMonitor', '质量监控', 'QualityCtrl Monitor', NULL, -1);
 INSERT INTO "i18n_message" VALUES (421, 'label', 'MetrologyMonitor', '计量监控', 'Metrology Monitor', NULL, -1);
+INSERT INTO "i18n_message" VALUES (422, 'label', 'saveOrder', '保存顺序', 'Save sequence', NULL, -1);
 
 -- Entity Object field Names  (id from 600 to  1499)
 
