@@ -15,6 +15,7 @@
 			        </p:selectOneListbox>
 
                 <h:panelGrid  columns="1" >
+                	<p align="center">#{msg.SysConfig}</p>
                     <h:panelGroup>
                         <p:dataTable id="SystemDataList"
                              value="#{i18nMessageController.sysConfig}" var="item" widgetVar="varDataList1"
@@ -32,7 +33,8 @@
                             </p:column>
                         </p:dataTable>
                     </h:panelGroup>
-
+					<br/>
+					<p align="center">#{msg.UserConfig}</p>
                     <h:panelGroup>
                         <p:dataTable id="CustomerDataList"
                               value="#{i18nMessageController.customConfig}" 
