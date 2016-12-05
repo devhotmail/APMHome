@@ -343,7 +343,6 @@ button.btn{-webkit-appearance:button}
 .clearfix:after{content:"";display:table;clear:both}
 .layout-wrapper .layout-main{padding-left:0;padding-right:0}
 .text--secondary{color:#9999a3}
-.header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;height:60px;margin-bottom:10px;font-size:20px;border-bottom:1px solid #d1d0d8;background-color:#fff}
 .status::before{content:'';color:#000;display:inline-block;position:relative;top:2px;font-size:1em;width:1em;height:1em;margin:0 5px;vertical-align:baseline}
 .status--1::before{background-color:#60a5d7}
 .status--2::before{background-color:#f7a247}
@@ -401,10 +400,6 @@ button.btn{-webkit-appearance:button}
 .layout-compact .layout-main .ui-calendar.ui-trigger-calendar .ui-inputfield{width:70px}
 .layout-compact .layout-main .ui-calendar.ui-trigger-calendar .ui-datepicker-trigger{float:left;width:20px;padding:0;margin:0;right:inherit;top:inherit}
 .layout-compact .layout-main .ui-calendar.ui-trigger-calendar .ui-icon-calendar{left:inherit}
-.layout-compact .layout-main .ui-paginator .ui-paginator-pages{padding:0;margin:0}
-.layout-compact .layout-main .ui-paginator .ui-paginator-first,.layout-compact .layout-main .ui-paginator .ui-paginator-last,.layout-compact .layout-main .ui-paginator .ui-paginator-next,.layout-compact .layout-main .ui-paginator .ui-paginator-pages a,.layout-compact .layout-main .ui-paginator .ui-paginator-prev{padding:0;width:2rem;height:2rem;line-height:2rem;text-align:center}
-.layout-compact .layout-main .ui-paginator .ui-paginator-first:before,.layout-compact .layout-main .ui-paginator .ui-paginator-last:before,.layout-compact .layout-main .ui-paginator .ui-paginator-next:before,.layout-compact .layout-main .ui-paginator .ui-paginator-prev:before{left:auto}
-.layout-compact .layout-main .ui-paginator select{height:2rem;min-width:60px;background-color:transparent;border:1px solid #b1b1bc;border-radius:3px;cursor:pointer;padding:0 10px;margin:0 10px;font-size:14px;-webkit-appearance:none;-moz-appearance:none;appearance:none}
 table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbdbd}
 .card--summary{background-color:#525156;min-height:100px;color:#fff}
 .card--summary>:not(:last-child){border-right:1px solid #3b3b3f}
