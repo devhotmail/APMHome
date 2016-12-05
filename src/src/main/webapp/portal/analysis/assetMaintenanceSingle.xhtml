@@ -82,7 +82,8 @@
                         <div class="maintenance-chart4">
                             <div class="ui-g">
                                 <div class="ui-g-12">
-                                    <p>#{msg.maintenanceAnalysis_timeChart_section}</p>
+                                    <h:outputText rendered="#{not empty assetMaintenanceController.errorTimePerStep[0]}"
+                                                  value="#{msg.maintenanceAnalysis_timeChart_section}"/>
                                 </div>
                                 <div class="ui-g-4 col-1 divide-line-right">
                                     <p:chart id="maintenanceR41" type="pie"
