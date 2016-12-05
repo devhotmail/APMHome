@@ -7,7 +7,6 @@ package com.ge.apm.service.asset;
 
 import com.ge.apm.dao.AssetFileAttachmentRepository;
 import com.ge.apm.dao.FileUploadDao;
-import com.ge.apm.domain.AssetFileAttachment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -45,7 +44,7 @@ public class AttachmentFileService {
         try {
             fileName = new String(file.getFileName().getBytes(), "utf-8");
         } catch (UnsupportedEncodingException ex) {
-            WebUtil.addErrorMessage("file name error");
+            WebUtil.addErrorMessage(WebUtil.getMessage("fileTransFail"));
             Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return fileName;
@@ -60,7 +59,7 @@ public class AttachmentFileService {
             fileStream.setName(new String(((String)result[0]).getBytes("utf-8"),"ISO8859-1"));
             return fileStream;
         } catch (SQLException | UnsupportedEncodingException ex) {
-            WebUtil.addErrorMessage("file download error");
+            WebUtil.addErrorMessage(WebUtil.getMessage("fileTransFail"));
             Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
         } 
         return null;
@@ -73,7 +72,7 @@ public class AttachmentFileService {
         try {
             returnId = fileUploaddao.saveUploadFile(file.getInputstream(), Integer.valueOf(String.valueOf(file.getSize())), getFileName(file));
         } catch (SQLException | IOException ex) {
-            WebUtil.addErrorMessage("file save error");
+            WebUtil.addErrorMessage(WebUtil.getMessage("fileTransFail"));
             Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return returnId;
