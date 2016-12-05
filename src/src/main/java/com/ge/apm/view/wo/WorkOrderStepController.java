@@ -164,7 +164,9 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
         fileService.deleteAttachment(attachid);
         WorkOrderStep step = dao.findById(this.selected.getId());
         step.setFileId(null);
+        this.selected.setFileId(null);
         step.setAttachmentUrl(null);
+        this.selected.setAttachmentUrl(null);
         dao.save(step);
     }
     
@@ -178,8 +180,10 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
             fileService.deleteAttachment(step.getFileId());
         }
         step.setAttachmentUrl(fileName);
+        this.selected.setAttachmentUrl(fileName);
         if (uploadFileId > 0) {
             step.setFileId(uploadFileId);
+            this.selected.setFileId(uploadFileId);
             WebUtil.addSuccessMessage("文件上传成功。", fileName + " is uploaded.");
         }
         dao.save(step);

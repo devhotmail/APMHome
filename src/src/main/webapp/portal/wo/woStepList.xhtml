@@ -60,6 +60,10 @@
                     <h:panelGroup>
                         <label class="label">#{msg.attachmentUrl}</label>
                         <p:inputText id="attachmentUrl" value="#{item.attachmentUrl}" readonly="true"/>
+                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" 
+                                         title="#{msg.download}" class="popupIconButton" rendered="#{(item.attachmentUrl ne null) and (item.fileId ne null)}">
+                            <p:fileDownload value="#{attachmentFileService.getFile(item.fileId)}" />
+                        </p:commandButton>
                     </h:panelGroup>
 
                 </h:panelGrid>
