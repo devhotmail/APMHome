@@ -200,14 +200,15 @@ public final class AssetProactiveMaintenanceController {
             "             CROSS JOIN " +
             "             generate_series(1, 31) AS thirty_one(day) " +
             "             LEFT OUTER JOIN " +
-            "             (SELECT DISTINCT EXTRACT (MONTH FROM plan.start_time) AS month, " +
-            "                              EXTRACT (DAY FROM plan.start_time) AS day, " +
-            "                              'tinted' AS hint " +
+            "             (SELECT EXTRACT (MONTH FROM plan.start_time) AS month, " +
+            "                     EXTRACT (DAY FROM plan.start_time) AS day, " +
+            "                     array_to_string(array_agg(asset.name), ',') AS hint " +
             "              FROM pm_order AS plan, " +
             "                   asset_info AS asset " +
             "              WHERE plan.asset_id = asset.id " +
             "                AND asset.hospital_id = :#hospitalId " +
             "                AND plan.start_time BETWEEN :#firstDayOfThisYear AND :#firstDayOfThisYearPlus1 " +
+            "              GROUP BY month, day " +
             "             ) AS temporary " +
             "             ON twelve.month = temporary.month " +
             "            AND thirty_one.day = temporary.day " +
@@ -222,7 +223,7 @@ public final class AssetProactiveMaintenanceController {
             "maintenance_schedule AS ( " +
             "        SELECT asset.id AS asset_id, " +
             "               CAST (EXTRACT (EPOCH FROM (plan.start_time - :#firstDayOfThisYearMinus1)) / 60 / 60 / 24 / 7 AS integer) AS start_time, " +
-            "               text('tinted') AS hint " +
+            "               to_char(plan.start_time, 'YYYY-MM-DD') AS hint " +
             "        FROM pm_order AS plan, " +
             "             asset_info AS asset " +
             "        WHERE plan.asset_id = asset.id " +

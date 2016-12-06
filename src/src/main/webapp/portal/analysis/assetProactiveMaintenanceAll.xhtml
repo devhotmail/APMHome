@@ -29,8 +29,8 @@
                             <f:facet name="header">
                                 <h:outputText value="#{column}"/>
                             </f:facet>
-                            <h:outputText value="#{colIndex == 0 ? schedule[colIndex] : ''}"
-                                          styleClass="#{colIndex == 0 ? '' : schedule[colIndex]}"/>
+                            <h:outputText value="#{schedule[colIndex]}"
+                                          styleClass="#{colIndex == 0 ? '' : schedule[colIndex].length() == 0 ? '' : 'tinted' }"/>
                         </p:columns>
                     </p:dataTable>
                 </div>
@@ -48,7 +48,7 @@
                             </p:row>
                         </p:columnGroup>
                         <p:columns value="#{assetProactiveMaintenanceController.generatedYear}" var="column" columnIndexVar="colIndex">
-                            <h:outputText value="#{colIndex == 0 ? forecast[colIndex] : ''}" styleClass="#{colIndex == 0 ? '' : forecast[colIndex]}"/>
+                            <h:outputText value="#{forecast[colIndex]}" styleClass="#{colIndex == 0 ? '' : forecast[colIndex]}"/>
                         </p:columns>
                     </p:dataTable>
                 </div>
