@@ -1,13 +1,45 @@
 @import "predix";
 @import "objects";
 
-.status {
-  @include squareBefore();
+$type-1: rgba(254,89,91,1);
+$type-2: rgba(56,150,248,1);
+$type-3: rgba(118,215,56,1);
+$type-4: rgba(156,154,255,1);
+$type-5: rgba(245,166,35,1);
+
+$type-color: $type-1 $type-2 $type-3 $type-4 $type-5;
+
+@mixin get-bgc($num) {
+  background-color: nth($type-color, $num);
 }
 
-// remove border-radius in card
+@mixin get-color($num) {
+  color: nth($type-color, $num);
+}
+
+.status::before {
+  content: '';
+  color: black;
+  display: inline-block;
+  position: relative;
+  top: 2px;
+  font-size: 1em;
+  width: 1em;
+  height: 1em;
+  margin: 0 5px;
+  vertical-align: baseline;
+}
+
+@each $num in (1,2,3,4,5) {
+  .status--#{$num}::before {
+    @include get-bgc($num);
+  }
+}
+
 .calendar {
-  border-radius: 0 !important;
+  margin: 0 5px 5px;
+  padding: 30px 30px 15px;
+  background-color: #fff;
 }
 
 .calendar-footer {
@@ -26,25 +58,10 @@
   }
 }
 
-$type-1: rgba(96, 165, 215, 1);
-$type-2: rgba(247, 162, 71, 1);
-$type-3: rgba(99, 187, 108, 1);
-$type-4: rgba(238, 126, 175, 1);
-$type-5: rgba(176, 143, 57, 1);
-$type-6: rgba(222, 207, 64, 1);
-
-$type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
-
-@mixin get-bgc($num) {
-  background-color: nth($type-color, $num);
-}
-
-@mixin get-color($num) {
-  color: nth($type-color, $num);
-}
-
 .event-counts {
-  height: 60px;
+  background-color: rgba(110,112,114,1);
+  height: 100px;
+  color: #fff;
 }
 
 .event-count {
@@ -53,14 +70,13 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
   line-height: 1;
 }
 
-@each $num in (1,2,3,4,5,6) {
+@each $num in (1,2,3,4,5) {
   .event-type-#{$num} {
     @include get-color($num);
   }
 }
 
 // reset part
-
 .main-body {
 
   // reset ui-tooltip default styles
@@ -71,7 +87,7 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
   .fc {
     // different event type class
 
-    @each $num in (1,2,3,4,5,6) {
+    @each $num in (1,2,3,4,5) {
       .fc-event.event-type-#{$num} {
         @include get-bgc($num);
       }
@@ -96,7 +112,6 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
     }
     // reset layout of toolbar
     .fc-toolbar {
-      margin-top: 10px;
       height: 40px;
       position: relative;
     }
@@ -104,31 +119,55 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
     .fc-center {
       position: absolute;
       left: 50%;
-      top: 0;
-      transform: translate3d(-50%, 0, 0);
+      top: 50%;
+      transform: translate3d(-50%, -50%, 0);
+
+      > h2 {
+        font-size: 20px;
+        font-weight: normal;
+        line-height: 1;
+      }
     }
 
     .fc-left {
       position: absolute;
       left: 0;
-      top: 0;
+      top: 50%;
+      transform: translate3d(0, -50%, 0);
 
       > div {
         display: flex;
         justify-content: center;
         align-items: center;
-
-        > h2 {
-          width: 170px;
-          text-align: center;
-        }
       }
 
       .fc-today-button {
         border-radius: 0;
         border-left-width: 0 !important;
         border-right-width: 0 !important;
+        border-top-color: $gray4;
+        border-bottom-color: $gray4;
         box-shadow: none !important;
+        opacity: 1 !important;
+
+        &.ui-state-disabled,
+        &.ui-state-disabled:hover {
+          background-color: rgba(248,248,248,1);
+        }
+      }
+
+      // same bgc and hover bgc for fc-left buttons
+      .fc-next-button,
+      .fc-prev-button,
+      .fc-today-button {
+        background-color: rgba(216,216,216,1);
+        &:hover {
+          background-color: rgba(216,216,216,.7);
+        }
+
+        .ink {
+          display: none;
+        }
       }
 
       // reset for next/prev button
@@ -140,7 +179,6 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
         width: 30px;
         height: 30px;
         color: $dv-basic-blue;
-        background-color: #fff;
         border: 1px solid $gray4;
         outline: none!important;
         box-shadow: none;
@@ -148,10 +186,11 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
         background-position: center;
         background-repeat: no-repeat;
 
-        .ui-icon {
-          display: none;
+        &:hover {
+          background-color: rgba(216,216,216,.7);
         }
 
+        .ui-icon,
         .ink {
           display: none;
         }
@@ -174,6 +213,10 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
       background-color: #fff!important;
     }
 
+    .ui-widget-content {
+      border-color: rgba(206,206,206,1);
+    }
+
     // reset the way of highlight today
     .fc-bg .fc-today {
       background-color: transparent;
@@ -184,7 +227,7 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
         padding-left: 15px;
         padding-top: 12px;
         text-align: left;
-        font-size: 24px;
+        font-size: 20px;
       }
 
       .fc-today {
@@ -192,8 +235,8 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5 $type-6;
 
         &::after {
           position: absolute;
-          left: 10px;
-          top: 5px;
+          left: 8px;
+          top: 4px;
           z-index: -1;
           display: block;
           content: '';
