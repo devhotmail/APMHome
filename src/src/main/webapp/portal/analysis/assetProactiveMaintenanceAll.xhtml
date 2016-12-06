@@ -48,7 +48,7 @@
                             </p:row>
                         </p:columnGroup>
                         <p:columns value="#{assetProactiveMaintenanceController.generatedYear}" var="column" columnIndexVar="colIndex">
-                            <h:outputText value="#{forecast[colIndex]}" styleClass="#{colIndex == 0 ? '' : forecast[colIndex]}"/>
+                            <h:outputText value="#{forecast[colIndex]}" styleClass="#{colIndex == 0 ? '' : forecast[colIndex].length() == 0 ? ' ' : 'tinted' }"/>
                         </p:columns>
                     </p:dataTable>
                 </div>
