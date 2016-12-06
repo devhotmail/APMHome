@@ -22,10 +22,11 @@ import webapp.framework.web.service.DbMessageSource;
 public class I18nMessageController extends JpaCRUDController<I18nMessage> {
 
 	private static final long serialVersionUID = 1L;
-	I18nMessageRepository dao = null;
-    UserAccount currentUser = null;
-	FieldCodeType selectedType = null;
-	I18nMessage i18nMessage = null;
+	public static final Integer SYS_SITE = -1 ;
+	private I18nMessageRepository dao = null;
+	private UserAccount currentUser = null;
+	private FieldCodeType fieldCodeType = null;
+	private String msgType;
 	private List<I18nMessage> sysConfig;
 	private List<I18nMessage> customConfig;
 	
@@ -33,8 +34,7 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
     protected void init() {
         dao = WebUtil.getBean(I18nMessageRepository.class);
         currentUser = UserContextService.getCurrentUserAccount();
-        selectedType = new FieldCodeType();
-        i18nMessage =new I18nMessage();
+        fieldCodeType = new FieldCodeType();
     }
 
     @Override
@@ -53,28 +53,24 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
     
     @Override
     public void delete(){
-    	String msgType = selected.getMsgType();
     	super.delete();
-    	customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
+    	customConfig = getFieldValueList(this.currentUser.getSiteId());
     }
     
     @Override
     public void save(){
-    	String msgType = selected.getMsgType();
     	super.save();
-    	customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
+    	customConfig = getFieldValueList(this.currentUser.getSiteId());
     }
     
     @Override
     public void prepareEdit(){
-    	logger.info("before edit, selected i18n is "+  selected);
-    	String msgType = selected.getMsgType();
     	super.prepareEdit();
-    	customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
+    	customConfig = getFieldValueList(this.currentUser.getSiteId());
     }
 
 
-	public List<I18nMessage> getFieldValueList(String msgType, Integer siteId) {
+	public List<I18nMessage> getFieldValueList(Integer siteId) {
 		if (siteId == null) {
 			logger.error("fetch i18n message list error,siteId is null, current user is " + this.currentUser);
 			return null;
@@ -92,7 +88,7 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
 		return null;
 	}
 	
-	public List<I18nMessage> fetchI18nMessageList(Integer siteId , String msgType ){
+	public List<I18nMessage> fetchI18nMessageList(Integer siteId){
 		List<SearchFilter> filter = new ArrayList<SearchFilter> ();
 		filter.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, siteId));
 		filter.add(new SearchFilter("msgType", SearchFilter.Operator.EQ, msgType));
@@ -100,49 +96,50 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
 		return result;
 	}
 
-   public void prepareCreate(String msgType) throws InstantiationException, IllegalAccessException{
+   public void prepareCreate() throws InstantiationException, IllegalAccessException{
 	   this.selected = null;
 	   super.prepareCreate();
 	   this.selected.setSiteId(this.currentUser.getSiteId());
 	   this.selected.setMsgType(msgType);
 	   this.selected.setMsgKey(this.currentUser.getName());
-	   customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
+	   customConfig = getFieldValueList(this.currentUser.getSiteId());
    }
    
-   public void batchImport(String msgType){
-	   List<I18nMessage> result = fetchI18nMessageList(-1,msgType);
+   public void batchImport(){
+	   List<I18nMessage> result = fetchI18nMessageList(-1);
 	   if(!CollectionUtils.isEmpty(result)){
-		   logger.info("msgType is "+msgType+ "get "+result.size()+"条system记录");
+		   if(logger.isInfoEnabled()){
+			   logger.info("msgType is "+msgType+ "get "+result.size()+"条system记录");
+		   }
 		   for (I18nMessage i18nMessage : result) {
 			   i18nMessage.setSiteId(this.currentUser.getSiteId());
 			   i18nMessage.setMsgKey(i18nMessage.getMsgKey().concat(currentUser.getName()));
 			   i18nMessage.setId(null);
 			   dao.save(i18nMessage);
 		}
-		   customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
+		   customConfig = getFieldValueList(this.currentUser.getSiteId());
 	   }
    }
    
-   public void clearAll(String msgType){
-	   List<I18nMessage> result = fetchI18nMessageList(this.currentUser.getSiteId(),msgType);
+   public void clearAll(){
+	   List<I18nMessage> result = fetchI18nMessageList(this.currentUser.getSiteId());
 	   if(!CollectionUtils.isEmpty(result)){
-		   logger.info("msgType is "+msgType+ "get "+result.size()+"条system记录");
+		   if(logger.isInfoEnabled()){
+			   logger.info("msgType is "+msgType+ "get "+result.size()+"条system记录");
+		   }
 		   for (I18nMessage i18nMessage : result) {
 			   i18nMessage.setSiteId(this.currentUser.getSiteId());
 			   i18nMessage.setMsgKey(i18nMessage.getMsgKey().concat(currentUser.getName()));
 			  dao.delete(i18nMessage);
 		}
-		   customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
+		   customConfig = getFieldValueList(this.currentUser.getSiteId());
 	   }
    }
    
    
-	public void onSelect(String msgType) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("invoke by ajax listener : " + selectedType);
-		}
-		sysConfig = getFieldValueList(msgType, -1);
-		customConfig = getFieldValueList(msgType, this.currentUser.getSiteId());
+	public void onSelect() {
+		sysConfig = getFieldValueList(SYS_SITE);
+		customConfig = getFieldValueList(this.currentUser.getSiteId());
 	}
 	
     @Override
@@ -151,11 +148,11 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
     }
    
 	public FieldCodeType getSelectedType() {
-		return selectedType;
+		return fieldCodeType;
 	}
 
-	public void setSelectedType(FieldCodeType selectedType) {
-		this.selectedType = selectedType;
+	public void setSelectedType(FieldCodeType fieldCodeType) {
+		this.fieldCodeType = fieldCodeType;
 	}
     
 	public UserAccount getCurrentUser() {
@@ -180,6 +177,14 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
 
 	public void setCustomConfig(List<I18nMessage> customConfig) {
 		this.customConfig = customConfig;
+	}
+
+	public String getMsgType() {
+		return msgType;
+	}
+
+	public void setMsgType(String msgType) {
+		this.msgType = msgType;
 	}
     
 }

@@ -9,13 +9,14 @@
 	          <h:form id="I18nMessageListForm" >
 	          	<h:panelGrid columns="2" >
 	          	
-			        <p:selectOneListbox id="selectBox"  value="#{fieldCodeTypeController.selectedType.msgType}" >
-			        	<p:ajax update="SystemDataList,CustomerDataList,I18nMessageEditDlg"  listener="#{i18nMessageController.onSelect(fieldCodeTypeController.selectedType.msgType)}" />
+			        <p:selectOneListbox id="selectBox"  value="#{i18nMessageController.msgType}" >
+			        	<p:ajax update="SystemDataList,CustomerDataList,I18nMessageEditDlg"  listener="#{i18nMessageController.onSelect()}" />
 			        	<f:selectItems value="#{fieldCodeTypeController.getFieldCodeTypeList()}"  var="item"  itemLabel="#{item.msgTypeName}"  itemValue="#{item.msgType}"/>
 			        </p:selectOneListbox>
 
                 <h:panelGrid  columns="1" >
-                	<p align="center">#{msg.SysConfig}</p>
+                	<!-- <p align="center">#{msg.SysConfig}</p> -->
+                	<p:fieldset legend="#{msg.SysConfig}">
                     <h:panelGroup>
                         <p:dataTable id="SystemDataList"
                              value="#{i18nMessageController.sysConfig}" var="item" widgetVar="varDataList1"
@@ -33,8 +34,10 @@
                             </p:column>
                         </p:dataTable>
                     </h:panelGroup>
+                    </p:fieldset>
 					<br/>
-					<p align="center">#{msg.UserConfig}</p>
+					<!-- <p align="center">#{msg.UserConfig}</p> -->
+					<p:fieldset legend="#{msg.UserConfig}">
                     <h:panelGroup>
                         <p:dataTable id="CustomerDataList"
                               value="#{i18nMessageController.customConfig}" 
@@ -55,16 +58,16 @@
                             </p:column>
                             <f:facet name="{exportbar}">
                                 <p:commandButton id="batchImport" icon="ui-icon-import-export"  title="#{msg.BatchImport}"
-                                                 actionListener="#{i18nMessageController.batchImport(fieldCodeTypeController.selectedType.msgType)}"  
-                                                 update=":I18nMessageListForm" disabled="#{empty fieldCodeTypeController.selectedType.msgType}" />
+                                                 actionListener="#{i18nMessageController.batchImport()}"  
+                                                 update=":I18nMessageListForm" disabled="#{empty i18nMessageController.msgType}" />
                                 <p:commandButton id="clearAll" icon="ui-icon-clear-all"  title="#{msg.ClearAll}"
-                                                 actionListener="#{i18nMessageController.clearAll(fieldCodeTypeController.selectedType.msgType)}"  
-                                                 update=":I18nMessageListForm" disabled="#{empty fieldCodeTypeController.selectedType.msgType}" >
+                                                 actionListener="#{i18nMessageController.clearAll()}"  
+                                                 update=":I18nMessageListForm" disabled="#{empty i18nMessageController.msgType}" >
                                                  <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteAllConformation}" icon="ui-icon-alert"/>
                                  </p:commandButton>
                             </f:facet>
                             <f:facet name="{Toolbar}">
-                                <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{i18nMessageController.prepareCreate(fieldCodeTypeController.selectedType.msgType)}" update=":I18nMessageListForm"  oncomplete="PF('I18nMessageEditDialog').show()" disabled="#{empty fieldCodeTypeController.selectedType.msgType}"/>
+                                <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{i18nMessageController.prepareCreate()}" update=":I18nMessageListForm"  oncomplete="PF('I18nMessageEditDialog').show()" disabled="#{empty i18nMessageController.msgType}"/>
                                 <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{i18nMessageController.prepareEdit}" update=":I18nMessageListForm:CustomerDataList,:I18nMessageEditDlg" oncomplete="PF('I18nMessageEditDialog').show()" disabled="#{empty i18nMessageController.selected}"/>
                                 <p:commandButton id="deleteButton" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{i18nMessageController.delete}" update=":I18nMessageListForm:CustomerDataList" disabled="#{empty i18nMessageController.selected}">
                                     <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
@@ -72,6 +75,7 @@
                             </f:facet>
                         </p:dataTable>
                     </h:panelGroup>
+                   </p:fieldset>
                 </h:panelGrid>
             </h:panelGrid>
         </h:form>
