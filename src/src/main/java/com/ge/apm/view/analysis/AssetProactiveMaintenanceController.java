@@ -1,6 +1,9 @@
 package com.ge.apm.view.analysis;
 
 import com.ge.apm.view.sysutil.UserContextService;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Weeks;
@@ -58,13 +61,30 @@ public final class AssetProactiveMaintenanceController {
     private DateTime firstDayOfThisYearMinus1;
     private DateTime firstDayOfThisYearPlus2;
 
+    private int assetId;
+
+    public final int getAssetId() {
+        return this.assetId;
+    }
+
+    public final void setAssetId(int value) {
+        this.assetId = value;
+        this.parameters.put("assetId", value);
+    }
+
     // endregion
 
     // region Properties
 
     public final List<String> getGeneratedMonth() {
         List<String> list = new ArrayList<>();
-        list.add(WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices"));
+        if (this.assetId == 0) {
+            list.add(WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices"));
+        }
+        else {
+            FluentIterable<Map<String, Object>> iterable = FluentIterable.from(this.query(SQL_SCALAR_DEVICE_NAME_SINGLE));
+            list.add((String)iterable.first().or(ImmutableMap.of("scalar", (Object)"")).get("scalar"));
+        }
         for (int i = 1; i <= 31; i++) {
             list.add(Integer.toString(i));
         }
@@ -187,8 +207,20 @@ public final class AssetProactiveMaintenanceController {
     // region SQL
 
     private final List<Map<String, Object>> query(String template) {
+        if (this.assetId == 0) {
+            template = StringUtils.replace(template, ":#andDeviceFilter", "");
+        }
+        else {
+            template = StringUtils.replace(template, ":#andDeviceFilter", "AND asset.id = :#assetId");
+        }
         return NativeSqlUtil.queryForList(template, this.parameters);
     }
+
+    private final static String SQL_SCALAR_DEVICE_NAME_SINGLE = "" +
+            "SELECT asset.name AS scalar " +
+            "FROM asset_info AS asset " +
+            "WHERE asset.id = :#assetId " +
+            ";";
 
     private final static String SQL_LIST_MAINTENANCE_SCHEDULE = "" +
             "SELECT array_prepend(to_char(temporary.month, '99'), " +
@@ -208,6 +240,7 @@ public final class AssetProactiveMaintenanceController {
             "              WHERE plan.asset_id = asset.id " +
             "                AND asset.hospital_id = :#hospitalId " +
             "                AND plan.start_time BETWEEN :#firstDayOfThisYear AND :#firstDayOfThisYearPlus1 " +
+            "                :#andDeviceFilter " +  // AND asset.id = :#assetId
             "              GROUP BY month, day " +
             "             ) AS temporary " +
             "             ON twelve.month = temporary.month " +
