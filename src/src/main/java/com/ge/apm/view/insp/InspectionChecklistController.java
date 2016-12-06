@@ -12,8 +12,6 @@ import com.ge.apm.domain.InspectionChecklist;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
-import org.primefaces.event.NodeCollapseEvent;
-import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.ReorderEvent;
 import org.primefaces.event.SelectEvent;
@@ -49,7 +47,7 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
         orgAssetTree = uaaService.getOrgAssetTree(UserContextService.getCurrentUserAccount().getHospitalId());
         checklistitemList = new ArrayList();
         type = WebUtil.getRequestParameter("type");
-        checklistType = (null == type ? null : Integer.valueOf(type));
+        checklistType = (null == type ? 0 : Integer.valueOf(type));
         if (null == type || type.isEmpty()) {
             setCheckType(orgAssetTree);
         }else{
