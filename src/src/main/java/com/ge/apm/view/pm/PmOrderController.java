@@ -7,6 +7,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.event.FileUploadEvent;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ge.apm.dao.FileUploadedRepository;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.PmOrderRepository;
@@ -179,6 +181,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         attachements.clear();
     }
     
+    @Transactional
     public void handleFileUpload(FileUploadEvent event) {
     	FileUploaded attach = new FileUploaded();
         String fileName = fileService.getFileName(event.getFile());
