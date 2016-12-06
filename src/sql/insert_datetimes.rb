@@ -49,7 +49,7 @@ totalrecords = asset_accounts
 for i in 0..totalrecords
   site_id = randnum.rand(1..2)
   asset_group   = randnum.rand(1..4)
-  name    = "#{type[asset_group-1]}-#{i}"
+  name    = "#{type[asset_group-1]}-#{i+1}"
 
   function_type = randnum.rand(1..10)
   hospital_id   = [1,2,2,3].sample
