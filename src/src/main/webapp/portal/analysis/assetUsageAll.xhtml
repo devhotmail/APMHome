@@ -23,16 +23,15 @@
 
                 <div class="ui-g-12">
                     <div class="block">
-                        <p:menuButton id="selAsset" placeholder="选择设备" value="#{assetUsageAllController.assetName}">
+                        <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetUsageAllController.assetName}">
 
-                            <p:menuitem value="选择单台设备... "
-									 actionListener="#{selectAssetController.prepareDialogCallback(assetUsageAllController, ':WorkOrderEditForm:selAsset')}"
-									 process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
-									 oncomplete="PF('varSelectAssetDlg').show()"
-									 url="/portal/analysis/assetUsageSingle.xhtml"/>
+                            <p:menuitem value="#{msg.selectAssetSingle}" actionListener="#{selectAssetController.prepareDialogCallback(assetUsageAllController, ':WorkOrderEditForm:selAsset')}"
+								process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+								oncomplete="PF('varSelectAssetDlg').show()"/>
                             <p:separator/>
 
-                            <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}" actionListener="#{assetUsageAllController.submit}" update="WorkOrderEditForm"/>
+                            <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"/>
+                            
                         </p:menuButton>
                     </div>
                 </div>
@@ -109,8 +108,8 @@
 					</div>
 				</div>
 
-            
-            
+
+
 			<!-- Chart 1: Device Scan -->
 			<div class="ui-g-12">
 				<div class="block">

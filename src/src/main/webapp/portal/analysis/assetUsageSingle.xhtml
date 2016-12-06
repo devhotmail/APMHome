@@ -24,15 +24,15 @@
 
 				<div class="ui-g-12">
                     <div class="block">
-                        <p:menuButton id="selAsset" placeholder="选择设备" value="#{assetUsageSingleController.assetName}">
+                        <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetUsageSingleController.assetName}">
 
-                            <p:menuitem value="选择单台设备... "
+                            <p:menuitem value="#{msg.selectAssetSingle}"
 									 actionListener="#{selectAssetController.prepareDialogCallback(assetUsageSingleController, ':WorkOrderEditForm:selAsset')}"
 									 process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
 									 oncomplete="PF('varSelectAssetDlg').show()"/>
                             <p:separator/>
 
-                            <p:menuitem value="全部设备" actionListener="#{assetUsageSingleController.submit}" update="" 
+                            <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
                             	url="/portal/analysis/assetUsageAll.xhtml"/>
 
                         </p:menuButton>

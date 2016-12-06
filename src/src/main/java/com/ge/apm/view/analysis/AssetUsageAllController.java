@@ -40,12 +40,13 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 	private static final String deviceUsagelg_2 = WebUtil.getMessage("deviceUsagelg_2");
 	private static final String deviceDTlg_1 = WebUtil.getMessage("deviceDTlg_1");
 	private static final String deviceDTlg_2 = WebUtil.getMessage("deviceDTlg_2");
-	private String assetName = WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");	
+	private String assetName = WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");
+	private int assetId = -1;
 	private static final int HOURS_DAY = 24;
 
 	private int hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
 	private int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
-	
+
 	// Dashboard Parameters
 	private String valueScan = null;
 	private String valueExpo = null;
@@ -67,12 +68,12 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 
 	private NumberFormat cf = new DecimalFormat(",###.##");
 
-	
+
 	//debug param
 
 	@PostConstruct
 	public void init() {
-		
+
 		hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
 		clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
 
@@ -85,7 +86,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 		deviceScan = new BarChartModel();
 		deviceScan.setBarWidth(50);
 		deviceScan.setLegendPosition("ne");
-        deviceScan.setExtender("deviceScan");		
+        deviceScan.setExtender("deviceScan");
 
 		deviceExpo = new BarChartModel();
 		deviceExpo.setBarWidth(50);
@@ -96,7 +97,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 		deviceUsage.setBarWidth(50);
 		deviceUsage.setLegendPosition("ne");
 		deviceUsage.setStacked(true);
-		deviceUsage.setExtender("deviceUsage");	
+		deviceUsage.setExtender("deviceUsage");
 
 		deviceDT = new BarChartModel();
 		deviceDT.setBarWidth(50);
@@ -104,35 +105,35 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 		deviceDT.setExtender("deviceDT");
 
 		deviceStat = new HorizontalBarChartModel();
-		deviceStat.setStacked(true);	
+		deviceStat.setStacked(true);
 		deviceStat.setExtender("deviceStat");
 
 		Calendar currentCal = Calendar.getInstance();
 		Calendar startCal = Calendar.getInstance();
 		startCal.add(Calendar.YEAR, -1);
-		
+
 		startDate = startCal.getTime();
 		endDate = currentCal.getTime();
-		currentDate = currentCal.getTime();	
-	
+		currentDate = currentCal.getTime();
+
 		deviceQuery(startDate, endDate, currentDate);
-		
+
 	}
-	
+
 	public void submit() {
 
-		currentDate = Calendar.getInstance().getTime();	
+		currentDate = Calendar.getInstance().getTime();
 		deviceQuery(startDate, endDate, currentDate);
 	}
 
-	
+
             //bigint
-    private String SCANTL 
+    private String SCANTL
             = "SELECT left_table.name, COUNT(right_table), SUM(expose_count) "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
             + "LEFT JOIN (SELECT asset_id, expose_count FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
             + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY left_table.name "            
+            + "GROUP BY left_table.name "
             + "ORDER BY left_table.name ";
 
             //bigint
@@ -155,7 +156,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			= "SELECT DISTINCT name, "
 			+ ":#HOURS_DAY * ( "
 			+ "CASE WHEN terminate_date IS NULL THEN Date(:#endDate) WHEN Date(:#endDate) < terminate_date THEN Date(:#endDate) ELSE terminate_date END "
-			+ "- CASE WHEN Date(:#startDate) > install_date THEN Date(:#startDate) ELSE install_date END ) serve " 
+			+ "- CASE WHEN Date(:#startDate) > install_date THEN Date(:#startDate) ELSE install_date END ) serve "
 			+ "FROM asset_info "
 			+ "WHERE hospital_id = :#hospitalId "
 			+ "AND is_valid = true "
@@ -187,41 +188,41 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 
 
 	// Getters & Setters
-	
-    public Date getStartDate() { 	
+
+    public Date getStartDate() {
 
         return startDate;
     }
- 
+
     public void setStartDate(Date startDate) {
 
         this.startDate = startDate;
-        
+
     	start_bool = true;
-    	
+
     	if (start_bool && end_bool) {
     		deviceQuery(startDate, endDate, currentDate);
     	}
-        
+
     }
-    
+
     public Date getEndDate() {
-	
+
         return endDate;
     }
- 
+
     public void setEndDate(Date endDate) {
-    		
+
         this.endDate = endDate;
-        
+
     	end_bool = true;
-    	
+
     	if (start_bool && end_bool) {
     		deviceQuery(startDate, endDate, currentDate);
     	}
     }
 
-    
+
 	public BarChartModel getDeviceScan() {
 
 		return deviceScan;
@@ -241,7 +242,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 
 		return deviceDT;
 	}
-	
+
 	public BarChartModel getDeviceStat() {
 
 		return deviceStat;
@@ -266,7 +267,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 
 		return valueDT;
 	}
-	
+
 	public String getValueWait() {
 
 		return valueWait;
@@ -277,15 +278,15 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 		return assetName;
 	}
 
-	public void setAssetName(String assetName) {
+	public int getAssetId() {
 
-		this.assetName = assetName;
+		return assetId;
 	}
 
 	private void devicePanel(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
-		
+
 		List<Map<String, Object>> rs_panel;
-		
+
 		// Panel Components
 		rs_panel = NativeSqlUtil.queryForList(VALUESCANTL, sqlParams);
 		if (!rs_panel.isEmpty()) {
@@ -293,11 +294,11 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			valueScan = cf.format(rs_panel.get(0).get("count")  != null ? (long)rs_panel.get(0).get("count") : 0);
 			valueExpo = cf.format(rs_panel.get(0).get("sum")  != null ? (double)rs_panel.get(0).get("sum") : 0.0);
 		}
-			
+
 
 	}
 
-	private void deviceChart_12(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {	
+	private void deviceChart_12(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
 
 			ChartSeries cst_scan = new BarChartSeries();
 			cst_scan.setLabel(deviceScanlg);
@@ -307,7 +308,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			List<Map<String, Object>> rs_scan = NativeSqlUtil.queryForList(SCANTL, sqlParams);
 
 			for (Map<String, Object> item : rs_scan) {
-				cst_scan.set(item.get("name") != null ? item.get("name").toString() : "", 
+				cst_scan.set(item.get("name") != null ? item.get("name").toString() : "",
 						item.get("count") != null ? (Long) item.get("count") : 0);
 				cst_expo.set(item.get("name") != null ? item.get("name").toString() : "",
 						item.get("sum") != null ? (Double) item.get("sum") : (Double) 0.0);
@@ -316,7 +317,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			deviceScan.clear();
 			deviceScan.addSeries(cst_scan);
 
-	
+
 			ChartSeries cst_expo_bench = new LineChartSeries();
 			cst_expo_bench.setLabel(deviceExpolg_2);
 
@@ -326,11 +327,11 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 				cst_expo_bench.set(item.get("name") != null ? item.get("name").toString() : "",
 						item.get("bench") != null ? (Double) item.get("bench") : (Double) 0.0);
 			}
-			
+
 			deviceExpo.clear();
 			deviceExpo.addSeries(cst_expo);
 			deviceExpo.addSeries(cst_expo_bench);
-	}			
+	}
 
 
 	private void deviceChart_34(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
@@ -343,7 +344,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			cst_dt.setLabel(deviceDTlg_1);
 			ChartSeries cst_dt_bench = new LineChartSeries();
 			cst_dt_bench.setLabel(deviceDTlg_2);
-			
+
 
 			List<Map<String, Object>> rs_serve = NativeSqlUtil.queryForList(SERVETL, sqlParams);
 			List<Map<String, Object>> rs_inuse = NativeSqlUtil.queryForList(INUSETL, sqlParams);
@@ -374,9 +375,9 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			double wait_total = 0.0; // wait = serve - downtime - inuse
 
 
-			for ( it_inuse = rs_inuse.iterator(), it_dt = rs_dt.iterator(), it_serve = rs_serve.iterator(), it_dt_bench = rs_dt_bench.iterator(); 
+			for ( it_inuse = rs_inuse.iterator(), it_dt = rs_dt.iterator(), it_serve = rs_serve.iterator(), it_dt_bench = rs_dt_bench.iterator();
 					it_inuse.hasNext() && it_dt.hasNext() && it_serve.hasNext() && it_dt_bench.hasNext(); ) {
-				
+
 				item_inuse = it_inuse.next();
 				item_dt = it_dt.next();
 				item_serve = it_serve.next();
@@ -389,19 +390,19 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 					inuse = item_inuse.get("inuse") != null ? ((long)item_inuse.get("inuse"))/60.0 : 0;
 					dt =  item_dt.get("dt") != null ? (double)item_dt.get("dt") : 0;
 					dt_bench = item_dt_bench.get("dtbench") != null ? (double)item_dt_bench.get("dtbench") : 0;
-					wait = serve - dt - inuse;	
+					wait = serve - dt - inuse;
 					if (wait < 0)	wait = 0;
 				}
 				else {
 					inuse = 0;
-					dt = 0; 
+					dt = 0;
 					dt_bench = 0;
 					wait = 0;
-				}			
+				}
 
 				cst_inuse.set(asset_name, inuse);
 				cst_wait.set(asset_name, wait);
-				
+
 				inuse_total += inuse;
 				dt_total += dt;
 				wait_total += wait;
@@ -411,9 +412,9 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 
 				if (dt > 100) dt = 100;
 				if (dt_bench > 100) dt_bench = 100;
-				
+
 				cst_dt.set(asset_name, dt);
-				cst_dt_bench.set(asset_name, dt_bench);		
+				cst_dt_bench.set(asset_name, dt_bench);
 
 			}
 
@@ -447,7 +448,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 	private void deviceQuery(Date startDate, Date endDate, Date currentDate) {
 
 		HashMap<String, Object> sqlParams = new HashMap<>();
-		
+
 		sqlParams.put("hospitalId", hospitalId);
 		sqlParams.put("clinical_dept_id", clinical_dept_id);
 		sqlParams.put("startDate", startDate);
@@ -468,13 +469,12 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
         AssetInfo asset = (AssetInfo) eventObject;
 
         if(asset == null) return;
-        /*
-        this.assetId    = asset.getId();
-        this.setAssetName(asset.getName());
-        this.isSingleAsset = true;
-        logger.debug("Selected asset Id: {}, asset name: {}", assetId, assetName);
-        update();
-        */
+
+        this.assetId = asset.getId();
+        this.assetName = asset.getName();
+        
+		WebUtil.navigateTo("/portal/analysis/assetUsageSingle.xhtml?faces-redirect=true&asset_id=" + assetId + "&asset_name=" + assetName);
+
     }
 
 

@@ -503,6 +503,8 @@ INSERT INTO "i18n_message" VALUES (5040,'label','assetsDashboardclm11', '停机�
 INSERT INTO "i18n_message" VALUES (5041,'label','deviceValueScanhd', '设备总扫描量 (次)','Device Scan (Times)',null,-1);
 INSERT INTO "i18n_message" VALUES (5042,'label','deviceValueExpohd', '设备总曝光量 (次)','Device Exposure (Times)',null,-1);
 INSERT INTO "i18n_message" VALUES (5043,'label','deviceValueROIhd', '设备总利润 （元）','Device ROI （CNY)',null,-1);
+INSERT INTO "i18n_message" VALUES (5045,'label','selectAssetSingle', '选择单台设备','Select a device',null,-1);
+INSERT INTO "i18n_message" VALUES (5046,'label','selectAssetChoose', '选择设备','Select devices',null,-1);
 
 -- device maintenance
 

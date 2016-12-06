@@ -8,29 +8,38 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.I18nMessage;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
+import org.joda.time.DateTime;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.LineChartModel;
+import org.primefaces.model.chart.BarChartSeries;
+import org.primefaces.model.chart.LineChartSeries;
+import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.HorizontalBarChartModel;
+import org.primefaces.model.chart.DateAxis;
 
 import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
-import java.io.Serializable;
-import javax.faces.bean.ViewScoped;
-
 import webapp.framework.dao.NativeSqlUtil;
-import java.time.Year;
-import java.text.NumberFormat;
-import java.text.DecimalFormat;
-
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.ServerEventInterface;
-import com.ge.apm.domain.AssetInfo;
-import com.ge.apm.domain.I18nMessage;
+
+import java.text.NumberFormat;
+import java.time.Year;
+import java.text.DecimalFormat;
+import javax.faces.context.FacesContext;
 
 import com.ge.apm.view.analysis.Row; 
 
 @ManagedBean
 @ViewScoped
-public class AssetPerfAllController implements Serializable, ServerEventInterface {
+public class AssetPerfSingleController implements ServerEventInterface {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,17 +49,24 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
     // Table Components
     private List<Row> assetDashBoard = null;
+    private HashMap<String, String> yearList = new HashMap<>();
 
-	private int hospitalId = -1;
-	private int clinical_dept_id = -1;
+    private int hospitalId = -1;
+    private int clinical_dept_id = -1;
+    private int filter_id = -1;
+    private int MAX_INTERVAL=4;
+    
     private Date startDate;
-	private Date endDate;
-	private Date currentDate;
+    private Date endDate;
+    private Date currentDate;
+
     private int targetYear = Year.now().getValue();
+    private String selectedYear = Integer.toString(targetYear);
 
     private String assetName = WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");
     private int assetId = -1;
 
+    private NumberFormat cf = new DecimalFormat(",###.##");
 
     @PostConstruct
     public void init() {
@@ -68,8 +84,29 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
         endDate = currentCal.getTime();
         Date currentDate = currentCal.getTime();
 
-        deviceQuery(startDate, endDate, currentDate);
+        int year = targetYear;
+        for (int index = 0; index < MAX_INTERVAL; index++) {
+            yearList.put(Integer.toString(year),Integer.toString(year));
+            year -= 1;
+        }
 
+        if (FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_id") != null 
+            && FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_name") != null) {
+
+            filter_id = Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_id"));
+            assetName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_name");
+            deviceQuery(startDate, endDate, currentDate);
+        }
+    }
+
+    @Override
+    public void onServerEvent(String eventName, Object eventObject) {
+        AssetInfo asset = (AssetInfo) eventObject;
+
+        this.filter_id = asset.getId();
+        this.assetName = asset.getName();
+
+        deviceQuery(startDate, endDate, currentDate);
     }
 
 
@@ -87,7 +124,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
         deviceQuery(startDate, endDate, currentDate);
     }
 
-            //bigint
+           //bigint
     private String DB1TL
             = "SELECT left_table.name, serial_num, clinical_dept_id, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
             + "FROM (SELECT id, name, serial_num, clinical_dept_id FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
@@ -183,6 +220,28 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
     public int getAssetId() {
 
         return assetId;
+    }
+
+    public String getSelectedYear() {
+
+        return selectedYear;
+    }
+
+    public void setSelectedYear(String selectedYear) {
+
+        this.selectedYear = selectedYear;
+    }
+    
+    public Map<String, String> getYearList() {
+        return yearList;
+    }
+
+    public void onSelectedYearChange() {
+
+        targetYear = Integer.parseInt(selectedYear);
+        //sqlParams.put("targetYear", this.targetYear);
+        //startMonth = getStartMonth();
+
     }
 
     private void devicePanel(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
@@ -284,20 +343,5 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
         deviceTable(startDate, endDate, currentDate, sqlParams);
 
     }
-
-    @Override
-    public void onServerEvent(String eventName, Object eventObject){
-        AssetInfo asset = (AssetInfo) eventObject;
-
-        if(asset == null) return;
-
-        this.assetId = asset.getId();
-        this.assetName = asset.getName();
-        
-        WebUtil.navigateTo("/portal/analysis/assetPerfSingle.xhtml?faces-redirect=true&asset_id=" + assetId + "&asset_name=" + assetName);
-
-    }
-
-
 
 }

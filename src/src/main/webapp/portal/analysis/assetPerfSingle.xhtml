@@ -16,16 +16,15 @@
         <div class="ui-g">
             <h:form id="WorkOrderEditForm">
             <div class="ui-g-2">
-                <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetPerfAllController.assetName}">
-
+                <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetPerfSingleController.assetName}">
                     <p:menuitem value="#{msg.selectAssetSingle}"
-                                actionListener="#{selectAssetController.prepareDialogCallback(assetPerfAllController, ':WorkOrderEditForm:selAsset')}"
+                                actionListener="#{selectAssetController.prepareDialogCallback(assetPerfSingleController, ':WorkOrderEditForm:selAsset')}"
                                 process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
                                 oncomplete="PF('varSelectAssetDlg').show()"/>
                     <p:separator/>
 
-                    <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"/>
-                    
+                    <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
+                                url="/portal/analysis/assetPerfAll.xhtml"/>
                 </p:menuButton>
             </div>
             </h:form>
@@ -42,7 +41,7 @@
                         <div class="epsilon u-mv-">#{msg.assetTotalProfit}</div>
                         <p:outputPanel id="value_profit">
                             <div class="text--banner delta">
-                                <h:outputText value="#{homeHeadController.totalProfit}"/>
+                                <h:outputText value="TBD"/>
                             </div>
                         </p:outputPanel>
                     </div>
@@ -50,7 +49,7 @@
                         <div class="epsilon u-mv-">#{msg.assetTopPerfhd}</div>
                         <p:outputPanel id="value_top_asset">
                             <div class="text--banner delta">
-                                <h:outputText value="#{assetPerfAllController.topAsset}"/>
+                                <h:outputText value="#{assetPerfSingleController.topAsset}"/>
                             </div>
                         </p:outputPanel>
                     </div>
@@ -58,7 +57,7 @@
                         <div class="epsilon u-mv-">#{msg.deptTopPerfhd}</div>
                         <p:outputPanel id="value_top_dept">
                             <div class="text--banner delta">
-                                <h:outputText value="#{assetPerfAllController.topDept}"/>
+                                <h:outputText value="#{assetPerfSingleController.topDept}"/>
                             </div>
                         </p:outputPanel>
                     </div>
@@ -66,45 +65,21 @@
             </div>
 
             <div class="ui-g-12">
-                <p:selectOneMenu id="selectedYear" value="#{homeHeadController.selectedYear}">
-                    <p:ajax listener="#{homeHeadController.onSelectedYearChange}"
-                            update="BarChartForm"/>
-                    <p:ajax listener="#{assetPerfAllController.submit(homeHeadController.selectedYear)}"
+                <p:selectOneMenu id="selectedYear" value="#{assetPerfSingleController.selectedYear}">
+                    <p:ajax listener="#{assetPerfSingleController.submit(assetPerfSingleController.selectedYear)}"
                             update="TopValueForm AssetInfoListForm"/>
-                    <f:selectItems value="#{homeHeadController.yearList}"/>
+                    <f:selectItems value="#{assetPerfSingleController.yearList}"/>
                 </p:selectOneMenu>
             </div>
             </h:form>
 
             <div class="ui-g-12">
-                <h:form id="BarChartForm">
-                <div class="block">
-                    <h3 class="block-title">#{msg.assetAveROI}</h3>
-                    <div class="layout">
-                        <div class="widget layout__item u-2/3 divide-line-right divide-line-bottom u-p">
-                            <h4 class="widget-title">#{msg.assetROI}</h4>
-                            <p:chart id="barAnnualRevenue" type="bar" model="#{homeHeadController.barAnnualRevenue}" responsive="true"/>
-                        </div>
-                        <div class="widget layout__item u-1/3 divide-line-bottom u-p">
-                            <h4 class="widget-title">#{msg.profitDistro}</h4>
-                            <p:chart id="pieAnnualRevenue" type="pie" model="#{homeHeadController.pieAnnualRevenue}" responsive="true"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="ui-g-12">
-                    <div class="block">
-                        <h3 class="block-title">#{msg.assetAnnual}</h3>
-                        <p:chart id="barMonthlyRevenue" type="bar" model="#{homeHeadController.barMonthlyRevenue}"
-                                 style="height:300px" responsive="true"/>
-                    </div>
-                </div>
-                </h:form>
 
                 <div class="ui-g-12">
                     <div class="block">
                         <h3 class="block-title">#{msg.assetsDashboardhd}</h3>
                         <h:form id="AssetInfoListForm">
-                        <p:dataTable id="datalist" var="item" value="#{assetPerfAllController.assetDashboard}"
+                        <p:dataTable id="datalist" var="item" value="#{assetPerfSingleController.assetDashboard}"
                                  lazy="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
                                  rowKey="#{item.name}" sortMode="single" sortOrder="descending" sortBy="#{item.name}"
                                  rows="10" emptyMessage="#{msg.noRecordFound}"
