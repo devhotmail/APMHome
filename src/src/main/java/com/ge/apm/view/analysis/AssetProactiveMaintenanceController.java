@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Weeks;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.postgresql.jdbc4.Jdbc4Array;
 import org.primefaces.model.timeline.TimelineEvent;
 import org.primefaces.model.timeline.TimelineModel;
@@ -78,13 +80,14 @@ public final class AssetProactiveMaintenanceController {
 
     public final List<String> getGeneratedMonth() {
         List<String> list = new ArrayList<>();
-        if (this.assetId == 0) {
+        list.add("");
+        /* if (this.assetId == 0) {
             list.add(WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices"));
         }
         else {
             FluentIterable<Map<String, Object>> iterable = FluentIterable.from(this.query(SQL_SCALAR_DEVICE_NAME_SINGLE));
             list.add((String)iterable.first().or(ImmutableMap.of("scalar", (Object)"")).get("scalar"));
-        }
+        } */
         for (int i = 1; i <= 31; i++) {
             list.add(Integer.toString(i));
         }
@@ -189,8 +192,10 @@ public final class AssetProactiveMaintenanceController {
                                         Weeks.weeksBetween(this.firstDayOfThisYearMinus1, this.today).getWeeks() - l2);
                 // forward
                 l2 += interval;
+                DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd");
                 while (l2 < array.length) {
-                    array[l2] = "tinted lightly-tinted";
+                    String date = format.print(this.firstDayOfThisYearMinus1.plusDays(7 * l2));
+                    array[l2] = date + " *";
                     l2 += interval;
                 }
                 ret.add(array);
