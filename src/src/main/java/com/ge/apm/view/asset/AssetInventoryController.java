@@ -97,6 +97,12 @@ public class AssetInventoryController extends JpaCRUDController<AssetInfo>{
     		if(selectedNode.getChildCount() > 0){
     			List<TreeNode> childNode = selectedNode.getChildren();
     			for (TreeNode treeNode : childNode) {
+    				if(treeNode.getType().equals("org")){
+    					continue;
+    				}
+//    				else if(treeNode.getType().equals("asset")){
+//    					
+//    				}
     	        	if(unValidDeviceList.contains(treeNode)){
     	        		unValidDeviceList.remove(treeNode);
     	        	}
