@@ -1,12 +1,16 @@
 package com.ge.apm.service.wo;
 
+import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.dao.WorkOrderStepRepository;
+import com.ge.apm.domain.SiteInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderStep;
 import com.ge.apm.service.uaa.UaaService;
+import java.util.List;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.util.TimeUtil;
@@ -19,6 +23,11 @@ import webapp.framework.web.WebUtil;
 @Component
 public class WorkOrderService {
     private static final Logger logger = Logger.getLogger(WorkOrderService.class);
+    
+    @Autowired
+    private SiteInfoRepository siteDao;
+    @Autowired
+    private WorkOrderStepRepository stepDao;
     
     public WorkOrderStep initWorkOrderCurrentStep(WorkOrder wo){
         WorkOrderStep woStep = new WorkOrderStep();
@@ -127,6 +136,25 @@ public class WorkOrderService {
             wo.setCurrentPersonName(currentWoStep.getOwnerName());
             
             throw ex;
+        }
+        //judge whether continue, if auto_stepX is true then continue
+        int currentStep = wo.getCurrentStep();
+        if ( wo.getSiteId() == null) return;
+        SiteInfo site = siteDao.findById(wo.getSiteId());
+        if (site == null) return;
+        List<WorkOrderStep> list = stepDao.getByWorkOrderIdAndStepId(wo.getId(), currentStep);
+        if (list.size() == 0) return;
+        for(WorkOrderStep step : list) {
+            if (step.getEndTime() == null)
+                currentWoStep = step;
+        }
+        switch (currentStep){
+            case 2:if(site.getWfAutoStep2()){finishWorkOrderStep(wo, currentWoStep);}break;
+            case 3:if(site.getWfAutoStep3()){finishWorkOrderStep(wo, currentWoStep);}break;
+            case 4:if(site.getWfAutoStep4()){finishWorkOrderStep(wo, currentWoStep);}break;
+            case 5:if(site.getWfAutoStep5()){finishWorkOrderStep(wo, currentWoStep);}break;
+            case 6:if(site.getWfAutoStep6()){closeWorkOrder(wo, currentWoStep);}break;
+            default:;
         }
     }
 

@@ -66,6 +66,31 @@
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>
+                    <p:fieldset legend="#{msg.WorkOrderConfig}">
+                        <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{siteInfoController.selected != null}">
+                            <h:panelGroup>
+                                <label class="label">&nbsp;</label>
+                                <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep2}" value="#{siteInfoController.selected.wfAutoStep2}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">&nbsp;</label>
+                                <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep3}" value="#{siteInfoController.selected.wfAutoStep3}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">&nbsp;</label>
+                                <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep4}" value="#{siteInfoController.selected.wfAutoStep4}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">&nbsp;</label>
+                                <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep5}" value="#{siteInfoController.selected.wfAutoStep5}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">&nbsp;</label>
+                                <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep6}" value="#{siteInfoController.selected.wfAutoStep6}"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </p:fieldset>
+                    <br/>
                     <p:commandButton validateClient="true" actionListener="#{siteInfoController.save}" value="#{msg.Save}" update="display,:SiteInfoEditDlg, :SiteInfoListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'SiteInfoEditDialog');"/>
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('SiteInfoEditDialog').hide()"/>

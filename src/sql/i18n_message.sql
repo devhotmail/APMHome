@@ -308,6 +308,11 @@ INSERT INTO "i18n_message" VALUES (740,'field_name','lastQaDate','上次质控�
 INSERT INTO "i18n_message" VALUES (741,'field_name','lastMeteringDate','上次计量时间','Last Metering Date',null,-1);
 INSERT INTO "i18n_message" VALUES (742,'field_name','assetName','资产名称','Asset Name',null,-1);
 INSERT INTO "i18n_message" VALUES (743,'field_name','period','周期','Period',null,-1);
+INSERT INTO "i18n_message" VALUES (744,'field_name','wfAutoStep2', '自动审核','Auto Approve',null,-1);
+INSERT INTO "i18n_message" VALUES (745,'field_name','wfAutoStep3', '自动派工','Auto Assign',null,-1);
+INSERT INTO "i18n_message" VALUES (746,'field_name','wfAutoStep4', '自动领工','Auto Accept',null,-1);
+INSERT INTO "i18n_message" VALUES (747,'field_name','wfAutoStep5', '自动维修','Auto Repair',null,-1);
+INSERT INTO "i18n_message" VALUES (748,'field_name','wfAutoStep6', '自动关单','Auto Close',null,-1);
 
 -- field value code types  ( id from 1400)
 
@@ -506,6 +511,7 @@ INSERT INTO "i18n_message" VALUES (5042,'label','deviceValueExpohd', '设备总�
 INSERT INTO "i18n_message" VALUES (5043,'label','deviceValueROIhd', '设备总利润 （元）','Device ROI （CNY)',null,-1);
 INSERT INTO "i18n_message" VALUES (5045,'label','selectAssetSingle', '选择单台设备','Select a device',null,-1);
 INSERT INTO "i18n_message" VALUES (5046,'label','selectAssetChoose', '选择设备','Select devices',null,-1);
+INSERT INTO "i18n_message" VALUES (5047,'label','WorkOrderConfig', '流程配置','WorkOrder Config',null,-1);
 
 -- device maintenance
 
@@ -579,7 +585,6 @@ INSERT INTO "i18n_message" VALUES (5585,'label','preventiveMaintenanceAnalysis_y
 INSERT INTO "i18n_message" VALUES (5586,'label','preventiveMaintenanceAnalysis_month', '%d月','%dM',null,-1);
 INSERT INTO "i18n_message" VALUES (5587,'label','preventiveMaintenanceAnalysis_allDevices', '全部设备','All',null,-1);
 INSERT INTO "i18n_message" VALUES (5588,'label','preventiveMaintenanceAnalysis_deviceName', '设备名称','Name',null,-1);
-
 
 -- Home pages start from 5601 to 5700
 
