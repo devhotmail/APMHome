@@ -41,7 +41,7 @@ public class AssetClinicalRecord implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "modality_id")
-    private int modalityId;
+    private String modalityId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "modality_type_id")
@@ -111,6 +111,11 @@ public class AssetClinicalRecord implements Serializable {
     @NotNull
     private Integer assetId;
 
+    @Column(name = "source_system")
+    private String sourceSystem;
+    @Column(name = "source_record_id")
+    private String sourceRecordId;
+    
     public AssetClinicalRecord() {
     }
 
@@ -142,12 +147,28 @@ public class AssetClinicalRecord implements Serializable {
         this.siteId = siteId;
     }
 
-    public int getModalityId() {
+    public String getModalityId() {
         return modalityId;
     }
 
-    public void setModalityId(int modalityId) {
+    public void setModalityId(String modalityId) {
         this.modalityId = modalityId;
+    }
+
+    public String getSourceSystem() {
+        return sourceSystem;
+    }
+
+    public void setSourceSystem(String sourceSystem) {
+        this.sourceSystem = sourceSystem;
+    }
+
+    public String getSourceRecordId() {
+        return sourceRecordId;
+    }
+
+    public void setSourceRecordId(String sourceRecordId) {
+        this.sourceRecordId = sourceRecordId;
     }
 
     public int getModalityTypeId() {

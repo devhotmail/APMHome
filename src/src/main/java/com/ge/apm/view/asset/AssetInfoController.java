@@ -211,7 +211,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public List<AssetFileAttachment> getAttachList(Integer assetid, String type) {
         if (attachements == null || attachements.isEmpty()) {
             List<SearchFilter> sfs = new ArrayList();
-            sfs.addAll(this.searchFilters);
+            //sfs.addAll(this.searchFilters);
             sfs.add(new SearchFilter("assetId", SearchFilter.Operator.EQ, assetid));
             attachements = attachDao.findBySearchFilter(sfs);
         }
