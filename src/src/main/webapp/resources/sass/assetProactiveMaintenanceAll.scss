@@ -33,9 +33,12 @@
     }
   }
 
-  .ui-datatable tr:last-child {
-    td > .popover {
-      top: -100%;
+  .ui-datatable tr {
+    &:last-child, &:nth-last-child(2) {
+      td > .popover {
+        top: auto;
+        bottom: 100%;
+      }
     }
   }
 

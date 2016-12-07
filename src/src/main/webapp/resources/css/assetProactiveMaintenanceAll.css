@@ -426,7 +426,7 @@ table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbd
 .layout-compact .layout-main .popover{z-index:2;position:absolute;background:#fff;min-width:90px;border-radius:2px;left:100%;top:100%;margin-top:5px;margin-left:5px;display:none}
 .layout-compact .layout-main .ui-datatable td{position:relative;overflow:visible;vertical-align:top}
 .layout-compact .layout-main .ui-datatable td:hover>.popover:not(:empty){display:block}
-.layout-compact .layout-main .ui-datatable tr:last-child td>.popover{top:-100%}
+.layout-compact .layout-main .ui-datatable tr:last-child td>.popover,.layout-compact .layout-main .ui-datatable tr:nth-last-child(2) td>.popover{top:auto;bottom:100%}
 .layout-compact .layout-main .ui-datatable.maintenance-forecast table{overflow:hidden}
 .layout-compact .layout-main .ui-datatable.maintenance-forecast table thead th{padding:.5rem 0;overflow:visible;border:0;position:relative;text-align:left}
 .layout-compact .layout-main .ui-datatable.maintenance-forecast table thead th:first-child{padding-left:1rem}
