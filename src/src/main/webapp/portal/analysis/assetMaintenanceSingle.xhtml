@@ -115,7 +115,7 @@
                         <div class="ui-g">
                             <div class="ui-g-4 divide-line-right">
                                 <p>#{msg.maintenanceAnalysis_percentageChart_room}</p>
-                                <div class="ui-g-6">
+                                <div class="ui-g-6 #{ assetMaintenanceController.errorPercentageInRoomOfDeviceBoolean ? '' : 'ui-g-12' }">
                                     <table class="table table--small">
                                         <tr>
                                             <td>#{msg.maintenanceAnalysis_percentageChart_percentage}</td>
@@ -143,13 +143,14 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="ui-g-6">
-                                    <p:chart id="maintenanceR62" type="pie" model="#{assetMaintenanceController.errorPercentageInRoomOfDeviceChart}"/>
-                                </div>
+                                <p:outputPanel class="ui-g-6" rendered="#{ assetMaintenanceController.errorPercentageInRoomOfDeviceBoolean }">
+                                    <p:chart id="maintenanceR62" type="pie"
+                                             model="#{assetMaintenanceController.errorPercentageInRoomOfDeviceChart}"/>
+                                </p:outputPanel>
                             </div>
                             <div class="ui-g-4 divide-line-right">
                                 <p>#{msg.maintenanceAnalysis_percentageChart_category}</p>
-                                <div class="ui-g-6">
+                                <div class="ui-g-6 #{ assetMaintenanceController.errorPercentageInDeviceTypeOfDeviceBoolean ? '' : 'ui-g-12' }">
                                     <table class="table table--small">
                                         <tr>
                                             <td>#{msg.maintenanceAnalysis_percentageChart_percentage}</td>
@@ -181,13 +182,14 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="ui-g-6">
-                                    <p:chart id="maintenanceR64" type="pie" model="#{assetMaintenanceController.errorPercentageInDeviceTypeOfDeviceChart}"/>
-                                </div>
+                                <p:outputPanel class="ui-g-6" rendered="#{ assetMaintenanceController.errorPercentageInDeviceTypeOfDeviceBoolean }">
+                                    <p:chart id="maintenanceR64" type="pie"
+                                             model="#{assetMaintenanceController.errorPercentageInDeviceTypeOfDeviceChart}"/>
+                                </p:outputPanel>
                             </div>
                             <div class="ui-g-4">
                                 <p>#{msg.maintenanceAnalysis_percentageChart_device}</p>
-                                <div class="ui-g-6">
+                                <div class="ui-g-6 #{ assetMaintenanceController.errorPercentageInTotalOfDeviceBoolean ? '' : 'ui-g-12' }">
                                     <table class="table table--small">
                                         <tr>
                                             <td>#{msg.maintenanceAnalysis_percentageChart_percentage}</td>
@@ -217,9 +219,10 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="ui-g-6">
-                                    <p:chart id="maintenanceR66" type="pie" model="#{assetMaintenanceController.errorPercentageInTotalOfDeviceChart}" />
-                                </div>
+                                <p:outputPanel class="ui-g-6" rendered="#{ assetMaintenanceController.errorPercentageInTotalOfDeviceBoolean }">
+                                    <p:chart id="maintenanceR66" type="pie"
+                                        model="#{assetMaintenanceController.errorPercentageInTotalOfDeviceChart}" />
+                                </p:outputPanel>
                             </div>
                         </div>
                     </div>

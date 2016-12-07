@@ -291,6 +291,10 @@ public final class AssetMaintenanceController {
              / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_ROOM_OF_DEVICE_SINGLE), Integer.valueOf(0))).doubleValue();
     }
 
+    public final boolean getErrorPercentageInRoomOfDeviceBoolean() {
+        return !(Double.isInfinite(this.getErrorPercentageInRoomOfDevice()) || Double.isNaN(this.getErrorPercentageInRoomOfDevice()));
+    }
+
     public final String getErrorPercentageInRoomOfDeviceString() {
         int value = (int)Math.round(this.getErrorPercentageInRoomOfDevice()*100);
         value = (value < 0 || value > 100) ? 0 : value;
@@ -321,6 +325,10 @@ public final class AssetMaintenanceController {
                 / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_DEVICE_TYPE_OF_DEVICE_SINGLE), Integer.valueOf(0))).doubleValue();
     }
 
+    public final boolean getErrorPercentageInDeviceTypeOfDeviceBoolean() {
+        return !(Double.isInfinite(this.getErrorPercentageInDeviceTypeOfDevice()) || Double.isNaN(this.getErrorPercentageInDeviceTypeOfDevice()));
+    }
+
     public final String getErrorPercentageInDeviceTypeOfDeviceString() {
         int value = (int)Math.round(this.getErrorPercentageInDeviceTypeOfDevice()*100);
         value = (value < 0 || value > 100) ? 0 : value;
@@ -349,6 +357,10 @@ public final class AssetMaintenanceController {
     public final double getErrorPercentageInTotalOfDevice() {
         return (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Integer.valueOf(0))).doubleValue()
                 / (convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_IN_TOTAL_OF_DEVICE_SINGLE), Integer.valueOf(0))).doubleValue();
+    }
+
+    public final boolean getErrorPercentageInTotalOfDeviceBoolean() {
+        return !(Double.isInfinite(this.getErrorPercentageInTotalOfDevice()) || Double.isNaN(this.getErrorPercentageInTotalOfDevice()));
     }
 
     public final String getErrorPercentageInTotalOfDeviceString() {
