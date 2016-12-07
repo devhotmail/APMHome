@@ -1,28 +1,51 @@
 package com.ge.apm.view.sysutil;
 
-import com.ge.apm.service.uaa.UaaService;
-import java.io.File;
-import java.io.IOException;
+import com.ge.apm.dao.UserAccountRepository;
+import com.ge.apm.domain.UserAccount;
+import static com.ge.apm.domain.UserAccount.HASH_INTERATIONS;
+import com.ge.apm.service.utils.Digests;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.codec.DecoderException;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.service.LoginService;
-import webapp.framework.web.service.UserContext;
 
 @ManagedBean
 @RequestScoped
 public class LoginController extends LoginService {
 
     @Override
+    public String onPasswordEncrypted(String loginName, String plainPassword){
+        UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
+        UserAccount user = userDao.getByLoginName(loginName);
+        System.out.println("************* plainPassword="+plainPassword);
+        if(user!=null) {
+            try {
+                byte[] salt = Digests.decodeHex(user.getPwdSalt());
+                byte[] hashPassword;
+                
+                hashPassword = Digests.sha1(plainPassword.getBytes(), salt, UserAccount.HASH_INTERATIONS);
+                String saltedPassword = Digests.encodeHex(hashPassword);
+        System.out.println("************* saltedPassword="+saltedPassword);
+                
+                return saltedPassword;
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (DecoderException ex) {
+                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return plainPassword;        
+    }
+    
+    @Override
     protected void afterLogin() {
         // called after user logined.
-        UserContextService userContextService = (UserContextService) WebUtil.getBean(UserContextService.class);
+        UserContextService userContextService = WebUtil.getBean(UserContextService.class);
         userContextService.processAfterLogin();
 
         WebUtil.redirectTo(userContextService.getUserDefaultHomePage());

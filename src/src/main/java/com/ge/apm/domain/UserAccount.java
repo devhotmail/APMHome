@@ -3,7 +3,9 @@
 package com.ge.apm.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ge.apm.service.utils.Digests;
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +29,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import webapp.framework.util.StringUtil;
 
 /**
  *
@@ -42,6 +43,11 @@ import webapp.framework.util.StringUtil;
 public class UserAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public static final String HASH_ALGORITHM = "SHA-1";
+    public static final int HASH_INTERATIONS = 1024;
+    public static final int SALT_SIZE = 8;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -59,7 +65,7 @@ public class UserAccount implements Serializable {
     private String name;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 16)
+    @Size(min = 1, max = 255)
     @Column(name = "password")
     private String password;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
@@ -97,6 +103,15 @@ public class UserAccount implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginTime;
 
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 64)
+    @Column(name = "pwd_salt")
+    private String pwdSalt;
+
+    @Transient
+    private String plainPassword;
+    
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount", fetch = FetchType.LAZY)
     private List<UserRole> userRoleList;
@@ -138,16 +153,12 @@ public class UserAccount implements Serializable {
         this.name = name;
     }
 
-    public String getPasswordEncryped() {
+    public String getPassword() {
         return password;
     }
 
-    public String getPassword() {
-        return StringUtil.desDecrypt(password);
-    }
-
     public void setPassword(String password) {
-        this.password = StringUtil.desEncrypt(password);
+        this.password = password;
     }
 
     public String getEmail() {
@@ -263,6 +274,30 @@ public class UserAccount implements Serializable {
         this.hospitalId = hospitalId;
     }
 
+    public String getPwdSalt() {
+        return pwdSalt;
+    }
+
+    public void setPwdSalt(String pwdSalt) {
+        this.pwdSalt = pwdSalt;
+    }
+
+    public String getPlainPassword() {
+        return plainPassword;
+    }
+
+    public void setPlainPassword(String plainPassword) {
+        this.plainPassword = plainPassword;
+    }
+
+    public void entryptPassword() throws NoSuchAlgorithmException {
+        byte[] salt = Digests.generateSalt(SALT_SIZE);
+        setPwdSalt(Digests.encodeHex(salt));
+            
+        byte[] hashPassword = Digests.sha1(getPlainPassword().getBytes(), salt, HASH_INTERATIONS);
+        setPassword(Digests.encodeHex(hashPassword));
+    }
+        
     @Override
     public int hashCode() {
         int hash = 0;
