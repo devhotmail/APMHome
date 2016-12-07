@@ -189,7 +189,7 @@ public final class AssetProactiveMaintenanceController {
                     l1--;
                 }
                 int interval = Math.max(l2 - l1,
-                                        Weeks.weeksBetween(this.firstDayOfThisYearMinus1, this.today).getWeeks() - l2);
+                                        Weeks.weeksBetween(this.firstDayOfThisYearMinus1, this.today).getWeeks() + 1 - l2);
                 // forward
                 l2 += interval;
                 DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd");

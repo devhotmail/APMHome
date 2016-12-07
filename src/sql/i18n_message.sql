@@ -553,6 +553,9 @@ INSERT INTO "i18n_message" VALUES (5548,'label','maintenanceAnalysis_distributio
 INSERT INTO "i18n_message" VALUES (5549,'label','maintenanceAnalysis_distributionChart_device_xAxis', '设备','Device',null,-1);
 
 INSERT INTO "i18n_message" VALUES (5551,'label','maintenanceAnalysis_percentageChart', '设备故障所占比例','Numbers',null,-1);
+INSERT INTO "i18n_message" VALUES (5552,'label','maintenanceAnalysis_counting', '台','Device(s)',null,-1);
+INSERT INTO "i18n_message" VALUES (5553,'label','maintenanceAnalysis_this', '本台设备','This Device',null,-1);
+INSERT INTO "i18n_message" VALUES (5554,'label','maintenanceAnalysis_that', '其它设备','Others',null,-1);
 INSERT INTO "i18n_message" VALUES (5555,'label','maintenanceAnalysis_percentageChart_percentage', '所占比例：','Ratio: ',null,-1);
 INSERT INTO "i18n_message" VALUES (5556,'label','maintenanceAnalysis_percentageChart_occurrence', '此台设备故障数：','This device: ',null,-1);
 INSERT INTO "i18n_message" VALUES (5561,'label','maintenanceAnalysis_percentageChart_room', '此台设备故障占所在科室总故障比例','Ratio in the room',null,-1);
@@ -597,6 +600,18 @@ INSERT INTO "i18n_message" VALUES (5611,'clinicalDeptId','5', '心导管室','He
 INSERT INTO "i18n_message" VALUES (5612,'label','assetAnnual', '设备绩效年报（单位：元）','Asset Performance Annual Report',null,-1);
 INSERT INTO "i18n_message" VALUES (5613,'label','assetAnnualForecast', '设备绩效年报预测（单位：元）','Asset Performance Forecast Report',null,-1);
 
+INSERT INTO "i18n_message" VALUES (9001,'month','1',  '一月','January',null,-1);
+INSERT INTO "i18n_message" VALUES (9002,'month','2',  '二月','Feburary',null,-1);
+INSERT INTO "i18n_message" VALUES (9003,'month','3',  '三月','March',null,-1);
+INSERT INTO "i18n_message" VALUES (9004,'month','4',  '四月','April',null,-1);
+INSERT INTO "i18n_message" VALUES (9005,'month','5',  '五月','May',null,-1);
+INSERT INTO "i18n_message" VALUES (9006,'month','6',  '六月','June',null,-1);
+INSERT INTO "i18n_message" VALUES (9007,'month','7',  '七月','July',null,-1);
+INSERT INTO "i18n_message" VALUES (9008,'month','8',  '八月','August',null,-1);
+INSERT INTO "i18n_message" VALUES (9009,'month','9',  '九月','September',null,-1);
+INSERT INTO "i18n_message" VALUES (9010,'month','10', '十月','October',null,-1);
+INSERT INTO "i18n_message" VALUES (9011,'month','11', '十一月','November',null,-1);
+INSERT INTO "i18n_message" VALUES (9012,'month','12', '十二月','December',null,-1);
 
 -- update id sequence value
 SELECT setval('"public"."i18n_message_id_seq"', 10000, false);
