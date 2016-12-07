@@ -83,6 +83,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
 
         ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
+        if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+        searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, true));
     }
 
     public void setFileService(AttachmentFileService fileService) {
