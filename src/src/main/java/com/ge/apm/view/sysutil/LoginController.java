@@ -21,7 +21,6 @@ public class LoginController extends LoginService {
     public String onPasswordEncrypted(String loginName, String plainPassword){
         UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
         UserAccount user = userDao.getByLoginName(loginName);
-        System.out.println("************* plainPassword="+plainPassword);
         if(user!=null) {
             try {
                 byte[] salt = Digests.decodeHex(user.getPwdSalt());
@@ -29,7 +28,6 @@ public class LoginController extends LoginService {
                 
                 hashPassword = Digests.sha1(plainPassword.getBytes(), salt, UserAccount.HASH_INTERATIONS);
                 String saltedPassword = Digests.encodeHex(hashPassword);
-        System.out.println("************* saltedPassword="+saltedPassword);
                 
                 return saltedPassword;
             } catch (NoSuchAlgorithmException ex) {
