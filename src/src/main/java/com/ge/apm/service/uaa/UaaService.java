@@ -1,5 +1,19 @@
 package com.ge.apm.service.uaa;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.InspectionChecklistRepository;
 import com.ge.apm.dao.OrgInfoRepository;
@@ -13,16 +27,7 @@ import com.ge.apm.domain.SysRole;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.UserRole;
 import com.ge.apm.view.sysutil.UserContextService;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+
 import webapp.framework.web.WebUtil;
 
 /**
@@ -262,8 +267,44 @@ public class UaaService {
         
         TreeNode root = getOrgTree(hospitalId);
         addAssetToOrgNode(root, assetMap);
-        
+        removeInvalidOrg(root);
         return root;
+    }
+    
+    public void removeInvalidOrg(TreeNode root){
+    	if(root == null){
+    		return;
+    	}
+    	if(logger.isInfoEnabled()){
+    		logger.info("current node type is "+root.getType());
+    	}
+    	if(root.getType().equals("default") && root.getChildCount() > 0){
+    		for (Iterator<TreeNode> iterator = root.getChildren().iterator();iterator.hasNext();) {
+    			TreeNode childNode = (TreeNode) iterator.next();
+    			if(CollectionUtils.isEmpty(childNode.getChildren()) && childNode.getType().equals("org")){
+    				iterator.remove();
+    				continue;
+    			}
+    			if(!bindAsset(childNode)){
+    				iterator.remove();
+    				continue;
+    			}
+			}
+    	}
+    	
+    }
+    
+    public boolean bindAsset(TreeNode treeNode){
+    	if(treeNode.getType().equals("org") && treeNode.getChildCount() > 0){
+    		for (TreeNode childNode : treeNode.getChildren()) {
+				if(childNode.getType().equals("asset")){
+					return true;
+				}else if(childNode.getType().equals("org")){
+					return bindAsset(childNode);
+				}
+			}
+    	}
+    	return false;
     }
 
     private void addChecklistToAssetNode(TreeNode node, Map<Integer, List<InspectionChecklist>> checklistMap){

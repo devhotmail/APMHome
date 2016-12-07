@@ -54,19 +54,13 @@ public class AssetInventoryController extends JpaCRUDController<AssetInfo>{
      */
     private List<TreeNode> toNodeList(TreeNode treeNode) {
     	List<TreeNode> nodes = new ArrayList<TreeNode>();
-    	logger.info("1current node type is "+ treeNode.getType());
-    	logger.info("1current rowkey is "+ treeNode.getRowKey());
 			List<TreeNode> orgNodes = treeNode.getChildren();
 			if(!CollectionUtils.isEmpty(orgNodes)){
 				for (TreeNode orgNode : orgNodes) {
-					logger.info("2current node type is "+ orgNode.getType());
-					logger.info("2current rowkey is "+ orgNode.getRowKey());
 					if(orgNode.getType().equals("org")){
 						List<TreeNode> assetNodes = orgNode.getChildren();
 						if(!CollectionUtils.isEmpty(assetNodes)){
 							for (TreeNode assetNode : assetNodes) {
-								logger.info("3current node type is "+ assetNode.getType());
-								logger.info("3current rowkey is "+ assetNode.getRowKey());
 								nodes.add(assetNode);
 							}
 						}
