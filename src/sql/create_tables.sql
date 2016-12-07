@@ -85,7 +85,12 @@ CREATE TABLE "site_info" (
 "location_en" varchar(256) COLLATE "default" DEFAULT NULL::character varying,
 "time_zone" int4,
 "default_lang" varchar(16) COLLATE "default" DEFAULT NULL::character varying,
-"is_enabled" bool
+"is_enabled" bool,
+"wf_auto_step2" bool,
+"wf_auto_step3" bool,
+"wf_auto_step4" bool,
+"wf_auto_step5" bool,
+"wf_auto_step6" bool
 );
 
 CREATE TABLE org_info (

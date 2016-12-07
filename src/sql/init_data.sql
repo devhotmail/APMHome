@@ -8,8 +8,8 @@ truncate table data_table_config cascade;
 truncate table field_code_type cascade;
 
 
-INSERT INTO "site_info" VALUES ('1', 'GE', 'GE', 'GE', 'GE', null, null, null, null, null, null, null, null);
-INSERT INTO "site_info" VALUES ('2', 'Demo医联体', 'DemoHospitalGrup', '医联体', '医联体', null, null, null, null, null, null, null, null);
+INSERT INTO "site_info" VALUES ('1', 'GE', 'GE', 'GE', 'GE', null, null, null, null, null, null, null, true, false,false, false, false,false);
+INSERT INTO "site_info" VALUES ('2', 'Demo医联体', 'DemoHospitalGrup', '医联体', '医联体', null, null, null, null, null, null, null, true, false,false, false, false,false);
 
 INSERT INTO "org_info" VALUES ('1', '1', null, 'Digital Healthcare', 'Digital Healthcare', null);
 INSERT INTO "org_info" VALUES ('2', '2', null, '医院本部', 'Hospital Headquarter', null);
