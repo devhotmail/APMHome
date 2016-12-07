@@ -102,7 +102,7 @@
     }, 0);
   }
 
-  function displayValues(data) {
+  function barDisplayValues(data) {
     var sum = data.reduce(function(sum, serie) {
       var item = serie[0];
       var val = (typeof val === 'number' ? val : serie.reduce(function(serieSum, slot) {
@@ -115,7 +115,7 @@
       };
     }, {total: 0, num: 0});
 
-    var avg = sum.total/sum.num;
+    var avg = sum.total === 0 ? 1: sum.total/sum.num;
 
     return data.map(function(slot) {
       var item = slot[0];
@@ -126,13 +126,26 @@
     });
   }
 
-  function displaySeries(data) {
-    return data.map(function(slot) {
+  function pieDisplayValues(data) {
+    return [data[0].map(function(item) {
+      if (item[1] === 0) {
+        item[1] = 1;
+      }
+      return item;
+    })];
+  }
+
+  function displayPointLabels() {
+    var data = this.cfg.data;
+    var labels = this.cfg.series.map(function(serie) {
+      return serie.label;
+    });
+
+    return data.map(function(slot, i) {
       var item = slot[0];
-      var label = item[0] || '';
       return {
         pointLabels: {
-          labels: [label]
+          labels: [[labels[i], parseInt(item[0]) || '']]
         }
       };
     });
@@ -172,23 +185,17 @@
     var _this = this;
     _this.lastVal = 0;
     var data = this.cfg.data;
-    var series = displaySeries(data);
+    var series = displayPointLabels.call(this);
     var colors = displayColors(data);
     // special placeholder value
-    data = displayValues(data);
+    data = barDisplayValues(data);
     this.cfg.data = data;
     var total = seriesSum(data);
     $.extend(true/*recursive*/, this.cfg, base, {
       shadow: false,
       seriesColors: colors,
       legend: {
-        renderer: $.jqplot.EnhancedLegendRenderer,
-        show: true,
-        rendererOptions: {
-          numberRows: 1
-        },
-        location: 'n',
-        placement: 'outsideGrid'
+        show: false,
       },
       seriesDefaults: {
         pointLabels: {
@@ -197,7 +204,19 @@
           formatString: '%d 分钟',
           escapeHTML: false,
           formatter: function(format, val) {
-            return $.jqplot.sprintf(format, val);
+            var minute = val[1];
+            if (minute) {
+              if (minute > 60) {
+                // minute > 60 => hour
+                return $.jqplot.sprintf('%s: %.1f 小时', val[0], minute / 60);
+              } else {
+                // minute > 60 => hour
+                return $.jqplot.sprintf('%s: %d 分钟', val[0], minute);
+              }
+            }
+            else {
+              return $.jqplot.sprintf('%s: 无数据', val[0]);
+            }
           }
         },
         rendererOptions: {
@@ -239,7 +258,12 @@
     });
   };
 
-  window.maintenanceE62 = window.maintenanceE64 = window.maintenanceE66 = window.maintenanceE41 = window.maintenanceE42 = window.maintenanceE43 = function() {
+  window.maintenanceE62 = window.maintenanceE64 = window.maintenanceE66 =
+  window.maintenanceE41 = window.maintenanceE42 = window.maintenanceE43 = function() {
+    var data = this.cfg.data;
+    // special placeholder value
+    data = pieDisplayValues(data);
+    this.cfg.data = data;
     $.extend(true/*recursive*/, this.cfg, base, base_pie_chart, {
       highlighter: {
         tooltipAxes: 'x',

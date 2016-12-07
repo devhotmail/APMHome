@@ -343,6 +343,7 @@ button.btn{-webkit-appearance:button}
 .clearfix:after{content:"";display:table;clear:both}
 .layout-wrapper .layout-main{padding-left:0;padding-right:0}
 .text--secondary{color:#9999a3}
+.header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;height:60px;font-size:20px;border-bottom:1px solid #d1d0d8;background-color:#fff}
 .status::before{content:'';color:#000;display:inline-block;position:relative;top:2px;font-size:1em;width:1em;height:1em;margin:0 5px;vertical-align:baseline}
 .status--1::before{background-color:#60a5d7}
 .status--2::before{background-color:#f7a247}
@@ -425,10 +426,12 @@ table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbd
 .table th{text-align:left}
 .table--small td,.table--small th{padding:.33333rem}
 .chart-device-stat.horizontal .maintenance-chart3 .jqplot-table-legend-label{font-size:15px;color:#000}
+.chart-device-stat.horizontal .maintenance-chart3 .jqplot-point-label{margin-top:-60px;position:relative}
+.chart-device-stat.horizontal .maintenance-chart3 .jqplot-point-label:after{content:'';position:absolute;background:#fff;display:block;width:5px;height:30px;right:-6px;margin-top:5px;top:100%}
 .chart-device-stat.horizontal .maintenance-chart3 .jqplot-axis.jqplot-xaxis,.chart-device-stat.horizontal .maintenance-chart3 .jqplot-axis.jqplot-yaxis,.chart-device-stat.horizontal .maintenance-chart3 .jqplot-title{display:none}
 .maintenance-chart3 .jqplot-grid-canvas,.maintenance-chart4 .jqplot-grid-canvas,.maintenance-chart6 .jqplot-grid-canvas{display:none}
 .maintenance-chart5 .jqplot-target{height:300px}
-.maintenance-chart6 .table td,.maintenance-chart6 .table th{border-width:0}
+.maintenance-chart6 .table td,.maintenance-chart6 .table th{border-width:0;text-align:left}
 .maintenance-chart6 .jqplot-target{margin-top:-70px!important;height:300px}
 .maintenance-chart3{height:100px}
 .block .maintenance-chart4 table.jqplot-table-legend,.block .maintenance-chart6 table.jqplot-table-legend{top:0!important}

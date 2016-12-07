@@ -312,7 +312,7 @@ public final class AssetMaintenanceController {
 
     public final PieChartModel getErrorPercentageInRoomOfDeviceChart() {
         PieChartModel chart = convertToPieChartModel(this.getErrorPercentageInRoomOfDevice());
-//        chart.setExtender("maintenanceE62");
+        chart.setExtender("maintenanceE62");
         return chart;
     }
 
@@ -342,7 +342,7 @@ public final class AssetMaintenanceController {
 
     public final PieChartModel getErrorPercentageInDeviceTypeOfDeviceChart() {
         PieChartModel chart = convertToPieChartModel(this.getErrorPercentageInDeviceTypeOfDevice());
-//        chart.setExtender("maintenanceE64");
+        chart.setExtender("maintenanceE64");
         return chart;
     }
 
@@ -372,7 +372,7 @@ public final class AssetMaintenanceController {
 
     public final PieChartModel getErrorPercentageInTotalOfDeviceChart() {
         PieChartModel chart = convertToPieChartModel(this.getErrorPercentageInTotalOfDevice());
-//        chart.setExtender("maintenanceE66");
+        chart.setExtender("maintenanceE66");
         return chart;
     }
 
