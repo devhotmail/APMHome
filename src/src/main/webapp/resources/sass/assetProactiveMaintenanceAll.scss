@@ -8,6 +8,38 @@
     margin: 0;
   }
 
+  .popover {
+    z-index: 2;
+    position: absolute;
+    background: white;
+    min-width: 90px;
+    border-radius: 2px;
+    left: 100%;
+    top: 100%;
+    margin-top: 5px;
+    margin-left: 5px;
+    display: none;
+  }
+
+  .ui-datatable td {
+    position: relative;
+    overflow: visible;
+    vertical-align: top;
+
+    &:hover {
+      > .popover:not(:empty) {
+        display: block;
+      }
+    }
+  }
+
+  .ui-datatable tr:last-child {
+    td > .popover {
+      top: -100%;
+    }
+  }
+
+
   .ui-datatable.maintenance-forecast {
     table {
       overflow: hidden;
@@ -36,6 +68,8 @@
         }
       }
       tbody {
+        border: 1px;
+
         tr.ui-datatable-even {
           background-color: transparent;
         }
@@ -53,7 +87,7 @@
           > .tinted {
             display: inline-block;
             width: 100%;
-            height: calc(100% + 10px);
+            height: 100%;
             background-color: $dv-basic-pink;
 
             &.lightly-tinted {
@@ -99,12 +133,13 @@
           > .tinted {
             display: inline-block;
             width: 100%;
-            height: calc(100% + 10px);
+            height: 100%;
             background-color: $dv-basic-pink;
           }
 
           &:first-child {
             padding: 0 1rem;
+            vertical-align: middle;
             height: 2rem;
             width: auto;
           }

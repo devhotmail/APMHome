@@ -365,6 +365,7 @@ button.btn{-webkit-appearance:button}
 .block table.jqplot-table-legend{border-width:0;color:inherit;font-size:15px;top:-40px!important;right:0;left:auto!important}
 .block table.jqplot-table-legend .jqplot-table-legend-swatch.jqplot-series-hidden{opacity:.4}
 .block table.jqplot-table-legend .jqplot-table-legend-label.jqplot-series-hidden{text-decoration:none}
+.popover{outline:0;padding:5px;border:1px solid #d1d0d8;background-color:#fff;color:#000;box-shadow:0 -2px 0 #fff,2px 0 0 #fff,-1px 1px 1px rgba(0,0,0,.15)}
 .layout-compact .layout-wrapper .layout-main{padding:75px 0 0 0}
 .layout-compact .layout-main .ui-tabmenu{padding:0;display:table;border:0}
 .layout-compact .layout-main .ui-tabmenu .ui-tabmenu-nav>.ui-tabmenuitem{margin:0;border-radius:0;border-bottom:2px solid #b1b1bc}
@@ -422,19 +423,24 @@ table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbd
 .chart-device-stat.vertical tr.jqplot-table-legend:last-child .jqplot-table-legend-label:before{display:none}
 .chart-device-stat.vertical table.jqplot-table-legend{margin:65px 0 0 0;height:100%;position:absolute!important;right:auto!important;left:-30px!important;background:0 0;margin-right:0}
 .layout-compact .layout-main .ui-datatable table{table-layout:auto;margin:0}
+.layout-compact .layout-main .popover{z-index:2;position:absolute;background:#fff;min-width:90px;border-radius:2px;left:100%;top:100%;margin-top:5px;margin-left:5px;display:none}
+.layout-compact .layout-main .ui-datatable td{position:relative;overflow:visible;vertical-align:top}
+.layout-compact .layout-main .ui-datatable td:hover>.popover:not(:empty){display:block}
+.layout-compact .layout-main .ui-datatable tr:last-child td>.popover{top:-100%}
 .layout-compact .layout-main .ui-datatable.maintenance-forecast table{overflow:hidden}
 .layout-compact .layout-main .ui-datatable.maintenance-forecast table thead th{padding:.5rem 0;overflow:visible;border:0;position:relative;text-align:left}
 .layout-compact .layout-main .ui-datatable.maintenance-forecast table thead th:first-child{padding-left:1rem}
 .layout-compact .layout-main .ui-datatable.maintenance-forecast table thead th::after{content:"";display:block;background-color:#cacaca;width:1px;right:-1px;top:0;height:99999px;position:absolute}
+.layout-compact .layout-main .ui-datatable.maintenance-forecast table tbody{border:1px}
 .layout-compact .layout-main .ui-datatable.maintenance-forecast table tbody tr.ui-datatable-even{background-color:transparent}
 .layout-compact .layout-main .ui-datatable.maintenance-forecast table tbody tr.ui-widget-content td{padding:0;width:6px;box-sizing:content-box}
 .layout-compact .layout-main .ui-datatable.maintenance-forecast table tbody tr.ui-widget-content td:not(:first-child){border-left-width:0;border-right-width:0}
-.layout-compact .layout-main .ui-datatable.maintenance-forecast table tbody tr.ui-widget-content td>.tinted{display:inline-block;width:100%;height:calc(100% + 10px);background-color:#f17cb0}
+.layout-compact .layout-main .ui-datatable.maintenance-forecast table tbody tr.ui-widget-content td>.tinted{display:inline-block;width:100%;height:100%;background-color:#f17cb0}
 .layout-compact .layout-main .ui-datatable.maintenance-forecast table tbody tr.ui-widget-content td>.tinted.lightly-tinted{opacity:.6}
 .layout-compact .layout-main .ui-datatable.maintenance-forecast table tbody tr.ui-widget-content td:first-child{padding:.6rem 1rem;width:auto}
 .layout-compact .layout-main .ui-datatable.maintenance-pmstats table thead th{overflow:visible;border:0;padding:.5rem 0;position:relative;text-align:left}
 .layout-compact .layout-main .ui-datatable.maintenance-pmstats table thead th:first-child{padding-left:1rem}
 .layout-compact .layout-main .ui-datatable.maintenance-pmstats table tbody tr.ui-datatable-even{background-color:transparent}
 .layout-compact .layout-main .ui-datatable.maintenance-pmstats table tbody tr.ui-widget-content td{padding:0;width:2rem;box-sizing:content-box}
-.layout-compact .layout-main .ui-datatable.maintenance-pmstats table tbody tr.ui-widget-content td>.tinted{display:inline-block;width:100%;height:calc(100% + 10px);background-color:#f17cb0}
-.layout-compact .layout-main .ui-datatable.maintenance-pmstats table tbody tr.ui-widget-content td:first-child{padding:0 1rem;height:2rem;width:auto}
+.layout-compact .layout-main .ui-datatable.maintenance-pmstats table tbody tr.ui-widget-content td>.tinted{display:inline-block;width:100%;height:100%;background-color:#f17cb0}
+.layout-compact .layout-main .ui-datatable.maintenance-pmstats table tbody tr.ui-widget-content td:first-child{padding:0 1rem;vertical-align:middle;height:2rem;width:auto}
