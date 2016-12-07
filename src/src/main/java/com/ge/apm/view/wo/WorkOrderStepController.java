@@ -109,6 +109,11 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
     }
 
     public void finishWorkOrderStep(){
+        if(selected!=null && selected.getStepId()==6){
+            closeWorkOrder();
+            return;
+        }
+        
         WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
         try{
             woService.finishWorkOrderStep(wo, this.selected);
