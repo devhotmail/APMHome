@@ -14,7 +14,10 @@ import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.UserRole;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -172,6 +175,11 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
         selected.setSiteId(selectedOrg.getSiteId());
         selected.setHospitalId(selectedOrg.getHospitalId());
         selected.setOrgInfoId(selectedOrg.getId());
-        selected.setPassword("123456");
+        selected.setPlainPassword("123456");
+        try {
+            selected.entryptPassword();
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(UserAccountController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

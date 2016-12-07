@@ -4,6 +4,7 @@ import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -58,8 +59,9 @@ public class ProfileController implements Serializable {
         WebUtil.addSuccessMessage(WebUtil.getMessage("UserAccount")+WebUtil.getMessage("Updated"));
     }
     
-    public void resetPassword(){
-        myAccount.setPassword(newPassword);
+    public void resetPassword() throws NoSuchAlgorithmException{
+        myAccount.setPlainPassword(newPassword);
+        myAccount.entryptPassword();
         UserAccountRepository userAccountDao = WebUtil.getBean(UserAccountRepository.class);
         userAccountDao.save(myAccount);
         
