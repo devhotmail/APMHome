@@ -1,5 +1,6 @@
 package com.ge.apm.view.analysis;
 
+import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.view.sysutil.UserContextService;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.ServerEventInterface;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -22,7 +24,7 @@ import java.util.Map;
 
 @ManagedBean
 @ViewScoped
-public final class AssetMaintenanceController {
+public final class AssetMaintenanceController implements ServerEventInterface {
 
     protected final static Logger log = LoggerFactory.getLogger(AssetMaintenanceController.class);
 
@@ -93,9 +95,28 @@ public final class AssetMaintenanceController {
         this.parameters.put("assetId", value);
     }
 
+    @Override
+    public void onServerEvent(String eventName, Object eventObject){
+        AssetInfo asset = (AssetInfo) eventObject;
+
+        if(asset == null) return;
+
+        Integer assetId = asset.getId();
+
+        WebUtil.navigateTo("/portal/analysis/assetUsageSingle.xhtml?faces-redirect=true&asset_id=" + assetId);
+    }
+
     // endregion
 
     // region Properties
+
+    public final String getAssetName() {
+        if (this.assetId == 0) {
+            return WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");
+        } else {
+            return convertToScalar(this.query(SQL_SCALAR_DEVICE_NAME_SINGLE), WebUtil.getMessage("maintenanceAnalysis_empty"));
+        }
+    }
 
     public final String getTopErrorReason() {
         Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_REASON), Integer.valueOf(0));
@@ -421,6 +442,12 @@ public final class AssetMaintenanceController {
             return NativeSqlUtil.queryForList(template, temporary);
         }
     }
+
+    private final static String SQL_SCALAR_DEVICE_NAME_SINGLE = "" +
+            "SELECT asset.name AS scalar " +
+            "FROM asset_info AS asset " +
+            "WHERE asset.id = :#assetId " +
+            ";";
 
     // 设备故障最主要原因
 

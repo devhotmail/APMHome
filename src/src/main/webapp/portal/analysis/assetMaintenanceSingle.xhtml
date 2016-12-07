@@ -24,6 +24,25 @@
             </div>
 
             <div class="ui-g-12">
+                <h:form id="WorkOrderEditForm">
+                    <div class="block">
+                        <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetMaintenanceController.assetName}">
+
+                            <p:menuitem value="#{msg.selectAssetSingle}"
+                                        actionListener="#{selectAssetController.prepareDialogCallback(assetMaintenanceController, ':WorkOrderEditForm:selAsset')}"
+                                        process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+                                        oncomplete="PF('varSelectAssetDlg').show()"/>
+                            <p:separator/>
+
+                            <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
+                                        url="/portal/analysis/assetMaintenanceAll.xhtml"/>
+
+                        </p:menuButton>
+                    </div>
+                </h:form>
+            </div>
+
+            <div class="ui-g-12">
                 <div class="card--summary ui-g">
                     <div class="ui-lg-3">
                         <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_reasonTile}</div>
@@ -229,6 +248,8 @@
                 </div>
             </div>
         </div>
+
+        <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
     </ui:define>
 
 </ui:composition>
