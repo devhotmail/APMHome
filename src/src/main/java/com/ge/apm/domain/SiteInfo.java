@@ -69,12 +69,24 @@ public class SiteInfo implements Serializable {
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
+    @Column(name = "wf_auto_step2")
+    private Boolean wfAutoStep2;
+    @Column(name = "wf_auto_step3")
+    private Boolean wfAutoStep3;
+    @Column(name = "wf_auto_step4")
+    private Boolean wfAutoStep4;
+    @Column(name = "wf_auto_step5")
+    private Boolean wfAutoStep5;
+    @Column(name = "wf_auto_step6")
+    private Boolean wfAutoStep6;
+    
     public SiteInfo() {
         isEnabled = true;
-    }
-
-    public SiteInfo(Integer id) {
-        this.id = id;
+        wfAutoStep2 = false;
+        wfAutoStep3 = false;
+        wfAutoStep4 = false;
+        wfAutoStep5 = false;
+        wfAutoStep6 = false;
     }
 
     public Integer getId() {
@@ -179,6 +191,46 @@ public class SiteInfo implements Serializable {
 
     public void setIsEnabled(Boolean isEnabled) {
         this.isEnabled = isEnabled;
+    }
+
+    public Boolean getWfAutoStep2() {
+        return wfAutoStep2;
+    }
+
+    public void setWfAutoStep2(Boolean wfAutoStep2) {
+        this.wfAutoStep2 = wfAutoStep2;
+    }
+
+    public Boolean getWfAutoStep3() {
+        return wfAutoStep3;
+    }
+
+    public void setWfAutoStep3(Boolean wfAutoStep3) {
+        this.wfAutoStep3 = wfAutoStep3;
+    }
+
+    public Boolean getWfAutoStep4() {
+        return wfAutoStep4;
+    }
+
+    public void setWfAutoStep4(Boolean wfAutoStep4) {
+        this.wfAutoStep4 = wfAutoStep4;
+    }
+
+    public Boolean getWfAutoStep5() {
+        return wfAutoStep5;
+    }
+
+    public void setWfAutoStep5(Boolean wfAutoStep5) {
+        this.wfAutoStep5 = wfAutoStep5;
+    }
+
+    public Boolean getWfAutoStep6() {
+        return wfAutoStep6;
+    }
+
+    public void setWfAutoStep6(Boolean wfAutoStep6) {
+        this.wfAutoStep6 = wfAutoStep6;
     }
 
     @Override
