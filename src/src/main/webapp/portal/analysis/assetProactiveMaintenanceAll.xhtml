@@ -19,6 +19,24 @@
             </div>
 
             <div class="ui-g-12">
+                <h:form id="WorkOrderEditForm">
+                    <div class="block">
+                        <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetProactiveMaintenanceController.assetName}">
+
+                            <p:menuitem value="#{msg.selectAssetSingle}"
+                                        actionListener="#{selectAssetController.prepareDialogCallback(assetProactiveMaintenanceController, ':WorkOrderEditForm:selAsset')}"
+                                        process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+                                        oncomplete="PF('varSelectAssetDlg').show()"/>
+                            <p:separator/>
+
+                            <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"/>
+
+                        </p:menuButton>
+                    </div>
+                </h:form>
+            </div>
+
+            <div class="ui-g-12">
                 <div class="block">
                     <h3 class="block-title">#{msg.preventiveMaintenanceAnalysis_planChart}</h3>
                     <p:dataTable class="maintenance-pmstats" var="schedule"
@@ -64,6 +82,7 @@
             </div>
         </div>
 
+        <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
     </ui:define>
 
 </ui:composition>

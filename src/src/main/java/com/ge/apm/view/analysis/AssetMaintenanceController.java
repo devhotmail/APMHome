@@ -99,11 +99,13 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     public void onServerEvent(String eventName, Object eventObject){
         AssetInfo asset = (AssetInfo) eventObject;
 
-        if(asset == null) return;
+        if (asset == null) {
+            return;
+        }
 
         Integer assetId = asset.getId();
 
-        WebUtil.navigateTo("/portal/analysis/assetUsageSingle.xhtml?faces-redirect=true&asset_id=" + assetId);
+        WebUtil.navigateTo("/portal/analysis/assetMaintenanceSingle.xhtml?faces-redirect=true&assetId=" + assetId);
     }
 
     // endregion

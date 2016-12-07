@@ -23,7 +23,8 @@
                     <div class="block">
                         <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetMaintenanceController.assetName}">
 
-                            <p:menuitem value="#{msg.selectAssetSingle}" actionListener="#{selectAssetController.prepareDialogCallback(assetMaintenanceController, ':WorkOrderEditForm:selAsset')}"
+                            <p:menuitem value="#{msg.selectAssetSingle}"
+                                        actionListener="#{selectAssetController.prepareDialogCallback(assetMaintenanceController, ':WorkOrderEditForm:selAsset')}"
                                         process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
                                         oncomplete="PF('varSelectAssetDlg').show()"/>
                             <p:separator/>

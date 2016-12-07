@@ -1,5 +1,6 @@
 package com.ge.apm.view.analysis;
 
+import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.view.sysutil.UserContextService;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.ServerEventInterface;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -25,7 +27,7 @@ import java.util.*;
 
 @ManagedBean
 @ViewScoped
-public final class AssetProactiveMaintenanceController {
+public final class AssetProactiveMaintenanceController implements ServerEventInterface {
 
     protected final static Logger log = LoggerFactory.getLogger(AssetMaintenanceController.class);
 
@@ -74,9 +76,32 @@ public final class AssetProactiveMaintenanceController {
         this.parameters.put("assetId", value);
     }
 
+    @Override
+    public void onServerEvent(String eventName, Object eventObject){
+        AssetInfo asset = (AssetInfo) eventObject;
+
+        if (asset == null) {
+            return;
+        }
+
+        Integer assetId = asset.getId();
+
+        WebUtil.navigateTo("/portal/analysis/assetProactiveMaintenanceSingle.xhtml?faces-redirect=true&assetId=" + assetId);
+    }
+
     // endregion
 
     // region Properties
+
+    public final String getAssetName() {
+        if (this.assetId == 0) {
+            return WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");
+        }
+        else {
+            FluentIterable<Map<String, Object>> iterable = FluentIterable.from(this.query(SQL_SCALAR_DEVICE_NAME_SINGLE));
+            return (String)iterable.first().or(ImmutableMap.of("scalar", (Object)"")).get("scalar");
+        }
+    }
 
     public final List<String> getGeneratedMonth() {
         List<String> list = new ArrayList<>();
