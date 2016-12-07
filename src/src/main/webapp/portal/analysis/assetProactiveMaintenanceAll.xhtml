@@ -29,7 +29,7 @@
                             <f:facet name="header">
                                 <h:outputText value="#{column}"/>
                             </f:facet>
-                            <h:outputText value="#{schedule[colIndex]}"
+                            <h:outputText value='#{ schedule[colIndex] }'
                                           styleClass="#{colIndex == 0 ? '' : schedule[colIndex].length() == 0 ? '' : 'tinted' }"/>
                         </p:columns>
                     </p:dataTable>

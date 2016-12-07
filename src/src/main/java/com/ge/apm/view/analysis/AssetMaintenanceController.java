@@ -648,7 +648,7 @@ public final class AssetMaintenanceController {
             "ORDER BY key ASC " +
             ";";
 
-    // 设备故障分布：按单台设备（前40台） // TODO: possibly ZERO
+    // 设备故障分布：按单台设备（前40台）
 
     private final static String SQL_LIST_TOP_ERROR_DEVICE_ALL = "" +
             "SELECT asset.name AS key, COALESCE(temporary.value, 0) AS value " +
@@ -661,7 +661,6 @@ public final class AssetMaintenanceController {
             "          AND asset.hospital_id = :#hospitalId" +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY asset.id " +
-            //"        ORDER BY count(*) DESC " +
             ") AS temporary " +
             "ON asset.id = temporary.key " +
             "ORDER BY value DESC " +
@@ -830,9 +829,9 @@ public final class AssetMaintenanceController {
 
     private final static PieChartModel convertToPieChartModel(double primary) {
         PieChartModel chart = new PieChartModel();
-        chart.set("THIS", primary); // TODO: i18n
+        chart.set(WebUtil.getMessage("maintenanceAnalysis_this"), primary);
         if (primary < 1) {
-            chart.set("THAT", 1 - primary); // TODO: i18n
+            chart.set(WebUtil.getMessage("maintenanceAnalysis_that"), 1 - primary);
         }
         return chart;
     }

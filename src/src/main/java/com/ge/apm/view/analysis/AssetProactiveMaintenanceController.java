@@ -100,7 +100,9 @@ public final class AssetProactiveMaintenanceController {
         List<Object> ret = new ArrayList<>(13);
         for (Map<String, Object> map : list) {
             try {
-                ret.add(((Jdbc4Array) map.get("scalar")).getArray());
+                String[] a = (String[]) ((Jdbc4Array) map.get("scalar")).getArray();
+                a[0] = WebUtil.getFieldValueMessage("month", a[0].trim());
+                ret.add(a);
             }
             catch (SQLException exception) {
                 ret.add(new String[31 + 1]);
@@ -162,7 +164,7 @@ public final class AssetProactiveMaintenanceController {
             else if (current.getMonthOfYear() != previous.getMonthOfYear() && (current.getMonthOfYear() == 4 || current.getMonthOfYear() == 7 || current.getMonthOfYear() == 10)) {
                 list.add(new MegaColumn(last, mega));
                 mega = 1;
-                last = String.format(WebUtil.getMessage("preventiveMaintenanceAnalysis_month"), current.getMonthOfYear());
+                last = WebUtil.getFieldValueMessage("month", Integer.toString(current.getMonthOfYear()));
             }
             else {
                 mega++;
