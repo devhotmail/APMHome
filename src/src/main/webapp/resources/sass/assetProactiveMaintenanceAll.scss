@@ -8,6 +8,10 @@
     margin: 0;
   }
 
+  .ui-datatable-tablewrapper {
+    overflow: hidden;
+  }
+
   .popover {
     z-index: 2;
     position: absolute;

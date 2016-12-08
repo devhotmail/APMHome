@@ -423,6 +423,7 @@ table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbd
 .chart-device-stat.vertical tr.jqplot-table-legend:last-child .jqplot-table-legend-label:before{display:none}
 .chart-device-stat.vertical table.jqplot-table-legend{margin:65px 0 0 0;height:100%;position:absolute!important;right:auto!important;left:-30px!important;background:0 0;margin-right:0}
 .layout-compact .layout-main .ui-datatable table{table-layout:auto;margin:0}
+.layout-compact .layout-main .ui-datatable-tablewrapper{overflow:hidden}
 .layout-compact .layout-main .popover{z-index:2;position:absolute;background:#fff;min-width:90px;border-radius:2px;left:100%;top:100%;margin-top:5px;margin-left:5px;display:none}
 .layout-compact .layout-main .ui-datatable td{position:relative;overflow:visible;vertical-align:top}
 .layout-compact .layout-main .ui-datatable td:hover>.popover:not(:empty){display:block}
