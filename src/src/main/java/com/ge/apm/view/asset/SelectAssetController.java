@@ -1,6 +1,5 @@
 package com.ge.apm.view.asset;
 
-import java.util.List;
 import javax.faces.bean.ManagedBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,10 +8,12 @@ import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.util.ArrayList;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
+import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.ServerEventInterface;
 
@@ -35,6 +36,8 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
 
     @Override
     protected Page<AssetInfo> loadData(PageRequest pageRequest) {
+        if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+        searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, true));
         return super.loadData(pageRequest);
     }
 

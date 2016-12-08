@@ -39,6 +39,12 @@
                         <p:ajax event="filter" listener="#{workOrderController.onFilter}" update="WorkOrderEditForm WorkOrderStepListForm"/>
 
                         <p:column styleClass="textCenter"  headerText="#{msg.casePriority}" sortBy="#{item.casePriority}" filterBy="#{item.casePriority}" filterMatchMode="EQ">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('casePriority')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                             <h:outputText value="#{item.casePriority}" class="priorityItem priorityItem#{item.casePriority}"/>
                         </p:column>
                         <p:column headerText="#{msg.requestTime}" sortBy="#{item.requestTime}" filterBy="#{item.requestTime}" filterMatchMode="GTE">
@@ -50,6 +56,12 @@
                             </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.requestorName}" sortBy="#{item.requestorName}" filterBy="#{item.requestorName}" filterMatchMode="LIKE">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{workOrderController.hospitalUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                             <h:outputText value="#{item.requestorName}"/>
                         </p:column>
                         <p:column headerText="#{msg.workOrderName}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
@@ -74,6 +86,12 @@
                             <h:outputText value="#{item.requestReasonInShort}" title="#{item.requestReason}"/>
                         </p:column>
                         <p:column headerText="#{msg.currentPersonName}" sortBy="#{item.currentPersonName}" filterBy="#{item.currentPersonName}" filterMatchMode="LIKE">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{workOrderController.hospitalUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                             <h:outputText value="#{item.currentPersonName}"/>
                         </p:column>
                         <p:column headerText="#{msg.currentStep}" sortBy="#{item.currentStep}" filterBy="#{item.currentStep}" filterMatchMode="EQ">
