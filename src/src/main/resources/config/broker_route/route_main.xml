@@ -29,10 +29,30 @@
     <bean id="i18nExtraDbMessages" class="webapp.framework.web.service.ExtraDbMessageSource"
               p:extraMessages="{}"/>
         
+    <cxf:cxfEndpoint id="clinicalDataServiceEndpoint"
+                     address="/clinicalDataService"
+                     serviceClass="com.ge.apm.service.misc.DataUploadService"/>
+    <bean id="clinicalDataServiceImpl" class="com.ge.apm.service.misc.DataUploadServiceImpl"/>
+    
     <routeContext id="route_main" xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="cxf:bean:clinicalDataServiceEndpoint"/>
+            <removeHeaders pattern="Camel*"/>
+            <setHeader headerName="CamelBeanMethodName"><simple>${headers.SOAPAction}</simple></setHeader>
+            <bean ref="clinicalDataServiceImpl"/>
+        </route>
+
+        <route>
+            <from uri="servlet:///test?servletName=MyServlet"/>
+            <removeHeaders pattern="Camel*"/>
+            <log message="---- from HTTP: ${headers}" loggingLevel="ERROR"/>
+            <log message="---- from HTTP: ${body}" loggingLevel="ERROR"/>
+        </route>
+        
         <route>
             <from uri="direct:executeNativeSQL"/>
             <removeHeaders pattern="Camel*"/>
+            <!--<log message="***NativeSQL: ${headers}" loggingLevel="ERROR"/>-->
             <recipientList delimiter="|">
                 <simple>sql:${headers._sql}?dataSource=risDataSource</simple>
             </recipientList>
