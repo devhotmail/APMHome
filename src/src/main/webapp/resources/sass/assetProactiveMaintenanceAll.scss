@@ -2,50 +2,27 @@
 @import "objects";
 @import "charts";
 
+body .ui-tooltip {
+  .ui-tooltip-arrow {
+    display: none;
+  }
+  .ui-tooltip-text {
+    @include tooltip;
+  }
+}
+
 .layout-compact .layout-main {
   .ui-datatable table {
     table-layout: auto;
     margin: 0;
+    td {
+      vertical-align: top;
+    }
   }
 
   .ui-datatable-tablewrapper {
     overflow: hidden;
   }
-
-  .popover {
-    z-index: 2;
-    position: absolute;
-    background: white;
-    min-width: 90px;
-    border-radius: 2px;
-    left: 100%;
-    top: 100%;
-    margin-top: 5px;
-    margin-left: 5px;
-    display: none;
-  }
-
-  .ui-datatable td {
-    position: relative;
-    overflow: visible;
-    vertical-align: top;
-
-    &:hover {
-      > .popover:not(:empty) {
-        display: block;
-      }
-    }
-  }
-
-  .ui-datatable tr {
-    &:last-child, &:nth-last-child(2) {
-      td > .popover {
-        top: auto;
-        bottom: 100%;
-      }
-    }
-  }
-
 
   .ui-datatable.maintenance-forecast {
     table {
@@ -156,4 +133,3 @@
   }
 
 }
-

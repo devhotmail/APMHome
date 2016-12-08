@@ -40,17 +40,19 @@
                 <div class="block">
                     <h3 class="block-title">#{msg.preventiveMaintenanceAnalysis_planChart}</h3>
                     <p:dataTable class="maintenance-pmstats" var="schedule"
-                                 value="#{assetProactiveMaintenanceController.maintenanceSchedule}">
+                                 value="#{assetProactiveMaintenanceController.maintenanceSchedule}"
+                                 rowIndexVar="rowIndex">
                         <p:columns value="#{assetProactiveMaintenanceController.generatedMonth}"
                                    var="column"
                                    columnIndexVar="colIndex">
                             <f:facet name="header">
                                 <h:outputText value="#{column}"/>
                             </f:facet>
-                            <h:outputText styleClass="#{colIndex == 0 ? '' : schedule[colIndex].length() == 0 ? '' : 'tinted' }"
+                            <h:outputText id="asset-name" styleClass="#{colIndex == 0 ? '' : schedule[colIndex].length() == 0 ? '' : 'tinted' }"
                                           value="#{ colIndex == 0 ? schedule[colIndex] : '' }"/>
-                            <h:outputText value='#{ schedule[colIndex] }' styleClass="popover"
-                                          rendered="#{colIndex == 0 or schedule[colIndex].length() == 0 ? false : true}"/>
+                            <p:tooltip for="asset-name" trackMouse="true" position="bottom">
+                                <h:outputText value='#{ schedule[colIndex] }' rendered="#{colIndex == 0 or schedule[colIndex].length() == 0 ? false : true}"/>
+                            </p:tooltip>
 
                         </p:columns>
                     </p:dataTable>
@@ -70,12 +72,14 @@
                         </p:columnGroup>
                         <p:columns value="#{ assetProactiveMaintenanceController.generatedYear }" var="column" columnIndexVar="colIndex">
 
-                            <h:outputText
+                            <h:outputText id="plan-day"
                             styleClass="#{ colIndex == 0 ? '' : forecast[colIndex].length() == 0 ? ' ' : forecast[colIndex].length() == 10 ? 'tinted' : 'tinted lightly-tinted' }"
                             value="#{ colIndex == 0 ? forecast[colIndex] : '' }"/>
 
-                            <h:outputText rendered="#{colIndex == 0 or forecast[colIndex].length() == 0 ? false : true}"
-                                          value="#{forecast[colIndex].substring(0, 10)}" styleClass="popover" />
+                            <p:tooltip rendered="#{colIndex == 0 or forecast[colIndex].length() == 0 ? false : true}" for="plan-day" trackMouse="true" position="bottom">
+                                <h:outputText value="#{forecast[colIndex].substring(0, 10)}" />
+                            </p:tooltip>
+
                         </p:columns>
                     </p:dataTable>
                 </div>

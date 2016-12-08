@@ -52,6 +52,15 @@
   }
 }
 
+@mixin tooltip {
+  outline: none;
+  padding: 5px;
+  border: 1px solid $popover-border-color;
+  background-color: $popover-color;
+  color: $popover-text-color;
+  box-shadow: 0px -2px 0px $popover-color, 2px 0px 0px $popover-color, -1px 1px 1px $popover-shadow-color;
+}
+
 .status {
   @include squareBefore();
 }
@@ -133,15 +142,6 @@ $popover-color: $white;
 $popover-border-color: $gray4;
 $popover-text-color: $black;
 $popover-shadow-color: rgba($black, .15);
-
-.popover {
-  outline: none;
-  padding: 5px;
-  border: 1px solid $popover-border-color;
-  background-color: $popover-color;
-  color: $popover-text-color;
-  box-shadow: 0px -2px 0px $popover-color, 2px 0px 0px $popover-color, -1px 1px 1px $popover-shadow-color;
-}
 
 .layout-compact .layout-wrapper .layout-main {
   padding: 75px 0 0 0;
