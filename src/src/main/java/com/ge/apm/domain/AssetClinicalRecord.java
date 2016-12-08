@@ -73,21 +73,7 @@ public class AssetClinicalRecord implements Serializable {
     @Column(name = "price_amount")
     private Double priceAmount;
     @Column(name = "price_unit")
-    private Integer priceUnit;
-    @Size(max = 64)
-    @Column(name = "patient_id")
-    private String patientId;
-    @Size(max = 32)
-    @Column(name = "patient_name_zh")
-    private String patientNameZh;
-    @Size(max = 32)
-    @Column(name = "patient_name_en")
-    private String patientNameEn;
-    @Size(max = 32)
-    @Column(name = "patient_age")
-    private String patientAge;
-    @Column(name = "patient_gender")
-    private Integer patientGender;
+    private String priceUnit;
     @Column(name = "inject_count")
     private Double injectCount;
     @Column(name = "expose_count")
@@ -227,52 +213,12 @@ public class AssetClinicalRecord implements Serializable {
         this.priceAmount = priceAmount;
     }
 
-    public Integer getPriceUnit() {
+    public String getPriceUnit() {
         return priceUnit;
     }
 
-    public void setPriceUnit(Integer priceUnit) {
+    public void setPriceUnit(String priceUnit) {
         this.priceUnit = priceUnit;
-    }
-
-    public String getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
-
-    public String getPatientNameZh() {
-        return patientNameZh;
-    }
-
-    public void setPatientNameZh(String patientNameZh) {
-        this.patientNameZh = patientNameZh;
-    }
-
-    public String getPatientNameEn() {
-        return patientNameEn;
-    }
-
-    public void setPatientNameEn(String patientNameEn) {
-        this.patientNameEn = patientNameEn;
-    }
-
-    public String getPatientAge() {
-        return patientAge;
-    }
-
-    public void setPatientAge(String patientAge) {
-        this.patientAge = patientAge;
-    }
-
-    public Integer getPatientGender() {
-        return patientGender;
-    }
-
-    public void setPatientGender(Integer patientGender) {
-        this.patientGender = patientGender;
     }
 
     public Double getInjectCount() {

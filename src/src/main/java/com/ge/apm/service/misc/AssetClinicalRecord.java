@@ -20,11 +20,6 @@ public class AssetClinicalRecord implements Serializable {
     private String procedureStepName;
     private Double priceAmount;
     private Integer priceUnit;
-    private String patientId;
-    private String patientNameZh;
-    private String patientNameEn;
-    private String patientAge;
-    private Integer patientGender;
     private Double injectCount;
     private Double exposeCount;
     private Integer filmCount;
@@ -134,46 +129,6 @@ public class AssetClinicalRecord implements Serializable {
 
     public void setPriceUnit(Integer priceUnit) {
         this.priceUnit = priceUnit;
-    }
-
-    public String getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
-
-    public String getPatientNameZh() {
-        return patientNameZh;
-    }
-
-    public void setPatientNameZh(String patientNameZh) {
-        this.patientNameZh = patientNameZh;
-    }
-
-    public String getPatientNameEn() {
-        return patientNameEn;
-    }
-
-    public void setPatientNameEn(String patientNameEn) {
-        this.patientNameEn = patientNameEn;
-    }
-
-    public String getPatientAge() {
-        return patientAge;
-    }
-
-    public void setPatientAge(String patientAge) {
-        this.patientAge = patientAge;
-    }
-
-    public Integer getPatientGender() {
-        return patientGender;
-    }
-
-    public void setPatientGender(Integer patientGender) {
-        this.patientGender = patientGender;
     }
 
     public Double getInjectCount() {
