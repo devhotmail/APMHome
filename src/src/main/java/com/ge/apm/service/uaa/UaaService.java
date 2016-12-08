@@ -306,6 +306,8 @@ public class UaaService {
     	}
     	return false;
     }
+    
+   
 
     private void addChecklistToAssetNode(TreeNode node, Map<Integer, List<InspectionChecklist>> checklistMap){
         if("asset".equals(node.getType())){
@@ -342,12 +344,76 @@ public class UaaService {
         }
         
         TreeNode root = getOrgAssetTree(hospitalId);
-        addChecklistToAssetNode(root, checklistMap);
-        
+        addChecklistToAssetNode(root, checklistMap);        
         return root;
     }
     
-    public List<UserAccount> getUserList(int hospitalId){
+    public TreeNode buildAssetInspectionTreeWithoutEmptyNode(int hospitalId, int checklistType,boolean isContainEmptyNode){
+
+        InspectionChecklistRepository checklistDao = WebUtil.getBean(InspectionChecklistRepository.class);
+        List<InspectionChecklist> checkList = checklistDao.getByHospitalIdAndChecklistType(hospitalId, checklistType);
+
+        Map<Integer, List<InspectionChecklist>> checklistMap = new HashMap<>();
+        for(InspectionChecklist item: checkList){
+            List<InspectionChecklist> checklist = checklistMap.get(item.getAssetId());
+
+            if(checklist==null){
+                checklist = new ArrayList<>();
+                checklistMap.put(item.getAssetId(), checklist);
+            }
+            checklist.add(item);
+        }
+        
+        TreeNode root = getOrgAssetTree(hospitalId);
+        addChecklistToAssetNode(root, checklistMap);
+        if(!isContainEmptyNode){
+        	removeInValidAsset(root);
+        }
+        return root;
+    }
+    
+    private void removeInValidAsset(TreeNode root) {
+		if(root == null){
+			return;
+		}
+    	if(root.getType().equals("default") && root.getChildCount() > 0){
+    		for (Iterator<TreeNode> iterator = root.getChildren().iterator();iterator.hasNext();) {
+    			TreeNode childNode = (TreeNode) iterator.next();
+    			if(CollectionUtils.isEmpty(childNode.getChildren()) && childNode.getType().equals("org")){
+    				iterator.remove();
+    				continue;
+    			}
+    			if(!bindAsset(childNode)){
+    				iterator.remove();
+    				continue;
+    			}
+    			if(!bindInspection(childNode)){
+    				iterator.remove();
+    				continue;
+    			}
+			}
+    	}
+		
+	}
+
+    // judge whether the asset binds a inspection or not
+	private boolean bindInspection(TreeNode treeNode) {
+		if(treeNode == null){
+			return false;
+		}
+		if(treeNode.getType().equals("org") && treeNode.getChildCount() > 0){
+    		for (TreeNode childNode : treeNode.getChildren()) {
+				if(childNode.getType().equals("asset") && childNode.getChildCount() > 0){
+					return true;
+				}else if(childNode.getType().equals("org")){
+					return bindInspection(childNode);
+				}
+			}
+		}
+		return false;
+	}
+	
+	public List<UserAccount> getUserList(int hospitalId){
         UserAccountRepository userAccountDao = WebUtil.getBean(UserAccountRepository.class);
         return userAccountDao.getByHospitalId(hospitalId);
     }
