@@ -27,7 +27,6 @@
         <logout logout-url="/logout.xhtml" success-handler-ref="logoutHandler"/>
 
         <intercept-url pattern="/home.xhtml" access="isAuthenticated()"/>
-        <intercept-url pattern="/portal/**" access="isAuthenticated()"/>
         <intercept-url pattern="/sysadmin/**" access="hasRole('SuperAdmin')"/>
         <intercept-url pattern="/admin/**" access="hasRole('SuperAdmin')" />
 
