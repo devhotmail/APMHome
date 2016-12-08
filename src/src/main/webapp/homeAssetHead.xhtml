@@ -33,7 +33,9 @@
                         <div><span class="overview-title"><b>设备状态</b></span></div>
                         <br/>
                         <div class="ui-g">
-                            <div class="ui-g-4 ui-md-6 ui-lg-4 block">
+
+                            <a href="/geapm/portal/wo/woList.xhtml"
+                               class="ui-g-4 ui-md-6 ui-lg-4 block">
                                 <p class="epsilon">维修中</p>
                                 <p class="epsilon text--secondary">维修流程</p>
                                 <ul class="list-inline list-bare">
@@ -57,9 +59,10 @@
                                         </ul>
                                     </ui:repeat>
                                 </div>
-                            </div>
+                            </a>
 
-                            <div class="ui-g-4 ui-md-6 ui-lg-4 block">
+                            <a href="/geapm/portal/asset/info/List.xhtml"
+                               class="ui-g-4 ui-md-6 ui-lg-4 block">
                                 <p class="epsilon">停机中</p>
                                 <h1 class="beta text--center">#{homeAssetHeadController.assetNumberStopped}</h1>
                                 <div class="block-footer">
@@ -71,9 +74,10 @@
                                         </ul>
                                     </ui:repeat>
                                 </div>
-                            </div>
+                            </a>
 
-                            <div class="ui-g-4 ui-md-6 ui-lg-4 block">
+                            <a href="/geapm/portal/asset/info/List.xhtml"
+                               class="ui-g-4 ui-md-6 ui-lg-4 block">
                                 <p class="epsilon">保修期到期(2个月内)</p>
                                 <h1 class="beta text--center">
                                     #{homeAssetHeadController.assetNumberWarrantyExpired}</h1>
@@ -85,9 +89,10 @@
                                         </div>
                                     </ui:repeat>
                                 </div>
-                            </div>
+                            </a>
 
-                            <div class="ui-g-4 ui-md-6 ui-lg-4 block">
+                            <a href="/geapm/portal/pm/List.xhtml"
+                               class="ui-g-4 ui-md-6 ui-lg-4 block">
                                 <p class="epsilon">预防性维护(1周内)</p>
                                 <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInPm}</h1>
                                 <div class="block-footer">
@@ -98,9 +103,10 @@
                                         </div>
                                     </ui:repeat>
                                 </div>
-                            </div>
+                            </a>
 
-                            <div class="ui-g-4 ui-md-6 ui-lg-4 block">
+                            <a href="/geapm/portal/insp/MetrologyOrderList.xhtml"
+                               class="ui-g-4 ui-md-6 ui-lg-4 block">
                                 <p class="epsilon">设备计量(2个月内)</p>
                                 <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInMetering}</h1>
                                 <div class="block-footer">
@@ -111,9 +117,10 @@
                                         </div>
                                     </ui:repeat>
                                 </div>
-                            </div>
+                            </a>
 
-                            <div class="ui-g-4 ui-md-6 ui-lg-4 block">
+                            <a href="http://localhost:8080/geapm/portal/insp/QualityCtrlOrderList.xhtml"
+                               class="ui-g-4 ui-md-6 ui-lg-4 block">
                                 <p class="epsilon">设备质控(2个月内)</p>
                                 <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInQa}</h1>
                                 <div class="block-footer">
@@ -124,7 +131,7 @@
                                         </div>
                                     </ui:repeat>
                                 </div>
-                            </div>
+                            </a>
 
                         </div>
                     </div>
