@@ -104,22 +104,20 @@
                                     <h:outputText rendered="#{not empty assetMaintenanceController.errorTimePerStep[0]}"
                                                   value="#{msg.maintenanceAnalysis_timeChart_section}"/>
                                 </div>
-                                <p:outputPanel rendered="#{not empty assetMaintenanceController.errorTimePerStep[0]}">
-                                    <div class="ui-g-4 col-1 divide-line-right">
-                                        <p:chart id="maintenanceR41" type="pie"
-                                                 model="#{assetMaintenanceController.errorTimePerStep[0]}"/>
-                                    </div>
+                                <p:outputPanel rendered="#{not empty assetMaintenanceController.errorTimePerStep[0]}"
+                                               class="ui-g-4 col-1 divide-line-right">
+                                    <p:chart id="maintenanceR41" type="pie"
+                                             model="#{assetMaintenanceController.errorTimePerStep[0]}"/>
                                 </p:outputPanel>
-                                <p:outputPanel rendered="#{not empty assetMaintenanceController.errorTimePerStep[1]}">
-                                    <div class="ui-g-4 col-2 divide-line-right">
-                                        <p:chart id="maintenanceR42" type="pie"
-                                                 model="#{assetMaintenanceController.errorTimePerStep[1]}"/>
-                                    </div>
+                                <p:outputPanel rendered="#{not empty assetMaintenanceController.errorTimePerStep[1]}"
+                                               class="ui-g-4 col-2 divide-line-right">
+                                    <p:chart id="maintenanceR42" type="pie"
+                                             model="#{assetMaintenanceController.errorTimePerStep[1]}"/>
                                 </p:outputPanel>
-                                <p:outputPanel rendered="#{not empty assetMaintenanceController.errorTimePerStep[2]}">
-                                    <div class="ui-g-4 col-3">
-                                        <p:chart id="maintenanceR43" type="pie" model="#{assetMaintenanceController.errorTimePerStep[2]}"/>
-                                    </div>
+                                <p:outputPanel rendered="#{not empty assetMaintenanceController.errorTimePerStep[2]}"
+                                               class="ui-g-4 col-3">
+                                    <p:chart id="maintenanceR43" type="pie"
+                                             model="#{assetMaintenanceController.errorTimePerStep[2]}"/>
                                 </p:outputPanel>
                             </div>
                         </div>
