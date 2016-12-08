@@ -50,8 +50,11 @@
                             </f:facet>
                             <h:outputText id="asset-name" styleClass="#{colIndex == 0 ? '' : schedule[colIndex].length() == 0 ? '' : 'tinted' }"
                                           value="#{ colIndex == 0 ? schedule[colIndex] : '' }"/>
-                            <p:tooltip for="asset-name" trackMouse="true" position="bottom">
-                                <h:outputText value='#{ schedule[colIndex] }' rendered="#{colIndex == 0 or schedule[colIndex].length() == 0 ? false : true}"/>
+                            <p:tooltip for="asset-name" trackMouse="true" position="bottom"
+                                       rendered="#{colIndex == 0 or schedule[colIndex].length() == 0 ? false : true}">
+                                <p:repeat value="#{ schedule[colIndex].split(',,,,') }" var="device">
+                                    <h:outputText value='#{device}'/><br/>
+                                </p:repeat>
                             </p:tooltip>
 
                         </p:columns>

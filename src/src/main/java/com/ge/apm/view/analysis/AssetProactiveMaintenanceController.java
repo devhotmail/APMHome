@@ -266,7 +266,7 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
             "             LEFT OUTER JOIN " +
             "             (SELECT EXTRACT (MONTH FROM plan.start_time) AS month, " +
             "                     EXTRACT (DAY FROM plan.start_time) AS day, " +
-            "                     array_to_string(array_agg(asset.name), ',') AS hint " +
+            "                     array_to_string(array_agg(asset.name), ',,,,') AS hint " +
             "              FROM pm_order AS plan, " +
             "                   asset_info AS asset " +
             "              WHERE plan.asset_id = asset.id " +
