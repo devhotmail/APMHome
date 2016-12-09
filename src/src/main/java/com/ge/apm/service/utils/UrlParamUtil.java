@@ -2,7 +2,8 @@ package com.ge.apm.service.utils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
@@ -19,6 +20,14 @@ public class UrlParamUtil {
         return new String(base64.decode(encodedUrlQueryString));
     }
 
+    public static Map<String, String> decodeUrlQueryStringToMap(){
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String queryString = request.getQueryString();
+        if(queryString==null) return null;
+        
+        return decodeUrlQueryStringToMap(queryString);
+    }
+    
     public static Map<String, String> decodeUrlQueryStringToMap(String encodedUrlQueryString){
         String strParam = decodeUrlQueryString(encodedUrlQueryString);
         String[] params = strParam.split("&");
