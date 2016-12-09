@@ -12,7 +12,7 @@ public class DataUploadServiceImpl implements DataUploadService{
         
         AssetClinicalRecordRepository dao = WebUtil.getBean(AssetClinicalRecordRepository.class);
         dao.save(assetClinicalRecord);
-        return "OK";
+        return "dataUploadedOK";
     }
     
 }
