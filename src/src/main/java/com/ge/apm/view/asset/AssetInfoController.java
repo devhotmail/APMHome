@@ -58,8 +58,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         orgDao = WebUtil.getBean(OrgInfoRepository.class);
         uuaService = WebUtil.getBean(UaaService.class);
-        this.filterBySite = true;
-        this.setSiteFilter();
+        this.filterByHospital = true;
+        this.setHospitalFilter();
 
         String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
