@@ -137,7 +137,8 @@ public class AssetInventoryController extends JpaCRUDController<AssetInfo>{
     public void deviceCheck(){
     		updateDeviceCheck(unValidDeviceList,lastStockTakeDate,false);
     		updateDeviceCheck((List<TreeNode>) CollectionUtils.diff(this.assetTreeNodes, unValidDeviceList),lastStockTakeDate,true);
-    		WebUtil.addSuccessMessage("asset inventory success !");
+    		//"asset inventory success !"
+    		WebUtil.addSuccessMessage(WebUtil.getMessage("DeviceInventorySuccess"));
     }
     
 	public void updateDeviceCheck(List<TreeNode> treeNodes, Date date, boolean isValid) {
