@@ -2,9 +2,11 @@ package com.ge.apm.service.uaa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
@@ -37,7 +39,9 @@ import webapp.framework.web.WebUtil;
 @Component
 public class UaaService {
     private static final Logger logger = Logger.getLogger(UaaService.class);
-    
+    public static final String ROOT = "default";
+    public static final String ORG = "org";
+    public static final String ASSET = "asset";
     private static Map<String, SysRole> sysRoles;
 
     private void loadSysRoles(){
@@ -267,47 +271,49 @@ public class UaaService {
         
         TreeNode root = getOrgTree(hospitalId);
         addAssetToOrgNode(root, assetMap);
-        removeInvalidOrg(root);
+        cleanTree(root,ASSET);
         return root;
     }
     
-    public void removeInvalidOrg(TreeNode root){
-    	if(root == null){
+    private TreeNode cleanTree(TreeNode node, String type) {
+        Iterator<TreeNode> iterator = node.getChildren().iterator();
+        Set<TreeNode> remomveset = new HashSet<TreeNode>();
+        while (iterator.hasNext()) {
+            TreeNode subNode = iterator.next();
+            if (subNode.getType().equals(type)) {
+                return node;
+            }
+            subNode = cleanTree(subNode, type);
+            if (subNode.isLeaf()) {
+                remomveset.add(subNode);
+            }
+        }
+        node.getChildren().removeAll(remomveset);
+        return node;
+    }
+    
+    public void removeInvalidNode(TreeNode node,String type){
+    	if(node == null || !node.getType().equals(type)){
+    		logger.error("current node is null or not org node !");
     		return;
     	}
-    	if(logger.isInfoEnabled()){
-    		logger.info("current node type is "+root.getType());
+    	if(node.isLeaf()){
+    		node.getParent().getChildren().remove(node);
+    		return;
     	}
-    	if(root.getType().equals("default") && root.getChildCount() > 0){
-    		for (Iterator<TreeNode> iterator = root.getChildren().iterator();iterator.hasNext();) {
-    			TreeNode childNode = (TreeNode) iterator.next();
-    			if(CollectionUtils.isEmpty(childNode.getChildren()) && childNode.getType().equals("org")){
-    				iterator.remove();
-    				continue;
-    			}
-    			if(!bindAsset(childNode)){
-    				iterator.remove();
-    				continue;
-    			}
+    	List<TreeNode> invalidNodeList = new ArrayList<TreeNode>();
+		for(TreeNode childNode : node.getChildren()){
+			if(childNode.isLeaf() && childNode.getType().equals(type)){
+				invalidNodeList.add(childNode);
 			}
-    	}
-    	
-    }
-    
-    public boolean bindAsset(TreeNode treeNode){
-    	if(treeNode.getType().equals("org") && treeNode.getChildCount() > 0){
-    		for (TreeNode childNode : treeNode.getChildren()) {
-				if(childNode.getType().equals("asset")){
-					return true;
-				}else if(childNode.getType().equals("org")){
-					return bindAsset(childNode);
-				}
+			if(childNode.getType().equals(node.getType()) && childNode.getChildCount() > 0){
+				removeInvalidNode(childNode,type);
 			}
+		}
+    	if(!CollectionUtils.isEmpty(invalidNodeList)){
+    		node.getChildren().removeAll(invalidNodeList);
     	}
-    	return false;
-    }
-    
-   
+    }   
 
     private void addChecklistToAssetNode(TreeNode node, Map<Integer, List<InspectionChecklist>> checklistMap){
         if("asset".equals(node.getType())){
@@ -347,71 +353,6 @@ public class UaaService {
         addChecklistToAssetNode(root, checklistMap);        
         return root;
     }
-    
-    public TreeNode buildAssetInspectionTreeWithoutEmptyNode(int hospitalId, int checklistType,boolean isContainEmptyNode){
-
-        InspectionChecklistRepository checklistDao = WebUtil.getBean(InspectionChecklistRepository.class);
-        List<InspectionChecklist> checkList = checklistDao.getByHospitalIdAndChecklistType(hospitalId, checklistType);
-
-        Map<Integer, List<InspectionChecklist>> checklistMap = new HashMap<>();
-        for(InspectionChecklist item: checkList){
-            List<InspectionChecklist> checklist = checklistMap.get(item.getAssetId());
-
-            if(checklist==null){
-                checklist = new ArrayList<>();
-                checklistMap.put(item.getAssetId(), checklist);
-            }
-            checklist.add(item);
-        }
-        
-        TreeNode root = getOrgAssetTree(hospitalId);
-        addChecklistToAssetNode(root, checklistMap);
-        if(!isContainEmptyNode){
-        	removeInValidAsset(root);
-        }
-        return root;
-    }
-    
-    private void removeInValidAsset(TreeNode root) {
-		if(root == null){
-			return;
-		}
-    	if(root.getType().equals("default") && root.getChildCount() > 0){
-    		for (Iterator<TreeNode> iterator = root.getChildren().iterator();iterator.hasNext();) {
-    			TreeNode childNode = (TreeNode) iterator.next();
-    			if(CollectionUtils.isEmpty(childNode.getChildren()) && childNode.getType().equals("org")){
-    				iterator.remove();
-    				continue;
-    			}
-    			if(!bindAsset(childNode)){
-    				iterator.remove();
-    				continue;
-    			}
-    			if(!bindInspection(childNode)){
-    				iterator.remove();
-    				continue;
-    			}
-			}
-    	}
-		
-	}
-
-    // judge whether the asset binds a inspection or not
-	private boolean bindInspection(TreeNode treeNode) {
-		if(treeNode == null){
-			return false;
-		}
-		if(treeNode.getType().equals("org") && treeNode.getChildCount() > 0){
-    		for (TreeNode childNode : treeNode.getChildren()) {
-				if(childNode.getType().equals("asset") && childNode.getChildCount() > 0){
-					return true;
-				}else if(childNode.getType().equals("org")){
-					return bindInspection(childNode);
-				}
-			}
-		}
-		return false;
-	}
 	
 	public List<UserAccount> getUserList(int hospitalId){
         UserAccountRepository userAccountDao = WebUtil.getBean(UserAccountRepository.class);
