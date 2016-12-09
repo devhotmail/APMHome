@@ -25,11 +25,11 @@ INSERT INTO "public"."sys_role" VALUES ('3', 'AssetStuff', '设备科科员', '/
 INSERT INTO "public"."sys_role" VALUES ('4', 'DeptHead', '科室主任', '/homeDeptHead.xhtml');
 INSERT INTO "public"."sys_role" VALUES ('5', 'ITAdmin', 'IT管理员', '/home.xhtml');
 
-INSERT INTO user_account VALUES ('1', '1', '1', '1', 'admin', 'administrator', '4d5d301391201137','89e46973e65221b64d923f39124fc87801790371', 'apm.admin@ge.com', '', 't', 't', 't', 't', 't', '2016-10-17 10:57:00');
-INSERT INTO user_account VALUES ('2', '2', '2', '2', 'head', '院长', '4d5d301391201137','89e46973e65221b64d923f39124fc87801790371', 'head@a.com', null, 'f', 'f', 'f', 't', 'f', null);
-INSERT INTO user_account VALUES ('3', '2', '2', '6', 'assetHead', '设备科主任', '4d5d301391201137','89e46973e65221b64d923f39124fc87801790371', 'assethead@a.com', '', 'f', 'f', 'f', 't', 'f', null);
-INSERT INTO user_account VALUES ('4', '2', '2', '4', 'deptHead', '放射科主任', '4d5d301391201137','89e46973e65221b64d923f39124fc87801790371', 'radiologyHead@a.com', null, 'f', 'f', 'f', 't', 'f', null);
-INSERT INTO user_account VALUES ('5', '2', '2', '6', 'user', '科员', '4d5d301391201137','89e46973e65221b64d923f39124fc87801790371', 'asset.staff@a.com', null, 'f', 'f', 'f', 't', 'f', null);
+INSERT INTO user_account VALUES ('1', '1', '1', '1', 'admin', 'administrator', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'apm.admin@ge.com', '', 't', 't', 't', 't', 't', '2016-10-17 10:57:00');
+INSERT INTO user_account VALUES ('2', '2', '2', '2', 'head', '院长', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'head@a.com', null, 'f', 'f', 'f', 't', 'f', null);
+INSERT INTO user_account VALUES ('3', '2', '2', '6', 'assetHead', '设备科主任', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'assethead@a.com', '', 'f', 'f', 'f', 't', 'f', null);
+INSERT INTO user_account VALUES ('4', '2', '2', '4', 'deptHead', '放射科主任', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'radiologyHead@a.com', null, 'f', 'f', 'f', 't', 'f', null);
+INSERT INTO user_account VALUES ('5', '2', '2', '6', 'user', '科员', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'asset.staff@a.com', null, 'f', 'f', 'f', 't', 'f', null);
 
 INSERT INTO "public"."user_role" VALUES ('1', '2', '1');
 INSERT INTO "public"."user_role" VALUES ('2', '3', '2');
