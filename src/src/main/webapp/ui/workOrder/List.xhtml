@@ -103,8 +103,8 @@
                     <p:column headerText="#{msg.currentPersonName}" sortBy="#{item.currentPersonName}" filterBy="#{item.currentPersonName}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.currentPersonName}"/>
                     </p:column>
-                    <p:column headerText="#{msg.currentStep}" sortBy="#{item.currentStep}" filterBy="#{item.currentStep}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.currentStep}"/>
+                    <p:column headerText="#{msg.currentStep}" sortBy="#{item.currentStepId}" filterBy="#{item.currentStepId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.currentStepId}"/>
                     </p:column>
                     <p:column headerText="#{msg.isClosed}" sortBy="#{item.isClosed}" filterBy="#{item.isClosed}" filterMatchMode="EQ">
                         <f:facet name="filter">

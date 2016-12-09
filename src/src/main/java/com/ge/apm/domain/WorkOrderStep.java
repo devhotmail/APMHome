@@ -45,7 +45,7 @@ public class WorkOrderStep implements Serializable {
     private Integer stepId;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 32)
+    @Size(min = 1, max = 16)
     @Column(name = "step_name")
     private String stepName;
     @Basic(optional = false)

@@ -64,7 +64,7 @@ public class WoProcessController extends JpaCRUDController<WorkOrder> {
     }
 
     public boolean getIsInViewMode(){
-        return (this.selected==null || this.selected.getCurrentStep()!=1);
+        return (this.selected==null || this.selected.getCurrentStepId()!=1);
     }
     
     public void onSelectWorkOrder(){
@@ -93,7 +93,7 @@ public class WoProcessController extends JpaCRUDController<WorkOrder> {
         workOrder.setCreatorName(loginUser.getName());
         
         workOrder.setCreateTime(TimeUtil.now());
-        workOrder.setCurrentStep(1);
+        workOrder.setCurrentStepId(1);
         
         workOrder.setCasePriority(3);
 
@@ -115,14 +115,14 @@ public class WoProcessController extends JpaCRUDController<WorkOrder> {
         UserAccount currentPerson = userDao.findById(workOrder.getCurrentPersonId());
         workOrder.setCurrentPersonName(currentPerson.getName());
         
-        if(workOrder.getCurrentStep()==1)
-            workOrder.setCurrentStep(2);
+        if(workOrder.getCurrentStepId()==1)
+            workOrder.setCurrentStepId(2);
     }
 
     @Override
     public void onAfterNewObject(WorkOrder wo, boolean isOK) {
         if(!isOK){
-            wo.setCurrentStep(1);
+            wo.setCurrentStepId(1);
             return;
         }
         
@@ -130,8 +130,8 @@ public class WoProcessController extends JpaCRUDController<WorkOrder> {
         WorkOrderStep woStep = new WorkOrderStep();
         woStep.setWorkOrderId(wo.getId());
         woStep.setSiteId(wo.getSiteId());
-        woStep.setStepId(wo.getCurrentStep());
-        woStep.setStepName(FieldValueMessageController.doGetFieldValue("woSteps", wo.getCurrentStep().toString()));
+        woStep.setStepId(wo.getCurrentStepId());
+        woStep.setStepName(FieldValueMessageController.doGetFieldValue("woSteps", wo.getCurrentStepId().toString()));
         woStep.setOwnerId(wo.getCurrentPersonId());
         woStep.setOwnerName(wo.getCurrentPersonName());
         

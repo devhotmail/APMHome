@@ -57,7 +57,7 @@
                         <h:outputLabel value="#{msg.currentPersonName}" for="currentPersonName" />
                         <h:outputText value="#{workOrderController.selected.currentPersonName}"/>
                         <h:outputLabel value="#{msg.currentStep}" for="currentStep" />
-                        <h:outputText value="#{workOrderController.selected.currentStep}"/>
+                        <h:outputText value="#{workOrderController.selected.currentStepId}"/>
                         <h:outputLabel value="#{msg.isClosed}" for="isClosed" />
                         <p:selectBooleanCheckbox id="isClosed" value="#{workOrderController.selected.isClosed}" required="true" requiredMessage="#{msg.isClosed} #{msg.ValidationRequire}" disabled="true"/>
                         <h:outputLabel value="#{msg.closeReason}" for="closeReason" />

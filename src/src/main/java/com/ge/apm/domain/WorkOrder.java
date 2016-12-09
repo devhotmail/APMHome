@@ -107,8 +107,13 @@ public class WorkOrder implements Serializable {
     private String currentPersonName;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "current_step")
-    private Integer currentStep;
+    @Column(name = "current_step_id")
+    private Integer currentStepId;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 16)
+    @Column(name = "current_step_name")
+    private String currentStepName;
     @Basic(optional = false)
     @NotNull
     @Column(name = "is_closed")
@@ -299,12 +304,20 @@ public class WorkOrder implements Serializable {
         this.currentPersonName = currentPersonName;
     }
 
-    public Integer getCurrentStep() {
-        return currentStep;
+    public Integer getCurrentStepId() {
+        return currentStepId;
     }
 
-    public void setCurrentStep(Integer currentStep) {
-        this.currentStep = currentStep;
+    public void setCurrentStepId(Integer currentStepId) {
+        this.currentStepId = currentStepId;
+    }
+
+    public String getCurrentStepName() {
+        return currentStepName;
+    }
+
+    public void setCurrentStepName(String currentStepName) {
+        this.currentStepName = currentStepName;
     }
 
     public boolean getIsClosed() {

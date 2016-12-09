@@ -91,14 +91,14 @@
                             </f:facet>
                             <h:outputText value="#{item.currentPersonName}"/>
                         </p:column>
-                        <p:column headerText="#{msg.currentStep}" sortBy="#{item.currentStep}" filterBy="#{item.currentStep}" filterMatchMode="EQ">
+                        <p:column headerText="#{msg.currentStep}" sortBy="#{item.currentStepId}" filterBy="#{item.currentStepId}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('woSteps')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
                             </f:facet>
-                            <h:outputText value="#{fieldMsg.fieldValue('woSteps', item.currentStep)}"/>
+                            <h:outputText value="#{fieldMsg.fieldValue('woSteps', item.currentStepId)}"/>
                         </p:column>
                         <p:column headerText="#{msg.isClosed}" sortBy="#{item.isClosed}" filterBy="#{item.isClosed}" filterMatchMode="EQ">
                             <f:facet name="filter">

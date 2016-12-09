@@ -30,7 +30,7 @@
                 <h:form id="WorkOrderListForm" rendered="#{workOrderController.selected ne null}">
                     <p:fieldset legend="#{msg.WorkOrder}" rendered="#{workOrderController.selected != null}">
 
-                        <p:steps activeIndex="#{workOrderController.selected.currentStep-1}" styleClass="test" readonly="false">
+                        <p:steps activeIndex="#{workOrderController.selected.currentStepId-1}" styleClass="test" readonly="false">
                             <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '1')}" onclick="return false;"/>
                             <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '2')}" onclick="return false;"/>
                             <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '3')}" onclick="return false;"/>
@@ -111,11 +111,11 @@
                         <p:tabView id="tabView" style="border: none;padding: 0;margin: 0;top:-2px;" rendered="#{workOrderController.selected ne null}" activeIndex="#{workOrderController.activeTabId}">
                             <p:ajax event="tabChange" listener="#{workOrderController.onTabChanged}" update="@parent"/>
 
-                            <p:tab id="tabHandleOrder" title="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}">
+                            <p:tab id="tabHandleOrder" title="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStepId)}">
                             </p:tab>
                             <p:tab id="TransferOrder" title="#{msg.TransferOrder}">
                             </p:tab>
-                            <p:tab id="tabCloseOrder" title="#{fieldMsg.fieldValue('woSteps', '6')}" rendered="#{(workOrderController.selected.currentStep ne 6)}">
+                            <p:tab id="tabCloseOrder" title="#{fieldMsg.fieldValue('woSteps', '6')}" rendered="#{(workOrderController.selected.currentStepId ne 6)}">
                             </p:tab>
                         </p:tabView>
                         <p:panelGrid id="panelStepDataInput" columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
@@ -184,7 +184,7 @@
                             </h:panelGroup>
                         </p:panelGrid>
 
-                        <p:commandButton validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderStepController.finishWorkOrderStep()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStep)}" rendered="#{workOrderController.activeTabId eq 0}"/>
+                        <p:commandButton validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderStepController.finishWorkOrderStep()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStepId)}" rendered="#{workOrderController.activeTabId eq 0}"/>
                         <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.transferWorkOrder()}" value="#{msg.TransferOrder}" rendered="#{workOrderController.activeTabId eq 1}"/>
                         <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.closeWorkOrder()}" value="#{fieldMsg.fieldValue('woSteps', '6')}" rendered="#{workOrderController.activeTabId eq 2}"/>
                     </p:fieldset>

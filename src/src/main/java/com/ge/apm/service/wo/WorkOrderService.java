@@ -38,8 +38,8 @@ public class WorkOrderService {
         if(wo.getCurrentPersonId()!=null) woStep.setOwnerId(wo.getCurrentPersonId());
         if(wo.getCurrentPersonName()!=null) woStep.setOwnerName(wo.getCurrentPersonName());
         
-        woStep.setStepId(wo.getCurrentStep());
-        woStep.setStepName(WebUtil.getMessage("woSteps"+"-"+wo.getCurrentStep()));
+        woStep.setStepId(wo.getCurrentStepId());
+        woStep.setStepName(WebUtil.getMessage("woSteps"+"-"+wo.getCurrentStepId()));
 
         woStep.setStartTime(TimeUtil.now());
         
@@ -53,6 +53,7 @@ public class WorkOrderService {
         
         if(wo!=null){
             try{
+                wo.setCurrentStepName(WebUtil.getMessage("woSteps"+"-"+wo.getCurrentStepId()));
                 woDao.save(wo);
             }
             catch(Exception ex){
@@ -121,7 +122,7 @@ public class WorkOrderService {
         currentWoStep.setEndTime(TimeUtil.now());
         
         // initiate next Work Order Step
-        wo.setCurrentStep(currentWoStep.getStepId()+1);
+        wo.setCurrentStepId(currentWoStep.getStepId()+1);
         checkWorkOrderPersonNames(wo);
         
         WorkOrderStep nextWoStep = initWorkOrderCurrentStep(wo);
@@ -131,14 +132,14 @@ public class WorkOrderService {
         }
         catch(Exception ex){
             // rollback WorkOrder changes
-            wo.setCurrentStep(currentWoStep.getStepId());
+            wo.setCurrentStepId(currentWoStep.getStepId());
             wo.setCurrentPersonId(currentWoStep.getOwnerId());
             wo.setCurrentPersonName(currentWoStep.getOwnerName());
             
             throw ex;
         }
         //judge whether continue, if auto_stepX is true then continue
-        int currentStep = wo.getCurrentStep();
+        int currentStep = wo.getCurrentStepId();
         if ( wo.getSiteId() == null) return;
         SiteInfo site = siteDao.findById(wo.getSiteId());
         if (site == null) return;
@@ -159,7 +160,7 @@ public class WorkOrderService {
     }
 
     public void closeWorkOrder(WorkOrder wo, WorkOrderStep currentWoStep) throws Exception{
-        wo.setCurrentStep(6);
+        wo.setCurrentStepId(6);
         wo.setIsClosed(true);
         currentWoStep.setEndTime(TimeUtil.now());
                 

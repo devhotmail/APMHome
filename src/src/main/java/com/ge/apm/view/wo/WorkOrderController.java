@@ -114,7 +114,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         selected.setCreatorName(loginUser.getName());
         
         selected.setCreateTime(TimeUtil.now());
-        selected.setCurrentStep(1);
+        selected.setCurrentStepId(1);
         
         selected.setCasePriority(3);
 

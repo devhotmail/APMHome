@@ -75,7 +75,7 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
         if(wo!=null){
             List<WorkOrderStep> woStepList = null;
             if(wo.getId()!=null)
-                 woStepList = dao.getByWorkOrderIdAndStepId(wo.getId(), wo.getCurrentStep());
+                 woStepList = dao.getByWorkOrderIdAndStepId(wo.getId(), wo.getCurrentStepId());
 
             if( (woStepList==null) || woStepList.isEmpty()){
                 WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
