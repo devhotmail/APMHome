@@ -20,7 +20,7 @@ public class UrlParamUtil {
         return new String(base64.decode(encodedUrlQueryString));
     }
 
-    public static Map<String, String> decodeUrlQueryStringToMap(){
+    public static Map<String, Object> decodeUrlQueryStringToMap(){
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String queryString = request.getQueryString();
         if(queryString==null) return null;
@@ -28,10 +28,10 @@ public class UrlParamUtil {
         return decodeUrlQueryStringToMap(queryString);
     }
     
-    public static Map<String, String> decodeUrlQueryStringToMap(String encodedUrlQueryString){
+    public static Map<String, Object> decodeUrlQueryStringToMap(String encodedUrlQueryString){
         String strParam = decodeUrlQueryString(encodedUrlQueryString);
         String[] params = strParam.split("&");
-        Map<String, String> paramMap = new HashMap<String, String>();
+        Map<String, Object> paramMap = new HashMap<String, Object>();
         for(String paramKeyValuePair: params){
             String[] paramKeyValue = paramKeyValuePair.split("=");
             if(paramKeyValue.length>1){
