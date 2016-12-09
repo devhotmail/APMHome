@@ -465,6 +465,7 @@ INSERT INTO "i18n_message" VALUES (3016,'message','DeleteAllConformation', '您�
 INSERT INTO "i18n_message" VALUES (3017,'message','invalidSizeMessage', '文件内容不能大于','File size must less than ',null,-1);
 INSERT INTO "i18n_message" VALUES (3018,'message','remainingCharacters', '还有{0}字','{0} characters remaining.',null,-1);
 INSERT INTO "i18n_message" VALUES (3019,'message','fileTransFail', '文件传输失败','File transform Failure',null,-1);
+INSERT INTO "i18n_message" VALUES (3019,'message','DeviceInventorySuccess', '设备盘点成功！','file inventory success',null,-1);
 
 
 -- Chart label/lengend （id from 5000 to 5500）
