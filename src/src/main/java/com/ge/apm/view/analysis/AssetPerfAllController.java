@@ -276,7 +276,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
                 name = item_1.get("name")!=null ?(String)item_1.get("name"): "";
                 serial_num = item_1.get("serial_num")!=null ? (String)item_1.get("serial_num") : "";
-                clinical_dept_name = item_1.get("clinical_dept_name")!=null ? (String)item_1.get("clinical_dept_name") : "";
+                clinical_dept_name = getDeptName((Integer)item_1.get("clinical_dept_id"));
                 revenue = item_1.get("revenue")!=null ? (double)item_1.get("revenue") : 0.0;
                 scan = item_1.get("scan")!=null ? (long)item_1.get("scan") : 0;
                 expo = item_1.get("expo")!=null ? (double)item_1.get("expo") : 0.0;
