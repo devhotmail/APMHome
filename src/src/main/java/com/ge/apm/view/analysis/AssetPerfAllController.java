@@ -50,7 +50,8 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
     private String assetName = WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");
     private int assetId = -1;
-
+    Map<Integer, String> i18nMessageAsset = new HashMap<Integer, String>();
+    Map<Integer, String> i18nMessageDept = new HashMap<Integer, String>();
 
     @PostConstruct
     public void init() {
@@ -67,6 +68,21 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
         startDate = startCal.getTime();
         endDate = currentCal.getTime();
         Date currentDate = currentCal.getTime();
+
+        FieldValueMessageController fieldMsg = WebUtil.getBean(FieldValueMessageController.class, "fieldMsg");
+        List<I18nMessage> messages1 = fieldMsg.getFieldValueList("assetGroup");
+        List<I18nMessage> messages2 = fieldMsg.getFieldValueList("clinicalDeptId");
+
+
+
+        int i = 0;
+        for (I18nMessage local1 : messages1)
+            i18nMessageAsset.put(++i, local1.getValue());
+
+        i = 0;
+        for (I18nMessage local2 : messages2)
+            i18nMessageDept.put(++i, local2.getValue());
+
 
         deviceQuery(startDate, endDate, currentDate);
 
@@ -190,32 +206,38 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
             topAsset = "";
             topDept = "";
 
-            FieldValueMessageController fieldMsg = WebUtil.getBean(FieldValueMessageController.class, "fieldMsg");
-            List<I18nMessage> messages1 = fieldMsg.getFieldValueList("assetGroup");
-            List<I18nMessage> messages2 = fieldMsg.getFieldValueList("clinicalDeptId");
-
-            Map<Integer, String> messages_map1 = new HashMap<Integer, String>();
-            Map<Integer, String> messages_map2 = new HashMap<Integer, String>();
-
-            int i = 0;
-            for (I18nMessage local1 : messages1)
-                messages_map1.put(++i, local1.getValue());
-
-            i = 0;
-            for (I18nMessage local2 : messages2)
-                messages_map2.put(++i, local2.getValue());
-
             List<Map<String, Object>> rs_mx1 = NativeSqlUtil.queryForList(MAX1TL, sqlParams);
+
             for (Map<String, Object> item : rs_mx1)
                 if (item.get("asset_group") != null)
-                    topAsset += (messages_map1.get((Integer)item.get("asset_group")) + " ");
+                    topAsset += (getAssetGroup((Integer)item.get("asset_group")) + " ");
 
             List<Map<String, Object>> rs_mx2 = NativeSqlUtil.queryForList(MAX2TL, sqlParams);
             for (Map<String, Object> item : rs_mx2)
                 if (item.get("clinical_dept_id") != null)
-                    topDept += (messages_map2.get((Integer)item.get("clinical_dept_id")) + " ");
+                    topDept += (getDeptName((Integer)item.get("clinical_dept_id")) + " ");
     }
 
+
+    private String getAssetGroup (Integer asset_group) {
+
+        if (asset_group==null)
+            return "";
+        else if (i18nMessageAsset.containsKey(asset_group))
+            return i18nMessageAsset.get(asset_group);
+        else
+            return String.valueOf(asset_group);
+    }
+
+    private String getDeptName (Integer clinical_dept_id) {
+
+        if (clinical_dept_id==null)
+            return "";
+        else if (i18nMessageDept.containsKey(clinical_dept_id))
+            return i18nMessageDept.get(clinical_dept_id);
+        else
+            return String.valueOf(clinical_dept_id);
+    }
 
     private void deviceTable (Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
 
@@ -263,7 +285,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
                 repair = item_3.get("repair")!=null ? (long)item_3.get("repair") : 0;
                 dt = item_3.get("dt")!=null ? (double)item_3.get("dt") : 0.0;
 
-                assetDashBoard.add(new Row(name, serial_num, clinical_dept_name, cf.format(revenue), cf.format(scan), cf.format(expo), cf.format(cost), cf.format(profit), cf.format(repair), cf.format(dt)));
+                assetDashBoard.add(new Row(name, serial_num, clinical_dept_name, revenue, scan, expo, cost, profit, repair, dt));
             }
 
     }

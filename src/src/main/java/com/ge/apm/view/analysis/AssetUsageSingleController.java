@@ -331,8 +331,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 		deviceScan.clear();
 		deviceScan.addSeries(cst_scan);
-		b = System.currentTimeMillis();
-		System.out.println("ChartSeries Prepare for Chart 1: " + (b-a));
 
 	}
 
@@ -344,16 +342,15 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		ChartSeries cst_expo = new LineChartSeries();
 		cst_expo.setLabel(deviceExpolg_1);
 
-		a = System.currentTimeMillis();
+
 		List<Map<String, Object>> rs_expo = NativeSqlUtil.queryForList(EXPOTL, sqlParams);
-		b = System.currentTimeMillis();
-		System.out.println("SQL Query for Chart 2: " + (b-a));
+
 
 		Map<String, Object> rs_expo_map = new HashMap<String, Object>();
 
 		if (!rs_expo.isEmpty())
 			for (Map<String, Object> item : rs_expo) {
-				rs_expo_map.put(item.get("timeline").toString(), item.get("hours") != null ? (Double) item.get("hours") : 0);
+				rs_expo_map.put((String)item.get("timeline"), item.get("hours") != null ? (Double) item.get("hours") : 0);
 		}
 
 		rs_expo.clear();
@@ -371,8 +368,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 		deviceExpo.clear();
 		deviceExpo.addSeries(cst_expo);
-		b = System.currentTimeMillis();
-		System.out.println("ChartSeries Prepare for Chart 2: " + (b-a));
 
 	}
 

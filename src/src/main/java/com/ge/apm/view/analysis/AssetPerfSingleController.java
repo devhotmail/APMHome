@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.joda.time.DateTime;
 
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.I18nMessage;
@@ -18,7 +19,9 @@ import javax.faces.bean.ViewScoped;
 import org.joda.time.DateTime;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.LineChartModel;
+import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.BarChartSeries;
+import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.LineChartSeries;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
@@ -42,10 +45,14 @@ import com.ge.apm.view.analysis.Row;
 public class AssetPerfSingleController implements ServerEventInterface {
 
     private static final long serialVersionUID = 1L;
+    private static final String deviceROIlg_1 = WebUtil.getMessage("deviceROIlg_1");
+    private static final String deviceROIlg_2 = WebUtil.getMessage("deviceROIlg_2");
 
     // Dashboard Parameters
-    private String topAsset = null;
-    private String topDept = null;
+    private String valueProfit = null;
+    private String valueRevenue = null;
+    private String valueCost = null;
+    private BarChartModel bcProfit = null;
 
     // Table Components
     private List<Row> assetDashBoard = null;
@@ -55,7 +62,10 @@ public class AssetPerfSingleController implements ServerEventInterface {
     private int clinical_dept_id = -1;
     private int filter_id = -1;
     private int MAX_INTERVAL=4;
-    
+    private static final String YEAR_FORMAT = "yyyy";
+    private static final String MONTH_FORMAT = "yyyy-MM";
+    private static final String DAY_FORMAT = "yyyy-MM-dd";
+
     private Date startDate;
     private Date endDate;
     private Date currentDate;
@@ -65,12 +75,24 @@ public class AssetPerfSingleController implements ServerEventInterface {
 
     private String assetName = WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");
     private int assetId = -1;
+    private int activeTab = 1;
 
     private NumberFormat cf = new DecimalFormat(",###.##");
+    Map<Integer, String> i18nMessageDept = new HashMap<Integer, String>();
+
+    HashMap<String, Object> sqlParams = new HashMap<>();
 
     @PostConstruct
     public void init() {
 
+        valueProfit = "";
+        valueRevenue = "";
+        valueCost = "";
+
+        bcProfit = new BarChartModel();
+        bcProfit.setBarWidth(50);
+        bcProfit.setLegendPosition("ne");
+        //bcProfit.setExtender("bcProfit");
         assetDashBoard = new ArrayList<Row>();
 
         hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
@@ -89,6 +111,13 @@ public class AssetPerfSingleController implements ServerEventInterface {
             yearList.put(Integer.toString(year),Integer.toString(year));
             year -= 1;
         }
+
+        FieldValueMessageController fieldMsg = WebUtil.getBean(FieldValueMessageController.class, "fieldMsg");
+        List<I18nMessage> messages = fieldMsg.getFieldValueList("clinicalDeptId");
+        int i = 0;
+        for (I18nMessage local : messages)
+            i18nMessageDept.put(++i, local.getValue());
+
 
         if (FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_id") != null 
             && FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_name") != null) {
@@ -124,57 +153,83 @@ public class AssetPerfSingleController implements ServerEventInterface {
         deviceQuery(startDate, endDate, currentDate);
     }
 
+    public void onSelect (int i) {
+
+        activeTab = i;
+        deviceTable(startDate, endDate, currentDate, sqlParams, activeTab);
+
+    }
+
+    private String DB0TL
+            = "SELECT name, serial_num, clinical_dept_id "
+            + "FROM asset_info "
+            + "WHERE id = :#filter_id ";
+
            //bigint
-    private String DB1TL
-            = "SELECT left_table.name, serial_num, clinical_dept_id, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
-            + "FROM (SELECT id, name, serial_num, clinical_dept_id FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
-            + "LEFT JOIN (SELECT expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
+    private String DB1TLYEAR
+            = "SELECT key, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
+            + "FROM (SELECT id, name, serial_num, clinical_dept_id FROM asset_info WHERE id = :#filter_id) left_table "
+            + "LEFT JOIN (SELECT TO_CHAR(exam_date, 'yyyy') AS key, expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY left_table.name, serial_num, clinical_dept_id "
-            + "ORDER BY left_table.name ";
+            + "GROUP BY key "
+            + "ORDER BY key ";
 
-    private String DB2TL
-            = "SELECT left_table.name, deprecate_amount depre "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
-            + "LEFT JOIN asset_depreciation "
-            + "ON left_table.id = asset_depreciation.asset_id "
-            + "ORDER BY left_table.name";
+    private String DB2TLYEAR
+            = "SELECT deprecate_amount depre "
+            + "FROM asset_depreciation "
+            + "WHERE asset_id = :#filter_id ";
 
-    private String DB3TL
-            = "SELECT left_table.name, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
-            + "LEFT JOIN (SELECT total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
+    private String DB3TLYEAR
+            = "SELECT key, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
+            + "FROM (SELECT id FROM asset_info WHERE id = :#filter_id) left_table "
+            + "LEFT JOIN (SELECT TO_CHAR(create_time, 'yyyy') AS key, total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY left_table.name "
-            + "ORDER BY left_table.name ";
+            + "GROUP BY key "
+            + "ORDER BY key ";
 
-    private String MAX1TL
-            = "SELECT asset_group FROM "
-            + "( SELECT left_table.asset_group, SUM(right_table.price_amount) "
-            + "FROM (SELECT id, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
-            + "LEFT JOIN (SELECT price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
+           //bigint
+    private String DB1TLMONTH
+            = "SELECT key, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
+            + "FROM (SELECT id, name, serial_num, clinical_dept_id FROM asset_info WHERE id = :#filter_id) left_table "
+            + "LEFT JOIN (SELECT TO_CHAR(exam_date, 'yyyy-mm') AS key, expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY asset_group ) as t1 "
-            + "WHERE t1.sum = ( "
-            + "SELECT MAX(sum) FROM (SELECT left_table.asset_group, SUM(right_table.price_amount) "
-            + "FROM (SELECT id, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
-            + "LEFT JOIN (SELECT price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
-            + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY asset_group) as t2 )";
+            + "GROUP BY key "
+            + "ORDER BY key ";
 
-    private String MAX2TL
-            = "SELECT clinical_dept_id FROM "
-            + "( SELECT left_table.clinical_dept_id, SUM(right_table.price_amount) "
-            + "FROM (SELECT id, clinical_dept_id FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
-            + "LEFT JOIN (SELECT price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
+    private String DB2TLMONTH
+            = "SELECT deprecate_amount/12 depre "
+            + "FROM asset_depreciation "
+            + "WHERE asset_id = :#filter_id ";
+
+    private String DB3TLMONTH
+            = "SELECT key, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
+            + "FROM (SELECT id FROM asset_info WHERE id = :#filter_id) left_table "
+            + "LEFT JOIN (SELECT TO_CHAR(create_time, 'yyyy-mm') AS key, total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY clinical_dept_id ) as t1 "
-            + "WHERE t1.sum = ( "
-            + "SELECT MAX(sum) FROM (SELECT left_table.clinical_dept_id, SUM(right_table.price_amount) "
-            + "FROM (SELECT id, clinical_dept_id FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
-            + "LEFT JOIN (SELECT price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
+            + "GROUP BY key "
+            + "ORDER BY key ";
+
+            //bigint
+    private String DB1TLDAY
+            = "SELECT key, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
+            + "FROM (SELECT id, name, serial_num, clinical_dept_id FROM asset_info WHERE id = :#filter_id) left_table "
+            + "LEFT JOIN (SELECT TO_CHAR(exam_date, 'yyyy-mm-dd') AS key, expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY clinical_dept_id) as t2 )";
+            + "GROUP BY key "
+            + "ORDER BY key ";
+
+    private String DB2TLDAY
+            = "SELECT deprecate_amount/365 depre "
+            + "FROM asset_depreciation "
+            + "WHERE asset_id = :#filter_id ";
+
+    private String DB3TLDAY
+            = "SELECT key, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
+            + "FROM (SELECT id FROM asset_info WHERE id = :#filter_id) left_table "
+            + "LEFT JOIN (SELECT TO_CHAR(create_time, 'yyyy-mm-dd') AS key, total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
+            + "ON left_table.id = right_table.asset_id "
+            + "GROUP BY key "
+            + "ORDER BY key ";
 
     // Getters & Setters
     public Date getStartDate() {
@@ -195,16 +250,6 @@ public class AssetPerfSingleController implements ServerEventInterface {
     public void setEndDate(Date endDate) {
 
         this.endDate = endDate;
-    }
-
-    public String getTopAsset() {
-
-        return topAsset;
-    }
-
-    public String getTopDept() {
-
-        return topDept;
     }
 
     public List<Row> getAssetDashboard () {
@@ -244,92 +289,321 @@ public class AssetPerfSingleController implements ServerEventInterface {
 
     }
 
-    private void devicePanel(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
+    public String getValueProfit() {
 
-            topAsset = "";
-            topDept = "";
-
-            FieldValueMessageController fieldMsg = WebUtil.getBean(FieldValueMessageController.class, "fieldMsg");
-            List<I18nMessage> messages1 = fieldMsg.getFieldValueList("assetGroup");
-            List<I18nMessage> messages2 = fieldMsg.getFieldValueList("clinicalDeptId");
-
-            Map<Integer, String> messages_map1 = new HashMap<Integer, String>();
-            Map<Integer, String> messages_map2 = new HashMap<Integer, String>();
-
-            int i = 0;
-            for (I18nMessage local1 : messages1)
-                messages_map1.put(++i, local1.getValue());
-
-            i = 0;
-            for (I18nMessage local2 : messages2)
-                messages_map2.put(++i, local2.getValue());
-
-            List<Map<String, Object>> rs_mx1 = NativeSqlUtil.queryForList(MAX1TL, sqlParams);
-            for (Map<String, Object> item : rs_mx1)
-                if (item.get("asset_group") != null)
-                    topAsset += (messages_map1.get((Integer)item.get("asset_group")) + " ");
-
-            List<Map<String, Object>> rs_mx2 = NativeSqlUtil.queryForList(MAX2TL, sqlParams);
-            for (Map<String, Object> item : rs_mx2)
-                if (item.get("clinical_dept_id") != null)
-                    topDept += (messages_map2.get((Integer)item.get("clinical_dept_id")) + " ");
+        return valueProfit;
     }
 
+    public String getValueRevenue() {
 
-    private void deviceTable (Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
+        return valueRevenue;
+    }
 
-            List<Map<String, Object>> rs_db1 = NativeSqlUtil.queryForList(DB1TL, sqlParams);
-            List<Map<String, Object>> rs_db2 = NativeSqlUtil.queryForList(DB2TL, sqlParams);
-            List<Map<String, Object>> rs_db3 = NativeSqlUtil.queryForList(DB3TL, sqlParams);
+    public String getValueCost() {
 
-            Iterator<Map<String, Object>> it_1;
-            Iterator<Map<String, Object>> it_2;
-            Iterator<Map<String, Object>> it_3;
-            Map<String, Object> item_1;
-            Map<String, Object> item_2;
-            Map<String, Object> item_3;
+        return valueCost;
+    }
 
-            String name;
-            String serial_num;
-            String clinical_dept_name;
-            double revenue;
-            long scan;
-            double expo;
-            double cost;
-            double profit;
-            long repair;
-            double dt;
+    public BarChartModel getBcProfit() {
 
-            NumberFormat cf = new DecimalFormat(",###.##");
+        return bcProfit;
+    }
 
-            assetDashBoard.clear();
+    public int getActiveTab() {
 
-            for (it_1 = rs_db1.iterator(), it_2 = rs_db2.iterator(), it_3 = rs_db3.iterator();
-                it_1.hasNext() && it_2.hasNext() && it_3.hasNext(); ) {
+        return activeTab;
+    }
 
-                item_1 = it_1.next();
-                item_2 = it_2.next();
-                item_3 = it_3.next();
+    private void deviceChart_1(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
 
-                name = item_1.get("name")!=null ?(String)item_1.get("name"): "";
-                serial_num = item_1.get("serial_num")!=null ? (String)item_1.get("serial_num") : "";
-                clinical_dept_name = item_1.get("clinical_dept_name")!=null ? (String)item_1.get("clinical_dept_name") : "";
-                revenue = item_1.get("revenue")!=null ? (double)item_1.get("revenue") : 0.0;
-                scan = item_1.get("scan")!=null ? (long)item_1.get("scan") : 0;
-                expo = item_1.get("expo")!=null ? (double)item_1.get("expo") : 0.0;
-                cost = (item_2.get("depre")!=null ? (double)item_2.get("depre") : 0.0) + (item_3.get("price")!=null ? (double)item_3.get("price") : 0.0);
-                profit = revenue - cost;
-                repair = item_3.get("repair")!=null ? (long)item_3.get("repair") : 0;
-                dt = item_3.get("dt")!=null ? (double)item_3.get("dt") : 0.0;
+        ChartSeries cst_1 = new BarChartSeries();
+        cst_1.setLabel(deviceROIlg_1);
+        ChartSeries cst_2 = new BarChartSeries();
+        cst_2.setLabel(deviceROIlg_2);
 
-                assetDashBoard.add(new Row(name, serial_num, clinical_dept_name, cf.format(revenue), cf.format(scan), cf.format(expo), cf.format(cost), cf.format(profit), cf.format(repair), cf.format(dt)));
+        List<Map<String, Object>> rs_1 = NativeSqlUtil.queryForList(DB1TLMONTH, sqlParams);
+        List<Map<String, Object>> rs_2 = NativeSqlUtil.queryForList(DB2TLMONTH, sqlParams);
+        List<Map<String, Object>> rs_3 = NativeSqlUtil.queryForList(DB3TLMONTH, sqlParams);
+        
+        double revenue;
+        double cost;
+        double price;
+        double depre = 0.0;
+        double profit;
+        String date;
+
+        if (!rs_2.isEmpty())
+            depre = rs_2.get(0).get("depre")!=null ? (double)rs_2.get(0).get("depre") : 0.0;
+
+        Map<String, Object> rs_1_map = new HashMap<String, Object>();
+        Map<String, Object> rs_3_map = new HashMap<String, Object>();
+
+        if (!rs_1.isEmpty())
+            for (Map<String, Object> item : rs_1) {
+                rs_1_map.put((String)item.get("key"), item.get("revenue") != null ? (Double) item.get("revenue") : 0);
             }
 
+        if (!rs_3.isEmpty())
+            for (Map<String, Object> item : rs_3) {
+                rs_3_map.put((String)item.get("key"), item.get("price") != null ? (Double) item.get("price") : 0);
+            }
+
+
+        DateTime startJoda = new DateTime(targetYear+ "-1");
+        DateTime endJoda;
+
+        for (endJoda = startJoda.plusYears(1); startJoda.isBefore(endJoda); startJoda = startJoda.plusMonths(1)) {
+                
+                date = startJoda.toString(MONTH_FORMAT);
+
+                if (rs_1_map.containsKey(date))
+                    revenue = rs_1_map.get(date)!=null ? (double)rs_1_map.get(date) : 0.0;
+                else   
+                    revenue = 0.0;
+
+                if (rs_3_map.containsKey(date))
+                    price = rs_3_map.get(date)!=null ? (double)rs_3_map.get(date) : 0.0;
+                else   
+                    price = 0.0;
+
+                cost = depre + price;
+
+                profit = revenue - cost;
+
+                cst_1.set(date, revenue);
+                cst_2.set(date, profit);
+
+        }
+
+        bcProfit.clear();
+        bcProfit.addSeries(cst_1);
+        bcProfit.addSeries(cst_2);
+
     }
 
-    private void deviceQuery(Date startDate, Date endDate, Date currentDate) {
 
-        HashMap<String, Object> sqlParams = new HashMap<>();
+    private void deviceTable (Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams, int i) {
+
+        List<Map<String, Object>> rs_0;
+        List<Map<String, Object>> rs_1;
+        List<Map<String, Object>> rs_2;
+        List<Map<String, Object>> rs_3;
+
+        rs_0 = NativeSqlUtil.queryForList(DB0TL, sqlParams);
+
+        switch (i) {
+
+        case 0:
+
+            rs_1 = NativeSqlUtil.queryForList(DB1TLDAY, sqlParams);
+            rs_2 = NativeSqlUtil.queryForList(DB2TLDAY, sqlParams);
+            rs_3 = NativeSqlUtil.queryForList(DB3TLDAY, sqlParams);       
+            break;
+
+        case 3:
+        case 2:
+
+            rs_1 = NativeSqlUtil.queryForList(DB1TLYEAR, sqlParams);
+            rs_2 = NativeSqlUtil.queryForList(DB2TLYEAR, sqlParams);
+            rs_3 = NativeSqlUtil.queryForList(DB3TLYEAR, sqlParams);
+            break;
+
+        default:
+
+            rs_1 = NativeSqlUtil.queryForList(DB1TLMONTH, sqlParams);
+            rs_2 = NativeSqlUtil.queryForList(DB2TLMONTH, sqlParams);
+            rs_3 = NativeSqlUtil.queryForList(DB3TLMONTH, sqlParams);
+            break;
+        }
+
+        double depre = 0.0;
+        String name = "";
+        String serial_num = "";
+        String clinical_dept_name = "";
+
+        if (!rs_0.isEmpty()) {
+            name = rs_0.get(0).get("name")!=null ? (String)rs_0.get(0).get("name") : "";
+            serial_num = rs_0.get(0).get("serial_num")!=null ? (String)rs_0.get(0).get("serial_num") : "";
+            clinical_dept_name = getDeptName((Integer)rs_0.get(0).get("clinical_dept_id"));
+        }
+
+        if (!rs_2.isEmpty())
+            depre = rs_2.get(0).get("depre")!=null ? (double)rs_2.get(0).get("depre") : 0.0;
+
+        Map<String, Row> rs_1_map = new HashMap<String, Row>();
+        Map<String, Row> rs_3_map = new HashMap<String, Row>();
+        
+        if (!rs_1.isEmpty())
+            for (Map<String, Object> item : rs_1) {
+                rs_1_map.put((String)item.get("key"), new Row(item));
+            }
+
+        if (!rs_3.isEmpty())
+            for (Map<String, Object> item : rs_3) 
+                rs_3_map.put((String)item.get("key"), new Row(item, depre));
+
+
+
+        switch (i) {
+
+        case 3: 
+            deviceValue(name, serial_num, clinical_dept_name, depre, rs_1_map, rs_3_map);
+            break;
+
+        case 0:
+
+            deviceTableDay(name, serial_num, clinical_dept_name, depre, rs_1_map, rs_3_map);   
+            break;
+
+        case 2:
+
+            deviceTableYear(name, serial_num, clinical_dept_name, depre, rs_1_map, rs_3_map);  
+            break;
+
+        default:
+
+            deviceTableMonth(name, serial_num, clinical_dept_name, depre, rs_1_map, rs_3_map);  
+            break;
+        }
+        
+
+
+    }
+
+    private String getDeptName (Integer clinical_dept_id) {
+
+        if (clinical_dept_id==null)
+            return "";
+        else if (i18nMessageDept.containsKey(clinical_dept_id))
+            return i18nMessageDept.get(clinical_dept_id);
+        else
+            return String.valueOf(clinical_dept_id);
+    }
+
+    private void deviceTableMonth (String name, String serial_num, String clinical_dept_name, double depre, 
+        Map<String, Row> rs_1_map, Map<String, Row> rs_3_map) {
+
+        String date;
+        DateTime startJoda = new DateTime(targetYear + "-1");
+        DateTime endJoda;
+
+        assetDashBoard.clear();
+
+        for (endJoda = startJoda.plusYears(1); startJoda.isBefore(endJoda); startJoda = startJoda.plusMonths(1)) {
+
+            date = startJoda.toString(MONTH_FORMAT);
+            assetDashBoard.add( new Row(name, serial_num, clinical_dept_name, date, rs_1_map.get(date), rs_3_map.get(date), depre) );
+
+        }
+
+    }
+
+    private void deviceTableDay (String name, String serial_num, String clinical_dept_name, double depre, 
+        Map<String, Row> rs_1_map, Map<String, Row> rs_3_map) {
+
+        String date;
+        DateTime startJoda = new DateTime(targetYear + "-1-1");
+        DateTime endJoda;
+
+        assetDashBoard.clear();
+        for (endJoda = startJoda.plusYears(1); startJoda.isBefore(endJoda); startJoda = startJoda.plusDays(1)) {
+
+            date = startJoda.toString(DAY_FORMAT);
+            assetDashBoard.add( new Row(name, serial_num, clinical_dept_name, date, rs_1_map.get(date), rs_3_map.get(date), depre) );
+
+        }
+
+    }
+
+    private void deviceTableYear (String name, String serial_num, String clinical_dept_name, double depre, 
+        Map<String, Row> rs_1_map, Map<String, Row> rs_3_map) {
+
+        String date = String.valueOf(targetYear);
+        Row tableRow = new Row(name, serial_num, clinical_dept_name, date, rs_1_map.get(date), rs_3_map.get(date), depre);
+
+        assetDashBoard.clear();
+        assetDashBoard.add(tableRow);
+
+    }
+
+    private void deviceValue (String name, String serial_num, String clinical_dept_name, double depre, 
+        Map<String, Row> rs_1_map, Map<String, Row> rs_3_map) {
+
+        String date = String.valueOf(targetYear);
+        Row tableRow = new Row(name, serial_num, clinical_dept_name, date, rs_1_map.get(date), rs_3_map.get(date), depre);
+
+        valueProfit = tableRow.getProfit();
+        valueRevenue = tableRow.getRevenue();
+        valueCost = tableRow.getCost();
+
+    }
+
+
+    private void deviceTableDay (Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
+
+
+        List<Map<String, Object>> rs_0;
+        List<Map<String, Object>> rs_1;
+        List<Map<String, Object>> rs_2;
+        List<Map<String, Object>> rs_3;
+
+        rs_0 = NativeSqlUtil.queryForList(DB0TL, sqlParams);
+        rs_1 = NativeSqlUtil.queryForList(DB1TLDAY, sqlParams);
+        rs_2 = NativeSqlUtil.queryForList(DB2TLDAY, sqlParams);
+        rs_3 = NativeSqlUtil.queryForList(DB3TLDAY, sqlParams);                
+
+        double depre = 0.0;
+        String date;
+        String name = "";
+        String serial_num = "";
+        String clinical_dept_name = "";
+
+        if (!rs_0.isEmpty()) {
+            name = rs_0.get(0).get("name")!=null ? (String)rs_0.get(0).get("name") : "";
+            serial_num = rs_0.get(0).get("serial_num")!=null ? (String)rs_0.get(0).get("serial_num") : "";
+            clinical_dept_name = rs_0.get(0).get("clinical_dept_name")!=null ? (String)rs_0.get(0).get("clinical_dept_name") : "";
+        }
+
+
+        if (!rs_2.isEmpty())
+            depre = rs_2.get(0).get("depre")!=null ? (double)rs_2.get(0).get("depre") : 0.0;
+
+        Map<String, Row> rs_1_map = new HashMap<String, Row>();
+        Map<String, Row> rs_3_map = new HashMap<String, Row>();
+        
+        if (!rs_1.isEmpty())
+            for (Map<String, Object> item : rs_1) 
+                rs_1_map.put((String)item.get("key"), new Row(item));
+
+        if (!rs_3.isEmpty())
+            for (Map<String, Object> item : rs_3) 
+                rs_3_map.put((String)item.get("key"), new Row(item, depre));
+
+
+        DateTime startJoda = new DateTime(targetYear + "-1-1");
+        DateTime endJoda;
+
+        assetDashBoard.clear();
+        for (endJoda = startJoda.plusYears(1); startJoda.isBefore(endJoda); startJoda = startJoda.plusDays(1)) {
+
+            date = startJoda.toString(DAY_FORMAT);
+            System.out.println("LOOP = " + date);
+            System.out.println("1: ");
+            if (rs_1_map.get(date)!=null)
+                rs_1_map.get(date).toPrint();
+            System.out.println("2: ");
+            if (rs_3_map.get(date)!=null)
+                rs_3_map.get(date).toPrint();
+            System.out.println("Combined: ");
+            (new Row(name, serial_num, clinical_dept_name, date, rs_1_map.get(date), rs_3_map.get(date), depre)).toPrint();
+            assetDashBoard.add( new Row(name, serial_num, clinical_dept_name, date, rs_1_map.get(date), rs_3_map.get(date), depre) );
+
+        }
+
+    }
+
+
+    private void deviceQuery(Date startDate, Date endDate, Date currentDate) {
 
         sqlParams.put("hospitalId", hospitalId);
         sqlParams.put("clinical_dept_id", clinical_dept_id);
@@ -337,10 +611,11 @@ public class AssetPerfSingleController implements ServerEventInterface {
         sqlParams.put("endDate", endDate);
         sqlParams.put("currentDate", currentDate);
         sqlParams.put("targetYear", targetYear);
+        sqlParams.put("filter_id", filter_id);
 
-        devicePanel(startDate, endDate, currentDate, sqlParams);
-
-        deviceTable(startDate, endDate, currentDate, sqlParams);
+        deviceChart_1(startDate, endDate, currentDate, sqlParams);
+        deviceTable(startDate, endDate, currentDate, sqlParams, 3);
+        deviceTable(startDate, endDate, currentDate, sqlParams, activeTab);
 
     }
 

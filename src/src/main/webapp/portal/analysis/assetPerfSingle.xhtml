@@ -13,6 +13,7 @@
     </ui:define>
 
     <ui:define name="content">
+
         <h:form id="WorkOrderEditForm" styleClass="ui-g">
             <div class="ui-g-2">
                 <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetPerfSingleController.assetName}">
@@ -38,26 +39,26 @@
             <div class="ui-g-12">
                 <div class="card--summary ui-g ui-fluid">
                     <div class="ui-g-12 ui-md-4">
-                        <div class="epsilon u-mv-">#{msg.assetTotalProfit}</div>
+                        <div class="epsilon u-mv-">#{msg.deviceValueRevenuehd}</div>
                         <p:outputPanel id="value_profit">
                             <div class="text--banner delta">
-                                <h:outputText value="TBD"/>
+                                <h:outputText value="#{assetPerfSingleController.valueProfit}"/>
                             </div>
                         </p:outputPanel>
                     </div>
                     <div class="ui-g-12 ui-md-4">
-                        <div class="epsilon u-mv-">#{msg.assetTopPerfhd}</div>
-                        <p:outputPanel id="value_top_asset">
+                        <div class="epsilon u-mv-">#{msg.deviceValueRevenuehd}</div>
+                        <p:outputPanel id="value_revenue">
                             <div class="text--banner delta">
-                                <h:outputText value="#{assetPerfSingleController.topAsset}"/>
+                                <h:outputText value="#{assetPerfSingleController.valueRevenue}"/>
                             </div>
                         </p:outputPanel>
                     </div>
                     <div class="ui-g-12 ui-md-4">
-                        <div class="epsilon u-mv-">#{msg.deptTopPerfhd}</div>
-                        <p:outputPanel id="value_top_dept">
+                        <div class="epsilon u-mv-">#{msg.deviceValueCosthd}</div>
+                        <p:outputPanel id="value_cost">
                             <div class="text--banner delta">
-                                <h:outputText value="#{assetPerfSingleController.topDept}"/>
+                                <h:outputText value="#{assetPerfSingleController.valueCost}"/>
                             </div>
                         </p:outputPanel>
                     </div>
@@ -67,48 +68,77 @@
             <div class="ui-g-12">
                 <p:selectOneMenu id="selectedYear" value="#{assetPerfSingleController.selectedYear}">
                     <p:ajax listener="#{assetPerfSingleController.submit(assetPerfSingleController.selectedYear)}"
-                            update="TopValueForm AssetInfoListForm"/>
+                            update="TopValueForm BarChartForm AssetInfoListForm"/>
                     <f:selectItems value="#{assetPerfSingleController.yearList}"/>
                 </p:selectOneMenu>
             </div>
         </h:form>
 
         <div class="ui-g">
+            
             <div class="ui-g-12">
+            <h:form id="BarChartForm">
+                <div class="block">
+                    <h3 class="block-title">#{msg.assetAnnual}</h3>
+                    <p:chart id="roi_bar" type="bar"
+                        model="#{assetPerfSingleController.bcProfit}" responsive="true" />
+                </div>
+            </h:form>
+            </div>
+            
 
-                <div class="ui-g-12">
+            <div class="ui-g-12">
+                    <h3 class="block-title">#{msg.assetsDashboardhd}</h3>
                     <div class="block">
-                        <h3 class="block-title">#{msg.assetsDashboardhd}</h3>
+                        <h:form id="GroupByForm" styleClass="ui-g">
+                        <p:tabMenu id="tabMenu" activeIndex="#{assetPerfSingleController.activeTab}" >
+                            <p:menuitem value="Day"
+                                        actionListener="#{assetPerfSingleController.onSelect('0')}"
+                                        update=":GroupByForm:tabMenu AssetInfoListForm"/>
+                            <p:menuitem value="Month"
+                                        actionListener="#{assetPerfSingleController.onSelect('1')}"
+                                        update=":GroupByForm:tabMenu AssetInfoListForm"/>
+                            <p:menuitem value="Year"
+                                        actionListener="#{assetPerfSingleController.onSelect('2')}"
+                                        update=":GroupByForm:tabMenu AssetInfoListForm"/>
+                        </p:tabMenu>
+                        </h:form>
+                    </div>
+
+                    <div class="block">
                         <h:form id="AssetInfoListForm">
                         <p:dataTable id="datalist" var="item" value="#{assetPerfSingleController.assetDashboard}"
                                  lazy="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
                                  rowKey="#{item.name}" sortMode="single" sortOrder="descending" sortBy="#{item.name}"
-                                 rows="10" emptyMessage="#{msg.noRecordFound}"
+                                 rows="20" emptyMessage="#{msg.noRecordFound}"
                                  rowsPerPageTemplate="10,20,50">
 
                         <p:column headerText="#{msg.assetsDashboardclm1}">
                             <h:outputText value="#{item.name}"/>
                         </p:column>
-                        <p:column headerText="#{msg.assetsDashboardclm3}" >
+                        <p:column headerText="#{msg.assetsDashboardclm2}" >
                             <h:outputText value="#{item.serial_num}"/>
                         </p:column>
-                        <p:column headerText="#{msg.assetsDashboardclm4}">
+                        <p:column headerText="#{msg.assetsDashboardclm3}">
                             <h:outputText value="#{item.clinical_dept_name}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.assetsDashboardclm4}">
+                            <h:outputText value="#{item.date}"/>
                         </p:column>
                         <p:column headerText="#{msg.assetsDashboardclm5}" >
                             <h:outputText value="#{item.revenue}"/>
                         </p:column>
                         <p:column headerText="#{msg.assetsDashboardclm6}" >
-                            <h:outputText value="#{item.scan}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.assetsDashboardclm7}" >
-                            <h:outputText value="#{item.expo}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.assetsDashboardclm8}" >
                             <h:outputText value="#{item.cost}"/>
                         </p:column>
-                        <p:column headerText="#{msg.assetsDashboardclm9}" >
+                        <p:column headerText="#{msg.assetsDashboardclm7}" >
                             <h:outputText value="#{item.profit}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.assetsDashboardclm8}" >
+                            <h:outputText value="#{item.scan}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.assetsDashboardclm9}" >
+                            <h:outputText value="#{item.expo}"/>
                         </p:column>
                         <p:column headerText="#{msg.assetsDashboardclm10}" >
                             <h:outputText value="#{item.repair}"/>
@@ -131,7 +161,7 @@
                         </p:dataTable>
                         </h:form>
                     </div>
-                </div>
+
             </div>
         </div>
 
