@@ -222,7 +222,8 @@ start_time timestamp,
 end_time timestamp,
 is_finished bool not null,
 comments varchar(256),
-paper_url varchar(128) );
+paper_url varchar(128),
+hospital_id int not null );
 
 
 create table inspection_order_detail(
