@@ -1,0 +1,7 @@
+---
+inherit: manifest.yml
+
+applications:
+- name: geapm-uat
+  services:
+  - geapm-uat-psql

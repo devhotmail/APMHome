@@ -1,10 +1,11 @@
+---
+instances: 1
+memory: 1024M
+disk_quota: 1024M
+stack: cflinuxfs2
+path: ./target/geapm-1.0.0.war
+
 applications:
-- name: geapm
-  instances: 1
-  memory: 1024M
-  disk_quota: 1024M
+- name: geapm-st
   services:
-  - ge-apm-postgres
-  - ge-apm-logstash
-  stack: cflinuxfs2
-  path: ./target/geapm-1.0.0.war
+  - geapm-st-psql
