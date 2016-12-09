@@ -12,7 +12,7 @@ import org.apache.commons.lang3.Validate;
 
 public class Digests {
 
-    private static final String SHA1 = "SHA-1";
+    private static final String SHA1 = "SHA-256";
     private static final String MD5 = "MD5";
 
     private static SecureRandom random = new SecureRandom();
