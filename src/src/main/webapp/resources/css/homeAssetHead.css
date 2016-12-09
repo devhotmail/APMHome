@@ -342,6 +342,7 @@ button.btn{-webkit-appearance:button}
 .btn--large{font-size:1.33333rem}
 .clearfix:after{content:"";display:table;clear:both}
 .layout-compact .layout-wrapper header{position:fixed;width:calc(100% - 250px);top:76px;z-index:999;background-color:#6e7072}
+.layout-compact .layout-wrapper.layout-menu-static-inactive header{width:100%}
 .layout-compact .layout-wrapper .card--title{height:60px;line-height:60px;background-color:#fff}
 .layout-compact .layout-wrapper .card--summary{height:100px;color:#fff}
 .layout-compact .layout-wrapper .card--summary>:not(:last-child){border-right:1px solid #3b3b3f}

@@ -13,6 +13,12 @@
     background-color: $main-bg-color;
   }
 
+  &.layout-menu-static-inactive {
+    header {
+      width: 100%;
+    }
+  }
+
   .card--title {
     height: $card-title-height;
     line-height: $card-title-height;
