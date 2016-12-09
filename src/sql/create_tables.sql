@@ -284,14 +284,15 @@ case_priority int not null,
 is_internal bool not null,
 current_person_id int not null,
 current_person_name varchar(16),
-current_step int not null,
+current_step_id int not null,
 is_closed bool not null,
 close_reason varchar(256),
 comments varchar(256),
 total_man_hour int,
 total_price float,
 confirmed_down_time timestamp,
-confirmed_up_time timestamp);
+confirmed_up_time timestamp,
+current_step_name varchar(16));
 
 
 create table work_order_history(
