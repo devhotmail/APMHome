@@ -36,26 +36,26 @@
         <intercept-url pattern="/homeDeptHead**" access="hasAnyRole('SuperAdmin','DeptHead')"/>
         
         <!-- 设备档案 -->
-        <intercept-url pattern="/portal/asset/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStuff')"/> 
+        <intercept-url pattern="/portal/asset/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/> 
         
         <!-- 维修管理 -->
-        <intercept-url pattern="/portal/wo/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStuff')"/> <!-- 维修管理 -->
+        <intercept-url pattern="/portal/wo/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 维修管理 -->
 
         <!-- 设备监控 -->
-        <intercept-url pattern="/portal/analysis/assetStatus**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStuff')"/> <!-- 状态监控 -->
-        <intercept-url pattern="/portal/analysis/assetMaintenance**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','AssetStuff')"/>   <!-- 维修事件统计 -->
-        <intercept-url pattern="/portal/analysis/assetUsage**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','AssetStuff','DeptHead')"/> <!-- 使用情况统计 -->
+        <intercept-url pattern="/portal/analysis/assetStatus**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/> <!-- 状态监控 -->
+        <intercept-url pattern="/portal/analysis/assetMaintenance**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','AssetStaff')"/>   <!-- 维修事件统计 -->
+        <intercept-url pattern="/portal/analysis/assetUsage**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','AssetStaff','DeptHead')"/> <!-- 使用情况统计 -->
         <intercept-url pattern="/portal/analysis/assetScan**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead')"/> <!-- 扫描详情统计 -->
 
         <!-- 预防维护 -->
-        <intercept-url pattern="/portal/insp/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStuff')"/> <!-- 巡检管理 -->
-        <intercept-url pattern="/portal/pm/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStuff')"/> <!-- 保养管理 -->
-        <intercept-url pattern="/portal/metering/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStuff')"/> <!-- 计量管理 -->
-        <intercept-url pattern="/portal/qc/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStuff')"/> <!-- 质控管理 -->
-        <intercept-url pattern="/portal/adverseEvent/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStuff')"/> <!-- 不良事件上报 -->
+        <intercept-url pattern="/portal/insp/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 巡检管理 -->
+        <intercept-url pattern="/portal/pm/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 保养管理 -->
+        <intercept-url pattern="/portal/metering/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 计量管理 -->
+        <intercept-url pattern="/portal/qc/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 质控管理 -->
+        <intercept-url pattern="/portal/adverseEvent/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 不良事件上报 -->
 
         <!-- 知识文档 -->
-        <intercept-url pattern="/portal/asset/fileAttachment/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStuff')"/> <!-- 文档管理 -->
+        <intercept-url pattern="/portal/asset/fileAttachment/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/> <!-- 文档管理 -->
         
         <!-- 绩效分析 -->
         <intercept-url pattern="/portal/analysis/assetPerf**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 绩效分析 -->

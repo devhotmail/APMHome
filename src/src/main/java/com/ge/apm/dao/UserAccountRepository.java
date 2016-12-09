@@ -21,7 +21,7 @@ public interface UserAccountRepository extends GenericRepository<UserAccount> {
     
     //@QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     @Query("select u from UserAccount u, UserRole r where u.hospitalId=?1 and u.id=r.userId and r.roleId=3")
-    List<UserAccount> getUserListByHospitalIdWithAssetStuffRole(int hospitalId);
+    List<UserAccount> getUserListByHospitalIdWithAssetStaffRole(int hospitalId);
     
     Page<UserAccount> getBySiteId(Pageable pageRequest, int siteId);
     Page<UserAccount> getByOrgInfoId(Pageable pageRequest, int orgInfoId);

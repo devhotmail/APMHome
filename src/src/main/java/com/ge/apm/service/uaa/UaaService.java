@@ -65,8 +65,8 @@ public class UaaService {
             url = getDefautHomePage("AssetHead");
         else if(userContextService.hasRole("DeptHead"))
             url = getDefautHomePage("DeptHead");
-        else if(userContextService.hasRole("DeptStuff"))
-            url = getDefautHomePage("DeptStuff");
+        else if(userContextService.hasRole("AssetStaff"))
+            url = getDefautHomePage("AssetStaff");
         else
             url = "/home.xhtml";
         
@@ -360,7 +360,7 @@ public class UaaService {
     }
     public List<UserAccount> getUserListWithAssetStaffRole(int hospitalId){
         UserAccountRepository userAccountDao = WebUtil.getBean(UserAccountRepository.class);
-        return userAccountDao.getUserListByHospitalIdWithAssetStuffRole(hospitalId);
+        return userAccountDao.getUserListByHospitalIdWithAssetStaffRole(hospitalId);
     }
 
     public UserAccount getUserById(int userId){

@@ -78,7 +78,7 @@ public class UserContextService implements Serializable{
         
         if(UserContextService.isLocalAdmin()) return true;
         else if("LocalAdmin".equals(role)) return false;
-
+        System.out.println("************* roles="+UserContext.getRoles());
         return UserContext.getRoles().contains(role);
     }
 

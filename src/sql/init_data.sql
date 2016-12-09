@@ -21,7 +21,7 @@ INSERT INTO "org_info" VALUES ('6', '2', 2, '设备科', 'Asset Dept', '2');
 
 INSERT INTO "public"."sys_role" VALUES ('1', 'HospitalHead', '院长', '/homeHead.xhtml');
 INSERT INTO "public"."sys_role" VALUES ('2', 'AssetHead', '设备科主任', '/homeAssetHead.xhtml');
-INSERT INTO "public"."sys_role" VALUES ('3', 'AssetStuff', '设备科科员', '/homeAssetStuff.xhtml');
+INSERT INTO "public"."sys_role" VALUES ('3', 'AssetStaff', '设备科科员', '/homeAssetStaff.xhtml');
 INSERT INTO "public"."sys_role" VALUES ('4', 'DeptHead', '科室主任', '/homeDeptHead.xhtml');
 INSERT INTO "public"."sys_role" VALUES ('5', 'ITAdmin', 'IT管理员', '/home.xhtml');
 
@@ -35,6 +35,7 @@ INSERT INTO "public"."user_role" VALUES ('1', '2', '1');
 INSERT INTO "public"."user_role" VALUES ('2', '3', '2');
 INSERT INTO "public"."user_role" VALUES ('3', '4', '4');
 INSERT INTO "public"."user_role" VALUES ('4', '5', '5');
+INSERT INTO "public"."user_role" VALUES ('5', '5', '3');
 
 
 INSERT INTO "chart_config" VALUES (1, 'dashboard_pie', 'select * from demo_data where id>=990 ', 't', 'pie', 'type', 'number1', 'number1', '饼图测试', 'e', NULL, 2, 't', 'x Label', NULL, NULL, NULL, NULL, NULL, NULL, 'y Label', NULL, NULL, 't');
@@ -59,7 +60,7 @@ SELECT setval('"site_info_id_seq"', 3, false);
 SELECT setval('"org_info_id_seq"', 7, false);
 SELECT setval('"sys_role_id_seq"', 6, false);
 SELECT setval('"user_account_id_seq"', 6, false);
-SELECT setval('"user_role_id_seq"', 5, false);
+SELECT setval('"user_role_id_seq"', 6, false);
 SELECT setval('"chart_config_id_seq"', 4, false);
 SELECT setval('"data_table_config_id_seq"', 4, false);
 SELECT setval('"field_code_type_id_seq"', 4, false);
