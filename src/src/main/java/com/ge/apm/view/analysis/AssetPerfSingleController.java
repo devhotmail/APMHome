@@ -92,7 +92,7 @@ public class AssetPerfSingleController implements ServerEventInterface {
         bcProfit = new BarChartModel();
         bcProfit.setBarWidth(50);
         bcProfit.setLegendPosition("ne");
-        //bcProfit.setExtender("bcProfit");
+        bcProfit.setExtender("barAnnualRevenue");
         assetDashBoard = new ArrayList<Row>();
 
         hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
