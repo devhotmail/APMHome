@@ -40,7 +40,7 @@
                                          paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true" style="height:95%;"
                                          rowKey="#{item.id}" sortMode="single"  sortOrder="ascending" sortBy="#{item.displayOrder}"
                                          paginatorTemplate="{Toolbar} {CurrentPageReport}" rowIndexVar="rowIndex" emptyMessage="#{msg.noRecordFound}"
-                                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" draggableRows="true" scrollable="true" scrollHeight="300">
+                                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" draggableRows="true" scrollable="true" scrollHeight="290">
 
                                 <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
                                 <p:ajax event="rowReorder" listener="#{inspectionChecklistController.onRowReorder}" update="saveOrder"/>
