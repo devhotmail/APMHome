@@ -16,69 +16,71 @@
 
     <ui:define name="content">
 
+        <header>
+            <div class="card--title text--center">
+                <div class="ui-g">
+                    <div class="ui-g-1">
+                        <h:form id="WorkOrderEditForm" class="text--left">
+                                <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}"
+                                              value="#{assetMaintenanceController.assetName}">
+
+                                    <p:menuitem value="#{msg.selectAssetSingle}"
+                                                actionListener="#{selectAssetController.prepareDialogCallback(assetMaintenanceController, ':WorkOrderEditForm:selAsset')}"
+                                                process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+                                                oncomplete="PF('varSelectAssetDlg').show()"/>
+                                    <p:separator/>
+
+                                    <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
+                                                url="/portal/analysis/assetMaintenanceAll.xhtml"/>
+
+                                </p:menuButton>
+                        </h:form>
+                    </div>
+                    <div class="ui-g-10">
+                        <span class="epsilon">#{msg.maintenanceAnalysis_title}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card--summary ui-g">
+                <div class="ui-lg-3">
+                    <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_reasonTile}</div>
+                    <div class="text--banner u-mt- delta">
+                        <h:outputText id="maintenanceR11" value="#{assetMaintenanceController.topErrorReason}"/>
+                    </div>
+                </div>
+                <div class="ui-lg-3">
+                    <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_stepTile}</div>
+                    <div class="text--banner u-mt- delta">
+                        <h:outputText id="maintenanceR12" value="#{assetMaintenanceController.topErrorStep}"/>
+                    </div>
+                </div>
+                <div class="ui-lg-3">
+                    <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_occurrenceTile}</div>
+                    <div class="text--banner u-mt- delta">
+                        <h:outputText id="maintenanceR15" value="#{assetMaintenanceController.errorCount}"/>
+                    </div>
+                </div>
+            </div>
+        </header>
+
         <div class="ui-g">
             <div class="ui-g-12">
-                <div class="text--center u-mv-">
-                    <span class="epsilon">#{msg.maintenanceAnalysis_title}</span>
-                </div>
-            </div>
-
-            <div class="ui-g-12">
-                <h:form id="WorkOrderEditForm">
-                    <div class="block">
-                        <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetMaintenanceController.assetName}">
-
-                            <p:menuitem value="#{msg.selectAssetSingle}"
-                                        actionListener="#{selectAssetController.prepareDialogCallback(assetMaintenanceController, ':WorkOrderEditForm:selAsset')}"
-                                        process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
-                                        oncomplete="PF('varSelectAssetDlg').show()"/>
-                            <p:separator/>
-
-                            <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
-                                        url="/portal/analysis/assetMaintenanceAll.xhtml"/>
-
-                        </p:menuButton>
+                <div class="block u-pv">
+                    <div class="calendar-range-picker flex flex--row flex--center flex--justify">
+                        <p:calendar id="start_date_button" value="#{assetMaintenanceController.startDate}"
+                                    showOn="button">
+                            <p:ajax event="dateSelect" listener="#{assetMaintenanceController.onStartDateSelect}"
+                                    showOn="button"/>
+                        </p:calendar>
+                        <label>到</label>
+                        <p:calendar id="end_date_button" value="#{assetMaintenanceController.endDate}" showOn="button">
+                            <p:ajax event="dateSelect" listener="#{assetMaintenanceController.onEndDateSelect}"
+                                    showOn="button"/>
+                        </p:calendar>
+                        <p:commandButton value="确定"
+                                         update="maintenanceR11 maintenanceR12 maintenanceR15 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR611 maintenanceR612 maintenanceR613 maintenanceR614 maintenanceR615 maintenanceR62 maintenanceR631 maintenanceR632 maintenanceR633 maintenanceR634 maintenanceR635 maintenanceR64 maintenanceR651 maintenanceR652 maintenanceR653 maintenanceR654 maintenanceR655 maintenanceR66"
+                                         actionListener="#{assetMaintenanceController.submit}"/>
                     </div>
-                </h:form>
-            </div>
-
-            <div class="ui-g-12">
-                <div class="card--summary ui-g">
-                    <div class="ui-lg-3">
-                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_reasonTile}</div>
-                        <div class="text--banner u-mt- gamma">
-                            <h:outputText id="maintenanceR11" value="#{assetMaintenanceController.topErrorReason}"/>
-                        </div>
-                    </div>
-                    <div class="ui-lg-3">
-                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_stepTile}</div>
-                        <div class="text--banner u-mt- gamma">
-                            <h:outputText id="maintenanceR12" value="#{assetMaintenanceController.topErrorStep}"/>
-                        </div>
-                    </div>
-                    <div class="ui-lg-3">
-                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_occurrenceTile}</div>
-                        <div class="text--banner u-mt- gamma">
-                            <h:outputText id="maintenanceR15" value="#{assetMaintenanceController.errorCount}"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ui-g-12">
-                <div class="calendar-range-picker flex flex--row flex--center flex--justify">
-                    <p:calendar id="start_date_button" value="#{assetMaintenanceController.startDate}" showOn="button">
-                        <p:ajax event="dateSelect" listener="#{assetMaintenanceController.onStartDateSelect}"
-                                showOn="button"/>
-                    </p:calendar>
-                    <label>到</label>
-                    <p:calendar id="end_date_button" value="#{assetMaintenanceController.endDate}" showOn="button">
-                        <p:ajax event="dateSelect" listener="#{assetMaintenanceController.onEndDateSelect}"
-                                showOn="button"/>
-                    </p:calendar>
-                    <p:commandButton value="确定"
-                                     update="maintenanceR11 maintenanceR12 maintenanceR15 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR611 maintenanceR612 maintenanceR613 maintenanceR614 maintenanceR615 maintenanceR62 maintenanceR631 maintenanceR632 maintenanceR633 maintenanceR634 maintenanceR635 maintenanceR64 maintenanceR651 maintenanceR652 maintenanceR653 maintenanceR654 maintenanceR655 maintenanceR66"
-                                     actionListener="#{assetMaintenanceController.submit}"/>
                 </div>
             </div>
 

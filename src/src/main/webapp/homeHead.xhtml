@@ -13,39 +13,34 @@
     </ui:define>
 
     <ui:define name="content">
-
+        <header>
+            <div class="card--title text--center">
+                <span class="epsilon">#{msg.HomePageHospitalHead}</span>
+            </div>
+            <div class="card--summary ui-g ui-fluid">
+                <div class="ui-g-12 ui-md-4">
+                    <div class="epsilon u-mv-">#{msg.assetTotalProfit}</div>
+                    <p:outputPanel id="value_scan" header="Device Scan (Times)">
+                        <div class="text--banner delta">
+                            <h:outputText value="#{homeHeadController.totalProfit}"/>
+                            <span class="text--unit text--secondary"></span>
+                        </div>
+                    </p:outputPanel>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <div class="epsilon u-mv-">#{msg.assetTotalProfitForecast}</div>
+                    <p:outputPanel id="value_expo" header="Device Exposure (Hours)">
+                        <div class="text--banner delta">
+                            <h:outputText value="#{homeHeadController.profitForecast}"/>
+                            <span class="text--unit text--secondary"></span>
+                        </div>
+                    </p:outputPanel>
+                </div>
+            </div>
+        </header>
         <div class="ui-g">
             <div class="ui-g-12">
-                <div class="text--center u-mv-">
-                    <span class="epsilon">#{msg.HomePageHospitalHead}</span>
-                </div>
-            </div>
-
-            <div class="ui-g-12">
-                <div class="card--summary ui-g ui-fluid">
-                    <div class="ui-g-12 ui-md-4">
-                        <div class="epsilon u-mv-">#{msg.assetTotalProfit}</div>
-                        <p:outputPanel id="value_scan" header="Device Scan (Times)">
-                            <div class="text--banner delta">
-                                <h:outputText value="#{homeHeadController.totalProfit}"/>
-                                <span class="text--unit text--secondary"></span>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                    <div class="ui-g-12 ui-md-6">
-                        <div class="epsilon u-mv-">#{msg.assetTotalProfitForecast}</div>
-                        <p:outputPanel id="value_expo" header="Device Exposure (Hours)">
-                            <div class="text--banner delta">
-                                <h:outputText value="#{homeHeadController.profitForecast}"/>
-                                <span class="text--unit text--secondary"></span>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ui-g-12">
-                <div class="block">
+                <div class="block u-pv-">
                     <h:form>
                         <p:selectOneMenu id="selectedYear" value="#{homeHeadController.selectedYear}">
                             <p:ajax listener="#{homeHeadController.onSelectedYearChange}"
@@ -55,7 +50,6 @@
                     </h:form>
                 </div>
             </div>
-
             <div class="ui-g-12">
                 <div class="block">
                     <h3 class="block-title">#{msg.assetAveROI}</h3>
@@ -70,19 +64,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="ui-g-12">
-                    <div class="block">
-                        <h3 class="block-title">#{msg.assetAnnual}</h3>
-                        <p:chart id="barMonthlyRevenue" type="bar" model="#{homeHeadController.barMonthlyRevenue}"
-                                 style="height:300px" responsive="true"/>
-                    </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="block">
+                    <h3 class="block-title">#{msg.assetAnnual}</h3>
+                    <p:chart id="barMonthlyRevenue" type="bar" model="#{homeHeadController.barMonthlyRevenue}"
+                             style="height:300px" responsive="true"/>
                 </div>
-                <div class="ui-g-12">
-                    <div class="block">
-                        <h3 class="block-title">#{msg.assetAnnualForecast}</h3>
-                        <p:chart id="barForecast" type="bar" model="#{homeHeadController.barMonthlyForecast}"
-                                 style="height:300px" responsive="true"/>
-                    </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="block">
+                    <h3 class="block-title">#{msg.assetAnnualForecast}</h3>
+                    <p:chart id="barForecast" type="bar" model="#{homeHeadController.barMonthlyForecast}"
+                             style="height:300px" responsive="true"/>
                 </div>
             </div>
         </div>

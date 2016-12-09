@@ -13,83 +13,83 @@
     </ui:define>
 
     <ui:define name="content">
-
-        <h:form id="WorkOrderEditForm" styleClass="ui-g">
-            <div class="ui-g-2">
-                <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetPerfSingleController.assetName}">
-                    <p:menuitem value="#{msg.selectAssetSingle}"
-                                actionListener="#{selectAssetController.prepareDialogCallback(assetPerfSingleController, ':WorkOrderEditForm:selAsset')}"
-                                process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
-                                oncomplete="PF('varSelectAssetDlg').show()"/>
-                    <p:separator/>
-
-                    <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
-                                url="/portal/analysis/assetPerfAll.xhtml"/>
-                </p:menuButton>
-            </div>
-            <div class="ui-g-10">
-                <div class="text--center u-mv-">
-                    <span class="epsilon">#{msg.devicePerfhd}</span>
-                </div>
-            </div>
-        </h:form>
-
-
-        <h:form id="TopValueForm" styleClass="ui-g">
-            <div class="ui-g-12">
-                <div class="card--summary ui-g ui-fluid">
-                    <div class="ui-g-12 ui-md-4">
-                        <div class="epsilon u-mv-">#{msg.deviceValueRevenuehd}</div>
-                        <p:outputPanel id="value_profit">
-                            <div class="text--banner delta">
-                                <h:outputText value="#{assetPerfSingleController.valueProfit}"/>
-                            </div>
-                        </p:outputPanel>
+        <header>
+            <div class="card--title text--center">
+                <div class="ui-g">
+                    <div class="ui-g-1">
+                        <h:form id="WorkOrderEditForm" class="text--left">
+                            <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}"
+                                          value="#{assetPerfSingleController.assetName}">
+                                <p:menuitem value="#{msg.selectAssetSingle}"
+                                            actionListener="#{selectAssetController.prepareDialogCallback(assetPerfSingleController, ':WorkOrderEditForm:selAsset')}"
+                                            process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+                                            oncomplete="PF('varSelectAssetDlg').show()"/>
+                                <p:separator/>
+                                <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
+                                            url="/portal/analysis/assetPerfAll.xhtml"/>
+                            </p:menuButton>
+                        </h:form>
                     </div>
-                    <div class="ui-g-12 ui-md-4">
-                        <div class="epsilon u-mv-">#{msg.deviceValueRevenuehd}</div>
-                        <p:outputPanel id="value_revenue">
-                            <div class="text--banner delta">
-                                <h:outputText value="#{assetPerfSingleController.valueRevenue}"/>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                    <div class="ui-g-12 ui-md-4">
-                        <div class="epsilon u-mv-">#{msg.deviceValueCosthd}</div>
-                        <p:outputPanel id="value_cost">
-                            <div class="text--banner delta">
-                                <h:outputText value="#{assetPerfSingleController.valueCost}"/>
-                            </div>
-                        </p:outputPanel>
+                    <div class="ui-g-10">
+                        <span class="epsilon">#{msg.devicePerfhd}</span>
                     </div>
                 </div>
             </div>
-
-            <div class="ui-g-12">
-                <p:selectOneMenu id="selectedYear" value="#{assetPerfSingleController.selectedYear}">
-                    <p:ajax listener="#{assetPerfSingleController.submit(assetPerfSingleController.selectedYear)}"
-                            update="TopValueForm BarChartForm AssetInfoListForm"/>
-                    <f:selectItems value="#{assetPerfSingleController.yearList}"/>
-                </p:selectOneMenu>
+            <div class="card--summary">
+                <h:form id="TopValueForm">
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="epsilon u-mv-">#{msg.deviceValueRevenuehd}</div>
+                            <p:outputPanel id="value_profit">
+                                <div class="text--banner delta">
+                                    <h:outputText value="#{assetPerfSingleController.valueProfit}"/>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="epsilon u-mv-">#{msg.deviceValueRevenuehd}</div>
+                            <p:outputPanel id="value_revenue">
+                                <div class="text--banner delta">
+                                    <h:outputText value="#{assetPerfSingleController.valueRevenue}"/>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="epsilon u-mv-">#{msg.deviceValueCosthd}</div>
+                            <p:outputPanel id="value_cost">
+                                <div class="text--banner delta">
+                                    <h:outputText value="#{assetPerfSingleController.valueCost}"/>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+                    </div>
+                </h:form>
             </div>
-        </h:form>
-
+        </header>
         <div class="ui-g">
-            
             <div class="ui-g-12">
-            <h:form id="BarChartForm">
                 <div class="block">
-                    <h3 class="block-title">#{msg.assetAnnual}</h3>
-                    <p:chart id="roi_bar" type="bar"
-                        model="#{assetPerfSingleController.bcProfit}" responsive="true" />
+                    <p:selectOneMenu id="selectedYear" value="#{assetPerfSingleController.selectedYear}">
+                        <p:ajax listener="#{assetPerfSingleController.submit(assetPerfSingleController.selectedYear)}"
+                                update="TopValueForm BarChartForm AssetInfoListForm"/>
+                        <f:selectItems value="#{assetPerfSingleController.yearList}"/>
+                    </p:selectOneMenu>
                 </div>
-            </h:form>
             </div>
-            
 
             <div class="ui-g-12">
-                    <h3 class="block-title">#{msg.assetsDashboardhd}</h3>
+                <h:form id="BarChartForm">
                     <div class="block">
+                        <h3 class="block-title">#{msg.assetAnnual}</h3>
+                        <p:chart id="roi_bar" type="bar"
+                                 model="#{assetPerfSingleController.bcProfit}" responsive="true"/>
+                    </div>
+                </h:form>
+            </div>
+            
+            <div class="ui-g-12">
+                    <div class="block">
+                        <h3 class="block-title">#{msg.assetsDashboardhd}</h3>
                         <h:form id="GroupByForm" styleClass="ui-g">
                         <p:tabMenu id="tabMenu" activeIndex="#{assetPerfSingleController.activeTab}" >
                             <p:menuitem value="Day"

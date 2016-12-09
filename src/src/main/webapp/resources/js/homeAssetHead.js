@@ -2,7 +2,7 @@ function skinBar() {
   $.extend(true/*recursive*/, this.cfg, {
     shadow: false,
     title: '',
-    height: 120,
+    height: 100,
     seriesColors: ['rgba(93, 165, 218, 1)'],
     animate: !$.jqplot.use_excanvas,
     grid: {

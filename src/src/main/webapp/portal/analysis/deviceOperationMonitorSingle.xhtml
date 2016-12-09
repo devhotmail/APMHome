@@ -14,56 +14,69 @@
 
     <ui:define name="content">
         <h:form>
-            <div class="ui-g">
-                <div class="ui-g-12">
-                    <div class="ui-g-1">
-                        <p:menuButton id="menuButton" value="#{deviceOperationMonitorController.assetGroups.get(deviceOperationMonitorController.selectedGroupId)}">
-                            <p:menuitem value="CT" actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('1')}" update="@form"/>
-                            <p:menuitem value="MR" actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('2')}" update="@form"/>
-                            <p:menuitem value="XRay" actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('3')}" update="@form"/>
-                            <p:menuitem value="DR" actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('4')}" update="@form"/>
-                            <p:separator />
-                            <p:menuitem value="全部设备" url="/portal/analysis/deviceOperationMonitorAll.xhtml"/>
-                        </p:menuButton>
-                    </div>
-                    <div class="ui-g-11">
-                        <div class="text--center u-mv-">
+            <header>
+                <div class="card--title text--center">
+                    <div class="ui-g">
+                        <div class="ui-g-1">
+                            <div class="text--left">
+                                <p:menuButton id="menuButton"
+                                              value="#{deviceOperationMonitorController.assetGroups.get(deviceOperationMonitorController.selectedGroupId)}">
+                                    <p:menuitem value="CT"
+                                                actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('1')}"
+                                                update="@form"/>
+                                    <p:menuitem value="MR"
+                                                actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('2')}"
+                                                update="@form"/>
+                                    <p:menuitem value="XRay"
+                                                actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('3')}"
+                                                update="@form"/>
+                                    <p:menuitem value="DR"
+                                                actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('4')}"
+                                                update="@form"/>
+                                    <p:separator/>
+                                    <p:menuitem value="全部设备" url="/portal/analysis/deviceOperationMonitorAll.xhtml"/>
+                                </p:menuButton>
+                            </div>
+                        </div>
+                        <div class="ui-g-10">
                             <span class="epsilon">#{msg.deviceOperationMonitor}</span>
                         </div>
                     </div>
                 </div>
-
-                <div class="ui-g-12">
-                    <div class="card--summary ui-g">
-                        <div class="ui-lg-4">
+                <div class="card--summary">
+                    <div class="ui-g">
+                        <div class="ui-lg-2">
                             <div class="epsilon u-mv-">检查部位总数</div>
                             <p:outputPanel id="value_scan">
-                                <div class="text--banner u-mt- gamma">
+                                <div class="text--banner u-mt- delta">
                                     <h:outputText value="#{deviceOperationMonitorController.totalExamCount}"/>
                                     <span class="text--unit text--secondary">个</span>
                                 </div>
                             </p:outputPanel>
                         </div>
-                        <div class="ui-lg-8">
+                        <div class="ui-lg-10">
                             <p:chart id="statusBar" widgetVar="topBar" class="chart-device-stat horizontal" type="bar"
                                      model="#{deviceOperationMonitorController.topBar}"
-                                     style="height:100px"
                                      responsive="true"/>
                         </div>
                     </div>
                 </div>
+            </header>
 
+            <div class="ui-g">
                 <div class="ui-g-12">
-                    <p:growl id="messages" showDetail="true"/>
-                    <div class="calendar-range-picker flex flex--row flex--center flex--justify">
-                        <p:calendar id="start_date_button" value="#{deviceOperationMonitorController.startDate}"
-                                    showOn="button"/>
-                        <label>到</label>
-                        <p:calendar id="end_date_button" value="#{deviceOperationMonitorController.endDate}"
-                                    showOn="button"/>
-                        <p:commandButton id="submit_date" class="btn btn--large" value="确定"
-                                         actionListener="#{deviceOperationMonitorController.renderFormBySelectDate()}"
-                                         update="@form"/>
+                    <div class="block u-pv">
+                        <p:growl id="messages" showDetail="true"/>
+                        <div class="calendar-range-picker flex flex--row flex--center flex--justify">
+                            <p:calendar id="start_date_button" value="#{deviceOperationMonitorController.startDate}"
+                                        showOn="button"/>
+                            <label>到</label>
+                            <p:calendar id="end_date_button" value="#{deviceOperationMonitorController.endDate}"
+                                        showOn="button"/>
+                            <p:commandButton id="submit_date" class="btn btn--large" value="确定"
+                                             actionListener="#{deviceOperationMonitorController.renderFormBySelectDate()}"
+                                             update="@form"/>
+                        </div>
                     </div>
                 </div>
 

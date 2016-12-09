@@ -51,14 +51,13 @@
       shadow: false,
       lineWidth: 1,
       rendererOptions: {
-        highlightMouseOver: true,
+        highlightMouseOver: false,
         barWidth: 20,
         barPadding: 1,
         barMargin: 1,
         animation: {
           speed: 1500
-        },
-        highlightMouseOver: false
+        }
       },
       markerOptions: {
         shadow: false,
@@ -112,7 +111,8 @@
           }
         },
         rendererOptions: {
-          barWidth: 50,
+          highlightMouseOver: false,
+          barWidth: 40,
           animation: {
             speed: 1500
           },

@@ -15,57 +15,67 @@
     <ui:define name="content">
         <h:form>
             <p:growl id="messages" showDetail="true"/>
-
-            <div class="header">我的工单管理</div>
-
-            <div class="event-counts u-p flex">
-              <div class="flex__item"></div>
-              <div class="flex__item"></div>
-              <div class="flex__item" style="text-align:center">
-                <div class="event-count event-type-1">
-                  #{woScheduleController.inspNum}
+            <header>
+                <div class="card--title text--center">
+                    <span class="epsilon">我的工单管理</span>
                 </div>
-                <div>巡检</div>
-              </div>
-              <div class="flex__item" style="text-align:center">
-                <div class="event-count event-type-2">
-                  #{woScheduleController.meterNum}
+                <div class="card--summary">
+                    <div class="u-p flex flex--row">
+                        <div class="flex__item"></div>
+                        <div class="flex__item"></div>
+                        <div class="flex__item" style="text-align:center">
+                            <div class="event-count event-type-1">
+                                #{woScheduleController.inspNum}
+                            </div>
+                            <div>巡检</div>
+                        </div>
+                        <div class="flex__item" style="text-align:center">
+                            <div class="event-count event-type-2">
+                                #{woScheduleController.meterNum}
+                            </div>
+                            <div>计量</div>
+                        </div>
+                        <div class="flex__item" style="text-align:center">
+                            <div class="event-count event-type-3">
+                                #{woScheduleController.qaNum}
+                            </div>
+                            <div>质控</div>
+                        </div>
+                        <div class="flex__item" style="text-align:center">
+                            <div class="event-count event-type-4">
+                                #{woScheduleController.mtMum}
+                            </div>
+                            <div>维修</div>
+                        </div>
+                        <div class="flex__item" style="text-align:center">
+                            <div class="event-count event-type-5">
+                                #{woScheduleController.pmNum}
+                            </div>
+                            <div>保养</div>
+                        </div>
+                        <div class="flex__item"></div>
+                        <div class="flex__item"></div>
+                    </div>
                 </div>
-                <div>计量</div>
-              </div>
-              <div class="flex__item" style="text-align:center">
-                <div class="event-count event-type-3">
-                  #{woScheduleController.qaNum}
-                </div>
-                <div>质控</div>
-              </div>
-              <div class="flex__item" style="text-align:center">
-                <div class="event-count event-type-4">
-                  #{woScheduleController.mtMum}
-                </div>
-                <div>维修</div>
-              </div>
-              <div class="flex__item" style="text-align:center">
-                <div class="event-count event-type-5">
-                  #{woScheduleController.pmNum}
-                </div>
-                <div>保养</div>
-              </div>
-              <div class="flex__item"></div>
-              <div class="flex__item"></div>
-            </div>
-
-            <div class="calendar">
-                <p:schedule id="schedule" value="#{woScheduleController.model}"
-                    widgetVar="myschedule" timeZone="GMT+8" tooltip="true" timeFormat="HH:mm"
-                    leftHeaderTemplate="prev,today,next" centerHeaderTemplate="title" rightHeaderTemplate="">
-                </p:schedule>
-                <div class="calendar-footer">
-                  <span class="u-m status status--1">巡检</span>
-                  <span class="u-m status status--2">质控</span>
-                  <span class="u-m status status--3">计量</span>
-                  <span class="u-m status status--4">维修</span>
-                  <span class="u-m status status--5">保养</span>
+            </header>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="block">
+                        <div class="calendar">
+                            <p:schedule id="schedule" value="#{woScheduleController.model}"
+                                        widgetVar="myschedule" timeZone="GMT+8" tooltip="true" timeFormat="HH:mm"
+                                        leftHeaderTemplate="prev,today,next" centerHeaderTemplate="title"
+                                        rightHeaderTemplate="">
+                            </p:schedule>
+                            <div class="calendar-footer">
+                                <span class="u-m status status--1">巡检</span>
+                                <span class="u-m status status--2">质控</span>
+                                <span class="u-m status status--3">计量</span>
+                                <span class="u-m status status--4">维修</span>
+                                <span class="u-m status status--5">保养</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </h:form>

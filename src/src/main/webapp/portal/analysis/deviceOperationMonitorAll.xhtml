@@ -12,66 +12,72 @@
 
     <ui:define name="content">
         <h:form>
-            <div class="ui-g">
-                <div class="ui-g-12">
-                    <div class="ui-g-1">
-                        <p:menuButton id="menuButton" value="全部设备">
-                            <p:menuitem value="CT"
-                                        url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=1"/>
-                            <p:menuitem value="MR"
-                                        url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=2"/>
-                            <p:menuitem value="XRay"
-                                        url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=3"/>
-                            <p:menuitem value="DR"
-                                        url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=4"/>
-                            <p:separator/>
-                            <p:menuitem value="全部设备" url="/portal/analysis/deviceOperationMonitorAll.xhtml"/>
-                        </p:menuButton>
-                    </div>
-                    <div class="ui-g-11">
-                        <div class="text--center u-mv-">
+            <header>
+                <div class="card--title text--center">
+                    <div class="ui-g">
+                        <div class="ui-g-1">
+                            <div class="text--left">
+                                <p:menuButton id="menuButton" value="全部设备">
+                                    <p:menuitem value="CT"
+                                                url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=1"/>
+                                    <p:menuitem value="MR"
+                                                url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=2"/>
+                                    <p:menuitem value="XRay"
+                                                url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=3"/>
+                                    <p:menuitem value="DR"
+                                                url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=4"/>
+                                    <p:separator/>
+                                    <p:menuitem value="全部设备" url="/portal/analysis/deviceOperationMonitorAll.xhtml"/>
+                                </p:menuButton>
+                            </div>
+                        </div>
+                        <div class="ui-g-10">
                             <span class="epsilon">#{msg.deviceOperationMonitor}</span>
                         </div>
                     </div>
                 </div>
-
-                <div class="ui-g-12">
-                    <div class="card--summary ui-g">
-                        <div class="ui-lg-4">
+                <div class="card--summary">
+                    <div class="ui-g">
+                        <div class="ui-lg-2">
                             <div class="epsilon u-mv-">检查部位总数</div>
                             <p:outputPanel id="value_scan">
-                                <div class="text--banner u-mt- gamma">
+                                <div class="text--banner u-mt- delta">
                                     <h:outputText value="#{deviceOperationMonitorController.totalExamAllCount}"/>
                                     <span class="text--unit text--secondary">个</span>
                                 </div>
                             </p:outputPanel>
                         </div>
-                        <div class="ui-lg-8">
+                        <div class="ui-lg-10">
                             <p:chart id="statusBar" widgetVar="topBar" class="chart-device-stat horizontal" type="bar"
                                      model="#{deviceOperationMonitorController.topBarAll}"
                                      responsive="true"/>
                         </div>
                     </div>
                 </div>
+            </header>
 
+            <div class="ui-g">
                 <div class="ui-g-12">
-                    <p:growl id="messages" showDetail="true"/>
-                    <div class="calendar-range-picker flex flex--row flex--center flex--justify">
-                        <p:calendar id="start_date_button" value="#{deviceOperationMonitorController.startDate}"
-                                    showOn="button"/>
-                        <label>到</label>
-                        <p:calendar id="end_date_button" value="#{deviceOperationMonitorController.endDate}"
-                                    showOn="button"/>
-                        <p:commandButton id="submit_date" class="btn btn--large" value="确定"
-                                         actionListener="#{deviceOperationMonitorController.renderFormBySelectDate()}"
-                                         update="@form"/>
+                    <div class="block u-pv">
+                        <p:growl id="messages" showDetail="true"/>
+                        <div class="calendar-range-picker flex flex--row flex--center flex--justify">
+                            <p:calendar id="start_date_button" value="#{deviceOperationMonitorController.startDate}"
+                                        showOn="button"/>
+                            <label>到</label>
+                            <p:calendar id="end_date_button" value="#{deviceOperationMonitorController.endDate}"
+                                        showOn="button"/>
+                            <p:commandButton id="submit_date" class="btn btn--large" value="确定"
+                                             actionListener="#{deviceOperationMonitorController.renderFormBySelectDate()}"
+                                             update="@form"/>
+                        </div>
                     </div>
                 </div>
 
                 <div class="ui-g-12">
                     <div class="block">
                         <h3 class="block-title">设备检查部位统计</h3>
-                        <p:chart id="middleBar" class="chart-device-stat-bypart" type="bar" model="#{deviceOperationMonitorController.middleBar}" responsive="true"/>
+                        <p:chart id="middleBar" class="chart-device-stat-bypart" type="bar"
+                                 model="#{deviceOperationMonitorController.middleBar}" responsive="true"/>
                     </div>
                 </div>
 
@@ -112,7 +118,8 @@
                             <div class="ui-xl-3 ui-lg-6 divide-line-right">
                                 <div class="flex flex--row flex--center">
                                     <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomXrayBarTitle}</p>
+                                        <p class="text--center">
+                                            ${deviceOperationMonitorController.bottomXrayBarTitle}</p>
                                         <ui:include src="bodyModel.xhtml"/>
                                     </div>
                                     <div>

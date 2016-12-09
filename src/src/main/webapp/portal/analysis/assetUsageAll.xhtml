@@ -12,37 +12,36 @@
 	</ui:define>
 
 	<ui:define name="content">
-        <h:form id="WorkOrderEditForm">
-		<div class="ui-g">
+		<header>
+			<div class="card--title text--center">
+				<div class="ui-g">
+					<div class="ui-g-1">
+						<h:form id="WorkOrderEditForm" class="text--left">
+							<p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}"
+										  value="#{assetUsageAllController.assetName}">
 
-			<div class="ui-g-12">
-				<div class="text--center u-mv-">
-					<span class="epsilon">#{msg.DeviceUtilizationAnalysis}</span>
+								<p:menuitem value="#{msg.selectAssetSingle}"
+											actionListener="#{selectAssetController.prepareDialogCallback(assetUsageAllController, ':WorkOrderEditForm:selAsset')}"
+											process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+											oncomplete="PF('varSelectAssetDlg').show()"/>
+								<p:separator/>
+
+								<p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"/>
+
+							</p:menuButton>
+						</h:form>
+					</div>
+					<div class="ui-g-10">
+						<span class="epsilon">#{msg.DeviceUtilizationAnalysis}</span>
+					</div>
 				</div>
 			</div>
-
-                <div class="ui-g-12">
-                    <div class="block">
-                        <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetUsageAllController.assetName}">
-
-                            <p:menuitem value="#{msg.selectAssetSingle}" actionListener="#{selectAssetController.prepareDialogCallback(assetUsageAllController, ':WorkOrderEditForm:selAsset')}"
-								process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
-								oncomplete="PF('varSelectAssetDlg').show()"/>
-                            <p:separator/>
-
-                            <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"/>
-                            
-                        </p:menuButton>
-                    </div>
-                </div>
-
-
-			<div class="ui-g-12">
-				<div class="card--summary ui-g ui-fluid">
+			<div class="card--summary">
+				<div class="ui-g">
 					<div class="ui-md-6 ui-lg-3">
 						<div class="epsilon u-mv-">#{msg.deviceScanStat}</div>
 						<p:outputPanel id="value_scan">
-							<div class="text--banner u-mt+ gamma">
+							<div class="text--banner u-mt+ delta">
 								<h:outputText value="#{assetUsageAllController.valueScan}"/>
 								<span class="text--unit text--secondary"></span>
 							</div>
@@ -51,7 +50,7 @@
 					<div class="ui-md-6 ui-lg-3">
 						<div class="epsilon u-mv-">#{msg.deviceExpoStat}</div>
 						<p:outputPanel id="value_expo">
-							<div class="text--banner u-mt+ gamma">
+							<div class="text--banner u-mt+ delta">
 								<h:outputText value="#{assetUsageAllController.valueExpo}"/>
 								<span class="text--unit text--secondary"></span>
 							</div>
@@ -63,7 +62,7 @@
 							<div class="ui-md-4">
 								<div class="epsilon u-mb--">#{msg.deviceUsageStat_1}</div>
 								<p:outputPanel id="value_usage_1">
-									<div class="text--banner delta">
+									<div class="text--banner epsilon">
 										<h:outputText value="#{assetUsageAllController.valueWait}"/>
 										<span class="text--unit text--secondary"></span>
 									</div>
@@ -72,7 +71,7 @@
 							<div class="ui-md-4">
 								<div class="epsilon u-mb--">#{msg.deviceUsageStat_2}</div>
 								<p:outputPanel id="value_usage_2">
-									<div class="text--banner delta">
+									<div class="text--banner epsilon">
 										<h:outputText value="#{assetUsageAllController.valueInuse}"/>
 										<span class="text--unit text--secondary"></span>
 									</div>
@@ -81,34 +80,36 @@
 							<div class="ui-md-4">
 								<div class="epsilon u-mb--">#{msg.deviceUsageStat_3}</div>
 								<p:outputPanel id="value_usage_3">
-									<div class="text--banner delta">
+									<div class="text--banner epsilon">
 										<h:outputText value="#{assetUsageAllController.valueDT}"/>
 										<span class="text--unit text--secondary"></span>
 									</div>
 								</p:outputPanel>
 							</div>
 						</div>
-						<p:chart widgetVar="deviceStat" class="chart-device-stat" id="value_usage_bar" type="bar"
-								 model="#{assetUsageAllController.deviceStat}" />
+						<p:chart widgetVar="deviceStat" class="chart-device-stat" id="value_usage_bar" type="bar" model="#{assetUsageAllController.deviceStat}"/>
 					</div>
 				</div>
 			</div>
+		</header>
 
-
-				<p:growl id="calendar_submit" showDetail="true"/>
-				<div class="ui-g-12">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="block">
+					<p:growl id="calendar_submit" showDetail="true"/>
 					<div class="calendar-range-picker flex flex--row flex--center flex--justify">
-						<p:calendar id="start_date_button" value="#{assetUsageAllController.startDate}" showOn="button"/>
+						<p:calendar id="start_date_button" value="#{assetUsageAllController.startDate}"
+									showOn="button"/>
 						<label>到</label>
-						<p:calendar id="end_date_button" value="#{assetUsageAllController.endDate}" showOn="button"/>
+						<p:calendar id="end_date_button" value="#{assetUsageAllController.endDate}"
+									showOn="button"/>
 						<label> </label>
 						<p:commandButton id="submit_date" class="btn btn--large" value="确定"
 										 update="calendar_submit value_scan value_expo value_usage_1 value_usage_2 value_usage_3 value_usage_bar scan_bar exposure_bar usage_bar dt_bar"
 										 actionListener="#{assetUsageAllController.submit}"/>
 					</div>
 				</div>
-
-
+			</div>
 
 			<!-- Chart 1: Device Scan -->
 			<div class="ui-g-12">
@@ -142,9 +143,7 @@
 					<p:chart id="dt_bar" type="bar" model="#{assetUsageAllController.deviceDT}" responsive="true" />
 				</div>
 			</div>
-
 		</div>
-        </h:form>
 
 		<ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
 	</ui:define>

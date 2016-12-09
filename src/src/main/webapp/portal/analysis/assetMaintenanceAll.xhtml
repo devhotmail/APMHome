@@ -11,62 +11,63 @@
     </ui:define>
 
     <ui:define name="content">
-        <div class="ui-g">
-            <div class="ui-g-12">
-                <div class="text--center u-mv-">
-                    <span class="epsilon">#{msg.maintenanceAnalysis_title}</span>
+        <header>
+            <div class="card--title text--center">
+                <div class="ui-g">
+                    <div class="ui-g-1">
+                        <h:form id="WorkOrderEditForm" class="text--left">
+                            <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}"
+                                          value="#{assetMaintenanceController.assetName}">
+
+                                <p:menuitem value="#{msg.selectAssetSingle}"
+                                            actionListener="#{selectAssetController.prepareDialogCallback(assetMaintenanceController, ':WorkOrderEditForm:selAsset')}"
+                                            process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+                                            oncomplete="PF('varSelectAssetDlg').show()"/>
+                                <p:separator/>
+
+                                <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"/>
+
+                            </p:menuButton>
+                        </h:form>
+                    </div>
+                    <div class="ui-g-10">
+                        <span class="epsilon">#{msg.maintenanceAnalysis_title}</span>
+                    </div>
                 </div>
             </div>
-
-            <div class="ui-g-12">
-                <h:form id="WorkOrderEditForm">
-                    <div class="block">
-                        <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetMaintenanceController.assetName}">
-
-                            <p:menuitem value="#{msg.selectAssetSingle}"
-                                        actionListener="#{selectAssetController.prepareDialogCallback(assetMaintenanceController, ':WorkOrderEditForm:selAsset')}"
-                                        process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
-                                        oncomplete="PF('varSelectAssetDlg').show()"/>
-                            <p:separator/>
-
-                            <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"/>
-
-                        </p:menuButton>
-                    </div>
-                </h:form>
-            </div>
-
-            <div class="ui-g-12">
-                <div class="card--summary ui-g">
+            <div class="card--summary">
+                <div class="ui-g">
                     <div class="ui-lg-3">
                         <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_reasonTile}</div>
-                        <div class="text--banner u-mt- gamma">
+                        <div class="text--banner u-mt- delta">
                             <h:outputText id="maintenanceR11" value="#{assetMaintenanceController.topErrorReason}"/>
                         </div>
                     </div>
                     <div class="ui-lg-3">
                         <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_stepTile}</div>
-                        <div class="text--banner u-mt- gamma">
+                        <div class="text--banner u-mt- delta">
                             <h:outputText id="maintenanceR12" value="#{assetMaintenanceController.topErrorStep}"/>
                         </div>
                     </div>
                     <div class="ui-lg-3">
                         <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_roomTile}</div>
-                        <div class="text--banner u-mt- gamma">
+                        <div class="text--banner u-mt- delta">
                             <h:outputText id="maintenanceR13" value="#{assetMaintenanceController.topErrorRoom}"/>
                         </div>
                     </div>
                     <div class="ui-lg-3">
                         <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_categoryTile}</div>
-                        <div class="text--banner u-mt- gamma">
+                        <div class="text--banner u-mt- delta">
                             <h:outputText id="maintenanceR14" value="#{assetMaintenanceController.topErrorDeviceType}"/>
                         </div>
                     </div>
                 </div>
             </div>
+        </header>
 
+        <div class="ui-g">
             <div class="ui-g-12">
-                <h:form>
+                <h:form class="block u-pv-">
                     <div class="calendar-range-picker flex flex--row flex--center flex--justify">
                         <p:calendar id="start_date_button" value="#{assetMaintenanceController.startDate}" showOn="button"/>
                         <label>到</label>

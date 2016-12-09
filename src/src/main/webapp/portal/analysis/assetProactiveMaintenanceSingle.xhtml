@@ -16,32 +16,34 @@
 
     <ui:define name="content">
 
-        <div class="ui-g">
-            <div class="ui-g-12">
-                <div class="text--center u-mv-">
-                    <span class="epsilon">#{msg.preventiveMaintenanceAnalysis_title}</span>
+        <header>
+            <div class="card--title text--center">
+                <div class="ui-g">
+                    <div class="ui-g-1">
+                        <h:form id="WorkOrderEditForm">
+                            <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}"
+                                          value="#{assetProactiveMaintenanceController.assetName}">
+
+                                <p:menuitem value="#{msg.selectAssetSingle}"
+                                            actionListener="#{selectAssetController.prepareDialogCallback(assetProactiveMaintenanceController, ':WorkOrderEditForm:selAsset')}"
+                                            process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+                                            oncomplete="PF('varSelectAssetDlg').show()"/>
+                                <p:separator/>
+
+                                <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
+                                            url="/portal/analysis/assetProactiveMaintenanceAll.xhtml"/>
+
+                            </p:menuButton>
+                        </h:form>
+                    </div>
+                    <div class="ui-g-10">
+                        <span class="epsilon">#{msg.preventiveMaintenanceAnalysis_title}</span>
+                    </div>
                 </div>
             </div>
+        </header>
 
-            <div class="ui-g-12">
-                <h:form id="WorkOrderEditForm">
-                    <div class="block">
-                        <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}" value="#{assetProactiveMaintenanceController.assetName}">
-
-                            <p:menuitem value="#{msg.selectAssetSingle}"
-                                        actionListener="#{selectAssetController.prepareDialogCallback(assetProactiveMaintenanceController, ':WorkOrderEditForm:selAsset')}"
-                                        process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
-                                        oncomplete="PF('varSelectAssetDlg').show()"/>
-                            <p:separator/>
-
-                            <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
-                                        url="/portal/analysis/assetProactiveMaintenanceAll.xhtml"/>
-
-                        </p:menuButton>
-                    </div>
-                </h:form>
-            </div>
-
+        <div class="ui-g">
             <div class="ui-g-12">
                 <div class="block">
                     <h3 class="block-title">#{msg.preventiveMaintenanceAnalysis_planChart}</h3>

@@ -14,125 +14,132 @@
 
     <ui:define name="content">
         <h:form>
+            <header>
+                <div class="card--title text--center">
+                    <span class="epsilon">#{msg.HomePageAssetHead}</span>
+                </div>
+                <div class="card--summary">
+                    <p:chart id="statusBar" type="bar" model="#{homeAssetHeadController.barModel}" responsive="true"/>
+                </div>
+            </header>
 
             <div class="ui-g ui-fluid">
                 <div class="ui-g-12">
-                    <div class="text--center u-mv+">
-                        <span class="epsilon">#{msg.HomePageAssetHead}</span>
-                    </div>
-                </div>
-
-                <div class="ui-g-12" style="text-align: center">
-                    <div class="card--summary">
-                        <p:chart id="statusBar" type="bar" model="#{homeAssetHeadController.barModel}" responsive="true"/>
-                    </div>
-                </div>
-
-                <div class="ui-g-12">
-                    <div class="card--device-status">
-                        <div><span class="overview-title"><b>设备状态</b></span></div>
-                        <br/>
-                        <div class="ui-g">
-
-                            <a href="./portal/wo/woList.xhtml?isClosed=false"
-                               class="ui-g-4 ui-md-6 ui-lg-4 block">
-                                <p class="epsilon">维修中</p>
-                                <p class="epsilon text--secondary">维修流程</p>
-                                <ul class="list-inline list-bare">
-                                    <ui:repeat value="#{homeAssetHeadController.stepCounts.entrySet().toArray()}"
-                                               var="entry"
-                                               varStatus="status">
-                                        <li>
-                                            <span class="status status--#{status.index+1}">#{entry.key}</span><span>(#{entry.value})</span>
-                                        </li>
-                                    </ui:repeat>
-                                </ul>
-                                <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInMt}</h1>
-                                <div class="block-footer">
-                                    <ui:repeat value="#{homeAssetHeadController.assetsInMt}" var="asset">
-                                        <p>#{asset.asset}</p>
-                                        <ul class="list-inline list-bare layout layout--middle layout--center">
-                                            <li class="layout__item u-1/2">维修流程:<span
-                                                    class="status status--#{asset.stepId}"/>#{asset.stepName}
-                                            </li>
-                                            <li class="layout__item u-1/2">维修人:<span/>#{asset.owner}</li>
+                    <div class="block">
+                        <h3 class="block-title">设备状态</h3>
+                        <div class="card--device-status">
+                            <div class="ui-g">
+                                <div class="ui-g-4 ui-md-6 ui-lg-4">
+                                    <a href="./portal/wo/woList.xhtml?isClosed=false" class="block">
+                                        <p class="epsilon">维修中</p>
+                                        <p class="epsilon text--secondary">维修流程</p>
+                                        <ul class="list-inline list-bare">
+                                            <ui:repeat
+                                            value="#{homeAssetHeadController.stepCounts.entrySet().toArray()}"
+                                            var="entry"
+                                            varStatus="status">
+                                                <li>
+                                                    <span
+                                                    class="status status--#{status.index+1}">#{entry.key}</span><span>(#{entry.value})</span>
+                                                </li>
+                                            </ui:repeat>
                                         </ul>
-                                    </ui:repeat>
-                                </div>
-                            </a>
-
-                            <a href="./portal/asset/info/List.xhtml?assetStatus=2"
-                               class="ui-g-4 ui-md-6 ui-lg-4 block">
-                                <p class="epsilon">停机中</p>
-                                <h1 class="beta text--center">#{homeAssetHeadController.assetNumberStopped}</h1>
-                                <div class="block-footer">
-                                    <ui:repeat value="#{homeAssetHeadController.assetsStopped}" var="asset">
-                                        <p>#{asset.asset}</p>
-                                        <ul class="list-inline list-bare layout layout--middle layout--center">
-                                            <li class="layout__item u-1/2">停机时间:<span>#{asset.downTime}</span></li>
-                                            <li class="layout__item u-1/2">原因:<span>#{fieldMsg.fieldValue('caseType', asset.downReason)}</span></li>
-                                        </ul>
-                                    </ui:repeat>
-                                </div>
-                            </a>
-
-                            <a href="./portal/asset/info/List.xhtml?model=1"
-                               class="ui-g-4 ui-md-6 ui-lg-4 block">
-                                <p class="epsilon">保修期到期(2个月内)</p>
-                                <h1 class="beta text--center">
-                                    #{homeAssetHeadController.assetNumberWarrantyExpired}</h1>
-                                <div class="block-footer">
-                                    <ui:repeat value="#{homeAssetHeadController.assetsWarrantyExpired}" var="asset">
-                                        <div class="layout layout--middle">
-                                            <p class="layout__item u-1/2">#{asset.asset}</p>
-                                            <p class="layout__item u-1/2"><span>#{asset.warrantyDate}</span></p>
+                                        <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInMt}</h1>
+                                        <div class="block-footer">
+                                            <ui:repeat value="#{homeAssetHeadController.assetsInMt}" var="asset">
+                                                <p>#{asset.asset}</p>
+                                                <ul class="list-inline list-bare layout layout--middle layout--center">
+                                                    <li class="layout__item u-1/2">维修流程:<span
+                                                                                        class="status status--#{asset.stepId}"/>#{asset.stepName}
+                                                    </li>
+                                                    <li class="layout__item u-1/2">维修人:<span/>#{asset.owner}</li>
+                                                </ul>
+                                            </ui:repeat>
                                         </div>
-                                    </ui:repeat>
+                                    </a>
                                 </div>
-                            </a>
 
-                            <a href="./portal/pm/List.xhtml?model=1"
-                               class="ui-g-4 ui-md-6 ui-lg-4 block">
-                                <p class="epsilon">预防性维护(1周内)</p>
-                                <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInPm}</h1>
-                                <div class="block-footer">
-                                    <ui:repeat value="#{homeAssetHeadController.assetsInPm}" var="asset">
-                                        <div class="layout layout--middle">
-                                            <p class="layout__item u-1/2">#{asset.asset}</p>
-                                            <p class="layout__item u-1/2"><span>#{asset.pmDate}</span></p>
+                                <div class="ui-g-4 ui-md-6 ui-lg-4">
+                                    <a href="./portal/asset/info/List.xhtml?assetStatus=2" class="block">
+                                        <p class="epsilon">停机中</p>
+                                        <h1 class="beta text--center">#{homeAssetHeadController.assetNumberStopped}</h1>
+                                        <div class="block-footer">
+                                            <ui:repeat value="#{homeAssetHeadController.assetsStopped}" var="asset">
+                                                <p>#{asset.asset}</p>
+                                                <ul class="list-inline list-bare layout layout--middle layout--center">
+                                                    <li class="layout__item u-1/2">停机时间:<span>#{asset.downTime}</span>
+                                                    </li>
+                                                    <li class="layout__item u-1/2">原因:<span>#{fieldMsg.fieldValue('caseType', asset.downReason)}</span>
+                                                    </li>
+                                                </ul>
+                                            </ui:repeat>
                                         </div>
-                                    </ui:repeat>
+                                    </a>
                                 </div>
-                            </a>
 
-                            <a href="./portal/insp/MetrologyOrderList.xhtml?model=1"
-                               class="ui-g-4 ui-md-6 ui-lg-4 block">
-                                <p class="epsilon">设备计量(2个月内)</p>
-                                <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInMetering}</h1>
-                                <div class="block-footer">
-                                    <ui:repeat value="#{homeAssetHeadController.assetsInMetering}" var="asset">
-                                        <div class="layout layout--middle">
-                                            <p class="layout__item u-1/2">#{asset.asset}</p>
-                                            <p class="layout__item u-1/2"><span>#{asset.meteringDate}</span></p>
+                                <div class="ui-g-4 ui-md-6 ui-lg-4">
+                                    <a href="./portal/asset/info/List.xhtml?model=1" class="block">
+                                        <p class="epsilon">保修期到期(2个月内)</p>
+                                        <h1 class="beta text--center">
+                                            #{homeAssetHeadController.assetNumberWarrantyExpired}</h1>
+                                        <div class="block-footer">
+                                            <ui:repeat value="#{homeAssetHeadController.assetsWarrantyExpired}"
+                                                       var="asset">
+                                                <div class="layout layout--middle">
+                                                    <p class="layout__item u-1/2">#{asset.asset}</p>
+                                                    <p class="layout__item u-1/2"><span>#{asset.warrantyDate}</span></p>
+                                                </div>
+                                            </ui:repeat>
                                         </div>
-                                    </ui:repeat>
+                                    </a>
                                 </div>
-                            </a>
 
-                            <a href="./portal/insp/QualityCtrlOrderList.xhtml?model=1"
-                               class="ui-g-4 ui-md-6 ui-lg-4 block">
-                                <p class="epsilon">设备质控(2个月内)</p>
-                                <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInQa}</h1>
-                                <div class="block-footer">
-                                    <ui:repeat value="#{homeAssetHeadController.assetsInQa}" var="asset">
-                                        <div class="layout layout--middle">
-                                            <p class="layout__item u-1/2">#{asset.asset}</p>
-                                            <p class="layout__item u-1/2"><span>#{asset.qaDate}</span></p>
+                                <div class="ui-g-4 ui-md-6 ui-lg-4">
+                                    <a href="./portal/pm/List.xhtml?model=1" class="block">
+                                        <p class="epsilon">预防性维护(1周内)</p>
+                                        <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInPm}</h1>
+                                        <div class="block-footer">
+                                            <ui:repeat value="#{homeAssetHeadController.assetsInPm}" var="asset">
+                                                <div class="layout layout--middle">
+                                                    <p class="layout__item u-1/2">#{asset.asset}</p>
+                                                    <p class="layout__item u-1/2"><span>#{asset.pmDate}</span></p>
+                                                </div>
+                                            </ui:repeat>
                                         </div>
-                                    </ui:repeat>
+                                    </a>
                                 </div>
-                            </a>
 
+                                <div class="ui-g-4 ui-md-6 ui-lg-4">
+                                    <a href="./portal/insp/MetrologyOrderList.xhtml?model=1" class="block">
+                                        <p class="epsilon">设备计量(2个月内)</p>
+                                        <h1 class="beta text--center">
+                                            #{homeAssetHeadController.assetNumberInMetering}</h1>
+                                        <div class="block-footer">
+                                            <ui:repeat value="#{homeAssetHeadController.assetsInMetering}" var="asset">
+                                                <div class="layout layout--middle">
+                                                    <p class="layout__item u-1/2">#{asset.asset}</p>
+                                                    <p class="layout__item u-1/2"><span>#{asset.meteringDate}</span></p>
+                                                </div>
+                                            </ui:repeat>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="ui-g-4 ui-md-6 ui-lg-4">
+                                    <a href="./portal/insp/QualityCtrlOrderList.xhtml?model=1" class="block">
+                                        <p class="epsilon">设备质控(2个月内)</p>
+                                        <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInQa}</h1>
+                                        <div class="block-footer">
+                                            <ui:repeat value="#{homeAssetHeadController.assetsInQa}" var="asset">
+                                                <div class="layout layout--middle">
+                                                    <p class="layout__item u-1/2">#{asset.asset}</p>
+                                                    <p class="layout__item u-1/2"><span>#{asset.qaDate}</span></p>
+                                                </div>
+                                            </ui:repeat>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

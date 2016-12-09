@@ -1,21 +1,62 @@
-.layout-wrapper .layout-main {
-  padding-left: 0;
-  padding-right: 0;
+.layout-compact .layout-wrapper {
+  $main-bg-color: rgb(110, 112, 114);
+  $topbar-height: 75px;
+  $card-title-height: 60px;
+  $summary-height: 100px;
+  $body-padding-top: $topbar-height + $summary-height + $card-title-height;
+
+  header {
+    position: fixed;
+    width: calc(100% - 250px);
+    top: 76px;
+    z-index: 999;
+    background-color: $main-bg-color;
+  }
+
+  .card--title {
+    height: $card-title-height;
+    line-height: $card-title-height;
+    background-color: white;
+  }
+
+  .card--summary {
+    height: 100px;
+    color: white;
+    > *:not(:last-child) {
+      border-right: 1px solid $gray9;
+    }
+    .divide-line-bottom {
+      border-bottom: 1px solid $gray9;
+    }
+  }
+
+  .layout-menu {
+    box-shadow: none;
+  }
+
+  .layout-main {
+    min-height: 100vh;
+    padding-left: 0;
+    padding-right: 0;
+    background-color: $main-bg-color;
+    padding: $body-padding-top 0 0 0;
+
+    @for $i from 1 through 12 {
+      .ui-g-#{$i}{
+        padding: 5px;
+        padding-top: 0;
+      }
+    }
+  }
+
+  .footer {
+    display: none;
+  }
 }
 
 // Meta
 .text--secondary {
   color: $gray6;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 60px;
-  font-size: 20px;
-  border-bottom: 1px solid $gray4;
-  background-color: #fff;
 }
 
 @mixin squareBefore() {
@@ -66,7 +107,7 @@
 }
 
 .block {
-  padding: 20px !important;
+  padding: 20px;
   margin-bottom: 1px;
   box-sizing: border-box;
   background: #ffffff;
@@ -142,10 +183,6 @@ $popover-color: $white;
 $popover-border-color: $gray4;
 $popover-text-color: $black;
 $popover-shadow-color: rgba($black, .15);
-
-.layout-compact .layout-wrapper .layout-main {
-  padding: 75px 0 0 0;
-}
 
 .layout-compact .layout-main {
 
@@ -348,16 +385,4 @@ table.jqplot-table-legend {
   background-color: #ffffff;
   color: #757575;
   border-color: #bdbdbd;
-}
-
-.card--summary {
-  background-color: $gray8;
-  min-height: 100px;
-  color: white;
-  > *:not(:last-child) {
-    border-right: 1px solid $gray9;
-  }
-  .divide-line-bottom {
-    border-bottom: 1px solid $gray9;
-  }
 }

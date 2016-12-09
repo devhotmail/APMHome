@@ -12,64 +12,63 @@
 	</ui:define>
 
 	<ui:define name="content">
+		<header>
+			<div class="card--title text--center">
+				<span class="epsilon">#{msg.HomePageDeptHead}</span>
+			</div>
+			<div class="card--summary ui-g">
+				<div class="ui-g-12 ui-md-4">
+					<div class="epsilon u-mv-">#{msg.deviceValueScanhd}</div>
+					<p:outputPanel id="value_scan">
+						<div class="text--banner gamma">
+							<h:outputText value="#{homeDeptHeadController.valueScan}"/>
+							<span class="text--unit text--secondary"></span>
+						</div>
+					</p:outputPanel>
+				</div>
+				<div class="ui-g-12 ui-md-4">
+					<div class="epsilon u-mv-">#{msg.deviceValueExpohd}</div>
+					<p:outputPanel id="value_expo">
+						<div class="text--banner gamma">
+							<h:outputText value="#{homeDeptHeadController.valueExpo}"/>
+							<span class="text--unit text--secondary"></span>
+						</div>
+					</p:outputPanel>
+				</div>
+				<div class="ui-g-12 ui-md-4">
+					<div class="epsilon u-mv-">#{msg.deviceValueROIhd}</div>
+					<p:outputPanel id="value_profit">
+						<div class="text--banner gamma">
+							<h:outputText value="#{homeDeptHeadController.valueProfit}"/>
+							<span class="text--unit text--secondary"></span>
+						</div>
+					</p:outputPanel>
+				</div>
+			</div>
+		</header>
 
 		<div class="ui-g">
+
+			<!-- Range picker -->
 			<div class="ui-g-12">
-				<div class="text--center u-mv-">
-					<span class="epsilon">#{msg.HomePageDeptHead}</span>
+				<div class="block u-pv--">
+					<h:form id="form2">
+						<p:growl id="calendar_submit" showDetail="true"/>
+						<div class="calendar-range-picker flex flex--row flex--center flex--justify">
+							<p:calendar id="start_date_button" value="#{homeDeptHeadController.startDate}"
+										showOn="button"/>
+							<label>到</label>
+							<p:calendar id="end_date_button" value="#{homeDeptHeadController.endDate}"
+										showOn="button"/>
+							<label> </label>
+							<p:commandButton id="submit_date" class="btn btn--large" value="确定"
+											 update="calendar_submit value_scan value_expo value_profit scan_bar exposure_bar profit_bar"
+											 actionListener="#{homeDeptHeadController.submit}"/>
+						</div>
+					</h:form>
 				</div>
 			</div>
 
-			<div class="ui-g-12">
-				<!-- Statistics Overview -->
-				<div class="card--summary ui-g">
-					<div class="ui-g-12 ui-md-4">
-						<div class="epsilon u-mv-">#{msg.deviceValueScanhd}</div>
-						<p:outputPanel id="value_scan">
-							<div class="text--banner gamma">
-								<h:outputText value="#{homeDeptHeadController.valueScan}"/>
-								<span class="text--unit text--secondary"></span>
-							</div>
-						</p:outputPanel>
-					</div>
-					<div class="ui-g-12 ui-md-4">
-						<div class="epsilon u-mv-">#{msg.deviceValueExpohd}</div>
-						<p:outputPanel id="value_expo">
-							<div class="text--banner gamma">
-								<h:outputText value="#{homeDeptHeadController.valueExpo}"/>
-								<span class="text--unit text--secondary"></span>
-							</div>
-						</p:outputPanel>
-					</div>
-					<div class="ui-g-12 ui-md-4">
-						<div class="epsilon u-mv-">#{msg.deviceValueROIhd}</div>
-						<p:outputPanel id="value_profit">
-							<div class="text--banner gamma">
-								<h:outputText value="#{homeDeptHeadController.valueProfit}"/>
-								<span class="text--unit text--secondary"></span>
-							</div>
-						</p:outputPanel>
-					</div>
-				</div>
-			</div>
-
-		<h:form id="form2">
-			<p:growl id="calendar_submit" showDetail="true" />
-
-			<div class="ui-g-12">
-				<div class="calendar-range-picker flex flex--row flex--center flex--justify">
-					<p:calendar id="start_date_button" value="#{homeDeptHeadController.startDate}" showOn="button"/>
-					<label>到</label>
-					<p:calendar id="end_date_button" value="#{homeDeptHeadController.endDate}" showOn="button"/>
-					<label> </label>
-					<p:commandButton id="submit_date" class="btn btn--large" value="确定" update="calendar_submit value_scan value_expo value_profit scan_bar exposure_bar profit_bar"
-									 actionListener="#{homeDeptHeadController.submit}"/>
-				</div>
-
-			</div>
-		</h:form>
-            
-            
 			<!-- Chart 1: Device Scan -->
 			<div class="ui-g-12">
 				<div class="block">
