@@ -440,6 +440,8 @@ INSERT INTO "i18n_message" VALUES (1625,'depreciationMethodList','5', '折旧算
 INSERT INTO "i18n_message" VALUES (1626, 'label', 'SysConfig', '系统配置项', 'system config', NULL, -1);
 INSERT INTO "i18n_message" VALUES (1627, 'label', 'UserConfig', '自定义配置项', 'config by user', NULL, -1);
 INSERT INTO "i18n_message" VALUES (1628, 'label', 'AssetInfoDetail', '设备详细信息', 'Asset Detail Info', NULL, -1);
+INSERT INTO "i18n_message" VALUES (1629, 'label', 'AssetInventoryUnmatchedList', '与实物不符的设备列表', 'Asset Inventory Unmatched List', NULL, -1);
+INSERT INTO "i18n_message" VALUES (1630, 'label', 'AssetInventoryDate', '设备盘点日期', 'Asset Inventory Date', NULL, -1);
 
 
 -- module's messages  (id from 3000)
