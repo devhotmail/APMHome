@@ -96,6 +96,11 @@ public class InspectionOrder implements Serializable {
     @Column(name = "paper_url")
     private String paperUrl;
     
+    @Column(name = "hospital_id")
+    @Basic(optional = false)
+    @NotNull
+    private Integer hospitalId;
+
     public InspectionOrder() {
     }
 
@@ -225,6 +230,14 @@ public class InspectionOrder implements Serializable {
 
     public void setPaperUrl(String paperUrl) {
         this.paperUrl = paperUrl;
+    }
+
+    public Integer getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
     }
 
     @Override

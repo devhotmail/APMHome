@@ -70,6 +70,8 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
 
         this.filterBySite = true;
         this.setSiteFilter();
+        this.filterByHospital = true;
+        this.setHospitalFilter();
 
         String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
@@ -194,6 +196,7 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
     @Override
     public void onBeforeNewObject(InspectionOrder object) {
         object.setSiteId(UserContextService.getSiteId());
+        object.setHospitalId(UserContextService.getCurrentUserAccount().getHospitalId());
         object.setCreatorId(UserContextService.getCurrentUserAccount().getId());
         object.setCreatorName(UserContextService.getCurrentUserAccount().getName());
         object.setOrderType(3);
