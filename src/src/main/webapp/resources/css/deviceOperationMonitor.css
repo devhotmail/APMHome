@@ -341,8 +341,11 @@ button.btn{-webkit-appearance:button}
 .btn--primary:active{border-color:transparent;background-color:#2b5ea2}
 .btn--large{font-size:1.33333rem}
 .clearfix:after{content:"";display:table;clear:both}
-.layout-compact .layout-wrapper header{position:fixed;width:calc(100% - 250px);top:76px;z-index:999;background-color:#6e7072}
+.layout-compact .layout-wrapper header{position:fixed;width:100%;top:76px;z-index:999;background-color:#6e7072;-webkit-transition:width .3s;transition:width .3s}
+.layout-compact .layout-wrapper.layout-menu-static-active header{width:calc(100% - 250px)}
 .layout-compact .layout-wrapper.layout-menu-static-inactive header{width:100%}
+@media (max-width:1024px){.layout-compact .layout-wrapper header{width:100%!important}
+}
 .layout-compact .layout-wrapper .card--title{height:60px;line-height:60px;background-color:#fff}
 .layout-compact .layout-wrapper .card--summary{height:100px;color:#fff}
 .layout-compact .layout-wrapper .card--summary>:not(:last-child){border-right:1px solid #3b3b3f}
@@ -421,6 +424,7 @@ button.btn{-webkit-appearance:button}
 .layout-compact .layout-main .ui-calendar.ui-trigger-calendar .ui-icon-calendar{left:inherit}
 table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbdbd}
 .jqplot-pie-series.jqplot-data-label,.jqplot-point-label{color:#000;font-size:11px}
+td.jqplot-table-legend{text-align:left}
 .chart-device-stat{height:100px}
 .chart-device-stat .jqplot-target{margin:0}
 .chart-device-stat .jqplot-grid-canvas{display:none}

@@ -1,6 +1,6 @@
 (function() {
 
-  var CURRENCY = "%'.2f 元";
+  var CURRENCY = "%'.2f";
 
   var base = {
     shadow: false,

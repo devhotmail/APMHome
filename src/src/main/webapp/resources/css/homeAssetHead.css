@@ -341,8 +341,11 @@ button.btn{-webkit-appearance:button}
 .btn--primary:active{border-color:transparent;background-color:#2b5ea2}
 .btn--large{font-size:1.33333rem}
 .clearfix:after{content:"";display:table;clear:both}
-.layout-compact .layout-wrapper header{position:fixed;width:calc(100% - 250px);top:76px;z-index:999;background-color:#6e7072}
+.layout-compact .layout-wrapper header{position:fixed;width:100%;top:76px;z-index:999;background-color:#6e7072;-webkit-transition:width .3s;transition:width .3s}
+.layout-compact .layout-wrapper.layout-menu-static-active header{width:calc(100% - 250px)}
 .layout-compact .layout-wrapper.layout-menu-static-inactive header{width:100%}
+@media (max-width:1024px){.layout-compact .layout-wrapper header{width:100%!important}
+}
 .layout-compact .layout-wrapper .card--title{height:60px;line-height:60px;background-color:#fff}
 .layout-compact .layout-wrapper .card--summary{height:100px;color:#fff}
 .layout-compact .layout-wrapper .card--summary>:not(:last-child){border-right:1px solid #3b3b3f}
@@ -420,10 +423,11 @@ button.btn{-webkit-appearance:button}
 .layout-compact .layout-main .ui-calendar.ui-trigger-calendar .ui-datepicker-trigger{float:left;width:20px;padding:0;margin:0;right:inherit;top:inherit}
 .layout-compact .layout-main .ui-calendar.ui-trigger-calendar .ui-icon-calendar{left:inherit}
 table.jqplot-table-legend{background-color:#fff;color:#757575;border-color:#bdbdbd}
-.block-title{margin-bottom:0}
-.card--device-status a.block{display:block;min-height:400px;color:inherit}
-.card--device-status a.block:link,.card--device-status a.block:visited{color:inherit;text-decoration:none}
-.card--device-status a.block:hover{position:relative;box-shadow:0 0 8px 5px rgba(0,0,0,.2)}
+a.block{display:block;position:relative;min-height:450px;color:inherit}
+a.block:link,a.block:visited{color:inherit;text-decoration:none}
+a.block:hover{z-index:2;box-shadow:0 0 8px 5px rgba(0,0,0,.2)}
+a.block .text--center{margin:0;position:absolute;font-weight:200;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}
+.block-footer{width:calc(100% - 20px * 2);min-height:130px;position:absolute;bottom:20px}
 .card--device-status .ui-g-1{padding:0!important}
 .card--device-status .ui-g-2{padding:0!important}
 .card--device-status .ui-g-3{padding:0!important}

@@ -53,12 +53,12 @@
             <div class="ui-g-12">
                 <div class="block">
                     <h3 class="block-title">#{msg.assetAveROI}</h3>
-                    <div class="layout">
-                        <div class="widget layout__item u-2/3 divide-line-right divide-line-bottom u-p">
+                    <div class="ui-g">
+                        <div class="widget ui-lg-8 divide-line-right divide-line-bottom u-p">
                             <h4 class="widget-title">#{msg.assetROI}</h4>
                             <p:chart id="barAnnualRevenue" type="bar" model="#{homeHeadController.barAnnualRevenue}" responsive="true"/>
                         </div>
-                        <div class="widget layout__item u-1/3 divide-line-bottom u-p">
+                        <div class="widget ui-lg-4 ui-md-8 divide-line-bottom u-p">
                             <h4 class="widget-title">#{msg.profitDistro}</h4>
                             <p:chart id="pieAnnualRevenue" type="pie" model="#{homeHeadController.pieAnnualRevenue}" responsive="true"/>
                         </div>

@@ -7,15 +7,28 @@
 
   header {
     position: fixed;
-    width: calc(100% - 250px);
+    width: 100%;
     top: 76px;
     z-index: 999;
     background-color: $main-bg-color;
+    transition: width .3s;
+  }
+
+  &.layout-menu-static-active {
+    header {
+      width: calc(100% - 250px);
+    }
   }
 
   &.layout-menu-static-inactive {
     header {
       width: 100%;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    header {
+      width: 100% !important;
     }
   }
 
