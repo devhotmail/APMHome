@@ -479,6 +479,7 @@ button.btn{-webkit-appearance:button}
 .layout-compact .layout-main .ui-button{display:inline-block;overflow:visible;height:30px;margin:0;border:1px solid #b1b1bc;border-radius:3px;padding:0 15px;box-shadow:0 1px 0 rgba(0,0,0,.1);font:inherit;line-height:calc(30px - 2px);-webkit-font-smoothing:antialiased;cursor:pointer;text-align:center;text-decoration:none;text-transform:none;white-space:nowrap;background-color:#e4e4ea}
 .layout-compact .layout-main .ui-button+.ui-inputfield{height:30px}
 .layout-compact .layout-main .ui-button .ui-icon{color:#000}
+.layout-compact .layout-main .ui-button .ui-icon::before{color:#000}
 .layout-compact .layout-main .ui-button-icon-left{left:5px}
 .layout-compact .layout-main .ui-button-icon-right{right:5px}
 .layout-compact .layout-main .ui-button,.layout-compact .layout-main .ui-button:active,.layout-compact .layout-main .ui-button:hover,.layout-compact .layout-main .ui-button:link,.layout-compact .layout-main .ui-button:visited{color:#000}

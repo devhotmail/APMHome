@@ -279,6 +279,9 @@ $popover-shadow-color: rgba($black, .15);
 
     .ui-icon {
       color: $inuit-btn-color;
+      &::before {
+        color: $inuit-btn-color;
+      }
     }
 
     &-icon {
