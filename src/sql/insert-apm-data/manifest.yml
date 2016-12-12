@@ -1,0 +1,6 @@
+applications:
+- name: geapm-uat-data
+  instances: 2
+  memory: 1024M
+  disk_quota: 1024M
+  stack: cflinuxfs2
