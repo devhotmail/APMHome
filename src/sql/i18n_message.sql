@@ -533,10 +533,10 @@ INSERT INTO "i18n_message" VALUES (5507,'label','maintenanceAnalysis_otherReason
 INSERT INTO "i18n_message" VALUES (5508,'label','maintenanceAnalysis_otherCategory', '其他设备类型','Others',null,-1);
 INSERT INTO "i18n_message" VALUES (5509,'label','maintenanceAnalysis_otherRoom', '其他科室','Others',null,-1);
 
-INSERT INTO "i18n_message" VALUES (5511,'label','maintenanceAnalysis_reasonTile', '设备故障主要原因','Most Common Reason',null,-1);
-INSERT INTO "i18n_message" VALUES (5512,'label','maintenanceAnalysis_stepTile', '设备故障处理流程最耗时步骤','Most Time-Consuming Step',null,-1);
-INSERT INTO "i18n_message" VALUES (5513,'label','maintenanceAnalysis_roomTile', '设备故障主要发生的科室','Most Frequent Room',null,-1);
-INSERT INTO "i18n_message" VALUES (5514,'label','maintenanceAnalysis_categoryTile', '设备故障主要发生的设备类型','Most Frequent Device',null,-1);
+INSERT INTO "i18n_message" VALUES (5511,'label','maintenanceAnalysis_reasonTile', '故障主要原因','Most Common Reason',null,-1);
+INSERT INTO "i18n_message" VALUES (5512,'label','maintenanceAnalysis_stepTile', '故障处理流程最耗时步骤','Most Time-Consuming Step',null,-1);
+INSERT INTO "i18n_message" VALUES (5513,'label','maintenanceAnalysis_roomTile', '故障主要发生的科室','Most Frequent Room',null,-1);
+INSERT INTO "i18n_message" VALUES (5514,'label','maintenanceAnalysis_categoryTile', '故障主要发生的设备类型','Most Frequent Device',null,-1);
 INSERT INTO "i18n_message" VALUES (5515,'label','maintenanceAnalysis_occurrenceTile', '设备故障数','Count',null,-1);
 INSERT INTO "i18n_message" VALUES (5516,'label','maintenanceAnalysis_rankTile_room', '在科室中排名','Rank in Room',null,-1);
 INSERT INTO "i18n_message" VALUES (5517,'label','maintenanceAnalysis_rankTile_category', '在同类设备中排名','Rank in Category',null,-1);
