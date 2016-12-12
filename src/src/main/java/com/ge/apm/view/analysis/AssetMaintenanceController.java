@@ -17,10 +17,7 @@ import webapp.framework.web.mvc.ServerEventInterface;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ManagedBean
 @ViewScoped
@@ -215,10 +212,11 @@ public final class AssetMaintenanceController implements ServerEventInterface {
         return chart;
     }
 
-    public final PieChartModel[] getErrorTimePerStep() {
+    public final List<AbstractMap.SimpleImmutableEntry<String, PieChartModel>> getErrorTimePerStep() {
         List<Map<String, Object>> list = this.query(SQL_LIST_TOP_ERROR_STEP);
-        PieChartModel[] charts = new PieChartModel[] { null, null, null };
-        for (int index = 0; index < 3 && index < list.size(); index++) {
+        List<AbstractMap.SimpleImmutableEntry<String, PieChartModel>> charts = new ArrayList<>();
+        int index = 0;
+        for (; index < 3 && index < list.size(); index++) {
             int scalar = (int)list.get(index).get("scalar");
             Map<String, Object> extra = new HashMap<>();
             extra.put("stepId", scalar);
@@ -246,7 +244,11 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             chart.setLegendPosition("e");
             chart.setShowDataLabels(true);
             chart.setExtender("maintenanceE4" + Integer.toString(index + 1));
-            charts[index] = chart;
+            charts.add(new AbstractMap.SimpleImmutableEntry<String, PieChartModel>("chart-for-step-" + scalar, chart));
+        }
+        while (index < 3) {
+            charts.add(null);
+            index++;
         }
         return charts;
     }
