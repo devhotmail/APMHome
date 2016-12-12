@@ -17,7 +17,7 @@
             <p:growl id="messages" showDetail="true"/>
             <header>
                 <div class="card--title text--center">
-                    <span class="epsilon">我的工单管理</span>
+                    <span class="epsilon">#{msg.staff_title}</span>
                 </div>
                 <div class="card--summary">
                     <div class="u-p flex flex--row">
@@ -27,31 +27,31 @@
                             <div class="event-count event-type-1">
                                 #{woScheduleController.inspNum}
                             </div>
-                            <div>巡检</div>
+                            <div>#{msg.staff_tile_inspection}</div>
                         </div>
                         <div class="flex__item" style="text-align:center">
                             <div class="event-count event-type-2">
                                 #{woScheduleController.meterNum}
                             </div>
-                            <div>计量</div>
+                            <div>#{msg.staff_tile_meter}</div>
                         </div>
                         <div class="flex__item" style="text-align:center">
                             <div class="event-count event-type-3">
                                 #{woScheduleController.qaNum}
                             </div>
-                            <div>质控</div>
+                            <div>#{msg.staff_tile_quality}</div>
                         </div>
                         <div class="flex__item" style="text-align:center">
                             <div class="event-count event-type-4">
                                 #{woScheduleController.mtMum}
                             </div>
-                            <div>维修</div>
+                            <div>#{msg.staff_tile_maintenance}</div>
                         </div>
                         <div class="flex__item" style="text-align:center">
                             <div class="event-count event-type-5">
                                 #{woScheduleController.pmNum}
                             </div>
-                            <div>保养</div>
+                            <div>#{msg.staff_tile_preventive}</div>
                         </div>
                         <div class="flex__item"></div>
                         <div class="flex__item"></div>
@@ -68,11 +68,11 @@
                                         rightHeaderTemplate="">
                             </p:schedule>
                             <div class="calendar-footer">
-                                <span class="u-m status status--1">巡检</span>
-                                <span class="u-m status status--2">质控</span>
-                                <span class="u-m status status--3">计量</span>
-                                <span class="u-m status status--4">维修</span>
-                                <span class="u-m status status--5">保养</span>
+                                <span class="u-m status status--1">#{msg.staff_tile_inspection}</span>
+                                <span class="u-m status status--2">#{msg.staff_tile_meter}</span>
+                                <span class="u-m status status--3">#{msg.staff_tile_quality}</span>
+                                <span class="u-m status status--4">#{msg.staff_tile_maintenance}</span>
+                                <span class="u-m status status--5">#{msg.staff_tile_preventive}</span>
                             </div>
                         </div>
                     </div>

@@ -544,6 +544,15 @@ INSERT INTO "i18n_message" VALUES (5413,'label','assetHead_tile_maintenance_owne
 INSERT INTO "i18n_message" VALUES (5414,'label','assetHead_tile_off_time', '停机时间：','Down Time:',null,-1);
 INSERT INTO "i18n_message" VALUES (5415,'label','assetHead_tile_off_reason', '原因：','Reason:',null,-1);
 
+-- staff
+
+INSERT INTO "i18n_message" VALUES (5431,'label','staff_title', '我的工单管理','My Work Orders',null,-1);
+INSERT INTO "i18n_message" VALUES (5435,'label','staff_tile_inspection', '巡检','Inspect',null,-1);
+INSERT INTO "i18n_message" VALUES (5436,'label','staff_tile_meter', '计量','Meter',null,-1);
+INSERT INTO "i18n_message" VALUES (5437,'label','staff_tile_quality', '质控','Check',null,-1);
+INSERT INTO "i18n_message" VALUES (5438,'label','staff_tile_maintenance', '维修','Maintain',null,-1);
+INSERT INTO "i18n_message" VALUES (5439,'label','staff_tile_preventive', '保养','Prevent',null,-1);
+
 -- device maintenance
 
 INSERT INTO "i18n_message" VALUES (5501,'label','maintenanceAnalysis_title', '设备维修事件统计分析','Device Maintenance Analysis',null,-1);
