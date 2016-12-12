@@ -7,17 +7,11 @@
 
   header {
     position: fixed;
-    width: 100%;
+    width: calc(100% - 250px);
     top: 76px;
     z-index: 999;
     background-color: $main-bg-color;
     transition: width .3s;
-  }
-
-  &.layout-menu-static-active {
-    header {
-      width: calc(100% - 250px);
-    }
   }
 
   &.layout-menu-static-inactive {

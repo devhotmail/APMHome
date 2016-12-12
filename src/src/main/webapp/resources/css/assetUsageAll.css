@@ -341,8 +341,7 @@ button.btn{-webkit-appearance:button}
 .btn--primary:active{border-color:transparent;background-color:#2b5ea2}
 .btn--large{font-size:1.33333rem}
 .clearfix:after{content:"";display:table;clear:both}
-.layout-compact .layout-wrapper header{position:fixed;width:100%;top:76px;z-index:999;background-color:#6e7072;-webkit-transition:width .3s;transition:width .3s}
-.layout-compact .layout-wrapper.layout-menu-static-active header{width:calc(100% - 250px)}
+.layout-compact .layout-wrapper header{position:fixed;width:calc(100% - 250px);top:76px;z-index:999;background-color:#6e7072;-webkit-transition:width .3s;transition:width .3s}
 .layout-compact .layout-wrapper.layout-menu-static-inactive header{width:100%}
 @media (max-width:1024px){.layout-compact .layout-wrapper header{width:100%!important}
 }
