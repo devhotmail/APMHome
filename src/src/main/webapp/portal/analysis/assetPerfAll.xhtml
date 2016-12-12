@@ -100,6 +100,13 @@
             </div>
             <div class="ui-g-12">
                 <div class="block">
+                    <h3 class="block-title">#{msg.assetAnnual}</h3>
+                    <p:chart id="barMonthlyRevenue" type="bar" model="#{homeHeadController.barMonthlyRevenue}"
+                             style="height:300px" responsive="true"/>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="block">
                     <h3 class="block-title">#{msg.assetsDashboardhd}</h3>
                     <h:form id="AssetInfoListForm">
                         <p:dataTable id="datalist" var="item" value="#{assetPerfAllController.assetDashboard}"
@@ -167,13 +174,6 @@
 
                         </p:dataTable>
                     </h:form>
-                </div>
-            </div>
-            <div class="ui-g-12">
-                <div class="block">
-                    <h3 class="block-title">#{msg.assetAnnual}</h3>
-                    <p:chart id="barMonthlyRevenue" type="bar" model="#{homeHeadController.barMonthlyRevenue}"
-                             style="height:300px" responsive="true"/>
                 </div>
             </div>
         </div>
