@@ -96,6 +96,7 @@
 		<div class="ui-g">
 			<div class="ui-g-12">
 				<div class="block">
+				<h:form id="form2">
 					<p:growl id="calendar_submit" showDetail="true"/>
 					<div class="calendar-range-picker flex flex--row flex--center flex--justify">
 						<p:calendar id="start_date_button" value="#{assetUsageAllController.startDate}"
@@ -108,6 +109,7 @@
 										 update="calendar_submit value_scan value_expo value_usage_1 value_usage_2 value_usage_3 value_usage_bar scan_bar exposure_bar usage_bar dt_bar"
 										 actionListener="#{assetUsageAllController.submit}"/>
 					</div>
+				</h:form>	
 				</div>
 			</div>
 

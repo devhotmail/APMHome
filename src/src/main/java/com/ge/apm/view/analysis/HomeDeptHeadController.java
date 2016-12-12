@@ -115,6 +115,17 @@ public class HomeDeptHeadController implements Serializable {
 
     }
 
+    private boolean checkInterval(Date startDate, Date endDate) {
+        DateTime start = new DateTime(startDate);
+        Interval interval = new Interval(start.plusMonths(1).plusDays(-1), start.plusYears(3).plusDays(1));
+        boolean flag = interval.contains(new DateTime(endDate));
+        if (!flag) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, checkIntervalNotice_1, checkIntervalNotice_2);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+        return flag;
+    }
+    
             //bigint
     private String SCANTL
             = "SELECT left_table.name, COUNT(right_table), SUM(expose_count) "
@@ -209,17 +220,6 @@ public class HomeDeptHeadController implements Serializable {
     public String getValueProfit() {
 
         return valueProfit;
-    }
-
-    private boolean checkInterval(Date startDate, Date endDate) {
-        DateTime start = new DateTime(startDate);
-        Interval interval = new Interval(start.plusMonths(1), start.plusYears(3));
-        boolean flag = interval.contains(new DateTime(endDate));
-        if (!flag) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, checkIntervalNotice_1, checkIntervalNotice_2);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
-        return flag;
     }
 
     private void devicePanel(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {

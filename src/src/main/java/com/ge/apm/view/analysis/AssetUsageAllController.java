@@ -74,8 +74,6 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 	private Date startDate = null;
 	private Date endDate = null;
 	private Date currentDate = null;
-	private boolean start_bool = false;
-	private boolean end_bool = false;
 
 	private NumberFormat cf = new DecimalFormat(",###.##");
 
@@ -146,7 +144,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 
     private boolean checkInterval(Date startDate, Date endDate) {
         DateTime start = new DateTime(startDate);
-        Interval interval = new Interval(start.plusMonths(1), start.plusYears(3));
+        Interval interval = new Interval(start.plusMonths(1).plusDays(-1), start.plusYears(3).plusDays(1));
         boolean flag = interval.contains(new DateTime(endDate));
         if (!flag) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, checkIntervalNotice_1, checkIntervalNotice_2);
@@ -225,13 +223,6 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
     public void setStartDate(Date startDate) {
 
         this.startDate = startDate;
-
-    	start_bool = true;
-
-    	if (start_bool && end_bool) {
-    		deviceQuery(startDate, endDate, currentDate);
-    	}
-
     }
 
     public Date getEndDate() {
@@ -242,12 +233,6 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
     public void setEndDate(Date endDate) {
 
         this.endDate = endDate;
-
-    	end_bool = true;
-
-    	if (start_bool && end_bool) {
-    		deviceQuery(startDate, endDate, currentDate);
-    	}
     }
 
 

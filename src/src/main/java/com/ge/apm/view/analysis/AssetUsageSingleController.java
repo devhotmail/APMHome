@@ -42,7 +42,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 	private static final String deviceExpolg_1 = WebUtil.getMessage("deviceExpolg_1");
 	private static final String deviceUsagelg_1 = WebUtil.getMessage("deviceUsagelg_1");
 	private static final String deviceUsagelg_2 = WebUtil.getMessage("deviceUsagelg_2");
-	private static final String deviceDTlg_3 = WebUtil.getMessage("deviceDTlg_3");
+	private static final String deviceUsagelg_3 = WebUtil.getMessage("deviceUsagelg_3");
     private static final String checkIntervalNotice_1 = WebUtil.getMessage("checkIntervalNotice_1");
     private static final String checkIntervalNotice_2 = WebUtil.getMessage("checkIntervalNotice_2");
 
@@ -119,7 +119,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 		Calendar currentCal = Calendar.getInstance();
 		Calendar startCal = Calendar.getInstance();
-		startCal.add(Calendar.MONTH, -6);
+		startCal.add(Calendar.YEAR, -1);
 
 		startDate = startCal.getTime();
 		endDate = currentCal.getTime();
@@ -161,7 +161,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
     private boolean checkInterval(Date startDate, Date endDate) {
         DateTime start = new DateTime(startDate);
-        Interval interval = new Interval(start.plusMonths(1), start.plusYears(3));
+        Interval interval = new Interval(start.plusMonths(1).plusDays(-1), start.plusYears(3).plusDays(1));
         boolean flag = interval.contains(new DateTime(endDate));
         if (!flag) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, checkIntervalNotice_1, checkIntervalNotice_2);
@@ -407,7 +407,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		cst_wait.setLabel(deviceUsagelg_2);
 		cst_wait.setFill(true);
 		LineChartSeries cst_dt = new LineChartSeries();
-		cst_dt.setLabel(deviceDTlg_3);
+		cst_dt.setLabel(deviceUsagelg_3);
 		cst_dt.setFill(true);
 
 		double inuse;
