@@ -105,3 +105,14 @@ function getCurrentDateFilter(inputWidgetVar, displayWidgetVar) {
         display.value = input.value;
     
 }
+
+// on menu close fire window resize event - to help re-plot charts
+$(function() {
+    var TRANSITION_END = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend';
+    $('#menu-button').on('click', function() {
+        // incorporate animation
+        $('.layout-main').one(TRANSITION_END, function() {
+            $(window).trigger('resize');
+        })
+    });
+})
