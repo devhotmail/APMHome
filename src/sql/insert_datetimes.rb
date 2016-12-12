@@ -142,7 +142,7 @@ for i in 1..totalrecords
 
   sql = "insert into #{table} (site_id, hospital_id, asset_id, name, asset_name, creator_id, creator_name, create_time,
         requestor_id, requestor_name, request_time, request_reason, case_type, case_sub_type,
-        case_priority, is_internal, current_person_id, current_step,
+        case_priority, is_internal, current_person_id, current_step_id,
         is_closed, total_man_hour, total_price, confirmed_down_time, confirmed_up_time) values (\'#{site_id}\', \'#{hospital_id}\', \'#{asset_id}\',
         \'#{name}\', \'#{asset_name}\', \'#{creator_id}\',\'#{creator_name}\', \'#{create_time}\',
         \'#{requestor_id}\', \'#{requestor_name}\',\'#{request_time}\', \'#{request_reason}\',
