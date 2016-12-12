@@ -6,6 +6,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
+
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.OrgInfo;
@@ -26,6 +28,8 @@ import webapp.framework.web.WebUtil;
 @ManagedBean
 @ViewScoped
 public class UserAccountController extends JpaCRUDController<UserAccount> {
+	
+	public static final String DEFAULT_USER_ROLE = "设备科科员";
 
     UserAccountRepository dao = null;
     UaaService uaaService = WebUtil.getBean(UaaService.class);
@@ -181,5 +185,16 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(UserAccountController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+    }
+    
+    
+    @Override
+    public void onAfterNewObject(UserAccount userAccount,boolean isOk ){
+    	if(isOk && this.crudActionName.equals("Create")){
+    		List<String> role = new ArrayList<String>();
+    		role.add(DEFAULT_USER_ROLE);
+    		uaaService.setUserRoles(selected, role);
+    	}
     }
 }
