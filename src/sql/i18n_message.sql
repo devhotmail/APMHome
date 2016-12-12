@@ -525,6 +525,25 @@ INSERT INTO "i18n_message" VALUES (5055,'label','checkIntervalNotice_2', '选择
 INSERT INTO "i18n_message" VALUES (5056,'label','selectSearchInterval_1', '到','to',null,-1);
 INSERT INTO "i18n_message" VALUES (5057,'label','selectSearchInterval_2', '确定','Submit',null,-1);
 INSERT INTO "i18n_message" VALUES (5058,'label','deviceUsagelg_3', '停机','Downtime',null,-1);
+
+
+
+-- asset head
+
+INSERT INTO "i18n_message" VALUES (5401,'label','assetHead_status', '设备状态','Device Status',null,-1);
+INSERT INTO "i18n_message" VALUES (5402,'label','assetHead_tile_maintenance', '维修中','In Maintenance',null,-1);
+INSERT INTO "i18n_message" VALUES (5403,'label','assetHead_tile_off', '停机中','Off',null,-1);
+INSERT INTO "i18n_message" VALUES (5404,'label','assetHead_tile_out', '保修期到期（2个月内）','Nearly Out Of Maintenance (within 2 months)',null,-1);
+INSERT INTO "i18n_message" VALUES (5405,'label','assetHead_tile_preventive', '预防性维护（1周内）','Preventive Maintenance (within 1 week)',null,-1);
+INSERT INTO "i18n_message" VALUES (5406,'label','assetHead_tile_metrology', '设备计量（2个月内）','Metrology (within 2 months)',null,-1);
+INSERT INTO "i18n_message" VALUES (5407,'label','assetHead_tile_quality', '设备质控（2个月内）','Quality Control (within 2 months)',null,-1);
+
+INSERT INTO "i18n_message" VALUES (5411,'label','assetHead_tile_maintenance_progressSeries', '维修流程','Progress',null,-1);
+INSERT INTO "i18n_message" VALUES (5412,'label','assetHead_tile_maintenance_progress', '维修流程：','Progress:',null,-1);
+INSERT INTO "i18n_message" VALUES (5413,'label','assetHead_tile_maintenance_owner', '维修人：','Owner',null,-1);
+INSERT INTO "i18n_message" VALUES (5414,'label','assetHead_tile_off_time', '停机时间：','Down Time:',null,-1);
+INSERT INTO "i18n_message" VALUES (5415,'label','assetHead_tile_off_reason', '原因：','Reason:',null,-1);
+
 -- device maintenance
 
 INSERT INTO "i18n_message" VALUES (5501,'label','maintenanceAnalysis_title', '设备维修事件统计分析','Device Maintenance Analysis',null,-1);
