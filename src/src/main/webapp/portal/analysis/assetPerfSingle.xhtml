@@ -39,10 +39,11 @@
                 <h:form id="TopValueForm">
                     <div class="ui-g ui-fluid">
                         <div class="ui-g-12 ui-md-4">
-                            <div class="epsilon u-mv-">#{msg.deviceValueRevenuehd}</div>
+                            <div class="epsilon u-mv-">#{msg.deviceValueProfithd}</div>
                             <p:outputPanel id="value_profit">
                                 <div class="text--banner delta">
                                     <h:outputText value="#{assetPerfSingleController.valueProfit}"/>
+                                    <span class="text--unit text--secondary">#{msg.CNYlb}</span>
                                 </div>
                             </p:outputPanel>
                         </div>
@@ -51,6 +52,7 @@
                             <p:outputPanel id="value_revenue">
                                 <div class="text--banner delta">
                                     <h:outputText value="#{assetPerfSingleController.valueRevenue}"/>
+                                    <span class="text--unit text--secondary">#{msg.CNYlb}</span>
                                 </div>
                             </p:outputPanel>
                         </div>
@@ -59,6 +61,7 @@
                             <p:outputPanel id="value_cost">
                                 <div class="text--banner delta">
                                     <h:outputText value="#{assetPerfSingleController.valueCost}"/>
+                                    <span class="text--unit text--secondary">#{msg.CNYlb}</span>
                                 </div>
                             </p:outputPanel>
                         </div>

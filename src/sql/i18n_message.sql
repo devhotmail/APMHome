@@ -514,16 +514,17 @@ INSERT INTO "i18n_message" VALUES (5042,'label','deviceValueExpohd', '总曝光�
 INSERT INTO "i18n_message" VALUES (5045,'label','selectAssetSingle', '选择单台设备','Select a device',null,-1);
 INSERT INTO "i18n_message" VALUES (5046,'label','selectAssetChoose', '选择设备','Select devices',null,-1);
 INSERT INTO "i18n_message" VALUES (5047,'label','WorkOrderConfig', '流程配置','WorkOrder Config',null,-1);
-INSERT INTO "i18n_message" VALUES (5048,'label','deviceValueRevenuehd', '设备总收入(元)','Revenue （CNY)',null,-1);
-INSERT INTO "i18n_message" VALUES (5049,'label','deviceValueCosthd', '设备总成本(元)','Cost （CNY)',null,-1);
-INSERT INTO "i18n_message" VALUES (5050,'label','groupByMonth', '月','Month',null,-1);
-INSERT INTO "i18n_message" VALUES (5051,'label','groupByDay', '日','Day',null,-1);
-INSERT INTO "i18n_message" VALUES (5052,'label','groupByYear', '年','Year',null,-1);
-INSERT INTO "i18n_message" VALUES (5053,'label','checkIntervalNotice_1', '提示','Notice',null,-1);
-INSERT INTO "i18n_message" VALUES (5054,'label','checkIntervalNotice_2', '选择范围控制最小1个月，最大3年','Search interval between 1 month and 3 years',null,-1);
-INSERT INTO "i18n_message" VALUES (5055,'label','selectSearchInterval_1', '到','to',null,-1);
-INSERT INTO "i18n_message" VALUES (5056,'label','selectSearchInterval_2', '确定','Submit',null,-1);
-INSERT INTO "i18n_message" VALUES (5057,'label','deviceUsagelg_3', '停机','Downtime',null,-1);
+INSERT INTO "i18n_message" VALUES (5048,'label','deviceValueProfithd', '设备总利润','Profit',null,-1);
+INSERT INTO "i18n_message" VALUES (5049,'label','deviceValueRevenuehd', '设备总成本','Revenue',null,-1);
+INSERT INTO "i18n_message" VALUES (5050,'label','deviceValueCosthd', '设备总成本','Cost',null,-1);
+INSERT INTO "i18n_message" VALUES (5051,'label','groupByMonth', '月','Month',null,-1);
+INSERT INTO "i18n_message" VALUES (5052,'label','groupByDay', '日','Day',null,-1);
+INSERT INTO "i18n_message" VALUES (5053,'label','groupByYear', '年','Year',null,-1);
+INSERT INTO "i18n_message" VALUES (5054,'label','checkIntervalNotice_1', '提示','Notice',null,-1);
+INSERT INTO "i18n_message" VALUES (5055,'label','checkIntervalNotice_2', '选择范围控制最小1个月，最大3年','Search interval between 1 month and 3 years',null,-1);
+INSERT INTO "i18n_message" VALUES (5056,'label','selectSearchInterval_1', '到','to',null,-1);
+INSERT INTO "i18n_message" VALUES (5057,'label','selectSearchInterval_2', '确定','Submit',null,-1);
+INSERT INTO "i18n_message" VALUES (5058,'label','deviceUsagelg_3', '停机','Downtime',null,-1);
 -- device maintenance
 
 INSERT INTO "i18n_message" VALUES (5501,'label','maintenanceAnalysis_title', '设备维修事件统计分析','Device Maintenance Analysis',null,-1);
