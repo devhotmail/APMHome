@@ -91,7 +91,7 @@ CREATE TABLE "site_info" (
 "wf_auto_step4" bool,
 "wf_auto_step5" bool,
 "wf_auto_step6" bool,
-auth_key varchar(255)
+auth_key varchar(64)
 );
 
 CREATE TABLE org_info (
@@ -355,6 +355,32 @@ exam_duration int not null,
 source_system varchar(32),
 source_record_id varchar(64));
 
+create table asset_clinical_record_errlog(
+id serial not null,
+site_id int,
+hospital_id int,
+asset_id int,
+modality_id varchar(64),
+modality_type_id int,
+modality_type varchar(32),
+procedure_id int,
+procedure_name varchar(32),
+procedure_step_id int,
+procedure_step_name varchar(32),
+price_amount float,
+price_unit varchar(16),
+inject_count float,
+expose_count float,
+film_count int,
+exam_date date,
+exam_start_time time,
+exam_duration int,
+source_system varchar(32),
+source_record_id varchar(64),
+upload_key varchar(256),
+upload_time timestamp,
+err_msg varchar(256));
+
 
 create table supplier(
 id serial not null,
@@ -403,6 +429,7 @@ ALTER TABLE data_table_config ADD PRIMARY KEY (id);
 ALTER TABLE asset_depreciation ADD PRIMARY KEY (id);
 ALTER TABLE file_uploaded ADD PRIMARY KEY (id);
 ALTER TABLE field_code_type ADD PRIMARY KEY (id);
+ALTER TABLE asset_clinical_record_errlog ADD PRIMARY KEY (id);
 
 
 ALTER TABLE "user_account" ADD CONSTRAINT "uk_user_account_login_name" UNIQUE ("login_name");
