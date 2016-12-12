@@ -64,7 +64,7 @@
       xaxis: {
         tickOptions: {
           labelPosition: 'middle',
-          angle: -90
+          angle: -75
         }
       }
     },

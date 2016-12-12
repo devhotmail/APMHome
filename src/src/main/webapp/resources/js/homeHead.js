@@ -128,7 +128,7 @@
         },
         rendererOptions: {
           varyBarColor: true,
-          barWidth: 15
+          barWidth: 10
         }
       },
       seriesColors: ['rgba(96, 189, 103, 1)', 'rgba(250, 164, 58, 1)'],
@@ -143,7 +143,7 @@
         xaxis: {
           tickOptions: {
             labelPosition: 'middle',
-            angle: -90
+            angle: -75
           }
         }
       }
