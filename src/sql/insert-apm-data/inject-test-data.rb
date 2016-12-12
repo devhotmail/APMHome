@@ -40,7 +40,9 @@ end
 # init @conn
 get_conn
 
-line_num = 0
+text = File.open('create_tables.sql').read
+@conn.exec(text)
+
 text = File.open('test_data.sql').read
 text.gsub!(/\r\n?/, "\n")
 text.each_line do |line|
