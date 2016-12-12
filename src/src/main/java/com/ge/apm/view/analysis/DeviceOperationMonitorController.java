@@ -134,8 +134,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
             initBottomView();
             initBottomBars();
         } else {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "提示", "选择范围控制最小1个月，最大1年");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "提示", "选择范围控制最小1个月，最大1年"));
         }
 
     }
@@ -369,10 +368,10 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         return barChartModel;
     }
 
-    private <T extends BarChartModel> T initBarModel(T barChartModel, String title, boolean stacked, String legendPostion, String skin, ImmutableTable<String, String, Integer> table, boolean seriesReversed) {
+    private <T extends BarChartModel> T initBarModel(T barChartModel, String title, boolean stacked, String legendPosition, String skin, ImmutableTable<String, String, Integer> table, boolean seriesReversed) {
         barChartModel.setTitle(title);
         barChartModel.setStacked(stacked);
-        barChartModel.setLegendPosition(legendPostion);
+        barChartModel.setLegendPosition(legendPosition);
         barChartModel.setExtender(skin);
         barChartModel.setShowDatatip(false);
         barChartModel.setShadow(false);

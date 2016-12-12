@@ -12,6 +12,7 @@
 
     <ui:define name="content">
         <h:form>
+            <p:growl id="growl" autoUpdate="true" showDetail="true" />
             <header>
                 <div class="card--title text--center">
                     <div class="ui-g">
@@ -59,7 +60,6 @@
             <div class="ui-g">
                 <div class="ui-g-12">
                     <div class="block u-pv">
-                        <p:growl id="messages" showDetail="true"/>
                         <div class="calendar-range-picker flex flex--row flex--center flex--justify">
                             <p:calendar id="start_date_button" value="#{deviceOperationMonitorController.startDate}"
                                         showOn="button"/>
