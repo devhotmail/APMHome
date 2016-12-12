@@ -192,7 +192,7 @@
         formatString: null,
         tooltipFormatString: '%f 小时'
       },
-      seriesColors: ['rgba(178, 145, 46, 1)', 'rgba(241, 124, 176, 1)'],
+      seriesColors: ['rgba(240, 126, 110, 1)', 'rgba(237, 221, 70, 1)', 'rgba(241, 124, 176, 1)'],
     });
   }
 
