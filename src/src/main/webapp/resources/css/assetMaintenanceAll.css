@@ -540,7 +540,9 @@ td.jqplot-table-legend{text-align:left}
 .block .maintenance-chart4 .jqplot-title--4::before,.block .maintenance-chart6 .jqplot-title--4::before{background-color:#ee7eaf}
 .block .maintenance-chart4 .jqplot-title--5::before,.block .maintenance-chart6 .jqplot-title--5::before{background-color:#b08f39}
 .block .maintenance-chart4 .jqplot-title--6::before,.block .maintenance-chart6 .jqplot-title--6::before{background-color:#decf40}
-.col-1 .jqplot-title::before{background-color:#63bb6c}
-.col-2 .jqplot-title::before{background-color:#ee7eaf}
-.col-3 .jqplot-title::before{background-color:#b08f39}
-.text--unit{font-size:70%}
+.chart-for-step-1 .jqplot-title::before{background-color:#60a5d7}
+.chart-for-step-2 .jqplot-title::before{background-color:#f7a245}
+.chart-for-step-3 .jqplot-title::before{background-color:#63bb6c}
+.chart-for-step-4 .jqplot-title::before{background-color:#ee7eaf}
+.chart-for-step-5 .jqplot-title::before{background-color:#b08f39}
+.chart-for-step-6 .jqplot-title::before{background-color:#dece40}
