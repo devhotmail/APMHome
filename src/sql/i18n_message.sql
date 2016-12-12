@@ -469,12 +469,12 @@ INSERT INTO "i18n_message" VALUES (3020,'message','DeviceInventorySuccess', '设
 
 
 -- Chart label/lengend （id from 5000 to 5500）
-INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量(次)','Scan (Times)',null,-1);
+INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量','Scan (Times)',null,-1);
 INSERT INTO "i18n_message" VALUES (5001,'label','deviceScanlg', '扫描次数','Scan',null,-1);
-INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光量(次)','Exposure (Hours)',null,-1);
+INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光量','Exposure (Hours)',null,-1);
 INSERT INTO "i18n_message" VALUES (5003,'label','deviceExpolg_1', '曝光量','Exposure',null,-1);
 INSERT INTO "i18n_message" VALUES (5004,'label','deviceExpolg_2', '基准曝光量','Scan (Baseline)',null,-1);
-INSERT INTO "i18n_message" VALUES (5005,'label','deviceROIhd', '设备投资回报(元)','ROI (CNY）',null,-1);
+INSERT INTO "i18n_message" VALUES (5005,'label','deviceROIhd', '设备投资回报','ROI (CNY）',null,-1);
 INSERT INTO "i18n_message" VALUES (5006,'label','deviceROIlg_1', '收入','Revenue',null,-1);
 INSERT INTO "i18n_message" VALUES (5007,'label','deviceROIlg_2', '利润','Profit',null,-1);
 INSERT INTO "i18n_message" VALUES (5008,'label','countlb', '次','Count',null,-1);
@@ -509,8 +509,8 @@ INSERT INTO "i18n_message" VALUES (5037,'label','assetsDashboardclm8', '扫描�
 INSERT INTO "i18n_message" VALUES (5038,'label','assetsDashboardclm9', '曝光量(次)','Exposure',null,-1);
 INSERT INTO "i18n_message" VALUES (5039,'label','assetsDashboardclm10', '维修(次)','Maintainance',null,-1);
 INSERT INTO "i18n_message" VALUES (5040,'label','assetsDashboardclm11', '累计停机时长(小时)','Downtime',null,-1);
-INSERT INTO "i18n_message" VALUES (5041,'label','deviceValueScanhd', '总扫描量(次)','Scan',null,-1);
-INSERT INTO "i18n_message" VALUES (5042,'label','deviceValueExpohd', '总曝光量(次)','Exposure',null,-1);
+INSERT INTO "i18n_message" VALUES (5041,'label','deviceValueScanhd', '总扫描量','Scan',null,-1);
+INSERT INTO "i18n_message" VALUES (5042,'label','deviceValueExpohd', '总曝光量','Exposure',null,-1);
 INSERT INTO "i18n_message" VALUES (5045,'label','selectAssetSingle', '选择单台设备','Select a device',null,-1);
 INSERT INTO "i18n_message" VALUES (5046,'label','selectAssetChoose', '选择设备','Select devices',null,-1);
 INSERT INTO "i18n_message" VALUES (5047,'label','WorkOrderConfig', '流程配置','WorkOrder Config',null,-1);
