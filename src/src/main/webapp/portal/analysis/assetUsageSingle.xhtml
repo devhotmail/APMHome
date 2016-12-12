@@ -103,11 +103,11 @@
 					<div class="calendar-range-picker flex flex--row flex--center flex--justify">
 						<p:calendar id="start_date_button" value="#{assetUsageSingleController.startDate}"
 									showOn="button"/>
-						<label>到</label>
+						<label>#{msg.selectSearchInterval_1}</label>
 						<p:calendar id="end_date_button" value="#{assetUsageSingleController.endDate}"
 									showOn="button"/>
 						<label> </label>
-						<p:commandButton id="submit_date" class="btn btn--large" value="确定"
+						<p:commandButton id="submit_date" class="btn btn--large" value="#{msg.selectSearchInterval_2}"
 										 update="calendar_submit value_scan value_expo value_usage_1 value_usage_2 value_usage_3 value_usage_bar scan_bar exposure_bar usage_bar"
 										 actionListener="#{assetUsageSingleController.submit}"/>
 					</div>

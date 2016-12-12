@@ -16,11 +16,10 @@ import com.ge.apm.view.sysutil.UserContextService;
 import java.io.Serializable;
 import javax.faces.bean.ViewScoped;
 
+import org.slf4j.LoggerFactory;
+
 import webapp.framework.dao.NativeSqlUtil;
 import java.time.Year;
-import java.text.NumberFormat;
-import java.text.DecimalFormat;
-
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.ServerEventInterface;
 import com.ge.apm.domain.AssetInfo;
@@ -32,8 +31,10 @@ import com.ge.apm.view.analysis.Row;
 @ViewScoped
 public class AssetPerfAllController implements Serializable, ServerEventInterface {
 
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
+    
     private static final long serialVersionUID = 1L;
-
+    
     // Dashboard Parameters
     private String topAsset = null;
     private String topDept = null;
@@ -90,7 +91,9 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
 
     public void submit() {
-
+  
+    	logger.debug("On Submit ");
+    	
         currentDate = Calendar.getInstance().getTime();
         deviceQuery(startDate, endDate, currentDate);
     }
@@ -98,6 +101,8 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
     public void submit(String targetYear) {
 
+    	logger.debug("On Submit " + targetYear);
+    	
         this.targetYear = Integer.parseInt(targetYear);
         currentDate = Calendar.getInstance().getTime();
         deviceQuery(startDate, endDate, currentDate);
@@ -217,8 +222,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
                 if (item.get("clinical_dept_id") != null)
                     topDept += (getDeptName((Integer)item.get("clinical_dept_id")) + " ");
     }
-
-
+    
     private String getAssetGroup (Integer asset_group) {
 
         if (asset_group==null)
@@ -262,8 +266,6 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
             double profit;
             long repair;
             double dt;
-
-            NumberFormat cf = new DecimalFormat(",###.##");
 
             assetDashBoard.clear();
 

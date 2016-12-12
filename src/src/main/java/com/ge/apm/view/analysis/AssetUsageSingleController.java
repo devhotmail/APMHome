@@ -8,14 +8,17 @@ import java.util.Map;
 
 import com.ge.apm.domain.AssetInfo;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.BarChartSeries;
 import org.primefaces.model.chart.LineChartSeries;
+import org.slf4j.LoggerFactory;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.DateAxis;
@@ -33,11 +36,15 @@ import javax.faces.context.FacesContext;
 @ViewScoped
 public class AssetUsageSingleController implements ServerEventInterface {
 
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
+
 	private static final String deviceScanlg = WebUtil.getMessage("deviceScanlg");
 	private static final String deviceExpolg_1 = WebUtil.getMessage("deviceExpolg_1");
 	private static final String deviceUsagelg_1 = WebUtil.getMessage("deviceUsagelg_1");
 	private static final String deviceUsagelg_2 = WebUtil.getMessage("deviceUsagelg_2");
 	private static final String deviceDTlg_3 = WebUtil.getMessage("deviceDTlg_3");
+    private static final String checkIntervalNotice_1 = WebUtil.getMessage("checkIntervalNotice_1");
+    private static final String checkIntervalNotice_2 = WebUtil.getMessage("checkIntervalNotice_2");
 
 	private static final String DATA_FORMAT = "yyyy-MM-dd";
 	private static final int HOURS_DAY = 24;
@@ -140,11 +147,28 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 	public void submit() {
 
+		logger.debug("On Submit " + startDate + " to " + endDate);
+		
+        if (!checkInterval(startDate, endDate)) {
+        	logger.debug("Invalid search interval");
+            return;
+        }
+        
 		currentDate = Calendar.getInstance().getTime();
 		deviceQuery(startDate, endDate, currentDate);
 
 	}
 
+    private boolean checkInterval(Date startDate, Date endDate) {
+        DateTime start = new DateTime(startDate);
+        Interval interval = new Interval(start.plusMonths(1), start.plusYears(3));
+        boolean flag = interval.contains(new DateTime(endDate));
+        if (!flag) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, checkIntervalNotice_1, checkIntervalNotice_2);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+        return flag;
+    }
 
 	// Chart SQL
 	private String SCANTL
@@ -493,9 +517,9 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		cst_stat_3.set("total", dt_total);
 
 		deviceStat.clear();
-		deviceStat.addSeries(cst_stat_3);
 		deviceStat.addSeries(cst_stat_1);
 		deviceStat.addSeries(cst_stat_2);
+		deviceStat.addSeries(cst_stat_3);
 	}
 
 	private void devicePanel(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {

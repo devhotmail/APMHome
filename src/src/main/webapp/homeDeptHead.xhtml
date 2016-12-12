@@ -57,11 +57,11 @@
 						<div class="calendar-range-picker flex flex--row flex--center flex--justify">
 							<p:calendar id="start_date_button" value="#{homeDeptHeadController.startDate}"
 										showOn="button"/>
-							<label>到</label>
+							<label>#{msg.selectSearchInterval_1}</label>
 							<p:calendar id="end_date_button" value="#{homeDeptHeadController.endDate}"
 										showOn="button"/>
 							<label> </label>
-							<p:commandButton id="submit_date" class="btn btn--large" value="确定"
+							<p:commandButton id="submit_date" class="btn btn--large" value="#{msg.selectSearchInterval_2}"
 											 update="calendar_submit value_scan value_expo value_profit scan_bar exposure_bar profit_bar"
 											 actionListener="#{homeDeptHeadController.submit}"/>
 						</div>

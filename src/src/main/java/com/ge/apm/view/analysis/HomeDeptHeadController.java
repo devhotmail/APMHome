@@ -13,13 +13,19 @@ import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.BarChartSeries;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.LineChartSeries;
+import org.slf4j.LoggerFactory;
 
 import com.ge.apm.view.sysutil.UserContextService;
 import java.io.Serializable;
 import javax.faces.bean.ViewScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
+
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
@@ -28,12 +34,16 @@ import java.text.DecimalFormat;
 @ViewScoped
 public class HomeDeptHeadController implements Serializable {
 
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
+
     private static final long serialVersionUID = 1L;
     private static final String deviceScanlg = WebUtil.getMessage("deviceScanlg");
     private static final String deviceExpolg_1 = WebUtil.getMessage("deviceExpolg_1");
     private static final String deviceExpolg_2 = WebUtil.getMessage("deviceExpolg_2");
     private static final String deviceROIlg_1 = WebUtil.getMessage("deviceROIlg_1");
     private static final String deviceROIlg_2 = WebUtil.getMessage("deviceROIlg_2");
+    private static final String checkIntervalNotice_1 = WebUtil.getMessage("checkIntervalNotice_1");
+    private static final String checkIntervalNotice_2 = WebUtil.getMessage("checkIntervalNotice_2");
 
     // Dashboard Parameters
     private String valueScan = null;
@@ -51,6 +61,7 @@ public class HomeDeptHeadController implements Serializable {
     private int clinical_dept_id = -1;
 
     private NumberFormat cf = new DecimalFormat(",###.##");
+    private NumberFormat cfint = new DecimalFormat(",###");
 
     @PostConstruct
     public void init() {
@@ -91,6 +102,13 @@ public class HomeDeptHeadController implements Serializable {
     }
 
     public void submit() {
+
+    	logger.debug("On Submit " + startDate + " to " + endDate);
+    	
+        if (!checkInterval(startDate, endDate)) {
+        	logger.debug("Invalid search interval");
+            return;
+        }
 
         currentDate = Calendar.getInstance().getTime(); 
         deviceQuery(startDate, endDate, currentDate);
@@ -193,6 +211,17 @@ public class HomeDeptHeadController implements Serializable {
         return valueProfit;
     }
 
+    private boolean checkInterval(Date startDate, Date endDate) {
+        DateTime start = new DateTime(startDate);
+        Interval interval = new Interval(start.plusMonths(1), start.plusYears(3));
+        boolean flag = interval.contains(new DateTime(endDate));
+        if (!flag) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, checkIntervalNotice_1, checkIntervalNotice_2);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+        return flag;
+    }
+
     private void devicePanel(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
 
         List<Map<String, Object>> resultSet;
@@ -201,7 +230,7 @@ public class HomeDeptHeadController implements Serializable {
         resultSet = NativeSqlUtil.queryForList(VALUESCANTL, sqlParams);
         if(!resultSet.isEmpty()) {
             valueScan = cf.format(resultSet.get(0).get("count") != null ? (long)resultSet.get(0).get("count") : 0);
-            valueExpo = cf.format(resultSet.get(0).get("sum") != null ? (double)resultSet.get(0).get("sum") : 0.0);
+            valueExpo = cfint.format(resultSet.get(0).get("sum") != null ? (double)resultSet.get(0).get("sum") : 0.0);
         }
 
     }

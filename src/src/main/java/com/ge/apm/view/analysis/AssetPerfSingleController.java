@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.joda.time.DateTime;
-
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.I18nMessage;
 
@@ -16,16 +14,10 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.joda.time.DateTime;
-import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.BarChartSeries;
 import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.LineChartSeries;
-import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.HorizontalBarChartModel;
-import org.primefaces.model.chart.DateAxis;
+import org.slf4j.LoggerFactory;
 
 import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
@@ -33,9 +25,7 @@ import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.ServerEventInterface;
 
-import java.text.NumberFormat;
 import java.time.Year;
-import java.text.DecimalFormat;
 import javax.faces.context.FacesContext;
 
 import com.ge.apm.view.analysis.Row; 
@@ -44,7 +34,8 @@ import com.ge.apm.view.analysis.Row;
 @ViewScoped
 public class AssetPerfSingleController implements ServerEventInterface {
 
-    private static final long serialVersionUID = 1L;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
+
     private static final String deviceROIlg_1 = WebUtil.getMessage("deviceROIlg_1");
     private static final String deviceROIlg_2 = WebUtil.getMessage("deviceROIlg_2");
 
@@ -62,7 +53,6 @@ public class AssetPerfSingleController implements ServerEventInterface {
     private int clinical_dept_id = -1;
     private int filter_id = -1;
     private int MAX_INTERVAL=4;
-    private static final String YEAR_FORMAT = "yyyy";
     private static final String MONTH_FORMAT = "yyyy-MM";
     private static final String DAY_FORMAT = "yyyy-MM-dd";
 
@@ -77,7 +67,6 @@ public class AssetPerfSingleController implements ServerEventInterface {
     private int assetId = -1;
     private int activeTab = 1;
 
-    private NumberFormat cf = new DecimalFormat(",###.##");
     Map<Integer, String> i18nMessageDept = new HashMap<Integer, String>();
 
     HashMap<String, Object> sqlParams = new HashMap<>();
@@ -140,14 +129,18 @@ public class AssetPerfSingleController implements ServerEventInterface {
 
 
     public void submit() {
-
+        
+    	logger.debug("On Submit ");
+    	
         currentDate = Calendar.getInstance().getTime();
         deviceQuery(startDate, endDate, currentDate);
     }
 
 
     public void submit(String targetYear) {
-
+        
+    	logger.debug("On Submit " + targetYear);
+    	
         this.targetYear = Integer.parseInt(targetYear);
         currentDate = Calendar.getInstance().getTime();
         deviceQuery(startDate, endDate, currentDate);
@@ -538,69 +531,6 @@ public class AssetPerfSingleController implements ServerEventInterface {
 
     }
 
-
-    private void deviceTableDay (Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
-
-
-        List<Map<String, Object>> rs_0;
-        List<Map<String, Object>> rs_1;
-        List<Map<String, Object>> rs_2;
-        List<Map<String, Object>> rs_3;
-
-        rs_0 = NativeSqlUtil.queryForList(DB0TL, sqlParams);
-        rs_1 = NativeSqlUtil.queryForList(DB1TLDAY, sqlParams);
-        rs_2 = NativeSqlUtil.queryForList(DB2TLDAY, sqlParams);
-        rs_3 = NativeSqlUtil.queryForList(DB3TLDAY, sqlParams);                
-
-        double depre = 0.0;
-        String date;
-        String name = "";
-        String serial_num = "";
-        String clinical_dept_name = "";
-
-        if (!rs_0.isEmpty()) {
-            name = rs_0.get(0).get("name")!=null ? (String)rs_0.get(0).get("name") : "";
-            serial_num = rs_0.get(0).get("serial_num")!=null ? (String)rs_0.get(0).get("serial_num") : "";
-            clinical_dept_name = rs_0.get(0).get("clinical_dept_name")!=null ? (String)rs_0.get(0).get("clinical_dept_name") : "";
-        }
-
-
-        if (!rs_2.isEmpty())
-            depre = rs_2.get(0).get("depre")!=null ? (double)rs_2.get(0).get("depre") : 0.0;
-
-        Map<String, Row> rs_1_map = new HashMap<String, Row>();
-        Map<String, Row> rs_3_map = new HashMap<String, Row>();
-        
-        if (!rs_1.isEmpty())
-            for (Map<String, Object> item : rs_1) 
-                rs_1_map.put((String)item.get("key"), new Row(item));
-
-        if (!rs_3.isEmpty())
-            for (Map<String, Object> item : rs_3) 
-                rs_3_map.put((String)item.get("key"), new Row(item, depre));
-
-
-        DateTime startJoda = new DateTime(targetYear + "-1-1");
-        DateTime endJoda;
-
-        assetDashBoard.clear();
-        for (endJoda = startJoda.plusYears(1); startJoda.isBefore(endJoda); startJoda = startJoda.plusDays(1)) {
-
-            date = startJoda.toString(DAY_FORMAT);
-            System.out.println("LOOP = " + date);
-            System.out.println("1: ");
-            if (rs_1_map.get(date)!=null)
-                rs_1_map.get(date).toPrint();
-            System.out.println("2: ");
-            if (rs_3_map.get(date)!=null)
-                rs_3_map.get(date).toPrint();
-            System.out.println("Combined: ");
-            (new Row(name, serial_num, clinical_dept_name, date, rs_1_map.get(date), rs_3_map.get(date), depre)).toPrint();
-            assetDashBoard.add( new Row(name, serial_num, clinical_dept_name, date, rs_1_map.get(date), rs_3_map.get(date), depre) );
-
-        }
-
-    }
 
 
     private void deviceQuery(Date startDate, Date endDate, Date currentDate) {

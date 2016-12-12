@@ -469,21 +469,21 @@ INSERT INTO "i18n_message" VALUES (3020,'message','DeviceInventorySuccess', '设
 
 
 -- Chart label/lengend （id from 5000 to 5500）
-INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量 (次)','Device Scan (Times)',null,-1);
-INSERT INTO "i18n_message" VALUES (5001,'label','deviceScanlg', '扫描次数','Device Scan',null,-1);
-INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光量 (次)','Device Exposure (Hours)',null,-1);
+INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量 (次)','Scan (Times)',null,-1);
+INSERT INTO "i18n_message" VALUES (5001,'label','deviceScanlg', '扫描次数','Scan',null,-1);
+INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光量 (次)','Exposure (Hours)',null,-1);
 INSERT INTO "i18n_message" VALUES (5003,'label','deviceExpolg_1', '曝光量','Exposure',null,-1);
-INSERT INTO "i18n_message" VALUES (5004,'label','deviceExpolg_2', '基准曝光量','Device Scan (Baseline)',null,-1);
-INSERT INTO "i18n_message" VALUES (5005,'label','deviceROIhd', '设备投资回报 （元）','Device ROI (CNY）',null,-1);
+INSERT INTO "i18n_message" VALUES (5004,'label','deviceExpolg_2', '基准曝光量','Scan (Baseline)',null,-1);
+INSERT INTO "i18n_message" VALUES (5005,'label','deviceROIhd', '设备投资回报 （元）','ROI (CNY）',null,-1);
 INSERT INTO "i18n_message" VALUES (5006,'label','deviceROIlg_1', '收入','Revenue',null,-1);
 INSERT INTO "i18n_message" VALUES (5007,'label','deviceROIlg_2', '利润','Profit',null,-1);
 INSERT INTO "i18n_message" VALUES (5008,'label','countlb', '次','Count',null,-1);
 INSERT INTO "i18n_message" VALUES (5009,'label','hourslb', '小时','Hours',null,-1);
 INSERT INTO "i18n_message" VALUES (5010,'label','CNYlb', '元','CNY',null,-1);
-INSERT INTO "i18n_message" VALUES (5011,'label','deviceUsagehd', '设备使用 (小时)','Device Usage',null,-1);
+INSERT INTO "i18n_message" VALUES (5011,'label','deviceUsagehd', '设备使用 (小时)','Usage',null,-1);
 INSERT INTO "i18n_message" VALUES (5012,'label','deviceUsagelg_1', '使用','In-Use',null,-1);
 INSERT INTO "i18n_message" VALUES (5013,'label','deviceUsagelg_2', '空闲','Idle',null,-1);
-INSERT INTO "i18n_message" VALUES (5014,'label','deviceDThd', '设备停机率 （百分比）','Device Downtime (Percent)',null,-1);
+INSERT INTO "i18n_message" VALUES (5014,'label','deviceDThd', '设备停机率 （百分比）','Downtime (Percent)',null,-1);
 INSERT INTO "i18n_message" VALUES (5015,'label','deviceDTlg_1', '停机率','Downtime',null,-1);
 INSERT INTO "i18n_message" VALUES (5016,'label','deviceDTlg_2', '基准停机率','Downtime (Baseline)',null,-1);
 INSERT INTO "i18n_message" VALUES (5017,'label','pctlb', '百分比','Percent',null,-1);
@@ -491,32 +491,39 @@ INSERT INTO "i18n_message" VALUES (5018,'label','devicelb', '设备','Device',nu
 INSERT INTO "i18n_message" VALUES (5019,'label','deviceUsageStat_1', '设备总等待时间 (小时)','In-use (Hours)',null,-1);
 INSERT INTO "i18n_message" VALUES (5020,'label','deviceUsageStat_2', '设备总使用时间 (小时)','Idle (Hours)',null,-1);
 INSERT INTO "i18n_message" VALUES (5021,'label','deviceUsageStat_3', '设备总停机时间 (小时)','Downtime (Hours)',null,-1);
-INSERT INTO "i18n_message" VALUES (5022,'label','deviceScanStat', '设备总扫描量 (次)','Device Scan (Times)',null,-1);
-INSERT INTO "i18n_message" VALUES (5023,'label','deviceExpoStat', '设备总曝光量 (次)','Device Exposure (Times)',null,-1);
+INSERT INTO "i18n_message" VALUES (5022,'label','deviceScanStat', '设备总扫描量 (次)','Scan (Times)',null,-1);
+INSERT INTO "i18n_message" VALUES (5023,'label','deviceExpoStat', '设备总曝光量 (次)','Exposure (Times)',null,-1);
 INSERT INTO "i18n_message" VALUES (5025,'label','deviceDTlg_3', '停机','Downtime',null,-1);
-INSERT INTO "i18n_message" VALUES (5026,'label','devicePerfhd', '设备绩效分析','Device Performance',null,-1);
+INSERT INTO "i18n_message" VALUES (5026,'label','devicePerfhd', '设备绩效分析','Performance',null,-1);
 INSERT INTO "i18n_message" VALUES (5027,'label','assetTopPerfhd', '利润最高设备','Top Asset',null,-1);
 INSERT INTO "i18n_message" VALUES (5028,'label','deptTopPerfhd', '利润最高科室','Top Department',null,-1);
 INSERT INTO "i18n_message" VALUES (5029,'label','assetsDashboardhd', '设备绩效分析汇总','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5030,'label','assetsDashboardclm1', '资产名称','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5031,'label','assetsDashboardclm4', '时间','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5032,'label','assetsDashboardclm2','序列号','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5033,'label','assetsDashboardclm3', '所在科室','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5034,'label','assetsDashboardclm5', '收入 （元）','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5035,'label','assetsDashboardclm6', '运营成本 （元）','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5036,'label','assetsDashboardclm7', '利润 （元）','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5037,'label','assetsDashboardclm8', '扫描量 （次）','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5038,'label','assetsDashboardclm9', '曝光量 （次）','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5039,'label','assetsDashboardclm10', '维修 （次）','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5040,'label','assetsDashboardclm11', '累计停机时长 （小时） ','Top Department',null,-1);
-INSERT INTO "i18n_message" VALUES (5041,'label','deviceValueScanhd', '设备总扫描量 (次)','Device Scan (Times)',null,-1);
-INSERT INTO "i18n_message" VALUES (5042,'label','deviceValueExpohd', '设备总曝光量 (次)','Device Exposure (Times)',null,-1);
+INSERT INTO "i18n_message" VALUES (5030,'label','assetsDashboardclm1', '资产名称','Asset',null,-1);
+INSERT INTO "i18n_message" VALUES (5031,'label','assetsDashboardclm4', '时间','Date',null,-1);
+INSERT INTO "i18n_message" VALUES (5032,'label','assetsDashboardclm2','序列号','Serial Number',null,-1);
+INSERT INTO "i18n_message" VALUES (5033,'label','assetsDashboardclm3', '所在科室','Department',null,-1);
+INSERT INTO "i18n_message" VALUES (5034,'label','assetsDashboardclm5', '收入 （元）','Revenue',null,-1);
+INSERT INTO "i18n_message" VALUES (5035,'label','assetsDashboardclm6', '运营成本 （元）','Cost',null,-1);
+INSERT INTO "i18n_message" VALUES (5036,'label','assetsDashboardclm7', '利润 （元）','Profit',null,-1);
+INSERT INTO "i18n_message" VALUES (5037,'label','assetsDashboardclm8', '扫描量 （次）','Scan',null,-1);
+INSERT INTO "i18n_message" VALUES (5038,'label','assetsDashboardclm9', '曝光量 （次）','Exposure',null,-1);
+INSERT INTO "i18n_message" VALUES (5039,'label','assetsDashboardclm10', '维修 （次）','Maintainance',null,-1);
+INSERT INTO "i18n_message" VALUES (5040,'label','assetsDashboardclm11', '累计停机时长 （小时） ','Downtime',null,-1);
+INSERT INTO "i18n_message" VALUES (5041,'label','deviceValueScanhd', '设备总扫描量 (次)','Scan',null,-1);
+INSERT INTO "i18n_message" VALUES (5042,'label','deviceValueExpohd', '设备总曝光量 (次)','Exposure',null,-1);
 INSERT INTO "i18n_message" VALUES (5045,'label','selectAssetSingle', '选择单台设备','Select a device',null,-1);
 INSERT INTO "i18n_message" VALUES (5046,'label','selectAssetChoose', '选择设备','Select devices',null,-1);
 INSERT INTO "i18n_message" VALUES (5047,'label','WorkOrderConfig', '流程配置','WorkOrder Config',null,-1);
 INSERT INTO "i18n_message" VALUES (5048,'label','deviceValueRevenuehd', '设备总收入 （元）','Revenue （CNY)',null,-1);
 INSERT INTO "i18n_message" VALUES (5049,'label','deviceValueCosthd', '设备总成本 （元）','Cost （CNY)',null,-1);
-INSERT INTO "i18n_message" VALUES (5050,'label','deviceValueROIhd', '设备总利润 （元）','Profit （CNY)',null,-1);
+INSERT INTO "i18n_message" VALUES (5050,'label','groupByMonth', '月','Month',null,-1);
+INSERT INTO "i18n_message" VALUES (5051,'label','groupByDay', '日','Day',null,-1);
+INSERT INTO "i18n_message" VALUES (5052,'label','groupByYear', '年','Year',null,-1);
+INSERT INTO "i18n_message" VALUES (5053,'label','checkIntervalNotice_1', '提示','Notice',null,-1);
+INSERT INTO "i18n_message" VALUES (5054,'label','checkIntervalNotice_2', '选择范围控制最小1个月，最大3年','Search interval between 1 month and 3 years',null,-1);
+INSERT INTO "i18n_message" VALUES (5055,'label','selectSearchInterval_1', '到','to',null,-1);
+INSERT INTO "i18n_message" VALUES (5056,'label','selectSearchInterval_2', '确定','Submit',null,-1);
+
 -- device maintenance
 
 INSERT INTO "i18n_message" VALUES (5501,'label','maintenanceAnalysis_title', '设备维修事件统计分析','Device Maintenance Analysis',null,-1);

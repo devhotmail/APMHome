@@ -92,13 +92,13 @@
                         <h3 class="block-title">#{msg.assetsDashboardhd}</h3>
                         <h:form id="GroupByForm" styleClass="ui-g">
                         <p:tabMenu id="tabMenu" activeIndex="#{assetPerfSingleController.activeTab}" >
-                            <p:menuitem value="Day"
+                            <p:menuitem value="#{msg.groupByDay}"
                                         actionListener="#{assetPerfSingleController.onSelect('0')}"
                                         update=":GroupByForm:tabMenu AssetInfoListForm"/>
-                            <p:menuitem value="Month"
+                            <p:menuitem value="#{msg.groupByMonth}"
                                         actionListener="#{assetPerfSingleController.onSelect('1')}"
                                         update=":GroupByForm:tabMenu AssetInfoListForm"/>
-                            <p:menuitem value="Year"
+                            <p:menuitem value="#{msg.groupByYear}"
                                         actionListener="#{assetPerfSingleController.onSelect('2')}"
                                         update=":GroupByForm:tabMenu AssetInfoListForm"/>
                         </p:tabMenu>
