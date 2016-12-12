@@ -1,3 +1,4 @@
+@import "px-viewport-design/_base.viewport.scss";
 @import "variables";
 // Settings
 @import "px-colors-design/_settings.colors.scss";
@@ -9,7 +10,6 @@
 @import "px-list-inline-design/_objects.list-inline.scss";
 @import "px-list-bare-design/_objects.list-bare.scss";
 @import "px-headings-design/_base.headings.scss";
-@import "px-viewport-design/_base.viewport.scss";
 @import "px-layout-design/_objects.layout.scss";
 @import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
 @import "px-widths-responsive-design/_trumps.widths-responsive.scss";

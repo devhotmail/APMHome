@@ -38,49 +38,48 @@
 			</div>
 			<div class="card--summary">
 				<div class="ui-g">
-					<div class="ui-md-6 ui-lg-3">
-						<div class="epsilon u-mv-">#{msg.deviceScanStat}</div>
+					<div class="ui-md-2">
+						<div class="text--scale epsilon u-mv-">#{msg.deviceScanStat}</div>
 						<p:outputPanel id="value_scan">
-							<div class="text--banner u-mt+ delta">
+							<div class="text--scale u-mt+ delta">
 								<h:outputText value="#{assetUsageAllController.valueScan}"/>
 								<span class="text--unit text--secondary"></span>
 							</div>
 						</p:outputPanel>
 					</div>
-					<div class="ui-md-6 ui-lg-3">
-						<div class="epsilon u-mv-">#{msg.deviceExpoStat}</div>
+					<div class="ui-md-2">
+						<div class="text--scale epsilon u-mv-">#{msg.deviceExpoStat}</div>
 						<p:outputPanel id="value_expo">
-							<div class="text--banner u-mt+ delta">
+							<div class="text--scale u-mt+ delta">
 								<h:outputText value="#{assetUsageAllController.valueExpo}"/>
 								<span class="text--unit text--secondary"></span>
 							</div>
 						</p:outputPanel>
 					</div>
-					<div class="visible-portable divide-line-bottom"></div>
-					<div class="ui-md-12 ui-lg-6">
+					<div class="ui-md-8">
 						<div class="ui-g">
 							<div class="ui-md-4">
-								<div class="epsilon u-mb--">#{msg.deviceUsageStat_1}</div>
+								<div class="text--scale epsilon u-mb--">#{msg.deviceUsageStat_1}</div>
 								<p:outputPanel id="value_usage_1">
-									<div class="text--banner epsilon">
+									<div class="text--scale epsilon">
 										<h:outputText value="#{assetUsageAllController.valueWait}"/>
 										<span class="text--unit text--secondary"></span>
 									</div>
 								</p:outputPanel>
 							</div>
 							<div class="ui-md-4">
-								<div class="epsilon u-mb--">#{msg.deviceUsageStat_2}</div>
+								<div class="text--scale epsilon u-mb--">#{msg.deviceUsageStat_2}</div>
 								<p:outputPanel id="value_usage_2">
-									<div class="text--banner epsilon">
+									<div class="text--scale epsilon">
 										<h:outputText value="#{assetUsageAllController.valueInuse}"/>
 										<span class="text--unit text--secondary"></span>
 									</div>
 								</p:outputPanel>
 							</div>
 							<div class="ui-md-4">
-								<div class="epsilon u-mb--">#{msg.deviceUsageStat_3}</div>
+								<div class="text--scale epsilon u-mb--">#{msg.deviceUsageStat_3}</div>
 								<p:outputPanel id="value_usage_3">
-									<div class="text--banner epsilon">
+									<div class="text--scale epsilon">
 										<h:outputText value="#{assetUsageAllController.valueDT}"/>
 										<span class="text--unit text--secondary"></span>
 									</div>

@@ -36,3 +36,23 @@ $inuit-enable-btn--primary: true;
 $inuit-enable-btn--large: true;
 
 $inuit-enable-table--small: true;
+
+$breakpoints: (
+/* Predix breakpoints */
+"palm" "screen and (max-width: 47.9rem)",
+"lap" "screen and (min-width: 48rem) and (max-width: 63.9rem)",
+"lap-and-up" "screen and (min-width: 48rem)",
+"portable" "screen and (max-width: 63.9rem)",
+"desk" "screen and (min-width: 63.9rem)",
+"desk-wide" "screen and (min-width: #{$desk-wide-width})",
+"retina" "(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi), (min-resolution: 2dppx)" "sm" "screen and (max-width: 40em)",
+
+/* Reflect grid breakpoints */
+"sm" "screen and (max-width: 767px)",
+"md" "screen and (min-width: 768) and (max-width: 991px)",
+"lg" "screen and (min-width: 992px) and (max-width: 1199px)",
+"xl" "screen and (min-width: 1200px)",
+
+/* Reflect Ultima layout menu open */
+"nomenu" "screen and (max-width: 1024px)"
+);
