@@ -1,9 +1,10 @@
+$main-bg-color: rgb(110, 112, 114);
+$topbar-height: 75px;
+$card-title-height: 60px;
+$summary-height: 100px;
+$body-padding-top: $topbar-height + $summary-height + $card-title-height;
+
 .layout-compact .layout-wrapper {
-  $main-bg-color: rgb(110, 112, 114);
-  $topbar-height: 75px;
-  $card-title-height: 60px;
-  $summary-height: 100px;
-  $body-padding-top: $topbar-height + $summary-height + $card-title-height;
 
   header {
     position: fixed;

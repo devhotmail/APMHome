@@ -516,6 +516,10 @@ td.jqplot-table-legend{text-align:left}
 .chart-device-stat.vertical .jqplot-table-legend-label:before{content:'';display:block;width:100px;position:absolute;right:0;top:0;height:1px;background-color:#7c7c84}
 .chart-device-stat.vertical tr.jqplot-table-legend:last-child .jqplot-table-legend-label:before{display:none}
 .chart-device-stat.vertical table.jqplot-table-legend{margin:65px 0 0 0;height:100%;position:absolute!important;right:auto!important;left:-30px!important;background:0 0;margin-right:0}
+body.layout-compact .chart-device-stat.horizontal .jqplot-point-label{position:relative}
+@media screen and (max-width:1024px){body.layout-compact .chart-device-stat.horizontal .jqplot-point-label{font-size:.8rem;line-height:1.66667}
+}
+body.layout-compact .chart-device-stat.horizontal .jqplot-point-label:after{content:'';position:absolute;background:#6e7072;display:block;width:5px;height:50px;top:-10px;right:-10px}
 body.layout-compact .chart-device-stat-bypart,body.layout-compact .chart-device-statbytime{height:400px}
 body.layout-compact .body-shape{height:400px;min-width:200px}
 body.layout-compact .chart-device-stat.chart-device-2.vertical{margin-top:-40px}

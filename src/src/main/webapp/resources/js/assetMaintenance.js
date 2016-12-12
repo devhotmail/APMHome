@@ -115,12 +115,15 @@
       };
     }, {total: 0, num: 0});
 
-    var avg = sum.total === 0 ? 1: sum.total/sum.num;
+    var avg = sum.total === 0 ? 1 : sum.total / sum.num;
+    var min = sum.total === 0 ? avg : sum.total / 15;
 
     return data.map(function(slot) {
       var item = slot[0];
       if (item[0] === 0) {
-        item[0] = avg;
+        item[0] = min;
+      } else if (item[0] < min) {
+        item[0] = min;
       }
       return slot;
     });
@@ -185,6 +188,7 @@
     var _this = this;
     _this.lastVal = 0;
     var data = this.cfg.data;
+    //data = [[[111, 1]], [[93, 1]], [[1, 1]], [[95, 1]], [[115, 1]], [[103, 1]]]
     var series = displayPointLabels.call(this);
     var colors = displayColors(data);
     // special placeholder value

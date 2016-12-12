@@ -7,6 +7,22 @@
   .jqplot-axis.jqplot-xaxis, .jqplot-axis.jqplot-yaxis, .jqplot-title {
     display: none;
   }
+
+  .jqplot-point-label {
+    position: relative;
+    color: transparent;
+
+    &:after {
+      content: '';
+      position: absolute;
+      background: $main-bg-color;
+      display: block;
+      width: 5px;
+      height: 10px;
+      right: -10px;
+      top: 0;
+    }
+  }
 }
 
 .text--unit {

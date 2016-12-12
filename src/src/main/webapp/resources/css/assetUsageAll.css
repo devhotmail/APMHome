@@ -518,6 +518,8 @@ td.jqplot-table-legend{text-align:left}
 .chart-device-stat.vertical table.jqplot-table-legend{margin:65px 0 0 0;height:100%;position:absolute!important;right:auto!important;left:-30px!important;background:0 0;margin-right:0}
 .chart-device-stat{height:50px}
 .chart-device-stat .jqplot-axis.jqplot-xaxis,.chart-device-stat .jqplot-axis.jqplot-yaxis,.chart-device-stat .jqplot-title{display:none}
+.chart-device-stat .jqplot-point-label{position:relative;color:transparent}
+.chart-device-stat .jqplot-point-label:after{content:'';position:absolute;background:#6e7072;display:block;width:5px;height:10px;right:-10px;top:0}
 .text--unit{font-size:70%}
 @media screen and (min-width:992px) and (max-width:1199px){.text--scale{font-size:99%}
 }

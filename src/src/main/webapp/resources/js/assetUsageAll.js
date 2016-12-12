@@ -2,6 +2,12 @@
 
   // TODO: label ist from database
   var CURRENCY = "%'.2f";
+  var VIS_COLORS = [
+    'rgba(241, 124, 176, 1)',
+    'rgba(178, 145, 46, 1)',
+    'rgba(229, 17, 111, 1)'
+  ];
+  var VIS_COLOR_BLANK = 'rgba(153, 153, 163, 1)';
 
   var base = {
     shadow: false,
@@ -87,15 +93,71 @@
     return data.reduce(function(sum, serie) {
       var val = serie[0];
       return sum + (typeof val === 'number' ? val : serie.reduce(function(serieSum, slot) {
-                return serieSum + slot[0];
-              }, 0)
-          );
+            return serieSum + slot[0];
+          }, 0)
+        );
     }, 0);
+  }
+
+  function barDisplayValues(data) {
+    var sum = data.reduce(function(sum, serie) {
+      var item = serie[0];
+      var val = (typeof val === 'number' ? val : serie.reduce(function(serieSum, slot) {
+        return serieSum + slot[0];
+      }, 0) );
+
+      return {
+        total: val + sum.total,
+        num: val !== 0 ? sum.num + 1 : sum.num
+      };
+    }, {total: 0, num: 0});
+
+    var avg = sum.total === 0 ? 1 : sum.total / sum.num;
+    var min = sum.total === 0 ? avg : sum.total / 20;
+
+    return data.map(function(slot) {
+      var item = slot[0];
+      if (item[0] === 0) {
+        item[0] = avg;
+      } else if (item[0] < min) {
+        item[0] = min;
+      }
+      return slot;
+    });
+  }
+
+  function displayPointLabels() {
+    var data = this.cfg.data;
+    var labels = this.cfg.series.map(function(serie) {
+      return serie.label;
+    });
+
+    return data.map(function(slot, i) {
+      var item = slot[0];
+      return {
+        pointLabels: {
+          labels: [[labels[i], parseInt(item[0]) || '']]
+        }
+      };
+    });
+  }
+
+  function displayColors(data) {
+    return data.map(function(slot, i) {
+      var item = slot[0];
+      return item[0] ? VIS_COLORS[i] : VIS_COLOR_BLANK;
+    });
   }
 
   window.deviceStat = function() {
     var _this = this;
     var data = this.cfg.data;
+    //data = [[[332937.2227777777, 1]], [[6658, 1]], [[27663.943888888898, 1]]];
+    //data = [[[332937, 1]], [[0, 1]], [[27663, 1]]];
+    var colors = displayColors(data);
+    // special placeholder value
+    data = barDisplayValues(data);
+    this.cfg.data = data;
     var total = seriesSum(data);
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
       legend: {
@@ -118,8 +180,11 @@
           highlightMouseOver: false,
         },
         pointLabels: {
-          show: false
-        }
+          show: true,
+          location: 'w',
+          edgeTolerance: 0,
+          hideZeros: false,
+        },
       },
       axesDefault: {
         tickOptions: {
@@ -147,7 +212,7 @@
           }
         },
       },
-      seriesColors: ['rgba(241, 124, 176, 1)', 'rgba(178, 145, 46, 1)', 'rgba(229, 17, 111, 1)']
+      seriesColors: colors
     });
   }
 

@@ -86,7 +86,10 @@
 								</p:outputPanel>
 							</div>
 						</div>
-						<p:chart widgetVar="deviceStat" class="chart-device-stat" id="value_usage_bar" type="bar" model="#{assetUsageAllController.deviceStat}"/>
+						<div class="chart-device-stat horizontal">
+							<p:chart widgetVar="deviceStat" id="value_usage_bar" type="bar"
+									 model="#{assetUsageAllController.deviceStat}"/>
+						</div>
 					</div>
 				</div>
 			</div>
