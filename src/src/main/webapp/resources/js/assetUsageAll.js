@@ -47,6 +47,7 @@
   };
 
   var base_bar_chart = {
+    resetAxesOnResize: false,
     height: 300,
     legend: {
       show: true,
@@ -152,9 +153,6 @@
 
   window.deviceScan = function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
-      legend: {
-        labels: ['扫描量'],
-      },
       highlighter: {
         show: true,
         tooltipAxes: 'y',
@@ -167,9 +165,6 @@
 
   window.deviceExpo = function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
-      legend: {
-        labels: ['扫描量'],
-      },
       highlighter: {
         show: true,
         tooltipAxes: 'y',
@@ -197,18 +192,12 @@
         formatString: null,
         tooltipFormatString: '%f 小时'
       },
-      legend: {
-        labels: ['使用','等待'],
-      },
       seriesColors: ['rgba(178, 145, 46, 1)', 'rgba(241, 124, 176, 1)'],
     });
   }
 
   window.deviceDT = function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
-      legend: {
-        labels: ['停机率','基准停机率'],
-      },
       highlighter: {
         show: true,
         tooltipAxes: 'y',
@@ -226,5 +215,12 @@
       seriesColors: ['rgba(229, 17, 111, 1)', 'rgba(178, 118, 178, 1)'],
     });
   }
+
+  $(window).resize(function() {
+    if('deviceStat' in PrimeFaces.widgets){
+      var plot1 = PrimeFaces.widgets.deviceStat.plot;
+      plot1.replot({resetAxes: false});
+    }
+  });
 
 })();
