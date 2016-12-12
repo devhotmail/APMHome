@@ -261,6 +261,8 @@ end
 table = "inspection_order"
 totalrecords = 3000
 for i in 1..totalrecords
+  # TODO: fix "null value in column "hospital_id" violates not-null constraint (PG::NotNullViolation)"
+  hospital_id = [1, 2, 2, 3].sample
   order_type = randnum.rand(1..3)
   site_id = randnum.rand(1..2)
   name = "#{["巡检","计量","质控"][order_type - 1]}-#{i}"
@@ -281,10 +283,10 @@ for i in 1..totalrecords
 
 
   sql = "insert into #{table} (order_type, site_id, name, creator_id, creator_name, create_time, owner_id, owner_name,
-         owner_org_id, owner_org_name, start_time, end_time, is_finished) values (\'#{order_type}\', \'#{site_id}\', \'#{name}\',
+         owner_org_id, owner_org_name, start_time, end_time, is_finished, hospital_id) values (\'#{order_type}\', \'#{site_id}\', \'#{name}\',
         \'#{creator_id}\', \'#{creator_name}\',\'#{create_time}\', \'#{owner_id}\',
         \'#{owner_name}\', \'#{owner_org_id}\', \'#{owner_org_name}\', \'#{start_time}\', \'#{end_time}\',
-        \'#{is_finished}\')"
+        \'#{is_finished}\', \'#{hospital_id}\')"
   puts sql
   conn.exec(sql)
 end
