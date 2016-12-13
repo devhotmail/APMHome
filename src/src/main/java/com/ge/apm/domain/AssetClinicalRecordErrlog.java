@@ -10,8 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -84,8 +82,8 @@ public class AssetClinicalRecordErrlog implements Serializable {
     @Column(name = "source_record_id")
     private String sourceRecordId;
     @Size(max = 256)
-    @Column(name = "site_key")
-    private String siteKey;
+    @Column(name = "edge_server_key")
+    private String edgeServerKey;
     @Column(name = "upload_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date uploadTime;
@@ -268,12 +266,12 @@ public class AssetClinicalRecordErrlog implements Serializable {
         this.sourceRecordId = sourceRecordId;
     }
 
-    public String getSiteKey() {
-        return siteKey;
+    public String getEdgeServerKey() {
+        return edgeServerKey;
     }
 
-    public void setSiteKey(String siteKey) {
-        this.siteKey = siteKey;
+    public void setEdgeServerKey(String edgeServerKey) {
+        this.edgeServerKey = edgeServerKey;
     }
 
     public Date getUploadTime() {

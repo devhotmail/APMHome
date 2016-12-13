@@ -58,7 +58,7 @@ public class DataUploadServiceImpl implements DataUploadService{
             AssetClinicalRecordErrlog assetClinicalRecordErrlog = new AssetClinicalRecordErrlog();
             BeanUtils.copyProperties(assetClinicalRecord, assetClinicalRecordErrlog);
 
-            assetClinicalRecordErrlog.setSiteKey(edgeServerKey);
+            assetClinicalRecordErrlog.setEdgeServerKey(edgeServerKey);
             assetClinicalRecordErrlog.setUploadTime(TimeUtil.now());
 
             String errMsg = ex.getMessage();
