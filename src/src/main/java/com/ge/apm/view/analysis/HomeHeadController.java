@@ -721,7 +721,6 @@ public class HomeHeadController extends SqlConfigurableChartController {
         Map<String, String> messages_map = new HashMap<String, String>();
 
         for (I18nMessage local : messages) {
-                System.out.println(local.getMsgKey() + ":" + local.getValue());
                 messages_map.put(local.getMsgKey(), local.getValue());
         }
 

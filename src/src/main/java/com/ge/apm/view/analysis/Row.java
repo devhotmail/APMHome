@@ -19,7 +19,7 @@ public class Row {
         private double dt;
 
         private final NumberFormat cf = new DecimalFormat(",###.##");
-
+        private NumberFormat cfint = new DecimalFormat(",###");
 
         public Row (String name, String serial_num, String clinical_dept_name, double revenue, long scan,
                     double expo, double cost, double profit, long repair, double dt) {
@@ -136,7 +136,7 @@ public class Row {
 
         public String getExpo() {
 
-            return cf.format(expo);
+            return cfint.format(expo);
         }
 
         public String getCost() {

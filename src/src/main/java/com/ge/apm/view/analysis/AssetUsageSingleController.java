@@ -71,6 +71,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 	private String assetName = null;
 
 	private NumberFormat cf = new DecimalFormat(",###.##");
+	private NumberFormat cfint = new DecimalFormat(",###");
 
 	//debug param
 	private long a;
@@ -535,7 +536,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		rs_panel = NativeSqlUtil.queryForList(VALUEEXPOTL, sqlParams);
 
 		if (!rs_panel.isEmpty())
-			valueExpo = cf.format(rs_panel.get(0).get("sum")  != null ? (double)rs_panel.get(0).get("sum") : 0.0);
+			valueExpo = cfint.format(rs_panel.get(0).get("sum")  != null ? (double)rs_panel.get(0).get("sum") : 0.0);
 
 	}
 

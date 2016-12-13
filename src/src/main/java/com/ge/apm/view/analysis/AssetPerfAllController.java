@@ -51,8 +51,8 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
     private String assetName = WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");
     private int assetId = -1;
-    Map<Integer, String> i18nMessageAsset = new HashMap<Integer, String>();
-    Map<Integer, String> i18nMessageDept = new HashMap<Integer, String>();
+    Map<String, String> i18nMessageAsset = new HashMap<String, String>();
+    Map<String, String> i18nMessageDept = new HashMap<String, String>();
 
     @PostConstruct
     public void init() {
@@ -74,15 +74,13 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
         List<I18nMessage> messages1 = fieldMsg.getFieldValueList("assetGroup");
         List<I18nMessage> messages2 = fieldMsg.getFieldValueList("clinicalDeptId");
 
+        for (I18nMessage local1 : messages1) {
+            i18nMessageAsset.put(local1.getMsgKey(), local1.getValue());
+        }
 
-
-        int i = 0;
-        for (I18nMessage local1 : messages1)
-            i18nMessageAsset.put(++i, local1.getValue());
-
-        i = 0;
-        for (I18nMessage local2 : messages2)
-            i18nMessageDept.put(++i, local2.getValue());
+        for (I18nMessage local2 : messages2){
+            i18nMessageDept.put(local2.getMsgKey(), local2.getValue());
+        }
 
 
         deviceQuery(startDate, endDate, currentDate);
@@ -214,8 +212,9 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
             List<Map<String, Object>> rs_mx1 = NativeSqlUtil.queryForList(MAX1TL, sqlParams);
 
             for (Map<String, Object> item : rs_mx1)
-                if (item.get("asset_group") != null)
+                if (item.get("asset_group") != null) {
                     topAsset += (getAssetGroup((Integer)item.get("asset_group")) + " ");
+                }
 
             List<Map<String, Object>> rs_mx2 = NativeSqlUtil.queryForList(MAX2TL, sqlParams);
             for (Map<String, Object> item : rs_mx2)
@@ -227,8 +226,8 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
         if (asset_group==null)
             return "";
-        else if (i18nMessageAsset.containsKey(asset_group))
-            return i18nMessageAsset.get(asset_group);
+        else if (i18nMessageAsset.containsKey(String.valueOf(asset_group)))
+            return i18nMessageAsset.get(String.valueOf(asset_group));
         else
             return String.valueOf(asset_group);
     }
@@ -237,8 +236,8 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
         if (clinical_dept_id==null)
             return "";
-        else if (i18nMessageDept.containsKey(clinical_dept_id))
-            return i18nMessageDept.get(clinical_dept_id);
+        else if (i18nMessageDept.containsKey(String.valueOf(clinical_dept_id)))
+            return i18nMessageDept.get(String.valueOf(clinical_dept_id));
         else
             return String.valueOf(clinical_dept_id);
     }
