@@ -378,7 +378,7 @@ exam_start_time time,
 exam_duration int,
 source_system varchar(32),
 source_record_id varchar(64),
-upload_key varchar(256),
+edge_server_key varchar(256),
 upload_time timestamp,
 err_msg varchar(256));
 
@@ -409,17 +409,18 @@ create table asset_depreciation(
 id serial not null,
 site_id int not null,
 asset_id int not null,
-contract_id int not null,
 deprecate_date date not null,
-deprecate_amount float not null
+deprecate_amount float not null,
+contract_id int
 );
 
 create table edge_server_info(
 id serial not null,
 site_id int,
 hospital_id int,
+hospital_name varchar(64),
+edge_server_name varchar(64),
 edge_server_key varchar(256),
-registration_date date,
 is_enabled bool
 );
 
