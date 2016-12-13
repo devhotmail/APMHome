@@ -1,9 +1,16 @@
 (function() {
-  var BODY_PART_COLORS = ["rgba(96, 165, 215, 1)", "rgba(246, 162, 70, 1)", "rgba(99, 187, 108, 1)", "rgba(238, 126, 175, 1)", "rgba(176, 143, 56, 1)"];
-  var BODY_PART_COLORS_REVERTED = BODY_PART_COLORS.slice(0).reverse();
-  var BASELINE_COLOR = 'rgba(229,92,0,.8)';
+  var VIS_COLORS = ["rgba(96, 165, 215, 1)", "rgba(246, 162, 70, 1)", "rgba(99, 187, 108, 1)", "rgba(238, 126, 175, 1)", "rgba(176, 143, 56, 1)"];
+  var BASELINE_COLOR = 'rgb(229,92,0)';
+
   var base_chart = {
-    resetAxesOnResize: false,
+    title: '',
+    animate: !$.jqplot.use_excanvas,
+    grid: {
+      background: '#ffffff',
+      borderColor: 'transparent',
+      drawGridlines: true,
+      shadow: false
+    },
     legend: {
       show: true,
       rendererOptions: {
@@ -12,11 +19,13 @@
       location: 'ne',
       renderer: $.jqplot.EnhancedPieLegendRenderer
     },
+    resetAxesOnResize: false,
     highlighter: {
       show: true
     },
     axes: {
       xaxis: {
+        renderer: $.jqplot.CategoryAxisRenderer,
         tickOptions: {
           labelPosition: 'middle',
           angle: -90
@@ -30,12 +39,13 @@
       rendererOptions: {
         highlightMouseOver: true,
         smooth: false,
-        barWidth: 10,
+        barWidth: 20,
         animation: {
           speed: 500
         },
       }
     },
+    seriesColors: VIS_COLORS,
     canvasOverlay: {
       show: true,
       objects: [
@@ -54,10 +64,21 @@
   };
 
   window.briefSkin = function() {
-    $.extend(true/*recursive*/, this.cfg, base_chart);
+    $.extend(true/*recursive*/, this.cfg, base_chart, {
+      height: 150,
+      axes: {
+        xaxis: {
+          tickOptions: {
+            show: false
+          }
+        }
+      }
+    });
   };
   window.detailSkin = function() {
-    $.extend(true/*recursive*/, this.cfg, base_chart, {});
+    $.extend(true/*recursive*/, this.cfg, base_chart, {
+      height: 250,
+    });
   };
 
 })();
