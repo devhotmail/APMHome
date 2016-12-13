@@ -39,7 +39,7 @@ public class AssetProcurementController {
     private final static Logger log = LoggerFactory.getLogger(AssetProcurementController.class);
     private final static DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     private final static ImmutableMap<Integer, String> parts = ImmutableMap.of(1, "头部", 2, "胸部", 3, "腹部", 4, "四肢", 5, "其他");
-    private final static int DAILY_UTIL_BENCHMARK = 9 * 60 * 60;
+    private final static int DAILY_UTIL_BENCHMARK = 8 * 60 * 60;
     private final Map<String, String> queries;
     private final JdbcTemplate jdbcTemplate;
     private final int siteId;
@@ -201,14 +201,15 @@ public class AssetProcurementController {
     private void initIncome() {
         for (Detail detail : details.values()) {
             if (detail.getNumPurchase() > 0) {
-                detail.setForecastIncomeNoneAction(detail.getLastFstYearIncome());
-                detail.setForecastIncomeAfterAction(predictNext(detail.lastSndYearIncome, detail.lastFstYearIncome));
+                detail.setForecastIncomeNoneAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)));
+                detail.setForecastIncomeAfterAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() * (detail.forecastAvgUtilPercent / 100) : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)) * (detail.forecastAvgUtilPercent / 100));
                 detail.setForecastIncreaseAfterAction(detail.forecastIncomeAfterAction - detail.forecastIncomeNoneAction);
             } else {
-                detail.setForecastIncomeNoneAction(predictNext(detail.lastSndYearIncome, detail.lastFstYearIncome));
-                detail.setForecastIncomeAfterAction(predictNext(detail.lastSndYearIncome, detail.lastFstYearIncome));
-                detail.setForecastIncreaseAfterAction(predictNext(detail.lastSndYearIncome, detail.lastFstYearIncome) - detail.lastFstYearIncome);
+                detail.setForecastIncomeNoneAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)));
+                detail.setForecastIncomeAfterAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)));
+                detail.setForecastIncreaseAfterAction(0d);
             }
+            log.info("incomeNoneAction:{}, incomeAfterAction:{}, increase:{}", detail.forecastIncomeNoneAction, detail.forecastIncomeAfterAction, detail.forecastIncreaseAfterAction);
         }
     }
 

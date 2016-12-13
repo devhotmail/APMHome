@@ -214,7 +214,7 @@ end
 
 
 table = "asset_clinical_record"
-totalrecords = 600000
+totalrecords = 200000
 for i in 1..totalrecords
   site_id = randnum.rand(1..2)
   hospital_id = [1, 2, 2, 3].sample
