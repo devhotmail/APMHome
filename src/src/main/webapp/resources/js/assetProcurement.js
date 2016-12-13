@@ -16,8 +16,7 @@
       rendererOptions: {
         numberRows: 1
       },
-      location: 'ne',
-      renderer: $.jqplot.EnhancedPieLegendRenderer
+      location: 'ne'
     },
     resetAxesOnResize: false,
     highlighter: {
@@ -65,6 +64,9 @@
 
   window.briefSkin = function() {
     $.extend(true/*recursive*/, this.cfg, base_chart, {
+      highlighter: {
+        show: false
+      },
       height: 150,
       axes: {
         xaxis: {
@@ -76,9 +78,15 @@
     });
   };
   window.detailSkin = function() {
-    $.extend(true/*recursive*/, this.cfg, base_chart, {
+    var cfg = {
       height: 250,
-    });
+    };
+    // set opacity for series color
+    if (this.cfg.widgetVar === 'predictBarChart') {
+      cfg.seriesColors = VIS_COLORS.map(function(rgba) {
+        return rgba.replace(/1\)$/, '.7)');
+      });
+    }
+    $.extend(true/*recursive*/, this.cfg, base_chart, cfg);
   };
-
 })();

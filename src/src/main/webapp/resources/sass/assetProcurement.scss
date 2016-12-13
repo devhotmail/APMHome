@@ -23,6 +23,12 @@
     margin: .5rem 0;
   }
 
+  > hr {
+    border-width: 0;
+    background-color: transparent;
+    border-bottom: 1px solid $gray6;
+  }
+
   &-subtitle {
     color: $gray6;
   }
@@ -44,21 +50,50 @@
   }
 }
 
+a.device-block {
+  display: block;
+  color: inherit;
+  &:hover, &:link, &:visited {
+    color: inherit;
+  }
+}
+
 .device-brief-list, .device-details-list {
   table.jqplot-table-legend {
     display: none;
   }
 }
 
-.device-brief-list .device-block {
-  cursor: pointer;
+@keyframes slide-in {
+  to {
+    max-height: 1000px;
+  }
+}
+@keyframes slide-out {
+  to {
+    max-height: 0;
+  }
 }
 
 .device-details-list {
   margin: 5px;
   border: 1px solid $gray6;
   border-top-width: 0;
-  & > *:not(:first-child) {
-    display: none;
+
+  .device-block-wrapper {
+    overflow: hidden;
+    animation-name: slide-out;
+    animation-duration: .3s;
+    animation-fill-mode: forwards;
+    max-height: 0;
+
+    &:target {
+      animation-name: slide-in;
+      animation-delay: .3s;
+    }
   }
+}
+
+.text--alert {
+  color: $dv-dark-red;
 }
