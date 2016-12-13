@@ -469,21 +469,21 @@ INSERT INTO "i18n_message" VALUES (3020,'message','DeviceInventorySuccess', '设
 
 
 -- Chart label/lengend （id from 5000 to 5500）
-INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量','Scan (Times)',null,-1);
+INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan (Times)',null,-1);
 INSERT INTO "i18n_message" VALUES (5001,'label','deviceScanlg', '扫描次数','Scan',null,-1);
-INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光量','Exposure (Hours)',null,-1);
+INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光量（小时）','Exposure (Hours)',null,-1);
 INSERT INTO "i18n_message" VALUES (5003,'label','deviceExpolg_1', '曝光量','Exposure',null,-1);
 INSERT INTO "i18n_message" VALUES (5004,'label','deviceExpolg_2', '基准曝光量','Scan (Baseline)',null,-1);
-INSERT INTO "i18n_message" VALUES (5005,'label','deviceROIhd', '设备投资回报','ROI (CNY）',null,-1);
+INSERT INTO "i18n_message" VALUES (5005,'label','deviceROIhd', '设备投资回报（元）','ROI (CNY）',null,-1);
 INSERT INTO "i18n_message" VALUES (5006,'label','deviceROIlg_1', '收入','Revenue',null,-1);
 INSERT INTO "i18n_message" VALUES (5007,'label','deviceROIlg_2', '利润','Profit',null,-1);
 INSERT INTO "i18n_message" VALUES (5008,'label','countlb', '次','Count',null,-1);
 INSERT INTO "i18n_message" VALUES (5009,'label','hourslb', '小时','Hours',null,-1);
 INSERT INTO "i18n_message" VALUES (5010,'label','CNYlb', '元','CNY',null,-1);
-INSERT INTO "i18n_message" VALUES (5011,'label','deviceUsagehd', '设备使用(小时)','Usage',null,-1);
+INSERT INTO "i18n_message" VALUES (5011,'label','deviceUsagehd', '设备使用（小时）','Usage',null,-1);
 INSERT INTO "i18n_message" VALUES (5012,'label','deviceUsagelg_1', '使用','In-Use',null,-1);
 INSERT INTO "i18n_message" VALUES (5013,'label','deviceUsagelg_2', '等待','Idle',null,-1);
-INSERT INTO "i18n_message" VALUES (5014,'label','deviceDThd', '设备停机率(百分比)','Downtime (Percent)',null,-1);
+INSERT INTO "i18n_message" VALUES (5014,'label','deviceDThd', '设备停机率（％）','Downtime (Percent)',null,-1);
 INSERT INTO "i18n_message" VALUES (5015,'label','deviceDTlg_1', '停机率','Downtime',null,-1);
 INSERT INTO "i18n_message" VALUES (5016,'label','deviceDTlg_2', '基准停机率','Downtime (Baseline)',null,-1);
 INSERT INTO "i18n_message" VALUES (5017,'label','pctlb', '百分比','Percent',null,-1);
@@ -571,7 +571,7 @@ INSERT INTO "i18n_message" VALUES (5516,'label','maintenanceAnalysis_rankTile_ro
 INSERT INTO "i18n_message" VALUES (5517,'label','maintenanceAnalysis_rankTile_category', '在同类设备中排名','Rank in Category',null,-1);
 INSERT INTO "i18n_message" VALUES (5518,'label','maintenanceAnalysis_rankTile_device', '在所有设备中排名','Rank Overall',null,-1);
 
-INSERT INTO "i18n_message" VALUES (5521,'label','maintenanceAnalysis_reasonChart', '设备故障原因分析','Reason Analysis',null,-1);
+INSERT INTO "i18n_message" VALUES (5521,'label','maintenanceAnalysis_reasonChart', '设备故障原因分析（次）','Reason Analysis',null,-1);
 INSERT INTO "i18n_message" VALUES (5522,'label','maintenanceAnalysis_reasonChart_xAxis', '故障原因','Reason',null,-1);
 INSERT INTO "i18n_message" VALUES (5523,'label','maintenanceAnalysis_reasonChart_yAxis', '故障次数','Occurrence',null,-1);
 
@@ -589,7 +589,7 @@ INSERT INTO "i18n_message" VALUES (5537,'label','maintenanceAnalysis_timeChart_l
 INSERT INTO "i18n_message" VALUES (5538,'label','maintenanceAnalysis_timeChart_legend_3', '1小时到1天以内','1 Hour to 1 Day',null,-1);
 INSERT INTO "i18n_message" VALUES (5539,'label','maintenanceAnalysis_timeChart_legend_4', '1天以上','Over 1 Day',null,-1);
 
-INSERT INTO "i18n_message" VALUES (5541,'label','maintenanceAnalysis_distributionChart', '设备故障分布','Distribution',null,-1);
+INSERT INTO "i18n_message" VALUES (5541,'label','maintenanceAnalysis_distributionChart', '设备故障分布（次）','Distribution',null,-1);
 INSERT INTO "i18n_message" VALUES (5543,'label','maintenanceAnalysis_distributionChart_yAxis', '故障次数','Occurrence',null,-1);
 INSERT INTO "i18n_message" VALUES (5544,'label','maintenanceAnalysis_distributionChart_room', '按科室','By Room',null,-1);
 INSERT INTO "i18n_message" VALUES (5545,'label','maintenanceAnalysis_distributionChart_room_xAxis', '科室','Room',null,-1);
@@ -629,7 +629,7 @@ INSERT INTO "i18n_message" VALUES (5588,'label','preventiveMaintenanceAnalysis_d
 -- device usage
 
 INSERT INTO "i18n_message" VALUES (5591,'label','operationMonitor_count', '检查部位总数','Count',null,-1);
-INSERT INTO "i18n_message" VALUES (5592,'label','operationMonitor_summary', '设备检查部位统计','Summary',null,-1);
+INSERT INTO "i18n_message" VALUES (5592,'label','operationMonitor_summary', '设备检查部位统计（个）','Summary',null,-1);
 INSERT INTO "i18n_message" VALUES (5593,'label','operationMonitor_device', '个','devices',null,-1);
 INSERT INTO "i18n_message" VALUES (5597,'label','operationMonitor_day', '天','Day',null,-1);
 INSERT INTO "i18n_message" VALUES (5598,'label','operationMonitor_week', '周','Week',null,-1);
@@ -640,7 +640,7 @@ INSERT INTO "i18n_message" VALUES (5599,'label','operationMonitor_month', '月',
 -- Hospital head home page
 INSERT INTO "i18n_message" VALUES (5601,'label','assetTotalProfit', '设备总利润','Asset Total Profit',null,-1);
 INSERT INTO "i18n_message" VALUES (5602,'label','assetTotalProfitForecast', '设备总利润预测','Asset Total Profit Forecast',null,-1);
-INSERT INTO "i18n_message" VALUES (5603,'label','assetAveROI', '设备平均投资回报','Asset Ave ROI',null,-1);
+INSERT INTO "i18n_message" VALUES (5603,'label','assetAveROI', '设备平均投资回报（元）','Asset Ave ROI',null,-1);
 INSERT INTO "i18n_message" VALUES (5604,'label','assetROI', '设备投资回报','Asset ROI',null,-1);
 INSERT INTO "i18n_message" VALUES (5605,'label','profitDistro', '利润科室分布','Profit Distribution by Department',null,-1);
 INSERT INTO "i18n_message" VALUES (5606,'label','assetType', '设备类型','Asset Type',null,-1);
@@ -651,8 +651,8 @@ INSERT INTO "i18n_message" VALUES (5609,'clinicalDeptId','3', '心超室','Heart
 INSERT INTO "i18n_message" VALUES (5610,'clinicalDeptId','4', '放射科','Ultrasonic Dept',null,-1);
 INSERT INTO "i18n_message" VALUES (5611,'clinicalDeptId','5', '心导管室','Heart Dept',null,-1);
 
-INSERT INTO "i18n_message" VALUES (5621,'label','assetAnnual', '设备绩效年报','Asset Performance Annual Report',null,-1);
-INSERT INTO "i18n_message" VALUES (5622,'label','assetAnnualForecast', '设备绩效年报预测','Asset Performance Forecast Report',null,-1);
+INSERT INTO "i18n_message" VALUES (5621,'label','assetAnnual', '设备绩效年报（元）','Asset Performance Annual Report',null,-1);
+INSERT INTO "i18n_message" VALUES (5622,'label','assetAnnualForecast', '设备绩效年报预测（元）','Asset Performance Forecast Report',null,-1);
 INSERT INTO "i18n_message" VALUES (5623,'label','assetAnnualForecast_title', '设备绩效预测','Asset Performance Annual Report',null,-1);
 
 INSERT INTO "i18n_message" VALUES (9001,'month','1',  '一月','January',null,-1);
