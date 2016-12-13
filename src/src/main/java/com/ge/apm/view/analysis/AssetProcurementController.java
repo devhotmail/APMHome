@@ -220,7 +220,7 @@ public class AssetProcurementController {
             long days = new Interval(new DateTime(lastSndYearStart), new DateTime(lastSndYearEnd)).toDuration().getStandardDays();
             return (int) (((double) report.getExamSeconds()) / ((double) (days * DAILY_UTIL_BENCHMARK)) * 100D);
         } else if (new Interval(new DateTime(lastSndYearStart), new DateTime(lastSndYearEnd)).contains(new DateTime(report.getInstalled()))) {
-            long days = new Interval(new DateTime(report.getInstalled()), new DateTime(lastSndYearEnd)).toDuration().getStandardSeconds();
+            long days = new Interval(new DateTime(report.getInstalled()), new DateTime(lastSndYearEnd)).toDuration().getStandardDays();
             return (int) (((double) report.getExamSeconds()) / ((double) (days * DAILY_UTIL_BENCHMARK)) * 100D);
         } else {
             return 0;
@@ -233,7 +233,7 @@ public class AssetProcurementController {
             long days = new Interval(new DateTime(lastFstYearStart), new DateTime(lastFstYearEnd)).toDuration().getStandardDays();
             return (int) (((double) report.getExamSeconds()) / ((double) (days * DAILY_UTIL_BENCHMARK)) * 100D);
         } else if (new Interval(new DateTime(lastFstYearStart), new DateTime(lastFstYearEnd)).contains(new DateTime(report.getInstalled()))) {
-            long days = new Interval(new DateTime(report.getInstalled()), new DateTime(lastFstYearEnd)).toDuration().getStandardSeconds();
+            long days = new Interval(new DateTime(report.getInstalled()), new DateTime(lastFstYearEnd)).toDuration().getStandardDays();
             return (int) (((double) report.getExamSeconds()) / ((double) (days * DAILY_UTIL_BENCHMARK)) * 100D);
         } else {
             return 0;
