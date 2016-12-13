@@ -1,5 +1,6 @@
 package com.ge.apm.view.analysis;
 
+import ca.uhn.hl7v2.model.v24.datatype.ST;
 import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.FieldValueMessageController;
@@ -7,6 +8,7 @@ import com.ge.apm.view.sysutil.UserContextService;
 import com.google.common.base.Optional;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.*;
 import com.google.common.math.Stats;
 import org.joda.time.DateTime;
@@ -28,6 +30,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static java.lang.Math.ceil;
+import static java.lang.Math.round;
 
 
 @ManagedBean
@@ -76,6 +79,7 @@ public class AssetProcurementController {
         initLastSndYearReport();
         initForecastReport();
         initSuggestion();
+        initIncome();
     }
 
     private void initLastFstYearReport() {
@@ -179,19 +183,33 @@ public class AssetProcurementController {
             int numOfMatchedAssets = numOfAssetsUtilExceedsThreshold(detail);
             detail.setForecastResult(String.format("%s台设备使用率>100%%", numOfMatchedAssets > 0 ? numOfMatchedAssets : "无单"));
             if (numOfMatchedAssets > 0 && detail.getForecastAvgUtilPercent() > 100) {
-                int suggestedNum = (int) (ceil(Stats.of(detail.getAssetUtilForecasts().values()).sum() / 100d) - (double) detail.getAssetUtilForecasts().keySet().size());
-                detail.setSuggestion(String.format("建议购买%s台新设备", suggestedNum));
-                detail.setForecastUtilAfterAction((int) (Stats.of(detail.getAssetUtilForecasts().values()).sum() / (double) (detail.getAssetUtilForecasts().keySet().size() + suggestedNum)));
+                detail.setNumPurchase((int) (ceil(Stats.of(detail.getAssetUtilForecasts().values()).sum() / 100d) - (double) detail.getAssetUtilForecasts().keySet().size()));
+                detail.setSuggestion(String.format("建议购买%s台新设备", detail.getNumPurchase()));
+                detail.setForecastUtilAfterAction((int) (Stats.of(detail.getAssetUtilForecasts().values()).sum() / (double) (detail.getAssetUtilForecasts().keySet().size() + detail.getNumPurchase())));
             } else if (numOfMatchedAssets > 0 && detail.getForecastAvgUtilPercent() < 100) {
+                detail.setNumPurchase(0);
+                detail.setNumImprove(numOfMatchedAssets);
                 detail.setSuggestion("建议安排合理化");
             } else {
+                detail.setNumPurchase(0);
+                detail.setNumImprove(0);
                 detail.setSuggestion("无");
             }
         }
     }
 
     private void initIncome() {
-
+        for (Detail detail : details.values()) {
+            if (detail.getNumPurchase() > 0) {
+                detail.setForecastIncomeNoneAction(detail.getLastFstYearIncome());
+                detail.setForecastIncomeAfterAction(predictNext(detail.lastSndYearIncome, detail.lastFstYearIncome));
+                detail.setForecastIncreaseAfterAction(detail.forecastIncomeAfterAction - detail.forecastIncomeNoneAction);
+            } else {
+                detail.setForecastIncomeNoneAction(predictNext(detail.lastSndYearIncome, detail.lastFstYearIncome));
+                detail.setForecastIncomeAfterAction(predictNext(detail.lastSndYearIncome, detail.lastFstYearIncome));
+                detail.setForecastIncreaseAfterAction(predictNext(detail.lastSndYearIncome, detail.lastFstYearIncome) - detail.lastFstYearIncome);
+            }
+        }
     }
 
     private int numOfAssetsUtilExceedsThreshold(Detail detail) {
@@ -345,8 +363,35 @@ public class AssetProcurementController {
         return getDetails()[i];
     }
 
-    public int getColSize() {
+    public int getRowSize() {
         return 6;
+    }
+
+    public int getNumPurchase() {
+        return (int) Stats.of(FluentIterable.from(getDetails()).transform(new Function<Detail, Integer>() {
+            @Override
+            public Integer apply(Detail input) {
+                return input.getNumPurchase();
+            }
+        })).sum();
+    }
+
+    public int getNumImprove() {
+        return (int) Stats.of(FluentIterable.from(getDetails()).transform(new Function<Detail, Integer>() {
+            @Override
+            public Integer apply(Detail input) {
+                return input.getNumImprove();
+            }
+        })).sum();
+    }
+
+    public int getNumIncrease() {
+        return (int) Stats.of(FluentIterable.from(getDetails()).transform(new Function<Detail, Integer>() {
+            @Override
+            public Integer apply(Detail input) {
+                return input.getForecastIncreaseAfterAction();
+            }
+        })).sum();
     }
 
     private static class Report {
@@ -453,6 +498,8 @@ public class AssetProcurementController {
         private Table<String, String, Integer> forecastChartData;
         private String forecastResult;
         private String suggestion;
+        private int numPurchase;
+        private int numImprove;
         private ImmutableMap<String, Integer> assetUtilForecasts;
         private int forecastUtilAfterAction;
         private Double lastFstYearIncome;
@@ -575,6 +622,22 @@ public class AssetProcurementController {
             this.suggestion = suggestion;
         }
 
+        public int getNumPurchase() {
+            return numPurchase;
+        }
+
+        public void setNumPurchase(int numPurchase) {
+            this.numPurchase = numPurchase;
+        }
+
+        public int getNumImprove() {
+            return numImprove;
+        }
+
+        public void setNumImprove(int numImprove) {
+            this.numImprove = numImprove;
+        }
+
         public ImmutableMap<String, Integer> getAssetUtilForecasts() {
             Objects.requireNonNull(forecastChartData);
             return ImmutableMap.copyOf(Maps.transformValues(forecastChartData.columnMap(), new Function<Map<String, Integer>, Integer>() {
@@ -613,24 +676,24 @@ public class AssetProcurementController {
             this.lastSndYearIncome = lastSndYearIncome;
         }
 
-        public Double getForecastIncomeNoneAction() {
-            return forecastIncomeNoneAction;
+        public int getForecastIncomeNoneAction() {
+            return (int) round(forecastIncomeNoneAction / 10000d);
         }
 
         public void setForecastIncomeNoneAction(Double forecastIncomeNoneAction) {
             this.forecastIncomeNoneAction = forecastIncomeNoneAction;
         }
 
-        public Double getForecastIncomeAfterAction() {
-            return forecastIncomeAfterAction;
+        public int getForecastIncomeAfterAction() {
+            return (int) round(forecastIncomeAfterAction / 10000d);
         }
 
         public void setForecastIncomeAfterAction(Double forecastIncomeAfterAction) {
             this.forecastIncomeAfterAction = forecastIncomeAfterAction;
         }
 
-        public Double getForecastIncreaseAfterAction() {
-            return forecastIncreaseAfterAction;
+        public int getForecastIncreaseAfterAction() {
+            return (int) round(forecastIncreaseAfterAction / 10000d);
         }
 
         public void setForecastIncreaseAfterAction(Double forecastIncreaseAfterAction) {

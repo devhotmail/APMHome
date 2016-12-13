@@ -3,6 +3,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
@@ -26,21 +27,21 @@
                     <div class="ui-md-4">
                         <div class="epsilon u-mv-">设备购买建议</div>
                         <div class="text--banner delta">
-                            1
+                            ${assetProcurementController.numPurchase}
                             <span class="text--unit text--secondary">台</span>
                         </div>
                     </div>
                     <div class="ui-md-4">
                         <div class="epsilon u-mv-">设备安排合理化</div>
                         <div class="text--banner delta">
-                            1
+                            ${assetProcurementController.numImprove}
                             <span class="text--unit text--secondary">台</span>
                         </div>
                     </div>
                     <div class="ui-md-4">
                         <div class="epsilon u-mv-">预测总收益增加</div>
                         <div class="text--banner delta">
-                            20
+                            ${assetProcurementController.numIncrease}
                             <span class="text--unit text--secondary">万元</span>
                         </div>
                     </div>
@@ -48,15 +49,16 @@
             </header>
             <div class="block">
                 <c:forEach var="i" begin="0"
-                           end="${assetProcurementController.detailsSize/assetProcurementController.colSize}"
+                           end="${assetProcurementController.detailsSize/assetProcurementController.rowSize}"
                            varStatus="status">
                     <section class="device-brief-list">
                         <div class="ui-g">
-                            <c:forEach var="j" begin="${i*assetProcurementController.colSize+1}"
-                                       end="${i*assetProcurementController.colSize+assetProcurementController.colSize}">
+                            <c:forEach var="j" begin="${i*assetProcurementController.rowSize+1}"
+                                       end="${i*assetProcurementController.rowSize+assetProcurementController.rowSize}">
                                 <c:if test="${j le assetProcurementController.detailsSize}">
                                     <div class="ui-g-2">
-                                        <a href="#device-detail-${j}" class="device-block ${assetProcurementController.detail(j-1).suggestion != '无'? 'device-block--alert' : ''}">
+                                        <a href="#device-detail-${j}"
+                                           class="device-block ${assetProcurementController.detail(j-1).suggestion != '无'? 'device-block--alert' : ''}">
                                             <h2 class="device-block-title">
                                                 ${assetProcurementController.detail(j-1).groupName}</h2>
                                             <p class="device-block-subtitle">平均使用率预测:</p>
@@ -78,8 +80,8 @@
                         </div>
                     </section>
                     <section class="device-details-list">
-                        <c:forEach var="j" begin="${i*assetProcurementController.colSize+1}"
-                                   end="${i*assetProcurementController.colSize+assetProcurementController.colSize}">
+                        <c:forEach var="j" begin="${i*assetProcurementController.rowSize+1}"
+                                   end="${i*assetProcurementController.rowSize+assetProcurementController.rowSize}">
                             <c:if test="${j le assetProcurementController.detailsSize}">
                                 <div id="device-detail-${j}" class="device-block-wrapper">
                                     <div class="device-block device-detail-block ${assetProcurementController.detail(j-1).suggestion != '无'? 'device-block--alert' : ''}">
@@ -107,10 +109,10 @@
                                                             ${assetProcurementController.lastSndYearStart}-${assetProcurementController.lastSndYearEnd}
                                                         </p>
                                                         <h2 class="${assetProcurementController.detail(j-1).lastSndYearAvgUtilPercent > 100? 'text--alert' : ''}">
-                                                            ${assetProcurementController.detail(j-1).lastSndYearAvgUtilPercent}%
+                                                            ${assetProcurementController.detail(j-1).lastFstYearAvgUtilPercent}%
                                                         </h2>
                                                         <p:chart type="bar"
-                                                                 model="${assetProcurementController.detail(j-1).lastSndYearChart}"
+                                                                 model="${assetProcurementController.detail(j-1).lastFstYearChart}"
                                                                  responsive="true"/>
                                                     </div>
                                                     <div class="ui-g-4">
@@ -118,9 +120,9 @@
                                                             ${assetProcurementController.lastFstYearStart}-${assetProcurementController.lastFstYearEnd}
                                                         </p>
                                                         <h2 class="${assetProcurementController.detail(j-1).lastFstYearAvgUtilPercent > 100? 'text--alert' : ''}">
-                                                            ${assetProcurementController.detail(j-1).lastFstYearAvgUtilPercent}%</h2>
-                                                        <p:chart widgetVar="predictBarChart" class="chart-with-legend" type="bar"
-                                                                 model="${assetProcurementController.detail(j-1).lastFstYearChart}"
+                                                            ${assetProcurementController.detail(j-1).forecastAvgUtilPercent}%</h2>
+                                                        <p:chart class="chart-with-legend" type="bar"
+                                                                 model="${assetProcurementController.detail(j-1).forecastChart}"
                                                                  responsive="true"/>
                                                     </div>
                                                 </div>
@@ -136,11 +138,11 @@
                                                         <h:outputText value="#{entry.key}"/>
                                                     </p:column>
                                                     <p:column headerText="使用率">
-                                                        <h:outputText class="${entry.value > 100? 'text--alert' : ''}" value="#{entry.value}%"/>
+                                                        <h:outputText class="${entry.value > 100? 'text--alert' : ''}"
+                                                                      value="#{entry.value}%"/>
                                                     </p:column>
                                                 </p:dataTable>
-                                                <c:if
-                                                test="${(detail.forecastUtilAfterAction > 0) and (detail.suggestion.contains('购买'))}">
+                                                <c:if test="${(assetProcurementController.detail(j-1).forecastUtilAfterAction > 0) and (assetProcurementController.detail(j-1).suggestion.contains('购买'))}">
                                                     <p class="device-block-subtitle">采取建议后使用率预测:</p>
                                                     <p>
                                                         ${assetProcurementController.detail(j-1).forecastUtilAfterAction}％平均使用率</p>
@@ -149,16 +151,26 @@
                                             <div class="ui-g-1 u-ph+ divide-line-left">
                                                 <p>设备收益预测:</p>
                                                 <br/>
-                                                <p class="device-block-subtitle">不采取建议收益预测:</p>
-                                                <h2>120万元</h2>
-                                                <br/>
-                                                <br/>
-                                                <p class="device-block-subtitle">采取建议后收益预测:</p>
-                                                <h2>140万元</h2>
-                                                <br/>
-                                                <br/>
-                                                <p class="device-block-subtitle">采取建议后增收:</p>
-                                                <h2>140万元</h2>
+                                                <c:if test="${fn:contains(assetProcurementController.detail(j-1).suggestion, '建议')}">
+                                                    <p class="device-block-subtitle">不采取建议收益预测:</p>
+                                                    <h2>
+                                                        ${assetProcurementController.detail(j-1).forecastIncomeNoneAction}万元</h2>
+                                                    <br/>
+                                                    <br/>
+                                                    <p class="device-block-subtitle">采取建议后收益预测:</p>
+                                                    <h2>
+                                                        ${assetProcurementController.detail(j-1).forecastIncomeAfterAction}万元</h2>
+                                                    <br/>
+                                                    <br/>
+                                                    <p class="device-block-subtitle">采取建议后增收:</p>
+                                                    <h2>
+                                                        ${assetProcurementController.detail(j-1).forecastIncreaseAfterAction}万元</h2>
+                                                </c:if>
+                                                <c:if test="${fn:contains(assetProcurementController.detail(j-1).suggestion, '无')}">
+                                                    <p class="device-block-subtitle">收益预测:</p>
+                                                    <h2>
+                                                        ${assetProcurementController.detail(j-1).forecastIncomeNoneAction}万元</h2>
+                                                </c:if>
                                             </div>
                                         </div>
                                     </div>

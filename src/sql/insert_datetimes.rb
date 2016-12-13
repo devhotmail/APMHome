@@ -15,7 +15,7 @@ table     = "debug"
 startdate = "2013-1-1"
 enddate   = DateTime.now
 
-type      = ["CT", "MR", "xRay", "DR"]
+type      = ["CT", "MR", "DR", "CR","RF", "DSA", "乳腺机", "PET","NM", "PET-CT", "PET-MR", "US"]
 totalrecords  = 6
 # totalrecords  = 5
 
@@ -48,7 +48,7 @@ asset_accounts = 90
 totalrecords = asset_accounts
 for i in 0..totalrecords
   site_id = randnum.rand(1..2)
-  asset_group   = randnum.rand(1..4)
+  asset_group   = randnum.rand(1..12)
   name    = "#{type[asset_group-1]}-#{i+1}"
 
   function_type = randnum.rand(1..10)
@@ -214,15 +214,15 @@ end
 
 
 table = "asset_clinical_record"
-totalrecords = 200000
+totalrecords = 600000
 for i in 1..totalrecords
   site_id = randnum.rand(1..2)
   hospital_id = [1, 2, 2, 3].sample
   asset_id = randnum.rand(1..asset_accounts)
 
   modality_id       = randnum.rand(1..50)
-  modality_type_id  = randnum.rand(1..10)
-  modality_type     = type.sample
+  modality_type_id  = randnum.rand(1..12)
+  modality_type     = type[modality_type_id-1]
   procedure_id      = randnum.rand(1..5)
   procedure_name    = ["头部", "胸部", "腹部", "四肢", "其他"][procedure_id - 1]
   procedure_step_id = randnum.rand(1..6)
