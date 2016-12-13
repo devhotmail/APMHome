@@ -113,7 +113,7 @@
     }, {total: 0, num: 0});
 
     var avg = sum.total === 0 ? 1 : sum.total / sum.num;
-    var min = sum.total === 0 ? avg : sum.total / 20;
+    var min = sum.total === 0 ? avg : sum.total / 100;
 
     return data.map(function(slot) {
       var item = slot[0];
