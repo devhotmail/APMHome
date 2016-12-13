@@ -83,7 +83,7 @@
                     </div>
                     <div class="ui-g-2">
                         <span>设备使用建议：</span><br/>
-                        ${detail.suggestion}
+                        ${detail.suggestion}<br/>
                         <span>原设备预测使用率：</span><br/>
                         <p:dataTable var="entry" value="#{detail.assetUtilForecasts.entrySet().toArray()}">
                             <p:column headerText="设备名称">
@@ -96,8 +96,10 @@
 
                         <br/>
                         <c:if test="${detail.forecastUtilAfterAction > 0}">
-                            <span>采取建议后使用率预测：</span><br/>
-                            ${detail.forecastUtilAfterAction}％平均使用率
+                            <c:if test="${detail.suggestion != '无'}">
+                                <span>采取建议后使用率预测：</span><br/>
+                                ${detail.forecastUtilAfterAction}％平均使用率
+                            </c:if>
                         </c:if>
                     </div>
                     <div class="ui-g-1">
