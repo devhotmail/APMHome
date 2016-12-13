@@ -68,7 +68,7 @@ for i in 0..totalrecords
   randtime      = (duration * rand).to_i + etime.to_i
   warranty_date = Time.at(randtime).strftime("%F")
 
-  randtime      = (duration * rand).to_i + stime.to_i
+  randtime      = (duration * rand).to_i/10 + stime.to_i
   install_date = Time.at(randtime).strftime("%F")
 
   randtime      = (duration * rand).to_i + stime.to_i

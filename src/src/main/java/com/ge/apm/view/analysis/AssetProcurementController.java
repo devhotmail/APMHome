@@ -202,14 +202,13 @@ public class AssetProcurementController {
         for (Detail detail : details.values()) {
             if (detail.getNumPurchase() > 0) {
                 detail.setForecastIncomeNoneAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)));
-                detail.setForecastIncomeAfterAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() * (detail.forecastAvgUtilPercent / 100) : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)) * (detail.forecastAvgUtilPercent / 100));
+                detail.setForecastIncomeAfterAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() * (detail.forecastAvgUtilPercent / 100d) : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)) * (detail.forecastAvgUtilPercent / 100d));
                 detail.setForecastIncreaseAfterAction(detail.forecastIncomeAfterAction - detail.forecastIncomeNoneAction);
             } else {
                 detail.setForecastIncomeNoneAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)));
                 detail.setForecastIncomeAfterAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)));
                 detail.setForecastIncreaseAfterAction(0d);
             }
-            log.info("incomeNoneAction:{}, incomeAfterAction:{}, increase:{}", detail.forecastIncomeNoneAction, detail.forecastIncomeAfterAction, detail.forecastIncreaseAfterAction);
         }
     }
 
@@ -678,7 +677,7 @@ public class AssetProcurementController {
         }
 
         public int getForecastIncomeNoneAction() {
-            return (int) round(forecastIncomeNoneAction / 10000d);
+            return (int) ceil(forecastIncomeNoneAction / 10000d);
         }
 
         public void setForecastIncomeNoneAction(Double forecastIncomeNoneAction) {
@@ -686,7 +685,7 @@ public class AssetProcurementController {
         }
 
         public int getForecastIncomeAfterAction() {
-            return (int) round(forecastIncomeAfterAction / 10000d);
+            return (int) ceil(forecastIncomeAfterAction / 10000d);
         }
 
         public void setForecastIncomeAfterAction(Double forecastIncomeAfterAction) {
@@ -694,7 +693,7 @@ public class AssetProcurementController {
         }
 
         public int getForecastIncreaseAfterAction() {
-            return (int) round(forecastIncreaseAfterAction / 10000d);
+            return (int) ceil(forecastIncreaseAfterAction / 10000d);
         }
 
         public void setForecastIncreaseAfterAction(Double forecastIncreaseAfterAction) {
