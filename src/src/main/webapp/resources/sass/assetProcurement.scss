@@ -1,0 +1,19 @@
+@import "predix";
+@import "objects";
+@import "datatable";
+@import "charts";
+
+.device-block {
+  padding: .5rem;
+  &-title {
+    border-bottom: 1px solid $gray6;
+  }
+
+  &-subtitle {
+    color: $gray6;
+  }
+
+  .chart {
+    height: 100px;
+  }
+}

@@ -16,117 +16,133 @@
     <ui:define name="content">
         <h:form>
             <p:growl id="messages" showDetail="true"/>
-
-            <div class="header">辅助决策分析</div>
-
-            <div class="ui-g-12">
-                <div class="ui-g-4">
-                    设备购买建议
-                    <br/>
-                    1台
+            <header>
+                <div class="card--title text--center">
+                    <span class="epsilon">辅助决策分析</span>
                 </div>
-                <div class="ui-g-4">
-                    设备安排合理化
-                    <br/>
-                    1台
+                <div class="card--summary ui-g ui-fluid">
+                    <div class="ui-md-4">
+                        <div class="epsilon u-mv-">设备购买建议</div>
+                        <div class="text--banner delta">
+                            1
+                            <span class="text--unit text--secondary">台</span>
+                        </div>
+                    </div>
+                    <div class="ui-md-4">
+                        <div class="epsilon u-mv-">设备安排合理化</div>
+                        <div class="text--banner delta">
+                            1
+                            <span class="text--unit text--secondary">台</span>
+                        </div>
+                    </div>
+                    <div class="ui-md-4">
+                        <div class="epsilon u-mv-">预测总收益增加</div>
+                        <div class="text--banner delta">
+                            1
+                            <span class="text--unit text--secondary">20万元</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="ui-g-4">
-                    预测总收益增加
-                    <br/>
-                    20万元
+            </header>
+
+            <div class="ui-g">
+                <div class="block">
+                    <c:forEach var="detail" items="#{assetProcurementController.details}">
+                        <div class="ui-g-2">
+                            <c:if test="${detail.suggestion == '无'}">
+                                <span>${detail.groupName}</span>
+                            </c:if>
+                            <c:if test="${detail.suggestion != '无'}">
+                                <span style="color:red">${detail.groupName}</span>
+                            </c:if>
+                            <br/>
+                            平均使用率预测：
+                            <br/>
+                            ${detail.forecastAvgUtilPercent} % 平均使用率
+                            <br/>
+                            建议:
+                            <br/>
+                            ${detail.suggestion}
+                            <br/>
+                            使用率预测：
+                            <br/>
+                            ${detail.forecastResult}
+                            <br/>
+                            <p:chart type="bar" model="${detail.forecastBriefChart}" responsive="true"
+                                     extender="briefSkin"/>
+                        </div>
+                    </c:forEach>
+                    <c:forEach var="detail" items="#{assetProcurementController.details}">
+                        <div class="ui-g-12">
+                            <hr/>
+                            <div class="ui-g-9">
+                                <c:if test="${detail.suggestion == '无'}">
+                                    <span>${detail.groupName}</span>
+                                </c:if>
+                                <c:if test="${detail.suggestion != '无'}">
+                                    <span style="color:red">${detail.groupName}</span>
+                                </c:if>
+                                <br/>
+                                <span>根据历史数据进行使用率预测：</span>
+                                <br/>
+                                <div class="ui-g-3">
+                                    ${assetProcurementController.lastSndYearStart}-${assetProcurementController.lastSndYearEnd}
+                                    <br/>
+                                    <span>${detail.lastSndYearAvgUtilPercent}%平均使用率</span>
+                                    <br/>
+                                    <p:chart type="bar" model="${detail.lastSndYearChart}" responsive="true"
+                                             extender="detailSkin"/>
+                                </div>
+                                <div class="ui-g-3">
+                                    ${assetProcurementController.lastFstYearStart}-${assetProcurementController.lastFstYearEnd}
+                                    <br/>
+                                    <span>${detail.lastFstYearAvgUtilPercent}%平均使用率</span>
+                                    <br/>
+                                    <p:chart type="bar" model="${detail.lastFstYearChart}" responsive="true"
+                                             extender="detailSkin"/>
+                                </div>
+                                <div class="ui-g-3">
+                                    ${assetProcurementController.forecastStart}-${assetProcurementController.forecastEnd}
+                                    <br/>
+                                    <span>${detail.forecastAvgUtilPercent}%平均使用率</span>
+                                    <br/>
+                                    <p:chart type="bar" model="${detail.forecastChart}" responsive="true"
+                                             extender="detailSkin"/>
+                                </div>
+                            </div>
+                            <div class="ui-g-2">
+                                <span>设备使用建议：</span><br/>
+                                ${detail.suggestion}<br/>
+                                <span>原设备预测使用率：</span><br/>
+                                <p:dataTable var="entry" value="#{detail.assetUtilForecasts.entrySet().toArray()}">
+                                    <p:column headerText="设备名称">
+                                        <h:outputText value="#{entry.key}"/>
+                                    </p:column>
+                                    <p:column headerText="使用率">
+                                        <h:outputText value="#{entry.value}"/>
+                                    </p:column>
+                                </p:dataTable>
+
+                                <br/>
+                                <c:if
+                                test="${(detail.forecastUtilAfterAction > 0) and (detail.suggestion.contains('购买'))}">
+                                    <span>采取建议后使用率预测：</span><br/>
+                                    ${detail.forecastUtilAfterAction}％平均使用率
+                                </c:if>
+                            </div>
+                            <div class="ui-g-1">
+                                <span>设备收益预测：</span><br/>
+                                <span>不采取建议收益预测：</span><br/>
+                                <span>120万元</span><br/>
+                                <span>采取建议后收益预测：</span><br/>
+                                <span>140万元</span><br/>
+                                <span>采取建议后收益增加：</span><br/>
+                                <span>20万元</span><br/>
+                            </div>
+                        </div>
+                    </c:forEach>
                 </div>
             </div>
-            <hr/>
-            <c:forEach var="detail" items="#{assetProcurementController.details}">
-                <div class="ui-g-2">
-                    <c:if test="${detail.suggestion == '无'}">
-                        <span>${detail.groupName}</span>
-                    </c:if>
-                    <c:if test="${detail.suggestion != '无'}">
-                        <span style="color:red">${detail.groupName}</span>
-                    </c:if>
-                    <br/>
-                    平均使用率预测：
-                    <br/>
-                    ${detail.forecastAvgUtilPercent} % 平均使用率
-                    <br/>
-                    建议:
-                    <br/>
-                    ${detail.suggestion}
-                    <br/>
-                    使用率预测：
-                    <br/>
-                    ${detail.forecastResult}
-                    <br/>
-                    <p:chart type="bar" model="${detail.forecastBriefChart}" responsive="true" extender="briefSkin"/>
-                </div>
-            </c:forEach>
-
-            <c:forEach var="detail" items="#{assetProcurementController.details}">
-                <div class="ui-g-12">
-                    <hr/>
-                    <div class="ui-g-9">
-                        <c:if test="${detail.suggestion == '无'}">
-                            <span>${detail.groupName}</span>
-                        </c:if>
-                        <c:if test="${detail.suggestion != '无'}">
-                            <span style="color:red">${detail.groupName}</span>
-                        </c:if>
-                        <br/>
-                        <span>根据历史数据进行使用率预测：</span>
-                        <br/>
-                        <div class="ui-g-3">
-                            ${assetProcurementController.lastSndYearStart}-${assetProcurementController.lastSndYearEnd}
-                            <br/>
-                            <span>${detail.lastSndYearAvgUtilPercent}%平均使用率</span>
-                            <br/>
-                            <p:chart type="bar" model="${detail.lastSndYearChart}" responsive="true" extender="detailSkin"/>
-                        </div>
-                        <div class="ui-g-3">
-                            ${assetProcurementController.lastFstYearStart}-${assetProcurementController.lastFstYearEnd}
-                            <br/>
-                            <span>${detail.lastFstYearAvgUtilPercent}%平均使用率</span>
-                            <br/>
-                            <p:chart type="bar" model="${detail.lastFstYearChart}" responsive="true" extender="detailSkin"/>
-                        </div>
-                        <div class="ui-g-3">
-                            ${assetProcurementController.forecastStart}-${assetProcurementController.forecastEnd}
-                            <br/>
-                            <span>${detail.forecastAvgUtilPercent}%平均使用率</span>
-                            <br/>
-                            <p:chart type="bar" model="${detail.forecastChart}" responsive="true" extender="detailSkin"/>
-                        </div>
-                    </div>
-                    <div class="ui-g-2">
-                        <span>设备使用建议：</span><br/>
-                        ${detail.suggestion}<br/>
-                        <span>原设备预测使用率：</span><br/>
-                        <p:dataTable var="entry" value="#{detail.assetUtilForecasts.entrySet().toArray()}">
-                            <p:column headerText="设备名称">
-                                <h:outputText value="#{entry.key}"/>
-                            </p:column>
-                            <p:column headerText="使用率">
-                                <h:outputText value="#{entry.value}"/>
-                            </p:column>
-                        </p:dataTable>
-
-                        <br/>
-                        <c:if test="${(detail.forecastUtilAfterAction > 0) and (detail.suggestion.contains('购买'))}">
-                            <span>采取建议后使用率预测：</span><br/>
-                            ${detail.forecastUtilAfterAction}％平均使用率
-                        </c:if>
-                    </div>
-                    <div class="ui-g-1">
-                        <span>设备收益预测：</span><br/>
-                        <span>不采取建议收益预测：</span><br/>
-                        <span>120万元</span><br/>
-                        <span>采取建议后收益预测：</span><br/>
-                        <span>140万元</span><br/>
-                        <span>采取建议后收益增加：</span><br/>
-                        <span>20万元</span><br/>
-                    </div>
-                </div>
-            </c:forEach>
         </h:form>
     </ui:define>
 </ui:composition>
