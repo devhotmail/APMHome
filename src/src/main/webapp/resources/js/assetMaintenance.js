@@ -26,10 +26,6 @@
     },
     axes: {
       yaxis: {
-        tickOptions: {
-          show: true,
-          textColor: 'rgb(36,35,38)'
-        },
         rendererOptions: {
           drawBaseline: true,
         }
@@ -305,10 +301,20 @@
       legend: {
         show: false
       },
+      axes: {
+        xaxis: {
+          tickOptions: {
+            show: true,
+            labelPosition: 'middle',
+            markSize: 0,
+            angle: -75,
+          },
+        }
+      },
       seriesColors: ['rgba(93, 165, 218, 1)'],
       seriesDefaults: {
         rendererOptions: {
-          barWidth: 20,
+          barWidth: this.cfg.widgetVar === 'chart-bar-thin'? 10: 20,
           highlightMouseOver: true,
         }
       },

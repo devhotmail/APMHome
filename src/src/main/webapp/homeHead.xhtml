@@ -17,24 +17,26 @@
             <div class="card--title text--center">
                 <span class="epsilon">#{msg.HomePage}</span>
             </div>
-            <div class="card--summary ui-g ui-fluid">
-                <div class="ui-g-12 ui-md-4">
-                    <div class="epsilon u-mv-">#{msg.assetTotalProfit}</div>
-                    <p:outputPanel id="value_scan" header="Device Scan (Times)">
-                        <div class="text--banner delta">
-                            <h:outputText value="#{homeHeadController.totalProfit}"/>
-                            <span class="text--unit text--secondary">#{msg.CNYlb}</span>
-                        </div>
-                    </p:outputPanel>
-                </div>
-                <div class="ui-g-12 ui-md-6">
-                    <div class="epsilon u-mv-">#{msg.assetTotalProfitForecast}</div>
-                    <p:outputPanel id="value_expo" header="Device Exposure (Hours)">
-                        <div class="text--banner delta">
-                            <h:outputText value="#{homeHeadController.profitForecast}"/>
-                            <span class="text--unit text--secondary">#{msg.CNYlb}</span>
-                        </div>
-                    </p:outputPanel>
+            <div class="card--summary">
+                <div class="ui-g">
+                    <div class="ui-md-4">
+                        <div class="epsilon u-mv-">#{msg.assetTotalProfit}</div>
+                        <p:outputPanel id="value_scan" header="Device Scan (Times)">
+                            <div class="text--banner delta">
+                                <h:outputText value="#{homeHeadController.totalProfit}"/>
+                                <span class="text--unit text--secondary">#{msg.CNYlb}</span>
+                            </div>
+                        </p:outputPanel>
+                    </div>
+                    <div class="ui-md-6">
+                        <div class="epsilon u-mv-">#{msg.assetTotalProfitForecast}</div>
+                        <p:outputPanel id="value_expo" header="Device Exposure (Hours)">
+                            <div class="text--banner delta">
+                                <h:outputText value="#{homeHeadController.profitForecast}"/>
+                                <span class="text--unit text--secondary">#{msg.CNYlb}</span>
+                            </div>
+                        </p:outputPanel>
+                    </div>
                 </div>
             </div>
         </header>
@@ -60,7 +62,7 @@
                         </div>
                         <div class="widget ui-lg-4 ui-md-8 divide-line-bottom u-p">
                             <h4 class="widget-title">#{msg.profitDistro}</h4>
-                            <p:chart id="pieAnnualRevenue" type="pie" model="#{homeHeadController.pieAnnualRevenue}" responsive="true"/>
+                            <p:chart id="pieAnnualRevenue" type="pie" class="revenue-pie-chart" model="#{homeHeadController.pieAnnualRevenue}" responsive="true"/>
                         </div>
                     </div>
                 </div>

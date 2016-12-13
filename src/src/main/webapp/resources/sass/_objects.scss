@@ -36,12 +36,21 @@ $body-padding-top: $topbar-height + $summary-height + $card-title-height;
   .card--summary {
     height: 100px;
     color: white;
-    > *:not(:last-child) {
-      border-right: 1px solid $gray9;
+
+    > .ui-g {
+      height: 100%;
+      > *:not(:last-child) {
+        border-right: 1px solid $gray9;
+      }
     }
+
     .divide-line-bottom {
       border-bottom: 1px solid $gray9;
     }
+  }
+
+  .text--banner {
+    white-space: nowrap;
   }
 
   .layout-menu {

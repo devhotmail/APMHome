@@ -424,8 +424,10 @@ button.btn{-webkit-appearance:button}
 }
 .layout-compact .layout-wrapper .card--title{height:60px;line-height:60px;background-color:#fff}
 .layout-compact .layout-wrapper .card--summary{height:100px;color:#fff}
-.layout-compact .layout-wrapper .card--summary>:not(:last-child){border-right:1px solid #3b3b3f}
+.layout-compact .layout-wrapper .card--summary>.ui-g{height:100%}
+.layout-compact .layout-wrapper .card--summary>.ui-g>:not(:last-child){border-right:1px solid #3b3b3f}
 .layout-compact .layout-wrapper .card--summary .divide-line-bottom{border-bottom:1px solid #3b3b3f}
+.layout-compact .layout-wrapper .text--banner{white-space:nowrap}
 .layout-compact .layout-wrapper .layout-menu{box-shadow:none}
 .layout-compact .layout-wrapper .layout-main{min-height:100vh;padding-left:0;padding-right:0;background-color:#6e7072;padding:235px 0 0 0}
 .layout-compact .layout-wrapper .layout-main .ui-g-1{padding:5px;padding-top:0}
@@ -528,3 +530,4 @@ td.jqplot-table-legend{text-align:left}
 .block{position:relative}
 .jqplot-point-label{-webkit-transform:translateX(10px);transform:translateX(10px)}
 body.layout-compact .ui-datatable thead th{border-width:0}
+body.layout-compact .revenue-pie-chart table.jqplot-table-legend{top:20px!important}

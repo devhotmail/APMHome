@@ -1,6 +1,7 @@
 (function() {
 
   var CURRENCY = "%'.2f";
+  var VIS_COLORS = ['rgba(152, 201, 241, 1)', 'rgba(57, 129, 232, 1)'];
 
   var base = {
     shadow: false,
@@ -71,7 +72,10 @@
 
   var base_bar_chart = {
     highlighter: {
-      show: true
+      show: true,
+      tooltipAxes: 'y',
+      formatString: null,
+      tooltipFormatString: '%s'
     },
     seriesDefaults: {
       useNegativeColors: false,
@@ -100,7 +104,7 @@
 
   window.barMonthlyRevenue = function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
-      seriesColors: ['rgba(96, 189, 103, 1)', 'rgba(250, 164, 58, 1)'],
+      seriesColors: VIS_COLORS,
     });
   }
 
@@ -131,13 +135,13 @@
           barWidth: 10
         }
       },
-      seriesColors: ['rgba(96, 189, 103, 1)', 'rgba(250, 164, 58, 1)'],
+      seriesColors: VIS_COLORS,
       series: [{
         // income
-        seriesColors: generateSeriesColorForTicks(this.cfg.ticks, 'rgba(96, 189, 103, 1)', 'rgba(96, 189, 103, .4)'),
+        seriesColors: generateSeriesColorForTicks(this.cfg.ticks, VIS_COLORS[0], VIS_COLORS[0].replace(/1\)$/, '.4)')),
       }, {
         // revenue
-        seriesColors: generateSeriesColorForTicks(this.cfg.ticks, 'rgba(250, 164, 58, 1)', 'rgba(250, 164, 58, .4)')
+        seriesColors: generateSeriesColorForTicks(this.cfg.ticks, VIS_COLORS[1], VIS_COLORS[1].replace(/1\)$/, '.4)'))
       }],
       axes: {
         xaxis: {
@@ -152,7 +156,7 @@
 
   window.barAnnualRevenue= function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
-      seriesColors: ['rgba(96, 189, 103, 1)', 'rgba(250, 164, 58, 1)'],
+      seriesColors: VIS_COLORS,
       series: [
         {
           pointLabels: {

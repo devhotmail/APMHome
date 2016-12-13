@@ -15,4 +15,8 @@ body.layout-compact {
   .ui-datatable thead th {
     border-width: 0;
   }
+
+  .revenue-pie-chart table.jqplot-table-legend {
+    top: 20px !important;
+  }
 }

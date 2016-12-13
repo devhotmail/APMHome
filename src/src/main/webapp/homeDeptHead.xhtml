@@ -16,33 +16,35 @@
 			<div class="card--title text--center">
 				<span class="epsilon">#{msg.HomePage}</span>
 			</div>
-			<div class="card--summary ui-g">
-				<div class="ui-g-12 ui-md-4">
-					<div class="epsilon u-mv-">#{msg.deviceValueScanhd}</div>
-					<p:outputPanel id="value_scan">
-						<div class="text--banner gamma">
-							<h:outputText value="#{homeDeptHeadController.valueScan}"/>
-							<span class="text--unit text--secondary">#{msg.countlb}</span>
-						</div>
-					</p:outputPanel>
-				</div>
-				<div class="ui-g-12 ui-md-4">
-					<div class="epsilon u-mv-">#{msg.deviceValueExpohd}</div>
-					<p:outputPanel id="value_expo">
-						<div class="text--banner gamma">
-							<h:outputText value="#{homeDeptHeadController.valueExpo}"/>
-							<span class="text--unit text--secondary">#{msg.hourslb}</span>
-						</div>
-					</p:outputPanel>
-				</div>
-				<div class="ui-g-12 ui-md-4">
-					<div class="epsilon u-mv-">#{msg.deviceValueProfithd}</div>
-					<p:outputPanel id="value_profit">
-						<div class="text--banner gamma">
-							<h:outputText value="#{homeDeptHeadController.valueProfit}"/>
-							<span class="text--unit text--secondary">#{msg.CNYlb}</span>
-						</div>
-					</p:outputPanel>
+			<div class="card--summary">
+				<div class="ui-g">
+					<div class="ui-md-4">
+						<div class="epsilon u-mv-">#{msg.deviceValueScanhd}</div>
+						<p:outputPanel id="value_scan">
+							<div class="text--banner delta">
+								<h:outputText value="#{homeDeptHeadController.valueScan}"/>
+								<span class="text--unit epsilon text--secondary">#{msg.countlb}</span>
+							</div>
+						</p:outputPanel>
+					</div>
+					<div class="ui-md-4">
+						<div class="epsilon u-mv-">#{msg.deviceValueExpohd}</div>
+						<p:outputPanel id="value_expo">
+							<div class="text--banner delta">
+								<h:outputText value="#{homeDeptHeadController.valueExpo}"/>
+								<span class="text--unit epsilon text--secondary">#{msg.hourslb}</span>
+							</div>
+						</p:outputPanel>
+					</div>
+					<div class="ui-md-4">
+						<div class="epsilon u-mv-">#{msg.deviceValueProfithd}</div>
+						<p:outputPanel id="value_profit">
+							<div class="text--banner delta">
+								<h:outputText value="#{homeDeptHeadController.valueProfit}"/>
+								<span class="text--unit epsilon text--secondary">#{msg.CNYlb}</span>
+							</div>
+						</p:outputPanel>
+					</div>
 				</div>
 			</div>
 		</header>

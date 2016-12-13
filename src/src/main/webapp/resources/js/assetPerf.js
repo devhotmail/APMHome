@@ -1,6 +1,7 @@
 (function() {
 
-  var CURRENCY = "%'.2f 元";
+  var CURRENCY = "%'.2f";
+  var VIS_COLORS = ['rgba(152, 201, 241, 1)', 'rgba(57, 129, 232, 1)'];
 
   var base = {
     shadow: false,
@@ -115,13 +116,13 @@
 
   window.barMonthlyRevenue = function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
-      seriesColors: ['rgba(96, 189, 103, 1)', 'rgba(250, 164, 58, 1)'],
+      seriesColors: VIS_COLORS,
     });
   }
 
   window.barAnnualRevenue= function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
-      seriesColors: ['rgba(96, 189, 103, 1)', 'rgba(250, 164, 58, 1)'],
+      seriesColors: VIS_COLORS,
       series: [
         {
           pointLabels: {
