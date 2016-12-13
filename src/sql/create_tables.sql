@@ -24,7 +24,8 @@ DROP TABLE IF EXISTS asset_info CASCADE;
 DROP TABLE IF EXISTS asset_depreciation CASCADE;
 DROP TABLE IF EXISTS file_uploaded CASCADE;
 DROP TABLE IF EXISTS field_code_type CASCADE;
-
+DROP TABLE IF EXISTS edge_server_info;
+DROP TABLE IF EXISTS asset_contract;
 
 CREATE TABLE i18n_message (
 "id" serial NOT NULL,
@@ -393,13 +394,36 @@ zipcode varchar(16),
 contactor varchar(16),
 tel varchar(16));
 
+
+create table asset_contract(
+id serial not null,
+site_id int not null,
+asset_id int not null,
+name varchar(64) not null,
+file_id int,
+start_date date not null,
+end_date date not null,
+contract_amount float not null
+);
+
 create table asset_depreciation(
 id serial not null,
 site_id int not null,
 asset_id int not null,
+contract_id int not null,
 deprecate_date date not null,
 deprecate_amount float not null
 );
+
+create table edge_server_info(
+id serial not null,
+site_id int,
+hospital_id int,
+edge_server_key varchar(256),
+registration_date date,
+is_enabled bool
+);
+
 
 create table field_code_type(
 id serial not null,
@@ -431,7 +455,8 @@ ALTER TABLE asset_depreciation ADD PRIMARY KEY (id);
 ALTER TABLE file_uploaded ADD PRIMARY KEY (id);
 ALTER TABLE field_code_type ADD PRIMARY KEY (id);
 ALTER TABLE asset_clinical_record_errlog ADD PRIMARY KEY (id);
-
+ALTER TABLE edge_server_info ADD PRIMARY KEY (id);
+ALTER TABLE asset_contract ADD PRIMARY KEY (id);
 
 ALTER TABLE "user_account" ADD CONSTRAINT "uk_user_account_login_name" UNIQUE ("login_name");
 
