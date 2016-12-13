@@ -6,7 +6,7 @@ INSERT INTO "i18n_message" VALUES (1, 'label', 'logout', '注销', 'Logout', NUL
 INSERT INTO "i18n_message" VALUES (2, 'label', 'login', '登录系统', 'Login', NULL, -1);
 INSERT INTO "i18n_message" VALUES (3, 'label', 'login_name', '登录用户名', 'Login Name', NULL, -1);
 INSERT INTO "i18n_message" VALUES (4, 'label', 'password', '密码', 'Password', NULL, -1);
-INSERT INTO "i18n_message" VALUES (5, 'label', 'home', '首页', 'Home', NULL, -1);
+INSERT INTO "i18n_message" VALUES (5, 'label', 'home', '我的主页', 'Home', NULL, -1);
 INSERT INTO "i18n_message" VALUES (6, 'label', 'True2Yes', '是', 'Yes', NULL, -1);
 INSERT INTO "i18n_message" VALUES (7, 'label', 'False2No', '否', 'No', NULL, -1);
 INSERT INTO "i18n_message" VALUES (8, 'label', 'ValidationRequire', '输入不可为空！', 'Input is required!', NULL, -1);
