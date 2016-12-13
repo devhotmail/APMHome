@@ -269,33 +269,9 @@
     };
   }
 
-  window.bottomDrBarSkin =
-  window.bottomXrayBarSkin =
-  window.bottomCtBarSkin =
-  window.bottomLeftBarSkin =
-  window.bottomMrBarSkin =
-  window.bottomRightBarSkin = function() {
-    var _this = this;
-    _this.lastVal = 0;
-    var data = this.cfg.data;
-    // special placeholder value
-    this.cfg.data = data.map(function(slot) {
-      if (slot[0] === 0) {
-        slot[0] = .9;
-      }
-      return slot;
-    });
+  window.briefSkin =
+  window.detailSkin = function() {
 
-    $.extend(true/*recursive*/, this.cfg, verticalStackConfig.call(this, _this.cfg.data));
-    _this.jq.on('jqplotPreReplot', function() {
-      _this.lastVal = 0;
-    });
-    _this.jq.on('jqplotPostReplot', function() {
-      flipLegendRows(_this.jq);
-    });
-    setTimeout(function() {
-      flipLegendRows(_this.jq);
-    }, 0);
   };
 
 })();

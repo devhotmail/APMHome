@@ -105,7 +105,7 @@ public class AssetProcurementController {
             }
             detail.setLastFstYearChartData(builder.build());
             //detail.setLastFstYearChart(initBarModel(new BarChartModel(), String.format("%s Last First Year BarChart", detail.getGroupName()), true, "ne", String.format("js%sLstFstYearBarChartSkin", detail.getGroupName()), ImmutableTable.copyOf(detail.getLastFstYearChartData()), true));
-            detail.setLastFstYearChart(initBarModel(new BarChartModel(), String.format("%s Last First Year BarChart", detail.getGroupName()), true, "ne", null, ImmutableTable.copyOf(detail.getLastFstYearChartData()), true));
+            detail.setLastFstYearChart(initBarModel(new BarChartModel(), String.format("%s Last First Year BarChart", detail.getGroupName()), true, "ne", "detailSkin", ImmutableTable.copyOf(detail.getLastFstYearChartData()), true));
             detail.setLastFstYearAvgUtilPercent((int) (Stats.of(detail.getLastFstYearChartData().values()).sum() / (double) detail.getLastFstYearChartData().columnKeySet().size()));
             details.put(detail.getGroupId(), detail);
         }
@@ -141,7 +141,7 @@ public class AssetProcurementController {
             }
             detail.setLastSndYearChartData(builder.build());
             //detail.setLastSndYearChart(initBarModel(new BarChartModel(),String.format("%s Last Second Year BarChart", detail.getGroupName()), true, "ne", String.format("js%sLstSndYearBarChartSkin", detail.getGroupName()), ImmutableTable.copyOf(detail.getLastSndYearChartData()), true));
-            detail.setLastSndYearChart(initBarModel(new BarChartModel(), String.format("%s Last Second Year BarChart", detail.getGroupName()), true, "ne", null, ImmutableTable.copyOf(detail.getLastSndYearChartData()), true));
+            detail.setLastSndYearChart(initBarModel(new BarChartModel(), String.format("%s Last Second Year BarChart", detail.getGroupName()), true, "ne", "detailSkin", ImmutableTable.copyOf(detail.getLastSndYearChartData()), true));
             detail.setLastSndYearAvgUtilPercent((int) (Stats.of(detail.getLastSndYearChartData().values()).sum() / (double) detail.getLastSndYearChartData().columnKeySet().size()));
             details.put(detail.getGroupId(), detail);
         }
@@ -159,8 +159,8 @@ public class AssetProcurementController {
                 }
             }
             detail.setForecastChartData(builder.build());
-            //detail.setForecastChart(initBarModel(new BarChartModel(),String.format("%s Forecast BarChart", detail.getGroupName()), true, "ne", String.format("js%sForecastBarChartSkin",detail.getGroupName()), ImmutableTable.copyOf(detail.getForecastChartData()), true));
-            detail.setForecastChart(initBarModel(new BarChartModel(), String.format("%s Forecast BarChart", detail.getGroupName()), true, "ne", null, ImmutableTable.copyOf(detail.getForecastChartData()), true));
+            detail.setForecastChart(initBarModel(new BarChartModel(), String.format("%s Forecast BarChart", detail.getGroupName()), true, "ne", "detailSkin", ImmutableTable.copyOf(detail.getForecastChartData()), true));
+            detail.setForecastBriefChart(initBarModel(new BarChartModel(), String.format("%s Forecast Brief BarChart", detail.getGroupName()), true, "ne", "briefSkin", ImmutableTable.copyOf(detail.getForecastChartData()), true));
             detail.setForecastAvgUtilPercent((int) (Stats.of(detail.getForecastChartData().values()).sum() / (double) detail.getForecastChartData().columnKeySet().size()));
             detail.setAssetUtilForecasts(ImmutableMap.copyOf(Maps.transformValues(detail.getForecastChartData().columnMap(), new Function<Map<String, Integer>, Integer>() {
                 @Override
@@ -177,7 +177,7 @@ public class AssetProcurementController {
             int numOfMatchedAssets = numOfAssetsUtilExceedsThreshold(detail);
             detail.setForecastResult(String.format("%s台设备使用率>100%%", numOfMatchedAssets > 0 ? numOfMatchedAssets : "无单"));
             if (numOfMatchedAssets > 0 && detail.getForecastAvgUtilPercent() > 100) {
-                int suggestedNum = (int) ((double) ((detail.getForecastAvgUtilPercent() - 100) / 100d) + 1d);
+                int suggestedNum = (int) ((Stats.of(detail.getAssetUtilForecasts().values()).sum() / 100d) - (double) detail.getAssetUtilForecasts().keySet().size());
                 detail.setSuggestion(String.format("建议购买%s台新设备", suggestedNum));
                 detail.setForecastUtilAfterAction((int) (Stats.of(detail.getAssetUtilForecasts().values()).sum() / (double) (detail.getAssetUtilForecasts().keySet().size() + suggestedNum)));
             } else if (numOfMatchedAssets > 0 && detail.getForecastAvgUtilPercent() < 100) {
@@ -431,6 +431,7 @@ public class AssetProcurementController {
         private Table<String, String, Integer> lastFstYearChartData;
         private int forecastAvgUtilPercent;
         private BarChartModel forecastChart;
+        private BarChartModel forecastBriefChart;
         private Table<String, String, Integer> forecastChartData;
         private String forecastResult;
         private String suggestion;
@@ -522,6 +523,14 @@ public class AssetProcurementController {
 
         public void setForecastChart(BarChartModel forecastChart) {
             this.forecastChart = forecastChart;
+        }
+
+        public BarChartModel getForecastBriefChart() {
+            return forecastBriefChart;
+        }
+
+        public void setForecastBriefChart(BarChartModel forecastBriefChart) {
+            this.forecastBriefChart = forecastBriefChart;
         }
 
         public Table<String, String, Integer> getForecastChartData() {

@@ -39,7 +39,12 @@
             <hr/>
             <c:forEach var="detail" items="#{assetProcurementController.details}">
                 <div class="ui-g-2">
-                    <span>${detail.groupName}</span>
+                    <c:if test="${detail.suggestion == '无'}">
+                        <span>${detail.groupName}</span>
+                    </c:if>
+                    <c:if test="${detail.suggestion != '无'}">
+                        <span style="color:red">${detail.groupName}</span>
+                    </c:if>
                     <br/>
                     平均使用率预测：
                     <br/>
@@ -53,7 +58,7 @@
                     <br/>
                     ${detail.forecastResult}
                     <br/>
-                    <p:chart type="bar" model="${detail.forecastChart}" responsive="true"/>
+                    <p:chart type="bar" model="${detail.forecastBriefChart}" responsive="true" extender="briefSkin"/>
                 </div>
             </c:forEach>
 
@@ -66,19 +71,25 @@
                         <span>根据历史数据进行使用率预测：</span>
                         <br/>
                         <div class="ui-g-3">
+                            ${assetProcurementController.lastSndYearStart}-${assetProcurementController.lastSndYearEnd}
+                            <br/>
                             <span>${detail.lastSndYearAvgUtilPercent}%平均使用率</span>
                             <br/>
-                            <p:chart type="bar" model="${detail.lastSndYearChart}" responsive="true"/>
+                            <p:chart type="bar" model="${detail.lastSndYearChart}" responsive="true" extender="detailSkin"/>
                         </div>
                         <div class="ui-g-3">
+                            ${assetProcurementController.lastFstYearStart}-${assetProcurementController.lastFstYearEnd}
+                            <br/>
                             <span>${detail.lastFstYearAvgUtilPercent}%平均使用率</span>
                             <br/>
-                            <p:chart type="bar" model="${detail.lastFstYearChart}" responsive="true"/>
+                            <p:chart type="bar" model="${detail.lastFstYearChart}" responsive="true" extender="detailSkin"/>
                         </div>
                         <div class="ui-g-3">
+                            ${assetProcurementController.forecastStart}-${assetProcurementController.forecastEnd}
+                            <br/>
                             <span>${detail.forecastAvgUtilPercent}%平均使用率</span>
                             <br/>
-                            <p:chart type="bar" model="${detail.forecastChart}" responsive="true"/>
+                            <p:chart type="bar" model="${detail.forecastChart}" responsive="true" extender="detailSkin"/>
                         </div>
                     </div>
                     <div class="ui-g-2">
@@ -95,11 +106,9 @@
                         </p:dataTable>
 
                         <br/>
-                        <c:if test="${detail.forecastUtilAfterAction > 0}">
-                            <c:if test="${detail.suggestion != '无'}">
-                                <span>采取建议后使用率预测：</span><br/>
-                                ${detail.forecastUtilAfterAction}％平均使用率
-                            </c:if>
+                        <c:if test="${(detail.forecastUtilAfterAction > 0) and (detail.suggestion != '无')}">
+                            <span>采取建议后使用率预测：</span><br/>
+                            ${detail.forecastUtilAfterAction}％平均使用率
                         </c:if>
                     </div>
                     <div class="ui-g-1">
