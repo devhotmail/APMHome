@@ -1,6 +1,5 @@
 package com.ge.apm.service.misc;
 
-import com.ge.apm.domain.AssetClinicalRecord;
 import javax.jws.WebMethod;
 import javax.jws.WebResult;
 import javax.jws.WebService;
@@ -12,6 +11,6 @@ public interface DataUploadService {
 
     @WebResult(name = "soapResult")
     @WebMethod(operationName = "uploadAssetClinicalRecord", action = "uploadAssetClinicalRecord")
-    public String uploadAssetClinicalRecord(AssetClinicalRecord assetClinicalRecord);
+    public String uploadAssetClinicalRecord(ClinicalDataUploadRequest dataUploadRequest) throws Exception;
     
 }
