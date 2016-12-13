@@ -34,7 +34,7 @@
                                                 actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('4')}"
                                                 update="@form"/>
                                     <p:separator/>
-                                    <p:menuitem value="全部设备" url="/portal/analysis/deviceOperationMonitorAll.xhtml"/>
+                                    <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}" url="/portal/analysis/deviceOperationMonitorAll.xhtml"/>
                                 </p:menuButton>
                             </div>
                         </div>
@@ -46,11 +46,11 @@
                 <div class="card--summary">
                     <div class="ui-g">
                         <div class="ui-md-2">
-                            <div class="epsilon u-mv-">检查部位总数</div>
+                            <div class="epsilon u-mv-">#{msg.operationMonitor_count}</div>
                             <p:outputPanel id="value_scan">
                                 <div class="text--banner u-mt- delta">
                                     <h:outputText value="#{deviceOperationMonitorController.totalExamCount}"/>
-                                    <span class="text--unit text--secondary">个</span>
+                                    <span class="text--unit text--secondary">#{msg.operationMonitor_device}</span>
                                 </div>
                             </p:outputPanel>
                         </div>
@@ -82,15 +82,15 @@
 
                 <div class="ui-g-12">
                     <div class="block">
-                        <h3 class="block-title">设备检查部位统计</h3>
+                        <h3 class="block-title">#{msg.operationMonitor_summary}</h3>
                         <p:tabMenu id="tabMenu" activeIndex="#{deviceOperationMonitorController.activeTabIndex}">
-                            <p:menuitem value="天"
+                            <p:menuitem value="#{msg.operationMonitor_day}"
                                         actionListener="#{deviceOperationMonitorController.renderTabView('0')}"
                                         update="@form"/>
-                            <p:menuitem value="周"
+                            <p:menuitem value="#{msg.operationMonitor_week}"
                                         actionListener="#{deviceOperationMonitorController.renderTabView('1')}"
                                         update="@form"/>
-                            <p:menuitem value="月"
+                            <p:menuitem value="#{msg.operationMonitor_month}"
                                         actionListener="#{deviceOperationMonitorController.renderTabView('2')}"
                                         update="@form"/>
                         </p:tabMenu>
@@ -100,7 +100,7 @@
 
                 <div class="ui-g-12">
                     <div class="block">
-                        <h3 class="block-title">设备检查部位统计</h3>
+                        <h3 class="block-title">#{msg.operationMonitor_summary}</h3>
                         <div class="ui-g">
                             <div class="ui-md-12 ui-lg-6 divide-line-right">
                                 <div class="flex flex--row flex--center">
@@ -109,7 +109,7 @@
                                         <ui:include src="bodyModel.xhtml"/>
                                     </div>
                                     <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomLeftTotal}个</p>
+                                        <p class="text--center">${deviceOperationMonitorController.bottomLeftTotal}#{msg.operationMonitor_device}</p>
                                         <p:chart id="bottomLeftBar" type="bar" class="chart-device-stat chart-device-2 vertical"
                                                  widgetVar="bottomLeftBar"
                                                  model="#{deviceOperationMonitorController.bottomLeftBar}"
@@ -126,7 +126,7 @@
                                     </div>
                                     <div>
                                         <p class="text--center">
-                                            ${deviceOperationMonitorController.bottomRightTotal}个</p>
+                                            ${deviceOperationMonitorController.bottomRightTotal}#{msg.operationMonitor_device}</p>
                                         <p:chart type="bar" class="chart-device-stat chart-device-2 vertical"
                                                  widgetVar="bottomRightBar"
                                                  model="#{deviceOperationMonitorController.bottomRightBar}"

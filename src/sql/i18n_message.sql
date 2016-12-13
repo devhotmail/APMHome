@@ -626,6 +626,15 @@ INSERT INTO "i18n_message" VALUES (5586,'label','preventiveMaintenanceAnalysis_m
 INSERT INTO "i18n_message" VALUES (5587,'label','preventiveMaintenanceAnalysis_allDevices', '全部设备','All',null,-1);
 INSERT INTO "i18n_message" VALUES (5588,'label','preventiveMaintenanceAnalysis_deviceName', '设备名称','Name',null,-1);
 
+-- device usage
+
+INSERT INTO "i18n_message" VALUES (5591,'label','operationMonitor_count', '检查部位总数','Count',null,-1);
+INSERT INTO "i18n_message" VALUES (5592,'label','operationMonitor_summary', '设备检查部位统计','Summary',null,-1);
+INSERT INTO "i18n_message" VALUES (5593,'label','operationMonitor_device', '个','devices',null,-1);
+INSERT INTO "i18n_message" VALUES (5597,'label','operationMonitor_day', '天','Day',null,-1);
+INSERT INTO "i18n_message" VALUES (5598,'label','operationMonitor_week', '周','Week',null,-1);
+INSERT INTO "i18n_message" VALUES (5599,'label','operationMonitor_month', '月','Month',null,-1);
+
 -- Home pages start from 5601 to 5700
 
 -- Hospital head home page

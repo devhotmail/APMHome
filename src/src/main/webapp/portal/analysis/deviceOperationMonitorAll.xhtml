@@ -18,7 +18,7 @@
                     <div class="ui-g">
                         <div class="ui-g-1">
                             <div class="text--left">
-                                <p:menuButton id="menuButton" value="全部设备">
+                                <p:menuButton id="menuButton" value="#{msg.preventiveMaintenanceAnalysis_allDevices}">
                                     <p:menuitem value="CT"
                                                 url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=1"/>
                                     <p:menuitem value="MR"
@@ -28,7 +28,7 @@
                                     <p:menuitem value="DR"
                                                 url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=4"/>
                                     <p:separator/>
-                                    <p:menuitem value="全部设备" url="/portal/analysis/deviceOperationMonitorAll.xhtml"/>
+                                    <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}" url="/portal/analysis/deviceOperationMonitorAll.xhtml"/>
                                 </p:menuButton>
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                 <div class="card--summary">
                     <div class="ui-g">
                         <div class="ui-md-2">
-                            <div class="epsilon u-mv-">检查部位总数</div>
+                            <div class="epsilon u-mv-">#{msg.operationMonitor_count}</div>
                             <p:outputPanel id="value_scan">
                                 <div class="text--banner u-mt- delta">
                                     <h:outputText value="#{deviceOperationMonitorController.totalExamAllCount}"/>
@@ -75,7 +75,7 @@
 
                 <div class="ui-g-12">
                     <div class="block">
-                        <h3 class="block-title">设备检查部位统计</h3>
+                        <h3 class="block-title">#{msg.operationMonitor_summary}</h3>
                         <p:chart id="middleBar" class="chart-device-stat-bypart" type="bar"
                                  model="#{deviceOperationMonitorController.middleBar}" responsive="true"/>
                     </div>
@@ -83,7 +83,7 @@
 
                 <div class="ui-g-12">
                     <div class="block">
-                        <h3 class="block-title">设备检查部位统计</h3>
+                        <h3 class="block-title">#{msg.operationMonitor_summary}</h3>
                         <div class="ui-g">
                             <div class="ui-xl-3 ui-lg-6 divide-line-right">
                                 <div class="flex flex--row flex--center">
@@ -92,7 +92,7 @@
                                         <ui:include src="bodyModel.xhtml"/>
                                     </div>
                                     <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomCtTotal}个</p>
+                                        <p class="text--center">${deviceOperationMonitorController.bottomCtTotal}#{msg.operationMonitor_device}</p>
                                         <p:chart id="bottomCtBar" type="bar" widgetVar="body-chart-1"
                                                  class="chart-device-stat vertical"
                                                  model="#{deviceOperationMonitorController.bottomCtBar}"
@@ -107,7 +107,7 @@
                                         <ui:include src="bodyModel.xhtml"/>
                                     </div>
                                     <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomMrTotal}个</p>
+                                        <p class="text--center">${deviceOperationMonitorController.bottomMrTotal}#{msg.operationMonitor_device}</p>
                                         <p:chart id="bottomMrBar" type="bar" widgetVar="body-chart-2"
                                                  class="chart-device-stat vertical"
                                                  model="#{deviceOperationMonitorController.bottomMrBar}"
@@ -123,7 +123,7 @@
                                         <ui:include src="bodyModel.xhtml"/>
                                     </div>
                                     <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomXrayTotal}个</p>
+                                        <p class="text--center">${deviceOperationMonitorController.bottomXrayTotal}#{msg.operationMonitor_device}</p>
                                         <p:chart id="bottomXrayBar" type="bar" widgetVar="body-chart-3"
                                                  class="chart-device-stat vertical"
                                                  model="#{deviceOperationMonitorController.bottomXrayBar}"
@@ -138,7 +138,7 @@
                                         <ui:include src="bodyModel.xhtml"/>
                                     </div>
                                     <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomDrTotal}个</p>
+                                        <p class="text--center">${deviceOperationMonitorController.bottomDrTotal}#{msg.operationMonitor_device}</p>
                                         <p:chart id="bottomDrBar" type="bar" widgetVar="body-chart-4"
                                                  class="chart-device-stat vertical"
                                                  model="#{deviceOperationMonitorController.bottomDrBar}"
