@@ -283,7 +283,7 @@ INSERT INTO "i18n_message" VALUES (715,'field_name','contactPerson','联系人',
 INSERT INTO "i18n_message" VALUES (716,'field_name','contactPhone','联系电话','Contact Phone',null,-1);
 INSERT INTO "i18n_message" VALUES (717,'field_name','defaultLang','默认语言','Default Lang',null,-1);
 INSERT INTO "i18n_message" VALUES (718,'field_name','email','Email','Email',null,-1);
-INSERT INTO "i18n_message" VALUES (719,'field_name','homePage','首页','Home Page',null,-1);
+INSERT INTO "i18n_message" VALUES (719,'field_name','homePage','我的主页','Home Page',null,-1);
 INSERT INTO "i18n_message" VALUES (720,'field_name','isActive','激活?','Active?',null,-1);
 INSERT INTO "i18n_message" VALUES (721,'field_name','isEnabled','启用?','Enabled?',null,-1);
 INSERT INTO "i18n_message" VALUES (722,'field_name','isLocalAdmin','本院管理员','Local Admin?',null,-1);
