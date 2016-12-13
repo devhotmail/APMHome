@@ -2,29 +2,12 @@ $main-bg-color: rgb(110, 112, 114);
 $topbar-height: 75px;
 $card-title-height: 60px;
 $summary-height: 100px;
-$body-padding-top: $topbar-height + $summary-height + $card-title-height;
+$body-padding-top: $topbar-height;
 
 .layout-compact .layout-wrapper {
 
   header {
-    position: fixed;
-    width: calc(100% - 250px);
-    top: 76px;
-    z-index: 999;
     background-color: $main-bg-color;
-    transition: width .3s;
-  }
-
-  &.layout-menu-static-inactive {
-    header {
-      width: 100%;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    header {
-      width: 100% !important;
-    }
   }
 
   .card--title {
@@ -39,6 +22,11 @@ $body-padding-top: $topbar-height + $summary-height + $card-title-height;
 
     > .ui-g {
       height: 100%;
+
+      > * {
+        padding: .3rem .6rem;
+      }
+
       > *:not(:last-child) {
         border-right: 1px solid $gray9;
       }

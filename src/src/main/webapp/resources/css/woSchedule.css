@@ -418,18 +418,16 @@ button.btn{-webkit-appearance:button}
 .btn--primary:active{border-color:transparent;background-color:#2b5ea2}
 .btn--large{font-size:1.33333rem}
 .clearfix:after{content:"";display:table;clear:both}
-.layout-compact .layout-wrapper header{position:fixed;width:calc(100% - 250px);top:76px;z-index:999;background-color:#6e7072;-webkit-transition:width .3s;transition:width .3s}
-.layout-compact .layout-wrapper.layout-menu-static-inactive header{width:100%}
-@media (max-width:1024px){.layout-compact .layout-wrapper header{width:100%!important}
-}
+.layout-compact .layout-wrapper header{background-color:#6e7072}
 .layout-compact .layout-wrapper .card--title{height:60px;line-height:60px;background-color:#fff}
 .layout-compact .layout-wrapper .card--summary{height:100px;color:#fff}
 .layout-compact .layout-wrapper .card--summary>.ui-g{height:100%}
+.layout-compact .layout-wrapper .card--summary>.ui-g>*{padding:.3rem .6rem}
 .layout-compact .layout-wrapper .card--summary>.ui-g>:not(:last-child){border-right:1px solid #3b3b3f}
 .layout-compact .layout-wrapper .card--summary .divide-line-bottom{border-bottom:1px solid #3b3b3f}
 .layout-compact .layout-wrapper .text--banner{white-space:nowrap}
 .layout-compact .layout-wrapper .layout-menu{box-shadow:none}
-.layout-compact .layout-wrapper .layout-main{min-height:100vh;padding-left:0;padding-right:0;background-color:#6e7072;padding:235px 0 0 0}
+.layout-compact .layout-wrapper .layout-main{min-height:100vh;padding-left:0;padding-right:0;background-color:#6e7072;padding:75px 0 0 0}
 .layout-compact .layout-wrapper .layout-main .ui-g-1{padding:5px;padding-top:0}
 .layout-compact .layout-wrapper .layout-main .ui-g-2{padding:5px;padding-top:0}
 .layout-compact .layout-wrapper .layout-main .ui-g-3{padding:5px;padding-top:0}
