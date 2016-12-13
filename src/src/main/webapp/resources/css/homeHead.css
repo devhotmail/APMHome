@@ -440,7 +440,6 @@ button.btn{-webkit-appearance:button}
 .layout-compact .layout-wrapper .layout-main .ui-g-10{padding:5px;padding-top:0}
 .layout-compact .layout-wrapper .layout-main .ui-g-11{padding:5px;padding-top:0}
 .layout-compact .layout-wrapper .layout-main .ui-g-12{padding:5px;padding-top:0}
-.layout-compact .layout-wrapper .footer{display:none}
 .text--secondary{color:#9999a3}
 .status::before{content:'';color:#000;display:inline-block;position:relative;top:2px;font-size:1em;width:1em;height:1em;margin:0 5px;vertical-align:baseline}
 .status--1::before{background-color:#60a5d7}
