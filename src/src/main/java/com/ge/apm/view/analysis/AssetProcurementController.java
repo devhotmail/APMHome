@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+import static java.lang.Math.ceil;
+
 
 @ManagedBean
 @ViewScoped
@@ -34,7 +36,7 @@ public class AssetProcurementController {
     private final static Logger log = LoggerFactory.getLogger(AssetProcurementController.class);
     private final static DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     private final static ImmutableMap<Integer, String> parts = ImmutableMap.of(1, "头部", 2, "胸部", 3, "腹部", 4, "四肢", 5, "其他");
-    private final static int DAILY_UTIL_BENCHMARK = 8 * 60 * 60;
+    private final static int DAILY_UTIL_BENCHMARK = 9 * 60 * 60;
     private final Map<String, String> queries;
     private final JdbcTemplate jdbcTemplate;
     private final int siteId;
@@ -177,7 +179,7 @@ public class AssetProcurementController {
             int numOfMatchedAssets = numOfAssetsUtilExceedsThreshold(detail);
             detail.setForecastResult(String.format("%s台设备使用率>100%%", numOfMatchedAssets > 0 ? numOfMatchedAssets : "无单"));
             if (numOfMatchedAssets > 0 && detail.getForecastAvgUtilPercent() > 100) {
-                int suggestedNum = (int) (((Stats.of(detail.getAssetUtilForecasts().values()).sum() / 100d) + 1d) - (double) detail.getAssetUtilForecasts().keySet().size());
+                int suggestedNum = (int) (ceil(Stats.of(detail.getAssetUtilForecasts().values()).sum() / 100d) - (double) detail.getAssetUtilForecasts().keySet().size());
                 detail.setSuggestion(String.format("建议购买%s台新设备", suggestedNum));
                 detail.setForecastUtilAfterAction((int) (Stats.of(detail.getAssetUtilForecasts().values()).sum() / (double) (detail.getAssetUtilForecasts().keySet().size() + suggestedNum)));
             } else if (numOfMatchedAssets > 0 && detail.getForecastAvgUtilPercent() < 100) {
@@ -186,6 +188,10 @@ public class AssetProcurementController {
                 detail.setSuggestion("无");
             }
         }
+    }
+
+    private void initIncome() {
+
     }
 
     private int numOfAssetsUtilExceedsThreshold(Detail detail) {
@@ -327,8 +333,20 @@ public class AssetProcurementController {
         return from(forecastEnd);
     }
 
-    public Set<Detail> getDetails() {
-        return ImmutableSortedSet.copyOf(details.values());
+    public Detail[] getDetails() {
+        return details.values().toArray(new Detail[0]);
+    }
+
+    public int getDetailsSize() {
+        return getDetails().length;
+    }
+
+    public Detail detail(int i) {
+        return getDetails()[i];
+    }
+
+    public int getColSize() {
+        return 6;
     }
 
     private static class Report {
