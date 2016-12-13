@@ -1,12 +1,12 @@
 (function() {
 
-  // TODO: label ist from database
   var CURRENCY = "%'.2f";
-  var VIS_COLORS = [
-    'rgba(241, 124, 176, 1)',
-    'rgba(178, 145, 46, 1)',
-    'rgba(229, 17, 111, 1)'
+  var USAGE_COLORS = [
+    'rgba(240, 126, 110, 1)',
+    'rgba(93, 165, 218, 1)',
+    'rgba(182, 195, 203, 1)'
   ];
+  var USAGE_COLORS_REVERSE = USAGE_COLORS.slice(0).reverse();
   var VIS_COLOR_BLANK = 'rgba(153, 153, 163, 1)';
 
   var base = {
@@ -145,7 +145,7 @@
   function displayColors(data) {
     return data.map(function(slot, i) {
       var item = slot[0];
-      return item[0] ? VIS_COLORS[i] : VIS_COLOR_BLANK;
+      return item[0] ? USAGE_COLORS_REVERSE[i] : VIS_COLOR_BLANK;
     });
   }
 
@@ -257,7 +257,7 @@
         formatString: null,
         tooltipFormatString: '%f 小时'
       },
-      seriesColors: ['rgba(240, 126, 110, 1)', 'rgba(237, 221, 70, 1)', 'rgba(241, 124, 176, 1)'],
+      seriesColors: ['rgba(93, 165, 218, 1)', 'rgba(182, 195, 203, 1)'],
     });
   }
 
@@ -277,7 +277,7 @@
             size: 20
           }
         }],
-      seriesColors: ['rgba(229, 17, 111, 1)', 'rgba(178, 118, 178, 1)'],
+      seriesColors: ['rgba(240, 126, 110, 1)', 'rgba(178, 118, 178, 1)'],
     });
   }
 
