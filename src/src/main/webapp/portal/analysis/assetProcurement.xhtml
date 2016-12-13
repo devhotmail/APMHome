@@ -66,7 +66,12 @@
                 <div class="ui-g-12">
                     <hr/>
                     <div class="ui-g-9">
-                        <span>${detail.groupName}</span>
+                        <c:if test="${detail.suggestion == '无'}">
+                            <span>${detail.groupName}</span>
+                        </c:if>
+                        <c:if test="${detail.suggestion != '无'}">
+                            <span style="color:red">${detail.groupName}</span>
+                        </c:if>
                         <br/>
                         <span>根据历史数据进行使用率预测：</span>
                         <br/>
@@ -106,7 +111,7 @@
                         </p:dataTable>
 
                         <br/>
-                        <c:if test="${(detail.forecastUtilAfterAction > 0) and (detail.suggestion != '无')}">
+                        <c:if test="${(detail.forecastUtilAfterAction > 0) and (detail.suggestion.contains('购买'))}">
                             <span>采取建议后使用率预测：</span><br/>
                             ${detail.forecastUtilAfterAction}％平均使用率
                         </c:if>

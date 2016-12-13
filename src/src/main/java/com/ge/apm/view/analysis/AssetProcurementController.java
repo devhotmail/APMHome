@@ -177,7 +177,7 @@ public class AssetProcurementController {
             int numOfMatchedAssets = numOfAssetsUtilExceedsThreshold(detail);
             detail.setForecastResult(String.format("%s台设备使用率>100%%", numOfMatchedAssets > 0 ? numOfMatchedAssets : "无单"));
             if (numOfMatchedAssets > 0 && detail.getForecastAvgUtilPercent() > 100) {
-                int suggestedNum = (int) ((Stats.of(detail.getAssetUtilForecasts().values()).sum() / 100d) - (double) detail.getAssetUtilForecasts().keySet().size());
+                int suggestedNum = (int) (((Stats.of(detail.getAssetUtilForecasts().values()).sum() / 100d) + 1d) - (double) detail.getAssetUtilForecasts().keySet().size());
                 detail.setSuggestion(String.format("建议购买%s台新设备", suggestedNum));
                 detail.setForecastUtilAfterAction((int) (Stats.of(detail.getAssetUtilForecasts().values()).sum() / (double) (detail.getAssetUtilForecasts().keySet().size() + suggestedNum)));
             } else if (numOfMatchedAssets > 0 && detail.getForecastAvgUtilPercent() < 100) {
@@ -572,8 +572,7 @@ public class AssetProcurementController {
         }
 
         public int getForecastUtilAfterAction() {
-            Objects.requireNonNull(forecastChartData);
-            return (int) (Stats.of(forecastChartData.values()).sum() / (double) (forecastChartData.columnKeySet().size() + 1));
+            return this.forecastUtilAfterAction;
         }
 
         public void setForecastUtilAfterAction(int forecastUtilAfterAction) {
