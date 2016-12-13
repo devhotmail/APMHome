@@ -2,9 +2,9 @@ package com.ge.apm.view.analysis;
 
 import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.UserAccount;
-import com.ge.apm.service.utils.Option;
 import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
+import com.google.common.base.Optional;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.*;
@@ -82,14 +82,14 @@ public class AssetProcurementController {
             @Override
             public void processRow(ResultSet rs) throws SQLException {
                 Report report = new Report(rs.getInt("asset_group"), rs.getString("asset_name"), rs.getDate("install_date"), rs.getInt("part_id"), rs.getInt("exam_count"), rs.getInt("exam_duration"), rs.getDouble("exam_charge"));
-                LinkedHashMap<Integer, Report> map = Option.of(table.get(report.getGroup(), report.getName())).getOrElse(new LinkedHashMap<Integer, Report>());
+                LinkedHashMap<Integer, Report> map = Optional.fromNullable(table.get(report.getGroup(), report.getName())).or(new LinkedHashMap<Integer, Report>());
                 map.put(report.getExamPart(), report);
                 table.put(report.getGroup(), report.getName(), map);
             }
         }, siteId, hospitalId, lastFstYearStart, lastFstYearEnd);
         log.info("initLastFstYearReport query result: {}", table);
         for (int group : table.rowKeySet()) {
-            Detail detail = Option.of(details.get(group)).getOrElse(new Detail());
+            Detail detail = Optional.of(details.get(group)).or(new Detail());
             detail.setGroupId(group);
             detail.setGroupName(assetGroups.get(group));
             detail.setLastFstYearIncome(calcAnnualIncome(table.row(group)));
@@ -118,14 +118,14 @@ public class AssetProcurementController {
             @Override
             public void processRow(ResultSet rs) throws SQLException {
                 Report report = new Report(rs.getInt("asset_group"), rs.getString("asset_name"), rs.getDate("install_date"), rs.getInt("part_id"), rs.getInt("exam_count"), rs.getInt("exam_duration"), rs.getDouble("exam_charge"));
-                LinkedHashMap<Integer, Report> map = Option.of(table.get(report.getGroup(), report.getName())).getOrElse(new LinkedHashMap<Integer, Report>());
+                LinkedHashMap<Integer, Report> map = Optional.of(table.get(report.getGroup(), report.getName())).or(new LinkedHashMap<Integer, Report>());
                 map.put(report.getExamPart(), report);
                 table.put(report.getGroup(), report.getName(), map);
             }
         }, siteId, hospitalId, lastSndYearStart, lastSndYearEnd);
         log.info("initLastSndYearReport query result: {}", table);
         for (int group : table.rowKeySet()) {
-            Detail detail = Option.of(details.get(group)).getOrElse(new Detail());
+            Detail detail = Optional.of(details.get(group)).or(new Detail());
             detail.setGroupId(group);
             detail.setGroupName(assetGroups.get(group));
             detail.setLastSndYearIncome(calcAnnualIncome(table.row(group)));
