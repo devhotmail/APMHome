@@ -92,8 +92,7 @@ CREATE TABLE "site_info" (
 "wf_auto_step3" bool,
 "wf_auto_step4" bool,
 "wf_auto_step5" bool,
-"wf_auto_step6" bool,
-auth_key varchar(64)
+"wf_auto_step6" bool
 );
 
 CREATE TABLE org_info (
