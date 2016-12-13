@@ -34,7 +34,7 @@ public class AssetProcurementController {
     private final static Logger log = LoggerFactory.getLogger(AssetProcurementController.class);
     private final static DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     private final static ImmutableMap<Integer, String> parts = ImmutableMap.of(1, "头部", 2, "胸部", 3, "腹部", 4, "四肢", 5, "其他");
-    private final static int DAILY_UTIL_BENCHMARK = 3 * 60 * 60;
+    private final static int DAILY_UTIL_BENCHMARK = 8 * 60 * 60;
     private final Map<String, String> queries;
     private final JdbcTemplate jdbcTemplate;
     private final int siteId;
@@ -89,7 +89,7 @@ public class AssetProcurementController {
         }, siteId, hospitalId, lastFstYearStart, lastFstYearEnd);
         log.info("initLastFstYearReport query result: {}", table);
         for (int group : table.rowKeySet()) {
-            Detail detail = Optional.of(details.get(group)).or(new Detail());
+            Detail detail = Optional.fromNullable(details.get(group)).or(new Detail());
             detail.setGroupId(group);
             detail.setGroupName(assetGroups.get(group));
             detail.setLastFstYearIncome(calcAnnualIncome(table.row(group)));
@@ -118,14 +118,14 @@ public class AssetProcurementController {
             @Override
             public void processRow(ResultSet rs) throws SQLException {
                 Report report = new Report(rs.getInt("asset_group"), rs.getString("asset_name"), rs.getDate("install_date"), rs.getInt("part_id"), rs.getInt("exam_count"), rs.getInt("exam_duration"), rs.getDouble("exam_charge"));
-                LinkedHashMap<Integer, Report> map = Optional.of(table.get(report.getGroup(), report.getName())).or(new LinkedHashMap<Integer, Report>());
+                LinkedHashMap<Integer, Report> map = Optional.fromNullable(table.get(report.getGroup(), report.getName())).or(new LinkedHashMap<Integer, Report>());
                 map.put(report.getExamPart(), report);
                 table.put(report.getGroup(), report.getName(), map);
             }
         }, siteId, hospitalId, lastSndYearStart, lastSndYearEnd);
         log.info("initLastSndYearReport query result: {}", table);
         for (int group : table.rowKeySet()) {
-            Detail detail = Optional.of(details.get(group)).or(new Detail());
+            Detail detail = Optional.fromNullable(details.get(group)).or(new Detail());
             detail.setGroupId(group);
             detail.setGroupName(assetGroups.get(group));
             detail.setLastSndYearIncome(calcAnnualIncome(table.row(group)));
