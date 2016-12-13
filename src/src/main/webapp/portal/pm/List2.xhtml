@@ -14,26 +14,31 @@
                 </p>
             <h:form id="PmOrderListForm">
                 <p:dataTable id="datalist" >
-
                       <p:column headerText="#{msg.name}" sortBy="#{item.name}" >
                         	<h:outputText value="#{item.name}" />
                     </p:column>
-                    
-                    <!-- Create?faces-redirect=true&amp;actionName=Create -->
                 </p:dataTable>
                 
-               <p:commandButton id="createButton0" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" 
-               			actionListener="#{demoUrlEncodeController.prepareCreate}" 
-               			action="#{urlEncryptController.encodeUrlParam('Edit2?faces-redirect=true&amp;propertyStr=hello',true)}" /> 
-               			
-               <p:commandButton id="createButton1" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" 
+                <!-- 原始 1-->
+                <p:commandButton id="createButton1" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" 
                			actionListener="#{demoUrlEncodeController.prepareCreate}"  
-               			action="Edit2?faces-redirect=true&amp;actionName=Edit2&amp;propertyStr=hello" /> 		
-               				
-                        
+               			action="Edit2?faces-redirect=true&amp;actionName=Edit2&amp;propertyStr=hello" />
+               			
+               	 <!-- 改造后 -->
                <p:commandButton id="createButton2" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" 
                			actionListener="#{demoUrlEncodeController.prepareCreate}" 
-               			action="#{urlEncryptController.encodeUrlParam('Edit2?faces-redirect=true',true)}" /> 
+               			action="#{urlEncryptController.encodeUrlParam('Edit2.xhtml?actionName=Edit2&amp;propertyStr=hello')}" /> 		
+               	
+               	<!-- 原始 2-->
+<!--                	<p:button id="processButton1" icon="ui-icon-arrow-forward" value="#{msg.ProcessWorkOrder}" 
+               	outcome="woProcess.xhtml?woId=#{workOrderController.selected.getId()}" /> -->
+                  
+                <p:button id="processButton2" icon="ui-icon-arrow-forward" 
+               	outcome="#{urlEncryptController.encodeUrlParam('Edit2.xhtml?woId=10')}" />   
+               			
+
+               			
+               
             </h:form>
 
             </div>

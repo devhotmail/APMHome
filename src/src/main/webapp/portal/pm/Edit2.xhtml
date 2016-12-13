@@ -14,16 +14,13 @@
 
                         <h:panelGroup>
                             <label class="label">#{msg.name}*</label>
-                            <p>#{demoUrlEncodeController.encodeStr}</p>
+                            <p>#{demoUrlEncodeController.woId}</p>
                         </h:panelGroup>
                         
                         <h:panelGroup>
                             <label class="label">#{msg.name}*</label>
                             <p>#{demoUrlEncodeController.propertyStr}</p>
                         </h:panelGroup>
-                        
-                    <p:commandButton id= "b1" immediate="true" actionListener="#{demoUrlEncodeController.prepareCreate}"   value="#{msg.Save}"  icon="ui-icon-save" />
-                    <p:commandButton id = "b2"  immediate="true" actionListener="#{demoUrlEncodeController.prepareCreate}"   value="#{msg.Save}"  icon="ui-icon-save" />
                 </h:panelGroup>
 
             </p:fieldset>

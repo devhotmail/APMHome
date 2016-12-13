@@ -42,4 +42,12 @@ public class UrlParamUtil {
         return paramMap;
     }
     
+    public static void main(String[] args) {
+		System.out.println(decodeUrlQueryStringToMap("ZmFjZXMtcmVkaXJlY3Q9dHJ1ZSZwcm9wZXJ0eVN0cj1oZWxsbw=="));
+		System.out.println(decodeUrlQueryStringToMap("d29JZD0xMA%3D%3D"));
+		
+		System.out.println(encodeUrlQueryString("?propertyStr=hello"));
+		System.out.println(encodeUrlQueryString("?propertyStr=中文"));
+	}
+    
 }
