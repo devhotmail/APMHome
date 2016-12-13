@@ -186,7 +186,7 @@ public class AssetProcurementController {
                 detail.setNumPurchase((int) (ceil(Stats.of(detail.getAssetUtilForecasts().values()).sum() / 100d) - (double) detail.getAssetUtilForecasts().keySet().size()));
                 detail.setSuggestion(String.format("建议购买%s台新设备", detail.getNumPurchase()));
                 detail.setForecastUtilAfterAction((int) (Stats.of(detail.getAssetUtilForecasts().values()).sum() / (double) (detail.getAssetUtilForecasts().keySet().size() + detail.getNumPurchase())));
-            } else if (numOfMatchedAssets > 0 && detail.getForecastAvgUtilPercent() < 100) {
+            } else if (numOfMatchedAssets > 0 && detail.getForecastAvgUtilPercent() <= 100) {
                 detail.setNumPurchase(0);
                 detail.setNumImprove(numOfMatchedAssets);
                 detail.setSuggestion("建议安排合理化");
