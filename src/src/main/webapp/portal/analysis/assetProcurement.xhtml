@@ -22,8 +22,6 @@
             <header>
                 <div class="card--title text--center">
                     <span class="epsilon">辅助决策分析</span>
-                    <span class="ui-icon ui-icon-more-vert"
-                          title="设备使用时间按每天${assetProcurementController.dailyUtilHours}小时计算"/>
                 </div>
                 <div class="card--summary">
                     <div class="ui-g">
@@ -69,6 +67,8 @@
                                             <h3 class="${assetProcurementController.detail(j-1).forecastAvgUtilPercent > 100? 'text--alert' : ''}">
                                                 ${assetProcurementController.detail(j-1).forecastAvgUtilPercent} %
                                             </h3>
+                                            <h:outputText id="tooltip${j-1}" class="ui-icon ui-icon-more-vert"/>
+                                            <p:tooltip for="tooltip${j-1}" value="设备使用时间按每天${assetProcurementController.dailyUtilHours}小时计算" trackMouse="true" />
                                             <p class="device-block-subtitle">建议:</p>
                                             <p>${assetProcurementController.detail(j-1).suggestion}</p>
                                             <hr/>
