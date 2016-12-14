@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
+import jodd.util.URLDecoder;
+
 public class UrlParamUtil {
 
     private static final Logger log = Logger.getLogger(UrlParamUtil.class.getName());
@@ -19,6 +21,7 @@ public class UrlParamUtil {
     public static String decodeUrlQueryString(String encodedUrlQueryString){
         return new String(base64.decode(encodedUrlQueryString));
     }
+
 
     public static Map<String, Object> decodeUrlQueryStringToMap(){
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -38,16 +41,25 @@ public class UrlParamUtil {
                 paramMap.put(paramKeyValue[0], paramKeyValue[1]);
             }
         }
-        
         return paramMap;
     }
     
-    public static void main(String[] args) {
-		System.out.println(decodeUrlQueryStringToMap("ZmFjZXMtcmVkaXJlY3Q9dHJ1ZSZwcm9wZXJ0eVN0cj1oZWxsbw=="));
-		System.out.println(decodeUrlQueryStringToMap("d29JZD0xMA%3D%3D"));
-		
-		System.out.println(encodeUrlQueryString("?propertyStr=hello"));
-		System.out.println(encodeUrlQueryString("?propertyStr=中文"));
-	}
+    
+   public static Map<String,Object> getMapFromStr(String encodedUrlQueryString){
+	   if(encodedUrlQueryString == null || encodedUrlQueryString.trim().length() == 0){
+		   return null;
+	   }
+	   Map<String, Object> paramMap = new HashMap<String, Object>();
+	   encodedUrlQueryString = URLDecoder.decode(encodedUrlQueryString, "utf-8");
+	   String paramStr = new String(base64.decode(encodedUrlQueryString));
+	   String[] params = paramStr.split("&");
+       for(String paramKeyValuePair: params){
+           String[] paramKeyValue = paramKeyValuePair.split("=");
+           if(paramKeyValue.length>1){
+               paramMap.put(paramKeyValue[0], paramKeyValue[1]);
+           }
+       }
+	   return paramMap;
+   }
     
 }

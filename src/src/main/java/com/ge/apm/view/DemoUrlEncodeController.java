@@ -28,8 +28,8 @@ public class DemoUrlEncodeController extends JpaCRUDController<T>{
 	 protected void init() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");
-		propertyStr = (String) UrlEncryptController.getMap(encodeStr,"propertyStr");
-		String woIdStr = (String) UrlEncryptController.getMap(encodeStr,"woId");
+		propertyStr = (String) UrlEncryptController.getValueFromMap(encodeStr,"propertyStr");
+		String woIdStr = (String) UrlEncryptController.getValueFromMap(encodeStr,"woId");
 		if(woIdStr !=null){
 			woId = Integer.parseInt(woIdStr);
 		}
