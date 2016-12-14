@@ -23,14 +23,13 @@ INSERT INTO "public"."sys_role" VALUES ('1', 'HospitalHead', '院长', '/homeHea
 INSERT INTO "public"."sys_role" VALUES ('2', 'AssetHead', '设备科主任', '/homeAssetHead.xhtml');
 INSERT INTO "public"."sys_role" VALUES ('3', 'AssetStaff', '设备科科员', '/homeAssetStaff.xhtml');
 INSERT INTO "public"."sys_role" VALUES ('4', 'DeptHead', '科室主任', '/homeDeptHead.xhtml');
-INSERT INTO "public"."sys_role" VALUES ('5', 'ITAdmin', 'IT管理员', '/home.xhtml');
+INSERT INTO "public"."sys_role" VALUES ('5', 'ITAdmin', 'IT管理员', '/portal/uaa/userAccount/List.xhtml');
 
 INSERT INTO user_account VALUES ('1', '1', '1', '1', 'admin', 'administrator', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'apm.admin@ge.com', '', 't', 't', 't', 't', 't', '2016-10-17 10:57:00');
 INSERT INTO user_account VALUES ('2', '2', '2', '2', 'head', '院长', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'head@a.com', null, 'f', 'f', 'f', 't', 'f', null);
 INSERT INTO user_account VALUES ('3', '2', '2', '6', 'assetHead', '设备科主任', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'assethead@a.com', '', 'f', 'f', 'f', 't', 'f', null);
 INSERT INTO user_account VALUES ('4', '2', '2', '4', 'deptHead', '放射科主任', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'radiologyHead@a.com', null, 'f', 'f', 'f', 't', 'f', null);
 INSERT INTO user_account VALUES ('5', '2', '2', '6', 'user', '科员', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'asset.staff@a.com', null, 'f', 'f', 'f', 't', 'f', null);
-
 INSERT INTO user_account VALUES ('6', '2', '2', '2', 'HPVP', 'Head of Hospital', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'head@a.com', null, 'f', 'f', 'f', 't', 'f', null);
 INSERT INTO user_account VALUES ('7', '2', '2', '6', 'EQPHead', 'Head of Equipment Dept', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'assethead@a.com', '', 'f', 'f', 'f', 't', 'f', null);
 INSERT INTO user_account VALUES ('8', '2', '2', '4', 'RADHead', 'Head of Radiology Dept', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'radiologyHead@a.com', null, 'f', 'f', 'f', 't', 'f', null);
@@ -63,7 +62,7 @@ INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (7,'assetFunction
 SELECT setval('"site_info_id_seq"', 3, false);
 SELECT setval('"org_info_id_seq"', 7, false);
 SELECT setval('"sys_role_id_seq"', 6, false);
-SELECT setval('"user_account_id_seq"', 6, false);
+SELECT setval('"user_account_id_seq"', 9, false);
 SELECT setval('"user_role_id_seq"', 6, false);
 SELECT setval('"chart_config_id_seq"', 4, false);
 SELECT setval('"data_table_config_id_seq"', 4, false);
