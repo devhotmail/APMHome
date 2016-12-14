@@ -20,19 +20,23 @@
                         <h:form id="WorkOrderEditForm" class="text--left">
                             <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}"
                                           value="#{assetPerfSingleController.assetName}">
+
                                 <p:menuitem value="#{msg.selectAssetSingle}"
                                             actionListener="#{selectAssetController.prepareDialogCallback(assetPerfSingleController, ':WorkOrderEditForm:selAsset')}"
                                             process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
                                             oncomplete="PF('varSelectAssetDlg').show()"/>
                                 <p:separator/>
+                                
                                 <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
                                             url="/portal/analysis/assetPerfAll.xhtml"/>
                             </p:menuButton>
                         </h:form>
                     </div>
+
                     <div class="ui-g-10">
                         <span class="epsilon">#{msg.DeviceKPIAnalysis}</span>
                     </div>
+
                 </div>
             </div>
             <div class="card--summary">
@@ -71,6 +75,7 @@
         </header>
         <div class="ui-g">
             <div class="ui-g-12">
+                <h:form id="YearSelectForm">
                 <div class="block">
                     <p:selectOneMenu id="selectedYear" value="#{assetPerfSingleController.selectedYear}">
                         <p:ajax listener="#{assetPerfSingleController.submit(assetPerfSingleController.selectedYear)}"
@@ -78,6 +83,7 @@
                         <f:selectItems value="#{assetPerfSingleController.yearList}"/>
                     </p:selectOneMenu>
                 </div>
+                </h:form>
             </div>
 
             <div class="ui-g-12">

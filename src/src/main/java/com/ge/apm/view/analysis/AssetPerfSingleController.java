@@ -121,10 +121,13 @@ public class AssetPerfSingleController implements ServerEventInterface {
     public void onServerEvent(String eventName, Object eventObject) {
         AssetInfo asset = (AssetInfo) eventObject;
 
-        this.filter_id = asset.getId();
-        this.assetName = asset.getName();
+        if(asset == null) return;
 
-        deviceQuery(startDate, endDate, currentDate);
+        this.assetId = asset.getId();
+        this.assetName = asset.getName();
+        
+        WebUtil.navigateTo("/portal/analysis/assetPerfSingle.xhtml?faces-redirect=true&asset_id=" + assetId + "&asset_name=" + assetName);
+
     }
 
 

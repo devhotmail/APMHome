@@ -350,111 +350,110 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 
 	private void deviceChart_34(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
 
-			ChartSeries cst_inuse = new BarChartSeries();
-			cst_inuse.setLabel(deviceUsagelg_1);
-			ChartSeries cst_wait = new BarChartSeries();
-			cst_wait.setLabel(deviceUsagelg_2);
-			ChartSeries cst_dt = new BarChartSeries();
-			cst_dt.setLabel(deviceDTlg_1);
-			ChartSeries cst_dt_bench = new LineChartSeries();
-			cst_dt_bench.setLabel(deviceDTlg_2);
+		ChartSeries cst_inuse = new BarChartSeries();
+		cst_inuse.setLabel(deviceUsagelg_1);
+		ChartSeries cst_wait = new BarChartSeries();
+		cst_wait.setLabel(deviceUsagelg_2);
+		ChartSeries cst_dt = new BarChartSeries();
+		cst_dt.setLabel(deviceDTlg_1);
+		ChartSeries cst_dt_bench = new LineChartSeries();
+		cst_dt_bench.setLabel(deviceDTlg_2);
 
 
-			List<Map<String, Object>> rs_serve = NativeSqlUtil.queryForList(SERVETL, sqlParams);
-			List<Map<String, Object>> rs_inuse = NativeSqlUtil.queryForList(INUSETL, sqlParams);
-			List<Map<String, Object>> rs_dt = NativeSqlUtil.queryForList(DTTL, sqlParams);
-			List<Map<String, Object>> rs_dt_bench = NativeSqlUtil.queryForList(BENCHDTTL, sqlParams);
+		List<Map<String, Object>> rs_serve = NativeSqlUtil.queryForList(SERVETL, sqlParams);
+		List<Map<String, Object>> rs_inuse = NativeSqlUtil.queryForList(INUSETL, sqlParams);
+		List<Map<String, Object>> rs_dt = NativeSqlUtil.queryForList(DTTL, sqlParams);
+		List<Map<String, Object>> rs_dt_bench = NativeSqlUtil.queryForList(BENCHDTTL, sqlParams);
 
 
-			Iterator <Map<String, Object>> it_serve;
-			Iterator <Map<String, Object>> it_inuse;
-			Iterator <Map<String, Object>> it_dt;
-			Iterator <Map<String, Object>> it_dt_bench;
+		Iterator <Map<String, Object>> it_serve;
+		Iterator <Map<String, Object>> it_inuse;
+		Iterator <Map<String, Object>> it_dt;
+		Iterator <Map<String, Object>> it_dt_bench;
 
-			Map<String, Object> item_serve;
-			Map<String, Object> item_inuse;
-			Map<String, Object> item_dt;
-			Map<String, Object> item_dt_bench;
+		Map<String, Object> item_serve;
+		Map<String, Object> item_inuse;
+		Map<String, Object> item_dt;
+		Map<String, Object> item_dt_bench;
+
+		String asset_name;
+		long serve;
+		double inuse;
+		double dt;
+		double dt_bench;
+		double wait; // wait = serve - downtime - inuse
+
+		double inuse_total = 0.0;
+		double dt_total= 0.0;
+		double wait_total = 0.0; // wait = serve - downtime - inuse
 
 
-			String asset_name;
-			long serve;
-			double inuse;
-			double dt;
-			double dt_bench;
-			double wait; // wait = serve - downtime - inuse
-
-			double inuse_total = 0.0;
-			double dt_total= 0.0;
-			double wait_total = 0.0; // wait = serve - downtime - inuse
-
-
-			for ( it_inuse = rs_inuse.iterator(), it_dt = rs_dt.iterator(), it_serve = rs_serve.iterator(), it_dt_bench = rs_dt_bench.iterator();
+		for ( it_inuse = rs_inuse.iterator(), it_dt = rs_dt.iterator(), it_serve = rs_serve.iterator(), it_dt_bench = rs_dt_bench.iterator();
 					it_inuse.hasNext() && it_dt.hasNext() && it_serve.hasNext() && it_dt_bench.hasNext(); ) {
 
-				item_inuse = it_inuse.next();
-				item_dt = it_dt.next();
-				item_serve = it_serve.next();
-				item_dt_bench = it_dt_bench.next();
+			item_inuse = it_inuse.next();
+			item_dt = it_dt.next();
+			item_serve = it_serve.next();
+			item_dt_bench = it_dt_bench.next();
 
-				asset_name = (item_serve.get("name") != null ? (String) item_serve.get("name") : "");
-				serve = item_serve.get("serve") != null ? (int)item_serve.get("serve") : 0;
+			asset_name = (item_serve.get("name") != null ? (String) item_serve.get("name") : "");
+			serve = item_serve.get("serve") != null ? (int)item_serve.get("serve") : 0;
 
-				if (serve > 0) {
-					inuse = item_inuse.get("inuse") != null ? ((long)item_inuse.get("inuse"))/60.0 : 0;
-					dt =  item_dt.get("dt") != null ? (double)item_dt.get("dt") : 0;
-					dt_bench = item_dt_bench.get("dtbench") != null ? (double)item_dt_bench.get("dtbench") : 0;
-					wait = serve - dt - inuse;
-					if (wait < 0)	wait = 0;
-				}
-				else {
-					inuse = 0;
-					dt = 0;
-					dt_bench = 0;
-					wait = 0;
-				}
-
-				cst_inuse.set(asset_name, inuse);
-				cst_wait.set(asset_name, wait);
-
-				inuse_total += inuse;
-				dt_total += dt;
-				wait_total += wait;
-
-				dt /= serve;
-				dt *= 100;
-
-				if (dt > 100) dt = 100;
-				if (dt_bench > 100) dt_bench = 100;
-
-				cst_dt.set(asset_name, dt);
-				cst_dt_bench.set(asset_name, dt_bench);
-
+			if (serve > 0) {
+				inuse = item_inuse.get("inuse") != null ? ((long)item_inuse.get("inuse"))/60.0 : 0;
+				dt =  item_dt.get("dt") != null ? (double)item_dt.get("dt") : 0;
+				dt_bench = item_dt_bench.get("dtbench") != null ? (double)item_dt_bench.get("dtbench") : 0;
+				wait = serve - dt - inuse;
+				if (wait < 0)	wait = 0;
+			}
+			else {
+				inuse = 0;
+				dt = 0;
+				dt_bench = 0;
+				wait = 0;
 			}
 
-			valueInuse =cf.format(inuse_total);
-			valueDT = cf.format(dt_total);
-			valueWait = cf.format(wait_total);
+			cst_inuse.set(asset_name, inuse);
+			cst_wait.set(asset_name, wait);
 
-			deviceUsage.clear();
-			deviceUsage.addSeries(cst_inuse);
-			deviceUsage.addSeries(cst_wait);
+			inuse_total += inuse;
+			dt_total += dt;
+			wait_total += wait;
 
-			deviceDT.clear();
-			deviceDT.addSeries(cst_dt);
-			deviceDT.addSeries(cst_dt_bench);
+			dt /= serve;
+			dt *= 100;
 
-			ChartSeries cst_stat_1 = new BarChartSeries();
-			cst_stat_1.set("total", wait_total);
-			ChartSeries cst_stat_2 = new BarChartSeries();
-			cst_stat_2.set("total", inuse_total);
-			ChartSeries cst_stat_3 = new BarChartSeries();
-			cst_stat_3.set("total", dt_total);
+			if (dt > 100) dt = 100;
+			if (dt_bench > 100) dt_bench = 100;
 
-			deviceStat.clear();
-			deviceStat.addSeries(cst_stat_1);
-			deviceStat.addSeries(cst_stat_2);
-			deviceStat.addSeries(cst_stat_3);
+			cst_dt.set(asset_name, dt);
+			cst_dt_bench.set(asset_name, dt_bench);
+
+		}
+
+		deviceUsage.clear();
+		deviceUsage.addSeries(cst_inuse);
+		deviceUsage.addSeries(cst_wait);
+
+		deviceDT.clear();
+		deviceDT.addSeries(cst_dt);
+		deviceDT.addSeries(cst_dt_bench);
+
+		valueWait = cf.format(wait_total);
+		valueInuse =cf.format(inuse_total);
+		valueDT = cf.format(dt_total);
+
+		ChartSeries cst_stat_1 = new BarChartSeries();
+		cst_stat_1.set("total", wait_total);
+		ChartSeries cst_stat_2 = new BarChartSeries();
+		cst_stat_2.set("total", inuse_total);
+		ChartSeries cst_stat_3 = new BarChartSeries();
+		cst_stat_3.set("total", dt_total);
+
+		deviceStat.clear();
+		deviceStat.addSeries(cst_stat_1);
+		deviceStat.addSeries(cst_stat_2);
+		deviceStat.addSeries(cst_stat_3);
 
 	}
 

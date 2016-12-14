@@ -32,12 +32,15 @@
                             </p:menuButton>
                         </h:form>
                     </div>
+
                     <div class="ui-g-10">
                         <span class="epsilon">#{msg.DeviceKPIAnalysis}</span>
                     </div>
+                    
                 </div>
             </div>
             <div class="card--summary">
+                <h:form id="TopValueForm">
                 <div class="ui-g ui-fluid">
                     <div class="ui-g-12 ui-md-4">
                         <div class="epsilon u-mv-">#{msg.assetTotalProfit}</div>
@@ -65,25 +68,27 @@
                         </p:outputPanel>
                     </div>
                 </div>
+                </h:form>
             </div>
         </header>
 
         <div class="ui-g">
             <div class="ui-g-12">
+                <h:form id="YearSelectForm">
                 <div class="block">
-                    <h:form id="TopValueForm">
                         <p:selectOneMenu id="selectedYear" value="#{homeHeadController.selectedYear}">
                             <p:ajax listener="#{homeHeadController.onSelectedYearChange}"
-                                    update="BarChartForm"/>
+                                    update="BarChartForm1 BarChartForm2"/>
                             <p:ajax listener="#{assetPerfAllController.submit(homeHeadController.selectedYear)}"
                                     update="TopValueForm AssetInfoListForm"/>
                             <f:selectItems value="#{homeHeadController.yearList}"/>
                         </p:selectOneMenu>
-                    </h:form>
                 </div>
+                </h:form>
             </div>
+
             <div class="ui-g-12">
-                <h:form id="BarChartForm">
+                <h:form id="BarChartForm1">
                 <div class="block">
                     <h3 class="block-title">#{msg.assetAveROI}</h3>
                     <div class="layout">
@@ -99,13 +104,17 @@
                 </div>
                 </h:form>
             </div>
+
             <div class="ui-g-12">
+                <h:form id="BarChartForm2">
                 <div class="block">
                     <h3 class="block-title">#{msg.assetAnnual}</h3>
                     <p:chart id="barMonthlyRevenue" type="bar" model="#{homeHeadController.barMonthlyRevenue}"
                              style="height:300px" responsive="true"/>
                 </div>
+                </h:form>
             </div>
+
             <div class="ui-g-12">
                 <div class="block">
                     <h3 class="block-title">#{msg.assetsDashboardhd}</h3>
