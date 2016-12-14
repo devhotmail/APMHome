@@ -46,8 +46,8 @@
                         <p:column headerText="#{msg.aliasName}" sortBy="#{item.aliasName}" filterBy="#{item.aliasName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.aliasName}"/>
                         </p:column>
-                        <p:column headerText="#{msg.functionGroup}" sortBy="#{item.functionGroup}" filterBy="#{item.functionGroup}" filterMatchMode="EQ">
-                            <h:outputText value="#{fieldMsg.fieldValue('assetGroup',item.functionGroup)}"/>
+                        <p:column headerText="#{msg.functionType}" sortBy="#{item.functionType}" filterBy="#{item.functionType}" filterMatchMode="EQ">
+                            <h:outputText value="#{fieldMsg.fieldValue('assetGroup',item.functionType)}"/>
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
@@ -55,8 +55,8 @@
                                 </p:selectOneMenu>
                             </f:facet>
                         </p:column>
-                        <p:column headerText="#{msg.functionType}" sortBy="#{item.functionType}" filterBy="#{item.functionType}" filterMatchMode="EQ">
-                            <h:outputText value="#{fieldMsg.fieldValue('assetFunctionType',item.functionType)}"/>
+                        <p:column headerText="#{msg.functionGroup}" sortBy="#{item.functionGroup}" filterBy="#{item.functionGroup}" filterMatchMode="EQ">
+                            <h:outputText value="#{fieldMsg.fieldValue('assetFunctionType',item.functionGroup)}"/>
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
@@ -65,13 +65,25 @@
                             </f:facet>
                         </p:column>
                         <p:column headerText="#{msg.functionGrade}" sortBy="#{item.functionGrade}" filterBy="#{item.functionGrade}" filterMatchMode="EQ">
-                            <h:outputText value="#{item.functionGrade}"/>
+                            <h:outputText value="#{fieldMsg.fieldValue('assetFunctionGrade',item.functionGrade)}"/>
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionGrade')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                         </p:column>
                         <p:column headerText="#{msg.manufacture}" sortBy="#{item.manufacture}" filterBy="#{item.manufacture}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.manufacture}"/>
                         </p:column>
                         <p:column headerText="#{msg.vendor}" sortBy="#{item.vendor}" filterBy="#{item.vendor}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.vendor}"/>
+                            <h:outputText value="#{supplierController.getSupplier(item.vendor).name}"/>
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{supplierController.supplierList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                         </p:column>
                         <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
                             <f:facet name="filter">

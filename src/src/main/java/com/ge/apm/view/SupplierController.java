@@ -31,6 +31,11 @@ public class SupplierController extends JpaCRUDController<Supplier> {
     public List<Supplier> getSupplierList() {
         return dao.getBySiteId(UserContextService.getSiteId());
     }
+    
+    public Supplier getSupplier(Integer id) {
+        return dao.findById(id);
+    }
+    
 
     @Override
     public void onBeforeNewObject(Supplier supplier) {
