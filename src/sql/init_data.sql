@@ -39,6 +39,9 @@ INSERT INTO "public"."user_role" VALUES ('2', '3', '2');
 INSERT INTO "public"."user_role" VALUES ('3', '4', '4');
 INSERT INTO "public"."user_role" VALUES ('4', '5', '5');
 INSERT INTO "public"."user_role" VALUES ('5', '5', '3');
+INSERT INTO "public"."user_role" VALUES ('6', '6', '1');
+INSERT INTO "public"."user_role" VALUES ('7', '7', '2');
+INSERT INTO "public"."user_role" VALUES ('8', '8', '4');
 
 
 INSERT INTO "chart_config" VALUES (1, 'dashboard_pie', 'select * from demo_data where id>=990 ', 't', 'pie', 'type', 'number1', 'number1', '饼图测试', 'e', NULL, 2, 't', 'x Label', NULL, NULL, NULL, NULL, NULL, NULL, 'y Label', NULL, NULL, 't');
@@ -50,22 +53,19 @@ INSERT INTO "data_table_config" VALUES (2, 'test2', 'select count(*) from demo_d
 INSERT INTO "data_table_config" VALUES (3, 'aaa', 'aaa', 'aaa', 'f', 't');
 
 
-INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (1,'casePriority','故障紧急程度');
-INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (2,'caseType','故障类别');
-INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (3,'caseSubType','故障子类别');
-INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (4,'assetGroup','资产分组');
-INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (5,'woSteps','维修工单步骤');
-INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (6,'assetStatus','资产状态');
-INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (7,'assetFunctionType','资产功能类别');
+INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (1,'caseType','故障类别');
+INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (2,'caseSubType','故障子类别');
+INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (3,'assetGroup','资产分组');
+INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (4,'assetFunctionType','资产功能类别');
 
 
 SELECT setval('"site_info_id_seq"', 3, false);
 SELECT setval('"org_info_id_seq"', 7, false);
 SELECT setval('"sys_role_id_seq"', 6, false);
 SELECT setval('"user_account_id_seq"', 9, false);
-SELECT setval('"user_role_id_seq"', 6, false);
+SELECT setval('"user_role_id_seq"', 9, false);
 SELECT setval('"chart_config_id_seq"', 4, false);
 SELECT setval('"data_table_config_id_seq"', 4, false);
-SELECT setval('"field_code_type_id_seq"', 4, false);
+SELECT setval('"field_code_type_id_seq"', 5, false);
 
 
