@@ -9,10 +9,12 @@
         <h:outputScript name="js/assetUsageAll.js"/>
     </ui:define>
     <ui:define name="content">
-        <p align="center">
-            <b>#{msg.AssetInfoDetail}</b>
-        </p>
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.AssetInfoDetail}"/>
+            </div>
 
+        </div>
 
         <div class="ui-g">
             <div class="card--summary ui-g ui-fluid">
@@ -156,7 +158,7 @@
                                 <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                             </h:outputText>
                         </p:column>
-                         <p:column headerText="#{msg.workOrderName}" >
+                        <p:column headerText="#{msg.workOrderName}" >
                             <h:outputText value="#{item.name}"/>
                         </p:column>
                         <p:column headerText="#{msg.requestorName}" >

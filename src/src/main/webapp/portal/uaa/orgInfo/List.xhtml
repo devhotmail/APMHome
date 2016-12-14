@@ -6,56 +6,63 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="content">
-        <h:form id="editForm">
-
-            <div class="ui-g ui-fluid">
-                <div class="ui-g-12 ui-lg-3">
-                    <div class="card" style="height:400px;">
-                        <p:scrollPanel style="height:98%;border: 0" mode="native">
-                            <p:tree id="orgTree" class="tree" style="width:98%;border:0;" value="#{orgInfoController.orgTree}" var="node" selectionMode="single" selection="#{orgInfoController.selectedNode}" highlight="true">
-                                <p:ajax process="@this" event="select" listener="#{orgInfoController.onSelectTreeNode}" update=":editForm:editPanel"/>
-
-                                <p:treeNode type="org">
-                                    <h:outputText value="#{node.name}"/>
-                                </p:treeNode>
-                            </p:tree>
-                        </p:scrollPanel>
-                    </div>
-                </div>
-
-                <div class="ui-g-12 ui-lg-9">
-                    <div class="card" style="height:400px;">
-                        <h:panelGroup id="editPanel">
-                            <h:panelGrid columns="8">
-                                <p:commandButton id="createButton" icon="ui-icon-plus" value="#{msg.Create} #{msg.Hospital}" actionListener="#{orgInfoController.prepareCreateHospital}" update=":editForm:editPanel"/>
-                                <p:commandButton id="createButton2" icon="ui-icon-plus" value="#{msg.Create} #{msg.Department}" disabled="#{orgInfoController.selected eq null}" actionListener="#{orgInfoController.prepareCreateDepartment}" update=":editForm:editPanel"/>
-                                <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" value="#{msg.Delete}" actionListener="#{orgInfoController.deleteSelectedOrg}" update=":editForm" disabled="#{empty orgInfoController.selected or empty orgInfoController.selected.id}">
-                                    <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
-                                </p:commandButton>
-                            </h:panelGrid>
-                            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="width: 30%" rendered="#{orgInfoController.selected ne null}">
-                                <h:panelGroup>
-                                    <label class="label">#{msg.parentId}</label>
-                                    <p:outputLabel value="#{orgInfoController.selected.parentOrg}" rendered="#{orgInfoController.selected.parentOrg ne null}"/>
-                                    <p:outputLabel value="N/A" rendered="#{orgInfoController.selected.parentOrg eq null}"/>
-                                </h:panelGroup>
-                                <h:panelGroup>
-                                    <label class="label">#{msg.name}*</label>
-                                    <p:inputText id="name" value="#{orgInfoController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
-                                </h:panelGroup>
-                                <h:panelGroup>
-                                    <label class="label">#{msg.nameEn}</label>
-                                    <p:inputText id="nameEn" value="#{orgInfoController.selected.nameEn}" />
-                                </h:panelGroup>
-
-                                <p:commandButton style="width: 90px;" validateClient="true" icon="ui-icon-check" actionListener="#{orgInfoController.saveSelectedOrg}" value="#{msg.Save}" update="orgTree :growl"/>
-                            </p:panelGrid>
-
-                        </h:panelGroup>
-                    </div>
-                </div>
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.OrgAdmin}"/>
             </div>
-        </h:form>
+
+            <div class="ui-g-12">
+
+                <h:form id="editForm">
+
+                    <div class="ui-g-12 ui-lg-3">
+                        <div class="card" style="height:400px;">
+                            <p:scrollPanel style="height:98%;border: 0" mode="native">
+                                <p:tree id="orgTree" class="tree" style="width:98%;border:0;" value="#{orgInfoController.orgTree}" var="node" selectionMode="single" selection="#{orgInfoController.selectedNode}" highlight="true">
+                                    <p:ajax process="@this" event="select" listener="#{orgInfoController.onSelectTreeNode}" update=":editForm:editPanel"/>
+
+                                    <p:treeNode type="org">
+                                        <h:outputText value="#{node.name}"/>
+                                    </p:treeNode>
+                                </p:tree>
+                            </p:scrollPanel>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-lg-9">
+                        <div class="card" style="height:400px;">
+                            <h:panelGroup id="editPanel">
+                                <h:panelGrid columns="8">
+                                    <p:commandButton id="createButton" icon="ui-icon-plus" value="#{msg.Create} #{msg.Hospital}" actionListener="#{orgInfoController.prepareCreateHospital}" update=":editForm:editPanel"/>
+                                    <p:commandButton id="createButton2" icon="ui-icon-plus" value="#{msg.Create} #{msg.Department}" disabled="#{orgInfoController.selected eq null}" actionListener="#{orgInfoController.prepareCreateDepartment}" update=":editForm:editPanel"/>
+                                    <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" value="#{msg.Delete}" actionListener="#{orgInfoController.deleteSelectedOrg}" update=":editForm" disabled="#{empty orgInfoController.selected or empty orgInfoController.selected.id}">
+                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                                    </p:commandButton>
+                                </h:panelGrid>
+                                <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" style="width: 30%" rendered="#{orgInfoController.selected ne null}">
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.parentId}</label>
+                                        <p:outputLabel value="#{orgInfoController.selected.parentOrg}" rendered="#{orgInfoController.selected.parentOrg ne null}"/>
+                                        <p:outputLabel value="N/A" rendered="#{orgInfoController.selected.parentOrg eq null}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.name}*</label>
+                                        <p:inputText id="name" value="#{orgInfoController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.nameEn}</label>
+                                        <p:inputText id="nameEn" value="#{orgInfoController.selected.nameEn}" />
+                                    </h:panelGroup>
+
+                                    <p:commandButton style="width: 90px;" validateClient="true" icon="ui-icon-check" actionListener="#{orgInfoController.saveSelectedOrg}" value="#{msg.Save}" update="orgTree :growl"/>
+                                </p:panelGrid>
+
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+        </div>
     </ui:define>
 
 </ui:composition>

@@ -4,7 +4,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
-    
+
     <ui:define name="preRenderView">
         <f:metadata>
             <f:viewParam name="model" value="#{qualityCtrlOrderController.filterStartTime}"/>
@@ -13,14 +13,12 @@
     </ui:define>
 
     <ui:define name="content">
-        <div class="ui-g">
-            <div class="ui-g-12">
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.DeviceQualityControl}"/>
+            </div>
 
-                    <p align="center">
-                        <b>#{msg.DeviceQualityControl}</b>
-                    </p>
-
-
+            <div class="ui-g-12 card">
                 <h:form id="InspectionOrderListForm">
                     <p:dataTable id="datalist" value="#{qualityCtrlOrderController.lazyModel}" var="item" widgetVar="varDataList"
                                  selectionMode="single" selection="#{qualityCtrlOrderController.selected}"
@@ -105,7 +103,7 @@
 
             </div>
         </div>
-        
+
         <p:overlayPanel widgetVar="panelFilterCreateTime" for=":InspectionOrderListForm:datalist:filterCreateTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
@@ -113,7 +111,7 @@
                 <p:outputLabel value="#{msg.To}"/>
                 <p:calendar widgetVar="varCreateTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
-            <p:commandButton onclick="setDateFilter('varDataList','varFilterCreateTime','varCreateTimeFrom','varCreateTimeTo'); PF('panelFilterCreateTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="setDateFilter('varDataList', 'varFilterCreateTime', 'varCreateTimeFrom', 'varCreateTimeTo'); PF('panelFilterCreateTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterCreateTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
         </p:overlayPanel>
         <p:overlayPanel widgetVar="panelFilterStartTime" for=":InspectionOrderListForm:datalist:filterStartTime" dismissable="false">
@@ -123,7 +121,7 @@
                 <p:outputLabel value="#{msg.To}"/>
                 <p:calendar widgetVar="varStartTimeTo" value="#{qualityCtrlOrderController.varStartTimeTo}" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
-            <p:commandButton onclick="setDateFilter('varDataList','varFilterStartTime','varStartTimeFrom','varStartTimeTo'); PF('panelFilterStartTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="setDateFilter('varDataList', 'varFilterStartTime', 'varStartTimeFrom', 'varStartTimeTo'); PF('panelFilterStartTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterStartTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
         </p:overlayPanel>
         <p:overlayPanel widgetVar="panelFilterEndTime" for=":InspectionOrderListForm:datalist:filterEndTime" dismissable="false">
@@ -133,7 +131,7 @@
                 <p:outputLabel value="#{msg.To}"/>
                 <p:calendar widgetVar="varEndTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
-            <p:commandButton onclick="setDateFilter('varDataList','varFilterEndTime','varEndTimeFrom','varEndTimeTo'); PF('panelFilterEndTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="setDateFilter('varDataList', 'varFilterEndTime', 'varEndTimeFrom', 'varEndTimeTo'); PF('panelFilterEndTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterEndTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
         </p:overlayPanel>
 

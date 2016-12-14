@@ -4,7 +4,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
-    
+
     <ui:define name="preRenderView">
         <f:metadata>
             <f:viewParam name="model" value="#{pmOrderController.filterStartTime}"/>
@@ -13,96 +13,96 @@
     </ui:define>
 
     <ui:define name="content">
-        <div class="ui-g">
-            <div class="ui-g-12">
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.PmRecord}"/>
+            </div>
 
-                <p align="center">
-                    <b>#{msg.PmRecord}</b>
-                </p>
-            <h:form id="PmOrderListForm">
-                <p:dataTable id="datalist" value="#{pmOrderController.lazyModel}" var="item" widgetVar="varDataList"
-                    selectionMode="single" selection="#{pmOrderController.selected}"
-                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
-                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
-                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
-                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
-                    rows="3" emptyMessage="#{msg.noRecordFound}"
-                    rowsPerPageTemplate="3,5,10,15">
-					
-                    <p:ajax event="rowSelect"  listener="#{pmOrderController.prepareEdit()}"  update="createButton deleteButton PmOrderEditForm"/>
-                    <p:ajax event="filter" listener="#{pmOrderController.onFilter}" update="createButton deleteButton"/>
+            <div class="ui-g-12 card">
+                <h:form id="PmOrderListForm">
+                    <p:dataTable id="datalist" value="#{pmOrderController.lazyModel}" var="item" widgetVar="varDataList"
+                                 selectionMode="single" selection="#{pmOrderController.selected}"
+                                 lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                 rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                                 paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                                 rows="3" emptyMessage="#{msg.noRecordFound}"
+                                 rowsPerPageTemplate="3,5,10,15">
 
-                      <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
-                        	<h:outputText value="#{item.name}" />
-                    </p:column>
-                    <p:column headerText="#{msg.assetName}" sortBy="#{item.assetName}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.assetName}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.creatorName}" sortBy="#{item.creatorName}" filterBy="#{item.creatorName}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.creatorName}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.createTime}" sortBy="#{item.createTime}" filterBy="#{item.createTime}" filterMatchMode="GTE">
-                        <f:facet name="filter">
-                            <p:inputText id="filterCreateTime" widgetVar="varFilterCreateTime"/>
-                        </f:facet>
-                        <h:outputText value="#{item.createTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="#{msg.ownerId}" sortBy="#{item.ownerName}" filterBy="#{item.ownerName}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.ownerName}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.ownerOrgName}" sortBy="#{item.ownerOrgName}" filterBy="#{item.ownerOrgName}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.ownerOrgName}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.startTime}" sortBy="#{item.startTime}" filterBy="#{item.startTime}" filterMatchMode="GTE">
-                        <f:facet name="filter">
-                            <p:inputText id="filterStartTime" widgetVar="varFilterStartTime" value="#{pmOrderController.startFormatTime}"/>
-                        </f:facet>
-                        <h:outputText value="#{item.startTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="#{msg.endTime}" sortBy="#{item.endTime}" filterBy="#{item.endTime}" filterMatchMode="GTE">
-                        <f:facet name="filter">
-                            <p:inputText id="filterEndTime" widgetVar="varFilterEndTime"/>
-                        </f:facet>
-                        <h:outputText value="#{item.endTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="#{msg.isFinished}" sortBy="#{item.isFinished}" filterBy="#{item.isFinished}" filterMatchMode="EQ">
-                        <f:facet name="filter">
-                            <p:selectOneMenu onchange="PF('varDataList').filter()" value="#{pmOrderController.filterIsFinished}">
-                                <f:converter converterId="javax.faces.Boolean" />
-                                <f:selectItem itemLabel="#{msg.All}" itemValue="" />
-                                <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
-                                <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
-                            </p:selectOneMenu>
-                        </f:facet>
-                        <h:outputText value="#{item.isFinished? msg.True2Yes : msg.False2No }"/>
-                    </p:column>
-                    
-                    <f:facet name="{Toolbar}">
+                        <p:ajax event="rowSelect"  listener="#{pmOrderController.prepareEdit()}"  update="createButton deleteButton PmOrderEditForm"/>
+                        <p:ajax event="filter" listener="#{pmOrderController.onFilter}" update="createButton deleteButton"/>
 
-                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{pmOrderController.prepareCreate}" update=":PmOrderEditForm" />
-                        <p:commandButton  id="deleteButton"   icon="ui-icon-close"  title="#{msg.Delete}" actionListener="#{pmOrderController.delete}" disabled="#{empty pmOrderController.selected or pmOrderController.selected.isFinished eq true}"
-                         update=":PmOrderListForm,:PmOrderEditForm"  > 
-		                    <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
-		                </p:commandButton> 
-		                <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
-                            <p:dataExporter type="xls" target="datalist" fileName="PmOrder_export"/>
-                        </p:commandButton>
-                    </f:facet>
-                </p:dataTable>
-            </h:form>
+                        <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.name}" />
+                        </p:column>
+                        <p:column headerText="#{msg.assetName}" sortBy="#{item.assetName}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.assetName}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.creatorName}" sortBy="#{item.creatorName}" filterBy="#{item.creatorName}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.creatorName}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.createTime}" sortBy="#{item.createTime}" filterBy="#{item.createTime}" filterMatchMode="GTE">
+                            <f:facet name="filter">
+                                <p:inputText id="filterCreateTime" widgetVar="varFilterCreateTime"/>
+                            </f:facet>
+                            <h:outputText value="#{item.createTime}">
+                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msg.ownerId}" sortBy="#{item.ownerName}" filterBy="#{item.ownerName}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.ownerName}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.ownerOrgName}" sortBy="#{item.ownerOrgName}" filterBy="#{item.ownerOrgName}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.ownerOrgName}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.startTime}" sortBy="#{item.startTime}" filterBy="#{item.startTime}" filterMatchMode="GTE">
+                            <f:facet name="filter">
+                                <p:inputText id="filterStartTime" widgetVar="varFilterStartTime" value="#{pmOrderController.startFormatTime}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.startTime}">
+                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msg.endTime}" sortBy="#{item.endTime}" filterBy="#{item.endTime}" filterMatchMode="GTE">
+                            <f:facet name="filter">
+                                <p:inputText id="filterEndTime" widgetVar="varFilterEndTime"/>
+                            </f:facet>
+                            <h:outputText value="#{item.endTime}">
+                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msg.isFinished}" sortBy="#{item.isFinished}" filterBy="#{item.isFinished}" filterMatchMode="EQ">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" value="#{pmOrderController.filterIsFinished}">
+                                    <f:converter converterId="javax.faces.Boolean" />
+                                    <f:selectItem itemLabel="#{msg.All}" itemValue="" />
+                                    <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
+                                    <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{item.isFinished? msg.True2Yes : msg.False2No }"/>
+                        </p:column>
 
-            <ui:include src="Edit.xhtml"/>
-            <ui:include src="View.xhtml"/>
+                        <f:facet name="{Toolbar}">
+
+                            <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{pmOrderController.prepareCreate}" update=":PmOrderEditForm" />
+                            <p:commandButton  id="deleteButton"   icon="ui-icon-close"  title="#{msg.Delete}" actionListener="#{pmOrderController.delete}" disabled="#{empty pmOrderController.selected or pmOrderController.selected.isFinished eq true}"
+                                              update=":PmOrderListForm,:PmOrderEditForm"  > 
+                                <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                            </p:commandButton> 
+                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
+                                <p:dataExporter type="xls" target="datalist" fileName="PmOrder_export"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+                </h:form>
+
+                <ui:include src="Edit.xhtml"/>
+                <ui:include src="View.xhtml"/>
 
             </div>
         </div>
-        
+
         <p:overlayPanel widgetVar="panelFilterCreateTime" for=":PmOrderListForm:datalist:filterCreateTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
@@ -110,7 +110,7 @@
                 <p:outputLabel value="#{msg.To}"/>
                 <p:calendar widgetVar="varCreateTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
-            <p:commandButton onclick="setDateFilter('varDataList','varFilterCreateTime','varCreateTimeFrom','varCreateTimeTo'); PF('panelFilterCreateTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="setDateFilter('varDataList', 'varFilterCreateTime', 'varCreateTimeFrom', 'varCreateTimeTo'); PF('panelFilterCreateTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterCreateTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
         </p:overlayPanel>
         <p:overlayPanel widgetVar="panelFilterStartTime" for=":PmOrderListForm:datalist:filterStartTime" dismissable="false">
@@ -120,7 +120,7 @@
                 <p:outputLabel value="#{msg.To}"/>
                 <p:calendar widgetVar="varStartTimeTo" value="#{pmOrderController.varStartTimeTo}" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
-            <p:commandButton onclick="setDateFilter('varDataList','varFilterStartTime','varStartTimeFrom','varStartTimeTo'); PF('panelFilterStartTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="setDateFilter('varDataList', 'varFilterStartTime', 'varStartTimeFrom', 'varStartTimeTo'); PF('panelFilterStartTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterStartTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
         </p:overlayPanel>
         <p:overlayPanel widgetVar="panelFilterEndTime" for=":PmOrderListForm:datalist:filterEndTime" dismissable="false">
@@ -130,10 +130,10 @@
                 <p:outputLabel value="#{msg.To}"/>
                 <p:calendar widgetVar="varEndTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
-            <p:commandButton onclick="setDateFilter('varDataList','varFilterEndTime','varEndTimeFrom','varEndTimeTo'); PF('panelFilterEndTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="setDateFilter('varDataList', 'varFilterEndTime', 'varEndTimeFrom', 'varEndTimeTo'); PF('panelFilterEndTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterEndTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
         </p:overlayPanel>
-        
+
     </ui:define>
 
 </ui:composition>

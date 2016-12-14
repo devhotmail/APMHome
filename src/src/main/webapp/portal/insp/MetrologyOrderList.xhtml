@@ -13,14 +13,12 @@
     </ui:define>
 
     <ui:define name="content">
-        <div class="ui-g">
-            <div class="ui-g-12">
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.DeviceMetrologyMgmt}"/>
+            </div>
 
-                    <p align="center">
-                        <b>#{msg.DeviceMetrologyMgmt}</b>
-                    </p>
-
-
+            <div class="ui-g-12 card">
                 <h:form id="InspectionOrderListForm">
                     <p:dataTable id="datalist" value="#{metrologyOrderController.lazyModel}" var="item" widgetVar="varDataList"
                                  selectionMode="single" selection="#{metrologyOrderController.selected}"

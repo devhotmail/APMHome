@@ -7,11 +7,12 @@
 
     <ui:define name="content">
         <div class="ui-g">
-            <div class="ui-g-12">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.AssetDocMgmt}"/>
+            </div>
 
-                <p align="center">
-                    <b>#{msg.AssetFileAttachment}</b>
-                </p>
+            <div class="ui-g-12 card">
+
                 <h:form id="AssetFileAttachmentListForm">
                     <p:dataTable id="datalist" value="#{assetFileAttachmentController.lazyModel}" var="item" widgetVar="varDataList"
                                  selectionMode="single" selection="#{assetFileAttachmentController.selected}"

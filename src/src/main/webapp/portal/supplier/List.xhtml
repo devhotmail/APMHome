@@ -6,60 +6,61 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="content">
-        <div class="ui-g">
-            <div class="ui-g-12">
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.Supplier}"/>
+            </div>
 
-                <p align="center">
-                    <b>#{msg.Supplier}</b>
-                </p>
-            <h:form id="SupplierListForm">
-                <p:dataTable id="datalist" value="#{supplierController.lazyModel}" var="item" widgetVar="varDataList"
-                    selectionMode="single" selection="#{supplierController.selected}"
-                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
-                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
-                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
-                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
-                    rows="20" emptyMessage="#{msg.noRecordFound}"
-                    rowsPerPageTemplate="20,40,60,90">
+            <div class="ui-g-12 card">
 
-                    <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
-                    <p:ajax event="filter" listener="#{supplierController.onFilter}" update="createButton editButton deleteButton"/>
-                    
-                    <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.name}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.city}" sortBy="#{item.city}" filterBy="#{item.city}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.city}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.address}" sortBy="#{item.address}" filterBy="#{item.address}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.address}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.zipcode}" sortBy="#{item.zipcode}" filterBy="#{item.zipcode}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.zipcode}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.contactor}" sortBy="#{item.contactor}" filterBy="#{item.contactor}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.contactor}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.tel}" sortBy="#{item.tel}" filterBy="#{item.tel}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.tel}"/>
-                    </p:column>
-                    <f:facet name="{Toolbar}">
-                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
-                            <p:dataExporter type="xls" target="datalist" fileName="Supplier_export"/>
-                        </p:commandButton>
-                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{supplierController.prepareCreate}" update=":SupplierEditDlg" oncomplete="PF('SupplierEditDialog').show()"/>
-                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{supplierController.prepareEdit}" update=":SupplierEditDlg" oncomplete="PF('SupplierEditDialog').show()" disabled="#{empty supplierController.selected}"/>
-                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{supplierController.delete}" update="datalist" disabled="#{empty supplierController.selected}">
-                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
-                        </p:commandButton>
-                    </f:facet>
-                </p:dataTable>
-            </h:form>
+                <h:form id="SupplierListForm">
+                    <p:dataTable id="datalist" value="#{supplierController.lazyModel}" var="item" widgetVar="varDataList"
+                                 selectionMode="single" selection="#{supplierController.selected}"
+                                 lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                 rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                                 paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                                 rows="20" emptyMessage="#{msg.noRecordFound}"
+                                 rowsPerPageTemplate="20,40,60,90">
 
-            <ui:include src="Edit.xhtml"/>
+                        <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
+                        <p:ajax event="filter" listener="#{supplierController.onFilter}" update="createButton editButton deleteButton"/>
+
+                        <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.name}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.city}" sortBy="#{item.city}" filterBy="#{item.city}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.city}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.address}" sortBy="#{item.address}" filterBy="#{item.address}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.address}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.zipcode}" sortBy="#{item.zipcode}" filterBy="#{item.zipcode}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.zipcode}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.contactor}" sortBy="#{item.contactor}" filterBy="#{item.contactor}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.contactor}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.tel}" sortBy="#{item.tel}" filterBy="#{item.tel}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.tel}"/>
+                        </p:column>
+                        <f:facet name="{Toolbar}">
+                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
+                                <p:dataExporter type="xls" target="datalist" fileName="Supplier_export"/>
+                            </p:commandButton>
+                            <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{supplierController.prepareCreate}" update=":SupplierEditDlg" oncomplete="PF('SupplierEditDialog').show()"/>
+                            <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{supplierController.prepareEdit}" update=":SupplierEditDlg" oncomplete="PF('SupplierEditDialog').show()" disabled="#{empty supplierController.selected}"/>
+                            <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{supplierController.delete}" update="datalist" disabled="#{empty supplierController.selected}">
+                                <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+                </h:form>
+
+                <ui:include src="Edit.xhtml"/>
             </div>
         </div>
-        
+
     </ui:define>
 
 </ui:composition>

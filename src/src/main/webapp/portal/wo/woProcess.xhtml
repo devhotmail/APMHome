@@ -17,12 +17,12 @@
     </ui:define>
 
     <ui:define name="content">
-        <div class="ui-g card clearfix">
-            <div class="ui-g-12">
-
-                <p align="center">
-                    <b>#{msg.MyWorkOrder}</b>
-                </p>
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.MyWorkOrder}"/>
+            </div>
+            
+            <div class="ui-g-12 card">
                 <p:messages autoUpdate="true" closable="true" showDetail="false"/>
 
                 <p:outputLabel value="#{msg.noWorkOrderSelected}" rendered="#{workOrderController.selected eq null}"/>

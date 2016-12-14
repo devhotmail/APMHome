@@ -28,7 +28,7 @@
                             <label class="label">#{msg.telephone}</label>
                             <p:inputText id="telephone" value="#{userAccountController.selected.telephone}" />
                         </h:panelGroup>
-                        <h:panelGroup>
+                        <h:panelGroup rendered="false">
                             <p:selectBooleanCheckbox itemLabel="#{msg.isSiteAdmin}*" value="#{userAccountController.selected.isSiteAdmin}" required="true" requiredMessage="#{msg.isSiteAdmin} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>

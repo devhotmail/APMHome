@@ -1,3 +1,18 @@
+html{
+background-color: #6e7072;    
+}
+.topbar, .topbar-left {
+  height: 60px!important;
+}
+.layout-main {
+padding-top: 60px!important;
+padding-left: 0!important;
+padding-right: 0!important;
+background-color: #6e7072;
+}
+.layout-menu{
+top: 60px!important;
+}
 .ultima-menu{
 margin-top: 0px!important;
 }
@@ -5,7 +20,29 @@ margin-top: 0px!important;
 margin-bottom: 2px!important;
 }
 .card{
-border-radius: 10px!important;
+border-radius: 0px!important;
+margin-bottom: 6px!important;
+margin-left: 6px!important;
+margin-right: 6px!important;
+box-shadow: none!important;
+-webkit-box-shadow: none!important;
+}
+.cardTitle{
+height: 60px!important;
+margin-left: 0px!important;
+margin-right: 0px!important;
+text-align: center!important;
+}
+.pageTitle {
+font-size: 1.33333rem!important;
+line-height: 1!important;
+}
+.ajaxStatusDialog{
+background: transparent!important;
+border: none!important;
+-moz-box-shadow: none!important;
+-webkit-box-shadow: none!important;
+box-shadow: none!important;
 }
 .ui-growl{
 z-index: 9999!important;
