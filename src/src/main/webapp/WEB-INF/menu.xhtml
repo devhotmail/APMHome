@@ -83,7 +83,7 @@
                             <p:menuitem id="um40" value="#{msg.DeviceKPIAnalysis}" outcome="/portal/analysis/assetPerfAll"/>
                             <p:menuitem id="um41" value="#{msg.DeviceKPIForecast}" outcome="/portal/analysis/assetForecastAll"/>
                             <p:menuitem id="um42" value="#{msg.DeviceCostAnalysis}" rendered="false" outcome="/empty"/>
-                            <p:menuitem id="um43" value="#{msg.DevicePurchaseDecisionSupport}" outcome="/empty"/>
+                            <p:menuitem id="um43" value="#{msg.DevicePurchaseDecisionSupport}" outcome="/portal/analysis/assetProcurement"/>
                         </p:submenu>
                         <p:submenu id="um44" label="#{msg.SysAdmin}" icon="settings"  rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('ITAdmin')}">
                             <p:menuitem id="um45" value="#{msg.SiteAdmin}" outcome="/admin/uaa/siteInfo/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin')}"/>

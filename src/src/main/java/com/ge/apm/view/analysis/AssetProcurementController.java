@@ -1,14 +1,12 @@
 package com.ge.apm.view.analysis;
 
-import ca.uhn.hl7v2.model.v24.datatype.ST;
 import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
-import com.google.common.base.Optional;
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.base.Strings;
 import com.google.common.collect.*;
 import com.google.common.math.Stats;
 import org.joda.time.DateTime;
@@ -27,10 +25,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.Math.ceil;
-import static java.lang.Math.round;
 
 
 @ManagedBean
@@ -39,7 +39,8 @@ public class AssetProcurementController {
     private final static Logger log = LoggerFactory.getLogger(AssetProcurementController.class);
     private final static DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     private final static ImmutableMap<Integer, String> parts = ImmutableMap.of(1, "头部", 2, "胸部", 3, "腹部", 4, "四肢", 5, "其他");
-    private final static int DAILY_UTIL_BENCHMARK = 8 * 60 * 60;
+    private final static int DAILY_UTIL_HOURS = 8;
+    private final static int DAILY_UTIL_BENCHMARK = DAILY_UTIL_HOURS * 60 * 60;
     private final Map<String, String> queries;
     private final JdbcTemplate jdbcTemplate;
     private final int siteId;
@@ -392,6 +393,10 @@ public class AssetProcurementController {
                 return input.getForecastIncreaseAfterAction();
             }
         })).sum();
+    }
+
+    public int getDailyUtilHours() {
+        return DAILY_UTIL_HOURS;
     }
 
     private static class Report {
