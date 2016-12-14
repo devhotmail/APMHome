@@ -2,6 +2,9 @@ package com.ge.apm.view;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.poi.hssf.record.formula.functions.T;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import webapp.framework.dao.GenericRepository;
@@ -23,8 +26,13 @@ public class DemoUrlEncodeController extends JpaCRUDController<T>{
 	
 	@Override
 	 protected void init() {
-		propertyStr = (String) UrlEncryptController.getMap("propertyStr");
-		woId = Integer.parseInt((String) UrlEncryptController.getMap("woId"));
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String encodeStr = request.getParameter("str");
+		propertyStr = (String) UrlEncryptController.getMap(encodeStr,"propertyStr");
+		String woIdStr = (String) UrlEncryptController.getMap(encodeStr,"woId");
+		if(woIdStr !=null){
+			woId = Integer.parseInt(woIdStr);
+		}
 		logger.info("propertyStr value is "+propertyStr );
 	}
 	public Integer getWoId() {

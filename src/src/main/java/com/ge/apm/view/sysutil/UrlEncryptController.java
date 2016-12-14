@@ -113,9 +113,13 @@ public class UrlEncryptController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public  static Object getMap(String key){
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String encodeStr = request.getParameter("str");
+	public  static Object getMap(String encodeStr,String key){
+//        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//        String encodeStr = request.getParameter("str");
+        if(encodeStr == null){
+        	logger.error("get param from map error ,encodeStr is null.");
+        	return null;
+        }
         if(encodeStr.contains("%3D")){
         	encodeStr = encodeStr.replaceAll("%3D", "=");
         }
