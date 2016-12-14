@@ -276,7 +276,7 @@ INSERT INTO "i18n_message" VALUES (708,'field_name','updatePersonId','变更人'
 INSERT INTO "i18n_message" VALUES (709,'field_name','updatePersonName','变更人','Update Person Name',null,-1);
 INSERT INTO "i18n_message" VALUES (710,'field_name','updateTime','处理时间','Update Time',null,-1);
 INSERT INTO "i18n_message" VALUES (711,'field_name','vendor','供应商','Vendor',null,-1);
-INSERT INTO "i18n_message" VALUES (712,'field_name','warrantyDate','保证截止日期','Warranty Date',null,-1);
+INSERT INTO "i18n_message" VALUES (712,'field_name','warrantyDate','保修截止日期','Warranty Date',null,-1);
 INSERT INTO "i18n_message" VALUES (713,'field_name','zipcode','邮编','Zipcode',null,-1);
 INSERT INTO "i18n_message" VALUES (714,'field_name','contactEmail','Email','Contact Email',null,-1);
 INSERT INTO "i18n_message" VALUES (715,'field_name','contactPerson','联系人','Contact Person',null,-1);
@@ -401,11 +401,11 @@ INSERT INTO "i18n_message" VALUES (1576,'assetFunctionType','43', '6870软件',n
 INSERT INTO "i18n_message" VALUES (1577,'assetFunctionType','44', '6877介入器材',null,null,-1);
 
 
-INSERT INTO "i18n_message" VALUES (1580,'caseType','1', '故障类型1',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1581,'caseType','2', '故障类型2',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1582,'caseType','3', '故障类型3',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1583,'caseType','4', '故障类型4',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1584,'caseType','5', '故障类型5',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1580,'caseType','1', '设备老化',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1581,'caseType','2', '设备损坏',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1582,'caseType','3', '耗材损坏',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1583,'caseType','4', '保修过期',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1584,'caseType','5', '其他',null,null,-1);
 
 INSERT INTO "i18n_message" VALUES (1585,'caseSubType','1', '故障子类型1',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1586,'caseSubType','2', '故障子类型2',null,null,-1);
@@ -413,11 +413,9 @@ INSERT INTO "i18n_message" VALUES (1587,'caseSubType','3', '故障子类型3',nu
 INSERT INTO "i18n_message" VALUES (1588,'caseSubType','4', '故障子类型4',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1589,'caseSubType','5', '故障子类型5',null,null,-1);
 
-INSERT INTO "i18n_message" VALUES (1595,'assetFunctionGrade','1', '功能等级1',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1596,'assetFunctionGrade','2', '功能等级2',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1597,'assetFunctionGrade','3', '功能等级3',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1598,'assetFunctionGrade','4', '功能等级4',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1599,'assetFunctionGrade','5', '功能等级5',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1595,'assetFunctionGrade','1', '等级1',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1596,'assetFunctionGrade','2', '等级2',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1597,'assetFunctionGrade','3', '等级3',null,null,-1);
 
 INSERT INTO "i18n_message" VALUES (1601,'ownAssetGroup','1', '所属设备类型1',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1602,'ownAssetGroup','2', '所属设备类型2',null,null,-1);
@@ -431,11 +429,9 @@ INSERT INTO "i18n_message" VALUES (1613,'inspectionPeriod','3', '每两周',null
 INSERT INTO "i18n_message" VALUES (1614,'inspectionPeriod','4', '每月',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1615,'inspectionPeriod','5', '每季度',null,null,-1);
 
-INSERT INTO "i18n_message" VALUES (1621,'depreciationMethodList','1', '折旧算法1',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1622,'depreciationMethodList','2', '折旧算法2',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1623,'depreciationMethodList','3', '折旧算法3',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1624,'depreciationMethodList','4', '折旧算法4',null,null,-1);
-INSERT INTO "i18n_message" VALUES (1625,'depreciationMethodList','5', '折旧算法5',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1621,'depreciationMethodList','1', '平均',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1622,'depreciationMethodList','2', '加速双倍余额',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1623,'depreciationMethodList','3', '加速年限',null,null,-1);
 
 INSERT INTO "i18n_message" VALUES (1626, 'label', 'SysConfig', '系统配置项', 'system config', NULL, -1);
 INSERT INTO "i18n_message" VALUES (1627, 'label', 'UserConfig', '自定义配置项', 'config by user', NULL, -1);
