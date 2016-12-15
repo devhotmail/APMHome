@@ -3,8 +3,6 @@ package com.ge.apm.view;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.SupplierRepository;
 import com.ge.apm.domain.Supplier;
@@ -41,4 +39,10 @@ public class SupplierController extends JpaCRUDController<Supplier> {
     public void onBeforeNewObject(Supplier supplier) {
         supplier.setSiteId(UserContextService.getSiteId());
     }
+    
+    @Override
+    public String getKeyFieldNameValue(Supplier supplier){
+        return WebUtil.getMessage("name")+"="+supplier.getName();
+    }
+    
 }

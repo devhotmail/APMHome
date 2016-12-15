@@ -188,7 +188,6 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
 
     }
     
-    
     @Override
     public void onAfterNewObject(UserAccount userAccount,boolean isOk ){
     	if(isOk && this.crudActionName.equals("Create")){
@@ -196,5 +195,15 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     		role.add(DEFAULT_USER_ROLE);
     		uaaService.setUserRoles(selected, role);
     	}
+    }
+    
+    @Override
+    public void onBeforeSave(UserAccount user){
+        //remove space charactors.
+        String loginName = user.getLoginName();
+        if(loginName==null) return;
+        
+        loginName = loginName.replace(" ", "");
+        user.setLoginName(loginName);
     }
 }

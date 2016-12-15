@@ -44,50 +44,14 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
         return dao.find();
     }
 
-    public void queryDB(){
-        //准备 SQL 参数
-        Map<String, Object> sqlParams = new HashMap<>();
-        sqlParams.put("hospitalId", 1);
-        sqlParams.put("assetName", "%CT%");
-        
-        //执行 SQL
-        List<Map<String, Object>> result = NativeSqlUtil.queryForList("select * from asset_info where hospital_id=:#hospitalId and name like :#assetName", sqlParams);
-        
-        //取第一行记录的资产名称字段
-        String assetName = result.get(0).get("name").toString();
-        
-    }
-/*
     @Override
-    public void onBeforeNewObject(SiteInfo object) {
+    public String getErrorMessageForDuplicateKey(SiteInfo site){
+        return String.format(WebUtil.getMessage("DuplicateSiteName"), site.getName());
     }
     
     @Override
-    public void onAfterNewObject(SiteInfo object, boolean isOK) {
-    }
-
-    @Override
-    public void onBeforeUpdateObject(SiteInfo object) {
+    public String getKeyFieldNameValue(SiteInfo site){
+        return WebUtil.getMessage("name")+"="+site.getName();
     }
     
-    @Override
-    public void onAfterUpdateObject(SiteInfo object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeDeleteObject(SiteInfo object) {
-    }
-    
-    @Override
-    public void onAfterDeleteObject(SiteInfo object, boolean isOK) {
-    }
-    
-    @Override
-    public void onBeforeSave(SiteInfo object) {
-    }
-    
-    @Override
-    public void onAfterDataChanged(){
-    };
-*/
 }
