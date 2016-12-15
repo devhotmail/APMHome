@@ -276,6 +276,7 @@
           }
         },
         rendererOptions: {
+          highlightMouseOver: false,
           barWidth: 60,
           animation: {
             speed: 500

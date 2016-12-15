@@ -50,7 +50,7 @@
                             <p:outputPanel id="value_scan">
                                 <div class="text--banner u-mt- delta">
                                     <h:outputText value="#{deviceOperationMonitorController.totalExamCount}"/>
-                                    <span class="text--unit text--secondary">#{msg.operationMonitor_device}</span>
+                                    <span class="text--unit text--secondary epsilon">#{msg.operationMonitor_device}</span>
                                 </div>
                             </p:outputPanel>
                         </div>
@@ -65,7 +65,7 @@
 
             <div class="ui-g">
                 <div class="ui-g-12">
-                    <div class="block u-pv">
+                    <div class="block">
                         <p:growl id="messages" showDetail="true"/>
                         <div class="calendar-range-picker flex flex--row flex--center flex--justify">
                             <p:calendar id="start_date_button" value="#{deviceOperationMonitorController.startDate}"

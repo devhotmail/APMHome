@@ -1,7 +1,5 @@
 $main-bg-color: rgb(110, 112, 114);
 $topbar-height: 75px;
-$card-title-height: 60px;
-$summary-height: 100px;
 $body-padding-top: $topbar-height;
 
 .layout-compact .layout-wrapper {
@@ -11,8 +9,7 @@ $body-padding-top: $topbar-height;
   }
 
   .card--title {
-    height: $card-title-height;
-    line-height: $card-title-height;
+    padding: 15px;
     background-color: white;
   }
 
@@ -336,7 +333,6 @@ $popover-shadow-color: rgba($black, .15);
     }
   }
   .calendar-range-picker {
-    padding: 10px;
     max-width: 320px;
     > label {
       padding: 0 5px;
