@@ -1,10 +1,12 @@
 package com.ge.apm.view.sysutil;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Enumeration;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ApplicationScoped;
 import javax.servlet.http.HttpServletRequestWrapper;
+import webapp.framework.util.TimeUtil;
 import webapp.framework.web.mvc.SqlConfigurableChartController;
 import webapp.framework.web.mvc.SqlConfigurableDataController;
 import webapp.framework.web.service.DbMessageSource;
@@ -68,4 +70,8 @@ public class AppContextService implements Serializable{
             return str.substring(0,length)+"...";
         }
     }
+     
+     public Date getCurentDate(){
+         return TimeUtil.now();
+     }
 }
