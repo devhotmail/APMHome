@@ -69,6 +69,7 @@ INSERT INTO "i18n_message" VALUES (65, 'label','All', '全部','All',null,-1);
 INSERT INTO "i18n_message" VALUES (66, 'label','From', '从','From',null,-1);
 INSERT INTO "i18n_message" VALUES (67, 'label','To', '到','To',null,-1);
 INSERT INTO "i18n_message" VALUES (68, 'label','Execute', '执行','Execute',null,-1);
+INSERT INTO "i18n_message" VALUES (69, 'label','DuplicateSiteName', '租户名称 "%s" 已有人使用，请更换租户名称.','Site name already used by others, please change to another site name.',null,-1);
 
 
 -- menu item names  ( id from 200 to  399)
@@ -329,6 +330,7 @@ INSERT INTO "i18n_message" VALUES (1408,'assetGroup','9','NM','NM',null,-1);
 INSERT INTO "i18n_message" VALUES (1409,'assetGroup','10','PET-CT','PET-CT',null,-1);
 INSERT INTO "i18n_message" VALUES (1410,'assetGroup','11','PET-MR','PET-MR',null,-1);
 INSERT INTO "i18n_message" VALUES (1411,'assetGroup','12','US','US',null,-1);
+INSERT INTO "i18n_message" VALUES (1412,'assetGroup','13','其它','Others',null,-1);
 
 
 INSERT INTO "i18n_message" VALUES (1510,'woSteps','1', '报修','Create',null,-1);
