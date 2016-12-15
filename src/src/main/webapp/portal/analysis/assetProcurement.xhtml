@@ -65,10 +65,14 @@
                                                 ${assetProcurementController.detail(j-1).groupName}</h2>
                                             <p class="device-block-subtitle">平均使用率预测:</p>
                                             <h3 class="${assetProcurementController.detail(j-1).forecastAvgUtilPercent > 100? 'text--alert' : ''}">
-                                                ${assetProcurementController.detail(j-1).forecastAvgUtilPercent} %
+                                                <span>
+                                                    ${assetProcurementController.detail(j-1).forecastAvgUtilPercent} %
+                                                </span>
+                                                <span class="text--annotation">
+                                                    <h:outputText id="tooltip${j-1}" class="ui-icon ui-icon-info-outline"/>
+                                                    <p:tooltip for="tooltip${j-1}" value="设备使用时间按每天${assetProcurementController.dailyUtilHours}小时计算" trackMouse="true"/>
+                                                </span>
                                             </h3>
-                                            <h:outputText id="tooltip${j-1}" class="ui-icon ui-icon-more-vert"/>
-                                            <p:tooltip for="tooltip${j-1}" value="设备使用时间按每天${assetProcurementController.dailyUtilHours}小时计算" trackMouse="true" />
                                             <p class="device-block-subtitle">建议:</p>
                                             <p>${assetProcurementController.detail(j-1).suggestion}</p>
                                             <hr/>

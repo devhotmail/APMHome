@@ -95,6 +95,13 @@ a.device-block {
   }
 }
 
+.text--annotation {
+  vertical-align: baseline;
+  .ui-icon {
+    font-size: 14px !important;
+  }
+}
+
 .text--alert {
   color: $dv-dark-red;
 }

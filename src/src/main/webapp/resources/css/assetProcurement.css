@@ -547,4 +547,6 @@ a.device-block:hover,a.device-block:link,a.device-block:visited{color:inherit}
 .device-details-list{margin:5px;border:1px solid #9999a3;border-top-width:0}
 .device-details-list .device-block-wrapper{overflow:hidden;-webkit-animation-name:slide-out;animation-name:slide-out;-webkit-animation-duration:.7s;animation-duration:.7s;-webkit-animation-fill-mode:forwards;animation-fill-mode:forwards;-webkit-animation-timing-function:ease-in-out;animation-timing-function:ease-in-out;max-height:0}
 .device-details-list .device-block-wrapper:target{-webkit-animation-name:slide-in;animation-name:slide-in;-webkit-animation-delay:.7s;animation-delay:.7s}
+.text--annotation{vertical-align:baseline}
+.text--annotation .ui-icon{font-size:14px!important}
 .text--alert{color:#cb2027}
