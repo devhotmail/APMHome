@@ -25,13 +25,16 @@
                              paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
                              currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
                              rows="5" emptyMessage="#{msg.noRecordFound}" rowsPerPageTemplate="5,10,15,20">
-
+							
+							<p:column headerText="#{msg.I18nCode}" style="text-align: center;">
+                                <h:outputText value="#{item.msgType}"/>
+                            </p:column>
                             <p:column headerText="#{msg.name}" style="text-align: center;">
                                 <h:outputText value="#{item.valueZh}"/>
                             </p:column>
-                            <p:column headerText="#{msg.valueEn}"  style="text-align: center;">
+<!--                             <p:column headerText="#{msg.valueEn}"  style="text-align: center;">
                                 <h:outputText value="#{item.valueEn}"/>
-                            </p:column>
+                            </p:column> -->
                         </p:dataTable>
                     </h:panelGroup>
                     </p:fieldset>
@@ -50,27 +53,32 @@
 
                             <p:ajax event="rowSelect"  update="createButton editButton deleteButton"/>
                             
+                            <p:column headerText="#{msg.I18nCode}" style="text-align: center;">
+                                <h:outputText value="#{item.msgType}"/>
+                            </p:column>
                             <p:column headerText="#{msg.name}" style="text-align: center;">
                                 <h:outputText value="#{item.valueZh}"/>
                             </p:column>
-                            <p:column headerText="#{msg.valueEn}"  style="text-align: center;">
+<!--                             <p:column headerText="#{msg.valueEn}"  style="text-align: center;">
                                 <h:outputText value="#{item.valueEn}" />
-                            </p:column>
+                            </p:column> -->
                             <f:facet name="{exportbar}">
                                 <p:commandButton id="batchImport" icon="ui-icon-import-export"  title="#{msg.BatchImport}"
                                                  actionListener="#{i18nMessageController.batchImport()}"  
-                                                 update=":I18nMessageListForm" disabled="#{empty i18nMessageController.msgType}" />
+                                                 update=":I18nMessageListForm" disabled="#{empty i18nMessageController.msgType}" >
+                                           		<p:confirm header="#{msg.friendlyTips}" message="#{msg.BatchImportMsg}"  icon="ui-icon-alert"/>
+                                  </p:commandButton>
                                 <p:commandButton id="clearAll" icon="ui-icon-clear-all"  title="#{msg.ClearAll}"
                                                  actionListener="#{i18nMessageController.clearAll()}"  
                                                  update=":I18nMessageListForm" disabled="#{empty i18nMessageController.msgType}" >
-                                                 <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteAllConformation}" icon="ui-icon-alert"/>
+                                                 <p:confirm header="#{msg.friendlyTips}" message="#{msg.DeleteAllConformation}" icon="ui-icon-alert"/>
                                  </p:commandButton>
                             </f:facet>
                             <f:facet name="{Toolbar}">
                                 <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{i18nMessageController.prepareCreate()}" update=":I18nMessageListForm"  oncomplete="PF('I18nMessageEditDialog').show()" disabled="#{empty i18nMessageController.msgType}"/>
                                 <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{i18nMessageController.prepareEdit}" update=":I18nMessageListForm:CustomerDataList,:I18nMessageEditDlg" oncomplete="PF('I18nMessageEditDialog').show()" disabled="#{empty i18nMessageController.selected}"/>
                                 <p:commandButton id="deleteButton" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{i18nMessageController.delete}" update=":I18nMessageListForm:CustomerDataList" disabled="#{empty i18nMessageController.selected}">
-                                    <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                                    <p:confirm header="#{msg.friendlyTips}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
                                 </p:commandButton>
                             </f:facet>
                         </p:dataTable>

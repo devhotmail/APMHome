@@ -101,19 +101,22 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
 	   super.prepareCreate();
 	   this.selected.setSiteId(this.currentUser.getSiteId());
 	   this.selected.setMsgType(msgType);
-	   this.selected.setMsgKey(this.currentUser.getName());
+//	   this.selected.setMsgKey(this.currentUser.getName());
 	   customConfig = getFieldValueList(this.currentUser.getSiteId());
    }
    
    public void batchImport(){
 	   List<I18nMessage> result = fetchI18nMessageList(-1);
+	   //first clear before record
+	   clearAll();
 	   if(!CollectionUtils.isEmpty(result)){
 		   if(logger.isInfoEnabled()){
 			   logger.info("msgType is "+msgType+ "get "+result.size()+"条system记录");
 		   }
 		   for (I18nMessage i18nMessage : result) {
 			   i18nMessage.setSiteId(this.currentUser.getSiteId());
-			   i18nMessage.setMsgKey(i18nMessage.getMsgKey().concat(currentUser.getName()));
+			   //i18nMessage.setMsgKey(i18nMessage.getMsgKey().concat(currentUser.getName()));
+			   i18nMessage.setMsgKey(i18nMessage.getMsgKey());
 			   i18nMessage.setId(null);
 			   dao.save(i18nMessage);
 		}
@@ -128,14 +131,18 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
 			   logger.info("msgType is "+msgType+ "get "+result.size()+"条system记录");
 		   }
 		   for (I18nMessage i18nMessage : result) {
-			   i18nMessage.setSiteId(this.currentUser.getSiteId());
-			   i18nMessage.setMsgKey(i18nMessage.getMsgKey().concat(currentUser.getName()));
+//			   i18nMessage.setSiteId(this.currentUser.getSiteId());
+//			   i18nMessage.setMsgKey(i18nMessage.getMsgKey().concat(currentUser.getName()));
 			  dao.delete(i18nMessage);
 		}
 		   customConfig = getFieldValueList(this.currentUser.getSiteId());
 	   }
    }
    
+   @Override
+   public String getErrorMessageForDuplicateKey(I18nMessage i18nMessage){
+       return String.format(WebUtil.getMessage("DuplicateMsgKey"), i18nMessage.getMsgKey());
+   }
    
 	public void onSelect() {
 		sysConfig = getFieldValueList(SYS_SITE);

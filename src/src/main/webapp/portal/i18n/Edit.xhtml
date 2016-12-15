@@ -12,14 +12,18 @@
             <h:form id="I18nMessageEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="3"  layout="grid"  styleClass="ui-panelgrid-blank form-group" >
+                    	<h:panelGroup>
+                    		<label class="label">#{msg.I18nCode}</label>
+                            <p:inputText id="msgType" value="#{i18nMessageController.selected.msgType}" />
+                    	</h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.name}</label>
                             <p:inputText id="valueZh" value="#{i18nMessageController.selected.valueZh}" />
                         </h:panelGroup>
-                        <h:panelGroup>
+<!--                         <h:panelGroup>
                             <label class="label">#{msg.valueEn}</label>
                             <p:inputText id="valueEn" value="#{i18nMessageController.selected.valueEn}" />
-                        </h:panelGroup>
+                        </h:panelGroup> -->
                     </p:panelGrid>
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{i18nMessageController.save()}" value="#{msg.Save}" update="display,:I18nMessageEditDlg, :I18nMessageListForm:CustomerDataList, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'I18nMessageEditDialog');"/>
