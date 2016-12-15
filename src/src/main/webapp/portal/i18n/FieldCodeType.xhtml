@@ -27,7 +27,7 @@
                              rows="5" emptyMessage="#{msg.noRecordFound}" rowsPerPageTemplate="5,10,15,20">
 							
 							<p:column headerText="#{msg.I18nCode}" style="text-align: center;">
-                                <h:outputText value="#{item.msgType}"/>
+                                <h:outputText value="#{item.msgKey}"/>
                             </p:column>
                             <p:column headerText="#{msg.name}" style="text-align: center;">
                                 <h:outputText value="#{item.valueZh}"/>
@@ -54,7 +54,7 @@
                             <p:ajax event="rowSelect"  update="createButton editButton deleteButton"/>
                             
                             <p:column headerText="#{msg.I18nCode}" style="text-align: center;">
-                                <h:outputText value="#{item.msgType}"/>
+                                <h:outputText value="#{item.msgKey}"/>
                             </p:column>
                             <p:column headerText="#{msg.name}" style="text-align: center;">
                                 <h:outputText value="#{item.valueZh}"/>
