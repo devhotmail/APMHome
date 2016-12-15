@@ -63,10 +63,7 @@
                     <p:column headerText="#{msg.location}" sortBy="#{item.location}" filterBy="#{item.location}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.location}"/>
                     </p:column>
-                    <p:column headerText="#{msg.locationEn}" sortBy="#{item.locationEn}" filterBy="#{item.locationEn}" filterMatchMode="LIKE">
-                        <h:outputText value="#{item.locationEn}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.timeZone}" sortBy="#{item.timeZone}" filterBy="#{item.timeZone}" filterMatchMode="EQ">
+                    <p:column rendered="false" headerText="#{msg.timeZone}" sortBy="#{item.timeZone}" filterBy="#{item.timeZone}" filterMatchMode="EQ">
                         <h:outputText value="#{item.timeZone}"/>
                     </p:column>
                     <p:column headerText="#{msg.defaultLang}" sortBy="#{item.defaultLang}" filterBy="#{item.defaultLang}" filterMatchMode="LIKE">

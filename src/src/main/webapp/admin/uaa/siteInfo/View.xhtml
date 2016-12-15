@@ -28,10 +28,8 @@
                         <h:outputText value="#{siteInfoController.selected.contactEmail}"/>
                         <h:outputLabel value="#{msg.location}" for="location" />
                         <h:outputText value="#{siteInfoController.selected.location}"/>
-                        <h:outputLabel value="#{msg.locationEn}" for="locationEn" />
-                        <h:outputText value="#{siteInfoController.selected.locationEn}"/>
-                        <h:outputLabel value="#{msg.timeZone}" for="timeZone" />
-                        <h:outputText value="#{siteInfoController.selected.timeZone}"/>
+                        <h:outputLabel rendered="false" value="#{msg.timeZone}" for="timeZone" />
+                        <h:outputText rendered="false" value="#{siteInfoController.selected.timeZone}"/>
                         <h:outputLabel value="#{msg.defaultLang}" for="defaultLang" />
                         <h:outputText value="#{siteInfoController.selected.defaultLang}"/>
                         <h:outputLabel value="#{msg.isEnabled}" for="isEnabled" />

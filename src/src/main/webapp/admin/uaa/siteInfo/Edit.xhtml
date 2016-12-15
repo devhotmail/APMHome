@@ -44,11 +44,7 @@
                             <label class="label">#{msg.location}</label>
                             <p:inputText id="location" value="#{siteInfoController.selected.location}" />
                         </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.locationEn}</label>
-                            <p:inputText id="locationEn" value="#{siteInfoController.selected.locationEn}" />
-                        </h:panelGroup>
-                        <h:panelGroup>
+                        <h:panelGroup rendered="false">
                             <label class="label">#{msg.timeZone}</label>
                             <p:inputText id="timeZone" value="#{siteInfoController.selected.timeZone}" />
                         </h:panelGroup>
