@@ -136,6 +136,7 @@ INSERT INTO "i18n_message" VALUES (259, 'label', 'ChecklistAdmin', '巡检/质�
 INSERT INTO "i18n_message" VALUES (260, 'label', 'checkListSetting', '检查项配置', 'Checklist Configure', NULL, -1);
 INSERT INTO "i18n_message" VALUES (261, 'label', 'checkListItem', '检查项', 'Checklist Item', NULL, -1);
 INSERT INTO "i18n_message" VALUES (262, 'label', 'AssetInfoDetail', '设备基本信息管理', 'Asset Info Details Managerment', NULL, -1);
+INSERT INTO "i18n_message" VALUES (263, 'label', 'AssetStatusTimeChange', '资产状态与时间变更', 'Asset Status And Confirm Time Change', NULL, -1);
 
 
 -- Entity Object Names  ( id from 400 to  599)

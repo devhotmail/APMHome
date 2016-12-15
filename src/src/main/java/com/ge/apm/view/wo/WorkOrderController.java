@@ -1,5 +1,6 @@
 package com.ge.apm.view.wo;
 
+import com.ge.apm.dao.AssetInfoRepository;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
 
     WorkOrderRepository dao = null;
     UserAccount loginUser;
+    AssetInfoRepository assetDao = null;
 
     @Override
     protected void init() {
@@ -34,6 +36,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         this.filterBySite = true;
 
         dao = WebUtil.getBean(WorkOrderRepository.class);
+        assetDao = WebUtil.getBean(AssetInfoRepository.class);
     }
 
     @Override
@@ -180,6 +183,34 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
         setSiteFilter();
         searchFilters.add(new SearchFilter("isClosed", SearchFilter.Operator.EQ, Boolean.parseBoolean(filterIsClosed)));
+    }
+    
+    private int assetStatus;
+
+    public int getAssetStatus() {
+        if (assetStatus == 0) {
+            if (this.selected != null && this.selected.getAssetId() != null) {
+                AssetInfo asset = assetDao.findById(this.selected.getAssetId());
+                if (asset != null){
+                    assetStatus = asset.getStatus();
+                }
+            }
+        }
+        return assetStatus;
+    }
+
+    public void setAssetStatus(int assetStatus) {
+        this.assetStatus = assetStatus;
+    }
+    
+    public void assetStatusChange() {
+        if(assetStatus == 0) return;
+        AssetInfo asset = assetDao.findById(this.selected.getAssetId());
+        asset.setStatus(assetStatus);
+        assetDao.save(asset);
+    }
+    public void workOrderConfirmTimeChange() {
+        dao.save(this.selected);
     }
     
 }
