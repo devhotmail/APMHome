@@ -9,3 +9,4 @@ applications:
 - name: geapm-st
   services:
   - geapm-st-psql
+  - geapm-st-log

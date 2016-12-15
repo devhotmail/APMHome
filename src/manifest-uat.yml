@@ -5,3 +5,4 @@ applications:
 - name: geapm-uat
   services:
   - geapm-uat-psql
+  - geapm-uat-log
