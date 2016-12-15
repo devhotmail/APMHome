@@ -37,7 +37,6 @@
     <routeContext id="route_main" xmlns="http://camel.apache.org/schema/spring">
         <route>
             <from uri="cxf:bean:clinicalDataServiceEndpoint"/>
-            <removeHeaders pattern="Camel*"/>
             <setHeader headerName="CamelBeanMethodName"><simple>${headers.SOAPAction}</simple></setHeader>
             <bean ref="clinicalDataServiceImpl"/>
         </route>
