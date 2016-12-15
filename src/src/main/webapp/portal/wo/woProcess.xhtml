@@ -117,16 +117,16 @@
                                 </p:selectOneButton>
                             </h:panelGroup>
                             <h:panelGroup>
-                                <label class="label">#{msg.confirmedStartTime}</label>
+                                <label class="label">#{msg.confirmedStartTime}*</label>
                                 <p:calendar id="confirmedDownTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderController.selected.confirmedDownTime}" 
-                                            showOn="button" readonlyInput="true" locale="zh" showButtonPanel="true" navigator="true" required="true">
+                                            showOn="button" readonlyInput="true" locale="zh" showButtonPanel="true" navigator="true" required="true" requiredMessage="#{msg.confirmedStartTime} #{msg.ValidationRequire}">
                                     <p:ajax event="dateSelect" listener="#{workOrderController.workOrderConfirmTimeChange}" />
                                 </p:calendar>
                             </h:panelGroup>
                             <h:panelGroup>
-                                <label class="label">#{msg.confirmedEndTime}</label>
+                                <label class="label">#{msg.confirmedEndTime}*</label>
                                 <p:calendar id="confirmedUpTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderController.selected.confirmedUpTime}" 
-                                            showOn="button" readonlyInput="true" locale="zh" showButtonPanel="true" navigator="true" required="true">
+                                            showOn="button" readonlyInput="true" locale="zh" showButtonPanel="true" navigator="true" required="true" requiredMessage="#{msg.confirmedEndTime} #{msg.ValidationRequire}">
                                     <p:ajax event="dateSelect" listener="#{workOrderController.workOrderConfirmTimeChange}" />
                                 </p:calendar>
                             </h:panelGroup>
@@ -148,7 +148,7 @@
                         </p:tabView>
                         <p:panelGrid id="panelStepDataInput" columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup rendered="#{workOrderController.activeTabId ne 2}">
-                                <label class="label">#{msg.nextStep}#{msg.taskOwner}</label>
+                                <label class="label">#{msg.nextStep}#{msg.taskOwner}*</label>
                                 <p:selectOneMenu value="#{workOrderController.selected.currentPersonId}" required="true" requiredMessage="#{msg.currentPersonName} xx #{msg.ValidationRequire}">
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
                                     <f:selectItems value="#{workOrderController.hospitalUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
@@ -164,7 +164,7 @@
                             </h:panelGroup>
 
                             <h:panelGroup>
-                                <label class="label">#{msg.isInternal}</label>
+                                <label class="label">#{msg.isInternal}*</label>
                                 <p:selectBooleanCheckbox id="isInternal" itemLabel="#{msg.isInternal}" value="#{workOrderController.selected.isInternal}" required="true" requiredMessage="#{msg.isInternal} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             
@@ -212,9 +212,9 @@
                             </h:panelGroup>
                         </p:panelGrid>
 
-                        <p:commandButton validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderStepController.finishWorkOrderStep()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStepId)}" rendered="#{workOrderController.activeTabId eq 0}"/>
-                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.transferWorkOrder()}" value="#{msg.TransferOrder}" rendered="#{workOrderController.activeTabId eq 1}"/>
-                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.closeWorkOrder()}" value="#{fieldMsg.fieldValue('woSteps', '6')}" rendered="#{workOrderController.activeTabId eq 2}"/>
+                        <p:commandButton validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderStepController.finishWorkOrderStep()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStepId)}" rendered="#{workOrderController.activeTabId eq 0}" update="growl" process="@form,:formStatus:confirmedDownTime,:formStatus:confirmedUpTime"/>
+                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.transferWorkOrder()}" value="#{msg.TransferOrder}" rendered="#{workOrderController.activeTabId eq 1}" update="growl" process="@form"/>
+                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.closeWorkOrder()}" value="#{fieldMsg.fieldValue('woSteps', '6')}" rendered="#{workOrderController.activeTabId eq 2}" update="growl" process="@form,:formStatus:confirmedDownTime,:formStatus:confirmedUpTime"/>
                     </p:fieldset>
                 </h:form>
             </div>
