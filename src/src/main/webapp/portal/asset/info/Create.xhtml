@@ -125,9 +125,9 @@
                                 </p:selectOneMenu>
                             </h:panelGroup>
                             <h:panelGroup>
-                                <label class="label">#{msg.assetGroup}</label>
+                                <label class="label">#{msg.assetGroup}*</label>
                                 <!--<p:inputText id="assetGroup" value="#{assetInfoController.selected.assetGroup}"/>-->
-                                <p:selectOneMenu id="assetGroup" value="#{assetInfoController.selected.assetGroup}">
+                                <p:selectOneMenu id="assetGroup" value="#{assetInfoController.selected.assetGroup}" required="true" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}" />
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('ownAssetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
