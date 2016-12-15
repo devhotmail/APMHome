@@ -465,6 +465,7 @@ INSERT INTO "i18n_message" VALUES (3017,'message','invalidSizeMessage', '文件�
 INSERT INTO "i18n_message" VALUES (3018,'message','remainingCharacters', '还有{0}字','{0} characters remaining.',null,-1);
 INSERT INTO "i18n_message" VALUES (3019,'message','fileTransFail', '文件传输失败','File transform Failure',null,-1);
 INSERT INTO "i18n_message" VALUES (3020,'message','DeviceInventorySuccess', '设备盘点成功！','file inventory success',null,-1);
+INSERT INTO "i18n_message" VALUES (3021,'message','I18nCode', '编码','i18n code',null,-1);
 
 
 -- Chart label/lengend （id from 5000 to 5500）
@@ -524,6 +525,7 @@ INSERT INTO "i18n_message" VALUES (5055,'label','checkIntervalNotice_2', '选择
 INSERT INTO "i18n_message" VALUES (5056,'label','selectSearchInterval_1', '到','to',null,-1);
 INSERT INTO "i18n_message" VALUES (5057,'label','selectSearchInterval_2', '确定','Submit',null,-1);
 INSERT INTO "i18n_message" VALUES (5058,'label','deviceUsagelg_3', '停机','Downtime',null,-1);
+
 
 
 
