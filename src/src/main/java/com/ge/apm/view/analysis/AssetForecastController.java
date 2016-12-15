@@ -503,6 +503,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
 
     public void onAssetsChange() {
         isSingleAsset = false;
+        this.setAssetName(WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices"));
         update();
     }
 

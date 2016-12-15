@@ -18,7 +18,7 @@
                 <div class="card--title text--center">
                     <div class="ui-g">
                         <div class="ui-g-1 text--left">
-                            <p:menuButton id="selAsset" placeholder="全部设备" value="#{assetForecastController.assetName}">
+                            <p:menuButton id="selAsset" placeholder="#{msg.preventiveMaintenanceAnalysis_allDevices}" value="#{assetForecastController.assetName}">
                                 <p:menuitem value="选择单台设备... "
                                             actionListener="#{selectAssetController.prepareDialogCallback(assetForecastController,
                                             ':Forecast:selAsset :Forecast:value_expo :Forecast:barForecast')}"
@@ -26,7 +26,7 @@
                                             update=":selectAssetDlg"
                                             oncomplete="PF('varSelectAssetDlg').show()"/>
                                 <p:separator/>
-                                <p:menuitem value="全部设备" actionListener="#{assetForecastController.onAssetsChange}"
+                                <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}" actionListener="#{assetForecastController.onAssetsChange}"
                                             update="selAsset value_expo barForecast"/>
                             </p:menuButton>
                         </div>
