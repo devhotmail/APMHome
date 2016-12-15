@@ -15,6 +15,7 @@ import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
 import org.primefaces.event.FileUploadEvent;
 import webapp.framework.web.WebUtil;
 import webapp.framework.dao.SearchFilter;
@@ -50,6 +54,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     private UaaService uuaService;
 
     private OrgInfoRepository orgDao;
+    
+    private String operation;
 
     @Override
     protected void init() {
@@ -60,8 +66,11 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         uuaService = WebUtil.getBean(UaaService.class);
         this.filterByHospital = true;
         this.setHospitalFilter();
-
-        String actionName = WebUtil.getRequestParameter("actionName");
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String encodeStr = request.getParameter("str");
+        String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr,"actionName");
+        
+       // String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
             try {
                 prepareCreate();
@@ -69,15 +78,18 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
                 Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if ("View".equalsIgnoreCase(actionName)) {
-            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+           // setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+        	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
             owner = userDao.findById(selected.getAssetOwnerId());
             prepareView();
         } else if ("Edit".equalsIgnoreCase(actionName)) {
-            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+            //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+        	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
             owner = userDao.findById(selected.getAssetOwnerId());
             prepareEdit();
         } else if ("Delete".equalsIgnoreCase(actionName)) {
-            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+            //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+        	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
             owner = userDao.findById(selected.getAssetOwnerId());
             prepareDelete();
         }
@@ -106,7 +118,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public String getViewPage(String pageName, String actionName) {
-        return pageName + "?faces-redirect=true&actionName=" + actionName + "&selectedid=" + selected.getId();
+    	operation  = pageName + "?actionName=" + actionName + "&selectedid=" + selected.getId();
+    	return operation;
     }
 
     @Override
@@ -367,5 +380,14 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void setWarrantyFormatTime(String warrantyFormatTime) {
         this.warrantyFormatTime = warrantyFormatTime;
     }
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+    
 
 }
