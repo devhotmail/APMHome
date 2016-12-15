@@ -63,13 +63,13 @@ INSERT INTO "i18n_message" VALUES (58,'message','Http404NotFoundTitle', '网页�
 INSERT INTO "i18n_message" VALUES (59,'message','Http404NotFoundMsg', '您想访问的网页不存在.','The resource you are looking for does not exist.',null,-1);
 INSERT INTO "i18n_message" VALUES (60,'message','Http401AccessDeniedTitle', '权限受限','Access Denied',null,-1);
 INSERT INTO "i18n_message" VALUES (61,'message','Http401AccessDeniedMsg', '对不起，您未获得访问此网页的授权.','You are not authorized to access this resource.',null,-1);
-INSERT INTO "i18n_message" VALUES (62, 'label','ClearAll', '清空自定义配置','ClearAll',null,-1);
 INSERT INTO "i18n_message" VALUES (63, 'label','Upload', '上传','Upload',null,-1);
 INSERT INTO "i18n_message" VALUES (65, 'label','All', '全部','All',null,-1);
 INSERT INTO "i18n_message" VALUES (66, 'label','From', '从','From',null,-1);
 INSERT INTO "i18n_message" VALUES (67, 'label','To', '到','To',null,-1);
 INSERT INTO "i18n_message" VALUES (68, 'label','Execute', '执行','Execute',null,-1);
 INSERT INTO "i18n_message" VALUES (69, 'label','DuplicateSiteName', '租户名称 "%s" 已有人使用，请更换租户名称.','Site name already used by others, please change to another site name.',null,-1);
+INSERT INTO "i18n_message" VALUES (70, 'label','invalidEmail', 'Email: 不是有效的Email地址.','Invalid Email Address.',null,-1);
 
 
 -- menu item names  ( id from 200 to  399)
@@ -136,8 +136,8 @@ INSERT INTO "i18n_message" VALUES (257, 'label', 'Attachment', '附件', 'Attach
 INSERT INTO "i18n_message" VALUES (259, 'label', 'ChecklistAdmin', '巡检/质控/计量条目维护', 'Checklist Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (260, 'label', 'checkListSetting', '检查项配置', 'Checklist Configure', NULL, -1);
 INSERT INTO "i18n_message" VALUES (261, 'label', 'checkListItem', '检查项', 'Checklist Item', NULL, -1);
-INSERT INTO "i18n_message" VALUES (262, 'label', 'AssetInfoDetail', '设备基本信息管理', 'Asset Info Details Managerment', NULL, -1);
 INSERT INTO "i18n_message" VALUES (263, 'label', 'AssetStatusTimeChange', '资产状态与时间变更', 'Asset Status And Confirm Time Change', NULL, -1);
+INSERT INTO "i18n_message" VALUES (264, 'label', 'SysCodeConfig', '系统编码配置', 'Sys Code Config', NULL, -1);
 
 
 -- Entity Object Names  ( id from 400 to  599)
@@ -151,7 +151,6 @@ INSERT INTO "i18n_message" VALUES (406, 'label', 'WorkOrderStep', '工单步骤'
 INSERT INTO "i18n_message" VALUES (407, 'label', 'WorkOrderStepDetail', '工单详情', 'Work Order Step Details', NULL, -1);
 
 INSERT INTO "i18n_message" VALUES (409, 'label', 'AssetClinicalRecord', '检查记录', 'Work Order Step Details', NULL, -1);
-INSERT INTO "i18n_message" VALUES (410, 'label', 'InspectionChecklist', '巡检Checklist', 'Inspection Checklist', NULL, -1);
 INSERT INTO "i18n_message" VALUES (412, 'label', 'InspectionOrderDetail', '巡检工单详情', 'Inspection Order Detail', NULL, -1);
 INSERT INTO "i18n_message" VALUES (413, 'label', 'Supplier', '供应商信息', 'Supplier', NULL, -1);
 INSERT INTO "i18n_message" VALUES (414, 'label', 'InspectionWorkOrder', '巡检工单', 'Inspection Order', NULL, -1);
@@ -167,7 +166,7 @@ INSERT INTO "i18n_message" VALUES (422, 'label', 'saveOrder', '保存顺序', 'S
 -- Entity Object field Names  (id from 600 to  1499)
 
 INSERT INTO "i18n_message" VALUES (600,'field_name','accessory','备件','Accessory',null,-1);
-INSERT INTO "i18n_message" VALUES (601,'field_name','accessoryPrice','单价','Accessory Price',null,-1);
+INSERT INTO "i18n_message" VALUES (601,'field_name','accessoryPrice','单价(元)','Accessory Price',null,-1);
 INSERT INTO "i18n_message" VALUES (602,'field_name','accessoryQuantity','数量','Accessory Quantity',null,-1);
 INSERT INTO "i18n_message" VALUES (603,'field_name','address','地址','Address',null,-1);
 INSERT INTO "i18n_message" VALUES (604,'field_name','aliasName','别名','Alias Name',null,-1);
@@ -232,7 +231,7 @@ INSERT INTO "i18n_message" VALUES (662,'field_name','locationCode','安装位置
 INSERT INTO "i18n_message" VALUES (663,'field_name','locationName','安装位置','Location Name',null,-1);
 INSERT INTO "i18n_message" VALUES (664,'field_name','maitanance','维修商','Maitanance',null,-1);
 INSERT INTO "i18n_message" VALUES (665,'field_name','maitananceTel','维修电话','Maitanance Tel',null,-1);
-INSERT INTO "i18n_message" VALUES (666,'field_name','manHours','工时','Man Hours',null,-1);
+INSERT INTO "i18n_message" VALUES (666,'field_name','manHours','工时(小时)','Man Hours',null,-1);
 INSERT INTO "i18n_message" VALUES (667,'field_name','manufactDate','出厂日期','Manufact Date',null,-1);
 INSERT INTO "i18n_message" VALUES (668,'field_name','manufacture','制造商','Manufacture',null,-1);
 INSERT INTO "i18n_message" VALUES (669,'field_name','modalityId','院内IT系统编号','Modality Id',null,-1);
@@ -258,21 +257,21 @@ INSERT INTO "i18n_message" VALUES (688,'field_name','procedureName','检查部�
 INSERT INTO "i18n_message" VALUES (689,'field_name','procedureStepId','检查步骤','Procedure Step Id',null,-1);
 INSERT INTO "i18n_message" VALUES (690,'field_name','procedureStepName','检查步骤','Procedure Step Name',null,-1);
 INSERT INTO "i18n_message" VALUES (691,'field_name','purchaseDate','购买日期','Purchase Date',null,-1);
-INSERT INTO "i18n_message" VALUES (692,'field_name','purchasePrice','采购价格','Purchase Price',null,-1);
+INSERT INTO "i18n_message" VALUES (692,'field_name','purchasePrice','采购价格(元)','Purchase Price',null,-1);
 INSERT INTO "i18n_message" VALUES (693,'field_name','reportUrl','维护报告','Report Url',null,-1);
 INSERT INTO "i18n_message" VALUES (694,'field_name','requestReason','故障现象','Request Reason',null,-1);
 INSERT INTO "i18n_message" VALUES (695,'field_name','requestTime','报修时间','Request Time',null,-1);
 INSERT INTO "i18n_message" VALUES (696,'field_name','requestorId','报修人','Requestor Id',null,-1);
 INSERT INTO "i18n_message" VALUES (697,'field_name','requestorName','报修人','Requestor Name',null,-1);
-INSERT INTO "i18n_message" VALUES (698,'field_name','salvageValue','最终残值','Salvage Value',null,-1);
+INSERT INTO "i18n_message" VALUES (698,'field_name','salvageValue','最终残值(元)','Salvage Value',null,-1);
 INSERT INTO "i18n_message" VALUES (699,'field_name','serialNum','设备编号（制造商）','Serial Num',null,-1);
 INSERT INTO "i18n_message" VALUES (700,'field_name','startTime','开始时间','Start Time',null,-1);
 INSERT INTO "i18n_message" VALUES (701,'field_name','status','当前状态','Status',null,-1);
 INSERT INTO "i18n_message" VALUES (702,'field_name','stepName','步骤名称','Step Name',null,-1);
 INSERT INTO "i18n_message" VALUES (703,'field_name','tel','电话','Tel',null,-1);
 INSERT INTO "i18n_message" VALUES (704,'field_name','terminateDate','报废日期','Terminate Date',null,-1);
-INSERT INTO "i18n_message" VALUES (705,'field_name','totalManHour','总计人工','Total Man Hour',null,-1);
-INSERT INTO "i18n_message" VALUES (706,'field_name','totalPrice','总计费用','Total Price',null,-1);
+INSERT INTO "i18n_message" VALUES (705,'field_name','totalManHour','总计人工(小时)','Total Man Hour',null,-1);
+INSERT INTO "i18n_message" VALUES (706,'field_name','totalPrice','总计费用(元)','Total Price',null,-1);
 INSERT INTO "i18n_message" VALUES (707,'field_name','updateDetail','变更内容描述','Update Detail',null,-1);
 INSERT INTO "i18n_message" VALUES (708,'field_name','updatePersonId','变更人','Update Person Id',null,-1);
 INSERT INTO "i18n_message" VALUES (709,'field_name','updatePersonName','变更人','Update Person Name',null,-1);
