@@ -77,13 +77,7 @@
                             <h:outputText value="#{item.manufacture}"/>
                         </p:column>
                         <p:column headerText="#{msg.vendor}" sortBy="#{item.vendor}" filterBy="#{item.vendor}" filterMatchMode="LIKE">
-                            <h:outputText value="#{supplierController.getSupplier(item.vendor).name}"/>
-                            <f:facet name="filter">
-                                <p:selectOneMenu onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
-                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{supplierController.supplierList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                </p:selectOneMenu>
-                            </f:facet>
+                            <h:outputText value="#{item.vendor}"/>
                         </p:column>
                         <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
                             <f:facet name="filter">

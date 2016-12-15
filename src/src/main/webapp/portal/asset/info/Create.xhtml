@@ -60,7 +60,7 @@
                                 <label class="label">#{msg.vendor}</label>
                                 <p:selectOneMenu id="vendor" value="#{assetInfoController.selected.vendor}">
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{supplierController.supplierList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                    <f:selectItems value="#{supplierController.supplierList}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
                                 </p:selectOneMenu>
 
                             </h:panelGroup>
