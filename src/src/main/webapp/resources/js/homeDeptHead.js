@@ -1,6 +1,7 @@
 (function() {
 
   var CURRENCY = "%'.0f";
+  var VIS_COLORS = ['rgba(152, 201, 241, 1)', 'rgba(57, 129, 232, 1)'];
 
   var base = {
     shadow: false,
@@ -47,7 +48,7 @@
         show: false
       },
       rendererOptions: {
-        barWidth: 20,
+        barWidth: 10,
         highlightMouseOver: false
       },
       markerOptions: {
@@ -99,7 +100,7 @@
 
   window.deviceScan = function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
-      seriesColors: ['rgba(93, 165, 218, 1)'],
+      seriesColors: VIS_COLORS,
     });
   }
 
@@ -118,7 +119,7 @@
 
   window.deviceProfit= function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
-      seriesColors: ['rgba(96, 188, 103, 1)', 'rgba(250, 164, 58, 1)'],
+      seriesColors: VIS_COLORS,
     });
   }
 })();
