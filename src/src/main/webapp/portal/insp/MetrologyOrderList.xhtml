@@ -90,13 +90,17 @@
                             <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="InspectionOrder_export"/>
                             </p:commandButton>
-                            <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}"  action="MetrologyOrderCreate?faces-redirect=true&amp;actionName=Create"/>
+                            <!-- <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}"  action="MetrologyOrderCreate?faces-redirect=true&amp;actionName=Create"/>
                             <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}"  action="#{metrologyOrderController.getViewPage('MetrologyOrderDetail','View')}"  disabled="#{empty metrologyOrderController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash" title="#{msg.Delete}"  action="#{metrologyOrderController.getViewPage('MetrologyOrderDetail','Delete')}" disabled="#{empty metrologyOrderController.selected or metrologyOrderController.selected.isFinished}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash" title="#{msg.Delete}"  action="#{metrologyOrderController.getViewPage('MetrologyOrderDetail','Delete')}" disabled="#{empty metrologyOrderController.selected or metrologyOrderController.selected.isFinished}"/> -->
+                            
+                            <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}"  action="#{urlEncryptController.encodeUrlParam('MetrologyOrderCreate?actionName=Create')}"/>
+                            <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}"  actionListener="#{metrologyOrderController.getViewPage('MetrologyOrderDetail','View')}"  action="#{urlEncryptController.encodeUrlParam(metrologyOrderController.operation)}" disabled="#{empty metrologyOrderController.selected}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash" title="#{msg.Delete}"  actionListener="#{metrologyOrderController.getViewPage('MetrologyOrderDetail','Delete')}"  action="#{urlEncryptController.encodeUrlParam(metrologyOrderController.operation)}"  disabled="#{empty metrologyOrderController.selected or metrologyOrderController.selected.isFinished}"/>
                         </f:facet>
                     </p:dataTable>
                     <br/>
-                    <p:commandButton id="excuteButton" icon="ui-icon-playlist-add-check" value="#{msg.Execute}"  action="#{metrologyOrderController.getViewPage('MetrologyOrderExcute','Excute')}" disabled="#{empty metrologyOrderController.selected or metrologyOrderController.selected.isFinished}"/>
+                    <p:commandButton id="excuteButton" icon="ui-icon-playlist-add-check" value="#{msg.Execute}"  actionListener="#{metrologyOrderController.getViewPage('MetrologyOrderExcute','Excute')}"  action="#{urlEncryptController.encodeUrlParam(metrologyOrderController.operation)}"  disabled="#{empty metrologyOrderController.selected or metrologyOrderController.selected.isFinished}"/>
                 </h:form>
 
 

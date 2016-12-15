@@ -90,13 +90,17 @@
                             <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="InspectionOrder_export"/>
                             </p:commandButton>
-                            <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}"  action="QualityCtrlOrderCreate?faces-redirect=true&amp;actionName=Create"/>
+                           <!--  <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}"  action="QualityCtrlOrderCreate?faces-redirect=true&amp;actionName=Create"/>
                             <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}"  action="#{qualityCtrlOrderController.getViewPage('QualityCtrlOrderDetail','View')}"  disabled="#{empty qualityCtrlOrderController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash" title="#{msg.Delete}"  action="#{qualityCtrlOrderController.getViewPage('QualityCtrlOrderDetail','Delete')}" disabled="#{empty qualityCtrlOrderController.selected or qualityCtrlOrderController.selected.isFinished}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash" title="#{msg.Delete}"  action="#{qualityCtrlOrderController.getViewPage('QualityCtrlOrderDetail','Delete')}" disabled="#{empty qualityCtrlOrderController.selected or qualityCtrlOrderController.selected.isFinished}"/> -->
+                            
+                             <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}"  action="#{urlEncryptController.encodeUrlParam('QualityCtrlOrderCreate?actionName=Create')}"/>
+                            <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}"  actionListener="#{qualityCtrlOrderController.getViewPage('QualityCtrlOrderDetail','View')}"  action="#{urlEncryptController.encodeUrlParam(qualityCtrlOrderController.operation)}"  disabled="#{empty qualityCtrlOrderController.selected}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash" title="#{msg.Delete}"  actionListener="#{qualityCtrlOrderController.getViewPage('QualityCtrlOrderDetail','Delete')}"  action="#{urlEncryptController.encodeUrlParam(qualityCtrlOrderController.operation)}"  disabled="#{empty qualityCtrlOrderController.selected or qualityCtrlOrderController.selected.isFinished}"/>
                         </f:facet>
                     </p:dataTable>
                     <br/>
-                    <p:commandButton id="excuteButton" icon="ui-icon-playlist-add-check" value="#{msg.Execute}"  action="#{qualityCtrlOrderController.getViewPage('QualityCtrlOrderExcute','Excute')}" disabled="#{empty qualityCtrlOrderController.selected or qualityCtrlOrderController.selected.isFinished}"/>
+                    <p:commandButton id="excuteButton" icon="ui-icon-playlist-add-check" value="#{msg.Execute}"  actionListener="#{qualityCtrlOrderController.getViewPage('QualityCtrlOrderExcute','Excute')}"  action="#{urlEncryptController.encodeUrlParam(qualityCtrlOrderController.operation)}"  disabled="#{empty qualityCtrlOrderController.selected or qualityCtrlOrderController.selected.isFinished}"/>
 
                 </h:form>
 

@@ -7,6 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
@@ -25,6 +28,7 @@ import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.insp.InspectionService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.asset.AssetInfoController;
+import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -60,6 +64,8 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
     List<InspectionOrderDetail> orderDetailItemList;
 
     AttachmentFileService fileService;
+    
+    private String operation;
 
     @Override
     protected void init() {
@@ -72,8 +78,11 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         this.setSiteFilter();
         this.filterByHospital = true;
         this.setHospitalFilter();
-
-        String actionName = WebUtil.getRequestParameter("actionName");
+        
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String encodeStr = request.getParameter("str");
+        String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr,"actionName");
+        //String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
             try {
                 prepareCreate();
@@ -84,23 +93,27 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
                 Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if ("View".equalsIgnoreCase(actionName)) {
-            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+            //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+        	 setSelected(Integer.parseInt( (String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
             owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareView();
         } else if ("Edit".equalsIgnoreCase(actionName)) {
-            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+            //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+        	setSelected(Integer.parseInt( (String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
             owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareEdit();
         } else if ("Delete".equalsIgnoreCase(actionName)) {
-            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+            //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+        	setSelected(Integer.parseInt( (String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
             owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareDelete();
         } else if ("Excute".equalsIgnoreCase(actionName)) {
-            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-            owner = inspectionService.getUserAccountById(selected.getOwnerId());
+            //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+        	setSelected(Integer.parseInt( (String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
+        	owner = inspectionService.getUserAccountById(selected.getOwnerId());
             excuteItemTree = inspectionService.getInspectionOrderDetailAsTree(selected.getId(), true);
             setTreeStatus(excuteItemTree);
         }
@@ -211,8 +224,9 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         this.selected.setOwnerOrgName(org.getName());
     }
 
-    public String getViewPage(String pageName, String actionName) {
-        return pageName + "?faces-redirect=true&actionName=" + actionName + "&selectedid=" + selected.getId();
+    public void getViewPage(String pageName, String actionName) {
+        //return pageName + "?faces-redirect=true&actionName=" + actionName + "&selectedid=" + selected.getId();
+    	operation = pageName + "?actionName=" + actionName + "&selectedid=" + selected.getId();
     }
 
     public String removeOne() {
@@ -396,5 +410,15 @@ private String filterStartTime = null;
     public void setStartFormatTime(String startFormatTime) {
         this.startFormatTime = startFormatTime;
     }
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+    
+    
 
 }
