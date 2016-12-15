@@ -70,7 +70,7 @@ INSERT INTO "i18n_message" VALUES (67, 'label','To', '到','To',null,-1);
 INSERT INTO "i18n_message" VALUES (68, 'label','Execute', '执行','Execute',null,-1);
 INSERT INTO "i18n_message" VALUES (69, 'label','DuplicateSiteName', '租户名称 "%s" 已有人使用，请更换租户名称.','Site name already used by others, please change to another site name.',null,-1);
 INSERT INTO "i18n_message" VALUES (70, 'label','invalidEmail', 'Email: 不是有效的Email地址.','Invalid Email Address.',null,-1);
-
+INSERT INTO "i18n_message" VALUES (71, 'label','DuplicateMsgType', '编码 "%s" 已存在,请更换其他名称','the code you seted has been used,please change to another one',null,-1);
 
 -- menu item names  ( id from 200 to  399)
 
