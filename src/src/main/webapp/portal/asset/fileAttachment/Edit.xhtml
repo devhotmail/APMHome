@@ -27,18 +27,20 @@
                             <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.prepareDialogCallback(assetFileAttachmentController, ':AssetFileAttachmentEditForm:assetName')}" process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg" oncomplete="PF('varSelectAssetDlg').show()"/>
                         </h:panelGroup>
 
-                        <h:panelGroup id="upload" rendered="#{assetFileAttachmentController.isCreatAction() and assetFileAttachmentController.selected.name==null}">
-                            <p:fileUpload fileUploadListener="#{assetFileAttachmentController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%" 
-                                          multiple="false" sizeLimit="10000000" update="messages name :AssetFileAttachmentEditForm" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M"  label="#{msg.Add}" />
+                        <p:panel id="upload" styleClass="ui-panelgrid-blank" style=" border: 0">
+                        <h:panelGroup rendered="#{assetFileAttachmentController.isCreatAction() and assetFileAttachmentController.selected.name==null}">
+                            <p:fileUpload fileUploadListener="#{assetFileAttachmentController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%" process="@this"
+                                          multiple="false" sizeLimit="10000000" update=":AssetFileAttachmentEditForm:upload" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M"  label="#{msg.Add}" />
                             <p:growl id="messages" showDetail="true" />
                         </h:panelGroup>
                         <h:panelGroup id="namepanel" rendered="#{assetFileAttachmentController.selected.name!=null}">
                             <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{assetFileAttachmentController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}" readonly="true"/>
-                            <p:commandButton actionListener="#{assetFileAttachmentController.removeAttachment(assetFileAttachmentController.selected.fileId)}" id="iconOnly" update=":AssetFileAttachmentEditForm" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this" rendered="#{assetFileAttachmentController.isCreatAction()}">
+                            <p:commandButton actionListener="#{assetFileAttachmentController.removeAttachment(assetFileAttachmentController.selected.fileId)}" id="iconOnly" update=":AssetFileAttachmentEditForm:upload" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this" rendered="#{assetFileAttachmentController.isCreatAction()}">
                                 <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
                             </p:commandButton>
                         </h:panelGroup>
+                            </p:panel>
                     </p:panelGrid>
                         <h:panelGroup>
                             <p:commandButton validateClient="true" actionListener="#{assetFileAttachmentController.save}" value="#{msg.Save}" update="display,:AssetFileAttachmentEditForm :AssetFileAttachmentListForm:datalist, :growl" icon="ui-icon-check" />
