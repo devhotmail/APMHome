@@ -27,7 +27,7 @@
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.email}*</label>
-                                <p:inputText id="email" value="#{profileController.myAccount.email}"  required="true" requiredMessage="#{msg.email} #{msg.ValidationRequire}"/>
+                                <p:inputText id="email" value="#{profileController.myAccount.email}"  required="true" requiredMessage="#{msg.email} #{msg.ValidationRequire}" validatorMessage="#{msg.InvalidEmail}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.telephone}</label>

@@ -38,7 +38,7 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.contactEmail}</label>
-                            <p:inputText id="contactEmail" value="#{siteInfoController.selected.contactEmail}" />
+                            <p:inputText id="contactEmail" value="#{siteInfoController.selected.contactEmail}" validatorMessage="#{msg.invalidEmail}"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.location}</label>
