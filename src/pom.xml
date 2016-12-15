@@ -68,7 +68,7 @@
                 <version>2.4.3</version>
                 <configuration>
                     <showSuccess>false</showSuccess>
-                    <argLine>-Xmx512m -XX:MaxPermSize=256m</argLine>
+                    <!--<argLine>-Xmx512m -XX:MaxPermSize=256m</argLine>-->
                 </configuration>
             </plugin>
             <plugin>
@@ -564,6 +564,11 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>20.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
         </dependency>
     </dependencies>
 
