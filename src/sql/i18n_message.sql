@@ -155,10 +155,10 @@ INSERT INTO "i18n_message" VALUES (412, 'label', 'InspectionOrderDetail', '巡�
 INSERT INTO "i18n_message" VALUES (413, 'label', 'Supplier', '供应商信息', 'Supplier', NULL, -1);
 INSERT INTO "i18n_message" VALUES (414, 'label', 'InspectionWorkOrder', '巡检工单', 'Inspection Order', NULL, -1);
 INSERT INTO "i18n_message" VALUES (415, 'label', 'MetrologWorkOrder', '计量工单', 'Inspection Order', NULL, -1);
-INSERT INTO "i18n_message" VALUES (416, 'label', 'QualityCtrlWorkOrder', '质检工单', 'Inspection Order', NULL, -1);
+INSERT INTO "i18n_message" VALUES (416, 'label', 'QualityCtrlWorkOrder', '质控工单', 'Inspection Order', NULL, -1);
 INSERT INTO "i18n_message" VALUES (417,'label','DeviceCheck', '设备盘点','device check',null,-1);
 INSERT INTO "i18n_message" VALUES (418, 'label', 'MetrologyOrderDetail', '计量工单详情', 'Metrology Order Detail', NULL, -1);
-INSERT INTO "i18n_message" VALUES (419, 'label', 'QualityCtrlOrderDetail', '质检工单详情', 'Quality Control Order Detail', NULL, -1);
+INSERT INTO "i18n_message" VALUES (419, 'label', 'QualityCtrlOrderDetail', '质控工单详情', 'Quality Control Order Detail', NULL, -1);
 INSERT INTO "i18n_message" VALUES (420, 'label', 'QualityCtrlMonitor', '质量监控', 'QualityCtrl Monitor', NULL, -1);
 INSERT INTO "i18n_message" VALUES (421, 'label', 'MetrologyMonitor', '计量监控', 'Metrology Monitor', NULL, -1);
 INSERT INTO "i18n_message" VALUES (422, 'label', 'saveOrder', '保存顺序', 'Save sequence', NULL, -1);
