@@ -525,6 +525,7 @@ INSERT INTO "i18n_message" VALUES (5055,'label','checkIntervalNotice_2', '选择
 INSERT INTO "i18n_message" VALUES (5056,'label','selectSearchInterval_1', '到','to',null,-1);
 INSERT INTO "i18n_message" VALUES (5057,'label','selectSearchInterval_2', '确定','Submit',null,-1);
 INSERT INTO "i18n_message" VALUES (5058,'label','deviceUsagelg_3', '停机','Downtime',null,-1);
+INSERT INTO "i18n_message" VALUES (5059,'label','friendlyTips', '友情提示','friendly tips',null,-1);
 
 
 
