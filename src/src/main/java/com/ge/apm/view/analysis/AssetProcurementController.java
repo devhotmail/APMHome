@@ -202,12 +202,12 @@ public class AssetProcurementController {
     private void initIncome() {
         for (Detail detail : details.values()) {
             if (detail.getNumPurchase() > 0) {
-                detail.setForecastIncomeNoneAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)));
-                detail.setForecastIncomeAfterAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() * (detail.forecastAvgUtilPercent / 100d) : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)) * (detail.forecastAvgUtilPercent / 100d));
+                detail.setForecastIncomeNoneAction(detail.lastFstYearAvgUtilPercent == 0 ? 0d : detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)));
+                detail.setForecastIncomeAfterAction(detail.lastFstYearAvgUtilPercent == 0 ? 0d : detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() * (detail.forecastAvgUtilPercent / 100d) : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)) * (detail.forecastAvgUtilPercent / 100d));
                 detail.setForecastIncreaseAfterAction(detail.forecastIncomeAfterAction - detail.forecastIncomeNoneAction);
             } else {
-                detail.setForecastIncomeNoneAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)));
-                detail.setForecastIncomeAfterAction(detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)));
+                detail.setForecastIncomeNoneAction(detail.lastFstYearAvgUtilPercent == 0 ? 0d : detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)));
+                detail.setForecastIncomeAfterAction(detail.lastFstYearAvgUtilPercent == 0 ? 0d : detail.lastFstYearAvgUtilPercent > 100 ? detail.getLastFstYearIncome() : (detail.lastFstYearIncome / (detail.lastFstYearAvgUtilPercent / 100d)));
                 detail.setForecastIncreaseAfterAction(0d);
             }
         }

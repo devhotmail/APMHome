@@ -159,7 +159,7 @@
                                             <div class="ui-g-1 u-ph+ divide-line-left">
                                                 <p>设备收益预测:</p>
                                                 <br/>
-                                                <c:if test="${fn:contains(assetProcurementController.detail(j-1).suggestion, '建议')}">
+                                                <c:if test="${(assetProcurementController.detail(j-1).lastFstYearAvgUtilPercent > 0) and (fn:contains(assetProcurementController.detail(j-1).suggestion, '建议'))}">
                                                     <p class="device-block-subtitle">不采取建议收益预测:</p>
                                                     <h2>
                                                         ${assetProcurementController.detail(j-1).forecastIncomeNoneAction}万元</h2>
@@ -174,10 +174,9 @@
                                                     <h2>
                                                         ${assetProcurementController.detail(j-1).forecastIncreaseAfterAction}万元</h2>
                                                 </c:if>
-                                                <c:if test="${fn:contains(assetProcurementController.detail(j-1).suggestion, '无')}">
+                                                <c:if test="${(assetProcurementController.detail(j-1).lastFstYearAvgUtilPercent > 0) and (fn:contains(assetProcurementController.detail(j-1).suggestion, '无'))}">
                                                     <p class="device-block-subtitle">收益预测:</p>
-                                                    <h2>
-                                                        ${assetProcurementController.detail(j-1).forecastIncomeNoneAction}万元</h2>
+                                                    <h2>${assetProcurementController.detail(j-1).forecastIncomeNoneAction}万元</h2>
                                                 </c:if>
                                             </div>
                                         </div>
