@@ -99,13 +99,13 @@
   };
 
   $(function() {
-    var TAB_SEL = 'a.device-block';
+    var TAB_SEL = '.device-brief-list a.device-block';
     var CONTENT_SEL = '.device-block-wrapper';
     $(TAB_SEL).on('click', function() {
       var target_id = $(this).data('toggle');
       var $tab = $(this);
+      $(TAB_SEL).not(this).removeClass('active');
       $tab.toggleClass('active');
-      $(this).parent().siblings().find(TAB_SEL).removeClass('active');
       $(CONTENT_SEL).each(function() {
         $(this).toggleClass('active', this.id === target_id && $tab.hasClass('active'));
       });

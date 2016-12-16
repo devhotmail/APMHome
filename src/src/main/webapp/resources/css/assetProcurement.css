@@ -546,7 +546,7 @@ a.device-block.active:after{content:'';position:absolute;left:50%;bottom:-10px;-
 }
 @keyframes slide-out{to{max-height:0}
 }
-.device-details-list{margin:5px;margin-top:10px;border:1px solid #9999a3;border-top-width:0}
+.device-details-list{margin:5px;margin-top:10px;border-top-width:0}
 .device-details-list .device-block-wrapper{overflow:hidden;-webkit-animation-name:slide-out;animation-name:slide-out;-webkit-animation-duration:.3s;animation-duration:.3s;-webkit-animation-fill-mode:forwards;animation-fill-mode:forwards;-webkit-animation-timing-function:ease-in-out;animation-timing-function:ease-in-out;max-height:0}
 .device-details-list .device-block-wrapper.active{-webkit-animation-name:slide-in;animation-name:slide-in;-webkit-animation-delay:.3s;animation-delay:.3s}
 .text--annotation{vertical-align:baseline}
