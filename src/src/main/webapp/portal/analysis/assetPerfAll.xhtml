@@ -13,64 +13,64 @@
     </ui:define>
 
     <ui:define name="content">
-        <header>
-            <div class="card--title text--center">
-                <div class="ui-g">
-                    <div class="ui-g-1">
-                        <h:form id="WorkOrderEditForm" class="text--left">
-                            <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}"
-                                          value="#{assetPerfAllController.assetName}">
+        <h:form id="TopValueForm">
+            <header>
+                <div class="card--title text--center">
+                    <div class="ui-g">
+                        <div class="ui-g-1">
+                            <h:form id="WorkOrderEditForm" class="text--left">
+                                <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}"
+                                              value="#{assetPerfAllController.assetName}">
 
-                                <p:menuitem value="#{msg.selectAssetSingle}"
-                                            actionListener="#{selectAssetController.prepareDialogCallback(assetPerfAllController, ':WorkOrderEditForm:selAsset')}"
-                                            process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
-                                            oncomplete="PF('varSelectAssetDlg').show()"/>
-                                <p:separator/>
+                                    <p:menuitem value="#{msg.selectAssetSingle}"
+                                                actionListener="#{selectAssetController.prepareDialogCallback(assetPerfAllController, ':WorkOrderEditForm:selAsset')}"
+                                                process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+                                                oncomplete="PF('varSelectAssetDlg').show()"/>
+                                    <p:separator/>
 
-                                <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"/>
+                                    <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"/>
 
-                            </p:menuButton>
-                        </h:form>
-                    </div>
+                                </p:menuButton>
+                            </h:form>
+                        </div>
 
-                    <div class="ui-g-10">
-                        <span class="epsilon">#{msg.DeviceKPIAnalysis}</span>
-                    </div>
-                    
-                </div>
-            </div>
-            <div class="card--summary">
-                <h:form id="TopValueForm">
-                <div class="ui-g ui-fluid">
-                    <div class="ui-g-12 ui-md-4">
-                        <div class="epsilon u-mv-">#{msg.assetTotalProfit}</div>
-                        <p:outputPanel id="value_profit">
-                            <div class="text--banner delta">
-                                <h:outputText value="#{homeHeadController.totalProfit}"/>
-                                <span class="text--unit text--secondary epsilon">#{msg.CNYlb}</span>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                    <div class="ui-g-12 ui-md-4">
-                        <div class="epsilon u-mv-">#{msg.assetTopPerfhd}</div>
-                        <p:outputPanel id="value_top_asset">
-                            <div class="text--banner delta">
-                                <h:outputText value="#{assetPerfAllController.topAsset}"/>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                    <div class="ui-g-12 ui-md-4">
-                        <div class="epsilon u-mv-">#{msg.deptTopPerfhd}</div>
-                        <p:outputPanel id="value_top_dept">
-                            <div class="text--banner delta">
-                                <h:outputText value="#{assetPerfAllController.topDept}"/>
-                            </div>
-                        </p:outputPanel>
+                        <div class="ui-g-10">
+                            <span class="epsilon">#{msg.DeviceKPIAnalysis}</span>
+                        </div>
+
                     </div>
                 </div>
-                </h:form>
-            </div>
-        </header>
+                <div class="card--summary">
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="epsilon u-mv-">#{msg.assetTotalProfit}</div>
+                            <p:outputPanel id="value_profit">
+                                <div class="text--banner delta">
+                                    <h:outputText value="#{homeHeadController.totalProfit}"/>
+                                    <span class="text--unit text--secondary epsilon">#{msg.CNYlb}</span>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="epsilon u-mv-">#{msg.assetTopPerfhd}</div>
+                            <p:outputPanel id="value_top_asset">
+                                <div class="text--banner delta">
+                                    <h:outputText value="#{assetPerfAllController.topAsset}"/>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="epsilon u-mv-">#{msg.deptTopPerfhd}</div>
+                            <p:outputPanel id="value_top_dept">
+                                <div class="text--banner delta">
+                                    <h:outputText value="#{assetPerfAllController.topDept}"/>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </h:form>
 
         <div class="ui-g">
             <div class="ui-g-12">
