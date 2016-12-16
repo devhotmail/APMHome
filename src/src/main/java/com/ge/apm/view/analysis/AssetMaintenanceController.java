@@ -31,7 +31,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
 
     private final int knownCaseTypes = 5;
     private final int knownWorkOrderSteps = 6;
-    private final int knownAssetGroups = 8;
+    private final int knownAssetGroups = 13;
     private final int knownRooms = 5;
 
     public AssetMaintenanceController() {
