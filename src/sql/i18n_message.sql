@@ -137,7 +137,10 @@ INSERT INTO "i18n_message" VALUES (259, 'label', 'ChecklistAdmin', '巡检/质�
 INSERT INTO "i18n_message" VALUES (260, 'label', 'checkListSetting', '检查项配置', 'Checklist Configure', NULL, -1);
 INSERT INTO "i18n_message" VALUES (261, 'label', 'checkListItem', '检查项', 'Checklist Item', NULL, -1);
 INSERT INTO "i18n_message" VALUES (263, 'label', 'AssetStatusTimeChange', '资产状态与时间变更', 'Asset Status And Confirm Time Change', NULL, -1);
-INSERT INTO "i18n_message" VALUES (264, 'label', 'SysCodeConfig', '系统编码配置', 'Sys Code Config', NULL, -1);
+INSERT INTO "i18n_message" VALUES (264, 'label', 'AssetContractAmount', '合同总额', 'Asset Contract Amount', NULL, -1);
+INSERT INTO "i18n_message" VALUES (265, 'label', 'AssetContractAttachment', '合同附件', 'Asset Contract Attachment', NULL, -1);
+INSERT INTO "i18n_message" VALUES (266, 'label', 'AssetContractName', '合同名称', 'Asset Contract Name', NULL, -1);
+INSERT INTO "i18n_message" VALUES (267, 'label', 'SysCodeConfig', '系统编码配置', 'Sys Code Config', NULL, -1);
 
 
 -- Entity Object Names  ( id from 400 to  599)
