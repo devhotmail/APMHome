@@ -218,7 +218,7 @@ outline-color: transparent!important;
 .ui-datatable thead th.ui-state-active .ui-inputfield, body .ui-datatable thead th.ui-state-highlight .ui-inputfield{
 color: black!important;
 }
-.ui-column-title{
+.xui-column-title{
 white-space: nowrap!important;
 word-wrap: break-word!important;
 overflow: hidden!important;

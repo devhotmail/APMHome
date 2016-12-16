@@ -21,19 +21,19 @@
             <p:calendar id="search_GTE_the_date_DATETIME" pattern="yyyy-MM-dd" readonlyInput="true"/>
             <p:outputLabel value="Type"/>
             <p:inputText id="search_LIKE_type"/>
-            <p:commandButton value="Search" actionListener="#{demoDataTableController.setSearchFilter}" update="demoForm"/>
+            <p:commandButton value="Search" actionListener="#{demoDataTableCrudController.setSearchFilter}" update="demoForm"/>
         </h:form>
 
         <h:form id="demoForm">
         <div class="ui-g">
             <div class="ui-g-6">
-                <p:chart type="#{demoChartController.getChartType('dashboard_pie')}" model="#{demoChartController.getChartModel('dashboard_pie')}"/>
+                <p:chart type="#{demoChartCrudController.getChartType('dashboard_pie')}" model="#{demoChartCrudController.getChartModel('dashboard_pie')}"/>
             </div>
             <div class="ui-g-6">
-                <p:chart type="#{demoChartController.getChartType('dashboard_bar')}" model="#{demoChartController.getChartModel('dashboard_bar')}"/>
+                <p:chart type="#{demoChartCrudController.getChartType('dashboard_bar')}" model="#{demoChartCrudController.getChartModel('dashboard_bar')}"/>
             </div>
             <div class="ui-g-6">
-                <p:chart type="#{demoChartController.getChartType('dashboard_line')}" model="#{demoChartController.getChartModel('dashboard_line')}"/>
+                <p:chart type="#{demoChartCrudController.getChartType('dashboard_line')}" model="#{demoChartCrudController.getChartModel('dashboard_line')}"/>
             </div>
         </div>
         </h:form>
