@@ -82,7 +82,7 @@
                             </f:facet>
                             <h:outputText value="#{fieldMsg.fieldValue('caseType', item.caseType)}"/>
                         </p:column>
-                        <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="EQ">
+                        <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.requestReasonInShort}" title="#{item.requestReason}"/>
                         </p:column>
                         <p:column headerText="#{msg.currentPersonName}" sortBy="#{item.currentPersonName}" filterBy="#{item.currentPersonName}" filterMatchMode="LIKE">

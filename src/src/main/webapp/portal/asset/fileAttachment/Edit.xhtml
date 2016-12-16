@@ -43,7 +43,7 @@
                             </p:panel>
                     </p:panelGrid>
                         <h:panelGroup>
-                            <p:commandButton validateClient="true" actionListener="#{assetFileAttachmentController.save}" value="#{msg.Save}" update="display,:AssetFileAttachmentEditForm :AssetFileAttachmentListForm:datalist, :growl" icon="ui-icon-check" />
+                            <p:commandButton validateClient="true" actionListener="#{assetFileAttachmentController.save}" value="#{msg.Save}" update=":AssetFileAttachmentListForm:datalist, :growl" icon="ui-icon-check" />
                             <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-arrow-back" actionListener="#{assetFileAttachmentController.cancel}" update="display,:AssetFileAttachmentEditForm :growl"/>
                         </h:panelGroup>
 

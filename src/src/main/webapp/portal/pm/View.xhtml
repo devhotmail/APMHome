@@ -71,7 +71,7 @@
 
                     </p:panelGrid>
                     <br/>
-                    <p:commandButton rendered="#{pmOrderController.deleteAction}" icon="ui-icon-trash" actionListener="#{pmOrderController.delete}" value="#{msg.Delete}" update="display,:PmOrderViewDlg, :PmOrderListForm:datalist, :growl" oncomplete="handleSubmit(args, 'PmOrderViewDialog');"/>
+                    <p:commandButton rendered="#{pmOrderController.deleteAction}" icon="ui-icon-trash" actionListener="#{pmOrderController.delete}" value="#{msg.Delete}" update=":PmOrderListForm:datalist, :growl" oncomplete="handleSubmit(args, 'PmOrderViewDialog');"/>
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" value="#{msg.Close}" icon="ui-icon ui-icon-close" onclick="PF('PmOrderViewDialog').hide()"/>
                     

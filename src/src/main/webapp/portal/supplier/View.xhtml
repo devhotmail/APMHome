@@ -30,7 +30,7 @@
                         <h:outputText value="#{supplierController.selected.tel}"/>
                     </p:panelGrid>
                     <br/>
-                    <p:commandButton rendered="#{supplierController.deleteAction}" icon="ui-icon-trash" actionListener="#{supplierController.delete}" value="#{msg.Delete}" update="display,:SupplierViewDlg, :SupplierListForm:datalist, :growl" oncomplete="handleSubmit(args, 'SupplierViewDialog');"/>
+                    <p:commandButton rendered="#{supplierController.deleteAction}" icon="ui-icon-trash" actionListener="#{supplierController.delete}" value="#{msg.Delete}" update=":SupplierListForm:datalist, :growl" oncomplete="handleSubmit(args, 'SupplierViewDialog');"/>
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('SupplierViewDialog').hide()"/>
                     
