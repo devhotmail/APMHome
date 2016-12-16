@@ -35,6 +35,11 @@
         <intercept-url pattern="/homeAssetHead**" access="hasAnyRole('SuperAdmin','AssetHead')"/>
         <intercept-url pattern="/homeDeptHead**" access="hasAnyRole('SuperAdmin','DeptHead')"/>
         
+        <!-- 系统管理 -->
+        <intercept-url pattern="/portal/uaa/**" access="hasRole('ITAdmin')"/>
+        <intercept-url pattern="/portal/insp/checkListList**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead')"/> <!-- 巡检条目配置 -->
+        <intercept-url pattern="/portal/i18n/FieldCodeType.xhtml**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead')"/> <!-- 系统编码配置 -->
+                
         <!-- 设备档案 -->
         <intercept-url pattern="/portal/asset/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/> 
         
@@ -62,9 +67,6 @@
         <intercept-url pattern="/portal/analysis/assetForecast**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 绩效预测 -->
         <intercept-url pattern="/portal/analysis/assetDecision**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 辅助决策 -->
 
-        <!-- 系统管理 -->
-        <intercept-url pattern="/portal/uaa/**" access="hasRole('ITAdmin')"/>
-        
         <intercept-url pattern="/**/*.xhtml*" access="isAuthenticated()"/>
         <access-denied-handler error-page="/accessdeniedzh.xhtml" />
         <!--
