@@ -139,11 +139,11 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
             selectedAsset = (AssetInfo) node.getData();
             checklistitemList = this.getItemList();
         } else {
-            selected = null;
             checklistType = 0;
             selectedAsset = null;
             checklistitemList.clear();
         }
+        selected = null;
 
     }
 
