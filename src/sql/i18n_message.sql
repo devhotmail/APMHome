@@ -63,6 +63,7 @@ INSERT INTO "i18n_message" VALUES (58,'message','Http404NotFoundTitle', '网页�
 INSERT INTO "i18n_message" VALUES (59,'message','Http404NotFoundMsg', '您想访问的网页不存在.','The resource you are looking for does not exist.',null,-1);
 INSERT INTO "i18n_message" VALUES (60,'message','Http401AccessDeniedTitle', '权限受限','Access Denied',null,-1);
 INSERT INTO "i18n_message" VALUES (61,'message','Http401AccessDeniedMsg', '对不起，您未获得访问此网页的授权.','You are not authorized to access this resource.',null,-1);
+INSERT INTO "i18n_message" VALUES (62, 'message','UserRole', '用户权限','User Role',null,-1);
 INSERT INTO "i18n_message" VALUES (63, 'label','Upload', '上传','Upload',null,-1);
 INSERT INTO "i18n_message" VALUES (65, 'label','All', '全部','All',null,-1);
 INSERT INTO "i18n_message" VALUES (66, 'label','From', '从','From',null,-1);
@@ -246,7 +247,7 @@ INSERT INTO "i18n_message" VALUES (674,'field_name','ownerId','执行人','Owner
 INSERT INTO "i18n_message" VALUES (675,'field_name','ownerName','责任人','Owner Name',null,-1);
 INSERT INTO "i18n_message" VALUES (676,'field_name','ownerOrgId','执行人所属部门','Owner Org Id',null,-1);
 INSERT INTO "i18n_message" VALUES (677,'field_name','ownerOrgName','执行人所属部门','Owner Org Name',null,-1);
-INSERT INTO "i18n_message" VALUES (678,'field_name','paperUrl','扫描件上传（备用）','Paper Url',null,-1);
+INSERT INTO "i18n_message" VALUES (678,'field_name','paperUrl','附件','Paper Url',null,-1);
 INSERT INTO "i18n_message" VALUES (679,'field_name','patientAge','年龄','Patient Age',null,-1);
 INSERT INTO "i18n_message" VALUES (680,'field_name','patientGender','性别','Patient Gender',null,-1);
 INSERT INTO "i18n_message" VALUES (681,'field_name','patientId','患者信息','Patient Id',null,-1);
