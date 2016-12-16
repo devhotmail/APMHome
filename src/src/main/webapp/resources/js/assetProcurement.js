@@ -62,6 +62,16 @@
     }
   };
 
+  function skinSeriesColors() {
+    // set opacity for prediction chart
+    if (/predict-/.test(this.cfg.widgetVar)) {
+      console.log(this.cfg.widgetVar);
+      this.cfg.seriesColors = VIS_COLORS.map(function(rgba) {
+        return rgba.replace(/1\)$/, '.5)');
+      });
+    }
+  }
+
   window.briefSkin = function() {
     $.extend(true/*recursive*/, this.cfg, base_chart, {
       highlighter: {
@@ -72,21 +82,33 @@
         xaxis: {
           tickOptions: {
             show: false
+          },
+          rendererOptions: {
+            drawBaseline: false
           }
         }
       }
     });
+    skinSeriesColors.call(this);
   };
   window.detailSkin = function() {
-    var cfg = {
+    $.extend(true/*recursive*/, this.cfg, base_chart, {
       height: 250,
-    };
-    // set opacity for series color
-    if (this.cfg.widgetVar === 'predictBarChart') {
-      cfg.seriesColors = VIS_COLORS.map(function(rgba) {
-        return rgba.replace(/1\)$/, '.7)');
-      });
-    }
-    $.extend(true/*recursive*/, this.cfg, base_chart, cfg);
+    });
+    skinSeriesColors.call(this);
   };
+
+  $(function() {
+    var TAB_SEL = 'a.device-block';
+    var CONTENT_SEL = '.device-block-wrapper';
+    $(TAB_SEL).on('click', function() {
+      var target_id = $(this).data('toggle');
+      var $tab = $(this);
+      $tab.toggleClass('active');
+      $(this).parent().siblings().find(TAB_SEL).removeClass('active');
+      $(CONTENT_SEL).each(function() {
+        $(this).toggleClass('active', this.id === target_id && $tab.hasClass('active'));
+      });
+    });
+  });
 })();

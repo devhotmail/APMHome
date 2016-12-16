@@ -51,10 +51,39 @@
 }
 
 a.device-block {
+  $arrow-size: 10px;
+
   display: block;
+  border-right: 1px solid transparent;
+  border-left: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+
+  min-height: 400px;
   color: inherit;
+  position: relative;
+
   &:hover, &:link, &:visited {
     color: inherit;
+  }
+
+  &.active {
+    border-right: 1px solid $gray6;
+    border-left: 1px solid $gray6;
+    border-bottom: 1px solid $gray6;
+
+    &:after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -$arrow-size;
+      transform: translateX(-50%);
+      display: block;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: $arrow-size $arrow-size 0 $arrow-size;
+      border-color: $gray6 transparent transparent transparent;
+    }
   }
 }
 
@@ -77,20 +106,21 @@ a.device-block {
 
 .device-details-list {
   margin: 5px;
+  margin-top: 10px;
   border: 1px solid $gray6;
   border-top-width: 0;
 
   .device-block-wrapper {
     overflow: hidden;
     animation-name: slide-out;
-    animation-duration: .7s;
+    animation-duration: .3s;
     animation-fill-mode: forwards;
     animation-timing-function: ease-in-out;
     max-height: 0;
 
-    &:target {
+    &.active {
       animation-name: slide-in;
-      animation-delay: .7s;
+      animation-delay: .3s;
     }
   }
 }

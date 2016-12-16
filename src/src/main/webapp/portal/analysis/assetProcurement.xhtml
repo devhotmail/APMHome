@@ -59,7 +59,7 @@
                                        end="${i*assetProcurementController.rowSize+assetProcurementController.rowSize}">
                                 <c:if test="${j le assetProcurementController.detailsSize}">
                                     <div class="ui-g-2">
-                                        <a href="#device-detail-${j}"
+                                        <a href="javascript:;" data-toggle="device-detail-${j}"
                                            class="device-block ${assetProcurementController.detail(j-1).suggestion != '无'? 'device-block--alert' : ''}">
                                             <h2 class="device-block-title">
                                                 ${assetProcurementController.detail(j-1).groupName}</h2>
@@ -78,7 +78,7 @@
                                             <hr/>
                                             <p class="device-block-subtitle">使用率预测:</p>
                                             <p>${assetProcurementController.detail(j-1).forecastResult}</p>
-                                            <p:chart class="brief-chart" type="bar"
+                                            <p:chart widgetVar="predict-preview-${i}-${j}" class="brief-chart" type="bar"
                                                      model="${assetProcurementController.detail(j-1).forecastBriefChart}"
                                                      responsive="true"/>
                                         </a>
@@ -129,7 +129,7 @@
                                                         </p>
                                                         <h2 class="${assetProcurementController.detail(j-1).lastFstYearAvgUtilPercent > 100? 'text--alert' : ''}">
                                                             ${assetProcurementController.detail(j-1).forecastAvgUtilPercent}%</h2>
-                                                        <p:chart class="chart-with-legend" type="bar"
+                                                        <p:chart widgetVar="predict-${i}-${j}" class="chart-with-legend" type="bar"
                                                                  model="${assetProcurementController.detail(j-1).forecastChart}"
                                                                  responsive="true"/>
                                                     </div>

@@ -525,8 +525,3 @@ td.jqplot-table-legend{text-align:left}
 }
 @media screen and (max-width:1024px){.text--scale{font-size:90%}
 }
-
-body.layout-compact .ui-radiobutton .ui-radiobutton-box .ui-radiobutton-icon {
-    top: -2px!important;
-    left: -3px!important;
-}
