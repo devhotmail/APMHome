@@ -24,9 +24,9 @@
         
         <div class="card exception-panel" style="padding-top: 10px;padding-left: 0px; padding-right: 0px; margin-top: -150px;">
             <i class="material-icons">&#xE001;</i>
-            <h1>#{msg.Http404NotFoundTitle}</h1>
-            <div class="exception-detail">#{msg.Http404NotFoundMsg}</div>
-            <p:button outcome="#{userContextService.userDefaultHomePage}" value="#{msg.Return} #{msg.Homepage}" styleClass="secondary"/>
+            <h1>#{fieldMsg.msgValueZh('Http404NotFoundTitle')}</h1>
+            <div class="exception-detail">#{fieldMsg.msgValueZh('Http404NotFoundMsg')}</div>
+            <p:button outcome="#{userContextService.userDefaultHomePage}" value="#{fieldMsg.msgValueZh('Return')} #{fieldMsg.msgValueZh('Homepage')}" styleClass="secondary"/>
         </div>
         
         <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />

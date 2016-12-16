@@ -24,9 +24,9 @@
         
         <div class="card exception-panel" style="padding-top: 10px;padding-left: 0px; padding-right: 0px; margin-top: -150px;">
             <i class="material-icons">&#xE000;</i>
-            <h1>#{msg.Http500ErrorTitle}</h1>
-            <div class="exception-detail">#{msg.Http500ErrorMsg}</div>
-            <p:button outcome="#{userContextService.userDefaultHomePage}" value="#{msg.Return} #{msg.Homepage}" styleClass="secondary"/>
+            <h1>#{fieldMsg.msgValueZh('Http500ErrorTitle')}</h1>
+            <div class="exception-detail">#{fieldMsg.msgValueZh('Http500ErrorMsg')}</div>
+            <p:button outcome="#{userContextService.userDefaultHomePage}" value="#{fieldMsg.msgValueZh('Return')} #{fieldMsg.msgValueZh('Homepage')}" styleClass="secondary"/>
         </div>
         
         <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
