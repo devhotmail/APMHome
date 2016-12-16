@@ -3,6 +3,8 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="head">
@@ -12,23 +14,20 @@
 
     <ui:define name="content">
         <h:form>
-            <p:growl id="growl" autoUpdate="true" showDetail="true" />
+            <p:growl id="growl" autoUpdate="true" showDetail="true"/>
             <header>
                 <div class="card--title text--center">
                     <div class="ui-g">
                         <div class="ui-g-1">
                             <div class="text--left">
                                 <p:menuButton id="menuButton" value="#{msg.preventiveMaintenanceAnalysis_allDevices}">
-                                    <p:menuitem value="CT"
-                                                url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=1"/>
-                                    <p:menuitem value="MR"
-                                                url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=2"/>
-                                    <p:menuitem value="XRay"
-                                                url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=3"/>
-                                    <p:menuitem value="DR"
-                                                url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=4"/>
+                                    <c:forEach var="entry" items="${deviceOperationMonitorController.assetGroups}">
+                                        <p:menuitem value="#{entry.value}"
+                                                    url="/portal/analysis/deviceOperationMonitorSingle.xhtml?selectedGroupId=#{entry.key}"/>
+                                    </c:forEach>
                                     <p:separator/>
-                                    <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}" url="/portal/analysis/deviceOperationMonitorAll.xhtml"/>
+                                    <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
+                                                url="/portal/analysis/deviceOperationMonitorAll.xhtml"/>
                                 </p:menuButton>
                             </div>
                         </div>
@@ -85,67 +84,25 @@
                     <div class="block">
                         <h3 class="block-title">#{msg.operationMonitor_summary}</h3>
                         <div class="ui-g">
-                            <div class="ui-xl-3 ui-lg-6 divide-line-right">
-                                <div class="flex flex--row flex--center">
-                                    <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomCtBarTitle}</p>
-                                        <ui:include src="bodyModel.xhtml"/>
-                                    </div>
-                                    <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomCtTotal}#{msg.operationMonitor_device}</p>
-                                        <p:chart id="bottomCtBar" type="bar" widgetVar="body-chart-1"
-                                                 class="chart-device-stat vertical"
-                                                 model="#{deviceOperationMonitorController.bottomCtBar}"
-                                                 responsive="true"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ui-xl-3 ui-lg-6 divide-line-right">
-                                <div class="flex flex--row flex--center">
-                                    <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomMrBarTitle}</p>
-                                        <ui:include src="bodyModel.xhtml"/>
-                                    </div>
-                                    <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomMrTotal}#{msg.operationMonitor_device}</p>
-                                        <p:chart id="bottomMrBar" type="bar" widgetVar="body-chart-2"
-                                                 class="chart-device-stat vertical"
-                                                 model="#{deviceOperationMonitorController.bottomMrBar}"
-                                                 responsive="true"/>
+                            <c:forEach var="bar" items="${deviceOperationMonitorController.bottomBars}">
+                                <div class="ui-xl-3 ui-lg-6 divide-line-right">
+                                    <div class="flex flex--row flex--center">
+                                        <div>
+                                            <p class="text--center">
+                                                ${bar.group}</p>
+                                            <ui:include src="bodyModel.xhtml"/>
+                                        </div>
+                                        <div>
+                                            <p class="text--center">
+                                                ${bar.total}#{msg.operationMonitor_device}</p>
+                                            <p:chart type="bar" widgetVar="body-chart-1"
+                                                     class="chart-device-stat vertical"
+                                                     model="#{bar.chart}"
+                                                     responsive="true"/>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="ui-xl-3 ui-lg-6 divide-line-right">
-                                <div class="flex flex--row flex--center">
-                                    <div>
-                                        <p class="text--center">
-                                            ${deviceOperationMonitorController.bottomXrayBarTitle}</p>
-                                        <ui:include src="bodyModel.xhtml"/>
-                                    </div>
-                                    <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomXrayTotal}#{msg.operationMonitor_device}</p>
-                                        <p:chart id="bottomXrayBar" type="bar" widgetVar="body-chart-3"
-                                                 class="chart-device-stat vertical"
-                                                 model="#{deviceOperationMonitorController.bottomXrayBar}"
-                                                 responsive="true"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ui-xl-3 ui-lg-6">
-                                <div class="flex flex--row flex--center">
-                                    <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomDrBarTitle}</p>
-                                        <ui:include src="bodyModel.xhtml"/>
-                                    </div>
-                                    <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomDrTotal}#{msg.operationMonitor_device}</p>
-                                        <p:chart id="bottomDrBar" type="bar" widgetVar="body-chart-4"
-                                                 class="chart-device-stat vertical"
-                                                 model="#{deviceOperationMonitorController.bottomDrBar}"
-                                                 responsive="true"/>
-                                    </div>
-                                </div>
-                            </div>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>

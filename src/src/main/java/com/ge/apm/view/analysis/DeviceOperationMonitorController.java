@@ -1,6 +1,8 @@
 package com.ge.apm.view.analysis;
 
+import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
@@ -26,6 +28,7 @@ import javax.faces.context.FacesContext;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,20 +66,8 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     private String bottomRightBarTitle = "";
     private int bottomRightTotal = 0;
     private BarChartModel bottomRightBar;
-    private String bottomCtBarTitle = "";
-    private int bottomCtTotal = 0;
-    private BarChartModel bottomCtBar;
-    private String bottomMrBarTitle = "";
-    private int bottomMrTotal = 0;
-    private BarChartModel bottomMrBar;
-    private String bottomXrayBarTitle = "";
-    private int bottomXrayTotal = 0;
-    private BarChartModel bottomXrayBar;
-    private String bottomDrBarTitle = "";
-    private int bottomDrTotal = 0;
-    private BarChartModel bottomDrBar;
-    private ImmutableTable<String, String, Integer> bottomBarsData;
-    private Map<Integer, String> assetGroups = ImmutableMap.of();
+    private List<Report> bottomBars;
+    private Map<Integer, String> assetGroups;
     private int selectedGroupId;
     private int totalExamCount = 0;
     private int totalExamAllCount = 0;
@@ -97,18 +88,15 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         queries.put("examsPerProcedurePerDay", "select a.ts_day as exam_time,a.part_id as exam_id, COALESCE(b.exam_count, 0) as exam_count from (select * from  (select generate_series(date_trunc('day',to_date(?,'yyyy-MM-dd')), date_trunc('day',to_date(?,'yyyy-MM-dd')), '1 days') as ts_day) as ts  cross join (select generate_series(1,5) as part_id) as pi order by ts_day, part_id) as a left join (select date_trunc('day', ac.exam_date) as exam_day, ac.procedure_id as procedure_id, ac.procedure_name as procedure_name, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id  where ai.site_id = ? and ai.hospital_id = ? and ai.asset_group = ? and ac.exam_date between ? and ? group by exam_day, ac.procedure_id, ac.procedure_name order by exam_day, procedure_id) as b on a.ts_day = b.exam_day and a.part_id = b.procedure_id");
         queries.put("examsPerProcedureAll", "select a.part_id as exam_id, COALESCE(b.count, 0) as exam_count from (select generate_series(1,5) as part_id) as a left join (select ac.procedure_id, ac.procedure_name, count(*) from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ac.exam_date between ? and ? group by ac.procedure_name, ac.procedure_id order by ac.procedure_id) as b on a.part_id = b.procedure_id");
         queries.put("examsForMiddleBar", "select dm.asset_name as asset_name, dm.exam_id as exam_id, COALESCE(af.exam_count, 0) as exam_count from (select nm.name as asset_name, pid.part_id as exam_id from (select ai.name from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ac.exam_date between ? and ? group by ai.name) as nm cross join (select generate_series(1,5) as part_id) as pid) as dm left join (select ai.name, ac.procedure_id, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ac.exam_date between ? and ? group by ai.name,ac.procedure_id) as af on dm.asset_name = af.name and dm.exam_id = af.procedure_id");
-        queries.put("examsForGroups", "select dm.asset_group as group_id, dm.procedure_id as exam_id, COALESCE(af.exam_count,0) as exam_count from (select * from (select generate_series(1,4) as asset_group) as ag cross join (select generate_series(1,5) as procedure_id) as pi) as dm left join (select ai.asset_group, ac.procedure_id, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ac.exam_date between ? and ? group by ai.asset_group,ac.procedure_id order by ai.asset_group,ac.procedure_id) as af on dm.asset_group = af.asset_group and dm.procedure_id = af.procedure_id");
+        queries.put("examsForGroups", "select dm.asset_group as group_id, dm.procedure_id as exam_id, COALESCE(af.exam_count,0) as exam_count from (select * from (select generate_series(1,?) as asset_group) as ag cross join (select generate_series(1,5) as procedure_id) as pi) as dm left join (select ai.asset_group, ac.procedure_id, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ac.exam_date between ? and ? group by ai.asset_group,ac.procedure_id order by ai.asset_group,ac.procedure_id) as af on dm.asset_group = af.asset_group and dm.procedure_id = af.procedure_id");
     }
 
     @PostConstruct
     public void init() {
         int parmSelectGroupId = Integer.valueOf(Optional.fromNullable(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedGroupId")).or("0"));
-        selectedGroupId = parmSelectGroupId == 0 ? FluentIterable.from(assetGroups.keySet()).first().or(1) : parmSelectGroupId;
         assetGroups = initAssetGroups();
-        bottomCtBarTitle = assetGroups.get(1);
-        bottomMrBarTitle = assetGroups.get(2);
-        bottomXrayBarTitle = assetGroups.get(3);
-        bottomDrBarTitle = assetGroups.get(4);
+        selectedGroupId = parmSelectGroupId == 0 ? FluentIterable.from(assetGroups.keySet()).first().or(1) : parmSelectGroupId;
+        bottomBars = Lists.newArrayListWithExpectedSize(assetGroups.size());
         initStartEndDate();
         initTopBar();
         initTopBarAll();
@@ -151,6 +139,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
             query = queries.get("examsPerProcedurePerMonth");
             bottomLeftBarTitle = MONTH_AVERAGE;
         }
+        log.info("renderTabView sql: {}, params:{},{},{},{},{},{},{}", query, from(startDate), from(endDate), siteId, hospitalId, selectedGroupId, startDate, endDate);
         List<DeviceOperationInfo> exams = jdbcTemplate.query(query, new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -172,6 +161,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     public void initMiddleBar() {
+        log.info("examsForMiddleBar sql: {}, params:{},{},{},{},{},{},{},{}", queries.get("examsForMiddleBar"), siteId, hospitalId, startDate, endDate, siteId, hospitalId, startDate, endDate);
         List<DeviceOperationInfo> exams = jdbcTemplate.query(queries.get("examsForMiddleBar"), new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -192,6 +182,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     public void initBottomBars() {
+        log.info("initBottomBars sql:{}, param:{},{},{},{}", queries.get("examsForGroups"), assetGroups.size(), siteId, hospitalId, startDate, endDate);
         List<DeviceOperationInfo> exams = jdbcTemplate.query(queries.get("examsForGroups"), new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -201,47 +192,38 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
                 deviceOperationInfo.setExamCount(rs.getInt("exam_count"));
                 return deviceOperationInfo;
             }
-        }, siteId, hospitalId, startDate, endDate);
+        }, assetGroups.size(), siteId, hospitalId, startDate, endDate);
         ImmutableTable.Builder<String, String, Integer> builder = new ImmutableTable.Builder<>();
         for (DeviceOperationInfo info : exams) {
             builder.put(info.getGroupName(), info.getProcedureName(), info.getExamCount());
         }
-        bottomBarsData = builder.build();
-        bottomCtTotal = (int) Stats.of(bottomBarsData.row(assetGroups.get(1)).values()).sum();
-        bottomMrTotal = (int) Stats.of(bottomBarsData.row(assetGroups.get(2)).values()).sum();
-        bottomXrayTotal = (int) Stats.of(bottomBarsData.row(assetGroups.get(3)).values()).sum();
-        bottomDrTotal = (int) Stats.of(bottomBarsData.row(assetGroups.get(4)).values()).sum();
-        bottomCtBar = initBarModel(new BarChartModel(), bottomCtBarTitle, true, 50, "ne", "bottomCtBarSkin", bottomBarsData.row(assetGroups.get(1)), true);
-        bottomMrBar = initBarModel(new BarChartModel(), bottomMrBarTitle, true, 50, "ne", "bottomMrBarSkin", bottomBarsData.row(assetGroups.get(2)), true);
-        bottomXrayBar = initBarModel(new BarChartModel(), bottomXrayBarTitle, true, 50, "ne", "bottomXrayBarSkin", bottomBarsData.row(assetGroups.get(3)), true);
-        bottomDrBar = initBarModel(new BarChartModel(), bottomDrBarTitle, true, 50, "ne", "bottomDrBarSkin", bottomBarsData.row(assetGroups.get(4)), true);
+        ImmutableTable<String, String, Integer> table = builder.build();
+        for (String group : table.rowKeySet()) {
+            ImmutableMap<String, Integer> renderData = table.row(group);
+            BarChartModel chart = initBarModel(new BarChartModel(), group, true, 50, "ne", null, renderData, true);
+            bottomBars.add(new Report(group, (int) Stats.of(renderData.values()).sum(), chart, renderData));
+        }
+        log.info("bottomBars: {}", bottomBars);
     }
 
 
     private boolean checkEndDate(Date startDate, Date endDate) {
         DateTime start = new DateTime(startDate);
-        Interval interval = new Interval(start.plusMonths(1), start.plusYears(1));
+        Interval interval = new Interval(start.plusMonths(1).minusDays(1), start.plusYears(1).plusDays(1));
         return interval.contains(new DateTime(endDate));
     }
 
     private Map<Integer, String> initAssetGroups() {
-        List<DeviceOperationInfo> list = jdbcTemplate.query(queries.get("assetGroups"), new RowMapper<DeviceOperationInfo>() {
-            @Override
-            public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
-                DeviceOperationInfo deviceOperationInfo = new DeviceOperationInfo();
-                deviceOperationInfo.setGroupId(rs.getInt("assetGroupId"));
-                deviceOperationInfo.setGroupName(rs.getString("assetGroupName"));
-                return deviceOperationInfo;
-            }
-        }, "assetGroup");
-        Map<Integer, String> assetGroups = Maps.newHashMapWithExpectedSize(list.size());
-        for (DeviceOperationInfo info : list) {
-            assetGroups.put(info.getGroupId(), info.getGroupName());
+        FieldValueMessageController msgController = WebUtil.getBean(FieldValueMessageController.class, "fieldMsg");
+        LinkedHashMap<Integer, String> assetGroup = Maps.newLinkedHashMapWithExpectedSize(12);
+        for (I18nMessage msg : msgController.getFieldValueList("assetGroup")) {
+            assetGroup.put(Integer.parseInt(msg.getMsgKey()), msg.getValue());
         }
-        return assetGroups;
+        return assetGroup;
     }
 
     private void initTopBar() {
+        log.info("examsPerProcedure sql: {}, params:{},{},{},{},{}", queries.get("examsPerProcedure"), siteId, hospitalId, selectedGroupId, startDate, endDate);
         List<DeviceOperationInfo> list = jdbcTemplate.query(queries.get("examsPerProcedure"), new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -261,6 +243,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     private void initTopBarAll() {
+        log.info("examsPerProcedureAll sql: {}, params:{},{},{},{}", queries.get("examsPerProcedureAll"), siteId, hospitalId, startDate, endDate);
         List<DeviceOperationInfo> list = jdbcTemplate.query(queries.get("examsPerProcedureAll"), new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -280,7 +263,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     private void initStartEndDate() {
-        startDate = DateTime.now().minusYears(1).plusDays(1).toDate();
+        startDate = DateTime.now().minusYears(1).toDate();
         endDate = DateTime.now().toDate();
     }
 
@@ -380,7 +363,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         }
         Axis xAxis = barChartModel.getAxis(AxisType.X);
         Axis yAxis = barChartModel.getAxis(AxisType.Y);
-        xAxis.setTickAngle(-75);
+        xAxis.setTickAngle(-90);
         yAxis.setMin(0);
 
         return barChartModel;
@@ -422,24 +405,12 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         return bottomLeftBar;
     }
 
-    public BarChartModel getBottomCtBar() {
-        return bottomCtBar;
-    }
-
-    public BarChartModel getBottomMrBar() {
-        return bottomMrBar;
-    }
-
-    public BarChartModel getBottomXrayBar() {
-        return bottomXrayBar;
-    }
-
-    public BarChartModel getBottomDrBar() {
-        return bottomDrBar;
-    }
-
     public Map<Integer, String> getAssetGroups() {
         return assetGroups;
+    }
+
+    public List<Report> getBottomBars() {
+        return bottomBars;
     }
 
     public int getSelectedGroupId() {
@@ -494,36 +465,60 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         return bottomRightTotal;
     }
 
-    public String getBottomCtBarTitle() {
-        return bottomCtBarTitle;
-    }
+    public static class Report {
+        private String group;
+        private int total = 0;
+        private BarChartModel chart;
+        private ImmutableMap<String, Integer> renderData;
 
-    public int getBottomCtTotal() {
-        return bottomCtTotal;
-    }
+        public Report(String group, int total, BarChartModel chart, ImmutableMap<String, Integer> renderData) {
+            this.group = group;
+            this.total = total;
+            this.chart = chart;
+            this.renderData = renderData;
+        }
 
-    public String getBottomMrBarTitle() {
-        return bottomMrBarTitle;
-    }
+        public String getGroup() {
+            return group;
+        }
 
-    public int getBottomMrTotal() {
-        return bottomMrTotal;
-    }
+        public void setGroup(String group) {
+            this.group = group;
+        }
 
-    public String getBottomXrayBarTitle() {
-        return bottomXrayBarTitle;
-    }
+        public int getTotal() {
+            return total;
+        }
 
-    public int getBottomXrayTotal() {
-        return bottomXrayTotal;
-    }
+        public void setTotal(int total) {
+            this.total = total;
+        }
 
-    public String getBottomDrBarTitle() {
-        return bottomDrBarTitle;
-    }
+        public BarChartModel getChart() {
+            return chart;
+        }
 
-    public int getBottomDrTotal() {
-        return bottomDrTotal;
+        public void setChart(BarChartModel chart) {
+            this.chart = chart;
+        }
+
+        public ImmutableMap<String, Integer> getRenderData() {
+            return renderData;
+        }
+
+        public void setRenderData(ImmutableMap<String, Integer> renderData) {
+            this.renderData = renderData;
+        }
+
+        @Override
+        public String toString() {
+            return "Report{" +
+                    "group='" + group + '\'' +
+                    ", total=" + total +
+                    ", chart=" + chart +
+                    ", renderData=" + renderData +
+                    '}';
+        }
     }
 
     public static class DeviceOperationInfo {

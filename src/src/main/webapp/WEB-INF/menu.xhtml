@@ -53,7 +53,7 @@
                             <p:menuitem id="um14" value="#{msg.Inspection}" rendered="false" outcome="/empty"/>
                         </p:submenu>
                         <p:submenu id="um15" label="#{msg.DeviceMonitor}" icon="fa fa-bell-o" rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
-                            <p:menuitem id="um16" value="#{msg.DeviceStatusMonitor}" outcome="/empty" />
+                            <p:menuitem id="um16" value="#{msg.DeviceStatusMonitor}" outcome="/portal/analysis/deviceStatusMonitor" />
                             <p:menuitem id="um17" value="#{msg.DeviceDowntimeAnalysis}" outcome="/empty"  rendered="false"/>
                             <p:menuitem id="um18" value="#{msg.DeviceMaintainanceEventAnalysis}" outcome="/portal/analysis/assetMaintenanceAll" rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}"/>
                             <p:menuitem id="um19" value="#{msg.DeviceMaintainanceCostAnalysis}" outcome="/empty"/>

@@ -2,6 +2,8 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
@@ -21,20 +23,14 @@
                             <div class="text--left">
                                 <p:menuButton id="menuButton"
                                               value="#{deviceOperationMonitorController.assetGroups.get(deviceOperationMonitorController.selectedGroupId)}">
-                                    <p:menuitem value="CT"
-                                                actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('1')}"
-                                                update="@form"/>
-                                    <p:menuitem value="MR"
-                                                actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('2')}"
-                                                update="@form"/>
-                                    <p:menuitem value="XRay"
-                                                actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('3')}"
-                                                update="@form"/>
-                                    <p:menuitem value="DR"
-                                                actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup('4')}"
-                                                update="@form"/>
+                                    <c:forEach var="entry" items="${deviceOperationMonitorController.assetGroups}">
+                                        <p:menuitem value="#{entry.value}"
+                                                    actionListener="#{deviceOperationMonitorController.renderFormBySelectGroup(entry.key)}"
+                                                    update="@form"/>
+                                    </c:forEach>
                                     <p:separator/>
-                                    <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}" url="/portal/analysis/deviceOperationMonitorAll.xhtml"/>
+                                    <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
+                                                url="/portal/analysis/deviceOperationMonitorAll.xhtml"/>
                                 </p:menuButton>
                             </div>
                         </div>
@@ -94,7 +90,8 @@
                                         actionListener="#{deviceOperationMonitorController.renderTabView('2')}"
                                         update="@form"/>
                         </p:tabMenu>
-                        <p:chart id="tabArea" type="line" model="#{deviceOperationMonitorController.tabAreaModel}" responsive="true"/>
+                        <p:chart id="tabArea" type="line" model="#{deviceOperationMonitorController.tabAreaModel}"
+                                 responsive="true"/>
                     </div>
                 </div>
 
@@ -105,12 +102,15 @@
                             <div class="ui-md-12 ui-lg-6 divide-line-right">
                                 <div class="flex flex--row flex--center">
                                     <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomLeftBarTitle}</p>
+                                        <p class="text--center">
+                                            ${deviceOperationMonitorController.bottomLeftBarTitle}</p>
                                         <ui:include src="bodyModel.xhtml"/>
                                     </div>
                                     <div>
-                                        <p class="text--center">${deviceOperationMonitorController.bottomLeftTotal}#{msg.operationMonitor_device}</p>
-                                        <p:chart id="bottomLeftBar" type="bar" class="chart-device-stat chart-device-2 vertical"
+                                        <p class="text--center">
+                                            ${deviceOperationMonitorController.bottomLeftTotal}#{msg.operationMonitor_device}</p>
+                                        <p:chart id="bottomLeftBar" type="bar"
+                                                 class="chart-device-stat chart-device-2 vertical"
                                                  widgetVar="bottomLeftBar"
                                                  model="#{deviceOperationMonitorController.bottomLeftBar}"
                                                  responsive="true"/>
