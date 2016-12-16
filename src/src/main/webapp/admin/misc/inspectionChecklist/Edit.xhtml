@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="InspectionChecklistEditDlg" widgetVar="InspectionChecklistEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionChecklistCrudController.CRUDActionName} #{msg.InspectionChecklist}">
+            <h:form id="InspectionChecklistEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionChecklistCrudController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
+                            <p:inputText id="id" value="#{inspectionChecklistCrudController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
+                            <p:inputText id="siteId" value="#{inspectionChecklistCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.hospitalId}*</label>
+                            <p:inputText id="hospitalId" value="#{inspectionChecklistCrudController.selected.hospitalId}"  required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.item}*</label>
+                            <p:inputText id="item" value="#{inspectionChecklistCrudController.selected.item}"  required="true" requiredMessage="#{msg.item} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.displayOrder}*</label>
+                            <p:inputText id="displayOrder" value="#{inspectionChecklistCrudController.selected.displayOrder}"  required="true" requiredMessage="#{msg.displayOrder} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetId}*</label>
+                            <p:inputText id="assetId" value="#{inspectionChecklistCrudController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.checklistType}*</label>
+                            <p:inputText id="checklistType" value="#{inspectionChecklistCrudController.selected.checklistType}"  required="true" requiredMessage="#{msg.checklistType} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{inspectionChecklistCrudController.save}" value="#{msg.Save}" update=":InspectionChecklistListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'InspectionChecklistEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('InspectionChecklistEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

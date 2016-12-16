@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="SysRoleEditDlg" widgetVar="SysRoleEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{sysRoleCrudController.CRUDActionName} #{msg.SysRole}">
+            <h:form id="SysRoleEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{sysRoleCrudController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
+                            <p:inputText id="id" value="#{sysRoleCrudController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.name}</label>
+                            <p:inputText id="name" value="#{sysRoleCrudController.selected.name}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.roleDesc}</label>
+                            <p:inputText id="roleDesc" value="#{sysRoleCrudController.selected.roleDesc}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.homePage}</label>
+                            <p:inputText id="homePage" value="#{sysRoleCrudController.selected.homePage}" />
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{sysRoleCrudController.save}" value="#{msg.Save}" update=":SysRoleListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'SysRoleEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('SysRoleEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

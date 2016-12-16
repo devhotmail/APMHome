@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="AssetInfoViewDlg" widgetVar="AssetInfoViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetInfoCrudController.CRUDActionName} #{msg.AssetInfo}">
+            <h:form id="AssetInfoViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="6" rendered="#{assetInfoCrudController.selected != null}">
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{assetInfoCrudController.selected.id}"/>
+                        <h:outputLabel value="#{msg.siteId}" for="siteId" />
+                        <h:outputText value="#{assetInfoCrudController.selected.siteId}"/>
+                        <h:outputLabel value="#{msg.name}" for="name" />
+                        <h:outputText value="#{assetInfoCrudController.selected.name}"/>
+                        <h:outputLabel value="#{msg.aliasName}" for="aliasName" />
+                        <h:outputText value="#{assetInfoCrudController.selected.aliasName}"/>
+                        <h:outputLabel value="#{msg.functionGroup}" for="functionGroup" />
+                        <h:outputText value="#{assetInfoCrudController.selected.functionGroup}"/>
+                        <h:outputLabel value="#{msg.functionType}" for="functionType" />
+                        <h:outputText value="#{assetInfoCrudController.selected.functionType}"/>
+                        <h:outputLabel value="#{msg.functionGrade}" for="functionGrade" />
+                        <h:outputText value="#{assetInfoCrudController.selected.functionGrade}"/>
+                        <h:outputLabel value="#{msg.manufacture}" for="manufacture" />
+                        <h:outputText value="#{assetInfoCrudController.selected.manufacture}"/>
+                        <h:outputLabel value="#{msg.vendor}" for="vendor" />
+                        <h:outputText value="#{assetInfoCrudController.selected.vendor}"/>
+                        <h:outputLabel value="#{msg.maitanance}" for="maitanance" />
+                        <h:outputText value="#{assetInfoCrudController.selected.maitanance}"/>
+                        <h:outputLabel value="#{msg.maitananceTel}" for="maitananceTel" />
+                        <h:outputText value="#{assetInfoCrudController.selected.maitananceTel}"/>
+                        <h:outputLabel value="#{msg.serialNum}" for="serialNum" />
+                        <h:outputText value="#{assetInfoCrudController.selected.serialNum}"/>
+                        <h:outputLabel value="#{msg.departNum}" for="departNum" />
+                        <h:outputText value="#{assetInfoCrudController.selected.departNum}"/>
+                        <h:outputLabel value="#{msg.financingNum}" for="financingNum" />
+                        <h:outputText value="#{assetInfoCrudController.selected.financingNum}"/>
+                        <h:outputLabel value="#{msg.barcode}" for="barcode" />
+                        <h:outputText value="#{assetInfoCrudController.selected.barcode}"/>
+                        <h:outputLabel value="#{msg.modalityId}" for="modalityId" />
+                        <h:outputText value="#{assetInfoCrudController.selected.modalityId}"/>
+                        <h:outputLabel value="#{msg.locationCode}" for="locationCode" />
+                        <h:outputText value="#{assetInfoCrudController.selected.locationCode}"/>
+                        <h:outputLabel value="#{msg.locationName}" for="locationName" />
+                        <h:outputText value="#{assetInfoCrudController.selected.locationName}"/>
+                        <h:outputLabel value="#{msg.clinicalDeptId}" for="clinicalDeptId" />
+                        <h:outputText value="#{assetInfoCrudController.selected.clinicalDeptId}"/>
+                        <h:outputLabel value="#{msg.clinicalDeptName}" for="clinicalDeptName" />
+                        <h:outputText value="#{assetInfoCrudController.selected.clinicalDeptName}"/>
+                        <h:outputLabel value="#{msg.assetGroup}" for="assetGroup" />
+                        <h:outputText value="#{assetInfoCrudController.selected.assetGroup}"/>
+                        <h:outputLabel value="#{msg.assetDeptId}" for="assetDeptId" />
+                        <h:outputText value="#{assetInfoCrudController.selected.assetDeptId}"/>
+                        <h:outputLabel value="#{msg.assetOwnerId}" for="assetOwnerId" />
+                        <h:outputText value="#{assetInfoCrudController.selected.assetOwnerId}"/>
+                        <h:outputLabel value="#{msg.assetOwnerName}" for="assetOwnerName" />
+                        <h:outputText value="#{assetInfoCrudController.selected.assetOwnerName}"/>
+                        <h:outputLabel value="#{msg.assetOwnerTel}" for="assetOwnerTel" />
+                        <h:outputText value="#{assetInfoCrudController.selected.assetOwnerTel}"/>
+                        <h:outputLabel value="#{msg.isValid}" for="isValid" />
+                        <p:selectBooleanCheckbox id="isValid" value="#{assetInfoCrudController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}" disabled="true"/>
+                        <h:outputLabel value="#{msg.status}" for="status" />
+                        <h:outputText value="#{assetInfoCrudController.selected.status}"/>
+                        <h:outputLabel value="#{msg.manufactDate}" for="manufactDate" />
+                        <h:outputText value="#{assetInfoCrudController.selected.manufactDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.purchaseDate}" for="purchaseDate" />
+                        <h:outputText value="#{assetInfoCrudController.selected.purchaseDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.arriveDate}" for="arriveDate" />
+                        <h:outputText value="#{assetInfoCrudController.selected.arriveDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.installDate}" for="installDate" />
+                        <h:outputText value="#{assetInfoCrudController.selected.installDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.warrantyDate}" for="warrantyDate" />
+                        <h:outputText value="#{assetInfoCrudController.selected.warrantyDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.terminateDate}" for="terminateDate" />
+                        <h:outputText value="#{assetInfoCrudController.selected.terminateDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.lastPmDate}" for="lastPmDate" />
+                        <h:outputText value="#{assetInfoCrudController.selected.lastPmDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.lastMeteringDate}" for="lastMeteringDate" />
+                        <h:outputText value="#{assetInfoCrudController.selected.lastMeteringDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.lastQaDate}" for="lastQaDate" />
+                        <h:outputText value="#{assetInfoCrudController.selected.lastQaDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.lastStockTakeDate}" for="lastStockTakeDate" />
+                        <h:outputText value="#{assetInfoCrudController.selected.lastStockTakeDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.purchasePrice}" for="purchasePrice" />
+                        <h:outputText value="#{assetInfoCrudController.selected.purchasePrice}"/>
+                        <h:outputLabel value="#{msg.salvageValue}" for="salvageValue" />
+                        <h:outputText value="#{assetInfoCrudController.selected.salvageValue}"/>
+                        <h:outputLabel value="#{msg.lifecycle}" for="lifecycle" />
+                        <h:outputText value="#{assetInfoCrudController.selected.lifecycle}"/>
+                        <h:outputLabel value="#{msg.depreciationMethod}" for="depreciationMethod" />
+                        <h:outputText value="#{assetInfoCrudController.selected.depreciationMethod}"/>
+                        <h:outputLabel value="#{msg.hospitalId}" for="hospitalId" />
+                        <h:outputText value="#{assetInfoCrudController.selected.hospitalId}"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{assetInfoCrudController.deleteAction}" icon="ui-icon-trash" actionListener="#{assetInfoCrudController.delete}" value="#{msg.Delete}" update="display,:AssetInfoViewDlg, :AssetInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'AssetInfoViewDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('AssetInfoViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

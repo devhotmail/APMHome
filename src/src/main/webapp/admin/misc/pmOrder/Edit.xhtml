@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="PmOrderEditDlg" widgetVar="PmOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{pmOrderCrudController.CRUDActionName} #{msg.PmOrder}">
+            <h:form id="PmOrderEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{pmOrderCrudController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
+                            <p:inputText id="id" value="#{pmOrderCrudController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
+                            <p:inputText id="siteId" value="#{pmOrderCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.hospitalId}*</label>
+                            <p:inputText id="hospitalId" value="#{pmOrderCrudController.selected.hospitalId}"  required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.name}*</label>
+                            <p:inputText id="name" value="#{pmOrderCrudController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.creatorId}*</label>
+                            <p:inputText id="creatorId" value="#{pmOrderCrudController.selected.creatorId}"  required="true" requiredMessage="#{msg.creatorId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.creatorName}*</label>
+                            <p:inputText id="creatorName" value="#{pmOrderCrudController.selected.creatorName}"  required="true" requiredMessage="#{msg.creatorName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.createTime}*</label>
+                            <p:calendar id="createTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderCrudController.selected.createTime}" required="true" requiredMessage="#{msg.createTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerId}</label>
+                            <p:inputText id="ownerId" value="#{pmOrderCrudController.selected.ownerId}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerName}</label>
+                            <p:inputText id="ownerName" value="#{pmOrderCrudController.selected.ownerName}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerOrgId}</label>
+                            <p:inputText id="ownerOrgId" value="#{pmOrderCrudController.selected.ownerOrgId}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerOrgName}</label>
+                            <p:inputText id="ownerOrgName" value="#{pmOrderCrudController.selected.ownerOrgName}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.startTime}</label>
+                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderCrudController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.endTime}</label>
+                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderCrudController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.isFinished}*</label>
+                            <p:selectBooleanCheckbox id="isFinished" itemLabel="#{msg.isFinished}" value="#{pmOrderCrudController.selected.isFinished}" required="true" requiredMessage="#{msg.isFinished} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.comments}</label>
+                            <p:inputText id="comments" value="#{pmOrderCrudController.selected.comments}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.nextTime}</label>
+                            <p:calendar id="nextTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderCrudController.selected.nextTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.reportUrl}</label>
+                            <p:inputText id="reportUrl" value="#{pmOrderCrudController.selected.reportUrl}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetId}*</label>
+                            <p:inputText id="assetId" value="#{pmOrderCrudController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetName}*</label>
+                            <p:inputText id="assetName" value="#{pmOrderCrudController.selected.assetName}"  required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.fileId}</label>
+                            <p:inputText id="fileId" value="#{pmOrderCrudController.selected.fileId}" />
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{pmOrderCrudController.save}" value="#{msg.Save}" update=":PmOrderListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'PmOrderEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('PmOrderEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

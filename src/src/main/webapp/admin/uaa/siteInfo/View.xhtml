@@ -46,7 +46,7 @@
                         <p:selectBooleanCheckbox id="wfAutoStep6" value="#{siteInfoController.selected.wfAutoStep6}" disabled="true"/>
                     </p:panelGrid>
                     <br/>
-                    <p:commandButton rendered="#{siteInfoController.deleteAction}" icon="ui-icon-trash" actionListener="#{siteInfoController.delete}" value="#{msg.Delete}" update="display,:SiteInfoViewDlg, :SiteInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'SiteInfoViewDialog');"/>
+                    <p:commandButton rendered="#{siteInfoController.deleteAction}" icon="ui-icon-trash" actionListener="#{siteInfoController.delete}" value="#{msg.Delete}" update=":SiteInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'SiteInfoViewDialog');"/>
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" value="#{msg.Close}" icon="ui-icon ui-icon-close" onclick="PF('SiteInfoViewDialog').hide()"/>
                     

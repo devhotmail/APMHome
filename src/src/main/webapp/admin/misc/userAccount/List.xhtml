@@ -1,0 +1,157 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+
+                <p align="center">
+                    <b>#{msg.UserAccount}</b>
+                </p>
+            <h:form id="UserAccountListForm">
+                <p:dataTable id="datalist" value="#{userAccountCrudController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{userAccountCrudController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                    rows="20" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{userAccountCrudController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    
+                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.loginName}" sortBy="#{item.loginName}" filterBy="#{item.loginName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.loginName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.name}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.password}" sortBy="#{item.password}" filterBy="#{item.password}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.password}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.email}" sortBy="#{item.email}" filterBy="#{item.email}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.email}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.telephone}" sortBy="#{item.telephone}" filterBy="#{item.telephone}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.telephone}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.isSuperAdmin}" sortBy="#{item.isSuperAdmin}" filterBy="#{item.isSuperAdmin}" filterMatchMode="EQ">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('varDataList').filter()">
+                                <f:converter converterId="javax.faces.Boolean" />
+                                <f:selectItem itemLabel="#{msg.All}" itemValue="" />
+                                <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
+                                <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{item.isSuperAdmin? msg.True2Yes : msg.False2No }"/>
+                    </p:column>
+                    <p:column headerText="#{msg.isSiteAdmin}" sortBy="#{item.isSiteAdmin}" filterBy="#{item.isSiteAdmin}" filterMatchMode="EQ">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('varDataList').filter()">
+                                <f:converter converterId="javax.faces.Boolean" />
+                                <f:selectItem itemLabel="#{msg.All}" itemValue="" />
+                                <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
+                                <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{item.isSiteAdmin? msg.True2Yes : msg.False2No }"/>
+                    </p:column>
+                    <p:column headerText="#{msg.isLocalAdmin}" sortBy="#{item.isLocalAdmin}" filterBy="#{item.isLocalAdmin}" filterMatchMode="EQ">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('varDataList').filter()">
+                                <f:converter converterId="javax.faces.Boolean" />
+                                <f:selectItem itemLabel="#{msg.All}" itemValue="" />
+                                <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
+                                <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{item.isLocalAdmin? msg.True2Yes : msg.False2No }"/>
+                    </p:column>
+                    <p:column headerText="#{msg.isActive}" sortBy="#{item.isActive}" filterBy="#{item.isActive}" filterMatchMode="EQ">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('varDataList').filter()">
+                                <f:converter converterId="javax.faces.Boolean" />
+                                <f:selectItem itemLabel="#{msg.All}" itemValue="" />
+                                <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
+                                <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{item.isActive? msg.True2Yes : msg.False2No }"/>
+                    </p:column>
+                    <p:column headerText="#{msg.isOnline}" sortBy="#{item.isOnline}" filterBy="#{item.isOnline}" filterMatchMode="EQ">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('varDataList').filter()">
+                                <f:converter converterId="javax.faces.Boolean" />
+                                <f:selectItem itemLabel="#{msg.All}" itemValue="" />
+                                <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
+                                <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{item.isOnline? msg.True2Yes : msg.False2No }"/>
+                    </p:column>
+                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.siteId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.hospitalId}" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.hospitalId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.lastLoginTime}" sortBy="#{item.lastLoginTime}" filterBy="#{item.lastLoginTime}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputText id="filterLastLoginTime" widgetVar="varFilterLastLoginTime"/>
+                        </f:facet>
+                        <h:outputText value="#{item.lastLoginTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.pwdSalt}" sortBy="#{item.pwdSalt}" filterBy="#{item.pwdSalt}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.pwdSalt}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.plainPassword}" sortBy="#{item.plainPassword}" filterBy="#{item.plainPassword}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.plainPassword}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.orgInfoId}" sortBy="#{item.orgInfoId}" filterBy="#{item.orgInfoId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.orgInfoId}"/>
+                    </p:column>
+                    <f:facet name="{Toolbar}">
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="UserAccount_export"/>
+                        </p:commandButton>
+                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{userAccountCrudController.prepareCreate}" update=":UserAccountEditDlg" oncomplete="PF('UserAccountEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{userAccountCrudController.prepareView}" update=":UserAccountViewDlg" oncomplete="PF('UserAccountViewDialog').show()" disabled="#{empty userAccountCrudController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{userAccountCrudController.prepareEdit}" update=":UserAccountEditDlg" oncomplete="PF('UserAccountEditDialog').show()" disabled="#{empty userAccountCrudController.selected}"/>
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Delete}" actionListener="#{userAccountCrudController.delete}" update="datalist" disabled="#{empty userAccountCrudController.selected}">
+                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                        </p:commandButton>
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+
+            </div>
+        </div>
+
+        <p:overlayPanel widgetVar="panelFilterLastLoginTime" for=":UserAccountListForm:datalist:filterLastLoginTime" dismissable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{msg.From}"/>
+                <p:calendar widgetVar="varLastLoginTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:outputLabel value="#{msg.To}"/>
+                <p:calendar widgetVar="varLastLoginTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+            </h:panelGrid>
+            <p:commandButton onclick="setDateFilter('varDataList','varFilterLastLoginTime','varLastLoginTimeFrom','varLastLoginTimeTo'); PF('panelFilterLastLoginTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="PF('panelFilterLastLoginTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
+        </p:overlayPanel>
+        
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="UserAccountViewDlg" widgetVar="UserAccountViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{userAccountCrudController.CRUDActionName} #{msg.UserAccount}">
+            <h:form id="UserAccountViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="6" rendered="#{userAccountCrudController.selected != null}">
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{userAccountCrudController.selected.id}"/>
+                        <h:outputLabel value="#{msg.loginName}" for="loginName" />
+                        <h:outputText value="#{userAccountCrudController.selected.loginName}"/>
+                        <h:outputLabel value="#{msg.name}" for="name" />
+                        <h:outputText value="#{userAccountCrudController.selected.name}"/>
+                        <h:outputLabel value="#{msg.password}" for="password" />
+                        <h:outputText value="#{userAccountCrudController.selected.password}"/>
+                        <h:outputLabel value="#{msg.email}" for="email" />
+                        <h:outputText value="#{userAccountCrudController.selected.email}"/>
+                        <h:outputLabel value="#{msg.telephone}" for="telephone" />
+                        <h:outputText value="#{userAccountCrudController.selected.telephone}"/>
+                        <h:outputLabel value="#{msg.isSuperAdmin}" for="isSuperAdmin" />
+                        <p:selectBooleanCheckbox id="isSuperAdmin" value="#{userAccountCrudController.selected.isSuperAdmin}" required="true" requiredMessage="#{msg.isSuperAdmin} #{msg.ValidationRequire}" disabled="true"/>
+                        <h:outputLabel value="#{msg.isSiteAdmin}" for="isSiteAdmin" />
+                        <p:selectBooleanCheckbox id="isSiteAdmin" value="#{userAccountCrudController.selected.isSiteAdmin}" required="true" requiredMessage="#{msg.isSiteAdmin} #{msg.ValidationRequire}" disabled="true"/>
+                        <h:outputLabel value="#{msg.isLocalAdmin}" for="isLocalAdmin" />
+                        <p:selectBooleanCheckbox id="isLocalAdmin" value="#{userAccountCrudController.selected.isLocalAdmin}" required="true" requiredMessage="#{msg.isLocalAdmin} #{msg.ValidationRequire}" disabled="true"/>
+                        <h:outputLabel value="#{msg.isActive}" for="isActive" />
+                        <p:selectBooleanCheckbox id="isActive" value="#{userAccountCrudController.selected.isActive}" required="true" requiredMessage="#{msg.isActive} #{msg.ValidationRequire}" disabled="true"/>
+                        <h:outputLabel value="#{msg.isOnline}" for="isOnline" />
+                        <p:selectBooleanCheckbox id="isOnline" value="#{userAccountCrudController.selected.isOnline}" disabled="true"/>
+                        <h:outputLabel value="#{msg.siteId}" for="siteId" />
+                        <h:outputText value="#{userAccountCrudController.selected.siteId}"/>
+                        <h:outputLabel value="#{msg.hospitalId}" for="hospitalId" />
+                        <h:outputText value="#{userAccountCrudController.selected.hospitalId}"/>
+                        <h:outputLabel value="#{msg.lastLoginTime}" for="lastLoginTime" />
+                        <h:outputText value="#{userAccountCrudController.selected.lastLoginTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputLabel value="#{msg.pwdSalt}" for="pwdSalt" />
+                        <h:outputText value="#{userAccountCrudController.selected.pwdSalt}"/>
+                        <h:outputLabel value="#{msg.plainPassword}" for="plainPassword" />
+                        <h:outputText value="#{userAccountCrudController.selected.plainPassword}"/>
+                        <h:outputLabel value="#{msg.orgInfoId}" for="orgInfoId" />
+                        <h:outputText value="#{userAccountCrudController.selected.orgInfoId}"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{userAccountCrudController.deleteAction}" icon="ui-icon-trash" actionListener="#{userAccountCrudController.delete}" value="#{msg.Delete}" update="display,:UserAccountViewDlg, :UserAccountListForm:datalist, :growl" oncomplete="handleSubmit(args, 'UserAccountViewDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('UserAccountViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -40,7 +40,7 @@
                         <h:outputText value="#{userAccountController.selected.orgInfoId}"/>
                     </p:panelGrid>
                     <br/>
-                    <p:commandButton rendered="#{userAccountController.deleteAction}" icon="ui-icon-trash" actionListener="#{userAccountController.delete}" value="#{msg.Delete}" update="display,:UserAccountViewDlg, :UserAccountListForm:datalist, :growl" oncomplete="handleSubmit(args, 'UserAccountViewDialog');"/>
+                    <p:commandButton rendered="#{userAccountController.deleteAction}" icon="ui-icon-trash" actionListener="#{userAccountController.delete}" value="#{msg.Delete}" update=":UserAccountListForm:datalist, :growl" oncomplete="handleSubmit(args, 'UserAccountViewDialog');"/>
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" value="#{msg.Close}" icon="ui-icon ui-icon-close" onclick="PF('UserAccountViewDialog').hide()"/>
                     

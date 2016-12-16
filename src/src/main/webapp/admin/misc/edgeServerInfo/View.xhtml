@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="EdgeServerInfoViewDlg" widgetVar="EdgeServerInfoViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{edgeServerInfoCrudController.CRUDActionName} #{msg.EdgeServerInfo}">
+            <h:form id="EdgeServerInfoViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="6" rendered="#{edgeServerInfoCrudController.selected != null}">
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{edgeServerInfoCrudController.selected.id}"/>
+                        <h:outputLabel value="#{msg.siteId}" for="siteId" />
+                        <h:outputText value="#{edgeServerInfoCrudController.selected.siteId}"/>
+                        <h:outputLabel value="#{msg.hospitalId}" for="hospitalId" />
+                        <h:outputText value="#{edgeServerInfoCrudController.selected.hospitalId}"/>
+                        <h:outputLabel value="#{msg.edgeServerKey}" for="edgeServerKey" />
+                        <h:outputText value="#{edgeServerInfoCrudController.selected.edgeServerKey}"/>
+                        <h:outputLabel value="#{msg.edgeServerName}" for="edgeServerName" />
+                        <h:outputText value="#{edgeServerInfoCrudController.selected.edgeServerName}"/>
+                        <h:outputLabel value="#{msg.hospitalName}" for="hospitalName" />
+                        <h:outputText value="#{edgeServerInfoCrudController.selected.hospitalName}"/>
+                        <h:outputLabel value="#{msg.isEnabled}" for="isEnabled" />
+                        <p:selectBooleanCheckbox id="isEnabled" value="#{edgeServerInfoCrudController.selected.isEnabled}" disabled="true"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{edgeServerInfoCrudController.deleteAction}" icon="ui-icon-trash" actionListener="#{edgeServerInfoCrudController.delete}" value="#{msg.Delete}" update="display,:EdgeServerInfoViewDlg, :EdgeServerInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'EdgeServerInfoViewDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('EdgeServerInfoViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

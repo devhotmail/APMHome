@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="FileUploadedEditDlg" widgetVar="FileUploadedEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{fileUploadedCrudController.CRUDActionName} #{msg.FileUploaded}">
+            <h:form id="FileUploadedEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{fileUploadedCrudController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.id}*</label>
+                            <p:inputText id="id" value="#{fileUploadedCrudController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.fileName}*</label>
+                            <p:inputText id="fileName" value="#{fileUploadedCrudController.selected.fileName}"  required="true" requiredMessage="#{msg.fileName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.fileContent}*</label>
+                            <p:inputText id="fileContent" value="#{fileUploadedCrudController.selected.fileContent}"  required="true" requiredMessage="#{msg.fileContent} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{fileUploadedCrudController.save}" value="#{msg.Save}" update=":FileUploadedListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'FileUploadedEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('FileUploadedEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

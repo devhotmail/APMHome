@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="UserRoleViewDlg" widgetVar="UserRoleViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{userRoleCrudController.CRUDActionName} #{msg.UserRole}">
+            <h:form id="UserRoleViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="6" rendered="#{userRoleCrudController.selected != null}">
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{userRoleCrudController.selected.id}"/>
+                        <h:outputLabel value="#{msg.userId}" for="userId" />
+                        <h:outputText value="#{userRoleCrudController.selected.userId}"/>
+                        <h:outputLabel value="#{msg.roleId}" for="roleId" />
+                        <h:outputText value="#{userRoleCrudController.selected.roleId}"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{userRoleCrudController.deleteAction}" icon="ui-icon-trash" actionListener="#{userRoleCrudController.delete}" value="#{msg.Delete}" update="display,:UserRoleViewDlg, :UserRoleListForm:datalist, :growl" oncomplete="handleSubmit(args, 'UserRoleViewDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('UserRoleViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

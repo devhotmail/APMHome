@@ -1,0 +1,144 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+
+                <p align="center">
+                    <b>#{msg.AssetClinicalRecord}</b>
+                </p>
+            <h:form id="AssetClinicalRecordListForm">
+                <p:dataTable id="datalist" value="#{assetClinicalRecordCrudController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{assetClinicalRecordCrudController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                    rows="20" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{assetClinicalRecordCrudController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    
+                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.siteId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.hospitalId}" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.hospitalId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.modalityId}" sortBy="#{item.modalityId}" filterBy="#{item.modalityId}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.modalityId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.modalityTypeId}" sortBy="#{item.modalityTypeId}" filterBy="#{item.modalityTypeId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.modalityTypeId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.modalityType}" sortBy="#{item.modalityType}" filterBy="#{item.modalityType}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.modalityType}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.procedureId}" sortBy="#{item.procedureId}" filterBy="#{item.procedureId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.procedureId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.procedureName}" sortBy="#{item.procedureName}" filterBy="#{item.procedureName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.procedureName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.procedureStepId}" sortBy="#{item.procedureStepId}" filterBy="#{item.procedureStepId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.procedureStepId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.procedureStepName}" sortBy="#{item.procedureStepName}" filterBy="#{item.procedureStepName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.procedureStepName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.priceAmount}" sortBy="#{item.priceAmount}" filterBy="#{item.priceAmount}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.priceAmount}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.priceUnit}" sortBy="#{item.priceUnit}" filterBy="#{item.priceUnit}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.priceUnit}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.injectCount}" sortBy="#{item.injectCount}" filterBy="#{item.injectCount}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.injectCount}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.exposeCount}" sortBy="#{item.exposeCount}" filterBy="#{item.exposeCount}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.exposeCount}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.filmCount}" sortBy="#{item.filmCount}" filterBy="#{item.filmCount}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.filmCount}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.examDate}" sortBy="#{item.examDate}" filterBy="#{item.examDate}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputText id="filterExamDate" widgetVar="varFilterExamDate"/>
+                        </f:facet>
+                        <h:outputText value="#{item.examDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.examStartTime}" sortBy="#{item.examStartTime}" filterBy="#{item.examStartTime}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputText id="filterExamStartTime" widgetVar="varFilterExamStartTime"/>
+                        </f:facet>
+                        <h:outputText value="#{item.examStartTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.examDuration}" sortBy="#{item.examDuration}" filterBy="#{item.examDuration}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.examDuration}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.assetId}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.assetId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.sourceSystem}" sortBy="#{item.sourceSystem}" filterBy="#{item.sourceSystem}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.sourceSystem}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.sourceRecordId}" sortBy="#{item.sourceRecordId}" filterBy="#{item.sourceRecordId}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.sourceRecordId}"/>
+                    </p:column>
+                    <f:facet name="{Toolbar}">
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="AssetClinicalRecord_export"/>
+                        </p:commandButton>
+                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{assetClinicalRecordCrudController.prepareCreate}" update=":AssetClinicalRecordEditDlg" oncomplete="PF('AssetClinicalRecordEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{assetClinicalRecordCrudController.prepareView}" update=":AssetClinicalRecordViewDlg" oncomplete="PF('AssetClinicalRecordViewDialog').show()" disabled="#{empty assetClinicalRecordCrudController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{assetClinicalRecordCrudController.prepareEdit}" update=":AssetClinicalRecordEditDlg" oncomplete="PF('AssetClinicalRecordEditDialog').show()" disabled="#{empty assetClinicalRecordCrudController.selected}"/>
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Delete}" actionListener="#{assetClinicalRecordCrudController.delete}" update="datalist" disabled="#{empty assetClinicalRecordCrudController.selected}">
+                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                        </p:commandButton>
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+
+            </div>
+        </div>
+
+        <p:overlayPanel widgetVar="panelFilterExamDate" for=":AssetClinicalRecordListForm:datalist:filterExamDate" dismissable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{msg.From}"/>
+                <p:calendar widgetVar="varExamDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:outputLabel value="#{msg.To}"/>
+                <p:calendar widgetVar="varExamDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+            </h:panelGrid>
+            <p:commandButton onclick="setDateFilter('varDataList','varFilterExamDate','varExamDateFrom','varExamDateTo'); PF('panelFilterExamDate').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="PF('panelFilterExamDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
+        </p:overlayPanel>
+        <p:overlayPanel widgetVar="panelFilterExamStartTime" for=":AssetClinicalRecordListForm:datalist:filterExamStartTime" dismissable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{msg.From}"/>
+                <p:calendar widgetVar="varExamStartTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:outputLabel value="#{msg.To}"/>
+                <p:calendar widgetVar="varExamStartTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+            </h:panelGrid>
+            <p:commandButton onclick="setDateFilter('varDataList','varFilterExamStartTime','varExamStartTimeFrom','varExamStartTimeTo'); PF('panelFilterExamStartTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="PF('panelFilterExamStartTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
+        </p:overlayPanel>
+        
+    </ui:define>
+
+</ui:composition>

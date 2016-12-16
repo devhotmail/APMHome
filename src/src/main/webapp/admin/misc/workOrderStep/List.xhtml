@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+
+                <p align="center">
+                    <b>#{msg.WorkOrderStep}</b>
+                </p>
+            <h:form id="WorkOrderStepListForm">
+                <p:dataTable id="datalist" value="#{workOrderStepCrudController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{workOrderStepCrudController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                    rows="20" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{workOrderStepCrudController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    
+                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.siteId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.stepId}" sortBy="#{item.stepId}" filterBy="#{item.stepId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.stepId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.stepName}" sortBy="#{item.stepName}" filterBy="#{item.stepName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.stepName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.ownerId}" sortBy="#{item.ownerId}" filterBy="#{item.ownerId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.ownerId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.ownerName}" sortBy="#{item.ownerName}" filterBy="#{item.ownerName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.ownerName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.startTime}" sortBy="#{item.startTime}" filterBy="#{item.startTime}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputText id="filterStartTime" widgetVar="varFilterStartTime"/>
+                        </f:facet>
+                        <h:outputText value="#{item.startTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.endTime}" sortBy="#{item.endTime}" filterBy="#{item.endTime}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputText id="filterEndTime" widgetVar="varFilterEndTime"/>
+                        </f:facet>
+                        <h:outputText value="#{item.endTime}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.description}" sortBy="#{item.description}" filterBy="#{item.description}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.description}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.attachmentUrl}" sortBy="#{item.attachmentUrl}" filterBy="#{item.attachmentUrl}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.attachmentUrl}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.workOrderId}" sortBy="#{item.workOrderId}" filterBy="#{item.workOrderId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.workOrderId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.fileId}" sortBy="#{item.fileId}" filterBy="#{item.fileId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.fileId}"/>
+                    </p:column>
+                    <f:facet name="{Toolbar}">
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="WorkOrderStep_export"/>
+                        </p:commandButton>
+                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{workOrderStepCrudController.prepareCreate}" update=":WorkOrderStepEditDlg" oncomplete="PF('WorkOrderStepEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{workOrderStepCrudController.prepareView}" update=":WorkOrderStepViewDlg" oncomplete="PF('WorkOrderStepViewDialog').show()" disabled="#{empty workOrderStepCrudController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{workOrderStepCrudController.prepareEdit}" update=":WorkOrderStepEditDlg" oncomplete="PF('WorkOrderStepEditDialog').show()" disabled="#{empty workOrderStepCrudController.selected}"/>
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Delete}" actionListener="#{workOrderStepCrudController.delete}" update="datalist" disabled="#{empty workOrderStepCrudController.selected}">
+                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                        </p:commandButton>
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+
+            </div>
+        </div>
+
+        <p:overlayPanel widgetVar="panelFilterStartTime" for=":WorkOrderStepListForm:datalist:filterStartTime" dismissable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{msg.From}"/>
+                <p:calendar widgetVar="varStartTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:outputLabel value="#{msg.To}"/>
+                <p:calendar widgetVar="varStartTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+            </h:panelGrid>
+            <p:commandButton onclick="setDateFilter('varDataList','varFilterStartTime','varStartTimeFrom','varStartTimeTo'); PF('panelFilterStartTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="PF('panelFilterStartTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
+        </p:overlayPanel>
+        <p:overlayPanel widgetVar="panelFilterEndTime" for=":WorkOrderStepListForm:datalist:filterEndTime" dismissable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{msg.From}"/>
+                <p:calendar widgetVar="varEndTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:outputLabel value="#{msg.To}"/>
+                <p:calendar widgetVar="varEndTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+            </h:panelGrid>
+            <p:commandButton onclick="setDateFilter('varDataList','varFilterEndTime','varEndTimeFrom','varEndTimeTo'); PF('panelFilterEndTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="PF('panelFilterEndTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
+        </p:overlayPanel>
+        
+    </ui:define>
+
+</ui:composition>
