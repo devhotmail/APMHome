@@ -120,14 +120,14 @@
                                 <label class="label">#{msg.confirmedStartTime}*</label>
                                 <p:calendar id="confirmedDownTime" pattern="yyyy/MM/dd HH:mm:ss" maxdate="#{appContextService.curentDate}" value="#{workOrderController.selected.confirmedDownTime}" 
                                             showOn="button" readonlyInput="true" locale="zh" showButtonPanel="true" navigator="true" required="true" requiredMessage="#{msg.confirmedStartTime} #{msg.ValidationRequire}">
-                                    <p:ajax event="dateSelect" listener="#{workOrderController.workOrderConfirmTimeChange}" />
+                                    <p:ajax event="dateSelect" listener="#{workOrderController.workOrderConfirmTimeChange('down')}" update=":formStatus:confirmedUpTime"/>
                                 </p:calendar>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.confirmedEndTime}*</label>
                                 <p:calendar id="confirmedUpTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderController.selected.confirmedUpTime}" 
                                             showOn="button" readonlyInput="true" locale="zh" showButtonPanel="true" navigator="true" required="true" requiredMessage="#{msg.confirmedEndTime} #{msg.ValidationRequire}">
-                                    <p:ajax event="dateSelect" listener="#{workOrderController.workOrderConfirmTimeChange}" />
+                                    <p:ajax event="dateSelect" listener="#{workOrderController.workOrderConfirmTimeChange('up')}" update="confirmedUpTime"/>
                                 </p:calendar>
                             </h:panelGroup>
                         </p:panelGrid>
@@ -202,12 +202,12 @@
                                 <label class="label">#{msg.attachmentUrl}</label>
                                 <p:dataList id="pictureList" value="#{workOrderStepController.getAttachList(workOrderStepController.selected.id)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
                                     #{fileitem.attachmentUrl}
-                                    <p:commandButton actionListener="#{workOrderStepController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
+                                    <p:commandButton actionListener="#{workOrderStepController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList,:formStepData:type1" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
                                         <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
                                     </p:commandButton>
                                 </p:dataList>
                                 <p:fileUpload id="type1" fileUploadListener="#{workOrderStepController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                              multiple="false"  sizeLimit="10000000" update="pictureList" auto="true" 
+                                              multiple="false"  sizeLimit="10000000" update="pictureList,WorkOrderStepListForm:stepDataList" auto="true" fileLimit="1" fileLimitMessage="#{msg.fileLimitMessage}1"
                                               invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
                             </h:panelGroup>
                         </p:panelGrid>

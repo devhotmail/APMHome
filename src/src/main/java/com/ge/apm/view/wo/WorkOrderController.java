@@ -68,6 +68,8 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         setHospitalFilter();
         setLoginUserFilter();
         
+        this.selected = null;
+        
         return dao.findBySearchFilter(this.searchFilters, pageRequest);
     }
 
@@ -209,7 +211,17 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         asset.setStatus(assetStatus);
         assetDao.save(asset);
     }
-    public void workOrderConfirmTimeChange() {
+    public void workOrderConfirmTimeChange(String changeType) {
+        if (selected.getConfirmedUpTime()!=null&&selected.getConfirmedDownTime()!=null){
+            if(selected.getConfirmedUpTime().before(selected.getConfirmedDownTime())){
+                if ("up".equals(changeType)) {
+                    WebUtil.addSuccessMessage("恢复可用时间不能早于停机时间。", "UpTime can not before than DownTime is uploaded.");
+                    this.selected.setConfirmedUpTime(null);
+                } else {
+                    this.selected.setConfirmedUpTime(null);
+                }
+            } 
+        }
         dao.save(this.selected);
     }
     

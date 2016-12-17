@@ -31,7 +31,7 @@
             }
         </style>
         <p:fieldset  class="stepList" legend="#{msg.WorkOrderStep}"  rendered="#{(workOrderController.selected ne null) and (workOrderStepController.workOrderStepList.size() gt 0)}">
-            <p:dataList value="#{workOrderStepController.workOrderStepList}" var="item" type="definition">
+            <p:dataList id="stepDataList" value="#{workOrderStepController.workOrderStepList}" var="item" type="definition">
                 <h:panelGrid columns="8">
                     <h:panelGroup>
                         <label class="label">#{msg.stepName}*</label>

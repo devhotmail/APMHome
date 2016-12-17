@@ -471,6 +471,7 @@ INSERT INTO "i18n_message" VALUES (3020,'message','DeviceInventorySuccess', '设
 INSERT INTO "i18n_message" VALUES (3021,'message','I18nCode', '编码','i18n code',null,-1);
 INSERT INTO "i18n_message" VALUES (3022,'message','BatchImportMsg', '批量导入会清空之前的自定义配置，您确定要批量导入么？','batch import message',null,-1);
 INSERT INTO "i18n_message" VALUES (3023,'message','noAvailableCheckListItem', '没有可用的检查项，点此进行配置','There is no available checklist item, please do setting firstly!',null,-1);
+INSERT INTO "i18n_message" VALUES (3024,'message','fileLimitMessage', '文件个数不能大于','File number must less than ',null,-1);
 
 
 -- Chart label/lengend （id from 5000 to 5500）
