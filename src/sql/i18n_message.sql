@@ -328,6 +328,12 @@ INSERT INTO "i18n_message" VALUES (753,'field_name','valueEn', '英文值','msg 
 INSERT INTO "i18n_message" VALUES (754,'field_name','cyclicStartDate', '循环开始时间','Cyclic Start Date',null,-1);
 INSERT INTO "i18n_message" VALUES (755,'field_name','cyclicEndDate', '循环结束时间','Cyclic End Date',null,-1);
 INSERT INTO "i18n_message" VALUES (756,'field_name','displayOrder', '执行顺序','Display order',null,-1);
+INSERT INTO "i18n_message" VALUES (752,'field_name','msgType', '编码类型',' Code Type',null,-1);
+INSERT INTO "i18n_message" VALUES (753,'field_name','msgKey', '编码值',' Code Key',null,-1);
+INSERT INTO "i18n_message" VALUES (754,'field_name','msgValue', '编码名称',' Code Name',null,-1);
+INSERT INTO "i18n_message" VALUES (755,'field_name','I18nMessage', '系统编码',' Sys Code',null,-1);
+
+
 
 -- field value code types  ( id from 1400)
 
@@ -488,7 +494,6 @@ INSERT INTO "i18n_message" VALUES (3025,'message','is uploaded.', '%s已上传.'
 INSERT INTO "i18n_message" VALUES (3026,'message','DeleteFileConformationMsg', '确认删除文件吗？',' Confirm to remove this file?',null,-1);
 INSERT INTO "i18n_message" VALUES (3027,'message','SelectUploadFile', '请选择上传文件','Please choose one file to upload!',null,-1);
 INSERT INTO "i18n_message" VALUES (3025,'message','SuccessUploaded', '上传成功',' is uploaded',null,-1);
-
 
 -- Chart label/lengend （id from 5000 to 5500）
 INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan (Times)',null,-1);
