@@ -11,9 +11,12 @@ import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.List;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.math.NumberUtils;
 import org.primefaces.event.TabChangeEvent;
 import webapp.framework.dao.SearchFilter;
@@ -138,6 +141,16 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         
         selected.setIsInternal(true);
         selected.setIsClosed(false);
+        
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String encodeStr = request.getParameter("str");
+        String assetId = (String)UrlEncryptController.getValueFromMap(encodeStr,"assetId");
+        if (assetId != null && !"".equals(assetId)) {
+            selected.setAssetId(Integer.parseInt(assetId));
+            selected.setAssetName((String) UrlEncryptController.getValueFromMap(encodeStr,"assetName"));
+            selected.setCaseOwnerId(Integer.parseInt((String)UrlEncryptController.getValueFromMap(encodeStr,"assetOwnerId")));
+            selected.setCaseOwnerName((String) UrlEncryptController.getValueFromMap(encodeStr,"assetOwnerName"));
+        }
 
         onSelectWorkOrder();
     }
