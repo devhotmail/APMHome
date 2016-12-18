@@ -51,11 +51,11 @@
                                 <p:inputText id="ownerOrgId"   placeholder="#{qualityCtrlOrderController.selected.ownerOrgName}" readonly="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
-                                <label class="label">#{msg.startTime}*</label>
+                                <label class="label">#{msg.cyclicStartDate}*</label>
                                 <p:calendar id="startTime" pattern="yyyy/MM/dd" value="#{qualityCtrlOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.startTime} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>
-                                <label class="label">#{msg.endTime}*</label>
+                                <label class="label">#{msg.cyclicEndDate}*</label>
                                 <p:calendar id="endTime" pattern="yyyy/MM/dd" value="#{qualityCtrlOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.endTime} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>

@@ -64,7 +64,7 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
     List<InspectionOrderDetail> orderDetailItemList;
 
     AttachmentFileService fileService;
-    
+
     private String operation;
 
     @Override
@@ -79,10 +79,10 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
         this.filterByHospital = true;
         this.setHospitalFilter();
 
-       // String actionName = WebUtil.getRequestParameter("actionName");
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        // String actionName = WebUtil.getRequestParameter("actionName");
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");
-        String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr,"actionName");
+        String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr, "actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
             try {
                 prepareCreate();
@@ -94,27 +94,28 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
             }
         } else if ("View".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareView();
         } else if ("Edit".equalsIgnoreCase(actionName)) {
-           // setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-         	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
-        	owner = inspectionService.getUserAccountById(selected.getOwnerId());
+            // setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
+            owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareEdit();
         } else if ("Delete".equalsIgnoreCase(actionName)) {
 //            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-         	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareDelete();
         } else if ("Excute".equalsIgnoreCase(actionName)) {
 //            setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-         	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = inspectionService.getUserAccountById(selected.getOwnerId());
             excuteItemTree = inspectionService.getInspectionOrderDetailAsTree(selected.getId(), true);
+            this.selected.setEndTime(new Date());
             setTreeStatus(excuteItemTree);
         }
 
@@ -156,14 +157,14 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
-            searchFilters.add(new SearchFilter("orderType",SearchFilter.Operator.EQ,3));
+            searchFilters.add(new SearchFilter("orderType", SearchFilter.Operator.EQ, 3));
             return dao.findBySearchFilter(this.searchFilters, pageRequest);
         }
     }
 
     @Override
     public List<InspectionOrder> getItemList() {
-        searchFilters.add(new SearchFilter("orderType",SearchFilter.Operator.EQ,3));
+        searchFilters.add(new SearchFilter("orderType", SearchFilter.Operator.EQ, 3));
         return dao.findBySearchFilter(searchFilters);
     }
 
@@ -191,7 +192,7 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
         }
         return tempList;
     }
-    
+
     public String createOrder() {
         //for create page submit
         if (null == selectedNodesList || selectedNodesList.isEmpty()) {
@@ -224,7 +225,7 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
         this.selected.setOwnerOrgName(org.getName());
     }
 
-    public void  getViewPage(String pageName, String actionName) {
+    public void getViewPage(String pageName, String actionName) {
         operation = pageName + "?actionName=" + actionName + "&selectedid=" + selected.getId();
     }
 
@@ -238,16 +239,14 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
 
     public String excuteOrder() {
         List<InspectionOrderDetail> checkItemList = new ArrayList();
-        int excutedCount = 0;
         for (TreeNode item : excutedItemArray) {
             if (item.getType().equals("checklist")) {
                 InspectionOrderDetail checkItem = (InspectionOrderDetail) item.getData();
                 checkItem.setIsPassed(true);
                 checkItemList.add(checkItem);
-                excutedCount++;
             }
         }
-        this.selected.setIsFinished(getTreeCount(excuteItemTree) == excutedCount);
+        this.selected.setIsFinished(true);
         inspectionService.excuteOrder(this.selected, checkItemList);
         return "QualityCtrlOrderList?faces-redirect=true";
     }
@@ -351,7 +350,7 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
     public void setExcutedItemArray(TreeNode[] excutedItemArray) {
         this.excutedItemArray = excutedItemArray;
     }
-    
+
     private String filterStartTime = null;
     private String filterIsFinished = null;
 
@@ -371,9 +370,13 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
         this.filterIsFinished = filterIsFinished;
     }
 
-    public void setStartTimeFilter(){
-        if(filterStartTime==null || !"1".equals(filterStartTime))  return;
-        if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+    public void setStartTimeFilter() {
+        if (filterStartTime == null || !"1".equals(filterStartTime)) {
+            return;
+        }
+        if (searchFilters == null) {
+            searchFilters = new ArrayList<SearchFilter>();
+        }
         Date startTime = new Date();
         //2个月内，则是2个月后时间之前所有
         Calendar c = Calendar.getInstance();
@@ -399,25 +402,23 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
 
     public String getStartFormatTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        if (varStartTimeTo==null){
+        if (varStartTimeTo == null) {
             return startFormatTime;
         } else {
-            return "~"+sdf.format(varStartTimeTo);
-        } 
+            return "~" + sdf.format(varStartTimeTo);
+        }
     }
 
     public void setStartFormatTime(String startFormatTime) {
         this.startFormatTime = startFormatTime;
     }
 
-	public String getOperation() {
-		return operation;
-	}
+    public String getOperation() {
+        return operation;
+    }
 
-	public void setOperation(String operation) {
-		this.operation = operation;
-	}
-    
-    
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
 
 }
