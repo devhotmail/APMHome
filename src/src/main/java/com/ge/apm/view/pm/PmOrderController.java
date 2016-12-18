@@ -98,12 +98,12 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     	this.onBeforeNewObject(null);
     }
     
-    @Override
+/*    @Override
     public void onAfterUpdateObject(PmOrder object, boolean isOK) {
     	if(isOK){
     		this.selected = null;
     	}
-    }
+    }*/
    
     @Override
     public void prepareEdit(){
@@ -151,21 +151,6 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         	this.selected.setOwnerOrgName(orgInfo.getName());
         }
     }
-    
-/*    public List<FileUploaded> getReportList(Integer pmOrderId) {
-    	if(pmOrderId != null && pmOrderId > 0){
-    		PmOrder pmOrder = dao.findById(pmOrderId);
-    		if(pmOrder.getFileId() == null || pmOrder.getFileId() <= 0){
-    			return attachements;
-    		}
-    		FileUploaded fu =  fileUploadedRepository.findById(pmOrder.getFileId());
-    		if(fu != null){
-    			attachements.add(fu);
-    		}
-    		return attachements;
-    	}
-    	return attachements;
-    }*/
 
     public void removeAttachment(Integer fileId) {
     	if(fileId == null || fileId <= 0){
