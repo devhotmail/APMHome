@@ -11,7 +11,7 @@
         <h:form id="PmOrderEditForm">
             <p:fieldset legend="#{pmOrderController.CRUDActionName} #{msg.PmRecord}" rendered="#{pmOrderController.selected !=null}">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{pmOrderController.selected != null}">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" >
 
                         <h:panelGroup>
                             <label class="label">#{msg.name}*</label>
@@ -28,7 +28,7 @@
                         <h:panelGroup >
                             <label class="label">#{msg.ownerId}*</label>
                             <p:selectOneMenu id="assetOwnerName" value="#{pmOrderController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="true" requiredMessage="#{msg.ownerId} #{msg.ValidationRequire}" >
-                                <p:ajax listener="#{pmOrderController.onOwnerChange()}" process="@this"  update=":PmOrderEditForm:ownerName,:PmOrderEditForm:ownerOrgName" />
+                                <p:ajax listener="#{pmOrderController.onOwnerChange()}" process="@this"  update=":PmOrderEditForm:ownerOrgName" />
                                 <f:selectItem itemLabel="" />
                                 <f:selectItems value="#{pmOrderController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
                                 <p:column>
@@ -37,10 +37,10 @@
                             </p:selectOneMenu>
                         </h:panelGroup>
 
-                        <h:panelGroup>
+<!--                          <h:panelGroup>
                             <label class="label">#{msg.ownerId}</label>
                             <p:inputText readonly="true"  id="ownerName" value="#{pmOrderController.selected.ownerName}" />
-                        </h:panelGroup>
+                        </h:panelGroup> -->
                         <h:panelGroup>
                             <label class="label">#{msg.ownerOrgName}</label>
                             <p:inputText readonly="true"  id="ownerOrgName" value="#{pmOrderController.selected.ownerOrgName}" />
@@ -71,20 +71,27 @@
                         </h:panelGroup>
 
                         <h:panelGroup>
-                            <p:dataList id="pictureList" value="#{pmOrderController.attachements}"  var="fileitem"  type="definition"
-                                    emptyMessage="#{msg.noRecordFound}">
+                        	
+                          <p:panel id="panel1">
+                            <p:dataList id="pictureList" value="#{pmOrderController.attachements}"  var="fileitem"  type="definition"  
+                            emptyMessage="#{msg.noRecordFound}"  rendered="#{pmOrderController.attachements.size() gt 0}">
                                 <f:facet name="header">#{msg.attachmentUrl}</f:facet>
                                     #{fileitem.fileName}
-                               <p:commandButton icon="ui-icon-cloud-download" style="zoom:0.7;" title="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"   >
+                               <p:commandButton process="@this"  icon="ui-icon-cloud-download" style="zoom:0.7;" title="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"   >
 		                                <p:fileDownload value="#{attachmentFileService.getFile(fileitem.id)}" />
 		                       </p:commandButton>
-                               <p:commandButton process="@this"  immediate="true" actionListener="#{pmOrderController.removeAttachment(fileitem.id)}" id="iconOnly" update="pictureList"
-                                	style="zoom:0.7;"  icon="ui-icon-clear" title="#{msg.Delete}" />
+		                       
+                               <p:commandButton process="@this"  immediate="true"  actionListener="#{pmOrderController.removeAttachment(fileitem.id)}" 
+                               update=":PmOrderEditForm"  style="zoom:0.7;"  icon="ui-icon-clear" title="#{msg.Delete}" />
+                               
                             </p:dataList>
+
                             <p:fileUpload fileUploadListener="#{pmOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
-                                uploadLabel="#{msg.Upload}" cancelLabel="#{msg.Cancel}"
-                                multiple="true"  sizeLimit="1000000" fileLimit="1"  update="pictureList"
+                                uploadLabel="#{msg.Upload}" cancelLabel="#{msg.Cancel}"  rendered="#{pmOrderController.attachements.size() lt 1}"
+                                multiple="false"  sizeLimit="10000000" fileLimit="1"  update=":PmOrderEditForm:panel1"
                                 auto="true" invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
+                          </p:panel>
+                          
                         </h:panelGroup>
                     </p:panelGrid>
 
