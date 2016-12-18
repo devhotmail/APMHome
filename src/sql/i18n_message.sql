@@ -475,9 +475,10 @@ INSERT INTO "i18n_message" VALUES (3021,'message','I18nCode', '编码','i18n cod
 INSERT INTO "i18n_message" VALUES (3022,'message','BatchImportMsg', '批量导入会清空之前的自定义配置，您确定要批量导入么？','batch import message',null,-1);
 INSERT INTO "i18n_message" VALUES (3023,'message','noAvailableCheckListItem', '没有可用的检查项，点此进行配置','There is no available checklist item, please do setting firstly!',null,-1);
 INSERT INTO "i18n_message" VALUES (3024,'message','fileLimitMessage', '文件个数不能大于','File number must less than ',null,-1);
-INSERT INTO "i18n_message" VALUES (3025,'message','SuccessUploaded', '上传成功',' is uploaded',null,-1);
+INSERT INTO "i18n_message" VALUES (3025,'message','is uploaded.', '%s已上传.','%s is upload',null,-1);
 INSERT INTO "i18n_message" VALUES (3026,'message','DeleteFileConformationMsg', '确认删除文件吗？',' Confirm to remove this file?',null,-1);
 INSERT INTO "i18n_message" VALUES (3027,'message','SelectUploadFile', '请选择上传文件','Please choose one file to upload!',null,-1);
+INSERT INTO "i18n_message" VALUES (3025,'message','SuccessUploaded', '上传成功',' is uploaded',null,-1);
 
 
 -- Chart label/lengend （id from 5000 to 5500）
