@@ -1,4 +1,4 @@
-package com.ge.apm.view;
+package com.ge.apm.view.misc;
 
 import java.util.List;
 import javax.faces.bean.ManagedBean;
