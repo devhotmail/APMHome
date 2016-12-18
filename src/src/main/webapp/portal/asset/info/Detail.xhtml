@@ -115,6 +115,154 @@
                 </p:panelGrid>
             </p:tab>
         </p:accordionPanel>
+        <p:accordionPanel id="accordion2" multiple="false" >
+            <p:tab title="#{msg.AssetInfoDetail}">
+                <p:panelGrid columns="4"  layout="grid" styleClass="ui-panelgrid-blank">
+
+                    <h:panelGroup>
+                        <label class="label">#{msg.serialNum}</label>
+                        <p:inputText id="serialNum" value="#{assetInfoController.selected.serialNum}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.aliasName}</label>
+                        <p:inputText id="aliasName" value="#{assetInfoController.selected.aliasName}" readonly="true"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <label class="label">#{msg.functionType}</label>
+                        <p:inputText id="functionType" value="#{fieldMsg.fieldValue('assetGroup', assetInfoController.selected.functionType)}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.functionGrade}</label>
+                        <p:inputText id="functionGrade" value="#{fieldMsg.fieldValue('assetFunctionGrade', assetInfoController.selected.functionGrade)}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.functionGroup}</label>
+                        <p:inputText id="functionGroup" value="#{fieldMsg.fieldValue('assetFunctionType', assetInfoController.selected.functionGroup)}" readonly="true"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <label class="label">#{msg.manufacture}</label>
+                        <p:inputText id="manufacture" value="#{assetInfoController.selected.manufacture}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.maitanance}</label>
+                        <p:inputText id="maitanance" value="#{assetInfoController.selected.maitanance}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.maitananceTel}</label>
+                        <p:inputText id="maitananceTel" value="#{assetInfoController.selected.maitananceTel}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.financingNum}</label>
+                        <p:inputText id="financingNum2" value="#{assetInfoController.selected.financingNum}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.barcode}</label>
+                        <p:inputText id="barcode" value="#{assetInfoController.selected.barcode}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.modalityId}</label>
+                        <p:inputText id="modalityId" value="#{assetInfoController.selected.modalityId}" readonly="true"/>
+                    </h:panelGroup>
+                    <p:spacer/>
+                    <h:panelGroup>
+                        <label class="label">#{msg.locationCode}</label>
+                        <p:inputText id="locationCode" value="#{assetInfoController.selected.locationCode}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.locationName}</label>
+                        <p:inputText id="locationName" value="#{assetInfoController.selected.locationName}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.hospitalId}</label>
+                        <p:inputText id="hospitalId" value="#{assetInfoController.getHospital(0).name}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.assetGroup}</label>
+                        <p:inputText id="assetGroup" value="#{fieldMsg.fieldValue('ownAssetGroup', assetInfoController.selected.assetGroup)}" readonly="true"/>
+                    </h:panelGroup>
+<!--                    <h:panelGroup>
+                        <label class="label">#{msg.assetDeptId}</label>
+                        <p:inputText id="assetDeptId" value="#{assetInfoController.selected.assetDeptId}" readonly="true"/>
+                    </h:panelGroup>-->
+                    <h:panelGroup>
+                        <label class="label">#{msg.assetOwnerName}</label>
+                        <p:inputText id="assetOwnerName" value="#{assetInfoController.selected.assetOwnerName}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.assetOwnerTel}</label>
+                        <p:inputText id="assetOwnerTel" value="#{assetInfoController.selected.assetOwnerTel}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isValid}" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <label class="label">#{msg.manufactDate}</label>
+                        <p:inputText id="manufactDate" value="#{assetInfoController.selected.manufactDate}" readonly="true">
+                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <!--<p:calendar id="manufactDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.manufactDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />-->
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.arriveDate}</label>
+                        <p:inputText id="arriveDate" value="#{assetInfoController.selected.arriveDate}" readonly="true">
+                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <!--<p:calendar id="arriveDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.installDate}</label>
+                        <p:inputText id="installDate" value="#{assetInfoController.selected.installDate}" readonly="true">
+                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <!--<p:calendar id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.terminateDate}</label>
+                        <p:inputText id="terminateDate" value="#{assetInfoController.selected.terminateDate}" readonly="true">
+                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <!--<p:calendar id="terminateDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />-->
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.lastPmDate}</label>
+                        <p:inputText id="lastPmDate" value="#{assetInfoController.selected.lastPmDate}" readonly="true">
+                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <!--<p:calendar id="lastPmDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastPmDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.lastQaDate}</label>
+                        <p:inputText id="lastQaDate" value="#{assetInfoController.selected.lastQaDate}" readonly="true">
+                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <!--<p:calendar pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastQaDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.lastMeteringDate}</label>
+                        <p:inputText id="lastMeteringDate" value="#{assetInfoController.selected.lastMeteringDate}" readonly="true">
+                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <label class="label">#{msg.salvageValue}</label>
+                        <p:inputText id="salvageValue" value="#{assetInfoController.selected.salvageValue}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.lifecycle}</label>
+                        <p:inputText id="lifecycle" value="#{assetInfoController.selected.lifecycle}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.depreciationMethod}</label>
+                        <p:inputText id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}" readonly="true"/>
+                    </h:panelGroup>
+
+                </p:panelGrid>
+            </p:tab>
+        </p:accordionPanel>
 
         <h:form>
             <p:panelGrid columns="2"  layout="grid" styleClass="ui-panelgrid-blank">
@@ -135,7 +283,9 @@
                             <h:outputText value="#{item.ownerName}" />
                         </p:column>
                         <p:column headerText="#{msg.examStartTime}">
-                            <h:outputText value="#{item.startTime}" />
+                            <h:outputText value="#{item.startTime}" >
+                                <f:convertDateTime pattern="yyyy/MM/dd " />
+                            </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.endTime}">
                             <h:outputText value="#{item.endTime}" />
@@ -186,7 +336,9 @@
                             <h:outputText value="#{item.ownerName}" />
                         </p:column>
                         <p:column headerText="#{msg.examStartTime}">
-                            <h:outputText value="#{item.startTime}" />
+                            <h:outputText value="#{item.startTime}" >
+                                <f:convertDateTime pattern="yyyy/MM/dd " />
+                            </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.endTime}">
                             <h:outputText value="#{item.endTime}" />
@@ -211,7 +363,9 @@
                             <h:outputText value="#{item.ownerName}" />
                         </p:column>
                         <p:column headerText="#{msg.examStartTime}">
-                            <h:outputText value="#{item.startTime}" />
+                            <h:outputText value="#{item.startTime}" >
+                                <f:convertDateTime pattern="yyyy/MM/dd " />
+                            </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.endTime}">
                             <h:outputText value="#{item.endTime}" />
