@@ -11,27 +11,15 @@
         <p:dialog id="I18nMessageEditDlg" widgetVar="I18nMessageEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{i18nMessageController.CRUDActionName} #{msg.I18nMessage}">
             <h:form id="I18nMessageEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{i18nMessageController.selected != null}">
-                        <h:panelGroup>
-                            <label class="label">#{msg.msgType}*</label>
-                            <p:inputText id="msgType" value="#{i18nMessageController.selected.msgType}" readonly="true"  required="true" requiredMessage="#{msg.msgType} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
+                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{i18nMessageController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.msgKey}*</label>
-                            <p:inputText id="msgKey" value="#{i18nMessageController.selected.msgKey}"  required="true" requiredMessage="#{msg.msgKey} #{msg.ValidationRequire}"/>
+                            <p:spinner id="msgKey" value="#{i18nMessageController.selected.msgKey}"  required="true" requiredMessage="#{msg.msgKey} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <label class="label">#{msg.valueZh}</label>
+                            <label class="label">#{msg.msgValue}</label>
                             <p:inputText id="valueZh" value="#{i18nMessageController.selected.valueZh}" />
                         </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.valueEn}</label>
-                            <p:inputText id="valueEn" value="#{i18nMessageController.selected.valueEn}" />
-                        </h:panelGroup>
-                        <!--h:panelGroup>
-                            <label class="label">#{msg.valueTw}</label>
-                            <p:inputText id="valueTw" value="#{i18nMessageController.selected.valueTw}" />
-                        </h:panelGroup-->
                     </p:panelGrid>
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{i18nMessageController.save}" value="#{msg.Save}" update=":I18nMessageListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'I18nMessageEditDialog');"/>

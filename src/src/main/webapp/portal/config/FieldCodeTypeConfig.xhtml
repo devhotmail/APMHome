@@ -45,7 +45,7 @@
                         </p:column>
                         <f:facet name="{Toolbar}">
                             <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{i18nMessageController.prepareCreate}" update=":I18nMessageEditDlg" oncomplete="PF('I18nMessageEditDialog').show()" disabled="#{empty i18nMessageController.fieldCodeType}"/>
-                            <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}" actionListener="#{i18nMessageController.prepareView}" update=":I18nMessageViewDlg" oncomplete="PF('I18nMessageViewDialog').show()" disabled="#{empty i18nMessageController.selected}"/>
+                            <p:commandButton rendered="false" id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}" actionListener="#{i18nMessageController.prepareView}" update=":I18nMessageViewDlg" oncomplete="PF('I18nMessageViewDialog').show()" disabled="#{empty i18nMessageController.selected}"/>
                             <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{i18nMessageController.prepareEdit}" update=":I18nMessageEditDlg" oncomplete="PF('I18nMessageEditDialog').show()" disabled="#{empty i18nMessageController.fieldCodeType or empty i18nMessageController.selected}"/>
                             <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Delete}" actionListener="#{i18nMessageController.delete}" update="datalist" disabled="#{empty i18nMessageController.fieldCodeType or empty i18nMessageController.selected}">
                                 <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
@@ -58,7 +58,6 @@
                 </h:form>
 
             <ui:include src="Edit.xhtml"/>
-            <ui:include src="View.xhtml"/>
 
             </div>
         </div>
