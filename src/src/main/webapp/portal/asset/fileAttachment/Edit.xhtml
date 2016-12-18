@@ -37,7 +37,7 @@
                             <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{assetFileAttachmentController.selected.name}"  required="false" requiredMessage="#{msg.SelectUploadFile}" readonly="true"/>
                             <p:commandButton actionListener="#{assetFileAttachmentController.removeAttachment(assetFileAttachmentController.selected.fileId)}" id="iconOnly" update=":AssetFileAttachmentEditForm:upload" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this" rendered="#{assetFileAttachmentController.isCreatAction()}">
-                                <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
+                                <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
                             </p:commandButton>
                         </h:panelGroup>
                             </p:panel>

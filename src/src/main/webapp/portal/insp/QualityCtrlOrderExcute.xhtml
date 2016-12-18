@@ -93,7 +93,7 @@
                                 <h:panelGroup  rendered="#{qualityCtrlOrderController.selected.paperUrl != null}">
                                     <h:outputText value="#{msg.Attachment}"  />
                                     <p:commandButton  id="iconOnly" actionListener="#{qualityCtrlOrderController.removeAttach()}" update=":InspectionOrderEditForm:attchmentFile" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton">
-                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
+                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
                                     </p:commandButton>
                                 </h:panelGroup>
                                 <h:panelGroup rendered="#{qualityCtrlOrderController.selected.paperUrl == null}">
