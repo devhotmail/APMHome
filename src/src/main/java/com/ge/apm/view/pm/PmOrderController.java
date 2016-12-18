@@ -52,6 +52,8 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     
     private FileUploadedRepository fileUploadedRepository;
     
+//    private List<UserAccount> createrList;
+    
     @Override
     protected void init() {
 		this.filterByHospital = true;
@@ -63,7 +65,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 		fileUploadedRepository = WebUtil.getBean(FileUploadedRepository.class);
 		uuaService = (UaaService) WebUtil.getBean(UaaService.class);
 		attachements = new ArrayList<FileUploaded>();
-        ownerList = uuaService.getUserList(currentUser.getHospitalId());
+        ownerList =uuaService.getUsersWithAssetHeadOrStaffRole(currentUser.getHospitalId());
     }
 
     @Override
@@ -317,5 +319,15 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         public void setStartFormatTime(String startFormatTime) {
             this.startFormatTime = startFormatTime;
         }
+
+//		public List<UserAccount> getCreaterList() {
+//			return createrList;
+//		}
+//
+//		public void setCreaterList(List<UserAccount> createrList) {
+//			this.createrList = createrList;
+//		}
+        
+        
 
 }

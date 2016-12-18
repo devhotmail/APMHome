@@ -40,6 +40,12 @@
                         </p:column>
                         <p:column headerText="#{msg.creatorName}" sortBy="#{item.creatorName}" filterBy="#{item.creatorName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.creatorName}"/>
+                            <f:facet name="filter">
+                               <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                   <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                   <f:selectItems value="#{pmOrderController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                               </p:selectOneMenu>
+                           	</f:facet>
                         </p:column>
                         <p:column headerText="#{msg.createTime}" sortBy="#{item.createTime}" filterBy="#{item.createTime}" filterMatchMode="GTE">
                             <f:facet name="filter">
@@ -50,7 +56,13 @@
                             </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.ownerId}" sortBy="#{item.ownerName}" filterBy="#{item.ownerName}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.ownerName}"/>
+                           <h:outputText value="#{item.ownerName}"/>
+                          <f:facet name="filter">
+                               <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                   <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                   <f:selectItems value="#{pmOrderController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                               </p:selectOneMenu>
+                           </f:facet>
                         </p:column>
                         <p:column headerText="#{msg.ownerOrgName}" sortBy="#{item.ownerOrgName}" filterBy="#{item.ownerOrgName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.ownerOrgName}"/>
