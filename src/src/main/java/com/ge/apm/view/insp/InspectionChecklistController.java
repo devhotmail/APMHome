@@ -119,6 +119,13 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
     }
 
     @Override
+    protected String getActionMessage(String actionName) {
+        return (new StringBuilder()).append(WebUtil.getFieldValueMessage("checklistType", String.valueOf(selected.getChecklistType()))).append(WebUtil.getMessage("ItemConfig")).append(" ").append(WebUtil.getMessage(actionName)).toString();
+    }
+    
+    
+
+    @Override
     public void onAfterDeleteObject(InspectionChecklist object, boolean isOK) {
         if (isOK) {
             checklistitemList.remove(object);
