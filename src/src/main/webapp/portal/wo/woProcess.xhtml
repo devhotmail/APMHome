@@ -151,7 +151,7 @@
                                 <label class="label">#{msg.nextStep}#{msg.taskOwner}*</label>
                                 <p:selectOneMenu value="#{workOrderController.selected.currentPersonId}" required="true" requiredMessage="#{msg.currentPersonName} xx #{msg.ValidationRequire}">
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
-                                    <f:selectItems value="#{workOrderController.hospitalUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                    <f:selectItems value="#{workOrderController.usersWithAssetHeadOrStaffRole}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                             </h:panelGroup>
 

@@ -8,7 +8,7 @@
     <ui:define name="content">
         <div class="ui-g">
             <div class="ui-g-12 card cardTitle">
-                <p:outputLabel class="pageTitle" value="#{msg.I18nMessage}"/>
+                <p:outputLabel class="pageTitle" value="#{msg.SysCodeConfig}"/>
             </div>
 
             <div class="ui-g-12 card">
@@ -37,17 +37,11 @@
                         <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
                         <p:ajax event="filter" listener="#{i18nMessageController.onFilter}" update="createButton editButton viewButton deleteButton"/>
 
-                        <p:column headerText="#{msg.msgType}" sortBy="#{item.msgType}" filterBy="#{item.msgType}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.msgType}"/>
-                        </p:column>
                         <p:column headerText="#{msg.msgKey}" sortBy="#{item.msgKey}" filterBy="#{item.msgKey}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.msgKey}"/>
                         </p:column>
-                        <p:column headerText="#{msg.valueZh}" sortBy="#{item.valueZh}" filterBy="#{item.valueZh}" filterMatchMode="LIKE">
+                        <p:column headerText="#{msg.msgValue}" sortBy="#{item.valueZh}" filterBy="#{item.valueZh}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.valueZh}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.valueEn}" sortBy="#{item.valueEn}" filterBy="#{item.valueEn}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.valueEn}"/>
                         </p:column>
                         <f:facet name="{Toolbar}">
                             <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{i18nMessageController.prepareCreate}" update=":I18nMessageEditDlg" oncomplete="PF('I18nMessageEditDialog').show()" disabled="#{empty i18nMessageController.fieldCodeType}"/>

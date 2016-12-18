@@ -56,7 +56,7 @@
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{workOrderController.hospitalUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                                    <f:selectItems value="#{workOrderController.usersInHospital}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
                                 </p:selectOneMenu>
                             </f:facet>
                             <h:outputText value="#{item.requestorName}"/>
@@ -86,7 +86,7 @@
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{workOrderController.hospitalUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                                    <f:selectItems value="#{workOrderController.usersWithAssetHeadOrStaffRole}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
                                 </p:selectOneMenu>
                             </f:facet>
                             <h:outputText value="#{item.currentPersonName}"/>
