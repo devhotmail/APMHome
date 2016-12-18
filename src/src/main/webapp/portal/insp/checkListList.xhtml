@@ -52,13 +52,13 @@
                                     <h:outputText value="#{item.item}" />
                                 </p:column>
                                 <f:facet name="{Toolbar}">
-                                    <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
-                                        <p:dataExporter type="xls" target="datalist" fileName="InspectionChecklist_export"/>
-                                    </p:commandButton>
                                     <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{inspectionChecklistController.prepareCreate}" update=":InspectionChecklistEditDlg" oncomplete="PF('InspectionChecklistEditDialog').show()" disabled="#{0 == inspectionChecklistController.checklistType}"/>
                                     <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{inspectionChecklistController.prepareEdit}" update=":InspectionChecklistEditDlg" oncomplete="PF('InspectionChecklistEditDialog').show()" disabled="#{empty inspectionChecklistController.selected}"/>
-                                    <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{inspectionChecklistController.prepareDelete}" update=":InspectionChecklistViewDlg" oncomplete="PF('InspectionChecklistViewDialog').show()" disabled="#{empty inspectionChecklistController.selected}"/>
+                                    <p:commandButton id="deleteButton" icon="ui-icon-close" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{inspectionChecklistController.prepareDelete}" update=":InspectionChecklistViewDlg" oncomplete="PF('InspectionChecklistViewDialog').show()" disabled="#{empty inspectionChecklistController.selected}"/>
                                     <p:commandButton id="saveOrder" icon="ui-icon-save" class="btn btn-sm btn-gray" title="#{msg.saveOrder}" actionListener="#{inspectionChecklistController.saveOrder}"  update="saveOrder datalist" disabled="#{not inspectionChecklistController.isOrderChange}"/>
+                                    <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                                        <p:dataExporter type="xls" target="datalist" fileName="InspectionChecklist_export"/>
+                                    </p:commandButton>
                                 </f:facet>
                             </p:dataTable>
 
