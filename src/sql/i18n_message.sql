@@ -447,7 +447,7 @@ INSERT INTO "i18n_message" VALUES (1627, 'label', 'UserConfig', '自定义配置
 INSERT INTO "i18n_message" VALUES (1628, 'label', 'AssetInfoDetail', '设备详细信息', 'Asset Detail Info', NULL, -1);
 INSERT INTO "i18n_message" VALUES (1629, 'label', 'AssetInventoryUnmatchedList', '与实物不符的设备列表', 'Asset Inventory Unmatched List', NULL, -1);
 INSERT INTO "i18n_message" VALUES (1630, 'label', 'AssetInventoryDate', '设备盘点日期', 'Asset Inventory Date', NULL, -1);
-
+INSERT INTO "i18n_message" VALUES (1631, 'label', 'DefaultHospitalName', '总部/院区', 'Hospital Name', NULL, -1);
 
 -- module's messages  (id from 3000)
 INSERT INTO "i18n_message" VALUES (3000,'message','DeleteConformation', '删除确认','Delete Confirmation',null,-1);
