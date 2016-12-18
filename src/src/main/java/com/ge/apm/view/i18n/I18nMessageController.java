@@ -13,6 +13,7 @@ import org.primefaces.event.data.FilterEvent;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
+import webapp.framework.web.service.DbMessageSource;
 
 @ManagedBean
 @ViewScoped
@@ -28,7 +29,7 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
         dao = WebUtil.getBean(I18nMessageRepository.class);
         currentUser = UserContextService.getCurrentUserAccount();
         if (searchFilters == null) searchFilters = new ArrayList<> ();
-        searchFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, currentUser.getSiteId()));
+        searchFilters.add(new SearchFilter("id", SearchFilter.Operator.EQ, -1));
     }
 
     @Override
@@ -100,5 +101,11 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
     public void setCurrentUser(UserAccount currentUser) {
             this.currentUser = currentUser;
     }
+
+    @Override
+    public void onAfterDataChanged() {
+        DbMessageSource.reLoadMessages();
+    }
+    
     
 }
