@@ -322,16 +322,11 @@ INSERT INTO "i18n_message" VALUES (747,'field_name','wfAutoStep5', '自动维修
 INSERT INTO "i18n_message" VALUES (748,'field_name','wfAutoStep6', '自动关单','Auto Close',null,-1);
 INSERT INTO "i18n_message" VALUES (749,'field_name','PmOrder', '保养记录','preventive order',null,-1);
 INSERT INTO "i18n_message" VALUES (750,'field_name','msgType', '编码类型','msg type',null,-1);
-INSERT INTO "i18n_message" VALUES (751,'field_name','msgKey', '编码主键','msg key',null,-1);
-INSERT INTO "i18n_message" VALUES (752,'field_name','valueZh', '中文值','msg value zh',null,-1);
-INSERT INTO "i18n_message" VALUES (753,'field_name','valueEn', '英文值','msg value en',null,-1);
+INSERT INTO "i18n_message" VALUES (751,'field_name','msgKey', '编码值','Code Value',null,-1);
+INSERT INTO "i18n_message" VALUES (752,'field_name','valueZh', '编码名称','Code name',null,-1);
+INSERT INTO "i18n_message" VALUES (753,'field_name','displayOrder', '执行顺序','Display order',null,-1);
 INSERT INTO "i18n_message" VALUES (754,'field_name','cyclicStartDate', '循环开始时间','Cyclic Start Date',null,-1);
 INSERT INTO "i18n_message" VALUES (755,'field_name','cyclicEndDate', '循环结束时间','Cyclic End Date',null,-1);
-INSERT INTO "i18n_message" VALUES (756,'field_name','displayOrder', '执行顺序','Display order',null,-1);
-INSERT INTO "i18n_message" VALUES (757,'field_name','msgType', '编码类型',' Code Type',null,-1);
-INSERT INTO "i18n_message" VALUES (758,'field_name','msgKey', '编码值',' Code Key',null,-1);
-INSERT INTO "i18n_message" VALUES (759,'field_name','msgValue', '编码名称',' Code Name',null,-1);
-INSERT INTO "i18n_message" VALUES (760,'field_name','I18nMessage', '系统编码',' Sys Code',null,-1);
 
 
 
@@ -455,8 +450,6 @@ INSERT INTO "i18n_message" VALUES (1621,'depreciationMethodList','1', '平均',n
 INSERT INTO "i18n_message" VALUES (1622,'depreciationMethodList','2', '加速双倍余额',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1623,'depreciationMethodList','3', '加速年限',null,null,-1);
 
-INSERT INTO "i18n_message" VALUES (1626, 'label', 'SysConfig', '系统配置项', 'system config', NULL, -1);
-INSERT INTO "i18n_message" VALUES (1627, 'label', 'UserConfig', '自定义配置项', 'config by user', NULL, -1);
 INSERT INTO "i18n_message" VALUES (1628, 'label', 'AssetInfoDetail', '设备详细信息', 'Asset Detail Info', NULL, -1);
 INSERT INTO "i18n_message" VALUES (1629, 'label', 'AssetInventoryUnmatchedList', '与实物不符的设备列表', 'Asset Inventory Unmatched List', NULL, -1);
 INSERT INTO "i18n_message" VALUES (1630, 'label', 'AssetInventoryDate', '设备盘点日期', 'Asset Inventory Date', NULL, -1);
@@ -481,19 +474,18 @@ INSERT INTO "i18n_message" VALUES (3012,'message','shouldLate', '{0}应该晚于
 INSERT INTO "i18n_message" VALUES (3013,'message','todayDate', '当前日期',' current date',null,-1);
 INSERT INTO "i18n_message" VALUES (3014,'message','Hospital', '院区','Hospital',null,-1);
 INSERT INTO "i18n_message" VALUES (3015,'message','Department', '科室','Department',null,-1);
-INSERT INTO "i18n_message" VALUES (3016,'message','DeleteAllConformation', '您确定要删除所有的自定义配置么？','Are you sure to delete all config created by yourself?',null,-1);
+
 INSERT INTO "i18n_message" VALUES (3017,'message','invalidSizeMessage', '文件内容不能大于','File size must less than ',null,-1);
 INSERT INTO "i18n_message" VALUES (3018,'message','remainingCharacters', '还有{0}字','{0} characters remaining.',null,-1);
 INSERT INTO "i18n_message" VALUES (3019,'message','fileTransFail', '文件传输失败','File transform Failure',null,-1);
 INSERT INTO "i18n_message" VALUES (3020,'message','DeviceInventorySuccess', '设备盘点成功！','file inventory success',null,-1);
 INSERT INTO "i18n_message" VALUES (3021,'message','I18nCode', '编码','i18n code',null,-1);
-INSERT INTO "i18n_message" VALUES (3022,'message','BatchImportMsg', '批量导入会清空之前的自定义配置，您确定要批量导入么？','batch import message',null,-1);
-INSERT INTO "i18n_message" VALUES (3023,'message','noAvailableCheckListItem', '没有可用的检查项，点此进行配置','There is no available checklist item, please do setting firstly!',null,-1);
-INSERT INTO "i18n_message" VALUES (3024,'message','fileLimitMessage', '文件个数不能大于','File number must less than ',null,-1);
-INSERT INTO "i18n_message" VALUES (3025,'message','is uploaded.', '%s已上传.','%s is upload',null,-1);
-INSERT INTO "i18n_message" VALUES (3026,'message','DeleteFileConformationMsg', '确认删除文件吗？',' Confirm to remove this file?',null,-1);
-INSERT INTO "i18n_message" VALUES (3027,'message','SelectUploadFile', '请选择上传文件','Please choose one file to upload!',null,-1);
-INSERT INTO "i18n_message" VALUES (3025,'message','SuccessUploaded', '上传成功',' is uploaded',null,-1);
+INSERT INTO "i18n_message" VALUES (3022,'message','noAvailableCheckListItem', '没有可用的检查项，点此进行配置','There is no available checklist item, please do setting firstly!',null,-1);
+INSERT INTO "i18n_message" VALUES (3023,'message','fileLimitMessage', '文件个数不能大于','File number must less than ',null,-1);
+INSERT INTO "i18n_message" VALUES (3024,'message','is uploaded.', '%s已上传.','%s is upload',null,-1);
+INSERT INTO "i18n_message" VALUES (3025,'message','DeleteFileConformationMsg', '确认删除文件吗？',' Confirm to remove this file?',null,-1);
+INSERT INTO "i18n_message" VALUES (3026,'message','SelectUploadFile', '请选择上传文件','Please choose one file to upload!',null,-1);
+INSERT INTO "i18n_message" VALUES (3027,'message','SuccessUploaded', '上传成功',' is uploaded',null,-1);
 
 -- Chart label/lengend （id from 5000 to 5500）
 INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan (Times)',null,-1);
