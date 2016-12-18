@@ -52,11 +52,11 @@
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.cyclicStartDate}*</label>
-                                <p:calendar id="startTime" pattern="yyyy/MM/dd" value="#{qualityCtrlOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.startTime} #{msg.ValidationRequire}"/>
+                                <p:calendar id="startTime" pattern="yyyy/MM/dd" value="#{qualityCtrlOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.cyclicStartDate} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.cyclicEndDate}*</label>
-                                <p:calendar id="endTime" pattern="yyyy/MM/dd" value="#{qualityCtrlOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.endTime} #{msg.ValidationRequire}"/>
+                                <p:calendar id="endTime" pattern="yyyy/MM/dd" value="#{qualityCtrlOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.cyclicEndDate} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.period}*</label>
@@ -80,7 +80,8 @@
                         <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                             <p:scrollPanel style="width:98%;height:380px;border: 0" mode="native" >
                             <!--<label class="label">#{msg.assetName}</label>-->
-                                <p:tree id="assetTree" class="tree" style="border:0;height:378px" value="#{qualityCtrlOrderController.orgAssetTree}" selection="#{qualityCtrlOrderController.selectedNodes}"  var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
+                                <p:link href="checkListList.xhtml" rendered="#{qualityCtrlOrderController.orgAssetTree.leaf}">#{msg.noAvailableCheckListItem}</p:link>
+                                <p:tree id="assetTree" class="tree" style="border:0;height:362px" value="#{qualityCtrlOrderController.orgAssetTree}" selection="#{qualityCtrlOrderController.selectedNodes}"  var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
                                     <p:ajax event="select" listener="#{qualityCtrlOrderController.onSelectTreeNode}" update=":InspectionOrderEditForm:dataList"/>
                                     <p:ajax event="unselect" listener="#{qualityCtrlOrderController.onUnselectTreeNode}" update=":InspectionOrderEditForm:dataList"/>
 
