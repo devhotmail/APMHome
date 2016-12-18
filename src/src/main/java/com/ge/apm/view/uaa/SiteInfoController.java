@@ -10,6 +10,8 @@ import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.SiteInfo;
+import static java.lang.Math.E;
+import org.springframework.dao.DataIntegrityViolationException;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -30,6 +32,8 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
 
     @Override
     protected Page<SiteInfo> loadData(PageRequest pageRequest) {
+        selected = null;
+
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
@@ -60,6 +64,21 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
         
         OrgInfoRepository orgDao = WebUtil.getBean(OrgInfoRepository.class);
         orgDao.save(hospital);
+    }
+
+    @Override
+    protected boolean onPersistException(Exception ex, SiteInfo site){
+        if(ex.getClass().equals(DataIntegrityViolationException.class)){
+            DataIntegrityViolationException exFkey = (DataIntegrityViolationException) ex;
+            if(exFkey.getRootCause().getMessage().toLowerCase().contains("foreign key constraint ")){
+                String errMessage = WebUtil.getMessage("ForeighKeyErrorWithSiteId");
+                WebUtil.addErrorMessage(errMessage);
+
+                return true;
+            }
+        }
+                
+        return false;
     }
 
 }

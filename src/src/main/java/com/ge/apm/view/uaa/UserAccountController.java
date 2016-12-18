@@ -76,7 +76,6 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
         catch(Exception ex){
         }
         try{
-            System.out.println("************** orgTree.getChildCount()="+orgTree.getChildCount());
             if(selectedOrg==null)
                 selectedOrg = (OrgInfo)((DefaultTreeNode)orgTree.getChildren().get(0)).getData();
         }
@@ -93,6 +92,8 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
 
     @Override
     protected Page<UserAccount> loadData(PageRequest pageRequest) {
+        selected = null;
+        
         if ( selectedOrg == null) {
             return dao.getBySiteId(pageRequest, UserContextService.getSiteId());
         } else {

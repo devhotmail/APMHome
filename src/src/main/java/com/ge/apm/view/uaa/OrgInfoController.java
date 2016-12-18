@@ -16,6 +16,7 @@ import com.ge.apm.view.sysutil.UserContextService;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.springframework.dao.DataIntegrityViolationException;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -43,6 +44,7 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
 
     @Override
     protected Page<OrgInfo> loadData(PageRequest pageRequest) {
+        selected = null;
         return dao.getBySiteId(pageRequest, hospitalId);
     }
 
@@ -158,5 +160,19 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
     public void onBeforeNewObject(OrgInfo object) {
         object.setHospitalId(UserContextService.getCurrentUserAccount().getHospitalId());
     }
-  
+
+    @Override
+    protected boolean onPersistException(Exception ex, OrgInfo org){
+        if(ex.getClass().equals(DataIntegrityViolationException.class)){
+            DataIntegrityViolationException exFkey = (DataIntegrityViolationException) ex;
+            if(exFkey.getRootCause().getMessage().toLowerCase().contains("foreign key constraint ")){
+                String errMessage = WebUtil.getMessage("ForeighKeyErrorWithOrgId");
+                WebUtil.addErrorMessage(errMessage);
+
+                return true;
+            }
+        }
+                
+        return false;
+    }
 }
