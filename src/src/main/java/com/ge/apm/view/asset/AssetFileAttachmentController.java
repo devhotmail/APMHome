@@ -94,7 +94,7 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
         if (null == selectedAsset) {
             WebUtil.addErrorMessage(WebUtil.getMessage("assetName") + WebUtil.getMessage("ValidationRequire"));
         } else if (null == selected.getName() || selected.getName().isEmpty()) {
-            WebUtil.addErrorMessage(WebUtil.getMessage("name") + WebUtil.getMessage("ValidationRequire"));
+            WebUtil.addErrorMessage(WebUtil.getMessage("SelectUploadFile"));
         } else if (null == selected.getFileType() || selected.getFileType().isEmpty()) {
             WebUtil.addErrorMessage(WebUtil.getMessage("fileType") + WebUtil.getMessage("ValidationRequire"));
         } else {

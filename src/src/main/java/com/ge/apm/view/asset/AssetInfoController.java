@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedProperty;
@@ -160,7 +161,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public String removeOne() {
         this.delete();
         if (resultStatus) {
-            return "List";
+            return "List?faces-redirect=true";
         } else {
             return "";
         }
@@ -172,7 +173,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
         this.save();
         if (resultStatus) {
-            return "List";
+            return "List?faces-redirect=true";
         } else {
             return "";
         }
@@ -215,7 +216,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         Integer uploadFileId = fileService.uploadFile(event.getFile());
         if (uploadFileId > 0) {
             attach.setFileId(uploadFileId);
-            WebUtil.addSuccessMessage("Succesful", fileName + " is uploaded.");
+            WebUtil.addSuccessMessage(fileName + WebUtil.getMessage("SuccessUploaded"));
             attachements.add(attach);
         }
 
@@ -250,16 +251,19 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public void removeAttachment(Integer attachid) {
+        List<AssetFileAttachment> tempList = new ArrayList();
         for (AssetFileAttachment item : attachements) {
             if (attachid.equals(item.getFileId())) {
                 fileService.deleteAttachment(item.getFileId());
                 if(item.getId() != null){
                     attachDao.delete(item);
                 }
-                attachements.remove(item);
-                break;
+            }
+            else {
+                tempList.add(item);
             }
         }
+        attachements = tempList;
     }
 
     public OrgInfo getHospital(Integer id) {

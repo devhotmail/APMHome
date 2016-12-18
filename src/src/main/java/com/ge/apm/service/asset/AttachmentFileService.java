@@ -5,7 +5,6 @@
  */
 package com.ge.apm.service.asset;
 
-import com.ge.apm.dao.AssetFileAttachmentRepository;
 import com.ge.apm.dao.FileUploadDao;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,23 +14,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class AttachmentFileService {
-
-    AssetFileAttachmentRepository attachDao = null;
 
     FileUploadDao fileUploaddao;
 
     @PostConstruct
     public void init() {
-        attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         fileUploaddao = new FileUploadDao();
     }
 
@@ -50,6 +46,15 @@ public class AttachmentFileService {
         return fileName;
     }
 
+    
+    public String getFileNameById(Integer fileId) {
+        try {
+            return fileUploaddao.getFileNameById(fileId);
+        } catch (SQLException ex) {
+            Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
+        }
+    }
     
     public StreamedContent getFile(Integer fileId) {
         InputStream is = null;
