@@ -1,5 +1,6 @@
 package com.ge.apm.view.uaa;
 
+import com.ge.apm.dao.OrgInfoRepository;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -7,10 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.SiteInfoRepository;
+import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.SiteInfo;
-import java.util.HashMap;
-import java.util.Map;
-import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -43,7 +42,7 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
         //to do: change the code if necessary
         return dao.find();
     }
-
+    
     @Override
     public String getErrorMessageForDuplicateKey(SiteInfo site){
         return String.format(WebUtil.getMessage("DuplicateSiteName"), site.getName());
@@ -53,5 +52,14 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
     public String getKeyFieldNameValue(SiteInfo site){
         return WebUtil.getMessage("name")+"="+site.getName();
     }
-    
+
+    public void onAfterNewObject(SiteInfo site, boolean isOK) {
+        OrgInfo hospital = new OrgInfo();
+        hospital.setSiteId(site.getId());
+        hospital.setName(WebUtil.getMessage("DefaultHospitalName"));
+        
+        OrgInfoRepository orgDao = WebUtil.getBean(OrgInfoRepository.class);
+        orgDao.save(hospital);
+    }
+
 }
