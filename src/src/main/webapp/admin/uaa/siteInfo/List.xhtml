@@ -12,19 +12,6 @@
             </div>
 
             <div class="ui-g-12 card">
-                <h:form id="searchForm">
-                    <h:panelGroup>
-                        <label>#{msg.name}</label>
-                        <p:inputText id="search_LIKE_name"/>
-                        <p:spacer/><p:spacer/><p:spacer/>
-                        <p:commandButton value="#{msg.Search}" actionListener="#{siteInfoController.setSearchFilter()}" update="SiteInfoListForm:datalist"/>
-                        <p:spacer/><p:spacer/><p:spacer/>
-                        <p:commandButton value="#{msg.Reset}" update="searchForm">
-                            <p:resetInput target="searchForm" />
-                        </p:commandButton>
-                    </h:panelGroup>
-                </h:form>    
-                <br/>
                 
             <h:form id="SiteInfoListForm">
                 <p:dataTable id="datalist" value="#{siteInfoController.lazyModel}" var="item" widgetVar="varDataList"
