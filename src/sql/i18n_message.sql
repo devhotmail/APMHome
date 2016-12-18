@@ -166,6 +166,7 @@ INSERT INTO "i18n_message" VALUES (419, 'label', 'QualityCtrlOrderDetail', '质�
 INSERT INTO "i18n_message" VALUES (420, 'label', 'QualityCtrlMonitor', '质量监控', 'QualityCtrl Monitor', NULL, -1);
 INSERT INTO "i18n_message" VALUES (421, 'label', 'MetrologyMonitor', '计量监控', 'Metrology Monitor', NULL, -1);
 INSERT INTO "i18n_message" VALUES (422, 'label', 'saveOrder', '保存顺序', 'Save sequence', NULL, -1);
+INSERT INTO "i18n_message" VALUES (423, 'label', 'I18nMessage', '编码类型配置', 'I18nMessage', NULL, -1);
 
 -- Entity Object field Names  (id from 600 to  1499)
 
@@ -319,8 +320,12 @@ INSERT INTO "i18n_message" VALUES (746,'field_name','wfAutoStep4', '自动领工
 INSERT INTO "i18n_message" VALUES (747,'field_name','wfAutoStep5', '自动维修','Auto Repair',null,-1);
 INSERT INTO "i18n_message" VALUES (748,'field_name','wfAutoStep6', '自动关单','Auto Close',null,-1);
 INSERT INTO "i18n_message" VALUES (749,'field_name','PmOrder', '保养记录','preventive order',null,-1);
-INSERT INTO "i18n_message" VALUES (750,'field_name','cyclicStartDate', '循环开始时间','Cyclic Start Date',null,-1);
-INSERT INTO "i18n_message" VALUES (751,'field_name','cyclicEndDate', '循环结束时间','Cyclic End Date',null,-1);
+INSERT INTO "i18n_message" VALUES (750,'field_name','msgType', '编码类型','msg type',null,-1);
+INSERT INTO "i18n_message" VALUES (751,'field_name','msgKey', '编码主键','msg key',null,-1);
+INSERT INTO "i18n_message" VALUES (752,'field_name','valueZh', '中文值','msg value zh',null,-1);
+INSERT INTO "i18n_message" VALUES (753,'field_name','valueEn', '英文值','msg value en',null,-1);
+INSERT INTO "i18n_message" VALUES (754,'field_name','cyclicStartDate', '循环开始时间','Cyclic Start Date',null,-1);
+INSERT INTO "i18n_message" VALUES (755,'field_name','cyclicEndDate', '循环结束时间','Cyclic End Date',null,-1);
 
 -- field value code types  ( id from 1400)
 
