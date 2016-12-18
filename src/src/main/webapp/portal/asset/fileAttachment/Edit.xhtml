@@ -31,7 +31,7 @@
                         <h:panelGroup rendered="#{assetFileAttachmentController.isCreatAction() and assetFileAttachmentController.selected.name==null}">
                             <p:fileUpload fileUploadListener="#{assetFileAttachmentController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%" process="@this"
                                           multiple="false" sizeLimit="10000000" update=":AssetFileAttachmentEditForm:upload" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M"  label="#{msg.Add}" />
-                            <p:growl id="messages" showDetail="true" />
+                            <!--<p:growl id="messages" showDetail="true" />-->
                         </h:panelGroup>
                         <h:panelGroup id="namepanel" rendered="#{assetFileAttachmentController.selected.name!=null}">
                             <label class="label">#{msg.name}*</label>
@@ -43,7 +43,7 @@
                             </p:panel>
                     </p:panelGrid>
                         <h:panelGroup>
-                            <p:commandButton validateClient="true" actionListener="#{assetFileAttachmentController.save}" value="#{msg.Save}" update=":AssetFileAttachmentListForm:datalist, :growl" icon="ui-icon-check" />
+                            <p:commandButton validateClient="true" actionListener="#{assetFileAttachmentController.save}" value="#{msg.Save}" update=":AssetFileAttachmentListForm:datalist, :growl :AssetFileAttachmentEditForm" icon="ui-icon-check" />
                             <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-arrow-back" actionListener="#{assetFileAttachmentController.cancel}" update="display,:AssetFileAttachmentEditForm :growl"/>
                         </h:panelGroup>
 
