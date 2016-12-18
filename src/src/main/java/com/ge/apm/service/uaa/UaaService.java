@@ -358,9 +358,15 @@ public class UaaService {
         UserAccountRepository userAccountDao = WebUtil.getBean(UserAccountRepository.class);
         return userAccountDao.getByHospitalId(hospitalId);
     }
-    public List<UserAccount> getUserListWithAssetStaffRole(int hospitalId){
+        
+    public List<UserAccount> getUsersWithAssetStaffRole(int hospitalId){
         UserAccountRepository userAccountDao = WebUtil.getBean(UserAccountRepository.class);
-        return userAccountDao.getUserListByHospitalIdWithAssetStaffRole(hospitalId);
+        return userAccountDao.getUsersWithAssetStaffRole(hospitalId);
+    }
+
+    public List<UserAccount> getUsersWithAssetHeadOrStaffRole(int hospitalId){
+        UserAccountRepository userAccountDao = WebUtil.getBean(UserAccountRepository.class);
+        return userAccountDao.getUsersWithAssetHeadOrStaffRole(hospitalId);
     }
 
     public UserAccount getUserById(int userId){

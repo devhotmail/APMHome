@@ -103,9 +103,19 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         woStepController.setSelectedByWorkOrder(selected);
     }
     
-    public List<UserAccount> getHospitalUserList(){
+    public List<UserAccount> getUsersInHospital(){
         UaaService uaaService = WebUtil.getBean(UaaService.class);
         return uaaService.getUserList(loginUser.getHospitalId());
+    }
+
+    public List<UserAccount> getUsersWithAssetHeadOrStaffRole(){
+        UaaService uaaService = WebUtil.getBean(UaaService.class);
+        return uaaService.getUsersWithAssetHeadOrStaffRole(loginUser.getHospitalId());
+    }
+
+    public List<UserAccount> getUsersWithAssetStaffRole(){
+        UaaService uaaService = WebUtil.getBean(UaaService.class);
+        return uaaService.getUsersWithAssetStaffRole(loginUser.getHospitalId());
     }
     
     public void prepareCreateWorkOrder() throws InstantiationException, IllegalAccessException {
