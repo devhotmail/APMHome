@@ -309,10 +309,6 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("todayDate")));
         }
-        if (null!=input.getWarrantyDate() && input.getWarrantyDate().before(todaydate)) {
-            isError = true;
-            WebUtil.addErrorMessage(MessageFormat.format(WebUtil.getMessage("shouldLate"), WebUtil.getMessage("warrantyDate"), WebUtil.getMessage("todayDate")));
-        }
         if (null!=input.getLastPmDate() && input.getLastPmDate().after(todaydate)) {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("lastPmDate"), WebUtil.getMessage("todayDate")));
