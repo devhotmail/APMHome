@@ -74,22 +74,21 @@
                         	
                           <p:panel id="panel1">
                             <p:dataList id="pictureList" value="#{pmOrderController.attachements}"  var="fileitem"  type="definition"  
-                            emptyMessage="#{msg.noRecordFound}"  rendered="#{pmOrderController.attachements.size() gt 0}">
+                            	emptyMessage="#{msg.noRecordFound}"  rendered="#{pmOrderController.attachements.size() gt 0}">
                                 <f:facet name="header">#{msg.attachmentUrl}</f:facet>
                                     #{fileitem.fileName}
-                               <p:commandButton process="@this"  icon="ui-icon-cloud-download" style="zoom:0.7;" title="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"   >
+                               <p:commandButton process="@this"  icon="ui-icon-file-download" style="zoom:0.7;" title="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"   >
 		                                <p:fileDownload value="#{attachmentFileService.getFile(fileitem.id)}" />
 		                       </p:commandButton>
 		                       
                                <p:commandButton process="@this"  immediate="true"  actionListener="#{pmOrderController.removeAttachment(fileitem.id)}" 
-                               update=":PmOrderEditForm"  style="zoom:0.7;"  icon="ui-icon-clear" title="#{msg.Delete}" />
-                               
+                              update=":PmOrderEditForm:pictureList" style="zoom:0.7;"  icon="ui-icon-clear" title="#{msg.Delete}" />
                             </p:dataList>
 
                             <p:fileUpload fileUploadListener="#{pmOrderController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
                                 uploadLabel="#{msg.Upload}" cancelLabel="#{msg.Cancel}"  rendered="#{pmOrderController.attachements.size() lt 1}"
                                 multiple="false"  sizeLimit="10000000" fileLimit="1"  update=":PmOrderEditForm:panel1"
-                                auto="true" invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
+                                auto="true" invalidSizeMessage="#{msg.invalidSizeMessage}10M" fileLimitMessage="#{msg.fileLimitMessage}1"  label="#{msg.Add}"/>
                           </p:panel>
                           
                         </h:panelGroup>

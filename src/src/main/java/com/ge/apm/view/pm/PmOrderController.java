@@ -152,7 +152,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         }
     }
     
-    public List<FileUploaded> getReportList(Integer pmOrderId) {
+/*    public List<FileUploaded> getReportList(Integer pmOrderId) {
     	if(pmOrderId != null && pmOrderId > 0){
     		PmOrder pmOrder = dao.findById(pmOrderId);
     		if(pmOrder.getFileId() == null || pmOrder.getFileId() <= 0){
@@ -165,7 +165,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     		return attachements;
     	}
     	return attachements;
-    }
+    }*/
 
     public void removeAttachment(Integer fileId) {
     	if(fileId == null || fileId <= 0){
@@ -190,7 +190,6 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         Integer uploadFileId = fileService.uploadFile(event.getFile());
         if(uploadFileId>0){
         	attach.setId(uploadFileId);
-//            WebUtil.addSuccessMessage("Succesful", String.format(WebUtil.getMessage("is uploaded."), fileName) );
             WebUtil.addSuccessMessage(String.format(WebUtil.getMessage("is uploaded."), fileName));
             attachements.add(attach);
             this.selected.setFileId(uploadFileId);
