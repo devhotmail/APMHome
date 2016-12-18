@@ -173,6 +173,7 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
         step.setAttachmentUrl(null);
         this.selected.setAttachmentUrl(null);
         dao.save(step);
+        loadWorkOrderSteps(this.selected.getWorkOrderId());
     }
     
     public void handleFileUpload(FileUploadEvent event) {
@@ -192,6 +193,7 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
             WebUtil.addSuccessMessage("文件上传成功。", fileName + " is uploaded.");
         }
         dao.save(step);
+        loadWorkOrderSteps(this.selected.getWorkOrderId());
     }
     
 }

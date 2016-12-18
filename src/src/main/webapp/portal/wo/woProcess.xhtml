@@ -202,7 +202,7 @@
                                 <label class="label">#{msg.attachmentUrl}</label>
                                 <p:dataList id="pictureList" value="#{workOrderStepController.getAttachList(workOrderStepController.selected.id)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
                                     #{fileitem.attachmentUrl}
-                                    <p:commandButton actionListener="#{workOrderStepController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList,:formStepData:type1" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
+                                    <p:commandButton actionListener="#{workOrderStepController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList,:formStepData:type1,WorkOrderStepListForm:stepDataList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
                                         <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
                                     </p:commandButton>
                                 </p:dataList>
