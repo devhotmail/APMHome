@@ -77,10 +77,10 @@
 
                     <p:fieldset  style="margin-bottom:20px">
                         <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                            <h:panelGroup>
+<!--                            <h:panelGroup>
                                 <label class="label">#{msg.serialNum}</label>
-                                <p:inputText id="serialNum2" value="#{assetInfoController.selected.serialNum}"/>
-                            </h:panelGroup>
+                                <p:inputText id="serialNum" value="#{assetInfoController.selected.serialNum}"/>
+                            </h:panelGroup>-->
                             <h:panelGroup>
                                 <label class="label">#{msg.departNum}</label>
                                 <p:inputText id="departNum2" value="#{assetInfoController.selected.departNum}"/>
@@ -90,11 +90,11 @@
                                 <label class="label">#{msg.financingNum}</label>
                                 <p:inputText id="financingNum2" value="#{assetInfoController.selected.financingNum}"/>
                             </h:panelGroup>
-                            <p:spacer/>
                             <h:panelGroup>
                                 <label class="label">#{msg.barcode}</label>
                                 <p:inputText id="barcode" value="#{assetInfoController.selected.barcode}"/>
                             </h:panelGroup>
+                            <p:spacer/>
                             <h:panelGroup>
                                 <label class="label">#{msg.modalityId}</label>
                                 <p:inputText id="modalityId" value="#{assetInfoController.selected.modalityId}"/>
@@ -246,10 +246,10 @@
 
                                     #{fileitem.name}
                                     <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
-                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>
+                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
                                     </p:commandButton>
                                 </p:dataList>
-                                <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%" 
                                               multiple="false"  sizeLimit="10000000"  update="pictureList" auto="true" invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
                             </h:panelGroup>
                             <h:panelGroup >
@@ -257,7 +257,7 @@
                                     <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 2)}</f:facet>
                                         #{fileitem.name}
                                     <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="contractList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
-                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>
+                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
                                     </p:commandButton>
                                 </p:dataList>
                                 <p:fileUpload id="type2" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
@@ -268,7 +268,7 @@
                                     <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 3)}</f:facet>
                                     #{fileitem.name},
                                     <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="manualList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
-                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>
+                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
                                     </p:commandButton>
                                 </p:dataList>
                                 <p:fileUpload id="type3" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
@@ -279,18 +279,18 @@
                                     <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 4)}</f:facet>
                                         #{fileitem.name}
                                     <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="guideList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
-                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>
+                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
                                     </p:commandButton>
                                 </p:dataList>
                                 <p:fileUpload id="type4" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
                                               multiple="false"  sizeLimit="10000000"  update="guideList" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M"  label="#{msg.Add}"/>
                             </h:panelGroup>
-                            <h:panelGroup >
-                                <p:commandButton value="#{msg.Save}" icon="ui-icon-check" action="#{assetInfoController.applyChange()}" validateClient="true" update=":growl" style="float:right"/>
-                                <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="List?faces-redirect=true" immediate="true"  update=":growl" style="float:right"/>
-                            </h:panelGroup>
                         </p:panelGrid>
                     </p:fieldset>
+                            <h:panelGroup >
+                                <p:commandButton value="#{msg.Save}" icon="ui-icon-check" action="#{assetInfoController.applyChange()}" validateClient="true" update=":growl" style="float:left"/>
+                                <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="List?faces-redirect=true" immediate="true"  update=":growl" style="float:left"/>
+                            </h:panelGroup>
                 </h:form>
             </div>
         </div>
