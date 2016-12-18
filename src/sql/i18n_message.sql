@@ -142,6 +142,7 @@ INSERT INTO "i18n_message" VALUES (264, 'label', 'AssetContractAmount', '合同�
 INSERT INTO "i18n_message" VALUES (265, 'label', 'AssetContractAttachment', '合同附件', 'Asset Contract Attachment', NULL, -1);
 INSERT INTO "i18n_message" VALUES (266, 'label', 'AssetContractName', '合同名称', 'Asset Contract Name', NULL, -1);
 INSERT INTO "i18n_message" VALUES (267, 'label', 'SysCodeConfig', '系统编码配置', 'Sys Code Config', NULL, -1);
+INSERT INTO "i18n_message" VALUES (268, 'label', 'ItemConfig', '配置', 'Config', NULL, -1);
 
 
 -- Entity Object Names  ( id from 400 to  599)
