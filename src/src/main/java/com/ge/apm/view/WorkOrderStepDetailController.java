@@ -1,6 +1,5 @@
 package com.ge.apm.view;
 
-import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
@@ -10,6 +9,7 @@ import com.ge.apm.dao.WorkOrderStepDetailRepository;
 import com.ge.apm.domain.WorkOrderStep;
 import com.ge.apm.domain.WorkOrderStepDetail;
 import java.util.ArrayList;
+import org.primefaces.context.RequestContext;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -39,10 +39,6 @@ public class WorkOrderStepDetailController extends JpaCRUDController<WorkOrderSt
 
     public void prepareCreate(WorkOrderStep woStep) throws InstantiationException, IllegalAccessException{
         this.prepareCreate();
-        if(woStep.getStepDetails()==null){
-            woStep.setStepDetails(new ArrayList<WorkOrderStepDetail>());
-        }
-        woStep.getStepDetails().add(this.selected);
         
         this.selected.setSiteId(woStep.getSiteId());
         this.selected.setWorkOrderStepId(woStep.getId());
@@ -56,5 +52,27 @@ public class WorkOrderStepDetailController extends JpaCRUDController<WorkOrderSt
     public void delete(WorkOrderStep woStep, WorkOrderStepDetail woStepDetail){
         woStep.getStepDetails().remove(woStepDetail);
     }
+    
+    public void validateInput(WorkOrderStep woStep){
+        if(selected!=null){
+            if((selected.getAccessory()==null || "".equals(selected.getAccessory())) &&
+               selected.getAccessoryPrice()==null &&
+               selected.getAccessoryQuantity()==null &&
+               selected.getManHours()==null){
+                RequestContext.getCurrentInstance().addCallbackParam("validationFailed", true);
+                WebUtil.addErrorMessageKey("ValidationRequire");
+            }
+            else{
+                if(woStep.getStepDetails()==null){
+                    woStep.setStepDetails(new ArrayList<WorkOrderStepDetail>());
+                }
+                woStep.getStepDetails().add(this.selected);
+            }
+        }
+    }
+
+    public void cancelInput(WorkOrderStep woStep){
+        woStep.getStepDetails().remove(selected);
+  }
     
 }
