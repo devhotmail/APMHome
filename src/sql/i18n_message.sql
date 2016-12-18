@@ -312,13 +312,15 @@ INSERT INTO "i18n_message" VALUES (739,'field_name','lastPmDate','上次维护�
 INSERT INTO "i18n_message" VALUES (740,'field_name','lastQaDate','上次质控时间','Last Quality Control Date',null,-1);
 INSERT INTO "i18n_message" VALUES (741,'field_name','lastMeteringDate','上次计量时间','Last Metering Date',null,-1);
 INSERT INTO "i18n_message" VALUES (742,'field_name','assetName','资产名称','Asset Name',null,-1);
-INSERT INTO "i18n_message" VALUES (743,'field_name','period','周期','Period',null,-1);
+INSERT INTO "i18n_message" VALUES (743,'field_name','period','循环周期','Period',null,-1);
 INSERT INTO "i18n_message" VALUES (744,'field_name','wfAutoStep2', '自动审核','Auto Approve',null,-1);
 INSERT INTO "i18n_message" VALUES (745,'field_name','wfAutoStep3', '自动派工','Auto Assign',null,-1);
 INSERT INTO "i18n_message" VALUES (746,'field_name','wfAutoStep4', '自动领工','Auto Accept',null,-1);
 INSERT INTO "i18n_message" VALUES (747,'field_name','wfAutoStep5', '自动维修','Auto Repair',null,-1);
 INSERT INTO "i18n_message" VALUES (748,'field_name','wfAutoStep6', '自动关单','Auto Close',null,-1);
 INSERT INTO "i18n_message" VALUES (749,'field_name','PmOrder', '保养记录','preventive order',null,-1);
+INSERT INTO "i18n_message" VALUES (750,'field_name','cyclicStartDate', '循环开始时间','Cyclic Start Date',null,-1);
+INSERT INTO "i18n_message" VALUES (751,'field_name','cyclicEndDate', '循环结束时间','Cyclic End Date',null,-1);
 
 -- field value code types  ( id from 1400)
 
