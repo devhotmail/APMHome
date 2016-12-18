@@ -23,6 +23,7 @@ import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.asset.AssetInfoController;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -199,6 +200,17 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
             WebUtil.addErrorMessage(WebUtil.getMessage("noAssetSelected"));
             return "";
         }
+        Calendar calender = Calendar.getInstance();
+        calender.setTime(new Date());
+        calender.add(Calendar.DAY_OF_MONTH, -1);
+        if (selected.getStartTime() == null || selected.getStartTime().before(calender.getTime())) {
+            WebUtil.addErrorMessage(MessageFormat.format(WebUtil.getMessage("shouldLate"), WebUtil.getMessage("cyclicStartDate"), WebUtil.getMessage("todayDate")));
+            return "";
+        }
+        if (selected.getEndTime() == null || selected.getStartTime() == null || selected.getEndTime().before(selected.getStartTime())) {
+            WebUtil.addErrorMessage(MessageFormat.format(WebUtil.getMessage("shouldLate"), WebUtil.getMessage("cyclicEndDate"), WebUtil.getMessage("cyclicStartDate")));
+            return "";
+        }
         boolean isSuccess = inspectionService.createOrder(selected, period, selectedNodesList);
         if (isSuccess) {
             return "MetrologyOrderList?faces-redirect=true";
@@ -262,6 +274,10 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
         fileService.deleteAttachment(Integer.valueOf(selected.getPaperUrl()));
         selected.setPaperUrl(null);
 
+    }
+
+    public boolean isExcuteable() {
+        return selected != null && !selected.getIsFinished() && (selected.getStartTime().before(new Date()));
     }
 
     //getter and setter

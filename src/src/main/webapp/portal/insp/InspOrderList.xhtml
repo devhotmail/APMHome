@@ -118,7 +118,7 @@
                         </f:facet>
                     </p:dataTable>
                     <br/>
-                    <p:commandButton id="excuteButton" icon="ui-icon-playlist-add-check" value="#{msg.Execute}"  actionListener="#{inspectionOrderController.getViewPage('InspOrderExcute','Excute')}"  action="#{urlEncryptController.encodeUrlParam(inspectionOrderController.operation)}"   disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>
+                    <p:commandButton id="excuteButton" icon="ui-icon-playlist-add-check" value="#{msg.Execute}"  actionListener="#{inspectionOrderController.getViewPage('InspOrderExcute','Excute')}"  action="#{urlEncryptController.encodeUrlParam(inspectionOrderController.operation)}"   disabled="#{!inspectionOrderController.isExcuteable()}"/>
                 </h:form>
 
 

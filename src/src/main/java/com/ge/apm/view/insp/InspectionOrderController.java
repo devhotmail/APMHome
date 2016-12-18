@@ -30,6 +30,7 @@ import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.asset.AssetInfoController;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import webapp.framework.dao.SearchFilter;
@@ -134,19 +135,6 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         }
     }
 
-    private int getTreeCount(TreeNode node) {
-        int sum = 0;
-        if ("checklist".equals(node.getType())) {
-            return 1;
-        } else if (node.getChildCount() == 0) {
-            return 0;
-        }
-        for (TreeNode item : node.getChildren()) {
-            sum += getTreeCount(item);
-        }
-        return sum;
-    }
-
     @Override
     protected InspectionOrderRepository getDAO() {
         return dao;
@@ -197,6 +185,17 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         //for create page submit
         if (null == selectedNodesList || selectedNodesList.isEmpty()) {
             WebUtil.addErrorMessage(WebUtil.getMessage("noAssetSelected"));
+            return "";
+        }
+        Calendar calender = Calendar.getInstance();
+        calender.setTime(new Date());
+        calender.add(Calendar.DAY_OF_MONTH, -1);
+        if (selected.getStartTime() == null || selected.getStartTime().before(calender.getTime())) {
+            WebUtil.addErrorMessage(MessageFormat.format(WebUtil.getMessage("shouldLate"), WebUtil.getMessage("cyclicStartDate"), WebUtil.getMessage("todayDate")));
+            return "";
+        }
+        if (selected.getEndTime() == null || selected.getStartTime() == null || selected.getEndTime().before(selected.getStartTime())) {
+            WebUtil.addErrorMessage(MessageFormat.format(WebUtil.getMessage("shouldLate"), WebUtil.getMessage("cyclicEndDate"), WebUtil.getMessage("cyclicStartDate")));
             return "";
         }
         boolean isSuccess = inspectionService.createOrder(selected, period, selectedNodesList);
@@ -261,6 +260,10 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         fileService.deleteAttachment(Integer.valueOf(selected.getPaperUrl()));
         selected.setPaperUrl(null);
 
+    }
+
+    public boolean isExcuteable() {
+        return selected != null && !selected.getIsFinished() && (selected.getStartTime().before(new Date()));
     }
 
     //getter and setter

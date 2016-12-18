@@ -7,10 +7,15 @@
     <ui:define name="head">
         <h:outputStylesheet name="css/inspection.css"/>
     </ui:define>
+    
+    
     <ui:define name="content">
-        <p align="center">
-            <b>#{msg.InspectionWorkOrder}</b>
-        </p>
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.InspectionWorkOrder}"/>
+            </div>
+
+            <div class="ui-g-12 card">
 
         <h:form id="InspectionOrderEditForm">
             <p:fieldset legend="#{msg.BasicInfo}" style="margin-bottom:20px">
@@ -109,9 +114,8 @@
                 </h:panelGroup>
             </h:panelGroup>
         </h:form>
-        <br/>
-        <br/>
-        <br/>
+            </div>
+        </div>
 
     </ui:define>
 </ui:composition>

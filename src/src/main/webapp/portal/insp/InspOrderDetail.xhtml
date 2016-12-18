@@ -5,6 +5,9 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
+     <ui:define name="head">
+        <h:outputStylesheet name="css/inspection.css"/>
+    </ui:define>
     <ui:define name="content">
         <div class="ui-g clearfix">
             <div class="ui-g-12 card cardTitle">
@@ -46,7 +49,7 @@
                             <h:panelGroup>
                                 <label class="label">#{msg.endTime}</label>
                                 <p:inputText id="endTime" value="#{inspectionOrderController.selected.endTime}" readonly="true" >
-                                    <f:convertDateTime pattern="yyyy/MM/dd" />
+                                    <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                                 </p:inputText>
                             </h:panelGroup>
 
@@ -57,7 +60,7 @@
                             <h:panelGroup>
                                 <label class="label">#{msg.comments}</label>
                                 <!--<p:inputText id="comments" value="#{inspectionOrderController.selected.comments}" readonly="true" />-->
-                                <p:inputTextarea rows="5" cols="100"  maxlength="255"  autoResize="false" value="#{inspectionOrderController.selected.comments}"  />
+                                <p:inputTextarea rows="5" cols="100"  maxlength="255"  autoResize="false" value="#{inspectionOrderController.selected.comments}"  readonly="true" />
 
                             </h:panelGroup>
 

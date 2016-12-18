@@ -53,11 +53,11 @@
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.cyclicStartDate}*</label>
-                                <p:calendar id="startTime" pattern="yyyy/MM/dd" value="#{inspectionOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.startTime} #{msg.ValidationRequire}"/>
+                                <p:calendar id="startTime" pattern="yyyy/MM/dd" value="#{inspectionOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.cyclicStartDate} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.cyclicEndDate}*</label>
-                                <p:calendar id="endTime" pattern="yyyy/MM/dd" value="#{inspectionOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.endTime} #{msg.ValidationRequire}"/>
+                                <p:calendar id="endTime" pattern="yyyy/MM/dd" value="#{inspectionOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.cyclicEndDate} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.period}*</label>
