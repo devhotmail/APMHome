@@ -448,6 +448,8 @@ INSERT INTO "i18n_message" VALUES (1628, 'label', 'AssetInfoDetail', '设备详�
 INSERT INTO "i18n_message" VALUES (1629, 'label', 'AssetInventoryUnmatchedList', '与实物不符的设备列表', 'Asset Inventory Unmatched List', NULL, -1);
 INSERT INTO "i18n_message" VALUES (1630, 'label', 'AssetInventoryDate', '设备盘点日期', 'Asset Inventory Date', NULL, -1);
 INSERT INTO "i18n_message" VALUES (1631, 'label', 'DefaultHospitalName', '总部/院区', 'Hospital Name', NULL, -1);
+INSERT INTO "i18n_message" VALUES (1632, 'label', 'ForeighKeyErrorWithSiteId', '该租户不可删除: 请先删除其下面的组织机构信息', NULL, NULL, -1);
+INSERT INTO "i18n_message" VALUES (1633, 'label', 'ForeighKeyErrorWithOrgId', '该组织机构不可删除: 请先删除其下面的组织机构或用户信息', NULL, NULL, -1);
 
 -- module's messages  (id from 3000)
 INSERT INTO "i18n_message" VALUES (3000,'message','DeleteConformation', '删除确认','Delete Confirmation',null,-1);
