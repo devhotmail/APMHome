@@ -64,7 +64,7 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
     List<InspectionOrderDetail> orderDetailItemList;
 
     AttachmentFileService fileService;
-    
+
     private String operation;
 
     @Override
@@ -80,9 +80,9 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
         this.setHospitalFilter();
 
 //        String actionName = WebUtil.getRequestParameter("actionName");
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");
-        String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr,"actionName");
+        String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr, "actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
             try {
                 prepareCreate();
@@ -94,27 +94,28 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
             }
         } else if ("View".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareView();
         } else if ("Edit".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
-        	owner = inspectionService.getUserAccountById(selected.getOwnerId());
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
+            owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareEdit();
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
-        	owner = inspectionService.getUserAccountById(selected.getOwnerId());
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
+            owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareDelete();
         } else if ("Excute".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
-        	owner = inspectionService.getUserAccountById(selected.getOwnerId());
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
+            owner = inspectionService.getUserAccountById(selected.getOwnerId());
             excuteItemTree = inspectionService.getInspectionOrderDetailAsTree(selected.getId(), true);
+            this.selected.setEndTime(new Date());
             setTreeStatus(excuteItemTree);
         }
 
@@ -156,14 +157,14 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
-            searchFilters.add(new SearchFilter("orderType",SearchFilter.Operator.EQ,2));
+            searchFilters.add(new SearchFilter("orderType", SearchFilter.Operator.EQ, 2));
             return dao.findBySearchFilter(this.searchFilters, pageRequest);
         }
     }
 
     @Override
     public List<InspectionOrder> getItemList() {
-        searchFilters.add(new SearchFilter("orderType",SearchFilter.Operator.EQ,2));
+        searchFilters.add(new SearchFilter("orderType", SearchFilter.Operator.EQ, 2));
         return dao.findBySearchFilter(searchFilters);
     }
 
@@ -191,7 +192,7 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
         }
         return tempList;
     }
-    
+
     public String createOrder() {
         //for create page submit
         if (null == selectedNodesList || selectedNodesList.isEmpty()) {
@@ -226,8 +227,8 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
 
     public String getViewPage(String pageName, String actionName) {
         //return pageName + "?faces-redirect=true&actionName=" + actionName + "&selectedid=" + selected.getId();
-    	operation = pageName + "?actionName=" + actionName + "&selectedid=" + selected.getId();
-    	return operation;
+        operation = pageName + "?actionName=" + actionName + "&selectedid=" + selected.getId();
+        return operation;
     }
 
     public String removeOne() {
@@ -240,16 +241,14 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
 
     public String excuteOrder() {
         List<InspectionOrderDetail> checkItemList = new ArrayList();
-        int excutedCount = 0;
         for (TreeNode item : excutedItemArray) {
             if (item.getType().equals("checklist")) {
                 InspectionOrderDetail checkItem = (InspectionOrderDetail) item.getData();
                 checkItem.setIsPassed(true);
                 checkItemList.add(checkItem);
-                excutedCount++;
             }
         }
-        this.selected.setIsFinished(getTreeCount(excuteItemTree) == excutedCount);
+        this.selected.setIsFinished(true);
         inspectionService.excuteOrder(this.selected, checkItemList);
         return "MetrologyOrderList?faces-redirect=true";
     }
@@ -353,7 +352,7 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
     public void setExcutedItemArray(TreeNode[] excutedItemArray) {
         this.excutedItemArray = excutedItemArray;
     }
-    
+
     private String filterStartTime = null;
     private String filterIsFinished = null;
 
@@ -364,7 +363,7 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
     public void setFilterStartTime(String filterStartTime) {
         this.filterStartTime = filterStartTime;
     }
-    
+
     public String getFilterIsFinished() {
         return filterIsFinished;
     }
@@ -373,9 +372,13 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
         this.filterIsFinished = filterIsFinished;
     }
 
-    public void setStartTimeFilter(){
-        if(filterStartTime==null || !"1".equals(filterStartTime))  return;
-        if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+    public void setStartTimeFilter() {
+        if (filterStartTime == null || !"1".equals(filterStartTime)) {
+            return;
+        }
+        if (searchFilters == null) {
+            searchFilters = new ArrayList<SearchFilter>();
+        }
         //2个月内，则是在2个月后时间之前所有
         Date startTime = new Date();
         Calendar c = Calendar.getInstance();
@@ -401,24 +404,23 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
 
     public String getStartFormatTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        if (varStartTimeTo==null){
+        if (varStartTimeTo == null) {
             return startFormatTime;
         } else {
-            return "~"+sdf.format(varStartTimeTo);
-        } 
+            return "~" + sdf.format(varStartTimeTo);
+        }
     }
 
     public void setStartFormatTime(String startFormatTime) {
         this.startFormatTime = startFormatTime;
     }
 
-	public String getOperation() {
-		return operation;
-	}
+    public String getOperation() {
+        return operation;
+    }
 
-	public void setOperation(String operation) {
-		this.operation = operation;
-	}
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
 
-    
 }

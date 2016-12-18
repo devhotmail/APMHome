@@ -64,7 +64,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
     List<InspectionOrderDetail> orderDetailItemList;
 
     AttachmentFileService fileService;
-    
+
     private String operation;
 
     @Override
@@ -78,10 +78,10 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         this.setSiteFilter();
         this.filterByHospital = true;
         this.setHospitalFilter();
-        
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");
-        String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr,"actionName");
+        String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr, "actionName");
         //String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
             try {
@@ -94,27 +94,28 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
             }
         } else if ("View".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	 setSelected(Integer.parseInt( (String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareView();
         } else if ("Edit".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	setSelected(Integer.parseInt( (String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareEdit();
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	setSelected(Integer.parseInt( (String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
             prepareDelete();
         } else if ("Excute".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	setSelected(Integer.parseInt( (String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
-        	owner = inspectionService.getUserAccountById(selected.getOwnerId());
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
+            owner = inspectionService.getUserAccountById(selected.getOwnerId());
             excuteItemTree = inspectionService.getInspectionOrderDetailAsTree(selected.getId(), true);
+            this.selected.setEndTime(new Date());
             setTreeStatus(excuteItemTree);
         }
 
@@ -226,7 +227,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
 
     public void getViewPage(String pageName, String actionName) {
         //return pageName + "?faces-redirect=true&actionName=" + actionName + "&selectedid=" + selected.getId();
-    	operation = pageName + "?actionName=" + actionName + "&selectedid=" + selected.getId();
+        operation = pageName + "?actionName=" + actionName + "&selectedid=" + selected.getId();
     }
 
     public String removeOne() {
@@ -239,16 +240,14 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
 
     public String excuteOrder() {
         List<InspectionOrderDetail> checkItemList = new ArrayList();
-        int excutedCount = 0;
         for (TreeNode item : excutedItemArray) {
             if (item.getType().equals("checklist")) {
                 InspectionOrderDetail checkItem = (InspectionOrderDetail) item.getData();
                 checkItem.setIsPassed(true);
                 checkItemList.add(checkItem);
-                excutedCount++;
             }
         }
-        this.selected.setIsFinished(getTreeCount(excuteItemTree) == excutedCount);
+        this.selected.setIsFinished(true);
         inspectionService.excuteOrder(this.selected, checkItemList);
         return "InspOrderList?faces-redirect=true";
     }
@@ -353,7 +352,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         this.excutedItemArray = excutedItemArray;
     }
 
-private String filterStartTime = null;
+    private String filterStartTime = null;
     private String filterIsFinished = null;
 
     public String getFilterStartTime() {
@@ -363,7 +362,7 @@ private String filterStartTime = null;
     public void setFilterStartTime(String filterStartTime) {
         this.filterStartTime = filterStartTime;
     }
-    
+
     public String getFilterIsFinished() {
         return filterIsFinished;
     }
@@ -372,9 +371,13 @@ private String filterStartTime = null;
         this.filterIsFinished = filterIsFinished;
     }
 
-    public void setStartTimeFilter(){
-        if(filterStartTime==null || !"1".equals(filterStartTime))  return;
-        if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+    public void setStartTimeFilter() {
+        if (filterStartTime == null || !"1".equals(filterStartTime)) {
+            return;
+        }
+        if (searchFilters == null) {
+            searchFilters = new ArrayList<SearchFilter>();
+        }
         //2个月内，则是在2个月后时间之前所有
         Date startTime = new Date();
         Calendar c = Calendar.getInstance();
@@ -400,25 +403,23 @@ private String filterStartTime = null;
 
     public String getStartFormatTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        if (varStartTimeTo==null){
+        if (varStartTimeTo == null) {
             return startFormatTime;
         } else {
-            return "~"+sdf.format(varStartTimeTo);
-        } 
+            return "~" + sdf.format(varStartTimeTo);
+        }
     }
 
     public void setStartFormatTime(String startFormatTime) {
         this.startFormatTime = startFormatTime;
     }
 
-	public String getOperation() {
-		return operation;
-	}
+    public String getOperation() {
+        return operation;
+    }
 
-	public void setOperation(String operation) {
-		this.operation = operation;
-	}
-    
-    
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
 
 }

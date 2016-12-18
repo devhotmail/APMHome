@@ -83,16 +83,17 @@ public class InspectionService {
 
         Calendar calender = Calendar.getInstance();
         Date startDate = order.getStartTime();
-        Date endDate = order.getEndTime();
+        Date planEndDate = order.getEndTime();
+        order.setEndTime(null);
         //setting the endTime as the end of a day.
-        calender.setTime(endDate);
+        calender.setTime(planEndDate);
         calender.add(Calendar.HOUR_OF_DAY, 23);
         calender.add(Calendar.MINUTE, 59);
         calender.add(Calendar.SECOND, 59);
-        endDate = calender.getTime();
+        planEndDate = calender.getTime();
         Date itemstartDate = startDate;
         Date itemendDate = startDate;
-        while (itemendDate.before(endDate)) {
+        while (itemendDate.before(planEndDate)) {
             calender.setTime(itemendDate);
             switch (orderType) {
                 case 1:
@@ -114,7 +115,6 @@ public class InspectionService {
             order.setStartTime(itemstartDate);
             itemendDate = calender.getTime();
             itemstartDate = itemendDate;
-            order.setEndTime(itemendDate);
             order.setId(null);
             order = orderDao.save(order);
             for (InspectionOrderDetail item : detailList) {

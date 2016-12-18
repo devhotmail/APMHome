@@ -37,6 +37,12 @@
                         </p:column>
                         <p:column headerText="#{msg.creatorName}" sortBy="#{item.creatorName}" filterBy="#{item.creatorName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.creatorName}"/>
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{inspectionServiceController.getOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                         </p:column>
                         <p:column headerText="#{msg.createTime}" sortBy="#{item.createTime}" filterBy="#{item.createTime}" filterMatchMode="GTE">
                             <f:facet name="filter">
@@ -48,16 +54,28 @@
                         </p:column>
                         <p:column headerText="#{msg.ownerName}" sortBy="#{item.ownerName}" filterBy="#{item.ownerName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.ownerName}"/>
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{inspectionServiceController.getOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                         </p:column>
                         <p:column headerText="#{msg.ownerOrgName}" sortBy="#{item.ownerOrgName}" filterBy="#{item.ownerOrgName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.ownerOrgName}"/>
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{inspectionServiceController.getOwnerOrgList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                         </p:column>
                         <p:column headerText="#{msg.startTime}" sortBy="#{item.startTime}" filterBy="#{item.startTime}" filterMatchMode="GTE">
                             <f:facet name="filter">
                                 <p:inputText id="filterStartTime" widgetVar="varFilterStartTime" value="#{inspectionOrderController.startFormatTime}"/>
                             </f:facet>
                             <h:outputText value="#{item.startTime}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                                <f:convertDateTime pattern="yyyy/MM/dd" />
                             </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.endTime}" sortBy="#{item.endTime}" filterBy="#{item.endTime}" filterMatchMode="GTE">
@@ -88,18 +106,14 @@
                             </p:commandButton>
                         </p:column>
                         <f:facet name="{Toolbar}">
-                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
-                                <p:dataExporter type="xls" target="datalist" fileName="InspectionOrder_export"/>
-                            </p:commandButton>
-                            <!--<p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}"  action="InspOrderCreate?faces-redirect=true&amp;actionName=Create"/>
-                            <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}"  action="#{inspectionOrderController.getViewPage('InspOrderDetail','View')}"  disabled="#{empty inspectionOrderController.selected}"/>
-                            <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}"  action="#{inspectionOrderController.getViewPage('InspOrderEdit','Edit')}" disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash" title="#{msg.Delete}"  action="#{inspectionOrderController.getViewPage('InspOrderDetail','Delete')}" disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>-->
                             
                              <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}"  action="#{urlEncryptController.encodeUrlParam('InspOrderCreate?actionName=Create')}"/>
                             <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" title="#{msg.View}"  actionListener="#{inspectionOrderController.getViewPage('InspOrderDetail','View')}"  action="#{urlEncryptController.encodeUrlParam(inspectionOrderController.operation)}"  disabled="#{empty inspectionOrderController.selected}"/>
                             <!--<p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}"  action="#{inspectionOrderController.getViewPage('InspOrderEdit','Edit')}" disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>-->
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash" title="#{msg.Delete}"  actionListener="#{inspectionOrderController.getViewPage('InspOrderDetail','Delete')}"  action="#{urlEncryptController.encodeUrlParam(inspectionOrderController.operation)}"  disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-close" title="#{msg.Delete}"  actionListener="#{inspectionOrderController.getViewPage('InspOrderDetail','Delete')}"  action="#{urlEncryptController.encodeUrlParam(inspectionOrderController.operation)}"  disabled="#{empty inspectionOrderController.selected or inspectionOrderController.selected.isFinished}"/>
+                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                                <p:dataExporter type="xls" target="datalist" fileName="InspectionOrder_export"/>
+                            </p:commandButton>
                             
                         </f:facet>
                     </p:dataTable>
