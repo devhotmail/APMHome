@@ -328,10 +328,10 @@ INSERT INTO "i18n_message" VALUES (753,'field_name','valueEn', '英文值','msg 
 INSERT INTO "i18n_message" VALUES (754,'field_name','cyclicStartDate', '循环开始时间','Cyclic Start Date',null,-1);
 INSERT INTO "i18n_message" VALUES (755,'field_name','cyclicEndDate', '循环结束时间','Cyclic End Date',null,-1);
 INSERT INTO "i18n_message" VALUES (756,'field_name','displayOrder', '执行顺序','Display order',null,-1);
-INSERT INTO "i18n_message" VALUES (752,'field_name','msgType', '编码类型',' Code Type',null,-1);
-INSERT INTO "i18n_message" VALUES (753,'field_name','msgKey', '编码值',' Code Key',null,-1);
-INSERT INTO "i18n_message" VALUES (754,'field_name','msgValue', '编码名称',' Code Name',null,-1);
-INSERT INTO "i18n_message" VALUES (755,'field_name','I18nMessage', '系统编码',' Sys Code',null,-1);
+INSERT INTO "i18n_message" VALUES (757,'field_name','msgType', '编码类型',' Code Type',null,-1);
+INSERT INTO "i18n_message" VALUES (758,'field_name','msgKey', '编码值',' Code Key',null,-1);
+INSERT INTO "i18n_message" VALUES (759,'field_name','msgValue', '编码名称',' Code Name',null,-1);
+INSERT INTO "i18n_message" VALUES (760,'field_name','I18nMessage', '系统编码',' Sys Code',null,-1);
 
 
 
