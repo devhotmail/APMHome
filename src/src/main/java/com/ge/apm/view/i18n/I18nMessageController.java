@@ -9,6 +9,7 @@ import com.ge.apm.dao.I18nMessageRepository;
 import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.util.List;
 import org.primefaces.event.data.FilterEvent;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
@@ -55,6 +56,12 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
     
     @Override
     public void save(){
+        //判断key是否为唯一
+        List<I18nMessage> i18n = dao.getByMsgTypeAndSiteIdAndMsgKey(selected.getMsgType(), selected.getSiteId(), selected.getMsgKey());
+        if (i18n != null && i18n.size() > 0) {
+            WebUtil.addErrorMessage("编码值重复。");
+            return;
+        }
     	super.save();
     }
     

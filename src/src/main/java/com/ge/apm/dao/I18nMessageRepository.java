@@ -8,4 +8,6 @@ import webapp.framework.dao.GenericRepository;
 public interface I18nMessageRepository extends GenericRepository<I18nMessage> {
     @Query("select o from I18nMessage o")
     public List<I18nMessage> getI18nMessages();
+    
+    public List<I18nMessage> getByMsgTypeAndSiteIdAndMsgKey(String msgType, Integer siteId, String msgKey);
 }
