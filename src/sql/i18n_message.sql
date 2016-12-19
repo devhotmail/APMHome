@@ -486,7 +486,8 @@ INSERT INTO "i18n_message" VALUES (3024,'message','is uploaded.', '%s已上传.'
 INSERT INTO "i18n_message" VALUES (3025,'message','DeleteFileConformationMsg', '确认删除文件吗？',' Confirm to remove this file?',null,-1);
 INSERT INTO "i18n_message" VALUES (3026,'message','SelectUploadFile', '请选择上传文件','Please choose one file to upload!',null,-1);
 INSERT INTO "i18n_message" VALUES (3027,'message','SuccessUploaded', '上传成功',' is uploaded',null,-1);
-INSERT INTO "i18n_message" VALUES (3027,'message','WhenIsFinished', '任务完成时，%s不能为空.',' when the record is finished,%s cannot be null',null,-1);
+INSERT INTO "i18n_message" VALUES (3028,'message','InvalidPictureFileType', '文件类型应该属于(gif,jpe,jpeg,png,bmp)','Invalid Picture File Type',null,-1);
+INSERT INTO "i18n_message" VALUES (3029,'message','WhenIsFinished', '任务完成时，%s不能为空.',' when the record is finished,%s cannot be null',null,-1);
 
 -- Chart label/lengend （id from 5000 to 5500）
 INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan (Times)',null,-1);
