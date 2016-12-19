@@ -55,11 +55,11 @@
                                 <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="#{msg.requestorName}" sortBy="#{item.requestorName}" filterBy="#{item.requestorName}" filterMatchMode="LIKE">
+                        <p:column headerText="#{msg.requestorName}" sortBy="#{item.requestorName}" filterBy="#{item.requestorId}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{workOrderController.usersInHospital}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                                    <f:selectItems value="#{workOrderController.usersInHospital}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                             </f:facet>
                             <h:outputText value="#{item.requestorName}"/>
@@ -70,11 +70,11 @@
                         <p:column headerText="#{msg.assetName}" sortBy="#{item.assetName}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.assetName}"/>
                         </p:column>
-                        <p:column headerText="#{msg.caseOwnerName}" sortBy="#{item.caseOwnerName}" filterBy="#{item.caseOwnerName}" filterMatchMode="LIKE">
+                        <p:column headerText="#{msg.caseOwnerName}" sortBy="#{item.caseOwnerName}" filterBy="#{item.caseOwnerId}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{workOrderController.usersWithAssetHeadOrStaffRole}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                                    <f:selectItems value="#{workOrderController.usersWithAssetHeadOrStaffRole}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                             </f:facet>
                             <h:outputText value="#{item.caseOwnerName}"/>
@@ -91,11 +91,11 @@
                         <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.requestReasonInShort}" title="#{item.requestReason}"/>
                         </p:column>
-                        <p:column headerText="#{msg.currentPersonName}" sortBy="#{item.currentPersonName}" filterBy="#{item.currentPersonName}" filterMatchMode="LIKE">
+                        <p:column headerText="#{msg.currentPersonName}" sortBy="#{item.currentPersonName}" filterBy="#{item.currentPersonId}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{workOrderController.usersWithAssetHeadOrStaffRole}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                                    <f:selectItems value="#{workOrderController.usersWithAssetHeadOrStaffRole}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                             </f:facet>
                             <h:outputText value="#{item.currentPersonName}"/>

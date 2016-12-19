@@ -111,6 +111,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     @Override
     protected Page<AssetInfo> loadData(PageRequest pageRequest) {
+        selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
