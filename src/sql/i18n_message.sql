@@ -323,7 +323,7 @@ INSERT INTO "i18n_message" VALUES (748,'field_name','wfAutoStep6', '自动关单
 INSERT INTO "i18n_message" VALUES (749,'field_name','PmOrder', '保养记录','preventive order',null,-1);
 INSERT INTO "i18n_message" VALUES (750,'field_name','msgType', '编码类型','msg type',null,-1);
 INSERT INTO "i18n_message" VALUES (751,'field_name','msgKey', '编码值','Code Value',null,-1);
-INSERT INTO "i18n_message" VALUES (752,'field_name','valueZh', '编码名称','Code name',null,-1);
+INSERT INTO "i18n_message" VALUES (752,'field_name','msgValue', '编码名称','Code name',null,-1);
 INSERT INTO "i18n_message" VALUES (753,'field_name','displayOrder', '执行顺序','Display order',null,-1);
 INSERT INTO "i18n_message" VALUES (754,'field_name','cyclicStartDate', '循环开始时间','Cyclic Start Date',null,-1);
 INSERT INTO "i18n_message" VALUES (755,'field_name','cyclicEndDate', '循环结束时间','Cyclic End Date',null,-1);
