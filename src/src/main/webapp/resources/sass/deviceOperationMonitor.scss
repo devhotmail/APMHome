@@ -37,4 +37,8 @@ body.layout-compact {
       margin-top: 83px;
     }
   }
+
+  .flex__item.scan-part-chart {
+    flex-grow: 0;
+  }
 }

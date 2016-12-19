@@ -315,12 +315,8 @@
     };
   }
 
-  window.bottomDrBarSkin =
-  window.bottomXrayBarSkin =
-  window.bottomCtBarSkin =
   window.bottomLeftBarSkin =
-  window.bottomMrBarSkin =
-  window.bottomRightBarSkin
+  window.bottomRightBarSkin =
   window.bottomBarSkin= function() {
     var _this = this;
     _this.lastVal = 0;

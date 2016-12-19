@@ -83,9 +83,9 @@
                 <div class="ui-g-12">
                     <div class="block">
                         <h3 class="block-title">#{msg.operationMonitor_summary}</h3>
-                        <div class="ui-g">
+                        <div class="flex flex--row flex--wrap">
                             <c:forEach var="bar" items="${deviceOperationMonitorController.bottomBars}" status="status">
-                                <div class="ui-xl-3 ui-lg-6 divide-line-right">
+                                <div class="flex__item scan-part-chart">
                                     <div class="flex flex--row flex--center">
                                         <div>
                                             <p class="text--center">
@@ -95,8 +95,7 @@
                                         <div>
                                             <p class="text--center">
                                                 ${bar.total}#{msg.operationMonitor_device}</p>
-                                            <p:chart type="bar" widgetVar="body-chart-#{status.index}" class="chart-device-stat vertical" model="#{bar.chart}"
-                                                     responsive="true"/>
+                                            <p:chart type="bar" class="chart-device-stat vertical" model="#{bar.chart}" responsive="true"/>
                                         </div>
                                     </div>
                                 </div>

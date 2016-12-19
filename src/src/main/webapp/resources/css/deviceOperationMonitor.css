@@ -510,7 +510,7 @@ td.jqplot-table-legend{text-align:left}
 .chart-device-stat.horizontal .jqplot-point-label{font-size:1rem;line-height:1.33333}
 .chart-device-stat.horizontal .jqplot-table-legend-label{background-color:transparent;color:#fff;font-size:1.33333rem;line-height:1}
 .chart-device-stat.horizontal table.jqplot-table-legend{border:0;width:100%;position:static!important;background:0 0;margin-top:.5em;margin-bottom:0}
-.chart-device-stat.vertical{width:80px;height:420px;margin-top:-20px}
+.chart-device-stat.vertical{width:70px;height:420px;margin-top:-20px}
 .chart-device-stat.vertical .jqplot-point-label{font-size:.86667rem;line-height:1.53846}
 .chart-device-stat.vertical .jqplot-table-legend-label{background-color:transparent;vertical-align:top;position:relative;font-size:1rem;line-height:1.33333}
 .chart-device-stat.vertical .jqplot-table-legend-label:before{content:'';display:block;width:100px;position:absolute;right:0;top:0;height:1px;background-color:#7c7c84}
@@ -524,3 +524,4 @@ body.layout-compact .chart-device-stat-bypart,body.layout-compact .chart-device-
 body.layout-compact .body-shape{height:400px;min-width:200px}
 body.layout-compact .chart-device-stat.chart-device-2.vertical{margin-top:-40px}
 body.layout-compact .chart-device-stat.chart-device-2.vertical table.jqplot-table-legend{margin-top:83px}
+body.layout-compact .flex__item.scan-part-chart{-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0}
