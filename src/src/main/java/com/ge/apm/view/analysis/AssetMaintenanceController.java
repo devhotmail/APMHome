@@ -56,10 +56,15 @@ public final class AssetMaintenanceController implements ServerEventInterface {
         this.parameters.put("knownWorkOrderSteps", this.knownWorkOrderSteps);
         this.parameters.put("knownAssetGroups", this.knownAssetGroups);
         this.parameters.put("knownRooms", this.knownRooms);
+
+        this.setAll();
     }
 
     public final void submit() {
         if (validateDate(this.startDate, this.endDate)) {
+            this.setAll();
+        }
+        else {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, WebUtil.getMessage("checkIntervalNotice_1"), WebUtil.getMessage("checkIntervalNotice_2"));
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
@@ -93,12 +98,6 @@ public final class AssetMaintenanceController implements ServerEventInterface {
         }
     }
 
-    private boolean dateDisabled = false;
-
-    public final boolean getDateDisabled() {
-        return this.dateDisabled;
-    }
-
     private static final boolean validateDate(Date startDate, Date endDate) {
         if (new DateTime(startDate).plusMonths(1).isBefore(new DateTime(endDate)) &&
             new DateTime(startDate).plusYears(3).isAfter(new DateTime(endDate))) {
@@ -118,6 +117,8 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     public final void setAssetId(int value) {
         this.assetId = value;
         this.parameters.put("assetId", value);
+
+        this.setAll();
     }
 
     @Override
@@ -137,60 +138,131 @@ public final class AssetMaintenanceController implements ServerEventInterface {
 
     // region Properties
 
-    public final String getAssetName() {
+    private final void setAll() {
+        this.setAssetName();
+        this.setTopErrorReason();
+        this.setTopErrorStep();
         if (this.assetId == 0) {
-            return WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");
-        } else {
-            return convertToScalar(this.query(SQL_SCALAR_DEVICE_NAME_SINGLE), WebUtil.getMessage("maintenanceAnalysis_empty"));
+            this.setTopErrorRoom();
+            this.setTopErrorDeviceType();
+        }
+        if (this.assetId != 0) {
+            this.setErrorCount();
+        }
+        this.setErrorReasonChart();
+        this.setErrorStepChart();
+        this.setErrorTimePerStep();
+        if (this.assetId == 0) {
+            this.setErrorRoomChart();
+            this.setErrorDeviceTypeChart();
+            this.setTopErrorDeviceChart();
         }
     }
+
+    private String assetName;
+
+    public final String getAssetName() {
+        return this.assetName;
+    }
+
+    private final void setAssetName() {
+        if (this.assetId == 0) {
+            this.assetName = WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");
+        }
+        else {
+            this.assetName = convertToScalar(this.query(SQL_SCALAR_DEVICE_NAME_SINGLE), WebUtil.getMessage("maintenanceAnalysis_empty"));
+        }
+    }
+
+    private String topErrorReason;
 
     public final String getTopErrorReason() {
+        return this.topErrorReason;
+    }
+
+    private final void setTopErrorReason() {
         Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_REASON), Integer.valueOf(0));
         if (id == null || id.intValue() == 0) {
-            return WebUtil.getMessage("maintenanceAnalysis_empty");
+            this.topErrorReason = WebUtil.getMessage("maintenanceAnalysis_empty");
+            return;
         }
         if (id > 99) {
-            return WebUtil.getMessage("maintenanceAnalysis_otherReason");
+            this.topErrorReason = WebUtil.getMessage("maintenanceAnalysis_otherReason");
+            return;
         }
-        return WebUtil.getFieldValueMessage("caseType", id.toString());
+        this.topErrorReason = WebUtil.getFieldValueMessage("caseType", id.toString());
     }
+
+    private String topErrorStep;
 
     public final String getTopErrorStep() {
+        return this.topErrorStep;
+    }
+
+    private final void setTopErrorStep() {
         Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_STEP), Integer.valueOf(0));
         if (id == null || id.intValue() == 0) {
-            return WebUtil.getMessage("maintenanceAnalysis_empty");
+            this.topErrorStep = WebUtil.getMessage("maintenanceAnalysis_empty");
+            return;
         }
-        return WebUtil.getFieldValueMessage("woSteps", id.toString());
+        this.topErrorStep = WebUtil.getFieldValueMessage("woSteps", id.toString());
     }
+
+    private String topErrorRoom;
 
     public final String getTopErrorRoom() {
+        return this.topErrorRoom;
+    }
+
+    private final void setTopErrorRoom() {
         Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL), Integer.valueOf(0));
         if (id == null || id.intValue() == 0) {
-            return WebUtil.getMessage("maintenanceAnalysis_empty");
+            this.topErrorRoom = WebUtil.getMessage("maintenanceAnalysis_empty");
+            return;
         }
         if (id > 99) {
-            return WebUtil.getMessage("maintenanceAnalysis_otherRoom");
+            this.topErrorRoom = WebUtil.getMessage("maintenanceAnalysis_otherRoom");
+            return;
         }
-        return WebUtil.getFieldValueMessage("clinicalDeptId", id.toString());
+        this.topErrorRoom = WebUtil.getFieldValueMessage("clinicalDeptId", id.toString());
     }
+
+    private String topErrorDeviceType;
 
     public final String getTopErrorDeviceType() {
+        return this.topErrorDeviceType;
+    }
+
+    private final void setTopErrorDeviceType() {
         Integer id = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_DEVICE_TYPE_ALL), Integer.valueOf(0));
         if (id == null || id.intValue() == 0) {
-            return WebUtil.getMessage("maintenanceAnalysis_empty");
+            this.topErrorDeviceType = WebUtil.getMessage("maintenanceAnalysis_empty");
+            return;
         }
         if (id > 99) {
-            return WebUtil.getMessage("maintenanceAnalysis_otherCategory");
+            this.topErrorDeviceType = WebUtil.getMessage("maintenanceAnalysis_otherCategory");
+            return;
         }
-        return WebUtil.getFieldValueMessage("assetGroup", id.toString());
+        this.topErrorDeviceType = WebUtil.getFieldValueMessage("assetGroup", id.toString());
     }
+
+    private String errorCount;
 
     public final String getErrorCount() {
-        return convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Integer.valueOf(0)).toString();
+        return this.errorCount;
     }
 
+    private final void setErrorCount() {
+        this.errorCount = convertToScalar(this.query(SQL_SCALAR_ERROR_COUNT_SINGLE), Integer.valueOf(0)).toString();
+    }
+
+    private BarChartModel errorReasonChart;
+
     public final BarChartModel getErrorReasonChart() {
+        return this.errorReasonChart;
+    }
+
+    public final void setErrorReasonChart() {
         List<Map<String, Object>> list = this.query(SQL_LIST_ERROR_REASON);
         BarChartModel chart = new BarChartModel();
         ChartSeries series = new ChartSeries();
@@ -212,10 +284,16 @@ public final class AssetMaintenanceController implements ServerEventInterface {
         chart.getAxis(AxisType.X).setLabel(WebUtil.getMessage("maintenanceAnalysis_reasonChart_xAxis"));
         chart.getAxis(AxisType.Y).setLabel(WebUtil.getMessage("maintenanceAnalysis_reasonChart_yAxis"));
         chart.setExtender("maintenanceE2");
-        return chart;
+        this.errorReasonChart = chart;
     }
 
+    private HorizontalBarChartModel errorStepChart;
+
     public final HorizontalBarChartModel getErrorStepChart() {
+        return this.errorStepChart;
+    }
+
+    private final void setErrorStepChart() {
         List<Map<String, Object>> data = this.query(SQL_LIST_ERROR_STEP);
         int[] raw = new int[this.knownWorkOrderSteps];
 
@@ -237,10 +315,16 @@ public final class AssetMaintenanceController implements ServerEventInterface {
         }
         chart.getAxis(AxisType.X).setMin(0);
         chart.setExtender("maintenanceE3");
-        return chart;
+        this.errorStepChart = chart;
     }
 
+    private List<AbstractMap.SimpleImmutableEntry<String, PieChartModel>> errorTimePerStep;
+
     public final List<AbstractMap.SimpleImmutableEntry<String, PieChartModel>> getErrorTimePerStep() {
+        return this.errorTimePerStep;
+    }
+
+    private final void setErrorTimePerStep() {
         List<Map<String, Object>> list = this.query(SQL_LIST_TOP_ERROR_STEP);
         List<AbstractMap.SimpleImmutableEntry<String, PieChartModel>> charts = new ArrayList<>();
         int index = 0;
@@ -278,10 +362,16 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             charts.add(null);
             index++;
         }
-        return charts;
+        this.errorTimePerStep = charts;
     }
 
+    private BarChartModel errorRoomChart;
+
     public final BarChartModel getErrorRoomChart() {
+        return this.errorRoomChart;
+    }
+
+    private final void setErrorRoomChart() {
         List<Map<String, Object>> list = this.query(SQL_LIST_ERROR_ROOM_ALL);
         BarChartModel chart = new BarChartModel();
         ChartSeries series = new ChartSeries();
@@ -303,10 +393,16 @@ public final class AssetMaintenanceController implements ServerEventInterface {
         chart.getAxis(AxisType.X).setLabel(WebUtil.getMessage("maintenanceAnalysis_distributionChart_room_xAxis"));
         chart.getAxis(AxisType.Y).setLabel(WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
         chart.setExtender("maintenanceE51");
-        return chart;
+        this.errorRoomChart = chart;
     }
 
+    private BarChartModel errorDeviceTypeChart;
+
     public final BarChartModel getErrorDeviceTypeChart() {
+        return this.errorDeviceTypeChart;
+    }
+
+    private final void setErrorDeviceTypeChart() {
         List<Map<String, Object>> list = this.query(SQL_LIST_ERROR_DEVICE_TYPE_ALL);
         BarChartModel chart = new BarChartModel();
         ChartSeries series = new ChartSeries();
@@ -328,15 +424,21 @@ public final class AssetMaintenanceController implements ServerEventInterface {
         chart.getAxis(AxisType.X).setLabel(WebUtil.getMessage("maintenanceAnalysis_distributionChart_category_xAxis"));
         chart.getAxis(AxisType.Y).setLabel(WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
         chart.setExtender("maintenanceE52");
-        return chart;
+        this.errorDeviceTypeChart = chart;
     }
 
+    private BarChartModel topErrorDeviceChart;
+
     public final BarChartModel getTopErrorDeviceChart() {
+        return this.topErrorDeviceChart;
+    }
+
+    private final void setTopErrorDeviceChart() {
         BarChartModel chart = convertToBarChartModel(this.query(SQL_LIST_TOP_ERROR_DEVICE_ALL),
-                                                     WebUtil.getMessage("maintenanceAnalysis_distributionChart_device_xAxis"),
-                                                     WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
+                WebUtil.getMessage("maintenanceAnalysis_distributionChart_device_xAxis"),
+                WebUtil.getMessage("maintenanceAnalysis_distributionChart_yAxis"));
         chart.setExtender("maintenanceE53");
-        return chart;
+        this.topErrorDeviceChart = chart;
     }
 
     public final double getErrorPercentageInRoomOfDevice() {

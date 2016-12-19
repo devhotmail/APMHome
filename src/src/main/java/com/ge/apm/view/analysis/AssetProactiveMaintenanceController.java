@@ -293,6 +293,7 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
             "             asset_info AS asset " +
             "        WHERE plan.asset_id = asset.id " +
             "          AND asset.hospital_id = :#hospitalId " +
+            "          AND asset.is_valid = true " +
             "          AND plan.start_time BETWEEN :#firstDayOfThisYearMinus1 AND :#firstDayOfThisYearPlus2 " +
             "), " +
             "maintenance_schedule_asset_list AS ( " +
