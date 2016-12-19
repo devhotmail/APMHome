@@ -61,7 +61,8 @@
                             <p:calendar id="nextTime" pattern="yyyy/MM/dd" value="#{pmOrderController.selected.nextTime}" showOn="button" disabled="#{pmOrderController.selected.isFinished}"  Input="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <p:selectBooleanCheckbox  id="isValid" itemLabel="#{msg.isFinished}" value="#{pmOrderController.selected.isFinished}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"  disabled="#{pmOrderController.selected.isFinished}"/>
+                            <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isFinished}" value="#{pmOrderController.selected.isFinished}" required="true" 
+                            requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"  disabled="#{pmOrderController.selected.isFinished}" />
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>
@@ -96,9 +97,9 @@
                         </h:panelGroup>
                     </p:panelGrid>
 
-                    <p:commandButton action="#{pmOrderController.applyChange()}" validateClient="false" value="#{msg.Save}"  update=":growl,:PmOrderListForm,:PmOrderEditForm"  icon="ui-icon-check" />
+                    <p:commandButton action="#{pmOrderController.applyChange()}" validateClient="false" value="#{msg.Save}"  update=":growl,:PmOrderListForm,:PmOrderEditForm"  icon="ui-icon-check"  disabled="#{pmOrderController.selected.isFinished}" />
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" actionListener="#{pmOrderController.onCancel()}"   value="#{msg.Cancel}" update=":PmOrderEditForm,:PmOrderListForm"  icon="ui-icon-cancel" />
+                    <p:commandButton immediate="true" actionListener="#{pmOrderController.onCancel()}"   value="#{msg.Cancel}" update=":PmOrderEditForm,:PmOrderListForm"  icon="ui-icon-cancel"  disabled="#{pmOrderController.selected.isFinished}" />
                 </h:panelGroup>
 
 

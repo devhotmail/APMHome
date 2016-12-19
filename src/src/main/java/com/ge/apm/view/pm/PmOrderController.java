@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.AjaxBehaviorEvent;
+
 import org.primefaces.event.FileUploadEvent;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,8 +53,6 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     private UaaService uuaService;
     
     private FileUploadedRepository fileUploadedRepository;
-    
-//    private List<UserAccount> createrList;
     
     @Override
     protected void init() {
@@ -100,12 +100,19 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     	this.onBeforeNewObject(null);
     }
     
-/*    @Override
+    public void onBeforeUpdateObject(PmOrder object)
+    {
+    	if(this.attachements.isEmpty()){
+    		object.setFileId(null);
+		}
+    }
+    
+   @Override
     public void onAfterUpdateObject(PmOrder object, boolean isOK) {
     	if(isOK){
     		this.selected = null;
     	}
-    }*/
+    }
    
     @Override
     public void prepareEdit(){
@@ -158,15 +165,16 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     	if(fileId == null || fileId <= 0){
     		return;
     	}
+    	boolean isFindFile = false;
         for (FileUploaded item : attachements) {
             if (fileId.equals(item.getId())) {
+            	isFindFile = true;
                 fileService.deleteAttachment(item.getId());
-                this.selected.setFileId(null);
-                this.update();
-                break;
             }
         }
+        if(isFindFile){
         attachements.clear();
+        }
     }
     
     @Transactional
@@ -196,12 +204,15 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         }
     }
     
-    public int isHaveFile(PmOrder pmOrder){
+    public boolean isHaveFile(PmOrder pmOrder){
+    	if(pmOrder == null || pmOrder.getId() == null){
+    		return false;
+    	}
     	PmOrder pmOrderFromDB = dao.findById(pmOrder.getId());
 		if(pmOrderFromDB.getFileId() == null || pmOrderFromDB.getFileId() <= 0){
-			return 0;
+			return false;
 		}
-		return 1;
+		return true;
     }
     
     public void applyChange() {
@@ -212,13 +223,25 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
             WebUtil.addErrorMessage(WebUtil.getMessage("noAssetSelected"));
             return ;
         }
+    	if(selected.getIsFinished()){
+    		if(selected.getStartTime() == null){
+    			 WebUtil.addErrorMessage(String.format(WebUtil.getMessage("WhenIsFinished"), WebUtil.getMessage("startTime")));
+    			 selected.setIsFinished(false);
+    			 return;
+    		}
+    		if(selected.getEndTime() == null){
+    			 WebUtil.addErrorMessage(String.format(WebUtil.getMessage("WhenIsFinished"), WebUtil.getMessage("endTime")));
+    			 selected.setIsFinished(false);
+    			 return;
+    		}
+    	}
         this.save();
     }
     
     public boolean isTimeValidate() {
         String message =  WebUtil.getMessage("shouldEarly");
         PmOrder input = this.selected;
-        Date todaydate = new Date();
+       // Date todaydate = new Date();
         boolean isError = false;
         
         if (null!=input.getStartTime() && null!=input.getEndTime() && input.getEndTime().before(input.getStartTime())) {
@@ -254,7 +277,6 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 	}
 
 	public List<FileUploaded> getAttachements() {
-		logger.info("++++++++++++++="+attachements);
 		return attachements;
 	}
 
@@ -319,15 +341,5 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         public void setStartFormatTime(String startFormatTime) {
             this.startFormatTime = startFormatTime;
         }
-
-//		public List<UserAccount> getCreaterList() {
-//			return createrList;
-//		}
-//
-//		public void setCreaterList(List<UserAccount> createrList) {
-//			this.createrList = createrList;
-//		}
-        
-        
 
 }
