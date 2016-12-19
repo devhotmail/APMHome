@@ -66,23 +66,21 @@
 
         <div class="ui-g">
             <div class="ui-g-12">
-                <div class="block">
+                <h:form class="block">
+                    <p:growl id="calendar_submit" showDetail="true"/>
                     <div class="calendar-range-picker flex flex--row flex--center flex--justify">
-                        <p:calendar id="start_date_button" value="#{assetMaintenanceController.startDate}"
-                                    showOn="button">
-                            <p:ajax event="dateSelect" listener="#{assetMaintenanceController.onStartDateSelect}"
+                        <p:calendar id="start_date_button"
+                                    value="#{assetMaintenanceController.startDate}"
                                     showOn="button"/>
-                        </p:calendar>
-                        <label>到</label>
-                        <p:calendar id="end_date_button" value="#{assetMaintenanceController.endDate}" showOn="button">
-                            <p:ajax event="dateSelect" listener="#{assetMaintenanceController.onEndDateSelect}"
+                        <label>#{msg.selectSearchInterval_1}</label>
+                        <p:calendar id="end_date_button"
+                                    value="#{assetMaintenanceController.endDate}"
                                     showOn="button"/>
-                        </p:calendar>
                         <p:commandButton value="确定"
-                                         update="maintenanceR11 maintenanceR12 maintenanceR15 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR611 maintenanceR612 maintenanceR613 maintenanceR614 maintenanceR615 maintenanceR62 maintenanceR631 maintenanceR632 maintenanceR633 maintenanceR634 maintenanceR635 maintenanceR64 maintenanceR651 maintenanceR652 maintenanceR653 maintenanceR654 maintenanceR655 maintenanceR66"
+                                         update="calendar_submit maintenanceR11 maintenanceR12 maintenanceR15 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR611 maintenanceR612 maintenanceR613 maintenanceR614 maintenanceR615 maintenanceR62 maintenanceR631 maintenanceR632 maintenanceR633 maintenanceR634 maintenanceR635 maintenanceR64 maintenanceR651 maintenanceR652 maintenanceR653 maintenanceR654 maintenanceR655 maintenanceR66"
                                          actionListener="#{assetMaintenanceController.submit}"/>
                     </div>
-                </div>
+                </h:form>
             </div>
 
             <div class="ui-g-12">

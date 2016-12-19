@@ -6,6 +6,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.*;
 import org.slf4j.Logger;
@@ -15,8 +16,10 @@ import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.ServerEventInterface;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.util.*;
 
 @ManagedBean
@@ -41,8 +44,10 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     @PostConstruct
     public final void init() {
         DateTime today = new DateTime();
-        this.setStartDate(today.minusYears(1).toDate());
-        this.setEndDate(today.toDate());
+        this.startDate = today.minusYears(1).toDate();
+        this.parameters.put("startDate", this.startDate);
+        this.endDate = today.toDate();
+        this.parameters.put("endDate", this.endDate);
 
         this.hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
         this.parameters.put("hospitalId", this.hospitalId);
@@ -54,7 +59,10 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     }
 
     public final void submit() {
-
+        if (validateDate(this.startDate, this.endDate)) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, WebUtil.getMessage("checkIntervalNotice_1"), WebUtil.getMessage("checkIntervalNotice_2"));
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
     }
 
     // region Parameters
@@ -66,8 +74,10 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     }
 
     public final void setStartDate(Date value) {
-        this.startDate = value;
-        this.parameters.put("startDate", value);
+        if (validateDate(value, this.endDate)) {
+            this.startDate = value;
+            this.parameters.put("startDate", this.startDate);
+        }
     }
 
     private Date endDate;
@@ -77,8 +87,26 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     }
 
     public final void setEndDate(Date value) {
-        this.endDate = value;
-        this.parameters.put("endDate", value);
+        if (validateDate(this.startDate, value)) {
+            this.endDate = value;
+            this.parameters.put("endDate", this.endDate);
+        }
+    }
+
+    private boolean dateDisabled = false;
+
+    public final boolean getDateDisabled() {
+        return this.dateDisabled;
+    }
+
+    private static final boolean validateDate(Date startDate, Date endDate) {
+        if (new DateTime(startDate).plusMonths(1).isBefore(new DateTime(endDate)) &&
+            new DateTime(startDate).plusYears(3).isAfter(new DateTime(endDate))) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     private int assetId;

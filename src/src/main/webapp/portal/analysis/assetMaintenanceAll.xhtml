@@ -70,11 +70,19 @@
         <div class="ui-g">
             <div class="ui-g-12">
                 <h:form class="block">
+                    <p:growl id="calendar_submit" showDetail="true"/>
+
                     <div class="calendar-range-picker flex flex--row flex--center flex--justify">
-                        <p:calendar id="start_date_button" value="#{assetMaintenanceController.startDate}" showOn="button"/>
-                        <label>到</label>
-                        <p:calendar id="end_date_button" value="#{assetMaintenanceController.endDate}" showOn="button"/>
-                        <p:commandButton value="确定" update="maintenanceR11 maintenanceR12 maintenanceR13 maintenanceR14 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR5" actionListener="#{assetMaintenanceController.submit}"/>
+                        <p:calendar id="start_date_button"
+                                    value="#{assetMaintenanceController.startDate}"
+                                    showOn="button"/>
+                        <label>#{msg.selectSearchInterval_1}</label>
+                        <p:calendar id="end_date_button"
+                                    value="#{assetMaintenanceController.endDate}"
+                                    showOn="button"/>
+                        <p:commandButton value="确定"
+                                         update="calendar_submit maintenanceR11 maintenanceR12 maintenanceR13 maintenanceR14 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR5"
+                                         actionListener="#{assetMaintenanceController.submit}"/>
                     </div>
                 </h:form>
             </div>
