@@ -174,42 +174,42 @@
                         <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                             <h:panelGroup>
                                 <label class="label">#{msg.manufactDate}</label>
-                                <p:calendar id="manufactDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.manufactDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />
+                                <p:calendar id="manufactDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.manufactDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"  />
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.purchaseDate}</label>
-                                <p:calendar id="purchaseDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.purchaseDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"  />
+                                <p:calendar id="purchaseDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.purchaseDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" />
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.arriveDate}</label>
-                                <p:calendar id="arriveDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                                <p:calendar id="arriveDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
 
                             <p:spacer/>
 
                             <h:panelGroup>
                                 <label class="label">#{msg.installDate}</label>
-                                <p:calendar id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                                <p:calendar id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.warrantyDate}</label>
-                                <p:calendar id="warrantyDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.warrantyDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                                <p:calendar id="warrantyDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.warrantyDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.terminateDate}</label>
-                                <p:calendar id="terminateDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />
+                                <p:calendar id="terminateDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.lastPmDate}</label>
-                                <p:calendar id="lastPmDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastPmDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                                <p:calendar id="lastPmDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastPmDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.lastQaDate}</label>
-                                <p:calendar pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastQaDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                                <p:calendar pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastQaDate}" showOn="button" readonlyInput="false" showButtonPanel="false" navigator="true" mask="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.lastMeteringDate}</label>
-                                <p:calendar pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastMeteringDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                                <p:calendar pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastMeteringDate}" showOn="button" readonlyInput="false" showButtonPanel="false" navigator="true" mask="true"/>
                             </h:panelGroup>
                         </p:panelGrid>
                     </p:fieldset>
@@ -250,7 +250,7 @@
                                     </p:commandButton>
                                 </p:dataList>
                                 <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%" 
-                                              multiple="false"  sizeLimit="10000000"  update="pictureList" auto="true" invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
+                                              multiple="false"  sizeLimit="10000000"  update="pictureList" auto="true" invalidFileMessage="#{msg.InvalidPictureFileType}" invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}" allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/"/>
                             </h:panelGroup>
                             <h:panelGroup >
                                 <p:dataList id="contractList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
