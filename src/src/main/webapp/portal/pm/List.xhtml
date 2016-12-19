@@ -96,9 +96,9 @@
                         </p:column>
 
                         <f:facet name="{Toolbar}">
-                            <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{pmOrderController.prepareCreate}" update=":PmOrderEditForm,:overlayPanelList" />
+                            <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{pmOrderController.prepareCreate}" update=":PmOrderEditForm" />
                             <p:commandButton  id="deleteButton"   icon="ui-icon-close"  title="#{msg.Delete}" actionListener="#{pmOrderController.delete}" disabled="#{empty pmOrderController.selected or pmOrderController.selected.isFinished eq true}"
-                                              update=":PmOrderListForm,:PmOrderEditForm,:overlayPanelList"  > 
+                                              update=":PmOrderListForm,:PmOrderEditForm"  > 
                                 <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
                             </p:commandButton> 
                             <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
@@ -115,7 +115,6 @@
             </div>
         </div>
 		
-		<p:panel id="overlayPanelList">
         <p:overlayPanel widgetVar="panelFilterCreateTime" for=":PmOrderListForm:datalist:filterCreateTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
@@ -146,7 +145,6 @@
             <p:commandButton onclick="setDateFilter('varDataList', 'varFilterEndTime', 'varEndTimeFrom', 'varEndTimeTo'); PF('panelFilterEndTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterEndTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
         </p:overlayPanel>
-        </p:panel>
 
     </ui:define>
 
