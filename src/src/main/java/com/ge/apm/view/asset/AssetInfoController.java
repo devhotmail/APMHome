@@ -306,10 +306,27 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("arriveDate"), WebUtil.getMessage("installDate")));
         }
-        if (null!=input.getArriveDate() && input.getArriveDate().after(todaydate)) {
+        if (null!=input.getWarrantyDate() && null!=input.getInstallDate() && input.getWarrantyDate().before(input.getInstallDate())) {
             isError = true;
-            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("todayDate")));
+            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("warrantyDate")));
         }
+        if (null!=input.getTerminateDate() && null!=input.getInstallDate() && input.getTerminateDate().before(input.getInstallDate())) {
+            isError = true;
+            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("terminateDate")));
+        }
+        if (null!=input.getLastPmDate() && null!=input.getInstallDate() && input.getLastPmDate().before(input.getInstallDate())) {
+            isError = true;
+            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("lastPmDate")));
+        }
+        if (null!=input.getLastMeteringDate() && null!=input.getInstallDate() && input.getLastMeteringDate().before(input.getInstallDate())) {
+            isError = true;
+            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("lastMeteringDate")));
+        }
+        if (null!=input.getLastQaDate() && null!=input.getInstallDate() && input.getLastQaDate().before(input.getInstallDate())) {
+            isError = true;
+            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("lastQaDate")));
+        }
+        
         if (null!=input.getLastPmDate() && input.getLastPmDate().after(todaydate)) {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("lastPmDate"), WebUtil.getMessage("todayDate")));
