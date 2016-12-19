@@ -41,7 +41,7 @@
                                  rowsPerPageTemplate="10,20,30,90">
 
                         <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton roleButton"/>
-                        <p:ajax event="filter" listener="#{userAccountController.onFilter}" update="createButton editButton viewButton deleteButton roleButton"/>
+                        <p:ajax event="filter" listener="#{userAccountController.onFilter}" oncomplete="rc();"/>
 
                         <p:column headerText="#{msg.login_name}" sortBy="#{item.loginName}" filterBy="#{item.loginName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.loginName}"/>
@@ -90,6 +90,7 @@
                             <p:commandButton id="roleButton" icon="ui-icon-people"  title="#{msg.AssignRole}" actionListener="#{userAccountController.prepareRoleData}" update=":RoleEditDlg" oncomplete="PF('RoleEditDialog').show()" disabled="#{empty userAccountController.selected}"/>
                         </f:facet>
                     </p:dataTable>
+                    <p:remoteCommand name="rc" update="datalist:createButton datalist:editButton datalist:viewButton datalist:deleteButton datalist:roleButton" immediate="true"/>
                 </h:form>
             </div>
         </div>

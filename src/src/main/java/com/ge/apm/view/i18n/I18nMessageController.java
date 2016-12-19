@@ -34,6 +34,7 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
 
     @Override
     protected Page<I18nMessage> loadData(PageRequest pageRequest) {
+        this.selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {

@@ -30,7 +30,7 @@
                                  rowsPerPageTemplate="20,40,60,90">
 
                         <p:ajax event="rowSelect" update="createButton  viewButton deleteButton :InspectionOrderListForm:excuteButton"/>
-                        <p:ajax event="filter" listener="#{metrologyOrderController.onFilter}" update="createButton  viewButton deleteButton :InspectionOrderListForm:excuteButton"/>
+                        <p:ajax event="filter" listener="#{metrologyOrderController.onFilter}" update=":InspectionOrderListForm:excuteButton" oncomplete="rc();"/>
                         <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.name}"/>
                         </p:column>
@@ -115,6 +115,7 @@
                         </f:facet>
                     </p:dataTable>
                     <br/>
+                    <p:remoteCommand name="rc" update="datalist:createButton datalist:viewButton datalist:deleteButton" immediate="true"/>
                     <p:commandButton id="excuteButton" icon="ui-icon-playlist-add-check" value="#{msg.Execute}"  actionListener="#{metrologyOrderController.getViewPage('MetrologyOrderExcute','Excute')}"  action="#{urlEncryptController.encodeUrlParam(metrologyOrderController.operation)}"  disabled="#{!metrologyOrderController.isExcuteable()}"/>
                 </h:form>
 

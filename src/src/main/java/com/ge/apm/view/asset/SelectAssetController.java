@@ -36,6 +36,7 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
 
     @Override
     protected Page<AssetInfo> loadData(PageRequest pageRequest) {
+        this.selected = null;
         if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
         searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, true));
         return super.loadData(pageRequest);

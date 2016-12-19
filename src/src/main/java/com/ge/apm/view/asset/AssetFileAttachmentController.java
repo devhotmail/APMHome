@@ -55,6 +55,7 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
 
     @Override
     protected Page<AssetFileAttachment> loadData(PageRequest pageRequest) {
+        this.selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {

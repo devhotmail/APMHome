@@ -28,6 +28,7 @@ public class UserRoleController extends GenericCRUDController<UserRole> {
 
     @Override
     protected Page<UserRole> loadData(PageRequest pageRequest) {
+        selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {

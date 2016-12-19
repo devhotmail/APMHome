@@ -28,6 +28,7 @@ public class SysRoleController extends GenericCRUDController<SysRole> {
 
     @Override
     protected Page<SysRole> loadData(PageRequest pageRequest) {
+        this.selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {

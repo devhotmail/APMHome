@@ -142,6 +142,7 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
 
     @Override
     protected Page<InspectionOrder> loadData(PageRequest pageRequest) {
+        this.selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {

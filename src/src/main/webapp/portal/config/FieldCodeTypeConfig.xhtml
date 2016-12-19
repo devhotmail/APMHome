@@ -35,7 +35,7 @@
                         rowsPerPageTemplate="20,40,60,90">
 
                         <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
-                        <p:ajax event="filter" listener="#{i18nMessageController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                        <p:ajax event="filter" listener="#{i18nMessageController.onFilter}" oncomplete="rc();"/>
 
                         <p:column headerText="#{msg.msgKey}" sortBy="#{item.msgKey}" filterBy="#{item.msgKey}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.msgKey}"/>
@@ -55,6 +55,7 @@
                             </p:commandButton>
                         </f:facet>
                     </p:dataTable>
+                    <p:remoteCommand name="rc" update="datalist:createButton datalist:editButton datalist:viewButton datalist:deleteButton" immediate="true"/>
                 </h:form>
 
             <ui:include src="Edit.xhtml"/>

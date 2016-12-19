@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.AjaxBehaviorEvent;
 
 import org.primefaces.event.FileUploadEvent;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +24,8 @@ import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
@@ -71,6 +72,16 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     @Override
     protected PmOrderRepository getDAO() {
         return dao;
+    }
+    
+    @Override
+    protected Page<PmOrder> loadData(PageRequest pageRequest) {
+        selected = null;
+        if (this.searchFilters == null) {
+            return dao.findAll(pageRequest);
+        } else {
+            return dao.findBySearchFilter(this.searchFilters, pageRequest);
+        }
     }
 
     @Override

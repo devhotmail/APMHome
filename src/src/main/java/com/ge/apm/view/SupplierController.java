@@ -7,6 +7,8 @@ import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.SupplierRepository;
 import com.ge.apm.domain.Supplier;
 import com.ge.apm.view.sysutil.UserContextService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -43,6 +45,16 @@ public class SupplierController extends JpaCRUDController<Supplier> {
     @Override
     public String getKeyFieldNameValue(Supplier supplier){
         return WebUtil.getMessage("name")+"="+supplier.getName();
+    }
+    
+    @Override
+    protected Page<Supplier> loadData(PageRequest pageRequest) {
+        this.selected = null;
+        if (this.searchFilters == null) {
+            return dao.findAll(pageRequest);
+        } else {
+            return dao.findBySearchFilter(this.searchFilters, pageRequest);
+        }
     }
     
 }

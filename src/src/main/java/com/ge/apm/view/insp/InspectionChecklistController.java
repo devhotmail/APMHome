@@ -77,6 +77,7 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
 
     @Override
     protected Page<InspectionChecklist> loadData(PageRequest pageRequest) {
+        this.selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {

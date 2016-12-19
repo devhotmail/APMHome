@@ -30,7 +30,7 @@
                                  rowsPerPageTemplate="20,40,60,90">
 
                         <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton "/>
-                        <p:ajax event="filter" listener="#{assetInfoController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                        <p:ajax event="filter" listener="#{assetInfoController.onFilter}" oncomplete="rc();"/>
 
                         <!--
                         <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
@@ -114,6 +114,7 @@
                             </p:commandButton>
                         </f:facet>
                     </p:dataTable>
+                    <p:remoteCommand name="rc" update="datalist:createButton datalist:editButton datalist:viewButton datalist:deleteButton" immediate="true"/>
                 </h:form>
             </div>
         </div>
