@@ -320,7 +320,8 @@
   window.bottomCtBarSkin =
   window.bottomLeftBarSkin =
   window.bottomMrBarSkin =
-  window.bottomRightBarSkin = function() {
+  window.bottomRightBarSkin
+  window.bottomBarSkin= function() {
     var _this = this;
     _this.lastVal = 0;
     var data = this.cfg.data;

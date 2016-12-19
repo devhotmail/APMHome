@@ -200,7 +200,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         ImmutableTable<String, String, Integer> table = builder.build();
         for (String group : table.rowKeySet()) {
             ImmutableMap<String, Integer> renderData = table.row(group);
-            BarChartModel chart = initBarModel(new BarChartModel(), group, true, 50, "ne", null, renderData, true);
+            BarChartModel chart = initBarModel(new BarChartModel(), group, true, 50, "ne", "bottomBarSkin", renderData, true);
             bottomBars.add(new Report(group, (int) Stats.of(renderData.values()).sum(), chart, renderData));
         }
         log.info("bottomBars: {}", bottomBars);
