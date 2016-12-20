@@ -94,13 +94,17 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
     public void save() {
         if (null == selectedAsset) {
             WebUtil.addErrorMessage(WebUtil.getMessage("assetName") + WebUtil.getMessage("ValidationRequire"));
-        } else if (null == selected.getName() || selected.getName().isEmpty()) {
-            WebUtil.addErrorMessage(WebUtil.getMessage("SelectUploadFile"));
-        } else if (null == selected.getFileType() || selected.getFileType().isEmpty()) {
+        } 
+        else if (null == selected.getFileType() || selected.getFileType().isEmpty()) {
             WebUtil.addErrorMessage(WebUtil.getMessage("fileType") + WebUtil.getMessage("ValidationRequire"));
-        } else if(selected.getFileType().equals("1") && !selected.getName().matches("^.*?\\.(jpg|jpeg|bmp|gif|png)$")){
+        } 
+        else if (null == selected.getName() || selected.getName().isEmpty()) {
+            WebUtil.addErrorMessage(WebUtil.getMessage("SelectUploadFile"));
+        } 
+        else if(selected.getFileType().equals("1") && !selected.getName().matches("^.*?\\.(jpg|jpeg|bmp|gif|png)$")){
             WebUtil.addErrorMessage(WebUtil.getMessage("InvalidPictureFileType"));
-        }else{
+        }
+        else{
             selected.setAssetId(selectedAsset.getId());
             dao.save(selected);
             cancel();
