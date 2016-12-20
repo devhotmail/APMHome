@@ -43,7 +43,7 @@
                             <p:menuitem id="um04" value="#{msg.AssetInventory}" outcome="/portal/asset/AssetInventory.xhtml"/>
                             <p:menuitem id="um05" value="#{msg.AssetDocumentMgmt}" rendered="false" outcome="/portal/asset/fileAttachment/List"/>
                             <p:menuitem id="um06" value="#{msg.AssetValueAnalysis}" rendered="false" outcome="/empty"/>
-                            <p:menuitem id="um07" rendered="false" value="#{msg.AssetContractMgmt}"  style="color: orange;" outcome="/empty"/>
+                            <p:menuitem id="um07" value="#{msg.AssetContractMgmt}"  outcome="/portal/asset/contract/List"/>
                         </p:submenu>
                         <p:submenu id="um09" label="#{msg.WorkOrderMgmt}" icon="fa fa-wrench" rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
                             <p:menuitem id="um10" value="#{msg.ServiceRequestMgmt}" outcome="/portal/wo/woList.xhtml"/>
