@@ -1002,6 +1002,9 @@ public final class AssetMaintenanceController implements ServerEventInterface {
 
     private final static PieChartModel convertToPieChartModel(double primary) {
         PieChartModel chart = new PieChartModel();
+        if (primary < 0.02) {
+            primary = 0.02;
+        }
         chart.set(WebUtil.getMessage("maintenanceAnalysis_this"), primary);
         if (primary < 1) {
             chart.set(WebUtil.getMessage("maintenanceAnalysis_that"), 1 - primary);
