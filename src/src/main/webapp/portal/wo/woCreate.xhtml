@@ -126,10 +126,22 @@
 
                         <br/>
 
-                        <p:commandButton validateClient="true" icon="ui-icon-check" actionListener="#{workOrderStepController.createWorkOrderStep()}" value="#{msg.Submit}" update="growl"/>
+                        <p:commandButton id="saveButton" validateClient="true" icon="ui-icon-check" actionListener="#{workOrderStepController.createWorkOrderStep()}" value="#{msg.Submit}" update="growl" onsuccess="PF('successDlg').show();"/>
                     </p:fieldset>
                 </h:form>
                 <ui:include src="woStepList.xhtml"/>
+                
+                <p:dialog widgetVar="successDlg" modal="true" closable="false" showHeader="false">
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <div class="card">
+                                <h1>#{msg.WorkOrder} #{msg.DataSavedOK}</h1>
+                                <p:button outcome="/portal/wo/woList.xhtml" value="#{msg.Return} #{msg.ServiceRequestMgmt}" style="display:inline-block;margin-top:5px"/>
+                            </div>
+                        </div>
+                    </div>
+                </p:dialog>
+                
             </div>
         </div>
         <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>

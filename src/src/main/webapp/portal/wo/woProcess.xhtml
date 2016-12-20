@@ -212,11 +212,26 @@
                             </h:panelGroup>
                         </p:panelGrid>
 
-                        <p:commandButton validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderStepController.finishWorkOrderStep()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStepId)}" rendered="#{workOrderController.activeTabId eq 0}" update="growl" process="@form,:formStatus:confirmedDownTime,:formStatus:confirmedUpTime"/>
-                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.transferWorkOrder()}" value="#{msg.TransferOrder}" rendered="#{workOrderController.activeTabId eq 1}" update="growl" process="@form"/>
-                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.closeWorkOrder()}" value="#{fieldMsg.fieldValue('woSteps', '6')}" rendered="#{workOrderController.activeTabId eq 2}" update="growl" process="@form,:formStatus:confirmedDownTime,:formStatus:confirmedUpTime"/>
+                        <p:commandButton validateClient="true" icon="ui-icon-arrow-forward" actionListener="#{workOrderStepController.finishWorkOrderStep()}" value="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStepId)}" 
+                                         rendered="#{workOrderController.activeTabId eq 0}" update="growl" process="@form,:formStatus:confirmedDownTime,:formStatus:confirmedUpTime" onsuccess="PF('successDlg').show();"/>
+                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.transferWorkOrder()}" value="#{msg.TransferOrder}" 
+                                         rendered="#{workOrderController.activeTabId eq 1}" update="growl" process="@form" onsuccess="PF('successDlg').show();"/>
+                        <p:commandButton validateClient="true" icon="ui-icon-done" actionListener="#{workOrderStepController.closeWorkOrder()}" value="#{fieldMsg.fieldValue('woSteps', '6')}" 
+                                         rendered="#{workOrderController.activeTabId eq 2}" update="growl" process="@form,:formStatus:confirmedDownTime,:formStatus:confirmedUpTime" onsuccess="PF('successDlg').show();"/>
                     </p:fieldset>
                 </h:form>
+                
+                <p:dialog widgetVar="successDlg" modal="true" closable="false" showHeader="false">
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <div class="card">
+                                <h1>#{msg.WorkOrder} #{msg.DataSavedOK}</h1>
+                                <p:button outcome="/portal/wo/myWoList.xhtml" value="#{msg.Return} #{msg.MyWorkOrder}" style="display:inline-block;margin-top:5px"/>
+                            </div>
+                        </div>
+                    </div>
+                </p:dialog>
+                
             </div>
         </div>
 

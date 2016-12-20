@@ -100,7 +100,7 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
         WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
         try{
             woService.createWorkOrderStep(wo, this.selected);
-            WebUtil.navigateTo("woSaved");
+//            WebUtil.navigateTo("woSaved");
         }
         catch(Exception ex){
             logger.error(ex.getMessage(), ex);
@@ -117,7 +117,7 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
         WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
         try{
             woService.finishWorkOrderStep(wo, this.selected);
-            WebUtil.navigateTo("woSaved");
+//            WebUtil.navigateTo("woSaved");
         }
         catch(Exception ex){
             logger.error(ex.getMessage(), ex);
@@ -129,7 +129,7 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
         WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
         try{
             woService.closeWorkOrder(wo, this.selected);
-            WebUtil.navigateTo("woSaved");
+//            WebUtil.navigateTo("woSaved");
         }
         catch(Exception ex){
             logger.error(ex.getMessage(), ex);
@@ -141,7 +141,7 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
         WorkOrderService woService = WebUtil.getBean(WorkOrderService.class);
          try{
             woService.transferWorkOrder(wo, this.selected);
-             WebUtil.navigateTo("woSaved");
+//             WebUtil.navigateTo("woSaved");
         }
         catch(Exception ex){
             logger.error(ex.getMessage(), ex);
