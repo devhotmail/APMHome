@@ -125,7 +125,9 @@ PrimeFaces.widget.Ultima = PrimeFaces.widget.BaseWidget.extend({
                 }
             }
             else {
-                $this.addMenuitem(item.attr('id'));
+                if (item.attr('id') !== 'menuform:logout') {
+                    $this.addMenuitem(item.attr('id'));
+                }
                 
                 if(horizontal) {
                     $this.deactivateItems(item.siblings());
@@ -357,6 +359,9 @@ PrimeFaces.widget.Ultima = PrimeFaces.widget.BaseWidget.extend({
                     }
                 }
             }
+        } else {
+            var menuitem = $("#menuform:um01".replace(/:/g, "\\:"));
+            menuitem.addClass('active-menuitem');
         }
         
         var inlineProfileCookie = $.cookie('ultima_inlineprofile_expanded');
