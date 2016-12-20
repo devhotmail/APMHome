@@ -128,6 +128,9 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         operation = "/portal/wo/woCreate?assetId=" + selected.getId() + "&assetName=" + selected.getName()
                 + "&assetOwnerId=" +selected.getAssetOwnerId() + "&assetOwnerName=" +selected.getAssetOwnerName();
     }
+    public void assembleMaintainList() {
+        operation = "/portal/wo/woList?assetId=" + selected.getId();
+    }
 
     @Override
     public void onAfterNewObject(AssetInfo object, boolean isOK) {

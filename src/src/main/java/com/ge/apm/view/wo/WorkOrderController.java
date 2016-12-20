@@ -30,6 +30,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
     WorkOrderRepository dao = null;
     UserAccount loginUser;
     AssetInfoRepository assetDao = null;
+    private Integer assetIdFromUrl;
 
     @Override
     protected void init() {
@@ -70,6 +71,16 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         //setSiteFilter();
         setHospitalFilter();
         setLoginUserFilter();
+        
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String encodeStr = request.getParameter("str");
+        String assetId = (String)UrlEncryptController.getValueFromMap(encodeStr,"assetId");
+        if (assetId != null && !"".equals(assetId)) {
+            this.assetIdFromUrl = Integer.parseInt(assetId);
+        }
+        if (assetIdFromUrl != null){
+            searchFilters.add(new SearchFilter("assetId", SearchFilter.Operator.EQ, assetIdFromUrl));
+        }
         
         this.selected = null;
         
@@ -246,6 +257,14 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
             } 
         }
         dao.save(this.selected);
+    }
+
+    public Integer getAssetIdFromUrl() {
+        return assetIdFromUrl;
+    }
+
+    public void setAssetIdFromUrl(Integer assetIdFromUrl) {
+        this.assetIdFromUrl = assetIdFromUrl;
     }
     
 }
