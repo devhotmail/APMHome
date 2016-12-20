@@ -23,8 +23,8 @@
                                  rows="20" emptyMessage="#{msg.noRecordFound}"
                                  rowsPerPageTemplate="20,40,60,90">
 
-                        <p:ajax event="rowSelect" listener="#{assetContractController.onSelectedChange}" update="createButton editButton deleteButton :AssetContractEditForm"/>
-                        <p:ajax event="filter" listener="#{assetContractController.onFilter}" update="createButton editButton deleteButton"/>
+                        <p:ajax event="rowSelect" listener="#{assetContractController.onSelectedChange}" update="createButton deleteButton :AssetContractEditForm"/>
+                        <p:ajax event="filter" listener="#{assetContractController.onFilter}" update="createButton deleteButton"/>
                         <p:column headerText="#{msg.assetName}" sortBy="#{item.assetId}" >
                             <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>
                         </p:column>
@@ -77,13 +77,13 @@
                             </p:commandButton>
                         </p:column>-->
                         <f:facet name="{Toolbar}">
+                            <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetContractController.prepareCreate}" update=":AssetContractEditForm" />
+                            <!--<p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{assetContractController.prepareView}" update=":AssetContractViewDlg" oncomplete="PF('AssetContractViewDialog').show()" disabled="#{empty assetContractController.selected}"/>-->
+                            <!--<p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{assetContractController.prepareEdit}"  update=":AssetContractEditForm" disabled="#{empty assetContractController.selected}"/>-->
+                            <p:commandButton id="deleteButton" icon="ui-icon-close" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{assetContractController.prepareDelete}" update=":AssetContractViewDlg" oncomplete="PF('AssetContractViewDialog').show()" disabled="#{empty assetContractController.selected}"/>
                             <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="AssetContract_export"/>
                             </p:commandButton>
-                            <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetContractController.prepareCreate}" update=":AssetContractEditForm" />
-                            <!--<p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{assetContractController.prepareView}" update=":AssetContractViewDlg" oncomplete="PF('AssetContractViewDialog').show()" disabled="#{empty assetContractController.selected}"/>-->
-                            <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{assetContractController.prepareEdit}"  update=":AssetContractEditForm" disabled="#{empty assetContractController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{assetContractController.prepareDelete}" update=":AssetContractViewDlg" oncomplete="PF('AssetContractViewDialog').show()" disabled="#{empty assetContractController.selected}"/>
                         </f:facet>
                     </p:dataTable>
                 </h:form>

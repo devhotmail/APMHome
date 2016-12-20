@@ -53,8 +53,8 @@
                                 <p:growl id="messages" showDetail="true" />
                             </h:panelGroup>
                             <h:panelGroup id="namepanel" rendered="#{assetContractController.selected.fileId!=null}">
-                                <label class="label">#{msg.name}*</label>
-                                <p:inputText id="name" value="#{assetContractController.selected.fileId}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}" readonly="true"/>
+                                <label class="label">#{msg.AssetContractAttachment}*</label>
+                                <p:inputText id="name" value="#{assetContractController.fileName}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}" readonly="true"/>
                                 <p:commandButton actionListener="#{assetContractController.removeAttachment(assetContractController.selected.fileId)}" id="iconOnly" update=":AssetContractEditForm:upload" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this" rendered="#{assetContractController.isCreatAction()}">
                                     <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
                                 </p:commandButton>
