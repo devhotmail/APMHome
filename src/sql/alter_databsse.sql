@@ -12,6 +12,8 @@ ALTER TABLE "supplier" ADD column supplier_code varchar(32);
 DROP TABLE IF EXISTS procedure_name_maping CASCADE;
 CREATE TABLE procedure_name_maping (
 "id" serial NOT NULL,
+site_id int not null,
+hospital_id int not null,
 "ris_procedure_name" varchar(256) COLLATE "default" NOT NULL,
 "apm_procedure_name" varchar(256) COLLATE "default" NOT NULL,
 "apm_procedure_id" int NOT NULL
