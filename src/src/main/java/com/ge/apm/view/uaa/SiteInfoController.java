@@ -10,7 +10,7 @@ import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.SiteInfo;
-import static java.lang.Math.E;
+import javax.faces.context.FacesContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
@@ -91,5 +91,18 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
                 
         return false;
     }
-
+    
+    @Override
+    public void save() {
+        List<SiteInfo> list = dao.getByName(this.selected.getName());
+        if (list != null && list.size() > 0) {
+            SiteInfo site = list.get(0);
+            if (site.getId() != this.selected.getId()) {
+                WebUtil.addErrorMessage("名称重复。");
+                FacesContext.getCurrentInstance().validationFailed();
+                return;
+            }
+        }
+        super.save();
+    }
 }
