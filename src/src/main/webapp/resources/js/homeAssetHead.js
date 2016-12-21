@@ -36,8 +36,7 @@ function skinBar() {
       lineWidth: 1,
       renderer: $.jqplot.BarRenderer,
       pointLabels: {
-        show: true,
-        hideZeros: true
+        show: true
       },
       rendererOptions: {
         highlightMouseOver: false,
