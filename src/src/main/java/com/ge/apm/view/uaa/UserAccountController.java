@@ -92,8 +92,6 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
 
     @Override
     protected Page<UserAccount> loadData(PageRequest pageRequest) {
-        selected = null;
-        
         if ( selectedOrg == null) {
             return dao.getBySiteId(pageRequest, UserContextService.getSiteId());
         } else {
