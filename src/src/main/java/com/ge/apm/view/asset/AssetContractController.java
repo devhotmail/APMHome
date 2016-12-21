@@ -11,7 +11,10 @@ import com.ge.apm.domain.AssetContract;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.service.asset.AssetInfoService;
 import com.ge.apm.service.asset.AttachmentFileService;
+import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import webapp.framework.web.WebUtil;
@@ -27,14 +30,35 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
     AssetInfo selectedAsset;
 
     private AssetInfoService assetService;
-    
+
     private String fileName;
 
     @Override
     protected void init() {
+
         dao = WebUtil.getBean(AssetContractRepository.class);
         fileService = WebUtil.getBean(AttachmentFileService.class);
         assetService = WebUtil.getBean(AssetInfoService.class);
+
+        String encodeStr = WebUtil.getRequestParameter("str");
+        if (null != encodeStr) {
+            String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr, "actionName");
+            String requestAssetId = (String) UrlEncryptController.getValueFromMap(encodeStr, "assetId");
+            if (null != actionName && actionName.equals("Create")) {
+                try {
+                    this.prepareCreate();
+                    this.selected.setAssetId(Integer.parseInt(requestAssetId));
+                    this.selectedAsset = assetService.getAssetInfo(Integer.parseInt(requestAssetId));
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(AssetContractController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(AssetContractController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                
+            }
+        }
+
         this.filterBySite = true;
         this.setSiteFilter();
     }
@@ -91,7 +115,7 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
         fileService.deleteAttachment(fileId);
         selected.setName(null);
         selected.setFileId(null);
-        this.fileName="";
+        this.fileName = "";
     }
 
     public void onAssetSelected(SelectEvent event) {
@@ -136,6 +160,5 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-    
 
 }

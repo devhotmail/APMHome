@@ -182,10 +182,10 @@
                         <label class="label">#{msg.assetGroup}</label>
                         <p:inputText id="assetGroup" value="#{fieldMsg.fieldValue('ownAssetGroup', assetInfoController.selected.assetGroup)}" readonly="true"/>
                     </h:panelGroup>
-<!--                    <h:panelGroup>
-                        <label class="label">#{msg.assetDeptId}</label>
-                        <p:inputText id="assetDeptId" value="#{assetInfoController.selected.assetDeptId}" readonly="true"/>
-                    </h:panelGroup>-->
+                    <!--                    <h:panelGroup>
+                                            <label class="label">#{msg.assetDeptId}</label>
+                                            <p:inputText id="assetDeptId" value="#{assetInfoController.selected.assetDeptId}" readonly="true"/>
+                                        </h:panelGroup>-->
                     <h:panelGroup>
                         <label class="label">#{msg.assetOwnerName}</label>
                         <p:inputText id="assetOwnerName" value="#{assetInfoController.selected.assetOwnerName}" readonly="true"/>
@@ -395,8 +395,40 @@
             </div>
         </p:fieldset>
 
-
         <h:form>
+                <p:panel  header="#{msg.deviceContract}">
+                <f:facet name="actions">
+                    <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="#{urlEncryptController.encodeUrlParam(assetInfoController.getContractListLink())}" ><h:outputText styleClass="ui-icon ui-icon-fullscreen" /></h:commandLink>
+                    <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="#{urlEncryptController.encodeUrlParam(assetInfoController.getContractAddLink())}"><h:outputText styleClass="ui-icon ui-icon-add" /></h:commandLink>
+                </f:facet>
+                    <p:dataTable var="item" value="#{assetInfoService.getContractList(assetInfoController.selected.id)}" emptyMessage="#{msg.noRecordFound}">
+                        <p:column headerText="#{msg.name}" >
+                            <h:outputText value="#{item.name}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.startTime}"  >
+
+                            <h:outputText value="#{item.startDate}">
+                                <f:convertDateTime pattern="yyyy/MM/dd" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msg.endTime}" >
+
+                            <h:outputText value="#{item.endDate}">
+                                <f:convertDateTime pattern="yyyy/MM/dd" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msg.AssetContractAmount}" sortBy="#{item.contractAmount}" >
+                            <h:outputText value="#{item.contractAmount}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.AssetContractAttachment}"  >
+                            <p:commandButton value="#{msg.download}"  onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" rendered="#{item.fileId > 0}" ajax="false">
+                                <p:fileDownload value="#{attachmentFileService.getFile(item.fileId)}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    </p:panel>
+
+
             <p:tabView>
                 <p:tab title="#{fieldMsg.fieldValue('attachmentType', 1)}">
                     <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="ordered" emptyMessage="#{msg.noRecordFound}">
@@ -422,14 +454,14 @@
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>
-                <p:tab title="#{fieldMsg.fieldValue('attachmentType', 4)}">
+<!--                <p:tab title="#{fieldMsg.fieldValue('attachmentType', 4)}">
                     <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="ordered" emptyMessage="#{msg.noRecordFound}">
-                        #{fileitem.name}
-                        <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" title="#{msg.download}" class="popupIconButton">
-                            <p:fileDownload value="#{attachmentFileService.getFile(fileitem.fileId)}" />
-                        </p:commandButton>
-                    </p:dataList>
-                </p:tab>
+                #{fileitem.name}
+                <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" title="#{msg.download}" class="popupIconButton">
+                    <p:fileDownload value="#{attachmentFileService.getFile(fileitem.fileId)}" />
+                </p:commandButton>
+            </p:dataList>
+        </p:tab>-->
             </p:tabView>
         </h:form>
     </ui:define>

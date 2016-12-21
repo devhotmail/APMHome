@@ -5,7 +5,9 @@
  */
 package com.ge.apm.service.asset;
 
+import com.ge.apm.dao.AssetContractRepository;
 import com.ge.apm.dao.AssetInfoRepository;
+import com.ge.apm.domain.AssetContract;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
@@ -25,6 +27,7 @@ import webapp.framework.web.WebUtil;
 public class AssetInfoService {
 
     AssetInfoRepository assetInfoDao = WebUtil.getBean(AssetInfoRepository.class);
+    AssetContractRepository contractDao = WebUtil.getBean(AssetContractRepository.class);
 
     public String getAssetInfoName(Integer id) {
         if(null==id || id==0)
@@ -43,5 +46,10 @@ public class AssetInfoService {
         assetInfoFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, currentUser.getSiteId()));
         List<AssetInfo> assetList = assetInfoDao.findBySearchFilter(assetInfoFilters);
         return assetList;
+    }
+    
+    public List<AssetContract> getContractList(Integer assetId){
+        
+        return contractDao.findByAssetId(assetId);
     }
 }
