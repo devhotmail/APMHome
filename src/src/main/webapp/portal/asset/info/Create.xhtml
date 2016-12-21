@@ -199,7 +199,7 @@
                                 <label class="label">#{msg.terminateDate}</label>
                                 <p:calendar id="terminateDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
-                            <h:panelGroup>
+<!--                            <h:panelGroup>
                                 <label class="label">#{msg.lastPmDate}</label>
                                 <p:calendar id="lastPmDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastPmDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
@@ -210,7 +210,7 @@
                             <h:panelGroup>
                                 <label class="label">#{msg.lastMeteringDate}</label>
                                 <p:calendar pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastMeteringDate}" showOn="button" readonlyInput="false" showButtonPanel="false" navigator="true" mask="true"/>
-                            </h:panelGroup>
+                            </h:panelGroup>-->
                         </p:panelGrid>
                     </p:fieldset>
                     <p:fieldset  style="margin-bottom:20px">
@@ -274,7 +274,7 @@
                                 <p:fileUpload id="type3" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
                                               multiple="false"  sizeLimit="10000000"  update="manualList" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
                             </h:panelGroup>
-                            <h:panelGroup >
+<!--                            <h:panelGroup >
                                 <p:dataList id="guideList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
                                     <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 4)}</f:facet>
                                         #{fileitem.name}
@@ -284,7 +284,7 @@
                                 </p:dataList>
                                 <p:fileUpload id="type4" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
                                               multiple="false"  sizeLimit="10000000"  update="guideList" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M"  label="#{msg.Add}"/>
-                            </h:panelGroup>
+                            </h:panelGroup>-->
                         </p:panelGrid>
                     </p:fieldset>
                             <h:panelGroup >
