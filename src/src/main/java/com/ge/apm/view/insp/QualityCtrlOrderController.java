@@ -28,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -239,15 +241,17 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
 
     public String excuteOrder() {
         List<InspectionOrderDetail> checkItemList = new ArrayList();
+        Set<Integer> assetIdSet = new HashSet();
         for (TreeNode item : excutedItemArray) {
             if (item.getType().equals("checklist")) {
                 InspectionOrderDetail checkItem = (InspectionOrderDetail) item.getData();
                 checkItem.setIsPassed(true);
                 checkItemList.add(checkItem);
+                assetIdSet.add(checkItem.getAssetId());
             }
         }
         this.selected.setIsFinished(true);
-        inspectionService.excuteOrder(this.selected, checkItemList);
+        inspectionService.excuteOrder(this.selected, checkItemList, assetIdSet);
         return "QualityCtrlOrderList?faces-redirect=true";
     }
 

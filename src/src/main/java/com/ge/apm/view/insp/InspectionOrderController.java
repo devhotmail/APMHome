@@ -33,6 +33,8 @@ import com.ge.apm.view.sysutil.UserContextService;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
@@ -240,15 +242,18 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
 
     public String excuteOrder() {
         List<InspectionOrderDetail> checkItemList = new ArrayList();
+        Set<Integer> assetIdSet = new HashSet();
         for (TreeNode item : excutedItemArray) {
             if (item.getType().equals("checklist")) {
                 InspectionOrderDetail checkItem = (InspectionOrderDetail) item.getData();
                 checkItem.setIsPassed(true);
                 checkItemList.add(checkItem);
+                
+                assetIdSet.add(checkItem.getAssetId());
             }
         }
         this.selected.setIsFinished(true);
-        inspectionService.excuteOrder(this.selected, checkItemList);
+        inspectionService.excuteOrder(this.selected, checkItemList,assetIdSet);
         return "InspOrderList?faces-redirect=true";
     }
 

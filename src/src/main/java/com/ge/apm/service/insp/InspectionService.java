@@ -147,9 +147,25 @@ public class InspectionService {
         return detailList;
     }
 
-    public void excuteOrder(InspectionOrder selected, List<InspectionOrderDetail> orderDetailItemList) {
+    public void excuteOrder(InspectionOrder selected, List<InspectionOrderDetail> orderDetailItemList,Set<Integer> assetIdSet) {
         detailDao.save(orderDetailItemList);
         orderDao.save(selected);
+        
+        for(Integer itemid : assetIdSet){
+            AssetInfo asset = assetInfoDao.findById(itemid);
+            switch (selected.getOrderType()){
+                case 1: 
+                    break;
+                case 2:
+                    asset.setLastMeteringDate(selected.getEndTime());
+                    break;
+                case 3: 
+                    asset.setLastQaDate(selected.getEndTime());
+                    break;
+            }
+            assetInfoDao.save(asset);
+        }
+        
     }
 
     public void updateOrder(InspectionOrder selected, List<InspectionOrderDetail> orderDetailItemList) {
