@@ -263,11 +263,19 @@
 
   window.deviceDT = function() {
     $.extend(true/*recursive*/, this.cfg, base, base_bar_chart, {
+      axes: {
+        yaxis: {
+          tickOptions: {
+            formatString: '%%%d'
+          }
+        }
+      },
       highlighter: {
         show: true,
-        tooltipAxes: 'y',
         formatString: null,
-        tooltipFormatString: '%f 小时'
+        tooltipAxes: 'y',
+        useAxesFormatters: false,
+        tooltipFormatString: '%%%#.1f',
       },
       series: [
         {}, {
