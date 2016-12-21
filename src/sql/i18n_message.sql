@@ -492,7 +492,7 @@ INSERT INTO "i18n_message" VALUES (3029,'message','WhenIsFinished', '任务完�
 -- Chart label/lengend （id from 5000 to 5500）
 INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan (Times)',null,-1);
 INSERT INTO "i18n_message" VALUES (5001,'label','deviceScanlg', '扫描次数','Scan',null,-1);
-INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光量（小时）','Exposure (Hours)',null,-1);
+INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光量（次）','Exposure (Hours)',null,-1);
 INSERT INTO "i18n_message" VALUES (5003,'label','deviceExpolg_1', '曝光量','Exposure',null,-1);
 INSERT INTO "i18n_message" VALUES (5004,'label','deviceExpolg_2', '基准曝光量','Scan (Baseline)',null,-1);
 INSERT INTO "i18n_message" VALUES (5005,'label','deviceROIhd', '设备投资回报（元）','ROI (CNY）',null,-1);
