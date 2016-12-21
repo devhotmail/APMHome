@@ -9,3 +9,12 @@ ALTER TABLE "i18n_message" ADD CONSTRAINT "uk_i18n_message_msg_key" UNIQUE (site
 
 ALTER TABLE "supplier" ADD column supplier_code varchar(32);
 
+DROP TABLE IF EXISTS i18n_message CASCADE;
+CREATE TABLE procedure_name_maping (
+"id" serial NOT NULL,
+"ris_procedure_name" varchar(256) COLLATE "default" NOT NULL,
+"apm_procedure_name" varchar(256) COLLATE "default" NOT NULL,
+"apm_procedure_id" int NOT NULL
+);
+
+ALTER TABLE procedure_name_maping ADD PRIMARY KEY ("id");
