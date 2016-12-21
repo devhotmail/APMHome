@@ -327,6 +327,7 @@ INSERT INTO "i18n_message" VALUES (752,'field_name','msgValue', '编码名称','
 INSERT INTO "i18n_message" VALUES (753,'field_name','displayOrder', '执行顺序','Display order',null,-1);
 INSERT INTO "i18n_message" VALUES (754,'field_name','cyclicStartDate', '循环开始时间','Cyclic Start Date',null,-1);
 INSERT INTO "i18n_message" VALUES (755,'field_name','cyclicEndDate', '循环结束时间','Cyclic End Date',null,-1);
+INSERT INTO "i18n_message" VALUES (756,'field_name','AttachedFileInfo', '附件信息','Attachment File Info',null,-1);
 
 
 
@@ -369,9 +370,8 @@ INSERT INTO "i18n_message" VALUES (1525,'casePriority','3','一般','Emergent',n
 
 
 INSERT INTO "i18n_message" VALUES (1530,'attachmentType','1','照片','Photo',null,-1);
-INSERT INTO "i18n_message" VALUES (1531,'attachmentType','2','合同','Contract',null,-1);
-INSERT INTO "i18n_message" VALUES (1532,'attachmentType','3','用户手册','User Manual',null,-1);
-INSERT INTO "i18n_message" VALUES (1533,'attachmentType','4','培训资料','Material for training',null,-1);
+INSERT INTO "i18n_message" VALUES (1532,'attachmentType','2','用户手册','User Manual',null,-1);
+INSERT INTO "i18n_message" VALUES (1533,'attachmentType','3','培训资料','Material for training',null,-1);
 
 INSERT INTO "i18n_message" VALUES (1535,'assetFunctionType','2', '6801基础外科手术器械',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1536,'assetFunctionType','3', '6802显微外科手术器械',null,null,-1);
