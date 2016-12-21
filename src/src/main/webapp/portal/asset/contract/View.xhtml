@@ -14,10 +14,6 @@
                     <p:panelGrid columns="2" rendered="#{assetContractController.selected != null}">
                         <h:outputLabel value="#{msg.name}" for="name" />
                         <h:outputText value="#{assetContractController.selected.name}"/>
-                        <h:outputLabel value="#{msg.fileType}" for="fileType" />
-                        <h:outputText value="#{fieldMsg.fieldValue('attachmentType', assetContractController.selected.fileType)}"/>
-                        <h:outputLabel value="#{msg.fileUrl}" for="fileUrl" />
-                        <h:outputText value="#{assetContractController.selected.fileUrl}"/>
                         <h:outputLabel value="#{msg.assetName}" for="assetId" />
                         <h:outputText value="#{assetInfoService.getAssetInfoName(assetContractController.selected.assetId)}"/>
                     </p:panelGrid>

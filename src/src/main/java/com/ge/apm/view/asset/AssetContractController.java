@@ -13,6 +13,7 @@ import com.ge.apm.service.asset.AssetInfoService;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -54,8 +55,8 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
                 } catch (IllegalAccessException ex) {
                     Logger.getLogger(AssetContractController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }else{
-                
+            } else {
+
             }
         }
 
@@ -91,6 +92,16 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
     @Override
     public void save() {
 
+        if (selected.getEndDate().before(selected.getStartDate())) {
+            WebUtil.addErrorMessage(MessageFormat.format(WebUtil.getMessage("shouldEarly"), WebUtil.getMessage("startTime"), WebUtil.getMessage("endTime")));
+            return;
+        } else if (null == selectedAsset) {
+            WebUtil.addErrorMessage(WebUtil.getMessage("assetName") + WebUtil.getMessage("ValidationRequire"));
+            return;
+        } else if (null == selected.getFileId()) {
+            WebUtil.addErrorMessage(WebUtil.getMessage("SelectUploadFile"));
+            return;
+        }
         selected.setAssetId(selectedAsset.getId());
         dao.save(selected);
         cancel();
@@ -103,6 +114,9 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
 
     @Override
     public void delete() {
+        fileService.deleteAttachment(selected.getFileId());
+        dao.delete(selected);
+        this.selected = null;
     }
 
     public void handleFileUpload(FileUploadEvent event) {
