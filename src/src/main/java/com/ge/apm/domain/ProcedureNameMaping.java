@@ -29,6 +29,15 @@ public class ProcedureNameMaping implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "site_id")
+    private Integer siteId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "hospital_id")
+    private Integer hospitalId;
+    
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 256)
     @Column(name = "ris_procedure_name")
     private String risProcedureName;
@@ -75,6 +84,22 @@ public class ProcedureNameMaping implements Serializable {
 
     public void setApmProcedureId(int apmProcedureId) {
         this.apmProcedureId = apmProcedureId;
+    }
+
+    public Integer getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(Integer siteId) {
+        this.siteId = siteId;
+    }
+
+    public Integer getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
     }
 
     @Override
