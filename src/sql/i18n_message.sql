@@ -516,8 +516,8 @@ INSERT INTO "i18n_message" VALUES (5022,'label','deviceScanStat', '总扫描量'
 INSERT INTO "i18n_message" VALUES (5023,'label','deviceExpoStat', '总曝光量','Exposure (Times)',null,-1);
 INSERT INTO "i18n_message" VALUES (5025,'label','deviceDTlg_3', '停机','Downtime',null,-1);
 INSERT INTO "i18n_message" VALUES (5026,'label','devicePerfhd', '设备绩效分析','Performance',null,-1);
-INSERT INTO "i18n_message" VALUES (5027,'label','assetTopPerfhd', '利润最高设备','Top Asset',null,-1);
-INSERT INTO "i18n_message" VALUES (5028,'label','deptTopPerfhd', '利润最高科室','Top Department',null,-1);
+INSERT INTO "i18n_message" VALUES (5027,'label','assetTopPerfhd', '利润最高设备类型','Top asset type',null,-1);
+INSERT INTO "i18n_message" VALUES (5028,'label','deptTopPerfhd', '利润最高科室','Top department',null,-1);
 INSERT INTO "i18n_message" VALUES (5029,'label','assetsDashboardhd', '设备绩效分析汇总','Top Department',null,-1);
 INSERT INTO "i18n_message" VALUES (5030,'label','assetsDashboardclm1', '资产名称','Asset',null,-1);
 INSERT INTO "i18n_message" VALUES (5031,'label','assetsDashboardclm4', '时间','Date',null,-1);
