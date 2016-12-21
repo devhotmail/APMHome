@@ -17,8 +17,8 @@
                             <p:spinner id="msgKey" value="#{i18nMessageController.selected.msgKey}"  required="true" requiredMessage="#{msg.msgKey} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <label class="label">#{msg.msgValue}</label>
-                            <p:inputText id="valueZh" value="#{i18nMessageController.selected.valueZh}" />
+                            <label class="label">#{msg.msgValue}*</label>
+                            <p:inputText id="valueZh" value="#{i18nMessageController.selected.valueZh}" required="true" requiredMessage="#{msg.msgValue} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>
