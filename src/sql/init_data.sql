@@ -56,7 +56,7 @@ INSERT INTO "data_table_config" VALUES (3, 'aaa', 'aaa', 'aaa', 'f', 't');
 INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (1,'caseType','故障类别');
 INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (2,'caseSubType','故障子类别');
 INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (3,'assetGroup','资产分组');
-INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (4,'assetFunctionType','资产功能类别');
+INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (4,'ownAssetGroup','所属设备类型');
 
 
 SELECT setval('"site_info_id_seq"', 3, false);
