@@ -49,6 +49,7 @@ public class SupplierController extends JpaCRUDController<Supplier> {
     
     @Override
     protected Page<Supplier> loadData(PageRequest pageRequest) {
+        this.setSiteFilter();
         this.selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);

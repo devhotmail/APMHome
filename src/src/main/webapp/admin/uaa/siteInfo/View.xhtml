@@ -40,10 +40,10 @@
                         <p:selectBooleanCheckbox id="wfAutoStep3" value="#{siteInfoController.selected.wfAutoStep3}" disabled="true"/>
                         <h:outputLabel value="#{msg.wfAutoStep4}" for="isEnabled" />
                         <p:selectBooleanCheckbox id="wfAutoStep4" value="#{siteInfoController.selected.wfAutoStep4}" disabled="true"/>
-                        <h:outputLabel value="#{msg.wfAutoStep5}" for="isEnabled" />
-                        <p:selectBooleanCheckbox id="wfAutoStep5" value="#{siteInfoController.selected.wfAutoStep5}" disabled="true"/>
-                        <h:outputLabel value="#{msg.wfAutoStep6}" for="isEnabled" />
-                        <p:selectBooleanCheckbox id="wfAutoStep6" value="#{siteInfoController.selected.wfAutoStep6}" disabled="true"/>
+                        <h:outputLabel value="#{msg.wfAutoStep5}" for="isEnabled" rendered="false"/>
+                        <p:selectBooleanCheckbox id="wfAutoStep5" value="#{siteInfoController.selected.wfAutoStep5}" disabled="true" rendered="false"/>
+                        <h:outputLabel value="#{msg.wfAutoStep6}" for="isEnabled" rendered="false"/>
+                        <p:selectBooleanCheckbox id="wfAutoStep6" value="#{siteInfoController.selected.wfAutoStep6}" disabled="true" rendered="false"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{siteInfoController.deleteAction}" icon="ui-icon-trash" actionListener="#{siteInfoController.delete}" value="#{msg.Delete}" update=":SiteInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'SiteInfoViewDialog');"/>
