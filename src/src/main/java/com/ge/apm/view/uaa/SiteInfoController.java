@@ -12,6 +12,7 @@ import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.SiteInfo;
 import static java.lang.Math.E;
 import org.springframework.dao.DataIntegrityViolationException;
+import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -58,6 +59,11 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
     }
 
     public void onAfterNewObject(SiteInfo site, boolean isOK) {
+        // import field code type data for this site
+        String sql = "insert into i18n_message(msg_type, msg_key, value_zh, value_en, value_tw, site_id) select msg_type, msg_key, value_zh, value_en, value_tw, %d as site_id from i18n_message where msg_type in (select msg_type from field_code_type)";
+        NativeSqlUtil.execute(String.format(sql, site.getId()), null);
+
+        // and create an default org for this site
         OrgInfo hospital = new OrgInfo();
         hospital.setSiteId(site.getId());
         hospital.setName(WebUtil.getMessage("DefaultHospitalName"));
