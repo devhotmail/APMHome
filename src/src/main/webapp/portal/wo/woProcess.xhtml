@@ -124,9 +124,11 @@
                                 </p:calendar>
                             </h:panelGroup>
                             <h:panelGroup>
-                                <label class="label">#{msg.confirmedEndTime}*</label>
+                                <label class="label">#{msg.confirmedEndTime}#{((workOrderController.activeTabId eq 2) or (workOrderController.selected.currentStepId eq 6 and workOrderController.activeTabId eq 0))?'*':''}</label>
                                 <p:calendar id="confirmedUpTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{workOrderController.selected.confirmedUpTime}" 
-                                            showOn="button" readonlyInput="true" locale="zh" showButtonPanel="true" navigator="true" required="true" requiredMessage="#{msg.confirmedEndTime} #{msg.ValidationRequire}">
+                                            showOn="button" readonlyInput="true" locale="zh" showButtonPanel="true" navigator="true" 
+                                            required="#{(workOrderController.selected.currentStepId eq 6 and workOrderController.activeTabId eq 0) or (workOrderController.activeTabId eq 2)}" 
+                                            requiredMessage="#{msg.confirmedEndTime} #{msg.ValidationRequire}">
                                     <p:ajax event="dateSelect" listener="#{workOrderController.workOrderConfirmTimeChange('up')}" update="confirmedUpTime"/>
                                 </p:calendar>
                             </h:panelGroup>
@@ -137,7 +139,7 @@
                 <h:form id="formStepData">
                     <p:fieldset id="panelProcessOrder" rendered="#{workOrderController.selected ne null}">
                         <p:tabView id="tabView" style="border: none;padding: 0;margin: 0;top:-2px;" rendered="#{workOrderController.selected ne null}" activeIndex="#{workOrderController.activeTabId}">
-                            <p:ajax event="tabChange" listener="#{workOrderController.onTabChanged}" update="@parent"/>
+                            <p:ajax event="tabChange" listener="#{workOrderController.onTabChanged}" update="@parent :formStatus"/>
 
                             <p:tab id="tabHandleOrder" title="#{msg.Finish}#{fieldMsg.fieldValue('woSteps', workOrderController.selected.currentStepId)}">
                             </p:tab>
