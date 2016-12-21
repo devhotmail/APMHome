@@ -327,7 +327,10 @@ INSERT INTO "i18n_message" VALUES (752,'field_name','msgValue', '编码名称','
 INSERT INTO "i18n_message" VALUES (753,'field_name','displayOrder', '执行顺序','Display order',null,-1);
 INSERT INTO "i18n_message" VALUES (754,'field_name','cyclicStartDate', '循环开始时间','Cyclic Start Date',null,-1);
 INSERT INTO "i18n_message" VALUES (755,'field_name','cyclicEndDate', '循环结束时间','Cyclic End Date',null,-1);
-INSERT INTO "i18n_message" VALUES (756,'field_name','AttachedFileInfo', '附件信息','Attachment File Info',null,-1);
+INSERT INTO "i18n_message" VALUES (756,'field_name','risProcedureName', 'ris部位名称','ris precedure name',null,-1);
+INSERT INTO "i18n_message" VALUES (757,'field_name','apmProcedureName', 'apm部位名称','apm precedure name',null,-1);
+INSERT INTO "i18n_message" VALUES (758,'field_name','AttachedFileInfo', '附件信息','Attachment File Info',null,-1);
+
 
 
 
