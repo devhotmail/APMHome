@@ -13,10 +13,6 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderHistoryCrudController.selected != null}">
                         <h:panelGroup>
-                            <label class="label">#{msg.id}*</label>
-                            <p:inputText id="id" value="#{workOrderHistoryCrudController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
                             <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{workOrderHistoryCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
                         </h:panelGroup>

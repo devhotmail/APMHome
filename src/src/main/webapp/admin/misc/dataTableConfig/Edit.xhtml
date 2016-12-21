@@ -13,10 +13,6 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{dataTableConfigCrudController.selected != null}">
                         <h:panelGroup>
-                            <label class="label">#{msg.id}*</label>
-                            <p:inputText id="id" value="#{dataTableConfigCrudController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
                             <label class="label">#{msg.dataTableName}*</label>
                             <p:inputText id="dataTableName" value="#{dataTableConfigCrudController.selected.dataTableName}"  required="true" requiredMessage="#{msg.dataTableName} #{msg.ValidationRequire}"/>
                         </h:panelGroup>

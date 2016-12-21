@@ -13,10 +13,6 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{fileUploadedCrudController.selected != null}">
                         <h:panelGroup>
-                            <label class="label">#{msg.id}*</label>
-                            <p:inputText id="id" value="#{fileUploadedCrudController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
                             <label class="label">#{msg.fileName}*</label>
                             <p:inputText id="fileName" value="#{fileUploadedCrudController.selected.fileName}"  required="true" requiredMessage="#{msg.fileName} #{msg.ValidationRequire}"/>
                         </h:panelGroup>

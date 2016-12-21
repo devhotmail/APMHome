@@ -13,10 +13,6 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{chartConfigCrudController.selected != null}">
                         <h:panelGroup>
-                            <label class="label">#{msg.id}*</label>
-                            <p:inputText id="id" value="#{chartConfigCrudController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
                             <label class="label">#{msg.chartName}*</label>
                             <p:inputText id="chartName" value="#{chartConfigCrudController.selected.chartName}"  required="true" requiredMessage="#{msg.chartName} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
