@@ -11,7 +11,7 @@
         <p:dialog id="FieldCodeTypeEditDlg" widgetVar="FieldCodeTypeEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{fieldCodeTypeCrudController.CRUDActionName} #{msg.FieldCodeType}">
             <h:form id="FieldCodeTypeEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{fieldCodeTypeCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{fieldCodeTypeCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.msgType}*</label>
                             <p:inputText id="msgType" value="#{fieldCodeTypeCrudController.selected.msgType}"  required="true" requiredMessage="#{msg.msgType} #{msg.ValidationRequire}"/>

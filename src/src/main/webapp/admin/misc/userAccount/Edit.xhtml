@@ -11,7 +11,7 @@
         <p:dialog id="UserAccountEditDlg" widgetVar="UserAccountEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{userAccountCrudController.CRUDActionName} #{msg.UserAccount}">
             <h:form id="UserAccountEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{userAccountCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{userAccountCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.loginName}*</label>
                             <p:inputText id="loginName" value="#{userAccountCrudController.selected.loginName}"  required="true" requiredMessage="#{msg.loginName} #{msg.ValidationRequire}"/>

@@ -11,7 +11,7 @@
         <p:dialog id="AssetClinicalRecordErrlogEditDlg" widgetVar="AssetClinicalRecordErrlogEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetClinicalRecordErrlogCrudController.CRUDActionName} #{msg.AssetClinicalRecordErrlog}">
             <h:form id="AssetClinicalRecordErrlogEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetClinicalRecordErrlogCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetClinicalRecordErrlogCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.siteId}</label>
                             <p:inputText id="siteId" value="#{assetClinicalRecordErrlogCrudController.selected.siteId}" />

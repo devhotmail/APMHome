@@ -11,7 +11,7 @@
         <p:dialog id="PmOrderEditDlg" widgetVar="PmOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{pmOrderCrudController.CRUDActionName} #{msg.PmOrder}">
             <h:form id="PmOrderEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{pmOrderCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{pmOrderCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{pmOrderCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>

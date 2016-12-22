@@ -11,7 +11,7 @@
         <p:dialog id="WorkOrderHistoryEditDlg" widgetVar="WorkOrderHistoryEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderHistoryCrudController.CRUDActionName} #{msg.WorkOrderHistory}">
             <h:form id="WorkOrderHistoryEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderHistoryCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderHistoryCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{workOrderHistoryCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>

@@ -11,7 +11,7 @@
         <p:dialog id="OrgInfoEditDlg" widgetVar="OrgInfoEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{orgInfoCrudController.CRUDActionName} #{msg.OrgInfo}">
             <h:form id="OrgInfoEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{orgInfoCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{orgInfoCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{orgInfoCrudController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>

@@ -11,7 +11,7 @@
         <p:dialog id="AssetClinicalRecordEditDlg" widgetVar="AssetClinicalRecordEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetClinicalRecordCrudController.CRUDActionName} #{msg.AssetClinicalRecord}">
             <h:form id="AssetClinicalRecordEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetClinicalRecordCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetClinicalRecordCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{assetClinicalRecordCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>

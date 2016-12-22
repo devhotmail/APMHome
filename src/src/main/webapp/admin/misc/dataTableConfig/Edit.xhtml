@@ -11,7 +11,7 @@
         <p:dialog id="DataTableConfigEditDlg" widgetVar="DataTableConfigEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{dataTableConfigCrudController.CRUDActionName} #{msg.DataTableConfig}">
             <h:form id="DataTableConfigEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{dataTableConfigCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{dataTableConfigCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.dataTableName}*</label>
                             <p:inputText id="dataTableName" value="#{dataTableConfigCrudController.selected.dataTableName}"  required="true" requiredMessage="#{msg.dataTableName} #{msg.ValidationRequire}"/>

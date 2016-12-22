@@ -11,7 +11,7 @@
         <p:dialog id="AssetInfoEditDlg" widgetVar="AssetInfoEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetInfoCrudController.CRUDActionName} #{msg.AssetInfo}">
             <h:form id="AssetInfoEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetInfoCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetInfoCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{assetInfoCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
@@ -175,10 +175,6 @@
                         <h:panelGroup>
                             <label class="label">#{msg.hospitalId}*</label>
                             <p:inputText id="hospitalId" value="#{assetInfoCrudController.selected.hospitalId}"  required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <label class="label">#{msg.hospital}</label>
-                            <p:inputText id="hospital" value="#{assetInfoCrudController.selected.hospital}" />
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>

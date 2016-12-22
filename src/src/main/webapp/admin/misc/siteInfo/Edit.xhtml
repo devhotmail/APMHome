@@ -11,7 +11,7 @@
         <p:dialog id="SiteInfoEditDlg" widgetVar="SiteInfoEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{siteInfoCrudController.CRUDActionName} #{msg.SiteInfo}">
             <h:form id="SiteInfoEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{siteInfoCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{siteInfoCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.name}*</label>
                             <p:inputText id="name" value="#{siteInfoCrudController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>

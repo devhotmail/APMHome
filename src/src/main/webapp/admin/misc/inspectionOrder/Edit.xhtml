@@ -11,7 +11,7 @@
         <p:dialog id="InspectionOrderEditDlg" widgetVar="InspectionOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionOrderCrudController.CRUDActionName} #{msg.InspectionOrder}">
             <h:form id="InspectionOrderEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionOrderCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionOrderCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.orderType}*</label>
                             <p:inputText id="orderType" value="#{inspectionOrderCrudController.selected.orderType}"  required="true" requiredMessage="#{msg.orderType} #{msg.ValidationRequire}"/>

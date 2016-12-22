@@ -11,7 +11,7 @@
         <p:dialog id="AssetContractEditDlg" widgetVar="AssetContractEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetContractCrudController.CRUDActionName} #{msg.AssetContract}">
             <h:form id="AssetContractEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetContractCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetContractCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{assetContractCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>

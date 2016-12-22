@@ -11,7 +11,7 @@
         <p:dialog id="UserRoleEditDlg" widgetVar="UserRoleEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{userRoleCrudController.CRUDActionName} #{msg.UserRole}">
             <h:form id="UserRoleEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{userRoleCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{userRoleCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.userId}</label>
                             <p:inputText id="userId" value="#{userRoleCrudController.selected.userId}" />

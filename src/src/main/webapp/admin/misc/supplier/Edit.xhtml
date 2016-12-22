@@ -11,7 +11,7 @@
         <p:dialog id="SupplierEditDlg" widgetVar="SupplierEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{supplierCrudController.CRUDActionName} #{msg.Supplier}">
             <h:form id="SupplierEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{supplierCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{supplierCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{supplierCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>

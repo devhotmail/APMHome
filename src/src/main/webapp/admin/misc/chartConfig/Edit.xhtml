@@ -11,7 +11,7 @@
         <p:dialog id="ChartConfigEditDlg" widgetVar="ChartConfigEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{chartConfigCrudController.CRUDActionName} #{msg.ChartConfig}">
             <h:form id="ChartConfigEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{chartConfigCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{chartConfigCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.chartName}*</label>
                             <p:inputText id="chartName" value="#{chartConfigCrudController.selected.chartName}"  required="true" requiredMessage="#{msg.chartName} #{msg.ValidationRequire}"/>

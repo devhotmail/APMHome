@@ -11,7 +11,7 @@
         <p:dialog id="I18nMessageEditDlg" widgetVar="I18nMessageEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{i18nMessageCrudController.CRUDActionName} #{msg.I18nMessage}">
             <h:form id="I18nMessageEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{i18nMessageCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{i18nMessageCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.msgType}*</label>
                             <p:inputText id="msgType" value="#{i18nMessageCrudController.selected.msgType}"  required="true" requiredMessage="#{msg.msgType} #{msg.ValidationRequire}"/>

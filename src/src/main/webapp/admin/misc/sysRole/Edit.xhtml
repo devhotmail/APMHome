@@ -11,7 +11,7 @@
         <p:dialog id="SysRoleEditDlg" widgetVar="SysRoleEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{sysRoleCrudController.CRUDActionName} #{msg.SysRole}">
             <h:form id="SysRoleEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{sysRoleCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{sysRoleCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.name}</label>
                             <p:inputText id="name" value="#{sysRoleCrudController.selected.name}" />

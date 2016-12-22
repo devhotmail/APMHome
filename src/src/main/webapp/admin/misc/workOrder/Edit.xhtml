@@ -11,7 +11,7 @@
         <p:dialog id="WorkOrderEditDlg" widgetVar="WorkOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderCrudController.CRUDActionName} #{msg.WorkOrder}">
             <h:form id="WorkOrderEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderCrudController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderCrudController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.siteId}*</label>
                             <p:inputText id="siteId" value="#{workOrderCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
