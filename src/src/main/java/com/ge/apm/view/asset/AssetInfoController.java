@@ -55,23 +55,28 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     private UaaService uuaService;
 
     private OrgInfoRepository orgDao;
-    
+
     private String operation;
 
     @Override
     protected void init() {
         dao = WebUtil.getBean(AssetInfoRepository.class);
         UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
+        UserContextService userContextService = WebUtil.getBean(UserContextService.class);
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         orgDao = WebUtil.getBean(OrgInfoRepository.class);
         uuaService = WebUtil.getBean(UaaService.class);
-        this.filterByHospital = true;
-        this.setHospitalFilter();
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String encodeStr = request.getParameter("str");
-        String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr,"actionName");
         
-       // String actionName = WebUtil.getRequestParameter("actionName");
+        this.filterBySite = true;
+        if (!userContextService.hasRole("MultiHospital")) {
+            this.filterByHospital = true;
+        }
+
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String encodeStr = request.getParameter("str");
+        String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr, "actionName");
+
+        // String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
             try {
                 prepareCreate();
@@ -79,24 +84,26 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
                 Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if ("View".equalsIgnoreCase(actionName)) {
-           // setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
+            // setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = userDao.findById(selected.getAssetOwnerId());
             prepareView();
         } else if ("Edit".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = userDao.findById(selected.getAssetOwnerId());
             prepareEdit();
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr,"selectedid")));
+            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = userDao.findById(selected.getAssetOwnerId());
             prepareDelete();
         }
 
         ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
-        if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+        if (searchFilters == null) {
+            searchFilters = new ArrayList<SearchFilter>();
+        }
         searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, true));
     }
 
@@ -120,14 +127,15 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public String getViewPage(String pageName, String actionName) {
-    	operation  = pageName + "?actionName=" + actionName + "&selectedid=" + selected.getId();
-    	return operation;
+        operation = pageName + "?actionName=" + actionName + "&selectedid=" + selected.getId();
+        return operation;
     }
-    
+
     public void assembleMaintainData() {
         operation = "/portal/wo/woCreate?assetId=" + selected.getId() + "&assetName=" + selected.getName()
-                + "&assetOwnerId=" +selected.getAssetOwnerId() + "&assetOwnerName=" +selected.getAssetOwnerName();
+                + "&assetOwnerId=" + selected.getAssetOwnerId() + "&assetOwnerName=" + selected.getAssetOwnerName();
     }
+
     public void assembleMaintainList() {
         operation = "/portal/wo/woList?assetId=" + selected.getId();
     }
@@ -140,14 +148,14 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
-    public String getContractListLink(){
+    public String getContractListLink() {
         return "/portal/asset/contract/List?assetId=" + selected.getId();
     }
-    
-    public String getContractAddLink(){
+
+    public String getContractAddLink() {
         return "/portal/asset/contract/List?assetId=" + selected.getId() + "&actionName=Create";
     }
-    
+
     @Override
     public void onBeforeNewObject(AssetInfo object) {
         object.setSiteId(UserContextService.getSiteId());
@@ -185,7 +193,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public String applyChange() {
-        if (!isTimeValidate()){
+        if (!isTimeValidate()) {
             return "";
         }
         this.save();
@@ -272,11 +280,10 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         for (AssetFileAttachment item : attachements) {
             if (attachid.equals(item.getFileId())) {
                 fileService.deleteAttachment(item.getFileId());
-                if(item.getId() != null){
+                if (item.getId() != null) {
                     attachDao.delete(item);
                 }
-            }
-            else {
+            } else {
                 tempList.add(item);
             }
         }
@@ -293,51 +300,53 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     public List<OrgInfo> getClinicalList() {
         List<SearchFilter> OrgInfoFilters = new ArrayList<>();
-        UserContextService.setHospitalFilter(OrgInfoFilters);
+//        UserContextService.setHospitalFilter(OrgInfoFilters);
+//        OrgInfoFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, this.selected.getSiteId()));
+        OrgInfoFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, selected.getHospitalId()));
         return orgDao.findBySearchFilter(OrgInfoFilters);
     }
 
     public boolean isTimeValidate() {
         String message = WebUtil.getMessage("shouldEarly"); //"{0} must before {1}!";
         AssetInfo input = this.selected;
-        Date todaydate = new Date();
+//        Date todaydate = new Date();
         boolean isError = false;
-        
-        if (null!=input.getManufactDate() && null!=input.getPurchaseDate() && input.getManufactDate().after(input.getPurchaseDate())) {
+
+        if (null != input.getManufactDate() && null != input.getPurchaseDate() && input.getManufactDate().after(input.getPurchaseDate())) {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("manufactDate"), WebUtil.getMessage("purchaseDate")));
         }
-        
-        if (null!=input.getArriveDate() && null!=input.getPurchaseDate() && input.getPurchaseDate().after(input.getArriveDate())) {
+
+        if (null != input.getArriveDate() && null != input.getPurchaseDate() && input.getPurchaseDate().after(input.getArriveDate())) {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("purchaseDate"), WebUtil.getMessage("arriveDate")));
         }
-        
-        if (null!=input.getArriveDate() && null!=input.getInstallDate() && input.getArriveDate().after(input.getInstallDate())) {
+
+        if (null != input.getArriveDate() && null != input.getInstallDate() && input.getArriveDate().after(input.getInstallDate())) {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("arriveDate"), WebUtil.getMessage("installDate")));
         }
-        if (null!=input.getWarrantyDate() && null!=input.getInstallDate() && input.getWarrantyDate().before(input.getInstallDate())) {
+        if (null != input.getWarrantyDate() && null != input.getInstallDate() && input.getWarrantyDate().before(input.getInstallDate())) {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("warrantyDate")));
         }
-        if (null!=input.getTerminateDate() && null!=input.getInstallDate() && input.getTerminateDate().before(input.getInstallDate())) {
+        if (null != input.getTerminateDate() && null != input.getInstallDate() && input.getTerminateDate().before(input.getInstallDate())) {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("terminateDate")));
         }
-        if (null!=input.getLastPmDate() && null!=input.getInstallDate() && input.getLastPmDate().before(input.getInstallDate())) {
+        if (null != input.getLastPmDate() && null != input.getInstallDate() && input.getLastPmDate().before(input.getInstallDate())) {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("lastPmDate")));
         }
-        if (null!=input.getLastMeteringDate() && null!=input.getInstallDate() && input.getLastMeteringDate().before(input.getInstallDate())) {
+        if (null != input.getLastMeteringDate() && null != input.getInstallDate() && input.getLastMeteringDate().before(input.getInstallDate())) {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("lastMeteringDate")));
         }
-        if (null!=input.getLastQaDate() && null!=input.getInstallDate() && input.getLastQaDate().before(input.getInstallDate())) {
+        if (null != input.getLastQaDate() && null != input.getInstallDate() && input.getLastQaDate().before(input.getInstallDate())) {
             isError = true;
             WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("installDate"), WebUtil.getMessage("lastQaDate")));
         }
-        
+
 //        if (null!=input.getLastPmDate() && input.getLastPmDate().after(todaydate)) {
 //            isError = true;
 //            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("lastPmDate"), WebUtil.getMessage("todayDate")));
@@ -350,22 +359,26 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 //            isError = true;
 //            WebUtil.addErrorMessage(MessageFormat.format(message, WebUtil.getMessage("lastQaDate"), WebUtil.getMessage("todayDate")));
 //        }
-        
-        
         return !isError;
     }
 
     private String filterAssetStatus = null;
+
     public String getFilterAssetStatus() {
         return filterAssetStatus;
     }
+
     public void setFilterAssetStatus(String filterAssetStatus) {
         this.filterAssetStatus = filterAssetStatus;
     }
 
-    public void setAssetStatusFilter(){
-        if(filterAssetStatus==null && filterWarrantyDate == null)  return;
-        if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+    public void setAssetStatusFilter() {
+        if (filterAssetStatus == null && filterWarrantyDate == null) {
+            return;
+        }
+        if (searchFilters == null) {
+            searchFilters = new ArrayList<SearchFilter>();
+        }
         if (filterAssetStatus != null) {
             searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, filterAssetStatus));
         }
@@ -380,7 +393,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             filterWarrantyDate = null;
         }
     }
-    
+
     private String filterWarrantyDate = null;
 
     public String getFilterWarrantyDate() {
@@ -390,7 +403,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void setFilterWarrantyDate(String filterWarrantyDate) {
         this.filterWarrantyDate = filterWarrantyDate;
     }
-    
+
     private Date varWarrantyDateTo = null;
     private String warrantyFormatTime = null;
 
@@ -404,24 +417,23 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     public String getWarrantyFormatTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        if (varWarrantyDateTo==null){
+        if (varWarrantyDateTo == null) {
             return warrantyFormatTime;
         } else {
-            return "~"+sdf.format(varWarrantyDateTo);
-        } 
+            return "~" + sdf.format(varWarrantyDateTo);
+        }
     }
 
     public void setWarrantyFormatTime(String warrantyFormatTime) {
         this.warrantyFormatTime = warrantyFormatTime;
     }
 
-	public String getOperation() {
-		return operation;
-	}
+    public String getOperation() {
+        return operation;
+    }
 
-	public void setOperation(String operation) {
-		this.operation = operation;
-	}
-    
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
 
 }

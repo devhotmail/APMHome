@@ -113,7 +113,12 @@
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.hospitalId}</label>
-                                <p:inputText id="hospitalId" value="#{assetInfoController.getHospital(0).name}" readonly="true"/>
+                                <p:inputText id="hospitalId" value="#{assetInfoController.getHospital(0).name}" readonly="true" rendered="#{!userContextService.hasRole('MultiHospital')}"/>
+                                <p:selectOneMenu id="hospitalIdSelect" value="#{assetInfoController.selected.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}" rendered="#{userContextService.hasRole('MultiHospital')}" >
+                                   <p:ajax  update="clinicalDeptName assetDeptId" />
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{assetInfoService.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
                             </h:panelGroup>
                             <p:spacer/>
                             <h:panelGroup>

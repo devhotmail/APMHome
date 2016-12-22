@@ -9,7 +9,9 @@ import com.ge.apm.dao.AssetContractRepository;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.domain.AssetContract;
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,8 @@ public class AssetInfoService {
 
     AssetInfoRepository assetInfoDao = WebUtil.getBean(AssetInfoRepository.class);
     AssetContractRepository contractDao = WebUtil.getBean(AssetContractRepository.class);
+    
+    UaaService uaaService = WebUtil.getBean(UaaService.class);
 
     public String getAssetInfoName(Integer id) {
         if(null==id || id==0)
@@ -49,7 +53,10 @@ public class AssetInfoService {
     }
     
     public List<AssetContract> getContractList(Integer assetId){
-        
         return contractDao.findByAssetId(assetId);
+    }
+    
+    public List<OrgInfo> getHospitalList(){
+        return uaaService.getHospitalListBySiteId(UserContextService.getCurrentUserAccount().getSiteId());
     }
 }

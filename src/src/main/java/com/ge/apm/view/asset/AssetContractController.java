@@ -1,6 +1,7 @@
 package com.ge.apm.view.asset;
 
 import com.ge.apm.dao.AssetContractRepository;
+import com.ge.apm.dao.AssetDepreciationRepository;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -8,12 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.domain.AssetContract;
+import com.ge.apm.domain.AssetDepreciation;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.service.asset.AssetInfoService;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.text.MessageFormat;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -25,6 +28,8 @@ import webapp.framework.web.WebUtil;
 public class AssetContractController extends JpaCRUDController<AssetContract> {
 
     AssetContractRepository dao = null;
+
+    AssetDepreciationRepository depredao = null;
 
     AttachmentFileService fileService;
 
@@ -38,6 +43,7 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
     protected void init() {
 
         dao = WebUtil.getBean(AssetContractRepository.class);
+        depredao = WebUtil.getBean(AssetDepreciationRepository.class);
         fileService = WebUtil.getBean(AttachmentFileService.class);
         assetService = WebUtil.getBean(AssetInfoService.class);
 
@@ -104,7 +110,33 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
         }
         selected.setAssetId(selectedAsset.getId());
         dao.save(selected);
+        saveDepreciation();
         cancel();
+    }
+
+    private void saveDepreciation() {
+        AssetDepreciation depre = new AssetDepreciation();
+        depre.setAssetId(selected.getAssetId());
+        depre.setSiteId(selected.getSiteId());
+        depre.setContractId(selected.getId());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(selected.getEndDate());
+        int endMonth = calendar.get(Calendar.YEAR) * 12 + calendar.get(Calendar.MONTH);
+        int endDay = calendar.get(Calendar.DAY_OF_MONTH);
+        calendar.setTime(selected.getStartDate());
+        int startMonth = calendar.get(Calendar.YEAR) * 12 + calendar.get(Calendar.MONTH);
+        int startDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int times = (endMonth - startMonth + (startDay<endDay?1:0));
+        depre.setDeprecateAmount(selected.getContractAmount() / times);
+        for (int i = 1; i < times; i++) {
+            calendar.add(Calendar.MONTH, 1);
+            depre.setDeprecateDate(calendar.getTime());
+            depre.setId(null);
+            depredao.save(depre);
+        }
+        depre.setDeprecateDate(selected.getEndDate());
+        depre.setId(null);
+        depredao.save(depre);
     }
 
     public void cancel() {
@@ -115,6 +147,8 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
     @Override
     public void delete() {
         fileService.deleteAttachment(selected.getFileId());
+        List<AssetDepreciation> depreList = depredao.getByContractId(selected.getId());
+        depredao.delete(depreList);
         dao.delete(selected);
         this.selected = null;
     }
