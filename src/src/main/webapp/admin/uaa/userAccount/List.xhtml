@@ -76,7 +76,7 @@
                             <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Delete}" actionListener="#{userAccountController.delete}" update="datalist" disabled="#{empty userAccountController.selected}">
                                 <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
                             </p:commandButton>
-                            <p:commandButton id="roleButton" icon="ui-icon-people"  title="#{msg.AssignRole}" actionListener="#{userAccountController.prepareRoleData}" update=":RoleEditDlg" oncomplete="PF('RoleEditDialog').show()" disabled="#{empty userAccountController.selected}"/>
+                            <p:commandButton id="roleButton" icon="ui-icon-people" process="@this" title="#{msg.AssignRole}" actionListener="#{userAccountController.prepareRoleData}" update=":RoleEditDlg" oncomplete="PF('RoleEditDialog').show()" disabled="#{empty userAccountController.selected}"/>
                             <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="UserAccount_export"/>
                             </p:commandButton>

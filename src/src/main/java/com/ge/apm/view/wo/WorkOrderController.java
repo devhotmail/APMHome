@@ -38,6 +38,9 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
 
         this.filterByHospital = true;
         this.filterBySite = true;
+        if (UserContextService.checkRole("MultiHospital")) {
+            this.filterByHospital = false;
+        }
 
         dao = WebUtil.getBean(WorkOrderRepository.class);
         assetDao = WebUtil.getBean(AssetInfoRepository.class);
@@ -68,8 +71,6 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
     @Override
     protected Page<WorkOrder> loadData(PageRequest pageRequest) {
         //only show my tasks
-        //setSiteFilter();
-        setHospitalFilter();
         setLoginUserFilter();
         
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -138,7 +139,8 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         this.prepareCreate();
         
         selected.setSiteId(loginUser.getSiteId());
-        selected.setHospitalId(loginUser.getHospitalId());
+//        hospitalId改为从设备上面取
+//        selected.setHospitalId(loginUser.getHospitalId());
         selected.setCreatorId(loginUser.getId());
         selected.setCreatorName(loginUser.getName());
         
@@ -161,6 +163,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
             selected.setAssetName((String) UrlEncryptController.getValueFromMap(encodeStr,"assetName"));
             selected.setCaseOwnerId(Integer.parseInt((String)UrlEncryptController.getValueFromMap(encodeStr,"assetOwnerId")));
             selected.setCaseOwnerName((String) UrlEncryptController.getValueFromMap(encodeStr,"assetOwnerName"));
+            selected.setHospitalId(getHospitalIdFromAsset(Integer.parseInt(assetId)));
         }
 
         onSelectWorkOrder();
@@ -177,6 +180,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         this.selected.setAssetName(asset.getName());
         this.selected.setCaseOwnerId(asset.getAssetOwnerId());
         this.selected.setCaseOwnerName(asset.getAssetOwnerName());
+        selected.setHospitalId(asset.getHospitalId());
     }
     
     public void prepareEditWorkOrderStep(){
@@ -217,7 +221,6 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         if (!("true".equals(filterIsClosed) || "false".equals(filterIsClosed))) return;
         
         if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
-        setSiteFilter();
         searchFilters.add(new SearchFilter("isClosed", SearchFilter.Operator.EQ, Boolean.parseBoolean(filterIsClosed)));
     }
     
@@ -265,6 +268,12 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
 
     public void setAssetIdFromUrl(Integer assetIdFromUrl) {
         this.assetIdFromUrl = assetIdFromUrl;
+    }
+    
+    private int getHospitalIdFromAsset(Integer id) {
+        AssetInfo asset = assetDao.findById(id);
+        if (asset == null) return -1;
+        return asset.getHospitalId();
     }
     
 }
