@@ -5,6 +5,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
+
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.OrgInfoRepository;
@@ -13,6 +15,7 @@ import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.service.asset.AssetDepreciationService;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UrlEncryptController;
@@ -57,6 +60,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     private OrgInfoRepository orgDao;
 
     private String operation;
+    
+    private AssetDepreciationService assetDepreciationService;
 
     @Override
     protected void init() {
@@ -66,7 +71,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         orgDao = WebUtil.getBean(OrgInfoRepository.class);
         uuaService = WebUtil.getBean(UaaService.class);
-        
+        assetDepreciationService = WebUtil.getBean(AssetDepreciationService.class);
         this.filterBySite = true;
         if (!userContextService.hasRole("MultiHospital")) {
             this.filterByHospital = true;
@@ -192,11 +197,13 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
+    @Transactional
     public String applyChange() {
         if (!isTimeValidate()) {
             return "";
         }
         this.save();
+        assetDepreciationService.saveAssetDerpeciation(selected);
         if (resultStatus) {
             return "List?faces-redirect=true";
         } else {

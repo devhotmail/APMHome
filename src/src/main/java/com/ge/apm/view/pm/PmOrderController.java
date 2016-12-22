@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.FileUploadEvent;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.FileUploadedRepository;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.PmOrderRepository;
@@ -55,6 +56,8 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     
     private FileUploadedRepository fileUploadedRepository;
     
+    private AssetInfoRepository assetInfoRepository = null;
+    
     @Override
     protected void init() {
 		this.filterByHospital = true;
@@ -67,6 +70,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 		uuaService = (UaaService) WebUtil.getBean(UaaService.class);
 		attachements = new ArrayList<FileUploaded>();
         ownerList =uuaService.getUsersWithAssetHeadOrStaffRole(currentUser.getHospitalId());
+        assetInfoRepository = WebUtil.getBean(AssetInfoRepository.class);
     }
 
     @Override
@@ -245,6 +249,10 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     			 selected.setIsFinished(false);
     			 return;
     		}
+    		AssetInfo ai = new AssetInfo();
+    		ai.setId(selected.getAssetId());
+    		ai.setLastPmDate(TimeUtil.now());
+    		assetInfoRepository.save(ai);
     	}
         this.save();
     }
