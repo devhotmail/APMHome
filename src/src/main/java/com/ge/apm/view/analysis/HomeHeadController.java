@@ -607,7 +607,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
         pieAnnualRevenue = pc;
         pieAnnualRevenue.setExtender("pieAnnualRevenue");
     }
-
+    
     private List<Map<String, Object>> calcProfit(List<Map<String, Object>> revenue,
                                                  List<Map<String, Object>> dep,
                                                  List<Map<String, Object>> maintenance
@@ -784,7 +784,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
             switch (targetType) {
 
                 case "Double":
-                    item.put("value", 0.1);
+                    item.put("value", 0.0);
                 default:
                     ;
             }
