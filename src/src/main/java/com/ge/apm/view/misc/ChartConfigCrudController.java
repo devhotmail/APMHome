@@ -5,19 +5,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
+import webapp.framework.web.mvc.GenericCRUDController;
 import com.ge.apm.dao.ChartConfigRepository;
 import com.ge.apm.domain.ChartConfig;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class ChartConfigCrudController extends JpaCRUDController<ChartConfig> {
+public class ChartConfigCrudController extends GenericCRUDController<ChartConfig> {
 
     ChartConfigRepository dao = null;
 
     @Override
     protected void init() {
+        filterBySite = false;
         dao = WebUtil.getBean(ChartConfigRepository.class);
     }
 

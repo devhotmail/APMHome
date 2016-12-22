@@ -23,6 +23,8 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
 
     @Override
     protected void init() {
+        filterBySite = false;
+
         dao = WebUtil.getBean(SiteInfoRepository.class);
     }
 

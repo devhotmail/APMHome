@@ -18,6 +18,8 @@ public class SysRoleController extends GenericCRUDController<SysRole> {
 
     @Override
     protected void init() {
+        filterBySite = false;
+        
         dao = WebUtil.getBean(SysRoleRepository.class);
     }
 

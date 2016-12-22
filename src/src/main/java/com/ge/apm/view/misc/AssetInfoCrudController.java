@@ -5,14 +5,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
+import webapp.framework.web.mvc.GenericCRUDController;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.domain.AssetInfo;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class AssetInfoCrudController extends JpaCRUDController<AssetInfo> {
+public class AssetInfoCrudController extends GenericCRUDController<AssetInfo> {
 
     AssetInfoRepository dao = null;
 

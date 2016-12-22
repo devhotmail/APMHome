@@ -5,19 +5,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.domain.OrgInfo;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.GenericCRUDController;
 
 @ManagedBean
 @ViewScoped
-public class OrgInfoCrudController extends JpaCRUDController<OrgInfo> {
+public class OrgInfoCrudController extends GenericCRUDController<OrgInfo> {
 
     OrgInfoRepository dao = null;
 
     @Override
     protected void init() {
+        filterBySite = false;
         dao = WebUtil.getBean(OrgInfoRepository.class);
     }
 

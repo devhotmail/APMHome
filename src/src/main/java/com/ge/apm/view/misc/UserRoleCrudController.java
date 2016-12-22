@@ -5,19 +5,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.UserRoleRepository;
 import com.ge.apm.domain.UserRole;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.GenericCRUDController;
 
 @ManagedBean
 @ViewScoped
-public class UserRoleCrudController extends JpaCRUDController<UserRole> {
+public class UserRoleCrudController extends GenericCRUDController<UserRole> {
 
     UserRoleRepository dao = null;
 
     @Override
     protected void init() {
+        filterBySite = false;
         dao = WebUtil.getBean(UserRoleRepository.class);
     }
 

@@ -19,6 +19,7 @@ public class ChartConfigController extends JpaCRUDController<ChartConfig> {
 
     @Override
     protected void init() {
+        filterBySite = false;
         dao = WebUtil.getBean(ChartConfigRepository.class);
     }
 

@@ -4,11 +4,12 @@ import com.ge.apm.dao.AssetClinicalRecordErrlogRepository;
 import com.ge.apm.dao.AssetClinicalRecordRepository;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.EdgeServerInfoRepository;
+import com.ge.apm.dao.ProcedureNameMapingRepository;
 import com.ge.apm.domain.AssetClinicalRecord;
 import com.ge.apm.domain.AssetClinicalRecordErrlog;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.EdgeServerInfo;
-import com.ge.apm.domain.OrgInfo;
+import com.ge.apm.domain.ProcedureNameMaping;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import webapp.framework.util.TimeUtil;
@@ -37,6 +38,20 @@ public class DataUploadServiceImpl implements DataUploadService{
         else
             throw new Exception("invalid modalityId");
     }
+    public void mapProcedureName(int siteId, int hospitalId, AssetClinicalRecord assetClinicalRecord) throws Exception{
+        assetClinicalRecord.setOriginalProcedureStepId(assetClinicalRecord.getProcedureId().toString());
+        assetClinicalRecord.setOriginalProcedureStepName(assetClinicalRecord.getProcedureName());
+        
+        ProcedureNameMapingRepository mapDao= WebUtil.getBean(ProcedureNameMapingRepository.class);
+        List<ProcedureNameMaping> nameList = mapDao.getBySiteIdAndHospitalIdAndRisProcedureName(siteId, hospitalId, assetClinicalRecord.getOriginalProcedureStepName());
+        if(nameList.size()>0){
+            assetClinicalRecord.setProcedureId(nameList.get(0).getApmProcedureId());
+            assetClinicalRecord.setProcedureName(nameList.get(0).getApmProcedureName());
+        }
+        else
+            throw new Exception("procedure name not mapped.");
+    }
+
     
     @Override
     public String uploadAssetClinicalRecord(ClinicalDataUploadRequest dataUploadRequest) throws Exception{
@@ -50,6 +65,8 @@ public class DataUploadServiceImpl implements DataUploadService{
             assetClinicalRecord.setAssetId(getAssetIdByModalityId(assetClinicalRecord));
             assetClinicalRecord.setId(null);
 
+            mapProcedureName(edgeServerInfo.getSiteId(), edgeServerInfo.getHospitalId(), assetClinicalRecord);
+            
             AssetClinicalRecordRepository dao = WebUtil.getBean(AssetClinicalRecordRepository.class);
             dao.save(assetClinicalRecord);
             return "dataUploadedOK";

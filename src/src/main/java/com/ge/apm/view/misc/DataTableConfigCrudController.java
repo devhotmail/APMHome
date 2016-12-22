@@ -5,19 +5,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
+import webapp.framework.web.mvc.GenericCRUDController;
 import com.ge.apm.dao.DataTableConfigRepository;
 import com.ge.apm.domain.DataTableConfig;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class DataTableConfigCrudController extends JpaCRUDController<DataTableConfig> {
+public class DataTableConfigCrudController extends GenericCRUDController<DataTableConfig> {
 
     DataTableConfigRepository dao = null;
 
     @Override
     protected void init() {
+        filterBySite = false;
         dao = WebUtil.getBean(DataTableConfigRepository.class);
     }
 

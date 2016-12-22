@@ -5,14 +5,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
+import webapp.framework.web.mvc.GenericCRUDController;
 import com.ge.apm.dao.EdgeServerInfoRepository;
 import com.ge.apm.domain.EdgeServerInfo;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class EdgeServerInfoCrudController extends JpaCRUDController<EdgeServerInfo> {
+public class EdgeServerInfoCrudController extends GenericCRUDController<EdgeServerInfo> {
 
     EdgeServerInfoRepository dao = null;
 

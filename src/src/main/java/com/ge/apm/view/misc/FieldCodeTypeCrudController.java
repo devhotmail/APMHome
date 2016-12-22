@@ -5,19 +5,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
+import webapp.framework.web.mvc.GenericCRUDController;
 import com.ge.apm.dao.FieldCodeTypeRepository;
 import com.ge.apm.domain.FieldCodeType;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class FieldCodeTypeCrudController extends JpaCRUDController<FieldCodeType> {
+public class FieldCodeTypeCrudController extends GenericCRUDController<FieldCodeType> {
 
     FieldCodeTypeRepository dao = null;
 
     @Override
     protected void init() {
+        filterBySite = false;
         dao = WebUtil.getBean(FieldCodeTypeRepository.class);
     }
 

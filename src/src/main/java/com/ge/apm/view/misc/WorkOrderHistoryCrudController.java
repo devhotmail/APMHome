@@ -5,14 +5,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.WorkOrderHistoryRepository;
 import com.ge.apm.domain.WorkOrderHistory;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.GenericCRUDController;
 
 @ManagedBean
 @ViewScoped
-public class WorkOrderHistoryCrudController extends JpaCRUDController<WorkOrderHistory> {
+public class WorkOrderHistoryCrudController extends GenericCRUDController<WorkOrderHistory> {
 
     WorkOrderHistoryRepository dao = null;
 

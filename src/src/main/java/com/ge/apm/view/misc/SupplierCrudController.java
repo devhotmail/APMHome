@@ -5,14 +5,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.SupplierRepository;
 import com.ge.apm.domain.Supplier;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.GenericCRUDController;
 
 @ManagedBean
 @ViewScoped
-public class SupplierCrudController extends JpaCRUDController<Supplier> {
+public class SupplierCrudController extends GenericCRUDController<Supplier> {
 
     SupplierRepository dao = null;
 

@@ -18,6 +18,7 @@ public class UserRoleController extends GenericCRUDController<UserRole> {
 
     @Override
     protected void init() {
+        filterBySite = false;
         dao = WebUtil.getBean(UserRoleRepository.class);
     }
 

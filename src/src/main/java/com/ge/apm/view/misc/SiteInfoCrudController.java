@@ -5,19 +5,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.domain.SiteInfo;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.GenericCRUDController;
 
 @ManagedBean
 @ViewScoped
-public class SiteInfoCrudController extends JpaCRUDController<SiteInfo> {
+public class SiteInfoCrudController extends GenericCRUDController<SiteInfo> {
 
     SiteInfoRepository dao = null;
 
     @Override
     protected void init() {
+        filterBySite = false;
         dao = WebUtil.getBean(SiteInfoRepository.class);
     }
 

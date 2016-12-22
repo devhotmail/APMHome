@@ -5,14 +5,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
+import webapp.framework.web.mvc.GenericCRUDController;
 import com.ge.apm.dao.AssetClinicalRecordErrlogRepository;
 import com.ge.apm.domain.AssetClinicalRecordErrlog;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class AssetClinicalRecordErrlogCrudController extends JpaCRUDController<AssetClinicalRecordErrlog> {
+public class AssetClinicalRecordErrlogCrudController extends GenericCRUDController<AssetClinicalRecordErrlog> {
 
     AssetClinicalRecordErrlogRepository dao = null;
 

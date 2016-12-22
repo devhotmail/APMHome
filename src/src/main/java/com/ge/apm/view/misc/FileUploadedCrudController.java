@@ -5,19 +5,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.FileUploadedRepository;
 import com.ge.apm.domain.FileUploaded;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.GenericCRUDController;
 
 @ManagedBean
 @ViewScoped
-public class FileUploadedCrudController extends JpaCRUDController<FileUploaded> {
+public class FileUploadedCrudController extends GenericCRUDController<FileUploaded> {
 
     FileUploadedRepository dao = null;
 
     @Override
     protected void init() {
+        filterBySite = false;
         dao = WebUtil.getBean(FileUploadedRepository.class);
     }
 

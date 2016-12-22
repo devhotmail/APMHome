@@ -5,14 +5,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.I18nMessageRepository;
 import com.ge.apm.domain.I18nMessage;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.GenericCRUDController;
 
 @ManagedBean
 @ViewScoped
-public class I18nMessageCrudController extends JpaCRUDController<I18nMessage> {
+public class I18nMessageCrudController extends GenericCRUDController<I18nMessage> {
 
     I18nMessageRepository dao = null;
 

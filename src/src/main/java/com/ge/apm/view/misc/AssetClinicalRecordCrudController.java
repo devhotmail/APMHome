@@ -5,19 +5,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
+import webapp.framework.web.mvc.GenericCRUDController;
 import com.ge.apm.dao.AssetClinicalRecordRepository;
 import com.ge.apm.domain.AssetClinicalRecord;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class AssetClinicalRecordCrudController extends JpaCRUDController<AssetClinicalRecord> {
+public class AssetClinicalRecordCrudController extends GenericCRUDController<AssetClinicalRecord> {
 
     AssetClinicalRecordRepository dao = null;
 
     @Override
     protected void init() {
+        filterBySite = false;
         dao = WebUtil.getBean(AssetClinicalRecordRepository.class);
     }
 

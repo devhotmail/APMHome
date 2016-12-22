@@ -54,7 +54,7 @@ public class AssetClinicalRecord implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "procedure_id")
-    private int procedureId;
+    private Integer procedureId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 32)
@@ -69,6 +69,18 @@ public class AssetClinicalRecord implements Serializable {
     @Size(min = 1, max = 32)
     @Column(name = "procedure_step_name")
     private String procedureStepName;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 32)
+    @Column(name = "original_procedure_id")
+    private String originalProcedureStepId;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 256)
+    @Column(name = "original_procedure_name")
+    private String originalProcedureStepName;
+            
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "price_amount")
     private Double priceAmount;
@@ -173,11 +185,11 @@ public class AssetClinicalRecord implements Serializable {
         this.modalityType = modalityType;
     }
 
-    public int getProcedureId() {
+    public Integer getProcedureId() {
         return procedureId;
     }
 
-    public void setProcedureId(int procedureId) {
+    public void setProcedureId(Integer procedureId) {
         this.procedureId = procedureId;
     }
 
@@ -275,6 +287,22 @@ public class AssetClinicalRecord implements Serializable {
 
     public void setAssetId(Integer assetId) {
         this.assetId = assetId;
+    }
+
+    public String getOriginalProcedureStepId() {
+        return originalProcedureStepId;
+    }
+
+    public void setOriginalProcedureStepId(String originalProcedureStepId) {
+        this.originalProcedureStepId = originalProcedureStepId;
+    }
+
+    public String getOriginalProcedureStepName() {
+        return originalProcedureStepName;
+    }
+
+    public void setOriginalProcedureStepName(String originalProcedureStepName) {
+        this.originalProcedureStepName = originalProcedureStepName;
     }
 
     @Override

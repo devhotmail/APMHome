@@ -36,6 +36,8 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
 
     @Override
     protected void init() {
+        filterBySite = false;
+        
         uaaService = WebUtil.getBean(UaaService.class);
         dao = WebUtil.getBean(UserAccountRepository.class);
 

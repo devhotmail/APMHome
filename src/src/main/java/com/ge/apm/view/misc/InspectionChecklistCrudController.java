@@ -5,14 +5,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.InspectionChecklistRepository;
 import com.ge.apm.domain.InspectionChecklist;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.GenericCRUDController;
 
 @ManagedBean
 @ViewScoped
-public class InspectionChecklistCrudController extends JpaCRUDController<InspectionChecklist> {
+public class InspectionChecklistCrudController extends GenericCRUDController<InspectionChecklist> {
 
     InspectionChecklistRepository dao = null;
 

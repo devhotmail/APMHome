@@ -19,6 +19,7 @@ public class DataTableConfigController extends JpaCRUDController<DataTableConfig
 
     @Override
     protected void init() {
+        filterBySite = false;
         dao = WebUtil.getBean(DataTableConfigRepository.class);
     }
 

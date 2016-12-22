@@ -5,14 +5,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
+import webapp.framework.web.mvc.GenericCRUDController;
 import com.ge.apm.dao.AssetFileAttachmentRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class AssetFileAttachmentCrudController extends JpaCRUDController<AssetFileAttachment> {
+public class AssetFileAttachmentCrudController extends GenericCRUDController<AssetFileAttachment> {
 
     AssetFileAttachmentRepository dao = null;
 

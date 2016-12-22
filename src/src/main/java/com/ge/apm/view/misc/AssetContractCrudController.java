@@ -5,14 +5,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
+import webapp.framework.web.mvc.GenericCRUDController;
 import com.ge.apm.dao.AssetContractRepository;
 import com.ge.apm.domain.AssetContract;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
 @ViewScoped
-public class AssetContractCrudController extends JpaCRUDController<AssetContract> {
+public class AssetContractCrudController extends GenericCRUDController<AssetContract> {
 
     AssetContractRepository dao = null;
 

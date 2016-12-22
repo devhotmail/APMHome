@@ -28,6 +28,8 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
 
     @Override
     protected void init() {
+        filterBySite = false;
+        
         dao = WebUtil.getBean(OrgInfoRepository.class);
         uaaService = WebUtil.getBean(UaaService.class);
         
