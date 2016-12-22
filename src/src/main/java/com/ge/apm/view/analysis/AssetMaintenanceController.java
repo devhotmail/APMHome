@@ -215,8 +215,8 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     }
 
     private final void setTopErrorRoom() {
-        String name = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL), null);
-        if (name == null) {
+        String name = convertToScalar(this.query(SQL_SCALAR_TOP_ERROR_ROOM_ALL), "");
+        if (name == null || name.isEmpty()) {
             this.topErrorRoom = WebUtil.getMessage("maintenanceAnalysis_empty");
             return;
         }
@@ -373,7 +373,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
         ChartSeries series = new ChartSeries();
         for (Map<String, Object> map : list) {
             String key = (String)map.get("key");
-            if (key == null) {
+            if (key == null || key.isEmpty()) {
                 key = WebUtil.getMessage("maintenanceAnalysis_empty");
             }
             series.set(key, (Number)map.get("value"));
@@ -617,12 +617,14 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     // 设备故障主要发生的科室
 
     private final static String SQL_SCALAR_TOP_ERROR_ROOM_ALL = "" +
-            "SELECT COALESCE(asset.clinical_dept_name, to_char(asset.clinical_dept_id)) AS scalar " +
-            "FROM work_order AS work" +
-            "WHERE work.hospital_id = :#hospitalId " +
+            "SELECT COALESCE(asset.clinical_dept_name, text(asset.clinical_dept_id)) AS scalar " +
+            "FROM work_order AS work," +
+            "     asset_info AS asset " +
+            "WHERE work.asset_id = asset.id " +
+            "  AND asset.hospital_id = :#hospitalId " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
-            "GROUP BY key " +
-            "ORDER BY value DESC " +
+            "GROUP BY scalar " +
+            "ORDER BY count(*) DESC " +
             "LIMIT 1 " +
             ";";
 
@@ -758,9 +760,11 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     // 设备故障分布：按科室
 
     private final static String SQL_LIST_ERROR_ROOM_ALL = "" +
-            "SELECT COALESCE(asset.clinical_dept_name, to_char(asset.clinical_dept_id)) AS key, count(*) AS value " +
-            "FROM work_order AS work" +
-            "WHERE work.hospital_id = :#hospitalId " +
+            "SELECT COALESCE(asset.clinical_dept_name, text(asset.clinical_dept_id)) AS key, count(*) AS value " +
+            "FROM work_order AS work, " +
+            "     asset_info AS asset " +
+            "WHERE work.asset_id = asset.id " +
+            "  AND work.hospital_id = :#hospitalId " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "GROUP BY key " +
             "ORDER BY key ASC " +
