@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:security="http://www.springframework.org/schema/security" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:cxf="http://camel.apache.org/schema/cxf"
+       xsi:schemaLocation="
+                       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+			http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+			http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+			http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+            http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+    
+    <context:property-placeholder location="file:./config.properties"/>
+    <context:component-scan base-package="com.ge.apm.edgeserver.dataupload.entity"/>
+
+    <bean id="properties" class="org.apache.camel.component.properties.PropertiesComponent">
+        <property name="location" value="file:./config.properties"/>
+    </bean>
+
+    <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+    
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+
+          p:persistenceUnitName="edgePU"
+          p:jpaVendorAdapter-ref="hibernateJpaVendorAdapter"
+          p:jpaProperties="classpath:hibernate.properties">
+        <property name="dataSource" ref="edgeDataSource" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager" p:entityManagerFactory-ref="entityManagerFactory"/>
+
+    <jpa:repositories base-package="com.ge.apm.edgeserver.dataupload.dao" factory-class="org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean" entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"/>
+    
+    <bean id="jpa" class="org.apache.camel.component.jpa.JpaComponent">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <bean id="tomcatContainerFactory" class="org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory"
+          p:port="${webServer.port}"/>
+    
+    <bean id="sql" class="org.apache.camel.component.sql.SqlComponent">
+        <property name="dataSource" ref="edgeDataSource"/>
+    </bean>
+
+    <bean id="risDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close"
+          lazy-init="true"
+          p:defaultAutoCommit="true"
+          p:initialSize="1"
+          p:maxActive="20"
+          p:maxIdle="5"
+          p:maxWait="10000"
+          p:poolPreparedStatements="true"
+          p:removeAbandoned="true"
+          p:removeAbandonedTimeout="60"
+          p:testOnBorrow="true" p:testOnReturn="true" p:testWhileIdle="true"
+          p:validationQuery="${risDb.testSQL}" p:timeBetweenEvictionRunsMillis="1000" p:minEvictableIdleTimeMillis="1000">
+        <property name="driverClassName" value="${risDb.jdbcDriverClassName}" />
+        <property name="url" value="${risDb.jdbcURL}"/>
+        <property name="username" value="${risDb.userName}"/>
+        <property name="password" value="${risDb.password}"/>
+    </bean>
+	
+    <bean id="sqlRis" class="org.apache.camel.component.sql.SqlComponent">
+        <property name="dataSource" ref="risDataSource"/>
+    </bean>
+
+    <cxf:cxfEndpoint id="clinicalDataServiceEndpoint"
+                     address="/clinicalDataUpload"
+                     serviceClass="com.ge.apm.edgeserver.dataupload.fromsite.DataUploadService"/>
+    <bean id="clinicalDataServiceImpl" class="com.ge.apm.edgeserver.dataupload.fromsite.DataUploadServiceImpl"/>
+
+    <import resource="file:${camel.config:./route_sys.xml}"/>
+    
+</beans>

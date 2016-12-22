@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:cxf="http://camel.apache.org/schema/cxf"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+         http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd">
+
+
+    <bean id="risDataMapper" class="com.ge.apm.edgeserver.sysutil.DataMapper">
+        <constructor-arg name="mappingRule">
+            <map>
+                <entry key="modality_id" value="RisModalityID"/>
+                <entry key="modality_type_id" value="RisModalityTypeID"/>
+                <entry key="modality_type" value="RisModalityTypeName"/>
+                <entry key="procedure_id" value="RisProcedureID"/>
+                <entry key="procedure_name" value="RisProcedureName"/>
+                <entry key="procedure_step_id" value="RisProcedureStepID"/>
+                <entry key="procedure_step_name" value="RisProcedureStepName"/>
+                <entry key="price_amount" value="RisExamPrice"/>
+                <entry key="price_unit" value="_const?string=RMB"/>
+                <entry key="inject_count" value="RisInjectCount"/>
+                <entry key="expose_count" value="RisExposeCount"/>
+                <entry key="film_count" value="RisFilmCount"/>
+                <entry key="exam_date" value="RisExamDate"/>
+                <entry key="exam_start_time" value="RisExamTime"/>
+                <entry key="exam_duration" value="RisExamDuration"/>
+                <entry key="source_system" value="_const?string=RIS"/>
+                <entry key="source_record_id" value="RisExamID"/>
+            </map>
+        </constructor-arg>
+        <constructor-arg name="defaultNullValues">
+            <map>
+                <entry key="_defaultNullValue" value="_const?string=0"/>
+                <entry key="modality_id" value="_const?string=0"/>
+                <entry key="modality_type_id" value="_const?integer=0"/>
+                <entry key="modality_type" value="_const?string=NA"/>
+                <entry key="procedure_id" value="_const?integer=0"/>
+                <entry key="procedure_name" value="_const?string=NA"/>
+                <entry key="procedure_step_id" value="_const?integer=0"/>
+                <entry key="procedure_step_name" value="_const?string=NA"/>
+                <entry key="price_amount" value="_const?integer=0"/>
+                <entry key="price_unit" value="_const?string=RMB"/>
+                <entry key="inject_count" value="_const?integer=0"/>
+                <entry key="expose_count" value="_const?integer=0"/>
+                <entry key="film_count" value="_const?integer=0"/>
+                <entry key="exam_date" value="_const?string="/>
+                <entry key="exam_start_time" value="_const?string="/>
+                <entry key="exam_duration" value="_const?integer=0"/>
+                <entry key="source_system" value="_const?string=RIS"/>
+                <entry key="source_record_id" value="_const?integer=0"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+	<bean id="risDeltaDataTool" class="com.ge.apm.edgeserver.sysutil.RisDeltaDataTool" 
+		p:deltaSQL="select ApproveDateTime, RisExamID, RisModalityID, RisModalityTypeID, RisModalityTypeName, RisProcedureID, RisProcedureName, RisProcedureStepID, RisProcedureStepName, RisExamPrice, RisInjectCount, RisExposeCount, RisFilmCount, RisExamDate, RisExamTime, RisExamDuration from RisExamInfo where ApproveDateTime>:#ApproveDateTime order by ApproveDateTime ASC"
+		p:deltaValueField="ApproveDateTime"
+		p:deltaValueType="DateTime"
+		p:defaultDeltaValue="2016-11-12 10:11:19"
+		p:deltaFileName="risDeltaValue.txt"
+		p:dateFormat="yyyy-MM-dd"
+		p:timeFormat="HH:mm:ss"
+		/>
+
+    <routeContext id="route_ris" xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="timer://loadRisData?fixedRate=true&amp;period=600000"/>
+			<bean ref="risDeltaDataTool" method="readDeltaValue"/>
+
+            <toD uri="sqlRis:${headers._risSQL}"/>
+            <split parallelProcessing="false" stopOnException="false">
+                <simple>${body}</simple>
+                <bean ref="risDataMapper" method="doDataMapping"/>
+                <to uri="sql:insert into asset_clinical_record_delta(modality_id,modality_type_id,modality_type,procedure_id,procedure_name,procedure_step_id,procedure_step_name,price_amount,price_unit,inject_count,expose_count,film_count,exam_date,exam_start_time,exam_duration,source_system,source_record_id, upload_status_prod, upload_status_uat) values(:#modality_id,:#modality_type_id,:#modality_type,:#procedure_id,:#procedure_name,:#procedure_step_id,:#procedure_step_name,:#price_amount,:#price_unit,:#inject_count,:#expose_count,:#film_count,to_date(:#exam_date, 'YYYY-MM-DD'),to_timestamp(:#exam_start_time, 'HH24:MI:SS'),:#exam_duration,:#source_system,:#source_record_id, 'N', 'N')"/>
+                <bean ref="risDeltaDataTool" method="updateDeltaValue"/>
+            </split>
+        </route>
+
+    </routeContext>
+</beans>
