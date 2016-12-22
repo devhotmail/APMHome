@@ -27,6 +27,9 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
     protected void init() {
         dao = WebUtil.getBean(AssetInfoRepository.class);
         this.filterByHospital = true;
+        if (UserContextService.checkRole("MultiHospital")) {
+            this.filterByHospital = false;
+        }
     }
 
     @Override
@@ -102,7 +105,11 @@ public class SelectAssetController extends JpaCRUDController<AssetInfo> {
         this.updateViewIDs = updateViewIDs;
 
         UaaService uaaService = WebUtil.getBean(UaaService.class);
-        orgAssetTree = uaaService.getOrgAssetTree(UserContextService.getCurrentUserAccount().getHospitalId());
+        if (UserContextService.checkRole("MultiHospital")) {
+            orgAssetTree = uaaService.getOrgAssetTree(UserContextService.getCurrentUserAccount().getSiteId(), true);
+        } else {
+            orgAssetTree = uaaService.getOrgAssetTree(UserContextService.getCurrentUserAccount().getHospitalId());
+        }
     }
 
     public void cancelDialog(){

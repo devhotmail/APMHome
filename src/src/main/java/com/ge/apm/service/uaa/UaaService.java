@@ -210,9 +210,14 @@ public class UaaService {
         }        
     }
     
-    public DefaultTreeNode getOrgTree(int hospitalId, boolean showHospitalAsRoot, Integer selectedOrgId){
+    public DefaultTreeNode getOrgTree(int hospitalId, boolean showHospitalAsRoot, Integer selectedOrgId, boolean ...type){
         OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
-        List<OrgInfo> orgList = orgInfoDao.getByHospitalId(hospitalId);
+        List<OrgInfo> orgList = null;
+        if (type == null || type.length == 0) {
+            orgList = orgInfoDao.getByHospitalId(hospitalId);
+        } else {
+            orgList = orgInfoDao.getFullOrgListBySiteId(hospitalId);
+        }
 
         DefaultTreeNode root = new DefaultTreeNode("Root", null);
         DefaultTreeNode treeRoot = root;
@@ -253,9 +258,14 @@ public class UaaService {
         }
     }
 
-    public TreeNode getOrgAssetTree(int hospitalId){
+    public TreeNode getOrgAssetTree(int hospitalId, boolean ...type){
         AssetInfoRepository assetInfoDao = WebUtil.getBean(AssetInfoRepository.class);
-        List<AssetInfo> assetList = assetInfoDao.getByHospitalId(hospitalId);
+        List<AssetInfo> assetList = null;
+        if (type == null || type.length == 0) {
+            assetList = assetInfoDao.getByHospitalId(hospitalId);
+        } else {
+            assetList = assetInfoDao.getBySiteId(hospitalId);//实际是siteId
+        }
         
         Map<Integer, List<AssetInfo>> assetMap = new HashMap<>();
         for(AssetInfo asset: assetList){
@@ -269,7 +279,7 @@ public class UaaService {
             assets.add(asset);
         }
         
-        TreeNode root = getOrgTree(hospitalId);
+        TreeNode root = getOrgTree(hospitalId, false, null, type);
         addAssetToOrgNode(root, assetMap);
         cleanTree(root,ASSET);
         return root;

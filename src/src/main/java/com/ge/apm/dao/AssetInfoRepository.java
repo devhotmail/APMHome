@@ -11,4 +11,7 @@ public interface AssetInfoRepository extends GenericRepository<AssetInfo> {
     
     @Query("select o from AssetInfo o where o.modalityId = ?1 and o.isValid = true")
     public List<AssetInfo> getByModalityId(String modalityId);
+    
+    @Query("select o from AssetInfo o where o.siteId = ?1 and o.isValid = true")
+    public List<AssetInfo> getBySiteId(int siteId);
 }
