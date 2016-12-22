@@ -1,12 +1,14 @@
 ---
 instances: 1
-memory: 1024M
-disk_quota: 1024M
+memory: 2048M
+disk_quota: 2048M
 stack: cflinuxfs2
 path: ./target/geapm-1.0.0.war
 
 applications:
-- name: geapm-st
+- name: geapmst2
+  env:
+    JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
   services:
-  - geapm-st-psql
-  - geapm-st-log
+  - pgst2
+  - logst2

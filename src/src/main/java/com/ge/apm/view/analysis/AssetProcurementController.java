@@ -25,10 +25,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static java.lang.Math.ceil;
 
@@ -301,6 +298,7 @@ public class AssetProcurementController {
         for (I18nMessage msg : msgController.getFieldValueList("assetGroup")) {
             builder.put(Integer.parseInt(msg.getMsgKey()), msg.getValue());
         }
+
         return builder.build();
     }
 

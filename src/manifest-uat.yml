@@ -1,8 +1,14 @@
 ---
-inherit: manifest.yml
+instances: 1
+memory: 2048M
+disk_quota: 2048M
+stack: cflinuxfs2
+path: ./target/geapm-1.0.0.war
 
 applications:
-- name: geapm-uat
+- name: geapmuat2
+  env:
+    JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
   services:
-  - geapm-uat-psql
-  - geapm-uat-log
+  - pg-uat2
+  - log-uat2
