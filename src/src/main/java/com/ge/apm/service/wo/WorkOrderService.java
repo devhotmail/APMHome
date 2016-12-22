@@ -163,12 +163,18 @@ public class WorkOrderService {
         wo.setCurrentStepId(6);
         wo.setIsClosed(true);
         currentWoStep.setEndTime(TimeUtil.now());
-                
+        
         WorkOrderRepository woDao = WebUtil.getBean(WorkOrderRepository.class);
         WorkOrderStepRepository woStepDao = WebUtil.getBean(WorkOrderStepRepository.class);
         
         try{
-            saveWorkOrderStep(wo, currentWoStep, null);
+            if (currentWoStep.getStepId() == 6){
+                saveWorkOrderStep(wo, currentWoStep, null);
+            } else {
+                WorkOrderStep nextWoStep = initWorkOrderCurrentStep(wo);
+                nextWoStep.setEndTime(TimeUtil.now());
+                saveWorkOrderStep(wo, currentWoStep, nextWoStep);
+            }
         }
         catch(Exception ex){
             // rollback WorkOrder changes
