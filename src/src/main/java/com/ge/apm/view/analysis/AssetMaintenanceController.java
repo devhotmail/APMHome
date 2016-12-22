@@ -734,10 +734,9 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "        FROM work_order_step AS step, " +
             "             work_order AS work " +
             "        WHERE step.work_order_id = work.id " +
-            "          AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
+            "          AND step.step_id = :#stepId " +
             "          AND step.start_time IS NOT NULL " +
             "          AND step.end_time IS NOT NULL " +
- //           "          AND work.is_closed = true " +
             "          AND work.hospital_id = :#hospitalId " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
