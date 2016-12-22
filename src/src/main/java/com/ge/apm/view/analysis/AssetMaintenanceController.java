@@ -100,7 +100,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
 
     private static final boolean validateDate(Date startDate, Date endDate) {
         if (new DateTime(startDate).plusMonths(1).isBefore(new DateTime(endDate)) &&
-            new DateTime(startDate).plusYears(3).isAfter(new DateTime(endDate))) {
+            new DateTime(startDate).plusYears(3).plusDays(1).isAfter(new DateTime(endDate))) {
             return true;
         }
         else {
