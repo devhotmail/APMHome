@@ -791,7 +791,11 @@ public final class AssetMaintenanceController implements ServerEventInterface {
 
     private final static String SQL_LIST_TOP_ERROR_DEVICE_ALL = "" +
             "SELECT asset.name AS key, COALESCE(temporary.value, 0) AS value " +
-            "FROM asset_info AS asset " +
+            "FROM ( " +
+            "        SELECT * " +
+            "        FROM asset_info AS asset " +
+            "        WHERE asset.hospital_id = :#hospitalId " +
+            ") AS asset " +
             "LEFT OUTER JOIN ( " +
             "        SELECT asset.id AS key, CAST(count(*) AS INTEGER) AS value " +
             "        FROM work_order AS work, " +
