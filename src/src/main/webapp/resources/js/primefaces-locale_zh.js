@@ -24,7 +24,7 @@ PrimeFaces.locales ['en'] = {
     day: '天',
     allDayText: '',
     messages: {  //optional for Client Side Validation
-        'javax.faces.component.UIInput.REQUIRED': '{0}: 必填字段, 输入不可为空.',
+        'javax.faces.component.UIInput.REQUIRED': '必填字段, 输入不可为空.',
         'javax.faces.converter.IntegerConverter.INTEGER': '{2}: \'{0}\' 输入必须是整数.',
         'javax.faces.converter.IntegerConverter.INTEGER_detail': '{2}: \'{0}\' 输入必须是数值型的(范围:-2147483648 到 2147483647). 例如: {1}',
         'javax.faces.converter.DoubleConverter.DOUBLE': '输入必须是数值型的.',
@@ -117,7 +117,7 @@ PrimeFaces.locales ['zh'] = {
     day: '天',
     allDayText: '',
     messages: {  //optional for Client Side Validation
-        'javax.faces.component.UIInput.REQUIRED': '{0}: 必填字段, 输入不可为空.',
+        'javax.faces.component.UIInput.REQUIRED': '必填字段, 输入不可为空.',
         'javax.faces.converter.IntegerConverter.INTEGER': '{2}: \'{0}\' 输入必须是整数.',
         'javax.faces.converter.IntegerConverter.INTEGER_detail': '{2}: \'{0}\' 输入必须是数值型的(范围:-2147483648 到 2147483647). 例如: {1}',
         'javax.faces.converter.DoubleConverter.DOUBLE': '输入必须是数值型的.',
