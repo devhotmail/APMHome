@@ -182,7 +182,7 @@ INSERT INTO "i18n_message" VALUES (603,'field_name','address','地址','Address'
 INSERT INTO "i18n_message" VALUES (604,'field_name','aliasName','别名','Alias Name',null,-1);
 INSERT INTO "i18n_message" VALUES (605,'field_name','arriveDate','到货日期','Arrive Date',null,-1);
 INSERT INTO "i18n_message" VALUES (606,'field_name','assetDeptId','所属设备科','Asset Dept Id',null,-1);
-INSERT INTO "i18n_message" VALUES (607,'field_name','assetGroup','设备型号','Asset Group',null,-1);
+INSERT INTO "i18n_message" VALUES (607,'field_name','functionType','设备型号','Function Type',null,-1);
 INSERT INTO "i18n_message" VALUES (608,'field_name','assetId','设备ID','Asset Id',null,-1);
 INSERT INTO "i18n_message" VALUES (609,'field_name','assetOwnerId','责任人','Asset Owner Id',null,-1);
 INSERT INTO "i18n_message" VALUES (610,'field_name','assetOwnerName','责任人','Asset Owner Name',null,-1);
@@ -224,7 +224,7 @@ INSERT INTO "i18n_message" VALUES (645,'field_name','filmCount','胶片量','Fil
 INSERT INTO "i18n_message" VALUES (646,'field_name','financingNum','资产编号','Financing Num',null,-1);
 INSERT INTO "i18n_message" VALUES (647,'field_name','functionGrade','功能等级','Function Grade',null,-1);
 INSERT INTO "i18n_message" VALUES (648,'field_name','functionGroup','功能分组','Function Group',null,-1);
-INSERT INTO "i18n_message" VALUES (649,'field_name','functionType','设备类型','Function Type',null,-1);
+INSERT INTO "i18n_message" VALUES (649,'field_name','assetGroup','设备类型','Asset Group',null,-1);
 INSERT INTO "i18n_message" VALUES (650,'field_name','hospitalId','所属院区','Hospital Id',null,-1);
 INSERT INTO "i18n_message" VALUES (651,'field_name','injectCount','注射量','Inject Count',null,-1);
 INSERT INTO "i18n_message" VALUES (652,'field_name','installDate','安装日期','Install Date',null,-1);

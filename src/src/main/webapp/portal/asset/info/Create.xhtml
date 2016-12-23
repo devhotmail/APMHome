@@ -31,8 +31,8 @@
                             </h:panelGroup>
                             <p:spacer/>
                             <h:panelGroup>
-                                <label class="label">#{msg.functionType}</label>
-                                <p:selectOneMenu id="functionType" value="#{assetInfoController.selected.functionType}">
+                                <label class="label">#{msg.assetGroup}</label>
+                                <p:selectOneMenu id="assetGroup" value="#{assetInfoController.selected.assetGroup}">
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
@@ -125,8 +125,8 @@
                                 </p:selectOneMenu>
                             </h:panelGroup>
                             <h:panelGroup>
-                                <label class="label">#{msg.assetGroup}</label>
-                                <p:inputText id="assetGroup" value="#{assetInfoController.selected.assetGroup}"/>
+                                <label class="label">#{msg.functionType}</label>
+                                <p:inputText id="functionType" value="#{assetInfoController.selected.functionType}"/>
 <!--                                <p:selectOneMenu id="assetGroup" value="#{assetInfoController.selected.assetGroup}" required="true" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}" />
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('ownAssetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>

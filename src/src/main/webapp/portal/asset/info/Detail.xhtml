@@ -129,8 +129,8 @@
                     </h:panelGroup>
 
                     <h:panelGroup>
-                        <label class="label">#{msg.functionType}</label>
-                        <p:inputText id="functionType" value="#{fieldMsg.fieldValue('assetGroup', assetInfoController.selected.functionType)}" readonly="true"/>
+                        <label class="label">#{msg.assetGroup}</label>
+                        <p:inputText id="assetGroup" value="#{fieldMsg.fieldValue('assetGroup', assetInfoController.selected.assetGroup)}" readonly="true"/>
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.functionGrade}</label>
@@ -179,8 +179,8 @@
                         <p:inputText id="hospitalId" value="#{assetInfoController.getHospital(0).name}" readonly="true"/>
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">#{msg.assetGroup}</label>
-                        <p:inputText id="assetGroup" value="#{fieldMsg.fieldValue('ownAssetGroup', assetInfoController.selected.assetGroup)}" readonly="true"/>
+                        <label class="label">#{msg.functionType}</label>
+                        <p:inputText id="functionType" value="#{assetInfoController.selected.functionType}" readonly="true"/>
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.assetOwnerName}</label>
