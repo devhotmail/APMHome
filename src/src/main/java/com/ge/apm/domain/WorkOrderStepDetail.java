@@ -45,6 +45,9 @@ public class WorkOrderStepDetail implements Serializable {
     @Column(name = "accessory_price")
     private Double accessoryPrice;
 
+    @Column(name = "other_expense")
+    private Double otherExpense;
+    
     @Column(name = "step_id")
     @Basic(optional = false)
     @NotNull
@@ -120,6 +123,14 @@ public class WorkOrderStepDetail implements Serializable {
 
     public void setWorkOrderStepId(Integer workOrderStepId) {
         this.workOrderStepId = workOrderStepId;
+    }
+
+    public Double getOtherExpense() {
+        return otherExpense;
+    }
+
+    public void setOtherExpense(Double otherExpense) {
+        this.otherExpense = otherExpense;
     }
 
     @Override
