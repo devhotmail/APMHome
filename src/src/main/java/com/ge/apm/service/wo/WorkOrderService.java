@@ -7,6 +7,7 @@ import com.ge.apm.domain.SiteInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderStep;
+import com.ge.apm.domain.WorkOrderStepDetail;
 import com.ge.apm.service.uaa.UaaService;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -70,6 +71,8 @@ public class WorkOrderService {
             
             try{
                 woStepDao.save(currentWoStep);
+                //保存step后会连带保存detail，再计算order上面的工时和总价
+                saveTotalTimeAndPrice(woDao, wo, currentWoStep);
             }
             catch(Exception ex){
                 throw new RuntimeException("Failed to save current WorkOrderStep:"+ex.getMessage());
@@ -198,6 +201,26 @@ public class WorkOrderService {
             
             throw ex;
         }        
+    }
+    
+    private void saveTotalTimeAndPrice(WorkOrderRepository woDao, WorkOrder wo, WorkOrderStep wos) {
+        int totalManHour = wo.getTotalManHour();
+        double totalPrice = wo.getTotalPrice();
+        if ( wo.getSiteId() == null) return;
+        SiteInfo site = siteDao.findById(wo.getSiteId());
+        if (site == null) return;
+        double hourPrice = site.getManhourPrice()==null?0.0:site.getManhourPrice();
+        List<WorkOrderStepDetail> details = wos.getStepDetails();
+        if (details == null || details.isEmpty()) return;
+        for (WorkOrderStepDetail detail : details) {
+            totalManHour += detail.getManHours()==null?0:detail.getManHours();
+            totalPrice = totalPrice + (detail.getManHours()==null?0:detail.getManHours())*hourPrice 
+                    + (detail.getAccessoryQuantity()==null?0:detail.getAccessoryQuantity())*(detail.getAccessoryPrice()==null?0.0:detail.getAccessoryPrice()) 
+                    + (detail.getOtherExpense()==null?0.0:detail.getOtherExpense());
+        }
+        wo.setTotalManHour(totalManHour);
+        wo.setTotalPrice(totalPrice);
+        woDao.save(wo);
     }
     
 }

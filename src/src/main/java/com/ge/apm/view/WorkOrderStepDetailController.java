@@ -58,7 +58,7 @@ public class WorkOrderStepDetailController extends JpaCRUDController<WorkOrderSt
             if((selected.getAccessory()==null || "".equals(selected.getAccessory())) &&
                selected.getAccessoryPrice()==null &&
                selected.getAccessoryQuantity()==null &&
-               selected.getManHours()==null){
+               selected.getManHours()==null && selected.getOtherExpense()==null){
                 RequestContext.getCurrentInstance().addCallbackParam("validationFailed", true);
                 WebUtil.addErrorMessageKey("ValidationRequire");
             }

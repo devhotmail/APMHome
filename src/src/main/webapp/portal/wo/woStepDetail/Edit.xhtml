@@ -28,6 +28,10 @@
                             <label class="label">#{msg.accessoryPrice}</label>
                             <p:inputNumber id="accessoryPrice" value="#{workOrderStepDetailController.selected.accessoryPrice}" />
                         </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.otherExpense}</label>
+                            <p:inputNumber id="otherExpense" value="#{workOrderStepDetailController.selected.otherExpense}" />
+                        </h:panelGroup>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton validateClient="true" process="@parent" value="#{msg.Save}" actionListener="#{workOrderStepDetailController.validateInput(workOrderStepController.selected)}" update=":formStepData:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'WorkOrderStepDetailEditDialog');"/>

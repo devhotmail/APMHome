@@ -25,6 +25,9 @@
             <p:column headerText="#{msg.accessoryPrice}">
                 <h:outputText value="#{item.accessoryPrice}"/>
             </p:column>
+            <p:column headerText="#{msg.otherExpense}">
+                <h:outputText value="#{item.otherExpense}"/>
+            </p:column>
             
             <p:column headerText="#{msg.Actions}">
                 <p:commandButton process="@this" icon="ui-icon-add" style="zoom:0.8;" title="#{msg.Create}" actionListener="#{workOrderStepDetailController.prepareCreate(workOrderStepController.selected)}" update=":WorkOrderStepDetailEditDlg" oncomplete="PF('WorkOrderStepDetailEditDialog').show()"/>

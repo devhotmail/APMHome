@@ -26,6 +26,8 @@
                         <h:outputText value="#{workOrderStepDetailController.selected.accessoryPrice}"/>
                         <h:outputLabel value="#{msg.workOrderStepId}" for="workOrderStepId" />
                         <h:outputText value="#{workOrderStepDetailController.selected.workOrderStepId}"/>
+                        <h:outputLabel value="#{msg.otherExpense}" for="otherExpense" />
+                        <h:outputText value="#{workOrderStepDetailController.selected.otherExpense}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{workOrderStepDetailController.deleteAction}" icon="ui-icon-trash" actionListener="#{workOrderStepDetailController.delete}" value="#{msg.Delete}" update=":WorkOrderStepDetailListForm:datalist, :growl" oncomplete="handleSubmit(args, 'WorkOrderStepDetailViewDialog');"/>
