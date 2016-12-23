@@ -50,6 +50,20 @@ public class AssetFileAttachment implements Serializable {
     private Integer assetId;
     @Column(name = "file_id")
     private Integer fileId;
+    @Column(name = "hospital_id")
+    @Basic(optional = false)
+    @NotNull
+    private Integer hospitalId;
+
+    public Integer getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
+    }
+    
+    
 
     public AssetFileAttachment() {
     }
