@@ -331,7 +331,8 @@ INSERT INTO "i18n_message" VALUES (756,'field_name','risProcedureName', 'ris部�
 INSERT INTO "i18n_message" VALUES (757,'field_name','apmProcedureName', 'apm部位名称','apm precedure name',null,-1);
 INSERT INTO "i18n_message" VALUES (758,'field_name','AttachedFileInfo', '附件信息','Attachment File Info',null,-1);
 
-
+INSERT INTO "i18n_message" VALUES (759,'field_name','otherExpense', '其他费用(元)','Other Expense(RMB)',null,-1);
+INSERT INTO "i18n_message" VALUES (760,'field_name','manhourPrice', '内部工时单价(元)','Manhour Price(RMB)',null,-1);
 
 
 -- field value code types  ( id from 1400)
