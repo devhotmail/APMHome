@@ -71,6 +71,9 @@ public class SiteInfo implements Serializable {
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
+    @Column(name = "manhour_price")
+    private Double manhourPrice;
+    
     @Column(name = "wf_auto_step2")
     private Boolean wfAutoStep2;
     @Column(name = "wf_auto_step3")
@@ -233,6 +236,14 @@ public class SiteInfo implements Serializable {
 
     public void setWfAutoStep6(Boolean wfAutoStep6) {
         this.wfAutoStep6 = wfAutoStep6;
+    }
+
+    public Double getManhourPrice() {
+        return manhourPrice;
+    }
+
+    public void setManhourPrice(Double manhourPrice) {
+        this.manhourPrice = manhourPrice;
     }
 
     @Override
