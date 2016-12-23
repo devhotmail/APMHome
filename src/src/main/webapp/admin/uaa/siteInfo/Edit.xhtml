@@ -57,6 +57,10 @@
                                 <f:selectItem itemLabel="tw" itemValue="tw"/>
                             </p:selectOneMenu>
                         </h:panelGroup>
+                        <h:panelGroup rendered="true">
+                            <label class="label">#{msg.manhourPrice}</label>
+                            <p:inputText id="manhourPrice" value="#{siteInfoController.selected.manhourPrice}" />
+                        </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">&nbsp;</label>
                             <p:selectBooleanCheckbox itemLabel="#{msg.isEnabled}" value="#{siteInfoController.selected.isEnabled}"/>
@@ -64,33 +68,18 @@
                     </p:panelGrid>
                     <br/>
                     <p:fieldset legend="#{msg.WorkOrderConfig}">
-                        <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{siteInfoController.selected != null}">
-                            <h:panelGroup>
-                                <label class="label">&nbsp;</label>
-                                <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep2}" value="#{siteInfoController.selected.wfAutoStep2}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">&nbsp;</label>
-                                <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep3}" value="#{siteInfoController.selected.wfAutoStep3}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">&nbsp;</label>
-                                <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep4}" value="#{siteInfoController.selected.wfAutoStep4}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">&nbsp;</label>
-                                <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep5}" value="#{siteInfoController.selected.wfAutoStep5}" rendered="false"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">&nbsp;</label>
-                                <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep6}" value="#{siteInfoController.selected.wfAutoStep6}" rendered="false"/>
-                            </h:panelGroup>
-                        </p:panelGrid>
+                        <h:panelGrid columns="6" rendered="#{siteInfoController.selected != null}">
+                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep2}" value="#{siteInfoController.selected.wfAutoStep2}"/>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep3}" value="#{siteInfoController.selected.wfAutoStep3}"/>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep4}" value="#{siteInfoController.selected.wfAutoStep4}"/>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep5}" value="#{siteInfoController.selected.wfAutoStep5}" rendered="false"/>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep6}" value="#{siteInfoController.selected.wfAutoStep6}" rendered="false"/>
+                        </h:panelGrid>
                     </p:fieldset>
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{siteInfoController.save}" value="#{msg.Save}" update=":growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'SiteInfoEditDialog');"/>
                     &nbsp;&nbsp;
-                    <p:commandButton immediate="true" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('SiteInfoEditDialog').hide()"/>
+                    <p:commandButton immediate="true" process="@this" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('SiteInfoEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
