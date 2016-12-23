@@ -461,8 +461,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 					dt = (currentJoda.plusDays(1).getMillis()/1000L - today)/3600;
 
-					System.out.println(dt);
-
 					rs_dt_map.put(timeline, dt);
 
 					diff_total -= dt;
