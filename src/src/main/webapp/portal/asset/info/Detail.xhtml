@@ -376,53 +376,54 @@
             <div class="ui-g-12">
                 <div class="block">
                     <h3 class="block-title">#{msg.deviceExpohd}</h3>
-                    <p:chart id="exposure_bar" type="bar" model="#{assetUsageAllController.deviceExpo}" responsive="true" />
+                    <p:chart id="exposure_bar" type="line" model="#{assetUsageSingleController.deviceExpo}"
+                             responsive="true"/>
                 </div>
             </div>
         </p:fieldset>
         <p:fieldset  style="margin-bottom:20px">
-            <!-- Chart 1: Device Scan -->
+            Chart 1: Device Scan 
             <div class="ui-g-12">
                 <div class="block">
                     <h3 class="block-title">#{msg.deviceScanhd}</h3>
-                    <p:chart id="scan_bar" type="bar"
-                             model="#{assetUsageAllController.deviceScan}" responsive="true" />
+                    <p:chart id="scan_bar" type="line"
+                             model="#{assetUsageSingleController.deviceScan}" responsive="true"/>
                 </div>
             </div>
         </p:fieldset>
 
         <h:form>
-                <p:panel  header="#{msg.deviceContract}">
+            <p:panel  header="#{msg.deviceContract}">
                 <f:facet name="actions">
                     <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="#{urlEncryptController.encodeUrlParam(assetInfoController.getContractListLink())}" ><h:outputText styleClass="ui-icon ui-icon-fullscreen" /></h:commandLink>
                     <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="#{urlEncryptController.encodeUrlParam(assetInfoController.getContractAddLink())}"><h:outputText styleClass="ui-icon ui-icon-add" /></h:commandLink>
                 </f:facet>
-                    <p:dataTable var="item" value="#{assetInfoService.getContractList(assetInfoController.selected.id)}" emptyMessage="#{msg.noRecordFound}">
-                        <p:column headerText="#{msg.name}" >
-                            <h:outputText value="#{item.name}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.startTime}"  >
+                <p:dataTable var="item" value="#{assetInfoService.getContractList(assetInfoController.selected.id)}" emptyMessage="#{msg.noRecordFound}">
+                    <p:column headerText="#{msg.name}" >
+                        <h:outputText value="#{item.name}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.startTime}"  >
 
-                            <h:outputText value="#{item.startDate}">
-                                <f:convertDateTime pattern="yyyy/MM/dd" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="#{msg.endTime}" >
+                        <h:outputText value="#{item.startDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.endTime}" >
 
-                            <h:outputText value="#{item.endDate}">
-                                <f:convertDateTime pattern="yyyy/MM/dd" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="#{msg.AssetContractAmount}" sortBy="#{item.contractAmount}" >
-                            <h:outputText value="#{item.contractAmount}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.AssetContractAttachment}"  >
-                            <p:commandButton value="#{msg.download}"  onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" rendered="#{item.fileId > 0}" ajax="false">
-                                <p:fileDownload value="#{attachmentFileService.getFile(item.fileId)}" />
-                            </p:commandButton>
-                        </p:column>
-                    </p:dataTable>
-                    </p:panel>
+                        <h:outputText value="#{item.endDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.AssetContractAmount}" sortBy="#{item.contractAmount}" >
+                        <h:outputText value="#{item.contractAmount}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.AssetContractAttachment}"  >
+                        <p:commandButton value="#{msg.download}"  onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" rendered="#{item.fileId > 0}" ajax="false">
+                            <p:fileDownload value="#{attachmentFileService.getFile(item.fileId)}" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
 
 
             <p:tabView>
