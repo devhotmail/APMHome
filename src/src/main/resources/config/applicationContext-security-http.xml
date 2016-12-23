@@ -37,7 +37,7 @@
         
         <!-- 系统管理 -->
         <intercept-url pattern="/portal/uaa/**" access="hasRole('ITAdmin')"/>
-        <intercept-url pattern="/portal/insp/checkListList**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead')"/> <!-- 巡检条目配置 -->
+        <intercept-url pattern="/portal/insp/checkListList**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead','AssetStaff')"/> <!-- 巡检条目配置 -->
         <intercept-url pattern="/portal/i18n/FieldCodeType.xhtml**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead')"/> <!-- 系统编码配置 -->
                 
         <!-- 设备档案 -->

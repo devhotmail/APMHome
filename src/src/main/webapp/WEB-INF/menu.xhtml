@@ -44,6 +44,7 @@
                             <p:menuitem id="um05" value="#{msg.AssetDocumentMgmt}" rendered="false" outcome="/portal/asset/fileAttachment/List"/>
                             <p:menuitem id="um06" value="#{msg.AssetValueAnalysis}" rendered="false" outcome="/empty"/>
                             <p:menuitem id="um07" value="#{msg.AssetContractMgmt}"  outcome="/portal/asset/contract/List"/>
+                            <p:menuitem id="um08" value="#{msg.SupplierMgmt}" outcome="/portal/supplier/List.xhtml"/>
                         </p:submenu>
                         <p:submenu id="um09" label="#{msg.WorkOrderMgmt}" icon="fa fa-wrench" rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
                             <p:menuitem id="um10" value="#{msg.ServiceRequestMgmt}" outcome="/portal/wo/woList.xhtml"/>
@@ -69,6 +70,7 @@
                             <p:menuitem id="um28" value="#{msg.DeviceQualityControl}" outcome="/portal/insp/QualityCtrlOrderList.xhtml"/>
                             <p:menuitem id="um29" value="#{msg.DeviceAdverseEventMgmt}" outcome="/empty"/>
                             <p:menuitem id="um30" value="#{msg.DeviceMedicalAccidentMgmt}" rendered="false" style="color: orange;" outcome="/empty" />
+                            <p:menuitem id="um301" value="#{msg.ChecklistAdmin}" outcome="/portal/insp/checkListList.xhtml"/>
                         </p:submenu>
                         <p:submenu id="um31" label="#{msg.AssetKnowledgeBaseMgmt}" icon="fa fa-book" rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
                             <p:menuitem id="um32" value="#{msg.AssetDocMgmt}" outcome="/portal/asset/fileAttachment/List.xhtml"/>
