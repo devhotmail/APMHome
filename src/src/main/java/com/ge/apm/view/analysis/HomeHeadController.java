@@ -553,41 +553,41 @@ public class HomeHeadController extends SqlConfigurableChartController {
     
     private void createAnnualPie() {
         // get revenue
-        sql = "select a.clinical_dept_id as key, " +
+        sql = "select a.clinical_dept_name as key, " +
                 "sum(r.price_amount) as value " +
                 "from asset_info a left join asset_clinical_record r " +
                 "on r.asset_id = a.id " +
                 "and extract(year from exam_date) = :#targetYear " +
                 "and a.hospital_id = :#hospitalId " +
-                "group by a.clinical_dept_id " +
-                "order by a.clinical_dept_id;";
+                "group by a.clinical_dept_name " +
+                "order by a.clinical_dept_name;";
         List<Map<String, Object>> r = prepareData(sql, sqlParams);
 
         // get asset depreciation value
-        sql = "select a.clinical_dept_id as key, " +
+        sql = "select a.clinical_dept_name as key, " +
                 "sum(d.deprecate_amount) as value " +
                 "from asset_info a left join asset_depreciation d " +
                 "on a.id = d.asset_id " +
                 "and a.hospital_id = :#hospitalId " +
-                "group by a.clinical_dept_id " +
-                "order by a.clinical_dept_id;";
+                "group by a.clinical_dept_name " +
+                "order by a.clinical_dept_name;";
         List<Map<String, Object>> d = prepareData(sql, sqlParams);
 
         // get maintenance cost
-        sql = "select a.clinical_dept_id as key, " +
+        sql = "select a.clinical_dept_name as key, " +
                 "sum(w.total_price) as value " +
                 "from asset_info a left join work_order w " +
                 "on w.asset_id = a.id " +
                 "and a.hospital_id = :#hospitalId " +
                 "and extract(year from w.request_time) = :#targetYear " +
                 "and w.is_closed = true " +
-                "group by a.clinical_dept_id " +
-                "order by a.clinical_dept_id asc;";
+                "group by a.clinical_dept_name " +
+                "order by a.clinical_dept_name asc;";
         List<Map<String, Object>> w = prepareData(sql, sqlParams);
 
         // Calcuate profile = revenue - depreciation - maintenance cost
         profit = calcProfit(r, d, w);
-        localizeAxis(profit, "clinicalDeptId");
+        //localizeAxis(profit, "clinicalDeptId");
 
         String title = new String("Annual Profit Distribution");
         drawPie(title, profit);
@@ -617,7 +617,8 @@ public class HomeHeadController extends SqlConfigurableChartController {
         List<Map<String, Object>> profit = new ArrayList<>();
 
         for (Map<String, Object> item : revenue) {
-            String key = item.get("key").toString();
+            
+            String key = item.get("key")!=null ? item.get("key").toString() : "";
 
             HashMap<String, Object> node = new HashMap<>();
 
@@ -723,7 +724,6 @@ public class HomeHeadController extends SqlConfigurableChartController {
         for (I18nMessage local : messages) {
                 messages_map.put(local.getMsgKey(), local.getValue());
         }
-
 
         for (Map<String, Object> res : results) 
             if (messages_map.containsKey(res.get("key").toString())) 

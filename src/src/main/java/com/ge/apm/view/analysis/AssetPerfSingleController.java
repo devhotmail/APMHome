@@ -16,6 +16,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.BarChartSeries;
+import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.ChartSeries;
 import org.slf4j.LoggerFactory;
 
@@ -157,14 +158,14 @@ public class AssetPerfSingleController implements ServerEventInterface {
     }
 
     private String DB0TL
-            = "SELECT name, serial_num, clinical_dept_id "
+            = "SELECT name, serial_num, clinical_dept_name "
             + "FROM asset_info "
             + "WHERE id = :#filter_id ";
 
            //bigint
     private String DB1TLYEAR
             = "SELECT key, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
-            + "FROM (SELECT id, name, serial_num, clinical_dept_id FROM asset_info WHERE id = :#filter_id) left_table "
+            + "FROM (SELECT id, name, serial_num FROM asset_info WHERE id = :#filter_id) left_table "
             + "LEFT JOIN (SELECT TO_CHAR(exam_date, 'yyyy') AS key, expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY key "
@@ -186,7 +187,7 @@ public class AssetPerfSingleController implements ServerEventInterface {
            //bigint
     private String DB1TLMONTH
             = "SELECT key, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
-            + "FROM (SELECT id, name, serial_num, clinical_dept_id FROM asset_info WHERE id = :#filter_id) left_table "
+            + "FROM (SELECT id, name, serial_num FROM asset_info WHERE id = :#filter_id) left_table "
             + "LEFT JOIN (SELECT TO_CHAR(exam_date, 'yyyy-mm') AS key, expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY key "
@@ -208,7 +209,7 @@ public class AssetPerfSingleController implements ServerEventInterface {
             //bigint
     private String DB1TLDAY
             = "SELECT key, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
-            + "FROM (SELECT id, name, serial_num, clinical_dept_id FROM asset_info WHERE id = :#filter_id) left_table "
+            + "FROM (SELECT id, name, serial_num FROM asset_info WHERE id = :#filter_id) left_table "
             + "LEFT JOIN (SELECT TO_CHAR(exam_date, 'yyyy-mm-dd') AS key, expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY key "
@@ -420,7 +421,7 @@ public class AssetPerfSingleController implements ServerEventInterface {
         if (!rs_0.isEmpty()) {
             name = rs_0.get(0).get("name")!=null ? (String)rs_0.get(0).get("name") : "";
             serial_num = rs_0.get(0).get("serial_num")!=null ? (String)rs_0.get(0).get("serial_num") : "";
-            clinical_dept_name = getDeptName((Integer)rs_0.get(0).get("clinical_dept_id"));
+            clinical_dept_name = (String)rs_0.get(0).get("clinical_dept_name");
         }
 
         if (!rs_2.isEmpty())
@@ -466,15 +467,6 @@ public class AssetPerfSingleController implements ServerEventInterface {
 
     }
 
-    private String getDeptName (Integer clinical_dept_id) {
-
-        if (clinical_dept_id==null)
-            return "";
-        else if (i18nMessageDept.containsKey(clinical_dept_id))
-            return i18nMessageDept.get(clinical_dept_id);
-        else
-            return String.valueOf(clinical_dept_id);
-    }
 
     private void deviceTableMonth (String name, String serial_num, String clinical_dept_name, double depre, 
         Map<String, Row> rs_1_map, Map<String, Row> rs_3_map) {

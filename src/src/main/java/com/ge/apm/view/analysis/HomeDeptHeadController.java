@@ -13,6 +13,7 @@ import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.BarChartSeries;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.LineChartSeries;
+import org.primefaces.model.chart.AxisType;
 import org.slf4j.LoggerFactory;
 
 import com.ge.apm.view.sysutil.UserContextService;
@@ -69,11 +70,13 @@ public class HomeDeptHeadController implements Serializable {
         deviceScan = new BarChartModel();
         deviceScan.setBarWidth(50);
         deviceScan.setLegendPosition("ne");
+        deviceScan.getAxis(AxisType.Y).setMin(0);
         deviceScan.setExtender("deviceScan");
 
         deviceExpo = new BarChartModel();
         deviceExpo.setBarWidth(50);
         deviceExpo.setLegendPosition("ne");
+        deviceExpo.getAxis(AxisType.Y).setMin(0);
         deviceExpo.setExtender("deviceExposure");
 
         deviceProfit = new BarChartModel();

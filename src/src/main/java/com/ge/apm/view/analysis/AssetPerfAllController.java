@@ -108,11 +108,11 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
             //bigint
     private String DB1TL
-            = "SELECT left_table.name, serial_num, clinical_dept_id, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
-            + "FROM (SELECT id, name, serial_num, clinical_dept_id FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            = "SELECT left_table.name, serial_num, clinical_dept_name, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
+            + "FROM (SELECT id, name, serial_num, clinical_dept_name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
             + "LEFT JOIN (SELECT expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY left_table.name, serial_num, clinical_dept_id "
+            + "GROUP BY left_table.name, serial_num, clinical_dept_name "
             + "ORDER BY left_table.name ";
 
     private String DB2TL
@@ -145,18 +145,18 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
             + "GROUP BY asset_group) as t2 )";
 
     private String MAX2TL
-            = "SELECT clinical_dept_id FROM "
-            + "( SELECT left_table.clinical_dept_id, SUM(right_table.price_amount) "
-            + "FROM (SELECT id, clinical_dept_id FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            = "SELECT clinical_dept_name FROM "
+            + "( SELECT left_table.clinical_dept_name, SUM(right_table.price_amount) "
+            + "FROM (SELECT id, clinical_dept_name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
             + "LEFT JOIN (SELECT price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY clinical_dept_id ) as t1 "
+            + "GROUP BY clinical_dept_name ) as t1 "
             + "WHERE t1.sum = ( "
-            + "SELECT MAX(sum) FROM (SELECT left_table.clinical_dept_id, SUM(right_table.price_amount) "
-            + "FROM (SELECT id, clinical_dept_id FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "SELECT MAX(sum) FROM (SELECT left_table.clinical_dept_name, SUM(right_table.price_amount) "
+            + "FROM (SELECT id, clinical_dept_name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
             + "LEFT JOIN (SELECT price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
-            + "GROUP BY clinical_dept_id) as t2 )";
+            + "GROUP BY clinical_dept_name) as t2 )";
 
     // Getters & Setters
     public Date getStartDate() {
@@ -218,8 +218,8 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
             List<Map<String, Object>> rs_mx2 = NativeSqlUtil.queryForList(MAX2TL, sqlParams);
             for (Map<String, Object> item : rs_mx2)
-                if (item.get("clinical_dept_id") != null)
-                    topDept += (getDeptName((Integer)item.get("clinical_dept_id")) + " ");
+                if (item.get("clinical_dept_name") != null)
+                    topDept += ((String)item.get("clinical_dept_name") + " ");
     }
     
     private String getAssetGroup (Integer asset_group) {
@@ -231,6 +231,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
         else
             return String.valueOf(asset_group);
     }
+
 
     private String getDeptName (Integer clinical_dept_id) {
 
@@ -277,7 +278,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
                 name = item_1.get("name")!=null ?(String)item_1.get("name"): "";
                 serial_num = item_1.get("serial_num")!=null ? (String)item_1.get("serial_num") : "";
-                clinical_dept_name = getDeptName((Integer)item_1.get("clinical_dept_id"));
+                clinical_dept_name = (String)item_1.get("clinical_dept_name");
                 revenue = item_1.get("revenue")!=null ? (double)item_1.get("revenue") : 0.0;
                 scan = item_1.get("scan")!=null ? (long)item_1.get("scan") : 0;
                 expo = item_1.get("expo")!=null ? (double)item_1.get("expo") : 0.0;
