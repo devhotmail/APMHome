@@ -52,7 +52,7 @@
         <property name="initialSize" value="1"/>
         <property name="minIdle" value="1"/>
         <property name="maxActive" value="20"/>
-        <property name="maxWait" value="60000"/>
+        <!--<property name="maxWait" value="60000"/>-->
         <property name="timeBetweenEvictionRunsMillis" value="60000"/>
         <property name="minEvictableIdleTimeMillis" value="300000"/>
         <property name="validationQuery" value="SELECT 'x'"/>
@@ -73,13 +73,33 @@
     </bean>
 
     <bean id="statFilter" class="com.alibaba.druid.filter.stat.StatFilter">
-        <property name="slowSqlMillis" value="5000"/>
         <property name="logSlowSql" value="true"/>
+        <property name="slowSqlMillis" value="5000"/>
+        <property name="mergeSql" value="true"/>
     </bean>
 
     <bean id="slf4jLogFilter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
         <property name="statementExecutableSqlLogEnable" value="false"/>
+        <property name="connectionLogErrorEnabled" value="true"/>
+        <property name="statementLogErrorEnabled" value="true"/>
+        <property name="resultSetLogErrorEnabled" value="true"/>
     </bean>
+
+    <bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor">
+    </bean>
+
+    <bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut"
+          scope="prototype">
+        <property name="patterns">
+            <list>
+                <value>com.ge.apm.*</value>
+            </list>
+        </property>
+    </bean>
+
+    <aop:config>
+        <aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut"/>
+    </aop:config>
 
     <!-- jmx -->
     <context:mbean-server/>
