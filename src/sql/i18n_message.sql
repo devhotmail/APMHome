@@ -499,7 +499,7 @@ INSERT INTO "i18n_message" VALUES (3028,'message','InvalidPictureFileType', '文
 INSERT INTO "i18n_message" VALUES (3029,'message','WhenIsFinished', '任务完成时，%s不能为空.',' when the record is finished,%s cannot be null',null,-1);
 INSERT INTO "i18n_message" VALUES (3030,'message','ResetConformation', '重置确认','Reset Confirmation',null,-1);
 INSERT INTO "i18n_message" VALUES (3031,'message','ResetConformationMsg', '您确定要重置选定用户的密码么?','Are you sure to reset selected user password?',null,-1);
-INSERT INTO "i18n_message" VALUES (3032,'message','passwordResetTips', '为了数据安全请修改初始密码。','Please change the initial password for safety.',null,-1);
+INSERT INTO "i18n_message" VALUES (3032,'message','passwordResetTips', '您使用的是系统初始密码。为保证您的帐号安全，建议您立即修改密码.','Please change the initial password for safety.',null,-1);
 
 -- Chart label/lengend （id from 5000 to 5500）
 INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan (Times)',null,-1);

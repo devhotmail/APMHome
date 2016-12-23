@@ -48,7 +48,7 @@ public class AssetInfo implements Serializable {
     @Column(name = "function_group")
     private Integer functionGroup;
     @Column(name = "function_type")
-    private Integer functionType;
+    private String functionType;
     @Column(name = "function_grade")
     private Integer functionGrade;
     @Size(max = 64)
@@ -239,11 +239,11 @@ public class AssetInfo implements Serializable {
         this.functionGroup = functionGroup;
     }
 
-    public Integer getFunctionType() {
+    public String getFunctionType() {
         return functionType;
     }
 
-    public void setFunctionType(Integer functionType) {
+    public void setFunctionType(String functionType) {
         this.functionType = functionType;
     }
 

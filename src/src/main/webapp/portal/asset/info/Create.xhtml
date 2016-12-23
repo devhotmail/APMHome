@@ -168,8 +168,8 @@
                                 <p:calendar id="manufactDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.manufactDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"  />
                             </h:panelGroup>
                             <h:panelGroup>
-                                <label class="label">#{msg.purchaseDate}</label>
-                                <p:calendar id="purchaseDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.purchaseDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" />
+                                <label class="label">#{msg.purchaseDate}*</label>
+                                <p:calendar id="purchaseDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.purchaseDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.purchaseDate} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.arriveDate}</label>

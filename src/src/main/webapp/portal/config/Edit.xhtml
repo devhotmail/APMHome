@@ -14,7 +14,7 @@
                     <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{i18nMessageController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.msgKey}*</label>
-                            <p:spinner id="msgKey" value="#{i18nMessageController.selected.msgKey}"  required="true" requiredMessage="#{msg.msgKey} #{msg.ValidationRequire}"/>
+                            <p:inputNumber id="msgKey" decimalPlaces="0" value="#{i18nMessageController.selected.msgKey}"  required="true" requiredMessage="#{msg.msgKey} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.msgValue}*</label>

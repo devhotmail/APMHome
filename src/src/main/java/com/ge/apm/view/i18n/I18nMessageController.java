@@ -54,6 +54,7 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
     	super.delete();
     }
     
+/*    
     @Override
     public void save(){
         //判断key是否为唯一
@@ -64,6 +65,7 @@ public class I18nMessageController extends JpaCRUDController<I18nMessage> {
         }
     	super.save();
     }
+*/
     
     @Override
     public void prepareEdit(){
