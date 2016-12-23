@@ -2,7 +2,6 @@ package com.ge.apm.view.sysutil;
 
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.UserAccount;
-import static com.ge.apm.domain.UserAccount.HASH_INTERATIONS;
 import com.ge.apm.service.utils.Digests;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -45,7 +44,28 @@ public class LoginController extends LoginService {
         // called after user logined.
         UserContextService userContextService = WebUtil.getBean(UserContextService.class);
         userContextService.processAfterLogin();
-
-        WebUtil.redirectTo(userContextService.getUserDefaultHomePage());
+        
+        UserAccount user = userContextService.getLoginUser();
+        String saltedPassword = null;
+        try {
+            byte[] salt = Digests.decodeHex(user.getPwdSalt());
+            byte[] hashPassword = Digests.sha1("123456".getBytes(), salt, UserAccount.HASH_INTERATIONS);
+            saltedPassword = Digests.encodeHex(hashPassword);
+        } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DecoderException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (user.getPassword().equals(saltedPassword)) {
+            WebUtil.redirectTo("/resetPassword.xhtml");
+        } else {
+            WebUtil.redirectTo(userContextService.getUserDefaultHomePage());
+        }
     }
+    
+    public String getHomePage() {
+        UserContextService userContextService = WebUtil.getBean(UserContextService.class);
+        return userContextService.getUserDefaultHomePage();
+    }
+
 }

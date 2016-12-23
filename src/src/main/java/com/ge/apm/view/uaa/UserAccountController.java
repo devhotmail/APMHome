@@ -6,7 +6,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
 
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.UserAccountRepository;
@@ -208,4 +207,15 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
         loginName = loginName.replace(" ", "");
         user.setLoginName(loginName);
     }
+    
+    public void resetPassword() {
+        selected.setPlainPassword("123456");
+        try {
+            selected.entryptPassword();
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(UserAccountController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dao.save(selected);
+    }
+    
 }

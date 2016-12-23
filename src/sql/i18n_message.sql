@@ -73,6 +73,8 @@ INSERT INTO "i18n_message" VALUES (69, 'label','DuplicateSiteName', '租户名�
 INSERT INTO "i18n_message" VALUES (70, 'label','invalidEmail', 'Email: 不是有效的Email地址.','Invalid Email Address.',null,-1);
 INSERT INTO "i18n_message" VALUES (71, 'label','DuplicateMsgKey', '编码 "%s" 已存在,请更换其他名称','the code you seted has been used,please change to another one',null,-1);
 INSERT INTO "i18n_message" VALUES (72, 'message','PasswordNotMatch', '输入的密码不匹配','Password not match',null,-1);
+INSERT INTO "i18n_message" VALUES (73, 'label', 'resetPassword', '重置密码', 'Reset Password', NULL, -1);
+INSERT INTO "i18n_message" VALUES (74, 'label', 'continue', '继续', 'Continue', NULL, -1);
 
 
 -- menu item names  ( id from 200 to  399)
@@ -332,7 +334,6 @@ INSERT INTO "i18n_message" VALUES (755,'field_name','cyclicEndDate', '循环结�
 INSERT INTO "i18n_message" VALUES (756,'field_name','risProcedureName', 'ris部位名称','ris precedure name',null,-1);
 INSERT INTO "i18n_message" VALUES (757,'field_name','apmProcedureName', 'apm部位名称','apm precedure name',null,-1);
 INSERT INTO "i18n_message" VALUES (758,'field_name','AttachedFileInfo', '附件信息','Attachment File Info',null,-1);
-
 INSERT INTO "i18n_message" VALUES (759,'field_name','otherExpense', '其他费用(元)','Other Expense(RMB)',null,-1);
 INSERT INTO "i18n_message" VALUES (760,'field_name','manhourPrice', '内部工时单价(元)','Manhour Price(RMB)',null,-1);
 
@@ -496,6 +497,9 @@ INSERT INTO "i18n_message" VALUES (3026,'message','SelectUploadFile', '请选择
 INSERT INTO "i18n_message" VALUES (3027,'message','SuccessUploaded', '上传成功',' is uploaded',null,-1);
 INSERT INTO "i18n_message" VALUES (3028,'message','InvalidPictureFileType', '文件类型应该属于(gif,jpe,jpeg,png,bmp)','Invalid Picture File Type',null,-1);
 INSERT INTO "i18n_message" VALUES (3029,'message','WhenIsFinished', '任务完成时，%s不能为空.',' when the record is finished,%s cannot be null',null,-1);
+INSERT INTO "i18n_message" VALUES (3030,'message','ResetConformation', '重置确认','Reset Confirmation',null,-1);
+INSERT INTO "i18n_message" VALUES (3031,'message','ResetConformationMsg', '您确定要重置选定用户的密码么?','Are you sure to reset selected user password?',null,-1);
+INSERT INTO "i18n_message" VALUES (3032,'message','passwordResetTips', '为了数据安全请修改初始密码。','Please change the initial password for safety.',null,-1);
 
 -- Chart label/lengend （id from 5000 to 5500）
 INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan (Times)',null,-1);
