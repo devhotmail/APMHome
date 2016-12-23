@@ -214,9 +214,9 @@ public class InspectionService {
         return root;
     }
 
-    public TreeNode getPlanTree(Integer orderType) {
+    public TreeNode getPlanTree(Integer orderType,Integer hospitalId ) {
         UaaService uuaService = WebUtil.getBean(UaaService.class);
-        TreeNode planTree = uuaService.getOrgAssetChecklistTree(UserContextService.getCurrentUserAccount().getHospitalId(), orderType);
+        TreeNode planTree = uuaService.getOrgAssetChecklistTree(hospitalId, orderType);
         planTree = cleanTree(planTree, "checklist");
         return planTree;
     }

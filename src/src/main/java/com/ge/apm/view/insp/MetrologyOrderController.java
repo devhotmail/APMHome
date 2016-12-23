@@ -70,28 +70,32 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
 
     private String operation;
 
+    Integer hospitalId;
+
     @Override
     protected void init() {
         dao = WebUtil.getBean(InspectionOrderRepository.class);
         fileService = WebUtil.getBean(AttachmentFileService.class);
         inspectionService = WebUtil.getBean(InspectionService.class);
         uuaService = WebUtil.getBean(UaaService.class);
+        UserContextService userContextService = WebUtil.getBean(UserContextService.class);
 
         this.filterBySite = true;
-        this.setSiteFilter();
+        if (!userContextService.hasRole("MultiHospital")) {
         this.filterByHospital = true;
-        this.setHospitalFilter();
+        }
 
-//        String actionName = WebUtil.getRequestParameter("actionName");
+        hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");
         String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr, "actionName");
+        //String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
             try {
                 prepareCreate();
-                orgAssetTree = inspectionService.getPlanTree(2);
+                orgAssetTree = inspectionService.getPlanTree(2,hospitalId);
                 owner = new UserAccount();
-                ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
+                ownerList = uuaService.getUserList(hospitalId);
             } catch (InstantiationException | IllegalAccessException ex) {
                 Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -135,19 +139,6 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
         for (TreeNode item : node.getChildren()) {
             setTreeStatus(item);
         }
-    }
-
-    private int getTreeCount(TreeNode node) {
-        int sum = 0;
-        if ("checklist".equals(node.getType())) {
-            return 1;
-        } else if (node.getChildCount() == 0) {
-            return 0;
-        }
-        for (TreeNode item : node.getChildren()) {
-            sum += getTreeCount(item);
-        }
-        return sum;
     }
 
     @Override
@@ -262,6 +253,7 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
                 InspectionOrderDetail checkItem = (InspectionOrderDetail) item.getData();
                 checkItem.setIsPassed(true);
                 checkItemList.add(checkItem);
+
                 assetIdSet.add(checkItem.getAssetId());
             }
         }
@@ -283,6 +275,17 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
 
     public boolean isExcuteable() {
         return selected != null && !selected.getIsFinished() && (selected.getStartTime().before(new Date()));
+    }
+
+    public void onHospitalChange() {
+        orgAssetTree = inspectionService.getPlanTree(1,hospitalId);
+        owner = new UserAccount();
+        ownerList = uuaService.getUserList(hospitalId);
+        
+        this.selected.setOwnerId(0);
+        this.selected.setOwnerName(null);
+        this.selected.setOwnerOrgId(0);
+        this.selected.setOwnerOrgName(null);
     }
 
     //getter and setter
@@ -442,6 +445,14 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
 
     public void setOperation(String operation) {
         this.operation = operation;
+    }
+
+    public Integer getHospitalId() {
+        return hospitalId;
+}
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
     }
 
 }

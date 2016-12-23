@@ -20,6 +20,13 @@
                 <h:form id="InspectionOrderEditForm">
                     <p:fieldset legend="#{msg.BasicInfo}" style="margin-bottom:20px">
                         <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                            <h:panelGroup rendered="#{userContextService.hasRole('MultiHospital')}">
+                                <label class="label">#{msg.hospitalId}</label>
+                                <p:selectOneMenu id="hospitalIdSelect" value="#{metrologyOrderController.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}" rendered="#{userContextService.hasRole('MultiHospital')}" >
+                                    <p:ajax   listener="#{metrologyOrderController.onHospitalChange}"  update="assetTree ownerName ownerOrgId" />
+                                    <f:selectItems value="#{assetInfoService.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.name}*</label>
                                 <p:inputText id="name" value="#{metrologyOrderController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>

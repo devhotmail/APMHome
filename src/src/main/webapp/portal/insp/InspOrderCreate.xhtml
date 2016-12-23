@@ -20,6 +20,13 @@
                 <h:form id="InspectionOrderEditForm">
                     <p:fieldset legend="#{msg.BasicInfo}" style="margin-bottom:20px">
                         <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                            <h:panelGroup rendered="#{userContextService.hasRole('MultiHospital')}">
+                                <label class="label">#{msg.hospitalId}</label>
+                                <p:selectOneMenu id="hospitalIdSelect" value="#{inspectionOrderController.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}" rendered="#{userContextService.hasRole('MultiHospital')}" >
+                                    <p:ajax   listener="#{inspectionOrderController.onHospitalChange}"  update="assetTree ownerName ownerOrgId" />
+                                    <f:selectItems value="#{assetInfoService.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.name}*</label>
                                 <p:inputText id="name" value="#{inspectionOrderController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
@@ -82,6 +89,7 @@
                             <p:scrollPanel style="width:98%;height:380px;border: 0" mode="native" >
                             <!--<label class="label" >#{msg.assetName}</label>-->
                                 <p:link href="checkListList.xhtml" rendered="#{inspectionOrderController.orgAssetTree.leaf}">#{msg.noAvailableCheckListItem}</p:link>
+
                                 <p:tree id="assetTree" class="tree" style="border:0;height:362px" value="#{inspectionOrderController.orgAssetTree}" selection="#{inspectionOrderController.selectedNodes}"  var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
                                     <p:ajax event="select" listener="#{inspectionOrderController.onSelectTreeNode}" update=":InspectionOrderEditForm:dataList"/>
                                     <p:ajax event="unselect" listener="#{inspectionOrderController.onUnselectTreeNode}" update=":InspectionOrderEditForm:dataList"/>
