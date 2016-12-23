@@ -63,6 +63,20 @@ public class AssetContract implements Serializable {
     @NotNull
     @Column(name = "contract_amount")
     private double contractAmount;
+    @Column(name = "hospital_id")
+    @Basic(optional = false)
+    @NotNull
+    private Integer hospitalId;
+
+    public Integer getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
+    }
+    
+    
 
     public AssetContract() {
     }

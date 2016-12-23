@@ -66,7 +66,11 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
             }
         }
 
+        UserContextService userContextService = WebUtil.getBean(UserContextService.class);
         this.filterBySite = true;
+        if (!userContextService.hasRole("MultiHospital")) {
+            this.filterByHospital = true;
+        }
         this.setSiteFilter();
     }
 
@@ -139,7 +143,7 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
             depre.setId(null);
             depredao.save(depre);
         }
-        
+
     }
 
     public void cancel() {
@@ -184,6 +188,7 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
             return;
         }
         this.selected.setAssetId(asset.getId());
+        this.selected.setHospitalId(asset.getHospitalId());
         this.selectedAsset = asset;
     }
 
