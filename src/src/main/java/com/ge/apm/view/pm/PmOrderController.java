@@ -25,6 +25,7 @@ import com.ge.apm.service.asset.AssetInfoOperateService;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
+import javax.faces.context.FacesContext;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
@@ -255,6 +256,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     		assetInfoOperateService.updateAssetInfoById(ai);
     	}
         this.save();
+        FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("PmOrderListForm");
     }
     
     public boolean isTimeValidate() {
