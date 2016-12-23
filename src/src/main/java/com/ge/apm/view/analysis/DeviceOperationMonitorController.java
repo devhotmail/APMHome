@@ -180,7 +180,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     public void initBottomBars() {
-        log.info("initBottomBars sql:{}, param:{},{},{},{}", queries.get("examsForGroups"), assetGroups.size(), siteId, hospitalId, startDate, endDate);
+        log.info("initBottomBars sql:{}, param:{},{},{},{}", queries.get("examsForGroups"), siteId, hospitalId, startDate, endDate);
         List<DeviceOperationInfo> exams = jdbcTemplate.query(queries.get("examsForGroups"), new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
