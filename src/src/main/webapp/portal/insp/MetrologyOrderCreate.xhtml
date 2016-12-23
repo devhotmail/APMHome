@@ -45,7 +45,7 @@
                                 <p:selectOneMenu id="ownerName" value="#{metrologyOrderController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="true" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}" >
                                     <p:ajax listener="#{metrologyOrderController.onOwnerChange}" process="@this" update="ownerOrgId"/>
                                     <f:selectItem itemLabel="" />
-                                    <f:selectItems value="#{assetInfoController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                    <f:selectItems value="#{inspectionServiceController.getOwnerList(metrologyOrderController.hospitalId)}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
                                     <p:column>
                                         <h:outputText value="#{t.name}"/>
                                     </p:column>

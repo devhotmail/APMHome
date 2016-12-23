@@ -34,9 +34,19 @@ public class InspectionServiceController {
     }
     
     public List<UserAccount> getOwnerList(){
-        return uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
+        return getOwnerList(UserContextService.getCurrentUserAccount().getHospitalId());
     }
     public List<OrgInfo> getOwnerOrgList(){
-        return uuaService.getOrgListByHospitalId(UserContextService.getCurrentUserAccount().getHospitalId());
+        return getOwnerOrgList(UserContextService.getCurrentUserAccount().getHospitalId());
     }
+    public List<UserAccount> getOwnerList(Integer hospitalId){
+        return uuaService.getUserList(hospitalId);
+    }
+    public List<OrgInfo> getOwnerOrgList(Integer hospitalId){
+        return uuaService.getOrgListByHospitalId(hospitalId);
+    }
+    
+    
+    
+    
 }
