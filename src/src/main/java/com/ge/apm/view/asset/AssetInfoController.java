@@ -60,7 +60,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     private OrgInfoRepository orgDao;
 
     private String operation;
-    
+
     private AssetDepreciationService assetDepreciationService;
 
     @Override
@@ -135,8 +135,9 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         operation = pageName + "?actionName=" + actionName + "&selectedid=" + selected.getId();
         return operation;
     }
+
     public String getDetailPage() {
-        operation = "Detail.xhtml?actionName=View&selectedid=" + selected.getId() + "&asset_name="+selected.getName();
+        operation = "Detail.xhtml?actionName=View&selectedid=" + selected.getId() + "&asset_name=" + selected.getName();
         return operation;
     }
 
@@ -307,6 +308,11 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         } else {
             return orgDao.findById(id);
         }
+    }
+
+    public void onHospitalChange() {
+        this.owner = null;
+        this.ownerList = uuaService.getUserList(selected.getHospitalId());
     }
 
     public List<OrgInfo> getClinicalList() {
