@@ -126,9 +126,22 @@
   }
 
   function pieDisplayValues(data) {
+    var sum = data.reduce(function(sum, serie) {
+        var item = serie[1];
+        var val = (typeof val === 'number' ? val : serie.reduce(function(serieSum, slot) {
+          return serieSum + slot[1];
+        }, 0) );
+
+        return {
+          total: val + sum.total,
+          num: val !== 0 ? sum.num + 1 : sum.num
+        };
+      }, {total: 0, num: 0});
+
+
     return [data[0].map(function(item) {
       if (item[1] === 0) {
-        item[1] = 1;
+        item[1] = sum.total/1000;
       }
       return item;
     })];
@@ -215,7 +228,7 @@
               }
             }
             else {
-              return $.jqplot.sprintf('%s: 无数据', val[0]);
+              return $.jqplot.sprintf('%s', val[0]);
             }
           }
         },
