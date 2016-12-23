@@ -449,6 +449,8 @@ INSERT INTO "i18n_message" VALUES (1612,'inspectionPeriod','2', '每周',null,nu
 INSERT INTO "i18n_message" VALUES (1613,'inspectionPeriod','3', '每两周',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1614,'inspectionPeriod','4', '每月',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1615,'inspectionPeriod','5', '每季度',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1616,'inspectionPeriod','6', '每半年',null,null,-1);
+INSERT INTO "i18n_message" VALUES (1617,'inspectionPeriod','7', '每年',null,null,-1);
 
 INSERT INTO "i18n_message" VALUES (1621,'depreciationMethodList','1', '平均',null,null,-1);
 INSERT INTO "i18n_message" VALUES (1622,'depreciationMethodList','2', '加速双倍余额',null,null,-1);
