@@ -71,6 +71,8 @@ public class SiteInfo implements Serializable {
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "manhour_price")
     private Double manhourPrice;
     
