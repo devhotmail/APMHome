@@ -24,4 +24,5 @@ ALTER TABLE procedure_name_maping ADD PRIMARY KEY ("id");
 ALTER TABLE asset_clinical_record ADD column original_procedure_name varchar(256);
 ALTER TABLE asset_clinical_record ADD column original_procedure_id varchar(32);
 
+ALTER TABLE work_order_step_detail ADD column other_expense float;
 

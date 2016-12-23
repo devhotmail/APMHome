@@ -237,7 +237,7 @@ INSERT INTO "i18n_message" VALUES (662,'field_name','locationCode','安装位置
 INSERT INTO "i18n_message" VALUES (663,'field_name','locationName','安装位置','Location Name',null,-1);
 INSERT INTO "i18n_message" VALUES (664,'field_name','maitanance','维修商','Maitanance',null,-1);
 INSERT INTO "i18n_message" VALUES (665,'field_name','maitananceTel','维修电话','Maitanance Tel',null,-1);
-INSERT INTO "i18n_message" VALUES (666,'field_name','manHours','工时(小时)','Man Hours',null,-1);
+INSERT INTO "i18n_message" VALUES (666,'field_name','manHours','内部工时(小时)','Man Hours',null,-1);
 INSERT INTO "i18n_message" VALUES (667,'field_name','manufactDate','出厂日期','Manufact Date',null,-1);
 INSERT INTO "i18n_message" VALUES (668,'field_name','manufacture','制造商','Manufacture',null,-1);
 INSERT INTO "i18n_message" VALUES (669,'field_name','modalityId','院内IT系统编号','Modality Id',null,-1);
