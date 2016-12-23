@@ -35,3 +35,4 @@ INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (3,'assetGroup','
 alter table asset_contract add column hospital_id int;
 alter table asset_file_attachment add column hospital_id int;
 
+alter table asset_info alter COLUMN function_type type varchar(64);
