@@ -115,6 +115,8 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
     }
 
     private void saveDepreciation() {
+        List<AssetDepreciation> depreList = depredao.getByContractId(selected.getId());
+        depredao.delete(depreList);
         AssetDepreciation depre = new AssetDepreciation();
         depre.setAssetId(selected.getAssetId());
         depre.setSiteId(selected.getSiteId());
@@ -126,17 +128,18 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
         calendar.setTime(selected.getStartDate());
         int startMonth = calendar.get(Calendar.YEAR) * 12 + calendar.get(Calendar.MONTH);
         int startDay = calendar.get(Calendar.DAY_OF_MONTH);
-        int times = (endMonth - startMonth + (startDay<endDay?1:0));
+        int times = (endMonth - startMonth + 1);
         depre.setDeprecateAmount(selected.getContractAmount() / times);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        depre.setDeprecateDate(calendar.getTime());
+        depredao.save(depre);
         for (int i = 1; i < times; i++) {
             calendar.add(Calendar.MONTH, 1);
             depre.setDeprecateDate(calendar.getTime());
             depre.setId(null);
             depredao.save(depre);
         }
-        depre.setDeprecateDate(selected.getEndDate());
-        depre.setId(null);
-        depredao.save(depre);
+        
     }
 
     public void cancel() {
@@ -186,6 +189,7 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
 
     public void onSelectedChange() {
         selectedAsset = assetService.getAssetInfo(selected.getAssetId());
+        fileName = fileService.getFileNameById(selected.getFileId());
         crudActionName = "Edit";
     }
 

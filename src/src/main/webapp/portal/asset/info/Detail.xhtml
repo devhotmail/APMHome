@@ -115,7 +115,7 @@
                 </p:panelGrid>
             </p:tab>
         </p:accordionPanel>
-        <p:accordionPanel id="accordion2" multiple="false" >
+        <p:accordionPanel id="accordion2">
             <p:tab title="#{msg.AssetInfoDetail}">
                 <p:panelGrid columns="4"  layout="grid" styleClass="ui-panelgrid-blank">
 
@@ -182,10 +182,6 @@
                         <label class="label">#{msg.assetGroup}</label>
                         <p:inputText id="assetGroup" value="#{fieldMsg.fieldValue('ownAssetGroup', assetInfoController.selected.assetGroup)}" readonly="true"/>
                     </h:panelGroup>
-                    <!--                    <h:panelGroup>
-                                            <label class="label">#{msg.assetDeptId}</label>
-                                            <p:inputText id="assetDeptId" value="#{assetInfoController.selected.assetDeptId}" readonly="true"/>
-                                        </h:panelGroup>-->
                     <h:panelGroup>
                         <label class="label">#{msg.assetOwnerName}</label>
                         <p:inputText id="assetOwnerName" value="#{assetInfoController.selected.assetOwnerName}" readonly="true"/>
