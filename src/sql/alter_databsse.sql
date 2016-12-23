@@ -30,3 +30,8 @@ ALTER TABLE site_info ADD column manhour_price float;
 truncate table field_code_type;
 INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (2,'caseSubType','故障子类别');
 INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (3,'assetGroup','设备类型');
+
+
+alter table asset_contract add column hospital_id int;
+alter table asset_file_attachment add column hospital_id int;
+
