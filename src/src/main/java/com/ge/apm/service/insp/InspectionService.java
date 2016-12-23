@@ -111,6 +111,12 @@ public class InspectionService {
                 case 5:
                     calender.add(Calendar.MONTH, 3);
                     break;
+                case 6:
+                    calender.add(Calendar.MONTH, 6);
+                    break;
+                case 7:
+                    calender.add(Calendar.MONTH, 12);
+                    break;
             }
             order.setStartTime(itemstartDate);
             itemendDate = calender.getTime();

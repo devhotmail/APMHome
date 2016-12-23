@@ -8,7 +8,7 @@
 
     <ui:composition>
 
-        <p:dialog id="AssetFileAttachmentViewDlg" widgetVar="AssetFileAttachmentViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetFileAttachmentController.CRUDActionName} #{msg.AssetFileAttachment}">
+        <p:dialog id="AssetFileAttachmentViewDlg" widgetVar="AssetFileAttachmentViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetFileAttachmentController.CRUDActionName}">
             <h:form id="AssetFileAttachmentViewForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{assetFileAttachmentController.selected != null}">
@@ -16,8 +16,6 @@
                         <h:outputText value="#{assetFileAttachmentController.selected.name}"/>
                         <h:outputLabel value="#{msg.fileType}" for="fileType" />
                         <h:outputText value="#{fieldMsg.fieldValue('attachmentType', assetFileAttachmentController.selected.fileType)}"/>
-                        <h:outputLabel value="#{msg.fileUrl}" for="fileUrl" />
-                        <h:outputText value="#{assetFileAttachmentController.selected.fileUrl}"/>
                         <h:outputLabel value="#{msg.assetName}" for="assetId" />
                         <h:outputText value="#{assetInfoService.getAssetInfoName(assetFileAttachmentController.selected.assetId)}"/>
                     </p:panelGrid>
