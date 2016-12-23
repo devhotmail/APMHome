@@ -453,7 +453,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 				if (item.get("diff_total") != null) {
 
 					timeline = item.get("timeline").toString();
-					currentJoda = new DateTime( Integer.valueOf(timeline.split("-")[0]), Integer.valueOf(timeline.split("-")[1]), Integer.valueOf(timeline.split("-")[2]), 0, 0, 0, 0, DateTimeZone.forID("Europe/London"));
+					currentJoda = new DateTime( Integer.valueOf(timeline.split("-")[0]), Integer.valueOf(timeline.split("-")[1]), Integer.valueOf(timeline.split("-")[2]), 0, 0, 0, 0, DateTimeZone.forOffsetHours(0));
 			
 					diff_total =  item.get("diff_total") != null ? (double) item.get("diff_total")/3600 : 0.0;
 					dt_total += diff_total;
