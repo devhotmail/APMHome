@@ -81,6 +81,7 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
 
     @Override
     protected Page<AssetContract> loadData(PageRequest pageRequest) {
+        selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
