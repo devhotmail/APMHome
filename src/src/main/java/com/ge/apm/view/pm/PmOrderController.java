@@ -1,16 +1,17 @@
 package com.ge.apm.view.pm;
 
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-
 import org.primefaces.event.FileUploadEvent;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.FileUploadedRepository;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.PmOrderRepository;
@@ -20,13 +21,10 @@ import com.ge.apm.domain.FileUploaded;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.PmOrder;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.service.asset.AssetInfoOperateService;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
@@ -56,7 +54,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     
     private FileUploadedRepository fileUploadedRepository;
     
-    private AssetInfoRepository assetInfoRepository = null;
+    private AssetInfoOperateService assetInfoOperateService = null;
     
     @Override
     protected void init() {
@@ -70,7 +68,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 		uuaService = (UaaService) WebUtil.getBean(UaaService.class);
 		attachements = new ArrayList<FileUploaded>();
         ownerList =uuaService.getUsersWithAssetHeadOrStaffRole(currentUser.getHospitalId());
-        assetInfoRepository = WebUtil.getBean(AssetInfoRepository.class);
+        assetInfoOperateService = WebUtil.getBean(AssetInfoOperateService.class);
     }
 
     @Override
@@ -90,8 +88,8 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 
     @Override
     public void onBeforeSave(PmOrder po) {
-    	po.setSiteId(this.currentUser.getSiteId());
-    	po.setHospitalId(this.currentUser.getHospitalId());
+//    	po.setSiteId(this.currentUser.getSiteId());
+//    	po.setHospitalId(this.currentUser.getHospitalId());
     	po.setCreatorId(this.currentUser.getId());
     	po.setCreatorName(this.currentUser.getName());
     	po.setCreateTime(TimeUtil.timeNowInDefaultTimeZone().toDate());
@@ -127,6 +125,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     	if(isOK){
     		this.selected = null;
     	}
+    	
     }
    
     @Override
@@ -162,9 +161,10 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     public void onServerEvent(String eventName, Object eventObject){
         AssetInfo asset = (AssetInfo) eventObject;
         if(asset==null) return;
-        
         if(this.selected==null) return;
         this.selected.setAssetId(asset.getId());
+        this.selected.setHospitalId(asset.getHospitalId());
+        this.selected.setSiteId(asset.getSiteId());
         this.selected.setAssetName(asset.getName());
         this.selected.setOwnerId(asset.getAssetOwnerId());
         this.selected.setOwnerName(asset.getAssetOwnerName());
@@ -251,8 +251,8 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     		}
     		AssetInfo ai = new AssetInfo();
     		ai.setId(selected.getAssetId());
-    		ai.setLastPmDate(TimeUtil.now());
-    		assetInfoRepository.save(ai);
+    		ai.setSiteId(selected.getSiteId());
+    		assetInfoOperateService.updateAssetInfoById(ai);
     	}
         this.save();
     }
