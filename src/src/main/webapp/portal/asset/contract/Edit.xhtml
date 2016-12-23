@@ -43,7 +43,7 @@
                         
                         <h:panelGroup>
                             <label class="label">#{msg.AssetContractAmount}*</label>
-                            <p:inputText id="contractAmount" value="#{assetContractController.selected.contractAmount}" required="true" requiredMessage="#{msg.AssetContractAmount} #{msg.ValidationRequire}"/>
+                            <p:inputNumber decimalPlaces="0" id="contractAmount" value="#{assetContractController.selected.contractAmount}" required="true" requiredMessage="#{msg.AssetContractAmount} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
 
                         <p:panel id="upload" styleClass="ui-panelgrid-blank" style=" border: 0">
