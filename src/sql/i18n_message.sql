@@ -540,7 +540,7 @@ INSERT INTO "i18n_message" VALUES (5041,'label','deviceValueScanhd', '总扫描�
 INSERT INTO "i18n_message" VALUES (5042,'label','deviceValueExpohd', '总曝光量','Exposure',null,-1);
 INSERT INTO "i18n_message" VALUES (5045,'label','selectAssetSingle', '选择单台设备','Select a device',null,-1);
 INSERT INTO "i18n_message" VALUES (5046,'label','selectAssetChoose', '选择设备','Select devices',null,-1);
-INSERT INTO "i18n_message" VALUES (5047,'label','WorkOrderConfig', '流程配置','WorkOrder Config',null,-1);
+INSERT INTO "i18n_message" VALUES (5047,'label','WorkOrderConfig', '维修工单流程配置','WorkOrder Config',null,-1);
 INSERT INTO "i18n_message" VALUES (5048,'label','deviceValueProfithd', '设备总利润','Profit',null,-1);
 INSERT INTO "i18n_message" VALUES (5049,'label','deviceValueRevenuehd', '设备总成本','Revenue',null,-1);
 INSERT INTO "i18n_message" VALUES (5050,'label','deviceValueCosthd', '设备总成本','Cost',null,-1);
