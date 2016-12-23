@@ -70,28 +70,32 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
 
     private String operation;
 
+    Integer hospitalId;
+
     @Override
     protected void init() {
         dao = WebUtil.getBean(InspectionOrderRepository.class);
         fileService = WebUtil.getBean(AttachmentFileService.class);
         inspectionService = WebUtil.getBean(InspectionService.class);
         uuaService = WebUtil.getBean(UaaService.class);
+        UserContextService userContextService = WebUtil.getBean(UserContextService.class);
 
         this.filterBySite = true;
-        this.setSiteFilter();
+        if (!userContextService.hasRole("MultiHospital")) {
         this.filterByHospital = true;
-        this.setHospitalFilter();
+        }
 
-        // String actionName = WebUtil.getRequestParameter("actionName");
+        hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");
         String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr, "actionName");
+        //String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
             try {
                 prepareCreate();
-                orgAssetTree = inspectionService.getPlanTree(3);
+                orgAssetTree = inspectionService.getPlanTree(3,hospitalId);
                 owner = new UserAccount();
-                ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
+                ownerList = uuaService.getUserList(hospitalId);
             } catch (InstantiationException | IllegalAccessException ex) {
                 Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -270,6 +274,17 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
         return selected != null && !selected.getIsFinished() && (selected.getStartTime().before(new Date()));
     }
 
+    public void onHospitalChange() {
+        orgAssetTree = inspectionService.getPlanTree(1,hospitalId);
+        owner = new UserAccount();
+        ownerList = uuaService.getUserList(hospitalId);
+        
+        this.selected.setOwnerId(0);
+        this.selected.setOwnerName(null);
+        this.selected.setOwnerOrgId(0);
+        this.selected.setOwnerOrgName(null);
+    }
+
     //getter and setter
     public TreeNode getOrgAssetTree() {
         return orgAssetTree;
@@ -427,6 +442,14 @@ public class QualityCtrlOrderController extends JpaCRUDController<InspectionOrde
 
     public void setOperation(String operation) {
         this.operation = operation;
+    }
+
+    public Integer getHospitalId() {
+        return hospitalId;
+}
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
     }
 
 }
