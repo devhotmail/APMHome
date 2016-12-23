@@ -265,7 +265,7 @@
                 <p:panel  header="#{msg.InspectionOrder}">
                     <f:facet name="actions">
                         <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="/portal/insp/InspOrderList?faces-redirect=true"><h:outputText styleClass="ui-icon ui-icon-fullscreen" /></h:commandLink>
-                        <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="/portal/insp/InspOrderCreate?faces-redirect=true&amp;actionName=Create"><h:outputText styleClass="ui-icon ui-icon-add" /></h:commandLink>
+                        <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="#{urlEncryptController.encodeUrlParam('/portal/insp/InspOrderCreate?faces-redirect=true&amp;actionName=Create')}"><h:outputText styleClass="ui-icon ui-icon-add" /></h:commandLink>
                     </f:facet>
 
                     <p:dataTable var="item" value="#{inspectionServiceController.getInspectionOrderList(assetInfoController.selected.id, 1, 3)}" emptyMessage="#{msg.noRecordFound}">
@@ -318,7 +318,7 @@
                 <p:panel  header="#{msg.QualityCtrlMonitor}">
                     <f:facet name="actions">
                         <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="/portal/insp/QualityCtrlOrderList?faces-redirect=true"><h:outputText styleClass="ui-icon ui-icon-fullscreen" /></h:commandLink>
-                        <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="/portal/insp/QualityCtrlOrderCreate?faces-redirect=true&amp;actionName=Create"><h:outputText styleClass="ui-icon ui-icon-add" /></h:commandLink>
+                        <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="#{urlEncryptController.encodeUrlParam('/portal/insp/QualityCtrlOrderCreate?faces-redirect=true&amp;actionName=Create')}"><h:outputText styleClass="ui-icon ui-icon-add" /></h:commandLink>
                     </f:facet>
 
                     <p:dataTable var="item" value="#{inspectionServiceController.getInspectionOrderList(assetInfoController.selected.id, 3, 3)}" emptyMessage="#{msg.noRecordFound}">
@@ -345,7 +345,7 @@
                 <p:panel  header="#{msg.MetrologyMonitor}">
                     <f:facet name="actions">
                         <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="/portal/insp/MetrologyOrderList?faces-redirect=true"><h:outputText styleClass="ui-icon ui-icon-fullscreen" /></h:commandLink>
-                        <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="/portal/insp/MetrologyOrderCreate?faces-redirect=true&amp;actionName=Create"><h:outputText styleClass="ui-icon ui-icon-add" /></h:commandLink>
+                        <h:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" action="#{urlEncryptController.encodeUrlParam('/portal/insp/MetrologyOrderCreate?faces-redirect=true&amp;actionName=Create')}"><h:outputText styleClass="ui-icon ui-icon-add" /></h:commandLink>
                     </f:facet>
 
                     <p:dataTable var="item" value="#{inspectionServiceController.getInspectionOrderList(assetInfoController.selected.id, 2, 3)}" emptyMessage="#{msg.noRecordFound}">

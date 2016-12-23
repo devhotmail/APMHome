@@ -18,6 +18,13 @@
                         <div class="card" style="height:400px;">
 
                             <p:scrollPanel style="width:98%;height:95%;border: 0" mode="native" >
+                                <h:panelGroup rendered="#{userContextService.hasRole('MultiHospital')}">
+                                    <label class="label">#{msg.hospitalId}</label>
+                                    <p:selectOneMenu id="hospitalIdSelect" value="#{inspectionChecklistController.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}" rendered="#{userContextService.hasRole('MultiHospital')}" >
+                                        <p:ajax   listener="#{inspectionChecklistController.onHospitalChange}"  update="assetTree" />
+                                        <f:selectItems value="#{assetInfoService.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
                                 <label class="label">#{msg.searchAssetByDept} #{msg.ChecklistType}</label>
                                 <p:tree id="assetTree" class="tree" style="width: 95%;border:0;" value="#{inspectionChecklistController.orgAssetTree}" var="node" dynamic="false" cache="false" selectionMode="single" selection="#{inspectionChecklistController.selectedNode}" highlight="true">
                                     <p:ajax event="select" listener="#{inspectionChecklistController.onSelectTreeNode}" update=":checkListQueryForm:datalist"/>
@@ -61,7 +68,7 @@
                                     <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
                                         <p:dataExporter type="xls" target="datalist" fileName="InspectionChecklist_export"/>
                                     </p:commandButton>
-                   
+
                                 </f:facet>
                             </p:dataTable>
 

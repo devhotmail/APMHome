@@ -25,6 +25,8 @@ import webapp.framework.web.WebUtil;
 public class InspectionChecklistController extends JpaCRUDController<InspectionChecklist> {
 
     InspectionChecklistRepository dao = null;
+    
+    UaaService uaaService;
 
     AssetInfo selectedAsset;
     Integer checklistType;
@@ -37,14 +39,17 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
 
     boolean isOrderChange = false;
     private String type;
+    
+    Integer hospitalId;
 
     @Override
     protected void init() {
         dao = WebUtil.getBean(InspectionChecklistRepository.class);
         this.filterBySite = true;
         this.setSiteFilter();
-        UaaService uaaService = WebUtil.getBean(UaaService.class);
-        orgAssetTree = uaaService.getOrgAssetTree(UserContextService.getCurrentUserAccount().getHospitalId());
+        uaaService = WebUtil.getBean(UaaService.class);
+        hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
+        orgAssetTree = uaaService.getOrgAssetTree(hospitalId);
         checklistitemList = new ArrayList();
         type = WebUtil.getRequestParameter("type");
         checklistType = (null == type ? 0 : Integer.valueOf(type));
@@ -165,6 +170,11 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
         }
         this.isOrderChange = false;
     }
+    
+    public void onHospitalChange(){
+        orgAssetTree = uaaService.getOrgAssetTree(hospitalId);
+        setCheckType(orgAssetTree);
+    }
 
     public void onRowReorder(ReorderEvent event) {
         this.isOrderChange = true;
@@ -221,5 +231,14 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
     public void setIsOrderChange(boolean isOrderChange) {
         this.isOrderChange = isOrderChange;
     }
+
+    public Integer getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
+    }
+    
 
 }
