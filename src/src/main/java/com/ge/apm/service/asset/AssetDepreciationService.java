@@ -1,12 +1,10 @@
 package com.ge.apm.service.asset;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.Months;
-import org.joda.time.Years;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -16,6 +14,7 @@ import com.ge.apm.dao.AssetDepreciationRepository;
 import com.ge.apm.domain.AssetDepreciation;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.service.utils.TimeUtils;
+import java.math.RoundingMode;
 
 import webapp.framework.web.WebUtil;
 
@@ -31,6 +30,7 @@ public class AssetDepreciationService {
 	 * 计算资产的月平均成本
 	 */
 	public Double calAssetDepreciation(AssetInfo assetInfo,Integer whichYear){
+            try{
 		BigDecimal  result = new BigDecimal(0);
 		if(assetInfo == null || whichYear == null){
 			return result.doubleValue();
@@ -44,10 +44,10 @@ public class AssetDepreciationService {
 				salvageValue = new BigDecimal(0);
 			}
 			BigDecimal lifeCycle = new BigDecimal(assetInfo.getLifecycle());//以年为单位
-			BigDecimal  unit = new BigDecimal(2d).divide(lifeCycle);
+			BigDecimal  unit = new BigDecimal(2d).divide(lifeCycle,2, RoundingMode.HALF_UP);
 			int depreciationMethod = assetInfo.getDepreciationMethod();
 			if(depreciationMethod == AVERAGE ){
-				result = (purchasePrice.subtract(salvageValue)).divide(lifeCycle);
+				result = (purchasePrice.subtract(salvageValue)).divide(lifeCycle, 2, RoundingMode.HALF_UP);
 			}else if(depreciationMethod == DOUBLE ){
 				if(whichYear != null){
 					/***
@@ -60,7 +60,7 @@ public class AssetDepreciationService {
 						最后两年需改为直线法折旧
 					 */
 					if((lifeCycle.intValue() - whichYear < 2) && (lifeCycle.intValue() - whichYear >= 0)){
-						result = purchasePrice.subtract(salvageValue).divide(lifeCycle);
+						result = purchasePrice.subtract(salvageValue).divide(lifeCycle,2, RoundingMode.HALF_UP);
 					}else{
 						BigDecimal temp = new BigDecimal(1d);
 						temp = temp.subtract(unit);
@@ -71,13 +71,18 @@ public class AssetDepreciationService {
 			}else if(depreciationMethod == YEAR ){
 				//年数总和法公式： 设备入账帐面价值为X，预计使用N年，残值为Y，则第M年计提折旧为(X-Y)*(N-M+1)/[(N+1)*N/2]。
 				result = (purchasePrice.subtract(salvageValue)).multiply(new BigDecimal(lifeCycle.intValue()-whichYear+1))
-						.divide(new BigDecimal((((lifeCycle.intValue()+1)*lifeCycle.intValue())/2)));
+						.divide(new BigDecimal((((lifeCycle.intValue()+1)*lifeCycle.intValue())/2)), 2, RoundingMode.HALF_UP);
 			}
 		}
 		if(result.doubleValue() >= 0){
-			result = result.divide(new BigDecimal(12),5,BigDecimal.ROUND_HALF_DOWN);
+			//result = result.divide(new BigDecimal(12),2,BigDecimal.ROUND_HALF_DOWN);
 		}
 		return result.doubleValue();
+            }
+            catch(Exception ex){
+                logger.error(ex.getMessage(), ex);
+                return 0.0;
+            }
 	}
 	
 	@Transactional
