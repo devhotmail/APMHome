@@ -42,7 +42,8 @@ public class WorkOrderStepDetailController extends JpaCRUDController<WorkOrderSt
         
         this.selected.setSiteId(woStep.getSiteId());
         this.selected.setWorkOrderStepId(woStep.getId());
-        
+
+        woStep.removeEmptyStepDetailRecord();
         woStep.addStepDetail(selected);
     }
     
