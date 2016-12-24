@@ -157,5 +157,8 @@ public class WorkOrderStepDetail implements Serializable {
     public String toString() {
         return "com.ge.apm.domain.WorkOrderStepDetail[ id=" + id + " ]";
     }
-    
+
+    public boolean isEmptyRecord() {
+        return manHours==null && accessory==null && accessoryQuantity==null && accessoryPrice==null&& otherExpense==null;
+    }
 }

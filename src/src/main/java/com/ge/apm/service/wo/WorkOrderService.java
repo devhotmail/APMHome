@@ -70,6 +70,7 @@ public class WorkOrderService {
             }
             
             try{
+                currentWoStep.removeEmptyStepDetailRecord();
                 woStepDao.save(currentWoStep);
                 //保存step后会连带保存detail，再计算order上面的工时和总价
                 saveTotalTimeAndPrice(woDao, wo, currentWoStep);
@@ -86,6 +87,7 @@ public class WorkOrderService {
             }
             
             try{
+                nextWoStep.removeEmptyStepDetailRecord();
                 woStepDao.save(nextWoStep);
             }
             catch(Exception ex){

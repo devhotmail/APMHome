@@ -1,4 +1,4 @@
-package com.ge.apm.view;
+package com.ge.apm.view.wo;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -55,18 +55,9 @@ public class WorkOrderStepDetailController extends JpaCRUDController<WorkOrderSt
     
     public void validateInput(WorkOrderStep woStep){
         if(selected!=null){
-            if((selected.getAccessory()==null || "".equals(selected.getAccessory())) &&
-               selected.getAccessoryPrice()==null &&
-               selected.getAccessoryQuantity()==null &&
-               selected.getManHours()==null && selected.getOtherExpense()==null){
+            if(selected.isEmptyRecord()){
                 RequestContext.getCurrentInstance().addCallbackParam("validationFailed", true);
                 WebUtil.addErrorMessageKey("ValidationRequire");
-            }
-            else{
-                if(woStep.getStepDetails()==null){
-                    woStep.setStepDetails(new ArrayList<WorkOrderStepDetail>());
-                }
-                woStep.getStepDetails().add(this.selected);
             }
         }
     }

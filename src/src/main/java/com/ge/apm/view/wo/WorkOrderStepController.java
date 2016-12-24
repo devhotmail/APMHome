@@ -9,6 +9,7 @@ import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.WorkOrderStepRepository;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderStep;
+import com.ge.apm.domain.WorkOrderStepDetail;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.wo.WorkOrderService;
 import java.util.ArrayList;
@@ -92,6 +93,18 @@ public class WorkOrderStepController extends JpaCRUDController<WorkOrderStep> {
             }
             else{
                 this.selected = woStepList.get(0);
+            }
+            
+            if(selected!=null){
+                if(selected.getStepDetails()==null)
+                    selected.setStepDetails(new ArrayList<WorkOrderStepDetail>());
+
+                if(selected.getStepDetails().size()==0){
+                    WorkOrderStepDetail woDetail = new WorkOrderStepDetail();
+                    woDetail.setSiteId(selected.getSiteId());
+                    woDetail.setWorkOrderStepId(selected.getId());
+                    selected.getStepDetails().add(woDetail);
+                }
             }
         }
     }

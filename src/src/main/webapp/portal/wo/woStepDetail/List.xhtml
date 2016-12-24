@@ -5,14 +5,9 @@
                 xmlns:p="http://primefaces.org/ui">
 
         <p:dataTable id="datalist" class="uiTransparent" value="#{workOrderStepController.selected.stepDetails}" var="item" widgetVar="varStepDetailDataList"
-                     lazy="false" paginator="true" paginatorPosition="top"
-                     paginatorAlwaysVisible="#{workOrderStepController.hasStepDetails ne true}" rowKey="#{item.id}" rows="1000" emptyMessage="#{msg.noRecordFound}"
-                     paginatorTemplate="{Toolbar}">
+                     lazy="false" paginator="false"
+                     rowKey="#{item.id}" rows="1000" emptyMessage="#{msg.noRecordFound}">
 
-            <f:facet name="{Toolbar}" class="uiTransparent">
-                <p:commandButton style="width:20px;height:26px; float:right;right:120px;top: 52px;" process="@this" icon="ui-icon-add" title="#{msg.Create}" actionListener="#{workOrderStepDetailController.prepareCreate(workOrderStepController.selected)}" update=":WorkOrderStepDetailEditDlg" oncomplete="PF('WorkOrderStepDetailEditDialog').show()"/>
-            </f:facet>
-            
             <p:column headerText="#{msg.manHours}">
                 <h:outputText value="#{item.manHours}"/>
             </p:column>
@@ -30,9 +25,9 @@
             </p:column>
             
             <p:column headerText="#{msg.Actions}">
-                <p:commandButton process="@this" icon="ui-icon-add" style="zoom:0.8;" title="#{msg.Create}" actionListener="#{workOrderStepDetailController.prepareCreate(workOrderStepController.selected)}" update=":WorkOrderStepDetailEditDlg" oncomplete="PF('WorkOrderStepDetailEditDialog').show()"/>
+                <p:commandButton process="@this" icon="ui-icon-add" style="zoom:0.8;" title="#{msg.Create}" actionListener="#{workOrderStepDetailController.prepareCreate(workOrderStepController.selected)}" update=":WorkOrderStepDetailEditDlg" oncomplete="PF('WorkOrderStepDetailEditDialog').show()" rendered="#{not item.isEmptyRecord()}"/>
                 <p:commandButton process="@this" icon="ui-icon-pencil" style="zoom:0.8;" title="#{msg.Edit}" actionListener="#{workOrderStepDetailController.prepareEdit(item)}" update=":WorkOrderStepDetailEditDlg" oncomplete="PF('WorkOrderStepDetailEditDialog').show()"/>
-                <p:commandButton process="@this" icon="ui-icon-close" style="zoom:0.8;" title="#{msg.Delete}" actionListener="#{workOrderStepDetailController.delete(workOrderStepController.selected,item)}" update=":formStepData:datalist">
+                <p:commandButton process="@this" icon="ui-icon-close" style="zoom:0.8;" title="#{msg.Delete}" actionListener="#{workOrderStepDetailController.delete(workOrderStepController.selected,item)}" update=":formStepData:datalist" rendered="#{not item.isEmptyRecord()}">
                     <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
                 </p:commandButton>
             </p:column>

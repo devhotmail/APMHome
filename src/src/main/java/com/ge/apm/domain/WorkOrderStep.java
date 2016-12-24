@@ -223,6 +223,16 @@ public class WorkOrderStep implements Serializable {
         return true;
     }
 
+    public void removeEmptyStepDetailRecord(){
+        if(this.stepDetails==null) return;
+        
+        for(int i=stepDetails.size()-1; i>=0; i--){
+            WorkOrderStepDetail detail = stepDetails.get(i);
+            if(detail.isEmptyRecord())
+                stepDetails.remove(i);
+        }
+    }
+    
     @Override
     public String toString() {
         return "com.ge.apm.domain.WorkOrderStep[ id=" + id + " ]";
