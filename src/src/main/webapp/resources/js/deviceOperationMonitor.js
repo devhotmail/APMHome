@@ -39,6 +39,28 @@
       return slot;
     });
   }
+  function verticalBarDisplayValues(data) {
+    var sum = data.reduce(function(sum, serie) {
+      var val = serie[0];
+      return {
+        total: val + sum.total,
+        num: val !== 0 ? sum.num + 1 : sum.num
+      };
+    }, {total: 0, num: 0});
+
+    var avg = sum.total === 0 ? 1 : sum.total / sum.num;
+    var min = sum.total === 0 ? avg : sum.total / 10;
+
+    return data.map(function(serie) {
+      var val = serie[0];
+      if (val === 0) {
+        serie[0] = min;
+      } else if (val < min) {
+        serie[0] = min;
+      }
+      return serie;
+    });
+  }
 
   function displayPointLabels() {
     var data = this.cfg.data;
@@ -51,6 +73,17 @@
       return {
         pointLabels: {
           labels: [[labels[i], parseInt(item[0]) || '']]
+        }
+      };
+    });
+  }
+
+  function verticalDisplayPointLabels(data) {
+    return data.map(function(serie, i) {
+      var val = serie[0];
+      return {
+        pointLabels: {
+          labels: [parseInt(val)]
         }
       };
     });
@@ -123,15 +156,12 @@
 
   window.topBarAllSkin = window.topBarSkin = function() {
     var data = this.cfg.data;
+    var total = seriesSum(data);
     var series = displayPointLabels.call(this);
     var colors = displayColors(data);
-    // special placeholder value
     data = barDisplayValues(data);
+    var max = seriesSum(data);
     this.cfg.data = data;
-    var total = seriesSum(data);
-
-    var _this = this;
-    _this.lastVal = 0;
     $.extend(true/*recursive*/, this.cfg, {
       animate: false,
       legend: {
@@ -177,7 +207,7 @@
       axes: {
         xaxis: {
           //pad: 0,
-          max: total,
+          max: max,
           min: 0,
           drawMajorGridlines: false,
           drawMajorTickMarks: false,
@@ -197,9 +227,6 @@
       },
       series: series,
       seriesColors: colors
-    });
-    _this.jq.on('jqplotPreReplot', function() {
-      _this.lastVal = 0;
     });
   }
 
@@ -249,8 +276,11 @@
   }
 
   function verticalStackConfig(data) {
-    var deviceSum = seriesSum(data);
-    var _this = this;
+    var total = seriesSum(data);
+    var series = verticalDisplayPointLabels(data);
+    data = verticalBarDisplayValues(data);
+    var max = seriesSum(data);
+
     return {
       resetAxesOnResize: false,
       legend: {
@@ -266,13 +296,7 @@
           formatString: '%d 个',
           escapeHTML: false,
           formatter: function(format, val) {
-            var newVal = val - (_this.lastVal || 0);
-            _this.lastVal = val;
-            val = newVal;
-            if (val < 1) {
-              val = 0;
-            }
-            return $.jqplot.sprintf(format, val) + (val? ('<br />' + Math.round(val / deviceSum * 100) + '%') : '');
+            return $.jqplot.sprintf(format, val) + (val ? ('<br />' + Math.round(val / total * 100) + '%') : '');
           }
         },
         rendererOptions: {
@@ -301,7 +325,7 @@
           pad: 0
         },
         yaxis: {
-          max: deviceSum,
+          max: max,
           min: 0,
           tickOptions: {
             show: false,
@@ -311,28 +335,18 @@
           }
         },
       },
+      series: series,
       seriesColors: BODY_PART_COLORS_REVERTED
     };
   }
 
   window.bottomLeftBarSkin =
   window.bottomRightBarSkin =
-  window.bottomBarSkin= function() {
+  window.bottomBarSkin= function() 
+  {
     var _this = this;
-    _this.lastVal = 0;
     var data = this.cfg.data;
-    // special placeholder value
-    this.cfg.data = data.map(function(slot) {
-      if (slot[0] === 0) {
-        slot[0] = .9;
-      }
-      return slot;
-    });
-
-    $.extend(true/*recursive*/, this.cfg, verticalStackConfig.call(this, _this.cfg.data));
-    _this.jq.on('jqplotPreReplot', function() {
-      _this.lastVal = 0;
-    });
+    $.extend(true/*recursive*/, this.cfg, verticalStackConfig(data));
     _this.jq.on('jqplotPostReplot', function() {
       flipLegendRows(_this.jq);
     });
