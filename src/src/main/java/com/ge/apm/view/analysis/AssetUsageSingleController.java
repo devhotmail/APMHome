@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.view.sysutil.UrlEncryptController;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -137,7 +138,15 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			assetName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_name");
 			deviceQuery(startDate, endDate, currentDate);
 		}
+
+        //It's for AssetInfoDetail page, using decrypt Url parameters
+        String encodeStr = WebUtil.getRequestParameter("str");
+        if (null != encodeStr) {
+            filter_id = Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid"));
+            assetName = (String) UrlEncryptController.getValueFromMap(encodeStr, "asset_name");
+            deviceQuery(startDate, endDate, currentDate);
 	}
+    }
 
 	@Override
     public void onServerEvent(String eventName, Object eventObject)	{
