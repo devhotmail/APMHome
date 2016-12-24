@@ -94,7 +94,7 @@
                             <p:menuitem id="um48" value="#{msg.OrgAdmin}" outcome="/portal/uaa/orgInfo/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin') eq false}"/>
                             <p:menuitem id="um49" value="#{msg.UserAdmin}" outcome="/portal/uaa/userAccount/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin') eq false}"/>
                             <p:menuitem id="um491" value="#{msg.SupplierMgmt}" outcome="/portal/supplier/List.xhtml"/>
-                            <p:menuitem id="um492" value="#{msg.ChecklistAdmin}" outcome="/portal/insp/checkListList.xhtml"/>
+                            <p:menuitem id="um492" value="#{msg.ChecklistAdmin}" rendered="false" outcome="/portal/insp/checkListList.xhtml"/>
                             <p:menuitem id="um493" value="#{msg.SysCodeConfig}" outcome="/portal/config/FieldCodeTypeConfig.xhtml"/>
                         </p:submenu>
                         
