@@ -29,7 +29,6 @@
                                 <label class="label">#{msg.aliasName}</label>
                                 <p:inputText id="aliasName" value="#{assetInfoController.selected.aliasName}"/>
                             </h:panelGroup>
-                            <p:spacer/>
                             <h:panelGroup>
                                 <label class="label">#{msg.assetGroup}*</label>
                                 <p:selectOneMenu id="assetGroup" value="#{assetInfoController.selected.assetGroup}" required="true" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
@@ -37,21 +36,42 @@
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
                             </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.functionGrade}</label>
-                                <p:selectOneMenu id="functionGrade" value="#{assetInfoController.selected.functionGrade}">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionGrade')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                </p:selectOneMenu>
-                            </h:panelGroup>
                             <h:panelGroup >
-                                <label class="label">#{msg.functionGroup}</label>
-                                <p:selectOneMenu id="functionGroup" value="#{assetInfoController.selected.functionGroup}" style="width: 100%">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                <label class="label">#{msg.assetOwnerName}*</label>
+                                <p:selectOneMenu id="assetOwnerName" value="#{assetInfoController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="true" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}" >
+                                    <p:ajax listener="#{assetInfoController.onOwnerChange}" process="@this" update="assetOwnerTel"/>
+                                    <f:selectItem itemLabel="" />
+                                    <f:selectItems value="#{assetInfoController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                    <p:column>
+                                        <h:outputText value="#{t.name}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{t.telephone}"/>
+                                    </p:column>
                                 </p:selectOneMenu>
                             </h:panelGroup>
-                            <p:spacer/>
+                            <h:panelGroup>
+                                <label class="label">#{msg.assetOwnerTel}</label>
+                                <p:inputText id="assetOwnerTel" value="#{assetInfoController.selected.assetOwnerTel}" readonly="true"/>
+                            </h:panelGroup>
+                            
+                            <h:panelGroup>
+                                <label class="label">#{msg.hospitalId}</label>
+                                <p:inputText id="hospitalId" value="#{assetInfoController.getHospital(assetInfoController.selected.hospitalId)}" readonly="true" rendered="#{!userContextService.hasRole('MultiHospital')}"/>
+                                <p:selectOneMenu id="hospitalIdSelect" value="#{assetInfoController.selected.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}" rendered="#{userContextService.hasRole('MultiHospital')}" >
+                                    <p:ajax  listener="#{assetInfoController.onHospitalChange}" update="clinicalDeptName assetOwnerName" />
+                                    <!--<f:selectItem itemLabel="#{msg.selectOneMessage}"/>-->
+                                    <f:selectItems value="#{assetInfoService.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.clinicalDeptName}*</label>
+                                <!--<p:inputText id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptName}"/>-->
+                                <p:selectOneMenu id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptId}" required="true" requiredMessage="#{msg.clinicalDeptName} #{msg.ValidationRequire}">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{assetInfoController.getClinicalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.manufacture}</label>
                                 <p:inputText id="manufacture" value="#{assetInfoController.selected.manufacture}"/>
@@ -100,31 +120,6 @@
                     <p:fieldset  style="margin-bottom:20px">
                         <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                             <h:panelGroup>
-                                <label class="label">#{msg.locationCode}</label>
-                                <p:inputText id="locationCode" value="#{assetInfoController.selected.locationCode}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.locationName}</label>
-                                <p:inputText id="locationName" value="#{assetInfoController.selected.locationName}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.hospitalId}</label>
-                                <p:inputText id="hospitalId" value="#{assetInfoController.getHospital(assetInfoController.selected.hospitalId)}" readonly="true" rendered="#{!userContextService.hasRole('MultiHospital')}"/>
-                                <p:selectOneMenu id="hospitalIdSelect" value="#{assetInfoController.selected.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}" rendered="#{userContextService.hasRole('MultiHospital')}" >
-                                    <p:ajax  listener="#{assetInfoController.onHospitalChange}" update="clinicalDeptName assetOwnerName" />
-                                    <!--<f:selectItem itemLabel="#{msg.selectOneMessage}"/>-->
-                                    <f:selectItems value="#{assetInfoService.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                </p:selectOneMenu>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.clinicalDeptName}*</label>
-                                <!--<p:inputText id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptName}"/>-->
-                                <p:selectOneMenu id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptId}" required="true" requiredMessage="#{msg.clinicalDeptName} #{msg.ValidationRequire}">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{assetInfoController.getClinicalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                </p:selectOneMenu>
-                            </h:panelGroup>
-                            <h:panelGroup>
                                 <label class="label">#{msg.functionType}</label>
                                 <p:inputText id="functionType" value="#{assetInfoController.selected.functionType}"/>
 <!--                                <p:selectOneMenu id="assetGroup" value="#{assetInfoController.selected.assetGroup}" required="true" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
@@ -132,23 +127,28 @@
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('ownAssetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>-->
                             </h:panelGroup>
-                            <h:panelGroup >
-                                <label class="label">#{msg.assetOwnerName}*</label>
-                                <p:selectOneMenu id="assetOwnerName" value="#{assetInfoController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="true" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}" >
-                                    <p:ajax listener="#{assetInfoController.onOwnerChange}" process="@this" update="assetOwnerTel"/>
-                                    <f:selectItem itemLabel="" />
-                                    <f:selectItems value="#{assetInfoController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
-                                    <p:column>
-                                        <h:outputText value="#{t.name}"/>
-                                    </p:column>
-                                    <p:column>
-                                        <h:outputText value="#{t.telephone}"/>
-                                    </p:column>
+                            <h:panelGroup>
+                                <label class="label">#{msg.functionGrade}</label>
+                                <p:selectOneMenu id="functionGrade" value="#{assetInfoController.selected.functionGrade}">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionGrade')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
                             </h:panelGroup>
+                            <h:panelGroup >
+                                <label class="label">#{msg.functionGroup}</label>
+                                <p:selectOneMenu id="functionGroup" value="#{assetInfoController.selected.functionGroup}" style="width: 100%">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <p:spacer/>
                             <h:panelGroup>
-                                <label class="label">#{msg.assetOwnerTel}</label>
-                                <p:inputText id="assetOwnerTel" value="#{assetInfoController.selected.assetOwnerTel}" readonly="true"/>
+                                <label class="label">#{msg.locationCode}</label>
+                                <p:inputText id="locationCode" value="#{assetInfoController.selected.locationCode}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.locationName}</label>
+                                <p:inputText id="locationName" value="#{assetInfoController.selected.locationName}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isValid}" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
