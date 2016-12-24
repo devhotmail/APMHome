@@ -103,11 +103,11 @@
                                 <p:selectBooleanCheckbox id="isInternal" itemLabel="#{msg.isInternal}" value="#{workOrderController.selected.isInternal}" required="true" requiredMessage="#{msg.isInternal} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
 
-                            <h:panelGroup>
+                            <h:panelGroup rendered="false">
                                 <label class="label">#{msg.totalManHour}</label>
                                 <p:inputText id="totalManHour" value="#{workOrderController.selected.totalManHour}" />
                             </h:panelGroup>
-                            <h:panelGroup>
+                            <h:panelGroup rendered="false">
                                 <label class="label">#{msg.totalPrice}</label>
                                 <p:inputText id="totalPrice" value="#{workOrderController.selected.totalPrice}" />
                             </h:panelGroup>
