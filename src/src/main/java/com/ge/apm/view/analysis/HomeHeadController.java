@@ -555,8 +555,8 @@ public class HomeHeadController extends SqlConfigurableChartController {
         // get revenue
         sql = "select a.clinical_dept_name as key, " +
                 "sum(r.price_amount) as value " +
-                "from asset_info a left join asset_clinical_record r " +
-                "on r.asset_id = a.id " +
+                "from asset_info a, asset_clinical_record r " +
+                "where r.asset_id = a.id " +
                 "and extract(year from exam_date) = :#targetYear " +
                 "and a.hospital_id = :#hospitalId " +
                 "group by a.clinical_dept_name " +
@@ -566,8 +566,8 @@ public class HomeHeadController extends SqlConfigurableChartController {
         // get asset depreciation value
         sql = "select a.clinical_dept_name as key, " +
                 "sum(d.deprecate_amount) as value " +
-                "from asset_info a left join asset_depreciation d " +
-                "on a.id = d.asset_id " +
+                "from asset_info a, asset_depreciation d " +
+                "where a.id = d.asset_id " +
                 "and a.hospital_id = :#hospitalId " +
                 "group by a.clinical_dept_name " +
                 "order by a.clinical_dept_name;";
@@ -576,8 +576,8 @@ public class HomeHeadController extends SqlConfigurableChartController {
         // get maintenance cost
         sql = "select a.clinical_dept_name as key, " +
                 "sum(w.total_price) as value " +
-                "from asset_info a left join work_order w " +
-                "on w.asset_id = a.id " +
+                "from asset_info a, work_order w " +
+                "where w.asset_id = a.id " +
                 "and a.hospital_id = :#hospitalId " +
                 "and extract(year from w.request_time) = :#targetYear " +
                 "and w.is_closed = true " +
@@ -733,14 +733,14 @@ public class HomeHeadController extends SqlConfigurableChartController {
     }
 
     private List<Map<String, Object>> prepareData(String sql, HashMap<String, Object> sqlParams) {
-        logger.debug(sql);
+        logger.debug("{}, parameter: {}, {}", sql, sqlParams.get("hospitalId"), sqlParams.get("targetYear"));
 
         List<Map<String, Object>> result = NativeSqlUtil.queryForList(sql, sqlParams);
 
         if (result.size() == 0) {
             Map<String, Object> item = new HashMap<>();
             item.put("key", 1);
-            item.put("value", 0.1);
+            item.put("value", 0.0);
             result.add(item);
         }
         else {
