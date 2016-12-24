@@ -41,16 +41,19 @@ public class FileUploadDao {
     }
 
     public Integer saveUploadFile(InputStream contentStream, int contentLength, String fileName) throws SQLException {
-
         PreparedStatement ps = template.getDataSource().getConnection().prepareStatement(SQL_SAVE, Statement.RETURN_GENERATED_KEYS);
-        ps.setString(1, fileName);
-        ps.setBinaryStream(2, contentStream, contentLength);
-        ps.executeUpdate();
-        ResultSet rs = ps.getGeneratedKeys();
-        rs.next();
-        Integer lastId = rs.getInt(1);
-        ps.close();
-        return lastId;
+        try{
+            ps.setString(1, fileName);
+            ps.setBinaryStream(2, contentStream, contentLength);
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            rs.next();
+            Integer lastId = rs.getInt(1);
+            return lastId;
+        }
+        finally{
+            ps.close();
+        }
     }
 
     public int deleteUploadFile(Integer id) {
@@ -58,22 +61,29 @@ public class FileUploadDao {
     }
 
     public Object[] getAttachmentFile(Integer id) throws SQLException {
-
         PreparedStatement ps = template.getDataSource().getConnection().prepareStatement(SQL_QUERY);
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        InputStream is = rs.getBinaryStream(2);
-        return new Object[]{rs.getString(1), is};
-
+        try{
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            InputStream is = rs.getBinaryStream(2);
+            return new Object[]{rs.getString(1), is};
+        }
+        finally{
+            ps.close();
+        }
     }
 
     public String getFileNameById(Integer fileId) throws SQLException {
         PreparedStatement ps = template.getDataSource().getConnection().prepareStatement(SQL_QUERY_NAME_BY_ID);
-        ps.setInt(1, fileId);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        return rs.getString(1);
+        try{
+            ps.setInt(1, fileId);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            return rs.getString(1);
+        }
+        finally{
+            ps.close();
+        }
     }
-
 }
