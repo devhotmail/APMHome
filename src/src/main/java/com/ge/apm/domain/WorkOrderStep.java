@@ -4,6 +4,7 @@ package com.ge.apm.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -231,6 +232,14 @@ public class WorkOrderStep implements Serializable {
             if(detail.isEmptyRecord())
                 stepDetails.remove(i);
         }
+    }
+
+    public void addStepDetail(WorkOrderStepDetail stepDetail){
+        if(this.stepDetails==null){
+            stepDetails =new ArrayList<WorkOrderStepDetail>();
+        }
+        
+        stepDetails.add(stepDetail);
     }
     
     @Override
