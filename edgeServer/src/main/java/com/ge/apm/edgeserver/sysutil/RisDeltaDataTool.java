@@ -115,7 +115,7 @@ public class RisDeltaDataTool {
             Properties prop = new Properties();
 
             prop.load(new FileInputStream(deltaFileName));
-            headers.put(deltaValueField, prop.getProperty(deltaFileName));
+            headers.put(deltaValueField, prop.getProperty(deltaValueField));
         }
         catch(Exception ex){
             headers.put(deltaValueField, defaultDeltaValue);

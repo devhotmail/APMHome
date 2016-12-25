@@ -50,8 +50,16 @@ public class DataMapper {
             }
             else {
                 FieldMappingRule fieldMappingRule = fieldMappingRules.get(item.getKey());
-                if(fieldMappingRule==null) throw new Exception("Error loading DataMapping.defaultNullValues, data field not found: fieldName="+item.getKey());
+                //if(fieldMappingRule==null) throw new Exception("Error loading DataMapping.defaultNullValues, data field not found: fieldName="+item.getKey());
+                if(fieldMappingRule==null){
+                    fieldMappingRule = new FieldMappingRule();
+                    fieldMappingRule.setFieldName(item.getKey());
+                    fieldMappingRules.put(item.getKey(), fieldMappingRule);
+
+                    fieldMappingRule.setMappingType(FieldMappingRule.parseFieldMappingType(item.getValue()));
+                }
                 fieldMappingRule.setDefaultNullValue(FieldMappingRule.parseConstValue(item.getValue()));
+                logger.warn("***Using default value for field: "+item.getKey());
             }
         }
         
