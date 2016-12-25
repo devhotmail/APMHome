@@ -35,7 +35,7 @@
                 <h:panelGrid columns="8">
                     <h:panelGroup>
                         <label class="label">#{msg.stepName}*</label>
-                        <p:inputText id="stepName" value="#{item.stepId}. #{item.stepName}" readonly="true" size="8"/>
+                        <p:inputText id="stepName" value="#{item.stepId}. #{item.stepName}" readonly="true" size="6"/>
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.ownerName}*</label>
@@ -43,13 +43,13 @@
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.startTime}*</label>
-                        <p:inputText readonly="true" value="#{item.startTime}" size="18">
+                        <p:inputText readonly="true" value="#{item.startTime}" size="14">
                             <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </p:inputText>
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.endTime}*</label>
-                        <p:inputText readonly="true" value="#{item.endTime}" size="18">
+                        <p:inputText readonly="true" value="#{item.endTime}" size="14">
                             <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </p:inputText>
                     </h:panelGroup>
