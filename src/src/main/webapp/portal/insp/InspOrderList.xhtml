@@ -49,7 +49,7 @@
                                 <p:inputText id="filterCreateTime" widgetVar="varFilterCreateTime"/>
                             </f:facet>
                             <h:outputText value="#{item.createTime}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                             </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.ownerName}" sortBy="#{item.ownerName}" filterBy="#{item.ownerId}" filterMatchMode="EQ">
@@ -83,7 +83,7 @@
                                 <p:inputText id="filterEndTime" widgetVar="varFilterEndTime"/>
                             </f:facet>
                             <h:outputText value="#{item.endTime}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                             </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.isFinished}" sortBy="#{item.isFinished}" filterBy="#{item.isFinished}" filterMatchMode="EQ">

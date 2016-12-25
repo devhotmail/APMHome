@@ -49,7 +49,7 @@
                                 <p:inputText id="filterRequestTime" widgetVar="varFilterRequestTime"/>
                             </f:facet>
                             <h:outputText value="#{item.requestTime}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                             </h:outputText>
                         </p:column>
                         <p:column width="70" headerText="#{msg.requestorName}" sortBy="#{item.requestorName}" filterBy="#{item.requestorId}" filterMatchMode="EQ">

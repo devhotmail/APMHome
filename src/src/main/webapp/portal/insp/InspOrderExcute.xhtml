@@ -31,7 +31,7 @@
                     <h:panelGroup>
                         <label class="label">#{msg.createTime}*</label>
                         <p:inputText id="createTime" value="#{inspectionOrderController.selected.createTime}" readonly="true">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </p:inputText>
                     </h:panelGroup>
                     <h:panelGroup>
@@ -51,7 +51,7 @@
                     <h:panelGroup>
                         <label class="label">#{msg.endTime}</label>
                         <p:inputText id="endTime" value="#{inspectionOrderController.selected.endTime}" readonly="true" >
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </p:inputText>
                     </h:panelGroup>
 
