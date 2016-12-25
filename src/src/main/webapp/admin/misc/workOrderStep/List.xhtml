@@ -48,7 +48,7 @@
                             <p:inputText id="filterStartTime" widgetVar="varFilterStartTime"/>
                         </f:facet>
                         <h:outputText value="#{item.startTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.endTime}" sortBy="#{item.endTime}" filterBy="#{item.endTime}" filterMatchMode="GTE">
@@ -56,7 +56,7 @@
                             <p:inputText id="filterEndTime" widgetVar="varFilterEndTime"/>
                         </f:facet>
                         <h:outputText value="#{item.endTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.description}" sortBy="#{item.description}" filterBy="#{item.description}" filterMatchMode="LIKE">

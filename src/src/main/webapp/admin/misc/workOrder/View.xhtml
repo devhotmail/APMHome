@@ -28,7 +28,7 @@
                         <h:outputText value="#{workOrderCrudController.selected.creatorName}"/>
                         <h:outputLabel value="#{msg.createTime}" for="createTime" />
                         <h:outputText value="#{workOrderCrudController.selected.createTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.requestorId}" for="requestorId" />
                         <h:outputText value="#{workOrderCrudController.selected.requestorId}"/>
@@ -36,7 +36,7 @@
                         <h:outputText value="#{workOrderCrudController.selected.requestorName}"/>
                         <h:outputLabel value="#{msg.requestTime}" for="requestTime" />
                         <h:outputText value="#{workOrderCrudController.selected.requestTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.requestReason}" for="requestReason" />
                         <h:outputText value="#{workOrderCrudController.selected.requestReason}"/>
@@ -72,11 +72,11 @@
                         <h:outputText value="#{workOrderCrudController.selected.totalPrice}"/>
                         <h:outputLabel value="#{msg.confirmedDownTime}" for="confirmedDownTime" />
                         <h:outputText value="#{workOrderCrudController.selected.confirmedDownTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.confirmedUpTime}" for="confirmedUpTime" />
                         <h:outputText value="#{workOrderCrudController.selected.confirmedUpTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.assetId}" for="assetId" />
                         <h:outputText value="#{workOrderCrudController.selected.assetId}"/>

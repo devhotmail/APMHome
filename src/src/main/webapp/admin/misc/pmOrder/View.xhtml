@@ -26,7 +26,7 @@
                         <h:outputText value="#{pmOrderCrudController.selected.creatorName}"/>
                         <h:outputLabel value="#{msg.createTime}" for="createTime" />
                         <h:outputText value="#{pmOrderCrudController.selected.createTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.ownerId}" for="ownerId" />
                         <h:outputText value="#{pmOrderCrudController.selected.ownerId}"/>
@@ -38,11 +38,11 @@
                         <h:outputText value="#{pmOrderCrudController.selected.ownerOrgName}"/>
                         <h:outputLabel value="#{msg.startTime}" for="startTime" />
                         <h:outputText value="#{pmOrderCrudController.selected.startTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.endTime}" for="endTime" />
                         <h:outputText value="#{pmOrderCrudController.selected.endTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.isFinished}" for="isFinished" />
                         <p:selectBooleanCheckbox id="isFinished" value="#{pmOrderCrudController.selected.isFinished}" required="true" requiredMessage="#{msg.isFinished} #{msg.ValidationRequire}" disabled="true"/>
@@ -50,7 +50,7 @@
                         <h:outputText value="#{pmOrderCrudController.selected.comments}"/>
                         <h:outputLabel value="#{msg.nextTime}" for="nextTime" />
                         <h:outputText value="#{pmOrderCrudController.selected.nextTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.reportUrl}" for="reportUrl" />
                         <h:outputText value="#{pmOrderCrudController.selected.reportUrl}"/>

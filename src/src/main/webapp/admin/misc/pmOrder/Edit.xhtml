@@ -34,7 +34,7 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.createTime}*</label>
-                            <p:calendar id="createTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderCrudController.selected.createTime}" required="true" requiredMessage="#{msg.createTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar id="createTime" pattern="yyyy/MM/dd HH:mm" value="#{pmOrderCrudController.selected.createTime}" required="true" requiredMessage="#{msg.createTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.ownerId}</label>
@@ -54,11 +54,11 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.startTime}</label>
-                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderCrudController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar id="startTime" pattern="yyyy/MM/dd HH:mm" value="#{pmOrderCrudController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.endTime}</label>
-                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderCrudController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar id="endTime" pattern="yyyy/MM/dd HH:mm" value="#{pmOrderCrudController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.isFinished}*</label>
@@ -70,7 +70,7 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.nextTime}</label>
-                            <p:calendar id="nextTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{pmOrderCrudController.selected.nextTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar id="nextTime" pattern="yyyy/MM/dd HH:mm" value="#{pmOrderCrudController.selected.nextTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.reportUrl}</label>

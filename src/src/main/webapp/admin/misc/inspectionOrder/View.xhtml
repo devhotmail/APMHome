@@ -26,7 +26,7 @@
                         <h:outputText value="#{inspectionOrderCrudController.selected.creatorName}"/>
                         <h:outputLabel value="#{msg.createTime}" for="createTime" />
                         <h:outputText value="#{inspectionOrderCrudController.selected.createTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.ownerId}" for="ownerId" />
                         <h:outputText value="#{inspectionOrderCrudController.selected.ownerId}"/>
@@ -38,11 +38,11 @@
                         <h:outputText value="#{inspectionOrderCrudController.selected.ownerOrgName}"/>
                         <h:outputLabel value="#{msg.startTime}" for="startTime" />
                         <h:outputText value="#{inspectionOrderCrudController.selected.startTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.endTime}" for="endTime" />
                         <h:outputText value="#{inspectionOrderCrudController.selected.endTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.isFinished}" for="isFinished" />
                         <p:selectBooleanCheckbox id="isFinished" value="#{inspectionOrderCrudController.selected.isFinished}" required="true" requiredMessage="#{msg.isFinished} #{msg.ValidationRequire}" disabled="true"/>

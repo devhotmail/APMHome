@@ -70,11 +70,11 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.examDate}*</label>
-                            <p:calendar id="examDate" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetClinicalRecordCrudController.selected.examDate}" required="true" requiredMessage="#{msg.examDate} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar id="examDate" pattern="yyyy/MM/dd HH:mm" value="#{assetClinicalRecordCrudController.selected.examDate}" required="true" requiredMessage="#{msg.examDate} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.examStartTime}*</label>
-                            <p:calendar id="examStartTime" pattern="yyyy/MM/dd HH:mm:ss" value="#{assetClinicalRecordCrudController.selected.examStartTime}" required="true" requiredMessage="#{msg.examStartTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar id="examStartTime" pattern="yyyy/MM/dd HH:mm" value="#{assetClinicalRecordCrudController.selected.examStartTime}" required="true" requiredMessage="#{msg.examStartTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.examDuration}</label>

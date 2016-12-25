@@ -26,11 +26,11 @@
                         <h:outputText value="#{workOrderStepCrudController.selected.ownerName}"/>
                         <h:outputLabel value="#{msg.startTime}" for="startTime" />
                         <h:outputText value="#{workOrderStepCrudController.selected.startTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.endTime}" for="endTime" />
                         <h:outputText value="#{workOrderStepCrudController.selected.endTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.description}" for="description" />
                         <h:outputText value="#{workOrderStepCrudController.selected.description}"/>

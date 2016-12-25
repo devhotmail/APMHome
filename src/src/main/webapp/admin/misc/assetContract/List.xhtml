@@ -45,7 +45,7 @@
                             <p:inputText id="filterStartDate" widgetVar="varFilterStartDate"/>
                         </f:facet>
                         <h:outputText value="#{item.startDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.endDate}" sortBy="#{item.endDate}" filterBy="#{item.endDate}" filterMatchMode="GTE">
@@ -53,7 +53,7 @@
                             <p:inputText id="filterEndDate" widgetVar="varFilterEndDate"/>
                         </f:facet>
                         <h:outputText value="#{item.endDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.contractAmount}" sortBy="#{item.contractAmount}" filterBy="#{item.contractAmount}" filterMatchMode="EQ">

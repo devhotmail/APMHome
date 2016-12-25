@@ -119,7 +119,7 @@
                             <p:inputText id="filterManufactDate" widgetVar="varFilterManufactDate"/>
                         </f:facet>
                         <h:outputText value="#{item.manufactDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.purchaseDate}" sortBy="#{item.purchaseDate}" filterBy="#{item.purchaseDate}" filterMatchMode="GTE">
@@ -127,7 +127,7 @@
                             <p:inputText id="filterPurchaseDate" widgetVar="varFilterPurchaseDate"/>
                         </f:facet>
                         <h:outputText value="#{item.purchaseDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.arriveDate}" sortBy="#{item.arriveDate}" filterBy="#{item.arriveDate}" filterMatchMode="GTE">
@@ -135,7 +135,7 @@
                             <p:inputText id="filterArriveDate" widgetVar="varFilterArriveDate"/>
                         </f:facet>
                         <h:outputText value="#{item.arriveDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.installDate}" sortBy="#{item.installDate}" filterBy="#{item.installDate}" filterMatchMode="GTE">
@@ -143,7 +143,7 @@
                             <p:inputText id="filterInstallDate" widgetVar="varFilterInstallDate"/>
                         </f:facet>
                         <h:outputText value="#{item.installDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.warrantyDate}" sortBy="#{item.warrantyDate}" filterBy="#{item.warrantyDate}" filterMatchMode="GTE">
@@ -151,7 +151,7 @@
                             <p:inputText id="filterWarrantyDate" widgetVar="varFilterWarrantyDate"/>
                         </f:facet>
                         <h:outputText value="#{item.warrantyDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.terminateDate}" sortBy="#{item.terminateDate}" filterBy="#{item.terminateDate}" filterMatchMode="GTE">
@@ -159,7 +159,7 @@
                             <p:inputText id="filterTerminateDate" widgetVar="varFilterTerminateDate"/>
                         </f:facet>
                         <h:outputText value="#{item.terminateDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.lastPmDate}" sortBy="#{item.lastPmDate}" filterBy="#{item.lastPmDate}" filterMatchMode="GTE">
@@ -167,7 +167,7 @@
                             <p:inputText id="filterLastPmDate" widgetVar="varFilterLastPmDate"/>
                         </f:facet>
                         <h:outputText value="#{item.lastPmDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.lastMeteringDate}" sortBy="#{item.lastMeteringDate}" filterBy="#{item.lastMeteringDate}" filterMatchMode="GTE">
@@ -175,7 +175,7 @@
                             <p:inputText id="filterLastMeteringDate" widgetVar="varFilterLastMeteringDate"/>
                         </f:facet>
                         <h:outputText value="#{item.lastMeteringDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.lastQaDate}" sortBy="#{item.lastQaDate}" filterBy="#{item.lastQaDate}" filterMatchMode="GTE">
@@ -183,7 +183,7 @@
                             <p:inputText id="filterLastQaDate" widgetVar="varFilterLastQaDate"/>
                         </f:facet>
                         <h:outputText value="#{item.lastQaDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.lastStockTakeDate}" sortBy="#{item.lastStockTakeDate}" filterBy="#{item.lastStockTakeDate}" filterMatchMode="GTE">
@@ -191,7 +191,7 @@
                             <p:inputText id="filterLastStockTakeDate" widgetVar="varFilterLastStockTakeDate"/>
                         </f:facet>
                         <h:outputText value="#{item.lastStockTakeDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.purchasePrice}" sortBy="#{item.purchasePrice}" filterBy="#{item.purchasePrice}" filterMatchMode="EQ">

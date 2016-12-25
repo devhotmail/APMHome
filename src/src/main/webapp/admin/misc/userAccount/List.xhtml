@@ -109,7 +109,7 @@
                             <p:inputText id="filterLastLoginTime" widgetVar="varFilterLastLoginTime"/>
                         </f:facet>
                         <h:outputText value="#{item.lastLoginTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.pwdSalt}" sortBy="#{item.pwdSalt}" filterBy="#{item.pwdSalt}" filterMatchMode="LIKE">

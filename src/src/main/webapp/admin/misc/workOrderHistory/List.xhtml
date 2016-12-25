@@ -45,7 +45,7 @@
                             <p:inputText id="filterUpdateTime" widgetVar="varFilterUpdateTime"/>
                         </f:facet>
                         <h:outputText value="#{item.updateTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.updateDetail}" sortBy="#{item.updateDetail}" filterBy="#{item.updateDetail}" filterMatchMode="LIKE">

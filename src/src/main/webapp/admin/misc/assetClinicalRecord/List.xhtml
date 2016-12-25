@@ -75,7 +75,7 @@
                             <p:inputText id="filterExamDate" widgetVar="varFilterExamDate"/>
                         </f:facet>
                         <h:outputText value="#{item.examDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.examStartTime}" sortBy="#{item.examStartTime}" filterBy="#{item.examStartTime}" filterMatchMode="GTE">
@@ -83,7 +83,7 @@
                             <p:inputText id="filterExamStartTime" widgetVar="varFilterExamStartTime"/>
                         </f:facet>
                         <h:outputText value="#{item.examStartTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.examDuration}" sortBy="#{item.examDuration}" filterBy="#{item.examDuration}" filterMatchMode="EQ">

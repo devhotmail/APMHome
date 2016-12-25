@@ -51,7 +51,7 @@
                             <p:inputText id="filterCreateTime" widgetVar="varFilterCreateTime"/>
                         </f:facet>
                         <h:outputText value="#{item.createTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.requestorId}" sortBy="#{item.requestorId}" filterBy="#{item.requestorId}" filterMatchMode="EQ">
@@ -65,7 +65,7 @@
                             <p:inputText id="filterRequestTime" widgetVar="varFilterRequestTime"/>
                         </f:facet>
                         <h:outputText value="#{item.requestTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
@@ -137,7 +137,7 @@
                             <p:inputText id="filterConfirmedDownTime" widgetVar="varFilterConfirmedDownTime"/>
                         </f:facet>
                         <h:outputText value="#{item.confirmedDownTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.confirmedUpTime}" sortBy="#{item.confirmedUpTime}" filterBy="#{item.confirmedUpTime}" filterMatchMode="GTE">
@@ -145,7 +145,7 @@
                             <p:inputText id="filterConfirmedUpTime" widgetVar="varFilterConfirmedUpTime"/>
                         </f:facet>
                         <h:outputText value="#{item.confirmedUpTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.assetId}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
