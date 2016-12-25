@@ -145,7 +145,11 @@ padding: 0!important;
 .ui-calendar .ui-button-text{
 padding: 0!important;
 }
-.ui-datepicker-calendar{
+.ui-datepicker tbody td, .ui-datepicker tbody td a{
+padding-top: 0px!important;
+padding-bottom: 0px!important;
+}
+.ui-datepicker, .ui-datepicker-calendar{
 line-height: 14px!important;
 margin-bottom: 0px!important;
 }
