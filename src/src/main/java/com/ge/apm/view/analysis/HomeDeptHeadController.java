@@ -235,6 +235,10 @@ public class HomeDeptHeadController implements Serializable {
             valueScan = cf.format(resultSet.get(0).get("count") != null ? (long)resultSet.get(0).get("count") : 0);
             valueExpo = cfint.format(resultSet.get(0).get("sum") != null ? (double)resultSet.get(0).get("sum") : 0.0);
         }
+        else {
+            valueScan = cf.format(0);
+            valueExpo = cfint.format(0.0);
+        }
 
     }
 

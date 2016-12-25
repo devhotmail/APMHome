@@ -313,6 +313,11 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			valueScan = cf.format(rs_panel.get(0).get("count")  != null ? (long)rs_panel.get(0).get("count") : 0);
 			valueExpo = cfint.format(rs_panel.get(0).get("sum")  != null ? (double)rs_panel.get(0).get("sum") : 0.0);
 		}
+		else{
+			valueScan = cf.format(0);
+			valueExpo = cfint.format(0.0);
+		}
+
 
 
 	}

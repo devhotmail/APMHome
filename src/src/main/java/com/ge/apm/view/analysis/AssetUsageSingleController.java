@@ -223,6 +223,16 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "GROUP BY asset_id";
 
 			//Integer
+	private String SERVETL
+			= "SELECT CASE WHEN Date(:#startDate) > install_date THEN Date(:#startDate) ELSE install_date END serve1, "
+			+ "CASE WHEN terminate_date IS NULL THEN Date(:#endDate) WHEN Date(:#endDate) < terminate_date THEN Date(:#endDate) ELSE terminate_date END serve2, "
+			+ ":#HOURS_DAY * ( "
+			+ "CASE WHEN terminate_date IS NULL THEN Date(:#endDate) WHEN Date(:#endDate) < terminate_date THEN Date(:#endDate) ELSE terminate_date END "
+			+ "- CASE WHEN Date(:#startDate) > install_date THEN Date(:#startDate) ELSE install_date END ) serve "
+			+ "FROM asset_info "
+			+ "WHERE id = :#filter_id ";
+
+			//Integer
 	private String INUSETL
 			= "SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, "
 			+ "SUM(exam_duration)/60 inuse "
@@ -425,22 +435,33 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		double dt;
 		double wait; // wait = serve - downtime - inuse
 
+		double serve_total;
 		double inuse_total = 0.0;
 		double dt_total= 0.0;
 		double wait_total = 0.0; // wait = serve - downtime - inuse
+
+		DateTime serve1;
+		DateTime serve2;
 
 		double diff_total;
 		double today;
 		boolean overday;
 		String timeline;
 		DateTime currentJoda;
-		/*
+		
 		List<Map<String, Object>> rs_serve_hour = NativeSqlUtil.queryForList(SERVETL, sqlParams);
 
-		if ( !rs_serve_hour.isEmpty() )
-			serve_hour = (int) (rs_serve_hour.get(0).get("serve_hour") != null ? rs_serve_hour.get(0).get("serve_hour") : 0);
-		else serve_hour = 0;
-		*/
+		if (!rs_serve_hour.isEmpty()) {
+			serve1 = new DateTime(rs_serve_hour.get(0).get("serve1") != null ? (Date) rs_serve_hour.get(0).get("serve1") : startDate);
+			serve2 = new DateTime(rs_serve_hour.get(0).get("serve2") != null ? (Date) rs_serve_hour.get(0).get("serve2") : endDate);
+			serve_total = rs_serve_hour.get(0).get("serve") != null ? (int) rs_serve_hour.get(0).get("serve") : 0;
+		}
+		else {
+			serve1 = new DateTime(startDate);
+			serve2 = new DateTime(endDate);
+			serve_total = 0;
+		}
+		
 		List<Map<String, Object>> rs_inuse = NativeSqlUtil.queryForList(INUSETL, sqlParams);
 		List<Map<String, Object>> rs_dt = NativeSqlUtil.queryForList(DTTL, sqlParams);
 
@@ -448,8 +469,9 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 		if (!rs_inuse.isEmpty())
 			for (Map<String, Object> item : rs_inuse) {
-				rs_inuse_map.put(item.get("timeline").toString(), item.get("inuse") != null ? ((long)item.get("inuse"))/60.0 : 0.0);
-
+				inuse = item.get("inuse") != null ? ((long)item.get("inuse"))/60.0 : 0.0;
+				inuse_total += inuse;
+				rs_inuse_map.put(item.get("timeline").toString(), inuse);
 		}
 
 		rs_inuse.clear();
@@ -489,9 +511,11 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 		rs_dt.clear();
 
+		wait_total += serve_total - inuse_total - dt_total;
+
 		String idate;
 
-		for (startJoda = new DateTime(startDate); startJoda.isBefore(endJoda); startJoda = startJoda.plusDays(1)) {
+		for (startJoda = new DateTime(startDate); startJoda.isBefore(endJoda.plusDays(1)); startJoda = startJoda.plusDays(1)) {
 
 			inuse = 0.0;
 			dt = 0.0;
@@ -501,7 +525,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 			if ( rs_inuse_map.containsKey(idate)) {
 				inuse = (double) rs_inuse_map.get(idate);
-				inuse_total += inuse;
 				cst_inuse.set(idate, inuse);
 			}
 			else {
@@ -516,9 +539,12 @@ public class AssetUsageSingleController implements ServerEventInterface {
 				cst_dt.set(idate, 0.0);
 			}
 
-			wait = HOURS_DAY - inuse - dt;
+			if (startJoda.isBefore(serve2.plusDays(1)) && startJoda.isAfter(serve1))
+				wait = HOURS_DAY - inuse - dt;
+			else
+				wait = 0;
+
 			if (wait < 0)	wait = 0.0;
-			wait_total += wait;
 			cst_wait.set(idate, wait);
 		}
 
@@ -554,11 +580,16 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 		if (!rs_panel.isEmpty())
 			valueScan = cf.format(rs_panel.get(0).get("sum")  != null ? (long)rs_panel.get(0).get("sum") : 0);
+		else
+			valueScan = cf.format(0);
+
 
 		rs_panel = NativeSqlUtil.queryForList(VALUEEXPOTL, sqlParams);
 
 		if (!rs_panel.isEmpty())
 			valueExpo = cfint.format(rs_panel.get(0).get("sum")  != null ? (double)rs_panel.get(0).get("sum") : 0.0);
+		else
+			valueExpo = cfint.format(0.0);
 
 	}
 
