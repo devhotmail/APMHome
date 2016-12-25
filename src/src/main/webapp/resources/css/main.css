@@ -145,6 +145,26 @@ padding: 0!important;
 .ui-calendar .ui-button-text{
 padding: 0!important;
 }
+.ui-datepicker-calendar{
+line-height: 14px!important;
+margin-bottom: 0px!important;
+}
+.ui-timepicker-div dl{
+margin-bottom: 5px!important;
+}
+.ui_tpicker_time_label, .ui_tpicker_hour_label, .ui_tpicker_minute_label, .ui_tpicker_second_label{
+margin-bottom: 0px!important;
+margin-top: 11px!important;
+padding-bottom: 0px!important;
+padding-top: 0px!important;
+}
+.ui_tpicker_time, .ui_tpicker_hour, .ui_tpicker_minute, .ui_tpicker_second{
+margin-bottom: 0px!important;
+margin-top: 26px!important;
+padding-bottom: 0px!important;
+xpadding-top: 5px!important;
+}
+
 table.ui-selectoneradio{
 vertical-align: top!important;
 border-spacing: 1px!important;
