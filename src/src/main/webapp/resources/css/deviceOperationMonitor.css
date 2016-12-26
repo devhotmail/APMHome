@@ -521,7 +521,6 @@ body.layout-compact .chart-device-stat.horizontal .jqplot-point-label{position:r
 }
 body.layout-compact .chart-device-stat.horizontal .jqplot-point-label:after{content:'';position:absolute;background:#6e7072;display:block;width:5px;height:50px;top:-10px;right:-10px}
 body.layout-compact .chart-device-stat-bypart,body.layout-compact .chart-device-statbytime{height:400px}
-body.layout-compact .body-shape{height:400px;min-width:200px}
+body.layout-compact .body-shape{height:400px;width:185px}
 body.layout-compact .chart-device-stat.chart-device-2.vertical{margin-top:-40px}
 body.layout-compact .chart-device-stat.chart-device-2.vertical table.jqplot-table-legend{margin-top:83px}
-body.layout-compact .flex__item.scan-part-chart{-webkit-box-flex:0;-ms-flex-positive:0;flex-grow:0}

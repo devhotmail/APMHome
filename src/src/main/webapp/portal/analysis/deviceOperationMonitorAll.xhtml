@@ -85,18 +85,17 @@
                         <h3 class="block-title">#{msg.operationMonitor_summary}</h3>
                         <div class="flex flex--row flex--wrap">
                             <c:forEach var="bar" items="${deviceOperationMonitorController.bottomBars}" status="status">
-                                <div class="flex__item scan-part-chart">
-                                    <div class="flex flex--row flex--center">
-                                        <div>
-                                            <p class="text--center">
-                                                ${bar.group}</p>
-                                            <ui:include src="bodyModel.xhtml"/>
-                                        </div>
-                                        <div>
-                                            <p class="text--center">
-                                                ${bar.total}#{msg.operationMonitor_device}</p>
-                                            <p:chart type="bar" class="chart-device-stat vertical" model="#{bar.chart}" responsive="true"/>
-                                        </div>
+                                <div class="flex flex--row flex--center">
+                                    <div>
+                                        <p class="text--center">
+                                            ${bar.group}</p>
+                                        <ui:include src="bodyModel.xhtml"/>
+                                    </div>
+                                    <div>
+                                        <p class="text--center">
+                                            ${bar.total}#{msg.operationMonitor_device}</p>
+                                        <p:chart type="bar" class="chart-device-stat vertical" model="#{bar.chart}"
+                                                 responsive="true"/>
                                     </div>
                                 </div>
                             </c:forEach>

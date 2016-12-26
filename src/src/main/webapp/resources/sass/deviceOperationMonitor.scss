@@ -28,7 +28,7 @@ body.layout-compact {
   }
   .body-shape {
     height: 400px;
-    min-width: 200px;
+    width: 185px;
   }
 
   .chart-device-stat.chart-device-2.vertical {
@@ -36,9 +36,5 @@ body.layout-compact {
     table.jqplot-table-legend {
       margin-top: 83px;
     }
-  }
-
-  .flex__item.scan-part-chart {
-    flex-grow: 0;
   }
 }
