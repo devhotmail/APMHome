@@ -86,7 +86,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         queries.put("examsPerProcedurePerDay", "select a.ts_day as exam_time,a.part_id as exam_id, COALESCE(b.exam_count, 0) as exam_count from (select * from  (select generate_series(date_trunc('day',to_date(?,'yyyy-MM-dd')), date_trunc('day',to_date(?,'yyyy-MM-dd')), '1 days') as ts_day) as ts  cross join (select generate_series(1,5) as part_id) as pi order by ts_day, part_id) as a left join (select date_trunc('day', ac.exam_date) as exam_day, ac.procedure_id as procedure_id, ac.procedure_name as procedure_name, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id  where ai.site_id = ? and ai.hospital_id = ? and ai.asset_group = ? and ac.exam_date between ? and ? group by exam_day, ac.procedure_id, ac.procedure_name order by exam_day, procedure_id) as b on a.ts_day = b.exam_day and a.part_id = b.procedure_id");
         queries.put("examsPerProcedureAll", "select a.part_id as exam_id, COALESCE(b.count, 0) as exam_count from (select generate_series(1,5) as part_id) as a left join (select ac.procedure_id, ac.procedure_name, count(*) from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ac.exam_date between ? and ? group by ac.procedure_name, ac.procedure_id order by ac.procedure_id) as b on a.part_id = b.procedure_id");
         queries.put("examsForMiddleBar", "select dm.asset_name as asset_name, dm.exam_id as exam_id, COALESCE(af.exam_count, 0) as exam_count from (select nm.name as asset_name, pid.part_id as exam_id from (select ai.name from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ac.exam_date between ? and ? group by ai.name) as nm cross join (select generate_series(1,5) as part_id) as pid) as dm left join (select ai.name, ac.procedure_id, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ac.exam_date between ? and ? group by ai.name,ac.procedure_id) as af on dm.asset_name = af.name and dm.exam_id = af.procedure_id");
-        queries.put("examsForGroups", "select dm.asset_group as group_id, dm.procedure_id as exam_id, COALESCE(af.exam_count,0) as exam_count from (select * from (select generate_series(1,12) as asset_group) as ag cross join (select generate_series(1,5) as procedure_id) as pi) as dm left join (select ai.asset_group, ac.procedure_id, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ac.exam_date between ? and ? group by ai.asset_group,ac.procedure_id order by ai.asset_group,ac.procedure_id) as af on dm.asset_group = af.asset_group and dm.procedure_id = af.procedure_id");
+        queries.put("examsForGroups", "select dm.asset_group as group_id, dm.procedure_id as exam_id, COALESCE(af.exam_count,0) as exam_count from (select * from (select generate_series(1,?) as asset_group) as ag cross join (select generate_series(1,5) as procedure_id) as pi) as dm left join (select ai.asset_group, ac.procedure_id, count(*) as exam_count from asset_info ai join asset_clinical_record ac on ai.id = ac.asset_id where ai.site_id = ? and ai.hospital_id = ? and ac.exam_date between ? and ? group by ai.asset_group,ac.procedure_id order by ai.asset_group,ac.procedure_id) as af on dm.asset_group = af.asset_group and dm.procedure_id = af.procedure_id");
     }
 
     @PostConstruct
@@ -180,7 +180,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     public void initBottomBars() {
-        log.info("initBottomBars sql:{}, param:{},{},{},{}", queries.get("examsForGroups"), siteId, hospitalId, startDate, endDate);
+        log.info("initBottomBars sql:{}, param:{},{},{},{},{}", queries.get("examsForGroups"), assetGroups.size(), siteId, hospitalId, startDate, endDate);
         List<DeviceOperationInfo> exams = jdbcTemplate.query(queries.get("examsForGroups"), new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -190,10 +190,13 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
                 deviceOperationInfo.setExamCount(rs.getInt("exam_count"));
                 return deviceOperationInfo;
             }
-        }, siteId, hospitalId, startDate, endDate);
+        }, assetGroups.size(), siteId, hospitalId, startDate, endDate);
+        log.info("exams: {}", exams);
         ImmutableTable.Builder<String, String, Integer> builder = new ImmutableTable.Builder<>();
         for (DeviceOperationInfo info : exams) {
-            builder.put(info.getGroupName(), info.getProcedureName(), info.getExamCount());
+            if (Optional.fromNullable(info.getGroupName()).isPresent() && Optional.fromNullable(info.getProcedureName()).isPresent() && Optional.fromNullable(info.getExamCount()).isPresent()) {
+                builder.put(info.getGroupName(), info.getProcedureName(), info.getExamCount());
+            }
         }
         ImmutableTable<String, String, Integer> table = builder.build();
         for (String group : table.rowKeySet()) {
@@ -220,6 +223,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
             }
 
         }
+        log.info("assetGroups: {}", assetGroup);
         return assetGroup;
     }
 
