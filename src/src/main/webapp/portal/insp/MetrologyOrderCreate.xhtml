@@ -37,7 +37,7 @@
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.createTime}*</label>
-                                <p:calendar id="createTime" pattern="yyyy/MM/dd HH:mm" value="#{metrologyOrderController.selected.createTime}" readonly="true" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                                <p:calendar timeZone="GMT+8"  id="createTime" pattern="yyyy/MM/dd HH:mm" value="#{metrologyOrderController.selected.createTime}" readonly="true" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.ownerName}*</label>
@@ -60,11 +60,11 @@
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.cyclicStartDate}*</label>
-                                <p:calendar id="startTime" pattern="yyyy/MM/dd" value="#{metrologyOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.cyclicStartDate} #{msg.ValidationRequire}"/>
+                                <p:calendar timeZone="GMT+8"  id="startTime" pattern="yyyy/MM/dd" value="#{metrologyOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.cyclicStartDate} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.cyclicEndDate}*</label>
-                                <p:calendar id="endTime" pattern="yyyy/MM/dd" value="#{metrologyOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.cyclicEndDate} #{msg.ValidationRequire}"/>
+                                <p:calendar timeZone="GMT+8"  id="endTime" pattern="yyyy/MM/dd" value="#{metrologyOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.cyclicEndDate} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.period}*</label>
@@ -72,7 +72,7 @@
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('inspectionPeriod')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
-                                <!--<p:calendar id="period" pattern="yyyy/MM/dd" value="#{metrologyOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>-->
+                                <!--<p:calendar timeZone="GMT+8"  id="period" pattern="yyyy/MM/dd" value="#{metrologyOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>-->
                             </h:panelGroup>
 
                             <!--                    <h:panelGroup>

@@ -110,10 +110,10 @@ height: auto!important;
 				<h:form id="form2">
                                     <p:growl id="calendar_submit" life="100000" showDetail="true"/>
 					<div class="calendar-range-picker flex flex--row flex--center flex--justify">
-						<p:calendar id="start_date_button" value="#{assetUsageAllController.startDate}"
+						<p:calendar timeZone="GMT+8"  id="start_date_button" value="#{assetUsageAllController.startDate}"
 									showOn="button"/>
 						<label>#{msg.selectSearchInterval_1}</label>
-						<p:calendar id="end_date_button" value="#{assetUsageAllController.endDate}"
+						<p:calendar timeZone="GMT+8"  id="end_date_button" value="#{assetUsageAllController.endDate}"
 									showOn="button"/>
 						<label> </label>
 						<p:commandButton id="submit_date" class="btn btn--large" value="#{msg.selectSearchInterval_2}"

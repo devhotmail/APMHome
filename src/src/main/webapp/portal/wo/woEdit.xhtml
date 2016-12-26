@@ -51,9 +51,9 @@
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.requestTime}*</label>
-                        <p:calendar rendered="#{workOrderController.isInViewMode ne true}"  id="requestTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderController.selected.requestTime}" required="true" requiredMessage="#{msg.requestTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" mask="true"/>
+                        <p:calendar timeZone="GMT+8"  rendered="#{workOrderController.isInViewMode ne true}"  id="requestTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderController.selected.requestTime}" required="true" requiredMessage="#{msg.requestTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         <p:inputText readonly="true" rendered="#{workOrderController.isInViewMode}" value="#{workOrderController.selected.requestTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </p:inputText>
                         
                     </h:panelGroup>

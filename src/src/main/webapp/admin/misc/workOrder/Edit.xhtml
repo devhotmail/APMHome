@@ -38,7 +38,7 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.createTime}*</label>
-                            <p:calendar id="createTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderCrudController.selected.createTime}" required="true" requiredMessage="#{msg.createTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar timeZone="GMT+8"  id="createTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderCrudController.selected.createTime}" required="true" requiredMessage="#{msg.createTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.requestorId}*</label>
@@ -50,7 +50,7 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.requestTime}*</label>
-                            <p:calendar id="requestTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderCrudController.selected.requestTime}" required="true" requiredMessage="#{msg.requestTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar timeZone="GMT+8"  id="requestTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderCrudController.selected.requestTime}" required="true" requiredMessage="#{msg.requestTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.requestReason}*</label>
@@ -118,11 +118,11 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.confirmedDownTime}</label>
-                            <p:calendar id="confirmedDownTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderCrudController.selected.confirmedDownTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar timeZone="GMT+8"  id="confirmedDownTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderCrudController.selected.confirmedDownTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.confirmedUpTime}</label>
-                            <p:calendar id="confirmedUpTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderCrudController.selected.confirmedUpTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar timeZone="GMT+8"  id="confirmedUpTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderCrudController.selected.confirmedUpTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.assetId}*</label>

@@ -119,7 +119,7 @@
                             <p:inputText id="filterManufactDate" widgetVar="varFilterManufactDate"/>
                         </f:facet>
                         <h:outputText value="#{item.manufactDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.purchaseDate}" sortBy="#{item.purchaseDate}" filterBy="#{item.purchaseDate}" filterMatchMode="GTE">
@@ -127,7 +127,7 @@
                             <p:inputText id="filterPurchaseDate" widgetVar="varFilterPurchaseDate"/>
                         </f:facet>
                         <h:outputText value="#{item.purchaseDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.arriveDate}" sortBy="#{item.arriveDate}" filterBy="#{item.arriveDate}" filterMatchMode="GTE">
@@ -135,7 +135,7 @@
                             <p:inputText id="filterArriveDate" widgetVar="varFilterArriveDate"/>
                         </f:facet>
                         <h:outputText value="#{item.arriveDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.installDate}" sortBy="#{item.installDate}" filterBy="#{item.installDate}" filterMatchMode="GTE">
@@ -143,7 +143,7 @@
                             <p:inputText id="filterInstallDate" widgetVar="varFilterInstallDate"/>
                         </f:facet>
                         <h:outputText value="#{item.installDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.warrantyDate}" sortBy="#{item.warrantyDate}" filterBy="#{item.warrantyDate}" filterMatchMode="GTE">
@@ -151,7 +151,7 @@
                             <p:inputText id="filterWarrantyDate" widgetVar="varFilterWarrantyDate"/>
                         </f:facet>
                         <h:outputText value="#{item.warrantyDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.terminateDate}" sortBy="#{item.terminateDate}" filterBy="#{item.terminateDate}" filterMatchMode="GTE">
@@ -159,7 +159,7 @@
                             <p:inputText id="filterTerminateDate" widgetVar="varFilterTerminateDate"/>
                         </f:facet>
                         <h:outputText value="#{item.terminateDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.lastPmDate}" sortBy="#{item.lastPmDate}" filterBy="#{item.lastPmDate}" filterMatchMode="GTE">
@@ -167,7 +167,7 @@
                             <p:inputText id="filterLastPmDate" widgetVar="varFilterLastPmDate"/>
                         </f:facet>
                         <h:outputText value="#{item.lastPmDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.lastMeteringDate}" sortBy="#{item.lastMeteringDate}" filterBy="#{item.lastMeteringDate}" filterMatchMode="GTE">
@@ -175,7 +175,7 @@
                             <p:inputText id="filterLastMeteringDate" widgetVar="varFilterLastMeteringDate"/>
                         </f:facet>
                         <h:outputText value="#{item.lastMeteringDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.lastQaDate}" sortBy="#{item.lastQaDate}" filterBy="#{item.lastQaDate}" filterMatchMode="GTE">
@@ -183,7 +183,7 @@
                             <p:inputText id="filterLastQaDate" widgetVar="varFilterLastQaDate"/>
                         </f:facet>
                         <h:outputText value="#{item.lastQaDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.lastStockTakeDate}" sortBy="#{item.lastStockTakeDate}" filterBy="#{item.lastStockTakeDate}" filterMatchMode="GTE">
@@ -191,7 +191,7 @@
                             <p:inputText id="filterLastStockTakeDate" widgetVar="varFilterLastStockTakeDate"/>
                         </f:facet>
                         <h:outputText value="#{item.lastStockTakeDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.purchasePrice}" sortBy="#{item.purchasePrice}" filterBy="#{item.purchasePrice}" filterMatchMode="EQ">
@@ -232,9 +232,9 @@
         <p:overlayPanel widgetVar="panelFilterManufactDate" for=":AssetInfoListForm:datalist:filterManufactDate" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varManufactDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varManufactDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varManufactDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varManufactDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterManufactDate','varManufactDateFrom','varManufactDateTo'); PF('panelFilterManufactDate').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterManufactDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -242,9 +242,9 @@
         <p:overlayPanel widgetVar="panelFilterPurchaseDate" for=":AssetInfoListForm:datalist:filterPurchaseDate" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varPurchaseDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varPurchaseDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varPurchaseDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varPurchaseDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterPurchaseDate','varPurchaseDateFrom','varPurchaseDateTo'); PF('panelFilterPurchaseDate').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterPurchaseDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -252,9 +252,9 @@
         <p:overlayPanel widgetVar="panelFilterArriveDate" for=":AssetInfoListForm:datalist:filterArriveDate" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varArriveDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varArriveDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varArriveDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varArriveDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterArriveDate','varArriveDateFrom','varArriveDateTo'); PF('panelFilterArriveDate').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterArriveDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -262,9 +262,9 @@
         <p:overlayPanel widgetVar="panelFilterInstallDate" for=":AssetInfoListForm:datalist:filterInstallDate" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varInstallDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varInstallDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varInstallDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varInstallDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterInstallDate','varInstallDateFrom','varInstallDateTo'); PF('panelFilterInstallDate').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterInstallDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -272,9 +272,9 @@
         <p:overlayPanel widgetVar="panelFilterWarrantyDate" for=":AssetInfoListForm:datalist:filterWarrantyDate" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varWarrantyDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varWarrantyDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varWarrantyDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varWarrantyDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterWarrantyDate','varWarrantyDateFrom','varWarrantyDateTo'); PF('panelFilterWarrantyDate').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterWarrantyDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -282,9 +282,9 @@
         <p:overlayPanel widgetVar="panelFilterTerminateDate" for=":AssetInfoListForm:datalist:filterTerminateDate" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varTerminateDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varTerminateDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varTerminateDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varTerminateDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterTerminateDate','varTerminateDateFrom','varTerminateDateTo'); PF('panelFilterTerminateDate').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterTerminateDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -292,9 +292,9 @@
         <p:overlayPanel widgetVar="panelFilterLastPmDate" for=":AssetInfoListForm:datalist:filterLastPmDate" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varLastPmDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varLastPmDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varLastPmDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varLastPmDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterLastPmDate','varLastPmDateFrom','varLastPmDateTo'); PF('panelFilterLastPmDate').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterLastPmDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -302,9 +302,9 @@
         <p:overlayPanel widgetVar="panelFilterLastMeteringDate" for=":AssetInfoListForm:datalist:filterLastMeteringDate" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varLastMeteringDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varLastMeteringDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varLastMeteringDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varLastMeteringDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterLastMeteringDate','varLastMeteringDateFrom','varLastMeteringDateTo'); PF('panelFilterLastMeteringDate').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterLastMeteringDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -312,9 +312,9 @@
         <p:overlayPanel widgetVar="panelFilterLastQaDate" for=":AssetInfoListForm:datalist:filterLastQaDate" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varLastQaDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varLastQaDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varLastQaDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varLastQaDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterLastQaDate','varLastQaDateFrom','varLastQaDateTo'); PF('panelFilterLastQaDate').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterLastQaDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -322,9 +322,9 @@
         <p:overlayPanel widgetVar="panelFilterLastStockTakeDate" for=":AssetInfoListForm:datalist:filterLastStockTakeDate" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varLastStockTakeDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varLastStockTakeDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varLastStockTakeDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varLastStockTakeDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterLastStockTakeDate','varLastStockTakeDateFrom','varLastStockTakeDateTo'); PF('panelFilterLastStockTakeDate').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterLastStockTakeDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>

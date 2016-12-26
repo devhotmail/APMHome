@@ -51,7 +51,7 @@
                             <p:inputText id="filterCreateTime" widgetVar="varFilterCreateTime"/>
                         </f:facet>
                         <h:outputText value="#{item.createTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.requestorId}" sortBy="#{item.requestorId}" filterBy="#{item.requestorId}" filterMatchMode="EQ">
@@ -65,7 +65,7 @@
                             <p:inputText id="filterRequestTime" widgetVar="varFilterRequestTime"/>
                         </f:facet>
                         <h:outputText value="#{item.requestTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
@@ -137,7 +137,7 @@
                             <p:inputText id="filterConfirmedDownTime" widgetVar="varFilterConfirmedDownTime"/>
                         </f:facet>
                         <h:outputText value="#{item.confirmedDownTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.confirmedUpTime}" sortBy="#{item.confirmedUpTime}" filterBy="#{item.confirmedUpTime}" filterMatchMode="GTE">
@@ -145,7 +145,7 @@
                             <p:inputText id="filterConfirmedUpTime" widgetVar="varFilterConfirmedUpTime"/>
                         </f:facet>
                         <h:outputText value="#{item.confirmedUpTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.assetId}" sortBy="#{item.assetId}" filterBy="#{item.assetId}" filterMatchMode="EQ">
@@ -174,9 +174,9 @@
         <p:overlayPanel widgetVar="panelFilterCreateTime" for=":WorkOrderListForm:datalist:filterCreateTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varCreateTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varCreateTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varCreateTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varCreateTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterCreateTime','varCreateTimeFrom','varCreateTimeTo'); PF('panelFilterCreateTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterCreateTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -184,9 +184,9 @@
         <p:overlayPanel widgetVar="panelFilterRequestTime" for=":WorkOrderListForm:datalist:filterRequestTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varRequestTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varRequestTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varRequestTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varRequestTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterRequestTime','varRequestTimeFrom','varRequestTimeTo'); PF('panelFilterRequestTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterRequestTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -194,9 +194,9 @@
         <p:overlayPanel widgetVar="panelFilterConfirmedDownTime" for=":WorkOrderListForm:datalist:filterConfirmedDownTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varConfirmedDownTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varConfirmedDownTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varConfirmedDownTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varConfirmedDownTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterConfirmedDownTime','varConfirmedDownTimeFrom','varConfirmedDownTimeTo'); PF('panelFilterConfirmedDownTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterConfirmedDownTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -204,9 +204,9 @@
         <p:overlayPanel widgetVar="panelFilterConfirmedUpTime" for=":WorkOrderListForm:datalist:filterConfirmedUpTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varConfirmedUpTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varConfirmedUpTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varConfirmedUpTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varConfirmedUpTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterConfirmedUpTime','varConfirmedUpTimeFrom','varConfirmedUpTimeTo'); PF('panelFilterConfirmedUpTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterConfirmedUpTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>

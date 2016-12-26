@@ -48,7 +48,7 @@
                             <p:inputText id="filterCreateTime" widgetVar="varFilterCreateTime"/>
                         </f:facet>
                         <h:outputText value="#{item.createTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.ownerId}" sortBy="#{item.ownerId}" filterBy="#{item.ownerId}" filterMatchMode="EQ">
@@ -68,7 +68,7 @@
                             <p:inputText id="filterStartTime" widgetVar="varFilterStartTime"/>
                         </f:facet>
                         <h:outputText value="#{item.startTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.endTime}" sortBy="#{item.endTime}" filterBy="#{item.endTime}" filterMatchMode="GTE">
@@ -76,7 +76,7 @@
                             <p:inputText id="filterEndTime" widgetVar="varFilterEndTime"/>
                         </f:facet>
                         <h:outputText value="#{item.endTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.isFinished}" sortBy="#{item.isFinished}" filterBy="#{item.isFinished}" filterMatchMode="EQ">
@@ -98,7 +98,7 @@
                             <p:inputText id="filterNextTime" widgetVar="varFilterNextTime"/>
                         </f:facet>
                         <h:outputText value="#{item.nextTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.reportUrl}" sortBy="#{item.reportUrl}" filterBy="#{item.reportUrl}" filterMatchMode="LIKE">
@@ -136,9 +136,9 @@
         <p:overlayPanel widgetVar="panelFilterCreateTime" for=":PmOrderListForm:datalist:filterCreateTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varCreateTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varCreateTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varCreateTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varCreateTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterCreateTime','varCreateTimeFrom','varCreateTimeTo'); PF('panelFilterCreateTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterCreateTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -146,9 +146,9 @@
         <p:overlayPanel widgetVar="panelFilterStartTime" for=":PmOrderListForm:datalist:filterStartTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varStartTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varStartTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varStartTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varStartTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterStartTime','varStartTimeFrom','varStartTimeTo'); PF('panelFilterStartTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterStartTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -156,9 +156,9 @@
         <p:overlayPanel widgetVar="panelFilterEndTime" for=":PmOrderListForm:datalist:filterEndTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varEndTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varEndTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varEndTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varEndTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterEndTime','varEndTimeFrom','varEndTimeTo'); PF('panelFilterEndTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterEndTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -166,9 +166,9 @@
         <p:overlayPanel widgetVar="panelFilterNextTime" for=":PmOrderListForm:datalist:filterNextTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varNextTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varNextTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varNextTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varNextTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterNextTime','varNextTimeFrom','varNextTimeTo'); PF('panelFilterNextTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterNextTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>

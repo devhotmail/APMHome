@@ -75,7 +75,7 @@
                             <p:inputText id="filterExamDate" widgetVar="varFilterExamDate"/>
                         </f:facet>
                         <h:outputText value="#{item.examDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.examStartTime}" sortBy="#{item.examStartTime}" filterBy="#{item.examStartTime}" filterMatchMode="GTE">
@@ -83,7 +83,7 @@
                             <p:inputText id="filterExamStartTime" widgetVar="varFilterExamStartTime"/>
                         </f:facet>
                         <h:outputText value="#{item.examStartTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.examDuration}" sortBy="#{item.examDuration}" filterBy="#{item.examDuration}" filterMatchMode="EQ">
@@ -121,9 +121,9 @@
         <p:overlayPanel widgetVar="panelFilterExamDate" for=":AssetClinicalRecordListForm:datalist:filterExamDate" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varExamDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varExamDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varExamDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varExamDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterExamDate','varExamDateFrom','varExamDateTo'); PF('panelFilterExamDate').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterExamDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -131,9 +131,9 @@
         <p:overlayPanel widgetVar="panelFilterExamStartTime" for=":AssetClinicalRecordListForm:datalist:filterExamStartTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varExamStartTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varExamStartTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varExamStartTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varExamStartTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterExamStartTime','varExamStartTimeFrom','varExamStartTimeTo'); PF('panelFilterExamStartTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterExamStartTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>

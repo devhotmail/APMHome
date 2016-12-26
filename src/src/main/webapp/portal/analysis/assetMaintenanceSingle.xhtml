@@ -69,11 +69,11 @@
                 <h:form class="block">
                     <p:growl id="calendar_submit" showDetail="true"/>
                     <div class="calendar-range-picker flex flex--row flex--center flex--justify">
-                        <p:calendar id="start_date_button"
+                        <p:calendar timeZone="GMT+8"  id="start_date_button"
                                     value="#{assetMaintenanceController.startDate}"
                                     showOn="button"/>
                         <label>#{msg.selectSearchInterval_1}</label>
-                        <p:calendar id="end_date_button"
+                        <p:calendar timeZone="GMT+8"  id="end_date_button"
                                     value="#{assetMaintenanceController.endDate}"
                                     showOn="button"/>
                         <p:commandButton value="确定"

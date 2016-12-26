@@ -61,7 +61,7 @@
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.requestTime}*</label>
-                                <p:calendar locale="zh"  id="requestTime" pattern="yyyy/MM/dd HH:mm" maxdate="#{appContextService.curentDate}" value="#{workOrderController.selected.requestTime}" required="true" requiredMessage="#{msg.requestTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" mask="true"/>
+                                <p:calendar timeZone="GMT+8"  locale="zh"  id="requestTime" pattern="yyyy/MM/dd HH:mm" maxdate="#{appContextService.curentDate}" value="#{workOrderController.selected.requestTime}" required="true" requiredMessage="#{msg.requestTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.caseOwnerName}</label>

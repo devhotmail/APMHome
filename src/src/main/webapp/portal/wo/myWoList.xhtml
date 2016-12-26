@@ -49,7 +49,7 @@
                                 <p:inputText id="filterRequestTime" widgetVar="varFilterRequestTime"/>
                             </f:facet>
                             <h:outputText value="#{item.requestTime}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                             </h:outputText>
                         </p:column>
                         <p:column width="70" headerText="#{msg.requestorName}" sortBy="#{item.requestorName}" filterBy="#{item.requestorId}" filterMatchMode="EQ">
@@ -133,9 +133,9 @@
         <p:overlayPanel widgetVar="panelFilterRequestTime" for=":WorkOrderListForm:datalist:filterRequestTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
-                <p:calendar widgetVar="varDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar widgetVar="varDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varDateTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList','varFilterRequestTime','varDateFrom','varDateTo'); PF('panelFilterRequestTime').hide();" title="#{msg.Confirm}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterRequestTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>

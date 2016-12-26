@@ -34,7 +34,7 @@
                         <h:outputText value="#{userAccountController.selected.siteId}"/>
                         <h:outputLabel value="#{msg.lastLoginTime}" for="lastLoginTime" />
                         <h:outputText value="#{userAccountController.selected.lastLoginTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.orgInfoId}" for="orgInfoId" />
                         <h:outputText value="#{userAccountController.selected.orgInfoId}"/>

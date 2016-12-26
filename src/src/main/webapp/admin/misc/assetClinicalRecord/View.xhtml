@@ -44,11 +44,11 @@
                         <h:outputText value="#{assetClinicalRecordCrudController.selected.filmCount}"/>
                         <h:outputLabel value="#{msg.examDate}" for="examDate" />
                         <h:outputText value="#{assetClinicalRecordCrudController.selected.examDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.examStartTime}" for="examStartTime" />
                         <h:outputText value="#{assetClinicalRecordCrudController.selected.examStartTime}">
-                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                         </h:outputText>
                         <h:outputLabel value="#{msg.examDuration}" for="examDuration" />
                         <h:outputText value="#{assetClinicalRecordCrudController.selected.examDuration}"/>

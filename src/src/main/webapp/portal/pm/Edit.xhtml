@@ -50,15 +50,15 @@
 
                         <h:panelGroup>
                             <label class="label" >#{msg.startTime}</label>
-                            <p:calendar id="startTime" pattern="yyyy/MM/dd" value="#{pmOrderController.selected.startTime}" showOn="button" disabled="#{pmOrderController.selected.isFinished}" showButtonPanel="true" navigator="true" />
+                            <p:calendar timeZone="GMT+8"  id="startTime" pattern="yyyy/MM/dd" value="#{pmOrderController.selected.startTime}" showOn="button" disabled="#{pmOrderController.selected.isFinished}" showButtonPanel="true" navigator="true" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.endTime}</label>
-                            <p:calendar id="endTime" pattern="yyyy/MM/dd" value="#{pmOrderController.selected.endTime}" showOn="button" disabled="#{pmOrderController.selected.isFinished}" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar timeZone="GMT+8"  id="endTime" pattern="yyyy/MM/dd" value="#{pmOrderController.selected.endTime}" showOn="button" disabled="#{pmOrderController.selected.isFinished}" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.nextTime}</label>
-                            <p:calendar id="nextTime" pattern="yyyy/MM/dd" value="#{pmOrderController.selected.nextTime}" showOn="button" disabled="#{pmOrderController.selected.isFinished}"  Input="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar timeZone="GMT+8"  id="nextTime" pattern="yyyy/MM/dd" value="#{pmOrderController.selected.nextTime}" showOn="button" disabled="#{pmOrderController.selected.isFinished}"  Input="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isFinished}" value="#{pmOrderController.selected.isFinished}" required="true" 

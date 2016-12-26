@@ -31,7 +31,7 @@
                             <h:panelGroup>
                                 <label class="label">#{msg.createTime}*</label>
                                 <p:inputText id="createTime" value="#{qualityCtrlOrderController.selected.createTime}" readonly="true">
-                                    <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                                    <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                                 </p:inputText>
                             </h:panelGroup>
                             <h:panelGroup>
@@ -45,13 +45,13 @@
                             <h:panelGroup>
                                 <label class="label">#{msg.startTime}</label>
                                 <p:inputText id="startTime" value="#{qualityCtrlOrderController.selected.startTime}" readonly="true" >
-                                    <f:convertDateTime pattern="yyyy/MM/dd" />
+                                    <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd" />
                                 </p:inputText>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.endTime}</label>
                                 <p:inputText id="endTime" value="#{qualityCtrlOrderController.selected.endTime}" readonly="true" >
-                                    <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                                    <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                                 </p:inputText>
                             </h:panelGroup>
 

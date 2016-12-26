@@ -30,11 +30,11 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.startDate}*</label>
-                            <p:calendar id="startDate" pattern="yyyy/MM/dd HH:mm" value="#{assetContractCrudController.selected.startDate}" required="true" requiredMessage="#{msg.startDate} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar timeZone="GMT+8"  id="startDate" pattern="yyyy/MM/dd HH:mm" value="#{assetContractCrudController.selected.startDate}" required="true" requiredMessage="#{msg.startDate} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.endDate}*</label>
-                            <p:calendar id="endDate" pattern="yyyy/MM/dd HH:mm" value="#{assetContractCrudController.selected.endDate}" required="true" requiredMessage="#{msg.endDate} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar timeZone="GMT+8"  id="endDate" pattern="yyyy/MM/dd HH:mm" value="#{assetContractCrudController.selected.endDate}" required="true" requiredMessage="#{msg.endDate} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.contractAmount}*</label>

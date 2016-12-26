@@ -34,11 +34,11 @@
 
                         <h:panelGroup>
                             <label class="label">#{msg.startTime}*</label>
-                            <p:calendar id="startTime" pattern="yyyy/MM/dd" value="#{assetContractController.selected.startDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.startTime} #{msg.ValidationRequire}"/>
+                            <p:calendar timeZone="GMT+8"  id="startTime" pattern="yyyy/MM/dd" value="#{assetContractController.selected.startDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.startTime} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.endTime}*</label>
-                            <p:calendar id="endTime" pattern="yyyy/MM/dd" value="#{assetContractController.selected.endDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.endTime} #{msg.ValidationRequire}"/>
+                            <p:calendar timeZone="GMT+8"  id="endTime" pattern="yyyy/MM/dd" value="#{assetContractController.selected.endDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.endTime} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         
                         <h:panelGroup>

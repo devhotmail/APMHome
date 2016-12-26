@@ -48,7 +48,7 @@
                         <div class="card" style="height:400px;">
                             <h:panelGroup>
                                 <label class="label">#{msg.AssetInventoryDate}</label>
-                                <p:calendar id="manufactDate" pattern="yyyy/MM/dd" maxdate="#{appContextService.curentDate}" value="#{assetInventoryController.lastStockTakeDate}"
+                                <p:calendar timeZone="GMT+8"  id="manufactDate" pattern="yyyy/MM/dd" maxdate="#{appContextService.curentDate}" value="#{assetInventoryController.lastStockTakeDate}"
                                             showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" locale="zh"/>
                             </h:panelGroup>
                             <br/><br/>

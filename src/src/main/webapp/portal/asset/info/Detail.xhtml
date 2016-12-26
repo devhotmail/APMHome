@@ -196,49 +196,49 @@
                     <h:panelGroup>
                         <label class="label">#{msg.manufactDate}</label>
                         <p:inputText id="manufactDate" value="#{assetInfoController.selected.manufactDate}" readonly="true">
-                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                         </p:inputText>
-                        <!--<p:calendar id="manufactDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.manufactDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />-->
+                        <!--<p:calendar timeZone="GMT+8"  id="manufactDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.manufactDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />-->
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.arriveDate}</label>
                         <p:inputText id="arriveDate" value="#{assetInfoController.selected.arriveDate}" readonly="true">
-                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                         </p:inputText>
-                        <!--<p:calendar id="arriveDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
+                        <!--<p:calendar timeZone="GMT+8"  id="arriveDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.installDate}</label>
                         <p:inputText id="installDate" value="#{assetInfoController.selected.installDate}" readonly="true">
-                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                         </p:inputText>
-                        <!--<p:calendar id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
+                        <!--<p:calendar timeZone="GMT+8"  id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.terminateDate}</label>
                         <p:inputText id="terminateDate" value="#{assetInfoController.selected.terminateDate}" readonly="true">
-                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                         </p:inputText>
-                        <!--<p:calendar id="terminateDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />-->
+                        <!--<p:calendar timeZone="GMT+8"  id="terminateDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />-->
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.lastPmDate}</label>
                         <p:inputText id="lastPmDate" value="#{assetInfoController.selected.lastPmDate}" readonly="true">
-                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                         </p:inputText>
-                        <!--<p:calendar id="lastPmDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastPmDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
+                        <!--<p:calendar timeZone="GMT+8"  id="lastPmDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastPmDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.lastQaDate}</label>
                         <p:inputText id="lastQaDate" value="#{assetInfoController.selected.lastQaDate}" readonly="true">
-                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                         </p:inputText>
-                        <!--<p:calendar pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastQaDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
+                        <!--<p:calendar timeZone="GMT+8"  pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastQaDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.lastMeteringDate}</label>
                         <p:inputText id="lastMeteringDate" value="#{assetInfoController.selected.lastMeteringDate}" readonly="true">
-                            <f:convertDateTime pattern="yyyy/MM/dd " />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                         </p:inputText>
                     </h:panelGroup>
 
@@ -279,7 +279,7 @@
                         </p:column>
                         <p:column headerText="#{msg.examStartTime}">
                             <h:outputText value="#{item.startTime}" >
-                                <f:convertDateTime pattern="yyyy/MM/dd " />
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                             </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.endTime}">
@@ -300,7 +300,7 @@
                         </p:column>
                         <p:column headerText="#{msg.requestTime}" >
                             <h:outputText value="#{item.requestTime}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                             </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.workOrderName}" >
@@ -332,7 +332,7 @@
                         </p:column>
                         <p:column headerText="#{msg.examStartTime}">
                             <h:outputText value="#{item.startTime}" >
-                                <f:convertDateTime pattern="yyyy/MM/dd " />
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                             </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.endTime}">
@@ -359,7 +359,7 @@
                         </p:column>
                         <p:column headerText="#{msg.examStartTime}">
                             <h:outputText value="#{item.startTime}" >
-                                <f:convertDateTime pattern="yyyy/MM/dd " />
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                             </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.endTime}">
@@ -404,13 +404,13 @@
                     <p:column headerText="#{msg.startTime}"  >
 
                         <h:outputText value="#{item.startDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.endTime}" >
 
                         <h:outputText value="#{item.endDate}">
-                            <f:convertDateTime pattern="yyyy/MM/dd" />
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd" />
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg.AssetContractAmount}" sortBy="#{item.contractAmount}" >

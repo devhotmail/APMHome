@@ -62,7 +62,7 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.lastLoginTime}</label>
-                            <p:calendar id="lastLoginTime" pattern="yyyy/MM/dd HH:mm" value="#{userAccountCrudController.selected.lastLoginTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            <p:calendar timeZone="GMT+8"  id="lastLoginTime" pattern="yyyy/MM/dd HH:mm" value="#{userAccountCrudController.selected.lastLoginTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.pwdSalt}*</label>

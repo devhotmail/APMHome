@@ -31,7 +31,7 @@
                   <div class="card" style="height:400px;">
                   	<h:panelGroup>
                         <label class="label">#{msg.DeviceCheckDate}</label>
-                        <p:calendar id="manufactDate" pattern="yyyy/MM/dd" value="#{assetCheckController.lastStockTakeDate}" 
+                        <p:calendar timeZone="GMT+8"  id="manufactDate" pattern="yyyy/MM/dd" value="#{assetCheckController.lastStockTakeDate}" 
                         showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />
                     </h:panelGroup>
                    <p:scrollPanel style="width:98%;height:95%;border: 0" mode="native" >

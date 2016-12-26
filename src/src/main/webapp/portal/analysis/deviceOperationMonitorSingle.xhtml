@@ -64,10 +64,10 @@
                     <div class="block">
                         <p:growl id="messages" showDetail="true"/>
                         <div class="calendar-range-picker flex flex--row flex--center flex--justify">
-                            <p:calendar id="start_date_button" value="#{deviceOperationMonitorController.startDate}"
+                            <p:calendar timeZone="GMT+8"  id="start_date_button" value="#{deviceOperationMonitorController.startDate}"
                                         showOn="button"/>
                             <label>到</label>
-                            <p:calendar id="end_date_button" value="#{deviceOperationMonitorController.endDate}"
+                            <p:calendar timeZone="GMT+8"  id="end_date_button" value="#{deviceOperationMonitorController.endDate}"
                                         showOn="button"/>
                             <p:commandButton id="submit_date" class="btn btn--large" value="确定"
                                              actionListener="#{deviceOperationMonitorController.renderFormBySelectDate()}"
