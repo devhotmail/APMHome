@@ -55,23 +55,23 @@
                                 </p:selectOneMenu>
                             </f:facet>
                         </p:column>
-                        <p:column headerText="#{msg.functionGroup}" sortBy="#{item.functionGroup}" filterBy="#{item.functionGroup}" filterMatchMode="EQ">
-                            <h:outputText value="#{fieldMsg.fieldValue('assetFunctionType',item.functionGroup)}"/>
+                        <p:column headerText="#{msg.clinicalDeptName}" sortBy="#{item.clinicalDeptName}" filterBy="#{item.clinicalDeptId}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                    <f:selectItems value="#{assetInfoController.ownerOrgList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                             </f:facet>
+                            <h:outputText value="#{item.clinicalDeptName}"/>
                         </p:column>
-                        <p:column headerText="#{msg.functionGrade}" sortBy="#{item.functionGrade}" filterBy="#{item.functionGrade}" filterMatchMode="EQ">
-                            <h:outputText value="#{fieldMsg.fieldValue('assetFunctionGrade',item.functionGrade)}"/>
+                        <p:column headerText="#{msg.assetOwnerName}" sortBy="#{item.assetOwnerName}" filterBy="#{item.assetOwnerId}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionGrade')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                    <f:selectItems value="#{assetInfoController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                             </f:facet>
+                            <h:outputText value="#{item.assetOwnerName}"/>
                         </p:column>
                         <p:column headerText="#{msg.manufacture}" sortBy="#{item.manufacture}" filterBy="#{item.manufacture}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.manufacture}"/>
