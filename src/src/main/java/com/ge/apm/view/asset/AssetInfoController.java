@@ -49,6 +49,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     private UserAccount owner;
     private List<UserAccount> ownerList;
+    private List<OrgInfo> ownerOrgList;
 
     private List<AssetFileAttachment> attachements;
 
@@ -106,6 +107,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
 
         ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
+        ownerOrgList = uuaService.getOrgListByHospitalId(UserContextService.getCurrentUserAccount().getHospitalId());
         if (searchFilters == null) {
             searchFilters = new ArrayList<SearchFilter>();
         }
@@ -218,6 +220,9 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     public UserAccount getOwner() {
         return owner;
+    }
+    public List<OrgInfo> getOwnerOrgList(){
+         return ownerOrgList;
     }
 
     public void setOwner(UserAccount owner) {
