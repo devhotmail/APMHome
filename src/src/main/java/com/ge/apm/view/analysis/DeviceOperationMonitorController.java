@@ -94,7 +94,6 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
         int parmSelectGroupId = Integer.valueOf(Optional.fromNullable(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedGroupId")).or("0"));
         assetGroups = initAssetGroups();
         selectedGroupId = parmSelectGroupId == 0 ? FluentIterable.from(assetGroups.keySet()).first().or(1) : parmSelectGroupId;
-        bottomBars = Lists.newArrayListWithExpectedSize(assetGroups.size());
         initStartEndDate();
         initTopBar();
         initTopBarAll();
@@ -181,6 +180,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
 
     public void initBottomBars() {
         log.info("initBottomBars sql:{}, param:{},{},{},{},{}", queries.get("examsForGroups"), assetGroups.size(), siteId, hospitalId, startDate, endDate);
+        bottomBars = Lists.newArrayListWithExpectedSize(assetGroups.size());
         List<DeviceOperationInfo> exams = jdbcTemplate.query(queries.get("examsForGroups"), new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
