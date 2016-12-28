@@ -116,10 +116,11 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
             + "ORDER BY left_table.name ";
 
     private String DB2TL
-            = "SELECT left_table.name, deprecate_amount depre "
+            = "SELECT left_table.name, sum(deprecate_amount) depre "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
-            + "LEFT JOIN asset_depreciation "
-            + "ON left_table.id = asset_depreciation.asset_id "
+            + "LEFT JOIN (SELECT asset_id, deprecate_amount FROM asset_depreciation WHERE EXTRACT(YEAR FROM deprecate_date) = :#targetYear) right_table "
+            + "ON left_table.id = right_table.asset_id "
+            + "GROUP BY left_table.name "
             + "ORDER BY left_table.name";
 
     private String DB3TL
