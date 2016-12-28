@@ -93,25 +93,27 @@ public class AssetProcurementController {
         }, siteId, hospitalId, lastFstYearStart, lastFstYearEnd);
         log.info("initLastFstYearReport query result: {}", table);
         for (int group : table.rowKeySet()) {
-            Detail detail = Optional.fromNullable(details.get(group)).or(new Detail());
-            detail.setGroupId(group);
-            detail.setGroupName(assetGroups.get(group));
-            detail.setLastFstYearIncome(calcAnnualIncome(table.row(group)));
-            ImmutableTable.Builder<String, String, Integer> builder = new ImmutableTable.Builder<>();
-            for (String assetName : table.columnKeySet()) {
-                LinkedHashMap<Integer, Report> map = table.get(group, assetName);
-                if (map != null) {
-                    for (Map.Entry<Integer, String> entry : parts.entrySet()) {
-                        Report report = map.get(entry.getKey());
-                        builder.put(entry.getValue(), assetName, calcLastFstYearUtilPartPercent(report));
+            if (Optional.fromNullable(assetGroups.get(group)).isPresent()) {
+                Detail detail = Optional.fromNullable(details.get(group)).or(new Detail());
+                detail.setGroupId(group);
+                detail.setGroupName(assetGroups.get(group));
+                detail.setLastFstYearIncome(calcAnnualIncome(table.row(group)));
+                ImmutableTable.Builder<String, String, Integer> builder = new ImmutableTable.Builder<>();
+                for (String assetName : table.columnKeySet()) {
+                    LinkedHashMap<Integer, Report> map = table.get(group, assetName);
+                    if (map != null) {
+                        for (Map.Entry<Integer, String> entry : parts.entrySet()) {
+                            Report report = map.get(entry.getKey());
+                            builder.put(entry.getValue(), assetName, calcLastFstYearUtilPartPercent(report));
+                        }
                     }
                 }
+                detail.setLastFstYearChartData(builder.build());
+                //detail.setLastFstYearChart(initBarModel(new BarChartModel(), String.format("%s Last First Year BarChart", detail.getGroupName()), true, "ne", String.format("js%sLstFstYearBarChartSkin", detail.getGroupName()), ImmutableTable.copyOf(detail.getLastFstYearChartData()), true));
+                detail.setLastFstYearChart(initBarModel(new BarChartModel(), String.format("%s Last First Year BarChart", detail.getGroupName()), true, "ne", "detailSkin", ImmutableTable.copyOf(detail.getLastFstYearChartData()), true));
+                detail.setLastFstYearAvgUtilPercent((int) (Stats.of(detail.getLastFstYearChartData().values()).sum() / (double) detail.getLastFstYearChartData().columnKeySet().size()));
+                details.put(detail.getGroupId(), detail);
             }
-            detail.setLastFstYearChartData(builder.build());
-            //detail.setLastFstYearChart(initBarModel(new BarChartModel(), String.format("%s Last First Year BarChart", detail.getGroupName()), true, "ne", String.format("js%sLstFstYearBarChartSkin", detail.getGroupName()), ImmutableTable.copyOf(detail.getLastFstYearChartData()), true));
-            detail.setLastFstYearChart(initBarModel(new BarChartModel(), String.format("%s Last First Year BarChart", detail.getGroupName()), true, "ne", "detailSkin", ImmutableTable.copyOf(detail.getLastFstYearChartData()), true));
-            detail.setLastFstYearAvgUtilPercent((int) (Stats.of(detail.getLastFstYearChartData().values()).sum() / (double) detail.getLastFstYearChartData().columnKeySet().size()));
-            details.put(detail.getGroupId(), detail);
         }
         log.info("details: {}", details);
     }
@@ -129,25 +131,27 @@ public class AssetProcurementController {
         }, siteId, hospitalId, lastSndYearStart, lastSndYearEnd);
         log.info("initLastSndYearReport query result: {}", table);
         for (int group : table.rowKeySet()) {
-            Detail detail = Optional.fromNullable(details.get(group)).or(new Detail());
-            detail.setGroupId(group);
-            detail.setGroupName(assetGroups.get(group));
-            detail.setLastSndYearIncome(calcAnnualIncome(table.row(group)));
-            ImmutableTable.Builder<String, String, Integer> builder = new ImmutableTable.Builder<>();
-            for (String assetName : table.columnKeySet()) {
-                LinkedHashMap<Integer, Report> map = table.get(group, assetName);
-                if (map != null) {
-                    for (Map.Entry<Integer, String> entry : parts.entrySet()) {
-                        Report report = map.get(entry.getKey());
-                        builder.put(entry.getValue(), assetName, calcLastSndYearUtilsPartPercent(report));
+            if (Optional.fromNullable(assetGroups.get(group)).isPresent()) {
+                Detail detail = Optional.fromNullable(details.get(group)).or(new Detail());
+                detail.setGroupId(group);
+                detail.setGroupName(assetGroups.get(group));
+                detail.setLastSndYearIncome(calcAnnualIncome(table.row(group)));
+                ImmutableTable.Builder<String, String, Integer> builder = new ImmutableTable.Builder<>();
+                for (String assetName : table.columnKeySet()) {
+                    LinkedHashMap<Integer, Report> map = table.get(group, assetName);
+                    if (map != null) {
+                        for (Map.Entry<Integer, String> entry : parts.entrySet()) {
+                            Report report = map.get(entry.getKey());
+                            builder.put(entry.getValue(), assetName, calcLastSndYearUtilsPartPercent(report));
+                        }
                     }
                 }
+                detail.setLastSndYearChartData(builder.build());
+                //detail.setLastSndYearChart(initBarModel(new BarChartModel(),String.format("%s Last Second Year BarChart", detail.getGroupName()), true, "ne", String.format("js%sLstSndYearBarChartSkin", detail.getGroupName()), ImmutableTable.copyOf(detail.getLastSndYearChartData()), true));
+                detail.setLastSndYearChart(initBarModel(new BarChartModel(), String.format("%s Last Second Year BarChart", detail.getGroupName()), true, "ne", "detailSkin", ImmutableTable.copyOf(detail.getLastSndYearChartData()), true));
+                detail.setLastSndYearAvgUtilPercent((int) (Stats.of(detail.getLastSndYearChartData().values()).sum() / (double) detail.getLastSndYearChartData().columnKeySet().size()));
+                details.put(detail.getGroupId(), detail);
             }
-            detail.setLastSndYearChartData(builder.build());
-            //detail.setLastSndYearChart(initBarModel(new BarChartModel(),String.format("%s Last Second Year BarChart", detail.getGroupName()), true, "ne", String.format("js%sLstSndYearBarChartSkin", detail.getGroupName()), ImmutableTable.copyOf(detail.getLastSndYearChartData()), true));
-            detail.setLastSndYearChart(initBarModel(new BarChartModel(), String.format("%s Last Second Year BarChart", detail.getGroupName()), true, "ne", "detailSkin", ImmutableTable.copyOf(detail.getLastSndYearChartData()), true));
-            detail.setLastSndYearAvgUtilPercent((int) (Stats.of(detail.getLastSndYearChartData().values()).sum() / (double) detail.getLastSndYearChartData().columnKeySet().size()));
-            details.put(detail.getGroupId(), detail);
         }
         log.info("details: {}", details);
     }
