@@ -106,10 +106,10 @@
 <!--<p:dialog id="InspectionOrderEditDlg" widgetVar="InspectionOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionOrderController.CRUDActionName} #{msg.InspectionOrder}">-->
                     <h:panelGroup id="display">
                         <h:panelGroup >
-                            <p:commandButton rendered="#{inspectionOrderController.deleteAction}" icon="ui-icon-trash" action="#{inspectionOrderController.removeOne()}" value="#{msg.Delete}" style="float:left">
+                            <p:commandButton rendered="#{inspectionOrderController.deleteAction}" icon="ui-icon-close" action="#{inspectionOrderController.removeOne()}" value="#{msg.Delete}" style="float:left">
                                 <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
                             </p:commandButton>
-                            <p:commandButton value="#{msg.Return}" action="InspOrderList?faces-redirect=true" immediate="true" style="float:left"/>  
+                            <p:commandButton value="#{msg.Return}" action="InspOrderList?faces-redirect=true" immediate="true" style="float:left" icon="ui-icon-arrow-back"/>  
                         </h:panelGroup>
                     </h:panelGroup>
                 </h:form>

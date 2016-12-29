@@ -31,6 +31,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
 
@@ -56,6 +57,7 @@ public class InspectionService {
         return userDao.getById(id);
     }
 
+    @Transactional
     public boolean deleteOrder(InspectionOrder order) {
         List<InspectionOrderDetail> details = detailDao.findByOrderId(order.getId());
         for (InspectionOrderDetail item : details) {
@@ -65,6 +67,7 @@ public class InspectionService {
         return true;
     }
 
+    @Transactional
     public boolean createOrder(InspectionOrder order, int orderType, List<Object[]> checkItemList) {
 
         List<InspectionOrderDetail> detailList = new ArrayList();
@@ -153,6 +156,7 @@ public class InspectionService {
         return detailList;
     }
 
+    @Transactional
     public void excuteOrder(InspectionOrder selected, List<InspectionOrderDetail> orderDetailItemList,Set<Integer> assetIdSet) {
         detailDao.save(orderDetailItemList);
         orderDao.save(selected);
@@ -174,6 +178,7 @@ public class InspectionService {
         
     }
 
+    @Transactional
     public void updateOrder(InspectionOrder selected, List<InspectionOrderDetail> orderDetailItemList) {
 
         for (InspectionOrderDetail item : orderDetailItemList) {
