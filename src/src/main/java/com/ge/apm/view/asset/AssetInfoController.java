@@ -1,13 +1,25 @@
 package com.ge.apm.view.asset;
 
-import com.ge.apm.dao.AssetFileAttachmentRepository;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
+import org.primefaces.event.FileUploadEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-import webapp.framework.web.mvc.JpaCRUDController;
+import com.ge.apm.dao.AssetFileAttachmentRepository;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.UserAccountRepository;
@@ -16,27 +28,14 @@ import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AssetDepreciationService;
-import com.ge.apm.service.asset.AssetDepreciationService_bak;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
-import org.primefaces.event.FileUploadEvent;
-import webapp.framework.web.WebUtil;
 import webapp.framework.dao.SearchFilter;
+import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.JpaCRUDController;
 
 @ManagedBean
 @ViewScoped
