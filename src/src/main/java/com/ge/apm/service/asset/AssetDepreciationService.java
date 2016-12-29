@@ -104,14 +104,19 @@ public class AssetDepreciationService {
 
 		if (assetInfo.getPurchasePrice() != null && assetInfo.getSalvageValue() != null
 				&& assetInfo.getLifecycle() != null && assetInfo.getPurchaseDate() != null) {
-			assetDepreciationRepository.deleteByAssetIdAndContractType(assetInfo.getId(), -1);
-
-			int lifecycle = assetInfo.getLifecycle() - 1;// 以月为单位，不足1年的默认为1年
+			assetInfo.setLifecycle(assetInfo.getLifecycle()/12);
 			Date purchaseDate = assetInfo.getPurchaseDate();
 			DateTime first = new DateTime(purchaseDate);
 			if (first.isAfterNow()) {// 未来时间暂不录入
 				return;
 			}
+			if(assetInfo.getPurchasePrice() - assetInfo.getSalvageValue() <= 0){
+				logger.error("购买价格应该大于残余值!");
+				return;
+			}
+			assetDepreciationRepository.deleteByAssetIdAndContractType(assetInfo.getId(), -1);
+			
+			int lifecycle = assetInfo.getLifecycle() - 1;// 以月为单位，不足1年的默认为1年
 			DateTime last = first.plusMonths(lifecycle);
 			String yyyyMM = null;
 			Double depreciationAmount = null;
@@ -130,11 +135,106 @@ public class AssetDepreciationService {
 		}
 	}
 	
+	@SuppressWarnings("unused")
+	private void assetDepreciation(Double purchasePriceFromAsset, Integer lifecycleFromAsset, Integer depreciationMethodFromAsset, 
+			Double salvageValueFromAsset,Date purchaseDateFromAsset,Integer assetId ,Integer siteId) {
+		if(purchasePriceFromAsset == null || lifecycleFromAsset == null || depreciationMethodFromAsset == null || salvageValueFromAsset == null 
+				|| purchaseDateFromAsset == null || assetId == null || siteId == null){
+			return;
+		}
+		assetDepreciationRepository.deleteByAssetIdAndContractType(assetId, -1);
+
+		int lifecycle = lifecycleFromAsset - 1;// 以月为单位，不足1年的默认为1年
+		Date purchaseDate = purchaseDateFromAsset;
+		DateTime first = new DateTime(purchaseDate);
+		if (first.isAfterNow()) {// 未来时间暂不录入
+			return;
+		}
+		DateTime last = first.plusMonths(lifecycle);
+		String yyyyMM = null;
+		Double depreciationAmount = null;
+		AssetDepreciation ad = null;
+		for (DateTime dateTime = first; dateTime.isBefore(last); dateTime = dateTime.plusMonths(1)) {
+			ad = new AssetDepreciation();
+			yyyyMM = dateTime.toString(FORMAT) + "-01";
+			depreciationAmount = calAssetDepreciationAmount(purchasePriceFromAsset, lifecycleFromAsset, depreciationMethodFromAsset, 
+					salvageValueFromAsset,betweenYear(first, dateTime));
+			ad.setAssetId(assetId);
+			ad.setSiteId(siteId);
+			ad.setContractId(-1);
+			ad.setDeprecateDate(TimeUtils.getDateFromStr(yyyyMM, "yyyy-MM-dd"));
+			ad.setDeprecateAmount(depreciationAmount);
+			assetDepreciationRepository.save(ad);
+		}
+	}
+	
+	
+
+	private Double calAssetDepreciationAmount(Double purchasePriceFromAsset, Integer lifecycleFromAsset, Integer depreciationMethodFromAsset, 
+			Double salvageValueFromAsset,Integer whichYear) {
+		BigDecimal  result = new BigDecimal(0);
+		if(whichYear == null){
+			return result.doubleValue();
+		}
+		if(purchasePriceFromAsset != null && lifecycleFromAsset != null && depreciationMethodFromAsset != null){
+			BigDecimal purchasePrice = new BigDecimal(purchasePriceFromAsset);
+			BigDecimal salvageValue;
+			if(salvageValueFromAsset != null){
+				salvageValue = new BigDecimal(salvageValueFromAsset);
+			}else{
+				salvageValue = new BigDecimal(0);
+			}
+			int lifeCycleFromYear = convertMonthToYear(lifecycleFromAsset);
+			BigDecimal lifeCycle = new BigDecimal(lifeCycleFromYear);//以年为单位
+			BigDecimal unit = new BigDecimal(2d).divide(lifeCycle,2, RoundingMode.HALF_UP);
+			int depreciationMethod = depreciationMethodFromAsset;
+			if(depreciationMethod == AVERAGE ){
+				result = (purchasePrice.subtract(salvageValue)).divide(lifeCycle, 2, RoundingMode.HALF_UP);
+			}else if(depreciationMethod == DOUBLE ){
+				if(whichYear != null){
+					/***
+					 * 加速折旧法分为双倍余额递减法和年数总和法。
+						双倍余额递减法的公式：设备入账帐面价值为X，预计使用N（N足够大）年，残值为Y。 　　
+						则第一年折旧C<1>=X*2/N； 　　
+						第二年折旧 C<2>=(X-C<1>)*2/N 　　
+						第三年折旧 C<3>=(X-C<1>-C<2>)*2/N 　　
+						··· ··· 　
+						最后两年需改为直线法折旧
+					 */
+					if((lifeCycle.intValue() - whichYear < 2) && (lifeCycle.intValue() - whichYear >= 0)){
+						result = purchasePrice.subtract(salvageValue).divide(lifeCycle,2, RoundingMode.HALF_UP);
+					}else{
+						BigDecimal temp = new BigDecimal(1d);
+						temp = temp.subtract(unit);
+						temp = temp.pow(whichYear-1);
+						result = purchasePrice.multiply(unit).multiply(temp);
+					}
+				}
+			}else if(depreciationMethod == YEAR ){
+				//年数总和法公式： 设备入账帐面价值为X，预计使用N年，残值为Y，则第M年计提折旧为(X-Y)*(N-M+1)/[(N+1)*N/2]。
+				result = (purchasePrice.subtract(salvageValue)).multiply(new BigDecimal(lifeCycle.intValue()-whichYear+1))
+						.divide(new BigDecimal((((lifeCycle.intValue()+1)*lifeCycle.intValue())/2)), 2, RoundingMode.HALF_UP);
+			}
+		}
+		if(result.doubleValue() > 0){
+			result = result.divide(new BigDecimal(12),2,BigDecimal.ROUND_HALF_DOWN);
+		}
+		return result.doubleValue();
+	
+	}
+
 	public int betweenYear(DateTime dt1,DateTime dt2){
 		int year = Months.monthsBetween(dt1, dt2).getMonths()/12;
 		return year +1;
 	}
 	
+	public void deleteByAssetIdAndContractId(int assetId,int ContractId){
+		if(assetId > 0){
+			assetDepreciationRepository = WebUtil.getBean(AssetDepreciationRepository.class);
+			assetDepreciationRepository.deleteByAssetIdAndContractType(assetId,ContractId);
+		}
+	}
+
 
 	public static void main(String[] args) {
 		AssetInfo assetInfo = new AssetInfo();
