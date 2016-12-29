@@ -528,10 +528,16 @@ public class AssetInfo implements Serializable {
     }
 
     public Double getLifecycleInYear() {
+    	if(lifecycle == null){
+    		return null;
+    	}
         return new Double(lifecycle)/12.0;
     }
 
     public void setLifecycleInYear(Double lifecycle) {
+    	if(lifecycle == null){
+    		return;
+    	}
        this.lifecycle = new Double(lifecycle * 12).intValue();
     }
     
