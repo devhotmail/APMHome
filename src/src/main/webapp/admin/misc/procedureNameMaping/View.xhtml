@@ -12,14 +12,14 @@
             <h:form id="ProcedureNameMapingViewForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="6" rendered="#{procedureNameMapingController.selected != null}">
-                        <!-- <h:outputLabel value="#{msg.id}" for="id" />
-                        <h:outputText value="#{procedureNameMapingController.selected.id}"/> -->
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{procedureNameMapingController.selected.id}"/>
                         <h:outputLabel value="#{msg.risProcedureName}" for="risProcedureName" />
                         <h:outputText value="#{procedureNameMapingController.selected.risProcedureName}"/>
                         <h:outputLabel value="#{msg.apmProcedureName}" for="apmProcedureName" />
                         <h:outputText value="#{procedureNameMapingController.selected.apmProcedureName}"/>
-                       <!--  <h:outputLabel value="#{msg.apmProcedureId}" for="apmProcedureId" />
-                        <h:outputText value="#{procedureNameMapingController.selected.apmProcedureId}"/> -->
+                        <h:outputLabel value="#{msg.apmProcedureId}" for="apmProcedureId" />
+                        <h:outputText value="#{procedureNameMapingController.selected.apmProcedureId}"/>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton rendered="#{procedureNameMapingController.deleteAction}" icon="ui-icon-trash" actionListener="#{procedureNameMapingController.delete}" value="#{msg.Delete}" update="display,:ProcedureNameMapingViewDlg, :ProcedureNameMapingListForm:datalist, :growl" oncomplete="handleSubmit(args, 'ProcedureNameMapingViewDialog');"/>

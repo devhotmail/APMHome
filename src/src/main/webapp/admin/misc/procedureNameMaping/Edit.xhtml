@@ -8,42 +8,42 @@
 
     <ui:composition>
 
-        <p:dialog id="ProcedureNameMapingEditDlg" widgetVar="ProcedureNameMapingEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{procedureNameMapingController.CRUDActionName} #{msg.ProcedureNameMaping}">
+        <p:dialog id="ProcedureNameMapingEditDlg" widgetVar="ProcedureNameMapingEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{procedureNameMapingCrudController.CRUDActionName} #{msg.ProcedureNameMaping}">
             <h:form id="ProcedureNameMapingEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{procedureNameMapingController.selected != null}">
+                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{procedureNameMapingCrudController.selected != null}">
   <!--                       <h:panelGroup>
                             <label class="label">#{msg.id}*</label>
-                            <p:inputText id="id" value="#{procedureNameMapingControllerCrud.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
+                            <p:inputText id="id" value="#{procedureNameMapingCrudControllerCrud.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
                         </h:panelGroup> -->
                         
                         <h:panelGroup>
                             <label class="label">#{msg.risProcedureName}*</label>
-                            <p:inputText id="risProcedureName" value="#{procedureNameMapingController.selected.risProcedureName}"  required="true" requiredMessage="#{msg.risProcedureName} #{msg.ValidationRequire}"/>
+                            <p:inputText id="risProcedureName" value="#{procedureNameMapingCrudController.selected.risProcedureName}"  required="true" requiredMessage="#{msg.risProcedureName} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                        
                          <h:panelGroup>
                             <label class="label">#{msg.apmProcedureName}*</label>
-                            <!-- <p:inputText id="apmProcedureName" value="#{procedureNameMapingController.selected.apmProcedureName}"  required="true" requiredMessage="#{msg.apmProcedureName} #{msg.ValidationRequire}"/> -->
-                        	<p:selectOneMenu id="apmProcedureName"  value="#{procedureNameMapingController.selected.apmProcedureName}" required="true" requiredMessage="#{msg.apmProcedureName} #{msg.ValidationRequire}">
-	                           <!-- <f:selectItem itemLabel="#{procedureNameMapingController.selected.apmProcedureName}" itemValue="procedureNameMapingController.selected.apmProcedureName"/> -->
-	                           <p:ajax listener="#{procedureNameMapingController.setAPI()}"  />
+                            <!-- <p:inputText id="apmProcedureName" value="#{procedureNameMapingCrudController.selected.apmProcedureName}"  required="true" requiredMessage="#{msg.apmProcedureName} #{msg.ValidationRequire}"/> -->
+                        	<p:selectOneMenu id="apmProcedureName"  value="#{procedureNameMapingCrudController.selected.apmProcedureName}" required="true" requiredMessage="#{msg.apmProcedureName} #{msg.ValidationRequire}">
+	                           <!-- <f:selectItem itemLabel="#{procedureNameMapingCrudController.selected.apmProcedureName}" itemValue="procedureNameMapingCrudController.selected.apmProcedureName"/> -->
+	                           <p:ajax listener="#{procedureNameMapingCrudController.setAPI()}"  />
 	                           <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
-	                            <f:selectItems value="#{procedureNameMapingController.apList}" var="item"  itemLabel="#{item.apmProcedureName}" itemValue="#{item.apmProcedureName}" 
+	                            <f:selectItems value="#{procedureNameMapingCrudController.apList}" var="item"  itemLabel="#{item.apmProcedureName}" itemValue="#{item.apmProcedureName}" 
 	                               />
-	                               <!-- actionListener="#{procedureNameMapingController.setAPI('item.apmProcedureName')}"  -->
+	                               <!-- actionListener="#{procedureNameMapingCrudController.setAPI('item.apmProcedureName')}"  -->
 	                        </p:selectOneMenu>
                         </h:panelGroup>
                         
     <!--              <h:panelGroup>
-	                         <p:selectOneMenu id="apmProcedureName2"   value="#{procedureNameMapingController.selected.apmProcedureName}" style="width:150px">
-	                            <f:selectItem itemLabel="#{procedureNameMapingController.selected.apmProcedureName}"/>
-	                            <f:selectItems value="#{procedureNameMapingController.apList}" var="item"  itemLabel="#{item.apmProcedureName}" itemValue="#{item.apmProcedureId}"/>
+	                         <p:selectOneMenu id="apmProcedureName2"   value="#{procedureNameMapingCrudController.selected.apmProcedureName}" style="width:150px">
+	                            <f:selectItem itemLabel="#{procedureNameMapingCrudController.selected.apmProcedureName}"/>
+	                            <f:selectItems value="#{procedureNameMapingCrudController.apList}" var="item"  itemLabel="#{item.apmProcedureName}" itemValue="#{item.apmProcedureId}"/>
 	                        </p:selectOneMenu>
                         </h:panelGroup> -->
                     </p:panelGrid>
                     <br/>
-                    <p:commandButton validateClient="true" actionListener="#{procedureNameMapingController.save}" value="#{msg.Save}" update=":ProcedureNameMapingListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'ProcedureNameMapingEditDialog');"/>
+                    <p:commandButton validateClient="true" actionListener="#{procedureNameMapingCrudController.save}" value="#{msg.Save}" update=":ProcedureNameMapingListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'ProcedureNameMapingEditDialog');"/>
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('ProcedureNameMapingEditDialog').hide()"/>
                 </h:panelGroup>
