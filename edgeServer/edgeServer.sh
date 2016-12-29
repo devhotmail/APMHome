@@ -3,7 +3,6 @@
 #该脚本为Linux下启动java程序的通用脚本。即可以作为开机自启动service脚本被调用，  
 #也可以作为启动java程序的独立脚本来使用。  
 #  
-#Author: tudaxia.com, Date: 2011/6/7  
 #  
 #警告!!!：该脚本stop部分使用系统kill命令来强制终止指定的java程序进程。  
 #在杀死进程前，未作任何条件检查。在某些情况下，如程序正在进行文件或数据库写操作，  
@@ -23,7 +22,8 @@
 #需要根据实际环境以及Java程序名称来修改这些参数  
 ###################################  
 #JDK所在路径  
-JAVA_HOME="/usr/share/jdk1.8.0_111"  
+JAVA_HOME="/usr/local/java/jdk1.8.0_111"  
+EDGE_SERVER_HOME="/edgeServer"
   
 #执行程序启动所使用的系统用户，考虑到安全，推荐不使用root帐号  
 RUNNING_USER=root  
@@ -67,7 +67,7 @@ checkpid() {
 ###################################  
 #(函数)启动程序  
 #  
-#说明：  
+#?得鳎? 
 #1. 首先调用checkpid函数，刷新$psid全局变量  
 #2. 如果程序已经启动（$psid不等于0），则提示程序已启动  
 #3. 如果程序没有被启动，则执行启动命令行  
@@ -85,6 +85,7 @@ start() {
       echo "================================"  
    else  
       echo -n "Starting $APP_MAINCLASS ..."  
+	  cd $EDGE_SERVER_HOME
       nohup $JAVA_HOME/bin/java -jar $APP_MAINCLASS  &
       
       checkpid  
