@@ -236,7 +236,7 @@ INSERT INTO "i18n_message" VALUES (657,'field_name','isValid','在用？','Is Va
 INSERT INTO "i18n_message" VALUES (658,'field_name','item','巡检项目','Item',null,-1);
 INSERT INTO "i18n_message" VALUES (659,'field_name','itemId','巡检项目','Item Id',null,-1);
 INSERT INTO "i18n_message" VALUES (660,'field_name','itemName','巡检项目','Item Name',null,-1);
-INSERT INTO "i18n_message" VALUES (661,'field_name','lifecycle','使用年限(月)','Lifecycle',null,-1);
+INSERT INTO "i18n_message" VALUES (661,'field_name','lifecycle','使用年限','Lifecycle',null,-1);
 INSERT INTO "i18n_message" VALUES (662,'field_name','locationCode','安装位置编码','Location Code',null,-1);
 INSERT INTO "i18n_message" VALUES (663,'field_name','locationName','安装位置','Location Name',null,-1);
 INSERT INTO "i18n_message" VALUES (664,'field_name','maitanance','维修商','Maitanance',null,-1);
