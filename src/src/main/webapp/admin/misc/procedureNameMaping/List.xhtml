@@ -6,14 +6,13 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="content">
-    
-            <div class="ui-g">
-            <div class="ui-g-12 card cardTitle">
-                <p:outputLabel class="pageTitle" value="#{msg.procedureNameMaping}"/>
-            </div>
-            
-            <div class="ui-g-12 card">
-				<h:form id="ProcedureNameMapingListForm">
+        <div class="ui-g">
+            <div class="ui-g-12">
+
+                <p align="center">
+                    <b>#{msg.ProcedureNameMaping}</b>
+                </p>
+            <h:form id="ProcedureNameMapingListForm">
                 <p:dataTable id="datalist" value="#{procedureNameMapingCrudController.lazyModel}" var="item" widgetVar="varDataList"
                     selectionMode="single" selection="#{procedureNameMapingCrudController.selected}"
                     lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
@@ -23,27 +22,43 @@
                     rows="20" emptyMessage="#{msg.noRecordFound}"
                     rowsPerPageTemplate="20,40,60,90">
 
-                    <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
-                    <p:ajax event="filter" listener="#{procedureNameMapingCrudController.onFilter}" update="createButton editButton deleteButton"/>
+                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{procedureNameMapingCrudController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    
+                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.siteId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.hospitalId}" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.hospitalId}"/>
+                    </p:column>
                     <p:column headerText="#{msg.risProcedureName}" sortBy="#{item.risProcedureName}" filterBy="#{item.risProcedureName}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.risProcedureName}"/>
                     </p:column>
                     <p:column headerText="#{msg.apmProcedureName}" sortBy="#{item.apmProcedureName}" filterBy="#{item.apmProcedureName}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.apmProcedureName}"/>
                     </p:column>
+                    <p:column headerText="#{msg.apmProcedureId}" sortBy="#{item.apmProcedureId}" filterBy="#{item.apmProcedureId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.apmProcedureId}"/>
+                    </p:column>
                     <f:facet name="{Toolbar}">
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="ProcedureNameMaping_export"/>
+                        </p:commandButton>
                         <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{procedureNameMapingCrudController.prepareCreate}" update=":ProcedureNameMapingEditDlg" oncomplete="PF('ProcedureNameMapingEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{procedureNameMapingCrudController.prepareView}" update=":ProcedureNameMapingViewDlg" oncomplete="PF('ProcedureNameMapingViewDialog').show()" disabled="#{empty procedureNameMapingCrudController.selected}"/>
                         <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{procedureNameMapingCrudController.prepareEdit}" update=":ProcedureNameMapingEditDlg" oncomplete="PF('ProcedureNameMapingEditDialog').show()" disabled="#{empty procedureNameMapingCrudController.selected}"/>
                         <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Delete}" actionListener="#{procedureNameMapingCrudController.delete}" update="datalist" disabled="#{empty procedureNameMapingCrudController.selected}">
                             <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
                         </p:commandButton>
-                       	<p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
-                            <p:dataExporter type="xls" target="datalist" fileName="ProcedureNameMaping_export"/>
-                        </p:commandButton>
                     </f:facet>
                 </p:dataTable>
-            	</h:form>
+            </h:form>
+
             <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
 
             </div>
         </div>
