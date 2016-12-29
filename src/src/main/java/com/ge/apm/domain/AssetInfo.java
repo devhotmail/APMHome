@@ -527,6 +527,14 @@ public class AssetInfo implements Serializable {
         this.depreciationMethod = depreciationMethod;
     }
 
+    public Double getLifecycleInYear() {
+        return new Double(lifecycle)/12.0;
+    }
+
+    public void setLifecycleInYear(Double lifecycle) {
+       this.lifecycle = new Double(lifecycle * 12).intValue();
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
