@@ -248,7 +248,7 @@
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.lifecycle}</label>
-                        <p:inputText id="lifecycle" value="#{assetInfoController.selected.lifecycle}" readonly="true"/>
+                        <p:inputNumber decimalPlaces="1" id="lifecycle" value="#{assetInfoController.selected.lifecycleInYear}" readonly="true"/>
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.depreciationMethod}</label>
