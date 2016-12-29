@@ -208,11 +208,11 @@
                         <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                             <h:panelGroup>
                                 <label class="label">#{msg.purchasePrice}*</label>
-                                <p:inputText id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" required="true" requiredMessage="#{msg.purchasePrice} #{msg.ValidationRequire}"/>
+                                <p:inputNumber decimalPlaces="2" id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" required="true" requiredMessage="#{msg.purchasePrice} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.salvageValue}</label>
-                                <p:inputText id="salvageValue" value="#{assetInfoController.selected.salvageValue}"/>
+                                <p:inputNumber decimalPlaces="2" id="salvageValue" value="#{assetInfoController.selected.salvageValue}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.lifecycle}</label>
