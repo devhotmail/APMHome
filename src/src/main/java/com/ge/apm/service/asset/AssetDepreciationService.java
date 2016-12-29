@@ -30,7 +30,6 @@ public class AssetDepreciationService {
 	 * 计算资产的月平均成本
 	 */
 	public Double calAssetDepreciation(AssetInfo assetInfo,Integer whichYear){
-            try{
 		BigDecimal  result = new BigDecimal(0);
 		if(assetInfo == null || whichYear == null){
 			return result.doubleValue();
@@ -43,8 +42,9 @@ public class AssetDepreciationService {
 			}else{
 				salvageValue = new BigDecimal(0);
 			}
-			BigDecimal lifeCycle = new BigDecimal(assetInfo.getLifecycle());//以年为单位
-			BigDecimal  unit = new BigDecimal(2d).divide(lifeCycle,2, RoundingMode.HALF_UP);
+			int lifeCycleFromYear = convertMonthToYear(assetInfo.getLifecycle());
+			BigDecimal lifeCycle = new BigDecimal(lifeCycleFromYear);//以年为单位
+			BigDecimal unit = new BigDecimal(2d).divide(lifeCycle,2, RoundingMode.HALF_UP);
 			int depreciationMethod = assetInfo.getDepreciationMethod();
 			if(depreciationMethod == AVERAGE ){
 				result = (purchasePrice.subtract(salvageValue)).divide(lifeCycle, 2, RoundingMode.HALF_UP);
@@ -75,46 +75,54 @@ public class AssetDepreciationService {
 			}
 		}
 		if(result.doubleValue() >= 0){
-			//result = result.divide(new BigDecimal(12),2,BigDecimal.ROUND_HALF_DOWN);
+			result = result.divide(new BigDecimal(12),2,BigDecimal.ROUND_HALF_DOWN);
 		}
 		return result.doubleValue();
-            }
-            catch(Exception ex){
-                logger.error(ex.getMessage(), ex);
-                return 0.0;
-            }
 	}
 	
+	private int convertMonthToYear(Integer lifecycle) {
+		if(lifecycle <= 12){
+			return 1;
+		}
+		return lifecycle/12 ;
+	}
+	
+
+
 	@Transactional
-	public  void saveAssetDerpeciation(AssetInfo assetInfo){
-		assetDepreciationRepository =  WebUtil.getBean(AssetDepreciationRepository.class);
-		if(assetInfo == null){
+	public void saveAssetDerpeciation(AssetInfo assetInfo) {
+		assetDepreciationRepository = WebUtil.getBean(AssetDepreciationRepository.class);
+		if (assetInfo == null) {
 			return;
 		}
 
-		if(assetInfo.getPurchasePrice() == null || assetInfo.getLifecycle() == null || assetInfo.getDepreciationMethod() == null ||
-				assetInfo.getSalvageValue() == null || assetInfo.getPurchaseDate() == null){
+		if (assetInfo.getPurchasePrice() == null || assetInfo.getLifecycle() == null
+				|| assetInfo.getDepreciationMethod() == null || assetInfo.getSalvageValue() == null
+				|| assetInfo.getPurchaseDate() == null) {
 			assetDepreciationRepository.deleteByAssetIdAndContractType(assetInfo.getId(), -1);
 		}
 
-		if(assetInfo.getPurchasePrice() != null && assetInfo.getSalvageValue() != null && assetInfo.getLifecycle() != null && assetInfo.getPurchaseDate() != null){
+		if (assetInfo.getPurchasePrice() != null && assetInfo.getSalvageValue() != null
+				&& assetInfo.getLifecycle() != null && assetInfo.getPurchaseDate() != null) {
 			assetDepreciationRepository.deleteByAssetIdAndContractType(assetInfo.getId(), -1);
+
+			int lifecycle = assetInfo.getLifecycle() - 1;// 以月为单位，不足1年的默认为1年
 			Date purchaseDate = assetInfo.getPurchaseDate();
-			DateTime first = new DateTime(purchaseDate);  
-			if(first.isAfterNow()){//未来时间暂不录入
+			DateTime first = new DateTime(purchaseDate);
+			if (first.isAfterNow()) {// 未来时间暂不录入
 				return;
 			}
-			DateTime last = first.plusMonths(assetInfo.getLifecycle());
+			DateTime last = first.plusMonths(lifecycle);
 			String yyyyMM = null;
 			Double depreciationAmount = null;
 			AssetDepreciation ad = null;
-			for(DateTime dateTime=first;dateTime.isBefore(last);dateTime = dateTime.plusMonths(1)){
+			for (DateTime dateTime = first; dateTime.isBefore(last); dateTime = dateTime.plusMonths(1)) {
 				ad = new AssetDepreciation();
-				yyyyMM = dateTime.toString(FORMAT)+"-01";
-				depreciationAmount = calAssetDepreciation(assetInfo,betweenYear(first,dateTime,assetInfo.getLifecycle()));
+				yyyyMM = dateTime.toString(FORMAT) + "-01";
+				depreciationAmount = calAssetDepreciation(assetInfo, betweenYear(first, dateTime));
 				ad.setAssetId(assetInfo.getId());
 				ad.setSiteId(assetInfo.getSiteId());
-				ad.setContractId(-1);	
+				ad.setContractId(-1);
 				ad.setDeprecateDate(TimeUtils.getDateFromStr(yyyyMM, "yyyy-MM-dd"));
 				ad.setDeprecateAmount(depreciationAmount);
 				assetDepreciationRepository.save(ad);
@@ -122,10 +130,11 @@ public class AssetDepreciationService {
 		}
 	}
 	
-	public int betweenYear(DateTime dt1,DateTime dt2,Integer lifecycle){
+	public int betweenYear(DateTime dt1,DateTime dt2){
 		int year = Months.monthsBetween(dt1, dt2).getMonths()/12;
 		return year +1;
 	}
+	
 
 	public static void main(String[] args) {
 		AssetInfo assetInfo = new AssetInfo();

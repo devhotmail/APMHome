@@ -14,5 +14,4 @@ public interface AssetDepreciationRepository extends GenericRepository<AssetDepr
     
     public List<AssetDepreciation> getByContractId(Integer contractId);
     
-//    public void deleteAllInvlidRecord();
 }
