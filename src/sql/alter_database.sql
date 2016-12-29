@@ -30,3 +30,6 @@ alter table asset_contract add column hospital_id int;
 alter table asset_file_attachment add column hospital_id int;
 
 alter table asset_info alter COLUMN function_type type varchar(64);
+
+
+ALTER TABLE "asset_clinical_record" ADD CONSTRAINT "uk_asset_clinical_record_ris_id" UNIQUE ("site_id", "hospital_id", "source_record_id");
