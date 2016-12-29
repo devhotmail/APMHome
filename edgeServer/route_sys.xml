@@ -11,7 +11,7 @@
         http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
     <import resource="file:./route_ris.xml"/>
-		
+
     <camelContext xmlns="http://camel.apache.org/schema/spring">
 	
         <routeContextRef ref="route_ris"/>
@@ -46,26 +46,26 @@
                 <choice>
                     <when>
                         <simple>${body} not contains 'soap:Fault'</simple>
-                        <to uri="sql:update asset_clinical_record_delta set upload_status_prod='Y', upload_time_prod=current_timestamp where upload_status_prod='N' and id=:#id"/>
+                        <to uri="sql:update asset_clinical_record_delta set upload_status_prod='Y', upload_time_prod=current_timestamp where upload_status_prod='N' and id=:#id::integer"/>
                     </when>
                     <when>
                         <simple>${body} contains 'soap:Fault'</simple>
                         <log message="*** uploadDeltaToCloud_PROD Error, message: ${body}" loggingLevel="ERROR"/>
                         <setHeader headerName="errMsg"><simple>${body}</simple></setHeader>
-                        <to uri="sql:update asset_clinical_record_delta set upload_status_prod='E', upload_time_prod=current_timestamp,err_msg_prod=:#errMsg where upload_status_prod='N' and id=:#id"/>
+                        <to uri="sql:update asset_clinical_record_delta set upload_status_prod='E', upload_time_prod=current_timestamp,err_msg_prod=:#errMsg where upload_status_prod='N' and id=:#id::integer"/>
                     </when>
                 </choice>
                 <doCatch>
                     <exception>java.io.IOException</exception>
                     <setHeader headerName="errMsg"><simple>${exception.message}</simple></setHeader>
                     <log message="*** uploadDeltaToCloud_PROD Error(IOException), message: ${headers.errMsg}" loggingLevel="ERROR"/>
-                    <to uri="sql:update asset_clinical_record_delta set upload_time_prod=current_timestamp, err_msg_prod=:#errMsg where upload_status_prod='N' and id=:#id"/>
+                    <to uri="sql:update asset_clinical_record_delta set upload_time_prod=current_timestamp, err_msg_prod=:#errMsg where upload_status_prod='N' and id=:#id::integer"/>
                 </doCatch>
                 <doCatch>
                     <exception>java.lang.Exception</exception>
                     <setHeader headerName="errMsg"><simple>${exception.message}</simple></setHeader>
                     <log message="*** uploadDeltaToCloud_PROD Error, message: ${headers.errMsg}" loggingLevel="ERROR"/>
-                    <to uri="sql:update asset_clinical_record_delta set upload_status_prod='E', upload_time_prod=current_timestamp, err_msg_prod=:#errMsg where upload_status_prod='N' and id=:#id"/>
+                    <to uri="sql:update asset_clinical_record_delta set upload_status_prod='E', upload_time_prod=current_timestamp, err_msg_prod=:#errMsg where upload_status_prod='N' and id=:#id::integer"/>
                 </doCatch>
             </doTry>
         </route>
@@ -91,26 +91,26 @@
                 <choice>
                     <when>
                         <simple>${body} not contains 'soap:Fault'</simple>
-                        <to uri="sql:update asset_clinical_record_delta set upload_status_uat='Y', upload_time_uat=current_timestamp where upload_status_uat='N' and id=:#id"/>
+                        <to uri="sql:update asset_clinical_record_delta set upload_status_uat='Y', upload_time_uat=current_timestamp where upload_status_uat='N' and id=:#id::integer"/>
                     </when>
                     <when>
                         <simple>${body} contains 'soap:Fault'</simple>
                         <log message="*** uploadDeltaToCloud_UAT Error, message: ${body}" loggingLevel="ERROR"/>
                         <setHeader headerName="errMsg"><simple>${body}</simple></setHeader>
-                        <to uri="sql:update asset_clinical_record_delta set upload_status_uat='E', upload_time_uat=current_timestamp,err_msg_uat=:#errMsg where upload_status_uat='N' and id=:#id"/>
+                        <to uri="sql:update asset_clinical_record_delta set upload_status_uat='E', upload_time_uat=current_timestamp,err_msg_uat=:#errMsg where upload_status_uat='N' and id=:#id::integer"/>
                     </when>
                 </choice>
                 <doCatch>
                     <exception>java.io.IOException</exception>
                     <setHeader headerName="errMsg"><simple>${exception.message}</simple></setHeader>
                     <log message="*** uploadDeltaToCloud_UAT Error(IOException), message: ${headers.errMsg}" loggingLevel="ERROR"/>
-                    <to uri="sql:update asset_clinical_record_delta set upload_time_uat=current_timestamp, err_msg_uat=:#errMsg where upload_status_uat='N' and id=:#id"/>
+                    <to uri="sql:update asset_clinical_record_delta set upload_time_uat=current_timestamp, err_msg_uat=:#errMsg where upload_status_uat='N' and id=:#id::integer"/>
                 </doCatch>
                 <doCatch>
                     <exception>java.lang.Exception</exception>
                     <setHeader headerName="errMsg"><simple>${exception.message}</simple></setHeader>
                     <log message="*** uploadDeltaToCloud_UAT Error, message: ${headers.errMsg}" loggingLevel="ERROR"/>
-                    <to uri="sql:update asset_clinical_record_delta set upload_status_uat='E', upload_time_uat=current_timestamp, err_msg_uat=:#errMsg where upload_status_uat='N' and id=:#id"/>
+                    <to uri="sql:update asset_clinical_record_delta set upload_status_uat='E', upload_time_uat=current_timestamp, err_msg_uat=:#errMsg where upload_status_uat='N' and id=:#id::integer"/>
                 </doCatch>
             </doTry>
         </route>
@@ -133,26 +133,26 @@
                 <choice>
                     <when>
                         <simple>${body} not contains 'soap:Fault'</simple>
-                        <to uri="sql:update asset_clinical_record_history set upload_status='Y', upload_time=current_timestamp where upload_status='N' and id=:#id"/>
+                        <to uri="sql:update asset_clinical_record_history set upload_status='Y', upload_time=current_timestamp where upload_status='N' and id=:#id::integer"/>
                     </when>
                     <when>
                         <simple>${body} contains 'soap:Fault'</simple>
                         <log message="*** uploadHistoryToCloud Error, message: ${body}" loggingLevel="ERROR"/>
                         <setHeader headerName="errMsg"><simple>${body}</simple></setHeader>
-                        <to uri="sql:update asset_clinical_record_history set upload_status='E', upload_time=current_timestamp,err_msg=:#errMsg where upload_status='N' and id=:#id"/>
+                        <to uri="sql:update asset_clinical_record_history set upload_status='E', upload_time=current_timestamp,err_msg=:#errMsg where upload_status='N' and id=:#id::integer"/>
                     </when>
                 </choice>
                 <doCatch>
                     <exception>java.io.IOException</exception>
                     <setHeader headerName="errMsg"><simple>${exception.message}</simple></setHeader>
                     <log message="*** uploadHistoryToCloud Error(IOException), message: ${headers.errMsg}" loggingLevel="ERROR"/>
-                    <to uri="sql:update asset_clinical_record_history set upload_time=current_timestamp, err_msg=:#errMsg where upload_status='N' and id=:#id"/>
+                    <to uri="sql:update asset_clinical_record_history set upload_time=current_timestamp, err_msg=:#errMsg where upload_status='N' and id=:#id::integer"/>
                 </doCatch>
                 <doCatch>
                     <exception>java.lang.Exception</exception>
                     <setHeader headerName="errMsg"><simple>${exception.message}</simple></setHeader>
                     <log message="*** uploadHistoryToCloud Error, message: ${headers.errMsg}" loggingLevel="ERROR"/>
-                    <to uri="sql:update asset_clinical_record_history set upload_status='E', upload_time=current_timestamp, err_msg=:#errMsg where upload_status='N' and id=:#id"/>
+                    <to uri="sql:update asset_clinical_record_history set upload_status='E', upload_time=current_timestamp, err_msg=:#errMsg where upload_status='N' and id=:#id::integer"/>
                 </doCatch>
             </doTry>
         </route>
