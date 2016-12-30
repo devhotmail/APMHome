@@ -2,6 +2,7 @@
  */
 package com.ge.apm.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -163,6 +164,7 @@ public class AssetInfo implements Serializable {
     
     @JoinColumn(insertable=false,updatable=false, name = "hospital_id", referencedColumnName = "id")
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    @JsonBackReference
     private OrgInfo hospital;
 
     public AssetInfo() {
