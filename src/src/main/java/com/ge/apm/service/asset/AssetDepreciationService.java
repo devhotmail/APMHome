@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.Months;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -104,7 +106,6 @@ public class AssetDepreciationService {
 
 		if (assetInfo.getPurchasePrice() != null && assetInfo.getSalvageValue() != null
 				&& assetInfo.getLifecycle() != null && assetInfo.getPurchaseDate() != null) {
-			assetInfo.setLifecycle(assetInfo.getLifecycle()/12);
 			Date purchaseDate = assetInfo.getPurchaseDate();
 			DateTime first = new DateTime(purchaseDate);
 			if (first.isAfterNow()) {// 未来时间暂不录入
@@ -116,12 +117,13 @@ public class AssetDepreciationService {
 			}
 			assetDepreciationRepository.deleteByAssetIdAndContractType(assetInfo.getId(), -1);
 			
-			int lifecycle = assetInfo.getLifecycle() - 1;// 以月为单位，不足1年的默认为1年
+			int lifecycle = assetInfo.getLifecycle();// 以月为单位，不足1年的默认为1年
 			DateTime last = first.plusMonths(lifecycle);
 			String yyyyMM = null;
 			Double depreciationAmount = null;
 			AssetDepreciation ad = null;
-			for (DateTime dateTime = first; dateTime.isBefore(last); dateTime = dateTime.plusMonths(1)) {
+			//for (DateTime dateTime = first; dateTime.isBefore(last); dateTime = dateTime.plusMonths(1)) {
+			for(DateTime dateTime=first;Months.monthsBetween(dateTime, last).getMonths() > 0;dateTime = dateTime.plusMonths(1)){
 				ad = new AssetDepreciation();
 				yyyyMM = dateTime.toString(FORMAT) + "-01";
 				depreciationAmount = calAssetDepreciation(assetInfo, betweenYear(first, dateTime));
