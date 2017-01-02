@@ -255,6 +255,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         attach.setFileType(type);
         attach.setSiteId(UserContextService.getCurrentUserAccount().getSiteId());
         attach.setAssetId(selected.getId());
+        attach.setHospitalId(selected.getHospitalId());
         Integer uploadFileId = fileService.uploadFile(event.getFile());
         if (uploadFileId > 0) {
             attach.setFileId(uploadFileId);
