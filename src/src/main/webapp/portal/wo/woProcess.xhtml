@@ -151,7 +151,7 @@
                         <p:panelGrid id="panelStepDataInput" columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup rendered="#{workOrderController.activeTabId ne 2}">
                                 <label class="label">#{msg.nextStep}#{msg.taskOwner}*</label>
-                                <p:selectOneMenu value="#{workOrderController.selected.currentPersonId}" required="true" requiredMessage="#{msg.currentPersonName} xx #{msg.ValidationRequire}">
+                                <p:selectOneMenu value="#{workOrderController.selected.currentPersonId}" required="true" requiredMessage="#{msg.currentPersonName} #{msg.ValidationRequire}">
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
                                     <f:selectItems value="#{workOrderController.usersWithAssetHeadOrStaffRole}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
