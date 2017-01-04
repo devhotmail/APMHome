@@ -74,7 +74,7 @@ INSERT INTO "i18n_message" VALUES (70, 'label','invalidEmail', 'Email: 不是有
 INSERT INTO "i18n_message" VALUES (71, 'label','DuplicateMsgKey', '编码 "%s" 已存在,请更换其他名称','the code you seted has been used,please change to another one',null,-1);
 INSERT INTO "i18n_message" VALUES (72, 'message','PasswordNotMatch', '输入的密码不匹配','Password not match',null,-1);
 INSERT INTO "i18n_message" VALUES (73, 'label', 'resetPassword', '重置密码', 'Reset Password', NULL, -1);
-INSERT INTO "i18n_message" VALUES (74, 'label', 'continue', '继续', 'Continue', NULL, -1);
+INSERT INTO "i18n_message" VALUES (74, 'label', 'continue', '跳过', 'Continue', NULL, -1);
 
 
 -- menu item names  ( id from 200 to  399)
