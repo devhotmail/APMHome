@@ -67,7 +67,6 @@ public class InspectionService {
         return true;
     }
 
-    @Transactional
     public boolean createOrder(InspectionOrder order, int orderType, List<Object[]> checkItemList) {
 
         List<InspectionOrderDetail> detailList = new ArrayList();
