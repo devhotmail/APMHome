@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DataTableConfigEditDlg" widgetVar="DataTableConfigEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{dataTableConfigCrudController.CRUDActionName} #{msg.DataTableConfig}">
+            <h:form id="DataTableConfigEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{dataTableConfigCrudController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.dataTableName}*</label>
+                            <p:inputText id="dataTableName" value="#{dataTableConfigCrudController.selected.dataTableName}"  required="true" requiredMessage="#{msg.dataTableName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.dataSql}*</label>
+                            <p:inputText id="dataSql" value="#{dataTableConfigCrudController.selected.dataSql}"  required="true" requiredMessage="#{msg.dataSql} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.dataCountSql}*</label>
+                            <p:inputText id="dataCountSql" value="#{dataTableConfigCrudController.selected.dataCountSql}"  required="true" requiredMessage="#{msg.dataCountSql} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.isDefaultEmptyResult}*</label>
+                            <p:selectBooleanCheckbox id="isDefaultEmptyResult" itemLabel="#{msg.isDefaultEmptyResult}" value="#{dataTableConfigCrudController.selected.isDefaultEmptyResult}" required="true" requiredMessage="#{msg.isDefaultEmptyResult} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.isPaginationSupported}*</label>
+                            <p:selectBooleanCheckbox id="isPaginationSupported" itemLabel="#{msg.isPaginationSupported}" value="#{dataTableConfigCrudController.selected.isPaginationSupported}" required="true" requiredMessage="#{msg.isPaginationSupported} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{dataTableConfigCrudController.save}" value="#{msg.Save}" update=":DataTableConfigListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'DataTableConfigEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('DataTableConfigEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

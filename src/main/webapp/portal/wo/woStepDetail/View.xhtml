@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="WorkOrderStepDetailViewDlg" widgetVar="WorkOrderStepDetailViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderStepDetailController.CRUDActionName} #{msg.WorkOrderStepDetail}">
+            <h:form id="WorkOrderStepDetailViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="6" rendered="#{workOrderStepDetailController.selected != null}">
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{workOrderStepDetailController.selected.id}"/>
+                        <h:outputLabel value="#{msg.siteId}" for="siteId" />
+                        <h:outputText value="#{workOrderStepDetailController.selected.siteId}"/>
+                        <h:outputLabel value="#{msg.manHours}" for="manHours" />
+                        <h:outputText value="#{workOrderStepDetailController.selected.manHours}"/>
+                        <h:outputLabel value="#{msg.accessory}" for="accessory" />
+                        <h:outputText value="#{workOrderStepDetailController.selected.accessory}"/>
+                        <h:outputLabel value="#{msg.accessoryQuantity}" for="accessoryQuantity" />
+                        <h:outputText value="#{workOrderStepDetailController.selected.accessoryQuantity}"/>
+                        <h:outputLabel value="#{msg.accessoryPrice}" for="accessoryPrice" />
+                        <h:outputText value="#{workOrderStepDetailController.selected.accessoryPrice}"/>
+                        <h:outputLabel value="#{msg.workOrderStepId}" for="workOrderStepId" />
+                        <h:outputText value="#{workOrderStepDetailController.selected.workOrderStepId}"/>
+                        <h:outputLabel value="#{msg.otherExpense}" for="otherExpense" />
+                        <h:outputText value="#{workOrderStepDetailController.selected.otherExpense}"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{workOrderStepDetailController.deleteAction}" icon="ui-icon-trash" actionListener="#{workOrderStepDetailController.delete}" value="#{msg.Delete}" update=":WorkOrderStepDetailListForm:datalist, :growl" oncomplete="handleSubmit(args, 'WorkOrderStepDetailViewDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="ui-icon ui-icon-close" onclick="PF('WorkOrderStepDetailViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

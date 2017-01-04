@@ -1,0 +1,42 @@
+@import "predix";
+@import "objects";
+@import "charts";
+
+.chart-device-stat {
+  height: 50px;
+  .jqplot-axis.jqplot-xaxis, .jqplot-axis.jqplot-yaxis, .jqplot-title {
+    display: none;
+  }
+
+  .jqplot-point-label {
+    position: relative;
+    color: transparent;
+
+    &:after {
+      content: '';
+      position: absolute;
+      background: $main-bg-color;
+      display: block;
+      width: 5px;
+      height: 18px;
+      right: -10px;
+      top: 0;
+    }
+  }
+}
+
+.text--unit {
+  font-size: 70%;
+}
+
+@include media-query(lg) {
+  .text--scale {
+    font-size: 99%;
+  }
+}
+
+@include media-query(nomenu) {
+  .text--scale {
+    font-size: 90%;
+  }
+}

@@ -1,0 +1,134 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+    <ui:define name="preRenderView">
+        <f:metadata>
+            <f:viewParam name="assetStatus" value="#{assetInfoController.filterAssetStatus}"/>
+            <f:viewParam name="model" value="#{assetInfoController.filterWarrantyDate}"/>
+        </f:metadata>
+        <f:event type="preRenderView" listener="#{assetInfoController.setAssetStatusFilter()}"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.AssetInfo}"/>
+            </div>
+
+            <div class="ui-g-12 card">
+                <h:form id="AssetInfoListForm">
+                    <p:dataTable id="datalist" value="#{assetInfoController.lazyModel}" var="item" widgetVar="varDataList"
+                                 selectionMode="single" selection="#{assetInfoController.selected}"
+                                 lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                 rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                                 paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                                 rows="20" emptyMessage="#{msg.noRecordFound}"
+                                 rowsPerPageTemplate="20,40,60,90">
+
+                        <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton "/>
+                        <p:ajax event="filter" listener="#{assetInfoController.onFilter}" oncomplete="rc();"/>
+
+                        <!--
+                        <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
+                            <h:outputText value="#{item.id}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
+                            <h:outputText value="#{item.siteId}"/>
+                        </p:column>
+                        -->
+                        <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.name}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.aliasName}" sortBy="#{item.aliasName}" filterBy="#{item.aliasName}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.aliasName}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.assetGroup}" sortBy="#{item.assetGroup}" filterBy="#{item.assetGroup}" filterMatchMode="EQ">
+                            <h:outputText value="#{fieldMsg.fieldValue('assetGroup',item.assetGroup)}"/>
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                        </p:column>
+                        <p:column headerText="#{msg.clinicalDeptName}" sortBy="#{item.clinicalDeptName}" filterBy="#{item.clinicalDeptId}" filterMatchMode="EQ">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{assetInfoController.ownerOrgList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{item.clinicalDeptName}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.assetOwnerName}" sortBy="#{item.assetOwnerName}" filterBy="#{item.assetOwnerId}" filterMatchMode="EQ">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{assetInfoController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{item.assetOwnerName}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.manufacture}" sortBy="#{item.manufacture}" filterBy="#{item.manufacture}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.manufacture}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.vendor}" sortBy="#{item.vendor}" filterBy="#{item.vendor}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.vendor}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" value="#{assetInfoController.filterAssetStatus}" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetStatus')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{fieldMsg.fieldValue('assetStatus',item.status)}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.warrantyDate}" sortBy="#{item.warrantyDate}" filterBy="#{item.warrantyDate}" filterMatchMode="GTE">
+                            <f:facet name="filter">
+                                <p:inputText id="filterWarrantyDate" widgetVar="varFilterWarrantyDate" value="#{assetInfoController.warrantyFormatTime}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.warrantyDate}">
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd" />
+                            </h:outputText>
+                        </p:column>
+                        <f:facet name="{Toolbar}">
+<!--                             <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetInfoController.prepareCreate}" action="Create?faces-redirect=true&amp;actionName=Create" />
+                            <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" action="#{assetInfoController.getViewPage('Detail','View')}"  disabled="#{empty assetInfoController.selected}" >
+                            </p:commandButton>
+                            <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" action="#{assetInfoController.getViewPage('Create','Edit')}" disabled="#{empty assetInfoController.selected}" />
+                            <p:commandButton rendered="false" id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" action="#{assetInfoController.getViewPage('View','Delete')}" disabled="#{empty assetInfoController.selected}"/>
+                             -->
+                            <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetInfoController.prepareCreate}" action="#{urlEncryptController.encodeUrlParam('Create.xhtml?actionName=Create')}" />
+                            <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{assetInfoController.getDetailPage()}"  action="#{urlEncryptController.encodeUrlParam(assetInfoController.operation)}"  disabled="#{empty assetInfoController.selected}" />
+                            <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}"  actionListener="#{assetInfoController.getViewPage('Create','Edit')}"  action="#{urlEncryptController.encodeUrlParam(assetInfoController.operation)}"  disabled="#{empty assetInfoController.selected}" />
+                            <p:commandButton rendered="false" id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}"  actionListener="#{assetInfoController.getViewPage('View','Delete')}"  action="#{urlEncryptController.encodeUrlParam(assetInfoController.operation)}"  disabled="#{empty assetInfoController.selected}"/>
+                            
+                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                                <p:dataExporter type="xls" target="datalist" fileName="AssetInfo_export"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+                    <p:remoteCommand name="rc" update="datalist:createButton datalist:editButton datalist:viewButton datalist:deleteButton" immediate="true"/>
+                </h:form>
+            </div>
+        </div>
+
+        <p:overlayPanel widgetVar="panelFilterWarrantyDate" for=":AssetInfoListForm:datalist:filterWarrantyDate" dismissable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{msg.From}"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varWarrantyDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:outputLabel value="#{msg.To}"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varWarrantyDateTo" value="#{assetInfoController.varWarrantyDateTo}" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+            </h:panelGrid>
+            <p:commandButton onclick="setDateFilter('varDataList', 'varFilterWarrantyDate', 'varWarrantyDateFrom', 'varWarrantyDateTo'); PF('panelFilterWarrantyDate').hide();" title="#{msg.Confirm}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="PF('panelFilterWarrantyDate').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
+        </p:overlayPanel>
+
+    </ui:define>
+
+</ui:composition>

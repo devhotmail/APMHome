@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+    <!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+    <!-- Enables the Spring MVC @Controller programming model -->
+    <mvc:annotation-driven />
+    <!-- Scan for Spring beans declared via annotations. -->
+    <context:component-scan base-package="com.ge.webris.web, com.ge.apm.web" />
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" p:defaultEncoding="utf-8" p:maxUploadSize="100000"/>  
+
+    <!-- Resolves views selected for rendering by @Controllers to .xhtml resources in the /WEB-INF/views directory -->
+    <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass" value="org.springframework.faces.mvc.JsfView" />
+        <property name="suffix" value=".xhtml" />
+    </bean>
+        
+    <!-- Imports user-defined @Controller beans that process client requests -->
+    <import resource="controllers.xml" />
+</beans>

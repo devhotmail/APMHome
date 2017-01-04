@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="I18nMessageViewDlg" widgetVar="I18nMessageViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{i18nMessageCrudController.CRUDActionName} #{msg.I18nMessage}">
+            <h:form id="I18nMessageViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="6" rendered="#{i18nMessageCrudController.selected != null}">
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{i18nMessageCrudController.selected.id}"/>
+                        <h:outputLabel value="#{msg.msgType}" for="msgType" />
+                        <h:outputText value="#{i18nMessageCrudController.selected.msgType}"/>
+                        <h:outputLabel value="#{msg.msgKey}" for="msgKey" />
+                        <h:outputText value="#{i18nMessageCrudController.selected.msgKey}"/>
+                        <h:outputLabel value="#{msg.valueZh}" for="valueZh" />
+                        <h:outputText value="#{i18nMessageCrudController.selected.valueZh}"/>
+                        <h:outputLabel value="#{msg.valueEn}" for="valueEn" />
+                        <h:outputText value="#{i18nMessageCrudController.selected.valueEn}"/>
+                        <h:outputLabel value="#{msg.valueTw}" for="valueTw" />
+                        <h:outputText value="#{i18nMessageCrudController.selected.valueTw}"/>
+                        <h:outputLabel value="#{msg.siteId}" for="siteId" />
+                        <h:outputText value="#{i18nMessageCrudController.selected.siteId}"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{i18nMessageCrudController.deleteAction}" icon="ui-icon-trash" actionListener="#{i18nMessageCrudController.delete}" value="#{msg.Delete}" update="display,:I18nMessageViewDlg, :I18nMessageListForm:datalist, :growl" oncomplete="handleSubmit(args, 'I18nMessageViewDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('I18nMessageViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

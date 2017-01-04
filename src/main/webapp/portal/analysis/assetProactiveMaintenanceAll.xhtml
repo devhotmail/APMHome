@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <h:outputStylesheet name="css/assetProactiveMaintenanceAll.css"/>
+        <h:outputScript name="js/assetProactiveMaintenanceAll.js"/>
+    </ui:define>
+
+    <ui:define name="content">
+
+        <header>
+            <div class="card--title text--center">
+                <div class="ui-g">
+                    <div class="ui-g-1">
+                        <h:form id="WorkOrderEditForm" class="text--left">
+                            <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}"
+                                          value="#{assetProactiveMaintenanceController.assetName}">
+
+                                <p:menuitem value="#{msg.selectAssetSingle}"
+                                            actionListener="#{selectAssetController.prepareDialogCallback(assetProactiveMaintenanceController, ':WorkOrderEditForm:selAsset')}"
+                                            process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+                                            oncomplete="PF('varSelectAssetDlg').show()"/>
+                                <p:separator/>
+
+                                <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"/>
+
+                            </p:menuButton>
+                        </h:form>
+                    </div>
+                    <div class="ui-g-10">
+                        <span class="epsilon">#{msg.PreventiveMaintaincePlanning}</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="block">
+                    <h3 class="block-title">#{msg.preventiveMaintenanceAnalysis_planChart}</h3>
+                    <p:dataTable class="maintenance-pmstats" var="schedule"
+                                 value="#{assetProactiveMaintenanceController.maintenanceSchedule}"
+                                 rowIndexVar="rowIndex">
+                        <p:columns value="#{assetProactiveMaintenanceController.generatedMonth}"
+                                   var="column"
+                                   columnIndexVar="colIndex">
+                            <f:facet name="header">
+                                <h:outputText value="#{column}"/>
+                            </f:facet>
+                            <h:outputText id="asset-name" styleClass="#{colIndex == 0 ? '' : schedule[colIndex].length() == 0 ? '' : 'tinted' }"
+                                          value="#{ colIndex == 0 ? schedule[colIndex] : '' }"/>
+                            <p:tooltip for="asset-name" trackMouse="true" position="bottom"
+                                       rendered="#{colIndex == 0 or schedule[colIndex].length() == 0 ? false : true}">
+                                <p:repeat value="#{ schedule[colIndex].split(',,,,') }" var="device">
+                                    <h:outputText value='#{device}'/><br/>
+                                </p:repeat>
+                            </p:tooltip>
+
+                        </p:columns>
+                    </p:dataTable>
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <p:outputPanel rendered="#{not empty assetProactiveMaintenanceController.maintenanceForecast}">
+                    <div class="block">
+                        <h3 class="block-title">#{msg.preventiveMaintenanceAnalysis_planChart}</h3>
+                        <p:dataTable class="maintenance-forecast" var="forecast" value="#{assetProactiveMaintenanceController.maintenanceForecast}">
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <ui:repeat var="mega" value="#{assetProactiveMaintenanceController.megaColumns}">
+                                        <p:column colspan="#{mega.span}" headerText="#{mega.name}"/>
+                                    </ui:repeat>
+                                </p:row>
+                            </p:columnGroup>
+                            <p:columns value="#{ assetProactiveMaintenanceController.generatedYear }" var="column" columnIndexVar="colIndex">
+
+                                <h:outputText id="plan-day"
+                                              styleClass="#{ colIndex == 0 ? '' : forecast[colIndex].length() == 0 ? ' ' : forecast[colIndex].length() == 10 ? 'tinted' : 'tinted lightly-tinted' }"
+                                              value="#{ colIndex == 0 ? forecast[colIndex] : '' }"/>
+
+                                <p:tooltip rendered="#{colIndex == 0 or forecast[colIndex].length() == 0 ? false : true}" for="plan-day" trackMouse="true" position="bottom">
+                                    <h:outputText value="#{forecast[colIndex].substring(0, 10)}" />
+                                </p:tooltip>
+
+                            </p:columns>
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+            </div>
+        </div>
+
+        <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,58 @@
+/// @type Number [default] - Heading size 1
+$inuit-heading-size-1: 75px !default;
+
+/// @type Number [default] - Heading size 2
+$inuit-heading-size-2: 60px !default;
+
+/// @type Number [default] - Heading size 3
+$inuit-heading-size-3: 45px !default;
+
+/// @type Number [default] - Heading size 4
+$inuit-heading-size-4: 30px !default;
+
+/// @type Number [default] - Heading size 5
+$inuit-heading-size-5: 20px !default;
+
+/// @type Number [default] - Heading size 6
+$inuit-heading-size-6: 12px !default;
+
+$inuit-enable-layout--huge: true;
+$inuit-enable-layout--middle: true;
+$inuit-enable-layout--center: true;
+$inuit-enable-margins: true;
+$inuit-enable-margins--tiny: true;
+$inuit-enable-margins--small: true;
+$inuit-enable-margins--large: true;
+$inuit-enable-margins--huge: true;
+$inuit-enable-paddings: true;
+$inuit-enable-paddings--tiny: true;
+$inuit-enable-paddings--small: true;
+$inuit-enable-paddings--large: true;
+$inuit-enable-paddings--huge: true;
+$inuit-enable-paddings--rtl: true;
+$inuit-enable-paddings--none: true;
+
+$inuit-enable-btn--primary: true;
+$inuit-enable-btn--large: true;
+
+$inuit-enable-table--small: true;
+
+$breakpoints: (
+/* Predix breakpoints */
+"palm" "screen and (max-width: 47.9rem)",
+"lap" "screen and (min-width: 48rem) and (max-width: 63.9rem)",
+"lap-and-up" "screen and (min-width: 48rem)",
+"portable" "screen and (max-width: 63.9rem)",
+"desk" "screen and (min-width: 63.9rem)",
+"desk-wide" "screen and (min-width: #{$desk-wide-width})",
+"retina" "(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi), (min-resolution: 2dppx)" "sm" "screen and (max-width: 40em)",
+
+/* Reflect grid breakpoints */
+"sm" "screen and (max-width: 767px)",
+"md" "screen and (min-width: 768) and (max-width: 991px)",
+"lg" "screen and (min-width: 992px) and (max-width: 1199px)",
+"xl" "screen and (min-width: 1200px)",
+
+/* Reflect Ultima layout menu open */
+"nomenu" "screen and (max-width: 1024px)"
+);

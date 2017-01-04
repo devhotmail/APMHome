@@ -1,0 +1,40 @@
+@import "predix";
+@import "objects";
+@import "charts";
+
+body.layout-compact {
+  .chart-device-stat.horizontal {
+    .jqplot-point-label {
+      position: relative;
+
+      @include media-query(nomenu) {
+        @include inuit-font-size(12px);
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        background: $main-bg-color;
+        display: block;
+        width: 5px;
+        height: 50px;
+        top: -10px;
+        right: -10px;
+      }
+    }
+  }
+  .chart-device-statbytime, .chart-device-stat-bypart {
+    height: 400px;
+  }
+  .body-shape {
+    height: 400px;
+    width: 185px;
+  }
+
+  .chart-device-stat.chart-device-2.vertical {
+    margin-top: -40px;
+    table.jqplot-table-legend {
+      margin-top: 83px;
+    }
+  }
+}

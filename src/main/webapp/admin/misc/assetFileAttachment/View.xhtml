@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="AssetFileAttachmentViewDlg" widgetVar="AssetFileAttachmentViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetFileAttachmentCrudController.CRUDActionName} #{msg.AssetFileAttachment}">
+            <h:form id="AssetFileAttachmentViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="6" rendered="#{assetFileAttachmentCrudController.selected != null}">
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{assetFileAttachmentCrudController.selected.id}"/>
+                        <h:outputLabel value="#{msg.siteId}" for="siteId" />
+                        <h:outputText value="#{assetFileAttachmentCrudController.selected.siteId}"/>
+                        <h:outputLabel value="#{msg.name}" for="name" />
+                        <h:outputText value="#{assetFileAttachmentCrudController.selected.name}"/>
+                        <h:outputLabel value="#{msg.fileType}" for="fileType" />
+                        <h:outputText value="#{assetFileAttachmentCrudController.selected.fileType}"/>
+                        <h:outputLabel value="#{msg.fileUrl}" for="fileUrl" />
+                        <h:outputText value="#{assetFileAttachmentCrudController.selected.fileUrl}"/>
+                        <h:outputLabel value="#{msg.assetId}" for="assetId" />
+                        <h:outputText value="#{assetFileAttachmentCrudController.selected.assetId}"/>
+                        <h:outputLabel value="#{msg.fileId}" for="fileId" />
+                        <h:outputText value="#{assetFileAttachmentCrudController.selected.fileId}"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{assetFileAttachmentCrudController.deleteAction}" icon="ui-icon-trash" actionListener="#{assetFileAttachmentCrudController.delete}" value="#{msg.Delete}" update="display,:AssetFileAttachmentViewDlg, :AssetFileAttachmentListForm:datalist, :growl" oncomplete="handleSubmit(args, 'AssetFileAttachmentViewDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('AssetFileAttachmentViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

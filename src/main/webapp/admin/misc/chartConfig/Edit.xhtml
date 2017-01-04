@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="ChartConfigEditDlg" widgetVar="ChartConfigEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{chartConfigCrudController.CRUDActionName} #{msg.ChartConfig}">
+            <h:form id="ChartConfigEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{chartConfigCrudController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.chartName}*</label>
+                            <p:inputText id="chartName" value="#{chartConfigCrudController.selected.chartName}"  required="true" requiredMessage="#{msg.chartName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.chartDataSql}*</label>
+                            <p:inputText id="chartDataSql" value="#{chartConfigCrudController.selected.chartDataSql}"  required="true" requiredMessage="#{msg.chartDataSql} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.isDefaultEmptyResult}*</label>
+                            <p:selectBooleanCheckbox id="isDefaultEmptyResult" itemLabel="#{msg.isDefaultEmptyResult}" value="#{chartConfigCrudController.selected.isDefaultEmptyResult}" required="true" requiredMessage="#{msg.isDefaultEmptyResult} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.chartType}*</label>
+                            <p:inputText id="chartType" value="#{chartConfigCrudController.selected.chartType}"  required="true" requiredMessage="#{msg.chartType} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.seriesDataField}*</label>
+                            <p:inputText id="seriesDataField" value="#{chartConfigCrudController.selected.seriesDataField}"  required="true" requiredMessage="#{msg.seriesDataField} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.xAxisDataField}*</label>
+                            <p:inputText id="xAxisDataField" value="#{chartConfigCrudController.selected.xAxisDataField}"  required="true" requiredMessage="#{msg.xAxisDataField} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.yAxisDataField}*</label>
+                            <p:inputText id="yAxisDataField" value="#{chartConfigCrudController.selected.yAxisDataField}"  required="true" requiredMessage="#{msg.yAxisDataField} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.chartTitle}</label>
+                            <p:inputText id="chartTitle" value="#{chartConfigCrudController.selected.chartTitle}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.legendPosition}</label>
+                            <p:inputText id="legendPosition" value="#{chartConfigCrudController.selected.legendPosition}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.legendRows}</label>
+                            <p:inputText id="legendRows" value="#{chartConfigCrudController.selected.legendRows}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.zoomEnabled}</label>
+                            <p:selectBooleanCheckbox id="zoomEnabled" itemLabel="#{msg.zoomEnabled}" value="#{chartConfigCrudController.selected.zoomEnabled}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.xAxisLabel}</label>
+                            <p:inputText id="xAxisLabel" value="#{chartConfigCrudController.selected.xAxisLabel}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.xAxisMin}</label>
+                            <p:inputText id="xAxisMin" value="#{chartConfigCrudController.selected.xAxisMin}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.xAxisMax}</label>
+                            <p:inputText id="xAxisMax" value="#{chartConfigCrudController.selected.xAxisMax}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.xAxisTickAngle}</label>
+                            <p:inputText id="xAxisTickAngle" value="#{chartConfigCrudController.selected.xAxisTickAngle}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.xAxisTickCount}</label>
+                            <p:inputText id="xAxisTickCount" value="#{chartConfigCrudController.selected.xAxisTickCount}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.xAxisTickFormat}</label>
+                            <p:inputText id="xAxisTickFormat" value="#{chartConfigCrudController.selected.xAxisTickFormat}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.xAxisTickInterval}</label>
+                            <p:inputText id="xAxisTickInterval" value="#{chartConfigCrudController.selected.xAxisTickInterval}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.yAxisLabel}</label>
+                            <p:inputText id="yAxisLabel" value="#{chartConfigCrudController.selected.yAxisLabel}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.yAxisMin}</label>
+                            <p:inputText id="yAxisMin" value="#{chartConfigCrudController.selected.yAxisMin}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.yAxisMax}</label>
+                            <p:inputText id="yAxisMax" value="#{chartConfigCrudController.selected.yAxisMax}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.addDateAxis}*</label>
+                            <p:selectBooleanCheckbox id="addDateAxis" itemLabel="#{msg.addDateAxis}" value="#{chartConfigCrudController.selected.addDateAxis}" required="true" requiredMessage="#{msg.addDateAxis} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{chartConfigCrudController.save}" value="#{msg.Save}" update=":ChartConfigListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'ChartConfigEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('ChartConfigEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
