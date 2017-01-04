@@ -63,7 +63,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
     private String sql;
     private HashMap<String, Object> sqlParams = new HashMap<>();
 
-    private boolean isYearly = false;
+    private boolean isYearly = true;
     private DateTime startMonth = new DateTime();
 
     private List<Map<String, Object>> monthRevenue = new ArrayList<>();
@@ -176,17 +176,9 @@ public class HomeHeadController extends SqlConfigurableChartController {
     }
 
     private DateTime getStartMonth() {
-        // format revenue if there is no perfect 12 month
-        DateTime startMonth = new DateTime();
-        if (targetYear == startMonth.getYear()) {
-            // start from last 12 month
-            isYearly = false;
-            startMonth = startMonth.withYear(startMonth.getYear() - 1);
-        } else {
-            isYearly = true;
-            startMonth = startMonth.withYear(targetYear).withMonthOfYear(1); // start from first month
-        }
 
+        startMonth = startMonth.withYear(targetYear).withMonthOfYear(1); // start from first month
+        
         return startMonth;
     }
 
@@ -359,11 +351,11 @@ public class HomeHeadController extends SqlConfigurableChartController {
 
 
     private List<Map<String, Object>> queryMonthRevenue() {
-        if (isYearly) {
+        //if (isYearly) {
             sql = targetYearMonthRevenue;
-        } else {
-            sql = last12MonthRevenue;
-        }
+        //} else {
+        //    sql = last12MonthRevenue;
+        //}
 
         logger.info("Get revenue by month.");
         monthRevenue = queryMonthDate(sql, sqlParams, 12, startMonth);
@@ -372,11 +364,11 @@ public class HomeHeadController extends SqlConfigurableChartController {
     }
 
     private List<Map<String, Object>> queryMonthMaint() {
-        if (isYearly) {
+        //if (isYearly) {
             sql = maintTargetYearMonthCost;
-        } else {
-            sql = maintLast12MonthCost;
-        }
+        //} else {
+        //    sql = maintLast12MonthCost;
+        //}
 
         logger.info("Get maintenance cost by month");
         monthMaint = queryMonthDate(sql, sqlParams, 12, startMonth);
