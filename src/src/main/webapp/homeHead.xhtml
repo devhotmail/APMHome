@@ -18,6 +18,7 @@
                 <span class="epsilon">#{msg.HomePage}</span>
             </div>
             <div class="card--summary">
+                <h:form id="TopValueForm">
                 <div class="ui-g">
                     <div class="ui-md-4">
                         <div class="epsilon u-mv-">#{msg.assetTotalProfit}</div>
@@ -38,6 +39,7 @@
                         </p:outputPanel>
                     </div>
                 </div>
+                </h:form>
             </div>
         </header>
         <div class="ui-g">
@@ -46,13 +48,14 @@
                     <h:form>
                         <p:selectOneMenu id="selectedYear" value="#{homeHeadController.selectedYear}">
                             <p:ajax listener="#{homeHeadController.onSelectedYearChange}"
-                                    update="value_scan selectedYear barAnnualRevenue pieAnnualRevenue barMonthlyRevenue"/>
+                                    update="TopValueForm BarChartForm1 BarChartForm2"/>
                             <f:selectItems value="#{homeHeadController.yearList}"/>
                         </p:selectOneMenu>
                     </h:form>
                 </div>
             </div>
             <div class="ui-g-12">
+                <h:form id="BarChartForm1">
                 <div class="block">
                     <h3 class="block-title">#{msg.assetAveROI}</h3>
                     <div class="ui-g">
@@ -66,13 +69,16 @@
                         </div>
                     </div>
                 </div>
+                </h:form>
             </div>
             <div class="ui-g-12">
+                <h:form id="BarChartForm2">
                 <div class="block">
                     <h3 class="block-title">#{msg.assetAnnual}</h3>
                     <p:chart id="barMonthlyRevenue" type="bar" model="#{homeHeadController.barMonthlyRevenue}"
                              style="height:300px" responsive="true"/>
                 </div>
+                </h:form>
             </div>
             <div class="ui-g-12">
                 <div class="block">
