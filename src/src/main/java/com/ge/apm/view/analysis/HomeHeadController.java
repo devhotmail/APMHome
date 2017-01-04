@@ -731,7 +731,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
 
         if (result.size() == 0) {
             Map<String, Object> item = new HashMap<>();
-            item.put("key", 1);
+            item.put("key", "");
             item.put("value", 0.0);
             result.add(item);
         }
