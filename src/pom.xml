@@ -18,7 +18,7 @@
         <jdbc.version>5.1.24</jdbc.version>
 
         <sql-maven-plugin.delimiter>;</sql-maven-plugin.delimiter>
-        <jdk.version>1.6</jdk.version>
+        <jdk.version>1.8</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <hibernate.version>4.2.6.Final</hibernate.version>
@@ -28,9 +28,7 @@
 
         <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
         <spring-data-jpa.version>1.5.2.RELEASE</spring-data-jpa.version>
-
-        <jetty.version>8.1.9.v20130131</jetty.version>
-
+        <jetty.version>9.4.0.v20161208</jetty.version>
         <application.name>${project.name}</application.name>
         <application.version>${project.version}</application.version>
         <application.description>${project.description}</application.description>
@@ -163,21 +161,12 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.7</version>
         </dependency>
-
-        <!--<dependency>-->
-        <!--<groupId>org.slf4j</groupId>-->
-        <!--<artifactId>log4j-over-slf4j</artifactId>-->
-        <!--<version>1.7.7</version>-->
-        <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>1.7.7</version>
             <scope>runtime</scope>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
@@ -544,7 +533,7 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.faces</artifactId>
-            <version>2.2.10</version>
+            <version>2.2.14</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.web</groupId>
@@ -592,6 +581,21 @@
             <version>1.9.2</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>io.javaslang</groupId>
+            <artifactId>javaslang</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.21.0-GA</version>
+        </dependency>
+        <dependency>
+            <groupId>io.reactivex.rxjava2</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>2.0.3</version>
+        </dependency>
     </dependencies>
 
     <pluginRepositories>
@@ -614,17 +618,8 @@
             </snapshots>
         </repository>
         <repository>
-            <id>repository.jboss.org</id>
-            <!--<url>http://repository.jboss.org/nexus/content/groups/public-jboss</url>-->
+            <id>aliyun</id>
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>java.net</id>
-            <name>JAVA.NET</name>
-            <url>http://download.java.net/maven/2</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -681,8 +676,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.0.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
@@ -695,7 +690,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
@@ -703,11 +698,6 @@
                     <webAppConfig>
                         <contextPath>${application.contextpath}</contextPath>
                     </webAppConfig>
-                    <connectors>
-                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                            <port>${application.port}</port>
-                        </connector>
-                    </connectors>
                     <requestLog implementation="org.eclipse.jetty.server.NCSARequestLog">
                         <filename>${project.build.directory}/jetty-yyyy_mm_dd-request.log</filename>
                         <retainDays>3</retainDays>
