@@ -582,6 +582,16 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>net.sf.barcode4j</groupId>
+            <artifactId>barcode4j-light</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.glxn</groupId>
+            <artifactId>qrgen</artifactId>
+            <version>1.4</version>
+        </dependency>
+         <dependency>
             <groupId>io.javaslang</groupId>
             <artifactId>javaslang</artifactId>
             <version>2.0.5</version>
