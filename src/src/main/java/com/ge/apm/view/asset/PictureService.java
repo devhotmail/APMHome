@@ -25,7 +25,7 @@ public class PictureService {
 
     AttachmentFileService attachService = WebUtil.getBean(AttachmentFileService.class);
 
-    public StreamedContent getImage() throws FileNotFoundException {
+    public StreamedContent getImage() {
         FacesContext context = FacesContext.getCurrentInstance();
         if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
             // So, we're rendering the view. Return a stub StreamedContent so that it will generate right URL.
@@ -36,5 +36,9 @@ public class PictureService {
             StreamedContent stream = attachService.getFile(Integer.parseInt(id));
             return stream;
         }
+    }
+    
+    public StreamedContent getBQImage(){
+        return null;
     }
 }
