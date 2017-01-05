@@ -8,7 +8,6 @@
 
     <!-- public pages -->
     <http pattern="/login.xhtml" security="none" />
-    <http pattern="/web/*" security="none" />
     <http pattern="/restful/*" security="none" />
     <http pattern="/ws/*" security="none" />
     <http pattern="/soap/*" security="none" />
@@ -27,6 +26,8 @@
         <logout logout-url="/logout.xhtml" success-handler-ref="logoutHandler"/>
 
         <intercept-url pattern="/home.xhtml" access="isAuthenticated()"/>
+        <intercept-url pattern="/web/dataget/**" access="permitAll"/>
+        <intercept-url pattern="/web/**" access="isAuthenticated()"/>
         <intercept-url pattern="/sysadmin/**" access="hasRole('SuperAdmin')"/>
         <intercept-url pattern="/admin/**" access="hasRole('SuperAdmin')" />
 
