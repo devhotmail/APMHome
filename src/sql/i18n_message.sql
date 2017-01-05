@@ -75,6 +75,7 @@ INSERT INTO "i18n_message" VALUES (71, 'label','DuplicateMsgKey', '编码 "%s" �
 INSERT INTO "i18n_message" VALUES (72, 'message','PasswordNotMatch', '输入的密码不匹配','Password not match',null,-1);
 INSERT INTO "i18n_message" VALUES (73, 'label', 'resetPassword', '重置密码', 'Reset Password', NULL, -1);
 INSERT INTO "i18n_message" VALUES (74, 'label', 'continue', '跳过', 'Continue', NULL, -1);
+INSERT INTO "i18n_message" VALUES (75, 'label', 'QRCode', '二维码', 'QRCode', NULL, -1);
 
 
 -- menu item names  ( id from 200 to  399)
