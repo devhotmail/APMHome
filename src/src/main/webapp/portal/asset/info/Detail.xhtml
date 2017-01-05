@@ -117,7 +117,7 @@
                     <div class="ui-g-4">
                         <p:galleria value="#{assetInfoController.getAttachList(assetInfoController.selected.id,1)}" var="attach" panelWidth="300" panelHeight="200" showCaption="false" rendered="#{!empty assetInfoController.getAttachList(assetInfoController.selected.id,1)}">
                             <p:graphicImage  value="#{pictureService.getImage()}"  >
-                            <f:param name="pictureId" value="#{attach.fileId}" />
+                                <f:param name="pictureId" value="#{attach.fileId}" />
                             </p:graphicImage>
                         </p:galleria>
                     </div>
@@ -460,15 +460,16 @@
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>
-<!--                <p:tab title="#{fieldMsg.fieldValue('attachmentType', 4)}">
-                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="ordered" emptyMessage="#{msg.noRecordFound}">
-                #{fileitem.name}
-                <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" title="#{msg.download}" class="popupIconButton">
-                    <p:fileDownload value="#{attachmentFileService.getFile(fileitem.fileId)}" />
-                </p:commandButton>
-            </p:dataList>
-        </p:tab>-->
+                <p:tab title="#{msg.QRCode}" rendered="false">
+                    <p:barcode value="0123456789" type="qr" height="200" format="png"/>
+                </p:tab>
             </p:tabView>
         </h:form>
+        
+        <p:fieldset style="margin-bottom:20px">
+            <h:panelGroup >
+                <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="List?faces-redirect=true" immediate="true"  update=":growl" style="float:left"/>
+            </h:panelGroup>
+        </p:fieldset>
     </ui:define>
 </ui:composition>
