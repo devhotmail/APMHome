@@ -19,6 +19,7 @@ import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.joda.time.DateTime;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.data.FilterEvent;
@@ -94,8 +95,6 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
         selected = null;
         super.onFilter(event); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
 
     @Override
     public List<AssetContract> getItemList() {
@@ -122,6 +121,19 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
             super.save();
             saveDepreciation();
             cancel();
+        }
+    }
+
+    @Override
+    public void onBeforeSave(AssetContract object) {
+        DateTime temp;
+        if (null != object.getStartDate()) {
+            temp = new DateTime(object.getStartDate());
+            object.setStartDate(temp.plusHours(12).toDate());
+        }
+        if (null != object.getEndDate()) {
+            temp = new DateTime(object.getEndDate());
+            object.setEndDate(temp.plusHours(12).toDate());
         }
     }
 

@@ -32,6 +32,7 @@ import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
+import org.joda.time.DateTime;
 
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
@@ -180,6 +181,31 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void onBeforeSave(AssetInfo object) {
         OrgInfo org = orgDao.findById(object.getClinicalDeptId());
         object.setClinicalDeptName(org.getName());
+        DateTime temp;
+        if (null != object.getManufactDate()) {
+            temp = new DateTime(object.getManufactDate());
+            object.setManufactDate(temp.plusHours(12).toDate());
+        }
+        if (null != object.getPurchaseDate()) {
+            temp = new DateTime(object.getPurchaseDate());
+            object.setPurchaseDate(temp.plusHours(12).toDate());
+        }
+        if (null != object.getArriveDate()) {
+            temp = new DateTime(object.getArriveDate());
+            object.setArriveDate(temp.plusHours(12).toDate());
+        }
+        if (null != object.getInstallDate()) {
+            temp = new DateTime(object.getInstallDate());
+            object.setInstallDate(temp.plusHours(12).toDate());
+        }
+        if (null != object.getWarrantyDate()) {
+            temp = new DateTime(object.getWarrantyDate());
+            object.setWarrantyDate(temp.plusHours(12).toDate());
+        }
+        if (null != object.getTerminateDate()) {
+            temp = new DateTime(object.getTerminateDate());
+            object.setTerminateDate(temp.plusHours(12).toDate());
+        }
     }
 
     @Override
@@ -221,8 +247,9 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public UserAccount getOwner() {
         return owner;
     }
-    public List<OrgInfo> getOwnerOrgList(){
-         return ownerOrgList;
+
+    public List<OrgInfo> getOwnerOrgList() {
+        return ownerOrgList;
     }
 
     public void setOwner(UserAccount owner) {
