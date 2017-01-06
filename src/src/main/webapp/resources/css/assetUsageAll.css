@@ -516,6 +516,13 @@ td.jqplot-table-legend{text-align:left}
 .chart-device-stat.vertical .jqplot-table-legend-label:before{content:'';display:block;width:100px;position:absolute;right:0;top:0;height:1px;background-color:#7c7c84}
 .chart-device-stat.vertical tr.jqplot-table-legend:last-child .jqplot-table-legend-label:before{display:none}
 .chart-device-stat.vertical table.jqplot-table-legend{margin:65px 0 0 0;height:100%;position:absolute!important;right:auto!important;left:-30px!important;background:0 0;margin-right:0}
+.usage-sum-right .ui-md-4{text-align:center}
+.usage-sum-right .usage-sum-wrapper{display:inline-block;text-align:left}
+.usage-sum-right .usage-sum-text{position:relative}
+.usage-sum-right .usage-sum-text::before{display:block;content:'';position:absolute;right:100%;right:calc(100% + 5px);top:50%;-webkit-transform:translate(0,-50%);transform:translate(0,-50%);width:12px;height:12px}
+.usage-sum-right .ui-md-4:nth-child(1) .usage-sum-text::before{background-color:#b6c3cb}
+.usage-sum-right .ui-md-4:nth-child(2) .usage-sum-text::before{background-color:#5da5da}
+.usage-sum-right .ui-md-4:nth-child(3) .usage-sum-text::before{background-color:#f07e6e}
 .chart-device-stat{height:50px}
 .chart-device-stat .jqplot-axis.jqplot-xaxis,.chart-device-stat .jqplot-axis.jqplot-yaxis,.chart-device-stat .jqplot-title{display:none}
 .chart-device-stat .jqplot-point-label{position:relative;color:transparent}
