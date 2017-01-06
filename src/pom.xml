@@ -664,7 +664,7 @@
                 <executions>
                       <execution>
                         <id>about</id>
-                        <phase>package</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                              <goal>exec</goal>
                         </goals>
@@ -755,7 +755,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1-beta-1</version>
+                <version>2.6</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
