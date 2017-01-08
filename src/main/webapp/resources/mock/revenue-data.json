@@ -1,0 +1,42 @@
+{
+  "name": "总收入",
+  "revenue": 180,
+  "margin": 100,
+  "children": [
+    {
+      "name": "MRI",
+      "revenue": 35,
+      "margin": 25
+    },
+    {
+      "name": "CT",
+      "revenue": 30,
+      "margin": 22
+    },
+    {
+      "name": "DR",
+      "revenue": 25,
+      "margin": 18
+    },
+    {
+      "name": "超声",
+      "revenue": 20,
+      "margin": 15
+    },
+    {
+      "name": "心血管照影",
+      "revenue": 17,
+      "margin": 10
+    },
+    {
+      "name": "肠胃X光机",
+      "revenue": 12,
+      "margin": 6
+    },
+    {
+      "name": "乳腺仪",
+      "revenue": 8,
+      "margin": 4
+    }
+  ]
+}
