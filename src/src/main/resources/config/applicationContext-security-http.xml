@@ -17,6 +17,7 @@
     <http pattern="/login.faces*" security="none" />
     <http pattern="/error/*" security="none" />
     <http pattern="/about.html" security="none" />
+    <http pattern="/web/*" security="none" />
 	
     <beans:bean name="logoutHandler" class="com.ge.apm.view.sysutil.LogoutHandler" 
                 p:logoutSuccessUrl="/login.xhtml"/>
@@ -30,7 +31,8 @@
         <intercept-url pattern="/web/dataget/**" access="permitAll"/>
         <intercept-url pattern="/web/**" access="isAuthenticated()"/>
         <intercept-url pattern="/sysadmin/**" access="hasRole('SuperAdmin')"/>
-        <intercept-url pattern="/admin/**" access="hasRole('SuperAdmin')" />
+        <intercept-url pattern="/admin/**" access="hasRole('SuperAdmin')" />	
+        <intercept-url pattern="/web/**" access="permitAll" />	
 
         <!-- 首页 -->
         <intercept-url pattern="/homeHead**" access="hasAnyRole('SuperAdmin','HospitalHead')"/>
