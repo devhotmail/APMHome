@@ -1,0 +1,65 @@
+@import "predix";
+
+.layout-compact .layout-wrapper {
+  $menu-width: 150px;
+  $highlight-color: rgba(91, 132, 215, 1);
+
+  &.menu-layout-static .layout-main {
+    margin-left: $menu-width;
+  }
+
+  .layout-menu.layout-menu-dark {
+    $icon-size: 50px;
+    background-color: $black;
+    width: $menu-width;
+
+    /* level2 menu item */
+    ul.ultima-menu ul > li > a {
+      text-align: left;
+      padding: .5rem 1.5rem;
+    }
+
+    /* level1/2 menu item active */
+    ul.ultima-menu li.active-menuitem > a {
+      background-color: transparent;
+      border-right-color: $highlight-color;
+    }
+
+    /* level1 menu icon*/
+    ul.ultima-menu li  i:first-child {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: auto;
+      font-size: 1.8rem;
+      color: $gray7;
+      border: 2px solid $gray7;
+      width: $icon-size;
+      height: $icon-size;
+      text-align: center;
+      vertical-align: middle;
+      border-radius: 50%;
+
+      & + span {
+        padding-top: .5rem;
+      }
+    }
+
+    ul.ultima-menu li > a {
+      text-align: center;
+      border-right: 5px solid transparent;
+
+      &:hover {
+        background-color: transparent;
+        > i:first-child, > span {
+          color: $highlight-color;
+          border-color: $highlight-color;
+        }
+      }
+    }
+
+    ul.ultima-menu li i:last-child {
+      display: none;
+    }
+  }
+}
