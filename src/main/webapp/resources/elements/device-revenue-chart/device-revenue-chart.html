@@ -323,13 +323,24 @@
         }
 
         var gauge_size = d3.interpolate(100, 200);
+        var gauge_color = d3.scaleOrdinal([
+          'rgba(117, 162, 234, 1)',
+          'rgba(140, 211, 199, 1)',
+          'rgba(204, 185, 92, 1)',
+          'rgba(187, 128, 188, 1)',
+          'rgba(128, 177, 211, 1)',
+          'rgba(184, 188, 128, 1)',
+          'rgba(157, 155, 191, 1)',
+          'rgba(152, 186, 145, 1)'
+        ]);
 
-        function renderNode(node, root) {
+        function renderNode(node, i) {
           var config = gaugeDefaultConfig();
           var data = node.data;
           var parent = node.parent;
           var size_scale = parent? data.revenue / parent.data.revenue : 1;
           config.height = config.width = gauge_size(size_scale);
+          config.circleColor = config.waveColor = gauge_color(i);
           config.waveAnimateTime = 5000;
           config.waveHeight = 0.15;
           config.waveOffset = 0.25;
