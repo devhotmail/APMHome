@@ -13,8 +13,7 @@ echo -e "<html>
 </html>" > ./src/main/webapp/about.html
 
 version=1.0
-build=`svn log --limit 1 |awk 'NR==2{print}' |awk '{print $1}'`
-build=${build#*r}
+build=`svn info |grep Revision |awk '{print $2}'`
 
 echo "Version: $version"
 echo "Build: $build"
