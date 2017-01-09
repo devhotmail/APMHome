@@ -38,14 +38,14 @@
             waveCount: 1, // The number of full waves per width of the wave circle.
             waveRiseTime: 1000, // The amount of time in milliseconds for the wave to rise from 0 to it's final height.
             waveAnimateTime: 18000, // The amount of time in milliseconds for a full wave to enter the wave circle.
-            waveRise: false, // Control if the wave should rise from 0 to it's full height, or start at it's full height.
+            waveRise: true, // Control if the wave should rise from 0 to it's full height, or start at it's full height.
             waveHeightScaling: true, // Controls wave size scaling at low and high fill percentages. When true, wave height reaches it's maximum at 50% fill, and minimum at 0% and 100% fill. This helps to prevent the wave from making the wave circle from appear totally full or empty when near it's minimum or maximum fill.
             waveAnimate: true, // Controls if the wave scrolls or is static.
             waveColor: "#178BCA", // The color of the fill wave.
             waveOffset: 0, // The amount to initially offset the wave. 0 = no offset. 1 = offset of one full wave.
             textVertPosition: .5, // The height at which to display the percentage text withing the wave circle. 0 = bottom, 1 = top.
             textSize: 1, // The relative height of the text to display in the wave circle. 1 = 50%
-            valueCountUp: false, // If true, the displayed value counts up from 0 to it's final value upon loading. If false, the final value is displayed.
+            valueCountUp: true, // If true, the displayed value counts up from 0 to it's final value upon loading. If false, the final value is displayed.
             textColor: "#045681", // The color of the value text when the wave does not overlap it.
             waveTextColor: "#fff" // The color of the value text when the wave overlaps it.
           };
@@ -118,7 +118,7 @@
           // The clipping area size is the height of the fill circle + the wave height, so we position the clip wave
           // such that the it will overlap the fill circle at all when at 0%, and will totally cover the fill
           // circle at 100%.
-          .range([ ( fillCircleMargin + fillCircleRadius * 2 + waveHeight ), ( fillCircleMargin - waveHeight )])
+          .range([fillCircleMargin + fillCircleRadius * 2 + waveHeight, fillCircleMargin-waveHeight])
           .domain([0, 1]);
           var waveAnimateScale = d3.scaleLinear()
           .range([0, waveClipWidth - fillCircleRadius * 2]) // Push the clip area one full wave then snap back.
@@ -188,12 +188,18 @@
           // Make the value count up.
           if (config.valueCountUp) {
             var textTween = function() {
-              var i = d3.interpolate(this.textContent, textFinalValue);
-              return function(t) { this.textContent = textFormat(i(t)); }
+              var textStartValue = this.textContent.match(/\d+/)[0];
+              var node = this;
+              var i = d3.interpolate(parseInt(textStartValue), parseInt(textFinalValue));
+              return function(t) {
+                node.textContent = textFormat(i(t));
+              }
             };
+
             text1.transition()
             .duration(config.waveRiseTime)
             .tween("text", textTween);
+
             text2.transition()
             .duration(config.waveRiseTime)
             .tween("text", textTween);
@@ -201,11 +207,13 @@
           // Make the wave rise. wave and waveGroup are separate so that horizontal and vertical movement can be controlled independently.
           var waveGroupXPosition = fillCircleMargin + fillCircleRadius * 2 - waveClipWidth;
           if (config.waveRise) {
-            waveGroup.attr('transform', 'translate(' + waveGroupXPosition + ',' + waveRiseScale(0) + ')')
+            waveGroup
+            .attr('transform', 'translate(' + waveGroupXPosition + ',' + waveRiseScale(0) + ')')
             .transition()
             .duration(config.waveRiseTime)
             .attr('transform', 'translate(' + waveGroupXPosition + ',' + waveRiseScale(fillPercent) + ')')
-            .on("start", function() { wave.attr('transform', 'translate(1,0)'); }); // This transform is necessary to get the clip wave positioned correctly when waveRise=true and waveAnimate=false. The wave will not position correctly without this, but it's not clear why this is actually necessary.
+            // This transform is necessary to get the clip wave positioned correctly when waveRise=true and waveAnimate=false. The wave will not position correctly without this, but it's not clear why this is actually necessary.
+            .on("start", function() { wave.attr('transform', 'translate(1,0)'); });
           } else {
             waveGroup.attr('transform', 'translate(' + waveGroupXPosition + ',' + waveRiseScale(fillPercent) + ')');
           }
@@ -237,7 +245,9 @@
               }
               var textTween = function() {
                 var i = d3.interpolate(this.textContent, parseFloat(value).toFixed(2));
-                return function(t) { this.textContent = textRounderUpdater(i(t)); }
+                return function(t) {
+                  this.textContent = textRounderUpdater(i(t));
+                }
               };
               text1.transition()
               .duration(config.waveRiseTime)
@@ -322,10 +332,8 @@
           config.height = config.width = gauge_size(size_scale);
           config.waveAnimateTime = 5000;
           config.waveHeight = 0.15;
-          config.waveAnimate = false;
           config.waveOffset = 0.25;
           config.maxValue = data.revenue;
-          // TODO: gauge size depends on revenue
           renderGauge(this, data.margin, config);
         }
 
