@@ -75,14 +75,14 @@ public class DataService {
     
     @Transactional
     public String postData(String tablename, List<Map> list) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        if(tablename == null) return "{code:1,msg:请输入表名}";
-        if (list == null || list.isEmpty()) return "{code:1,msg:无数据保存}";
+        if(tablename == null) return "{\"code\":\"1\",\"msg\":\"请输入表名\"}";
+        if (list == null || list.isEmpty()) return "{\"code\":\"1\",\"msg\":\"无数据保存\"}";
         String tableName = tablename.toLowerCase();
         String talbeClassName = "com.ge.apm.domain." + tabelNameToClassName(tableName);
         String daoName = "com.ge.apm.dao." + tabelNameToClassName(tableName) + "Repository";
         Class<?> dao = getDao(daoName);
         Class<?> table = getDao(talbeClassName);
-        if (dao == null || table == null) return "{code:1,msg:保存失败}";
+        if (dao == null || table == null) return "{\"code\":\"1\",\"msg\":\"保存失败\"}";
         List saveList = new ArrayList();
         for (int i=0; i<list.size();i++){
             Object obj = table.newInstance();
@@ -90,12 +90,12 @@ public class DataService {
             saveList.add(obj);
         }
         dao.getMethod("save", Iterable.class).invoke(WebUtil.getBean(dao), saveList);
-        return "{code:0,msg:保存成功}";//成功
+        return "{\"code\":\"0\",\"msg\":\"保存成功\"}";//成功
     }
     
     public Object postDirectData(String tablename, List<Map> list) {
-        if(tablename == null) return "{code:1,msg:请输入表名}";
-        if (list == null || list.isEmpty()) return "{code:1,msg:无数据保存}";
+        if(tablename == null) return "{\"code\":\"1\",\"msg\":\"请输入表名\"}";
+        if (list == null || list.isEmpty()) return "{\"code\":\"1\",\"msg\":\"无数据保存\"}";
         String tableName = tablename.toLowerCase();
         String talbeClassName = "com.ge.apm.domain." + tabelNameToClassName(tableName);
         Class<?> table = getDao(talbeClassName);
@@ -121,11 +121,11 @@ public class DataService {
         } catch(Exception ex) {
             em.getTransaction().rollback();
             Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
-            return "{code:1,msg:保存失败}";//失败
+            return "{\"code\":\"1\",\"msg\":\"保存失败\"}";//失败
         } finally{
             em.close();
         }
-        return "{code:0,msg:保存成功}";//成功
+        return "{\"code\":\"0\",\"msg\":\"保存成功\"}";//成功
     }
     
     private String tabelNameToClassName(String tableName) {
