@@ -29,10 +29,10 @@
 
         <intercept-url pattern="/home.xhtml" access="isAuthenticated()"/>
         <intercept-url pattern="/web/dataget/**" access="permitAll"/>
+        <intercept-url pattern="/web/datapost/**" access="permitAll"/>
         <intercept-url pattern="/web/**" access="isAuthenticated()"/>
         <intercept-url pattern="/sysadmin/**" access="hasRole('SuperAdmin')"/>
         <intercept-url pattern="/admin/**" access="hasRole('SuperAdmin')" />	
-        <intercept-url pattern="/web/**" access="permitAll" />	
 
         <!-- 首页 -->
         <intercept-url pattern="/homeHead**" access="hasAnyRole('SuperAdmin','HospitalHead')"/>
