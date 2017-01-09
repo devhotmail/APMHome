@@ -729,7 +729,7 @@
                         <retainDays>3</retainDays>
                         <append>true</append>
                         <extended>false</extended>
-                        <logTimeZone>GMT</logTimeZone>
+                        <logTimeZone>GMT+8:00</logTimeZone>
                     </requestLog>
                 </configuration>
             </plugin>

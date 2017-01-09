@@ -1,14 +1,25 @@
-<ui:composition 
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:p="http://primefaces.org/ui">
-    
-    <div class="footer card clearfix" style="background: transparent;">
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="footer card clearfix" style="background: transparent;">
         <span class="footer-text-right">
             <span style="color: white;" class="ui-icon ui-icon-copyright"></span>
             <span style="color: white;">GE Healthcare All Rights Reserved</span>
         </span>
-    </div>
+	</div>
+	<c:if test="${analyticsController.gaEnabled}">
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		  ga('create', '${analyticsController.gaId}', 'auto');
+		  ga('send', 'pageview');
+		</script>
+	</c:if>
 </ui:composition>

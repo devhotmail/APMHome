@@ -9,5 +9,6 @@ applications:
 - name: geapmprd 
   env:
     JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+    WEB_ANALYTICS_CFG: 'ga:{enabled:false, id:UA-89919537-1}'
   services:
   - pg-prd
