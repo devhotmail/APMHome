@@ -18,6 +18,6 @@ build=`svn info |grep Revision |awk '{print $2}'`
 echo "Version: $version"
 echo "Build: $build"
 
-sed -i 's/$version/'"$version"'/'  ./src/main/webapp/about.html
-sed -i 's/$build/'"$build"'/' ./src/main/webapp/about.html
+echo `sed  's/$version/'"$version"'/'  ./src/main/webapp/about.html` > ./src/main/webapp/about.html
+echo `sed  's/$build/'"$build"'/' ./src/main/webapp/about.html` > ./src/main/webapp/about.html
 
