@@ -65,6 +65,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     private AssetDepreciationService assetDepreciationService;
 
+    Boolean terminate;
+
     @Override
     protected void init() {
         dao = WebUtil.getBean(AssetInfoRepository.class);
@@ -74,6 +76,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         orgDao = WebUtil.getBean(OrgInfoRepository.class);
         uuaService = WebUtil.getBean(UaaService.class);
         assetDepreciationService = WebUtil.getBean(AssetDepreciationService.class);
+        terminate = Boolean.valueOf(WebUtil.getRequestParameter("terminate"));
         this.filterBySite = true;
         if (!userContextService.hasRole("MultiHospital")) {
             this.filterByHospital = true;
@@ -112,7 +115,12 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         if (searchFilters == null) {
             searchFilters = new ArrayList<SearchFilter>();
         }
-        searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, true));
+
+        if (terminate) {
+            this.searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, false));
+        } else {
+            searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, true));
+        }
     }
 
     public void setFileService(AttachmentFileService fileService) {
@@ -238,10 +246,14 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         this.save();
         assetDepreciationService.saveAssetDerpeciation(selected);
         if (resultStatus) {
-            return "List?faces-redirect=true";
+            return getListPageLink();
         } else {
             return "";
         }
+    }
+    
+    public String getListPageLink(){
+        return "List?faces-redirect=true" + (this.isTerminate()?"&terminate=true":"") ;
     }
 
     public UserAccount getOwner() {
@@ -484,6 +496,13 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     public void setOperation(String operation) {
         this.operation = operation;
+    }
+
+    public Boolean isTerminate() {
+        if(null!= selected){
+            return !selected.getIsValid();
+        }
+        return terminate;
     }
 
 }
