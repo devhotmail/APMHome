@@ -12,3 +12,4 @@ applications:
     WEB_ANALYTICS_CFG: 'ga:{enabled:true, id:UA-89919537-1}'
   services:
   - pg-prd
+  - geapmlog1
