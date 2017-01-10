@@ -18,11 +18,8 @@
     (
       function() {
         function project(x, radius) {
-          var a = radius, b = radius * .5
-          var angle = (
-              x - 180
-            ) / 180 * Math.PI;
-          return [a * Math.cos(angle), b * Math.sin(angle)];
+          var angle = ( x - 180 ) / 180 * Math.PI;
+          return [radius * Math.cos(angle), radius * Math.sin(angle)];
         }
 
         function gaugeDefaultConfig() {
@@ -345,7 +342,22 @@
           return new GaugeUpdater();
         }
 
-        var gauge_size = d3.interpolate(100, 200);
+        function nodeRadius(node) {
+          var data = node.data;
+          var parent = node.parent;
+          if(parent){
+            return gauge_size(data.revenue / parent.data.revenue);
+          }
+          return ROOT_RADIUS;
+        }
+
+        // how much degree of the arc is off screen
+        var START_ANGEL = 45;
+        // how much degree to separate adjacent orbit items
+        var MARGIN_ANGEL = 1;
+        // total revenue size
+        var ROOT_RADIUS = 80;
+        var gauge_size = d3.interpolate(20, 200);
         var gauge_color = d3.scaleOrdinal([
           'rgba(117, 162, 234, 1)',
           'rgba(140, 211, 199, 1)',
@@ -360,9 +372,7 @@
         function renderNode(node, i) {
           var config = gaugeDefaultConfig();
           var data = node.data;
-          var parent = node.parent;
-          var size_scale = parent? data.revenue / parent.data.revenue : 1;
-          config.height = config.width = gauge_size(size_scale);
+          config.height = config.width = nodeRadius(node)*2;
           config.circleColor = config.waveColor = gauge_color(i);
           config.waveAnimateTime = 5000;
           config.waveHeight = 0.15;
@@ -371,6 +381,43 @@
           config.node = node;
 
           renderGauge(this, data.margin, config);
+        }
+
+        function layout_orbit(root, options) {
+          var nodes = root.children;
+          var margin = options.margin;
+          var startDeg = options.start || 0;
+          var endDeg = options.end || 180;
+          var deg = startDeg;
+          var lastDeg = 0;
+          var thisDeg = 0;
+          var max = 0;
+          // item radius v.s. orbit radius
+          var r, R = options.radius, degEach;
+          for (var i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
+            r = nodeRadius(node);
+            thisDeg = Math.atan(r / R) * (
+              180 / Math.PI
+              );
+
+            node.x = deg + thisDeg + margin;
+            node.y = R;
+
+            // degree increments
+            deg += ( thisDeg + margin ) * 2;
+
+            if (deg < endDeg) {
+              max++;
+            } else {
+              break;
+            }
+          }
+          // layout the root
+          root.x = 90;
+          root.y = Math.sin(START_ANGEL * Math.PI / 180) * R;
+          root.children = root.children.slice(0, max);
+          console.log('layout totally %s items', root.children.length)
+          return root;
         }
 
         Polymer({
@@ -390,27 +437,33 @@
             var svg = d3.select("svg"),
               width = +svg.attr("width"),
               height = +svg.attr("height"),
-              radius = width / 2;
+              radius = width / 2 + 150,
             svg = svg.append("g").attr("transform",
               "translate(" + (
                 width / 2
               ) + "," + (
-                height / 2
+                height + Math.sin(START_ANGEL * Math.PI/180) * radius - 100
               ) + ")"
             );
+            var tree = layout_orbit(root,
+              {
+                start: START_ANGEL,
+                end: 180 - START_ANGEL,
+                radius: radius,
+                margin: MARGIN_ANGEL
+              });
 
-            var tree = d3.tree().size([180, radius - 100]);
-            tree(root);
             var link = svg.selectAll(".link")
-            .data(root.descendants().slice(1))
+            .data(tree.descendants().slice(1))
             .enter().append("path")
             .attr("class", "link")
             .attr("d", function(d) {
               return "M" + project(d.x, d.y)
                 + "L" + project(d.parent.x, d.parent.y);
             });
+
             var node = svg.selectAll(".node")
-            .data(root.descendants())
+            .data(tree.descendants())
             .enter().append("g")
             .attr("class", function(d) {
               return "node" + (
