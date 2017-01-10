@@ -83,13 +83,17 @@ public class DataService {
         Class<?> dao = getDao(daoName);
         Class<?> table = getDao(talbeClassName);
         if (dao == null || table == null) return "{\"code\":\"1\",\"msg\":\"保存失败\"}";
-        List saveList = new ArrayList();
-        for (int i=0; i<list.size();i++){
-            Object obj = table.newInstance();
-            BeanUtils.populate(obj, list.get(i));
-            saveList.add(obj);
+        int fortimes = list.size()/50 +1;//循环次数
+        for (int j=0; j<fortimes; j++) {
+            List<Map> subList = list.subList(j*50, (j+1)*50<list.size()?(j+1)*50:list.size());
+            List saveList = new ArrayList();
+            for (int i=0; i<subList.size();i++){
+                Object obj = table.newInstance();
+                BeanUtils.populate(obj, subList.get(i));
+                saveList.add(obj);
+            }
+            dao.getMethod("save", Iterable.class).invoke(WebUtil.getBean(dao), saveList);
         }
-        dao.getMethod("save", Iterable.class).invoke(WebUtil.getBean(dao), saveList);
         return "{\"code\":\"0\",\"msg\":\"保存成功\"}";//成功
     }
     
@@ -103,11 +107,14 @@ public class DataService {
         
         EntityManagerFactory emf = WebUtil.getBean(EntityManagerFactory.class);
         EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Query query = null;
-        try{
-            for (int i=0; i<list.size();i++){
-                Map<String, Object> map = list.get(i);
+        int fortimes = list.size()/50 +1;//循环次数
+        for (int j=0; j<fortimes; j++) {
+            List<Map> subList = list.subList(j*50, (j+1)*50<list.size()?(j+1)*50:list.size());
+            
+            em.getTransaction().begin();
+            Query query = null;
+            for (int i=0; i<subList.size();i++){
+                Map<String, Object> map = subList.get(i);
                 String outColumnStr = "insert into "+ tableName+ " (";
                 String outValueStr = ") values(";
                 String[] strs = insertColumn(fields, map);
@@ -117,12 +124,16 @@ public class DataService {
                 query = em.createNativeQuery(sql);
                 query.executeUpdate();
             }
-            em.getTransaction().commit();
-        } catch(Exception ex) {
-            em.getTransaction().rollback();
-            Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
-            return "{\"code\":\"1\",\"msg\":\"保存失败\"}";//失败
-        } finally{
+            try{
+                em.getTransaction().commit();
+            } catch(Exception ex) {
+                em.getTransaction().rollback();
+                Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
+                em.close();
+                return "{\"code\":\"1\",\"msg\":\"保存失败\"}";//失败
+            } 
+        }
+        if (em != null) {
             em.close();
         }
         return "{\"code\":\"0\",\"msg\":\"保存成功\"}";//成功
