@@ -140,6 +140,7 @@
           .attr('transform', 'translate(' + radius + ',' + radius + ')');
           
           // Text to show current node's name
+          // at least depth over 0
           var node = config.node;
           if (node.parent) {
             var r = gaugeCircleY(radius);
@@ -157,6 +158,7 @@
             })
             .append('text')
             .attr('text-anchor', 'middle')
+            .attr('fill', config.waveColor)
             .text(node.data.name);
           }
 
