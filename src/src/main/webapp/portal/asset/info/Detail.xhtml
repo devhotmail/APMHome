@@ -468,7 +468,7 @@
         
         <p:fieldset style="margin-bottom:20px">
             <h:panelGroup >
-                <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="List?faces-redirect=true" immediate="true"  update=":growl" style="float:left"/>
+                <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="#{assetInfoController.getListPageLink()}" immediate="true"  update=":growl" style="float:left"/>
             </h:panelGroup>
         </p:fieldset>
     </ui:define>
