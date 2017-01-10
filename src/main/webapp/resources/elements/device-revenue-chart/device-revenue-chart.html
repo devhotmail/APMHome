@@ -138,6 +138,27 @@
           .style("stroke", config.circleColor)
           .style("stroke-width", gaugeCircleY(circleThickness))
           .attr('transform', 'translate(' + radius + ',' + radius + ')');
+          
+          // Text to show current node's name
+          var node = config.node;
+          if (node.parent) {
+            var r = gaugeCircleY(radius);
+            var theta = node.x;
+
+            var distance = 25;
+            var _radius = r + distance;
+            var pos = [Math.cos(theta) * _radius, Math.sin(theta) * _radius];
+            if (theta === 90) pos = [0, _radius];
+            if (theta > 90) pos = [-Math.cos(180-theta) * _radius, Math.sin(180-theta) * _radius];
+
+            gauge.append('g')
+            .attr('transform', function() {
+              return 'translate(' + pos.join(',') + ')';
+            })
+            .append('text')
+            .attr('text-anchor', 'middle')
+            .text(node.data.name);
+          }
 
           // Text where the wave does not overlap.
           var text1 = gaugeGroup.append("text")
@@ -345,6 +366,8 @@
           config.waveHeight = 0.15;
           config.waveOffset = 0.25;
           config.maxValue = data.revenue;
+          config.node = node;
+
           renderGauge(this, data.margin, config);
         }
 
