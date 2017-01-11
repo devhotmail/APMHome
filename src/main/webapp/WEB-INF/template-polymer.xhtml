@@ -16,12 +16,10 @@
             <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}" />
         </f:facet>
         <title>GE APM</title>
-        <h:outputScript name="js/nanoscroller.js" library="ultima-layout" />
         <h:outputScript name="js/layout.js" library="ultima-layout" />
         <h:outputScript name="js/ripple.js" library="ultima-layout" />
         <h:outputScript name="js/swipe.js" library="ultima-layout" />
-        <h:outputStylesheet name="css/main.css" />
-        <h:outputStylesheet name="css/menu.css" />
+        <h:outputStylesheet name="css/shell.css" />
         <h:outputScript name="js/main.js" />
         <h:outputScript name="js/primefaces-locale_zh.js" />
 
@@ -36,11 +34,9 @@
     <h:body styleClass="main-body #{guestPreferences.compact ? 'layout-compact' : null}">
         <p:growl id="growl" autoUpdate="true" showDetail="false"  showSummary="true"/>
         <div class="layout-wrapper #{guestPreferences.menuLayout}">
-            <ui:include src="./topbar.xhtml" />
-            <ui:include src="./menu.xhtml" />
+            <ui:include src="./menu2.xhtml" />
             <div class="layout-main">
                 <ui:insert name="content"/>
-                <ui:include src="./footer.xhtml" />
             </div>
         </div>
         

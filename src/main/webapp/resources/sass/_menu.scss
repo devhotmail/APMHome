@@ -3,15 +3,23 @@
 .layout-compact .layout-wrapper {
   $menu-width: 150px;
   $highlight-color: rgba(91, 132, 215, 1);
+  $brand-color: #d1d0d8;
 
   &.menu-layout-static .layout-main {
     margin-left: $menu-width;
   }
 
   .layout-menu.layout-menu-dark {
+    top: 0 !important;
     $icon-size: 50px;
     background-color: $black;
     width: $menu-width;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     /* level2 menu item */
     ul.ultima-menu ul > li > a {
@@ -60,6 +68,34 @@
 
     ul.ultima-menu li i:last-child {
       display: none;
+    }
+  }
+
+  .brand {
+    svg {
+      fill: $brand-color;
+      vertical-align: middle;
+    }
+
+    h1 {
+      color: $brand-color;
+      font-weight: 200;
+    }
+  }
+
+  #menu-button {
+    display: block;
+    text-align: center;
+
+    > .material-icons {
+      color: $brand-color;
+      font-size: 2rem;
+    }
+
+    &:hover {
+      > .material-icons {
+        color: $highlight-color;
+      }
     }
   }
 }
