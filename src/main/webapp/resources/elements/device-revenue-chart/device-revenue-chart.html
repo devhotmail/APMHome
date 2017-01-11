@@ -140,15 +140,33 @@
           // at least depth over 0
           var node = config.node;
           if (node.parent) {
+            var distance = 30;
             var r = gaugeCircleY(radius);
-            var theta = node.x;
-
-            var distance = 25;
             var _radius = r + distance;
-            var pos = [Math.cos(theta) * _radius, Math.sin(theta) * _radius];
-            if (theta === 90) pos = [0, _radius];
-            if (theta > 90) pos = [-Math.cos(180-theta) * _radius, Math.sin(180-theta) * _radius];
 
+            // position according to center of the circle
+            var absolutePos = project(node.x, node.y);
+            var x0 = Math.abs(absolutePos[0]);
+            var y0 = Math.abs(absolutePos[1]);
+
+            // distance tree root center of the circle
+            // the line between these two pointers is vertical
+            var root2Center = Math.sin(START_ANGEL * Math.PI/180) * node.y;
+
+            // position according to tree root node
+            var x = x0;
+            var y = Math.abs(y0 - root2Center);
+
+            var distance2Parent = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+
+            var x0 = x / distance2Parent * _radius;
+            var y0 = y / distance2Parent * _radius;
+
+            var pos = [x0, y0];
+            if (absolutePos[0] === 0) pos = [0, y0];
+            if (absolutePos[0] > 0) pos = [-x0, y0];
+            
+            // draw text to this group
             gauge.append('g')
             .attr('transform', function() {
               return 'translate(' + pos.join(',') + ')';
@@ -445,6 +463,7 @@
                 height + Math.sin(START_ANGEL * Math.PI/180) * radius - 100
               ) + ")"
             );
+
             var tree = layout_orbit(root,
               {
                 start: START_ANGEL,
