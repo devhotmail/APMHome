@@ -7,11 +7,12 @@
                 template="/WEB-INF/template-polymer.xhtml">
 
   <ui:define name="head">
-    <h:outputStylesheet name="css/homeHead.css" />
     <link rel="import" href="elements/device-revenue-chart/device-revenue-chart.html" />
+    <link rel="import" href="elements/device-selector-bar/device-selector-bar.html" />
   </ui:define>
 
   <ui:define name="content">
+    <device-selector-bar></device-selector-bar>
     <device-revenue-chart></device-revenue-chart>
   </ui:define>
 </ui:composition>

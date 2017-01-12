@@ -1,0 +1,52 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="import" href="device-selector-bar-styles.html">
+
+<dom-module id="device-selector-bar">
+  <template>
+    <style include="device-selector-bar-styles"></style>
+    <div class="flex flex--row flex--center">
+      <div class="flex--item u-1/4 text--center">
+        <px-dropdown class="u-mh+" display-value="2017" selected-key="2017">
+          <px-dropdown-content class="px-dropdown-content"
+                               max-cont-character-width="10"
+                               extend-dropdown="true"
+                               extend-dropdown-by="15"
+                               items="[[yearList]]">
+          </px-dropdown-content>
+        </px-dropdown>
+      </div>
+      <div class="flex--item u-3/4">
+        <div class="btn-group">
+          <template is="dom-repeat" items="[[groupTabs]]">
+            <input id$="tab-[[index]]" name="group-type" type="radio" value="[[item.val]]">
+            <label for$="tab-[[index]]" class="btn u-mr+">[[item.key]]</label>
+          </template>
+        </div>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'device-selector-bar',
+      properties: {
+        yearList: Array,
+        groupTabs: Array
+      },
+      observers: [],
+      ready: function() {
+        var _this = this;
+        fetch('mock/device-selection-types.json').then(function(res) {
+          return res.json();
+        }).then(function(list) {
+          _this.set('groupTabs', list);
+        });
+        fetch('mock/dropdown-years.json').then(function(res) {
+          return res.json();
+        }).then(function(list) {
+          _this.set('yearList', list);
+        });
+      }
+    });
+  </script>
+</dom-module>
