@@ -24,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
 
 /**
@@ -33,18 +34,23 @@ import webapp.framework.web.WebUtil;
 @Service
 public class DataService {
     
-    public Object getDataRow(String tablename, String page, String size) {
+    public Object getDataRow(String tablename, String page, String size, String hospitalId, String siteId) {
         if (tablename == null) return null;
         String tableName = tablename.toLowerCase();
         String daoName = "com.ge.apm.dao."+tabelNameToClassName(tableName) + "Repository";
         Class<?> dao = getDao(daoName);
         try {
             try {
+                List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
+                if (hospitalId != null && !"".equals(hospitalId))
+                    searchFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, hospitalId));
+                if (siteId != null && !"".equals(siteId))
+                    searchFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, siteId));
                 if (page == null || size == null || "".equals(page) || "".equals(size)) {
-                    return dao.getMethod("findAll").invoke(WebUtil.getBean(dao));
+                    return dao.getMethod("findBySearchFilter", List.class).invoke(WebUtil.getBean(dao), searchFilters);
                 } else {
                     PageRequest pageRequest = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
-                    Page<Object> objPage = (Page<Object>)dao.getMethod("findAll", Pageable.class).invoke(WebUtil.getBean(dao), pageRequest);
+                    Page<Object> objPage = (Page<Object>)dao.getMethod("findBySearchFilter", List.class, Pageable.class).invoke(WebUtil.getBean(dao), searchFilters, pageRequest);
                     return objPage.getContent();
                 }
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {

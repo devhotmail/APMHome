@@ -32,8 +32,10 @@ public class DataGetAndPushController {
     @RequestMapping(value = "/dataget/{tablename}", method = RequestMethod.GET )
     public @ResponseBody Object getDataRow(@PathVariable String tablename, 
             @RequestParam(required=false) String page, 
-            @RequestParam(required=false) String size) {
-        return dataService.getDataRow(tablename, page, size);
+            @RequestParam(required=false) String size,
+            @RequestParam(required=false)  String hospitalId, 
+            @RequestParam(required=false)  String siteId) {
+        return dataService.getDataRow(tablename, page, size, hospitalId, siteId);
     }
     
     @RequestMapping(value = "/dataget/{tablename}/{id}", method = RequestMethod.GET )
