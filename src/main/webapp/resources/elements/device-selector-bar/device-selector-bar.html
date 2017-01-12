@@ -19,7 +19,7 @@
       <div class="flex--item u-3/4">
         <div class="btn-group">
           <template is="dom-repeat" items="[[groupTabs]]">
-            <input id$="tab-[[index]]" name="group-type" type="radio" value="[[item.val]]">
+            <input id$="tab-[[index]]" name="group-type" type="radio" value="[[item.val]]" checked="[[item.selected]]">
             <label for$="tab-[[index]]" class="btn u-mr+">[[item.key]]</label>
           </template>
         </div>
@@ -39,6 +39,7 @@
         fetch('mock/device-selection-types.json').then(function(res) {
           return res.json();
         }).then(function(list) {
+          list[0].selected = true;
           _this.set('groupTabs', list);
         });
         fetch('mock/dropdown-years.json').then(function(res) {
