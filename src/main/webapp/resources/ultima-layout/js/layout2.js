@@ -89,10 +89,10 @@ PrimeFaces.widget.Ultima = PrimeFaces.widget.BaseWidget.extend({
     $(document.body).on('click', function(e) {
       var target = e.target;
       var clickOutside = !$(target).closest('.layout-menu').length;
-      var persistedMenuClosed;
       if (clickOutside) {
-        persistedMenuClosed = +$.cookie('ultima_menu_open') === 0;
-        $this.toggleMenu(false);
+        if(+$.cookie('ultima_menu_open') === 0){
+          $this.toggleMenu(false);
+        }
       }
     });
   },
