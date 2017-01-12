@@ -8,7 +8,7 @@
       <div class="ui-g-12">
         <div class="block">
           <div id="chart" class="chart-container">
-            <svg width$="[[width]]" height$="[[height]]"></svg>
+            <svg id="chartSvg" width$="[[width]]" height$="[[height]]"></svg>
           </div>
         </div>
       </div>
@@ -452,11 +452,11 @@
 
             var root = d3.hierarchy(this.data);
             // layout start
-            var svg = d3.select("svg"),
+            var svg = d3.select(this.$.chartSvg),
               width = +svg.attr("width"),
               height = +svg.attr("height"),
               radius = width / 2 + 150,
-            svg = svg.append("g").attr("transform",
+              svg = svg.append("g").attr("transform",
               "translate(" + (
                 width / 2
               ) + "," + (
