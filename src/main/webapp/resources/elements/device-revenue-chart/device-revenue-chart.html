@@ -421,7 +421,6 @@
           var r, R = options.radius, degEach, scale = radiusScale(R);
           for (var i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
             r = nodeRadius(node) * scale;
-            console.log('gauge size', node.data.name, r);
             thisDeg = Math.atan(r / R) * (
               180 / Math.PI
               );
@@ -444,8 +443,7 @@
           root.y = Math.sin(START_ANGEL * Math.PI / 180) * R - 100;
           root.size = ROOT_RADIUS;
           root.children = root.children.slice(0, max);
-          console.log('layout totally %s items', root.children.length)
-          return root;
+          return deg - startDeg;
         }
 
         // https://github.com/d3/d3-shape/issues/27
@@ -472,14 +470,16 @@
             height: Number
           },
           replot: function() {
+            var _this = this;
+            var _opening = null;
 
-            var root = d3.hierarchy(this.data);
+            var tree = d3.hierarchy(this.data);
             // layout start
             var svg = d3.select(this.$.chartSvg),
               width = +svg.attr("width"),
               height = +svg.attr("height"),
               radius = width / 2 + 150,
-              svg = svg.append("g").attr("transform",
+              rootGroup = svg.append("g").attr("transform",
               "translate(" + (
                 width / 2
               ) + "," + (
@@ -487,7 +487,7 @@
               ) + ")"
             );
 
-            var tree = layout_orbit(root, {
+            layout_orbit(tree, {
               start: START_ANGEL,
               end: 180 - START_ANGEL,
               radius: radius,
@@ -498,7 +498,7 @@
             var nodes = tree.descendants();
             var links = tree.links();
 
-            var link = svg.selectAll('.link')
+            var link = rootGroup.selectAll('.link')
             .data(nodes.slice(1), function(d) {
               return d.data.id;
             });
@@ -521,7 +521,7 @@
             });
 
             // Update the nodes
-            var node = svg.selectAll('g.node')
+            var node = rootGroup.selectAll('g.node')
             .data(nodes, function(d) {
               return d.data.id || (d.data.id = ++i)
             });
@@ -557,12 +557,43 @@
             });
 
             this.scopeSubtree(this.$.chart, true)
+            function resetOrbit1() {
+              // reset to render subtree
+              node.merge(nodeUpdate)
+              .data(tree.descendants())
+              .transition()
+              .duration(DURATION)
+              .attr('transform', function(d) {
+                if (d.parent) {
+                  // recover to original position
+                  return 'translate(' + project(d.x0, d.y0) + ')';
+                } else {
+                  // dont move the position of tree root
+                  return 'translate(' + project(d.x0, d.y0) + ')';
+                }
+              });
+              link.merge(linkUpdate)
+              .data(tree.descendants().slice(1))
+              .transition()
+              .duration(DURATION)
+              .attr('d', function(d) {
+                var source = {
+                  x: d.x0,
+                  y: d.y0
+                };
+                var target = {
+                  x: d.parent.x0,
+                  y: d.parent.y0
+                };
+                return linkStraight(source, target);
+              });
+            }
 
             function handleClick(targetNode) {
               if (targetNode.parent) {
                 // build a new smaller tree layout
                 var new_radius = radius - 200;
-                var new_tree = layout_orbit(root, {
+                layout_orbit(tree, {
                   start: START_ANGEL,
                   end: 180 - START_ANGEL,
                   radius: new_radius,
@@ -571,7 +602,7 @@
                 });
                 // rerender subtree's children
                 node.merge(nodeUpdate)
-                .data(new_tree.descendants())
+                .data(tree.descendants())
                 .transition()
                 .duration(DURATION)
                 .attr('transform', function(d) {
@@ -581,10 +612,16 @@
                     // dont move the position of tree root
                     return 'translate(' + project(d.x0, d.y0) + ')';
                   }
+                })
+                .on('end', function(d) {
+                  // when this opening node is in position.
+                  if(d.data.id === targetNode.data.id){
+                    _opening = openNode(targetNode);
+                  }
                 });
 
                 link.merge(linkUpdate)
-                .data(new_tree.descendants().slice(1))
+                .data(tree.descendants().slice(1))
                 .transition()
                 .duration(DURATION)
                 .attr('d', function(d) {
@@ -596,39 +633,160 @@
                   return linkStraight(source, target);
                 });
               } else {
-                // reset to render subtree
-                node.merge(nodeUpdate)
-                .data(tree.descendants())
-                .transition()
-                .duration(DURATION)
-                .attr('transform', function(d) {
-                  if (d.parent) {
-                    // recover to original position
-                    return 'translate(' + project(d.x0, d.y0) + ')';
-                  } else {
-                    // dont move the position of tree root
-                    return 'translate(' + project(d.x0, d.y0) + ')';
-                  }
-                });
 
-                link.merge(linkUpdate)
-                .data(tree.descendants().slice(1))
-                .transition()
-                .duration(DURATION)
-                .attr('d', function(d) {
-                  var source = {
-                    x: d.x0,
-                    y: d.y0
-                  };
-                  var target = {
-                    x: d.parent.x0,
-                    y: d.parent.y0
-                  };
-                  return linkStraight(source, target);
-                });
+                // check if there's a 2nd orbit now
+                if (_opening) {
+                  _opening.then(function(closeNode) {
+                    closeNode().then(resetOrbit1);
+                  })
+                } else {
+                  resetOrbit1();
+                }
               }
             }
+
+            function openNode(node) {
+              // check node already opened
+              if(_this.$.chartSvg.querySelector('#tree--' + node.data.id)) {
+                return Promise.resolve(false);
+              }
+
+              return _this.handleRequestNode(node).then(function layoutOrbit2(data) {
+                var subTree = d3.hierarchy(data);
+                subTree.data = node.parent.data;
+                svg.select('.orbit2').remove();
+
+                var subGroup =
+                  svg.insert("g", ':first-child')
+                  .attr('class', 'orbit2')
+                  .attr('id', 'tree--'+node.data.id)
+                  .attr("transform",
+                  "translate(" + (
+                    width / 2
+                  ) + "," + (
+                    height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200
+                  ) + ")"
+                );
+
+                // calc start angle
+                var arcDeg = layout_orbit(subTree, {
+                  start: START_ANGEL,
+                  end: 180 - START_ANGEL,
+                  radius: radius,
+                  canvasRadius: width / 2,
+                  margin: MARGIN_ANGEL / 2
+                });
+
+                var startDeg;
+                var parentDeg = node.x - START_ANGEL;
+                var totalDeg = 180 - START_ANGEL * 2;
+                if (arcDeg / 2 < parentDeg) {
+                  startDeg = parentDeg - arcDeg/2;
+                } else if(arcDeg / 2 > parentDeg) {
+                  startDeg = 0;
+                }
+                startDeg += START_ANGEL;
+
+                // calc start angle
+                var arcDeg = layout_orbit(subTree, {
+                  start: startDeg,
+                  end: 180 - START_ANGEL,
+                  radius: radius,
+                  canvasRadius: width / 2,
+                  margin: MARGIN_ANGEL / 2
+                });
+
+                var nodes = subTree.descendants().slice(1);
+                var links = subTree.links();
+                var link = subGroup.selectAll('.link')
+                .data(nodes, function(d) {
+                  return d.data.id;
+                });
+
+                // Enter any new links at the parent's previous position.
+                var linkEnter = link.enter().append('path')
+                .attr('class', 'link')
+                .attr('d', function(d) {
+                  return linkStraight(node, node);
+                });
+
+                var linkUpdate = link.merge(linkEnter)
+                .transition()
+                .duration(DURATION/2)
+                .attr('d', function(d) {
+                  return linkStraight(node, d);
+                });
+
+                var groups = subGroup.selectAll('g.node')
+                .data(nodes, function(d) {
+                  return d.data.id || (
+                      d.data.id = ++i
+                    )
+                });
+
+                var nodeEnter = groups.enter().append("g")
+                .attr("class", function(d) {
+                  return "node" + (
+                      d.children ? " node--internal" : " node--leaf"
+                    );
+                })
+                .attr("transform", function(d) {
+                  return "translate(" + project(node.x, node.y) + ")";
+                })
+                .attr('id', function(d) {
+                  return 'node-' + d.data.id;
+                })
+                .each(renderNode);
+
+                // Transition nodes to their new position.
+                var nodeUpdate = groups.merge(nodeEnter)
+                .transition()
+                .duration(DURATION/2)
+                .attr('transform', function(d) {
+                  return 'translate(' + project(d.x, d.y) + ')';
+                });
+
+                return function closeNode() {
+                  return new Promise(function(resolve, reject) {
+                    // reset to render subtree
+                    groups.merge(nodeUpdate)
+                    .data(subTree.descendants())
+                    .transition()
+                    .duration(DURATION / 2)
+                    .attr('transform', function(d) {
+                      // recover to original position
+                      return 'translate(' + project(node.x, node.y) + ')';
+                    })
+                    .on('end', function(d, i) {
+                      // when orbit 2 is closed
+                      if (i === 0) {
+                        subGroup.remove();
+                        resolve();
+                      }
+                    })
+
+                    link.merge(linkUpdate)
+                    .data(subTree.descendants())
+                    .transition()
+                    .duration(DURATION / 2)
+                    .attr('d', function(d) {
+                      return linkStraight(node, node);
+                    });
+                  });
+                }
+              });
+            }
           },
+          handleRequestNode: function(node) {
+            var nodeId = node.data.id;
+            if(nodeId > 3){
+              nodeId = 2;
+            }
+            return fetch('mock/revenue-data-' + nodeId + '.json').then(function(res) {
+              return  res.json();
+            });
+          },
+
           ready: function() {
             var _this = this;
             var rect = this.$.chart.getBoundingClientRect();
