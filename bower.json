@@ -12,9 +12,6 @@
     "tests"
   ],
   "dependencies": {
-    "es6-promise": "^3.3.1",
-    "imd": "^1.0.0",
-    "fetch": "^2.0.1",
     "inuitcss": "^6.0.0-beta.4",
     "px-colors-design": "~0.2.20",
     "polymer": "^1.7.0",
@@ -29,10 +26,6 @@
     "px-layout-design": "^0.3.19",
     "px-list-bare-design": "^0.2.18",
     "px-buttons-design": "^0.4.38",
-    "px-tables-design": "^0.3.23",
-    "d3": "^4"
-  },
-  "resolutions": {
-    "px-defaults-design": "^1.0.2"
+    "px-tables-design": "^0.3.23"
   }
 }

@@ -161,7 +161,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
             //bigint
     private String SCANTL
             = "SELECT left_table.name, COUNT(right_table), SUM(expose_count) "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND asset_group != 13 AND hospital_id = :#hospitalId) left_table "
             + "LEFT JOIN (SELECT asset_id, expose_count FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY left_table.name "
@@ -177,7 +177,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			//Double
     private String BENCHEXPOTL
             = "SELECT left_table.name, left_table.asset_group, bench "
-            + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND asset_group != 13 AND hospital_id = :#hospitalId) left_table "
             + "LEFT JOIN (SELECT asset_group, SUM(expose_count) / COUNT(DISTINCT(asset_id)) bench FROM asset_info JOIN asset_clinical_record ON asset_info.id = asset_clinical_record.asset_id WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_group) right_table "
             + "ON left_table.asset_group = right_table.asset_group "
             + "ORDER BY left_table.name ";

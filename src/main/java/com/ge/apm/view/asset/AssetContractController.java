@@ -19,8 +19,10 @@ import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.joda.time.DateTime;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.data.FilterEvent;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -81,12 +83,17 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
 
     @Override
     protected Page<AssetContract> loadData(PageRequest pageRequest) {
-        selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
             return dao.findBySearchFilter(this.searchFilters, pageRequest);
         }
+    }
+
+    @Override
+    public void onFilter(FilterEvent event) {
+        selected = null;
+        super.onFilter(event); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -105,18 +112,29 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
 
         if (selected.getEndDate().before(selected.getStartDate())) {
             WebUtil.addErrorMessage(MessageFormat.format(WebUtil.getMessage("shouldEarly"), WebUtil.getMessage("startTime"), WebUtil.getMessage("endTime")));
-            return;
         } else if (null == selectedAsset) {
             WebUtil.addErrorMessage(WebUtil.getMessage("assetName") + WebUtil.getMessage("ValidationRequire"));
-            return;
         } else if (null == selected.getFileId()) {
             WebUtil.addErrorMessage(WebUtil.getMessage("SelectUploadFile"));
-            return;
+        } else {
+            selected.setAssetId(selectedAsset.getId());
+            super.save();
+            saveDepreciation();
+            cancel();
         }
-        selected.setAssetId(selectedAsset.getId());
-        dao.save(selected);
-        saveDepreciation();
-        cancel();
+    }
+
+    @Override
+    public void onBeforeSave(AssetContract object) {
+        DateTime temp;
+        if (null != object.getStartDate()) {
+            temp = new DateTime(object.getStartDate());
+            object.setStartDate(temp.plusHours(12).toDate());
+        }
+        if (null != object.getEndDate()) {
+            temp = new DateTime(object.getEndDate());
+            object.setEndDate(temp.plusHours(12).toDate());
+        }
     }
 
     private void saveDepreciation() {
@@ -129,10 +147,8 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(selected.getEndDate());
         int endMonth = calendar.get(Calendar.YEAR) * 12 + calendar.get(Calendar.MONTH);
-        int endDay = calendar.get(Calendar.DAY_OF_MONTH);
         calendar.setTime(selected.getStartDate());
         int startMonth = calendar.get(Calendar.YEAR) * 12 + calendar.get(Calendar.MONTH);
-        int startDay = calendar.get(Calendar.DAY_OF_MONTH);
         int times = (endMonth - startMonth + 1);
         depre.setDeprecateAmount(selected.getContractAmount() / times);
         calendar.set(Calendar.DAY_OF_MONTH, 1);

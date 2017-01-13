@@ -45,6 +45,7 @@
                             <p:menuitem id="um06" value="#{msg.AssetValueAnalysis}" rendered="false" outcome="/empty"/>
                             <p:menuitem id="um07" value="#{msg.AssetContractMgmt}"  outcome="/portal/asset/contract/List"/>
                             <p:menuitem id="um08" value="#{msg.SupplierMgmt}" outcome="/portal/supplier/List.xhtml"/>
+                            <p:menuitem id="um081" value="#{msg.TerminatedAsset}" outcome="/portal/asset/info/List.xhtml?terminate=true"/>
                         </p:submenu>
                         <p:submenu id="um09" label="#{msg.WorkOrderMgmt}" icon="fa fa-wrench" rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
                             <p:menuitem id="um10" value="#{msg.ServiceRequestMgmt}" outcome="/portal/wo/woList.xhtml"/>
@@ -93,7 +94,7 @@
                             <p:menuitem id="um47" value="#{msg.UserAdmin}" outcome="/admin/uaa/userAccount/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin')}"/>
                             <p:menuitem id="um48" value="#{msg.OrgAdmin}" outcome="/portal/uaa/orgInfo/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin') eq false}"/>
                             <p:menuitem id="um49" value="#{msg.UserAdmin}" outcome="/portal/uaa/userAccount/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin') eq false}"/>
-                            <p:menuitem id="um491" value="#{msg.SupplierMgmt}" outcome="/portal/supplier/List.xhtml"/>
+                            <p:menuitem id="um491" value="#{msg.SupplierMgmt}"  rendered="false" outcome="/portal/supplier/List.xhtml"/>
                             <p:menuitem id="um492" value="#{msg.ChecklistAdmin}" rendered="false" outcome="/portal/insp/checkListList.xhtml"/>
                             <p:menuitem id="um493" value="#{msg.SysCodeConfig}" outcome="/portal/config/FieldCodeTypeConfig.xhtml"/>
                         </p:submenu>
