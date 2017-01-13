@@ -33,12 +33,21 @@ import webapp.framework.web.mvc.ServerEventInterface;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 @ManagedBean
 @ViewScoped
 public class AssetUsageSingleController implements ServerEventInterface {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AssetUsageSingleController.class);
+    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private static final String remote_addr = request.getRemoteAddr();
+    private static final String page_uri = request.getRequestURI();
+    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
+    HashMap<String, Object> sqlParams = new HashMap<>();  
 
 	private static final String deviceScanlg = WebUtil.getMessage("deviceScanlg");
 	private static final String deviceExpolg_1 = WebUtil.getMessage("deviceExpolg_1");
@@ -50,10 +59,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 	private static final String DATA_FORMAT = "yyyy-MM-dd";
 	private static final int HOURS_DAY = 24;
-
-	private int hospitalId = -1;
-	private int clinical_dept_id = -1;
-	private int filter_id = -1;    
+    
 	private int assetId = -1;
 
 	// Dashboard Parameters
@@ -76,15 +82,8 @@ public class AssetUsageSingleController implements ServerEventInterface {
 	private NumberFormat cf = new DecimalFormat(",###.##");
 	private NumberFormat cfint = new DecimalFormat(",###");
 
-	//debug param
-	private long a;
-	private long b;
-
 	@PostConstruct
 	public void init() {
-
-		hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
-		clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
 
 		valueScan = "";
 		valueExpo = "";
@@ -134,7 +133,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		if (FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_id") != null 
 			&& FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_name") != null) {
 
-			filter_id = Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_id"));
+			assetId = Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_id"));
 			assetName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_name");
 			deviceQuery(startDate, endDate, currentDate);
 		}
@@ -142,7 +141,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
         //It's for AssetInfoDetail page, using decrypt Url parameters
         String encodeStr = WebUtil.getRequestParameter("str");
         if (null != encodeStr) {
-            filter_id = Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid"));
+            assetId = Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid"));
             assetName = (String) UrlEncryptController.getValueFromMap(encodeStr, "asset_name");
             deviceQuery(startDate, endDate, currentDate);
 	}
@@ -164,15 +163,14 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 	public void submit() {
 
-		logger.debug("On Submit " + startDate + " to " + endDate);
-		
-        if (!checkInterval(startDate, endDate)) {
-        	logger.debug("Invalid search interval");
-            return;
-        }
-        
 		currentDate = Calendar.getInstance().getTime();
-		deviceQuery(startDate, endDate, currentDate);
+
+        if (!checkInterval(startDate, endDate)) {
+        	sqlParams.put("_sql", "");
+            logger.error("{} {} {} {} \"{}\" {} \"{}\"", remote_addr, site_id, hospital_id, username, page_uri, sqlParams, "Invalid query interval");
+        }
+		else
+			deviceQuery(startDate, endDate, currentDate);
 
 	}
 
@@ -191,7 +189,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 	private String SCANTL
 			= "SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, COUNT(asset_id) count "
 			+ "FROM asset_clinical_record "
-			+ "WHERE asset_id = :#filter_id "
+			+ "WHERE asset_id = :#assetId "
 			+ "AND exam_date BETWEEN :#startDate AND :#endDate "
 			+ "GROUP BY exam_date "
 			+ "ORDER BY exam_date";
@@ -199,27 +197,24 @@ public class AssetUsageSingleController implements ServerEventInterface {
 	private String VALUESCANTL
 			= "SELECT COUNT(asset_id) sum "
 			+ "FROM asset_clinical_record "
-			+ "WHERE asset_id = :#filter_id "
+			+ "WHERE asset_id = :#assetId "
 			+ "AND exam_date BETWEEN :#startDate AND :#endDate "
-			//+ "AND hospital_id = :#hospitalId "
 			+ "GROUP BY asset_id";
 
 			//Double
 	private String EXPOTL
 			= "SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, SUM(expose_count) hours "
 			+ "FROM asset_clinical_record "
-			+ "WHERE asset_id = :#filter_id "
+			+ "WHERE asset_id = :#assetId "
 			+ "AND exam_date BETWEEN :#startDate AND :#endDate "
-			//+ "AND a.hospital_id = :#hospitalId "
 			+ "GROUP BY exam_date "
 			+ "ORDER BY exam_date";
 
 	private String VALUEEXPOTL
 			= "SELECT SUM(expose_count) sum "
 			+ "FROM asset_clinical_record "
-			+ "WHERE asset_id = :#filter_id "
+			+ "WHERE asset_id = :#assetId "
 			+ "AND exam_date BETWEEN :#startDate AND :#endDate "
-			//+ "AND hospital_id = :#hospitalId "
 			+ "GROUP BY asset_id";
 
 			//Integer
@@ -230,18 +225,17 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "CASE WHEN terminate_date IS NULL THEN Date(:#endDate) WHEN Date(:#endDate) < terminate_date THEN Date(:#endDate) ELSE terminate_date END "
 			+ "- CASE WHEN Date(:#startDate) > install_date THEN Date(:#startDate) ELSE install_date END ) serve "
 			+ "FROM asset_info "
-			+ "WHERE id = :#filter_id ";
+			+ "WHERE id = :#assetId ";
 
 			//Integer
 	private String INUSETL
 			= "SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, "
 			+ "SUM(exam_duration)/60 inuse "
 			+ "FROM asset_clinical_record "
-			+ "WHERE asset_id = :#filter_id "
+			+ "WHERE asset_id = :#assetId "
 			+ "AND exam_date BETWEEN :#startDate AND :#endDate "
 			+ "GROUP BY exam_date "
 			+ "ORDER BY exam_date";
-
 
 			//Double
 	private String DTTL
@@ -249,7 +243,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff_total, "
 			+ "EXTRACT(EPOCH FROM confirmed_down_time) today "
 			+ "FROM work_order "
-			+ "WHERE asset_id = :#filter_id "
+			+ "WHERE asset_id = :#assetId "
 			+ "AND confirmed_down_time > :#startDate AND confirmed_up_time < :#endDate "
 			+ "ORDER BY to_char(confirmed_up_time, 'YYYY-MM-DD')";
 
@@ -274,6 +268,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
     public void setStartDate(Date startDate) {
 
         this.startDate = startDate;
+		sqlParams.put("startDate", startDate);
 
     }
 
@@ -285,6 +280,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
     public void setEndDate(Date endDate) {
 
         this.endDate = endDate;
+		sqlParams.put("endDate", endDate);
 
     }
 
@@ -347,6 +343,8 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		ChartSeries cst_scan = new LineChartSeries();
 		cst_scan.setLabel(deviceScanlg);
 
+        sqlParams.put("_sql", SCANTL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);  
 		List<Map<String, Object>> rs_scan = NativeSqlUtil.queryForList(SCANTL, sqlParams);
 
 		Map<String, Object> rs_scan_map = new HashMap<String, Object>();
@@ -358,12 +356,9 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 		rs_scan.clear();
 
-
 		String idate;
 
 		for (startJoda = new DateTime(startDate); startJoda.isBefore(endJoda); startJoda = startJoda.plusDays(1)) {
-
-
 			idate = startJoda.toString(DATA_FORMAT);
 			if ( rs_scan_map.containsKey(idate)) {
 				cst_scan.set(idate, (Long) rs_scan_map.get(idate));
@@ -371,7 +366,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			else {
 				cst_scan.set(idate, 0);
 			}
-
 		}
 
 		deviceScan.clear();
@@ -387,12 +381,11 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		ChartSeries cst_expo = new LineChartSeries();
 		cst_expo.setLabel(deviceExpolg_1);
 
-
+        sqlParams.put("_sql", EXPOTL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
 		List<Map<String, Object>> rs_expo = NativeSqlUtil.queryForList(EXPOTL, sqlParams);
 
-
 		Map<String, Object> rs_expo_map = new HashMap<String, Object>();
-
 		if (!rs_expo.isEmpty())
 			for (Map<String, Object> item : rs_expo) {
 				rs_expo_map.put((String)item.get("timeline"), item.get("hours") != null ? (Double) item.get("hours") : 0);
@@ -401,7 +394,6 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		rs_expo.clear();
 
 		String idate;
-
 		for (startJoda = new DateTime(startDate); startJoda.isBefore(endJoda); startJoda = startJoda.plusDays(1)) {
 			idate = startJoda.toString(DATA_FORMAT);
 			if ( rs_expo_map.containsKey(idate))
@@ -445,10 +437,11 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 		double diff_total;
 		double today;
-		boolean overday;
 		String timeline;
 		DateTime currentJoda;
 		
+        sqlParams.put("_sql", SERVETL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 		
 		List<Map<String, Object>> rs_serve_hour = NativeSqlUtil.queryForList(SERVETL, sqlParams);
 
 		if (!rs_serve_hour.isEmpty()) {
@@ -462,7 +455,12 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			serve_total = 0;
 		}
 		
+        sqlParams.put("_sql", INUSETL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 			
 		List<Map<String, Object>> rs_inuse = NativeSqlUtil.queryForList(INUSETL, sqlParams);
+
+        sqlParams.put("_sql", DTTL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 			
 		List<Map<String, Object>> rs_dt = NativeSqlUtil.queryForList(DTTL, sqlParams);
 
 		Map<String, Object> rs_inuse_map = new HashMap<String, Object>();
@@ -576,6 +574,8 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		List<Map<String, Object>> rs_panel;
 
 		// Panel Components
+        sqlParams.put("_sql", VALUESCANTL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 		
 		rs_panel = NativeSqlUtil.queryForList(VALUESCANTL, sqlParams);
 
 		if (!rs_panel.isEmpty())
@@ -583,7 +583,8 @@ public class AssetUsageSingleController implements ServerEventInterface {
 		else
 			valueScan = cf.format(0);
 
-
+        sqlParams.put("_sql", VALUEEXPOTL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
 		rs_panel = NativeSqlUtil.queryForList(VALUEEXPOTL, sqlParams);
 
 		if (!rs_panel.isEmpty())
@@ -597,12 +598,12 @@ public class AssetUsageSingleController implements ServerEventInterface {
 
 		HashMap<String, Object> sqlParams = new HashMap<>();
 
-		sqlParams.put("hospitalId", hospitalId);
+		sqlParams.put("hospital_id", hospital_id);
 		sqlParams.put("clinical_dept_id", clinical_dept_id);
 		sqlParams.put("startDate", startDate);
 		sqlParams.put("endDate", endDate);
 		sqlParams.put("currentDate", currentDate);
-		sqlParams.put("filter_id", filter_id);
+		sqlParams.put("assetId", assetId);
 		sqlParams.put("HOURS_DAY", HOURS_DAY);
 
 		devicePanel(startDate, endDate, currentDate, sqlParams);

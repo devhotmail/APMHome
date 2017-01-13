@@ -15,6 +15,9 @@ import webapp.framework.web.mvc.SqlConfigurableChartController;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
 import java.text.NumberFormat;
 import java.time.Year;
 import java.util.*;
@@ -22,13 +25,21 @@ import java.util.*;
 @ManagedBean
 @ViewScoped
 public class AssetForecastController extends SqlConfigurableChartController implements ServerEventInterface {
-//public class AssetForecastController extends SqlConfigurableChartController {
+
+	private static final long serialVersionUID = 1L;
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AssetForecastController.class);
+    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private static final String remote_addr = request.getRemoteAddr();
+    private static final String page_uri = request.getRequestURI();
+    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    //private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
+    HashMap<String, Object> sqlParams = new HashMap<>(); 
 
     // I18n string
     private static final String revenueStr = WebUtil.getMessage("deviceROIlg_1");
     private static final String profitStr = WebUtil.getMessage("deviceROIlg_2");
-
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AssetForecastController.class);
 
     //UI Params
     private String profitForecast = "";
@@ -39,14 +50,10 @@ public class AssetForecastController extends SqlConfigurableChartController impl
     private String assetName    = "全部设备";
     private boolean isSingleAsset  = false;
 
-
-
     private int targetYear = Year.now().getValue();
-    private int hospitalId = 0;
     private String selectedYear = Integer.toString(targetYear);
 
     private String sql;
-    private HashMap<String, Object> sqlParams = new HashMap<>();
 
     private List<Map<String, Object>> monthDep = new ArrayList<>();
 
@@ -65,7 +72,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "sum(d.deprecate_amount) as value " +
                     "from asset_info a, asset_depreciation d " +
                     "where a.id = d.asset_id " +
-                    "and a.hospital_id = :#hospitalId " +
+                    "and a.hospital_id = :#hospital_id " +
                     "group by key;";
 
     private String forecastMonthRevenue =
@@ -75,7 +82,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "where to_char(r.exam_date, 'yyyy-mm') between to_char(now() - interval '2 year', 'yyyy-mm') " +
                     "and to_char(now(), 'yyyy-mm') " +
                     "and a.id = r.asset_id " +
-                    "and a.hospital_id = :#hospitalId " +
+                    "and a.hospital_id = :#hospital_id " +
                     "group by key order by key;";
 
     private String forecastMonthMaint =
@@ -86,7 +93,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "between to_char(now() - interval '2 year', 'yyyy-mm') " +
                     "and to_char(now(), 'yyyy-mm') " +
                     "and a.id = w.asset_id and w.is_closed = true " +
-                    "and a.hospital_id = :#hospitalId " +
+                    "and a.hospital_id = :#hospital_id " +
                     "group by key order by key;";
 
     // SQL for single asset
@@ -95,7 +102,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "sum(d.deprecate_amount) as value " +
                     "from asset_info a, asset_depreciation d " +
                     "where a.id = d.asset_id " +
-                    "and a.hospital_id = :#hospitalId " +
+                    "and a.hospital_id = :#hospital_id " +
                     "and a.id = :#assetId " +
                     "group by key;";
 
@@ -106,7 +113,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "where to_char(r.exam_date, 'yyyy-mm') between to_char(now() - interval '2 year', 'yyyy-mm') " +
                     "and to_char(now(), 'yyyy-mm') " +
                     "and a.id = r.asset_id " +
-                    "and a.hospital_id = :#hospitalId " +
+                    "and a.hospital_id = :#hospital_id " +
                     "and a.id = :#assetId " +
                     "group by key order by key;";
 
@@ -118,7 +125,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "between to_char(now() - interval '2 year', 'yyyy-mm') " +
                     "and to_char(now(), 'yyyy-mm') " +
                     "and a.id = w.asset_id and w.is_closed = true " +
-                    "and a.hospital_id = :#hospitalId " +
+                    "and a.hospital_id = :#hospital_id " +
                     "and a.id = :#assetId " +
                     "group by key order by key;";
 
@@ -134,8 +141,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
     protected void init() {
 
         // init sql params
-        hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
-        sqlParams.put("hospitalId", hospitalId);
+        sqlParams.put("hospital_id", hospital_id);
         sqlParams.put("targetYear", this.targetYear);
 
         queryForecastProfit();
@@ -241,7 +247,6 @@ public class AssetForecastController extends SqlConfigurableChartController impl
         bc.setLegendPosition("ne");
 
         Axis xAxis = bc.getAxis(AxisType.X);
-        Axis yAxis = bc.getAxis(AxisType.Y);
 
         xAxis.setTickAngle(-50);
         xAxis.setTickFormat("%y-%m");
@@ -271,7 +276,6 @@ public class AssetForecastController extends SqlConfigurableChartController impl
             sql = forecastMonthRevenue;
         }
 
-        logger.info("Get 24 months revenue by month");
         forecastRevenue = queryMonthDate(sql, sqlParams, 24, fcStartMonth);
 
         return forecastRevenue;
@@ -284,7 +288,6 @@ public class AssetForecastController extends SqlConfigurableChartController impl
             sql = forecastMonthMaint;
         }
 
-        logger.info("Get 24 months maint cost by month");
         forecastMaint = queryMonthDate(sql, sqlParams, 24, fcStartMonth);
 
         return forecastMaint;
@@ -296,15 +299,18 @@ public class AssetForecastController extends SqlConfigurableChartController impl
         } else {
             sql = depMonth;
         }
-        logger.info("Get 24 months by month");
+
         monthDep = queryMonthDepDate(sql, sqlParams, 24, fcStartMonth);
 
         return monthDep;
     }
 
     private List<Map<String, Object>> queryMonthDepDate(String sql, HashMap<String, Object> sqlParams, int months, DateTime startMonth) {
-        logger.info("Get dep by month, sql: {}, sqlParams: {}", sql, sqlParams);
+
+        sqlParams.put("_sql", sql);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
         List<Map<String, Object>> li = NativeSqlUtil.queryForList(sql, sqlParams);
+
         if (li.size() == 0) {
             li = calcMonthlyDep(0.0, months, startMonth);
         } else {
@@ -314,21 +320,21 @@ public class AssetForecastController extends SqlConfigurableChartController impl
     }
 
     private List<Map<String, Object>> queryMonthDate(String sql, HashMap<String, Object> sqlParams, int months, DateTime startMonth) {
-        logger.info("Get data by month, sql: {}, sqlParams: {}", sql, sqlParams);
+
+        sqlParams.put("_sql", sql);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
         List<Map<String, Object>> li = NativeSqlUtil.queryForList(sql, sqlParams);
+        
         return formatMonthlyData(li, months, startMonth);
     }
 
     public String getProfitForecast() { return profitForecast; }
 
     public String getSelectedYear() {
-        logger.debug("get selectdYear: {}", selectedYear);
-
         return selectedYear;
     }
 
     public void setSelectedYear(String selectedYear) {
-        logger.debug("set selectedYear: {}", selectedYear);
         this.selectedYear = selectedYear;
     }
 
@@ -359,7 +365,6 @@ public class AssetForecastController extends SqlConfigurableChartController impl
 
         // init expected result list
         DateTime targetMonth = startMonth;
-        logger.debug("startMonth: {}.", startMonth);
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM");
         for (int index = 0; index < size; index++) {
             Map<String, Object> item = new HashMap<>();
@@ -369,8 +374,6 @@ public class AssetForecastController extends SqlConfigurableChartController impl
             targetMonth = targetMonth.plusMonths(1);
         }
 
-        logger.debug("result size: {}", result.size());
-        logger.debug("print input result: {}", result);
         for (Map<String, Object> item : li) {
 
             if (result.size() == 0) {
@@ -419,15 +422,11 @@ public class AssetForecastController extends SqlConfigurableChartController impl
             } else {
 
                 // revenue did not equal to zero, let us calculate profit
-                if (dep.get(index).get("key") == null) {
-                    logger.debug("Cannot get key: " + key + "in deprecate sql query.");
-                } else {
+                if (dep.get(index).get("key") != null) {
                     value = value - (Double) dep.get(index).get("value");
                 }
 
-                if (maintenance.get(index).get("key") == null) {
-                    logger.debug("Cannot get key: " + key + "in maintenance sql query.");
-                } else {
+                if (maintenance.get(index).get("key") != null) {
                     value = value - (Double) maintenance.get(index).get("value");
                 }
                 node.put("value", value);
@@ -441,9 +440,11 @@ public class AssetForecastController extends SqlConfigurableChartController impl
         return profit;
     }
 
+    /*
     private List<Map<String, Object>> prepareData(String sql, HashMap<String, Object> sqlParams) {
-        logger.debug(sql);
 
+        sqlParams.put("_sql", sql);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
         List<Map<String, Object>> result = NativeSqlUtil.queryForList(sql, sqlParams);
 
         if (result.size() == 0) {
@@ -460,7 +461,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
 
 
         return result;
-    }
+    }*/
 
     private void drawBar(BarChartModel barChart, String label, List<Map<String, Object>> result) {
         ChartSeries cs = new ChartSeries();
@@ -473,6 +474,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
         barChart.addSeries(cs);
     }
 
+    /*
     private void checkNull(Map<String, Object> item, String targetType) {
         if (item.get("value") == null) {
 
@@ -486,10 +488,10 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     ;
             }
         }
-    }
+    }*/
 
     private void update() {
-        logger.debug("update associated value");
+
         if (isSingleAsset) {
             sqlParams.put("assetId", assetId);
         }
@@ -515,7 +517,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
         this.assetId    = asset.getId();
         this.setAssetName(asset.getName());
         this.isSingleAsset = true;
-        logger.debug("Selected asset Id: {}, asset name: {}", assetId, assetName);
+
         update();
     }
 }

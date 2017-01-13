@@ -7,7 +7,6 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,82 +19,90 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
 import java.util.*;
 
 @ManagedBean
 @ViewScoped
 public final class AssetMaintenanceController implements ServerEventInterface {
 
-    protected final static Logger log = LoggerFactory.getLogger(AssetMaintenanceController.class);
-
-    private final Map<String, Object> parameters;
-
-    private int hospitalId;
+    protected final static Logger logger = LoggerFactory.getLogger(AssetMaintenanceController.class);
+    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private static final String remote_addr = request.getRemoteAddr();
+    private static final String page_uri = request.getRequestURI();
+    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    
+    private static final String checkIntervalNotice_1 = WebUtil.getMessage("checkIntervalNotice_1");
+    private static final String checkIntervalNotice_2 = WebUtil.getMessage("checkIntervalNotice_2");
+    
+    //private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
+    HashMap<String, Object> sqlParams = new HashMap<>(); 
 
     private final int knownCaseTypes = 5;
     private final int knownWorkOrderSteps = 6;
     private final int knownAssetGroups = 13;
 //    private final int knownRooms = 5;
 
-    public AssetMaintenanceController() {
-        this.parameters = new HashMap<>();
-    }
-
+    private Date startDate;
+	private Date endDate;
+	
     @PostConstruct
     public final void init() {
         DateTime today = new DateTime();
-        this.startDate = today.minusYears(1).toDate();
-        this.parameters.put("startDate", this.startDate);
-        this.endDate = today.toDate();
-        this.parameters.put("endDate", this.endDate);
+        startDate = today.minusYears(1).toDate();
+        sqlParams.put("startDate", startDate);
+        endDate = today.toDate();
+        sqlParams.put("endDate", endDate);
 
-        this.hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
-        this.parameters.put("hospitalId", this.hospitalId);
-
-        this.parameters.put("knownCaseTypes", this.knownCaseTypes);
-        this.parameters.put("knownWorkOrderSteps", this.knownWorkOrderSteps);
-        this.parameters.put("knownAssetGroups", this.knownAssetGroups);
-//        this.parameters.put("knownRooms", this.knownRooms);
+        sqlParams.put("hospital_id", hospital_id);
+        sqlParams.put("knownCaseTypes", this.knownCaseTypes);
+        sqlParams.put("knownWorkOrderSteps", this.knownWorkOrderSteps);
+        sqlParams.put("knownAssetGroups", this.knownAssetGroups);
+//        sqlParams.put("knownRooms", this.knownRooms);
 
         this.setAll();
     }
 
     public final void submit() {
-        if (validateDate(this.startDate, this.endDate)) {
+    	
+        if (!checkInterval(startDate, endDate)) {
+        	sqlParams.put("_sql", "");
+            logger.error("{} {} {} {} \"{}\" {} \"{}\"", remote_addr, site_id, hospital_id, username, page_uri, sqlParams, "Invalid query interval");
+        }
+        else
             this.setAll();
-        }
-        else {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, WebUtil.getMessage("checkIntervalNotice_1"), WebUtil.getMessage("checkIntervalNotice_2"));
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
     }
-
-    // region Parameters
-
-    private Date startDate;
 
     public final Date getStartDate() {
         return this.startDate;
     }
 
     public final void setStartDate(Date value) {
-        if (validateDate(value, this.endDate)) {
-            this.startDate = value;
-            this.parameters.put("startDate", this.startDate);
-        }
+        this.startDate = value;
+        sqlParams.put("startDate", this.startDate);
     }
 
-    private Date endDate;
-
+    private boolean checkInterval(Date startDate, Date endDate) {
+        DateTime start = new DateTime(startDate);
+        Interval interval = new Interval(start.plusMonths(1).plusDays(-1), start.plusYears(3).plusDays(1));
+        boolean flag = interval.contains(new DateTime(endDate));
+        if (!flag) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, checkIntervalNotice_1, checkIntervalNotice_2);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+        return flag;
+    }
+    
     public final Date getEndDate() {
         return this.endDate;
     }
 
     public final void setEndDate(Date value) {
-        if (validateDate(this.startDate, value)) {
             this.endDate = value;
-            this.parameters.put("endDate", this.endDate);
-        }
+            sqlParams.put("endDate", this.endDate);
     }
 
     private static final boolean validateDate(Date startDate, Date endDate) {
@@ -116,7 +123,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
 
     public final void setAssetId(int value) {
         this.assetId = value;
-        this.parameters.put("assetId", value);
+        sqlParams.put("assetId", value);
 
         this.setAll();
     }
@@ -330,11 +337,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             extra.put("stepId", scalar);
             List<Map<String, Object>> innerList = this.query(SQL_LIST_ERROR_TIME_PER_STEP, extra);
             PieChartModel chart = new PieChartModel();
-            int total = 0;
-            for (Map<String, Object> map : innerList) {
-                int value = (int)map.get("value");
-                total += value;
-            }
+
             int[] raw = new int[4];
             for (Map<String, Object> map : innerList) {
                 int key = (int)map.get("key");
@@ -543,8 +546,8 @@ public final class AssetMaintenanceController implements ServerEventInterface {
 
     private final List<Map<String, Object>> query(String template, Map<String, Object> extra) {
         // TODO: replace may not be efficient
-        template = StringUtils.replace(template, ":#andHospitalFilterForWorkOrder", "AND work.hospital_id = :#hospitalId");
-        template = StringUtils.replace(template, ":#andHospitalFilterForAssetInfo", "AND asset.hospital_id = :#hospitalId");
+        template = StringUtils.replace(template, ":#andHospitalFilterForWorkOrder", "AND work.hospital_id = :#hospital_id");
+        template = StringUtils.replace(template, ":#andHospitalFilterForAssetInfo", "AND asset.hospital_id = :#hospital_id");
         template = StringUtils.replace(template, ":#andDateFilter", "AND work.request_time BETWEEN :#startDate AND :#endDate");
         if (this.assetId == 0) {
             template = StringUtils.replace(template, ":#andDeviceFilterForWorkOrder", "");
@@ -554,14 +557,19 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             template = StringUtils.replace(template, ":#andDeviceFilterForWorkOrder", "AND work.asset_id = :#assetId");
             template = StringUtils.replace(template, ":#andDeviceFilterForAssetInfo", "AND asset.id = :#assetId");
         }
-        log.info("=> {}", template);
+
         if (extra == null) {
-            return NativeSqlUtil.queryForList(template, this.parameters);
+            sqlParams.put("_sql", template);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);             
+            return NativeSqlUtil.queryForList(template, sqlParams);
         }
         else {
             // TODO: better approach?
-            Map<String, Object> temporary = new HashMap(this.parameters);
+            Map<String, Object> temporary = new HashMap<String, Object>(sqlParams);
             temporary.putAll(extra);
+
+            sqlParams.put("_sql", temporary);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, temporary);  
             return NativeSqlUtil.queryForList(template, temporary);
         }
     }
@@ -581,7 +589,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "        ELSE CAST(0 AS INTEGER) " +
             "END AS scalar " +
             "FROM work_order AS work " +
-            "WHERE work.hospital_id = :#hospitalId" +
+            "WHERE work.hospital_id = :#hospital_id" +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ":#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
             "GROUP BY scalar " +
@@ -602,7 +610,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "          AND step.start_time IS NOT NULL " +
             "          AND step.end_time IS NOT NULL " +
 //            "          AND work.is_closed = true " +
-            "          AND work.hospital_id = :#hospitalId " +
+            "          AND work.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
             "        GROUP BY step.step_id, work.id " +
@@ -621,7 +629,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "FROM work_order AS work," +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            "  AND asset.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospital_id " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "GROUP BY scalar " +
             "ORDER BY count(*) DESC " +
@@ -640,7 +648,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            "  AND asset.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospital_id " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "GROUP BY scalar " +
             "ORDER BY count(*) DESC " +
@@ -653,7 +661,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "SELECT CAST(count(*) AS INTEGER) AS scalar " +
             "FROM work_order AS work " +
             "WHERE TRUE " +
-            "  AND work.hospital_id = :#hospitalId " +
+            "  AND work.hospital_id = :#hospital_id " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ":#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
             ";";
@@ -670,7 +678,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "                ELSE CAST(0 AS INTEGER) " +
             "        END AS key, count(*) AS value " +
             "        FROM work_order AS work " +
-            "        WHERE work.hospital_id = :#hospitalId " +
+            "        WHERE work.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
             "        GROUP BY key " +
@@ -692,7 +700,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "          AND step.start_time IS NOT NULL " +
             "          AND step.end_time IS NOT NULL " +
  //           "          AND work.is_closed = true " +
-            "          AND work.hospital_id = :#hospitalId " +
+            "          AND work.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
             "        GROUP BY step.step_id, work.id " +
@@ -716,7 +724,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "          AND step.start_time IS NOT NULL " +
             "          AND step.end_time IS NOT NULL " +
  //           "          AND work.is_closed = true " +
-            "          AND work.hospital_id = :#hospitalId " +
+            "          AND work.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
             "        GROUP BY step.step_id, work.id " +
@@ -737,7 +745,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "          AND step.step_id = :#stepId " +
             "          AND step.start_time IS NOT NULL " +
             "          AND step.end_time IS NOT NULL " +
-            "          AND work.hospital_id = :#hospitalId " +
+            "          AND work.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
             "        GROUP BY step.step_id, work.id " +
@@ -763,7 +771,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            "  AND work.hospital_id = :#hospitalId " +
+            "  AND work.hospital_id = :#hospital_id " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "GROUP BY key " +
             "ORDER BY key ASC " +
@@ -780,7 +788,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            "  AND asset.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospital_id " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "GROUP BY key " +
             "ORDER BY key ASC " +
@@ -793,14 +801,14 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "FROM ( " +
             "        SELECT * " +
             "        FROM asset_info AS asset " +
-            "        WHERE asset.hospital_id = :#hospitalId " +
+            "        WHERE asset.hospital_id = :#hospital_id " +
             ") AS asset " +
             "LEFT OUTER JOIN ( " +
             "        SELECT asset.id AS key, CAST(count(*) AS INTEGER) AS value " +
             "        FROM work_order AS work, " +
             "             asset_info AS asset " +
             "        WHERE work.asset_id = asset.id " +
-            "          AND asset.hospital_id = :#hospitalId" +
+            "          AND asset.hospital_id = :#hospital_id" +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY asset.id " +
             ") AS temporary " +
@@ -819,10 +827,10 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "  AND asset.clinical_dept_id = ( " +
             "              SELECT asset.clinical_dept_id " +
             "              FROM asset_info AS asset " +
-            "              WHERE asset.hospital_id = :#hospitalId " +
+            "              WHERE asset.hospital_id = :#hospital_id " +
             "              :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
             "      ) " +
-            "  AND asset.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospital_id " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ";";
 
@@ -832,10 +840,10 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "WHERE asset.clinical_dept_id = ( " +
             "              SELECT asset.clinical_dept_id " +
             "              FROM asset_info AS asset " +
-            "              WHERE asset.hospital_id = :#hospitalId " +
+            "              WHERE asset.hospital_id = :#hospital_id " +
             "              :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
             "      ) " +
-            "  AND asset.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospital_id " +
             // TODO: include a date filter?
             ";";
 
@@ -849,10 +857,10 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "          AND asset.clinical_dept_id = ( " +
             "                      SELECT asset.clinical_dept_id " +
             "                      FROM asset_info AS asset " +
-            "                      WHERE asset.hospital_id = :#hospitalId " +
+            "                      WHERE asset.hospital_id = :#hospital_id " +
             "                      :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
             "              ) " +
-            "          AND asset.hospital_id = :#hospitalId " +
+            "          AND asset.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY work.asset_id " +
             ") AS temporary " +
@@ -867,10 +875,10 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "  AND asset.asset_group = ( " +
             "              SELECT asset.asset_group " +
             "              FROM asset_info AS asset " +
-            "              WHERE asset.hospital_id = :#hospitalId " +
+            "              WHERE asset.hospital_id = :#hospital_id " +
             "              :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
             "      ) " +
-            "  AND asset.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospital_id " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ";";
 
@@ -880,10 +888,10 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "WHERE asset.asset_group = ( " +
             "              SELECT asset.asset_group " +
             "              FROM asset_info AS asset " +
-            "              WHERE asset.hospital_id = :#hospitalId " +
+            "              WHERE asset.hospital_id = :#hospital_id " +
             "              :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
             "      ) " +
-            "  AND asset.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospital_id " +
             // TODO: include a date filter?
             ";";
 
@@ -897,10 +905,10 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "          AND asset.asset_group = ( " +
             "                      SELECT asset.asset_group " +
             "                      FROM asset_info AS asset " +
-            "                      WHERE asset.hospital_id = :#hospitalId " +
+            "                      WHERE asset.hospital_id = :#hospital_id " +
             "                      :#andDeviceFilterForAssetInfo " +  // AND asset.id = :#assetId
             "              ) " +
-            "          AND asset.hospital_id = :#hospitalId " +
+            "          AND asset.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY work.asset_id " +
             ") AS temporary " +
@@ -912,14 +920,14 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "FROM work_order AS work, " +
             "     asset_info AS asset " +
             "WHERE work.asset_id = asset.id " +
-            "  AND asset.hospital_id = :#hospitalId " +
+            "  AND asset.hospital_id = :#hospital_id " +
             "  AND work.request_time BETWEEN :#startDate AND :#endDate " +
             ";";
 
     private final static String SQL_SCALAR_DEVICE_COUNT_IN_TOTAL_OF_DEVICE_SINGLE = "" +
             "SELECT CAST(count(*) AS INTEGER) AS scalar " +
             "FROM asset_info AS asset " +
-            "WHERE asset.hospital_id = :#hospitalId " +
+            "WHERE asset.hospital_id = :#hospital_id " +
             // TODO: include a date filter?
             ";";
 
@@ -931,7 +939,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "             asset_info AS asset " +
             "        WHERE TRUE " +
             "          AND work.asset_id = asset.id " +
-            "          AND asset.hospital_id = :#hospitalId " +
+            "          AND asset.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY work.asset_id " +
             ") AS temporary " +
@@ -942,7 +950,8 @@ public final class AssetMaintenanceController implements ServerEventInterface {
 
     // region Chart
 
-    private final static <T> T convertToScalar(List<Map<String, Object>> list, T fallback) {
+    @SuppressWarnings("unchecked")
+	private final static <T> T convertToScalar(List<Map<String, Object>> list, T fallback) {
         FluentIterable<Map<String, Object>> iterable = FluentIterable.from(list);
         return (T)iterable.first().or(ImmutableMap.of("scalar", (Object)fallback)).get("scalar");
     }

@@ -16,7 +16,6 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.BarChartSeries;
-import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.ChartSeries;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +27,7 @@ import webapp.framework.web.mvc.ServerEventInterface;
 
 import java.time.Year;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import com.ge.apm.view.analysis.Row; 
 
@@ -35,7 +35,15 @@ import com.ge.apm.view.analysis.Row;
 @ViewScoped
 public class AssetPerfSingleController implements ServerEventInterface {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AssetPerfSingleController.class);
+    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private static final String remote_addr = request.getRemoteAddr();
+    private static final String page_uri = request.getRequestURI();
+    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
+    HashMap<String, Object> sqlParams = new HashMap<>(); 
 
     private static final String deviceROIlg_1 = WebUtil.getMessage("deviceROIlg_1");
     private static final String deviceROIlg_2 = WebUtil.getMessage("deviceROIlg_2");
@@ -50,9 +58,6 @@ public class AssetPerfSingleController implements ServerEventInterface {
     private List<Row> assetDashBoard = null;
     private HashMap<String, String> yearList = new HashMap<>();
 
-    private int hospitalId = -1;
-    private int clinical_dept_id = -1;
-    private int filter_id = -1;
     private int MAX_INTERVAL=4;
     private static final String MONTH_FORMAT = "yyyy-MM";
     private static final String DAY_FORMAT = "yyyy-MM-dd";
@@ -70,8 +75,6 @@ public class AssetPerfSingleController implements ServerEventInterface {
 
     Map<Integer, String> i18nMessageDept = new HashMap<Integer, String>();
 
-    HashMap<String, Object> sqlParams = new HashMap<>();
-
     @PostConstruct
     public void init() {
 
@@ -84,9 +87,6 @@ public class AssetPerfSingleController implements ServerEventInterface {
         bcProfit.setLegendPosition("ne");
         bcProfit.setExtender("barAnnualRevenue");
         assetDashBoard = new ArrayList<Row>();
-
-        hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
-        clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
 
         Calendar currentCal = Calendar.getInstance();
         Calendar startCal = Calendar.getInstance();
@@ -112,7 +112,7 @@ public class AssetPerfSingleController implements ServerEventInterface {
         if (FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_id") != null 
             && FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_name") != null) {
 
-            filter_id = Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_id"));
+        	assetId = Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_id"));
             assetName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("asset_name");
             deviceQuery(startDate, endDate, currentDate);
         }
@@ -133,8 +133,6 @@ public class AssetPerfSingleController implements ServerEventInterface {
 
 
     public void submit() {
-        
-    	logger.debug("On Submit ");
     	
         currentDate = Calendar.getInstance().getTime();
         deviceQuery(startDate, endDate, currentDate);
@@ -142,8 +140,6 @@ public class AssetPerfSingleController implements ServerEventInterface {
 
 
     public void submit(String targetYear) {
-        
-    	logger.debug("On Submit " + targetYear);
     	
         this.targetYear = Integer.parseInt(targetYear);
         currentDate = Calendar.getInstance().getTime();
@@ -153,19 +149,19 @@ public class AssetPerfSingleController implements ServerEventInterface {
     public void onSelect (int i) {
 
         activeTab = i;
-        deviceTable(startDate, endDate, currentDate, sqlParams, activeTab);
+        deviceTable(startDate, endDate, currentDate, activeTab);
 
     }
 
     private String DB0TL
             = "SELECT name, serial_num, clinical_dept_name "
             + "FROM asset_info "
-            + "WHERE id = :#filter_id ";
+            + "WHERE id = :#assetId ";
 
            //bigint
     private String DB1TLYEAR
             = "SELECT key, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
-            + "FROM (SELECT id, name, serial_num FROM asset_info WHERE id = :#filter_id) left_table "
+            + "FROM (SELECT id, name, serial_num FROM asset_info WHERE id = :#assetId) left_table "
             + "LEFT JOIN (SELECT TO_CHAR(exam_date, 'yyyy') AS key, expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY key "
@@ -174,11 +170,11 @@ public class AssetPerfSingleController implements ServerEventInterface {
     private String DB2TLYEAR
             = "SELECT deprecate_amount depre "
             + "FROM asset_depreciation "
-            + "WHERE asset_id = :#filter_id ";
+            + "WHERE asset_id = :#assetId ";
 
     private String DB3TLYEAR
             = "SELECT key, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
-            + "FROM (SELECT id FROM asset_info WHERE id = :#filter_id) left_table "
+            + "FROM (SELECT id FROM asset_info WHERE id = :#assetId) left_table "
             + "LEFT JOIN (SELECT TO_CHAR(create_time, 'yyyy') AS key, total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY key "
@@ -187,7 +183,7 @@ public class AssetPerfSingleController implements ServerEventInterface {
            //bigint
     private String DB1TLMONTH
             = "SELECT key, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
-            + "FROM (SELECT id, name, serial_num FROM asset_info WHERE id = :#filter_id) left_table "
+            + "FROM (SELECT id, name, serial_num FROM asset_info WHERE id = :#assetId) left_table "
             + "LEFT JOIN (SELECT TO_CHAR(exam_date, 'yyyy-mm') AS key, expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY key "
@@ -196,11 +192,11 @@ public class AssetPerfSingleController implements ServerEventInterface {
     private String DB2TLMONTH
             = "SELECT deprecate_amount/12 depre "
             + "FROM asset_depreciation "
-            + "WHERE asset_id = :#filter_id ";
+            + "WHERE asset_id = :#assetId ";
 
     private String DB3TLMONTH
             = "SELECT key, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
-            + "FROM (SELECT id FROM asset_info WHERE id = :#filter_id) left_table "
+            + "FROM (SELECT id FROM asset_info WHERE id = :#assetId) left_table "
             + "LEFT JOIN (SELECT TO_CHAR(create_time, 'yyyy-mm') AS key, total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY key "
@@ -209,7 +205,7 @@ public class AssetPerfSingleController implements ServerEventInterface {
             //bigint
     private String DB1TLDAY
             = "SELECT key, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
-            + "FROM (SELECT id, name, serial_num FROM asset_info WHERE id = :#filter_id) left_table "
+            + "FROM (SELECT id, name, serial_num FROM asset_info WHERE id = :#assetId) left_table "
             + "LEFT JOIN (SELECT TO_CHAR(exam_date, 'yyyy-mm-dd') AS key, expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY key "
@@ -218,11 +214,11 @@ public class AssetPerfSingleController implements ServerEventInterface {
     private String DB2TLDAY
             = "SELECT deprecate_amount/365 depre "
             + "FROM asset_depreciation "
-            + "WHERE asset_id = :#filter_id ";
+            + "WHERE asset_id = :#assetId ";
 
     private String DB3TLDAY
             = "SELECT key, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
-            + "FROM (SELECT id FROM asset_info WHERE id = :#filter_id) left_table "
+            + "FROM (SELECT id FROM asset_info WHERE id = :#assetId) left_table "
             + "LEFT JOIN (SELECT TO_CHAR(create_time, 'yyyy-mm-dd') AS key, total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY key "
@@ -237,6 +233,7 @@ public class AssetPerfSingleController implements ServerEventInterface {
     public void setStartDate(Date startDate) {
 
         this.startDate = startDate;
+        sqlParams.put("startDate", startDate);
     }
 
     public Date getEndDate() {
@@ -247,6 +244,7 @@ public class AssetPerfSingleController implements ServerEventInterface {
     public void setEndDate(Date endDate) {
 
         this.endDate = endDate;
+        sqlParams.put("endDate", endDate);
     }
 
     public List<Row> getAssetDashboard () {
@@ -311,15 +309,23 @@ public class AssetPerfSingleController implements ServerEventInterface {
         return activeTab;
     }
 
-    private void deviceChart_1(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
+    private void deviceChart_1(Date startDate, Date endDate, Date currentDate) {
 
         ChartSeries cst_1 = new BarChartSeries();
         cst_1.setLabel(deviceROIlg_1);
         ChartSeries cst_2 = new BarChartSeries();
         cst_2.setLabel(deviceROIlg_2);
 
+        sqlParams.put("_sql", DB1TLMONTH);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
         List<Map<String, Object>> rs_1 = NativeSqlUtil.queryForList(DB1TLMONTH, sqlParams);
+
+        sqlParams.put("_sql", DB2TLMONTH);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);        
         List<Map<String, Object>> rs_2 = NativeSqlUtil.queryForList(DB2TLMONTH, sqlParams);
+
+        sqlParams.put("_sql", DB3TLMONTH);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);        
         List<Map<String, Object>> rs_3 = NativeSqlUtil.queryForList(DB3TLMONTH, sqlParams);
         
         double revenue;
@@ -379,37 +385,66 @@ public class AssetPerfSingleController implements ServerEventInterface {
     }
 
 
-    private void deviceTable (Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams, int i) {
+    private void deviceTable (Date startDate, Date endDate, Date currentDate, int i) {
 
         List<Map<String, Object>> rs_0;
         List<Map<String, Object>> rs_1;
         List<Map<String, Object>> rs_2;
         List<Map<String, Object>> rs_3;
 
+        sqlParams.put("_sql", DB0TL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
         rs_0 = NativeSqlUtil.queryForList(DB0TL, sqlParams);
 
         switch (i) {
 
         case 0:
 
+            sqlParams.put("_sql", DB1TLDAY);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
             rs_1 = NativeSqlUtil.queryForList(DB1TLDAY, sqlParams);
+
+            sqlParams.put("_sql", DB2TLDAY);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);             
             rs_2 = NativeSqlUtil.queryForList(DB2TLDAY, sqlParams);
-            rs_3 = NativeSqlUtil.queryForList(DB3TLDAY, sqlParams);       
+
+            sqlParams.put("_sql", DB3TLDAY);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);             
+            rs_3 = NativeSqlUtil.queryForList(DB3TLDAY, sqlParams);
+
             break;
 
         case 3:
         case 2:
 
+            sqlParams.put("_sql", DB1TLYEAR);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
             rs_1 = NativeSqlUtil.queryForList(DB1TLYEAR, sqlParams);
+
+            sqlParams.put("_sql", DB2TLYEAR);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);             
             rs_2 = NativeSqlUtil.queryForList(DB2TLYEAR, sqlParams);
+
+            sqlParams.put("_sql", DB3TLYEAR);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);             
             rs_3 = NativeSqlUtil.queryForList(DB3TLYEAR, sqlParams);
+
             break;
 
         default:
 
+            sqlParams.put("_sql", DB1TLMONTH);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
             rs_1 = NativeSqlUtil.queryForList(DB1TLMONTH, sqlParams);
+
+            sqlParams.put("_sql", DB2TLMONTH);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);             
             rs_2 = NativeSqlUtil.queryForList(DB2TLMONTH, sqlParams);
+
+            sqlParams.put("_sql", DB3TLMONTH);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);             
             rs_3 = NativeSqlUtil.queryForList(DB3TLMONTH, sqlParams);
+
             break;
         }
 
@@ -530,17 +565,17 @@ public class AssetPerfSingleController implements ServerEventInterface {
 
     private void deviceQuery(Date startDate, Date endDate, Date currentDate) {
 
-        sqlParams.put("hospitalId", hospitalId);
+        sqlParams.put("hospital_id", hospital_id);
         sqlParams.put("clinical_dept_id", clinical_dept_id);
         sqlParams.put("startDate", startDate);
         sqlParams.put("endDate", endDate);
         sqlParams.put("currentDate", currentDate);
         sqlParams.put("targetYear", targetYear);
-        sqlParams.put("filter_id", filter_id);
+        sqlParams.put("assetId", assetId);
 
-        deviceChart_1(startDate, endDate, currentDate, sqlParams);
-        deviceTable(startDate, endDate, currentDate, sqlParams, 3);
-        deviceTable(startDate, endDate, currentDate, sqlParams, activeTab);
+        deviceChart_1(startDate, endDate, currentDate);
+        deviceTable(startDate, endDate, currentDate, 3);
+        deviceTable(startDate, endDate, currentDate, activeTab);
 
     }
 

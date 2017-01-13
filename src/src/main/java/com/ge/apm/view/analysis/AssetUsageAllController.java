@@ -13,6 +13,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -39,7 +40,15 @@ import java.text.DecimalFormat;
 @ViewScoped
 public class AssetUsageAllController implements Serializable, ServerEventInterface {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AssetUsageAllController.class);
+    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private static final String remote_addr = request.getRemoteAddr();
+    private static final String page_uri = request.getRequestURI();
+    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
+    HashMap<String, Object> sqlParams = new HashMap<>();  
 
 	private static final long serialVersionUID = 1L;
 	private static final String deviceScanlg = WebUtil.getMessage("deviceScanlg");
@@ -56,8 +65,6 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 	private int assetId = -1;
 	private static final int HOURS_DAY = 24;
 
-	private int hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
-	private int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
 
 	// Dashboard Parameters
 	private String valueScan = null;
@@ -83,9 +90,6 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 
 	@PostConstruct
 	public void init() {
-
-		hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
-		clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
 
 		valueScan = "";
 		valueExpo = "";
@@ -136,15 +140,14 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 
 	public void submit() {
 
-    	logger.debug("On Submit " + startDate + " to " + endDate);
-    	
-        if (!checkInterval(startDate, endDate)) {
-        	logger.debug("Invalid search interval");
-            return;
-        }
-        
 		currentDate = Calendar.getInstance().getTime();
-		deviceQuery(startDate, endDate, currentDate);
+
+        if (!checkInterval(startDate, endDate)) {
+        	sqlParams.put("_sql", "");
+            logger.error("{} {} {} {} \"{}\" {} \"{}\"", remote_addr, site_id, hospital_id, username, page_uri, sqlParams, "Invalid query interval");
+        }
+		else
+			deviceQuery(startDate, endDate, currentDate);
 	}
 
     private boolean checkInterval(Date startDate, Date endDate) {
@@ -161,7 +164,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
             //bigint
     private String SCANTL
             = "SELECT left_table.name, COUNT(right_table), SUM(expose_count) "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND asset_group != 13 AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND asset_group != 13 AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT asset_id, expose_count FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY left_table.name "
@@ -170,14 +173,14 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
             //bigint
     private String VALUESCANTL
             = "SELECT COUNT(right_table), SUM(expose_count) "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT expose_count, asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
             + "ON left_table.id = right_table.asset_id ";
 
 			//Double
     private String BENCHEXPOTL
             = "SELECT left_table.name, left_table.asset_group, bench "
-            + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND asset_group != 13 AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND asset_group != 13 AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT asset_group, SUM(expose_count) / COUNT(DISTINCT(asset_id)) bench FROM asset_info JOIN asset_clinical_record ON asset_info.id = asset_clinical_record.asset_id WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_group) right_table "
             + "ON left_table.asset_group = right_table.asset_group "
             + "ORDER BY left_table.name ";
@@ -189,14 +192,14 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			+ "CASE WHEN terminate_date IS NULL THEN Date(:#endDate) WHEN Date(:#endDate) < terminate_date THEN Date(:#endDate) ELSE terminate_date END "
 			+ "- CASE WHEN Date(:#startDate) > install_date THEN Date(:#startDate) ELSE install_date END ) serve "
 			+ "FROM asset_info "
-			+ "WHERE hospital_id = :#hospitalId "
+			+ "WHERE hospital_id = :#hospital_id "
 			+ "AND is_valid = true "
 			+ "ORDER BY name";
 
 			//bigint
 	private String INUSETL
             = "SELECT left_table.name, right_table.sum inuse "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT SUM(exam_duration), asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "ORDER BY left_table.name ";
@@ -204,7 +207,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			 //double
 	private String DTTL
             = "SELECT left_table.name, right_table.diff/3600 dt "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT SUM(EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time)) diff, asset_id FROM work_order WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "ORDER BY left_table.name ";
@@ -212,7 +215,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			 //double
 	private String BENCHDTTL
             = "SELECT left_table.name, left_table.asset_group, right_table.diff/36/(date(:#endDate) - date(:#startDate))/24 dtbench "
-            + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT asset_group, SUM(EXTRACT(EPOCH FROM(confirmed_up_time-confirmed_down_time))) / COUNT(DISTINCT(asset_id)) diff FROM asset_info JOIN work_order ON asset_info.id = work_order.asset_id WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_group) right_table "
             + "ON left_table.asset_group = right_table.asset_group "
             + "ORDER BY left_table.name ";
@@ -228,6 +231,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
     public void setStartDate(Date startDate) {
 
         this.startDate = startDate;
+		sqlParams.put("startDate", startDate);
     }
 
     public Date getEndDate() {
@@ -238,6 +242,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
     public void setEndDate(Date endDate) {
 
         this.endDate = endDate;
+		sqlParams.put("endDate", endDate);
     }
 
 
@@ -302,14 +307,16 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 	}
 
 
-	private void devicePanel(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
+	private void devicePanel(Date startDate, Date endDate, Date currentDate) {
 
 		List<Map<String, Object>> rs_panel;
 
 		// Panel Components
+        sqlParams.put("_sql", VALUESCANTL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);  		
 		rs_panel = NativeSqlUtil.queryForList(VALUESCANTL, sqlParams);
-		if (!rs_panel.isEmpty()) {
 
+		if (!rs_panel.isEmpty()) {
 			valueScan = cf.format(rs_panel.get(0).get("count")  != null ? (long)rs_panel.get(0).get("count") : 0);
 			valueExpo = cfint.format(rs_panel.get(0).get("sum")  != null ? (double)rs_panel.get(0).get("sum") : 0.0);
 		}
@@ -322,43 +329,46 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 
 	}
 
-	private void deviceChart_12(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
+	private void deviceChart_12(Date startDate, Date endDate, Date currentDate) {
 
-			ChartSeries cst_scan = new BarChartSeries();
-			cst_scan.setLabel(deviceScanlg);
-			ChartSeries cst_expo = new BarChartSeries();
-			cst_expo.setLabel(deviceExpolg_1);
+		ChartSeries cst_scan = new BarChartSeries();
+		cst_scan.setLabel(deviceScanlg);
+		ChartSeries cst_expo = new BarChartSeries();
+		cst_expo.setLabel(deviceExpolg_1);
 
-			List<Map<String, Object>> rs_scan = NativeSqlUtil.queryForList(SCANTL, sqlParams);
+        sqlParams.put("_sql", SCANTL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);  
+		List<Map<String, Object>> rs_scan = NativeSqlUtil.queryForList(SCANTL, sqlParams);
 
-			for (Map<String, Object> item : rs_scan) {
-				cst_scan.set(item.get("name") != null ? item.get("name").toString() : "",
-						item.get("count") != null ? (Long) item.get("count") : 0);
-				cst_expo.set(item.get("name") != null ? item.get("name").toString() : "",
-						item.get("sum") != null ? (Double) item.get("sum") : (Double) 0.0);
-			}
+		for (Map<String, Object> item : rs_scan) {
+			cst_scan.set(item.get("name") != null ? item.get("name").toString() : "",
+					item.get("count") != null ? (Long) item.get("count") : 0);
+			cst_expo.set(item.get("name") != null ? item.get("name").toString() : "",
+					item.get("sum") != null ? (Double) item.get("sum") : (Double) 0.0);
+		}
 
-			deviceScan.clear();
-			deviceScan.addSeries(cst_scan);
+		deviceScan.clear();
+		deviceScan.addSeries(cst_scan);
 
+		ChartSeries cst_expo_bench = new LineChartSeries();
+		cst_expo_bench.setLabel(deviceExpolg_2);
 
-			ChartSeries cst_expo_bench = new LineChartSeries();
-			cst_expo_bench.setLabel(deviceExpolg_2);
+        sqlParams.put("_sql", BENCHEXPOTL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);  
+		List<Map<String, Object>> rs_expo_bench = NativeSqlUtil.queryForList(BENCHEXPOTL, sqlParams);
 
-			List<Map<String, Object>> rs_expo_bench = NativeSqlUtil.queryForList(BENCHEXPOTL, sqlParams);
+		for (Map<String, Object> item : rs_expo_bench) {
+			cst_expo_bench.set(item.get("name") != null ? item.get("name").toString() : "",
+					item.get("bench") != null ? (Double) item.get("bench") : (Double) 0.0);
+		}
 
-			for (Map<String, Object> item : rs_expo_bench) {
-				cst_expo_bench.set(item.get("name") != null ? item.get("name").toString() : "",
-						item.get("bench") != null ? (Double) item.get("bench") : (Double) 0.0);
-			}
-
-			deviceExpo.clear();
-			deviceExpo.addSeries(cst_expo);
-			deviceExpo.addSeries(cst_expo_bench);
+		deviceExpo.clear();
+		deviceExpo.addSeries(cst_expo);
+		deviceExpo.addSeries(cst_expo_bench);
 	}
 
 
-	private void deviceChart_34(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
+	private void deviceChart_34(Date startDate, Date endDate, Date currentDate) {
 
 		ChartSeries cst_inuse = new BarChartSeries();
 		cst_inuse.setLabel(deviceUsagelg_1);
@@ -369,12 +379,21 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 		ChartSeries cst_dt_bench = new LineChartSeries();
 		cst_dt_bench.setLabel(deviceDTlg_2);
 
-
+        sqlParams.put("_sql", SERVETL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);  
 		List<Map<String, Object>> rs_serve = NativeSqlUtil.queryForList(SERVETL, sqlParams);
-		List<Map<String, Object>> rs_inuse = NativeSqlUtil.queryForList(INUSETL, sqlParams);
-		List<Map<String, Object>> rs_dt = NativeSqlUtil.queryForList(DTTL, sqlParams);
-		List<Map<String, Object>> rs_dt_bench = NativeSqlUtil.queryForList(BENCHDTTL, sqlParams);
 
+        sqlParams.put("_sql", INUSETL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);  		
+		List<Map<String, Object>> rs_inuse = NativeSqlUtil.queryForList(INUSETL, sqlParams);
+
+        sqlParams.put("_sql", DTTL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);  		
+		List<Map<String, Object>> rs_dt = NativeSqlUtil.queryForList(DTTL, sqlParams);
+
+        sqlParams.put("_sql", BENCHDTTL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);  		
+		List<Map<String, Object>> rs_dt_bench = NativeSqlUtil.queryForList(BENCHDTTL, sqlParams);
 
 		Iterator <Map<String, Object>> it_serve;
 		Iterator <Map<String, Object>> it_inuse;
@@ -462,20 +481,18 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 
 	private void deviceQuery(Date startDate, Date endDate, Date currentDate) {
 
-		HashMap<String, Object> sqlParams = new HashMap<>();
-
-		sqlParams.put("hospitalId", hospitalId);
+		sqlParams.put("hospital_id", hospital_id);
 		sqlParams.put("clinical_dept_id", clinical_dept_id);
 		sqlParams.put("startDate", startDate);
 		sqlParams.put("endDate", endDate);
 		sqlParams.put("currentDate", currentDate);
 		sqlParams.put("HOURS_DAY", HOURS_DAY);
 
-		devicePanel(startDate, endDate, currentDate, sqlParams);
+		devicePanel(startDate, endDate, currentDate);
 
-		deviceChart_12(startDate, endDate, currentDate, sqlParams);
+		deviceChart_12(startDate, endDate, currentDate);
 
-		deviceChart_34(startDate, endDate, currentDate, sqlParams);
+		deviceChart_34(startDate, endDate, currentDate);
 
 	}
 

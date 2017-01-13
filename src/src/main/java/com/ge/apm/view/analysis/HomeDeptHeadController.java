@@ -21,6 +21,7 @@ import java.io.Serializable;
 import javax.faces.bean.ViewScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
@@ -35,8 +36,16 @@ import java.text.DecimalFormat;
 @ViewScoped
 public class HomeDeptHeadController implements Serializable {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
-
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeDeptHeadController.class);
+    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private static final String remote_addr = request.getRemoteAddr();
+    private static final String page_uri = request.getRequestURI();
+    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
+    HashMap<String, Object> sqlParams = new HashMap<>();
+    
     private static final long serialVersionUID = 1L;
     private static final String deviceScanlg = WebUtil.getMessage("deviceScanlg");
     private static final String deviceExpolg_1 = WebUtil.getMessage("deviceExpolg_1");
@@ -58,8 +67,6 @@ public class HomeDeptHeadController implements Serializable {
     private Date startDate = null;
     private Date endDate = null;
     private Date currentDate = null;
-    private int hospitalId = -1;
-    private int clinical_dept_id = -1;
 
     private NumberFormat cf = new DecimalFormat(",###.##");
     private NumberFormat cfint = new DecimalFormat(",###");
@@ -84,10 +91,6 @@ public class HomeDeptHeadController implements Serializable {
         deviceProfit.setLegendPosition("ne");
         deviceProfit.setExtender("deviceProfit");
 
-
-        hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
-        clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
-
         valueScan = "";
         valueExpo = "";
         valueProfit = "";
@@ -106,15 +109,14 @@ public class HomeDeptHeadController implements Serializable {
 
     public void submit() {
 
-    	logger.debug("On Submit " + startDate + " to " + endDate);
-    	
-        if (!checkInterval(startDate, endDate)) {
-        	logger.debug("Invalid search interval");
-            return;
-        }
-
         currentDate = Calendar.getInstance().getTime(); 
-        deviceQuery(startDate, endDate, currentDate);
+
+        if (!checkInterval(startDate, endDate)) {
+        	sqlParams.put("_sql", "");
+            logger.error("{} {} {} {} \"{}\" {} \"{}\"", remote_addr, site_id, hospital_id, username, page_uri, sqlParams, "Invalid query interval");
+        }
+        else 
+            deviceQuery(startDate, endDate, currentDate);
 
     }
 
@@ -132,7 +134,7 @@ public class HomeDeptHeadController implements Serializable {
             //bigint
     private String SCANTL
             = "SELECT left_table.name, COUNT(right_table), SUM(expose_count) "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN (SELECT expose_count, asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY left_table.name "
@@ -141,35 +143,35 @@ public class HomeDeptHeadController implements Serializable {
             //bigint
     private String VALUESCANTL
             = "SELECT COUNT(right_table), SUM(expose_count) "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN (SELECT expose_count, asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
             + "ON left_table.id = right_table.asset_id ";
 
             //double
     private String REVENUETL
             = "SELECT left_table.name, right_table.sum "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN (SELECT SUM(price_amount), asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "ORDER BY left_table.name ";
 
     private String DEPRETL
             = "SELECT left_table.name, deprecate_amount / 365 * (Date(:#endDate) - Date(:#startDate)) depre "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN asset_depreciation "    
             + "ON left_table.id = asset_depreciation.asset_id "    
             + "ORDER BY left_table.name";
 
     private String MAINTAINTL
             = "SELECT left_table.name, right_table.sum "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN (SELECT SUM(total_price), asset_id FROM work_order WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "ORDER BY left_table.name ";
 
     private String BENCHEXPOTL
             = "SELECT left_table.name, left_table.asset_group, bench "
-            + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId AND clinical_dept_id = :#clinical_dept_id) left_table "
+            + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN (SELECT asset_group, SUM(expose_count) / COUNT(DISTINCT(asset_id)) bench FROM asset_info JOIN asset_clinical_record ON asset_info.id = asset_clinical_record.asset_id WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_group) right_table "
             + "ON left_table.asset_group = right_table.asset_group "
             + "ORDER BY left_table.name ";
@@ -183,6 +185,7 @@ public class HomeDeptHeadController implements Serializable {
     public void setStartDate(Date startDate) {
 
         this.startDate = startDate;
+        sqlParams.put("startDate", startDate);
     }
 
     public Date getEndDate() {
@@ -193,6 +196,7 @@ public class HomeDeptHeadController implements Serializable {
     public void setEndDate(Date endDate) {
 
         this.endDate = endDate;
+        sqlParams.put("endDate", endDate);
     }
 
     public BarChartModel getDeviceScan() {
@@ -225,12 +229,16 @@ public class HomeDeptHeadController implements Serializable {
         return valueProfit;
     }
 
-    private void devicePanel(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
+    private void devicePanel(Date startDate, Date endDate, Date currentDate) {
 
         List<Map<String, Object>> resultSet;
 
         // Panel Components
+        sqlParams.put("_sql", VALUESCANTL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
         resultSet = NativeSqlUtil.queryForList(VALUESCANTL, sqlParams);
+        
+
         if(!resultSet.isEmpty()) {
             valueScan = cf.format(resultSet.get(0).get("count") != null ? (long)resultSet.get(0).get("count") : 0);
             valueExpo = cfint.format(resultSet.get(0).get("sum") != null ? (double)resultSet.get(0).get("sum") : 0.0);
@@ -243,15 +251,17 @@ public class HomeDeptHeadController implements Serializable {
     }
 
 
-    private void deviceChart_12 (Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
+    private void deviceChart_12 (Date startDate, Date endDate, Date currentDate) {
 
             ChartSeries chartSeriesTypeS = new BarChartSeries();
             chartSeriesTypeS.setLabel(deviceScanlg);
             ChartSeries chartSeriesTypeE = new BarChartSeries();
             chartSeriesTypeE.setLabel(deviceExpolg_1);
 
+            sqlParams.put("_sql", SCANTL);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
             List<Map<String, Object>> resultSet = NativeSqlUtil.queryForList(SCANTL, sqlParams);
-
+            
             for (Map<String, Object> item : resultSet) {
                 chartSeriesTypeS.set(item.get("name").toString(),
                         item.get("count") != null ? (Long) item.get("count") : 0);
@@ -266,7 +276,11 @@ public class HomeDeptHeadController implements Serializable {
             ChartSeries chartSeriesTypeB = new LineChartSeries();
             chartSeriesTypeB.setLabel(deviceExpolg_2);
 
+            sqlParams.put("_sql", BENCHEXPOTL);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
             resultSet = NativeSqlUtil.queryForList(BENCHEXPOTL, sqlParams);
+            
+            
             for (Map<String, Object> item : resultSet) {
                 chartSeriesTypeB.set(item.get("name").toString(),
                         item.get("bench") != null ? (Double) item.get("bench") : (Double) 0.0);
@@ -278,12 +292,16 @@ public class HomeDeptHeadController implements Serializable {
 
     }
 
-    private void deviceChart_3 (Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {    
+    private void deviceChart_3 (Date startDate, Date endDate, Date currentDate) {    
 
             ChartSeries chartSeriesTypeR = new BarChartSeries();
             chartSeriesTypeR.setLabel(deviceROIlg_1);
 
+            sqlParams.put("_sql", REVENUETL);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
             List<Map<String, Object>> resultSet = NativeSqlUtil.queryForList(REVENUETL, sqlParams);
+            
+            
             for (Map<String, Object> item : resultSet) {
                 chartSeriesTypeR.set(item.get("name").toString(),
                         item.get("sum") != null ? (Double) item.get("sum") : (Double) 0.0);
@@ -292,8 +310,15 @@ public class HomeDeptHeadController implements Serializable {
             ChartSeries chartSeriesTypeP = new BarChartSeries();
             chartSeriesTypeP.setLabel(deviceROIlg_2);
 
+            sqlParams.put("_sql", DEPRETL);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
             List<Map<String, Object>> sub_x_resultSet = NativeSqlUtil.queryForList(DEPRETL, sqlParams);
+            
+            sqlParams.put("_sql", MAINTAINTL);
+            logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
             List<Map<String, Object>> sub_y_resultSet = NativeSqlUtil.queryForList(MAINTAINTL, sqlParams);
+            
+            
             Iterator<Map<String, Object>> it_a;
             Iterator<Map<String, Object>> it_x;
             Iterator<Map<String, Object>> it_y;
@@ -331,19 +356,18 @@ public class HomeDeptHeadController implements Serializable {
 
     private void deviceQuery(Date startDate, Date endDate, Date currentDate) {
 
-        HashMap<String, Object> sqlParams = new HashMap<>();
-        
-        sqlParams.put("hospitalId", hospitalId);
+        sqlParams.put("hospital_id", hospital_id);
         sqlParams.put("clinical_dept_id", clinical_dept_id);
         sqlParams.put("startDate", startDate);
         sqlParams.put("endDate", endDate);
         sqlParams.put("currentDate", currentDate);
 
-        devicePanel(startDate, endDate, currentDate, sqlParams);
+        devicePanel(startDate, endDate, currentDate);
 
-        deviceChart_12(startDate, endDate, currentDate, sqlParams);
+        deviceChart_12(startDate, endDate, currentDate);
 
-        deviceChart_3(startDate, endDate, currentDate, sqlParams);
+        deviceChart_3(startDate, endDate, currentDate);
+        
 
     }
 

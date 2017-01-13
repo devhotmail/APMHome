@@ -15,6 +15,8 @@ import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.io.Serializable;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +33,15 @@ import com.ge.apm.view.analysis.Row;
 @ViewScoped
 public class AssetPerfAllController implements Serializable, ServerEventInterface {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AssetPerfAllController.class);
+    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private static final String remote_addr = request.getRemoteAddr();
+    private static final String page_uri = request.getRequestURI();
+    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
+    HashMap<String, Object> sqlParams = new HashMap<>();    
     
     private static final long serialVersionUID = 1L;
     
@@ -42,8 +52,6 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
     // Table Components
     private List<Row> assetDashBoard = null;
 
-	private int hospitalId = -1;
-	private int clinical_dept_id = -1;
     private Date startDate;
 	private Date endDate;
 	private Date currentDate;
@@ -58,9 +66,6 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
     public void init() {
 
         assetDashBoard = new ArrayList<Row>();
-
-        hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
-        clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
 
         Calendar currentCal = Calendar.getInstance();
         Calendar startCal = Calendar.getInstance();
@@ -89,17 +94,13 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
 
     public void submit() {
-  
-    	logger.debug("On Submit ");
-    	
+
         currentDate = Calendar.getInstance().getTime();
         deviceQuery(startDate, endDate, currentDate);
     }
 
 
     public void submit(String targetYear) {
-
-    	logger.debug("On Submit " + targetYear);
     	
         this.targetYear = Integer.parseInt(targetYear);
         currentDate = Calendar.getInstance().getTime();
@@ -109,7 +110,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
             //bigint
     private String DB1TL
             = "SELECT left_table.name, serial_num, clinical_dept_name, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
-            + "FROM (SELECT id, name, serial_num, clinical_dept_name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, name, serial_num, clinical_dept_name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY left_table.name, serial_num, clinical_dept_name "
@@ -117,7 +118,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
     private String DB2TL
             = "SELECT left_table.name, sum(deprecate_amount) depre "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT asset_id, deprecate_amount FROM asset_depreciation WHERE EXTRACT(YEAR FROM deprecate_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY left_table.name "
@@ -125,7 +126,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
 
     private String DB3TL
             = "SELECT left_table.name, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
-            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY left_table.name "
@@ -134,13 +135,13 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
     private String MAX1TL
             = "SELECT asset_group FROM "
             + "( SELECT left_table.asset_group, SUM(right_table.price_amount) "
-            + "FROM (SELECT id, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY asset_group ) as t1 "
             + "WHERE t1.sum = ( "
             + "SELECT MAX(sum) FROM (SELECT left_table.asset_group, SUM(right_table.price_amount) "
-            + "FROM (SELECT id, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY asset_group) as t2 )";
@@ -148,13 +149,13 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
     private String MAX2TL
             = "SELECT clinical_dept_name FROM "
             + "( SELECT left_table.clinical_dept_name, SUM(right_table.price_amount) "
-            + "FROM (SELECT id, clinical_dept_name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, clinical_dept_name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY clinical_dept_name ) as t1 "
             + "WHERE t1.sum = ( "
             + "SELECT MAX(sum) FROM (SELECT left_table.clinical_dept_name, SUM(right_table.price_amount) "
-            + "FROM (SELECT id, clinical_dept_name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospitalId) left_table "
+            + "FROM (SELECT id, clinical_dept_name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY clinical_dept_name) as t2 )";
@@ -168,6 +169,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
     public void setStartDate(Date startDate) {
 
         this.startDate = startDate;
+        sqlParams.put("startDate", startDate);
     }
 
     public Date getEndDate() {
@@ -178,6 +180,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
     public void setEndDate(Date endDate) {
 
         this.endDate = endDate;
+        sqlParams.put("endDate", endDate);
     }
 
     public String getTopAsset() {
@@ -205,22 +208,26 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
         return assetId;
     }
 
-    private void devicePanel(Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
+    private void devicePanel(Date startDate, Date endDate, Date currentDate) {
 
-            topAsset = "";
-            topDept = "";
+        topAsset = "";
+        topDept = "";
 
-            List<Map<String, Object>> rs_mx1 = NativeSqlUtil.queryForList(MAX1TL, sqlParams);
+        sqlParams.put("_sql", MAX1TL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
+        List<Map<String, Object>> rs_mx1 = NativeSqlUtil.queryForList(MAX1TL, sqlParams);
 
-            for (Map<String, Object> item : rs_mx1)
-                if (item.get("asset_group") != null) {
-                    topAsset += (getAssetGroup((Integer)item.get("asset_group")) + " ");
-                }
+        for (Map<String, Object> item : rs_mx1)
+            if (item.get("asset_group") != null)
+                topAsset += (getAssetGroup((Integer)item.get("asset_group")) + " ");
 
-            List<Map<String, Object>> rs_mx2 = NativeSqlUtil.queryForList(MAX2TL, sqlParams);
-            for (Map<String, Object> item : rs_mx2)
-                if (item.get("clinical_dept_name") != null)
-                    topDept += ((String)item.get("clinical_dept_name") + " ");
+        sqlParams.put("_sql", MAX2TL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
+        List<Map<String, Object>> rs_mx2 = NativeSqlUtil.queryForList(MAX2TL, sqlParams);
+
+        for (Map<String, Object> item : rs_mx2)
+            if (item.get("clinical_dept_name") != null)
+                topDept += ((String)item.get("clinical_dept_name") + " ");
     }
     
     private String getAssetGroup (Integer asset_group) {
@@ -234,43 +241,41 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
     }
 
 
-    private String getDeptName (Integer clinical_dept_id) {
+    private void deviceTable (Date startDate, Date endDate, Date currentDate) {
 
-        if (clinical_dept_id==null)
-            return "";
-        else if (i18nMessageDept.containsKey(String.valueOf(clinical_dept_id)))
-            return i18nMessageDept.get(String.valueOf(clinical_dept_id));
-        else
-            return String.valueOf(clinical_dept_id);
-    }
+        sqlParams.put("_sql", DB1TL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
+        List<Map<String, Object>> rs_db1 = NativeSqlUtil.queryForList(DB1TL, sqlParams);
 
-    private void deviceTable (Date startDate, Date endDate, Date currentDate, HashMap<String, Object> sqlParams) {
+        sqlParams.put("_sql", DB2TL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);            
+        List<Map<String, Object>> rs_db2 = NativeSqlUtil.queryForList(DB2TL, sqlParams);
 
-            List<Map<String, Object>> rs_db1 = NativeSqlUtil.queryForList(DB1TL, sqlParams);
-            List<Map<String, Object>> rs_db2 = NativeSqlUtil.queryForList(DB2TL, sqlParams);
-            List<Map<String, Object>> rs_db3 = NativeSqlUtil.queryForList(DB3TL, sqlParams);
+        sqlParams.put("_sql", DB3TL);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);            
+        List<Map<String, Object>> rs_db3 = NativeSqlUtil.queryForList(DB3TL, sqlParams);
 
-            Iterator<Map<String, Object>> it_1;
-            Iterator<Map<String, Object>> it_2;
-            Iterator<Map<String, Object>> it_3;
-            Map<String, Object> item_1;
-            Map<String, Object> item_2;
-            Map<String, Object> item_3;
+        Iterator<Map<String, Object>> it_1;
+        Iterator<Map<String, Object>> it_2;
+        Iterator<Map<String, Object>> it_3;
+        Map<String, Object> item_1;
+        Map<String, Object> item_2;
+        Map<String, Object> item_3;
 
-            String name;
-            String serial_num;
-            String clinical_dept_name;
-            double revenue;
-            long scan;
-            double expo;
-            double cost;
-            double profit;
-            long repair;
-            double dt;
+        String name;
+        String serial_num;
+        String clinical_dept_name;
+        double revenue;
+        long scan;
+        double expo;
+        double cost;
+        double profit;
+        long repair;
+        double dt;
 
-            assetDashBoard.clear();
+        assetDashBoard.clear();
 
-            for (it_1 = rs_db1.iterator(), it_2 = rs_db2.iterator(), it_3 = rs_db3.iterator();
+        for (it_1 = rs_db1.iterator(), it_2 = rs_db2.iterator(), it_3 = rs_db3.iterator();
                 it_1.hasNext() && it_2.hasNext() && it_3.hasNext(); ) {
 
                 item_1 = it_1.next();
@@ -289,24 +294,22 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
                 dt = item_3.get("dt")!=null ? (double)item_3.get("dt") : 0.0;
 
                 assetDashBoard.add(new Row(name, serial_num, clinical_dept_name, revenue, scan, expo, cost, profit, repair, dt));
-            }
+        }
 
     }
 
     private void deviceQuery(Date startDate, Date endDate, Date currentDate) {
 
-        HashMap<String, Object> sqlParams = new HashMap<>();
-
-        sqlParams.put("hospitalId", hospitalId);
+        sqlParams.put("hospital_id", hospital_id);
         sqlParams.put("clinical_dept_id", clinical_dept_id);
         sqlParams.put("startDate", startDate);
         sqlParams.put("endDate", endDate);
         sqlParams.put("currentDate", currentDate);
         sqlParams.put("targetYear", targetYear);
 
-        devicePanel(startDate, endDate, currentDate, sqlParams);
+        devicePanel(startDate, endDate, currentDate);
 
-        deviceTable(startDate, endDate, currentDate, sqlParams);
+        deviceTable(startDate, endDate, currentDate);
 
     }
 
