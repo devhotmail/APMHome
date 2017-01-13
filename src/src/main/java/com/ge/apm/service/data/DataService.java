@@ -96,6 +96,7 @@ public class DataService {
             for (int i=0; i<subList.size();i++){
                 Object obj = table.newInstance();
                 BeanUtils.populate(obj, subList.get(i));
+                BeanUtils.setProperty(obj, "id", null);
                 saveList.add(obj);
             }
             dao.getMethod("save", Iterable.class).invoke(WebUtil.getBean(dao), saveList);

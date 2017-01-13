@@ -55,6 +55,8 @@ public class DataGetAndPushController {
             Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvocationTargetException ex) {
             Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(Exception ex) {
+            Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "{code:1,msg:保存失败}";
     }
