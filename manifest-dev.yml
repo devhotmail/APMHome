@@ -1,0 +1,13 @@
+---
+instances: 1
+memory: 2048M
+disk_quota: 2048M
+stack: cflinuxfs2
+path: ./target/geapm-1.0.0.war
+
+applications:
+- name: geapmdev2
+  env:
+    JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+  services:
+  - pg-dev01
