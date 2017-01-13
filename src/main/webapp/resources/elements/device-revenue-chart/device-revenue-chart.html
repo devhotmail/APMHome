@@ -394,7 +394,7 @@
         function renderNode(node, i) {
           var config = gaugeDefaultConfig();
           var data = node.data;
-          config.height = config.width = nodeRadius(node)*2;
+          config.height = config.width = node.size * 2;
           config.circleColor = config.waveColor = gauge_color(i);
           config.waveAnimateTime = 5000;
           config.waveHeight = 0.15;
@@ -408,22 +408,27 @@
         function layout_orbit(root, options) {
           var nodes = root.children;
           var margin = options.margin;
+          var maxR = options.canvasRadius;
           var startDeg = options.start || 0;
           var endDeg = options.end || 180;
           var deg = startDeg;
           var lastDeg = 0;
           var thisDeg = 0;
           var max = 0;
+          var radiusScale = d3.scaleLinear().domain([maxR, 0]).range([1, 0]);
+
           // item radius v.s. orbit radius
-          var r, R = options.radius, degEach;
+          var r, R = options.radius, degEach, scale = radiusScale(R);
           for (var i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
-            r = nodeRadius(node);
+            r = nodeRadius(node) * scale;
+            console.log('gauge size', node.data.name, r);
             thisDeg = Math.atan(r / R) * (
               180 / Math.PI
               );
 
             node.x = deg + thisDeg + margin;
             node.y = R;
+            node.size = r;
 
             // degree increments
             deg += ( thisDeg + margin ) * 2;
@@ -436,7 +441,8 @@
           }
           // layout the root
           root.x = 90;
-          root.y = Math.sin(START_ANGEL * Math.PI / 180) * R;
+          root.y = Math.sin(START_ANGEL * Math.PI / 180) * R - 100;
+          root.size = ROOT_RADIUS;
           root.children = root.children.slice(0, max);
           console.log('layout totally %s items', root.children.length)
           return root;
@@ -477,7 +483,7 @@
               "translate(" + (
                 width / 2
               ) + "," + (
-                height + Math.sin(START_ANGEL * Math.PI/180) * radius - 100
+                height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200
               ) + ")"
             );
 
@@ -485,9 +491,10 @@
               start: START_ANGEL,
               end: 180 - START_ANGEL,
               radius: radius,
+              canvasRadius: width / 2,
               margin: MARGIN_ANGEL
             });
-            
+
             var nodes = tree.descendants();
             var links = tree.links();
 
@@ -554,11 +561,12 @@
             function handleClick(targetNode) {
               if (targetNode.parent) {
                 // build a new smaller tree layout
-                var new_radius = width / 2 + 100;
+                var new_radius = radius - 200;
                 var new_tree = layout_orbit(root, {
                   start: START_ANGEL,
                   end: 180 - START_ANGEL,
                   radius: new_radius,
+                  canvasRadius: width / 2,
                   margin: MARGIN_ANGEL
                 });
                 // rerender subtree's children
