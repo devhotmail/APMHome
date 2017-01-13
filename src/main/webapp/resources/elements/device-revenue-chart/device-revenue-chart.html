@@ -375,6 +375,10 @@
         var MARGIN_ANGEL = 1;
         // total revenue size
         var ROOT_RADIUS = 80;
+        // transition duration
+        var DURATION = 750;
+        // id counter seed
+        var i = 0;
         var gauge_size = d3.interpolate(20, 200);
         var gauge_color = d3.scaleOrdinal([
           'rgba(117, 162, 234, 1)',
@@ -438,6 +442,19 @@
           return root;
         }
 
+        // https://github.com/d3/d3-shape/issues/27
+        // replacement for diagonal
+        function linkStraight(source, target) {
+          return 'M' + project(source.x, source.y) + 'L' + project(target.x, target.y);
+        }
+
+        function linkVertical(source, target) {
+          return 'M' + source.x + ',' + source.y
+            + 'C' + (source.x + target.x) / 2 + ',' + source.y
+            + ' ' + (source.x + target.x) / 2 + ',' + target.y
+            + ' ' + target.x + ',' + target.y
+        }
+
         Polymer({
           is: 'device-revenue-chart',
           properties: {
@@ -464,39 +481,145 @@
               ) + ")"
             );
 
-            var tree = layout_orbit(root,
-              {
-                start: START_ANGEL,
-                end: 180 - START_ANGEL,
-                radius: radius,
-                margin: MARGIN_ANGEL
-              });
+            var tree = layout_orbit(root, {
+              start: START_ANGEL,
+              end: 180 - START_ANGEL,
+              radius: radius,
+              margin: MARGIN_ANGEL
+            });
+            
+            var nodes = tree.descendants();
+            var links = tree.links();
 
-            var link = svg.selectAll(".link")
-            .data(tree.descendants().slice(1))
-            .enter().append("path")
-            .attr("class", "link")
-            .attr("d", function(d) {
-              return "M" + project(d.x, d.y)
-                + "L" + project(d.parent.x, d.parent.y);
+            var link = svg.selectAll('.link')
+            .data(nodes.slice(1), function(d) {
+              return d.data.id;
             });
 
-            var node = svg.selectAll(".node")
-            .data(tree.descendants())
-            .enter().append("g")
+            // Enter any new links at the parent's previous position.
+            var linkEnter = link.enter().append('path')
+            .attr('class', 'link')
+            .attr('d', function(d) {
+              var source = d.parent;
+              return linkStraight(source, source);
+            });
+
+            var linkUpdate = link.merge(linkEnter)
+            .transition()
+            .duration(DURATION)
+            .attr('d', function(d) {
+              var source = d;
+              var target = d.parent;
+              return linkStraight(source, target);
+            });
+
+            // Update the nodes
+            var node = svg.selectAll('g.node')
+            .data(nodes, function(d) {
+              return d.data.id || (d.data.id = ++i)
+            });
+
+            var nodeEnter = node.enter().append("g")
             .attr("class", function(d) {
               return "node" + (
                   d.children ? " node--internal" : " node--leaf"
                 );
             })
             .attr("transform", function(d) {
-              return "translate(" + project(d.x, d.y) + ")";
+              var _node = d.parent ? d.parent : d;
+              return "translate(" + project(_node.x, _node.y) + ")";
             })
-            .attr('id', function(d, i) {
-              return 'node-' + i;
+            .attr('id', function(d) {
+              return 'node-' + d.data.id;
             })
+            .on('click', handleClick)
             .each(renderNode);
+
+            // Transition nodes to their new position.
+            var nodeUpdate = node.merge(nodeEnter)
+            .transition()
+            .duration(DURATION)
+            .attr('transform', function(d) {
+              return 'translate(' + project(d.x, d.y) + ')';
+            });
+
+            // Mark previous position down
+            nodes.forEach(function(d) {
+              d.x0 = d.x;
+              d.y0 = d.y;
+            });
+
             this.scopeSubtree(this.$.chart, true)
+
+            function handleClick(targetNode) {
+              if (targetNode.parent) {
+                // build a new smaller tree layout
+                var new_radius = width / 2 + 100;
+                var new_tree = layout_orbit(root, {
+                  start: START_ANGEL,
+                  end: 180 - START_ANGEL,
+                  radius: new_radius,
+                  margin: MARGIN_ANGEL
+                });
+                // rerender subtree's children
+                node.merge(nodeUpdate)
+                .data(new_tree.descendants())
+                .transition()
+                .duration(DURATION)
+                .attr('transform', function(d) {
+                  if (d.parent) {
+                    return 'translate(' + project(d.x, d.y) + ')';
+                  } else {
+                    // dont move the position of tree root
+                    return 'translate(' + project(d.x0, d.y0) + ')';
+                  }
+                });
+
+                link.merge(linkUpdate)
+                .data(new_tree.descendants().slice(1))
+                .transition()
+                .duration(DURATION)
+                .attr('d', function(d) {
+                  var source = d;
+                  var target = {
+                    x: d.parent.x0,
+                    y: d.parent.y0
+                  };
+                  return linkStraight(source, target);
+                });
+              } else {
+                // reset to render subtree
+                node.merge(nodeUpdate)
+                .data(tree.descendants())
+                .transition()
+                .duration(DURATION)
+                .attr('transform', function(d) {
+                  if (d.parent) {
+                    // recover to original position
+                    return 'translate(' + project(d.x0, d.y0) + ')';
+                  } else {
+                    // dont move the position of tree root
+                    return 'translate(' + project(d.x0, d.y0) + ')';
+                  }
+                });
+
+                link.merge(linkUpdate)
+                .data(tree.descendants().slice(1))
+                .transition()
+                .duration(DURATION)
+                .attr('d', function(d) {
+                  var source = {
+                    x: d.x0,
+                    y: d.y0
+                  };
+                  var target = {
+                    x: d.parent.x0,
+                    y: d.parent.y0
+                  };
+                  return linkStraight(source, target);
+                });
+              }
+            }
           },
           ready: function() {
             var _this = this;
