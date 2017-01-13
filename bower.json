@@ -26,6 +26,16 @@
     "px-layout-design": "^0.3.19",
     "px-list-bare-design": "^0.2.18",
     "px-buttons-design": "^0.4.38",
+<<<<<<< HEAD
     "px-tables-design": "^0.3.23"
+=======
+    "px-tables-design": "^0.3.23",
+    "d3": "^4",
+    "px-dropdown": "^2.2.1",
+    "px-button-group-design": "^1.0.3"
+  },
+  "resolutions": {
+    "px-defaults-design": "^1.0.2"
+>>>>>>> 04ab97d0d0809b7375001416f4a6bfcae815222f
   }
 }

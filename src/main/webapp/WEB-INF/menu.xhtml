@@ -10,6 +10,7 @@
         <div class="layout-menu #{guestPreferences.menuClass}">
             <div class="nano">
                 <div class="nano-content menu-scroll-content">
+<<<<<<< HEAD
                     <ui:fragment rendered="#{guestPreferences.profileMode == 'inline' and guestPreferences.menuLayout != 'menu-layout-static menu-layout-horizontal'}">
                         <ul id="profile-menu" class="ultima-menu" style="display: block;">
                             <li role="menuitem">
@@ -103,6 +104,9 @@
                         <p:menuitem id="logout" value="#{msg.Logout}" icon="&#xe8ac;" url="#{facesContext.externalContext.requestContextPath}/logout.xhtml"/>
                         
                     </pu:menu>
+=======
+                    <ui:include src="./menu-content.xhtml"/>
+>>>>>>> 04ab97d0d0809b7375001416f4a6bfcae815222f
                 </div>
             </div>
         </div>
