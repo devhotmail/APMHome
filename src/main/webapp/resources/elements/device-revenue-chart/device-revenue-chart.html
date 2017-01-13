@@ -128,6 +128,7 @@
 
           // Center the gauge within the parent SVG.
           var gaugeGroup = gauge.append("g")
+          .attr('class', 'gauge')
           .attr('transform', 'translate(' + locationX + ',' + locationY + ')');
           gaugeGroup.append("circle")
           .attr("r", gaugeCircleY(radius))
@@ -138,8 +139,8 @@
           
           // Text to show current node's name
           // at least depth over 0
-          var node = config.node;
-          if (node.parent) {
+          if (config.showLabel) {
+            var node = config.node;
             var distance = 30;
             var r = gaugeCircleY(radius);
             var _radius = r + distance;
@@ -401,6 +402,8 @@
           config.waveOffset = 0.25;
           config.maxValue = data.revenue;
           config.node = node;
+          config.isRoot = node.depth;
+          config.showLabel = node.depth === 1; // only show label for depth one
 
           renderGauge(this, data.margin, config);
         }
@@ -428,6 +431,7 @@
             node.x = deg + thisDeg + margin;
             node.y = R;
             node.size = r;
+            node.scale = scale;
 
             // degree increments
             deg += ( thisDeg + margin ) * 2;
@@ -571,7 +575,23 @@
                   // dont move the position of tree root
                   return 'translate(' + project(d.x0, d.y0) + ')';
                 }
+              })
+              .each(function(d, i, nodeList) {
+                // reset the gauge size and position
+                if (d.parent) {
+                  d3.select(nodeList[i])
+                  .select('g.gauge')
+                  .transition()
+                  .duration(DURATION)
+                  .attr('transform', function(d) {
+                    var pos = [d.size, d.size].map(function(n) {
+                      return -n;
+                    });
+                    return 'translate(' + pos.join(',') + ')';
+                  });
+                }
               });
+
               link.merge(linkUpdate)
               .data(tree.descendants().slice(1))
               .transition()
@@ -606,9 +626,10 @@
                 .transition()
                 .duration(DURATION)
                 .attr('transform', function(d) {
-                  if (d.parent) {
+                  if (d.depth === 1) {
                     return 'translate(' + project(d.x, d.y) + ')';
-                  } else {
+                  }
+                  if (d.depth === 0) {
                     // dont move the position of tree root
                     return 'translate(' + project(d.x0, d.y0) + ')';
                   }
@@ -617,6 +638,21 @@
                   // when this opening node is in position.
                   if(d.data.id === targetNode.data.id){
                     _opening = openNode(targetNode);
+                  }
+                })
+                .each(function(d, i, nodeList) {
+                  // make the gauge smaller
+                  if (d.parent) {
+                    d3.select(nodeList[i])
+                    .select('g.gauge')
+                    .transition()
+                    .duration(DURATION)
+                    .attr('transform', function(d) {
+                      var pos = [d.size, d.size].map(function(n) {
+                        return -n * d.scale;
+                      });
+                      return 'translate(' + pos.join(',') + ')' + ' scale(' + d.scale + ')';
+                    });
                   }
                 });
 
