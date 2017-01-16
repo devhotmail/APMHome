@@ -476,7 +476,9 @@
               width = +svg.attr("width"),
               height = +svg.attr("height"),
               radius = width / 2 + 150,
-              rootGroup = svg.append("g").attr("transform",
+              rootGroup = svg.append("g")
+              .attr('class', 'orbit1')
+              .attr("transform",
               "translate(" + (
                 width / 2
               ) + "," + (
@@ -603,8 +605,19 @@
               });
             }
 
-            function handleClick(targetNode) {
+            function handleClick(targetNode, i, nodeList) {
+              // remove all `active` class for each node
+              d3.selectAll(nodeList)
+              .classed('active', false);
+
               if (targetNode.parent) {
+                // add `expanded` for root node when orbit two open
+                svg.classed('expanded', true);
+
+                // add `active` class for current node in orbit one
+                d3.select(nodeList[i])
+                .classed('active', true);
+
                 // build a new smaller tree layout
                 var new_radius = radius - 200;
                 layout_orbit(tree, {
@@ -664,6 +677,8 @@
                   return linkStraight(source, target);
                 });
               } else {
+                // remove `expanded` for root node when orbit two closed
+                svg.classed('expanded', false);
 
                 // check if there's a 2nd orbit now
                 if (_opening) {
@@ -744,7 +759,7 @@
                 var linkUpdate = link.merge(linkEnter)
                 .transition()
                 .delay(DURATION/2)
-                .duration(DURATION)
+                .duration(DURATION/2)
                 .ease(d3.easeQuadOut)
                 .attr('d', function(d, i) {
                   var source = node;
@@ -753,9 +768,12 @@
                   var sourcePos = project(source.x, source.y);
                   var targetPos = project(target.x, target.y);
 
-                  return 'M' + sourcePos
-                    + 'Q' + (sourcePos[0] + (targetPos[0] - sourcePos[0]) * 0.4)  + ',' + (sourcePos[1] + (targetPos[1] - sourcePos[1]) * 0.65)
-                    + ',' + targetPos;
+                  var controlPos = [
+                    sourcePos[0] + (targetPos[0] - sourcePos[0]) * 0.4,
+                    sourcePos[1] + (targetPos[1] - sourcePos[1]) * 0.65
+                  ];
+
+                  return 'M' + sourcePos + 'Q' + controlPos + ',' + targetPos;
                 });
 
                 var groups = subGroup.selectAll('g.node')
