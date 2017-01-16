@@ -35,12 +35,13 @@ import static java.lang.Math.ceil;
 @ViewScoped
 public class AssetProcurementController {
 	private static final Logger logger = LoggerFactory.getLogger(AssetProcurementController.class);
-    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    private static final String remote_addr = request.getRemoteAddr();
-    private static final String page_uri = request.getRequestURI();
-    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
-    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    
+    private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
     
     private final static ImmutableMap<Integer, String> parts = ImmutableMap.of(1, "头部", 2, "胸部", 3, "腹部", 4, "四肢", 5, "其他");
     private final static int DAILY_UTIL_HOURS = 8;

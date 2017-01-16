@@ -27,19 +27,19 @@ import java.util.*;
 @ViewScoped
 public final class AssetMaintenanceController implements ServerEventInterface {
 
-    protected final static Logger logger = LoggerFactory.getLogger(AssetMaintenanceController.class);
-    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    private static final String remote_addr = request.getRemoteAddr();
-    private static final String page_uri = request.getRequestURI();
-    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
-    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
-    
+    private static final Logger logger = LoggerFactory.getLogger(AssetMaintenanceController.class);
+
     private static final String checkIntervalNotice_1 = WebUtil.getMessage("checkIntervalNotice_1");
     private static final String checkIntervalNotice_2 = WebUtil.getMessage("checkIntervalNotice_2");
-    
-    //private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
-    HashMap<String, Object> sqlParams = new HashMap<>(); 
+
+    private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+
+    private HashMap<String, Object> sqlParams = new HashMap<>(); 
 
     private final int knownCaseTypes = 5;
     private final int knownWorkOrderSteps = 6;

@@ -36,17 +36,9 @@ import java.text.DecimalFormat;
 @ViewScoped
 public class HomeDeptHeadController implements Serializable {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeDeptHeadController.class);
-    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    private static final String remote_addr = request.getRemoteAddr();
-    private static final String page_uri = request.getRequestURI();
-    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
-    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
-    private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
-    HashMap<String, Object> sqlParams = new HashMap<>();
-    
     private static final long serialVersionUID = 1L;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeDeptHeadController.class);
+    
     private static final String deviceScanlg = WebUtil.getMessage("deviceScanlg");
     private static final String deviceExpolg_1 = WebUtil.getMessage("deviceExpolg_1");
     private static final String deviceExpolg_2 = WebUtil.getMessage("deviceExpolg_2");
@@ -54,6 +46,16 @@ public class HomeDeptHeadController implements Serializable {
     private static final String deviceROIlg_2 = WebUtil.getMessage("deviceROIlg_2");
     private static final String checkIntervalNotice_1 = WebUtil.getMessage("checkIntervalNotice_1");
     private static final String checkIntervalNotice_2 = WebUtil.getMessage("checkIntervalNotice_2");
+
+    private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    private final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
+    
+    private HashMap<String, Object> sqlParams = new HashMap<>();
 
     // Dashboard Parameters
     private String valueScan = null;
@@ -132,7 +134,7 @@ public class HomeDeptHeadController implements Serializable {
     }
     
             //bigint
-    private String SCANTL
+    private static final String SCANTL
             = "SELECT left_table.name, COUNT(right_table), SUM(expose_count) "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN (SELECT expose_count, asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
@@ -141,35 +143,35 @@ public class HomeDeptHeadController implements Serializable {
             + "ORDER BY left_table.name ";
 
             //bigint
-    private String VALUESCANTL
+    private static final String VALUESCANTL
             = "SELECT COUNT(right_table), SUM(expose_count) "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN (SELECT expose_count, asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
             + "ON left_table.id = right_table.asset_id ";
 
             //double
-    private String REVENUETL
+    private static final String REVENUETL
             = "SELECT left_table.name, right_table.sum "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN (SELECT SUM(price_amount), asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "ORDER BY left_table.name ";
 
-    private String DEPRETL
+    private static final String DEPRETL
             = "SELECT left_table.name, deprecate_amount / 365 * (Date(:#endDate) - Date(:#startDate)) depre "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN asset_depreciation "    
             + "ON left_table.id = asset_depreciation.asset_id "    
             + "ORDER BY left_table.name";
 
-    private String MAINTAINTL
+    private static final String MAINTAINTL
             = "SELECT left_table.name, right_table.sum "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN (SELECT SUM(total_price), asset_id FROM work_order WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "ORDER BY left_table.name ";
 
-    private String BENCHEXPOTL
+    private static final String BENCHEXPOTL
             = "SELECT left_table.name, left_table.asset_group, bench "
             + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
             + "LEFT JOIN (SELECT asset_group, SUM(expose_count) / COUNT(DISTINCT(asset_id)) bench FROM asset_info JOIN asset_clinical_record ON asset_info.id = asset_clinical_record.asset_id WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_group) right_table "

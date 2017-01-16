@@ -18,8 +18,8 @@ public class Row {
         private long repair;
         private double dt;
 
-        private final NumberFormat cf = new DecimalFormat(",###.##");
-        private NumberFormat cfint = new DecimalFormat(",###");
+        private static final NumberFormat cf = new DecimalFormat(",###.##");
+        private static final NumberFormat cfint = new DecimalFormat(",###");
 
         public Row (String name, String serial_num, String clinical_dept_name, double revenue, long scan,
                     double expo, double cost, double profit, long repair, double dt) {

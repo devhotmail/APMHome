@@ -28,26 +28,25 @@ public class AssetForecastController extends SqlConfigurableChartController impl
 
 	private static final long serialVersionUID = 1L;
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AssetForecastController.class);
-    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    private static final String remote_addr = request.getRemoteAddr();
-    private static final String page_uri = request.getRequestURI();
-    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
-    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
-    //private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
-    HashMap<String, Object> sqlParams = new HashMap<>(); 
 
-    // I18n string
     private static final String revenueStr = WebUtil.getMessage("deviceROIlg_1");
     private static final String profitStr = WebUtil.getMessage("deviceROIlg_2");
+
+    private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    private HashMap<String, Object> sqlParams = new HashMap<>(); 
 
     //UI Params
     private String profitForecast = "";
     private BarChartModel barMonthlyForecast = new BarChartModel();
 
     // chart parameters
-    private int assetId         = 1;
-    private String assetName    = "全部设备";
+    private int assetId = 1;
+    private String assetName = WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");
     private boolean isSingleAsset  = false;
 
     private int targetYear = Year.now().getValue();
@@ -67,7 +66,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
     private List<Map<String, Object>> predictPro = new ArrayList<>();
 
     // SQL script
-    private String depMonth =
+    private static final String depMonth =
             "select a.hospital_id as key, " +
                     "sum(d.deprecate_amount) as value " +
                     "from asset_info a, asset_depreciation d " +
@@ -75,7 +74,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "and a.hospital_id = :#hospital_id " +
                     "group by key;";
 
-    private String forecastMonthRevenue =
+    private static final String forecastMonthRevenue =
             "select sum(r.price_amount) as value, " +
                     "to_char(r.exam_date, 'yyyy-mm') as key " +
                     "from asset_info a, asset_clinical_record r " +
@@ -85,7 +84,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "and a.hospital_id = :#hospital_id " +
                     "group by key order by key;";
 
-    private String forecastMonthMaint =
+    private static final String forecastMonthMaint =
             "select to_char(w.request_time, 'yyyy-mm') as key, " +
                     "sum(w.total_price) as value " +
                     "from asset_info a, work_order w " +
@@ -97,7 +96,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "group by key order by key;";
 
     // SQL for single asset
-    private String assetDep =
+    private static final String assetDep =
             "select a.hospital_id as key, " +
                     "sum(d.deprecate_amount) as value " +
                     "from asset_info a, asset_depreciation d " +
@@ -106,7 +105,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "and a.id = :#assetId " +
                     "group by key;";
 
-    private String assetRevenue =
+    private static final String assetRevenue =
             "select sum(r.price_amount) as value, " +
                     "to_char(r.exam_date, 'yyyy-mm') as key " +
                     "from asset_info a, asset_clinical_record r " +
@@ -117,7 +116,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "and a.id = :#assetId " +
                     "group by key order by key;";
 
-    private String assetMaint =
+    private static final String assetMaint =
             "select to_char(w.request_time, 'yyyy-mm') as key, " +
                     "sum(w.total_price) as value " +
                     "from asset_info a, work_order w " +

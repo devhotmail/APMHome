@@ -33,18 +33,18 @@ import com.ge.apm.view.analysis.Row;
 @ViewScoped
 public class AssetPerfAllController implements Serializable, ServerEventInterface {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AssetPerfAllController.class);
-    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    private static final String remote_addr = request.getRemoteAddr();
-    private static final String page_uri = request.getRequestURI();
-    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
-    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
-    private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
-    HashMap<String, Object> sqlParams = new HashMap<>();    
-    
     private static final long serialVersionUID = 1L;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AssetPerfAllController.class);
     
+    private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    private final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
+
+    private HashMap<String, Object> sqlParams = new HashMap<>(); 
     // Dashboard Parameters
     private String topAsset = null;
     private String topDept = null;
@@ -108,7 +108,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
     }
 
             //bigint
-    private String DB1TL
+    private static final String DB1TL
             = "SELECT left_table.name, serial_num, clinical_dept_name, SUM(right_table.price_amount) revenue, COUNT(right_table) scan, SUM(expose_count) expo "
             + "FROM (SELECT id, name, serial_num, clinical_dept_name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT expose_count, price_amount, asset_id FROM asset_clinical_record WHERE EXTRACT(YEAR FROM exam_date) = :#targetYear) right_table "
@@ -116,7 +116,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
             + "GROUP BY left_table.name, serial_num, clinical_dept_name "
             + "ORDER BY left_table.name ";
 
-    private String DB2TL
+    private static final String DB2TL
             = "SELECT left_table.name, sum(deprecate_amount) depre "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT asset_id, deprecate_amount FROM asset_depreciation WHERE EXTRACT(YEAR FROM deprecate_date) = :#targetYear) right_table "
@@ -124,7 +124,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
             + "GROUP BY left_table.name "
             + "ORDER BY left_table.name";
 
-    private String DB3TL
+    private static final String DB3TL
             = "SELECT left_table.name, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
@@ -132,7 +132,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
             + "GROUP BY left_table.name "
             + "ORDER BY left_table.name ";
 
-    private String MAX1TL
+    private static final String MAX1TL
             = "SELECT asset_group FROM "
             + "( SELECT left_table.asset_group, SUM(right_table.price_amount) "
             + "FROM (SELECT id, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
@@ -146,7 +146,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY asset_group) as t2 )";
 
-    private String MAX2TL
+    private static final String MAX2TL
             = "SELECT clinical_dept_name FROM "
             + "( SELECT left_table.clinical_dept_name, SUM(right_table.price_amount) "
             + "FROM (SELECT id, clinical_dept_name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "

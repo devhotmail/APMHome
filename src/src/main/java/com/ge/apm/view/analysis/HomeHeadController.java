@@ -30,21 +30,20 @@ import webapp.framework.dao.NativeSqlUtil;
 public class HomeHeadController extends SqlConfigurableChartController {
 
 	private static final long serialVersionUID = 1L;
-	
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HomeHeadController.class);
-    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    private static final String remote_addr = request.getRemoteAddr();
-    private static final String page_uri = request.getRequestURI();
-    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
-    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
-    HashMap<String, Object> sqlParams = new HashMap<>();  
     
-	// I18n string
     private static final String assetTypeStr = WebUtil.getMessage("assetType");
     private static final String revenueStr = WebUtil.getMessage("deviceROIlg_1");
     private static final String profitStr = WebUtil.getMessage("deviceROIlg_2");
 
+    private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    
+    private HashMap<String, Object> sqlParams = new HashMap<>();  
     private List<Map<String, Object>> profit = new ArrayList<>();
 
     //UI Params
@@ -94,7 +93,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
                     "and a.hospital_id = :#hospital_id " +
                     "group by key order by key;";*/
 
-    private String targetYearMonthRevenue =
+    private static final String targetYearMonthRevenue =
             "select sum(r.price_amount) as value, " +
                     "to_char(r.exam_date, 'yyyy-mm') as key " +
                     "from asset_info a, asset_clinical_record r " +
@@ -103,7 +102,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
                     "and a.hospital_id = :#hospital_id " +
                     "group by key order by key;";
 
-    private String depMonth =
+    private static final String depMonth =
             "select a.hospital_id as key, " +
                     "sum(d.deprecate_amount) as value " +
                     "from asset_info a, asset_depreciation d " +
@@ -123,7 +122,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
                     "and a.hospital_id = :#hospital_id " +
                     "group by key order by key;";*/
 
-    private String maintTargetYearMonthCost =
+    private static final String maintTargetYearMonthCost =
             "select to_char(w.request_time, 'yyyy-mm') as key, " +
                     "sum(w.total_price) as value " +
                     "from asset_info a, work_order w " +
@@ -132,7 +131,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
                     "and a.hospital_id = :#hospital_id " +
                     "group by key order by key;";
 
-    private String forecastMonthRevenue =
+    private static final String forecastMonthRevenue =
             "select sum(r.price_amount) as value, " +
                     "to_char(r.exam_date, 'yyyy-mm') as key " +
                     "from asset_info a, asset_clinical_record r " +
@@ -142,7 +141,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
                     "and a.hospital_id = :#hospital_id " +
                     "group by key order by key;";
 
-    private String forecastMonthMaint =
+    private static final String forecastMonthMaint =
             "select to_char(w.request_time, 'yyyy-mm') as key, " +
                     "sum(w.total_price) as value " +
                     "from asset_info a, work_order w " +

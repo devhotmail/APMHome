@@ -40,17 +40,9 @@ import java.text.DecimalFormat;
 @ViewScoped
 public class AssetUsageAllController implements Serializable, ServerEventInterface {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AssetUsageAllController.class);
-    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    private static final String remote_addr = request.getRemoteAddr();
-    private static final String page_uri = request.getRequestURI();
-    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
-    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
-    private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
-    HashMap<String, Object> sqlParams = new HashMap<>();  
-
 	private static final long serialVersionUID = 1L;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AssetUsageAllController.class);
+    
 	private static final String deviceScanlg = WebUtil.getMessage("deviceScanlg");
 	private static final String deviceExpolg_1 = WebUtil.getMessage("deviceExpolg_1");
 	private static final String deviceExpolg_2 = WebUtil.getMessage("deviceExpolg_2");
@@ -60,11 +52,21 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 	private static final String deviceDTlg_2 = WebUtil.getMessage("deviceDTlg_2");
     private static final String checkIntervalNotice_1 = WebUtil.getMessage("checkIntervalNotice_1");
     private static final String checkIntervalNotice_2 = WebUtil.getMessage("checkIntervalNotice_2");
+	private static final int HOURS_DAY = 24;
+
+	private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    private final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
+    
+	private HashMap<String, Object> sqlParams = new HashMap<>();  
 
 	private String assetName = WebUtil.getMessage("preventiveMaintenanceAnalysis_allDevices");
 	private int assetId = -1;
-	private static final int HOURS_DAY = 24;
-
+	
 
 	// Dashboard Parameters
 	private String valueScan = null;
@@ -162,7 +164,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
     }
 
             //bigint
-    private String SCANTL
+    private static final String SCANTL
             = "SELECT left_table.name, COUNT(right_table), SUM(expose_count) "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND asset_group != 13 AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT asset_id, expose_count FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
@@ -171,14 +173,14 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
             + "ORDER BY left_table.name ";
 
             //bigint
-    private String VALUESCANTL
+    private static final String VALUESCANTL
             = "SELECT COUNT(right_table), SUM(expose_count) "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT expose_count, asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate) right_table "
             + "ON left_table.id = right_table.asset_id ";
 
 			//Double
-    private String BENCHEXPOTL
+    private static final String BENCHEXPOTL
             = "SELECT left_table.name, left_table.asset_group, bench "
             + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND asset_group != 13 AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT asset_group, SUM(expose_count) / COUNT(DISTINCT(asset_id)) bench FROM asset_info JOIN asset_clinical_record ON asset_info.id = asset_clinical_record.asset_id WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_group) right_table "
@@ -186,7 +188,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
             + "ORDER BY left_table.name ";
 
 			//Integer
-	private String SERVETL
+	private static final String SERVETL
 			= "SELECT DISTINCT name, "
 			+ ":#HOURS_DAY * ( "
 			+ "CASE WHEN terminate_date IS NULL THEN Date(:#endDate) WHEN Date(:#endDate) < terminate_date THEN Date(:#endDate) ELSE terminate_date END "
@@ -197,7 +199,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 			+ "ORDER BY name";
 
 			//bigint
-	private String INUSETL
+	private static final String INUSETL
             = "SELECT left_table.name, right_table.sum inuse "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT SUM(exam_duration), asset_id FROM asset_clinical_record WHERE exam_date BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
@@ -205,7 +207,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
             + "ORDER BY left_table.name ";
 
 			 //double
-	private String DTTL
+	private static final String DTTL
             = "SELECT left_table.name, right_table.diff/3600 dt "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT SUM(EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time)) diff, asset_id FROM work_order WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
@@ -213,7 +215,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
             + "ORDER BY left_table.name ";
 
 			 //double
-	private String BENCHDTTL
+	private static final String BENCHDTTL
             = "SELECT left_table.name, left_table.asset_group, right_table.diff/36/(date(:#endDate) - date(:#startDate))/24 dtbench "
             + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
             + "LEFT JOIN (SELECT asset_group, SUM(EXTRACT(EPOCH FROM(confirmed_up_time-confirmed_down_time))) / COUNT(DISTINCT(asset_id)) diff FROM asset_info JOIN work_order ON asset_info.id = work_order.asset_id WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_group) right_table "

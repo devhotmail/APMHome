@@ -30,14 +30,16 @@ import java.util.*;
 @ViewScoped
 public final class AssetProactiveMaintenanceController implements ServerEventInterface {
 
-    protected final static Logger logger = LoggerFactory.getLogger(AssetProactiveMaintenanceController.class);
-    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    private static final String remote_addr = request.getRemoteAddr();
-    private static final String page_uri = request.getRequestURI();
-    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
-    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
-    HashMap<String, Object> sqlParams = new HashMap<>();  
+    private static final Logger logger = LoggerFactory.getLogger(AssetProactiveMaintenanceController.class);
+    
+    private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    
+    private HashMap<String, Object> sqlParams = new HashMap<>();  
 
     @PostConstruct
     public final void init() {

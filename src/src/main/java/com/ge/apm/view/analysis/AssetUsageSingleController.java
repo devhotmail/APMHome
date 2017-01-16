@@ -40,15 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 public class AssetUsageSingleController implements ServerEventInterface {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AssetUsageSingleController.class);
-    private static final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-    private static final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    private static final String remote_addr = request.getRemoteAddr();
-    private static final String page_uri = request.getRequestURI();
-    private static final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
-    private static final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
-    private static final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
-    HashMap<String, Object> sqlParams = new HashMap<>();  
-
+    
 	private static final String deviceScanlg = WebUtil.getMessage("deviceScanlg");
 	private static final String deviceExpolg_1 = WebUtil.getMessage("deviceExpolg_1");
 	private static final String deviceUsagelg_1 = WebUtil.getMessage("deviceUsagelg_1");
@@ -56,9 +48,20 @@ public class AssetUsageSingleController implements ServerEventInterface {
 	private static final String deviceUsagelg_3 = WebUtil.getMessage("deviceUsagelg_3");
     private static final String checkIntervalNotice_1 = WebUtil.getMessage("checkIntervalNotice_1");
     private static final String checkIntervalNotice_2 = WebUtil.getMessage("checkIntervalNotice_2");
+	private final int HOURS_DAY = 24;
+
+	private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    private final int clinical_dept_id = UserContextService.getCurrentUserAccount().getOrgInfoId();
+    
+	private HashMap<String, Object> sqlParams = new HashMap<>();  
 
 	private static final String DATA_FORMAT = "yyyy-MM-dd";
-	private static final int HOURS_DAY = 24;
+	
     
 	private int assetId = -1;
 
@@ -186,7 +189,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
     }
 
 	// Chart SQL
-	private String SCANTL
+	private static final String SCANTL
 			= "SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, COUNT(asset_id) count "
 			+ "FROM asset_clinical_record "
 			+ "WHERE asset_id = :#assetId "
@@ -194,7 +197,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "GROUP BY exam_date "
 			+ "ORDER BY exam_date";
 
-	private String VALUESCANTL
+	private static final String VALUESCANTL
 			= "SELECT COUNT(asset_id) sum "
 			+ "FROM asset_clinical_record "
 			+ "WHERE asset_id = :#assetId "
@@ -202,7 +205,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "GROUP BY asset_id";
 
 			//Double
-	private String EXPOTL
+	private static final String EXPOTL
 			= "SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, SUM(expose_count) hours "
 			+ "FROM asset_clinical_record "
 			+ "WHERE asset_id = :#assetId "
@@ -210,7 +213,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "GROUP BY exam_date "
 			+ "ORDER BY exam_date";
 
-	private String VALUEEXPOTL
+	private static final String VALUEEXPOTL
 			= "SELECT SUM(expose_count) sum "
 			+ "FROM asset_clinical_record "
 			+ "WHERE asset_id = :#assetId "
@@ -218,7 +221,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "GROUP BY asset_id";
 
 			//Integer
-	private String SERVETL
+	private static final String SERVETL
 			= "SELECT CASE WHEN Date(:#startDate) > install_date THEN Date(:#startDate) ELSE install_date END serve1, "
 			+ "CASE WHEN terminate_date IS NULL THEN Date(:#endDate) WHEN Date(:#endDate) < terminate_date THEN Date(:#endDate) ELSE terminate_date END serve2, "
 			+ ":#HOURS_DAY * ( "
@@ -228,7 +231,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "WHERE id = :#assetId ";
 
 			//Integer
-	private String INUSETL
+	private static final String INUSETL
 			= "SELECT to_char(exam_date, 'YYYY-MM-DD') timeline, "
 			+ "SUM(exam_duration)/60 inuse "
 			+ "FROM asset_clinical_record "
@@ -238,7 +241,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "ORDER BY exam_date";
 
 			//Double
-	private String DTTL
+	private static final String DTTL
 			= "SELECT to_char(confirmed_down_time, 'YYYY-MM-DD') timeline, "
 			+ "EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff_total, "
 			+ "EXTRACT(EPOCH FROM confirmed_down_time) today "
@@ -247,9 +250,7 @@ public class AssetUsageSingleController implements ServerEventInterface {
 			+ "AND confirmed_down_time > :#startDate AND confirmed_up_time < :#endDate "
 			+ "ORDER BY to_char(confirmed_up_time, 'YYYY-MM-DD')";
 
-
 	// Getters & Setters
-
 	public String getAssetName() {
 
 		return assetName;
