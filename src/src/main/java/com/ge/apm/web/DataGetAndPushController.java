@@ -47,18 +47,10 @@ public class DataGetAndPushController {
     public @ResponseBody Object postData(@PathVariable String tablename, @RequestBody List<Map> list) {
         try {
             return dataService.postData(tablename, list);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
         } catch(Exception ex) {
             Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
+            return "{code:1,msg:"+ org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace(ex) +"}";
         }
-        return "{code:1,msg:保存失败}";
     }
     
     @RequestMapping(value = "/datapost/direct/{tablename}", method = RequestMethod.POST) 
