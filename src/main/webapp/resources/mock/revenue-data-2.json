@@ -2,14 +2,9 @@
   "name": "MR",
   "children": [
     {
-      "name": "MRI-1",
-      "revenue": 5,
-      "margin": 2
-    },
-    {
-      "name": "MRI-2",
-      "revenue": 8,
-      "margin": 5
+      "name": "MRI-4",
+      "revenue": 12,
+      "margin": 7
     },
     {
       "name": "MRI-3",
@@ -17,9 +12,14 @@
       "margin": 8
     },
     {
-      "name": "MRI-4",
-      "revenue": 12,
-      "margin": 7
+      "name": "MRI-2",
+      "revenue": 8,
+      "margin": 5
+    },
+    {
+      "name": "MRI-1",
+      "revenue": 5,
+      "margin": 2
     }
   ]
 }

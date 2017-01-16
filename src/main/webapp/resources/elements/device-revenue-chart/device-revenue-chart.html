@@ -456,13 +456,6 @@
           return 'M' + project(source.x, source.y) + 'L' + project(target.x, target.y);
         }
 
-        function linkVertical(source, target) {
-          return 'M' + source.x + ',' + source.y
-            + 'C' + (source.x + target.x) / 2 + ',' + source.y
-            + ' ' + (source.x + target.x) / 2 + ',' + target.y
-            + ' ' + target.x + ',' + target.y
-        }
-
         Polymer({
           is: 'device-revenue-chart',
           properties: {
@@ -750,9 +743,19 @@
 
                 var linkUpdate = link.merge(linkEnter)
                 .transition()
-                .duration(DURATION/2)
-                .attr('d', function(d) {
-                  return linkStraight(node, d);
+                .delay(DURATION/2)
+                .duration(DURATION)
+                .ease(d3.easeQuadOut)
+                .attr('d', function(d, i) {
+                  var source = node;
+                  var target = d;
+
+                  var sourcePos = project(source.x, source.y);
+                  var targetPos = project(target.x, target.y);
+
+                  return 'M' + sourcePos
+                    + 'Q' + (sourcePos[0] + (targetPos[0] - sourcePos[0]) * 0.4)  + ',' + (sourcePos[1] + (targetPos[1] - sourcePos[1]) * 0.65)
+                    + ',' + targetPos;
                 });
 
                 var groups = subGroup.selectAll('g.node')
@@ -820,6 +823,7 @@
             if(nodeId > 3){
               nodeId = 2;
             }
+            nodeId = 3;
             return fetch('mock/revenue-data-' + nodeId + '.json').then(function(res) {
               return  res.json();
             });
