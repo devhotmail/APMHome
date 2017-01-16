@@ -543,6 +543,7 @@
             .attr('id', function(d) {
               return 'node-' + d.data.id;
             })
+            .style('cursor', 'pointer')
             .on('click', handleClick)
             .each(renderNode);
 
