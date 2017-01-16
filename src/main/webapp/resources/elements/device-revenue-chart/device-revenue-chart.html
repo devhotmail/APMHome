@@ -648,10 +648,11 @@
                     .transition()
                     .duration(DURATION)
                     .attr('transform', function(d) {
+                      var scale = Math.pow(d.scale, 3);
                       var pos = [d.size, d.size].map(function(n) {
-                        return -n * d.scale;
+                        return -n * scale;
                       });
-                      return 'translate(' + pos.join(',') + ')' + ' scale(' + d.scale + ')';
+                      return 'translate(' + pos.join(',') + ')' + ' scale(' + scale + ')';
                     });
                   }
                 });
