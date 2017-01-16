@@ -189,4 +189,6 @@
             </list>
         </property>
     </bean>
+    
+    <util:properties id="wxProperties" location="classpath:/wx.properties" />
 </beans>
