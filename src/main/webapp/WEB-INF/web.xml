@@ -149,6 +149,10 @@
         <servlet-name>springMVCServlet</servlet-name>
         <url-pattern>/web/*</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>springMVCServlet</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>MyServlet</servlet-name>

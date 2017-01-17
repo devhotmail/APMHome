@@ -39,8 +39,10 @@
             <div class="layout-main">
                 <ui:insert name="content"/>
             </div>
+            <div class="layout-profile">
+                <span class="profile-name">#{msg.Welcome}, #{userContextService.userName}</span>
+            </div>
         </div>
-        
         <p:dialog widgetVar="statusDialog" modal="false" class="ajaxStatusDialog" draggable="false" closable="false" resizable="false" showHeader="false">
             <i class="fa fa-circle-o-notch fa-spin ajax-loader" style="zoom: 1.5;color: orange;" aria-hidden="true"></i>
         </p:dialog>

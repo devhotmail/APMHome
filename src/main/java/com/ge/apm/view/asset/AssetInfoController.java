@@ -32,6 +32,7 @@ import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
+import org.joda.time.DateTime;
 
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
@@ -64,6 +65,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     private AssetDepreciationService assetDepreciationService;
 
+    Boolean terminate;
+
     @Override
     protected void init() {
         dao = WebUtil.getBean(AssetInfoRepository.class);
@@ -73,6 +76,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         orgDao = WebUtil.getBean(OrgInfoRepository.class);
         uuaService = WebUtil.getBean(UaaService.class);
         assetDepreciationService = WebUtil.getBean(AssetDepreciationService.class);
+        terminate = Boolean.valueOf(WebUtil.getRequestParameter("terminate"));
         this.filterBySite = true;
         if (!userContextService.hasRole("MultiHospital")) {
             this.filterByHospital = true;
@@ -111,7 +115,12 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         if (searchFilters == null) {
             searchFilters = new ArrayList<SearchFilter>();
         }
-        searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, true));
+
+        if (terminate) {
+            this.searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, false));
+        } else {
+            searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, true));
+        }
     }
 
     public void setFileService(AttachmentFileService fileService) {
@@ -180,6 +189,31 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void onBeforeSave(AssetInfo object) {
         OrgInfo org = orgDao.findById(object.getClinicalDeptId());
         object.setClinicalDeptName(org.getName());
+        DateTime temp;
+        if (null != object.getManufactDate()) {
+            temp = new DateTime(object.getManufactDate());
+            object.setManufactDate(temp.plusHours(12).toDate());
+        }
+        if (null != object.getPurchaseDate()) {
+            temp = new DateTime(object.getPurchaseDate());
+            object.setPurchaseDate(temp.plusHours(12).toDate());
+        }
+        if (null != object.getArriveDate()) {
+            temp = new DateTime(object.getArriveDate());
+            object.setArriveDate(temp.plusHours(12).toDate());
+        }
+        if (null != object.getInstallDate()) {
+            temp = new DateTime(object.getInstallDate());
+            object.setInstallDate(temp.plusHours(12).toDate());
+        }
+        if (null != object.getWarrantyDate()) {
+            temp = new DateTime(object.getWarrantyDate());
+            object.setWarrantyDate(temp.plusHours(12).toDate());
+        }
+        if (null != object.getTerminateDate()) {
+            temp = new DateTime(object.getTerminateDate());
+            object.setTerminateDate(temp.plusHours(12).toDate());
+        }
     }
 
     @Override
@@ -212,17 +246,22 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         this.save();
         assetDepreciationService.saveAssetDerpeciation(selected);
         if (resultStatus) {
-            return "List?faces-redirect=true";
+            return getListPageLink();
         } else {
             return "";
         }
+    }
+    
+    public String getListPageLink(){
+        return "List?faces-redirect=true" + (this.isTerminate()?"&terminate=true":"") ;
     }
 
     public UserAccount getOwner() {
         return owner;
     }
-    public List<OrgInfo> getOwnerOrgList(){
-         return ownerOrgList;
+
+    public List<OrgInfo> getOwnerOrgList() {
+        return ownerOrgList;
     }
 
     public void setOwner(UserAccount owner) {
@@ -457,6 +496,13 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     public void setOperation(String operation) {
         this.operation = operation;
+    }
+
+    public Boolean isTerminate() {
+        if(null!= selected){
+            return !selected.getIsValid();
+        }
+        return terminate;
     }
 
 }

@@ -74,7 +74,7 @@
                                 <p:inputText id="filterStartTime" widgetVar="varFilterStartTime" value="#{metrologyOrderController.startFormatTime}"/>
                             </f:facet>
                             <h:outputText value="#{item.startTime}">
-                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd" />
                             </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.endTime}" sortBy="#{item.endTime}" filterBy="#{item.endTime}" filterMatchMode="GTE">

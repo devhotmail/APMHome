@@ -75,43 +75,53 @@
 
         <p:accordionPanel id="accordion" multiple="false" >
             <p:tab title="#{msg.BasicInfo}">
-                <p:panelGrid columns="4"  layout="grid" styleClass="ui-panelgrid-blank">
-
-                    <h:panelGroup>
-                        <label class="label">#{msg.name}</label>
-                        <p:inputText value="#{assetInfoController.selected.name}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.vendor}</label>
-                        <p:inputText value="#{assetInfoController.selected.vendor}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.departNum}</label>
-                        <p:inputText value="#{assetInfoController.selected.departNum}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.clinicalDeptName}</label>
-                        <p:inputText value="#{assetInfoController.selected.clinicalDeptName}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.purchaseDate}</label>
-                        <p:inputText value="#{assetInfoController.selected.purchaseDate}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.warrantyDate}</label>
-                        <p:inputText value="#{assetInfoController.selected.warrantyDate}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup >
-                        <label class="label">#{msg.purchasePrice}</label>
-                        <p:inputText value="#{assetInfoController.selected.purchasePrice}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.status}</label>
-                        <p:selectOneRadio id="status"  label="#{msg.status}" value="#{assetInfoController.selected.status}" disabled="true">
-                            <f:selectItems value="#{fieldMsg.getFieldValueList('assetStatus')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                        </p:selectOneRadio>
-                    </h:panelGroup>
-                </p:panelGrid>
+                <div class="ui-g">
+                    <div class="ui-g-8 ui-g-nopad">
+                        <p:panelGrid columns="3"  layout="grid" styleClass="ui-panelgrid-blank">
+                            <h:panelGroup>
+                                <label class="label">#{msg.name}</label>
+                                <p:inputText value="#{assetInfoController.selected.name}" readonly="true"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.vendor}</label>
+                                <p:inputText value="#{assetInfoController.selected.vendor}" readonly="true"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.departNum}</label>
+                                <p:inputText value="#{assetInfoController.selected.departNum}" readonly="true"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.clinicalDeptName}</label>
+                                <p:inputText value="#{assetInfoController.selected.clinicalDeptName}" readonly="true"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.purchaseDate}</label>
+                                <p:inputText value="#{assetInfoController.selected.purchaseDate}" readonly="true"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.warrantyDate}</label>
+                                <p:inputText value="#{assetInfoController.selected.warrantyDate}" readonly="true"/>
+                            </h:panelGroup>
+                            <h:panelGroup >
+                                <label class="label">#{msg.purchasePrice}</label>
+                                <p:inputText value="#{assetInfoController.selected.purchasePrice}" readonly="true"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.status}</label>
+                                <p:selectOneRadio id="status"  label="#{msg.status}" value="#{assetInfoController.selected.status}" disabled="true">
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetStatus')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneRadio>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                    <div class="ui-g-4">
+                        <p:galleria value="#{assetInfoController.getAttachList(assetInfoController.selected.id,1)}" var="attach" panelWidth="300" panelHeight="200" showCaption="false" rendered="#{!empty assetInfoController.getAttachList(assetInfoController.selected.id,1)}">
+                            <p:graphicImage  value="#{pictureService.getImage()}"  >
+                                <f:param name="pictureId" value="#{attach.fileId}" />
+                            </p:graphicImage>
+                        </p:galleria>
+                    </div>
+                </div>
             </p:tab>
         </p:accordionPanel>
         <p:accordionPanel id="accordion2">
@@ -381,7 +391,7 @@
             </div>
         </p:fieldset>
         <p:fieldset  style="margin-bottom:20px">
-            Chart 1: Device Scan 
+            <!-- Chart 1: Device Scan --> 
             <div class="ui-g-12">
                 <div class="block">
                     <h3 class="block-title">#{msg.deviceScanhd}</h3>
@@ -450,15 +460,16 @@
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>
-<!--                <p:tab title="#{fieldMsg.fieldValue('attachmentType', 4)}">
-                    <p:dataList value="#{assetInfoController.getAttachList(assetInfoController.selected.id,4)}" var="fileitem" type="ordered" emptyMessage="#{msg.noRecordFound}">
-                #{fileitem.name}
-                <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" title="#{msg.download}" class="popupIconButton">
-                    <p:fileDownload value="#{attachmentFileService.getFile(fileitem.fileId)}" />
-                </p:commandButton>
-            </p:dataList>
-        </p:tab>-->
+                <p:tab title="#{msg.QRCode}" rendered="false">
+                    <p:barcode value="0123456789" type="qr" height="200" format="png"/>
+                </p:tab>
             </p:tabView>
         </h:form>
+        
+        <p:fieldset style="margin-bottom:20px">
+            <h:panelGroup >
+                <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="#{assetInfoController.getListPageLink()}" immediate="true"  update=":growl" style="float:left"/>
+            </h:panelGroup>
+        </p:fieldset>
     </ui:define>
 </ui:composition>
