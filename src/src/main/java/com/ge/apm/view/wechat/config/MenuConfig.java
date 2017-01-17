@@ -1,5 +1,6 @@
 package com.ge.apm.view.wechat.config;
 
+import javax.faces.context.FacesContext;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.menu.WxMenu;
 import me.chanjar.weixin.common.bean.menu.WxMenuButton;
@@ -14,6 +15,8 @@ public class MenuConfig {
      */
     public static WxMenu getMenu(WxMpService wxMpService) {
 
+        String serverName = FacesContext.getCurrentInstance().getExternalContext().getRequestServerName();
+        serverName = "http://" + serverName + "/geapm";
         WxMenu menu = new WxMenu();
         WxMenuButton button1 = new WxMenuButton();
         button1.setName("设备信息");
@@ -22,11 +25,11 @@ public class MenuConfig {
         WxMenuButton button11 = new WxMenuButton();
         button11.setType(WxConsts.BUTTON_VIEW);
         button11.setName("查看设备信息");
-        button11.setUrl("http://danny.ittun.com/geapm");
+        button11.setUrl(serverName + "/wechat/asset/view.xhtml");
         WxMenuButton button12 = new WxMenuButton();
         button12.setType(WxConsts.BUTTON_VIEW);
         button12.setName("新增设备");
-        button12.setUrl("http://danny.ittun.com/geapm");
+        button12.setUrl(serverName + "/wechat/asset/create.xhtml");
         button1.getSubButtons().add(button11);
         button1.getSubButtons().add(button12);
 
@@ -35,11 +38,11 @@ public class MenuConfig {
         WxMenuButton button21 = new WxMenuButton();
         button21.setType(WxConsts.BUTTON_VIEW);
         button21.setName("新增报修");
-        button21.setUrl("http://danny.ittun.com/geapm");
+        button21.setUrl(serverName + "/wechat/wo/create.xhtml");
         WxMenuButton button22 = new WxMenuButton();
         button22.setType(WxConsts.BUTTON_VIEW);
         button22.setName("报修处理进度");
-        button22.setUrl("http://danny.ittun.com/geapm");
+        button22.setUrl(serverName + "/wechat/wo/process.xhtml");
         button2.getSubButtons().add(button21);
         button2.getSubButtons().add(button22);
 
@@ -48,15 +51,15 @@ public class MenuConfig {
         WxMenuButton button31 = new WxMenuButton();
         button31.setType(WxConsts.BUTTON_VIEW);
         button31.setName("APM帐号信息");
-        button31.setUrl("http://danny.ittun.com/geapm");
+        button31.setUrl(serverName + "/wechat/uaa/account.xhtml");
         WxMenuButton button32 = new WxMenuButton();
         button32.setType(WxConsts.BUTTON_VIEW);
         button32.setName("APM重置密码");
-        button32.setUrl("http://danny.ittun.com/geapm");
+        button32.setUrl(serverName + "/wechat/uaa/resetPass.xhtml");
         WxMenuButton button33 = new WxMenuButton();
         button33.setType(WxConsts.BUTTON_VIEW);
         button33.setName("APM帐号绑定");
-        button33.setUrl("http://danny.ittun.com/geapm");
+        button33.setUrl(serverName + "/wechat/uaa/bindAccount.xhtml");
         button3.getSubButtons().add(button31);
         button3.getSubButtons().add(button32);
         button3.getSubButtons().add(button33);
