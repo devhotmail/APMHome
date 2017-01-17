@@ -1,5 +1,13 @@
+:host {
+  height: calc(100vh - 46px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .chart-container {
-  height: 800px;
+  width: 100%;
+  height: 600px;
 }
 
 .node circle {
@@ -23,9 +31,4 @@
   stroke: #555;
   stroke-opacity: 0.4;
   stroke-width: 1;
-}
-
-#chartSvg {
-  display: block;
-  margin: 0 auto;
 }

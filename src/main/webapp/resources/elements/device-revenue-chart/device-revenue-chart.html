@@ -4,14 +4,8 @@
 <dom-module id="device-revenue-chart">
   <template>
     <style include="device-revenue-chart-styles"></style>
-    <div class="ui-g">
-      <div class="ui-g-12">
-        <div class="block">
-          <div id="chart" class="chart-container">
-            <svg id="chartSvg" width$="[[width]]" height$="[[height]]"></svg>
-          </div>
-        </div>
-      </div>
+    <div id="chart" class="chart-container">
+      <svg id="chartSvg" width$="[[width]]" height$="[[height]]"></svg>
     </div>
   </template>
   <script>
