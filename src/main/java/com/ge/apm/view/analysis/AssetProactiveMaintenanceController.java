@@ -11,8 +11,6 @@ import org.joda.time.Weeks;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.postgresql.jdbc4.Jdbc4Array;
-import org.primefaces.model.timeline.TimelineEvent;
-import org.primefaces.model.timeline.TimelineModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webapp.framework.dao.NativeSqlUtil;
@@ -22,6 +20,9 @@ import webapp.framework.web.mvc.ServerEventInterface;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
 import java.sql.SQLException;
 import java.util.*;
 
@@ -29,16 +30,21 @@ import java.util.*;
 @ViewScoped
 public final class AssetProactiveMaintenanceController implements ServerEventInterface {
 
-    protected final static Logger log = LoggerFactory.getLogger(AssetMaintenanceController.class);
-
-    public AssetProactiveMaintenanceController() {
-        this.parameters = new HashMap<>();
-    }
+    private static final Logger logger = LoggerFactory.getLogger(AssetProactiveMaintenanceController.class);
+    
+    private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    
+    private HashMap<String, Object> sqlParams = new HashMap<>();  
 
     @PostConstruct
     public final void init() {
-        this.hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
-        this.parameters.put("hospitalId", this.hospitalId);
+
+        sqlParams.put("hospital_id", hospital_id);
 
         DateMidnight midnight = new DateMidnight().minusYears(0);
         this.today = midnight.toDateTime();
@@ -46,18 +52,12 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
         this.firstDayOfThisYearPlus1 = this.firstDayOfThisYear.plusYears(1);
         this.firstDayOfThisYearMinus1 = this.firstDayOfThisYear.minusYears(1);
         this.firstDayOfThisYearPlus2 = this.firstDayOfThisYear.plusYears(2);
-        this.parameters.put("today", this.today.toDate());
-        this.parameters.put("firstDayOfThisYear", this.firstDayOfThisYear.toDate());
-        this.parameters.put("firstDayOfThisYearPlus1", this.firstDayOfThisYearPlus1.toDate());
-        this.parameters.put("firstDayOfThisYearMinus1", this.firstDayOfThisYearMinus1.toDate());
-        this.parameters.put("firstDayOfThisYearPlus2", this.firstDayOfThisYearPlus2.toDate());
+        sqlParams.put("today", this.today.toDate());
+        sqlParams.put("firstDayOfThisYear", this.firstDayOfThisYear.toDate());
+        sqlParams.put("firstDayOfThisYearPlus1", this.firstDayOfThisYearPlus1.toDate());
+        sqlParams.put("firstDayOfThisYearMinus1", this.firstDayOfThisYearMinus1.toDate());
+        sqlParams.put("firstDayOfThisYearPlus2", this.firstDayOfThisYearPlus2.toDate());
     }
-
-    // region Parameters
-
-    private final Map<String, Object> parameters;
-
-    private int hospitalId;
 
     private DateTime today;
     private DateTime firstDayOfThisYear;
@@ -73,7 +73,7 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
 
     public final void setAssetId(int value) {
         this.assetId = value;
-        this.parameters.put("assetId", value);
+        sqlParams.put("assetId", value);
     }
 
     @Override
@@ -245,7 +245,10 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
         else {
             template = StringUtils.replace(template, ":#andDeviceFilter", "AND asset.id = :#assetId");
         }
-        return NativeSqlUtil.queryForList(template, this.parameters);
+
+        sqlParams.put("_sql", template);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
+        return NativeSqlUtil.queryForList(template, sqlParams);
     }
 
     private final static String SQL_SCALAR_DEVICE_NAME_SINGLE = "" +
@@ -256,29 +259,29 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
 
     private final static String SQL_LIST_MAINTENANCE_SCHEDULE = "" +
             "SELECT array_prepend(to_char(temporary.month, '99'), " +
-            "                     array_agg(temporary.hint) " +
-            "                    ) AS scalar " +
+            "array_agg(temporary.hint) " +
+            ") AS scalar " +
             "FROM ( " +
-            "        SELECT twelve.month AS month, thirty_one.day AS day, COALESCE(temporary.hint, '') AS hint " +
-            "        FROM generate_series(1, 12) AS twelve(month) " +
-            "             CROSS JOIN " +
-            "             generate_series(1, 31) AS thirty_one(day) " +
-            "             LEFT OUTER JOIN " +
-            "             (SELECT EXTRACT (MONTH FROM plan.start_time) AS month, " +
-            "                     EXTRACT (DAY FROM plan.start_time) AS day, " +
-            "                     array_to_string(array_agg(asset.name), ',,,,') AS hint " +
-            "              FROM pm_order AS plan, " +
-            "                   asset_info AS asset " +
-            "              WHERE plan.asset_id = asset.id " +
-            "                AND asset.hospital_id = :#hospitalId " +
-            "                AND plan.start_time BETWEEN :#firstDayOfThisYear AND :#firstDayOfThisYearPlus1 " +
-            "                :#andDeviceFilter " +  // AND asset.id = :#assetId
-            "              GROUP BY month, day " +
-            "             ) AS temporary " +
-            "             ON twelve.month = temporary.month " +
-            "            AND thirty_one.day = temporary.day " +
-            "        ORDER BY twelve.month ASC, " +
-            "                 thirty_one.day ASC " +
+            "SELECT twelve.month AS month, thirty_one.day AS day, COALESCE(temporary.hint, '') AS hint " +
+            "FROM generate_series(1, 12) AS twelve(month) " +
+            "CROSS JOIN " +
+            "generate_series(1, 31) AS thirty_one(day) " +
+            "LEFT OUTER JOIN " +
+            "(SELECT EXTRACT (MONTH FROM plan.start_time) AS month, " +
+            "EXTRACT (DAY FROM plan.start_time) AS day, " +
+            "array_to_string(array_agg(asset.name), ',,,,') AS hint " +
+            "FROM pm_order AS plan, " +
+            "asset_info AS asset " +
+            "WHERE plan.asset_id = asset.id " +
+            "AND asset.hospital_id = :#hospital_id " +
+            " AND plan.start_time BETWEEN :#firstDayOfThisYear AND :#firstDayOfThisYearPlus1 " +
+            ":#andDeviceFilter " +  // AND asset.id = :#assetId
+            "GROUP BY month, day " +
+            ") AS temporary " +
+            "ON twelve.month = temporary.month " +
+            "AND thirty_one.day = temporary.day " +
+            "ORDER BY twelve.month ASC, " +
+            "thirty_one.day ASC " +
             ") AS temporary " +
             "GROUP BY temporary.month " +
             ";";
@@ -286,41 +289,40 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
     private final static String SQL_LIST_MAINTENANCE_FORECAST = "" +
             "WITH " +
             "maintenance_schedule AS ( " +
-            "        SELECT asset.id AS asset_id, " +
-            "               CAST (EXTRACT (EPOCH FROM (plan.start_time - :#firstDayOfThisYearMinus1)) / 60 / 60 / 24 / 7 AS integer) AS start_time, " +
-            "               to_char(plan.start_time, 'YYYY-MM-DD') AS hint " +
-            "        FROM pm_order AS plan, " +
-            "             asset_info AS asset " +
-            "        WHERE plan.asset_id = asset.id " +
-            "          AND asset.hospital_id = :#hospitalId " +
-            "          AND asset.is_valid = true " +
-            "          AND plan.start_time BETWEEN :#firstDayOfThisYearMinus1 AND :#firstDayOfThisYearPlus2 " +
+            "SELECT asset.id AS asset_id, " +
+            "CAST (EXTRACT (EPOCH FROM (plan.start_time - :#firstDayOfThisYearMinus1)) / 60 / 60 / 24 / 7 AS integer) AS start_time, " +
+            "to_char(plan.start_time, 'YYYY-MM-DD') AS hint " +
+            "FROM pm_order AS plan, " +
+            "asset_info AS asset " +
+            "WHERE plan.asset_id = asset.id " +
+            "AND asset.hospital_id = :#hospital_id " +
+            "AND asset.is_valid = true " +
+            "AND plan.start_time BETWEEN :#firstDayOfThisYearMinus1 AND :#firstDayOfThisYearPlus2 " +
             "), " +
             "maintenance_schedule_asset_list AS ( " +
-            "        SELECT DISTINCT asset_id " +
-            "        FROM maintenance_schedule " +
+            "SELECT DISTINCT asset_id " +
+            "FROM maintenance_schedule " +
             "), " +
             "maintenance_schedule_time_list AS ( " +
-            "        SELECT * FROM generate_series(0, 156) AS temporary(week) " +
+            "SELECT * FROM generate_series(0, 156) AS temporary(week) " +
             "), " +
             "temporary AS ( " +
-            "        SELECT maintenance_schedule_asset_list.asset_id AS asset_id, " +
-            "               maintenance_schedule_time_list.week AS start_time, " +
-            "               COALESCE(maintenance_schedule.hint, '') AS hint " +
-            "        FROM maintenance_schedule_asset_list " +
-            "        CROSS JOIN maintenance_schedule_time_list " +
-            "        LEFT OUTER JOIN maintenance_schedule " +
-            "        ON maintenance_schedule_asset_list.asset_id = maintenance_schedule.asset_id " +
-            "        AND maintenance_schedule_time_list.week = maintenance_schedule.start_time " +
-            "        ORDER BY maintenance_schedule_asset_list.asset_id ASC, " +
-            "                 maintenance_schedule_time_list.week ASC " +
+            "SELECT maintenance_schedule_asset_list.asset_id AS asset_id, " +
+            "maintenance_schedule_time_list.week AS start_time, " +
+            "COALESCE(maintenance_schedule.hint, '') AS hint " +
+            "FROM maintenance_schedule_asset_list " +
+            "CROSS JOIN maintenance_schedule_time_list " +
+            "LEFT OUTER JOIN maintenance_schedule " +
+            "ON maintenance_schedule_asset_list.asset_id = maintenance_schedule.asset_id " +
+            "AND maintenance_schedule_time_list.week = maintenance_schedule.start_time " +
+            "ORDER BY maintenance_schedule_asset_list.asset_id ASC, " +
+            "maintenance_schedule_time_list.week ASC " +
             ") " +
             "SELECT array_prepend(text(asset.name), array_agg(temporary.hint)) AS scalar " +
             "FROM temporary," +
-            "     asset_info AS asset " +
+            "asset_info AS asset " +
             "WHERE temporary.asset_id = asset.id " +
             "GROUP BY asset.id " +
             ";";
 
-    // endregion
 }
