@@ -1,5 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="device-revenue-chart-styles.html">
+<script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
+<script src="../../bower_components/lscache/lscache.js"></script>
+<script src="../../bower_components/urijs/src/URI.js"></script>
 
 <dom-module id="device-revenue-chart">
   <template>
@@ -7,6 +10,7 @@
     <div class="ui-g">
       <div class="ui-g-12">
         <div class="block">
+          <button on-click="openNextPage">Next Page</button>
           <div id="chart" class="chart-container">
             <svg id="chartSvg" width$="[[width]]" height$="[[height]]"></svg>
           </div>
@@ -80,9 +84,11 @@
           var waveLength = fillCircleRadius * 2 / config.waveCount;
           var waveClipCount = 1 + config.waveCount;
           var waveClipWidth = waveLength * waveClipCount;
+          var data = config.node.data;
+          var labelUnit = data.label_unit;
 
           // Rounding functions so that the correct number of decimal places is always displayed as the value counts up.
-          var textFormat = function(value) { return Math.round(value) + '万'; };
+          var textFormat = function(value) { return Math.round(value) + labelUnit; };
           if (parseFloat(textFinalValue) != parseFloat(textFormat(textFinalValue))) {
             textFormat = function(value) { return parseFloat(value).toFixed(1); };
           }
@@ -378,9 +384,11 @@
         var ROOT_RADIUS = 80;
         // transition duration
         var DURATION = 750;
+        // page transition duration
+        var DURATION_PAGING = 700;
         // id counter seed
         var i = 0;
-        var gauge_size = d3.interpolate(20, 200);
+        var gauge_size = d3.interpolate(20, 80);
         var gauge_color = d3.scaleOrdinal([
           'rgba(117, 162, 234, 1)',
           'rgba(140, 211, 199, 1)',
@@ -405,7 +413,7 @@
           config.isRoot = node.depth;
           config.showLabel = node.depth === 1; // only show label for depth one
 
-          renderGauge(this, data.margin, config);
+          renderGauge(this, data.profit, config);
         }
 
         function layout_orbit(root, options) {
@@ -447,7 +455,11 @@
           root.y = Math.sin(START_ANGEL * Math.PI / 180) * R - 100;
           root.size = ROOT_RADIUS;
           root.children = root.children.slice(0, max);
-          return deg - startDeg;
+
+          return {
+            count: max,
+            deg: deg - startDeg
+          };
         }
 
         // https://github.com/d3/d3-shape/issues/27
@@ -463,6 +475,45 @@
             + ' ' + target.x + ',' + target.y
         }
 
+        function formatConvert(data){
+          return Object.assign({}, data, {
+            revenue: parseFloat(data.revenue_label),
+            profit: parseFloat(data.profit_label)
+          });
+        }
+
+        function parseTransformRotate(element) {
+          var rotate;
+          var match = element.getAttribute('transform').match(/rotate\(([^)]+)\)/);
+          if (match) {
+            rotate = match[1].split(',');
+            return {
+              deg: rotate[0],
+              x: +rotate[1],
+              y: +rotate[2]
+            };
+          }
+          return null;
+        }
+
+        function rotateToTween(dest) {
+          return function transform() {
+            var rotate = parseTransformRotate(this);
+            var interpolate = d3.interpolateNumber(rotate.deg, dest);
+            return function(t) {
+              var deg = interpolate(t);
+              return d3Transform().rotate(deg, rotate.x, rotate.y)();
+            };
+          }
+        }
+
+        function rotate(dest){
+          return function() {
+            var rotate = parseTransformRotate(this);
+            return d3Transform().rotate(dest, rotate.x, rotate.y)();
+          }
+        }
+
         Polymer({
           is: 'device-revenue-chart',
           properties: {
@@ -470,28 +521,69 @@
               type: Object,
               observer: 'replot'
             },
+
+            /**
+             * Pagination records of what's on the screen.
+             * {
+             *  "offset": 15,
+             *  "count": 20
+             * }
+             */
+            pagination: {
+              type: Array,
+              value: function() {
+                return [
+                  {
+                    // orbit 1
+                    start: 0,
+                    offset: 0,
+                    offsetNext: 0,
+                    offsetHistory: []
+                  }
+                ];
+              }
+            },
+            pageStartHistoryL1: {
+              type: Array,
+              value: []
+            },
+            pageLastStartL1: {
+              type: Number,
+              computed: '_computeLastStart(pageStartHistoryL1)'
+            },
+            pageStartL1: {
+              type: Number,
+              value: 0,
+              observer: '_pageChanged'
+            },
+            pageOffsetL1: {
+              type: Number,
+              value: 0
+            },
+            pageEndL1: {
+              type: Number,
+              value: 0
+            },
             width: Number,
             height: Number
           },
-          replot: function() {
+          replot: function(root, children) {
+            var data = Object.assign({children: children}, root);
             var _this = this;
             var _opening = null;
-
-            var tree = d3.hierarchy(this.data);
+            var tree = d3.hierarchy(data);
             // layout start
             var svg = d3.select(this.$.chartSvg),
               width = +svg.attr("width"),
               height = +svg.attr("height"),
               radius = width / 2 + 150,
-              rootGroup = svg.append("g").attr("transform",
-              "translate(" + (
-                width / 2
-              ) + "," + (
-                height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200
-              ) + ")"
-            );
+              offsetX = width / 2,
+              offsetY = height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200;
 
-            layout_orbit(tree, {
+            var canvas = svg.append("g").attr('transform', d3Transform().rotate(0, width / 2, offsetY));
+            var rootGroup = canvas.append("g");
+            rootGroup.attr("transform", "translate(" + offsetX+ "," + offsetY + ")");
+            var result = layout_orbit(tree, {
               start: START_ANGEL,
               end: 180 - START_ANGEL,
               radius: radius,
@@ -560,7 +652,12 @@
               d.y0 = d.y;
             });
 
-            this.scopeSubtree(this.$.chart, true)
+            this.scopeSubtree(this.$.chart, true);
+
+            return Object.assign(result, {
+              element: canvas
+            });
+
             function resetOrbit1() {
               // reset to render subtree
               node.merge(nodeUpdate)
@@ -711,7 +808,7 @@
                   radius: radius,
                   canvasRadius: width / 2,
                   margin: MARGIN_ANGEL / 2
-                });
+                }).deg;
 
                 var startDeg;
                 var parentDeg = node.x - START_ANGEL;
@@ -730,7 +827,7 @@
                   radius: radius,
                   canvasRadius: width / 2,
                   margin: MARGIN_ANGEL / 2
-                });
+                }).deg;
 
                 var nodes = subTree.descendants().slice(1);
                 var links = subTree.links();
@@ -822,16 +919,102 @@
               return  res.json();
             });
           },
+          nextPage: function() {
+            var offset = this.get('pagination.0.offset');
+            var count = this.get('pagination.0.count');
+            this.set('pagination.0.offset', offset + count);
+          },
+          _computeLastStart: function(history) {
+            if (history.length > 2) {
+              return history[history.length - 2];
+            }
+            return NaN;
+          },
+          _pageChanged: function(newVal, oldVal) {
+            // on page changed build the offset history, in order to navigate backwards.
+            if (newVal > oldVal) {
+              this.push('pageStartHistoryL1', newVal);
+            } else {
+              this.pop('pageStartHistoryL1');
+            }
+          },
+          // Load next "n" more items from the URL and add them to cache
+          loadData: function(url, n) {
+            var _this = this;
+            n = n || 20;
+            var cacheKey = url;
+            var list = lscache.get(cacheKey) || [];
+            var length = list.length || 0;
+            // read the furthest offset
+            var offset = this.pageEndL1;
+            if (length - offset < n) {
+              url = URI(url).addQuery({
+                'start': length,
+                'limit': n
+              }).toString();
+              return fetch(url).then(function(res) {
+                return res.json();
+              }).then(function(data) {
+                list = list.concat(data.items.map(formatConvert));
+                lscache.set(cacheKey, list);
+                lscache.set(cacheKey+'/root', formatConvert(data.root));
+              });
+            } {
+              return Promise.resolve();
+            }
+          },
+          renderCurrPage: function(key) {
+            var start = this.pageStartL1;
+            var list = lscache.get(key) || [];
+            list = list.slice(start);
+            var result = this.replot(lscache.get(key + '/root'), list);
+            this.pageOffsetL1 = result.count;
+            var group = result.element;
+            this.currentPageElementL1 = group.node();
+            this.renderNextPage(key);
+            this.renderPrevPage(key);
+          },
+          renderNextPage: function(key) {
+            var start = this.pageOffsetL1;
+            var list = lscache.get(key) || [];
+            if (list.length > start) {
+              list = list.slice(start);
+              var result = this.replot(lscache.get(key + '/root'), list);
+              this.pageEndL1 = start + result.count;
+              var group = result.element;
+              group.attr('id', 'next-page').attr('transform', rotate(90));
+              this.nextPageElementL1 = group.node();
+            }
+          },
+          renderPrevPage: function(key) {
+            var start = this.pageLastStartL1, end = this.pageStartL1;
+            var list = lscache.get(key) || [];
+            var result;
+            if (!isNaN(start)) {
+              list = list.slice(start, end);
+              result = this.replot(lscache.get(key + '/root'), list);
+              this.prevPageElementL1 = result.element.node();
+            }
+          },
+          openNextPage: function() {
+            d3.select(this.nextPageElementL1)
+            .transition()
+            .duration(DURATION_PAGING)
+            .attrTween('transform', rotateToTween(0));
 
+            d3.select(this.currentPageElementL1)
+            .transition()
+            .duration(DURATION_PAGING)
+            .attrTween('transform', rotateToTween(-90))
+          },
           ready: function() {
             var _this = this;
             var rect = this.$.chart.getBoundingClientRect();
             this.set('width', rect.width);
             this.set('height', rect.height);
-            fetch('mock/revenue-data.json').then(function(res) {
-              return res.json();
-            }).then(function(data) {
-              _this.set('data', data);
+            var url = 'mock/profit-2016-by-type.json';
+            this.loadData(url).then(function() {
+              _this.renderCurrPage(url);
             });
           }
         });

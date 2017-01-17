@@ -1,0 +1,42 @@
+{
+  "total": 143,
+  "items": [
+    {
+      "id": "32",
+      "name": "ct001",
+      "type": "CT",
+      "revenue": 1.238654E5,
+      "profit": 1.0245322E5,
+      "perc": 3,
+      "revenue_label": "12.3",
+      "profit_label": "10.2",
+      "label_unit": "万"
+    },
+    {
+      "id": "26",
+      "name": "MR004",
+      "type": "MR-SR1",
+      "revenue": 9753.48,
+      "profit": 5962.53,
+      "perc": 3,
+      "revenue_label": "9753.5",
+      "profit_label": "5962.5",
+      "label_unit": "元"
+    }
+  ],
+  "root": {
+    "name": "total",
+    "type": "asset",
+    "revenue": 1.838654E8,
+    "profit": 1.3945322E8,
+    "revenue_label": "18386.5",
+    "profit_label": "13945.3",
+    "label_unit": "万",
+    "revenue_text": "总收入",
+    "profit_text": "总利润",
+    "link": {
+      "ref": "self",
+      "href": "https://dew.io/api/profit?year=2016"
+    }
+  }
+}

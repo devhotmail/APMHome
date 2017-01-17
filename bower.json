@@ -32,7 +32,10 @@
     "px-tables-design": "^0.3.23",
     "d3": "^4",
     "px-dropdown": "^2.2.1",
-    "px-button-group-design": "^1.0.3"
+    "px-button-group-design": "^1.0.3",
+    "lscache": "^1.0.5",
+    "urijs": "uri.js#^1.18.4",
+    "d3-transform": "^1.0.4"
   },
   "resolutions": {
     "px-defaults-design": "^1.0.2"
