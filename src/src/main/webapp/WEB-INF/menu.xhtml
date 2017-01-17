@@ -19,7 +19,7 @@
                             </li>
                             <li role="menuitem">
                                 <h:panelGroup rendered="#{localeService.language eq 'zh'}">
-                                    <a href="#{request.requestURL}?locale=en" class="ripplelink">
+                                    <a href="#{request.requestURI}?locale=en" class="ripplelink">
                                         <i class="material-icons">translate</i>
                                         <span>English Version</span>
                                     </a>
@@ -27,7 +27,7 @@
                             </li>
                             <li role="menuitem">
                                 <h:panelGroup rendered="#{localeService.language eq 'en'}">
-                                    <a href="#{request.requestURL}?locale=zh" class="ripplelink">
+                                    <a href="#{request.requestURI}?locale=zh" class="ripplelink">
                                         <i class="material-icons">translate</i>
                                         <span>中文版</span>
                                     </a>
