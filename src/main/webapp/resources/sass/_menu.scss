@@ -7,7 +7,7 @@
   $menu-bg-color: rgba(36, 35, 38, 1);
   $menu-bg-color-darker: $black;
   $icon-size: 50px;
-  $icon-size-inactive: 20px;
+  $icon-size-inactive: 50px;
 
   &.menu-layout-static .layout-main {
     margin-left: $menu-width;
@@ -18,24 +18,22 @@
       margin-left: 0;
     }
 
+    /* slide in brand text */
+    .brand {
+      h1 {
+        max-width: 0;
+      }
+    }
+
     .layout-menu.layout-menu-dark {
       margin-left: 0;
-      width: 50px;
-
-      /* collapse those menu items */
-      .brand, #profile-menu {
-        max-height: 0;
-        max-width: 50px;
-        visibility: hidden;
-      }
+      width: $menu-width/2;
 
       ul.ultima-menu li i:first-child {
         width: $icon-size-inactive;
         height: $icon-size-inactive;
-        transform: scale(.8);
-        border-color: transparent;
         & + span {
-          display: none;
+          visibility: hidden;
         }
       }
 
@@ -47,11 +45,16 @@
   }
 
   /* initialize transition */
-  .brand, #profile-menu {
-    max-height: 100px;
-    max-width: 150px;
-    overflow: hidden;
-    transition: max-width, max-height .4s;
+  .brand {
+    line-height: 2.5rem;
+    margin: 10px;
+
+    h1 {
+      max-width: 150px;
+      overflow-x: hidden;
+      margin: 0;
+      transition: max-width, .4s;
+    }
   }
 
   .ul.ultima-menu li i:first-child {
@@ -106,13 +109,16 @@
       border-radius: 50%;
 
       & + span {
-        padding-top: .5rem;
+        padding-top: 0;
       }
     }
 
     ul.ultima-menu li > a {
       text-align: center;
+      white-space: nowrap;
       border-right: 5px solid transparent;
+      border-left: 5px solid transparent;
+      padding: 5px 0;
 
       &:hover {
         background-color: transparent;
