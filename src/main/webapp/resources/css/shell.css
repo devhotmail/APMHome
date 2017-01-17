@@ -1046,12 +1046,13 @@ button.btn{-webkit-appearance:button}
 .clearfix:after{content:"";display:table;clear:both}
 .layout-compact .layout-wrapper.menu-layout-static .layout-main{margin-left:150px}
 .layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-main{margin-left:0}
-.layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-menu.layout-menu-dark{margin-left:0;width:50px}
-.layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-menu.layout-menu-dark #profile-menu,.layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-menu.layout-menu-dark .brand{max-height:0;max-width:50px;visibility:hidden}
-.layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-menu.layout-menu-dark ul.ultima-menu li i:first-child{width:20px;height:20px;-webkit-transform:scale(.8);transform:scale(.8);border-color:transparent}
-.layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-menu.layout-menu-dark ul.ultima-menu li i:first-child+span{display:none}
+.layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .brand h1{max-width:0}
+.layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-menu.layout-menu-dark{margin-left:0;width:75px}
+.layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-menu.layout-menu-dark ul.ultima-menu li i:first-child{width:50px;height:50px}
+.layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-menu.layout-menu-dark ul.ultima-menu li i:first-child+span{visibility:hidden}
 .layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-menu.layout-menu-dark ul.ultima-menu ul{display:none!important}
-.layout-compact .layout-wrapper #profile-menu,.layout-compact .layout-wrapper .brand{max-height:100px;max-width:150px;overflow:hidden;-webkit-transition:max-width,max-height .4s;transition:max-width,max-height .4s}
+.layout-compact .layout-wrapper .brand{line-height:2.5rem;margin:10px}
+.layout-compact .layout-wrapper .brand h1{max-width:150px;overflow-x:hidden;margin:0;-webkit-transition:max-width,.4s;transition:max-width,.4s}
 .layout-compact .layout-wrapper .ul.ultima-menu li i:first-child{-webkit-transition:border-color .4s,-webkit-transform;transition:border-color .4s,-webkit-transform;transition:transform,border-color .4s;transition:transform,border-color .4s,-webkit-transform}
 .layout-compact .layout-wrapper .layout-menu.layout-menu-dark{top:0!important;overflow-y:hidden!important;background-color:#242326;width:150px;-webkit-transition:width .4s;transition:width .4s;margin-left:0!important}
 .layout-compact .layout-wrapper .layout-menu.layout-menu-dark .menu-content{overflow-y:scroll;overflow-x:hidden;height:calc(100vh - 170px)}
@@ -1060,8 +1061,8 @@ button.btn{-webkit-appearance:button}
 .layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu ul>li>a{text-align:left;padding:.5rem 1.5rem}
 .layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu li.active-menuitem>a{background-color:transparent;border-right-color:#5b84d7}
 .layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu li i:first-child{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin:auto;font-size:1.8rem;color:#7c7c84;border:2px solid #7c7c84;width:50px;height:50px;text-align:center;vertical-align:middle;border-radius:50%}
-.layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu li i:first-child+span{padding-top:.5rem}
-.layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu li>a{text-align:center;border-right:5px solid transparent}
+.layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu li i:first-child+span{padding-top:0}
+.layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu li>a{text-align:center;white-space:nowrap;border-right:5px solid transparent;border-left:5px solid transparent;padding:5px 0}
 .layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu li>a:hover{background-color:transparent}
 .layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu li>a:hover>i:first-child,.layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu li>a:hover>span{color:#5b84d7;border-color:#5b84d7}
 .layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu li i:last-child{display:none}
@@ -1071,6 +1072,7 @@ button.btn{-webkit-appearance:button}
 .layout-compact .layout-wrapper #menu-button>.material-icons{color:#d1d0d8;font-size:2rem}
 .layout-compact .layout-wrapper #menu-button:hover>.material-icons{color:#5b84d7}
 .layout-compact .layout-wrapper .layout-main{padding-top:1rem;background-color:#eaeaea;min-height:100vh}
+.layout-compact .layout-wrapper .layout-profile{position:absolute;top:1rem;right:1rem;color:#242326;font-size:1.2rem}
 .layout-compact .layout-wrapper px-dropdown .dropcell.px-dropdown{border-radius:1rem;background-color:transparent;border-color:#7c7c84}
 .layout-compact .layout-wrapper px-dropdown .dropcell.px-dropdown:hover{border-color:#5b84d7}
 .layout-compact .layout-wrapper px-dropdown .dropcell.px-dropdown:hover px-dropdown-chevron,.layout-compact .layout-wrapper px-dropdown .dropcell.px-dropdown:hover px-dropdown-text{color:#5b84d7}
