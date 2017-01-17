@@ -83,6 +83,10 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
 
     @PostConstruct
     public void init() {
+
+        sqlParams.put("site_id", site_id);
+        sqlParams.put("hospital_id", hospital_id);
+
         initAssetsInfoInMt();
         initAssetsStopped();
         initAssetsWarrantyExpired();
