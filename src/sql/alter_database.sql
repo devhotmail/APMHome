@@ -3,6 +3,8 @@ ALTER TABLE "supplier" ADD CONSTRAINT "uk_supplier_name" UNIQUE (site_id, name);
 ALTER TABLE "i18n_message" ADD CONSTRAINT "uk_i18n_message_msg_key" UNIQUE (site_id, msg_type, msg_key);
 ALTER TABLE "supplier" ADD column supplier_code varchar(32);
 
+ALTER TABLE user_account ADD column wechat_id varchar(64);
+
 DROP TABLE IF EXISTS procedure_name_maping CASCADE;
 CREATE TABLE procedure_name_maping (
 "id" serial NOT NULL,
@@ -33,3 +35,8 @@ alter table asset_info alter COLUMN function_type type varchar(64);
 
 
 ALTER TABLE "asset_clinical_record" ADD CONSTRAINT "uk_asset_clinical_record_ris_id" UNIQUE ("site_id", "hospital_id", "source_record_id");
+
+create index ix_asset_clinical_record_asset_id on asset_clinical_record(asset_id);
+create index ix_asset_clinical_record_site_id on asset_clinical_record(site_id);
+create index ix_asset_clinical_record_exam_date on asset_clinical_record(exam_date);
+create index ix_asset_clinical_record_procedure_name on asset_clinical_record(procedure_name);
