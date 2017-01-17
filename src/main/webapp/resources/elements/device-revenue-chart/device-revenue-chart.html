@@ -433,6 +433,14 @@
             node.size = r;
             node.scale = scale;
 
+            var _circleCenter = project(node.x, node.y);
+
+            node.circle = {
+              r: node.size,
+              center: _circleCenter,
+              peak: [_circleCenter[0], _circleCenter[1] - node.size]
+            };
+
             // degree increments
             deg += ( thisDeg + margin ) * 2;
 
@@ -447,11 +455,18 @@
           root.y = Math.sin(START_ANGEL * Math.PI / 180) * R - 100;
           root.size = ROOT_RADIUS;
           root.children = root.children.slice(0, max);
+
+          var _rootCircleCenter = project(root.x, root.y);
+
+          root.circle = {
+            r: root.size,
+            center: _rootCircleCenter,
+            peak: [_rootCircleCenter[0], _rootCircleCenter[1] - root.size]
+          };
+
           return deg - startDeg;
         }
 
-        // https://github.com/d3/d3-shape/issues/27
-        // replacement for diagonal
         function linkStraight(source, target) {
           return 'M' + project(source.x, source.y) + 'L' + project(target.x, target.y);
         }
@@ -506,34 +521,33 @@
             var linkEnter = link.enter().append('path')
             .attr('class', 'link')
             .attr('d', function(d) {
-              var source = d.parent;
-              return linkStraight(source, source);
+              // the origin and endpoint is the same: circle peak of parent
+              return 'M' + d.parent.circle.peak + 'L' + d.parent.circle.peak;
             });
 
             var linkUpdate = link.merge(linkEnter)
             .transition()
             .duration(DURATION)
             .attr('d', function(d) {
-              var source = d;
-              var target = d.parent;
-              return linkStraight(source, target);
+              // origin: circle peak of parent
+              // endpoint: circle center of current node
+              return 'M' + d.parent.circle.peak + 'L' + d.circle.center;
             });
 
             // Update the nodes
             var node = rootGroup.selectAll('g.node')
             .data(nodes, function(d) {
-              return d.data.id || (d.data.id = ++i)
+              return d.data.id || (d.data.id = ++i);
             });
 
-            var nodeEnter = node.enter().append("g")
-            .attr("class", function(d) {
-              return "node" + (
-                  d.children ? " node--internal" : " node--leaf"
-                );
+            var nodeEnter = node.enter().append('g')
+            .attr('class', function(d) {
+              return 'node ' + (d.children ? 'node--internal' : 'node--leaf');
             })
-            .attr("transform", function(d) {
+            .attr('transform', function(d) {
+              // keep original position same as tree root
               var _node = d.parent ? d.parent : d;
-              return "translate(" + project(_node.x, _node.y) + ")";
+              return 'translate(' + _node.circle.center + ')';
             })
             .attr('id', function(d) {
               return 'node-' + d.data.id;
@@ -542,50 +556,49 @@
             .on('click', handleClick)
             .each(renderNode);
 
-            // Transition nodes to their new position.
+            // Transition child nodes to their new position.
             var nodeUpdate = node.merge(nodeEnter)
             .transition()
             .duration(DURATION)
             .attr('transform', function(d) {
-              return 'translate(' + project(d.x, d.y) + ')';
+              // move to own position
+              return 'translate(' + d.circle.center + ')';
             });
 
-            // Mark previous position down
+            // Save previous position
             nodes.forEach(function(d) {
               d.x0 = d.x;
               d.y0 = d.y;
+              d.circle0 = d.circle;
             });
 
-            this.scopeSubtree(this.$.chart, true)
+            this.scopeSubtree(this.$.chart, true);
+
             function resetOrbit1() {
               // reset to render subtree
               node.merge(nodeUpdate)
               .data(tree.descendants())
+              .filter(function(d) {
+                return d.parent;
+              })
               .transition()
               .duration(DURATION)
               .attr('transform', function(d) {
-                if (d.parent) {
-                  // recover to original position
-                  return 'translate(' + project(d.x0, d.y0) + ')';
-                } else {
-                  // dont move the position of tree root
-                  return 'translate(' + project(d.x0, d.y0) + ')';
-                }
+                // move to original position
+                return 'translate(' + d.circle0.center + ')';
               })
               .each(function(d, i, nodeList) {
                 // reset the gauge size and position
-                if (d.parent) {
-                  d3.select(nodeList[i])
-                  .select('g.gauge')
-                  .transition()
-                  .duration(DURATION)
-                  .attr('transform', function(d) {
-                    var pos = [d.size, d.size].map(function(n) {
-                      return -n;
-                    });
-                    return 'translate(' + pos.join(',') + ')';
+                d3.select(nodeList[i])
+                .select('g.gauge')
+                .transition()
+                .duration(DURATION)
+                .attr('transform', function(d) {
+                  var pos = [d.size, d.size].map(function(n) {
+                    return -n;
                   });
-                }
+                  return 'translate(' + pos.join(',') + ')';
+                });
               });
 
               link.merge(linkUpdate)
@@ -593,15 +606,10 @@
               .transition()
               .duration(DURATION)
               .attr('d', function(d) {
-                var source = {
-                  x: d.x0,
-                  y: d.y0
-                };
-                var target = {
-                  x: d.parent.x0,
-                  y: d.parent.y0
-                };
-                return linkStraight(source, target);
+                // origin: circle0 peak of parent
+                // endpoint: circle0 center of current node
+                // circle0 is an alias of the previous circle
+                return 'M' + d.parent.circle0.peak + 'L' + d.circle0.center;
               });
             }
 
@@ -632,36 +640,40 @@
                 .data(tree.descendants())
                 .transition()
                 .duration(DURATION)
+                .filter(function(d) {
+                  return d.parent;
+                })
                 .attr('transform', function(d) {
-                  if (d.depth === 1) {
-                    return 'translate(' + project(d.x, d.y) + ')';
-                  }
-                  if (d.depth === 0) {
-                    // dont move the position of tree root
-                    return 'translate(' + project(d.x0, d.y0) + ')';
-                  }
+                  return 'translate(' + d.circle.center + ')';
                 })
                 .on('end', function(d) {
                   // when this opening node is in position.
-                  if(d.data.id === targetNode.data.id){
+                  if (d.data.id === targetNode.data.id) {
                     _opening = openNode(targetNode);
                   }
                 })
                 .each(function(d, i, nodeList) {
-                  // make the gauge smaller
-                  if (d.parent) {
-                    d3.select(nodeList[i])
-                    .select('g.gauge')
-                    .transition()
-                    .duration(DURATION)
-                    .attr('transform', function(d) {
-                      var scale = Math.pow(d.scale, 3);
-                      var pos = [d.size, d.size].map(function(n) {
-                        return -n * scale;
-                      });
-                      return 'translate(' + pos.join(',') + ')' + ' scale(' + scale + ')';
+                  // make the orbit and gauge smaller
+                  d3.select(nodeList[i])
+                  .select('g.gauge')
+                  .transition()
+                  .duration(DURATION)
+                  .attr('transform', function(d) {
+                    var scale = Math.pow(d.scale, 3);
+
+                    // Stash origin scale and peak
+                    d.scale0 = d.scale;
+                    d.circle.peak0 = d.circle.peak;
+                    // replace `scale` && `peak` field with new value
+                    d.scale = scale;
+                    d.circle.peak = [d.circle.center[0], d.circle.center[1] - scale * d.circle.r];
+
+                    var pos = [d.size, d.size].map(function(n) {
+                      return -n * scale;
                     });
-                  }
+
+                    return 'translate(' + pos.join(',') + ')' + ' scale(' + scale + ')';
+                  });
                 });
 
                 link.merge(linkUpdate)
@@ -669,12 +681,10 @@
                 .transition()
                 .duration(DURATION)
                 .attr('d', function(d) {
-                  var source = d;
-                  var target = {
-                    x: d.parent.x0,
-                    y: d.parent.y0
-                  };
-                  return linkStraight(source, target);
+                  // origin: circle0 peak of parent
+                  // endpoint: circle center of current node
+                  // circle0 is an alias of the previous circle
+                  return 'M' + d.parent.circle0.peak + 'L' + d.circle.center;
                 });
               } else {
                 // remove `expanded` for root node when orbit two closed
@@ -693,7 +703,7 @@
 
             function openNode(node) {
               // check node already opened
-              if(_this.$.chartSvg.querySelector('#tree--' + node.data.id)) {
+              if (_this.$.chartSvg.querySelector('#tree--' + node.data.id)) {
                 return Promise.resolve(false);
               }
 
@@ -753,7 +763,8 @@
                 var linkEnter = link.enter().append('path')
                 .attr('class', 'link')
                 .attr('d', function(d) {
-                  return linkStraight(node, node);
+                  // origin and endpoint are the same
+                  return 'M' + node.circle.peak + 'L' + node.circle.peak;
                 });
 
                 var linkUpdate = link.merge(linkEnter)
@@ -762,18 +773,16 @@
                 .duration(DURATION/2)
                 .ease(d3.easeQuadOut)
                 .attr('d', function(d, i) {
-                  var source = node;
-                  var target = d;
+                  // origin: circle peak of parent (named `node` here)
+                  // endpoint: circle center of current node
+                  return 'M' + node.circle.peak + 'L' + d.circle.center;
 
-                  var sourcePos = project(source.x, source.y);
-                  var targetPos = project(target.x, target.y);
+                  // var controlPos = [
+                  //   sourcePos[0] + (targetPos[0] - sourcePos[0]) * 0.4,
+                  //   sourcePos[1] + (targetPos[1] - sourcePos[1]) * 0.65
+                  // ];
 
-                  var controlPos = [
-                    sourcePos[0] + (targetPos[0] - sourcePos[0]) * 0.4,
-                    sourcePos[1] + (targetPos[1] - sourcePos[1]) * 0.65
-                  ];
-
-                  return 'M' + sourcePos + 'Q' + controlPos + ',' + targetPos;
+                  // return 'M' + source.circle.peak + 'Q' + controlPos + ',' + d.circle.center;
                 });
 
                 var groups = subGroup.selectAll('g.node')
@@ -790,7 +799,8 @@
                     );
                 })
                 .attr("transform", function(d) {
-                  return "translate(" + project(node.x, node.y) + ")";
+                  // original position (parent `node` circle center)
+                  return 'translate(' + node.circle.center + ')';
                 })
                 .attr('id', function(d) {
                   return 'node-' + d.data.id;
@@ -802,7 +812,8 @@
                 .transition()
                 .duration(DURATION/2)
                 .attr('transform', function(d) {
-                  return 'translate(' + project(d.x, d.y) + ')';
+                  // own position
+                  return 'translate(' + d.circle.center + ')';
                 });
 
                 return function closeNode() {
@@ -813,8 +824,8 @@
                     .transition()
                     .duration(DURATION / 2)
                     .attr('transform', function(d) {
-                      // recover to original position
-                      return 'translate(' + project(node.x, node.y) + ')';
+                      // back to original position (parent `node` circle center)
+                      return 'translate(' + node.circle.center + ')';
                     })
                     .on('end', function(d, i) {
                       // when orbit 2 is closed
@@ -829,7 +840,8 @@
                     .transition()
                     .duration(DURATION / 2)
                     .attr('d', function(d) {
-                      return linkStraight(node, node);
+                      // back to original position (parent `node` circle peak)
+                      return 'M' + node.circle.peak + 'L' + node.circle.peak;
                     });
                   });
                 }
