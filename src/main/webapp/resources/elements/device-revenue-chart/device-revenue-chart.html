@@ -126,14 +126,20 @@
           .domain([0, 1]);
 
           // Center the gauge within the parent SVG.
-          var gaugeGroup = gauge.append("g")
+          var gaugeGroup = gauge.append('g')
           .attr('class', 'gauge')
           .attr('transform', 'translate(' + locationX + ',' + locationY + ')');
-          gaugeGroup.append("circle")
-          .attr("r", gaugeCircleY(radius))
-          .style("fill", '#fff')
-          .style("stroke", config.circleColor)
-          .style("stroke-width", gaugeCircleY(circleThickness))
+
+          gaugeGroup.append('circle')
+          .attr('r', gaugeCircleY(radius))
+          .attr('fill', function() {
+            var rgbaRegex = /^rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+[\.\d+]*)*\)$/;
+            var currentColor = config.circleColor.trim();
+            var match = rgbaRegex.exec(currentColor);
+            return 'rgba(' + [match[1], match[2], match[3], 0.2].join(',') + ')';
+          })
+          .attr('stroke', config.circleColor)
+          .attr('stroke-width', gaugeCircleY(circleThickness))
           .attr('transform', 'translate(' + radius + ',' + radius + ')');
           
           // Text to show current node's name
