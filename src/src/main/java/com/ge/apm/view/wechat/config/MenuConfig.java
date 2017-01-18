@@ -14,7 +14,6 @@ public class MenuConfig {
      * @return
      */
     public static WxMenu getMenu(WxMpService wxMpService) {
-
         String serverName = FacesContext.getCurrentInstance().getExternalContext().getRequestServerName();
         serverName = "http://" + serverName + "/geapm";
         WxMenu menu = new WxMenu();
@@ -38,7 +37,7 @@ public class MenuConfig {
         WxMenuButton button21 = new WxMenuButton();
         button21.setType(WxConsts.BUTTON_VIEW);
         button21.setName("新增报修");
-        button21.setUrl(serverName + "/wechat/wo/create.xhtml");
+        button21.setUrl(serverName + "/web/wocreate");
         WxMenuButton button22 = new WxMenuButton();
         button22.setType(WxConsts.BUTTON_VIEW);
         button22.setName("报修处理进度");
@@ -59,7 +58,8 @@ public class MenuConfig {
         WxMenuButton button33 = new WxMenuButton();
         button33.setType(WxConsts.BUTTON_VIEW);
         button33.setName("APM帐号绑定");
-        button33.setUrl(serverName + "/wechat/uaa/bindAccount.xhtml");
+        button33.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName+"/web/authurl",
+                WxConsts.OAUTH2_SCOPE_BASE, ""));
         button3.getSubButtons().add(button31);
         button3.getSubButtons().add(button32);
         button3.getSubButtons().add(button33);

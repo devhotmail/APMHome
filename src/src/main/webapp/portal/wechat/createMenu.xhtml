@@ -8,12 +8,12 @@
     <h:body>
         <div class="ui-g clearfix">
 
-            <div class="ui-g-12 card">
-                <p:growl autoUpdate="true" life="3000"/>
+            <div class="ui-g-12">
+                <p:growl id="growl" life="3000"/>
 
                 <br/>
                 <h:form id="menuForm">
-                    <p:commandButton actionListener="#{weChatController.createMenu()}" value="创建菜单"/>
+                    <p:commandButton validateClient="true" actionListener="#{weChatController.createMenu()}" value="创建菜单" update=":growl"/>
                 </h:form>
             </div>
         </div>

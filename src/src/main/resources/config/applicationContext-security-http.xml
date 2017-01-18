@@ -30,6 +30,8 @@
         <intercept-url pattern="/home.xhtml" access="isAuthenticated()"/>
         <intercept-url pattern="/web/dataget/**" access="permitAll"/>
         <intercept-url pattern="/web/datapost/**" access="permitAll"/>
+        <intercept-url pattern="/web/authurl" access="permitAll"/>
+        <intercept-url pattern="/web/binduser" access="permitAll"/>
         <intercept-url pattern="/web/**" access="isAuthenticated()"/>
         <intercept-url pattern="/api/**" access="isAuthenticated()"/>
         <intercept-url pattern="/sysadmin/**" access="hasRole('SuperAdmin')"/>
