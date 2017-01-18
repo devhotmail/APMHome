@@ -24,7 +24,7 @@ public class WxUserServiceImpl implements WxUserService{
 	}
 
 	@Override
-	public void resetPassword(String openId, String oldPassword,String newPassword) {
+	public void resetPassword(String openId, String newPassword) {
 		UserAccount ua = userAccountRepository.getByWeChatId(openId);
 		if(ua == null){
 			logger.error("cannot find user by openId,openId is {}",openId);

@@ -36,6 +36,8 @@
         <intercept-url pattern="/api/**" access="isAuthenticated()"/>
         <intercept-url pattern="/sysadmin/**" access="hasRole('SuperAdmin')"/>
         <intercept-url pattern="/admin/**" access="hasRole('SuperAdmin')" />	
+        <intercept-url pattern="/wechat/uaa/viewUserAccount.xhtml" access="permitAll"/>
+        <intercept-url pattern="/wechat/uaa/resetAccountPassword.xhtml" access="permitAll"/>
 
         <!-- 首页 -->
         <intercept-url pattern="/homeHead**" access="hasAnyRole('SuperAdmin','HospitalHead')"/>

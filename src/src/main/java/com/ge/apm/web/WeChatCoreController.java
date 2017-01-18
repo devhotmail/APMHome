@@ -65,7 +65,7 @@ public class WeChatCoreController {
             response.getWriter().println(echoStrOut);
             return;
         }
-
+        System.out.println("current token is "+wxMpService.getAccessToken());
 //        String encryptType = StringUtils.isBlank(request.getParameter("encrypt_type"))
 //            ? "raw"
 //            : request.getParameter("encrypt_type");

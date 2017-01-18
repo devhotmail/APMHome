@@ -50,11 +50,11 @@ public class MenuConfig {
         WxMenuButton button31 = new WxMenuButton();
         button31.setType(WxConsts.BUTTON_VIEW);
         button31.setName("APM帐号信息");
-        button31.setUrl(serverName + "/wechat/uaa/account.xhtml");
+        button31.setUrl(serverName + "/wechat/uaa/viewUserAccount.xhtml");
         WxMenuButton button32 = new WxMenuButton();
         button32.setType(WxConsts.BUTTON_VIEW);
         button32.setName("APM重置密码");
-        button32.setUrl(serverName + "/wechat/uaa/resetPass.xhtml");
+        button32.setUrl(serverName + "/wechat/uaa/resetAccountPassword.xhtml");
         WxMenuButton button33 = new WxMenuButton();
         button33.setType(WxConsts.BUTTON_VIEW);
         button33.setName("APM帐号绑定");
