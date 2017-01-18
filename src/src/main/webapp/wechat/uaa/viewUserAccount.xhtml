@@ -2,21 +2,24 @@
 <html 	xmlns="http://www.w3.org/1999/xhtml"
  			xmlns:h="http://java.sun.com/jsf/html"
             xmlns:f="http://java.sun.com/jsf/core"
-            xmlns:ui="http://java.sun.com/jsf/facelets"
             xmlns:p="http://primefaces.org/ui"
             xmlns:pm="http://primefaces.org/mobile">
             
      <f:view renderKitId="PRIMEFACES_MOBILE" />
+     
+     <h:head>
+ 		我的信息
+    </h:head>
     
     <h:body>    
          <pm:page>
-            <pm:header title="我的信息"></pm:header>
+            <pm:header title="我的信息" ></pm:header>
         <pm:content>
 	    	<pm:field>
-	             <p:outputLabel value="#{msg.login_name} : " for="loginName" >
-	           		<!-- <p:outputText value="#{wxUserController.currentUser.loginName}"/> -->
-	           		<p:inputText id= "loginName" value="#{wxUserController.currentUser.loginName}"></p:inputText>
-	          	</p:outputLabel>
+	             <h:outputLabel value="#{msg.login_name} : " for="loginName"  >
+	           		<h:outputText value="#{wxUserController.currentUser.loginName}"/>
+	           		<!-- <p:inputText id= "loginName" value="#{wxUserController.currentUser.loginName}"></p:inputText> -->
+	          	</h:outputLabel>
 	    	</pm:field>
 	    	<BR />
 	    	<pm:field>
