@@ -1,16 +1,281 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
-        <div>Create a Asset</div>
-    </body>
-</html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/wechattemplate.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.AssetInfo}"/>
+            </div>
+
+            <div class="ui-g-12 card">
+
+                <p:separator/>
+                <h:form id="AssetInfoEditForm">
+                    <p:fieldset legend="#{msg.BasicInfo}" style="margin-bottom:20px">
+                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                            <h:panelGroup>
+                                <label class="label">#{msg.serialNum}</label>
+                                <p:inputText id="serialNum" value="#{assetInfoController.selected.serialNum}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.name}*</label>
+                                <p:inputText id="name" value="#{assetInfoController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.aliasName}</label>
+                                <p:inputText id="aliasName" value="#{assetInfoController.selected.aliasName}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.assetGroup}*</label>
+                                <p:selectOneMenu id="assetGroup" value="#{assetInfoController.selected.assetGroup}" required="true" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup >
+                                <label class="label">#{msg.assetOwnerName}*</label>
+                                <p:selectOneMenu id="assetOwnerName" value="#{assetInfoController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="true" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}" >
+                                    <p:ajax listener="#{assetInfoController.onOwnerChange}" process="@this" update="assetOwnerTel"/>
+                                    <f:selectItem itemLabel="" />
+                                    <f:selectItems value="#{assetInfoController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                    <p:column>
+                                        <h:outputText value="#{t.name}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{t.telephone}"/>
+                                    </p:column>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.assetOwnerTel}</label>
+                                <p:inputText id="assetOwnerTel" value="#{assetInfoController.selected.assetOwnerTel}" readonly="true"/>
+                            </h:panelGroup>
+                            
+                            <h:panelGroup>
+                                <label class="label">#{msg.hospitalId}</label>
+                                <p:inputText id="hospitalId" value="#{assetInfoController.getHospital(assetInfoController.selected.hospitalId)}" readonly="true" rendered="#{!userContextService.hasRole('MultiHospital')}"/>
+                                <p:selectOneMenu id="hospitalIdSelect" value="#{assetInfoController.selected.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}" rendered="#{userContextService.hasRole('MultiHospital')}" >
+                                    <p:ajax  listener="#{assetInfoController.onHospitalChange}" update="clinicalDeptName assetOwnerName" />
+                                    <!--<f:selectItem itemLabel="#{msg.selectOneMessage}"/>-->
+                                    <f:selectItems value="#{assetInfoService.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.clinicalDeptName}*</label>
+                                <!--<p:inputText id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptName}"/>-->
+                                <p:selectOneMenu id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptId}" required="true" requiredMessage="#{msg.clinicalDeptName} #{msg.ValidationRequire}">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{assetInfoController.getClinicalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.manufacture}</label>
+                                <p:inputText id="manufacture" value="#{assetInfoController.selected.manufacture}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.vendor}</label>
+                                <p:selectOneMenu id="vendor" value="#{assetInfoController.selected.vendor}">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{supplierController.supplierList}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                                </p:selectOneMenu>
+
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.maitanance}</label>
+                                <p:inputText id="maitanance" value="#{assetInfoController.selected.maitanance}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.maitananceTel}</label>
+                                <p:inputText id="maitananceTel" value="#{assetInfoController.selected.maitananceTel}"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </p:fieldset>
+
+                    <p:fieldset  style="margin-bottom:20px">
+                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                            <h:panelGroup>
+                                <label class="label">#{msg.departNum}</label>
+                                <p:inputText id="departNum2" value="#{assetInfoController.selected.departNum}"/>
+
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.financingNum}</label>
+                                <p:inputText id="financingNum2" value="#{assetInfoController.selected.financingNum}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.barcode}</label>
+                                <p:inputText id="barcode" value="#{assetInfoController.selected.barcode}"/>
+                            </h:panelGroup>
+                            <p:spacer/>
+                            <h:panelGroup>
+                                <label class="label">#{msg.modalityId}</label>
+                                <p:inputText id="modalityId" value="#{assetInfoController.selected.modalityId}"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </p:fieldset>
+                    <p:fieldset  style="margin-bottom:20px">
+                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                            <h:panelGroup>
+                                <label class="label">#{msg.functionType}</label>
+                                <p:inputText id="functionType" value="#{assetInfoController.selected.functionType}"/>
+<!--                                <p:selectOneMenu id="assetGroup" value="#{assetInfoController.selected.assetGroup}" required="true" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}" />
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('ownAssetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>-->
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.functionGrade}</label>
+                                <p:selectOneMenu id="functionGrade" value="#{assetInfoController.selected.functionGrade}">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionGrade')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup >
+                                <label class="label">#{msg.functionGroup}</label>
+                                <p:selectOneMenu id="functionGroup" value="#{assetInfoController.selected.functionGroup}" style="width: 100%">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <p:spacer/>
+                            <h:panelGroup>
+                                <label class="label">#{msg.locationCode}</label>
+                                <p:inputText id="locationCode" value="#{assetInfoController.selected.locationCode}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.locationName}</label>
+                                <p:inputText id="locationName" value="#{assetInfoController.selected.locationName}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isValid}" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
+                            </h:panelGroup>
+                            <h:panelGroup >
+                                <label class="label">#{msg.status}*</label>
+                                <p:selectOneRadio id="status" value="#{assetInfoController.selected.status}" required="true" requiredMessage="#{msg.status} #{msg.ValidationRequire}">
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetStatus')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneRadio>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </p:fieldset>
+                    <p:fieldset  style="margin-bottom:20px">
+                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                            <h:panelGroup>
+                                <label class="label">#{msg.manufactDate}</label>
+                                <p:calendar timeZone="GMT+8"  id="manufactDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.manufactDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"  />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.purchaseDate}*</label>
+                                <p:calendar timeZone="GMT+8"  id="purchaseDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.purchaseDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.purchaseDate} #{msg.ValidationRequire}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.arriveDate}</label>
+                                <p:calendar timeZone="GMT+8"  id="arriveDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            </h:panelGroup>
+
+                            <p:spacer/>
+
+                            <h:panelGroup>
+                                <label class="label">#{msg.installDate}*</label>
+                                <p:calendar timeZone="GMT+8"  id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.installDate} #{msg.ValidationRequire}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.warrantyDate}</label>
+                                <p:calendar timeZone="GMT+8"  id="warrantyDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.warrantyDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.terminateDate}</label>
+                                <p:calendar timeZone="GMT+8"  id="terminateDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            </h:panelGroup>
+                            <!--                            <h:panelGroup>
+                                                            <label class="label">#{msg.lastPmDate}</label>
+                                                            <p:calendar timeZone="GMT+8"  id="lastPmDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastPmDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                                                        </h:panelGroup>
+                                                        <h:panelGroup>
+                                                            <label class="label">#{msg.lastQaDate}</label>
+                                                            <p:calendar timeZone="GMT+8"  pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastQaDate}" showOn="button" readonlyInput="false" showButtonPanel="false" navigator="true" mask="true"/>
+                                                        </h:panelGroup>
+                                                        <h:panelGroup>
+                                                            <label class="label">#{msg.lastMeteringDate}</label>
+                                                            <p:calendar timeZone="GMT+8"  pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastMeteringDate}" showOn="button" readonlyInput="false" showButtonPanel="false" navigator="true" mask="true"/>
+                                                        </h:panelGroup>-->
+                        </p:panelGrid>
+                    </p:fieldset>
+                    <p:fieldset  style="margin-bottom:20px">
+                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                            <h:panelGroup>
+                                <label class="label">#{msg.purchasePrice}*</label>
+                                <p:inputNumber minValue="0" decimalPlaces="2" id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.salvageValue}</label>
+                                <p:inputNumber minValue="0" decimalPlaces="2" id="salvageValue" value="#{assetInfoController.selected.salvageValue}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.lifecycle}</label>
+                                <p:inputNumber minValue="0" decimalPlaces="1" id="lifecycle" value="#{assetInfoController.selected.lifecycleInYear}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.depreciationMethod}</label>
+                                <!--<p:inputText id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}"/>-->
+                                <p:selectOneMenu id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('depreciationMethodList')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </p:fieldset>
+
+                    <p:fieldset legend="#{msg.Attachment}" style="margin-bottom:20px">
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                            <h:panelGroup >
+                                <p:dataList id="pictureList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
+                                    <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 1)}</f:facet>
+
+                                    #{fileitem.name}
+                                    <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
+                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
+                                    </p:commandButton>
+                                </p:dataList>
+                                <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%" 
+                                              multiple="false"  sizeLimit="10000000"  update="pictureList" auto="true" invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
+
+<!--                                <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%" 
+                                              multiple="false"  sizeLimit="10000000"  update="pictureList" auto="true" invalidFileMessage="#{msg.InvalidPictureFileType}" invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}" allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/"/>-->
+                            </h:panelGroup>
+<!--                            <h:panelGroup >
+                                <p:dataList id="contractList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
+                                    <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 2)}</f:facet>
+                                        #{fileitem.name}
+                                    <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="contractList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
+                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
+                                    </p:commandButton>
+                                </p:dataList>
+                                <p:fileUpload id="type2" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                              multiple="false"  sizeLimit="10000000"  update="contractList" auto="true" invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
+                            </h:panelGroup>
+                            <h:panelGroup >
+                                <p:dataList id="manualList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,3)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
+                                    <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 3)}</f:facet>
+                                    #{fileitem.name},
+                                    <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="manualList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
+                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
+                                    </p:commandButton>
+                                </p:dataList>
+                                <p:fileUpload id="type3" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%"
+                                              multiple="false"  sizeLimit="10000000"  update="manualList" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}"/>
+                            </h:panelGroup>-->
+                        </p:panelGrid>
+                    </p:fieldset>
+                    <h:panelGroup >
+                        <p:commandButton value="#{msg.Save}" icon="ui-icon-check"  actionListener="#{assetInfoController.applyChange()}" validateClient="true" update=":growl" style="float:left" onsuccess="setTimeout('WeixinJSBridge.call(\'closeWindow\')',2000);" />
+                        <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back"  immediate="true"  update=":growl" style="float:left"   oncomplete="WeixinJSBridge.call('closeWindow');"/>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
