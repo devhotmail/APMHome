@@ -1,5 +1,7 @@
 package com.ge.apm.service.utils;
 
+import javaslang.Tuple;
+import javaslang.Tuple2;
 import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
 import org.javamoney.moneta.format.MonetaryAmountDecimalFormatBuilder;
@@ -11,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.Locale;
 
 public interface CNY {
-  public final static MonetaryAmountFormat fmt = MonetaryAmountDecimalFormatBuilder.of(",###.##", Locale.CHINA).build();
+  public final static MonetaryAmountFormat fmt = MonetaryAmountDecimalFormatBuilder.of("###.#", Locale.CHINA).build();
   public final static Money O = Money.zero(Monetary.getCurrency(Locale.CHINA));
   public final static Money K = Money.of(1_000, Monetary.getCurrency(Locale.CHINA));
   public final static Money W = Money.of(10_000, Monetary.getCurrency(Locale.CHINA));
@@ -33,8 +35,8 @@ public interface CNY {
   }
 
   // @formatter:off
-  public static String desc(MonetaryAmount amount) {
-    if(amount.abs().isGreaterThan(W)) return format(amount.divide(10_000d)).concat("万"); else return format(amount).concat("元");
+  public static Tuple2<String,String> desc(MonetaryAmount amount) {
+    if(amount.abs().isGreaterThan(W)) return Tuple.of(format(amount.divide(10_000d)),"万"); else return Tuple.of(format(amount),"元");
   }
   // @formatter:on
 

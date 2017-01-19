@@ -30,10 +30,12 @@ public class ProfitApiUnitTest {
   public void testCny() {
     System.out.println(CNY.fmt.format(CNY.fmt.parse("10240.025")));
     Assertions.assertThat(CNY.O).isEqualTo(CNY.fmt.parse("0.00"));
+    System.out.println(CNY.desc(CNY.fmt.parse("1023432240.025234")));
   }
 
   @Test
   public void testUrlEscape() {
     System.out.println(UrlEscapers.urlPathSegmentEscaper().escape("放射科"));
   }
+
 }
