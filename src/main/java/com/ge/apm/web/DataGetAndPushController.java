@@ -32,8 +32,10 @@ public class DataGetAndPushController {
     @RequestMapping(value = "/dataget/{tablename}", method = RequestMethod.GET )
     public @ResponseBody Object getDataRow(@PathVariable String tablename, 
             @RequestParam(required=false) String page, 
-            @RequestParam(required=false) String size) {
-        return dataService.getDataRow(tablename, page, size);
+            @RequestParam(required=false) String size,
+            @RequestParam(required=false)  String hospitalId, 
+            @RequestParam(required=false)  String siteId) {
+        return dataService.getDataRow(tablename, page, size, hospitalId, siteId);
     }
     
     @RequestMapping(value = "/dataget/{tablename}/{id}", method = RequestMethod.GET )
@@ -45,16 +47,10 @@ public class DataGetAndPushController {
     public @ResponseBody Object postData(@PathVariable String tablename, @RequestBody List<Map> list) {
         try {
             return dataService.postData(tablename, list);
-        } catch (IllegalAccessException ex) {
+        } catch(Exception ex) {
             Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
+            return "{code:1,msg:"+ org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace(ex) +"}";
         }
-        return "{code:1,msg:保存失败}";
     }
     
     @RequestMapping(value = "/datapost/direct/{tablename}", method = RequestMethod.POST) 

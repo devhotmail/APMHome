@@ -5,6 +5,7 @@
  */
 package com.ge.apm.service.data;
 
+import com.ge.apm.service.converter.DateConverter;
 import com.ge.apm.web.DataGetAndPushController;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -19,11 +20,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
 
 /**
@@ -33,18 +37,28 @@ import webapp.framework.web.WebUtil;
 @Service
 public class DataService {
     
-    public Object getDataRow(String tablename, String page, String size) {
+    static {
+        ConvertUtils.register(new DateConverter(), java.util.Date.class);
+    }
+    
+    public Object getDataRow(String tablename, String page, String size, String hospitalId, String siteId) {
         if (tablename == null) return null;
         String tableName = tablename.toLowerCase();
         String daoName = "com.ge.apm.dao."+tabelNameToClassName(tableName) + "Repository";
         Class<?> dao = getDao(daoName);
         try {
             try {
+                List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
+                if (hospitalId != null && !"".equals(hospitalId))
+                    searchFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, hospitalId));
+                if (siteId != null && !"".equals(siteId))
+                    searchFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, siteId));
                 if (page == null || size == null || "".equals(page) || "".equals(size)) {
-                    return dao.getMethod("findAll").invoke(WebUtil.getBean(dao));
+                    return dao.getMethod("findBySearchFilter", List.class).invoke(WebUtil.getBean(dao), searchFilters);
                 } else {
-                    PageRequest pageRequest = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
-                    Page<Object> objPage = (Page<Object>)dao.getMethod("findAll", Pageable.class).invoke(WebUtil.getBean(dao), pageRequest);
+                    Sort sort = new Sort(Sort.Direction.ASC, "id");
+                    PageRequest pageRequest = new PageRequest(Integer.parseInt(page), Integer.parseInt(size), sort);
+                    Page<Object> objPage = (Page<Object>)dao.getMethod("findBySearchFilter", List.class, Pageable.class).invoke(WebUtil.getBean(dao), searchFilters, pageRequest);
                     return objPage.getContent();
                 }
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
@@ -75,14 +89,14 @@ public class DataService {
     
     @Transactional
     public String postData(String tablename, List<Map> list) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        if(tablename == null) return "{\"code\":\"1\",\"msg\":\"请输入表名\"}";
-        if (list == null || list.isEmpty()) return "{\"code\":\"1\",\"msg\":\"无数据保存\"}";
+        if(tablename == null) return "{\"code\":\"1\",\"msg\":\"please input table_name\"}";
+        if (list == null || list.isEmpty()) return "{\"code\":\"1\",\"msg\":\"no data post\"}";
         String tableName = tablename.toLowerCase();
         String talbeClassName = "com.ge.apm.domain." + tabelNameToClassName(tableName);
         String daoName = "com.ge.apm.dao." + tabelNameToClassName(tableName) + "Repository";
         Class<?> dao = getDao(daoName);
         Class<?> table = getDao(talbeClassName);
-        if (dao == null || table == null) return "{\"code\":\"1\",\"msg\":\"保存失败\"}";
+        if (dao == null || table == null) return "{\"code\":\"1\",\"msg\":\"save failed\"}";
         int fortimes = list.size()/50 +1;//循环次数
         for (int j=0; j<fortimes; j++) {
             List<Map> subList = list.subList(j*50, (j+1)*50<list.size()?(j+1)*50:list.size());
@@ -90,16 +104,17 @@ public class DataService {
             for (int i=0; i<subList.size();i++){
                 Object obj = table.newInstance();
                 BeanUtils.populate(obj, subList.get(i));
+                BeanUtils.setProperty(obj, "id", null);
                 saveList.add(obj);
             }
             dao.getMethod("save", Iterable.class).invoke(WebUtil.getBean(dao), saveList);
         }
-        return "{\"code\":\"0\",\"msg\":\"保存成功\"}";//成功
+        return "{\"code\":\"0\",\"msg\":\"save success\"}";//成功
     }
     
     public Object postDirectData(String tablename, List<Map> list) {
-        if(tablename == null) return "{\"code\":\"1\",\"msg\":\"请输入表名\"}";
-        if (list == null || list.isEmpty()) return "{\"code\":\"1\",\"msg\":\"无数据保存\"}";
+        if(tablename == null) return "{\"code\":\"1\",\"msg\":\"please input table_name\"}";
+        if (list == null || list.isEmpty()) return "{\"code\":\"1\",\"msg\":\"no data post\"}";
         String tableName = tablename.toLowerCase();
         String talbeClassName = "com.ge.apm.domain." + tabelNameToClassName(tableName);
         Class<?> table = getDao(talbeClassName);
@@ -130,13 +145,13 @@ public class DataService {
                 em.getTransaction().rollback();
                 Logger.getLogger(DataGetAndPushController.class.getName()).log(Level.SEVERE, null, ex);
                 em.close();
-                return "{\"code\":\"1\",\"msg\":\"保存失败\"}";//失败
+                return "{\"code\":\"1\",\"msg\":\"save failed\"}";//失败
             } 
         }
         if (em != null) {
             em.close();
         }
-        return "{\"code\":\"0\",\"msg\":\"保存成功\"}";//成功
+        return "{\"code\":\"0\",\"msg\":\"save success\"}";//成功
     }
     
     private String tabelNameToClassName(String tableName) {

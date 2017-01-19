@@ -110,6 +110,9 @@ public class UserAccount implements Serializable {
     @Column(name = "pwd_salt")
     private String pwdSalt;
 
+    @Column(name = "wechat_id")
+    private String weChatId;
+    
     @Transient
     private String plainPassword;
     
@@ -273,6 +276,14 @@ public class UserAccount implements Serializable {
 
     public void setHospitalId(Integer hospitalId) {
         this.hospitalId = hospitalId;
+    }
+
+    public String getWeChatId() {
+        return weChatId;
+    }
+
+    public void setWeChatId(String weChatId) {
+        this.weChatId = weChatId;
     }
 
     public String getPwdSalt() {

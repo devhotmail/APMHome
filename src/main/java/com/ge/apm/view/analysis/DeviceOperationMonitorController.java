@@ -1,7 +1,6 @@
 package com.ge.apm.view.analysis;
 
 import com.ge.apm.domain.I18nMessage;
-import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
 import com.google.common.base.MoreObjects;
@@ -26,6 +25,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -33,7 +34,17 @@ import java.util.*;
 @ManagedBean
 @ViewScoped
 public class DeviceOperationMonitorController extends SqlConfigurableChartController {
-    private static final Logger log = LoggerFactory.getLogger(DeviceOperationMonitorController.class);
+
+	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LoggerFactory.getLogger(DeviceOperationMonitorController.class);
+    
+    private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    
     public final static String HEAD = "头部";
     public final static String CHEST = "胸部";
     public final static String ABDOMEN = "腹部";
@@ -48,8 +59,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     private final Map<String, String> queries;
     private final JdbcTemplate jdbcTemplate;
-    private final int siteId;
-    private final int hospitalId;
+
     private BarChartModel topBar;
     private ImmutableMap<String, Integer> topBarData;
     private BarChartModel topBarAll;
@@ -74,9 +84,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     private int activeTabIndex = 2;
 
     public DeviceOperationMonitorController() {
-        UserAccount user = UserContextService.getCurrentUserAccount();
-        siteId = user.getSiteId();
-        hospitalId = user.getHospitalId();
+
         queries = Maps.newLinkedHashMap();
         jdbcTemplate = WebUtil.getServiceBean("jdbcTemplate", JdbcTemplate.class);
         queries.put("assetGroups", "select msg_key as assetGroupId, value_zh as assetGroupName from i18n_message where msg_type = ?");
@@ -136,7 +144,10 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
             query = queries.get("examsPerProcedurePerMonth");
             bottomLeftBarTitle = MONTH_AVERAGE;
         }
-        log.info("renderTabView sql: {}, params:{},{},{},{},{},{},{}", query, from(startDate), from(endDate), siteId, hospitalId, selectedGroupId, startDate, endDate);
+        
+        String sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, selectedGroupId=%s, startDate=%s, endDate=%s}",
+        		query, site_id, hospital_id, selectedGroupId, startDate, endDate);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
         List<DeviceOperationInfo> exams = jdbcTemplate.query(query, new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -146,11 +157,10 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
                 info.setExamDate(rs.getDate("exam_time"));
                 return info;
             }
-        }, from(startDate), from(endDate), siteId, hospitalId, selectedGroupId, startDate, endDate);
+        }, from(startDate), from(endDate), site_id, hospital_id, selectedGroupId, startDate, endDate);
 
         activeTabIndex = tabIndex;
         tabAreaModelData = initTable(exams);
-        log.info("tabAreaModelData: {}", tabAreaModelData);
         tabAreaModel = initLineCharModel(null, true, "ne", "tabAreaSkin", tabIndex == 2 ? "%y-%m" : null, tabAreaModelData);
         ImmutableMap<String, Integer> bottomLeftBarData = ImmutableMap.of(HEAD, average(tabAreaModelData.row(HEAD)), CHEST, average(tabAreaModelData.row(CHEST)), ABDOMEN, average(tabAreaModelData.row(ABDOMEN)), LIMBS, average(tabAreaModelData.row(LIMBS)), OTHER, average(tabAreaModelData.row(OTHER)));
         bottomLeftTotal = (int) Stats.of(bottomLeftBarData.values()).sum();
@@ -158,7 +168,9 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     public void initMiddleBar() {
-        log.info("examsForMiddleBar sql: {}, params:{},{},{},{},{},{},{},{}", queries.get("examsForMiddleBar"), siteId, hospitalId, startDate, endDate, siteId, hospitalId, startDate, endDate);
+        String sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, selectedGroupId=%s, startDate=%s, endDate=%s}",
+        		queries.get("examsForMiddleBar"), site_id, hospital_id, selectedGroupId, startDate, endDate);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
         List<DeviceOperationInfo> exams = jdbcTemplate.query(queries.get("examsForMiddleBar"), new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -168,19 +180,21 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
                 info.setExamCount(rs.getInt("exam_count"));
                 return info;
             }
-        }, siteId, hospitalId, startDate, endDate, siteId, hospitalId, startDate, endDate);
+        }, site_id, hospital_id, startDate, endDate, site_id, hospital_id, startDate, endDate);
         ImmutableTable.Builder<String, String, Integer> builder = new ImmutableTable.Builder<>();
         for (DeviceOperationInfo info : exams) {
             builder.put(info.getProcedureName(), info.getAssetName(), info.getExamCount());
         }
         middleBarData = builder.build();
-        log.info("middleBarData: {}", middleBarData);
         middleBar = initBarModel(new BarChartModel(), null, true, "ne", "middleBarSkin", middleBarData, true);
     }
 
     public void initBottomBars() {
-        log.info("initBottomBars sql:{}, param:{},{},{},{},{}", queries.get("examsForGroups"), assetGroups.size(), siteId, hospitalId, startDate, endDate);
+        
         bottomBars = Lists.newArrayListWithExpectedSize(assetGroups.size());
+        String sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, selectedGroupId=%s, startDate=%s, endDate=%s}",
+        		queries.get("examsForGroups"), site_id, hospital_id, selectedGroupId, startDate, endDate);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
         List<DeviceOperationInfo> exams = jdbcTemplate.query(queries.get("examsForGroups"), new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -190,8 +204,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
                 deviceOperationInfo.setExamCount(rs.getInt("exam_count"));
                 return deviceOperationInfo;
             }
-        }, assetGroups.size(), siteId, hospitalId, startDate, endDate);
-        log.info("exams: {}", exams);
+        }, assetGroups.size(), site_id, hospital_id, startDate, endDate);
         ImmutableTable.Builder<String, String, Integer> builder = new ImmutableTable.Builder<>();
         for (DeviceOperationInfo info : exams) {
             if (Optional.fromNullable(info.getGroupName()).isPresent() && Optional.fromNullable(info.getProcedureName()).isPresent() && Optional.fromNullable(info.getExamCount()).isPresent()) {
@@ -204,7 +217,6 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
             BarChartModel chart = initBarModel(new BarChartModel(), group, true, 50, "ne", "bottomBarSkin", renderData, true);
             bottomBars.add(new Report(group, (int) Stats.of(renderData.values()).sum(), chart, renderData));
         }
-        log.info("bottomBars: {}", bottomBars);
     }
 
 
@@ -223,12 +235,13 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
             }
 
         }
-        log.info("assetGroups: {}", assetGroup);
         return assetGroup;
     }
 
     private void initTopBar() {
-        log.info("examsPerProcedure sql: {}, params:{},{},{},{},{}", queries.get("examsPerProcedure"), siteId, hospitalId, selectedGroupId, startDate, endDate);
+        String sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, selectedGroupId=%s, startDate=%s, endDate=%s}",
+        		queries.get("examsPerProcedure"), site_id, hospital_id, selectedGroupId, startDate, endDate);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
         List<DeviceOperationInfo> list = jdbcTemplate.query(queries.get("examsPerProcedure"), new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -237,7 +250,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
                 deviceOperationInfo.setExamCount(rs.getInt("exam_count"));
                 return deviceOperationInfo;
             }
-        }, siteId, hospitalId, selectedGroupId, startDate, endDate);
+        }, site_id, hospital_id, selectedGroupId, startDate, endDate);
         ImmutableMap.Builder<String, Integer> reportBuilder = new ImmutableMap.Builder<>();
         for (DeviceOperationInfo deviceOperationInfo : list) {
             reportBuilder.put(deviceOperationInfo.getProcedureName(), deviceOperationInfo.getExamCount());
@@ -248,7 +261,9 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
     }
 
     private void initTopBarAll() {
-        log.info("examsPerProcedureAll sql: {}, params:{},{},{},{}", queries.get("examsPerProcedureAll"), siteId, hospitalId, startDate, endDate);
+        String sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, selectedGroupId=%s, startDate=%s, endDate=%s}",
+        		queries.get("examsPerProcedureAll"), site_id, hospital_id, selectedGroupId, startDate, endDate);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
         List<DeviceOperationInfo> list = jdbcTemplate.query(queries.get("examsPerProcedureAll"), new RowMapper<DeviceOperationInfo>() {
             @Override
             public DeviceOperationInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -257,7 +272,7 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
                 deviceOperationInfo.setExamCount(rs.getInt("exam_count"));
                 return deviceOperationInfo;
             }
-        }, siteId, hospitalId, startDate, endDate);
+        }, site_id, hospital_id, startDate, endDate);
         ImmutableMap.Builder<String, Integer> reportBuilder = new ImmutableMap.Builder<>();
         for (DeviceOperationInfo deviceOperationInfo : list) {
             reportBuilder.put(deviceOperationInfo.getProcedureName(), deviceOperationInfo.getExamCount());
@@ -376,18 +391,6 @@ public class DeviceOperationMonitorController extends SqlConfigurableChartContro
 
     private String from(Date date) {
         return new DateTime(date).toString(formatter);
-    }
-
-    private DateTime from(String date) {
-        return formatter.parseDateTime(date);
-    }
-
-    public int getSiteId() {
-        return siteId;
-    }
-
-    public int getHospitalId() {
-        return hospitalId;
     }
 
     public BarChartModel getTopBar() {

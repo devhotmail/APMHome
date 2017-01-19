@@ -1,7 +1,6 @@
 package com.ge.apm.view.analysis;
 
 import com.ge.apm.domain.I18nMessage;
-import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.FieldValueMessageController;
 import com.ge.apm.view.sysutil.UserContextService;
 import com.google.common.base.Function;
@@ -12,7 +11,6 @@ import com.google.common.math.Stats;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.primefaces.model.chart.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +21,9 @@ import webapp.framework.web.WebUtil;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -33,16 +34,20 @@ import static java.lang.Math.ceil;
 @ManagedBean
 @ViewScoped
 public class AssetProcurementController {
-    private final static Logger log = LoggerFactory.getLogger(AssetProcurementController.class);
-    private final static DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+	private static final Logger logger = LoggerFactory.getLogger(AssetProcurementController.class);
+    
+    private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    
     private final static ImmutableMap<Integer, String> parts = ImmutableMap.of(1, "头部", 2, "胸部", 3, "腹部", 4, "四肢", 5, "其他");
     private final static int DAILY_UTIL_HOURS = 8;
     private final static int DAILY_UTIL_BENCHMARK = DAILY_UTIL_HOURS * 60 * 60;
     private final Map<String, String> queries;
     private final JdbcTemplate jdbcTemplate;
-    private final int siteId;
-    private final int hospitalId;
-    private final int userId;
     private final Date lastSndYearStart;
     private final Date lastSndYearEnd;
     private final Date lastFstYearStart;
@@ -54,11 +59,8 @@ public class AssetProcurementController {
 
 
     public AssetProcurementController() {
-        UserAccount user = UserContextService.getCurrentUserAccount();
+
         jdbcTemplate = WebUtil.getServiceBean("jdbcTemplate", JdbcTemplate.class);
-        siteId = user.getSiteId();
-        hospitalId = user.getHospitalId();
-        userId = user.getId();
         queries = Maps.newLinkedHashMap();
         queries.put("utilization", "select asi.asset_group, asi.name as asset_name, asi.install_date, asi.part_id, COALESCE(acr.exam_count, 0) as exam_count, COALESCE(acr.duration, 0) as exam_duration, COALESCE(acr.amount, 0) as exam_charge from (select ai.site_id, ai.hospital_id, ai.id, ai.name, ai.asset_group, ai.install_date, pid.part_id from asset_info ai cross join (select generate_series(1,5) as part_id) as pid where ai.site_id = ? and ai.hospital_id = ? order by ai.asset_group, ai.name, pid.part_id) as asi left join (select asset_id, procedure_id, count(procedure_id) as exam_count, sum(exam_duration) as duration, sum(price_amount) as amount from asset_clinical_record where exam_date between ? and ? group by asset_id, procedure_id, procedure_name) as acr on asi.id = acr.asset_id and asi.part_id = acr.procedure_id order by asi.asset_group, asi.name, asi.part_id");
         forecastStart = DateTime.now().plusDays(1).toDate();
@@ -82,6 +84,9 @@ public class AssetProcurementController {
 
     private void initLastFstYearReport() {
         final Table<Integer, String, LinkedHashMap<Integer, Report>> table = HashBasedTable.create();
+        String sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, lastFstYearStart=%s, lastFstYearEnd=%s}", 
+        		queries.get("utilization"), site_id, hospital_id, lastFstYearStart, lastFstYearEnd);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
         jdbcTemplate.query(queries.get("utilization"), new RowCallbackHandler() {
             @Override
             public void processRow(ResultSet rs) throws SQLException {
@@ -90,8 +95,8 @@ public class AssetProcurementController {
                 map.put(report.getExamPart(), report);
                 table.put(report.getGroup(), report.getName(), map);
             }
-        }, siteId, hospitalId, lastFstYearStart, lastFstYearEnd);
-        log.info("initLastFstYearReport query result: {}", table);
+        }, site_id, hospital_id, lastFstYearStart, lastFstYearEnd);
+        
         for (int group : table.rowKeySet()) {
             if (Optional.fromNullable(assetGroups.get(group)).isPresent()) {
                 Detail detail = Optional.fromNullable(details.get(group)).or(new Detail());
@@ -115,11 +120,13 @@ public class AssetProcurementController {
                 details.put(detail.getGroupId(), detail);
             }
         }
-        log.info("details: {}", details);
     }
 
     private void initLastSndYearReport() {
         final Table<Integer, String, LinkedHashMap<Integer, Report>> table = HashBasedTable.create();
+        String sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, lastFstYearStart=%s, lastFstYearEnd=%s}", 
+        		queries.get("utilization"), site_id, hospital_id, lastFstYearStart, lastFstYearEnd);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
         jdbcTemplate.query(queries.get("utilization"), new RowCallbackHandler() {
             @Override
             public void processRow(ResultSet rs) throws SQLException {
@@ -128,8 +135,8 @@ public class AssetProcurementController {
                 map.put(report.getExamPart(), report);
                 table.put(report.getGroup(), report.getName(), map);
             }
-        }, siteId, hospitalId, lastSndYearStart, lastSndYearEnd);
-        log.info("initLastSndYearReport query result: {}", table);
+        }, site_id, hospital_id, lastSndYearStart, lastSndYearEnd);
+        
         for (int group : table.rowKeySet()) {
             if (Optional.fromNullable(assetGroups.get(group)).isPresent()) {
                 Detail detail = Optional.fromNullable(details.get(group)).or(new Detail());
@@ -153,7 +160,6 @@ public class AssetProcurementController {
                 details.put(detail.getGroupId(), detail);
             }
         }
-        log.info("details: {}", details);
     }
 
     private void initForecastReport() {
@@ -326,10 +332,6 @@ public class AssetProcurementController {
         return new DateTime(date).toString(DateTimeFormat.forPattern(format));
     }
 
-    private static Date from(String date) {
-        return formatter.parseDateTime(date).toDate();
-    }
-
     public String getLastSndYearStart() {
         return from(lastSndYearStart);
     }
@@ -424,56 +426,24 @@ public class AssetProcurementController {
             return group;
         }
 
-        public void setGroup(int group) {
-            this.group = group;
-        }
-
         public String getName() {
             return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
         }
 
         public Date getInstalled() {
             return installed;
         }
 
-        public void setInstalled(Date installed) {
-            this.installed = installed;
-        }
-
         public int getExamPart() {
             return examPart;
-        }
-
-        public void setExamPart(int examPart) {
-            this.examPart = examPart;
-        }
-
-        public int getExamCount() {
-            return examCount;
-        }
-
-        public void setExamCount(int examCount) {
-            this.examCount = examCount;
         }
 
         public int getExamSeconds() {
             return examSeconds;
         }
 
-        public void setExamSeconds(int examSeconds) {
-            this.examSeconds = examSeconds;
-        }
-
         public double getCharge() {
             return charge;
-        }
-
-        public void setCharge(double charge) {
-            this.charge = charge;
         }
 
         @Override

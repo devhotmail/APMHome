@@ -11,7 +11,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleModel;
@@ -25,6 +24,9 @@ import webapp.framework.web.mvc.SqlConfigurableChartController;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -35,13 +37,20 @@ import java.util.Map;
 @ManagedBean
 @ViewScoped
 public class WoScheduleController extends SqlConfigurableChartController {
-    private final static Logger log = LoggerFactory.getLogger(WoScheduleController.class);
-    private final static DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LoggerFactory.getLogger(WoScheduleController.class);
+    
+    private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+    private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    private final String remote_addr = request.getRemoteAddr();
+    private final String page_uri = request.getRequestURI();
+    private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
+    private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
+    
     private final Map<String, String> queries;
     private final JdbcTemplate jdbcTemplate;
     private final Map<Integer, String> eventTypes;
-    private final int siteId;
-    private final int hospitalId;
     private final int userId;
     private ScheduleModel model;
     private int inspNum;
@@ -53,8 +62,6 @@ public class WoScheduleController extends SqlConfigurableChartController {
     public WoScheduleController() {
         UserAccount user = UserContextService.getCurrentUserAccount();
         jdbcTemplate = WebUtil.getServiceBean("jdbcTemplate", JdbcTemplate.class);
-        siteId = user.getSiteId();
-        hospitalId = user.getHospitalId();
         userId = user.getId();
         queries = Maps.newLinkedHashMap();
         queries.put("inspection", "select distinct io.order_type, io.name, io.start_time, io.end_time, io.create_time, io.creator_name, ai.location_name, io.is_finished from inspection_order_detail iod join inspection_order io on iod.site_id = io.site_id and iod.order_id = io.id join asset_info ai on iod.site_id = ai.site_id and iod.asset_id = ai.id where io.start_time between ? and ? and ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and io.owner_id = ? and io.start_time is not null order by io.start_time");
@@ -71,7 +78,10 @@ public class WoScheduleController extends SqlConfigurableChartController {
     @PostConstruct
     public void init() {
         model = new LazyScheduleModel() {
-            @Override
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public void loadEvents(final Date start, Date end) {
                 List<Event> inspectionEvents = initInspectionEvents(start, end);
                 List<Event> maintenanceEvents = initMaintenanceEvents(start, end);
@@ -94,63 +104,83 @@ public class WoScheduleController extends SqlConfigurableChartController {
                                 return event;
                             }
                         });
-                log.info("loadedEvents: {}", events);
                 for (DefaultScheduleEvent event : events) {
                     model.addEvent(event);
                 }
                 //RequestContext.getCurrentInstance().execute(String.format("updateTopPanel([%s,%s,%s,%s,%s])", inspNum, meterNum, qaNum, mtMum, pmNum));
             }
         };
-        inspNum = jdbcTemplate.queryForObject(queries.get("inspNum"), Integer.TYPE, siteId, hospitalId, userId);
-        log.info("result: {} for query: {}", inspNum, queries.get("inspNum"));
-        meterNum = jdbcTemplate.queryForObject(queries.get("meterNum"), Integer.TYPE, siteId, hospitalId, userId);
-        log.info("result: {} for query: {}", meterNum, queries.get("meterNum"));
-        qaNum = jdbcTemplate.queryForObject(queries.get("qaNum"), Integer.TYPE, siteId, hospitalId, userId);
-        log.info("result: {} for query: {}", qaNum, queries.get("qaNum"));
-        mtMum = jdbcTemplate.queryForObject(queries.get("mtMum"), Integer.TYPE, siteId, hospitalId, userId);
-        log.info("result: {} for query: {}", mtMum, queries.get("mtMum"));
-        pmNum = jdbcTemplate.queryForObject(queries.get("pmNum"), Integer.TYPE, siteId, hospitalId, userId);
-        log.info("result: {} for query: {}", pmNum, queries.get("pmNum"));
+        
+        String sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, user_Id=%s}",
+        		queries.get("inspNum"), site_id, hospital_id, userId);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
+        inspNum = jdbcTemplate.queryForObject(queries.get("inspNum"), Integer.TYPE, site_id, hospital_id, userId);
+        
+        sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, user_Id=%s}",
+        		queries.get("meterNum"), site_id, hospital_id, userId);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
+        meterNum = jdbcTemplate.queryForObject(queries.get("meterNum"), Integer.TYPE, site_id, hospital_id, userId);
+        
+        sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, user_Id=%s}",
+        		queries.get("qaNum"), site_id, hospital_id, userId);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
+        qaNum = jdbcTemplate.queryForObject(queries.get("qaNum"), Integer.TYPE, site_id, hospital_id, userId);
+        
+        sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, user_Id=%s}",
+        		queries.get("mtMum"), site_id, hospital_id, userId);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
+        mtMum = jdbcTemplate.queryForObject(queries.get("mtMum"), Integer.TYPE, site_id, hospital_id, userId);
+        
+        sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, user_Id=%s}",
+        		queries.get("pmNum"), site_id, hospital_id, userId);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
+        pmNum = jdbcTemplate.queryForObject(queries.get("pmNum"), Integer.TYPE, site_id, hospital_id, userId);
     }
 
     private List<Event> initInspectionEvents(Date start, Date end) {
+    	
+    	String sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, user_Id=%s, startDate=%s, endDate=%s}",
+        		queries.get("inspection"), site_id, hospital_id, userId, start, end);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
+        
         return jdbcTemplate.query(queries.get("inspection"), new RowMapper<Event>() {
             @Override
             public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new Event(rs.getInt("order_type"), eventTypes.get(rs.getInt("order_type")), rs.getBoolean("is_finished"), rs.getString("name"), rs.getTimestamp("start_time"), Optional.fromNullable(rs.getTimestamp("end_time")).or(new Timestamp(new DateTime(rs.getTimestamp("start_time")).plusHours(1).getMillis())), Optional.fromNullable(rs.getTimestamp("create_time")).or(rs.getTimestamp("start_time")), rs.getString("creator_name"), rs.getString("location_name"));
             }
-        }, start, end, siteId, hospitalId, userId);
+        }, start, end, site_id, hospital_id, userId);
     }
 
     private List<Event> initMaintenanceEvents(Date start, Date end) {
+    	
+    	String sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, user_Id=%s, startDate=%s, endDate=%s}",
+        		queries.get("maintenance"), site_id, hospital_id, userId, start, end);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
+        
         return jdbcTemplate.query(queries.get("maintenance"), new RowMapper<Event>() {
             @Override
             public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new Event(4, eventTypes.get(4), rs.getBoolean("is_closed"), rs.getString("name"), rs.getTimestamp("start_time"), rs.getTimestamp("end_time"), rs.getTimestamp("start_time"), rs.getString("creator_name"), rs.getString("location_name"));
             }
-        }, start, end, siteId, hospitalId, userId);
+        }, start, end, site_id, hospital_id, userId);
     }
 
     private List<Event> initPreventiveMaintenanceEvents(Date start, Date end) {
+    	
+    	String sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, user_Id=%s, startDate=%s, endDate=%s}",
+        		queries.get("preventiveMaintenance"), site_id, hospital_id, userId, start, end);
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
+        
         return jdbcTemplate.query(queries.get("preventiveMaintenance"), new RowMapper<Event>() {
             @Override
             public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new Event(5, eventTypes.get(5), rs.getBoolean("is_finished"), rs.getString("name"), rs.getTimestamp("start_time"), Optional.fromNullable(rs.getTimestamp("end_time")).or(new Timestamp(new DateTime(rs.getTimestamp("start_time")).plusHours(1).getMillis())), Optional.fromNullable(rs.getTimestamp("create_time")).or(rs.getTimestamp("start_time")), rs.getString("creator_name"), rs.getString("location_name"));
             }
-        }, start, end, siteId, hospitalId, userId);
-    }
-
-
-    private static String from(Date date) {
-        return from(date, "yyyy-MM-dd");
+        }, start, end, site_id, hospital_id, userId);
     }
 
     private static String from(Date date, String format) {
         return new DateTime(date).toString(DateTimeFormat.forPattern(format));
-    }
-
-    private static Date from(String date) {
-        return formatter.parseDateTime(date).toDate();
     }
 
     public ScheduleModel getModel() {
