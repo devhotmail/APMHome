@@ -27,6 +27,9 @@
 
 .next-page, .prev-page {
   opacity: 0;
+}
+
+#chartSvg.in-transition {
   .link, .link-label {
     visibility: hidden;
   }
