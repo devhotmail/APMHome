@@ -16,7 +16,7 @@
             <pm:header title="我的信息" ></pm:header>
         <pm:content>
 	    	<pm:field>
-	             <h:outputLabel value="#{msg.login_name} : " for="loginName"  >
+	             <h:outputLabel value="#{msg.login_name} : " for="loginName" >
 	           		<h:outputText value="#{wxUserController.currentUser.loginName}"/>
 	           		<!-- <p:inputText id= "loginName" value="#{wxUserController.currentUser.loginName}"></p:inputText> -->
 	          	</h:outputLabel>
@@ -45,7 +45,7 @@
 		    	<h:outputText value="#{wxUserController.currentUser.email}"/>
 		    </h:outputLabel>
 		</pm:field> -->
-		          </pm:content>
+		          </pm:content> 
             </pm:page>
     </h:body>
 </html>

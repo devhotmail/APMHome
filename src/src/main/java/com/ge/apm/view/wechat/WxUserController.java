@@ -35,6 +35,7 @@ public class WxUserController  extends JpaCRUDController<UserAccount>{
     		currentUser.setLoginName("user");
     		currentUser.setEmail("gaozhanpeng999@163.com");
     		currentUser.setTelephone("13262569125");
+    		currentUser.setWeChatId("helloworld");
     	}
     }
 
@@ -51,7 +52,8 @@ public class WxUserController  extends JpaCRUDController<UserAccount>{
 	   return currentUser;
    } 
    
-   public void resetPassword(String newPassword){
+   public void resetPassword(){
+	   logger.info("newPwd is {}",newPassword);
 	   wxUserService.resetPassword(currentUser.getWeChatId(), newPassword);
    }
     
