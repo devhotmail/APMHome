@@ -41,19 +41,19 @@
             textSize: 1, // The relative height of the text to display in the wave circle. 1 = 50%
             valueCountUp: true, // If true, the displayed value counts up from 0 to it's final value upon loading. If false, the final value is displayed.
             textColor: "#045681", // The color of the value text when the wave does not overlap it.
-            waveTextColor: "#fff" // The color of the value text when the wave overlaps it.
+            waveTextColor: 'rgba(89, 89, 89, 1)' // The color of the value text when the wave overlaps it.
           };
         }
 
-        function renderGauge(element, value, config) {
+        function renderGauge(element, config) {
           if (config == null) {
             config = gaugeDefaultConfig();
           }
           var gauge = d3.select(element);
-          var radius = Math.min(config.width, config.height) / 2;
+          var radius = config.node.circle.r;
           var locationX = -parseInt(config.width) / 2;
           var locationY = -parseInt(config.height) / 2;
-          var fillPercent = Math.max(config.minValue, Math.min(config.maxValue, value)) / config.maxValue;
+          var fillPercent = Math.max(config.minValue, Math.min(config.maxValue, config.node.data.profit)) / config.maxValue;
           var waveHeightScale;
           if (config.waveHeightScaling) {
             waveHeightScale = d3.scaleLinear()
@@ -64,11 +64,9 @@
             .range([config.waveHeight, config.waveHeight])
             .domain([0, 100]);
           }
-          var textPixels = (
-            config.textSize * radius / 2
-          );
-          var textFinalValue = parseFloat(value).toFixed(2);
-          var textStartValue = config.valueCountUp ? config.minValue : textFinalValue;
+          var textPixels = config.textSize * radius / 3;
+          if (textPixels < 12) textPixels = 12;
+
           var circleThickness = config.circleThickness * radius;
           var circleFillGap = config.circleFillGap * radius;
           var fillCircleMargin = circleThickness + circleFillGap;
@@ -79,15 +77,6 @@
           var waveClipWidth = waveLength * waveClipCount;
           var data = config.node.data;
           var labelUnit = data.label_unit;
-
-          // Rounding functions so that the correct number of decimal places is always displayed as the value counts up.
-          var textFormat = function(value) { return Math.round(value) + labelUnit; };
-          if (parseFloat(textFinalValue) != parseFloat(textFormat(textFinalValue))) {
-            textFormat = function(value) { return parseFloat(value).toFixed(1); };
-          }
-          if (parseFloat(textFinalValue) != parseFloat(textFormat(textFinalValue))) {
-            textFormat = function(value) { return parseFloat(value).toFixed(2); };
-          }
 
           // Data for building the clip wave area.
           var data = [];
@@ -128,10 +117,25 @@
           // Center the gauge within the parent SVG.
           var gaugeGroup = gauge.append('g')
           .attr('class', 'gauge')
-          .attr('transform', 'translate(' + locationX + ',' + locationY + ')');
+          .attr('transform', 'translate(' + locationX + ',' + locationY + ')')
+          // using mouse event for hover effect
+          .on('mouseover', function(d) {
+            if (!d.selected) gauge.classed('active', true);
+          })
+          .on('mouseout', function(d) {
+            if (!d.selected) gauge.classed('active', false);
+          });
 
           gaugeGroup.append('circle')
-          .attr('r', gaugeCircleY(radius))
+          .attr('class', 'filter-circle')
+          .attr('r', radius)
+          .attr('fill', 'none')
+          .attr('cx', radius)
+          .attr('cy', radius);
+
+          gaugeGroup.append('circle')
+          .attr('class', 'outer-circle')
+          .attr('r', radius)
           .attr('fill', function() {
             var rgbaRegex = /^rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+[\.\d+]*)*\)$/;
             var currentColor = config.circleColor.trim();
@@ -139,16 +143,16 @@
             return 'rgba(' + [match[1], match[2], match[3], 0.2].join(',') + ')';
           })
           .attr('stroke', config.circleColor)
-          .attr('stroke-width', gaugeCircleY(circleThickness))
-          .attr('transform', 'translate(' + radius + ',' + radius + ')');
+          .attr('stroke-width', config.circleThickness * radius)
+          .attr('cx', radius)
+          .attr('cy', radius);
           
           // Text to show current node's name
           // at least depth over 0
           if (config.showLabel) {
             var node = config.node;
-            var distance = 30;
-            var r = gaugeCircleY(radius);
-            var _radius = r + distance;
+            var distance = 50;
+            var _radius = radius + distance;
 
             // position according to center of the circle
             var absolutePos = project(node.x, node.y);
@@ -173,25 +177,45 @@
             if (absolutePos[0] > 0) pos = [-x0, y0];
             
             // draw text to this group
-            gauge.append('g')
+            var labelGroup = gauge.append('g')
+            .attr('class', 'labels')
             .attr('transform', function() {
               return 'translate(' + pos.join(',') + ')';
-            })
-            .append('text')
-            .attr('class', 'link-label')
+            });
+
+            var labelFontSize = 14;
+
+            var _text = node.data.name;
+            var lineCount = 1;
+
+            labelGroup.append('text')
+            .attr('fill', config.waveColor)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', labelFontSize)
+            .text(_text.slice(0, 6));
+
+            if (_text.length > 7) {
+              labelGroup.append('text')
+              .attr('fill', config.waveColor)
+              .attr('text-anchor', 'middle')
+              .attr('font-size', labelFontSize)
+              .attr('transform', 'translate(' + [0, labelFontSize] + ')')
+              .text(_text.length > 12 ? _text.slice(6, 11) + '...' : _text.slice(6));
+
+              lineCount = 2;
+            }
+
+            var ratioInProfit = node.data.profit / node.parent.data.profit;
+
+            labelGroup.append('text')
+            .attr('class', 'profit-ratio')
+            .attr('font-size', labelFontSize)
             .attr('text-anchor', 'middle')
             .attr('fill', config.waveColor)
-            .text(node.data.name);
+            .attr('transform', 'translate(' + [0, labelFontSize * lineCount] + ')')
+            .text('占总利润' + parseInt(ratioInProfit * 100) + '%');
           }
 
-          // Text where the wave does not overlap.
-          var text1 = gaugeGroup.append("text")
-          .text(textFormat(textStartValue))
-          .attr("class", "liquidFillGaugeText")
-          .attr("text-anchor", "middle")
-          .attr("font-size", textPixels + "px")
-          .style("fill", config.textColor)
-          .attr('transform', 'translate(' + radius + ',' + textRiseScaleY(config.textVertPosition) + ')');
           // The clipping wave area.
           var clipArea = d3.area()
           .x(function(d) { return waveScaleX(d.x); })
@@ -220,35 +244,94 @@
           .attr("cx", radius)
           .attr("cy", radius)
           .attr("r", fillCircleRadius)
-          .style("fill", config.waveColor);
+          .attr("fill", config.waveColor);
 
-          // Text where the wave does overlap.
-          var text2 = fillCircleGroup.append("text")
-          .text(textFormat(textStartValue))
+          // Rounding functions so that the correct number of decimal places
+          // is always displayed as the value counts up.
+          var textFormat = function(value) { return Math.round(value) + '万'; };
+
+          var tipsGroup = gaugeGroup.append('g')
+          .attr('fill', config.textColor)
+          .attr('transform', 'translate(' + [radius, radius].join(',') + ')');
+
+          // text group to show revenue and profit value with text tips
+          var fullTipGroup = tipsGroup.append('g')
+          .attr('class', 'full-tips');
+
+          // text group to show revenue and profit value
+          var lightTipGroup = tipsGroup.append('g')
+          .attr('class', 'light-tips');
+
+          // revenue value
+          var revenue = config.node.data.revenue;
+          var text1FinalVal = parseFloat(revenue).toFixed(2);
+          var text1StartVal = config.valueCountUp ? config.minValue : text1FinalVal;
+
+          fullTipGroup.append('text')
+          .text('收入')
+          .attr('text-anchor', 'middle')
+          .attr('font-size', textPixels + 'px')
+          .attr('transform', 'translate(' + [0, -textPixels].join(',') + ')');
+
+          fullTipGroup.append('text')
+          .text(textFormat(text1FinalVal))
+          .attr('text-anchor', 'middle')
+          .attr('font-size', textPixels + 'px');
+
+          var text1 = lightTipGroup.append("text")
+          .text(textFormat(text1FinalVal))
+          .attr("class", "liquidFillGaugeText")
+          .attr("text-anchor", "middle")
+          .attr("font-size", textPixels + "px");
+
+          // profit value
+          var profit = config.node.data.profit;
+          var text2FinalVal = parseFloat(profit).toFixed(2);
+          var text2StartVal = config.valueCountUp ? config.minValue : text2FinalVal;
+
+          var text2 = lightTipGroup.append("text")
+          .text(textFormat(text2StartVal))
           .attr("class", "liquidFillGaugeText")
           .attr("text-anchor", "middle")
           .attr("font-size", textPixels + "px")
-          .style("fill", config.waveTextColor)
-          .attr('transform', 'translate(' + radius + ',' + textRiseScaleY(config.textVertPosition) + ')');
+          .attr('transform', 'translate(' + [0, textPixels].join(',') + ')');
+
+          fullTipGroup.append('text')
+          .text('利润')
+          .attr('text-anchor', 'middle')
+          .attr('font-size', textPixels + 'px')
+          .attr('transform', 'translate(' + [0, textPixels].join(',') + ')');
+
+          fullTipGroup.append('text')
+          .text(textFormat(text2FinalVal))
+          .attr('text-anchor', 'middle')
+          .attr('font-size', textPixels + 'px')
+          .attr('transform', 'translate(' + [0, textPixels * 2].join(',') + ')');
+
           // Make the value count up.
           if (config.valueCountUp) {
-            var textTween = function() {
-              var textStartValue = this.textContent.match(/\d+/)[0];
-              var node = this;
-              var i = d3.interpolate(parseInt(textStartValue), parseInt(textFinalValue));
-              return function(t) {
-                node.textContent = textFormat(i(t));
+            function textTweenFn(start, final) {
+              return function() {
+                var node = this;
+                var i = d3.interpolate(parseInt(start), parseInt(final));
+                return function(t) {
+                  node.textContent = textFormat(i(t));
+                }
               }
-            };
+            }
+
+            var textTween1 = textTweenFn(text1StartVal, text1FinalVal);
+            var textTween2 = textTweenFn(text2StartVal, text2FinalVal);
 
             text1.transition()
             .duration(config.waveRiseTime)
-            .tween("text", textTween);
+            .tween('text', textTween1);
 
             text2.transition()
             .duration(config.waveRiseTime)
-            .tween("text", textTween);
+            .tween('text', textTween2);
           }
+
           // Make the wave rise. wave and waveGroup are separate so that horizontal and vertical movement can be controlled independently.
           var waveGroupXPosition = fillCircleMargin + fillCircleRadius * 2 - waveClipWidth;
           if (config.waveRise) {
@@ -277,94 +360,6 @@
               animateWave(config.waveAnimateTime);
             });
           }
-
-          function GaugeUpdater() {
-            this.update = function(value) {
-              var newFinalValue = parseFloat(value).toFixed(2);
-              var textRounderUpdater = function(value) { return Math.round(value); };
-              if (parseFloat(newFinalValue) != parseFloat(textRounderUpdater(newFinalValue))) {
-                textRounderUpdater = function(value) { return parseFloat(value).toFixed(1); };
-              }
-              if (parseFloat(newFinalValue) != parseFloat(textRounderUpdater(newFinalValue))) {
-                textRounderUpdater = function(value) { return parseFloat(value).toFixed(2); };
-              }
-              var textTween = function() {
-                var i = d3.interpolate(this.textContent, parseFloat(value).toFixed(2));
-                return function(t) {
-                  this.textContent = textRounderUpdater(i(t));
-                }
-              };
-              text1.transition()
-              .duration(config.waveRiseTime)
-              .tween("text", textTween);
-              text2.transition()
-              .duration(config.waveRiseTime)
-              .tween("text", textTween);
-              var fillPercent = Math.max(config.minValue, Math.min(config.maxValue, value)) / config.maxValue;
-              var waveHeight = fillCircleRadius * waveHeightScale(fillPercent * 100);
-              var waveRiseScale = d3.scaleLinear()
-              // The clipping area size is the height of the fill circle + the wave height, so we position the clip wave
-              // such that the it will overlap the fill circle at all when at 0%, and will totally cover the fill
-              // circle at 100%.
-              .range([
-                (
-                  fillCircleMargin + fillCircleRadius * 2 + waveHeight
-                ),
-                (
-                  fillCircleMargin - waveHeight
-                )
-              ])
-              .domain([0, 1]);
-              var newHeight = waveRiseScale(fillPercent);
-              var waveScaleX = d3.scaleLinear().range([0, waveClipWidth]).domain([0, 1]);
-              var waveScaleY = d3.scaleLinear().range([0, waveHeight]).domain([0, 1]);
-              var newClipArea;
-              if (config.waveHeightScaling) {
-                newClipArea = d3.area()
-                .x(function(d) { return waveScaleX(d.x); })
-                .y0(function(d) {
-                  return waveScaleY(Math.sin(Math.PI * 2 * config.waveOffset * -1 + Math.PI * 2 * (
-                      1 - config.waveCount
-                    ) + d.y * 2 * Math.PI));
-                })
-                .y1(function(d) {
-                  return (
-                    fillCircleRadius * 2 + waveHeight
-                  );
-                });
-              } else {
-                newClipArea = clipArea;
-              }
-              var newWavePosition = config.waveAnimate ? waveAnimateScale(1) : 0;
-              wave.transition()
-              .duration(0)
-              .transition()
-              .duration(config.waveAnimate ?
-                        (
-                          config.waveAnimateTime * (
-                            1 - wave.attr('T')
-                          )
-                        ) :
-                        (
-                          config.waveRiseTime
-                        ))
-              .ease(d3.easeLinear)
-              .attr('d', newClipArea)
-              .attr('transform', 'translate(' + newWavePosition + ',0)')
-              .attr('T', '1')
-              .each("end", function() {
-                if (config.waveAnimate) {
-                  wave.attr('transform', 'translate(' + waveAnimateScale(0) + ',0)');
-                  animateWave(config.waveAnimateTime);
-                }
-              });
-              waveGroup.transition()
-              .duration(config.waveRiseTime)
-              .attr('transform', 'translate(' + waveGroupXPosition + ',' + newHeight + ')')
-            }
-          }
-
-          return new GaugeUpdater();
         }
 
         function nodeRadius(node) {
@@ -417,7 +412,7 @@
           config.isRoot = node.depth;
           config.showLabel = node.depth === 1; // only show label for depth one
 
-          renderGauge(this, data.profit, config);
+          renderGauge(this, config);
         }
 
         function layout_orbit(root, options) {
@@ -589,12 +584,19 @@
               offsetX = width / 2,
               offsetY = height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200;
 
+            var _rootCircleCenter = project(root.x, root.y);
+
             var node = {
               data: root,
               x: 90,
               y: Math.sin(START_ANGEL * Math.PI / 180) * radius - 100,
               size: ROOT_RADIUS,
-              parent: null
+              parent: null,
+              circle: {
+                r: ROOT_RADIUS,
+                center: _rootCircleCenter,
+                peak: [_rootCircleCenter[0], _rootCircleCenter[1] - root.size]
+              }
             };
 
             var canvas = svg.append("g")
@@ -717,6 +719,42 @@
               radius = width / 2 + 150,
               offsetX = width / 2,
               offsetY = height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200;
+
+            // add drop shadow for hovering/selected
+            var filter = svg.append('defs')
+            .append('filter')
+            .attr('id', 'drop-shadow')
+            .attr('filterUnits', 'userSpaceOnUse')
+            .attr('x', '-40%')
+            .attr('y', '-40%')
+            .attr('width', '180%')
+            .attr('height', '180%');
+
+            filter.append('feGaussianBlur')
+            .attr('in', 'SourceAlpha')
+            .attr('stdDeviation', 3)
+            .attr('result', 'blurOut');
+
+            filter.append('feOffset')
+            .attr('dx', 3)
+            .attr('dy', 3)
+            .attr('result', 'offsetblur');
+
+            filter.append('feOffset')
+            .attr('dx', -3)
+            .attr('dy', -3)
+            .attr('result', 'offsetblur');
+
+            var feMerge = filter.append('feMerge');
+
+            feMerge.append('feMergeNode')
+            .attr('in', 'BackgroundAlpha')
+
+            feMerge.append('feMergeNode')
+            .attr('in', 'SourceGraphic');
+
+            feMerge.append('feMergeNode')
+            .attr('in', 'SourceGraphic');
 
             var canvas = svg.insert('g', ':first-child')
               .attr('class', 'orbit1')
