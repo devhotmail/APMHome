@@ -21,6 +21,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import webapp.framework.context.ExternalLoginHandler;
+import webapp.framework.web.service.UserContext;
 
 /**
  *
@@ -35,7 +37,9 @@ public class WeChatCoreController {
     protected WxMpService wxMpService;
     @Autowired
     protected CoreService coreService;
-    
+
+    @Autowired
+    protected ExternalLoginHandler loginHandler;
     /**
      * 微信公众号webservice主服务接口，提供与微信服务器的信息交互
      *
@@ -109,6 +113,8 @@ public class WeChatCoreController {
             //获得用户基本信息
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
             model.addAttribute("openId", wxMpUser.getOpenId());
+            
+            coreService.loginByWeChatOpenId(wxMpUser.getOpenId(), request, response);
         } catch (WxErrorException ex) {
             Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, ex);
         }

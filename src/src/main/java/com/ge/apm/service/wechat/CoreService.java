@@ -3,6 +3,7 @@ package com.ge.apm.service.wechat;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.utils.Digests;
+import com.ge.apm.web.WeChatCoreController;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
@@ -25,8 +26,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import org.springframework.transaction.annotation.Transactional;
+import webapp.framework.context.ExternalLoginHandler;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.service.UserContext;
 
 /**
  * Created by FirenzesEagle on 2016/5/30 0030.
@@ -121,4 +127,30 @@ public class CoreService {
         return null;
     }
 
+    public boolean loginByWeChatOpenId(HttpServletRequest request,HttpServletResponse response){
+        if(UserContext.isLoggedIn()) return true; // user already logged in.
+
+        String code = request.getParameter("code");
+        WxMpOAuth2AccessToken wxMpOAuth2AccessToken;
+        try {
+            //获得token
+            wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
+            //获得用户基本信息
+            WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
+            String openId = wxMpUser.getOpenId();
+            
+            ExternalLoginHandler loginHandler = WebUtil.getServiceBean(ExternalLoginHandler.class);
+            return loginHandler.doLoginByWeChatOpenId(openId, request, response);
+        } catch (WxErrorException ex) {
+            Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return false;
+    }
+    
+    public boolean loginByWeChatOpenId(String weChatOpenId, HttpServletRequest request,HttpServletResponse response){
+        ExternalLoginHandler loginHandler = WebUtil.getServiceBean(ExternalLoginHandler.class);
+        return loginHandler.doLoginByWeChatOpenId(weChatOpenId, request, response);
+    }
+    
 }
