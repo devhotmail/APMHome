@@ -28,7 +28,7 @@ public class MenuConfig {
         WxMenuButton button12 = new WxMenuButton();
         button12.setType(WxConsts.BUTTON_VIEW);
         button12.setName("新增设备");
-        button12.setUrl(serverName + "/wechat/asset/create.xhtml");
+        button12.setUrl(serverName + "/wechat/asset/create.xhtml?str=YWN0aW9uTmFtZT1DcmVhdGU%3D");
         button1.getSubButtons().add(button11);
         button1.getSubButtons().add(button12);
 
