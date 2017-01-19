@@ -59,7 +59,7 @@ public class MenuConfig {
         button33.setType(WxConsts.BUTTON_VIEW);
         button33.setName("APM帐号绑定");
         button33.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName+"/web/authurl",
-                WxConsts.OAUTH2_SCOPE_BASE, ""));
+                WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         button3.getSubButtons().add(button31);
         button3.getSubButtons().add(button32);
         button3.getSubButtons().add(button33);

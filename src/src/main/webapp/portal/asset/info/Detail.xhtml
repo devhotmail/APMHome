@@ -460,8 +460,8 @@
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>
-                <p:tab title="#{msg.QRCode}" rendered="false">
-                    <p:barcode value="0123456789" type="qr" height="200" format="png"/>
+                <p:tab title="#{msg.QRCode}" rendered="true">
+                    <p:barcode value="#{assetInfoController.selected.id.toString()}" type="qr" height="200" format="png"/>
                 </p:tab>
             </p:tabView>
         </h:form>

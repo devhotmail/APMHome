@@ -1,8 +1,19 @@
 package com.ge.apm.service.wechat;
 
+import com.ge.apm.dao.FileUploadDao;
+import com.ge.apm.dao.I18nMessageRepository;
 import com.ge.apm.dao.UserAccountRepository;
+import com.ge.apm.dao.WorkOrderRepository;
+import com.ge.apm.dao.WorkOrderStepRepository;
+import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.domain.WorkOrder;
+import com.ge.apm.domain.WorkOrderStep;
+import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.service.utils.Digests;
+import com.ge.apm.service.wo.WorkOrderService;
+import java.io.File;
+import java.io.FileInputStream;
 import com.ge.apm.web.WeChatCoreController;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -22,14 +33,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import org.springframework.transaction.annotation.Transactional;
+import webapp.framework.util.TimeUtil;
 import webapp.framework.context.ExternalLoginHandler;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.service.UserContext;
@@ -45,6 +63,16 @@ public class CoreService {
     protected WxMpService wxMpService;
     @Autowired
     protected UserAccountRepository userDao;
+    @Autowired
+    protected WorkOrderRepository woDao;
+    @Autowired
+    protected WorkOrderService woService;
+    @Autowired
+    protected WorkOrderStepRepository stepDao;
+    @Autowired
+    protected I18nMessageRepository msgDao;
+    @Autowired
+    protected UaaService uaaService;
 
     public void requestGet(String urlWithParams) throws IOException {
         CloseableHttpClient httpclient = HttpClientBuilder.create().build();
@@ -125,6 +153,117 @@ public class CoreService {
             }
         }
         return null;
+    }
+    
+    @Transactional
+    public void saveWorkOrder(WorkOrder workOrder) throws Exception{
+        UserAccount loginUser =getLoginUser();
+        workOrder.setSiteId(loginUser.getSiteId());
+        workOrder.setCreatorId(loginUser.getId());
+        workOrder.setCreateTime(TimeUtil.now());
+        workOrder.setCurrentStepId(1);
+        workOrder.setTotalManHour(0);
+        workOrder.setTotalPrice(0.0);
+        workOrder.setIsClosed(false);
+        
+//        selected.setAssetId(Integer.parseInt(assetId));
+//        selected.setAssetName((String) UrlEncryptController.getValueFromMap(encodeStr,"assetName"));
+//        selected.setCaseOwnerId(Integer.parseInt((String)UrlEncryptController.getValueFromMap(encodeStr,"assetOwnerId")));
+//        selected.setCaseOwnerName((String) UrlEncryptController.getValueFromMap(encodeStr,"assetOwnerName"));
+//        selected.setHospitalId(getHospitalIdFromAsset(Integer.parseInt(assetId)));
+
+        WorkOrderStep step = woService.initWorkOrderCurrentStep(workOrder);
+        String serverId = workOrder.getCloseReason();
+        workOrder.setCloseReason(null);
+        woService.createWorkOrderStep(workOrder, step);
+        //保存完成后，再把上传的图片保存
+        if (serverId != null)
+            upload(workOrder, serverId);
+    }
+    
+    @Transactional
+    public void upload(WorkOrder workOrder, String serverId) throws WxErrorException {
+        File file = wxMpService.getMaterialService().mediaDownload(serverId);
+        if (file == null)
+            return;
+        Integer uploadFileId = uploadFile(file);
+        String fileName = getFileName(file);
+        List<WorkOrderStep> steps = stepDao.getByWorkOrderIdAndStepId(workOrder.getId(), 1);
+        if (steps == null || steps.size() == 0) return;
+        //如果有文件则删除以前的文件
+        WorkOrderStep step = steps.get(0);
+        if (step.getFileId() != null) {
+            FileUploadDao fileUploaddao = new FileUploadDao();
+            fileUploaddao.deleteUploadFile(step.getFileId());
+        }
+        step.setAttachmentUrl(fileName);
+        if (uploadFileId > 0) {
+            step.setFileId(uploadFileId);
+        }
+        stepDao.save(step);
+        file.delete();
+    }
+    
+    private int uploadFile(File file) {
+        Integer returnId = 0;
+        InputStream is = null;
+        try {
+            FileUploadDao fileUploaddao = new FileUploadDao();
+            is = new FileInputStream(file);
+            returnId = fileUploaddao.saveUploadFile(is, Integer.valueOf(String.valueOf(file.length())), getFileName(file));
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(CoreService.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(is != null) {
+                try{
+                    is.close();
+                }catch (IOException ex) {
+                    Logger.getLogger(CoreService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return returnId;
+    }
+    private String getFileName(File file) {
+        String fileName = "";
+        try {
+            fileName = new String(file.getName().getBytes(), "utf-8");
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(CoreService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return fileName;
+    }
+    
+    public UserAccount getLoginUser() {
+        return userDao.getByLoginName(UserContext.getUsername());
+    }
+    
+    public List<I18nMessage> getMsg(String msgType) {
+        return msgDao.getByMsgType(msgType);
+    }
+    
+    public List<Map<String, Object>> getUsersInHospital(){
+        List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+        List<UserAccount> uas = uaaService.getUserList(getLoginUser().getHospitalId());
+        for(UserAccount ua :uas) {
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put("id", ua.getId());
+            map.put("name", ua.getName());
+            list.add(map);
+        }
+        return list;
+    }
+    
+    public List<Map<String, Object>> getUsersWithAssetHeadOrStaffRole(){
+        List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+        List<UserAccount> uas = uaaService.getUsersWithAssetHeadOrStaffRole(getLoginUser().getHospitalId());
+        for(UserAccount ua :uas) {
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put("id", ua.getId());
+            map.put("name", ua.getName());
+            list.add(map);
+        }
+        return list;
     }
 
     public boolean loginByWeChatOpenId(HttpServletRequest request,HttpServletResponse response){
