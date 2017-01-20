@@ -1153,10 +1153,11 @@
               // plot root on level1
               if (level === 1) {
                 parent = lscache.get(key + '/root');
-                this.plotRoot(parent);
               } else {
                 parent = this.openingNodeL1;
               }
+
+              this.removePage('next', level);
               result = this['plotL' + level].call(this, parent, list);
               result.element.classed('next-page', true).attr('transform', rotate(90));
               this.set('pageEndL'+level, offset + result.count);
@@ -1174,11 +1175,10 @@
               // plot root on level1
               if (level === 1) {
                 parent = lscache.get(key + '/root');
-                this.plotRoot(parent);
               } else {
                 parent = this.openingNodeL1;
               }
-
+              this.removePage('prev', level);
               result = this['plotL' + level].call(this, parent, list);
               result.element.classed('prev-page', true).attr('transform', rotate(-90));
             }
@@ -1191,11 +1191,6 @@
             this.set('pageOffsetL' + level, this.get('pageEndL' + level));
             delete this['pageEndL' + level];
 
-            // load next page
-            _this.loadData(key).then(function() {
-              _this.renderNextPage(key, level);
-            });
-
             d3.select('.orbit' + level + '.next-page')
             .transition()
             .duration(DURATION_PAGING)
@@ -1207,7 +1202,11 @@
             .on('end', function() {
               pageEntered.call(this, 'curr');
               _this.isPaging = false;
-              _this.plotPager(key, level);
+              // load next page
+              _this.loadData(key).then(function() {
+                _this.renderNextPage(key, level);
+                _this.plotPager(key, level);
+              });
             });
 
             d3.select('.orbit' + level + '.curr-page')
@@ -1232,9 +1231,6 @@
             this.set('pageOffsetL' + level, this.get('pageStartL' + level));
             this.set('pageStartL' + level, this.get('pageLastStartL' + level));
 
-            // load prev page
-            this.renderPrevPage(key, level);
-
             d3.select('.orbit' + level + '.prev-page')
             .transition()
             .duration(DURATION_PAGING)
@@ -1245,11 +1241,13 @@
             })
             .on('end', function() {
               _this.isPaging = false;
-              _this.plotPager(key, level);
-
               pageEntered.call(this, 'curr');
               // reconcile dom
               _this.scopeSubtree(this);
+
+              // load prev page
+              _this.renderPrevPage(key, level);
+              _this.plotPager(key, level);
             });
 
             d3.select('.orbit' + level + '.curr-page')
