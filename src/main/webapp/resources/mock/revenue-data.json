@@ -4,7 +4,12 @@
   "margin": 100,
   "children": [
     {
-      "name": "MRI",
+      "name": "MRI超声超声超声",
+      "revenue": 35,
+      "margin": 25
+    },
+    {
+      "name": "MRI超声超声超声MRI超声超声超声",
       "revenue": 35,
       "margin": 25
     },

@@ -10,20 +10,8 @@
   height: 600px;
 }
 
-.node circle {
-  fill: #999;
-}
-
-// .node text {
-//   fill: white;
-// }
-
-.node--internal circle {
-  fill: #555;
-}
-
-.node--internal text {
-  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+.node text {
+  user-select: none;
 }
 
 .link {
@@ -33,12 +21,54 @@
   stroke-width: 1;
 }
 
+.node {
+  .labels .profit-ratio {
+    display: none;
+  }
+
+  .full-tips {
+    opacity: 0;
+    transition: opacity .3s linear;
+  }
+
+  .light-tips {
+    opacity: 1;
+    transition: opacity .3s linear;
+  }
+
+  &.active {
+    .gauge .filter-circle {
+      fill: rgba(255, 255, 255, .7);
+      filter: url(#drop-shadow);
+    }
+
+    .labels .profit-ratio {
+      display: block;
+    }
+
+    .full-tips {
+      opacity: 1;
+    }
+
+    .light-tips {
+      opacity: 0;
+    }
+  }
+}
+
 .next-page, .prev-page {
   opacity: 0;
 }
 
-#chartSvg.in-transition {
-  .link, .link-label {
-    visibility: hidden;
+#chartSvg {
+  // hide inner text in orbit1 when orbit2 expanded 
+  &.expanded .orbit1 .node--leaf:not(.active) .light-tips {
+    display: none;
+  }
+
+  &.in-transition {
+    .link, .link-label {
+      visibility: hidden;
+    }
   }
 }
