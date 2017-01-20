@@ -534,13 +534,22 @@
               type: Array,
               value: []
             },
+            _pageStartHistoryL2: {
+              type: Array,
+              value: []
+            },
             pageLastStartL1: {
               type: Number
             },
             pageStartL1: {
               type: Number,
               value: 0,
-              observer: '_pageChanged'
+              observer: '_pageChangedL1'
+            },
+            pageStartL2: {
+              type: Number,
+              value: 0,
+              observer: '_pageChangedL2'
             },
             pageOffsetL1: {
               type: Number,
@@ -562,7 +571,8 @@
             height: Number
           },
           observers: [
-            '_computeLastStart(_pageStartHistoryL1.*)'
+            '_computeLastStartL1(_pageStartHistoryL1.*)',
+            '_computeLastStartL2(_pageStartHistoryL2.*)'
           ],
           plotRoot: function(root) {
             var _this = this;
@@ -597,12 +607,15 @@
               svg.classed('expanded', false);
               // check if there's a 2nd orbit now
               if (_this.openingNodeL1) {
-                _this.closeNodeL1().then(_this.resetOrbitL1.bind(_this));
+                _this.closeNodeL1().then(function() {
+                  delete _this.openingNodeL1;
+                  _this.resetOrbitL1();
+                });
               }
             })
             .each(renderNode);
           },
-          plotPager: function(url) {
+          plotPager: function(url, level) {
             var _this = this;
             var svg = d3.select(this.$.chartSvg),
               width = +svg.attr("width"),
@@ -614,8 +627,8 @@
             var list = lscache.get(url) || [];
             var pages = lscache.get(url + '/pages');
             var total = pages? pages.total : list.length;
-            var hasNext = total > this.pageOffsetL1;
-            var hasPrev = this.pageStartL1 > 0;
+            var hasNext = total > this.get('pageOffsetL'+level);
+            var hasPrev = this.get('pageStartL'+level) > 0;
 
             var pagers = [
               {
@@ -649,13 +662,17 @@
             .attr("transform", function(d) {
               return "translate(" + project(d.x, d.y) + ")";
             })
-            .each(function(d) {
-              var node = d3.select(this).append("g")
-              .on('click', function handlePagerClick() {
-                var type = d.type;
-                type === 'next' ? _this.openNextPage(url) : _this.openPrevPage(url);
-              });
-              node.append("circle")
+            .merge(nodes);
+
+            nodes.style('display', function(d) {
+              return d.enabled? 'block': 'none';
+            }).each(function(d) {
+              var root = d3.select(this);
+
+              var nodes = root.selectAll('g.page-btn').data([d], function(d) { return d.type; });
+              var nodes_enter = nodes.enter().append("g").attr('class', 'page-btn');
+
+              nodes_enter.append("circle")
               .attr("cx", PAGER_RADIUS / 2)
               .attr("cy", PAGER_RADIUS / 2)
               .attr("r", PAGER_RADIUS)
@@ -664,19 +681,21 @@
               .style("stroke-width", "2px")
               .attr('class', function(d) {
                 return 'btn-' + d.type;
-              })
-              node.append('path')
+              });
+
+              nodes_enter.append('path')
               .attr('d', d3.symbol().type(d3.symbolTriangle).size(PAGER_RADIUS * 10))
               .attr('transform',
                 d3Transform()
                 .translate(PAGER_RADIUS / 2, PAGER_RADIUS / 2)
                 .rotate(180))
               .style('fill', PAGER_BORDER_COLOR);
-            })
-            .merge(nodes);
 
-            nodes.style('display', function(d) {
-              return d.enabled? 'block': 'none';
+              nodes = nodes.merge(nodes_enter);
+              nodes.on('click', null).on('click', function handlePagerClick() {
+                var type = d.type;
+                type === 'next' ? _this.openNextPage(url, level) : _this.openPrevPage(url, level);
+              });
             });
           },
           plotL1: function(root, children) {
@@ -933,6 +952,7 @@
                   d.data.id = ++i
                 )
             });
+
             var nodeEnter = groups.enter().append("g")
             .attr('class', function(d) {
               return 'node ' + (
@@ -961,9 +981,11 @@
               element: canvas,
               close: function closeNode() {
                 return new Promise(function(resolve, reject) {
-                  var groups = canvas.selectAll('g.node')
-                  .data(subTree.descendants())
-                  .transition()
+                  var root = svg.select('.orbit2.curr-page');
+                  var nodes = root.selectAll('g.node');
+                  var links = root.selectAll('path.link');
+
+                  nodes.transition()
                   .duration(DURATION / 2)
                   .attr('transform', function(d) {
                     // back to original position (parent `node` circle center)
@@ -972,14 +994,12 @@
                   .on('end', function(d, i) {
                     // when orbit 2 is closed
                     if (i === 0) {
-                      canvas.remove();
+                      root.remove();
                       resolve();
                     }
-                  })
+                  });
 
-                  link.merge(linkUpdate)
-                  .data(subTree.descendants())
-                  .transition()
+                  links.transition()
                   .duration(DURATION / 2)
                   .attr('d', function(d) {
                     // back to original position (parent `node` circle peak)
@@ -1041,26 +1061,36 @@
             // TODO: fetch real node url
             var key = 'mock/profit-2016-type-MRI.json';
             _this.loadData(key).then(function() {
-              _this.closeNodeL1().then(function() {
-                _this.closeNodeL1 = _this.renderCurrPage(key, 2).close;
-              });
+              var close = _this.renderCurrPage(key, 2).close;
+              _this.closeNodeL1 = function() {
+                return close().then(function() {
+                  _this.plotPager(key, 1);
+                });
+              }
             });
           },
-          nextPage: function() {
-            var offset = this.get('pagination.0.offset');
-            var count = this.get('pagination.0.count');
-            this.set('pagination.0.offset', offset + count);
-          },
-          _computeLastStart: function() {
+          _computeLastStartL1: function() {
             var history = this._pageStartHistoryL1;
             this.pageLastStartL1 = history[history.length - 1];
           },
-          _pageChanged: function(newVal, oldVal) {
+          _computeLastStartL2: function() {
+            var history = this._pageStartHistoryL2;
+            this.pageLastStartL2 = history[history.length - 1];
+          },
+          _pageChangedL1: function(newVal, oldVal) {
             // on page changed build the offset history, in order to navigate backwards.
             if (oldVal === undefined || newVal > oldVal) {
               this.push('_pageStartHistoryL1', oldVal);
             } else {
               this.pop('_pageStartHistoryL1');
+            }
+          },
+          _pageChangedL2: function(newVal, oldVal) {
+            // on page changed build the offset history, in order to navigate backwards.
+            if (oldVal === undefined || newVal > oldVal) {
+              this.push('_pageStartHistoryL2', oldVal);
+            } else {
+              this.pop('_pageStartHistoryL2');
             }
           },
           // Load next "n" more items from the URL and add them to cache
@@ -1103,16 +1133,17 @@
             var start = this.get('pageStartL' + level);
             var list = lscache.get(key) || [];
             list = list.slice(start);
+            this.removePage('curr', level);
             var result = this['plotL' + level].call(this, parent, list);
             result.element.classed('curr-page', true);
             this.set('pageOffsetL' + level, result.count);
             this.renderNextPage(key, level);
             this.renderPrevPage(key, level);
-            this.plotPager(key);
+            this.plotPager(key, level);
             return result;
           },
           renderNextPage: function(key, level) {
-            var offset = this.pageOffsetL1;
+            var offset = this.get('pageOffsetL' + level);
             var list = lscache.get(key) || [];
             var result;
             var parent;
@@ -1128,14 +1159,16 @@
               }
               result = this['plotL' + level].call(this, parent, list);
               result.element.classed('next-page', true).attr('transform', rotate(90));
-              this.pageEndL1 = offset + result.count;
+              this.set('pageEndL'+level, offset + result.count);
             }
           },
           renderPrevPage: function(key, level) {
-            var start = this.pageLastStartL1, end = this.pageStartL1;
-            var list = lscache.get(key) || [];
-            var result;
-            var parent;
+            var start = this.get('pageLastStartL' + level),
+              end = this.get('pageStartL' + level),
+              list = lscache.get(key) || [],
+              result,
+              parent;
+
             if (!isNaN(start)) {
               list = list.slice(start, end);
               // plot root on level1
@@ -1145,24 +1178,25 @@
               } else {
                 parent = this.openingNodeL1;
               }
+
               result = this['plotL' + level].call(this, parent, list);
               result.element.classed('prev-page', true).attr('transform', rotate(-90));
             }
           },
-          openNextPage: function(key) {
+          openNextPage: function(key, level) {
             var _this = this;
 
             // move page offset counter-clockwise
-            this.pageStartL1 = this.pageOffsetL1;
-            this.pageOffsetL1 = this.pageEndL1;
-            delete this.pageEndL1;
+            this.set('pageStartL' + level, this.get('pageOffsetL' + level));
+            this.set('pageOffsetL' + level, this.get('pageEndL' + level));
+            delete this['pageEndL' + level];
 
             // load next page
             _this.loadData(key).then(function() {
-              _this.renderNextPage(key);
+              _this.renderNextPage(key, level);
             });
 
-            d3.select('.next-page')
+            d3.select('.orbit' + level + '.next-page')
             .transition()
             .duration(DURATION_PAGING)
             .style('opacity', 1)
@@ -1173,10 +1207,10 @@
             .on('end', function() {
               pageEntered.call(this, 'curr');
               _this.isPaging = false;
-              _this.plotPager(key);
+              _this.plotPager(key, level);
             });
 
-            d3.select('.curr-page')
+            d3.select('.orbit' + level + '.curr-page')
             .transition()
             .style('opacity', 0)
             .duration(DURATION_PAGING)
@@ -1186,19 +1220,22 @@
               // reconcile dom
               _this.scopeSubtree(this);
             });
+
+            // kick out previous
+            d3.select('.orbit' + level + '.prev-page').remove();
           },
-          openPrevPage: function(key) {
+          openPrevPage: function(key, level) {
             var _this = this;
 
             // move page offset clockwise
-            this.pageEndL1 = this.pageOffsetL1;
-            this.pageOffsetL1 = this.pageStartL1;
-            this.pageStartL1 = this.pageLastStartL1;
+            this.set('pageEndL' + level, this.get('pageOffsetL' + level));
+            this.set('pageOffsetL' + level, this.get('pageStartL' + level));
+            this.set('pageStartL' + level, this.get('pageLastStartL' + level));
 
             // load prev page
-            this.renderPrevPage(key);
+            this.renderPrevPage(key, level);
 
-            d3.select('.prev-page')
+            d3.select('.orbit' + level + '.prev-page')
             .transition()
             .duration(DURATION_PAGING)
             .style('opacity', 1)
@@ -1208,14 +1245,14 @@
             })
             .on('end', function() {
               _this.isPaging = false;
-              _this.plotPager(key);
+              _this.plotPager(key, level);
 
               pageEntered.call(this, 'curr');
               // reconcile dom
               _this.scopeSubtree(this);
             });
 
-            d3.select('.curr-page')
+            d3.select('.orbit' + level + '.curr-page')
             .transition()
             .style('opacity', 0)
             .duration(DURATION_PAGING)
@@ -1227,7 +1264,11 @@
             });
 
             // kick out next
-            d3.select('.next-page').remove();
+            d3.select('.orbit' + level + '.next-page').remove();
+          },
+          removePage: function(type, level) {
+            var $page = d3.select(this.$.chartSvg).select('.orbit'+level+'.'+type+'-page');
+            $page.remove();
           },
           enterLeavePaging: function() {
             d3.select(this.$.chartSvg).classed('in-transition', this.isPaging);
