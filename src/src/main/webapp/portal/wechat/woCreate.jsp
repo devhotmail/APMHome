@@ -20,6 +20,13 @@
         <script>var WEB_ROOT = '${ctx}/';</script>
     </head>
     <body>
+        <div id="container" class="container"></div>
+        <script>
+            $(function(){
+                $('#container').append($('#create').html());
+            });
+        </script>
+        <script type="text/html" id="create">
         <div class="page">
             <div class="page__bd">
                 <div class="weui-gallery" id="gallery">
@@ -350,8 +357,11 @@
                             success: function(ret) {
                                 if (ret == 'success') {
                                     $loadingToast.fadeOut(100);
+                                    $('#container').empty();
+                                    $('#container').append($('#msg_success').html());
                                 } else {
-                                    alert('保存失败');
+                                    $('#container').empty();
+                                    $('#container').append($('#msg_failed').html());
                                 }
                             }
                         });
@@ -404,5 +414,36 @@
                 });
             </script>
         </div>
+        </script>
+        <script type="text/html" id="msg_success">
+            <div class="page">
+                <div class="weui-msg">
+                    <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+                    <div class="weui-msg__text-area">
+                        <h2 class="weui-msg__title">保存成功</h2>
+                    </div>
+                    <div class="weui-msg__opr-area">
+                        <p class="weui-btn-area">
+                            <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_primary">返回菜单</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <script type="text/html" id="msg_failed">
+            <div class="page">
+                <div class="weui-msg">
+                    <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+                    <div class="weui-msg__text-area">
+                        <h2 class="weui-msg__title">保存失败</h2>
+                    </div>
+                    <div class="weui-msg__opr-area">
+                        <p class="weui-btn-area">
+                            <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_primary">返回菜单</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </script>
     </body>
 </html>
