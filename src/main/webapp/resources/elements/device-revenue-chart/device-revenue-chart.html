@@ -119,11 +119,15 @@
           .attr('class', 'gauge')
           .attr('transform', 'translate(' + locationX + ',' + locationY + ')')
           // using mouse event for hover effect
-          .on('mouseover', function(d) {
-            if (!d.selected) gauge.classed('active', true);
+          .on('mouseover', function(d, i, nodeList) {
+            var currentNodeGroup = d3.select(nodeList[i]).node().parentNode;
+            var selected = d3.select(currentNodeGroup).classed('selected');
+            if (!selected) gauge.classed('active', true);
           })
-          .on('mouseout', function(d) {
-            if (!d.selected) gauge.classed('active', false);
+          .on('mouseout', function(d, i, nodeList) {
+            var currentNodeGroup = d3.select(nodeList[i]).node().parentNode;
+            var selected = d3.select(currentNodeGroup).classed('selected');
+            if (!selected) gauge.classed('active', false);
           });
 
           gaugeGroup.append('circle')
@@ -136,12 +140,7 @@
           gaugeGroup.append('circle')
           .attr('class', 'outer-circle')
           .attr('r', radius)
-          .attr('fill', function() {
-            var rgbaRegex = /^rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*\d+[\.\d+]*)*\)$/;
-            var currentColor = config.circleColor.trim();
-            var match = rgbaRegex.exec(currentColor);
-            return 'rgba(' + [match[1], match[2], match[3], 0.2].join(',') + ')';
-          })
+          .attr('fill', config.fillColor)
           .attr('stroke', config.circleColor)
           .attr('stroke-width', config.circleThickness * radius)
           .attr('cx', radius)
@@ -399,11 +398,23 @@
           'rgba(152, 186, 145, 1)'
         ]);
 
+        var gauge_fills = d3.scaleOrdinal([
+          'rgb(210, 219, 235)',
+          'rgb(215, 229, 227)',
+          'rgb(228, 224, 204)',
+          'rgb(224, 213, 225)',
+          'rgb(213, 222, 229)',
+          'rgb(224, 225, 213)',
+          'rgb(218, 218, 225)',
+          'rgb(217, 224, 216)'
+        ]);
+
         function renderNode(node, i) {
           var config = gaugeDefaultConfig();
           var data = node.data;
           config.height = config.width = node.size * 2;
           config.circleColor = config.waveColor = gauge_color(i);
+          config.fillColor = gauge_fills(i);
           config.waveAnimateTime = 5000;
           config.waveHeight = 0.15;
           config.waveOffset = 0.25;
@@ -584,28 +595,31 @@
               offsetX = width / 2,
               offsetY = height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200;
 
-            var _rootCircleCenter = project(root.x, root.y);
-
             var node = {
               data: root,
               x: 90,
               y: Math.sin(START_ANGEL * Math.PI / 180) * radius - 100,
               size: ROOT_RADIUS,
-              parent: null,
-              circle: {
-                r: ROOT_RADIUS,
-                center: _rootCircleCenter,
-                peak: [_rootCircleCenter[0], _rootCircleCenter[1] - root.size]
-              }
+              parent: null
+            };
+
+            var _rootCircleCenter = project(node.x, node.y);
+
+            node.circle = {
+              r: ROOT_RADIUS,
+              center: _rootCircleCenter,
+              peak: [_rootCircleCenter[0], _rootCircleCenter[1] - node.size]
             };
 
             var canvas = svg.append("g")
+            .attr('class', 'orbit orbit0')
             .attr('transform', d3Transform().rotate(0, width / 2, offsetY))
             .attr("transform", "translate(" + offsetX + "," + offsetY + ")");
 
             // Update the nodes
             canvas.selectAll('g.node')
             .data([node]).enter().append("g")
+            .attr('class', 'node node--internal')
             .attr("transform", function(d) {
               return "translate(" + project(d.x, d.y) + ")";
             })
@@ -613,6 +627,12 @@
             .on('click', function handleClickRoot() {
               // remove `expanded` for root node when orbit two closed
               svg.classed('expanded', false);
+
+              // remove all `active` and `selected` classes for each node in orbit one
+              d3.selectAll('.orbit1 .node--leaf')
+              .classed('active', false)
+              .classed('selected', false);
+
               // check if there's a 2nd orbit now
               if (_this.openingNodeL1) {
                 _this.closeNodeL1().then(function() {
@@ -757,7 +777,7 @@
             .attr('in', 'SourceGraphic');
 
             var canvas = svg.insert('g', ':first-child')
-              .attr('class', 'orbit1')
+              .attr('class', 'orbit orbit1')
               .attr('transform', d3Transform().rotate(0, width / 2, offsetY))
 
             var rootGroup = canvas.append("g");
@@ -840,78 +860,80 @@
             });
 
             function handleClick(targetNode, i, nodeList) {
-              // remove all `active` class for each node
-              d3.selectAll(nodeList)
-              .classed('active', false);
+              // add `expanded` for root node when orbit two open
+              svg.classed('expanded', true);
 
-              if (targetNode.parent) {
-                // add `expanded` for root node when orbit two open
-                svg.classed('expanded', true);
+              // remove all `active` class and `selected` attr for each node in orbit one
+              d3.selectAll('.orbit1 .node--leaf')
+              .classed('active', false)
+              .classed('selected', false);
 
-                // add `active` class for current node in orbit one
+              // add `active` and `selected` classes for current node in orbit one
+              d3.select(nodeList[i])
+              .classed('active', true)
+              .classed('selected', true);
+              
+              targetNode.selected = true;
+
+              // build a new smaller tree layout
+              var new_radius = radius - 200;
+              layout_orbit(tree, {
+                start: START_ANGEL,
+                end: 180 - START_ANGEL,
+                radius: new_radius,
+                canvasRadius: width / 2,
+                margin: MARGIN_ANGEL
+              });
+
+              // rerender subtree's children
+              rootGroup.selectAll('g.node')
+              .transition()
+              .duration(DURATION)
+              .filter(function(d) {
+                return d.parent;
+              })
+              .attr('transform', function(d) {
+                return 'translate(' + d.circle.center + ')';
+              })
+              .on('end', function(d) {
+                // when this opening node is in position.
+                if (d.data.id === targetNode.data.id) {
+                  _this.handleOpenNode(targetNode);
+                }
+              })
+              .each(function(d, i, nodeList) {
+                // make the orbit and gauge smaller
                 d3.select(nodeList[i])
-                .classed('active', true);
-
-                // build a new smaller tree layout
-                var new_radius = radius - 200;
-                layout_orbit(tree, {
-                  start: START_ANGEL,
-                  end: 180 - START_ANGEL,
-                  radius: new_radius,
-                  canvasRadius: width / 2,
-                  margin: MARGIN_ANGEL
-                });
-
-                // rerender subtree's children
-                rootGroup.selectAll('g.node')
+                .select('g.gauge')
                 .transition()
                 .duration(DURATION)
-                .filter(function(d) {
-                  return d.parent;
-                })
                 .attr('transform', function(d) {
-                  return 'translate(' + d.circle.center + ')';
-                })
-                .on('end', function(d) {
-                  // when this opening node is in position.
-                  if (d.data.id === targetNode.data.id) {
-                    _this.handleOpenNode(targetNode);
-                  }
-                })
-                .each(function(d, i, nodeList) {
-                  // make the orbit and gauge smaller
-                  d3.select(nodeList[i])
-                  .select('g.gauge')
-                  .transition()
-                  .duration(DURATION)
-                  .attr('transform', function(d) {
-                    var scale = Math.pow(d.scale, 3);
+                  var scale = Math.pow(d.scale, 3);
 
-                    // Stash origin scale and peak
-                    d.scale0 = d.scale;
-                    d.circle.peak0 = d.circle.peak;
-                    // replace `scale` && `peak` field with new value
-                    d.scale = scale;
-                    d.circle.peak = [d.circle.center[0], d.circle.center[1] - scale * d.circle.r];
+                  // Stash origin scale and peak
+                  d.scale0 = d.scale;
+                  d.circle.peak0 = d.circle.peak;
+                  // replace `scale` && `peak` field with new value
+                  d.scale = scale;
+                  d.circle.peak = [d.circle.center[0], d.circle.center[1] - scale * d.circle.r];
 
-                    var pos = [d.size, d.size].map(function(n) {
-                      return -n * scale;
-                    });
-
-                    return 'translate(' + pos.join(',') + ')' + ' scale(' + scale + ')';
+                  var pos = [d.size, d.size].map(function(n) {
+                    return -n * scale;
                   });
-                });
 
-                rootGroup.selectAll('.link')
-                .transition()
-                .duration(DURATION)
-                .attr('d', function(d) {
-                  // origin: circle0 peak of parent
-                  // endpoint: circle center of current node
-                  // circle0 is an alias of the previous circle
-                  return 'M' + d.parent.circle0.peak + 'L' + d.circle.center;
+                  return 'translate(' + pos.join(',') + ')' + ' scale(' + scale + ')';
                 });
-              }
+              });
+
+              rootGroup.selectAll('.link')
+              .transition()
+              .duration(DURATION)
+              .attr('d', function(d) {
+                // origin: circle0 peak of parent
+                // endpoint: circle center of current node
+                // circle0 is an alias of the previous circle
+                return 'M' + d.parent.circle0.peak + 'L' + d.circle.center;
+              });
             }
           },
           plotL2: function(parent, children) {
@@ -924,7 +946,7 @@
               offsetY = height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200;
 
             var canvas = svg.insert('g', ':first-child')
-            .classed('orbit2', true)
+            .attr('class', 'orbit orbit2')
             .attr('transform', d3Transform().rotate(0, width / 2, offsetY))
             
             var rootGroup = canvas.append("g");
@@ -1008,9 +1030,7 @@
 
             var nodeEnter = groups.enter().append("g")
             .attr('class', function(d) {
-              return 'node ' + (
-                  d.children ? 'node--internal' : 'node--leaf'
-                );
+              return 'node node--leaf';
             })
             .attr("transform", function(d) {
               // original position (parent `node` circle center)

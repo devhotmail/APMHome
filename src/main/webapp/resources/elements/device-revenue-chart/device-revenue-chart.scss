@@ -21,37 +21,44 @@
   stroke-width: 1;
 }
 
-.node {
-  .labels .profit-ratio {
+.orbit {
+
+  .node.active .gauge .filter-circle {
+    fill: rgba(255, 255, 255, .7);
+    filter: url(#drop-shadow);
+  }
+
+  &.orbit0 .light-tips {
     display: none;
   }
 
-  .full-tips {
-    opacity: 0;
-    transition: opacity .3s linear;
-  }
-
-  .light-tips {
-    opacity: 1;
-    transition: opacity .3s linear;
-  }
-
-  &.active {
-    .gauge .filter-circle {
-      fill: rgba(255, 255, 255, .7);
-      filter: url(#drop-shadow);
-    }
-
+  &:not(.orbit0) .node {
     .labels .profit-ratio {
-      display: block;
+      display: none;
     }
 
     .full-tips {
-      opacity: 1;
+      opacity: 0;
+      transition: opacity .3s linear;
     }
 
     .light-tips {
-      opacity: 0;
+      opacity: 1;
+      transition: opacity .3s linear;
+    }
+
+    &.active {
+      .labels .profit-ratio {
+        display: block;
+      }
+
+      .full-tips {
+        opacity: 1;
+      }
+
+      .light-tips {
+        opacity: 0;
+      }
     }
   }
 }
