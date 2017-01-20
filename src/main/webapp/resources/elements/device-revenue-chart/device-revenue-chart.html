@@ -945,8 +945,17 @@
             var startDeg;
             var parentDeg = parent.x - START_ANGEL;
             var totalDeg = 180 - START_ANGEL * 2;
+            var delta;
+
             if (arcDeg / 2 < parentDeg) {
               startDeg = parentDeg - arcDeg / 2;
+              delta = parent.x + arcDeg / 2 + START_ANGEL - 180;
+
+              // compensate if the arc exceeds horizon
+              if (delta > 0) {
+                startDeg -= delta;
+              }
+
             } else if (arcDeg / 2 > parentDeg) {
               startDeg = 0;
             }
