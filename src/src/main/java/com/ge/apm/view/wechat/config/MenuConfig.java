@@ -16,6 +16,7 @@ public class MenuConfig {
     public static WxMenu getMenu(WxMpService wxMpService) {
         String serverName = FacesContext.getCurrentInstance().getExternalContext().getRequestServerName();
         serverName = "http://" + serverName + "/geapm";
+//        serverName = "http://gzp.ittun.com/geapm";
         WxMenu menu = new WxMenu();
         WxMenuButton button1 = new WxMenuButton();
         button1.setName("设备信息");
@@ -24,7 +25,7 @@ public class MenuConfig {
         WxMenuButton button11 = new WxMenuButton();
         button11.setType(WxConsts.BUTTON_VIEW);
         button11.setName("查看设备信息");
-        button11.setUrl(serverName + "/wechat/asset/view.xhtml");
+        button11.setUrl(serverName + "/wechat/asset/viewAssetInfo.xhtml");
         WxMenuButton button12 = new WxMenuButton();
         button12.setType(WxConsts.BUTTON_VIEW);
         button12.setName("新增设备");

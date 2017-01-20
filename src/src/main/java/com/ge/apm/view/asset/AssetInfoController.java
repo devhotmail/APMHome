@@ -42,7 +42,9 @@ import webapp.framework.web.mvc.JpaCRUDController;
 @ViewScoped
 public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
-    AssetInfoRepository dao = null;
+	private static final long serialVersionUID = -1L;
+
+	AssetInfoRepository dao = null;
 
     AssetFileAttachmentRepository attachDao = null;
 

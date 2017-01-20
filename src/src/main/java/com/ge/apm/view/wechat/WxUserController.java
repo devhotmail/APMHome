@@ -54,7 +54,7 @@ public class WxUserController  extends JpaCRUDController<UserAccount>{
    
    public void resetPassword(){
 	   logger.info("newPwd is {}",newPassword);
-	   wxUserService.resetPassword(currentUser.getWeChatId(), newPassword);
+	  // wxUserService.resetPassword(currentUser.getWeChatId(), newPassword);
    }
     
 	@Override
