@@ -204,15 +204,17 @@
               lineCount = 2;
             }
 
-            var ratioInProfit = node.data.profit / node.parent.data.profit;
+            if (config.node.orbitIndex === 1) {
+              var ratioInProfit = node.data.profit / node.parent.data.profit;
 
-            labelGroup.append('text')
-            .attr('class', 'profit-ratio')
-            .attr('font-size', labelFontSize)
-            .attr('text-anchor', 'middle')
-            .attr('fill', config.waveColor)
-            .attr('transform', 'translate(' + [0, labelFontSize * lineCount] + ')')
-            .text('占总利润' + parseInt(ratioInProfit * 100) + '%');
+              labelGroup.append('text')
+              .attr('class', 'profit-ratio')
+              .attr('font-size', labelFontSize)
+              .attr('text-anchor', 'middle')
+              .attr('fill', config.waveColor)
+              .attr('transform', 'translate(' + [0, labelFontSize * lineCount] + ')')
+              .text('占总利润' + parseInt(ratioInProfit * 100) + '%');
+            }
           }
 
           // The clipping wave area.
@@ -432,6 +434,7 @@
           var maxR = options.canvasRadius;
           var startDeg = options.start || 0;
           var endDeg = options.end || 180;
+          var orbitIndex = options.orbitIndex || 1;
           var deg = startDeg;
           var lastDeg = 0;
           var thisDeg = 0;
@@ -450,6 +453,7 @@
             node.y = R;
             node.size = r;
             node.scale = scale;
+            node.orbitIndex = orbitIndex;
 
             var _circleCenter = project(node.x, node.y);
 
@@ -600,7 +604,8 @@
               x: 90,
               y: Math.sin(START_ANGEL * Math.PI / 180) * radius - 100,
               size: ROOT_RADIUS,
-              parent: null
+              parent: null,
+              orbitIndex: 0
             };
 
             var _rootCircleCenter = project(node.x, node.y);
@@ -787,7 +792,8 @@
               end: 180 - START_ANGEL,
               radius: radius,
               canvasRadius: width / 2,
-              margin: MARGIN_ANGEL
+              margin: MARGIN_ANGEL,
+              orbitIndex: 1
             });
 
             var nodes = tree.descendants();
@@ -882,7 +888,8 @@
                 end: 180 - START_ANGEL,
                 radius: new_radius,
                 canvasRadius: width / 2,
-                margin: MARGIN_ANGEL
+                margin: MARGIN_ANGEL,
+                orbitIndex: 1
               });
 
               // rerender subtree's children
@@ -962,7 +969,8 @@
               end: 180 - START_ANGEL,
               radius: radius,
               canvasRadius: width / 2,
-              margin: MARGIN_ANGEL / 2
+              margin: MARGIN_ANGEL / 2,
+              orbitIndex: 2
             }).deg;
             var startDeg;
             var parentDeg = parent.x - START_ANGEL;
@@ -988,7 +996,8 @@
               end: 180 - START_ANGEL,
               radius: radius,
               canvasRadius: width / 2,
-              margin: MARGIN_ANGEL / 2
+              margin: MARGIN_ANGEL / 2,
+              orbitIndex: 2
             });
 
             var nodes = subTree.descendants().slice(1);
