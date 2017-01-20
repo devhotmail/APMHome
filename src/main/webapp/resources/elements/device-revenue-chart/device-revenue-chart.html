@@ -50,10 +50,12 @@
             config = gaugeDefaultConfig();
           }
           var gauge = d3.select(element);
+          var node = config.node;
+          var data = node.data;
           var radius = config.node.circle.r;
           var locationX = -parseInt(config.width) / 2;
           var locationY = -parseInt(config.height) / 2;
-          var fillPercent = Math.max(config.minValue, Math.min(config.maxValue, config.node.data.profit)) / config.maxValue;
+          var fillPercent = Math.max(config.minValue, Math.min(config.maxValue, +node.data.profit_label)) / config.maxValue;
           var waveHeightScale;
           if (config.waveHeightScaling) {
             waveHeightScale = d3.scaleLinear()
@@ -75,7 +77,6 @@
           var waveLength = fillCircleRadius * 2 / config.waveCount;
           var waveClipCount = 1 + config.waveCount;
           var waveClipWidth = waveLength * waveClipCount;
-          var data = config.node.data;
           var labelUnit = data.label_unit;
 
           // Data for building the clip wave area.
@@ -150,7 +151,6 @@
           // Text to show current node's name
           // at least depth over 0
           if (config.showLabel) {
-            var node = config.node;
             var distance = 50;
             var _radius = radius + distance;
 
@@ -248,7 +248,7 @@
 
           // Rounding functions so that the correct number of decimal places
           // is always displayed as the value counts up.
-          var textFormat = function(value) { return Math.round(value) + '万'; };
+          var textFormat = function(value, unit) { return Math.round(value) + unit; };
 
           var tipsGroup = gaugeGroup.append('g')
           .attr('fill', config.textColor)
@@ -263,8 +263,9 @@
           .attr('class', 'light-tips');
 
           // revenue value
-          var revenue = config.node.data.revenue;
+          var revenue = +node.data.revenue_label;
           var text1FinalVal = parseFloat(revenue).toFixed(2);
+          var text1Unit = node.data.revenue_label_unit;
           var text1StartVal = config.valueCountUp ? config.minValue : text1FinalVal;
 
           fullTipGroup.append('text')
@@ -274,23 +275,24 @@
           .attr('transform', 'translate(' + [0, -textPixels].join(',') + ')');
 
           fullTipGroup.append('text')
-          .text(textFormat(text1FinalVal))
+          .text(textFormat(text1FinalVal, text1Unit))
           .attr('text-anchor', 'middle')
           .attr('font-size', textPixels + 'px');
 
           var text1 = lightTipGroup.append("text")
-          .text(textFormat(text1FinalVal))
+          .text(textFormat(text1FinalVal, text1Unit))
           .attr("class", "liquidFillGaugeText")
           .attr("text-anchor", "middle")
           .attr("font-size", textPixels + "px");
 
           // profit value
-          var profit = config.node.data.profit;
+          var profit = +node.data.profit_label;
           var text2FinalVal = parseFloat(profit).toFixed(2);
+          var text2Unit = node.data.profit_label_unit;
           var text2StartVal = config.valueCountUp ? config.minValue : text2FinalVal;
 
           var text2 = lightTipGroup.append("text")
-          .text(textFormat(text2StartVal))
+          .text(textFormat(text2StartVal, text2Unit))
           .attr("class", "liquidFillGaugeText")
           .attr("text-anchor", "middle")
           .attr("font-size", textPixels + "px")
@@ -303,25 +305,25 @@
           .attr('transform', 'translate(' + [0, textPixels].join(',') + ')');
 
           fullTipGroup.append('text')
-          .text(textFormat(text2FinalVal))
+          .text(textFormat(text2FinalVal, text2Unit))
           .attr('text-anchor', 'middle')
           .attr('font-size', textPixels + 'px')
           .attr('transform', 'translate(' + [0, textPixels * 2].join(',') + ')');
 
           // Make the value count up.
           if (config.valueCountUp) {
-            function textTweenFn(start, final) {
+            function textTweenFn(start, final, unit) {
               return function() {
                 var node = this;
                 var i = d3.interpolate(parseInt(start), parseInt(final));
                 return function(t) {
-                  node.textContent = textFormat(i(t));
+                  node.textContent = textFormat(i(t), unit);
                 }
               }
             }
 
-            var textTween1 = textTweenFn(text1StartVal, text1FinalVal);
-            var textTween2 = textTweenFn(text2StartVal, text2FinalVal);
+            var textTween1 = textTweenFn(text1StartVal, text1FinalVal, text1Unit);
+            var textTween2 = textTweenFn(text2StartVal, text2FinalVal, text2Unit);
 
             text1.transition()
             .duration(config.waveRiseTime)
@@ -365,15 +367,18 @@
         function nodeRadius(node) {
           var data = node.data;
           var parent = node.parent;
-          if(parent){
-            return gauge_size(data.revenue / parent.data.revenue);
+          var scale;
+          if (parent) {
+            scale = data.revenue / parent.data.revenue;
+            return gauge_size(scale > 1 ? 1 : scale);
           }
           return ROOT_RADIUS;
         }
 
         // how much degree of the arc is off screen
         var START_ANGEL = 45;
-        var PAGINATION_BUFFER = 0;
+        var PAGINATION_BUFFER = 50;
+        var PAGE_MAX = 20;
         var PAGER_BORDER_COLOR = 'rgba(177,177,188, 1)';
         var PAGER_START_ANGEL = START_ANGEL - 3;
         // how much degree to separate adjacent orbit items
@@ -387,7 +392,7 @@
         var PAGER_RADIUS = 20;
         // id counter seed
         var i = 0;
-        var gauge_size = d3.interpolate(20, 80);
+        var gauge_size = d3.interpolate(30, ROOT_RADIUS);
         var gauge_color = d3.scaleOrdinal([
           'rgba(117, 162, 234, 1)',
           'rgba(140, 211, 199, 1)',
@@ -407,7 +412,7 @@
           config.waveAnimateTime = 5000;
           config.waveHeight = 0.15;
           config.waveOffset = 0.25;
-          config.maxValue = data.revenue;
+          config.maxValue = +data.revenue_label;
           config.node = node;
           config.isRoot = node.depth;
           config.showLabel = node.depth === 1; // only show label for depth one
@@ -431,6 +436,7 @@
           var r, R = options.radius, degEach, scale = radiusScale(R);
           for (var i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
             r = nodeRadius(node) * scale;
+            console.log(node.data.name, scale);
             thisDeg = Math.atan(r / R) * (
               180 / Math.PI
               );
@@ -461,7 +467,6 @@
           root.x = 90;
           root.y = Math.sin(START_ANGEL * Math.PI / 180) * R - 100;
           root.size = ROOT_RADIUS;
-          root.children = root.children.slice(0, max);
 
           var _rootCircleCenter = project(root.x, root.y);
 
@@ -475,14 +480,6 @@
             count: max,
             deg: deg - startDeg
           };
-        }
-
-        function formatConvert(data) {
-          return Object.assign({}, data, {
-            id: i++,
-            revenue: parseFloat(data.revenue_label),
-            profit: parseFloat(data.profit_label)
-          });
         }
 
         function parseTransformRotate(element) {
@@ -527,9 +524,21 @@
         Polymer({
           is: 'device-revenue-chart',
           properties: {
-            data: {
-              type: Object,
-              observer: 'replot'
+            apiBaseUrl: {
+              type: String,
+              value: '/geapm/api/profit'
+            },
+            year: {
+              type: Number,
+              value: 2016
+            },
+            groupBy: {
+              type: String,
+              value: 'month'
+            },
+            queryUrl: {
+              type: String,
+              computed: 'computeQueryUrl(apiBaseUrl, year, groupBy)'
             },
             _pageStartHistoryL1: {
               type: Array,
@@ -766,11 +775,11 @@
               start: START_ANGEL,
               end: 180 - START_ANGEL,
               radius: radius,
-              canvasRadius: width / 2,
+              canvasRadius: radius,
               margin: MARGIN_ANGEL
             });
 
-            var nodes = tree.descendants();
+            var nodes = tree.descendants().slice(0, result.count);
             var links = tree.links();
 
             var link = rootGroup.selectAll('.link')
@@ -858,7 +867,7 @@
                   start: START_ANGEL,
                   end: 180 - START_ANGEL,
                   radius: new_radius,
-                  canvasRadius: width / 2,
+                  canvasRadius: radius,
                   margin: MARGIN_ANGEL
                 });
 
@@ -931,17 +940,18 @@
             rootGroup.attr("transform", "translate(" + offsetX + "," + offsetY + ")");
 
             var data = Object.assign({children: children}, parent.data);
-            var subTree = d3.hierarchy(data);
-            subTree.data = parent.parent.data;
+            var tree = d3.hierarchy(data);
+            tree.data = parent.parent.data;
             
             // calc start angle
-            var arcDeg = layout_orbit(subTree, {
+            var result = layout_orbit(tree, {
               start: START_ANGEL,
               end: 180 - START_ANGEL,
               radius: radius,
-              canvasRadius: width / 2,
+              canvasRadius: radius,
               margin: MARGIN_ANGEL / 2
-            }).deg;
+            });
+            var arcDeg = result.deg;
             var startDeg;
             var parentDeg = parent.x - START_ANGEL;
             var totalDeg = 180 - START_ANGEL * 2;
@@ -960,17 +970,18 @@
               startDeg = 0;
             }
             startDeg += START_ANGEL;
+
             // calc start angle
-            var result = layout_orbit(subTree, {
+            var result = layout_orbit(tree, {
               start: startDeg,
               end: 180 - START_ANGEL,
               radius: radius,
-              canvasRadius: width / 2,
+              canvasRadius: radius,
               margin: MARGIN_ANGEL / 2
             });
 
-            var nodes = subTree.descendants().slice(1);
-            var links = subTree.links();
+            var nodes = tree.descendants().slice(1, result.count);
+            var links = tree.links();
             var link = rootGroup.selectAll('.link')
             .data(nodes, function(d) {
               return d.data.id;
@@ -1111,13 +1122,16 @@
             }
             _this.openingNodeL1 = node;
 
-            // TODO: fetch real node url
-            var key = 'mock/profit-2016-type-MRI.json';
-            _this.loadData(key).then(function() {
-              var close = _this.renderCurrPage(key, 2).close;
+            var uri = URI(this.queryUrl)
+            .removeQuery('groupby')
+            .addQuery(this.groupBy, node.data.id)
+            .toString();
+
+            _this.loadData(uri, 2).then(function() {
+              var close = _this.renderCurrPage(uri, 2).close;
               _this.closeNodeL1 = function() {
                 return close().then(function() {
-                  _this.plotPager(key, 1);
+                  _this.plotPager(uri, 1);
                 });
               }
             });
@@ -1147,26 +1161,29 @@
             }
           },
           // Load next "n" more items from the URL and add them to cache
-          loadData: function(url, n) {
+          loadData: function(url, level) {
             var _this = this;
-            n = n || PAGINATION_BUFFER;
             var cacheKey = url;
             var list = lscache.get(cacheKey) || [];
             var pages = lscache.get(cacheKey + '/pages');
             var length = list.length || 0;
+            var offset = this.get('pageOffsetL'+ level);
 
             // read the furthest offset
-            if (!pages || length < pages.total) {
+            if (!pages || (length < pages.total && (length - offset) < PAGE_MAX)) {
               url = URI(url).addQuery({
                 'start': length,
-                'limit': n
+                'limit': PAGINATION_BUFFER
               }).toString();
-              return fetch(url).then(function(res) {
+
+              return fetch(url, {
+                credentials: 'same-origin'
+              }).then(function(res) {
                 return res.json();
               }).then(function(data) {
-                list = list.concat(data.items.map(formatConvert));
+                list = list.concat(data.items);
                 lscache.set(cacheKey, list);
-                lscache.set(cacheKey + '/root', formatConvert(data.root));
+                lscache.set(cacheKey + '/root', data.root);
                 lscache.set(cacheKey + '/pages', data.pages);
               });
             } {
@@ -1256,7 +1273,7 @@
               pageEntered.call(this, 'curr');
               _this.isPaging = false;
               // load next page
-              _this.loadData(key).then(function() {
+              _this.loadData(key, level).then(function() {
                 _this.renderNextPage(key, level);
                 _this.plotPager(key, level);
               });
@@ -1324,13 +1341,16 @@
           enterLeavePaging: function() {
             d3.select(this.$.chartSvg).classed('in-transition', this.isPaging);
           },
+          computeQueryUrl: function(baseUri, year, groupBy) {
+            return URI(this.apiBaseUrl).addQuery('year', year).addQuery('groupby', groupBy).toString();
+          },
           ready: function() {
             var _this = this;
             var rect = this.$.chart.getBoundingClientRect();
             this.set('width', rect.width);
             this.set('height', rect.height);
-            var url = 'mock/profit-2016-by-type.json';
-            this.loadData(url).then(function() {
+            var url = this.queryUrl;
+            this.loadData(url, 1).then(function() {
               _this.renderCurrPage(url);
             });
           }
