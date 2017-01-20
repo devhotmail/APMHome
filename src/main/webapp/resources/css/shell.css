@@ -1045,7 +1045,7 @@ button.btn{-webkit-appearance:button}
 .btn--large{font-size:1.33333rem}
 .clearfix:after{content:"";display:table;clear:both}
 .layout-compact .layout-wrapper.menu-layout-static .layout-main{margin-left:150px}
-.layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-main{margin-left:0}
+.layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-main{margin-left:75px}
 .layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .brand h1{max-width:0}
 .layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-menu.layout-menu-dark{margin-left:0;width:75px}
 .layout-compact .layout-wrapper.menu-layout-static.layout-menu-static-inactive .layout-menu.layout-menu-dark ul.ultima-menu li i:first-child{width:50px;height:50px}
