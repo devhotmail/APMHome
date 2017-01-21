@@ -19,6 +19,16 @@
           return [radius * Math.cos(angle), radius * Math.sin(angle)];
         }
 
+        // calc the circular geometry from node size properties
+        function circular_geom(node) {
+          var center = project(node.x, node.y);
+          return {
+            r: node.size,
+            center: center,
+            peak: [center[0], center[1] - node.size]
+          };
+        }
+
         function gaugeDefaultConfig() {
           return {
             width: 100, // The gauge minimum value.
@@ -433,6 +443,16 @@
           renderGauge(this, config);
         }
 
+        function layout_root(root, radius) {
+          root.x = 90;
+          root.y = Math.sin(START_ANGEL * Math.PI / 180) * radius - 100;
+          root.size = ROOT_RADIUS;
+          root.circle = circular_geom(root);
+          root.parent = null;
+          root.orbitIndex = 0;
+          return root;
+        }
+
         function layout_orbit(root, options) {
           var nodes = root.children;
           var margin = options.margin;
@@ -450,7 +470,6 @@
           var r, R = options.radius, degEach, scale = radiusScale(R);
           for (var i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
             r = nodeRadius(node) * scale;
-            console.log(node.data.name, scale);
             thisDeg = Math.atan(r / R) * (
               180 / Math.PI
               );
@@ -460,14 +479,7 @@
             node.size = r;
             node.scale = scale;
             node.orbitIndex = orbitIndex;
-
-            var _circleCenter = project(node.x, node.y);
-
-            node.circle = {
-              r: node.size,
-              center: _circleCenter,
-              peak: [_circleCenter[0], _circleCenter[1] - node.size]
-            };
+            node.circle = circular_geom(node);
 
             // degree increments
             deg += ( thisDeg + margin ) * 2;
@@ -478,18 +490,6 @@
               break;
             }
           }
-          // layout the root
-          root.x = 90;
-          root.y = Math.sin(START_ANGEL * Math.PI / 180) * R - 100;
-          root.size = ROOT_RADIUS;
-
-          var _rootCircleCenter = project(root.x, root.y);
-
-          root.circle = {
-            r: root.size,
-            center: _rootCircleCenter,
-            peak: [_rootCircleCenter[0], _rootCircleCenter[1] - root.size]
-          };
 
           return {
             count: max,
@@ -589,6 +589,10 @@
               value: false,
               observer: 'enterLeavePaging'
             },
+            layout: {
+              type: Object,
+              computed: 'computeLayout(width, height)'
+            },
             openingNodeL1: {
               type: Object
             },
@@ -601,33 +605,16 @@
           ],
           plotRoot: function(root) {
             var _this = this;
-            var svg = d3.select(this.$.chartSvg),
-              width = +svg.attr("width"),
-              height = +svg.attr("height"),
-              radius = width / 2 + 150,
-              offsetX = width / 2,
-              offsetY = height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200;
+            var svg = d3.select(this.$.chartSvg);
 
-            var node = {
-              data: root,
-              x: 90,
-              y: Math.sin(START_ANGEL * Math.PI / 180) * radius - 100,
-              size: ROOT_RADIUS,
-              parent: null,
-              orbitIndex: 0
-            };
-
-            var _rootCircleCenter = project(node.x, node.y);
-
-            node.circle = {
-              r: ROOT_RADIUS,
-              center: _rootCircleCenter,
-              peak: [_rootCircleCenter[0], _rootCircleCenter[1] - node.size]
-            };
+            var radius = this.layout.radius;
+            var offsetX = this.layout.offsetX;
+            var offsetY = this.layout.offsetY;
+            var node = layout_root({ data: root}, radius);
 
             var canvas = svg.append("g")
             .attr('class', 'orbit orbit0')
-            .attr('transform', d3Transform().rotate(0, width / 2, offsetY))
+            .attr('transform', d3Transform().rotate(0, this.width/2, offsetY))
             .attr("transform", "translate(" + offsetX + "," + offsetY + ")");
 
             // Update the nodes
@@ -660,11 +647,11 @@
           plotPager: function(url, level) {
             var _this = this;
             var svg = d3.select(this.$.chartSvg),
-              width = +svg.attr("width"),
-              height = +svg.attr("height"),
-              radius = width / 2 + 150,
-              offsetX = width / 2,
-              offsetY = height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200;
+              width = this.width,
+              height = this.height,
+              radius = this.layout.radius,
+              offsetX = this.layout.offsetX,
+              offsetY = this.layout.offsetY;
 
             var list = lscache.get(url) || [];
             var pages = lscache.get(url + '/pages');
@@ -748,11 +735,9 @@
 
             // layout start
             var svg = d3.select(this.$.chartSvg),
-              width = +svg.attr("width"),
-              height = +svg.attr("height"),
-              radius = width / 2 + 150,
-              offsetX = width / 2,
-              offsetY = height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200;
+              radius = this.layout.radius,
+              offsetX = this.layout.offsetX,
+              offsetY = this.layout.offsetY;
 
             // add drop shadow for hovering/selected
             var filter = svg.append('defs')
@@ -792,10 +777,14 @@
 
             var canvas = svg.insert('g', ':first-child')
               .attr('class', 'orbit orbit1')
-              .attr('transform', d3Transform().rotate(0, width / 2, offsetY))
+              .attr('transform', d3Transform().rotate(0, this.width/2, offsetY))
 
             var rootGroup = canvas.append("g");
             rootGroup.attr("transform", "translate(" + offsetX+ "," + offsetY + ")");
+
+            // Calc root node layout
+            layout_root(tree, radius);
+
             var result = layout_orbit(tree, {
               start: START_ANGEL,
               end: 180 - START_ANGEL,
@@ -805,11 +794,11 @@
               orbitIndex: 1
             });
 
-            var nodes = tree.descendants().slice(0, result.count);
+            var nodes = tree.children.slice(0, result.count);
             var links = tree.links();
 
             var link = rootGroup.selectAll('.link')
-            .data(nodes.slice(1), function(d) {
+            .data(nodes, function(d) {
               return d.data.id;
             });
 
@@ -832,7 +821,7 @@
 
             // Update the nodes
             var node = rootGroup.selectAll('g.node')
-            .data(nodes.slice(1), function(d) {
+            .data(nodes, function(d) {
               return d.data.id || (d.data.id = ++i);
             });
 
@@ -948,18 +937,18 @@
                 // origin: circle0 peak of parent
                 // endpoint: circle center of current node
                 // circle0 is an alias of the previous circle
-                return 'M' + d.parent.circle0.peak + 'L' + d.circle.center;
+                return 'M' + d.parent.circle.peak + 'L' + d.circle.center;
               });
             }
           },
           plotL2: function(parent, children) {
             // layout start
             var svg = d3.select(this.$.chartSvg),
-              width = +svg.attr("width"),
-              height = +svg.attr("height"),
-              radius = width / 2 + 150,
-              offsetX = width / 2,
-              offsetY = height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200;
+              width = this.width,
+              height = this.height,
+              radius = this.layout.radius,
+              offsetX = this.layout.offsetX,
+              offsetY = this.layout.offsetY;
 
             var canvas = svg.insert('g', ':first-child')
             .attr('class', 'orbit orbit2')
@@ -967,7 +956,6 @@
             
             var rootGroup = canvas.append("g");
             rootGroup.attr("transform", "translate(" + offsetX + "," + offsetY + ")");
-
             var data = Object.assign({children: children}, parent.data);
             var tree = d3.hierarchy(data);
             tree.data = parent.parent.data;
@@ -1012,7 +1000,7 @@
               orbitIndex: 2
             });
 
-            var nodes = tree.descendants().slice(1, result.count);
+            var nodes = tree.children.slice(0, result.count);
             var links = tree.links();
             var link = rootGroup.selectAll('.link')
             .data(nodes, function(d) {
@@ -1134,6 +1122,7 @@
                 return 'translate(' + pos.join(',') + ')';
               });
             });
+
             root.selectAll('.link')
             .transition()
             .duration(DURATION)
@@ -1141,7 +1130,7 @@
               // origin: circle0 peak of parent
               // endpoint: circle0 center of current node
               // circle0 is an alias of the previous circle
-              return 'M' + d.parent.circle0.peak + 'L' + d.circle0.center;
+              return 'M' + d.parent.circle.peak + 'L' + d.circle0.center;
             });
           },
           handleOpenNode: function(node) {
@@ -1161,6 +1150,7 @@
               var close = _this.renderCurrPage(uri, 2).close;
               _this.closeNodeL1 = function() {
                 return close().then(function() {
+                  var uri = node.parent.data.link.href;
                   _this.plotPager(uri, 1);
                 });
               }
@@ -1373,6 +1363,16 @@
           },
           computeQueryUrl: function(baseUri, year, groupBy) {
             return URI(this.apiBaseUrl).addQuery('year', year).addQuery('groupby', groupBy).toString();
+          },
+          computeLayout: function() {
+            var rect = this.$.chartSvg.getBoundingClientRect();
+            var radius = this.width / 2 + 150;
+
+            return {
+              radius: radius,
+              offsetX: this.width / 2,
+              offsetY: this.height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200
+            };
           },
           ready: function() {
             var _this = this;
