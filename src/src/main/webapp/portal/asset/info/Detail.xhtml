@@ -262,7 +262,7 @@
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.depreciationMethod}</label>
-                        <p:inputText id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}" readonly="true"/>
+                        <p:inputText id="depreciationMethod" value="#{fieldMsg.fieldValue('depreciationMethodList', assetInfoController.selected.depreciationMethod)}" readonly="true"/>
                     </h:panelGroup>
 
                 </p:panelGrid>
