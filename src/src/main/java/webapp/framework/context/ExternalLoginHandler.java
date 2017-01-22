@@ -98,7 +98,13 @@ public class ExternalLoginHandler {
             if (authResult == null) {
                 return false;
             }
-            sessionAuthenticationStrategy.onAuthentication(authResult, request, response);
+            
+            try{
+                sessionAuthenticationStrategy.onAuthentication(authResult, request, response);
+            }
+            catch(Exception ex){
+                handleError(ex, "onAuthentication");
+            }
 
             securityContext.setAuthentication(authResult);
             usernamePasswordAuthenticationFilter.getRememberMeServices().loginSuccess(request, response, authResult);

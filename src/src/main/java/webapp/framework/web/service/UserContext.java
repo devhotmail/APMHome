@@ -6,10 +6,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Locale;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import webapp.framework.web.WebUtil;
@@ -20,8 +23,40 @@ import webapp.framework.web.WebUtil;
 public class UserContext {
     public static final String ANONYMOUS_USER = "anonymousUser";
 
-    public static boolean isLoggedIn() {
-        return (!UserContext.isAnonymousUser()) && (UserContext.getUsername()!=null);
+    public static String getUsername(HttpServletRequest request) {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if(securityContext==null){
+            if(request==null){
+                try{
+                    request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+                }
+                catch(Exception ex){
+                }
+            }
+            if(request==null) return null;
+            
+            securityContext = (SecurityContext) request.getSession().getAttribute("SPRING_SECURITY_CONTEXT");
+        }
+        if(securityContext==null) return null;
+        
+        Authentication auth = securityContext.getAuthentication();
+        if (auth != null) {
+            Object principal = auth.getPrincipal();
+
+            if (principal instanceof UserDetails) {
+                return ((UserDetails) principal).getUsername();
+            }
+
+            return (String) principal.toString();
+        }
+
+        return null;
+    }
+    
+    public static boolean isLoggedIn(HttpServletRequest request) {
+        String userName = getUsername(request);
+        
+        return (userName!=null) && (!UserContext.ANONYMOUS_USER.equalsIgnoreCase(userName));
     }
     
     public static boolean isAnonymousUser() {
@@ -36,21 +71,17 @@ public class UserContext {
      * @return the current user's username, or null if none.
      */
     public static String getUsername() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth != null) {
-            Object principal = auth.getPrincipal();
-
-            if (principal instanceof UserDetails) {
-                return ((UserDetails) principal).getUsername();
-            }
-
-            return (String) principal.toString();
-        }
-
-        return null;
+        return getUsername(null);
     }
 
+    public static UserAccount getCurrentLoginUser(HttpServletRequest request){
+        String loginName = getUsername(request);
+        if(loginName==null) return null;
+        
+        UserAccountRepository dao=(UserAccountRepository) WebUtil.getBean(UserAccountRepository.class);
+        return dao.getByLoginName(loginName);
+    }
+    
     public static UserAccount getCurrentLoginUser(){
         UserAccountRepository dao=(UserAccountRepository) WebUtil.getBean(UserAccountRepository.class);
         return dao.getByLoginName(getUsername());

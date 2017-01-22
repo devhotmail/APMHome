@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
@@ -266,8 +267,14 @@ public class CoreService {
         return list;
     }
 
+    public boolean loginByWeChatOpenIdForJSF(){
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpServletResponse reponse = (HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse();
+        return loginByWeChatOpenId(request, reponse);
+    }
+
     public boolean loginByWeChatOpenId(HttpServletRequest request,HttpServletResponse response){
-        if(UserContext.isLoggedIn()) return true; // user already logged in.
+        if(UserContext.isLoggedIn(request)) return true; // user already logged in.
 
         String code = request.getParameter("code");
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken;
@@ -288,6 +295,8 @@ public class CoreService {
     }
     
     public boolean loginByWeChatOpenId(String weChatOpenId, HttpServletRequest request,HttpServletResponse response){
+        if(UserContext.isLoggedIn(request)) return true; // user already logged in.
+
         ExternalLoginHandler loginHandler = WebUtil.getServiceBean(ExternalLoginHandler.class);
         return loginHandler.doLoginByWeChatOpenId(weChatOpenId, request, response);
     }
