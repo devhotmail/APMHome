@@ -7,7 +7,7 @@
     <style include="device-selector-bar-styles"></style>
     <div class="flex flex--row flex--center">
       <div class="flex--item u-1/4 text--center">
-        <px-dropdown class="u-mh+" display-value="2017" selected-key="{{selectedYear}}">
+        <px-dropdown class="u-mh+" display-value="[[selectedYear]]  " selected-key="{{selectedYear}}">
           <px-dropdown-content class="px-dropdown-content"
                                max-cont-character-width="10"
                                extend-dropdown="true"
@@ -20,7 +20,7 @@
         <div class="btn-group">
           <template is="dom-repeat" items="[[groupTabs]]">
             <input id$="tab-[[index]]" name="group-type" type="radio" value="[[item.val]]"
-                   on-click="handleRadioSelect" checked="[[item.selected]]">
+                   on-click="handleRadioSelect" checked="[[_isRadioChecked(item)]]">
             <label for$="tab-[[index]]" class="btn u-mr+">[[item.key]]</label>
           </template>
         </div>
@@ -36,15 +36,18 @@
           type: Number,
           notify: true
         },
+        groupTabs: Array,
         selectedType: {
           type: String,
           notify: true
         },
-        groupTabs: Array
       },
-      observers: [],
+      observers: [
+        'saveOptionsInHistory(selectedYear, selectedType)',
+      ],
       ready: function() {
         var _this = this;
+        this.restoreOptionsFromHistory();
         fetch('mock/device-selection-types.json').then(function(res) {
           return res.json();
         }).then(function(list) {
@@ -59,6 +62,20 @@
       },
       handleRadioSelect: function(e) {
         this.set('selectedType', e.target.value);
+      },
+      restoreOptionsFromHistory: function() {
+        var hash = location.hash.replace(/^#/, '');
+        var options = URI('').search(hash).search(true);
+        this.set('selectedYear', +options.year || 2016);
+        this.set('selectedType', options.groupby || 'type');
+      },
+      saveOptionsInHistory: function(year, type) {
+        var uri = URI('').addQuery('year', year).addQuery('groupby', type);
+        var new_hash = uri.query();
+        location.hash = '#' + new_hash;
+      },
+      _isRadioChecked: function(item) {
+        return item.val === this.selectedType;
       }
     });
   </script>

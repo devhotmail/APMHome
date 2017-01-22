@@ -16,15 +16,5 @@
       <device-selector-bar selected-year="{{year}}" selected-type="{{groupBy}}"></device-selector-bar>
       <device-revenue-chart year="{{year}}" group-by="{{groupBy}}"></device-revenue-chart>
     </template>
-    <script>
-      (
-        function() {
-          var template = document.querySelector('template[is=dom-bind]');
-          // Initial value for the selector
-          template.year = 2016;
-          template.groupBy = 'type';
-        }
-      )();
-    </script>
   </ui:define>
 </ui:composition>
