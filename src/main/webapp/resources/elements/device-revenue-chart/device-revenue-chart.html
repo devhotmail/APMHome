@@ -1187,6 +1187,7 @@
           _queryChanged: function(year, groupby) {
             var _this = this;
             var url = this.queryUrl;
+            this.resetCanvas();
             this.loadData(url, 1).then(function() {
               _this.renderCurrPage(url);
             });
@@ -1234,7 +1235,7 @@
             var start = this.get('pageStartL' + level);
             var list = lscache.get(key) || [];
             list = list.slice(start);
-            this.removePage('curr', level);
+            this.removePage(level, 'curr');
             var result = this['plotL' + level].call(this, parent, list);
             result.element.classed('curr-page', true);
             this.set('pageOffsetL' + level, result.count);
@@ -1258,7 +1259,7 @@
                 parent = this.openingNodeL1;
               }
 
-              this.removePage('next', level);
+              this.removePage(level, 'next');
               result = this['plotL' + level].call(this, parent, list);
               result.element.classed('next-page', true).attr('transform', rotate(90));
               this.set('pageEndL'+level, offset + result.count);
@@ -1279,7 +1280,7 @@
               } else {
                 parent = this.openingNodeL1;
               }
-              this.removePage('prev', level);
+              this.removePage(level, 'prev');
               result = this['plotL' + level].call(this, parent, list);
               result.element.classed('prev-page', true).attr('transform', rotate(-90));
             }
@@ -1365,9 +1366,17 @@
             // kick out next
             d3.select('.orbit' + level + '.next-page').remove();
           },
-          removePage: function(type, level) {
-            var $page = d3.select(this.$.chartSvg).select('.orbit'+level+'.'+type+'-page');
+          removePage: function(level, type) {
+            var $sel = '.orbit' + level;
+            if (type) {
+              $sel += '.' + type + '-page';
+            }
+
+            var $page = d3.select(this.$.chartSvg).select($sel);
             $page.remove();
+          },
+          resetCanvas: function() {
+            this.$.chartSvg.innerHTML = '';
           },
           enterLeavePaging: function() {
             d3.select(this.$.chartSvg).classed('in-transition', this.isPaging);
