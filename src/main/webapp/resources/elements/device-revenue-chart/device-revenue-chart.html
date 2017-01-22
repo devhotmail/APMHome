@@ -621,7 +621,8 @@
               computed: 'computeLayout(width, height)'
             },
             openingNodeL1: {
-              type: Object
+              type: Object,
+              observer:  'handleOrbit1Collapsed'
             },
             width: Number,
             height: Number
@@ -654,8 +655,6 @@
             })
             .style('cursor', 'pointer')
             .on('click', function handleClickRoot() {
-              // remove `expanded` for root node when orbit two closed
-              svg.classed('expanded', false);
 
               // remove all `active` and `selected` classes for each node in orbit one
               d3.selectAll('.orbit1 .node--leaf')
@@ -665,7 +664,7 @@
               // check if there's a 2nd orbit now
               if (_this.openingNodeL1) {
                 _this.closeNodeL1().then(function() {
-                  delete _this.openingNodeL1;
+                  _this.openingNodeL1 = null;
                   _this.resetOrbitL1();
                 });
               }
@@ -897,8 +896,6 @@
             });
 
             function handleClick(targetNode, i, nodeList) {
-              // add `expanded` for root node when orbit two open
-              svg.classed('expanded', true);
 
               // remove all `active` class and `selected` attr for each node in orbit one
               d3.selectAll('.orbit1 .node--leaf')
@@ -1160,6 +1157,11 @@
               }
             });
           },
+          handleOrbit1Collapsed: function(node) {
+            var svg = d3.select(this.$.chartSvg);
+            // add/remove `expanded` for root node when orbit two closed
+            svg.classed('expanded', !!node);
+          },
           _computeLastStartL1: function() {
             var history = this._pageStartHistoryL1;
             this.pageLastStartL1 = history[history.length - 1];
@@ -1187,7 +1189,7 @@
           _queryChanged: function(year, groupby) {
             var _this = this;
             var url = this.queryUrl;
-            this.resetCanvas();
+            this.resetChart();
             this.loadData(url, 1).then(function() {
               _this.renderCurrPage(url);
             });
@@ -1375,8 +1377,18 @@
             var $page = d3.select(this.$.chartSvg).select($sel);
             $page.remove();
           },
-          resetCanvas: function() {
+          resetChart: function() {
+            this.resetPaginationLevel(1);
+            this.resetPaginationLevel(2);
+            this.openingNodeL1 = null;
+            this.isPaging = false;
             this.$.chartSvg.innerHTML = '';
+          },
+          resetPaginationLevel: function(level) {
+            level = level || 1;
+            this.set('pageStartL' + level, 0);
+            this.set('pageOffsetL' + level, 0);
+            this.set('pageLastL' + level, 0);
           },
           enterLeavePaging: function() {
             d3.select(this.$.chartSvg).classed('in-transition', this.isPaging);
