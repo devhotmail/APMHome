@@ -910,7 +910,7 @@
               targetNode.selected = true;
 
               // build a new smaller tree layout
-              var new_radius = radius - 200;
+              var new_radius = radius - 120;
               layout_orbit(tree, {
                 start: START_ANGEL,
                 end: 180 - START_ANGEL,
@@ -976,7 +976,7 @@
             var svg = d3.select(this.$.chartSvg),
               width = this.width,
               height = this.height,
-              radius = this.layout.radius,
+              radius = this.layout.radius + 50,
               offsetX = this.layout.offsetX,
               offsetY = this.layout.offsetY;
 
