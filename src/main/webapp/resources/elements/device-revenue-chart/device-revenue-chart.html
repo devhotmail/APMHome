@@ -543,18 +543,13 @@
               type: String,
               value: '/geapm/api/profit'
             },
-            year: {
-              type: Number,
-              value: 2016
-            },
-            groupBy: {
-              type: String,
-              value: 'month'
-            },
+            year: Number,
+            groupBy: String,
             queryUrl: {
               type: String,
               computed: 'computeQueryUrl(apiBaseUrl, year, groupBy)'
             },
+            isAttached: Boolean,
             _pageStartHistoryL1: {
               type: Array,
               value: []
@@ -601,7 +596,8 @@
           },
           observers: [
             '_computeLastStartL1(_pageStartHistoryL1.*)',
-            '_computeLastStartL2(_pageStartHistoryL2.*)'
+            '_computeLastStartL2(_pageStartHistoryL2.*)',
+            '_queryChanged(year, groupBy, isAttached)'
           ],
           plotRoot: function(root) {
             var _this = this;
@@ -1180,6 +1176,13 @@
               this.pop('_pageStartHistoryL2');
             }
           },
+          _queryChanged: function(year, groupby) {
+            var _this = this;
+            var url = this.queryUrl;
+            this.loadData(url, 1).then(function() {
+              _this.renderCurrPage(url);
+            });
+          },
           // Load next "n" more items from the URL and add them to cache
           loadData: function(url, level) {
             var _this = this;
@@ -1362,7 +1365,11 @@
             d3.select(this.$.chartSvg).classed('in-transition', this.isPaging);
           },
           computeQueryUrl: function(baseUri, year, groupBy) {
-            return URI(this.apiBaseUrl).addQuery('year', year).addQuery('groupby', groupBy).toString();
+            var uri = URI(this.apiBaseUrl).addQuery('year', year).addQuery('groupby', groupBy);
+            if (groupBy === 'device') {
+              uri.removeQuery('groupby');
+            }
+            return uri.toString();
           },
           computeLayout: function() {
             var rect = this.$.chartSvg.getBoundingClientRect();
@@ -1374,15 +1381,12 @@
               offsetY: this.height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200
             };
           },
-          ready: function() {
+          attached: function() {
             var _this = this;
             var rect = this.$.chart.getBoundingClientRect();
             this.set('width', rect.width);
             this.set('height', rect.height);
-            var url = this.queryUrl;
-            this.loadData(url, 1).then(function() {
-              _this.renderCurrPage(url);
-            });
+            this.set('isAttached', true);
           }
         });
       }

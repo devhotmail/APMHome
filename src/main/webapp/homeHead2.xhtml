@@ -8,9 +8,23 @@
 
   <ui:define name="head">
     <link rel="import" href="elements/device-revenue-chart/device-revenue-chart.html" />
+    <link rel="import" href="elements/device-selector-bar/device-selector-bar.html" />
   </ui:define>
 
   <ui:define name="content">
-    <device-revenue-chart></device-revenue-chart>
+    <template is="dom-bind">
+      <device-selector-bar selected-year="{{year}}" selected-type="{{groupBy}}"></device-selector-bar>
+      <device-revenue-chart year="{{year}}" group-by="{{groupBy}}"></device-revenue-chart>
+    </template>
+    <script>
+      (
+        function() {
+          var template = document.querySelector('template[is=dom-bind]');
+          // Initial value for the selector
+          template.year = 2016;
+          template.groupBy = 'type';
+        }
+      )();
+    </script>
   </ui:define>
 </ui:composition>

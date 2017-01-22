@@ -7,7 +7,7 @@
     <style include="device-selector-bar-styles"></style>
     <div class="flex flex--row flex--center">
       <div class="flex--item u-1/4 text--center">
-        <px-dropdown class="u-mh+" display-value="2017" selected-key="2017">
+        <px-dropdown class="u-mh+" display-value="2017" selected-key="{{selectedYear}}">
           <px-dropdown-content class="px-dropdown-content"
                                max-cont-character-width="10"
                                extend-dropdown="true"
@@ -19,7 +19,8 @@
       <div class="flex--item u-3/4">
         <div class="btn-group">
           <template is="dom-repeat" items="[[groupTabs]]">
-            <input id$="tab-[[index]]" name="group-type" type="radio" value="[[item.val]]" checked="[[item.selected]]">
+            <input id$="tab-[[index]]" name="group-type" type="radio" value="[[item.val]]"
+                   on-click="handleRadioSelect" checked="[[item.selected]]">
             <label for$="tab-[[index]]" class="btn u-mr+">[[item.key]]</label>
           </template>
         </div>
@@ -31,6 +32,14 @@
       is: 'device-selector-bar',
       properties: {
         yearList: Array,
+        selectedYear: {
+          type: Number,
+          notify: true
+        },
+        selectedType: {
+          type: String,
+          notify: true
+        },
         groupTabs: Array
       },
       observers: [],
@@ -47,6 +56,9 @@
         }).then(function(list) {
           _this.set('yearList', list);
         });
+      },
+      handleRadioSelect: function(e) {
+        this.set('selectedType', e.target.value);
       }
     });
   </script>
