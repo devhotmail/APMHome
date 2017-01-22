@@ -1,6 +1,5 @@
 package com.ge.apm.view.wechat.config;
 
-import javax.faces.context.FacesContext;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.menu.WxMenu;
 import me.chanjar.weixin.common.bean.menu.WxMenuButton;
@@ -13,10 +12,10 @@ public class MenuConfig {
      *
      * @return
      */
-    public static WxMenu getMenu(WxMpService wxMpService) {
-        String serverName = FacesContext.getCurrentInstance().getExternalContext().getRequestServerName();
-        serverName = "http://" + serverName + "/geapm";
-//        serverName = "http://gzp.ittun.com/geapm";
+    public static WxMenu getMenu(WxMpService wxMpService, String serverName) {
+        if (!serverName.endsWith("/")) {
+            serverName += "/";
+        }
         WxMenu menu = new WxMenu();
         WxMenuButton button1 = new WxMenuButton();
         button1.setName("设备信息");

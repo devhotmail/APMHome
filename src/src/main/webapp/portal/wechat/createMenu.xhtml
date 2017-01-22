@@ -13,6 +13,12 @@
 
                 <br/>
                 <h:form id="menuForm">
+                    <h:panelGroup>
+                        <label class="label ui-g-1">服务器地址*</label>
+                        <p:inputText class="ui-g-8" id="name" value="#{weChatController.domianUrl}" required="true" requiredMessage="服务器地址必填"/>
+                    </h:panelGroup>
+                    <br/>
+                    <br/>
                     <p:commandButton validateClient="true" actionListener="#{weChatController.createMenu()}" value="创建菜单" update=":growl"/>
                 </h:form>
             </div>
