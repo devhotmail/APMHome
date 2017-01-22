@@ -55,6 +55,10 @@
           };
         }
 
+        function hasChildren(node) {
+          return node.data.link && node.data.link.href !== '';
+        }
+
         function renderGauge(element, config) {
           if (config == null) {
             config = gaugeDefaultConfig();
@@ -860,8 +864,14 @@
             .attr('id', function(d) {
               return 'node-' + d.data.id;
             })
-            .style('cursor', 'pointer')
-            .on('click', handleClick)
+            .style('cursor', function(d) {
+              return hasChildren(d) ? 'pointer' : 'normal';
+            })
+            .on('click', function(d) {
+              if(hasChildren(d)) {
+                handleClick.apply(null, arguments);
+              }
+            })
             .each(renderNode);
 
             // Transition child nodes to their new position.
