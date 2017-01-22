@@ -104,7 +104,7 @@
                             </h:panelGroup>
                             <h:panelGroup >
                                 <label class="label">#{msg.purchasePrice}</label>
-                                <p:inputText value="#{assetInfoController.selected.purchasePrice}" readonly="true"/>
+                                <p:inputNumber minValue="0" decimalPlaces="2" id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" readonly="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.status}</label>
