@@ -455,25 +455,59 @@
 
         function layout_orbit(root, options) {
           var nodes = root.children;
+          var parent = options.layoutParent || root;
           var margin = options.margin;
           var maxR = options.canvasRadius;
           var startDeg = options.start || 0;
-          var endDeg = options.end || 180;
+          var endDeg = (options.end || 180) - startDeg;
           var orbitIndex = options.orbitIndex || 1;
-          var deg = startDeg;
+          var arcDeg = 0;
           var lastDeg = 0;
           var thisDeg = 0;
           var max = 0;
           var radiusScale = d3.scaleLinear().domain([maxR, 0]).range([1, 0]);
-
           // item radius v.s. orbit radius
           var r, R = options.radius, degEach, scale = radiusScale(R);
+
           for (var i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
             r = nodeRadius(node) * scale;
-            thisDeg = Math.atan(r / R) * (
-              180 / Math.PI
-              );
+            thisDeg = Math.atan(r / R) * ( 180 / Math.PI );
+            // degree increments
+            arcDeg += ( thisDeg + margin ) * 2;
+            if (arcDeg < endDeg) {
+              max++;
+            } else {
+              break;
+            }
+          }
 
+          var parentDeg = parent.x - START_ANGEL;
+          var totalDeg = 180 - START_ANGEL * 2;
+          var delta;
+
+          if (arcDeg / 2 < parentDeg) {
+            startDeg = parentDeg - arcDeg / 2;
+            delta = parent.x + arcDeg / 2 + START_ANGEL - 180;
+            // compensate if the arc exceeds horizon
+            if (delta > 0) {
+              startDeg -= delta;
+            }
+          } else if (arcDeg / 2 > parentDeg) {
+            startDeg = 0;
+          }
+          startDeg += START_ANGEL;
+
+          // start deg fixed
+          var deg = startDeg;
+
+
+          // slice the layout tree to only keep layout items
+          root.children = root.children.slice(0, max);
+          nodes = root.children;
+
+          for (i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
+            r = nodeRadius(node) * scale;
+            thisDeg = Math.atan(r / R) * ( 180 / Math.PI );
             node.x = deg + thisDeg + margin;
             node.y = R;
             node.size = r;
@@ -483,12 +517,6 @@
 
             // degree increments
             deg += ( thisDeg + margin ) * 2;
-
-            if (deg < endDeg) {
-              max++;
-            } else {
-              break;
-            }
           }
 
           return {
@@ -780,7 +808,6 @@
 
             // Calc root node layout
             layout_root(tree, radius);
-
             var result = layout_orbit(tree, {
               start: START_ANGEL,
               end: 180 - START_ANGEL,
@@ -790,7 +817,7 @@
               orbitIndex: 1
             });
 
-            var nodes = tree.children.slice(0, result.count);
+            var nodes = tree.children;
             var links = tree.links();
 
             var link = rootGroup.selectAll('.link')
@@ -961,42 +988,13 @@
               start: START_ANGEL,
               end: 180 - START_ANGEL,
               radius: radius,
+              layoutParent: parent,
               canvasRadius: radius,
               margin: MARGIN_ANGEL / 2,
               orbitIndex: 2
             });
 
-            var arcDeg = result.deg;
-            var startDeg;
-            var parentDeg = parent.x - START_ANGEL;
-            var totalDeg = 180 - START_ANGEL * 2;
-            var delta;
-
-            if (arcDeg / 2 < parentDeg) {
-              startDeg = parentDeg - arcDeg / 2;
-              delta = parent.x + arcDeg / 2 + START_ANGEL - 180;
-
-              // compensate if the arc exceeds horizon
-              if (delta > 0) {
-                startDeg -= delta;
-              }
-
-            } else if (arcDeg / 2 > parentDeg) {
-              startDeg = 0;
-            }
-            startDeg += START_ANGEL;
-
-            // calc start angle
-            var result = layout_orbit(tree, {
-              start: startDeg,
-              end: 180 - START_ANGEL,
-              radius: radius,
-              canvasRadius: radius,
-              margin: MARGIN_ANGEL / 2,
-              orbitIndex: 2
-            });
-
-            var nodes = tree.children.slice(0, result.count);
+            var nodes = tree.children;
             var links = tree.links();
             var link = rootGroup.selectAll('.link')
             .data(nodes, function(d) {
