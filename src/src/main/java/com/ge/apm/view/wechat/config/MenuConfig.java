@@ -13,8 +13,8 @@ public class MenuConfig {
      * @return
      */
     public static WxMenu getMenu(WxMpService wxMpService, String serverName) {
-        if (!serverName.endsWith("/")) {
-            serverName += "/";
+        if (serverName.endsWith("/")) {
+            serverName = serverName.substring(0, serverName.length()-1);
         }
         WxMenu menu = new WxMenu();
         WxMenuButton button1 = new WxMenuButton();

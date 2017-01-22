@@ -36,7 +36,7 @@ public class WeChatController extends JpaCRUDController<WorkOrder>{
         wxMpService = WebUtil.getBean(WxMpService.class);
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String serverName = request.getRequestURL().toString();
-        domianUrl = serverName.replace("portal/wechat/createMenu.xhtml", "");
+        domianUrl = serverName.replace("/portal/wechat/createMenu.xhtml", "");
     }
     
     public void createMenu() {
