@@ -24,7 +24,7 @@ public class MenuConfig {
         WxMenuButton button11 = new WxMenuButton();
         button11.setType(WxConsts.BUTTON_VIEW);
         button11.setName("查看设备信息");
-        button11.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/wechat/asset/view.xhtml", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        button11.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/wechat/asset/viewAssetInfo.xhtml", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button12 = new WxMenuButton();
         button12.setType(WxConsts.BUTTON_VIEW);
         button12.setName("新增设备");

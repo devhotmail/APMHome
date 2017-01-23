@@ -28,7 +28,6 @@ public class WxUserServiceImpl implements WxUserService{
 		UserAccount ua = userAccountRepository.getByWeChatId(openId);
 		if(ua == null){
 			logger.error("cannot find user by openId,openId is {}",openId);
-			//TODO redirect to login
 		}
 		ua.setPlainPassword(newPassword);
 		try {

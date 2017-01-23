@@ -6,13 +6,13 @@ import javax.faces.bean.ViewScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.service.impl.WxUserServiceImpl;
 import com.ge.apm.service.uaa.WxUserService;
-import com.ge.apm.view.sysutil.UserContextService;
-
 import webapp.framework.dao.GenericRepository;
+import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
+import webapp.framework.web.service.UserContext;
 
 @ManagedBean
 @ViewScoped
@@ -27,16 +27,8 @@ public class WxUserController  extends JpaCRUDController<UserAccount>{
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     protected void init() {
-    	currentUser = UserContextService.getCurrentUserAccount();
+    	currentUser = UserContext.getCurrentLoginUser();
 //    	wxUserService = WebUtil.getBean(WxUserServiceImpl.class);
-    	if(currentUser == null){
-    		currentUser = new UserAccount();
-    		currentUser.setName("gzp");
-    		currentUser.setLoginName("user");
-    		currentUser.setEmail("gaozhanpeng999@163.com");
-    		currentUser.setTelephone("13262569125");
-    		currentUser.setWeChatId("helloworld");
-    	}
     }
 
    public UserAccount getCurrentUser() {
@@ -54,7 +46,7 @@ public class WxUserController  extends JpaCRUDController<UserAccount>{
    
    public void resetPassword(){
 	   logger.info("newPwd is {}",newPassword);
-	  // wxUserService.resetPassword(currentUser.getWeChatId(), newPassword);
+	   wxUserService.resetPassword(currentUser.getWeChatId(), newPassword);
    }
     
 	@Override
