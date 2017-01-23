@@ -36,14 +36,16 @@ PrimeFaces.widget.Ultima = PrimeFaces.widget.BaseWidget.extend({
     this.menulinks.off('click').on('click', function(e) {
       var link = $(this),
         item = link.parent(),
-        submenu = item.children('ul');
+        submenu = item.children('ul'),
+        isOpen = !$this.wrapper.hasClass('layout-menu-static-inactive');
 
       // click on submenu item shall expand the menu
       if(submenu.length) {
         $this.toggleMenu(true);
       }
 
-      if (item.hasClass('active-menuitem')) {
+      // don't close sub-menu when side menu is collapsed
+      if (item.hasClass('active-menuitem') && isOpen) {
         if (submenu.length) {
           $this.removeMenuitem(item.attr('id'));
           item.removeClass('active-menuitem');
@@ -54,7 +56,7 @@ PrimeFaces.widget.Ultima = PrimeFaces.widget.BaseWidget.extend({
         if (item.attr('id') !== 'menuform:logout') {
           $this.addMenuitem(item.attr('id'));
         }
-        $this.deactivateItems(item.siblings(), true);
+        $this.deactivateItems(item.siblings(), isOpen);
         $this.activate(item);
       }
 
