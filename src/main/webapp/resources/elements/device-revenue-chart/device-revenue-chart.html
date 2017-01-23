@@ -29,6 +29,34 @@
           };
         }
 
+        function intersectByAngles(x1, y1, x2, y2, alp1, alp2) {
+          var u = x2 - x1
+          var v = y2 - y1
+          var a3 = Math.sqrt(u * u + v * v)
+          var alp3 = Math.PI - alp1 - alp2
+          var a2 = a3 * Math.sin(alp2) / Math.sin(alp3)
+          var RHS1 = x1 * u + y1 * v + a2 * a3 * Math.cos(alp1)
+          var RHS2 = y2 * u - x2 * v + a2 * a3 * Math.sin(alp1)
+          return [
+            (1.0 / (a3 * a3)) * (u * RHS1 - v * RHS2),
+            (1.0 / (a3 * a3)) * (v * RHS1 + u * RHS2)
+          ];
+        }
+
+        function getControls(d0, d1, angel0, angel1, mu0, mu1) {
+          var result = intersectByAngles(d0[0], d0[1], d1[0], d1[1], angel0, angel1);
+          var x2 = result[0];
+          var y2 = result[1];
+          return {
+            control1: [(x2 - d0[0]) * mu0 + d0[0], (y2 - d0[1]) * mu0 + d0[1]],
+            control2: [(x2 - d1[0]) * mu1 + d1[0], (y2 - d1[1]) * mu1 + d1[1]]
+          }
+        }
+
+        function deg2rad(angle) {
+          return (angle / 180) * Math.PI;
+        }
+
         function gaugeDefaultConfig() {
           return {
             width: 100, // The gauge minimum value.
@@ -962,17 +990,14 @@
                 .transition()
                 .duration(DURATION)
                 .attr('transform', function(d) {
-                  // var scale = Math.pow(d.scale, 3);
                   var scale =  2 / 3;
 
-                  // Stash origin scale and peak
-                  d.scale0 = d.scale;
+                  var originR = d.circle0.r;
+                  // Stash origin peak
                   d.circle.peak0 = d.circle.peak;
-                  // replace `scale` && `peak` field with new value
-                  d.scale = scale;
-                  d.circle.peak = [d.circle.center[0], d.circle.center[1] - scale * d.circle.r];
-
-                  var pos = [d.size, d.size].map(function(n) {
+                  // replace `peak` field with new value
+                  d.circle.peak = [d.circle.center[0], d.circle.center[1] - scale * originR];
+                  var pos = [originR, originR].map(function(n) {
                     return -n * scale;
                   });
 
@@ -1044,12 +1069,37 @@
             .attr('d', function(d, i) {
               // origin: circle peak of parent (named `node` here)
               // endpoint: circle center of current node
-              return 'M' + parent.circle.peak + 'L' + d.circle.center;
-              // var controlPos = [
-              //   sourcePos[0] + (targetPos[0] - sourcePos[0]) * 0.4,
-              //   sourcePos[1] + (targetPos[1] - sourcePos[1]) * 0.65
-              // ];
-              // return 'M' + source.circle.peak + 'Q' + controlPos + ',' + d.circle.center;
+
+              var source = parent.circle.peak;
+              var target = d.circle.center;
+
+              if (Math.abs(parent.x - 90) < MARGIN_ANGEL * 2) {
+                return 'M' + source + 'L' + target;
+              } 
+
+              var angel0 = 30;
+              var angel1 = 18;
+              var coefficient0 = 0.533;
+              var coefficient1 = 0.851;
+
+              if (parent.x < 90) {
+                angel0 = -angel0;
+                angel1 = -angel1;
+              }
+
+              if ((parent.x < 90 && d.x < parent.x) || (parent.x > 90 && d.x > parent.x)) {
+                coefficient0 = 0;
+                coefficient1 = 0;
+              }
+
+              var controls = getControls(
+                source, target,
+                deg2rad(angel0), deg2rad(angel1),
+                coefficient0, coefficient1
+              );
+
+              return 'M' + parent.circle.peak
+                + 'C' + controls.control1 + ' ' + controls.control2 + ' ' + d.circle.center;
             });
             var groups = rootGroup.selectAll('g.node')
             .data(nodes, function(d) {
