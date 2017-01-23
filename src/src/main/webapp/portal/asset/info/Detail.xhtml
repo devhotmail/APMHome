@@ -16,7 +16,7 @@
 
         </div>
 
-
+        <div class="ui-g-12 card">
         <div class="ui-g">
             <div class="ui-md-6 ui-lg-3">
                 <div class="epsilon u-mv-">#{msg.deviceScanStat}</div>
@@ -466,10 +466,9 @@
             </p:tabView>
         </h:form>
         
-        <p:fieldset style="margin-bottom:20px">
             <h:panelGroup >
-                <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="#{assetInfoController.getListPageLink()}" immediate="true"  update=":growl" style="float:left"/>
+                <p:commandButton id="returnButton" value="#{msg.Return}" icon="ui-icon-arrow-back" action="#{assetInfoController.getListPageLink()}" immediate="true"  update=":growl" style="float:left"/>
             </h:panelGroup>
-        </p:fieldset>
+        </div>
     </ui:define>
 </ui:composition>
