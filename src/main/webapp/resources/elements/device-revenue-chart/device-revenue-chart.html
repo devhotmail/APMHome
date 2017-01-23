@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="device-revenue-chart-styles.html">
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
 <script src="../../bower_components/lscache/lscache.js"></script>
@@ -449,7 +450,7 @@
 
         function layout_root(root, radius) {
           root.x = 90;
-          root.y = Math.sin(START_ANGEL * Math.PI / 180) * radius - 100;
+          root.y = Math.sin(START_ANGEL * Math.PI / 180) * radius - this.layout.rootOffsetY;
           root.size = ROOT_RADIUS;
           root.circle = circular_geom(root);
           root.parent = null;
@@ -632,6 +633,12 @@
             '_computeLastStartL2(_pageStartHistoryL2.*)',
             '_queryChanged(year, groupBy, isAttached)'
           ],
+          behaviors: [
+            Polymer.IronResizableBehavior
+          ],
+          listeners: {
+            'iron-resize': '_onResize'
+          },
           plotRoot: function(root) {
             var _this = this;
             var svg = d3.select(this.$.chartSvg);
@@ -639,7 +646,7 @@
             var radius = this.layout.radius;
             var offsetX = this.layout.offsetX;
             var offsetY = this.layout.offsetY;
-            var node = layout_root({ data: root}, radius);
+            var node = layout_root.call(this, { data: root}, radius);
 
             var canvas = svg.append("g")
             .attr('class', 'orbit orbit0')
@@ -754,7 +761,7 @@
               });
             });
           },
-          plotL1: function(root, children) {
+          plotL1: function(root, children, animation) {
             var data = Object.assign({children: children}, root);
             var _this = this;
             var _opening = null;
@@ -810,7 +817,7 @@
             rootGroup.attr("transform", "translate(" + offsetX+ "," + offsetY + ")");
 
             // Calc root node layout
-            layout_root(tree, radius);
+            layout_root.call(this, tree, radius);
             var result = layout_orbit(tree, {
               start: START_ANGEL,
               end: 180 - START_ANGEL,
@@ -833,17 +840,21 @@
             .attr('class', 'link')
             .attr('d', function(d) {
               // the origin and endpoint is the same: circle peak of parent
-              return 'M' + d.parent.circle.peak + 'L' + d.parent.circle.peak;
+              return 'M' + d.parent.circle.peak + 'L' + (
+                  animation === false ? d.circle.center : d.parent.circle.peak
+                );
             });
 
-            var linkUpdate = link.merge(linkEnter)
-            .transition()
-            .duration(DURATION)
-            .attr('d', function(d) {
-              // origin: circle peak of parent
-              // endpoint: circle center of current node
-              return 'M' + d.parent.circle.peak + 'L' + d.circle.center;
-            });
+            if (animation !== false) {
+              link.merge(linkEnter)
+              .transition()
+              .duration(DURATION)
+              .attr('d', function(d) {
+                // origin: circle peak of parent
+                // endpoint: circle center of current node
+                return 'M' + d.parent.circle.peak + 'L' + d.circle.center;
+              });
+            }
 
             // Update the nodes
             var node = rootGroup.selectAll('g.node')
@@ -858,7 +869,9 @@
             .attr('transform', function(d) {
               // keep original position same as tree root
               var _node = d.parent ? d.parent : d;
-              return 'translate(' + _node.circle.center + ')';
+              return 'translate(' + (
+                  animation === false ? d.circle.center : _node.circle.center
+                ) + ')';
             })
             .attr('id', function(d) {
               return 'node-' + d.data.id;
@@ -873,14 +886,16 @@
             })
             .each(renderNode);
 
-            // Transition child nodes to their new position.
-            var nodeUpdate = node.merge(nodeEnter)
-            .transition()
-            .duration(DURATION)
-            .attr('transform', function(d) {
-              // move to own position
-              return 'translate(' + d.circle.center + ')';
-            });
+            if(animation !== false) {
+              // Transition child nodes to their new position.
+              node.merge(nodeEnter)
+              .transition()
+              .duration(DURATION)
+              .attr('transform', function(d) {
+                // move to own position
+                return 'translate(' + d.circle.center + ')';
+              });
+            }
 
             // Save previous position
             nodes.forEach(function(d) {
@@ -910,7 +925,7 @@
               targetNode.selected = true;
 
               // build a new smaller tree layout
-              var new_radius = radius - 120;
+              var new_radius = radius - _this.layout.collapseOffset;
               layout_orbit(tree, {
                 start: START_ANGEL,
                 end: 180 - START_ANGEL,
@@ -1224,7 +1239,7 @@
               return Promise.resolve();
             }
           },
-          renderCurrPage: function(key, level) {
+          renderCurrPage: function(key, level, animation) {
             level = level || 1;
             var parent;
             // plot root on level1
@@ -1238,7 +1253,7 @@
             var list = lscache.get(key) || [];
             list = list.slice(start);
             this.removePage(level, 'curr');
-            var result = this['plotL' + level].call(this, parent, list);
+            var result = this['plotL' + level].call(this, parent, list, animation);
             result.element.classed('curr-page', true);
             this.set('pageOffsetL' + level, result.count);
             this.renderNextPage(key, level);
@@ -1402,20 +1417,35 @@
           },
           computeLayout: function() {
             var rect = this.$.chartSvg.getBoundingClientRect();
-            var radius = this.width / 2 + 150;
+            var width = this.width;
+            var height = this.height;
+            var ref = Math.min(width, height);
+            var rootRadius = ROOT_RADIUS = ref * .16;
+            var radius = width / 2 + ROOT_RADIUS * .71;
+            var invisible = Math.sin(START_ANGEL * Math.PI / 180) * radius;
+            var visible = radius - invisible;
+            var marginTop = rootRadius * 1.35;
+            var orbitDistance = rootRadius * 1.5;
+            var top = height - visible - marginTop;
 
             return {
               radius: radius,
+              rootRadius: rootRadius,
               offsetX: this.width / 2,
-              offsetY: this.height + Math.sin(START_ANGEL * Math.PI / 180) * radius - 200
+              offsetY: this.height + invisible - top,
+              rootOffsetY: orbitDistance,
+              collapseOffset: orbitDistance * .8
             };
           },
-          attached: function() {
+          _onResize: function() {
             var _this = this;
             var rect = this.$.chart.getBoundingClientRect();
             this.set('width', rect.width);
             this.set('height', rect.height);
             this.set('isAttached', true);
+            this.resetChart();
+            var url = this.queryUrl;
+            this.renderCurrPage(url, 1, false);
           }
         });
       }
