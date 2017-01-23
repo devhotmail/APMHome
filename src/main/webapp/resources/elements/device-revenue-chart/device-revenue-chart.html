@@ -35,7 +35,7 @@
             height: 100, // The gauge minimum value.
             minValue: 0, // The gauge minimum value.
             maxValue: 100, // The gauge maximum value.
-            circleThickness: 0.05, // The outer circle thickness as a percentage of it's radius.
+            circleThickness: 1, // The outer circle thickness as pixels
             circleFillGap: 0.05, // The size of the gap between the outer circle and wave circle as a percentage of the outer circles radius.
             circleColor: "#178BCA", // The color of the outer circle.
             waveHeight: 0.05, // The wave height as a percentage of the radius of the wave circle.
@@ -83,7 +83,7 @@
           var textPixels = config.textSize * radius / 3;
           if (textPixels < 12) textPixels = 12;
 
-          var circleThickness = config.circleThickness * radius;
+          var circleThickness = config.circleThickness;
           var circleFillGap = config.circleFillGap * radius;
           var fillCircleMargin = circleThickness + circleFillGap;
           var fillCircleRadius = radius - fillCircleMargin;
@@ -157,7 +157,7 @@
           .attr('r', radius)
           .attr('fill', config.fillColor)
           .attr('stroke', config.circleColor)
-          .attr('stroke-width', config.circleThickness * radius)
+          .attr('stroke-width', config.circleThickness)
           .attr('cx', radius)
           .attr('cy', radius);
           
@@ -390,6 +390,9 @@
           return ROOT_RADIUS;
         }
 
+        // get window innerHeight
+        var innerHeight = window.innerHeight > 828 ? 828 : window.innerHeight;
+
         // how much degree of the arc is off screen
         var START_ANGEL = 45;
         var PAGINATION_BUFFER = 50;
@@ -399,15 +402,20 @@
         // how much degree to separate adjacent orbit items
         var MARGIN_ANGEL = 1;
         // total revenue size
-        var ROOT_RADIUS = 80;
+        var ROOT_RADIUS = 80 // 140 / 828 * innerHeight;
         // transition duration
         var DURATION = 750;
         // page transition duration
         var DURATION_PAGING = 1000;
         var PAGER_RADIUS = 20;
+        // max radius for gauge
+        var GAUGE_RADIUS_MAX = 75 / 828 * innerHeight;
+        var GAUGE_RADIUS_MIN = 30 / 828 * innerHeight;
         // id counter seed
         var i = 0;
-        var gauge_size = d3.interpolate(50, 200);
+
+        var gauge_range = d3.scaleLinear().range([GAUGE_RADIUS_MIN, GAUGE_RADIUS_MAX]);
+
         var gauge_color = d3.scaleOrdinal([
           'rgba(117, 162, 234, 1)',
           'rgba(140, 211, 199, 1)',
@@ -449,7 +457,7 @@
 
         function layout_root(root, radius) {
           root.x = 90;
-          root.y = Math.sin(START_ANGEL * Math.PI / 180) * radius - 100;
+          root.y = Math.sin(START_ANGEL * Math.PI / 180) * radius - 80;
           root.size = ROOT_RADIUS;
           root.circle = circular_geom(root);
           root.parent = null;
@@ -470,11 +478,22 @@
           var thisDeg = 0;
           var max = 0;
           var radiusScale = d3.scaleLinear().domain([maxR, 0]).range([1, 0]);
+
+          var maxRevenue = Math.max.apply(null, nodes.map(function(n) {
+            return n.data.revenue;
+          }));
+
+          var minRevenue = Math.min.apply(null, nodes.map(function(n) {
+            return n.data.revenue;
+          }));
+
+          var scaleRadius = gauge_range.domain([minRevenue, maxRevenue]);
+
           // item radius v.s. orbit radius
           var r, R = options.radius, degEach, scale = radiusScale(R);
 
           for (var i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
-            r = nodeRadius(node) * scale;
+            r = scaleRadius(node.data.revenue);
             thisDeg = Math.atan(r / R) * ( 180 / Math.PI );
             // degree increments
             arcDeg += ( thisDeg + margin ) * 2;
@@ -510,7 +529,7 @@
           nodes = root.children;
 
           for (i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
-            r = nodeRadius(node) * scale;
+            r = scaleRadius(node.data.revenue);
             thisDeg = Math.atan(r / R) * ( 180 / Math.PI );
             node.x = deg + thisDeg + margin;
             node.y = R;
@@ -943,7 +962,8 @@
                 .transition()
                 .duration(DURATION)
                 .attr('transform', function(d) {
-                  var scale = Math.pow(d.scale, 3);
+                  // var scale = Math.pow(d.scale, 3);
+                  var scale =  2 / 3;
 
                   // Stash origin scale and peak
                   d.scale0 = d.scale;
@@ -994,10 +1014,10 @@
             var result = layout_orbit(tree, {
               start: START_ANGEL,
               end: 180 - START_ANGEL,
-              radius: radius,
+              radius: radius + 150,
               layoutParent: parent,
               canvasRadius: radius,
-              margin: MARGIN_ANGEL / 2,
+              margin: MARGIN_ANGEL,
               orbitIndex: 2
             });
 
