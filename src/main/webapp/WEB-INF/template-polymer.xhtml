@@ -16,10 +16,11 @@
             <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}" />
         </f:facet>
         <title>GE APM</title>
-        <h:outputScript name="js/nanoscroller.js" library="ultima-layout" />
         <h:outputScript name="js/layout2.js" library="ultima-layout" />
         <h:outputScript name="js/ripple.js" library="ultima-layout" />
         <h:outputScript name="js/swipe.js" library="ultima-layout" />
+        <!-- web components shim -->
+        <h:outputScript name="bower_components/webcomponentsjs/webcomponents-lite.min.js" />
         <h:outputStylesheet name="css/shell.css" />
         <h:outputScript name="js/main.js" />
         <h:outputScript name="js/primefaces-locale_zh.js" />
@@ -58,7 +59,6 @@
             <p:commandButton process="@this" value="#{msg.Cancel}" type="button" immediate="true" styleClass="ui-confirmdialog-no uiButton" icon="ui-icon-close"/>
         </p:confirmDialog>
 
-        <h:outputScript name="js/inline-loading-script.js"/>
     </h:body>
 
 </html>
