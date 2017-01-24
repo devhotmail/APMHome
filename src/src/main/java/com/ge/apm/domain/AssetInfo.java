@@ -559,11 +559,11 @@ public class AssetInfo implements Serializable {
        this.lifecycle = new Double(lifecycle * 12).intValue();
     }
 
-    public int getClinicalOwnerId() {
+    public Integer getClinicalOwnerId() {
         return clinicalOwnerId;
     }
 
-    public void setClinicalOwnerId(int clinicalOwnerId) {
+    public void setClinicalOwnerId(Integer clinicalOwnerId) {
         this.clinicalOwnerId = clinicalOwnerId;
     }
 
