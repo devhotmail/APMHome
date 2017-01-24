@@ -74,7 +74,7 @@ INSERT INTO "i18n_message" VALUES (70, 'label','invalidEmail', 'Email: 不是有
 INSERT INTO "i18n_message" VALUES (71, 'label','DuplicateMsgKey', '编码 "%s" 已存在,请更换其他名称','the code you seted has been used,please change to another one',null,-1);
 INSERT INTO "i18n_message" VALUES (72, 'message','PasswordNotMatch', '输入的密码不匹配','Password not match',null,-1);
 INSERT INTO "i18n_message" VALUES (73, 'label', 'resetPassword', '重置密码', 'Reset Password', NULL, -1);
-INSERT INTO "i18n_message" VALUES (74, 'label', 'continue', '跳过', 'Continue', NULL, -1);
+INSERT INTO "i18n_message" VALUES (74, 'label', 'continue', '继续', 'Continue', NULL, -1);
 INSERT INTO "i18n_message" VALUES (75, 'label', 'QRCode', '二维码', 'QRCode', NULL, -1);
 INSERT INTO "i18n_message" VALUES (76, 'label', 'TerminatedAsset', '报废资产', 'QRCode', NULL, -1);
 
@@ -355,6 +355,12 @@ INSERT INTO "i18n_message" VALUES (1409,'assetGroup','10','PET-CT','PET-CT',null
 INSERT INTO "i18n_message" VALUES (1410,'assetGroup','11','PET-MR','PET-MR',null,-1);
 INSERT INTO "i18n_message" VALUES (1411,'assetGroup','12','US','US',null,-1);
 INSERT INTO "i18n_message" VALUES (1412,'assetGroup','13','其它','Others',null,-1);
+
+INSERT INTO "i18n_message" VALUES (1490,'contractType','1','采购合同','Purchase Contract',null,-1);
+INSERT INTO "i18n_message" VALUES (1491,'contractType','2','维修合同','Maint Contract',null,-1);
+INSERT INTO "i18n_message" VALUES (1492,'contractType','3','延保合同','延保合同',null,-1);
+INSERT INTO "i18n_message" VALUES (1493,'contractType','4','移机合同','移机合同',null,-1);
+INSERT INTO "i18n_message" VALUES (1494,'contractType','5','保养合同','保养合同',null,-1);
 
 
 INSERT INTO "i18n_message" VALUES (1510,'woSteps','1', '报修','Create',null,-1);
