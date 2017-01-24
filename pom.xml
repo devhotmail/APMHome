@@ -41,6 +41,8 @@
         <hibernate.ehcache.configuration.file>ehcache.xml</hibernate.ehcache.configuration.file>
         <hibernate.use.second.level.cache>true</hibernate.use.second.level.cache>
         <hibernate.use.query.cache>true</hibernate.use.query.cache>
+
+        <maven.test.skip>true</maven.test.skip>
     </properties>
     <profiles>
         <profile>
