@@ -40,3 +40,11 @@ create index ix_asset_clinical_record_asset_id on asset_clinical_record(asset_id
 create index ix_asset_clinical_record_site_id on asset_clinical_record(site_id);
 create index ix_asset_clinical_record_exam_date on asset_clinical_record(exam_date);
 create index ix_asset_clinical_record_procedure_name on asset_clinical_record(procedure_name);
+
+alter table asset_info add COLUMN clinical_owner_id int4;
+alter table asset_info add COLUMN clinical_owner_name varchar(16);
+alter table asset_info add COLUMN clinical_owner_tel varchar(16);
+alter table asset_info add COLUMN registration_no varchar(64);
+alter table asset_info add COLUMN factory_warranty_date date;
+
+alter table asset_contract add COLUMN contract_type int;

@@ -146,6 +146,22 @@ public class AssetInfo implements Serializable {
     @Column(name = "last_stocktake_date")
     @Temporal(TemporalType.DATE)
     private Date lastStockTakeDate;
+
+    @Column(name = "clinical_owner_id")
+    private int clinicalOwnerId;
+    @Size(max = 16)
+    @Column(name = "clinical_owner_name")
+    private String clinicalOwnerName;
+    @Size(max = 16)
+    @Column(name = "clinical_owner_tel")
+    private String clinicalOwnerTel;
+    @Size(max = 64)
+    @Column(name = "registration_no")
+    private String registrationNo;
+    @Column(name = "factory_warranty_date")
+    @Temporal(TemporalType.DATE)
+    private Date factoryWarrantyDate;
+
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "purchase_price")
@@ -541,6 +557,46 @@ public class AssetInfo implements Serializable {
     		return;
     	}
        this.lifecycle = new Double(lifecycle * 12).intValue();
+    }
+
+    public int getClinicalOwnerId() {
+        return clinicalOwnerId;
+    }
+
+    public void setClinicalOwnerId(int clinicalOwnerId) {
+        this.clinicalOwnerId = clinicalOwnerId;
+    }
+
+    public String getClinicalOwnerName() {
+        return clinicalOwnerName;
+    }
+
+    public void setClinicalOwnerName(String clinicalOwnerName) {
+        this.clinicalOwnerName = clinicalOwnerName;
+    }
+
+    public String getClinicalOwnerTel() {
+        return clinicalOwnerTel;
+    }
+
+    public void setClinicalOwnerTel(String clinicalOwnerTel) {
+        this.clinicalOwnerTel = clinicalOwnerTel;
+    }
+
+    public String getRegistrationNo() {
+        return registrationNo;
+    }
+
+    public void setRegistrationNo(String registrationNo) {
+        this.registrationNo = registrationNo;
+    }
+
+    public Date getFactoryWarrantyDate() {
+        return factoryWarrantyDate;
+    }
+
+    public void setFactoryWarrantyDate(Date factoryWarrantyDate) {
+        this.factoryWarrantyDate = factoryWarrantyDate;
     }
     
     @Override
