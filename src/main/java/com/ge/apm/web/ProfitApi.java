@@ -1,10 +1,9 @@
 package com.ge.apm.web;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.utils.CNY;
-import com.github.davidmoten.rx.jdbc.ConnectionProviderFromDataSource;
+import com.github.davidmoten.rx.jdbc.ConnectionProvider;
 import com.github.davidmoten.rx.jdbc.Database;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Ints;
@@ -40,12 +39,12 @@ public class ProfitApi {
   private static final Logger log = LoggerFactory.getLogger(ProfitApi.class);
   private Database db;
 
-  @Resource(name = "risDataSource")
-  private DruidDataSource dataSource;
+  @Resource(name = "connectionProvider")
+  private ConnectionProvider connectionProvider;
 
   @PostConstruct
   public void init() {
-    db = Database.from(new ConnectionProviderFromDataSource(dataSource));
+    db = Database.from(connectionProvider);
   }
 
   @RequestMapping(method = RequestMethod.GET)
@@ -339,9 +338,9 @@ public class ProfitApi {
         .build())
       .put("root", new ImmutableMap.Builder<String, Object>()
         .put("name", Option.of(groupBy).map(v -> "total")
-          .orElse(Option.of(type).flatMap(v->Option.of(groups.get(v))))
-          .orElse(Option.of(dept).flatMap(v->Option.of(groups.get(v))))
-          .orElse(Option.of(month).flatMap(v->Option.of(groups.get(v))))
+          .orElse(Option.of(type).flatMap(v -> Option.of(groups.get(v))))
+          .orElse(Option.of(dept).flatMap(v -> Option.of(groups.get(v))))
+          .orElse(Option.of(month).flatMap(v -> Option.of(groups.get(v))))
           .getOrElse("asset"))
         .put("type", Option.of(groupBy).orElse(Option.of(type).map(i -> "type")).orElse(Option.of(dept).map(i -> "dept")).orElse(Option.of(month).map(i -> "month")).getOrElse("asset"))
         .put("revenue", sumRevenue(items))
