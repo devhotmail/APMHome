@@ -430,8 +430,10 @@
         var PAGER_START_ANGEL = START_ANGEL - 3;
         // how much degree to separate adjacent orbit items
         var MARGIN_ANGEL = 1;
-        // total revenue size
-        var ROOT_RADIUS = 80 // 140 / 828 * innerHeight;
+        // the least height this chart desires
+        var MIN_HEIGHT = 600;
+        // root node size, calc on demand by "layout" method
+        var ROOT_RADIUS;
         // transition duration
         var DURATION = 750;
         // page transition duration
@@ -442,8 +444,6 @@
         var GAUGE_RADIUS_MIN = 30 / 828 * innerHeight;
         // id counter seed
         var i = 0;
-
-        var gauge_range = d3.scaleLinear().range([GAUGE_RADIUS_MIN, GAUGE_RADIUS_MAX]);
 
         var gauge_color = d3.scaleOrdinal([
           'rgba(117, 162, 234, 1)',
@@ -486,7 +486,7 @@
 
         function layout_root(root, radius) {
           root.x = 90;
-          root.y = Math.sin(START_ANGEL * Math.PI / 180) * radius - this.layout.rootOffsetY;
+          root.y = this.layout.rootOffsetY;
           root.size = ROOT_RADIUS;
           root.circle = circular_geom(root);
           root.parent = null;
@@ -500,29 +500,21 @@
           var margin = options.margin;
           var maxR = options.canvasRadius;
           var startDeg = options.start || 0;
+          // scale based on value of this node
+          var sizeScale = options.sizeScale;
+          // scale based on current orbit radius
+          var radiusScale = d3.scaleLinear().domain([maxR, 0]).range([1, 0]);
           var endDeg = (options.end || 180) - startDeg;
           var orbitIndex = options.orbitIndex || 1;
           var arcDeg = 0;
           var lastDeg = 0;
           var thisDeg = 0;
           var max = 0;
-          var radiusScale = d3.scaleLinear().domain([maxR, 0]).range([1, 0]);
-
-          var maxRevenue = Math.max.apply(null, nodes.map(function(n) {
-            return n.data.revenue;
-          }));
-
-          var minRevenue = Math.min.apply(null, nodes.map(function(n) {
-            return n.data.revenue;
-          }));
-
-          var scaleRadius = gauge_range.domain([minRevenue, maxRevenue]);
-
           // item radius v.s. orbit radius
           var r, R = options.radius, degEach, scale = radiusScale(R);
 
           for (var i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
-            r = scaleRadius(node.data.revenue);
+            r = sizeScale(node.data.revenue) * scale;
             thisDeg = Math.atan(r / R) * ( 180 / Math.PI );
             // degree increments
             arcDeg += ( thisDeg + margin ) * 2;
@@ -558,7 +550,7 @@
           nodes = root.children;
 
           for (i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
-            r = scaleRadius(node.data.revenue);
+            r = sizeScale(node.data.revenue) * scale;
             thisDeg = Math.atan(r / R) * ( 180 / Math.PI );
             node.x = deg + thisDeg + margin;
             node.y = R;
@@ -658,6 +650,22 @@
             pageEndL1: {
               type: Number,
               value: 0
+            },
+            maxValueL1: {
+              type: Number,
+              value: 0
+            },
+            maxValueL2: {
+              type: Number,
+              value: 0
+            },
+            radiusScaleL1: {
+              type: Function,
+              computed: '_computeRadiusScaleL1(maxValueL1)'
+            },
+            radiusScaleL2: {
+              type: Function,
+              computed: '_computeRadiusScaleL2(maxValueL2)'
             },
             isPaging: {
               type: Boolean,
@@ -869,6 +877,7 @@
               start: START_ANGEL,
               end: 180 - START_ANGEL,
               radius: radius,
+              sizeScale: this.radiusScaleL1,
               canvasRadius: radius,
               margin: MARGIN_ANGEL,
               orbitIndex: 1
@@ -960,7 +969,7 @@
             function handleClick(targetNode, i, nodeList) {
 
               // remove all `active` class and `selected` attr for each node in orbit one
-              d3.selectAll('.orbit1 .node--leaf')
+              d3.selectAll('.orbit1 .node')
               .classed('active', false)
               .classed('selected', false);
 
@@ -969,14 +978,13 @@
               .classed('active', true)
               .classed('selected', true);
 
-              targetNode.selected = true;
-
               // build a new smaller tree layout
-              var new_radius = radius - _this.layout.collapseOffset;
+              var new_radius = _this.layout.collapsedRadius;
               layout_orbit(tree, {
                 start: START_ANGEL,
                 end: 180 - START_ANGEL,
                 radius: new_radius,
+                sizeScale: _this.radiusScaleL1,
                 canvasRadius: radius,
                 margin: MARGIN_ANGEL,
                 orbitIndex: 1
@@ -1036,7 +1044,7 @@
             var svg = d3.select(this.$.chartSvg),
               width = this.width,
               height = this.height,
-              radius = this.layout.radius + 50,
+              radius = this.layout.radiusL2,
               offsetX = this.layout.offsetX,
               offsetY = this.layout.offsetY;
 
@@ -1054,7 +1062,8 @@
             var result = layout_orbit(tree, {
               start: START_ANGEL,
               end: 180 - START_ANGEL,
-              radius: radius + 150,
+              radius: radius,
+              sizeScale: this.radiusScaleL2,
               layoutParent: parent,
               canvasRadius: radius,
               margin: MARGIN_ANGEL,
@@ -1279,6 +1288,9 @@
               _this.renderCurrPage(url);
             });
           },
+          attached: function() {
+            this.set('isAttached', true);
+          },
           // Load next "n" more items from the URL and add them to cache
           loadData: function(url, level) {
             var _this = this;
@@ -1300,14 +1312,21 @@
               }).then(function(res) {
                 return res.json();
               }).then(function(data) {
-                list = list.concat(data.items);
+                list = list.concat(data.items.map(_this.transformData));
                 lscache.set(cacheKey, list);
-                lscache.set(cacheKey + '/root', data.root);
+                lscache.set(cacheKey + '/root', _this.transformData(data.root));
                 lscache.set(cacheKey + '/pages', data.pages);
-              });
+              }).then(setMaxData);
             } {
-              return Promise.resolve();
+              return Promise.resolve().then(setMaxData);
             }
+
+            function setMaxData() {
+              _this.set('maxValueL' + level, list[0].revenue);
+            }
+          },
+          hasData: function(url) {
+            return !!lscache.get(url + '/root');
           },
           renderCurrPage: function(key, level, animation) {
             level = level || 1;
@@ -1359,7 +1378,7 @@
               result,
               parent;
 
-            if (!isNaN(start)) {
+            if (end) {
               list = list.slice(start, end);
               // plot root on level1
               if (level === 1) {
@@ -1478,6 +1497,10 @@
           enterLeavePaging: function() {
             d3.select(this.$.chartSvg).classed('in-transition', this.isPaging);
           },
+          transformData: function(item) {
+            // any server data transformation happens here, before entering cache
+            return item;
+          },
           computeQueryUrl: function(baseUri, year, groupBy) {
             var uri = URI(this.apiBaseUrl).addQuery('year', year).addQuery('groupby', groupBy);
             if (groupBy === 'device') {
@@ -1488,34 +1511,47 @@
           computeLayout: function() {
             var rect = this.$.chartSvg.getBoundingClientRect();
             var width = this.width;
-            var height = this.height;
-            var ref = Math.min(width, height);
-            var rootRadius = ROOT_RADIUS = ref * .16;
-            var radius = width / 2 + ROOT_RADIUS * .71;
+            var radius = width / 2 + width * .1;
+            var height = Math.max(this.height, MIN_HEIGHT);
+            var rootRadius = ROOT_RADIUS = Math.min(height * .16, 140);
+
+            // offsetY divided by the arc
             var invisible = Math.sin(START_ANGEL * Math.PI / 180) * radius;
             var visible = radius - invisible;
-            var marginTop = rootRadius * 1.35;
-            var orbitDistance = rootRadius * 1.5;
-            var top = height - visible - marginTop;
+
+            // offset scale ratio based on canvas height
+            var ratio = {
+              marginTop: .23,
+              root2Orbit1:  .5,
+              root2Orbit1Collapsed:  .2
+            };
 
             return {
               radius: radius,
               rootRadius: rootRadius,
+              radiusL2: radius + 50,
               offsetX: this.width / 2,
-              offsetY: this.height + invisible - top,
-              rootOffsetY: orbitDistance,
-              collapseOffset: orbitDistance * .8
+              offsetY: radius + height * ratio.marginTop,
+              rootOffsetY: radius - height * ratio.root2Orbit1,
+              collapsedRadius: radius - height * ratio.root2Orbit1Collapsed
             };
+          },
+          _computeRadiusScaleL1: function(val) {
+            return d3.scaleLinear().range([GAUGE_RADIUS_MIN, GAUGE_RADIUS_MAX]).domain([0, val]);
+          },
+          _computeRadiusScaleL2: function(val) {
+            return d3.scaleLinear().range([GAUGE_RADIUS_MIN, GAUGE_RADIUS_MAX]).domain([0, val]);
           },
           _onResize: function() {
             var _this = this;
             var rect = this.$.chart.getBoundingClientRect();
             this.set('width', rect.width);
             this.set('height', rect.height);
-            this.set('isAttached', true);
-            this.resetChart();
-            var url = this.queryUrl;
-            this.renderCurrPage(url, 1, false);
+            var key = this.queryUrl;
+            if (this.hasData(key)) {
+              this.resetChart();
+              this.renderCurrPage(key, 1, false);
+            }
           }
         });
       }
