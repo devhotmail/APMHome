@@ -1,94 +1,20 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/template.xhtml">
+                template="/WEB-INF/template-polymer.xhtml">
 
-    <ui:define name="title">Charts</ui:define>
+  <ui:define name="head">
+    <link rel="import" href="elements/device-revenue-chart/device-revenue-chart.html" />
+    <link rel="import" href="elements/device-selector-bar/device-selector-bar.html" />
+  </ui:define>
 
-    <ui:define name="head">
-        <h:outputStylesheet name="css/homeHead.css"/>
-        <h:outputScript name="js/homeHead.js"/>
-    </ui:define>
-
-    <ui:define name="content">
-        <header>
-            <div class="card--title text--center">
-                <span class="epsilon">#{msg.HomePage}</span>
-            </div>
-            <div class="card--summary">
-                <h:form id="TopValueForm">
-                <div class="ui-g">
-                    <div class="ui-md-4">
-                        <div class="epsilon u-mv-">#{msg.assetTotalProfit}</div>
-                        <p:outputPanel id="value_scan" header="Device Scan (Times)">
-                            <div class="text--banner delta">
-                                <h:outputText value="#{homeHeadController.totalProfit}"/>
-                                <span class="text--unit text--secondary epsilon">#{msg.CNYlb}</span>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                    <div class="ui-md-6">
-                        <div class="epsilon u-mv-">#{msg.assetTotalProfitForecast}</div>
-                        <p:outputPanel id="value_expo" header="Device Exposure (Hours)">
-                            <div class="text--banner delta">
-                                <h:outputText value="#{homeHeadController.profitForecast}"/>
-                                <span class="text--unit text--secondary">#{msg.CNYlb}</span>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                </div>
-                </h:form>
-            </div>
-        </header>
-        <div class="ui-g">
-            <div class="ui-g-12">
-                <div class="block u-pv-">
-                    <h:form>
-                        <p:selectOneMenu id="selectedYear" value="#{homeHeadController.selectedYear}">
-                            <p:ajax listener="#{homeHeadController.onSelectedYearChange}"
-                                    update="TopValueForm BarChartForm1 BarChartForm2"/>
-                            <f:selectItems value="#{homeHeadController.yearList}"/>
-                        </p:selectOneMenu>
-                    </h:form>
-                </div>
-            </div>
-            <div class="ui-g-12">
-                <h:form id="BarChartForm1">
-                <div class="block">
-                    <h3 class="block-title">#{msg.assetAveROI}</h3>
-                    <div class="ui-g">
-                        <div class="widget ui-lg-8 divide-line-right divide-line-bottom u-p">
-                            <h4 class="widget-title">#{msg.assetROI}</h4>
-                            <p:chart id="barAnnualRevenue" type="bar" model="#{homeHeadController.barAnnualRevenue}" responsive="true"/>
-                        </div>
-                        <div class="widget ui-lg-4 ui-md-8 divide-line-bottom u-p">
-                            <h4 class="widget-title">#{msg.profitDistro}</h4>
-                            <p:chart id="pieAnnualRevenue" type="pie" class="revenue-pie-chart" model="#{homeHeadController.pieAnnualRevenue}" responsive="true"/>
-                        </div>
-                    </div>
-                </div>
-                </h:form>
-            </div>
-            <div class="ui-g-12">
-                <h:form id="BarChartForm2">
-                <div class="block">
-                    <h3 class="block-title">#{msg.assetAnnual}</h3>
-                    <p:chart id="barMonthlyRevenue" type="bar" model="#{homeHeadController.barMonthlyRevenue}"
-                             style="height:300px" responsive="true"/>
-                </div>
-                </h:form>
-            </div>
-            <div class="ui-g-12">
-                <div class="block">
-                    <h3 class="block-title">#{msg.assetAnnualForecast}</h3>
-                    <p:chart id="barForecast" type="bar" model="#{homeHeadController.barMonthlyForecast}"
-                             style="height:300px" responsive="true"/>
-                </div>
-            </div>
-        </div>
-
-    </ui:define>
-
+  <ui:define name="content">
+    <template is="dom-bind">
+      <device-selector-bar selected-year="{{year}}" selected-type="{{groupBy}}"></device-selector-bar>
+      <device-revenue-chart year="{{year}}" group-by="{{groupBy}}"></device-revenue-chart>
+    </template>
+  </ui:define>
 </ui:composition>

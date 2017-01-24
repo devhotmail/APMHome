@@ -1,0 +1,505 @@
+{
+  "pages": {
+    "total": 32,
+    "limit": 50,
+    "start": 0
+  },
+  "root": {
+    "name": "MR",
+    "type": "type",
+    "revenue": 501825.6617533344,
+    "profit": 488947.51175333443,
+    "revenue_label": "50.2",
+    "revenue_label_unit": "万",
+    "profit_label": "48.9",
+    "profit_label_unit": "万",
+    "revenue_text": "总收入",
+    "profit_text": "总利润",
+    "link": {
+      "ref": "self",
+      "href": "http://localhost:8080/geapm/api/profit?year=2015&type=2"
+    }
+  },
+  "items": [
+    {
+      "id": 47,
+      "name": "MR-47",
+      "type": "type",
+      "revenue": 129503.13341432804,
+      "profit": 124324.00341432804,
+      "revenue_label": "13",
+      "revenue_label_unit": "万",
+      "profit_label": "12.4",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 7,
+      "name": "MR-7",
+      "type": "type",
+      "revenue": 127809.97258408967,
+      "profit": 122187.64258408967,
+      "revenue_label": "12.8",
+      "revenue_label_unit": "万",
+      "profit_label": "12.2",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 38,
+      "name": "MR-38",
+      "type": "type",
+      "revenue": 125074.8139935981,
+      "profit": 124527.9939935981,
+      "revenue_label": "12.5",
+      "revenue_label_unit": "万",
+      "profit_label": "12.5",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 64,
+      "name": "MR-64",
+      "type": "type",
+      "revenue": 119437.7417613186,
+      "profit": 117907.8717613186,
+      "revenue_label": "11.9",
+      "revenue_label_unit": "万",
+      "profit_label": "11.8",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 47,
+      "name": "MR-47",
+      "type": "type",
+      "revenue": 129503.13341432804,
+      "profit": 124324.00341432804,
+      "revenue_label": "13",
+      "revenue_label_unit": "万",
+      "profit_label": "12.4",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 7,
+      "name": "MR-7",
+      "type": "type",
+      "revenue": 127809.97258408967,
+      "profit": 122187.64258408967,
+      "revenue_label": "12.8",
+      "revenue_label_unit": "万",
+      "profit_label": "12.2",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 38,
+      "name": "MR-38",
+      "type": "type",
+      "revenue": 125074.8139935981,
+      "profit": 124527.9939935981,
+      "revenue_label": "12.5",
+      "revenue_label_unit": "万",
+      "profit_label": "12.5",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 64,
+      "name": "MR-64",
+      "type": "type",
+      "revenue": 119437.7417613186,
+      "profit": 117907.8717613186,
+      "revenue_label": "11.9",
+      "revenue_label_unit": "万",
+      "profit_label": "11.8",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 47,
+      "name": "MR-47",
+      "type": "type",
+      "revenue": 129503.13341432804,
+      "profit": 124324.00341432804,
+      "revenue_label": "13",
+      "revenue_label_unit": "万",
+      "profit_label": "12.4",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 7,
+      "name": "MR-7",
+      "type": "type",
+      "revenue": 127809.97258408967,
+      "profit": 122187.64258408967,
+      "revenue_label": "12.8",
+      "revenue_label_unit": "万",
+      "profit_label": "12.2",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 38,
+      "name": "MR-38",
+      "type": "type",
+      "revenue": 125074.8139935981,
+      "profit": 124527.9939935981,
+      "revenue_label": "12.5",
+      "revenue_label_unit": "万",
+      "profit_label": "12.5",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 64,
+      "name": "MR-64",
+      "type": "type",
+      "revenue": 119437.7417613186,
+      "profit": 117907.8717613186,
+      "revenue_label": "11.9",
+      "revenue_label_unit": "万",
+      "profit_label": "11.8",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 47,
+      "name": "MR-47",
+      "type": "type",
+      "revenue": 129503.13341432804,
+      "profit": 124324.00341432804,
+      "revenue_label": "13",
+      "revenue_label_unit": "万",
+      "profit_label": "12.4",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 7,
+      "name": "MR-7",
+      "type": "type",
+      "revenue": 127809.97258408967,
+      "profit": 122187.64258408967,
+      "revenue_label": "12.8",
+      "revenue_label_unit": "万",
+      "profit_label": "12.2",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 38,
+      "name": "MR-38",
+      "type": "type",
+      "revenue": 125074.8139935981,
+      "profit": 124527.9939935981,
+      "revenue_label": "12.5",
+      "revenue_label_unit": "万",
+      "profit_label": "12.5",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 64,
+      "name": "MR-64",
+      "type": "type",
+      "revenue": 119437.7417613186,
+      "profit": 117907.8717613186,
+      "revenue_label": "11.9",
+      "revenue_label_unit": "万",
+      "profit_label": "11.8",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 47,
+      "name": "MR-47",
+      "type": "type",
+      "revenue": 129503.13341432804,
+      "profit": 124324.00341432804,
+      "revenue_label": "13",
+      "revenue_label_unit": "万",
+      "profit_label": "12.4",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 7,
+      "name": "MR-7",
+      "type": "type",
+      "revenue": 127809.97258408967,
+      "profit": 122187.64258408967,
+      "revenue_label": "12.8",
+      "revenue_label_unit": "万",
+      "profit_label": "12.2",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 38,
+      "name": "MR-38",
+      "type": "type",
+      "revenue": 125074.8139935981,
+      "profit": 124527.9939935981,
+      "revenue_label": "12.5",
+      "revenue_label_unit": "万",
+      "profit_label": "12.5",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 64,
+      "name": "MR-64",
+      "type": "type",
+      "revenue": 119437.7417613186,
+      "profit": 117907.8717613186,
+      "revenue_label": "11.9",
+      "revenue_label_unit": "万",
+      "profit_label": "11.8",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 47,
+      "name": "MR-47",
+      "type": "type",
+      "revenue": 129503.13341432804,
+      "profit": 124324.00341432804,
+      "revenue_label": "13",
+      "revenue_label_unit": "万",
+      "profit_label": "12.4",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 7,
+      "name": "MR-7",
+      "type": "type",
+      "revenue": 127809.97258408967,
+      "profit": 122187.64258408967,
+      "revenue_label": "12.8",
+      "revenue_label_unit": "万",
+      "profit_label": "12.2",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 38,
+      "name": "MR-38",
+      "type": "type",
+      "revenue": 125074.8139935981,
+      "profit": 124527.9939935981,
+      "revenue_label": "12.5",
+      "revenue_label_unit": "万",
+      "profit_label": "12.5",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 64,
+      "name": "MR-64",
+      "type": "type",
+      "revenue": 119437.7417613186,
+      "profit": 117907.8717613186,
+      "revenue_label": "11.9",
+      "revenue_label_unit": "万",
+      "profit_label": "11.8",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 47,
+      "name": "MR-47",
+      "type": "type",
+      "revenue": 129503.13341432804,
+      "profit": 124324.00341432804,
+      "revenue_label": "13",
+      "revenue_label_unit": "万",
+      "profit_label": "12.4",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 7,
+      "name": "MR-7",
+      "type": "type",
+      "revenue": 127809.97258408967,
+      "profit": 122187.64258408967,
+      "revenue_label": "12.8",
+      "revenue_label_unit": "万",
+      "profit_label": "12.2",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 38,
+      "name": "MR-38",
+      "type": "type",
+      "revenue": 125074.8139935981,
+      "profit": 124527.9939935981,
+      "revenue_label": "12.5",
+      "revenue_label_unit": "万",
+      "profit_label": "12.5",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 64,
+      "name": "MR-64",
+      "type": "type",
+      "revenue": 119437.7417613186,
+      "profit": 117907.8717613186,
+      "revenue_label": "11.9",
+      "revenue_label_unit": "万",
+      "profit_label": "11.8",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 47,
+      "name": "MR-47",
+      "type": "type",
+      "revenue": 129503.13341432804,
+      "profit": 124324.00341432804,
+      "revenue_label": "13",
+      "revenue_label_unit": "万",
+      "profit_label": "12.4",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 7,
+      "name": "MR-7",
+      "type": "type",
+      "revenue": 127809.97258408967,
+      "profit": 122187.64258408967,
+      "revenue_label": "12.8",
+      "revenue_label_unit": "万",
+      "profit_label": "12.2",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 38,
+      "name": "MR-38",
+      "type": "type",
+      "revenue": 125074.8139935981,
+      "profit": 124527.9939935981,
+      "revenue_label": "12.5",
+      "revenue_label_unit": "万",
+      "profit_label": "12.5",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    },
+    {
+      "id": 64,
+      "name": "MR-64",
+      "type": "type",
+      "revenue": 119437.7417613186,
+      "profit": 117907.8717613186,
+      "revenue_label": "11.9",
+      "revenue_label_unit": "万",
+      "profit_label": "11.8",
+      "profit_label_unit": "万",
+      "link": {
+        "ref": "child",
+        "href": ""
+      }
+    }
+  ]
+}
