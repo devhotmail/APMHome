@@ -49,10 +49,10 @@ public class DataUploadServiceImpl implements DataUploadService{
             assetClinicalRecord.setProcedureName(nameList.get(0).getApmProcedureName());
         }
         else {
-            //throw new Exception("procedure name not mapped.");
+            throw new Exception("procedure name not mapped.");
             // mapped to "Else"
-            assetClinicalRecord.setProcedureId(0);
-            assetClinicalRecord.setProcedureName("其他");
+            //assetClinicalRecord.setProcedureId(0);
+            //assetClinicalRecord.setProcedureName("其他");
         }
     }
 
