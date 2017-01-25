@@ -17,60 +17,10 @@
         </div>
 
         <div class="ui-g-12 card">
-        <div class="ui-g">
-            <div class="ui-md-6 ui-lg-3">
-                <div class="epsilon u-mv-">#{msg.deviceScanStat}</div>
-                <p:outputPanel id="value_scan">
-                    <div class="text--banner u-mt+ delta">
-                        <h:outputText value="#{assetUsageSingleController.valueScan}"/>
-                        <span class="text--unit text--secondary epsilon">#{msg.countlb}</span>
-                    </div>
-                </p:outputPanel>
-            </div>
-            <div class="ui-md-6 ui-lg-3">
-                <div class="epsilon u-mv-">#{msg.deviceExpoStat}</div>
-                <p:outputPanel id="value_expo">
-                    <div class="text--banner u-mt+ delta">
-                        <h:outputText value="#{assetUsageSingleController.valueExpo}"/>
-                        <span class="text--unit text--secondary epsilon">#{msg.countlb}</span>
-                    </div>
-                </p:outputPanel>
-            </div>
-            <div class="visible-portable divide-line-bottom"></div>
-            <div class="ui-md-12 ui-lg-6">
-                <div class="ui-g">
-                    <div class="ui-md-4">
-                        <div class="epsilon u-mb--">#{msg.deviceUsageStat_1}</div>
-                        <p:outputPanel id="value_usage_1">
-                            <div class="text--banner epsilon">
-                                <h:outputText value="#{assetUsageSingleController.valueWait}"/>
-                                <span class="text--unit text--secondary epsilon">#{msg.hourslb}</span>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                    <div class="ui-md-4">
-                        <div class="epsilon u-mb--">#{msg.deviceUsageStat_2}</div>
-                        <p:outputPanel id="value_usage_2">
-                            <div class="text--banner epsilon">
-                                <h:outputText value="#{assetUsageSingleController.valueInuse}"/>
-                                <span class="text--unit text--secondary epsilon">#{msg.hourslb}</span>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                    <div class="ui-md-4">
-                        <div class="epsilon u-mb--">#{msg.deviceUsageStat_3}</div>
-                        <p:outputPanel id="value_usage_3">
-                            <div class="text--banner epsilon">
-                                <h:outputText value="#{assetUsageSingleController.valueDT}"/>
-                                <span class="text--unit text--secondary epsilon">#{msg.hourslb}</span>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                </div>
-                <p:chart widgetVar="deviceStat" class="chart-device-stat" id="value_usage_bar" type="bar"
-                         model="#{assetUsageSingleController.deviceStat}"/>
-            </div>
-        </div>
+            <p:link outcome="/portal/analysis/assetUsageSingle.xhtml" value="#{msg.DeviceUtilizationAnalysis}">
+                <f:param name="asset_name" value="#{assetInfoController.selected.name}" />
+                <f:param name="asset_id" value="#{assetInfoController.selected.id}" />
+            </p:link>
         <br/>
 
         <p:accordionPanel id="accordion" multiple="false" >
