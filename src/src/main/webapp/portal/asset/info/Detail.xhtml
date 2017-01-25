@@ -171,10 +171,13 @@
                         <p:inputText id="barcode" value="#{assetInfoController.selected.barcode}" readonly="true"/>
                     </h:panelGroup>
                     <h:panelGroup>
+                        <label class="label">#{msg.registrationNo}</label>
+                        <p:inputText id="registrationNo" value="#{assetInfoController.selected.registrationNo}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
                         <label class="label">#{msg.modalityId}</label>
                         <p:inputText id="modalityId" value="#{assetInfoController.selected.modalityId}" readonly="true"/>
                     </h:panelGroup>
-                    <p:spacer/>
                     <h:panelGroup>
                         <label class="label">#{msg.locationCode}</label>
                         <p:inputText id="locationCode" value="#{assetInfoController.selected.locationCode}" readonly="true"/>
@@ -200,6 +203,16 @@
                         <p:inputText id="assetOwnerTel" value="#{assetInfoController.selected.assetOwnerTel}" readonly="true"/>
                     </h:panelGroup>
                     <h:panelGroup>
+                        <label class="label">#{msg.clinicalOwnerName}</label>
+                        <p:inputText id="clinicalOwnerName" value="#{assetInfoController.selected.clinicalOwnerName}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.clinicalOwnerTel}</label>
+                        <p:inputText id="clinicalOwnerTel" value="#{assetInfoController.selected.clinicalOwnerTel}" readonly="true"/>
+                    </h:panelGroup>
+                    
+                    
+                    <h:panelGroup>
                         <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isValid}" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
                     </h:panelGroup>
 
@@ -223,6 +236,13 @@
                             <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                         </p:inputText>
                         <!--<p:calendar timeZone="GMT+8"  id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.factoryWarrantyDate}*</label>
+                        <p:inputText id="factoryWarrantyDate" value="#{assetInfoController.selected.factoryWarrantyDate}" readonly="true">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <!--<p:calendar timeZone="GMT+8"  id="factoryWarrantyDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.factoryWarrantyDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" />-->
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.terminateDate}</label>
