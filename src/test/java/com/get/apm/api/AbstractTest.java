@@ -18,13 +18,13 @@ import javax.annotation.Resource;
 @ContextConfiguration(locations = {"classpath*:config/springmvc-parent.xml", "file:src/main/webapp/WEB-INF/config/servlet-context.xml"})
 public abstract class AbstractTest {
   @Resource
-  private WebApplicationContext applicationContext;
+  protected WebApplicationContext context;
   protected MockMvc mvc;
   protected RestTemplate rest;
 
   @Before
   public void setup() {
-    this.mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
+    this.mvc = MockMvcBuilders.webAppContextSetup(context).build();
     this.rest = new RestTemplate(new MockMvcClientHttpRequestFactory(mvc));
   }
 

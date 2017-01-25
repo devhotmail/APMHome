@@ -1,5 +1,6 @@
 package com.get.apm.api.it;
 
+import com.ge.apm.service.api.ProfitService;
 import com.get.apm.api.AbstractTest;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -30,6 +31,12 @@ public class ProfitApiTest extends AbstractTest {
   public void testDummy() {
     Map map = this.rest.getForObject("/profit/dummy", Map.class);
     System.out.println(map.get("total"));
+  }
+
+  @Test
+  public void testProfitService() {
+    ProfitService profitService = context.getBean(ProfitService.class);
+    profitService.findCosts(1, 1, 2016).subscribe(System.out::println);
   }
 
 }
