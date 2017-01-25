@@ -101,6 +101,8 @@
 		<aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut"/>
 	</aop:config>
 
+	<aop:aspectj-autoproxy/>
+
 	<bean id="connectionProvider" class="com.github.davidmoten.rx.jdbc.ConnectionProviderFromDataSource" destroy-method="close">
 		<constructor-arg ref="risDataSource"/>
 	</bean>
