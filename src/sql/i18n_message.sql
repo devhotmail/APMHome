@@ -339,6 +339,13 @@ INSERT INTO "i18n_message" VALUES (758,'field_name','AttachedFileInfo', '附件�
 INSERT INTO "i18n_message" VALUES (759,'field_name','otherExpense', '其他费用(元)','Other Expense(RMB)',null,-1);
 INSERT INTO "i18n_message" VALUES (760,'field_name','manhourPrice', '内部工时单价(元)','Manhour Price(RMB)',null,-1);
 
+INSERT INTO "i18n_message" VALUES (761,'field_name','clinicalOwnerId', '科室负责人','Clinical Dept Owner',null,-1);
+INSERT INTO "i18n_message" VALUES (762,'field_name','clinicalOwnerName', '科室负责人','Clinical Dept Owner',null,-1);
+INSERT INTO "i18n_message" VALUES (763,'field_name','clinicalOwnerTel', '科室负责人电话','Clinical Dept Owner Tel',null,-1);
+INSERT INTO "i18n_message" VALUES (764,'field_name','registrationNo', '注册证号','Registration No',null,-1);
+INSERT INTO "i18n_message" VALUES (765,'field_name','factoryWarrantyDate', '质保日期','Manhour Price(RMB)',null,-1);
+INSERT INTO "i18n_message" VALUES (766,'field_name','contractType', '合同类型','Contract Type',null,-1);
+
 
 -- field value code types  ( id from 1400)
 

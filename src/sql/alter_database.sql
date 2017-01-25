@@ -48,3 +48,9 @@ alter table asset_info add COLUMN registration_no varchar(64);
 alter table asset_info add COLUMN factory_warranty_date date;
 
 alter table asset_contract add COLUMN contract_type int;
+
+alter table work_order add COLUMN from_dept_id int;
+alter table work_order add COLUMN from_dept_name varchar(64);
+alter table work_order add COLUMN ticket_no varchar(32);
+alter table work_order add COLUMN reponse_time int;
+alter table work_order add COLUMN repaire_time int;
