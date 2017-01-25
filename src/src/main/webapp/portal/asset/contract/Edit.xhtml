@@ -27,6 +27,14 @@
                         </h:panelGroup>
 
                         <h:panelGroup>
+                            <label class="label">#{msg.contractType}</label>
+                            <p:selectOneMenu id="contractType" value="#{assetContractController.selected.contractType}" required="false" requiredMessage="#{msg.contractType} #{msg.ValidationRequire}">
+                                <f:selectItem itemLabel="#{msg.selectOneMessage}" />
+                                <f:selectItems value="#{fieldMsg.getFieldValueList('contractType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}" />
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        
+                        <h:panelGroup>
                             <label class="label">#{msg.assetName}*</label>
                             <p:inputText id="assetName" readonly="true" value="#{assetContractController.selectedAsset.name}" placeholder="#{msg.noAssetSelected}" required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
                             <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.prepareDialogCallback(assetContractController, ':AssetContractEditForm:assetName')}" process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg" oncomplete="PF('varSelectAssetDlg').show()"/>
