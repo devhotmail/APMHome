@@ -37,7 +37,8 @@
     "urijs": "uri.js#^1.18.4",
     "d3-transform": "^1.0.4",
     "iron-resizable-behavior": "PolymerElements/iron-resizable-behavior#^1.0.5",
-    "es6-shim": "^0.35.2"
+    "es6-shim": "^0.35.2",
+    "innersvg-polyfill": "^0.0.2"
   },
   "resolutions": {
     "px-defaults-design": "^1.0.2",
