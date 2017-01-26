@@ -1,8 +1,22 @@
+$highlight-color: rgba(91, 132, 215, 1);
+
 :host {
   height: calc(100vh - 60px);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.page-btn {
+  cursor: pointer;
+  &.active {
+    circle {
+      stroke: $highlight-color !important;
+    }
+    path {
+      fill: $highlight-color !important;
+    }
+  }
 }
 
 .chart-container {
@@ -61,6 +75,11 @@
       }
     }
   }
+}
+
+/* Disable SVG filter which hangs IE10-11*/
+.ie .node.active .gauge .filter-circle {
+  filter: none;
 }
 
 .next-page, .prev-page {

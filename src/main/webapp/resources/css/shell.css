@@ -1055,7 +1055,7 @@ button.btn{-webkit-appearance:button}
 .layout-compact .layout-wrapper .brand h1{max-width:150px;overflow-x:hidden;margin:0;-webkit-transition:max-width,.4s;transition:max-width,.4s}
 .layout-compact .layout-wrapper .ul.ultima-menu li i:first-child{-webkit-transition:border-color .4s,-webkit-transform;transition:border-color .4s,-webkit-transform;transition:transform,border-color .4s;transition:transform,border-color .4s,-webkit-transform}
 .layout-compact .layout-wrapper .layout-menu.layout-menu-dark{top:0!important;overflow-y:hidden!important;background-color:#242326;width:150px;-webkit-transition:width .4s;transition:width .4s;margin-left:0!important}
-.layout-compact .layout-wrapper .layout-menu.layout-menu-dark .menu-content{overflow-y:scroll;overflow-x:hidden;height:calc(100vh - 170px)}
+.layout-compact .layout-wrapper .layout-menu.layout-menu-dark .menu-content{overflow-y:scroll;overflow-x:hidden;height:calc(100vh - 170px);-ms-overflow-style:none}
 .layout-compact .layout-wrapper .layout-menu.layout-menu-dark .menu-content::-webkit-scrollbar{display:none}
 .layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu ul{background-color:#000}
 .layout-compact .layout-wrapper .layout-menu.layout-menu-dark ul.ultima-menu ul>li>a{text-align:left;padding:.5rem 1.5rem}

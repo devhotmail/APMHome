@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="device-revenue-chart-styles.html">
+<script src="../../bower_components/innersvg-polyfill/innersvg.js"></script>
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
 <script src="../../bower_components/lscache/lscache.js"></script>
 <script src="../../bower_components/urijs/src/URI.js"></script>
@@ -9,7 +10,9 @@
   <template>
     <style include="device-revenue-chart-styles"></style>
     <div id="chart" class="chart-container">
-      <svg id="chartSvg" width$="[[width]]" height$="[[height]]"></svg>
+      <svg id="chartSvg" class$="[[_svgEnvClass]]" width$="[[width]]" height$="[[height]]">
+        <g id="canvas" class="canvas" transform$="[[_canvasTransform]]"></g>
+      </svg>
     </div>
   </template>
   <script>
@@ -85,6 +88,11 @@
 
         function hasChildren(node) {
           return node.data.link && node.data.link.href !== '';
+        }
+
+        // http://browserhacks.com/#hack-2f32c95ac8c021c463de0fdf685acb29
+        function isIE() {
+          return window.navigator.msPointerEnabled;
         }
 
         function renderGauge(element, config) {
@@ -479,6 +487,10 @@
           config.node = node;
           config.isRoot = node.depth;
           config.showLabel = node.depth === 1; // only show label for depth one
+          // gauge animation is way too expensive for IE
+          config.waveRise = !isIE();
+          config.waveAnimate = !isIE();
+          config.valueCountUp = !isIE();
 
           renderGauge(this, config);
         }
@@ -582,24 +594,6 @@
           return null;
         }
 
-        function rotateToTween(dest) {
-          return function transform() {
-            var rotate = parseTransformRotate(this);
-            var interpolate = d3.interpolateNumber(rotate.deg, dest);
-            return function(t) {
-              var deg = interpolate(t);
-              return d3Transform().rotate(deg, rotate.x, rotate.y)();
-            };
-          }
-        }
-
-        function rotate(dest) {
-          return function() {
-            var rotate = parseTransformRotate(this);
-            return d3Transform().rotate(dest, rotate.x, rotate.y)();
-          }
-        }
-
         function pageEntered(page) {
           // remove opacity inline styles
           var $el = d3.select(this).style('opacity', '');
@@ -630,6 +624,20 @@
             _pageStartHistoryL2: {
               type: Array,
               value: []
+            },
+            _canvasTransform: {
+              type: String,
+              computed: '_computeCanvasTranslate(layout)'
+            },
+            _svgEnvClass: {
+              type: String,
+              value: function() {
+                return isIE()? 'ie': '';
+              }
+            },
+            canvas: {
+              type: Object,
+              computed: '_getCanvas(isAttached)'
             },
             pageLastStartL1: {
               type: Number
@@ -698,23 +706,20 @@
           },
           plotRoot: function(root) {
             var _this = this;
-            var svg = d3.select(this.$.chartSvg);
-
+            var canvas = this.canvas;
             var radius = this.layout.radius;
             var offsetX = this.layout.offsetX;
             var offsetY = this.layout.offsetY;
             var node = layout_root.call(this, { data: root}, radius);
 
             // DOM clean up
-            svg.select('.orbit0').remove();
+            canvas.select('.orbit0').remove();
 
-            var canvas = svg.append("g")
-            .attr('class', 'orbit orbit0')
-            .attr('transform', d3Transform().rotate(0, this.width/2, offsetY))
-            .attr("transform", "translate(" + offsetX + "," + offsetY + ")");
+            var root = canvas.append("g")
+            .attr('class', 'orbit orbit0');
 
             // Update the nodes
-            canvas.selectAll('g.node')
+            root.selectAll('g.node')
             .data([node]).enter().append("g")
             .attr('class', 'node node--internal')
             .attr("transform", function(d) {
@@ -741,8 +746,7 @@
           },
           plotPager: function(url, level) {
             var _this = this;
-            var svg = d3.select(this.$.chartSvg),
-              width = this.width,
+            var width = this.width,
               height = this.height,
               radius = this.layout.radius,
               offsetX = this.layout.offsetX,
@@ -769,15 +773,12 @@
               }
             ];
 
-            var canvas = svg.select('g.pagination');
-            if (canvas.empty()) {
-              canvas = svg.append("g")
-              .attr('class', 'pagination')
-              .attr('transform', d3Transform().rotate(0, width / 2, offsetY))
-              .attr("transform", "translate(" + offsetX + "," + offsetY + ")");
+            var root = this.canvas.select('g.pagination');
+            if (root.empty()) {
+              root = this.canvas.append("g").attr('class', 'pagination')
             }
 
-            var nodes = canvas.selectAll('g.pager').data(pagers, function(d) {
+            var nodes = root.selectAll('g.pager').data(pagers, function(d) {
               return d.type;
             });
 
@@ -794,7 +795,15 @@
               var root = d3.select(this);
 
               var nodes = root.selectAll('g.page-btn').data([d], function(d) { return d.type; });
-              var nodes_enter = nodes.enter().append("g").attr('class', 'page-btn');
+              var nodes_enter = nodes.enter()
+              .append("g")
+              .attr('class', 'page-btn')
+              .on('mouseover', function(d) {
+                d3.select(this).classed('active', true);
+              })
+              .on('mouseout', function(d) {
+                d3.select(this).classed('active', false);
+              });
 
               nodes_enter.append("circle")
               .attr("cx", PAGER_RADIUS / 2)
@@ -870,12 +879,10 @@
             feMerge.append('feMergeNode')
             .attr('in', 'SourceGraphic');
 
-            var canvas = svg.insert('g', ':first-child')
+            var page = this.canvas
+              .insert('g', ':first-child')
               .attr('class', 'orbit orbit1')
-              .attr('transform', d3Transform().rotate(0, this.width/2, offsetY))
-
-            var rootGroup = canvas.append("g");
-            rootGroup.attr("transform", "translate(" + offsetX+ "," + offsetY + ")");
+              .attr('transform', d3Transform().rotate(0));
 
             // Calc root node layout
             layout_root.call(this, tree, radius);
@@ -892,7 +899,7 @@
             var nodes = tree.children;
             var links = tree.links();
 
-            var link = rootGroup.selectAll('.link')
+            var link = page.selectAll('.link')
             .data(nodes, function(d) {
               return d.data.id;
             });
@@ -919,7 +926,7 @@
             }
 
             // Update the nodes
-            var node = rootGroup.selectAll('g.node')
+            var node = page.selectAll('g.node')
             .data(nodes, function(d) {
               return d.data.id || (d.data.id = ++i);
             });
@@ -969,7 +976,7 @@
             this.scopeSubtree(this.$.chart, true);
 
             return Object.assign(result, {
-              element: canvas
+              element: page
             });
 
             function handleClick(targetNode, i, nodeList) {
@@ -1008,12 +1015,9 @@
               });
 
               // rerender subtree's children
-              rootGroup.selectAll('g.node')
+              page.selectAll('g.node')
               .transition()
               .duration(DURATION)
-              .filter(function(d) {
-                return d.parent;
-              })
               .attr('transform', function(d) {
                 return 'translate(' + d.circle.center + ')';
               })
@@ -1045,7 +1049,7 @@
                 });
               });
 
-              rootGroup.selectAll('.link')
+              page.selectAll('.link')
               .transition()
               .duration(DURATION)
               .attr('d', function(d) {
@@ -1060,19 +1064,16 @@
           },
           plotL2: function(parent, children) {
             // layout start
-            var svg = d3.select(this.$.chartSvg),
-              width = this.width,
+            var width = this.width,
               height = this.height,
               radius = this.layout.radiusL2,
               offsetX = this.layout.offsetX,
               offsetY = this.layout.offsetY;
 
-            var canvas = svg.insert('g', ':first-child')
+            var page = this.canvas.insert('g', ':first-child')
             .attr('class', 'orbit orbit2')
-            .attr('transform', d3Transform().rotate(0, width / 2, offsetY))
-            
-            var rootGroup = canvas.append("g");
-            rootGroup.attr("transform", "translate(" + offsetX + "," + offsetY + ")");
+            .attr('transform', d3Transform().rotate(0))
+
             var data = Object.assign({children: children}, parent.data);
             var tree = d3.hierarchy(data);
             tree.data = parent.parent.data;
@@ -1091,7 +1092,7 @@
 
             var nodes = tree.children;
             var links = tree.links();
-            var link = rootGroup.selectAll('.link')
+            var link = page.selectAll('.link')
             .data(nodes, function(d) {
               return d.data.id;
             });
@@ -1144,7 +1145,8 @@
               return 'M' + parent.circle.peak
                 + 'C' + controls.control1 + ' ' + controls.control2 + ' ' + d.circle.center;
             });
-            var groups = rootGroup.selectAll('g.node')
+
+            var groups = page.selectAll('g.node')
             .data(nodes, function(d) {
               return d.data.id || (
                   d.data.id = ++i
@@ -1152,15 +1154,10 @@
             });
 
             var nodeEnter = groups.enter().append("g")
-            .attr('class', function(d) {
-              return 'node node--leaf';
-            })
+            .attr('class', 'node node--leaf')
             .attr("transform", function(d) {
               // original position (parent `node` circle center)
               return 'translate(' + parent.circle.center + ')';
-            })
-            .attr('id', function(d) {
-              return 'node-' + d.data.id;
             })
             .each(renderNode);
 
@@ -1174,35 +1171,35 @@
             });
 
             return Object.assign(result, {
-              element: canvas,
-              close: function closeNode() {
-                return new Promise(function(resolve, reject) {
-                  var root = svg.select('.orbit2.curr-page');
-                  var nodes = root.selectAll('g.node');
-                  var links = root.selectAll('path.link');
-
-                  nodes.transition()
-                  .duration(DURATION / 2)
-                  .attr('transform', function(d) {
-                    // back to original position (parent `node` circle center)
-                    return 'translate(' + parent.circle.center + ')';
-                  })
-                  .on('end', function(d, i) {
-                    // when orbit 2 is closed
-                    if (i === 0) {
-                      root.remove();
-                      resolve();
-                    }
-                  });
-
-                  links.transition()
-                  .duration(DURATION / 2)
-                  .attr('d', function(d) {
-                    // back to original position (parent `node` circle peak)
-                    return 'M' + parent.circle.peak + 'L' + parent.circle.peak;
-                  });
-                });
-              }
+              element: page,
+              close: this.handleCloseNode.bind(this, parent)
+            });
+          },
+          handleCloseNode: function(parent) {
+            var _this = this;
+            return new Promise(function(resolve, reject) {
+              var page = _this.canvas.select('.orbit2.curr-page');
+              var nodes = page.selectAll('g.node');
+              var links = page.selectAll('path.link');
+              nodes.transition()
+              .duration(DURATION / 2)
+              .attr('transform', function(d) {
+                // back to original position (parent `node` circle center)
+                return 'translate(' + parent.circle.center + ')';
+              })
+              .on('end', function(d, i) {
+                // when orbit 2 is closed
+                if (i === 0) {
+                  page.remove();
+                  resolve();
+                }
+              });
+              links.transition()
+              .duration(DURATION / 2)
+              .attr('d', function(d) {
+                // back to original position (parent `node` circle peak)
+                return 'M' + parent.circle.peak + 'L' + parent.circle.peak;
+              });
             });
           },
           // dynamic function later bind in "renderCurrPage"
@@ -1211,9 +1208,8 @@
           },
           // dynamic function later bind in "plotL1"
           resetOrbitL1: function() {
-            var svg = d3.select(this.$.chartSvg);
-            var root = svg.selectAll('.orbit1.curr-page');
-            var rootTransform = svg.select('.orbit0 .node--transform');
+            var page = this.canvas.selectAll('.orbit1.curr-page');
+            var rootTransform = this.canvas.select('.orbit0 .node--transform');
 
             // restore root size & position
             rootTransform.transition()
@@ -1221,9 +1217,7 @@
             .attr('transform', '');
 
             // reset to render subtree
-            root.selectAll('g.node').filter(function(d) {
-              return d.parent;
-            })
+            page.selectAll('g.node')
             .transition()
             .duration(DURATION)
             .attr('transform', function(d) {
@@ -1244,7 +1238,7 @@
               });
             });
 
-            root.selectAll('.link')
+            page.selectAll('.link')
             .transition()
             .duration(DURATION)
             .attr('d', function(d) {
@@ -1393,7 +1387,7 @@
 
               this.removePage(level, 'next');
               result = this['plotL' + level].call(this, parent, list);
-              result.element.classed('next-page', true).attr('transform', rotate(90));
+              result.element.classed('next-page', true).attr('transform', d3Transform().rotate(90));
               this.set('pageEndL'+level, offset + result.count);
             }
           },
@@ -1414,7 +1408,7 @@
               }
               this.removePage(level, 'prev');
               result = this['plotL' + level].call(this, parent, list);
-              result.element.classed('prev-page', true).attr('transform', rotate(-90));
+              result.element.classed('prev-page', true).attr('transform', d3Transform().rotate(-90));
             }
           },
           openNextPage: function(key, level) {
@@ -1429,7 +1423,7 @@
             .transition()
             .duration(DURATION_PAGING)
             .style('opacity', 1)
-            .attrTween('transform', rotateToTween(0))
+            .attr('transform', d3Transform().rotate(0))
             .on('start', function() {
               _this.isPaging = true;
             })
@@ -1445,9 +1439,9 @@
 
             d3.select('.orbit' + level + '.curr-page')
             .transition()
-            .style('opacity', 0)
             .duration(DURATION_PAGING)
-            .attrTween('transform', rotateToTween(-90))
+            .style('opacity', 0)
+            .attr('transform', d3Transform().rotate(-90))
             .on('end', function() {
               pageEntered.call(this, 'prev');
               // reconcile dom
@@ -1469,7 +1463,7 @@
             .transition()
             .duration(DURATION_PAGING)
             .style('opacity', 1)
-            .attrTween('transform', rotateToTween(0))
+            .attr('transform', d3Transform().rotate(0))
             .on('start', function() {
               _this.isPaging = true;
             })
@@ -1488,7 +1482,7 @@
             .transition()
             .style('opacity', 0)
             .duration(DURATION_PAGING)
-            .attrTween('transform', rotateToTween(90))
+            .attr('transform', d3Transform().rotate(90))
             .on('end', function() {
               pageEntered.call(this, 'next');
               // reconcile dom
@@ -1512,7 +1506,7 @@
             this.resetPaginationLevel(2);
             this.openingNodeL1 = null;
             this.isPaging = false;
-            this.$.chartSvg.innerHTML = '';
+            this.$.canvas.innerHTML = '';
           },
           resetPaginationLevel: function(level) {
             level = level || 1;
@@ -1569,9 +1563,14 @@
           _computeRadiusScaleL2: function(val) {
             return d3.scaleLinear().range([GAUGE_RADIUS_MIN, GAUGE_RADIUS_MAX]).domain([0, val]);
           },
+          _getCanvas: function() {
+            return d3.select(this.$.canvas);
+          },
+          _computeCanvasTranslate: function(layout) {
+            return d3Transform().translate(layout.offsetX, layout.offsetY)();
+          },
           _replot: function(width, height) {
             var key = this.queryUrl;
-            var $chart = d3.select(this.$.chartSvg);
             this.debounce('replot', function() {
               if (this.hasData(key)) {
                 this.resetChart();
