@@ -6,3 +6,5 @@ conflict1
 conflict2
 conflict4
 conflict3
+
+cf2
