@@ -8,3 +8,4 @@ conflict4
 conflict3
 
 cf2
+cf3
