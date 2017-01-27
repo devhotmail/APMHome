@@ -2,4 +2,5 @@ ff2
 ff3
 ff4
 ff5
+conflict1
 conflict2
