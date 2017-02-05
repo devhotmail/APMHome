@@ -61,6 +61,7 @@ public class WorkOrder implements Serializable {
     @NotNull
     @Column(name = "create_time")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date createTime;
     @Basic(optional = false)
     @NotNull
