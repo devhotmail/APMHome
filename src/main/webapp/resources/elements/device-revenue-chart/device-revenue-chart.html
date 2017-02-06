@@ -446,6 +446,7 @@
         // page transition duration
         var DURATION_PAGING = 1000;
         var PAGER_RADIUS = 20;
+        var HTTP_MAXAGE_REGEXP = /max-age=(\d+)/;
         // max radius for gauge
         var GAUGE_RADIUS_MAX = 75 / 828 * innerHeight;
         var GAUGE_RADIUS_MIN = 30 / 828 * innerHeight;
@@ -1330,12 +1331,27 @@
               return fetch(url, {
                 credentials: 'same-origin'
               }).then(function(res) {
-                return res.json();
-              }).then(function(data) {
+                // check "Cache-Control" for cache expiration
+                var cache_control = res.headers.get('Cache-Control');
+                var max_age = cache_control.match(HTTP_MAXAGE_REGEXP);
+                if (max_age) {
+                  max_age = +max_age[1] / 60;
+                }
+
+                return res.json().then(function(data) {
+                  return {
+                    maxAge: max_age,
+                    data: data
+                  };
+                });
+              }).then(function(res) {
+                var data = res.data;
+                var cache_age = res.maxAge;
                 list = list.concat(data.items.map(_this.transformData));
-                lscache.set(cacheKey, list);
-                lscache.set(cacheKey + '/root', _this.transformData(data.root));
-                lscache.set(cacheKey + '/pages', data.pages);
+//                cache_age = 1;
+                lscache.set(cacheKey, list, cache_age);
+                lscache.set(cacheKey + '/root', _this.transformData(data.root), cache_age);
+                lscache.set(cacheKey + '/pages', data.pages, cache_age);
               }).then(setMaxData);
             } {
               return Promise.resolve().then(setMaxData);
