@@ -59,12 +59,15 @@
                 <script type="text/javascript">
                     var WEB_ROOT = '${ctx}/';
                     $(function(){
-                        $('#submit').click(function(){
+                        $('#submit').click(function(){debugger;
                             var $loadingToast = $('#loadingToast');
                             $.ajax({
                                 url: WEB_ROOT+'web/binduser',
                                 type: 'post',
                                 data: {'username': $('#username').val(), 'password': $('#password').val(), 'openId': $('#openId').val()},
+                                beforeSend: function( xhr ) { 
+                                    xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+                                    },
                                 success: function(ret) {
                                     if (ret == 'success') {
                                         $loadingToast.fadeOut(100);
