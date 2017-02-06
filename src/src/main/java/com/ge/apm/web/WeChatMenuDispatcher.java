@@ -79,7 +79,7 @@ public class WeChatMenuDispatcher {
             Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (isBinded) {
-                return "redirect:" + URL_MAP.get(index);
+                return  URL_MAP.get(index);
             }else{
                 return "userInfo";
             }
