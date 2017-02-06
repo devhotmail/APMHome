@@ -41,10 +41,10 @@ public class MenuConfig {
         WxMenuButton button22 = new WxMenuButton();
         button22.setType(WxConsts.BUTTON_VIEW);
         button22.setName("报修处理进度");
-        button22.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/wechat/wo/process.xhtml", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+     
+        button22.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/repairprocess", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         button2.getSubButtons().add(button21);
         button2.getSubButtons().add(button22);
-
         WxMenuButton button3 = new WxMenuButton();
         button3.setName("我的帐号");
         WxMenuButton button31 = new WxMenuButton();
