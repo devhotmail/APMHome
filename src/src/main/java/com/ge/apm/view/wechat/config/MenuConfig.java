@@ -29,16 +29,9 @@ public class MenuConfig {
         button12.setType(WxConsts.BUTTON_VIEW);
         button12.setName("新增设备");
         button12.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/12", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
-        System.out.println("===========" + button12.getUrl());
-        
-        WxMenuButton button13 = new WxMenuButton();
-        button13.setType(WxConsts.BUTTON_VIEW);
-        button13.setName("新增设备2");
-        button13.setUrl(serverName + "/web/menu/13");
         
         button1.getSubButtons().add(button11);
         button1.getSubButtons().add(button12);
-        button1.getSubButtons().add(button13);
 
         WxMenuButton button2 = new WxMenuButton();
         button2.setName("维修流程");
