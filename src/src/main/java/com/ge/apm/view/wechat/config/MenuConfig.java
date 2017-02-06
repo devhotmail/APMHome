@@ -24,20 +24,28 @@ public class MenuConfig {
         WxMenuButton button11 = new WxMenuButton();
         button11.setType(WxConsts.BUTTON_VIEW);
         button11.setName("查看设备信息");
-        button11.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/wechat/asset/viewAssetInfo.xhtml", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        button11.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/11", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button12 = new WxMenuButton();
         button12.setType(WxConsts.BUTTON_VIEW);
         button12.setName("新增设备");
-        button12.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/wechat/asset/create.xhtml?str=YWN0aW9uTmFtZT1DcmVhdGU%3D", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        button12.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/12", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        System.out.println("===========" + button12.getUrl());
+        
+        WxMenuButton button13 = new WxMenuButton();
+        button13.setType(WxConsts.BUTTON_VIEW);
+        button13.setName("新增设备2");
+        button13.setUrl(serverName + "/web/menu/13");
+        
         button1.getSubButtons().add(button11);
         button1.getSubButtons().add(button12);
+        button1.getSubButtons().add(button13);
 
         WxMenuButton button2 = new WxMenuButton();
         button2.setName("维修流程");
         WxMenuButton button21 = new WxMenuButton();
         button21.setType(WxConsts.BUTTON_VIEW);
         button21.setName("新增报修");
-        button21.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/wocreate", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        button21.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/21", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button22 = new WxMenuButton();
         button22.setType(WxConsts.BUTTON_VIEW);
         button22.setName("报修处理进度");
@@ -50,15 +58,15 @@ public class MenuConfig {
         WxMenuButton button31 = new WxMenuButton();
         button31.setType(WxConsts.BUTTON_VIEW);
         button31.setName("APM帐号信息");
-        button31.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/wechat/uaa/viewUserAccount.xhtml", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        button31.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/31", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button32 = new WxMenuButton();
         button32.setType(WxConsts.BUTTON_VIEW);
         button32.setName("APM重置密码");
-        button32.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName+"/wechat/uaa/resetAccountPassword.xhtml", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        button32.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName+"/web/menu/32", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button33 = new WxMenuButton();
         button33.setType(WxConsts.BUTTON_VIEW);
         button33.setName("APM帐号绑定");
-        button33.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName+"/web/authurl", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        button33.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName+"/web/menu/33", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         button3.getSubButtons().add(button31);
         button3.getSubButtons().add(button32);
         button3.getSubButtons().add(button33);
