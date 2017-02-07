@@ -72,6 +72,7 @@ public class RepairProcessController {
     @RequestMapping(value="findRepairDetail")
     @ResponseBody
     public Object[] findRepairDetail(Integer id) {
+        System.out.println("findRepairDetail---->");
         Object[] obj=new Object[3];
         WorkOrder workOrder= workOrderDao.findById(id);
         String caseType= FieldValueMessageController.fieldValue("caseType",String.valueOf(workOrder.getCaseType()));
