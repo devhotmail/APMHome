@@ -59,7 +59,7 @@
                 <script type="text/javascript">
                     var WEB_ROOT = '${ctx}/';
                     $(function(){
-                        $('#submit').click(function(){debugger;
+                        $('#submit').click(function(){
                             var $loadingToast = $('#loadingToast');
                             $.ajax({
                                 url: WEB_ROOT+'web/binduser',

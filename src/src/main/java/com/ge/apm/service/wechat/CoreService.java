@@ -123,7 +123,7 @@ public class CoreService {
     }
     
     @Transactional
-    public int bindingUserInfo(String openId, String username, String password) {
+    public int bindingUserInfo(HttpServletRequest request,HttpServletResponse response, String openId, String username, String password) {
         WxMpUser user = getUserInfo(openId, null);
         UserAccount ua = userValidate(username, password);
         if (ua == null || user == null){
@@ -131,6 +131,8 @@ public class CoreService {
         } else {
             ua.setWeChatId(openId);
             userDao.save(ua);
+            //主动登录
+            loginByWeChatOpenId(openId, request, response);
             return 0;//绑定成功
         }
     }
@@ -157,8 +159,8 @@ public class CoreService {
     }
     
     @Transactional
-    public void saveWorkOrder(WorkOrder workOrder) throws Exception{
-        UserAccount loginUser =getLoginUser();
+    public void saveWorkOrder(WorkOrder workOrder, HttpServletRequest request) throws Exception{
+        UserAccount loginUser =getLoginUser(request);
         workOrder.setSiteId(loginUser.getSiteId());
         workOrder.setCreatorId(loginUser.getId());
         workOrder.setCreateTime(TimeUtil.now());
@@ -235,17 +237,17 @@ public class CoreService {
         return fileName;
     }
     
-    public UserAccount getLoginUser() {
-        return userDao.getByLoginName(UserContext.getUsername());
+    public UserAccount getLoginUser(HttpServletRequest request) {
+        return userDao.getByLoginName(UserContext.getUsername(request));
     }
     
     public List<I18nMessage> getMsg(String msgType) {
         return msgDao.getByMsgType(msgType);
     }
     
-    public List<Map<String, Object>> getUsersInHospital(){
+    public List<Map<String, Object>> getUsersInHospital(HttpServletRequest request){
         List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
-        List<UserAccount> uas = uaaService.getUserList(getLoginUser().getHospitalId());
+        List<UserAccount> uas = uaaService.getUserList(getLoginUser(request).getHospitalId());
         for(UserAccount ua :uas) {
             Map<String,Object> map = new HashMap<String, Object>();
             map.put("id", ua.getId());
@@ -255,9 +257,9 @@ public class CoreService {
         return list;
     }
     
-    public List<Map<String, Object>> getUsersWithAssetHeadOrStaffRole(){
+    public List<Map<String, Object>> getUsersWithAssetHeadOrStaffRole(HttpServletRequest request){
         List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
-        List<UserAccount> uas = uaaService.getUsersWithAssetHeadOrStaffRole(getLoginUser().getHospitalId());
+        List<UserAccount> uas = uaaService.getUsersWithAssetHeadOrStaffRole(getLoginUser(request).getHospitalId());
         for(UserAccount ua :uas) {
             Map<String,Object> map = new HashMap<String, Object>();
             map.put("id", ua.getId());

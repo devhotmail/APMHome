@@ -38,11 +38,12 @@ public class WorkOrderController {
     
     @RequestMapping(value = "wocreate")
     public String woCreate(HttpServletRequest request,HttpServletResponse response, Model model) {
-        //先判断是否有绑定
+        //先判断是否登录
+        service.loginByWeChatOpenId(request, response);
         
         WxJsapiSignature s = null;
         try {
-            s = wxMpService.createJsapiSignature(request.getRequestURL().toString());
+            s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
         } catch (WxErrorException ex) {
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
             return "woCreate";
@@ -54,7 +55,7 @@ public class WorkOrderController {
         //初始化信息
         model.addAttribute("casePriority", 3);
         model.addAttribute("isInternal", true);
-        model.addAttribute("creatorName", service.getLoginUser().getName());
+        model.addAttribute("creatorName", service.getLoginUser(request).getName());
                 
         
         return "woCreate";
@@ -66,9 +67,9 @@ public class WorkOrderController {
     }
     
     @RequestMapping(value="saveworkorder")
-    public @ResponseBody Object saveWorkOrder(@RequestBody WorkOrder workOrder) {
+    public @ResponseBody Object saveWorkOrder(HttpServletRequest request, @RequestBody WorkOrder workOrder) {
         try{
-            service.saveWorkOrder(workOrder);
+            service.saveWorkOrder(workOrder, request);
         }catch(Exception ex){
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
             return "failed";
@@ -87,9 +88,9 @@ public class WorkOrderController {
     }
     
     @RequestMapping(value="getrequestor")
-    public @ResponseBody Object getRequestor() {
+    public @ResponseBody Object getRequestor(HttpServletRequest request, HttpServletResponse response) {
         try{
-            return service.getUsersInHospital();
+            return service.getUsersInHospital(request);
         }catch(Exception ex){
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -97,9 +98,9 @@ public class WorkOrderController {
     }
     
     @RequestMapping(value="getcurrentperson")
-    public @ResponseBody Object getCurrentPerson() {
+    public @ResponseBody Object getCurrentPerson(HttpServletRequest request, HttpServletResponse response) {
         try{
-            return service.getUsersWithAssetHeadOrStaffRole();
+            return service.getUsersWithAssetHeadOrStaffRole(request);
         }catch(Exception ex){
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
             return null;

@@ -22,7 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import webapp.framework.context.ExternalLoginHandler;
-import webapp.framework.web.service.UserContext;
 
 /**
  *
@@ -69,8 +68,7 @@ public class WeChatCoreController {
             response.getWriter().println(echoStrOut);
             return;
         }
-        String token = wxMpService.getAccessToken();
-        System.out.println("current token is \n"+token);
+        System.out.println("current token is "+wxMpService.getAccessToken());
 //        String encryptType = StringUtils.isBlank(request.getParameter("encrypt_type"))
 //            ? "raw"
 //            : request.getParameter("encrypt_type");
@@ -114,8 +112,6 @@ public class WeChatCoreController {
             //获得用户基本信息
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
             model.addAttribute("openId", wxMpUser.getOpenId());
-            
-            coreService.loginByWeChatOpenId(wxMpUser.getOpenId(), request, response);
         } catch (WxErrorException ex) {
             Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -123,8 +119,8 @@ public class WeChatCoreController {
     }
     
     @RequestMapping(value = "binduser")
-    public @ResponseBody String bindUser(String openId, String username, String password) throws WxErrorException{
-        return coreService.bindingUserInfo(openId, username, password)==0?"success":"failed";
+    public @ResponseBody String bindUser(HttpServletRequest request,HttpServletResponse response, String openId, String username, String password) throws WxErrorException{
+        return coreService.bindingUserInfo(request, response, openId, username, password)==0?"success":"failed";
     }
     
 }
