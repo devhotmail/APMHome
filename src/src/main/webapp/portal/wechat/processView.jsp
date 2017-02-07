@@ -18,7 +18,7 @@
 
 <script type="text/javascript">
     $(function(){
-        debugger;
+
         var appId = '${appId}';
         var timestamp = '${timestamp}';
         var nonceStr = '${nonceStr}';
