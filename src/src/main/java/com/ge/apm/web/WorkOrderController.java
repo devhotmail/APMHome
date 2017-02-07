@@ -38,9 +38,6 @@ public class WorkOrderController {
     
     @RequestMapping(value = "wocreate")
     public String woCreate(HttpServletRequest request,HttpServletResponse response, Model model) {
-        //先判断是否登录
-        service.loginByWeChatOpenId(request, response);
-        
         WxJsapiSignature s = null;
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
