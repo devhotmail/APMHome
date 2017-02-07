@@ -584,7 +584,7 @@ INSERT INTO "i18n_message" VALUES (5401,'label','assetHead_status', '设备状�
 INSERT INTO "i18n_message" VALUES (5402,'label','assetHead_tile_maintenance', '维修中','In Maintenance',null,-1);
 INSERT INTO "i18n_message" VALUES (5403,'label','assetHead_tile_off', '停机中','Off',null,-1);
 INSERT INTO "i18n_message" VALUES (5404,'label','assetHead_tile_out', '保修期到期（2个月内）','Nearly Out Of Maintenance (within 2 months)',null,-1);
-INSERT INTO "i18n_message" VALUES (5405,'label','assetHead_tile_preventive', '预防性维护（1周内）','Preventive Maintenance (within 1 week)',null,-1);
+INSERT INTO "i18n_message" VALUES (5405,'label','assetHead_tile_preventive', '保养（1周内）','Preventive Maintenance (within 1 week)',null,-1);
 INSERT INTO "i18n_message" VALUES (5406,'label','assetHead_tile_metrology', '设备计量（2个月内）','Metrology (within 2 months)',null,-1);
 INSERT INTO "i18n_message" VALUES (5407,'label','assetHead_tile_quality', '设备质控（2个月内）','Quality Control (within 2 months)',null,-1);
 
