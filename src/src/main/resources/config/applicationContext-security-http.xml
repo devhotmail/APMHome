@@ -17,8 +17,6 @@
     <http pattern="/login.faces*" security="none" />
     <http pattern="/error/*" security="none" />
     <http pattern="/about.html" security="none" />
-    <http pattern="/web/**" security="none" />
-    <http pattern="/**/wechat/**" security="none" />
 	
     <beans:bean name="logoutHandler" class="com.ge.apm.view.sysutil.LogoutHandler" 
                 p:logoutSuccessUrl="/login.xhtml"/>
@@ -27,6 +25,9 @@
     <http auto-config="true" use-expressions="true">
         <form-login login-page="/login.xhtml" default-target-url="/home.xhtml" login-processing-url="/logincheck" always-use-default-target="true" authentication-failure-url="/login?login_error=1"/>
         <logout logout-url="/logout.xhtml" success-handler-ref="logoutHandler"/>
+
+        <intercept-url pattern="/web/**" access="permitAll"/>
+        <intercept-url pattern="/**/wechat/**" access="permitAll"/>
 
         <intercept-url pattern="/home.xhtml" access="isAuthenticated()"/>
         <intercept-url pattern="/api/**" access="isAuthenticated()"/>
