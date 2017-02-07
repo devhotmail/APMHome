@@ -50,7 +50,10 @@ public class ExternalLoginHandler {
     public boolean doLoginByWeChatOpenId(String openId, HttpServletRequest request, HttpServletResponse response){
         UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
         UserAccount user = userDao.getByWeChatId(openId);
-        if(user==null) return false;
+        if(user==null){
+            WebUtil.redirectTo("/login.xhtml");
+            return false;
+        }
         
         return doLoginWithEncryptedPassword(user.getLoginName(), user.getPassword(), request, response);
     }
