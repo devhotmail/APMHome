@@ -69,6 +69,8 @@ public class WeChatCoreController {
             return;
         }
         System.out.println("current token is "+wxMpService.getAccessToken());
+        String apiTicket = wxMpService.getJsapiTicket();
+        System.out.println("current apiTicket is \n"+apiTicket);
 //        String encryptType = StringUtils.isBlank(request.getParameter("encrypt_type"))
 //            ? "raw"
 //            : request.getParameter("encrypt_type");

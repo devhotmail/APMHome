@@ -2,15 +2,12 @@ package com.ge.apm.view.wechat;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ge.apm.domain.UserAccount;
-import com.ge.apm.service.impl.WxUserServiceImpl;
 import com.ge.apm.service.uaa.WxUserService;
 import webapp.framework.dao.GenericRepository;
-import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
 import webapp.framework.web.service.UserContext;
 
@@ -24,7 +21,9 @@ public class WxUserController  extends JpaCRUDController<UserAccount>{
 	
 	@Autowired
     private WxUserService wxUserService;
+	
     private Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Override
     protected void init() {
     	currentUser = UserContext.getCurrentLoginUser();
