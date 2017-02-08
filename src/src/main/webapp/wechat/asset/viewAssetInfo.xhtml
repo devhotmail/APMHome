@@ -59,9 +59,7 @@
 			<BR /> 
 			<pm:field>
 			    <h:outputLabel  value="#{msg.status}:" for="status">
-			    	<!-- <h:outputText id="status" value="#{fieldMsg.getFieldValueList('assetStatus')}" /> -->
-			    	<h:outputText id="status" value="#{fieldMsg.fieldValue('assetStatus','assetInfo.status')}" />
-			    	<!-- <f:selectItems value="#{fieldMsg.getFieldValueList('assetStatus')}" var="item" itemLabel="#{assetInfo.status}" itemValue="#{item.msgKey}"/> -->
+			    	<h:outputText id="status" value="#{fieldMsg.fieldValue('assetStatus',wxAssetInfoController.assetInfo.status)}" />
 			    </h:outputLabel>
 			</pm:field>
           </pm:content> 

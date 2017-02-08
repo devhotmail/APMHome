@@ -41,6 +41,7 @@ public class WxAssetInfoController  extends JpaCRUDController<AssetInfo>{
     	    	}
     	    }
     	}
+//    	assetInfo =  dao.findById(1);
     	assetInfo =  dao.findById(assetId);
     }
     
