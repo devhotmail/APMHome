@@ -28,6 +28,11 @@ import webapp.framework.web.WebUtil;
 @ViewScoped
 public class UserAccountController extends JpaCRUDController<UserAccount> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1L;
+
 	public static final String DEFAULT_USER_ROLE = "设备科科员";
 
     UserAccountRepository dao = null;

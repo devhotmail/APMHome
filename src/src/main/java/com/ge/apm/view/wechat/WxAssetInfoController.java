@@ -32,7 +32,13 @@ public class WxAssetInfoController  extends JpaCRUDController<AssetInfo>{
     	    String name = (String) em.nextElement();
     	    logger.info(" current name is {}",name);
     	    if(name.equals("assetId")){
-    	    	assetId = Integer.parseInt(request.getParameter(name));
+    	    	String value = request.getParameter(name);
+    	    	try{
+    	    		assetId = Integer.parseInt(value);
+    	    	}catch(NumberFormatException ex){
+    	    		assetId = 0;
+    	    		logger.error("assetId format error,msg is {}",ex.getMessage());;
+    	    	}
     	    }
     	}
     	assetInfo =  dao.findById(assetId);
