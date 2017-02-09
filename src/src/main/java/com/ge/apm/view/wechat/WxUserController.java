@@ -17,7 +17,8 @@ public class WxUserController extends JpaCRUDController<UserAccount>{
 
 	private static final long serialVersionUID = -1L;
 	private UserAccount currentUser;
-	private String newPassword;
+//	private String newPassword;
+	private String confirmPassword;
 	
     private WxUserServiceImpl wxUserService;
 	
@@ -38,7 +39,14 @@ public class WxUserController extends JpaCRUDController<UserAccount>{
 	}
    
    public void resetPassword(){
-	   wxUserService.resetPassword(currentUser.getWeChatId(), newPassword);
+	   logger.info("confirmPwd is {}",confirmPassword);
+//	   if(!newPassword.equals(confirmPassword)){
+//		   WebUtil.addSuccessMessage(WebUtil.getMessage("PasswordNotMatch"));
+//		   return;
+//	   }
+	   wxUserService.resetPassword(currentUser.getWeChatId(), confirmPassword);
+//	   newPassword = null;
+	   confirmPassword = null;
    }
     
 	@Override
@@ -46,12 +54,20 @@ public class WxUserController extends JpaCRUDController<UserAccount>{
 		return null;
 	}
 
-	public String getNewPassword() {
-		return newPassword;
+//	public String getNewPassword() {
+//		return newPassword;
+//	}
+//
+//	public void setNewPassword(String newPassword) {
+//		this.newPassword = newPassword;
+//	}
+
+	public String getConfirmPassword() {
+		return confirmPassword;
 	}
 
-	public void setNewPassword(String newPassword) {
-		this.newPassword = newPassword;
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
 	}
 	
 }
