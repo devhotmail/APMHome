@@ -22,6 +22,7 @@ public class WxScanController  extends JpaCRUDController<T>{
     private Logger logger = LoggerFactory.getLogger(getClass());
     private WxJsapiSignature wxJsapiSignature ;
     private WxMpService wxMpService;
+    private String url;//扫描二维码后跳转的URL
     
     @Override
     protected void init() {
@@ -29,9 +30,14 @@ public class WxScanController  extends JpaCRUDController<T>{
     	try {
     		HttpServletRequest request =((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
 			wxJsapiSignature = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
-	    	logger.info("appid is {},noncestr is {},timestamp is {},url is {},signature is {}",
-	    	wxJsapiSignature.getAppid(),wxJsapiSignature.getNoncestr(),wxJsapiSignature.getTimestamp(),wxJsapiSignature.getUrl(),
-	    	wxJsapiSignature.getSignature());
+			String contextPath = request.getScheme()+"://"+request.getServerName()    +":"+request.getServerPort()+request.getContextPath(); 
+			url = contextPath+"/wechat/asset/viewAssetInfo.xhtml?assetId=";
+			if(logger.isDebugEnabled()){
+				logger.debug("current url is {}",url);
+				logger.debug("appid is {},noncestr is {},timestamp is {},url is {},signature is {}",
+						wxJsapiSignature.getAppid(),wxJsapiSignature.getNoncestr(),wxJsapiSignature.getTimestamp(),wxJsapiSignature.getUrl(),
+						wxJsapiSignature.getSignature());
+			}
 		} catch (WxErrorException e) {
 			e.printStackTrace();
 		}
@@ -49,4 +55,14 @@ public class WxScanController  extends JpaCRUDController<T>{
 	public void setWxJsapiSignature(WxJsapiSignature wxJsapiSignature) {
 		this.wxJsapiSignature = wxJsapiSignature;
 	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
+	
 }

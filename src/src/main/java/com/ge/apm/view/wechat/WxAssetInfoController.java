@@ -30,14 +30,14 @@ public class WxAssetInfoController  extends JpaCRUDController<AssetInfo>{
 		Enumeration em = request.getParameterNames();
     	 while (em.hasMoreElements()) {
     	    String name = (String) em.nextElement();
-    	    logger.info(" current name is {}",name);
+    	    logger.info(" current param name is {}",name);
     	    if(name.equals("assetId")){
     	    	String value = request.getParameter(name);
     	    	try{
     	    		assetId = Integer.parseInt(value);
     	    	}catch(NumberFormatException ex){
     	    		assetId = 0;
-    	    		logger.error("assetId format error,msg is {}",ex.getMessage());;
+    	    		logger.error("assetId format error,msg is {}",ex.getMessage());
     	    	}
     	    }
     	}
