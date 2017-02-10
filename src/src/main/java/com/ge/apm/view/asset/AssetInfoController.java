@@ -47,13 +47,13 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     AssetInfoRepository dao = null;
 
     AssetFileAttachmentRepository attachDao = null;
-    
+
     private UserAccountRepository userDao;
 
     private boolean resultStatus;
 
     private UserAccount clinicalOwner;
-    
+
     private UserAccount owner;
 //    private List<UserAccount> ownerList;
     private List<OrgInfo> ownerOrgList;
@@ -103,19 +103,25 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             // setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
             setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = userDao.findById(selected.getAssetOwnerId());
-            clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
+            if (null != selected.getClinicalOwnerId()) {
+                clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
+            }
             prepareView();
         } else if ("Edit".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
             setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = userDao.findById(selected.getAssetOwnerId());
-            clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
+            if (null != selected.getClinicalOwnerId()) {
+                clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
+            }
             prepareEdit();
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
             setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = userDao.findById(selected.getAssetOwnerId());
-            clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
+            if (null != selected.getClinicalOwnerId()) {
+                clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
+            }
             prepareDelete();
         }
 
@@ -287,7 +293,6 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         this.owner = owner;
     }
 
-
     public void onOwnerChange() {
         if (null != owner) {
             selected.setAssetOwnerId(owner.getId());
@@ -295,12 +300,14 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             selected.setAssetOwnerTel(owner.getTelephone());
         }
     }
+
     public void onClinicalDeptChange() {
         this.clinicalOwner = null;
         selected.setClinicalOwnerId(null);
         selected.setClinicalOwnerName(null);
         selected.setClinicalOwnerTel(null);
     }
+
     public void onClinicalOwnerChange() {
         if (null != clinicalOwner) {
             selected.setClinicalOwnerId(clinicalOwner.getId());
@@ -402,6 +409,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         List<UserAccount> res = userDao.getAssetOnwers(UserContextService.getSiteId(), hospitalId);
         return res;
     }
+
     public List<UserAccount> getClinicalOwnerList() {
         List<SearchFilter> usersFilters = new ArrayList<>();
         if (null != selected.getClinicalDeptId()) {
@@ -556,6 +564,5 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void setClinicalOwner(UserAccount clinicalOwner) {
         this.clinicalOwner = clinicalOwner;
     }
-    
 
 }
