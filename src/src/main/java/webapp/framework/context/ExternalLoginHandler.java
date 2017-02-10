@@ -51,7 +51,7 @@ public class ExternalLoginHandler {
         UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
         UserAccount user = userDao.getByWeChatId(openId);
         if(user==null){
-            WebUtil.redirectTo("/login.xhtml");
+            //WebUtil.redirectTo("/login.xhtml");
             return false;
         }
         
