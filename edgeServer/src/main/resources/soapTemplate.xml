@@ -1,0 +1,32 @@
+<#setting number_format="0">
+<#setting datetime_format="yyyy-MM-dd HH:mm:ss"/>
+<#setting date_format="yyyy-MM-dd">
+<#setting time_format="HH:mm:ss">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:com="com.ge.dh.apm">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <com:uploadAssetClinicalRecord>
+         <clinicalRecord>
+			 <examDate>${body['exam_date']?default("")}</examDate>
+			 <examDuration>${body['exam_duration']?default("0")}</examDuration>
+			 <examStartTime>${body['exam_start_time']?default("")}</examStartTime>
+			 <exposeCount>${body['expose_count']?default("0")}</exposeCount>
+			 <filmCount>${body['film_count']?default("0")}</filmCount>
+			 <id>0</id>
+			 <injectCount>${body['inject_count']?default("0")}</injectCount>
+			 <modalityId>${body['modality_id']?default("")}</modalityId>
+			 <modalityType>${body['modality_type']?default("")}</modalityType>
+			 <modalityTypeId>${body['modality_type_id']?default("")}</modalityTypeId>
+			 <priceAmount>${body['price_amount']?default("0")}</priceAmount>
+			 <priceUnit>${body['price_unit']?default("")}</priceUnit>
+			 <procedureId>${body['procedure_id']?default("")}</procedureId>
+			 <procedureName>${body['procedure_name']?default("")}</procedureName>
+			 <procedureStepId>${body['procedure_step_id']?default("")}</procedureStepId>
+			 <procedureStepName>${body['procedure_step_name']?default("")}</procedureStepName>
+			 <sourceRecordId>${body['source_record_id']?default("")}</sourceRecordId>
+			 <sourceSystem>${body['source_system']?default("")}</sourceSystem>
+         </clinicalRecord>
+         <edgeServerKey>${headers.edgeServerKey}</edgeServerKey>
+      </com:uploadAssetClinicalRecord>
+   </soapenv:Body>
+</soapenv:Envelope>

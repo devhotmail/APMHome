@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:cxf="http://camel.apache.org/schema/cxf"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
+        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+    <import resource="file:./route_ris.xml"/>
+
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+	
+        <routeContextRef ref="route_ris"/>
+
+        <route id="clinicalDataSOAP">
+            <from uri="cxf:bean:clinicalDataServiceEndpoint"/>
+            <removeHeaders pattern="Camel*"/>
+            <setHeader headerName="CamelBeanMethodName">
+                <simple>${headers.SOAPAction}</simple>
+            </setHeader>
+            <bean ref="clinicalDataServiceImpl"/>
+        </route>
+
+        <route id="clinicalDataDeltaToCloud2Prod">
+            <from uri="sql:select * from asset_clinical_record_delta where upload_status_prod='N' and create_time>=current_date + integer '-30'?consumer.delay=120000&amp;maxMessagesPerPoll=30"/>
+            <doTry>
+                <removeHeaders pattern="*"/>
+                <bean ref="clinicalDataServiceImpl" method="putServerKey"/>
+                <!--<log message="*** edgeServerKey=${headers.edgeServerKey}" loggingLevel="ERROR"/>-->
+                <setHeader headerName="id"><simple>${body[id]}</simple></setHeader>
+
+                <to uri="freemarker:soapTemplate.xml"/>
+                <!--<log message="*** SOAP=${body}" loggingLevel="ERROR"/>-->
+				
+                <setHeader headerName="SOAPAction"><constant>"uploadAssetClinicalRecord"</constant></setHeader>
+                <setHeader headerName="Content-Type"><constant>text/xml; charset=utf-8</constant></setHeader>
+                <setHeader headerName="CamelHttpMethod"><constant>POST</constant></setHeader>
+
+                <toD uri="{{APMCloudUrlPROD}}?bridgeEndpoint=true&amp;throwExceptionOnFailure=false"/>
+                <setBody><simple>${bodyAs(String)}</simple></setBody>
+
+                <choice>
+                    <when>
+                        <simple>${body} not contains 'soap:Fault'</simple>
+                        <to uri="sql:update asset_clinical_record_delta set upload_status_prod='Y', upload_time_prod=current_timestamp where upload_status_prod='N' and id=:#id::integer"/>
+                    </when>
+                    <when>
+                        <simple>${body} contains 'soap:Fault'</simple>
+                        <log message="*** uploadDeltaToCloud_PROD Error, message: ${body}" loggingLevel="ERROR"/>
+                        <setHeader headerName="errMsg"><simple>${body}</simple></setHeader>
+                        <to uri="sql:update asset_clinical_record_delta set upload_status_prod='E', upload_time_prod=current_timestamp,err_msg_prod=:#errMsg where upload_status_prod='N' and id=:#id::integer"/>
+                    </when>
+                </choice>
+                <doCatch>
+                    <exception>java.io.IOException</exception>
+                    <setHeader headerName="errMsg"><simple>${exception.message}</simple></setHeader>
+                    <log message="*** uploadDeltaToCloud_PROD Error(IOException), message: ${headers.errMsg}" loggingLevel="ERROR"/>
+                    <to uri="sql:update asset_clinical_record_delta set upload_time_prod=current_timestamp, err_msg_prod=:#errMsg where upload_status_prod='N' and id=:#id::integer"/>
+                </doCatch>
+                <doCatch>
+                    <exception>java.lang.Exception</exception>
+                    <setHeader headerName="errMsg"><simple>${exception.message}</simple></setHeader>
+                    <log message="*** uploadDeltaToCloud_PROD Error, message: ${headers.errMsg}" loggingLevel="ERROR"/>
+                    <to uri="sql:update asset_clinical_record_delta set upload_status_prod='E', upload_time_prod=current_timestamp, err_msg_prod=:#errMsg where upload_status_prod='N' and id=:#id::integer"/>
+                </doCatch>
+            </doTry>
+        </route>
+
+        <route id="clinicalDataDeltaToCloud2UAT">
+            <from uri="sql:select * from asset_clinical_record_delta where upload_status_uat='N' and create_time>=current_date + integer '-30'?consumer.delay=120000&amp;maxMessagesPerPoll=30"/>
+            <doTry>
+                <removeHeaders pattern="*"/>
+                <bean ref="clinicalDataServiceImpl" method="putServerKey"/>
+                <!--<log message="*** edgeServerKey=${headers.edgeServerKey}" loggingLevel="ERROR"/>-->
+                <setHeader headerName="id"><simple>${body[id]}</simple></setHeader>
+
+                <to uri="freemarker:soapTemplate.xml"/>
+                <!--<log message="*** SOAP=${body}" loggingLevel="ERROR"/>-->
+				
+                <setHeader headerName="SOAPAction"><constant>"uploadAssetClinicalRecord"</constant></setHeader>
+                <setHeader headerName="Content-Type"><constant>text/xml; charset=utf-8</constant></setHeader>
+                <setHeader headerName="CamelHttpMethod"><constant>POST</constant></setHeader>
+
+                <toD uri="{{APMCloudUrlUAT}}?bridgeEndpoint=true&amp;throwExceptionOnFailure=false"/>
+                <setBody><simple>${bodyAs(String)}</simple></setBody>
+
+                <choice>
+                    <when>
+                        <simple>${body} not contains 'soap:Fault'</simple>
+                        <to uri="sql:update asset_clinical_record_delta set upload_status_uat='Y', upload_time_uat=current_timestamp where upload_status_uat='N' and id=:#id::integer"/>
+                    </when>
+                    <when>
+                        <simple>${body} contains 'soap:Fault'</simple>
+                        <log message="*** uploadDeltaToCloud_UAT Error, message: ${body}" loggingLevel="ERROR"/>
+                        <setHeader headerName="errMsg"><simple>${body}</simple></setHeader>
+                        <to uri="sql:update asset_clinical_record_delta set upload_status_uat='E', upload_time_uat=current_timestamp,err_msg_uat=:#errMsg where upload_status_uat='N' and id=:#id::integer"/>
+                    </when>
+                </choice>
+                <doCatch>
+                    <exception>java.io.IOException</exception>
+                    <setHeader headerName="errMsg"><simple>${exception.message}</simple></setHeader>
+                    <log message="*** uploadDeltaToCloud_UAT Error(IOException), message: ${headers.errMsg}" loggingLevel="ERROR"/>
+                    <to uri="sql:update asset_clinical_record_delta set upload_time_uat=current_timestamp, err_msg_uat=:#errMsg where upload_status_uat='N' and id=:#id::integer"/>
+                </doCatch>
+                <doCatch>
+                    <exception>java.lang.Exception</exception>
+                    <setHeader headerName="errMsg"><simple>${exception.message}</simple></setHeader>
+                    <log message="*** uploadDeltaToCloud_UAT Error, message: ${headers.errMsg}" loggingLevel="ERROR"/>
+                    <to uri="sql:update asset_clinical_record_delta set upload_status_uat='E', upload_time_uat=current_timestamp, err_msg_uat=:#errMsg where upload_status_uat='N' and id=:#id::integer"/>
+                </doCatch>
+            </doTry>
+        </route>
+		
+        <route id="clinicalDataHisotryToCloud2Prod">
+            <from uri="sql:select * from asset_clinical_record_history where upload_status='N' and create_time>=current_date + integer '-30'?consumer.delay=120000&amp;maxMessagesPerPoll=10"/>
+            <doTry>
+                <bean ref="clinicalDataServiceImpl" method="putServerKey"/>
+                <setHeader headerName="id"><simple>${body[id]}</simple></setHeader>
+
+                <to uri="freemarker:soapTemplate.xml"/>
+                <setHeader headerName="SOAPAction"><constant>"uploadAssetClinicalRecord"</constant></setHeader>
+                <setHeader headerName="Content-Type"><constant>text/xml; charset=utf-8</constant></setHeader>
+                <setHeader headerName="CamelHttpMethod"><constant>POST</constant></setHeader>
+
+                <toD uri="{{APMCloudUrlPROD}}?bridgeEndpoint=true&amp;throwExceptionOnFailure=false"/>
+
+                <setBody><simple>${bodyAs(String)}</simple></setBody>
+
+                <choice>
+                    <when>
+                        <simple>${body} not contains 'soap:Fault'</simple>
+                        <to uri="sql:update asset_clinical_record_history set upload_status='Y', upload_time=current_timestamp where upload_status='N' and id=:#id::integer"/>
+                    </when>
+                    <when>
+                        <simple>${body} contains 'soap:Fault'</simple>
+                        <log message="*** uploadHistoryToCloud Error, message: ${body}" loggingLevel="ERROR"/>
+                        <setHeader headerName="errMsg"><simple>${body}</simple></setHeader>
+                        <to uri="sql:update asset_clinical_record_history set upload_status='E', upload_time=current_timestamp,err_msg=:#errMsg where upload_status='N' and id=:#id::integer"/>
+                    </when>
+                </choice>
+                <doCatch>
+                    <exception>java.io.IOException</exception>
+                    <setHeader headerName="errMsg"><simple>${exception.message}</simple></setHeader>
+                    <log message="*** uploadHistoryToCloud Error(IOException), message: ${headers.errMsg}" loggingLevel="ERROR"/>
+                    <to uri="sql:update asset_clinical_record_history set upload_time=current_timestamp, err_msg=:#errMsg where upload_status='N' and id=:#id::integer"/>
+                </doCatch>
+                <doCatch>
+                    <exception>java.lang.Exception</exception>
+                    <setHeader headerName="errMsg"><simple>${exception.message}</simple></setHeader>
+                    <log message="*** uploadHistoryToCloud Error, message: ${headers.errMsg}" loggingLevel="ERROR"/>
+                    <to uri="sql:update asset_clinical_record_history set upload_status='E', upload_time=current_timestamp, err_msg=:#errMsg where upload_status='N' and id=:#id::integer"/>
+                </doCatch>
+            </doTry>
+        </route>
+
+        <route id="purgeClinicalData">
+            <from uri="timer://purgeClinicalData?fixedRate=true&amp;period=1200000"/>
+            <to uri="sql:delete from asset_clinical_record_delta where create_time &lt; current_date + integer '-360'"/>
+            <to uri="sql:delete from asset_clinical_record_history where create_time &lt; current_date + integer '-360'"/>
+        </route>
+		
+    </camelContext>
+
+</beans>
