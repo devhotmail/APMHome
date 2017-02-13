@@ -105,18 +105,7 @@ public class WeChatCoreController {
      * @param response 
      */
     @RequestMapping(value = "authurl")
-    public String authUrl(HttpServletRequest request,HttpServletResponse response, Model model) throws WxErrorException{
-        String code = request.getParameter("code");
-        WxMpOAuth2AccessToken wxMpOAuth2AccessToken;
-        try {
-            //获得token
-            wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
-            //获得用户基本信息
-            WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
-            model.addAttribute("openId", wxMpUser.getOpenId());
-        } catch (WxErrorException ex) {
-            Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public String authUrl() {
         return "userInfo";
     }
     

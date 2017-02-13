@@ -15,7 +15,7 @@
         <title>帐号绑定</title>
         <!-- 引入 WeUI -->
         <link rel="stylesheet" href="${ctx}/resources/wechat/weui.min.css"/>
-        <script src="${ctx}/resources/wechat/jquery-2.0.0.min.js"></script>
+        <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
     </head>
     <body>
         <div id="container" class="container"></div>
@@ -56,35 +56,34 @@
                         <p class="weui-toast__content">帐号绑定中</p>
                     </div>
                 </div>
-                <script type="text/javascript">
-                    var WEB_ROOT = '${ctx}/';
-                    $(function(){
-                        $('#submit').click(function(){
-                            var $loadingToast = $('#loadingToast');
-                            $.ajax({
-                                url: WEB_ROOT+'web/binduser',
-                                type: 'post',
-                                data: {'username': $('#username').val(), 'password': $('#password').val(), 'openId': $('#openId').val()},
-                                beforeSend: function( xhr ) { 
-                                    xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
-                                    },
-                                success: function(ret) {
-                                    if (ret == 'success') {
-                                        $loadingToast.fadeOut(100);
-                                        $('#container').empty();
-                                        $('#container').append($('#msg_success').html());
-                                    } else {
-                                        $('#container').empty();
-                                        $('#container').append($('#msg_failed').html());
-                                    }
-                                }
-                            });
-                            if ($loadingToast.css('display') != 'none') return;
-                            $loadingToast.fadeIn(100);
-                        });
-                    });
-                </script>
             </div>
+            <script type="text/javascript">
+                var WEB_ROOT = '${ctx}/';
+                $(function(){
+                    $('#submit').click(function(){
+                        var $loadingToast = $('#loadingToast');
+                        $.ajax({
+                            url: WEB_ROOT+'web/binduser',
+                            type: 'post',
+                            data: {'username': $('#username').val(), 'password': $('#password').val(), 'openId': $('#openId').val()},
+                            beforeSend: function( xhr ) { 
+                                xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+                                },
+                            success: function(ret) {
+                                if (ret == 'success') {
+                                    $loadingToast.fadeOut(100);
+                                    $('#container').empty();
+                                    $('#container').append($('#msg_success').html());
+                                } else {
+                                    $('#container').empty();
+                                    $('#container').append($('#msg_failed').html());
+                                }
+                            }
+                        });
+                        if ($loadingToast.css('display') != 'none') return;
+                        $loadingToast.fadeIn(100);
+                    });
+                });
         </script>
         <script type="text/html" id="msg_success">
             <div class="page">

@@ -54,6 +54,7 @@ public class WeChatMenuDispatcher {
         URL_MAP.put("31", "/wechat/uaa/viewUserAccount.xhtml");
         URL_MAP.put("32", "/wechat/uaa/resetAccountPassword.xhtml");
         URL_MAP.put("33", "/web/authurl");
+        URL_MAP.put("24", "/web/wolistpage");
     }
 
     public static Map<String, String> getUrlMap() {

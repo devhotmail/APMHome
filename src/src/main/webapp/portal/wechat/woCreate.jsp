@@ -15,7 +15,7 @@
         <title>新增报修</title>
         <!-- 引入 WeUI -->
         <link rel="stylesheet" href="${ctx}/resources/wechat/weui.min.css"/>
-        <script src="${ctx}/resources/wechat/jquery-2.0.0.min.js"></script>
+        <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
         <script src="${ctx}/resources/wechat/jweixin-1.0.0.js"></script>
         <script>var WEB_ROOT = '${ctx}/';</script>
     </head>
@@ -229,6 +229,7 @@
                     <p class="weui-toast__content">数据保存中</p>
                 </div>
             </div>
+        </div>
             
             <script type="text/javascript">
                 $(function(){
@@ -412,8 +413,6 @@
                     }
                     
                 });
-            </script>
-        </div>
         </script>
         <script type="text/html" id="msg_success">
             <div class="page">

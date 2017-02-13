@@ -42,10 +42,15 @@ public class MenuConfig {
         WxMenuButton button22 = new WxMenuButton();
         button22.setType(WxConsts.BUTTON_VIEW);
         button22.setName("报修处理进度");
-     
         button22.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/23", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        WxMenuButton button23 = new WxMenuButton();
+        button23.setType(WxConsts.BUTTON_VIEW);
+        button23.setName("我的工单");
+        button23.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/24", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         button2.getSubButtons().add(button21);
         button2.getSubButtons().add(button22);
+        button2.getSubButtons().add(button23);
+        
         WxMenuButton button3 = new WxMenuButton();
         button3.setName("我的帐号");
         WxMenuButton button31 = new WxMenuButton();

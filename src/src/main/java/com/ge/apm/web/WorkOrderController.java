@@ -8,6 +8,7 @@ package com.ge.apm.web;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.service.wechat.CoreService;
+import com.ge.apm.service.wechat.WorkOrderWeChatService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,8 @@ public class WorkOrderController {
     private AssetInfoRepository assetDao;
     @Autowired
     private CoreService service;
+    @Autowired
+    private WorkOrderWeChatService woWcService;
     
     @RequestMapping(value = "wocreate")
     public String woCreate(HttpServletRequest request,HttpServletResponse response, Model model) {
@@ -102,6 +105,16 @@ public class WorkOrderController {
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+    
+    @RequestMapping(value = "wolistpage")
+    public String woListPage() {
+        return "myWoList";
+    }
+    
+    @RequestMapping(value = "wolistdata")
+    public @ResponseBody Object woListData(HttpServletRequest request) {
+        return woWcService.woList(request);
     }
     
 }
