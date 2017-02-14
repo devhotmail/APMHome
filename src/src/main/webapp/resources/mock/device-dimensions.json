@@ -1,0 +1,113 @@
+{
+  "pages": {
+    "total": 43,
+    "limit": 20,
+    "start": 0
+  },
+  "items": [
+    {
+      "id": "32",
+      "name": "ct001",
+      "type": "CT",
+      "dept": "放射科",
+      "rating": 4387,
+      "rating_text": "设备综合排名",
+      "scan": 869,
+      "scan_bm": 754,
+      "scan_unit": "次",
+      "scan_text": "扫描量",
+      "exposure": 675.23,
+      "exposure_bm": 594.98,
+      "exposure_unit": "单位",
+      "exposure_text": "曝光量",
+      "usage": 543.23,
+      "usage_bm": 426.86,
+      "usage_unit": "小时",
+      "usage_text": "使用时间",
+      "fix": 2,
+      "fix_bm": 1.3,
+      "fix_unit": "次",
+      "fix_text": "维修次数",
+      "stop": 1.2,
+      "stop_bm": 2.5,
+      "stop_unit": "%",
+      "stop_text": "停机率",
+      "profit": 1.0245322E5,
+      "profit_bm": 2.0245322E5,
+      "profit_label": "10.2",
+      "profit_bm_label": "20.2",
+      "profit_unit": "万元",
+      "profit_text": "利润"
+    },
+    {
+      "id": "12",
+      "name": "MR001",
+      "type": "MR",
+      "dept": "妇产科",
+      "rating": 3937,
+      "rating_text": "设备综合排名",
+      "scan": 769,
+      "scan_bm": 574,
+      "scan_unit": "次",
+      "scan_text": "扫描量",
+      "exposure": 875.23,
+      "exposure_bm": 995.98,
+      "exposure_unit": "单位",
+      "exposure_text": "曝光量",
+      "usage": 647.23,
+      "usage_bm": 722.86,
+      "usage_unit": "小时",
+      "usage_text": "使用时间",
+      "fix": 0,
+      "fix_bm": 0.8,
+      "fix_unit": "次",
+      "fix_text": "维修次数",
+      "stop": 0.0,
+      "stop_bm": 1.6,
+      "stop_unit": "%",
+      "stop_text": "停机率",
+      "profit": 5.8245322E6,
+      "profit_bm": 6.3245322E5,
+      "profit_label": "582.5",
+      "profit_bm_label": "632.5",
+      "profit_unit": "万元",
+      "profit_text": "利润"
+    }
+  ],
+  "ruler": {
+    "scan": {
+      "max": 3610,
+      "min": 360,
+      "step": 650
+    },
+    "exposure": {
+      "max": 1600,
+      "min": 20,
+      "step": 280
+    },
+    "usage": {
+      "max": 86120,
+      "min": 120,
+      "step": 17200
+    },
+    "fix": {
+      "max": 20,
+      "min": 0,
+      "step": 4
+    },
+    "stop": {
+      "max": 30,
+      "min": 0,
+      "step": 6
+    },
+    "profit": {
+      "max": 7.2E6,
+      "min": 1E5,
+      "step": 140
+    }
+  },
+  "link": {
+    "ref": "self",
+    "href": "https://dew.io/api/list?/api/list?from=2015-01-12&to=2016-01-12"
+  }
+}

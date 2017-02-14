@@ -1,0 +1,246 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="device-parallel-coordinates-styles.html">
+<script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
+
+
+<dom-module id="device-parallel-coordinates">
+  <template>
+    <style include="device-parallel-coordinates-styles"></style>
+    <div id="chart" class="canvas">
+      <svg id="svg" width$="[[width]]" height$="[[height]]"></svg>
+    </div>
+  </template>
+  <script>
+    define('device-parallel-coordinates', ['context'], function(context) {
+
+      Polymer({
+        is: 'device-parallel-coordinates',
+        properties: {
+          width: Number,
+          height: Number,
+          margin: {
+            type: Object,
+            value: function() {
+              return {
+                top: 40,
+                right: 40,
+                bottom: 20,
+                left: 40
+              };
+            },
+          },
+          dimensions: {
+            type: Array,
+            computed: '_getDimensions(data, margin, height)'
+          },
+          data: Array,
+        },
+        observers: [
+          '_replot(width, height, data)'
+        ],
+        behaviors: [
+          Polymer.IronResizableBehavior
+        ],
+        listeners: {
+          'iron-resize': '_onResize'
+        },
+        render: function() {
+          var _this = this;
+          var margin = this.margin,
+            width = this.width - margin.left - margin.right,
+            height = this.height - margin.top - margin.bottom;
+
+          var svg = d3.select(this.$.svg);
+
+          var dimensions = this.dimensions;
+          var data = this.data;
+
+          var x = d3.scalePoint()
+          .domain(dimensions.map(function(d) {
+            return d.name;
+          }))
+          .padding([.5])
+          .range([0, width]);
+
+          var line = d3.line()
+          .defined(function(d) { return !isNaN(d[1]); });
+          var yAxis = d3.axisLeft();
+
+          var root = svg.append("g").classed('chart-body', true).attr('transform', d3Transform().translate(margin.left, margin.top));
+
+          var dimension = root.selectAll(".dimension")
+          .data(dimensions)
+          .enter().append("g")
+          .attr("class", "dimension")
+          .attr("transform", function(d) {
+            return "translate(" + x(d.name) + ")";
+          });
+
+          dimensions.forEach(function(dimension) {
+            var domain;
+            var scaleDef = _this.scales;
+            var extent;
+            var ticks;
+            // the measurement axis
+            if (dimension.type === Number) {
+              extent = scaleDef[dimension.name];
+              domain = [extent.min, extent.max];
+              ticks = Math.round((
+                extent.max - extent.min
+                ) / extent.step);
+            }
+            // the ordinal axis
+            else {
+              domain = data.map(function(d) {
+                return d[dimension.name];
+              });
+            }
+            dimension.scale.domain(domain);
+            if (ticks) {
+              dimension.scale.ticks(ticks);
+            }
+          });
+
+          root.append("g")
+          .attr("class", "background")
+          .selectAll("path")
+          .data(data)
+          .enter().append("path")
+          .attr("d", draw);
+
+          root.append("g")
+          .attr("class", "foreground")
+          .selectAll("path")
+          .data(data)
+          .enter().append("path")
+          .attr("d", draw);
+
+          var axis = dimension.append("g")
+          .attr("class", "axis");
+
+          axis.append('text')
+          .attr("class", "title")
+          .attr("text-anchor", "middle")
+          .attr("y", -20)
+          .text(function(d) {
+            return d.label;
+          });
+
+          axis.each(function(d) {
+            d3.select(this).call(yAxis.scale(d.scale));
+          });
+
+
+          // Rebind the axis data to simplify mouseover.
+          root.select(".axis").selectAll("text:not(.title)")
+          .attr("class", "label")
+          .data(data, function(d) { return d.name || d; });
+
+          var projection = root.selectAll(".axis text,.background path,.foreground path")
+          .on("mouseover", mouseover)
+          .on("mouseout", mouseout);
+
+          this.scopeSubtree(this.$.svg);
+
+          function mouseover(d) {
+            root.classed("active", true);
+            projection.classed("inactive", function(p) { return p !== d; });
+            projection.filter(function(p) { return p === d; }).each(moveToFront);
+          }
+
+          function mouseout(d) {
+            root.classed("active", false);
+            projection.classed("inactive", false);
+          }
+
+          function moveToFront() {
+            this.parentNode.appendChild(this);
+          }
+
+          function draw(d) {
+            return line(dimensions.map(function(dimension) {
+              return [x(dimension.name), dimension.scale(d[dimension.name])];
+            }));
+          }
+        },
+        _getDimensions: function(data, margin, height) {
+          height = height - this.margin.top - this.margin.bottom;
+          var definition = data[0];
+          var dims = [
+            {
+              name: "name",
+              scale: d3.scaleOrdinal().range([0, height]),
+              type: String
+            },
+            {
+              name: "scan",
+              scale: d3.scaleLinear().range([0, height]),
+              type: Number
+            },
+            {
+              name: "exposure",
+              scale: d3.scaleLinear().range([height, 0]),
+              type: Number
+            },
+            {
+              name: "usage",
+              scale: d3.scaleLinear().range([height, 0]),
+              type: Number
+            },
+            {
+              name: "fix",
+              scale: d3.scaleLinear().range([height, 0]),
+              type: Number
+            },
+            {
+              name: "stop",
+              scale: d3.scaleLinear().range([height, 0]),
+              type: Number
+            },
+            {
+              name: "profit",
+              scale: d3.scaleLinear().range([height, 0]),
+              type: Number
+            }
+          ];
+          return dims.map(function(dimension) {
+            var name = dimension.name;
+            if (name === 'name') {
+              dimension.label = definition['rating_text'];
+              return dimension;
+            }
+            var label = definition[name + '_text'];
+            var unit = definition[name + '_unit'];
+            dimension.label = label + '(' + unit + ')';
+            return dimension;
+          });
+        },
+        _replot: function(width, height) {
+          var key = this.queryUrl;
+          this.$.svg.innerHTML = '';
+          this.debounce('replot', this.render, 500);
+        },
+        ready: function() {
+          this._loadData();
+        },
+        _loadData: function() {
+          var _this = this;
+          return fetch('mock/device-dimensions.json', {
+            credentials: 'same-origin'
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            _this.set('data', data.items);
+            _this.set('scales', data.ruler);
+          });
+        },
+        _onResize: function() {
+          var rect = this.$.chart.getBoundingClientRect();
+          this.set('width', rect.width);
+          this.set('height', rect.height);
+        },
+      });
+    });
+  </script>
+</dom-module>

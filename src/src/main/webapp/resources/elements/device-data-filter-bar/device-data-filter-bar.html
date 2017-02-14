@@ -1,0 +1,88 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="import" href="../../bower_components/px-rangepicker/px-rangepicker.html">
+<link rel="import" href="device-data-filter-bar-styles.html">
+<script src="../../bower_components/urijs/src/URI.js"></script>
+
+
+<dom-module id="device-data-filter-bar">
+  <template>
+    <style include="device-data-filter-bar-styles"></style>
+    <div class="flex flex--row flex--center">
+      <div class="flex--item u-1/4 text--center">
+        <px-rangepicker
+          id="rangepicker"
+          range="{{range}}"
+          hide-time="true"
+          date-format="YYYY/MM/DD"
+          time-format="hh:mm:ss A"
+          show-buttons="true">
+        </px-rangepicker>
+      </div>
+      <div class="flex--item u-3/4">
+        <label for="device-filter">筛选条件</label>
+        <px-dropdown id="device-filter" class="u-mh+" display-value="[[_displayValue]]" selected-key="{{selectedType}}">
+          <px-dropdown-content class="px-dropdown-content"
+                               max-cont-character-width="10"
+                               extend-dropdown="true"
+                               extend-dropdown-by="15"
+                               items="[[selectOptions]]">
+          </px-dropdown-content>
+        </px-dropdown>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'device-data-filter-bar',
+      properties: {
+        selectOptions: Array,
+        selectedType: {
+          type: String,
+          notify: true,
+        },
+        _displayValue: {
+          computed: '_getDisplayValue(selectedType, selectOptions)'
+        }
+      },
+      observers: [
+        'saveOptionsInHistory(selectedType)',
+      ],
+      ready: function() {
+        var _this = this;
+        this.restoreOptionsFromHistory();
+        fetch('mock/device-filter-options.json').then(function(res) {
+          return res.json();
+        }).then(function(list) {
+          _this.set('selectOptions', list);
+        });
+
+        var range = {
+          from: moment().toISOString(),
+          to: moment().add(1, 'y').toISOString()
+        };
+
+        this.set('range', range);
+      },
+      restoreOptionsFromHistory: function() {
+        var hash = location.hash.replace(/^#/, '');
+        var options = URI('').search(hash).search(true);
+        this.set('selectedType', options.filterBy || 0);
+      },
+      _getDisplayValue: function(key, options) {
+        return options.find(function(item) {
+          return item.key == key;
+        }).val;
+      },
+      saveOptionsInHistory: function(type) {
+        if (!type) {
+          return;
+        }
+
+        var uri = URI('').addQuery('filterBy', type);
+        var new_hash = uri.query();
+        location.hash = '#' + new_hash;
+      }
+    });
+  </script>
+</dom-module>

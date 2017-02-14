@@ -1,0 +1,106 @@
+<dom-module id="device-parallel-coordinates-styles">
+<template>
+<style>
+/*------------------------------------*    #PX-COLORS-DESIGN
+\*------------------------------------*/
+/**
+ * Brand Colors
+ */
+/**
+     * Primary
+     */
+/**
+     * Light
+     */
+/**
+     * Dark
+     */
+/**
+ * Monochromatic (gray10 is darkest, gray1 is lightest)
+ */
+/**
+ * Define grey = gray to avoid dev typos
+ */
+/**
+ * Buttons
+ */
+/**
+ * Selection
+ */
+/**
+ * Alerts
+ */
+/**
+ * Data Visualization
+ */
+/**
+     * Basic
+     */
+/**
+     * Light
+     */
+/**
+     * Dark
+     */
+:host {
+  margin-top: 60px;
+  height: calc(100vh - 60px);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
+
+.canvas {
+  width: 100%;
+  height: 100%; }
+
+.background path {
+  fill: none;
+  stroke: none;
+  stroke-width: 20px;
+  pointer-events: stroke; }
+
+.foreground path {
+  fill: none;
+  stroke: rgba(140, 140, 140, 0.1);
+  stroke-width: 1.5px; }
+
+.chart-body text {
+  fill: #525156; }
+
+.axis .title {
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase; }
+
+.axis line,
+.axis path {
+  fill: none;
+  stroke: #525156;
+  shape-rendering: crispEdges; }
+
+.label {
+  -webkit-transition: fill 125ms linear; }
+
+.chart-body.active .label:not(.inactive) {
+  font-weight: bold; }
+
+.chart-body.active .foreground path {
+  stroke: #5da5da;
+  stroke-width: 3px; }
+  .chart-body.active .foreground path.inactive {
+    stroke: rgba(140, 140, 140, 0.1);
+    stroke-opacity: .5;
+    stroke-width: 1px; }
+
+.label.inactive {
+  fill: #525156; }
+
+</style>
+</template>
+</dom-module>
