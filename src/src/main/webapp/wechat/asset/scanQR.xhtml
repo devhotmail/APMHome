@@ -3,10 +3,15 @@
  			xmlns:h="http://java.sun.com/jsf/html"
             xmlns:f="http://java.sun.com/jsf/core"
             xmlns:p="http://primefaces.org/ui"
+            xmlns:ui="http://java.sun.com/jsf/facelets"
             xmlns:pm="http://primefaces.org/mobile">
             
      <f:view renderKitId="PRIMEFACES_MOBILE" />
-     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<!--      <ui:define name="head">
+		 <h:outputScript name="webchat/jweixin-1.0.0.js"/>
+		 <h:outputScript name="webchat/jquery-2.0.0.min.js"/>
+	 </ui:define> -->
+      <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
      <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
      	<h:inputHidden id="appid" value="#{wxScanController.wxJsapiSignature.appid}"></h:inputHidden> 
      	<h:inputHidden id="noncestr" value="#{wxScanController.wxJsapiSignature.noncestr}"></h:inputHidden> 
@@ -43,4 +48,5 @@
               });
           });
      	</script>
+
 </html>
