@@ -103,7 +103,7 @@
     "profit": {
       "max": 7.2E6,
       "min": 1E5,
-      "step": 140
+      "step": 2E6
     }
   },
   "link": {

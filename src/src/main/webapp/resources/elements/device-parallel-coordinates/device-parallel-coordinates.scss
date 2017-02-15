@@ -5,7 +5,6 @@ $label-text-color: $gray8;
 $series-line-color: rgba($dv-light-gray, .1);
 
 :host {
-  margin-top: 60px;
   height: calc(100vh - 60px);
   display: flex;
   align-items: center;
@@ -34,10 +33,17 @@ $series-line-color: rgba($dv-light-gray, .1);
   fill: $label-text-color;
 }
 
-.axis .title {
-  font-size: 1rem;
-  font-weight: bold;
-  text-transform: uppercase;
+.axis text {
+  text-anchor: middle;
+
+  &.label {
+    font-size: 1rem;
+    text-transform: uppercase;
+  }
+
+  &.title {
+    font-weight: bold;
+  }
 }
 
 .axis line,
@@ -47,12 +53,29 @@ $series-line-color: rgba($dv-light-gray, .1);
   shape-rendering: crispEdges;
 }
 
+.sector {
+  rect {
+    fill: rgba($dv-dark-blue, .8);
+  }
+
+  text.label {
+    fill: $label-text-color;
+  }
+}
+
 .label {
   -webkit-transition: fill 125ms linear;
 }
 
-.chart-body.active .label:not(.inactive) {
-  font-weight: bold;
+.sector {
+  opacity: .8;
+}
+
+.chart-body.active .sector:not(.inactive) {
+  opacity: 1;
+  .label {
+    font-weight: bold;
+  }
 }
 
 .chart-body.active .foreground {

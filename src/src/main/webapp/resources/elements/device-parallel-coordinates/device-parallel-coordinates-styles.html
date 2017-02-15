@@ -43,7 +43,6 @@
      * Dark
      */
 :host {
-  margin-top: 60px;
   height: calc(100vh - 60px);
   display: -webkit-box;
   display: -ms-flexbox;
@@ -73,10 +72,13 @@
 .chart-body text {
   fill: #525156; }
 
-.axis .title {
-  font-size: 1rem;
-  font-weight: bold;
-  text-transform: uppercase; }
+.axis text {
+  text-anchor: middle; }
+  .axis text.label {
+    font-size: 1rem;
+    text-transform: uppercase; }
+  .axis text.title {
+    font-weight: bold; }
 
 .axis line,
 .axis path {
@@ -84,11 +86,22 @@
   stroke: #525156;
   shape-rendering: crispEdges; }
 
+.sector rect {
+  fill: rgba(38, 93, 171, 0.8); }
+
+.sector text.label {
+  fill: #525156; }
+
 .label {
   -webkit-transition: fill 125ms linear; }
 
-.chart-body.active .label:not(.inactive) {
-  font-weight: bold; }
+.sector {
+  opacity: .8; }
+
+.chart-body.active .sector:not(.inactive) {
+  opacity: 1; }
+  .chart-body.active .sector:not(.inactive) .label {
+    font-weight: bold; }
 
 .chart-body.active .foreground path {
   stroke: #5da5da;
