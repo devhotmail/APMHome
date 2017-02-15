@@ -3,7 +3,7 @@ bower_components/
 logs
 node_modules/
 target/
-src/main/webapp/resources/elements/**/*-styles.html
+elements/**/*-styles.html
 .idea/
 *.iml
 sql/
