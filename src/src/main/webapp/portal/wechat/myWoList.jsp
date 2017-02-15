@@ -23,7 +23,7 @@
                 top: 0; bottom: 0; left: 0; right: 0;
                 opacity: 1; background: white;
             }
-            .slideIn {
+            @-webkit-keyframes slideIn {
                 from {
                     transform: translate3d(100%, 0, 0);
                     opacity: 0;
@@ -34,7 +34,7 @@
                 }
             }
 
-            .slideOut {
+            @keyframes slideOut {
                 from {
                     transform: translate3d(0, 0, 0);
                     opacity: 1;
@@ -43,6 +43,13 @@
                     transform: translate3d(100%, 0, 0);
                     opacity: 0;
                 }
+            }
+            .page.slideIn {
+                animation: slideIn .2s forwards;
+            }
+
+            .page.slideOut {
+                animation: slideOut .2s forwards;
             }
         </style>
         <script>var WEB_ROOT = '${ctx}/';</script>
@@ -65,7 +72,7 @@
                     _pageIndex: 0,
                     init: function(){
                         var self = this;
-                        $(window).on('hashchange', function () {debugger;
+                        $(window).on('hashchange', function () {
                             var state = history.state || {};
                             var page = location.hash.indexOf('#') === 0 ? location.hash : '#';
                             if (state._pageIndex <= self._pageIndex ) {
@@ -84,7 +91,7 @@
                         history.replaceState && history.replaceState({_pageIndex: this._pageIndex}, '', location.href);
                         var html = $(page).html()+'<\/script>';
                         var $html = $(html);
-//                        $html.addClass('slideIn');
+                        $html.addClass('slideIn');
                         $('#container').append($html);
                         this._pageStack.push({dom: $html});
                     },
@@ -94,7 +101,9 @@
                         if (!stack) {
                             return;
                         }
-                        stack.dom.remove();
+                        stack.dom.addClass('slideOut').on('animationend webkitAnimationEnd', function () {
+                            stack.dom.remove();
+                        });
                     }
                 }
                 pageManager.init();
@@ -162,17 +171,38 @@
         
         <script type="text/html" id="wo_detail">
             <div class="page">
-                <div class="weui-msg">
-                    <div class="weui-msg__icon-area"><i class="weui-icon-info weui-icon_msg"></i></div>
-                    <div class="weui-msg__text-area">
-                        <h2 class="weui-msg__title">暂时没有需要处理的工单</h2>
-                    </div>
-                    <div class="weui-msg__opr-area">
-                        <p class="weui-btn-area">
-                        </p>
-                    </div>
-                </div>
-            </div>
+                <div class="page__bd">
+                    <div class="weui-tab">
+                        <div class="weui-navbar">
+                            <div class="weui-navbar__item weui-bar__item_on">
+                                选项
+                            </div>
+                           <div class="weui-navbar__item weui-bar__item_on">
+                               <span style="display: inline-block;position: relative;">
+                                   <span class="weui-badge" style="position: absolute;top: -2px;right: -13px;">测试</span>
+                               </span>
+                           </div>
+                           <div class="weui-navbar__item">
+                               <p class="weui-tabbar__label">通讯录</p>
+                           </div>
+                           <div class="weui-navbar__item">
+                               <span style="display: inline-block;position: relative;">
+                                   <span class="weui-badge weui-badge_dot" style="position: absolute;top: 0;right: -6px;"></span>
+                               </span>
+                           </div>
+                           <div class="weui-navbar__item">
+                               <p class="weui-tabbar__label">我</p>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+        <script type="text/javascript">
+            $(function(){
+                $('.weui-tabbar__item').on('click', function () {
+                    $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+                });
+            });
         </script>
         
         <script type="text/html" id="wo_li">
