@@ -82,6 +82,7 @@
           .range([0, width]);
 
           var line = d3.line()
+          .curve(d3.curveMonotoneX)
           .defined(function(d) { return !isNaN(d[1]); });
           var yAxis = d3.axisLeft();
 
@@ -91,9 +92,9 @@
           .data(dimensions)
           .enter().append("g")
           .attr("class", "dimension")
-          .attr("transform", function(d) {
-            return "translate(" + x(d.name) + ")";
-          });
+          .attr("transform", d3Transform().translate(function(d) {
+            return [x(d.name), 0]
+          }));
 
           // massage dimension with scale definitions (rules)
           dimensions.forEach(function(dimension) {
@@ -300,8 +301,8 @@
           .attr("y", function(d) {
             return padding / 2;
           })
-          .attr("height", function(d) {
-            return (d.y0 - d.y1) - padding;
+          .attr("height", function(d, i, list) {
+            return d.y0 - d.y1 - ((i === 0) ? 0 : padding);
           });
 
           // sector text label
