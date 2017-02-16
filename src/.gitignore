@@ -7,3 +7,4 @@ src/main/webapp/resources/elements/**/*-styles.html
 .idea/
 *.iml
 sql/
+about.html
