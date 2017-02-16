@@ -6,7 +6,7 @@ stack: cflinuxfs2
 path: ./target/geapm-1.0.0.war
 
 applications:
-- name: geapmuat3
+- name: geapmuat2
   env:
     JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
     WEB_ANALYTICS_CFG: 'ga:{enabled:true, id:UA-89957306-1}'
