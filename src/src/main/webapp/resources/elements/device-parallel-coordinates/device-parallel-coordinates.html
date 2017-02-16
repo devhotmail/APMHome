@@ -195,6 +195,7 @@
           .text(function(d) {
             return d;
           })
+          .attr('dy', '.35em')
           .attr('class', 'label')
           .attr('transform', d3Transform().translate(function(d) {
             return [0, scale(d)];

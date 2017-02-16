@@ -39,6 +39,7 @@ $series-line-color: rgba($dv-light-gray, .1);
   &.label {
     font-size: 1rem;
     text-transform: uppercase;
+    text-anchor: end;
   }
 
   &.title {
