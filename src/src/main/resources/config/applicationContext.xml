@@ -67,6 +67,7 @@
 		<property name="proxyFilters">
 			<list>
 				<ref bean="statFilter"/>
+				<ref bean="wallFilter"/>
 				<ref bean="slf4jLogFilter"/>
 			</list>
 		</property>
@@ -78,15 +79,20 @@
 		<property name="mergeSql" value="true"/>
 	</bean>
 
+	<bean id="wallFilter" class="com.alibaba.druid.wall.WallFilter">
+		<property name="dbType" value="postgresql" />
+		<property name="logViolation" value="true"/>
+		<property name="throwException" value="false"/>
+	</bean>
+
 	<bean id="slf4jLogFilter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
-		<property name="statementExecutableSqlLogEnable" value="false"/>
+		<property name="statementExecutableSqlLogEnable" value="true"/>
 		<property name="connectionLogErrorEnabled" value="true"/>
 		<property name="statementLogErrorEnabled" value="true"/>
 		<property name="resultSetLogErrorEnabled" value="true"/>
 	</bean>
 
-	<bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor">
-	</bean>
+	<bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor"/>
 
 	<bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut"
 	      scope="prototype">
@@ -97,11 +103,10 @@
 		</property>
 	</bean>
 
-	<aop:config>
+	<aop:config proxy-target-class="true">
 		<aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut"/>
 	</aop:config>
 
-	<aop:aspectj-autoproxy/>
 
 	<bean id="connectionProvider" class="com.github.davidmoten.rx.jdbc.ConnectionProviderFromDataSource" destroy-method="close">
 		<constructor-arg ref="risDataSource"/>

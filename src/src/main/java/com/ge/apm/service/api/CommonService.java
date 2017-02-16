@@ -31,7 +31,8 @@ public class CommonService {
 
 
   public Observable<Map<Integer, String>> findFields(int siteId, String type) {
-    return Observable.from(Option.of(DbMessageSource.getMessageCache(siteId)).filter(map -> !map.isEmpty()).getOrElse(DbMessageSource.getMessageCache(-1)).entrySet())
+    return Observable.from(Option
+      .of(DbMessageSource.getMessageCache(siteId)).filter(map -> map.entrySet().stream().anyMatch(entry -> entry.getValue().getMsgType().equalsIgnoreCase(type))).getOrElse(DbMessageSource.getMessageCache(-1)).entrySet())
       .filter(entry -> entry.getValue().getMsgType().equalsIgnoreCase(type))
       .map(Map.Entry::getValue)
       .toMap(msg -> Ints.tryParse(msg.getMsgKey()), I18nMessage::getValueZh)

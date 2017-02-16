@@ -11,6 +11,7 @@ import org.apache.ibatis.jdbc.SQL;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,7 @@ public class DynamicSqlTest {
     db.close();
   }
 
+  @Ignore
   @Test
   public void testConnection() {
     db.select("select id, msg_type, msg_key, value_zh, value_en from i18n_message where msg_type = :type")
@@ -76,6 +78,7 @@ public class DynamicSqlTest {
       .map(t -> Tuple.of(t._1(), t._2(), t._3()));
   }
 
+  @Ignore
   @Test
   public void testSqlBuilder() {
     Assertions.assertThat(dynamicQuery(1, 2, 3).count().toBlocking().single()).isGreaterThan(0);

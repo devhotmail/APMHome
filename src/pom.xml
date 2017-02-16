@@ -43,6 +43,7 @@
         <hibernate.use.query.cache>true</hibernate.use.query.cache>
 
         <maven.test.skip>true</maven.test.skip>
+        <jackson.version>2.8.1</jackson.version>
     </properties>
     <profiles>
         <profile>
@@ -218,12 +219,12 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>1.6.8</version>
+            <version>1.8.10</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>1.6.8</version>
+            <version>1.8.10</version>
         </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
@@ -281,12 +282,6 @@
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -357,7 +352,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.1.5</version>
+            <version>${jackson.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -416,7 +411,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.1.5</version>
+            <version>${jackson.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -476,7 +471,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-exec</artifactId>
-            <version>1.1</version>
+            <version>1.3</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -649,6 +644,22 @@
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
             <version>3.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>retrofit</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-jackson</artifactId>
+            <version>2.1.0</version>
         </dependency>
     </dependencies>
 
