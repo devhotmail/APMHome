@@ -33,7 +33,10 @@
                      address="/clinicalDataService"
                      serviceClass="com.ge.apm.service.misc.DataUploadService"/>
     <bean id="clinicalDataServiceImpl" class="com.ge.apm.service.misc.DataUploadServiceImpl"/>
-    
+
+    <bean id="assetCostDataAggregator" class="com.ge.apm.service.analysis.AssetCostDataAggregator"/>
+    <bean id="assetExamDataAggregator" class="com.ge.apm.service.analysis.assetExamDataAggregator"/>
+        
     <routeContext id="route_main" xmlns="http://camel.apache.org/schema/spring">
         <route>
             <from uri="cxf:bean:clinicalDataServiceEndpoint"/>
@@ -57,6 +60,15 @@
             </recipientList>
         </route>
 
+        <route>
+            <from uri="quartz://quartzAsseetCostDataAggregation?cron=0+0+*/3+*+*+?"/>
+            <bean ref="assetCostDataAggregator" method="aggregateCostData"/>
+        </route>
+
+        <route>
+            <from uri="quartz://quartzAsseetCostDataAggregation?cron=0+0+*/1+*+*+?"/>
+            <bean ref="assetExamDataAggregator" method="aggregateExamData"/>
+        </route>
 
 		<!--
         <route>
