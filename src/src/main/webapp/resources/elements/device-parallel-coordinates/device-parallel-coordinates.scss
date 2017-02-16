@@ -54,12 +54,17 @@ $series-line-color: rgba($dv-light-gray, .1);
 }
 
 .sector {
+  opacity: .8;
+
   rect {
     fill: rgba($dv-dark-blue, .8);
   }
 
-  text.label {
-    fill: $label-text-color;
+  .label {
+    fill: $gray1;
+    writing-mode: tb;
+    font-size: .8rem;
+    cursor: default;
   }
 }
 
@@ -67,14 +72,10 @@ $series-line-color: rgba($dv-light-gray, .1);
   -webkit-transition: fill 125ms linear;
 }
 
-.sector {
-  opacity: .8;
-}
-
 .chart-body.active .sector:not(.inactive) {
   opacity: 1;
   .label {
-    font-weight: bold;
+    fill: $white;
   }
 }
 

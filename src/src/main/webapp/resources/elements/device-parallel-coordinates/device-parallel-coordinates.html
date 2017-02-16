@@ -14,6 +14,24 @@
   <script>
     define('device-parallel-coordinates', ['context'], function(context) {
 
+      var SECTOR_MIN_STEP_FACTOR = .1;
+      var $ = d3.select;
+
+      function ellipsis(d) {
+        // tspan text ellipsis to "width" attr
+        var self = $(this),
+          textLength = this.getComputedTextLength(),
+          text = self.text();
+
+        while ((
+          textLength > self.attr('width')
+        ) && text.length > 0) {
+          text = text.slice(0, -1);
+          self.text(text + '...');
+          textLength = this.getComputedTextLength();
+        }
+      }
+
       Polymer({
         is: 'device-parallel-coordinates',
         properties: {
@@ -201,7 +219,9 @@
           var domain = scale.domain();
           var scaleDef = this.scales;
           var extent = scaleDef[dimension.name];
-          var tickNum = Math.round(( extent.max - extent.min ) / extent.step);
+          var format = dimension.format || function(val) { return val; };
+          var span = extent.max - extent.min;
+          var tickNum = Math.round(( span ) / extent.step);
 
           // unique sorted ticks
           var ticks = d3.set(
@@ -213,15 +233,36 @@
           .values()
           .map(Number)
           .sort(asc);
-          
+
+          // merge small chunk together
+          var step;
+          var lastTick;
+          for (var i = 0, tick, length = ticks.length; tick = ticks[i], i < length; i++) {
+            if (i === 0) {
+              continue;
+            }
+            lastTick = ticks[i - 1];
+            step = tick - lastTick;
+            if (step < span * SECTOR_MIN_STEP_FACTOR) {
+              if (i === length - 1) {
+                ticks.splice(i - 1, 1);
+                break;
+              } else {
+                ticks.splice(i, 1);
+                length--;
+                i--;
+              }
+            }
+          }
+
           var data = ticks.map(function(tick, i) {
             var lastTick = ticks[i - 1];
             if (i === 0) {
               return null;
             } else {
               return {
-                lastValue: lastTick,
-                value: tick,
+                lastValue: format(lastTick),
+                value: format(tick),
                 y0: scale(lastTick),
                 y1: scale(tick)
               };
@@ -239,6 +280,13 @@
           var bar_w = 24;
           var radius = 10;
           var padding = 10;
+          var textPadding = 15;
+
+          function sector_size(d) {
+            return (
+                d.y0 - d.y1
+              ) - padding;
+          }
 
           // sector region
           sectorsEnter
@@ -259,10 +307,30 @@
           // sector text label
           sectorsEnter
           .append('text')
+          .append('tspan')
+          .attr('width', function(d) {
+            return d.y0 - d.y1 - textPadding;
+          })
           .attr('class', 'label')
           .text(function(d) {
-            return [d.value, d.lastValue].join(' - ')
+            return [d.value, d.lastValue].join('-')
           })
+          .each(function clip(d, i) {
+            var text_size = this.getComputedTextLength();
+            var width = $(this).attr('width');
+            // text overflowed
+            if(text_size > width) {
+              // last value
+              if (i === data.length - 1) {
+                $(this).text([d.lastValue, '+'].join(' '));
+              }
+              // first value
+              if (i === 0) {
+                $(this).text(['<', d.value].join(' '));
+              }
+            }
+          })
+          .each(ellipsis)
           .attr('y', function(d) {
             return ( d.y0 - d.y1 ) / 2;
           });
@@ -272,6 +340,7 @@
         _getDimensions: function(data, margin, height) {
           height = height - this.margin.top - this.margin.bottom;
           var definition = data[0];
+          var currency = d3.format(",.2s");
           var dims = [
             {
               name: "name",
@@ -306,7 +375,10 @@
             {
               name: "profit",
               scale: d3.scaleLinear().range([height, 0]),
-              type: Number
+              type: Number,
+              format: function(val) {
+                return currency(val/1e4);
+              }
             }
           ];
           return dims.map(function(dimension) {

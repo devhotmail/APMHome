@@ -86,22 +86,25 @@
   stroke: #525156;
   shape-rendering: crispEdges; }
 
-.sector rect {
-  fill: rgba(38, 93, 171, 0.8); }
-
-.sector text.label {
-  fill: #525156; }
+.sector {
+  opacity: .8; }
+  .sector rect {
+    fill: rgba(38, 93, 171, 0.8); }
+  .sector .label {
+    fill: #f7f7fc;
+    -webkit-writing-mode: tb;
+        -ms-writing-mode: tb;
+            writing-mode: tb;
+    font-size: .8rem;
+    cursor: default; }
 
 .label {
   -webkit-transition: fill 125ms linear; }
 
-.sector {
-  opacity: .8; }
-
 .chart-body.active .sector:not(.inactive) {
   opacity: 1; }
   .chart-body.active .sector:not(.inactive) .label {
-    font-weight: bold; }
+    fill: white; }
 
 .chart-body.active .foreground path {
   stroke: #5da5da;
