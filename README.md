@@ -6,7 +6,7 @@ the GIT mirror of Dew project SVN
   - IDE(推荐NetBeans)
   - maven(NetBeans的安装中自带 maven)
   - JDK 1.8
-  - SVN 客户端, 并且从 svn 下载项目源码
+  - git
 
 ### 安装步骤
 
