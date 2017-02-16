@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="ProcedureNameMapingViewDlg" widgetVar="ProcedureNameMapingViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{procedureNameMapingCrudController.CRUDActionName} #{msg.ProcedureNameMaping}">
+            <h:form id="ProcedureNameMapingViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="6" rendered="#{procedureNameMapingCrudController.selected != null}">
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{procedureNameMapingCrudController.selected.id}"/>
+                        <h:outputLabel value="#{msg.siteId}" for="siteId" />
+                        <h:outputText value="#{procedureNameMapingCrudController.selected.siteId}"/>
+                        <h:outputLabel value="#{msg.hospitalId}" for="hospitalId" />
+                        <h:outputText value="#{procedureNameMapingCrudController.selected.hospitalId}"/>
+                        <h:outputLabel value="#{msg.risProcedureName}" for="risProcedureName" />
+                        <h:outputText value="#{procedureNameMapingCrudController.selected.risProcedureName}"/>
+                        <h:outputLabel value="#{msg.apmProcedureName}" for="apmProcedureName" />
+                        <h:outputText value="#{procedureNameMapingCrudController.selected.apmProcedureName}"/>
+                        <h:outputLabel value="#{msg.apmProcedureId}" for="apmProcedureId" />
+                        <h:outputText value="#{procedureNameMapingCrudController.selected.apmProcedureId}"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{procedureNameMapingCrudController.deleteAction}" icon="ui-icon-trash" actionListener="#{procedureNameMapingCrudController.delete}" value="#{msg.Delete}" update="display,:ProcedureNameMapingViewDlg, :ProcedureNameMapingListForm:datalist, :growl" oncomplete="handleSubmit(args, 'ProcedureNameMapingViewDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('ProcedureNameMapingViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

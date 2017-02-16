@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="SupplierEditDlg" widgetVar="SupplierEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{supplierController.CRUDActionName} #{msg.Supplier}">
+            <h:form id="SupplierEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{supplierController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.name}*</label>
+                            <p:inputText id="name" value="#{supplierController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.city}</label>
+                            <p:inputText id="city" value="#{supplierController.selected.city}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.address}</label>
+                            <p:inputText id="address" value="#{supplierController.selected.address}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.zipcode}</label>
+                            <p:inputText id="zipcode" value="#{supplierController.selected.zipcode}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.contactor}</label>
+                            <p:inputText id="contactor" value="#{supplierController.selected.contactor}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.tel}</label>
+                            <p:inputText id="tel" value="#{supplierController.selected.tel}" />
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{supplierController.save}" value="#{msg.Save}" update=":SupplierListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'SupplierEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('SupplierEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.UserAccount}"/>
+            </div>
+
+            <div class="ui-g-12 card">
+                <h:form id="UserAccountListForm">
+
+                    <p:commandButton id="btnSite" value="#{userAccountController.selectedSite.name}" type="button" icon="fa fa-angle-down" iconPos="right"/>
+                    <p:overlayPanel widgetVar="varPanelSite" for="btnSite" hideEffect="fade" dynamic="false" modal="false">
+                        <p:selectOneListbox style="border: none;" value="#{userAccountController.siteId}">
+                            <p:ajax process="@this" event="click" update=":UserAccountListForm" listener="#{userAccountController.setSiteId(userAccountController.siteId)}" oncomplete="PF('varPanelSite').hide();"/>
+
+                            <f:selectItems value="#{siteInfoController.itemList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                        </p:selectOneListbox>
+                    </p:overlayPanel>
+
+                    <p:commandButton id="btnOrg" value="#{userAccountController.selectedOrg.name}" type="button" icon="fa fa-angle-down" iconPos="right"/>
+                    <p:overlayPanel widgetVar="varPanelOrg" for="btnOrg" hideEffect="fade" dynamic="false" style="width:300px" modal="false">
+                        <p:scrollPanel style="height:300px;border: 0" mode="native">
+                            <p:tree id="orgTree" class="tree" style="width:98%;border:0;" value="#{userAccountController.orgTree}" selection="#{userAccountController.selectedNode}" var="node" selectionMode="single">
+                                <p:ajax process="@this" event="select" update=":UserAccountListForm" listener="#{userAccountController.onSelectTreeNode}" oncomplete="PF('varPanelOrg').hide();"/>
+                                <p:ajax process="@this" event="expand"/>
+                                <p:ajax process="@this" event="collapse"/>
+
+                                <p:treeNode type="org">
+                                    <h:outputText value="#{node.name}"/>
+                                </p:treeNode>
+                            </p:tree>
+                        </p:scrollPanel>
+                    </p:overlayPanel>
+
+
+                    <p:dataTable id="datalist" value="#{userAccountController.lazyModel}" var="item" widgetVar="varDataList"
+                                 selectionMode="single" selection="#{userAccountController.selected}"
+                                 lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                 rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                                 paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                                 rows="20" emptyMessage="#{msg.noRecordFound}"
+                                 rowsPerPageTemplate="10,20,30,90">
+
+                        <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton roleButton resetPassButton"/>
+                        <p:ajax event="filter" listener="#{userAccountController.onFilter}" update="createButton editButton viewButton deleteButton roleButton resetPassButton"/>
+
+                        <p:column headerText="#{msg.login_name}" sortBy="#{item.loginName}">
+                            <h:outputText value="#{item.loginName}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.userName}" sortBy="#{item.name}">
+                            <h:outputText value="#{item.name}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.email}" sortBy="#{item.email}">
+                            <h:outputText value="#{item.email}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.telephone}" sortBy="#{item.telephone}">
+                            <h:outputText value="#{item.telephone}"/>
+                        </p:column>
+                        <p:column rendered="false" headerText="#{msg.isSiteAdmin}" sortBy="#{item.isSiteAdmin}">
+                            <h:outputText value="#{item.isSiteAdmin? msg.True2Yes : msg.False2No }"/>
+                        </p:column>
+                        <p:column headerText="#{msg.isActive}" sortBy="#{item.isActive}">
+                            <h:outputText value="#{item.isActive? msg.True2Yes : msg.False2No }"/>
+                        </p:column>
+                        <f:facet name="{Toolbar}">
+                            <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{userAccountController.prepareCreate}" process="@this" update=":UserAccountEditDlg" oncomplete="PF('UserAccountEditDialog').show()"/>
+                            <p:commandButton id="viewButton" rendered="false" icon="ui-icon-remove-red-eye" title="#{msg.View}" actionListener="#{userAccountController.prepareView}" update=":UserAccountViewDlg" oncomplete="PF('UserAccountViewDialog').show()" disabled="#{empty userAccountController.selected}"/>
+                            <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{userAccountController.prepareEdit}" update=":UserAccountEditDlg" process="@this" oncomplete="PF('UserAccountEditDialog').show()" disabled="#{empty userAccountController.selected}"/>
+                            <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Delete}" actionListener="#{userAccountController.delete}" update="datalist" disabled="#{empty userAccountController.selected}">
+                                <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                            </p:commandButton>
+                            <p:commandButton id="roleButton" icon="ui-icon-people" process="@this" title="#{msg.AssignRole}" actionListener="#{userAccountController.prepareRoleData}" update=":RoleEditDlg" oncomplete="PF('RoleEditDialog').show()" disabled="#{empty userAccountController.selected}"/>
+                            <p:commandButton id="resetPassButton" icon="ui-icon-repeat" process="@this" title="#{msg.resetPassword}" actionListener="#{userAccountController.resetPassword}" update="datalist" disabled="#{empty userAccountController.selected}">
+                                <p:confirm header="#{msg.ResetConformation}" message="#{msg.ResetConformationMsg}" icon="ui-icon-alert"/>
+                            </p:commandButton>
+                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                                <p:dataExporter type="xls" target="datalist" fileName="UserAccount_export"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+                </h:form>
+
+                <ui:include src="Edit.xhtml"/>
+                <ui:include src="View.xhtml"/>
+                <ui:include src="Role.xhtml"/>
+
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

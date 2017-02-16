@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <p align="center">
+                <b>#{msg.AssetInfo}</b>
+            </p>
+            <div class="ui-g-12">
+                <h:form id="AssetInfoViewForm">
+                    <h:panelGroup id="display">
+                        <p:panelGrid columns="2" class="ui-panelgrid-blank form-group">
+                            <h:outputLabel value="#{msg.id}" for="id" />
+                            <h:outputText value="#{assetInfoController.selected.id}"/>
+                            <h:outputLabel value="#{msg.siteId}" for="siteId" />
+                            <h:outputText value="#{assetInfoController.selected.siteId}"/>
+                            <h:outputLabel value="#{msg.name}" for="name" />
+                            <h:outputText value="#{assetInfoController.selected.name}"/>
+                            <h:outputLabel value="#{msg.aliasName}" for="aliasName" />
+                            <h:outputText value="#{assetInfoController.selected.aliasName}"/>
+                            <h:outputLabel value="#{msg.functionGroup}" for="functionGroup" />
+                            <h:outputText value="#{assetInfoController.selected.functionGroup}"/>
+                            <h:outputLabel value="#{msg.functionType}" for="functionType" />
+                            <h:outputText value="#{assetInfoController.selected.functionType}"/>
+                            <h:outputLabel value="#{msg.functionGrade}" for="functionGrade" />
+                            <h:outputText value="#{assetInfoController.selected.functionGrade}"/>
+                            <h:outputLabel value="#{msg.manufacture}" for="manufacture" />
+                            <h:outputText value="#{assetInfoController.selected.manufacture}"/>
+                            <h:outputLabel value="#{msg.vendor}" for="vendor" />
+                            <h:outputText value="#{assetInfoController.selected.vendor}"/>
+                            <h:outputLabel value="#{msg.maitanance}" for="maitanance" />
+                            <h:outputText value="#{assetInfoController.selected.maitanance}"/>
+                            <h:outputLabel value="#{msg.maitananceTel}" for="maitananceTel" />
+                            <h:outputText value="#{assetInfoController.selected.maitananceTel}"/>
+                            <h:outputLabel value="#{msg.serialNum}" for="serialNum" />
+                            <h:outputText value="#{assetInfoController.selected.serialNum}"/>
+                            <h:outputLabel value="#{msg.departNum}" for="departNum" />
+                            <h:outputText value="#{assetInfoController.selected.departNum}"/>
+                            <h:outputLabel value="#{msg.financingNum}" for="financingNum" />
+                            <h:outputText value="#{assetInfoController.selected.financingNum}"/>
+                            <h:outputLabel value="#{msg.barcode}" for="barcode" />
+                            <h:outputText value="#{assetInfoController.selected.barcode}"/>
+                            <h:outputLabel value="#{msg.modalityId}" for="modalityId" />
+                            <h:outputText value="#{assetInfoController.selected.modalityId}"/>
+                            <h:outputLabel value="#{msg.locationCode}" for="locationCode" />
+                            <h:outputText value="#{assetInfoController.selected.locationCode}"/>
+                            <h:outputLabel value="#{msg.locationName}" for="locationName" />
+                            <h:outputText value="#{assetInfoController.selected.locationName}"/>
+                            <h:outputLabel value="#{msg.clinicalDeptId}" for="clinicalDeptId" />
+                            <h:outputText value="#{assetInfoController.selected.clinicalDeptId}"/>
+                            <h:outputLabel value="#{msg.clinicalDeptName}" for="clinicalDeptName" />
+                            <h:outputText value="#{assetInfoController.selected.clinicalDeptName}"/>
+                            <h:outputLabel value="#{msg.assetGroup}" for="assetGroup" />
+                            <h:outputText value="#{assetInfoController.selected.assetGroup}"/>
+                            <h:outputLabel value="#{msg.assetDeptId}" for="assetDeptId" />
+                            <h:outputText value="#{assetInfoController.selected.assetDeptId}"/>
+                            <h:outputLabel value="#{msg.assetOwnerId}" for="assetOwnerId" />
+                            <h:outputText value="#{assetInfoController.selected.assetOwnerId}"/>
+                            <h:outputLabel value="#{msg.assetOwnerName}" for="assetOwnerName" />
+                            <h:outputText value="#{assetInfoController.selected.assetOwnerName}"/>
+                            <h:outputLabel value="#{msg.assetOwnerTel}" for="assetOwnerTel" />
+                            <h:outputText value="#{assetInfoController.selected.assetOwnerTel}"/>
+                            <h:outputLabel value="#{msg.isValid}" for="isValid" />
+                            <p:selectBooleanCheckbox id="isValid" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}" disabled="true"/>
+                            <h:outputLabel value="#{msg.status}" for="status" />
+                            <h:outputText value="#{assetInfoController.selected.status}"/>
+                            <h:outputLabel value="#{msg.manufactDate}" for="manufactDate" />
+                            <h:outputText value="#{assetInfoController.selected.manufactDate}">
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </h:outputText>
+                            <h:outputLabel value="#{msg.purchaseDate}" for="purchaseDate" />
+                            <h:outputText value="#{assetInfoController.selected.purchaseDate}">
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </h:outputText>
+                            <h:outputLabel value="#{msg.arriveDate}" for="arriveDate" />
+                            <h:outputText value="#{assetInfoController.selected.arriveDate}">
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </h:outputText>
+                            <h:outputLabel value="#{msg.installDate}" for="installDate" />
+                            <h:outputText value="#{assetInfoController.selected.installDate}">
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </h:outputText>
+                            <h:outputLabel value="#{msg.warrantyDate}" for="warrantyDate" />
+                            <h:outputText value="#{assetInfoController.selected.warrantyDate}">
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </h:outputText>
+                            <h:outputLabel value="#{msg.terminateDate}" for="terminateDate" />
+                            <h:outputText value="#{assetInfoController.selected.terminateDate}">
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </h:outputText>
+        <!--                    <h:outputLabel value="#{msg.planDate}" for="planDate" />
+                            <h:outputText value="#{assetInfoController.selected.planDate}">
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </h:outputText>-->
+                            <h:outputLabel value="#{msg.purchasePrice}" for="purchasePrice" />
+                            <h:outputText value="#{assetInfoController.selected.purchasePrice}"/>
+                            <h:outputLabel value="#{msg.salvageValue}" for="salvageValue" />
+                            <h:outputText value="#{assetInfoController.selected.salvageValue}"/>
+                            <h:outputLabel value="#{msg.lifecycle}" for="lifecycle" />
+                            <h:outputText value="#{assetInfoController.selected.lifecycleInYear}"/>
+                            <h:outputLabel value="#{msg.depreciationMethod}" for="depreciationMethod" />
+                            <h:outputText value="#{assetInfoController.selected.depreciationMethod}"/>
+                            <h:outputLabel value="#{msg.hospitalId}" for="hospitalId" />
+                            <h:outputText value="#{assetInfoController.selected.hospitalId}"/>
+                        </p:panelGrid>
+                        <br/>
+                        <p:commandButton rendered="#{assetInfoController.deleteAction}" icon="ui-icon-trash"  action="#{assetInfoController.removeOne()}" value="#{msg.Delete}" />
+                        <p:commandButton immediate="true" value="#{msg.Close}" action="List?faces-redirect=true"/>
+
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

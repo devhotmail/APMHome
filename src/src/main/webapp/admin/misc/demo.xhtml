@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Sample</ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <p:commandButton icon="ui-icon-refresh" ajax="true" actionListener="#{appContextService.reloadI18nMessage()}" value="重新加载 i18n_message"/>
+            <p:commandButton icon="ui-icon-refresh" ajax="true" actionListener="#{appContextService.reloadChartConfig()}" value="重新加载 chart_config"/>
+            <p:commandButton icon="ui-icon-refresh" ajax="true" actionListener="#{appContextService.reloadDataTableConfig()}" value="重新加载 chart_config"/>
+        </h:form>
+        <br/>
+        <br/>
+        
+        <h:form id="searchForm">
+            <p:outputLabel value="时间大于或等于(例如 2016-09-01):"/>
+            <p:calendar timeZone="GMT+8"  id="search_GTE_the_date_DATETIME" pattern="yyyy-MM-dd" readonlyInput="true"/>
+            <p:outputLabel value="Type"/>
+            <p:inputText id="search_LIKE_type"/>
+            <p:commandButton value="Search" actionListener="#{demoDataTableCrudController.setSearchFilter}" update="demoForm"/>
+        </h:form>
+
+        <h:form id="demoForm">
+        <div class="ui-g">
+            <div class="ui-g-6">
+                <p:chart type="#{demoChartCrudController.getChartType('dashboard_pie')}" model="#{demoChartCrudController.getChartModel('dashboard_pie')}"/>
+            </div>
+            <div class="ui-g-6">
+                <p:chart type="#{demoChartCrudController.getChartType('dashboard_bar')}" model="#{demoChartCrudController.getChartModel('dashboard_bar')}"/>
+            </div>
+            <div class="ui-g-6">
+                <p:chart type="#{demoChartCrudController.getChartType('dashboard_line')}" model="#{demoChartCrudController.getChartModel('dashboard_line')}"/>
+            </div>
+        </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

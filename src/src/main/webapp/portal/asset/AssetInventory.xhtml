@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/inspection.css" />
+
+        <style type="text/css">
+            .ui-datalist-content{
+                border: 0!important;
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.AssetInventory}"/>
+            </div>
+
+
+            <h:form id ="deviceCheckForm">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-lg-6">
+                        <div class="card" style="height:400px;">
+                            <p:scrollPanel style="width:98%;height:95%;border: 0" mode="native" >
+                                <label class="label">#{msg.assetName}</label>
+                                <p:tree id="deviceTree" class="tree" style="border:0;" value="#{assetInventoryController.deviceNode}" var="node"  dynamic="false" cache="true" selectionMode="checkbox" highlight="true">
+                                    <p:ajax event="select" listener="#{assetInventoryController.onSelectDeviceTreeNode}" update=":deviceCheckForm:dataList"/>
+                                    <p:ajax event="unselect" listener="#{assetInventoryController.onUnSelectDeviceTreeNode}" update=":deviceCheckForm:dataList"/>
+
+                                    <p:treeNode type="org">
+                                        <h:outputText value="#{node.name}"/>
+                                    </p:treeNode>
+                                    <p:treeNode type="asset" icon="ui-icon-wifi-tethering">
+                                        <h:outputText value="#{node.name}"/>
+                                    </p:treeNode>
+                                </p:tree>
+                            </p:scrollPanel>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-lg-6">
+                        <div class="card" style="height:400px;">
+                            <h:panelGroup>
+                                <label class="label">#{msg.AssetInventoryDate}</label>
+                                <p:calendar timeZone="GMT+8"  id="manufactDate" pattern="yyyy/MM/dd" maxdate="#{appContextService.curentDate}" value="#{assetInventoryController.lastStockTakeDate}"
+                                            showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" locale="zh"/>
+                            </h:panelGroup>
+                            <br/><br/>
+
+                            <label class="label">#{msg.AssetInventoryUnmatchedList}</label>
+                            <p:scrollPanel style="width:98%;height:250px;border: 1" mode="native" >
+                                <p:dataList id="dataList" value="#{assetInventoryController.unValidDeviceList}" var="item" style="border: 0;" type="unordered" emptyMessage="#{msg.noRecordFound}">
+                                    <h:outputText value="#{item.data.name}" />
+                                </p:dataList>
+                            </p:scrollPanel>
+                            <br/>
+                            <center>
+                                <h:panelGroup >
+                                    <p:commandButton value="#{msg.Save}" actionListener="#{assetInventoryController.deviceCheck()}"
+                                                     validateClient="true" style="width:100px;float:center" update=":growl" icon="ui-icon-check" />
+                                </h:panelGroup>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="ChartConfigViewDlg" widgetVar="ChartConfigViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{chartConfigCrudController.CRUDActionName} #{msg.ChartConfig}">
+            <h:form id="ChartConfigViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="6" rendered="#{chartConfigCrudController.selected != null}">
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{chartConfigCrudController.selected.id}"/>
+                        <h:outputLabel value="#{msg.chartName}" for="chartName" />
+                        <h:outputText value="#{chartConfigCrudController.selected.chartName}"/>
+                        <h:outputLabel value="#{msg.chartDataSql}" for="chartDataSql" />
+                        <h:outputText value="#{chartConfigCrudController.selected.chartDataSql}"/>
+                        <h:outputLabel value="#{msg.isDefaultEmptyResult}" for="isDefaultEmptyResult" />
+                        <p:selectBooleanCheckbox id="isDefaultEmptyResult" value="#{chartConfigCrudController.selected.isDefaultEmptyResult}" required="true" requiredMessage="#{msg.isDefaultEmptyResult} #{msg.ValidationRequire}" disabled="true"/>
+                        <h:outputLabel value="#{msg.chartType}" for="chartType" />
+                        <h:outputText value="#{chartConfigCrudController.selected.chartType}"/>
+                        <h:outputLabel value="#{msg.seriesDataField}" for="seriesDataField" />
+                        <h:outputText value="#{chartConfigCrudController.selected.seriesDataField}"/>
+                        <h:outputLabel value="#{msg.xAxisDataField}" for="xAxisDataField" />
+                        <h:outputText value="#{chartConfigCrudController.selected.xAxisDataField}"/>
+                        <h:outputLabel value="#{msg.yAxisDataField}" for="yAxisDataField" />
+                        <h:outputText value="#{chartConfigCrudController.selected.yAxisDataField}"/>
+                        <h:outputLabel value="#{msg.chartTitle}" for="chartTitle" />
+                        <h:outputText value="#{chartConfigCrudController.selected.chartTitle}"/>
+                        <h:outputLabel value="#{msg.legendPosition}" for="legendPosition" />
+                        <h:outputText value="#{chartConfigCrudController.selected.legendPosition}"/>
+                        <h:outputLabel value="#{msg.legendRows}" for="legendRows" />
+                        <h:outputText value="#{chartConfigCrudController.selected.legendRows}"/>
+                        <h:outputLabel value="#{msg.zoomEnabled}" for="zoomEnabled" />
+                        <p:selectBooleanCheckbox id="zoomEnabled" value="#{chartConfigCrudController.selected.zoomEnabled}" disabled="true"/>
+                        <h:outputLabel value="#{msg.xAxisLabel}" for="xAxisLabel" />
+                        <h:outputText value="#{chartConfigCrudController.selected.xAxisLabel}"/>
+                        <h:outputLabel value="#{msg.xAxisMin}" for="xAxisMin" />
+                        <h:outputText value="#{chartConfigCrudController.selected.xAxisMin}"/>
+                        <h:outputLabel value="#{msg.xAxisMax}" for="xAxisMax" />
+                        <h:outputText value="#{chartConfigCrudController.selected.xAxisMax}"/>
+                        <h:outputLabel value="#{msg.xAxisTickAngle}" for="xAxisTickAngle" />
+                        <h:outputText value="#{chartConfigCrudController.selected.xAxisTickAngle}"/>
+                        <h:outputLabel value="#{msg.xAxisTickCount}" for="xAxisTickCount" />
+                        <h:outputText value="#{chartConfigCrudController.selected.xAxisTickCount}"/>
+                        <h:outputLabel value="#{msg.xAxisTickFormat}" for="xAxisTickFormat" />
+                        <h:outputText value="#{chartConfigCrudController.selected.xAxisTickFormat}"/>
+                        <h:outputLabel value="#{msg.xAxisTickInterval}" for="xAxisTickInterval" />
+                        <h:outputText value="#{chartConfigCrudController.selected.xAxisTickInterval}"/>
+                        <h:outputLabel value="#{msg.yAxisLabel}" for="yAxisLabel" />
+                        <h:outputText value="#{chartConfigCrudController.selected.yAxisLabel}"/>
+                        <h:outputLabel value="#{msg.yAxisMin}" for="yAxisMin" />
+                        <h:outputText value="#{chartConfigCrudController.selected.yAxisMin}"/>
+                        <h:outputLabel value="#{msg.yAxisMax}" for="yAxisMax" />
+                        <h:outputText value="#{chartConfigCrudController.selected.yAxisMax}"/>
+                        <h:outputLabel value="#{msg.addDateAxis}" for="addDateAxis" />
+                        <p:selectBooleanCheckbox id="addDateAxis" value="#{chartConfigCrudController.selected.addDateAxis}" required="true" requiredMessage="#{msg.addDateAxis} #{msg.ValidationRequire}" disabled="true"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{chartConfigCrudController.deleteAction}" icon="ui-icon-trash" actionListener="#{chartConfigCrudController.delete}" value="#{msg.Delete}" update="display,:ChartConfigViewDlg, :ChartConfigListForm:datalist, :growl" oncomplete="handleSubmit(args, 'ChartConfigViewDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('ChartConfigViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

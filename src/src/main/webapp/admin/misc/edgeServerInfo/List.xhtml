@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+
+                <p align="center">
+                    <b>#{msg.EdgeServerInfo}</b>
+                </p>
+            <h:form id="EdgeServerInfoListForm">
+                <p:dataTable id="datalist" value="#{edgeServerInfoCrudController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{edgeServerInfoCrudController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                    rows="20" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{edgeServerInfoCrudController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    
+                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.siteId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.hospitalId}" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.hospitalId}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.edgeServerKey}" sortBy="#{item.edgeServerKey}" filterBy="#{item.edgeServerKey}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.edgeServerKey}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.edgeServerName}" sortBy="#{item.edgeServerName}" filterBy="#{item.edgeServerName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.edgeServerName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.hospitalName}" sortBy="#{item.hospitalName}" filterBy="#{item.hospitalName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.hospitalName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.isEnabled}" sortBy="#{item.isEnabled}" filterBy="#{item.isEnabled}" filterMatchMode="EQ">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('varDataList').filter()">
+                                <f:converter converterId="javax.faces.Boolean" />
+                                <f:selectItem itemLabel="#{msg.All}" itemValue="" />
+                                <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
+                                <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{item.isEnabled? msg.True2Yes : msg.False2No }"/>
+                    </p:column>
+                    <f:facet name="{Toolbar}">
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="EdgeServerInfo_export"/>
+                        </p:commandButton>
+                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{edgeServerInfoCrudController.prepareCreate}" update=":EdgeServerInfoEditDlg" oncomplete="PF('EdgeServerInfoEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{edgeServerInfoCrudController.prepareView}" update=":EdgeServerInfoViewDlg" oncomplete="PF('EdgeServerInfoViewDialog').show()" disabled="#{empty edgeServerInfoCrudController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{edgeServerInfoCrudController.prepareEdit}" update=":EdgeServerInfoEditDlg" oncomplete="PF('EdgeServerInfoEditDialog').show()" disabled="#{empty edgeServerInfoCrudController.selected}"/>
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Delete}" actionListener="#{edgeServerInfoCrudController.delete}" update="datalist" disabled="#{empty edgeServerInfoCrudController.selected}">
+                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                        </p:commandButton>
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+
+            </div>
+        </div>
+
+        
+    </ui:define>
+
+</ui:composition>

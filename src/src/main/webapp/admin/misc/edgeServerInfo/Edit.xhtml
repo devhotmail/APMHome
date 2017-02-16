@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="EdgeServerInfoEditDlg" widgetVar="EdgeServerInfoEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{edgeServerInfoCrudController.CRUDActionName} #{msg.EdgeServerInfo}">
+            <h:form id="EdgeServerInfoEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{edgeServerInfoCrudController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}</label>
+                            <p:inputText id="siteId" value="#{edgeServerInfoCrudController.selected.siteId}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.hospitalId}</label>
+                            <p:inputText id="hospitalId" value="#{edgeServerInfoCrudController.selected.hospitalId}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.edgeServerKey}</label>
+                            <p:inputText id="edgeServerKey" value="#{edgeServerInfoCrudController.selected.edgeServerKey}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.edgeServerName}</label>
+                            <p:inputText id="edgeServerName" value="#{edgeServerInfoCrudController.selected.edgeServerName}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.hospitalName}</label>
+                            <p:inputText id="hospitalName" value="#{edgeServerInfoCrudController.selected.hospitalName}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.isEnabled}</label>
+                            <p:selectBooleanCheckbox id="isEnabled" itemLabel="#{msg.isEnabled}" value="#{edgeServerInfoCrudController.selected.isEnabled}"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{edgeServerInfoCrudController.save}" value="#{msg.Save}" update=":EdgeServerInfoListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'EdgeServerInfoEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('EdgeServerInfoEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -1,0 +1,94 @@
+@import "predix";
+@import "objects";
+@import "charts";
+@import 'px-tables-design/_base.tables.scss';
+
+.chart-device-stat.horizontal .maintenance-chart3 {
+  .jqplot-table-legend-label {
+    font-size: $inuit-base-font-size;
+    color: $black;
+  }
+
+  .jqplot-point-label {
+    margin-top: -60px;
+    position: relative;
+
+    &:after {
+      content: '';
+      position: absolute;
+      background: #fff;
+      display: block;
+      width: 5px;
+      height: 30px;
+      right: -6px;
+      margin-top: 5px;
+      top: 100%;
+    }
+  }
+
+  .jqplot-axis.jqplot-xaxis,
+  .jqplot-axis.jqplot-yaxis, .jqplot-title {
+    display: none;
+  }
+}
+
+.maintenance-chart3,
+.maintenance-chart4,
+.maintenance-chart6 {
+  .jqplot-grid-canvas {
+    display: none;
+  }
+}
+
+.maintenance-chart5 {
+  .jqplot-target {
+    height: 300px;
+  }
+}
+
+.maintenance-chart6 {
+  .table {
+    td, th {
+      border-width: 0;
+      text-align: left;
+    }
+  }
+  .jqplot-target {
+    margin-top: -70px !important;
+    height: 300px;
+  }
+}
+
+.maintenance-chart3 {
+  height: 100px;
+}
+
+.block {
+  .maintenance-chart4, .maintenance-chart6 {
+    table.jqplot-table-legend {
+      top: 0 !important;
+    }
+
+    .jqplot-target {
+      margin-top: 0;
+    }
+
+    .jqplot-title {
+      display: inline-block;
+      position: static !important;
+      width: auto !important;
+      text-align: left !important;
+      color: $black;
+
+      @include squareBefore();
+    }
+  }
+}
+
+$step-colors: rgba(96, 165, 215, 1), rgba(247, 162, 69, 1), rgba(99, 187, 108, 1), rgba(238, 126, 175, 1), rgba(176, 143, 57, 1), rgba(222, 206, 64, 1);
+
+@for $i from 1 through 6 {
+  .chart-for-step-#{$i} .jqplot-title::before {
+    background-color: nth($step-colors, $i);
+  }
+}

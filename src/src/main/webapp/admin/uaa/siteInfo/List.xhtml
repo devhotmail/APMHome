@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.SiteInfo}"/>
+            </div>
+
+            <div class="ui-g-12 card">
+                
+            <h:form id="SiteInfoListForm">
+                <p:dataTable id="datalist" value="#{siteInfoController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{siteInfoController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                    paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                    rows="20" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="20,40,60,90"> 
+
+                    <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{siteInfoController.onFilter}" oncomplete="rc();"/>
+                    
+                    <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.name}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.nameEn}" sortBy="#{item.nameEn}" filterBy="#{item.nameEn}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.nameEn}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.aliasName}" sortBy="#{item.aliasName}" filterBy="#{item.aliasName}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.aliasName}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.siteDescription}" sortBy="#{item.description}" filterBy="#{item.description}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.description}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.contactPerson}" sortBy="#{item.contactPerson}" filterBy="#{item.contactPerson}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.contactPerson}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.contactPhone}" sortBy="#{item.contactPhone}" filterBy="#{item.contactPhone}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.contactPhone}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.contactEmail}" sortBy="#{item.contactEmail}" filterBy="#{item.contactEmail}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.contactEmail}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.location}" sortBy="#{item.location}" filterBy="#{item.location}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.location}"/>
+                    </p:column>
+                    <p:column rendered="false" headerText="#{msg.timeZone}" sortBy="#{item.timeZone}" filterBy="#{item.timeZone}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.timeZone}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.defaultLang}" sortBy="#{item.defaultLang}" filterBy="#{item.defaultLang}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.defaultLang}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.isEnabled}" sortBy="#{item.isEnabled}" filterBy="#{item.isEnabled}" filterMatchMode="EQ">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('varDataList').filter()">
+                                <f:converter converterId="javax.faces.Boolean" />
+                                <f:selectItem itemLabel="#{msg.All}" itemValue="" />
+                                <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
+                                <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{item.isEnabled? msg.True2Yes : msg.False2No }"/>
+                    </p:column>
+                    <f:facet name="{Toolbar}">
+                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{siteInfoController.prepareCreate}" update=":SiteInfoEditDlg" oncomplete="PF('SiteInfoEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{siteInfoController.prepareView}" update=":SiteInfoViewDlg" oncomplete="PF('SiteInfoViewDialog').show()" disabled="#{empty siteInfoController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{siteInfoController.prepareEdit}" update=":SiteInfoEditDlg" oncomplete="PF('SiteInfoEditDialog').show()" disabled="#{empty siteInfoController.selected}"/>
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{siteInfoController.delete}" update="datalist" disabled="#{empty siteInfoController.selected}">
+                            <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+                        </p:commandButton>
+                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="SiteInfo_export"/>
+                        </p:commandButton>
+                    </f:facet>
+                </p:dataTable>
+                <p:remoteCommand name="rc" update="datalist:createButton datalist:deleteButton datalist:editButton datalist:viewButton" immediate="true"/>
+            </h:form>
+
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

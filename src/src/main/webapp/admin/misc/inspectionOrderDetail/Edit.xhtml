@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="InspectionOrderDetailEditDlg" widgetVar="InspectionOrderDetailEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionOrderDetailCrudController.CRUDActionName} #{msg.InspectionOrderDetail}">
+            <h:form id="InspectionOrderDetailEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{inspectionOrderDetailCrudController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
+                            <p:inputText id="siteId" value="#{inspectionOrderDetailCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.deptId}*</label>
+                            <p:inputText id="deptId" value="#{inspectionOrderDetailCrudController.selected.deptId}"  required="true" requiredMessage="#{msg.deptId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.deptName}*</label>
+                            <p:inputText id="deptName" value="#{inspectionOrderDetailCrudController.selected.deptName}"  required="true" requiredMessage="#{msg.deptName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetId}*</label>
+                            <p:inputText id="assetId" value="#{inspectionOrderDetailCrudController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetName}*</label>
+                            <p:inputText id="assetName" value="#{inspectionOrderDetailCrudController.selected.assetName}"  required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.orderId}*</label>
+                            <p:inputText id="orderId" value="#{inspectionOrderDetailCrudController.selected.orderId}"  required="true" requiredMessage="#{msg.orderId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.itemId}*</label>
+                            <p:inputText id="itemId" value="#{inspectionOrderDetailCrudController.selected.itemId}"  required="true" requiredMessage="#{msg.itemId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.itemName}*</label>
+                            <p:inputText id="itemName" value="#{inspectionOrderDetailCrudController.selected.itemName}"  required="true" requiredMessage="#{msg.itemName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.isPassed}*</label>
+                            <p:selectBooleanCheckbox id="isPassed" itemLabel="#{msg.isPassed}" value="#{inspectionOrderDetailCrudController.selected.isPassed}" required="true" requiredMessage="#{msg.isPassed} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{inspectionOrderDetailCrudController.save}" value="#{msg.Save}" update=":InspectionOrderDetailListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'InspectionOrderDetailEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('InspectionOrderDetailEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="OrgInfoEditDlg" widgetVar="OrgInfoEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{orgInfoCrudController.CRUDActionName} #{msg.OrgInfo}">
+            <h:form id="OrgInfoEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{orgInfoCrudController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.name}*</label>
+                            <p:inputText id="name" value="#{orgInfoCrudController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.nameEn}</label>
+                            <p:inputText id="nameEn" value="#{orgInfoCrudController.selected.nameEn}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.parentOrg}</label>
+                            <p:inputText id="parentOrg" value="#{orgInfoCrudController.selected.parentOrg}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.hospitalId}</label>
+                            <p:inputText id="hospitalId" value="#{orgInfoCrudController.selected.hospitalId}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
+                            <p:inputText id="siteId" value="#{orgInfoCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{orgInfoCrudController.save}" value="#{msg.Save}" update=":OrgInfoListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'OrgInfoEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('OrgInfoEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
