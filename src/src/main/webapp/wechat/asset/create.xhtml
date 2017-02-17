@@ -1,240 +1,185 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/wechattemplate.xhtml">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>新增资产</title>
+        <h:outputStylesheet name="wechat/weui.min.css" />
+        <script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/jquery-2.0.0.min.js"/>
+        <script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/jweixin-1.0.0.js"/>
+        <script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/fileUpload.js"/>
 
-    <ui:define name="content">
-        <div class="ui-g clearfix">
-            <div class="ui-g-12 card cardTitle">
-                <p:outputLabel class="pageTitle" value="#{msg.AssetInfo}"/>
+    </h:head>
+    <h:body>
+        <div class="weui-gallery" id="gallery">
+            <span class="weui-gallery__img" id="galleryImg"></span>
+            <div class="weui-gallery__opr">
+                <a href="javascript:" class="weui-gallery__del">
+                    <i class="weui-icon-delete weui-icon_gallery-delete"></i>
+                </a>
             </div>
+        </div>
+        
+        
+        <h:form id="assetForm" enctype="multipart/form-data" rendered="#{!wechatAssetCreateController.resultStatus}">
 
-            <div class="ui-g-12 card">
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">#{msg.name}</label></div>
+                    <div class="weui-cell__bd">
+                        <h:inputText class="weui-input" id="name"  value="#{wechatAssetCreateController.selected.name}" />
+                    </div>
+                    <div class="weui-cell__ft">
+                        <i class="weui-icon-warn"></i>
+                    </div>
+                </div>
 
-                <p:separator/>
-                <h:form id="AssetInfoEditForm">
-                    <p:fieldset legend="#{msg.BasicInfo}" style="margin-bottom:20px">
-                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                            <h:panelGroup>
-                                <label class="label">#{msg.serialNum}</label>
-                                <p:inputText id="serialNum" value="#{assetInfoController.selected.serialNum}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.name}*</label>
-                                <p:inputText id="name" value="#{assetInfoController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.aliasName}</label>
-                                <p:inputText id="aliasName" value="#{assetInfoController.selected.aliasName}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.assetGroup}*</label>
-                                <p:selectOneMenu id="assetGroup" value="#{assetInfoController.selected.assetGroup}" required="true" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">#{msg.assetGroup}</label></div>
+                    <div class="weui-cell__bd">
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__bd">
+                                <h:selectOneMenu class="weui-select" value="#{wechatAssetCreateController.selected.assetGroup}" required="true" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                </p:selectOneMenu>
-                            </h:panelGroup>
-                            <h:panelGroup >
-                                <label class="label">#{msg.assetOwnerName}*</label>
-                                <p:selectOneMenu id="assetOwnerName" value="#{assetInfoController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="true" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}" >
-                                    <p:ajax listener="#{assetInfoController.onOwnerChange}" process="@this" update="assetOwnerTel"/>
-                                    <f:selectItem itemLabel="" />
-                                    <f:selectItems value="#{assetInfoController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGroup rendered="#{userContextService.hasRole('MultiHospital')}">
+                    <div class="weui-cell"  >
+                        <div class="weui-cell__hd"><label class="weui-label">#{msg.hospitalId}</label></div>
+                        <div class="weui-cell__bd">
+                            <div class="weui-cell weui-cell_select">
+                                <div class="weui-cell__bd">
+                                    <h:selectOneMenu class="weui-select" value="#{wechatAssetCreateController.selected.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}" >
+                                        <p:ajax  listener="#{wechatAssetCreateController.onHospitalChange}" update="clinicalDeptName assetOwnerName clinicalOwnerName" />
+                                        <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                        <f:selectItems value="#{assetInfoService.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </h:panelGroup>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">#{msg.assetOwnerName}</label></div>
+                    <div class="weui-cell__bd">
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__bd">
+                                <h:selectOneMenu id="assetOwnerName" class="weui-select" value="#{wechatAssetCreateController.assetOwner}" converter="userAccountConverter" required="true" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}">
+                                    <p:ajax listener="#{wechatAssetCreateController.onOwnerChange}" />
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{wechatAssetCreateController.getOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
                                     <p:column>
                                         <h:outputText value="#{t.name}"/>
                                     </p:column>
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="weui-cell"  >
+                    <div class="weui-cell__hd"><label class="weui-label">#{msg.clinicalDeptName}</label></div>
+                    <div class="weui-cell__bd">
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__bd">
+                                <h:selectOneMenu id="clinicalDeptName" class="weui-select" value="#{wechatAssetCreateController.selected.clinicalDeptId}" required="true" requiredMessage="#{msg.clinicalDeptName} #{msg.ValidationRequire}">
+                                    <p:ajax  listener="#{wechatAssetCreateController.onClinicalDeptChange()}" update="clinicalOwnerName" />
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{wechatAssetCreateController.getClinicalDeptList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="weui-cell"  >
+                    <div class="weui-cell__hd"><label class="weui-label">#{msg.clinicalOwnerName}</label></div>
+                    <div class="weui-cell__bd">
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__bd">
+                                <h:selectOneMenu class="weui-select" id="clinicalOwnerName" value="#{wechatAssetCreateController.clinicalOwner}" converter="userAccountConverter" required="true" requiredMessage="#{msg.clinicalOwnerId} #{msg.ValidationRequire}">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{wechatAssetCreateController.getClinicalOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
                                     <p:column>
-                                        <h:outputText value="#{t.telephone}"/>
+                                        <h:outputText value="#{t.name}"/>
                                     </p:column>
-                                </p:selectOneMenu>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.assetOwnerTel}</label>
-                                <p:inputText id="assetOwnerTel" value="#{assetInfoController.selected.assetOwnerTel}" readonly="true"/>
-                            </h:panelGroup>
-                            
-                            <h:panelGroup>
-                                <label class="label">#{msg.hospitalId}</label>
-                                <p:inputText id="hospitalId" value="#{assetInfoController.getHospital(assetInfoController.selected.hospitalId)}" readonly="true" rendered="#{!userContextService.hasRole('MultiHospital')}"/>
-                                <p:selectOneMenu id="hospitalIdSelect" value="#{assetInfoController.selected.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}" rendered="#{userContextService.hasRole('MultiHospital')}" >
-                                    <p:ajax  listener="#{assetInfoController.onHospitalChange}" update="clinicalDeptName assetOwnerName" />
-                                    <!--<f:selectItem itemLabel="#{msg.selectOneMessage}"/>-->
-                                    <f:selectItems value="#{assetInfoService.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                </p:selectOneMenu>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.clinicalDeptName}*</label>
-                                <!--<p:inputText id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptName}"/>-->
-                                <p:selectOneMenu id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptId}" required="true" requiredMessage="#{msg.clinicalDeptName} #{msg.ValidationRequire}">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{assetInfoController.getClinicalDeptList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                </p:selectOneMenu>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.manufacture}</label>
-                                <p:inputText id="manufacture" value="#{assetInfoController.selected.manufacture}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.vendor}</label>
-                                <p:selectOneMenu id="vendor" value="#{assetInfoController.selected.vendor}">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{supplierController.supplierList}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
-                                </p:selectOneMenu>
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.maitanance}</label>
-                                <p:inputText id="maitanance" value="#{assetInfoController.selected.maitanance}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.maitananceTel}</label>
-                                <p:inputText id="maitananceTel" value="#{assetInfoController.selected.maitananceTel}"/>
-                            </h:panelGroup>
-                        </p:panelGrid>
-                    </p:fieldset>
 
-                    <p:fieldset  style="margin-bottom:20px">
-                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                            <h:panelGroup>
-                                <label class="label">#{msg.departNum}</label>
-                                <p:inputText id="departNum2" value="#{assetInfoController.selected.departNum}"/>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="weui-uploader">
+                            <div class="weui-uploader__hd">
+                                <p class="weui-uploader__title">图片上传</p>
+                            </div>
+                            <div class="weui-uploader__bd">
+                                <ul class="weui-uploader__files" id="uploaderFiles">
+                                </ul>
+                                <div class="weui-uploader__input-box">
+                                    <h:inputFile id="uploaderInput" value="#{wechatAssetCreateController.picture}" class="weui-uploader__input" />
+                                    <h:inputHidden id="uploaderFileId" value="#{wechatAssetCreateController.uploaderFileId}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.financingNum}</label>
-                                <p:inputText id="financingNum2" value="#{assetInfoController.selected.financingNum}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.barcode}</label>
-                                <p:inputText id="barcode" value="#{assetInfoController.selected.barcode}"/>
-                            </h:panelGroup>
-                            <p:spacer/>
-                            <h:panelGroup>
-                                <label class="label">#{msg.modalityId}</label>
-                                <p:inputText id="modalityId" value="#{assetInfoController.selected.modalityId}"/>
-                            </h:panelGroup>
-                        </p:panelGrid>
-                    </p:fieldset>
-                    <p:fieldset  style="margin-bottom:20px">
-                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                            <h:panelGroup>
-                                <label class="label">#{msg.functionType}</label>
-                                <p:inputText id="functionType" value="#{assetInfoController.selected.functionType}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.functionGrade}</label>
-                                <p:selectOneMenu id="functionGrade" value="#{assetInfoController.selected.functionGrade}">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionGrade')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                </p:selectOneMenu>
-                            </h:panelGroup>
-                            <h:panelGroup >
-                                <label class="label">#{msg.functionGroup}</label>
-                                <p:selectOneMenu id="functionGroup" value="#{assetInfoController.selected.functionGroup}" style="width: 100%">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                </p:selectOneMenu>
-                            </h:panelGroup>
-                            <p:spacer/>
-                            <h:panelGroup>
-                                <label class="label">#{msg.locationCode}</label>
-                                <p:inputText id="locationCode" value="#{assetInfoController.selected.locationCode}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.locationName}</label>
-                                <p:inputText id="locationName" value="#{assetInfoController.selected.locationName}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isValid}" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
-                            </h:panelGroup>
-                            <h:panelGroup >
-                                <label class="label">#{msg.status}*</label>
-                                <p:selectOneRadio id="status" value="#{assetInfoController.selected.status}" required="true" requiredMessage="#{msg.status} #{msg.ValidationRequire}">
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetStatus')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                </p:selectOneRadio>
-                            </h:panelGroup>
-                        </p:panelGrid>
-                    </p:fieldset>
-                    <p:fieldset  style="margin-bottom:20px">
-                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                            <h:panelGroup>
-                                <label class="label">#{msg.manufactDate}</label>
-                                <p:calendar timeZone="GMT+8"  id="manufactDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.manufactDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"  />
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.purchaseDate}*</label>
-                                <p:calendar timeZone="GMT+8"  id="purchaseDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.purchaseDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.purchaseDate} #{msg.ValidationRequire}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.arriveDate}</label>
-                                <p:calendar timeZone="GMT+8"  id="arriveDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
-                            </h:panelGroup>
 
-                            <p:spacer/>
+            </div>
 
-                            <h:panelGroup>
-                                <label class="label">#{msg.installDate}*</label>
-                                <p:calendar timeZone="GMT+8"  id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.installDate} #{msg.ValidationRequire}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.warrantyDate}</label>
-                                <p:calendar timeZone="GMT+8"  id="warrantyDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.warrantyDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.terminateDate}</label>
-                                <p:calendar timeZone="GMT+8"  id="terminateDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
-                            </h:panelGroup>
-                        </p:panelGrid>
-                    </p:fieldset>
-                    <p:fieldset  style="margin-bottom:20px">
-                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                            <h:panelGroup>
-                                <label class="label">#{msg.purchasePrice}*</label>
-                                <p:inputNumber minValue="0" decimalPlaces="2" id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" />
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.salvageValue}</label>
-                                <p:inputNumber minValue="0" decimalPlaces="2" id="salvageValue" value="#{assetInfoController.selected.salvageValue}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.lifecycle}</label>
-                                <p:inputNumber minValue="0" decimalPlaces="1" id="lifecycle" value="#{assetInfoController.selected.lifecycleInYear}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.depreciationMethod}</label>
-                                <!--<p:inputText id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}"/>-->
-                                <p:selectOneMenu id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('depreciationMethodList')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                </p:selectOneMenu>
-                            </h:panelGroup>
-                        </p:panelGrid>
-                    </p:fieldset>
-
-                    <p:fieldset legend="#{msg.Attachment}" style="margin-bottom:20px">
-                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                            <h:panelGroup >
-                                <p:dataList id="pictureList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,1)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
-                                    <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 1)}</f:facet>
-
-                                    #{fileitem.name}
-                                    <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
-                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
-                                    </p:commandButton>
-                                </p:dataList>
-                                <p:fileUpload id="type1" fileUploadListener="#{assetInfoController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%" 
-                                              multiple="false"  sizeLimit="10000000"  update="pictureList" auto="true" invalidFileMessage="#{msg.InvalidPictureFileType}" invalidSizeMessage="#{msg.invalidSizeMessage}10M" label="#{msg.Add}" allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/"/>
-                            </h:panelGroup>
-                        </p:panelGrid>
-                    </p:fieldset>
-                    <h:panelGroup >
-                        <p:commandButton value="#{msg.Save}" icon="ui-icon-check"  actionListener="#{assetInfoController.applyChange()}" validateClient="true" update=":growl" style="float:left" onsuccess="setTimeout('WeixinJSBridge.call(\'closeWindow\')',2000);" />
-                        <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back"  immediate="true"  update=":growl" style="float:left"   oncomplete="WeixinJSBridge.call('closeWindow');"/>
-                    </h:panelGroup>
-                </h:form>
+            <div class="weui-btn-area">
+                <h:commandButton value="#{msg.Save}" class="weui-btn weui-btn_primary"   type="submit"  actionListener="#{wechatAssetCreateController.applySave()}"   />
+            </div>
+        </h:form>
+        
+        <h:panelGroup rendered="#{wechatAssetCreateController.resultStatus}">
+        <div class="page">
+            <div class="weui-msg">
+                <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+                <div class="weui-msg__text-area">
+                    <h2 class="weui-msg__title">保存成功</h2>
+                </div>
+                <div class="weui-msg__opr-area">
+                    <p class="weui-btn-area">
+                        <!--<a href="create.xhtml" class="weui-btn weui-btn_primary">继续添加</a>-->
+                        <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_primary">返回菜单</a>
+                    </p>
+                </div>
             </div>
         </div>
-    </ui:define>
-</ui:composition>
+            </h:panelGroup>
+
+
+
+    </h:body>
+    <script>
+        $("#assetForm\\:name").attr('placeholder', '请输入...');
+        wx.config({
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: '#{wechatAssetCreateController.jsSignature.appid}', // 必填，公众号的唯一标识
+            timestamp:#{wechatAssetCreateController.jsSignature.timestamp}, // 必填，生成签名的时间戳
+            nonceStr: '#{wechatAssetCreateController.jsSignature.noncestr}', // 必填，生成签名的随机串
+            signature: '#{wechatAssetCreateController.jsSignature.signature}', // 必填，签名，
+            jsApiList: ['chooseImage','uploadImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+
+    </script>
+</html>
