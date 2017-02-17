@@ -243,6 +243,14 @@ public class AssetSummit implements Serializable {
         this.lastModified = lastModified;
     }
 
+    public Integer getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
