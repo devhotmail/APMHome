@@ -84,4 +84,5 @@ gulp.task('sass:watch', function() {
   gulp.watch(src_comp, ['sass:compile:module']);
 });
 
-gulp.task('default', ['sass:compile:css', 'sass:compile:module','sass:watch']);
+gulp.task('default', ['sass:compile:css', 'sass:compile:module']);
+gulp.task('watch', ['default', 'sass:watch']);
