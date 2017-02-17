@@ -8,3 +8,10 @@ src/src/main/webapp/resources/elements/**/*-styles.html
 *.iml
 src/sql/test_data.sql
 src/src/main/webapp/about.html
+src/.project
+src/.classpath
+src/.settings
+.gitignore
+src/geapm.iml
+
+
