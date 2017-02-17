@@ -45,6 +45,8 @@ public class AssetSummit implements Serializable {
     private Integer assetGroup;
     @Column(name = "dept_id")
     private Integer deptId;
+    @Column(name = "supplier_id")
+    private Integer supplierId;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "revenue")
     private Double revenue;

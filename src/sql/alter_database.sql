@@ -46,6 +46,8 @@ alter table asset_info add COLUMN clinical_owner_name varchar(16);
 alter table asset_info add COLUMN clinical_owner_tel varchar(16);
 alter table asset_info add COLUMN registration_no varchar(64);
 alter table asset_info add COLUMN factory_warranty_date date;
+alter table asset_info add COLUMN supplier_id int4;
+alter table asset_info add COLUMN qr_code varchar(256);
 
 alter table asset_contract add COLUMN contract_type int;
 
@@ -62,6 +64,7 @@ hospital_id int not null,
 asset_id int not null,
 asset_group int,
 dept_id int,
+supplier_id int,
 revenue float,
 maintenance_cost float,
 deprecation_cost float,

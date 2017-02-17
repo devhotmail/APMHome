@@ -58,6 +58,8 @@ public class AssetInfo implements Serializable {
     @Size(max = 64)
     @Column(name = "vendor")
     private String vendor;
+    @Column(name = "supplier_id")
+    private Integer supplierId;
     @Size(max = 64)
     @Column(name = "maitanance")
     private String maitanance;
@@ -161,7 +163,9 @@ public class AssetInfo implements Serializable {
     @Column(name = "factory_warranty_date")
     @Temporal(TemporalType.DATE)
     private Date factoryWarrantyDate;
-
+    @Size(max = 256)
+    @Column(name = "qr_code")
+    private String qrCode;
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "purchase_price")
@@ -597,6 +601,22 @@ public class AssetInfo implements Serializable {
 
     public void setFactoryWarrantyDate(Date factoryWarrantyDate) {
         this.factoryWarrantyDate = factoryWarrantyDate;
+    }
+
+    public Integer getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
     
     @Override
