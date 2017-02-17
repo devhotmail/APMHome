@@ -23,4 +23,6 @@ public class AssetCostDataAggregator {
         
     }
     
+    public void aggregateCostDataByAssetId(int assetId){
+    }
 }

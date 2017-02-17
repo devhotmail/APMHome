@@ -19,4 +19,6 @@ public class assetExamDataAggregator {
         
     }
     
+    public void aggregateExamDataByAssetId(int assetId){
+    }
 }

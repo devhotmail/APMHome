@@ -54,3 +54,27 @@ alter table work_order add COLUMN from_dept_name varchar(64);
 alter table work_order add COLUMN ticket_no varchar(32);
 alter table work_order add COLUMN reponse_time int;
 alter table work_order add COLUMN repaire_time int;
+
+create table asset_summit(
+id serial not null,
+site_id  int not null,
+hospital_id int not null,
+asset_id int not null,
+asset_group int,
+dept_id int,
+revenue float,
+maintenance_cost float,
+deprecation_cost float,
+inject_count int,
+expose_count float,
+film_count int,
+exam_count int,
+exam_duration int,
+down_time int,
+work_order_count int,
+rating int,
+created date,
+last_modified timestamp);
+
+alter table asset_summit add primary key (id);
+alter table asset_summit add constraint uk_asset_summit_asset_n_date unique (asset_id, created);

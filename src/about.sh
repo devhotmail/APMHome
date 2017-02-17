@@ -8,16 +8,27 @@ echo -e "<html>
    	<body>  
 		<div>GE Healthcare (China) APM</div>
 		<div>Version: \$version</div>
-		<div>Build: \$build</div>  
+		<div>Commit: \$commit</div>  
    	</body>  
 </html>" > ./src/main/webapp/about.html
 
-version=1.0
-build=`svn info |grep Revision |awk '{print $2}'`
+branch=`git branch |grep \* |awk '{print $2}'`
 
-echo "Version: $version"
-echo "Build: $build"
+if [ "$branch" = "develop" ]; then
+    version=2.0
+elif [ "$branch" = "master" ]; then
+    version=1.0
+else 
+    version=1.2
+fi
+
+commit=`git log -1 |grep commit |awk '{print $2}'`
+
+echo "version: $version"
+echo "commit: $commit"
+echo "branch: $branch"
+
 
 echo `sed  's/$version/'"$version"'/'  ./src/main/webapp/about.html` > ./src/main/webapp/about.html
-echo `sed  's/$build/'"$build"'/' ./src/main/webapp/about.html` > ./src/main/webapp/about.html
+echo `sed  's/$commit/'"$commit"'/' ./src/main/webapp/about.html` > ./src/main/webapp/about.html
 

@@ -1,9 +1,10 @@
-.svn/
-bower_components/
-logs
-node_modules/
-target/
-src/main/webapp/resources/elements/**/*-styles.html
+src/bower_components/
+src/logs
+src/node_modules/
+src/target/
+src/src/main/webapp/resources/css
+src/src/main/webapp/resources/elements/**/*-styles.html
 .idea/
 *.iml
-sql/
+src/sql/test_data.sql
+src/src/main/webapp/about.html
