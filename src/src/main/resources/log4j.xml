@@ -36,12 +36,6 @@
 		<level value="warn"/>
 	</logger>
 
-	<!-- JSF Phase listener (debug purpose) -->
-	<!-- <logger name="org.springframework.faces.support.RequestLoggingPhaseListener"> -->
-	<!-- <level value="${log4j.level}" /> -->
-	<!-- </logger> -->
-
-	<!-- TRANSACTION -->
 	<logger name="org.springframework.transaction">
 		<level value="warn"/>
 	</logger>
@@ -49,7 +43,6 @@
 		<level value="warn"/>
 	</logger>
 
-	<!-- HIBERNATE & CACHE SPECIFIC -->
 	<logger name="org.hibernate.cache.EhCacheProvider">
 		<level value="error"/>
 	</logger>
@@ -58,23 +51,6 @@
 		<level value="warn"/>
 	</logger>
 
-	<!-- Log Hibernate SQL queries to file (log level must be DEBUG to enable it) -->
-	<!--
-	<logger name="org.hibernate.SQL" additivity="false">
-<level value="debug" />
-<appender-ref ref="File" />
-</logger>
-	-->
-
-	<!-- log the param value in the prepared statement and the query result! (log level must be TRACE to enable it) -->
-	<!--
-<logger name="org.hibernate.type">
-<level value="trace" />
-<appender-ref ref="File"/>
-</logger>
-	-->
-
-	<!-- OTHER OPEN SOURCE PACKAGES -->
 	<logger name="org.springframework.security">
 		<level value="warn"/>
 	</logger>
@@ -85,6 +61,10 @@
 		<level value="warn"/>
 	</logger>
 	<logger name="org.springframework.beans.factory.support">
+		<level value="warn"/>
+	</logger>
+
+	<logger name="net.sf.ehcache">
 		<level value="warn"/>
 	</logger>
 

@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ehcache updateCheck="false" name="hibernateCache">
-	<diskStore path="java.io.tmpdir/ehcache/hibernate" />
+<ehcache updateCheck="false" monitoring="autodetect">
+	<diskStore path="java.io.tmpdir/ehcache/hibernate"/>
 
 	<!-- DefaultCache setting. -->
-	<defaultCache 
-            maxEntriesLocalHeap="10000"
-            eternal="true"
-            timeToIdleSeconds="0"
-            timeToLiveSeconds="0"
-            overflowToDisk="true"
-            maxEntriesLocalDisk="100000" />
+	<defaultCache maxBytesLocalHeap="10m" eternal="false" timeToIdleSeconds="86400" timeToLiveSeconds="86400" overflowToDisk="false"/>
 
+	<cache name="springCache" maxBytesLocalHeap="30m" eternal="true" timeToIdleSeconds="0" timeToLiveSeconds="0" memoryStoreEvictionPolicy="LFU" overflowToDisk="false" diskPersistent="false"/>
 </ehcache>

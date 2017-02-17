@@ -1,11 +1,12 @@
 package com.get.apm.api.ut;
 
 
-import com.ge.apm.service.utils.CNY;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.net.UrlEscapers;
 import javaslang.Tuple;
+import javaslang.control.Option;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.util.Strings;
 import org.junit.Test;
 import rx.Observable;
 import rx.observables.JoinObservable;
@@ -28,6 +29,11 @@ public class ProfitApiUnitTest {
   @Test
   public void testUrlEscape() {
     Assertions.assertThat(UrlEscapers.urlPathSegmentEscaper().escape("放射科")).isEqualToIgnoringCase("%E6%94%BE%E5%B0%84%E7%A7%91");
+  }
+
+  @Test
+  public void testSmallerString() {
+    Assertions.assertThat(Option.of(Tuple.of("abc", "a")).map(t -> !Strings.isNullOrEmpty(t._2) && t._2.length() > t._1.length() ? t._2 : t._1).getOrElse("")).isEqualToIgnoringCase("abc");
   }
 
 }
