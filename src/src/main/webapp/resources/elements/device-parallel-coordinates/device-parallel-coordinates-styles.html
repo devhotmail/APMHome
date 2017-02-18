@@ -101,21 +101,18 @@
 .label {
   -webkit-transition: fill 125ms linear; }
 
-.chart-body.active .sector:not(.inactive) {
+.chart-body.active .sector.active {
   opacity: 1; }
-  .chart-body.active .sector:not(.inactive) .label {
+  .chart-body.active .sector.active .label {
     fill: white; }
 
-.chart-body.active .foreground path {
+.chart-body.active .axis text.active {
+  fill: #5da5da;
+  font-weight: bold; }
+
+.chart-body.active .foreground path.active {
   stroke: #5da5da;
   stroke-width: 3px; }
-  .chart-body.active .foreground path.inactive {
-    stroke: rgba(140, 140, 140, 0.1);
-    stroke-opacity: .5;
-    stroke-width: 1px; }
-
-.label.inactive {
-  fill: #525156; }
 
 </style>
 </template>

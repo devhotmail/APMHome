@@ -133,7 +133,9 @@
           .attr("d", draw);
 
           var axis = dimension.append("g")
-          .attr("class", "axis");
+          .attr("class", function(d) {
+            return ['axis', 'axis-' + d.name].join(' ');
+          });
 
           axis.append('text')
           .attr("class", "title")
@@ -146,10 +148,10 @@
             var scale = d.scale;
             switch(d.name) {
               case 'name':
-                d3.select(this).call(_this._renderDeviceList.bind(_this), scale, height);
+                d3.select(this).call(_this._renderDeviceList.bind(_this), d, height);
                 break;
               default:
-                d3.select(this).call(_this._renderDimension.bind(_this), scale, height);
+                d3.select(this).call(_this._renderDimension.bind(_this), d, height);
             }
           });
 
@@ -166,8 +168,16 @@
 
           function mouseover(d) {
             root.classed("active", true);
-            projection.classed("inactive", function(p) { return p !== d; });
+            projection.classed("active", function(p) { return p === d; });
             projection.filter(function(p) { return p === d; }).each(moveToFront);
+
+            // highlight one series
+            if(d.id)
+              _this._highlightSeries(d.id);
+            // highlight one sector
+            else if(d.value) {
+              _this._highlightSector(d);
+            }
           }
 
           function mouseout(d) {
@@ -185,21 +195,23 @@
             }));
           }
         },
-        _renderDeviceList: function(selection, scale, height) {
-          var data = scale.domain();
-          console.log(data);
-          var devices = selection.selectAll('.sector').data(data);
+        _renderDeviceList: function(selection, dimension, height) {
+          var scale = dimension.scale;
+          var devices = selection.selectAll('.sector').data(this.data);
           var devicesEnter = devices.enter()
           .append('text')
           .text(function(d) {
-            return d;
+            return d.name;
+          })
+          .attr('id', function(d) {
+            return ['axis-label', dimension.name, d.id].join('-');
           })
           .attr('class', 'label')
           .attr('transform', d3Transform().translate(function(d) {
-            return [0, scale(d)];
+            return [0, scale(d.name)];
           }));
         },
-        _renderDimension: function(selection, scale, height) {
+        _renderDimension: function(selection, dimension, height) {
           function tickData(tick) {
             return {
               tick: tick,
@@ -215,6 +227,7 @@
             return a - b;
           }
 
+          var scale = dimension.scale;
           var dimension = selection.data()[0];
           var domain = scale.domain();
           var scaleDef = this.scales;
@@ -261,8 +274,9 @@
               return null;
             } else {
               return {
-                lastValue: format(lastTick),
-                value: format(tick),
+                name: dimension.name,
+                lastValue: lastTick,
+                value: tick,
                 y0: scale(lastTick),
                 y1: scale(tick)
               };
@@ -313,7 +327,7 @@
           })
           .attr('class', 'label')
           .text(function(d) {
-            return [d.value, d.lastValue].join('-')
+            return [format(d.value), format(d.lastValue)].join('-')
           })
           .each(function clip(d, i) {
             var text_size = this.getComputedTextLength();
@@ -322,11 +336,11 @@
             if(text_size > width) {
               // last value
               if (i === data.length - 1) {
-                $(this).text([d.lastValue, '+'].join(' '));
+                $(this).text([format(d.lastValue), '+'].join(' '));
               }
               // first value
               if (i === 0) {
-                $(this).text(['<', d.value].join(' '));
+                $(this).text(['<', format(d.value)].join(' '));
               }
             }
           })
@@ -336,6 +350,47 @@
           });
 
           sectors = sectors.merge(sectorsEnter);
+        },
+        _highlightSeries: function(id) {
+
+          if(id) {
+            // name axis
+            d3.selectAll('.axis.axis-name text.label').each(function toggleActive(d) {
+              $(this).classed('active', d.id === id);
+            });
+            var item = this.data.find(function(d) {
+              return d.id === id;
+            });
+            // other axis
+            this.dimensions.forEach(function(d) {
+              highlightSector(d.name, item);
+            })
+          }
+
+          function highlightSector(name, item) {
+            d3.selectAll('.axis.axis-' + name + ' .sector').each(function toggleActive(d_sector) {
+              var val = item[name];
+              var b = val >= d_sector.lastValue && val <= d_sector.value;
+//              console.log('sector match:', name, d_sector.lastValue, d_sector.value, val, b);
+              $(this).classed('active', b);
+            });
+          }
+        },
+        _highlightSector: function(sector) {
+          var name = sector.name;
+          if(sector) {
+            // name axis
+            d3.selectAll('.axis.axis-name text.label').each(function toggleActive(d) {
+              $(this).classed('active', valueInSector(d[name]));
+            });
+            d3.selectAll('.background path,.foreground path').each(function toggleActive(d) {
+              $(this).classed('active', valueInSector(d[name]));
+            });
+          }
+
+          function valueInSector(val) {
+            return val >= sector.lastValue && val <= sector.value;
+          }
         },
         _getDimensions: function(data, margin, height) {
           height = height - this.margin.top - this.margin.bottom;

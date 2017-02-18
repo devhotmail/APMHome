@@ -72,26 +72,19 @@ $series-line-color: rgba($dv-light-gray, .1);
   -webkit-transition: fill 125ms linear;
 }
 
-.chart-body.active .sector:not(.inactive) {
-  opacity: 1;
-  .label {
-    fill: $white;
-  }
-}
-
-.chart-body.active .foreground {
-  path {
-    stroke: $dv-basic-blue;
-    stroke-width: 3px;
-
-    &.inactive {
-      stroke: $series-line-color;
-      stroke-opacity: .5;
-      stroke-width: 1px;
+.chart-body.active {
+  .sector.active {
+    opacity: 1;
+    .label {
+      fill: $white;
     }
   }
-}
-
-.label.inactive {
-  fill: $label-text-color;
+  .axis text.active {
+    fill: $dv-basic-blue;
+    font-weight: bold;
+  }
+  .foreground path.active {
+    stroke: $dv-basic-blue;
+    stroke-width: 3px;
+  }
 }
