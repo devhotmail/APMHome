@@ -12,6 +12,7 @@ public class AssetCostStatistics implements Serializable{
 	private Integer hospitalId;//医院id
 	private Integer assetGroup;//资产分组
 	private Integer deptId;//科室id
+	private Integer supplierId;//供应商id
 	private String assetName;//资产名称
 	private Double maintenanceCost;//维修费用
 	private Double deprecationCost;//折旧费用
@@ -28,6 +29,12 @@ public class AssetCostStatistics implements Serializable{
 	private DateTime confirmedDownTime;//宕机时间
 	private Boolean woStatus;//工单状态
 	
+	public Integer getSupplierId() {
+		return supplierId;
+	}
+	public void setSupplierId(Integer supplierId) {
+		this.supplierId = supplierId;
+	}
 	public Boolean getWoStatus() {
 		return woStatus;
 	}
