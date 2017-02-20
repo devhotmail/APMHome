@@ -7,4 +7,5 @@ import webapp.framework.dao.GenericRepository;
 public interface SupplierRepository extends GenericRepository<Supplier> {
     public List<Supplier> getBySiteId(int siteId);
 
+    public Supplier getBySiteIdAndName(int siteId, String name);
 }

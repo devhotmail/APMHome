@@ -22,10 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ge.apm.dao.AssetFileAttachmentRepository;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.OrgInfoRepository;
+import com.ge.apm.dao.SupplierRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.OrgInfo;
+import com.ge.apm.domain.Supplier;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AssetDepreciationService;
 import com.ge.apm.service.asset.AttachmentFileService;
@@ -53,7 +55,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     private boolean resultStatus;
 
     private UserAccount clinicalOwner;
-
+    private Supplier supplier;
+    
     private UserAccount owner;
 //    private List<UserAccount> ownerList;
     private List<OrgInfo> ownerOrgList;
@@ -73,6 +76,21 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     Boolean terminate;
 
+    protected void setSelectedByUrlParam(String encodeUrl, String paramName){
+        setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeUrl, paramName)));
+        
+        owner = userDao.findById(selected.getAssetOwnerId());
+        
+        if (null != selected.getClinicalOwnerId()) {
+            clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
+        }
+
+        if (null != selected.getSupplierId()) {
+            SupplierRepository supplierDao = WebUtil.getBean(SupplierRepository.class);
+            supplier = supplierDao.findById(selected.getSupplierId());
+        }
+    }
+    
     @Override
     protected void init() {
         dao = WebUtil.getBean(AssetInfoRepository.class);
@@ -101,27 +119,15 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             }
         } else if ("View".equalsIgnoreCase(actionName)) {
             // setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
-            owner = userDao.findById(selected.getAssetOwnerId());
-            if (null != selected.getClinicalOwnerId()) {
-                clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
-            }
+            setSelectedByUrlParam(encodeStr, "selectedid");
             prepareView();
         } else if ("Edit".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
-            owner = userDao.findById(selected.getAssetOwnerId());
-            if (null != selected.getClinicalOwnerId()) {
-                clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
-            }
+            setSelectedByUrlParam(encodeStr, "selectedid");
             prepareEdit();
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
-            owner = userDao.findById(selected.getAssetOwnerId());
-            if (null != selected.getClinicalOwnerId()) {
-                clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
-            }
+            setSelectedByUrlParam(encodeStr, "selectedid");
             prepareDelete();
         }
 
@@ -316,6 +322,13 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
+    public void onSupplierChange() {
+        if (null != supplier) {
+            selected.setSupplierId(supplier.getId());
+            selected.setVendor(supplier.getName());
+        }
+    }
+    
     public void handleFileUpload(FileUploadEvent event) {
 
         String type = event.getComponent().getId();
@@ -565,4 +578,12 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         this.clinicalOwner = clinicalOwner;
     }
 
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
+    
 }
