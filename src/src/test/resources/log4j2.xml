@@ -61,7 +61,7 @@
     <logger name="druid.sql.Statement" additivity="false" level="debug">
       <appender-ref ref="Console"/>
     </logger>
-    <logger name="druid.sql.ResultSet" additivity="false" level="debug">
+    <logger name="druid.sql.ResultSet" additivity="false" level="info">
       <appender-ref ref="Console"/>
     </logger>
   </loggers>
