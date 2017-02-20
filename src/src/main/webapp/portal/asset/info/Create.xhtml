@@ -77,7 +77,7 @@
                                 <label class="label">#{msg.clinicalOwnerName}*</label>
                                 <p:selectOneMenu id="clinicalOwnerName" value="#{assetInfoController.clinicalOwner}" converter="userAccountConverter" var="t" required="true" requiredMessage="#{msg.clinicalOwnerId} #{msg.ValidationRequire}">
                                     <p:ajax  listener="#{assetInfoController.onClinicalOwnerChange()}" update="clinicalOwnerTel" />
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItem itemLabel=""/>
                                     <f:selectItems value="#{assetInfoController.getClinicalOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
                                     <p:column>
                                         <h:outputText value="#{t.name}"/>
