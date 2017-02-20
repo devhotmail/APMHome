@@ -1,19 +1,20 @@
 package com.ge.apm.view.sysutil;
 
+import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.dao.UserAccountRepository;
+import com.ge.apm.domain.SiteInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.uaa.UaaService;
+import webapp.framework.dao.SearchFilter;
+import webapp.framework.web.WebUtil;
+import webapp.framework.web.service.UserContext;
 
-import java.io.Serializable;
-import java.util.List;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-
-import webapp.framework.dao.SearchFilter;
-import webapp.framework.web.WebUtil;
-import webapp.framework.web.service.UserContext;
+import java.io.Serializable;
+import java.util.List;
 
 @ManagedBean(name="userContextService")
 @SessionScoped
@@ -21,7 +22,8 @@ public class UserContextService implements Serializable{
     private static final long serialVersionUID = 1L;
 
     private UserAccount userAccount=null;
-    
+  private SiteInfo siteInfo;
+
     public void processAfterLogin(){
         getLoginUser();
     }
@@ -55,12 +57,12 @@ public class UserContextService implements Serializable{
         if(!isFirstRequestAfterLogin) return;
         isFirstRequestAfterLogin = false;
 
-        //navigate to super admin's home page 
+      //navigate to super admin's home page
         FacesContext context = FacesContext.getCurrentInstance();
         ConfigurableNavigationHandler handler = (ConfigurableNavigationHandler)context.getApplication().getNavigationHandler();
         handler.performNavigation("admin/adminHome.xhtml?faces-redirect=true");
     }
-    
+
     public static List<String> getRoles() {
         return UserContext.getRoles();
     }
@@ -75,42 +77,46 @@ public class UserContextService implements Serializable{
 
         if(UserContextService.isSiteAdmin()) return true;
         else if("SiteAdmin".equals(role)) return false;
-        
+
         if(UserContextService.isLocalAdmin()) return true;
         else if("LocalAdmin".equals(role)) return false;
         return UserContext.getRoles().contains(role);
     }
 
-    protected UserAccount getLoginUser(){
+  public UserAccount getLoginUser() {
         if (userAccount==null){
             String userName = getUserLoginName();
             if(userName==null) return null; // user is not logined
-            
-            UserAccountRepository dao=(UserAccountRepository) WebUtil.getBean(UserAccountRepository.class);
+
+          UserAccountRepository dao = WebUtil.getBean(UserAccountRepository.class);
             userAccount = dao.getByLoginName(getUserLoginName());
         }
-        
-        return userAccount;
+
+    return userAccount;
     }
+
+  public SiteInfo getSiteInfo() {
+    return WebUtil.getBean(SiteInfoRepository.class).findById(getLoginUser().getSiteId());
+  }
 
     public boolean getIsSuperAdmin(){
         return UserContextService.isSuperAdmin();
     }
-    
-    public boolean getIsTenantAdmin(){
+
+  public boolean getIsTenantAdmin(){
         return UserContextService.isSiteAdmin();
     }
-    
-    public boolean getIsLocalAdmin(){
+
+  public boolean getIsLocalAdmin(){
         return UserContextService.isLocalAdmin();
     }
-    
-    public static UserAccount getCurrentUserAccount(){
-        UserContextService userContextService = (UserContextService) WebUtil.getBean(UserContextService.class);
+
+  public static UserAccount getCurrentUserAccount(){
+    UserContextService userContextService = WebUtil.getBean(UserContextService.class);
         return userContextService.getLoginUser();
     }
-    
-    public static boolean isSuperAdmin(){
+
+  public static boolean isSuperAdmin(){
         UserAccount userAccount = getCurrentUserAccount();
         return userAccount.getIsSuperAdmin();
     }
@@ -124,33 +130,33 @@ public class UserContextService implements Serializable{
         UserAccount userAccount = getCurrentUserAccount();
         return userAccount.getIsLocalAdmin();
     }
-    
-    public static int getUserID(){
+
+  public static int getUserID(){
         UserAccount userAccount = getCurrentUserAccount();
         if (userAccount!=null) return userAccount.getId();
-        
-        return -1;
+
+    return -1;
     }
-    
-    public static int getSiteId(){
+
+  public static int getSiteId(){
         UserAccount userAccount = getCurrentUserAccount();
         if (userAccount!=null) return userAccount.getSiteId();
-        
-        return -1;
+
+    return -1;
     }
-    
-    public static void setSiteFilter(List<SearchFilter> filters){
+
+  public static void setSiteFilter(List<SearchFilter> filters){
         filters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, UserContextService.getSiteId()));
     }
-    
-    public static void setHospitalFilter(List<SearchFilter> filters){
+
+  public static void setHospitalFilter(List<SearchFilter> filters){
         filters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, UserContextService.getCurrentUserAccount().getHospitalId()));
     }
-    
-    public String getUserDefaultHomePage(){
+
+  public String getUserDefaultHomePage(){
         this.getLoginUser();
-        
-        if(userAccount==null)
+
+    if(userAccount==null)
             return "/login.xhtml";
         else{
             UaaService uaaService = WebUtil.getBean(UaaService.class);
