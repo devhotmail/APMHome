@@ -40,7 +40,6 @@ public class ProfitApi {
   @Autowired
   private ProfitService profitService;
 
-
   @RequestMapping(method = RequestMethod.GET)
   @ResponseBody
   public ResponseEntity<Map<String, Object>> calcProfit(HttpServletRequest request,
@@ -53,9 +52,10 @@ public class ProfitApi {
                                                         @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
     log.info("year:{}, groupby:{}, type:{}, dept:{}, month:{}, limit:{}, start:{}", year, groupBy, type, dept, month, limit, start);
     UserAccount user = UserContext.getCurrentLoginUser();
-    Map<Integer, String> groups = commonService.findFields(user.getSiteId(), "assetGroup").toBlocking().single();
-    Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId()).toBlocking().single();
-    Map<Integer, String> months = commonService.findFields(user.getSiteId(), "month").toBlocking().single();
+    Map<Integer, String> groups = commonService.findFields(user.getSiteId(), "assetGroup");
+    Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
+    Map<Integer, String> months = commonService.findFields(user.getSiteId(), "month");
+    Map<Integer, Tuple3<Integer, String, String>> hospitals = commonService.findHospitals();
     log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (!Range.closed(DateTime.now().getYear() - 3, DateTime.now().getYear()).contains(year)) {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "input data is not supported"));
