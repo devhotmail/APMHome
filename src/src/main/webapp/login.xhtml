@@ -1,10 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <f:view xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
         xmlns:h="http://xmlns.jcp.org/jsf/html"
         xmlns:f="http://xmlns.jcp.org/jsf/core"
-        xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
         xmlns:p="http://primefaces.org/ui"
         contentType="text/html"
         encoding="UTF-8"
@@ -104,9 +102,10 @@
               (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
               m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
               })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-              ga('create', '${analyticsController.gaId}', 'auto');
+              ga('create', '${analyticsController.gaId}', {'sampleRate':100,'siteSpeedSampleRate':100});
               ga('send', 'pageview');
-		        </script>
+
+            </script>
         </h:body>
     </html>
 </f:view>
