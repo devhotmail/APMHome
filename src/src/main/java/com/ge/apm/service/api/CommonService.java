@@ -60,7 +60,7 @@ public class CommonService {
       .single();
   }
 
-  @Cacheable(cacheNames = "springCache", key = "'commonService.findDepts.'+#siteId+'.'+#type")
+  @Cacheable(cacheNames = "springCache", key = "'commonService.findDepts.'+#siteId+'.'+#hospitalId")
   public Map<Integer, String> findDepts(int siteId, int hospitalId) {
     return db
       .select(
