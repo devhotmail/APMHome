@@ -1,5 +1,6 @@
 package com.ge.apm.service.analysis;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.ge.apm.dao.mapper.AssetDepreciationMapper;
 import com.ge.apm.dao.mapper.AssetInfoMapper;
 import com.ge.apm.dao.mapper.WorkOrderMapper;
 import com.ge.apm.domain.AssetCostStatistics;
-import com.ge.apm.domain.AssetDepreciation;
 import com.ge.apm.domain.DownTimeAsset;
 
 /***
@@ -87,6 +86,7 @@ public class AssetCostDataService {
 		}
 		excuteTaskByAsset(assetCostStatistics);
 	}
+	
 	/***
 	 * 计算单个资产
 	 * @param assetCostStatistics
@@ -118,16 +118,18 @@ public class AssetCostDataService {
 		//当天的新建工单数
 		assetCostStatistics.setWorkOrderCount(workOrderMapper.fetchWorkOrdersByAssetId(assetCostStatistics.getAssetId()));
 		
-    	//3、计算
+    	//3、计算维修费用
 		assetCostStatistics.setMaintenanceCost(workOrderMapper.fetchWorkOrderCost(assetCostStatistics.getAssetId()));
+		
     	//4、计算折旧费用
 		assetCostStatistics.setDeprecationCost(calAssetDepreciation(assetCostStatistics.getAssetId()));
-		
 	}
 
 	private Double calAssetDepreciation(Integer assetId) {
 		Double sum = assetDepreciationMapper.fetchAssetDepreciationByAssetId(assetId);
-		return sum == null ? 0 : sum/30;
+		DateTime first = new DateTime(new Date());
+		int days = first.dayOfMonth().getMaximumValue();
+		return sum == null ? 0 : sum/days;
 	}
 	
 }
