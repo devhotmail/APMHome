@@ -347,6 +347,7 @@
                         } else {
                             assetData['isInternal'] = false;
                         }
+                        assetData['requestTime'] = assetData['requestTime'].replace('T', ' ');
                         var flag = formValidate();
                         if (!flag) return;
                         var $loadingToast = $('#loadingToast');

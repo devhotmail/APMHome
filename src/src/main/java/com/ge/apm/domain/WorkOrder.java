@@ -70,7 +70,7 @@ public class WorkOrder implements Serializable {
     @NotNull
     @Column(name = "request_time")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date requestTime;
     @Basic(optional = false)
     @NotNull

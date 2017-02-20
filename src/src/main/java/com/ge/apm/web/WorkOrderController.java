@@ -116,5 +116,20 @@ public class WorkOrderController {
     public @ResponseBody Object woListData(HttpServletRequest request) {
         return woWcService.woList(request);
     }
+
+    @RequestMapping(value = "wodetail")
+    public @ResponseBody Object woDetail(Integer id){
+        return woWcService.woDetail(id);
+    }
+
+    @RequestMapping(value = "wostepdetail")
+    public @ResponseBody Object woStepDetail(Integer id){
+        return woWcService.woStep(id);
+    }
+
+    @RequestMapping(value = "detailcost")
+    public @ResponseBody Object detailCost(Integer id){
+        return woWcService.stepDetail(id);
+    }
     
 }
