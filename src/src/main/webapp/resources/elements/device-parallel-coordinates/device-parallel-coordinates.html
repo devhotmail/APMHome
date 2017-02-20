@@ -53,6 +53,10 @@
             computed: '_getDimensions(data, margin, height)'
           },
           data: Array,
+          benchmarkSuffix: {
+            value: '_bm',
+            readOnly: true
+          }
         },
         observers: [
           '_replot(width, height, data)'
@@ -86,7 +90,24 @@
           .defined(function(d) { return !isNaN(d[1]); });
           var yAxis = d3.axisLeft();
 
-          var root = svg.append("g").classed('chart-body', true).attr('transform', d3Transform().translate(margin.left, margin.top));
+          var root = svg.append("g").classed('chart-body', true)
+          .attr('transform', d3Transform().translate(margin.left, margin.top));
+
+          // render parallel's name
+          var parallelNamesGroup = root.append('g')
+          .attr('transform', 'translate(0, -40)')
+          .selectAll('.parallel-names')
+          .data(dimensions)
+          .enter().append('text')
+          .attr('class', 'parallel-names')
+          .attr('dy', '.85em')
+          .attr('text-anchor', 'middle')
+          .attr('transform', d3Transform().translate(function(d) {
+            return [x(d.name), 0]
+          }))
+          .text(function(d) {
+            return d.label;
+          });
 
           var dimension = root.selectAll(".dimension")
           .data(dimensions)
@@ -142,21 +163,48 @@
           .attr('d', function(d) {
             return line(dimensions.map(function(dimension) {
               var _name = dimension.name;
-              var _key = _name === 'name' ? _name : _name + '_bm';
+              var _key = _name === 'name' ? _name : _name + _this.benchmarkSuffix;
               return [x(_name), dimension.scale(d[_key])];
             }));
+          });
+
+          // render value/bm_value label
+          var valueGroup = root.append('g')
+          .attr('class', 'value-group')
+          .attr('transform', 'translate(0, -10)')
+          .selectAll('g')
+          .data(data)
+          .enter().append('g')
+          .attr('class', 'value')
+          .attr('id', function(d) {
+            return 'value-' + d.id;
+          })
+
+          dimensions.forEach(function(dimension) {
+            var _name = dimension.name;
+
+            var _textWrapper = valueGroup.append('text')
+            .attr('text-anchor', 'middle')
+            .attr('font-size', 'small')
+            .attr('transform', d3Transform().translate(function(d) {
+              return [x(_name), 0];
+            }));
+
+            _textWrapper.append('tspan')
+            .attr('x', '0')
+            .attr('class', 'actual-val')
+            .text(function(d) {return _name === 'name' ? '实际值' : d[_name]});
+
+            _textWrapper.append('tspan')
+            .attr('class', 'benchmark-val')
+            .attr('x', '0')
+            .attr('dy', '1em')
+            .text(function(d) {return _name === 'name' ? '基准值' : d[_name + _this.benchmarkSuffix]});
           });
 
           var axis = dimension.append("g")
           .attr("class", function(d) {
             return ['axis', 'axis-' + d.name].join(' ');
-          });
-
-          axis.append('text')
-          .attr("class", "title")
-          .attr("y", -20)
-          .text(function(d) {
-            return d.label;
           });
 
           axis.each(function(d) {
@@ -175,9 +223,12 @@
           .attr("class", "label")
           .data(data, function(d) { return d.name || d; });
 
-          var projection = root.selectAll(".axis .sector,.background path,.foreground path,.benchmark path")
+          var projection = root.selectAll(".axis .sector,.axis .label,.background path,.foreground path,.benchmark path")
           .on("mouseover", mouseover)
           .on("mouseout", mouseout);
+
+          var valueLabels = root.select('.value-group')
+          .selectAll('g.value');
 
           this.scopeSubtree(this.$.svg);
 
@@ -185,6 +236,8 @@
             root.classed("active", true);
             projection.classed("active", function(p) { return p === d; });
             projection.filter(function(p) { return p === d; }).each(moveToFront);
+            // make the value of target item active
+            valueLabels.classed('active', function(p) { return p.id === d.id; });
 
             // highlight one series
             if(d.id)
@@ -198,6 +251,8 @@
           function mouseout(d) {
             root.classed("active", false);
             projection.classed("inactive", false);
+            // make all items inactive
+            valueLabels.classed('active', false);
           }
 
           function moveToFront() {

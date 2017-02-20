@@ -60,7 +60,7 @@ $series-line-color: rgba($dv-light-gray, .1);
 }
 
 .sector {
-  opacity: .8;
+  opacity: .7;
 
   rect {
     fill: rgba($dv-dark-blue, .8);
@@ -75,7 +75,26 @@ $series-line-color: rgba($dv-light-gray, .1);
 }
 
 .label {
-  -webkit-transition: fill 125ms linear;
+  transition: fill 125ms linear;
+}
+
+.value-group {
+  .value {
+    opacity: 0;
+    transition: opacity linear .15s;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  .actual-val {
+    fill: $dv-basic-blue;
+  }
+
+  .benchmark-val {
+    fill: $dv-basic-purple;
+  }
 }
 
 .chart-body.active {
