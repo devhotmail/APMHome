@@ -7,15 +7,9 @@ src/src/main/webapp/resources/elements/**/*-styles.html
 .idea/
 *.iml
 src/sql/test_data.sql
-<<<<<<< Updated upstream:src/.gitignore
-src/src/main/webapp/about.html
-=======
 src/src/main/webapp/about.html
 src/.project
 src/.classpath
 src/.settings
-.gitignore
 src/geapm.iml
 src/src/main/webapp/WEB-INF/sun-web.xml
-
->>>>>>> Stashed changes:.gitignore
