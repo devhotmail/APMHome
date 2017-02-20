@@ -29,6 +29,11 @@ $series-line-color: rgba($dv-light-gray, .1);
   stroke-width: 1.5px;
 }
 
+.benchmark path {
+  fill: none;
+  stroke: none;
+}
+
 .chart-body text {
   fill: $label-text-color;
 }
@@ -86,6 +91,10 @@ $series-line-color: rgba($dv-light-gray, .1);
   }
   .foreground path.active {
     stroke: $dv-basic-blue;
+    stroke-width: 3px;
+  }
+  .benchmark path.active {
+    stroke: $dv-basic-purple;
     stroke-width: 3px;
   }
 }

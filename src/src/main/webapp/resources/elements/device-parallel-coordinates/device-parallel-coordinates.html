@@ -133,6 +133,20 @@
           .enter().append("path")
           .attr("d", draw);
 
+          // render benchmark
+          root.append('g')
+          .attr('class', 'benchmark')
+          .selectAll('path')
+          .data(data)
+          .enter().append('path')
+          .attr('d', function(d) {
+            return line(dimensions.map(function(dimension) {
+              var _name = dimension.name;
+              var _key = _name === 'name' ? _name : _name + '_bm';
+              return [x(_name), dimension.scale(d[_key])];
+            }));
+          });
+
           var axis = dimension.append("g")
           .attr("class", function(d) {
             return ['axis', 'axis-' + d.name].join(' ');
@@ -161,7 +175,7 @@
           .attr("class", "label")
           .data(data, function(d) { return d.name || d; });
 
-          var projection = root.selectAll(".axis .sector,.background path,.foreground path")
+          var projection = root.selectAll(".axis .sector,.background path,.foreground path,.benchmark path")
           .on("mouseover", mouseover)
           .on("mouseout", mouseout);
 
@@ -373,7 +387,6 @@
             d3.selectAll('.axis.axis-' + name + ' .sector').each(function toggleActive(d_sector) {
               var val = item[name];
               var b = val >= d_sector.lastValue && val <= d_sector.value;
-//              console.log('sector match:', name, d_sector.lastValue, d_sector.value, val, b);
               $(this).classed('active', b);
             });
           }
