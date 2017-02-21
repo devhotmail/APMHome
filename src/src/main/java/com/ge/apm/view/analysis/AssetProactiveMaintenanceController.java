@@ -10,7 +10,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Weeks;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.postgresql.jdbc4.Jdbc4Array;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webapp.framework.dao.NativeSqlUtil;
@@ -22,24 +21,27 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-
+import java.sql.Array;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ManagedBean
 @ViewScoped
 public final class AssetProactiveMaintenanceController implements ServerEventInterface {
 
     private static final Logger logger = LoggerFactory.getLogger(AssetProactiveMaintenanceController.class);
-    
+
     private final String username = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
     private final HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
     private final String remote_addr = request.getRemoteAddr();
     private final String page_uri = request.getRequestURI();
     private final int site_id = UserContextService.getCurrentUserAccount().getSiteId();
     private final int hospital_id = UserContextService.getCurrentUserAccount().getHospitalId();
-    
-    private HashMap<String, Object> sqlParams = new HashMap<>();  
+
+    private HashMap<String, Object> sqlParams = new HashMap<>();
 
     @PostConstruct
     public final void init() {
@@ -99,7 +101,7 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
         }
         else {
             FluentIterable<Map<String, Object>> iterable = FluentIterable.from(this.query(SQL_SCALAR_DEVICE_NAME_SINGLE));
-            return (String)iterable.first().or(ImmutableMap.of("scalar", (Object)"")).get("scalar");
+            return (String) iterable.first().or(ImmutableMap.of("scalar", "")).get("scalar");
         }
     }
 
@@ -125,7 +127,7 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
         List<Object> ret = new ArrayList<>(13);
         for (Map<String, Object> map : list) {
             try {
-                String[] a = (String[]) ((Jdbc4Array) map.get("scalar")).getArray();
+                String[] a = (String[]) ((Array) map.get("scalar")).getArray();
                 a[0] = WebUtil.getFieldValueMessage("month", a[0].trim());
                 ret.add(a);
             }
@@ -205,7 +207,7 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
         List<Object> ret = new ArrayList<>();
         for (Map<String, Object> map : list) {
             try {
-                String[] array =(String[])((Jdbc4Array) map.get("scalar")).getArray();
+                String[] array = (String[]) ((Array) map.get("scalar")).getArray();
                 // backward
                 int l2 = array.length - 1;
                 while (l2 >= 0 && array[l2].length() == 0) {
@@ -247,7 +249,7 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
         }
 
         sqlParams.put("_sql", template);
-        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams); 
+        logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
         return NativeSqlUtil.queryForList(template, sqlParams);
     }
 

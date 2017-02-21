@@ -6,10 +6,11 @@ stack: cflinuxfs2
 path: ./target/geapm-1.0.0.war
 
 applications:
-- name: geapmuat3
+- name: geapmuat2
   env:
     JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
     WEB_ANALYTICS_CFG: 'ga:{enabled:true, id:UA-89957306-1}'
+    JBP_CONFIG_TOMCAT: "{ access_logging_support: {access_logging: enabled}, tomcat: { version: 8.5.11, external_configuration_enabled: true }, external_configuration: { version: 8.5.11, repository_root: \"https://geapmcfg.run.aws-jp01-pr.ice.predix.io\" } }"
   services:
   - pg-uat2
   - log-uat2

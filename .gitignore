@@ -1,9 +1,0 @@
-.svn/
-bower_components/
-logs
-node_modules/
-target/
-elements/**/*-styles.html
-.idea/
-*.iml
-sql/

@@ -5,92 +5,92 @@
 
 	<appender name="Console" class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS}[%t]%-5p %-20c:%L - %m%n" />
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS}[%t]%-5p %-20c:%L - %m%n"/>
 		</layout>
 	</appender>
 
 	<appender name="File" class="org.apache.log4j.RollingFileAppender">
 		<!--<param name="File" value="${project.name}-${project.version}.log" />-->
 		<param name="File" value="logs/RisSi-Server.log"/>
-		<param name="MaxFileSize" value="1000KB" />
-		<param name="MaxBackupIndex" value="20" />
+		<param name="MaxFileSize" value="2048KB"/>
+		<param name="MaxBackupIndex" value="20"/>
 
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS}[%t]%-5p %-20c:%L - %msg%n" />
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS}[%t]%-5p %-20c:%L - %msg%n"/>
 		</layout>
 	</appender>
 
 	<logger name="com.demo">
-		<level value="${log4j.level}" />
+		<level value="${log4j.level}"/>
 	</logger>
 
 	<logger name="com.ge.apm.view">
-		<level value="${log4j.level}" />
+		<level value="info"/>
 	</logger>
 
 	<logger name="com.demo.dao">
-		<level value="warn" />
+		<level value="warn"/>
 	</logger>
 
-	<!-- JSF Phase listener (debug purpose) -->
-	<!-- <logger name="org.springframework.faces.support.RequestLoggingPhaseListener"> -->
-	<!-- <level value="${log4j.level}" /> -->
-	<!-- </logger> -->
+	<logger name="webapp.framework.web.filter">
+		<level value="warn"/>
+	</logger>
 
-	<!-- TRANSACTION -->
 	<logger name="org.springframework.transaction">
-		<level value="warn" />
+		<level value="warn"/>
 	</logger>
 	<logger name="org.springframework.orm.hibernate3">
-		<level value="warn" />
+		<level value="warn"/>
 	</logger>
 
-	<!-- HIBERNATE & CACHE SPECIFIC -->
 	<logger name="org.hibernate.cache.EhCacheProvider">
-		<level value="error" />
+		<level value="error"/>
 	</logger>
 
 	<logger name="org.hibernate">
-		<level value="warn" />
+		<level value="warn"/>
 	</logger>
 
-	<!-- Log Hibernate SQL queries to file (log level must be DEBUG to enable it) -->
-        <!--
-        <logger name="org.hibernate.SQL" additivity="false">
-		<level value="debug" />
-		<appender-ref ref="File" />
-	</logger>
-        -->
-        
-	<!-- log the param value in the prepared statement and the query result! (log level must be TRACE to enable it) -->
-        <!--
-	<logger name="org.hibernate.type">
-	<level value="trace" />
-	<appender-ref ref="File"/>
-	</logger> 
-        -->
-
-	<!-- OTHER OPEN SOURCE PACKAGES -->
 	<logger name="org.springframework.security">
-		<level value="warn" />
+		<level value="warn"/>
 	</logger>
 	<logger name="org.apache.commons">
-		<level value="warn" />
+		<level value="warn"/>
 	</logger>
 	<logger name="org.springframework">
-		<level value="warn" />
+		<level value="warn"/>
 	</logger>
 	<logger name="org.springframework.beans.factory.support">
-		<level value="warn" />
+		<level value="warn"/>
 	</logger>
 
-	<logger name="log4j.logger.druid.sql">
-		<level value="info" />
+	<logger name="net.sf.ehcache">
+		<level value="warn"/>
+	</logger>
+
+	<logger name="druid.sql">
+		<level value="error"/>
+	</logger>
+
+	<logger name="druid.sql.DataSource">
+		<level value="error"/>
+	</logger>
+
+	<logger name="druid.sql.Connection">
+		<level value="error"/>
+	</logger>
+
+	<logger name="druid.sql.Statement">
+		<level value="debug"/>
+	</logger>
+
+	<logger name="druid.sql.ResultSet">
+		<level value="debug"/>
 	</logger>
 
 	<root>
-		<priority value="info" />
-		<appender-ref ref="Console" />
-		<appender-ref ref="File" />
+		<priority value="info"/>
+		<appender-ref ref="Console"/>
+		<appender-ref ref="File"/>
 	</root>
 </log4j:configuration>

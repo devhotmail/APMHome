@@ -5,59 +5,66 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 
-    <ui:insert name="preRenderView"/>
-    <h:head>
-        <base href="#{request.contextPath}/resources/" />
-        <f:facet name="first">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-            <meta name="apple-mobile-web-app-capable" content="yes" />
-            <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}" />
-        </f:facet>
-        <title>GE APM</title>
-        <h:outputScript name="js/layout2.js" library="ultima-layout" />
-        <h:outputScript name="js/ripple.js" library="ultima-layout" />
-        <h:outputScript name="js/swipe.js" library="ultima-layout" />
-        <!-- web components shim -->
-        <h:outputScript name="bower_components/webcomponentsjs/webcomponents-lite.min.js" />
-        <h:outputStylesheet name="css/shell.css" />
-        <h:outputScript name="js/main.js" />
+<ui:insert name="preRenderView"/>
+<h:head>
+    <base href="#{request.contextPath}/resources/"/>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}"/>
+    </f:facet>
+    <title>GE APM</title>
+    <h:outputScript name="js/layout2.js" library="ultima-layout"/>
+    <h:outputScript name="js/ripple.js" library="ultima-layout"/>
+    <h:outputScript name="js/swipe.js" library="ultima-layout"/>
+    <!-- web components shim -->
+    <h:outputScript name="bower_components/webcomponentsjs/webcomponents-lite.min.js"/>
+    <h:outputStylesheet name="css/shell.css"/>
+    <h:outputScript name="js/main.js"/>
 
-        <!-- Async HTML Imports do not block rending. Benefit of keeping it declarative
-	(instead of dynamically loading it later in JS) is that the parser can go to
-	town pre-fetching resources, etc. -->
-        <link id="main-element-import" rel="import" href="loader.html" />
+    <!-- Async HTML Imports do not block rending. Benefit of keeping it declarative
+(instead of dynamically loading it later in JS) is that the parser can go to
+town pre-fetching resources, etc. -->
+    <link id="main-element-import" rel="import" href="loader.html"/>
 
-        <ui:insert name="head"/>
-    </h:head>
+    <ui:insert name="head"/>
+</h:head>
 
-    <h:body styleClass="main-body #{guestPreferences.compact ? 'layout-compact' : null}">
-        <p:growl id="growl" autoUpdate="true" showDetail="false"  showSummary="true"/>
-        <div class="layout-wrapper #{guestPreferences.menuLayout}">
-            <ui:include src="./menu2.xhtml" />
-            <div class="layout-main">
-                <ui:insert name="content"/>
-            </div>
-            <div class="layout-profile">
-                <span class="profile-name">#{msg.Welcome}, #{userContextService.userName}</span>
-            </div>
+<h:body styleClass="main-body #{guestPreferences.compact ? 'layout-compact' : null}">
+    <ui:include src="./google-analytics.xhtml"/>
+    <form class="user-info">
+        <h:inputHidden id="userId" value="#{userContextService.loginUser.id}"/>
+        <h:inputHidden id="userLoginName" value="#{userContextService.loginUser.loginName}"/>
+        <h:inputHidden id="userSiteId" value="#{userContextService.siteInfo.id}"/>
+        <h:inputHidden id="userSiteName" value="#{userContextService.siteInfo.name}"/>
+    </form>
+    <p:growl id="growl" autoUpdate="true" showDetail="false" showSummary="true"/>
+    <div class="layout-wrapper #{guestPreferences.menuLayout}">
+        <ui:include src="./menu2.xhtml"/>
+        <div class="layout-main">
+            <ui:insert name="content"/>
         </div>
-        <p:dialog widgetVar="statusDialog" modal="false" class="ajaxStatusDialog" draggable="false" closable="false" resizable="false" showHeader="false">
-            <i class="fa fa-circle-o-notch fa-spin ajax-loader" style="zoom: 1.5;color: orange;" aria-hidden="true"></i>
-        </p:dialog>
+        <div class="layout-profile">
+            <span class="profile-name">#{msg.Welcome}, #{userContextService.userName}</span>
+        </div>
+    </div>
+    <p:dialog widgetVar="statusDialog" modal="false" class="ajaxStatusDialog" draggable="false" closable="false" resizable="false" showHeader="false">
+        <i class="fa fa-circle-o-notch fa-spin ajax-loader" style="zoom: 1.5;color: orange;" aria-hidden="true"></i>
+    </p:dialog>
 
-        <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
+    <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()"/>
 
-        <h:outputStylesheet name="css/animate.css" library="ultima-layout" />
-        <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
-        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout" />
-        <h:outputStylesheet name="css/icon.css" />
-        <p:confirmDialog global="true">
-            <p:commandButton process="@this" value="#{msg.Confirm}" type="button" styleClass="ui-confirmdialog-yes uiButton" icon="ui-icon-check"/>
-            <p:commandButton process="@this" value="#{msg.Cancel}" type="button" immediate="true" styleClass="ui-confirmdialog-no uiButton" icon="ui-icon-close"/>
-        </p:confirmDialog>
+    <h:outputStylesheet name="css/animate.css" library="ultima-layout"/>
+    <h:outputStylesheet name="css/ripple.css" library="ultima-layout"/>
+    <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout"/>
+    <h:outputStylesheet name="css/icon.css"/>
+    <p:confirmDialog global="true">
+        <p:commandButton process="@this" value="#{msg.Confirm}" type="button" styleClass="ui-confirmdialog-yes uiButton" icon="ui-icon-check"/>
+        <p:commandButton process="@this" value="#{msg.Cancel}" type="button" immediate="true" styleClass="ui-confirmdialog-no uiButton" icon="ui-icon-close"/>
+    </p:confirmDialog>
 
-    </h:body>
+</h:body>
 
 </html>
