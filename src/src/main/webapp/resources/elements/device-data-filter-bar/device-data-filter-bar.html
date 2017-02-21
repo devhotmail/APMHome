@@ -66,23 +66,21 @@
         this.set('range', range);
       },
       restoreOptionsFromHistory: function() {
-        var hash = location.hash.replace(/^#/, '');
-        var options = URI('').search(hash).search(true);
-        this.set('selectedType', options.filterBy || 0);
+        var options = URI().query(URI().fragment()).query(true);
+        this.set('selectedType', options.filter || 0);
       },
       _getDisplayValue: function(key, options) {
         return options.find(function(item) {
           return item.key == key;
         }).val;
       },
-      saveOptionsInHistory: function(type) {
-        if (!type) {
+      saveOptionsInHistory: function(value) {
+        if (!value) {
           return;
         }
-
-        var uri = URI('').addQuery('filterBy', type);
-        var new_hash = uri.query();
-        location.hash = '#' + new_hash;
+        var options = URI().query(URI().fragment()).query(true);
+        options['filter'] = value;
+        location.hash = '#' + URI().query(options).query();
       }
     });
   </script>

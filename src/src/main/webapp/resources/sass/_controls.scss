@@ -1,12 +1,12 @@
+@import "_theme";
+
 .layout-compact .layout-wrapper {
-  $highlight-color: rgba(91, 132, 215, 1);
-  $default-color: $gray7;
 
   px-dropdown {
     .dropcell.px-dropdown {
       border-radius: 1rem;
       background-color: transparent;
-      border-color: $default-color;
+      border-color: $text-color-default;
 
       &:hover {
         border-color: $highlight-color;
@@ -20,13 +20,13 @@
     }
 
     px-dropdown-text, px-dropdown-chevron {
-      color: $default-color;
+      color: $text-color-default;
     }
 
     .px-dropdown--content {
-      color: $default-color;
-      background: transparent;
+      color: $text-color-default;
       border-color: transparent;
+      background: $main-bg-color;
       text-align: left;
     }
 
@@ -39,9 +39,9 @@
   .btn-group {
     .btn {
       border-radius: 1rem !important;
-      color: $default-color;
+      color: $text-color-default;
       background-color: transparent;
-      border-color: $default-color;
+      border-color: $text-color-default;
 
       &:hover {
         color: $highlight-color;

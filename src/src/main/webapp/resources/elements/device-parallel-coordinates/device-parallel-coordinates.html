@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
 <link rel="import" href="device-parallel-coordinates-styles.html">
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
 
@@ -9,6 +10,15 @@
     <style include="device-parallel-coordinates-styles"></style>
     <div id="chart" class="canvas">
       <svg id="svg" width$="[[width]]" height$="[[height]]"></svg>
+      <!-- sort selector -->
+      <px-dropdown id="sortBy" class="sorting-dropdown" display-value="[[_getSortDisplayValue(sortBy, _sortOptions)]]" selected-key="{{sortBy}}">
+        <px-dropdown-content class="px-dropdown-content"
+                             max-cont-character-width="10"
+                             extend-dropdown="true"
+                             extend-dropdown-by="15"
+                             items="[[_sortOptions]]">
+        </px-dropdown-content>
+      </px-dropdown>
     </div>
   </template>
   <script>
@@ -16,6 +26,10 @@
 
       var SECTOR_MIN_STEP_FACTOR = .1;
       var $ = d3.select;
+
+      function notNull(val) {
+        return val !== null;
+      }
 
       function ellipsis(d) {
         // tspan text ellipsis to "width" attr
@@ -37,6 +51,14 @@
         properties: {
           width: Number,
           height: Number,
+          sortBy: {
+            type: String,
+          },
+          _sortOptions: {
+            type: Array,
+            // "comprehensive" sort by default
+            computed: "_getSortOptions(data, dimensions)"
+          },
           margin: {
             type: Object,
             value: function() {
@@ -59,7 +81,8 @@
           }
         },
         observers: [
-          '_replot(width, height, data)'
+          '_replot(width, height, data)',
+          'saveOptionsInHistory(sortBy)',
         ],
         behaviors: [
           Polymer.IronResizableBehavior
@@ -99,7 +122,9 @@
           .selectAll('.parallel-names')
           .data(dimensions)
           .enter().append('text')
-          .attr('class', 'parallel-names')
+          .attr('class', function(d) {
+            return ['dimension-title', d.name].join(' ')
+          })
           .attr('dy', '.85em')
           .attr('text-anchor', 'middle')
           .attr('transform', d3Transform().translate(function(d) {
@@ -470,35 +495,41 @@
             {
               name: "name",
               scale: d3.scaleBand().range([0, height]).padding(.1),
-              type: String
+              type: String,
             },
             {
               name: "scan",
               scale: d3.scaleLinear().range([height, 0]),
-              type: Number
+              type: Number,
+              sortable: true
             },
             {
               name: "exposure",
               scale: d3.scaleLinear().range([height, 0]),
-              type: Number
+              type: Number,
+              sortable: true
             },
             {
               name: "usage",
               scale: d3.scaleLinear().range([height, 0]),
-              type: Number
+              type: Number,
+              sortable: true
             },
             {
               name: "fix",
               scale: d3.scaleLinear().range([height, 0]),
-              type: Number
+              type: Number,
+              sortable: true
             },
             {
               name: "stop",
               scale: d3.scaleLinear().range([height, 0]),
-              type: Number
+              type: Number,
+              sortable: true
             },
             {
               name: "profit",
+              sortable: true,
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
               format: function(val) {
@@ -525,6 +556,38 @@
         },
         ready: function() {
           this._loadData();
+          this.restoreOptionsFromHistory();
+        },
+        _getSortOptions: function(data, dimensions) {
+          var definition = data[0];
+          var list = dimensions.map(function(dimension) {
+            if(!dimension.sortable)
+                return null;
+            var sortBy = dimension.name;
+            return {
+              key: sortBy,
+              val: sortBy === 'profit' ? '设备综合排名' : definition[dimension.name + '_text']
+            };
+          }).filter(notNull);
+
+          return list;
+        },
+        _getSortDisplayValue: function(key, options) {
+          return options.find(function(opt) {
+            return opt.key === key;
+          }).val;
+        },
+        restoreOptionsFromHistory: function() {
+          var options = URI().query(URI().fragment()).query(true);
+          this.set('sortBy', options.sort || 'profit');
+        },
+        saveOptionsInHistory: function(value) {
+          if (!value) {
+            return;
+          }
+          var options = URI().query(URI().fragment()).query(true);
+          options['sort'] = value;
+          location.hash = '#' + URI().query(options).query();
         },
         _loadData: function() {
           var _this = this;

@@ -11,6 +11,21 @@ $series-line-color: rgba($dv-light-gray, .1);
   justify-content: center;
 }
 
+#chart {
+  position: relative;
+}
+
+.dimension-title.name {
+  display: none;
+}
+
+.sorting-dropdown {
+  position: absolute;
+  width: 145px;
+  top: -10px;
+  left: 70px;
+}
+
 .canvas {
   width: 100%;
   height: 100%;
