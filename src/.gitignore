@@ -4,6 +4,7 @@ logs
 node_modules/
 target/
 src/main/webapp/resources/elements/**/*-styles.html
+src/main/webapp/resources/css
 .idea/
 *.iml
 sql/
