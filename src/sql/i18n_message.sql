@@ -76,7 +76,7 @@ INSERT INTO "i18n_message" VALUES (72, 'message','PasswordNotMatch', '输入的�
 INSERT INTO "i18n_message" VALUES (73, 'label', 'resetPassword', '重置密码', 'Reset Password', NULL, -1);
 INSERT INTO "i18n_message" VALUES (74, 'label', 'continue', '继续', 'Continue', NULL, -1);
 INSERT INTO "i18n_message" VALUES (75, 'label', 'QRCode', '二维码', 'QRCode', NULL, -1);
-INSERT INTO "i18n_message" VALUES (76, 'label', 'TerminatedAsset', '报废资产', 'QRCode', NULL, -1);
+INSERT INTO "i18n_message" VALUES (76, 'label', 'TerminatedAsset', '报废资产', 'Scrapped Asset', NULL, -1);
 
 
 -- menu item names  ( id from 200 to  399)
@@ -517,9 +517,9 @@ INSERT INTO "i18n_message" VALUES (3031,'message','ResetConformationMsg', '您�
 INSERT INTO "i18n_message" VALUES (3032,'message','passwordResetTips', '您使用的是系统初始密码。为保证您的帐号安全，建议您立即修改密码.','Please change the initial password for safety.',null,-1);
 
 -- Chart label/lengend （id from 5000 to 5500）
-INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan (Times)',null,-1);
+INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan #',null,-1);
 INSERT INTO "i18n_message" VALUES (5001,'label','deviceScanlg', '扫描次数','Scan',null,-1);
-INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光量（次）','Exposure (Hours)',null,-1);
+INSERT INTO "i18n_message" VALUES (5002,'label','deviceExpohd', '设备曝光量（次）','Exposure #',null,-1);
 INSERT INTO "i18n_message" VALUES (5003,'label','deviceExpolg_1', '曝光量','Exposure',null,-1);
 INSERT INTO "i18n_message" VALUES (5004,'label','deviceExpolg_2', '基准曝光量','Scan (Baseline)',null,-1);
 INSERT INTO "i18n_message" VALUES (5005,'label','deviceROIhd', '设备投资回报（元）','ROI (CNY）',null,-1);
