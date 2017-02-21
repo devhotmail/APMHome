@@ -69,29 +69,34 @@
   stroke: rgba(140, 140, 140, 0.1);
   stroke-width: 1.5px; }
 
+.benchmark path {
+  fill: none;
+  stroke: none; }
+
 .chart-body text {
-  fill: #525156; }
+  fill: #425866; }
 
 .axis text {
   text-anchor: middle; }
   .axis text.label {
     font-size: 1rem;
-    text-transform: uppercase; }
+    text-transform: uppercase;
+    text-anchor: end; }
   .axis text.title {
     font-weight: bold; }
 
 .axis line,
 .axis path {
   fill: none;
-  stroke: #525156;
+  stroke: #425866;
   shape-rendering: crispEdges; }
 
 .sector {
-  opacity: .8; }
+  opacity: .7; }
   .sector rect {
     fill: rgba(38, 93, 171, 0.8); }
   .sector .label {
-    fill: #f7f7fc;
+    fill: #f0f4f7;
     -webkit-writing-mode: tb;
         -ms-writing-mode: tb;
             writing-mode: tb;
@@ -99,7 +104,21 @@
     cursor: default; }
 
 .label {
-  -webkit-transition: fill 125ms linear; }
+  -webkit-transition: fill 125ms linear;
+  transition: fill 125ms linear; }
+
+.value-group .value {
+  opacity: 0;
+  -webkit-transition: opacity linear .15s;
+  transition: opacity linear .15s; }
+  .value-group .value.active {
+    opacity: 1; }
+
+.value-group .actual-val {
+  fill: #5da5da; }
+
+.value-group .benchmark-val {
+  fill: #b276b2; }
 
 .chart-body.active .sector.active {
   opacity: 1; }
@@ -112,6 +131,10 @@
 
 .chart-body.active .foreground path.active {
   stroke: #5da5da;
+  stroke-width: 3px; }
+
+.chart-body.active .benchmark path.active {
+  stroke: #b276b2;
   stroke-width: 3px; }
 
 </style>
