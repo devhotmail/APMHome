@@ -3,7 +3,6 @@
 <link rel="import" href="device-revenue-chart-styles.html">
 <script src="../../bower_components/innersvg-polyfill/innersvg.js"></script>
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
-<script src="../../bower_components/lscache/lscache.js"></script>
 <script src="../../bower_components/urijs/src/URI.js"></script>
 
 <dom-module id="device-revenue-chart">
@@ -16,7 +15,10 @@
     </div>
   </template>
   <script>
-    define('device-revenue-chart', ['context'], function(context) {
+    define('device-revenue-chart', [
+      'context',
+      'lscache'
+    ], function(context, lscache) {
         function project(x, radius) {
           var angle = ( x - 180 ) / 180 * Math.PI;
           return [radius * Math.cos(angle), radius * Math.sin(angle)];
