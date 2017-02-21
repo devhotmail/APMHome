@@ -34,6 +34,7 @@
     "px-dropdown": "^2.2.1",
     "px-button-group-design": "^1.0.3",
     "lscache": "^1.0.5",
+    "moment": "^2.17.1",
     "urijs": "uri.js#^1.18.4",
     "d3-transform": "^1.0.4",
     "iron-resizable-behavior": "PolymerElements/iron-resizable-behavior#^1.0.5",
