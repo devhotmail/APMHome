@@ -29,6 +29,8 @@ public final class DbMessageSource extends ResourceBundleMessageSource {
     private static final String TYPE_FIELD_NAME = "field_name";
 
     public static Map<String, I18nMessage> getMessageCache(int siteId){
+        if(msgCache==null) reLoadMessages();
+        
         Map<String, I18nMessage> cache = msgCache.get(siteId);
         if(cache!=null) return cache; 
         
