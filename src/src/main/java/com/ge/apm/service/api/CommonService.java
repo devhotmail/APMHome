@@ -36,6 +36,8 @@ public class CommonService {
   @PostConstruct
   public void init() {
     db = Database.from(connectionProvider);
+    // load messages before it can be used, otherwise we will get NullPointerException when first time DbMessageSource.getMessageCache() is called.
+    DbMessageSource.reLoadMessages();
   }
 
 
