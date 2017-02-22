@@ -3,6 +3,7 @@ instances: 1
 memory: 2048M
 disk_quota: 2048M
 stack: cflinuxfs2
+buildpack: https://github.com/cloudfoundry/java-buildpack.git
 path: ./target/geapm-1.0.0.war
 
 applications:
