@@ -63,7 +63,7 @@
             type: Object,
             value: function() {
               return {
-                top: 40,
+                top: 50,
                 right: 40,
                 bottom: 20,
                 left: 40
@@ -122,7 +122,7 @@
 
           // render parallel's name
           var parallelNamesGroup = root.append('g')
-          .attr('transform', 'translate(0, -40)')
+          .attr('transform', d3Transform().translate(0, -margin.top))
           .selectAll('.parallel-names')
           .data(dimensions)
           .enter().append('text')
@@ -200,7 +200,7 @@
           // render value/bm_value label
           var valueGroup = root.append('g')
           .attr('class', 'value-group')
-          .attr('transform', 'translate(0, -10)')
+          .attr('transform', 'translate(0, -20)')
           .selectAll('g')
           .data(data)
           .enter().append('g')
