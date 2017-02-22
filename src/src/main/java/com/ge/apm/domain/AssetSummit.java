@@ -55,7 +55,7 @@ public class AssetSummit implements Serializable {
     @Column(name = "deprecation_cost")
     private Double deprecationCost;
     @Column(name = "inject_count")
-    private Integer injectCount;
+    private Double injectCount;
     @Column(name = "expose_count")
     private Double exposeCount;
     @Column(name = "film_count")
@@ -163,11 +163,11 @@ public class AssetSummit implements Serializable {
         this.deprecationCost = deprecationCost;
     }
 
-    public Integer getInjectCount() {
+    public Double getInjectCount() {
         return injectCount;
     }
 
-    public void setInjectCount(Integer injectCount) {
+    public void setInjectCount(Double injectCount) {
         this.injectCount = injectCount;
     }
 

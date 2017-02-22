@@ -97,38 +97,38 @@ INSERT INTO "i18n_message" VALUES (209, 'label', 'SupplierMgmt', '供应商管�
 INSERT INTO "i18n_message" VALUES (210, 'label', 'AssetValueAnalysis', '设备价值统计', 'Asset Value Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (211, 'label', 'WorkOrderMgmt', '维修流程', 'Work Order Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (212, 'label', 'ServiceRequestMgmt', '报修管理', 'Service Request Mgmt.', NULL, -1);
-INSERT INTO "i18n_message" VALUES (213, 'label', 'MyWorkOrder', '报修处理', 'Work Order', NULL, -1);
-INSERT INTO "i18n_message" VALUES (214, 'label', 'MaintainanceRecord', '维修记录', 'Maintainance Record', NULL, -1);
+INSERT INTO "i18n_message" VALUES (213, 'label', 'MyWorkOrder', '报修处理', 'My Work Order', NULL, -1);
+INSERT INTO "i18n_message" VALUES (214, 'label', 'MaintainanceRecord', '维修记录', 'Repair Record', NULL, -1);
 INSERT INTO "i18n_message" VALUES (215, 'label', 'ServiceQualityReview', '维修质量评估', 'Service Quality Review', NULL, -1);
 INSERT INTO "i18n_message" VALUES (216, 'label', 'Inspection', '巡检管理', 'Inspection', NULL, -1);
-INSERT INTO "i18n_message" VALUES (217, 'label', 'DeviceMonitor', '设备监控', 'Device Monitor', NULL, -1);
-INSERT INTO "i18n_message" VALUES (218, 'label', 'DeviceStatusMonitor', '状态监控', 'Device Status Monitor', NULL, -1);
+INSERT INTO "i18n_message" VALUES (217, 'label', 'DeviceMonitor', '设备监控', 'Asset Monitor', NULL, -1);
+INSERT INTO "i18n_message" VALUES (218, 'label', 'DeviceStatusMonitor', '状态监控', 'Asset Status Monitor', NULL, -1);
 INSERT INTO "i18n_message" VALUES (219, 'label', 'DeviceDowntimeAnalysis', '停机率分析', 'Device Downtime Analysis', NULL, -1);
-INSERT INTO "i18n_message" VALUES (220, 'label', 'DeviceMaintainanceEventAnalysis', '维修事件统计', 'Maint. Event Analysis', NULL, -1);
-INSERT INTO "i18n_message" VALUES (221, 'label', 'DeviceMaintainanceCostAnalysis', '维护成本统计', 'Maint. Cost Analysis', NULL, -1);
+INSERT INTO "i18n_message" VALUES (220, 'label', 'DeviceMaintainanceEventAnalysis', '维修事件统计', 'Repair Event Analysis', NULL, -1);
+INSERT INTO "i18n_message" VALUES (221, 'label', 'DeviceMaintainanceCostAnalysis', '维护成本统计', 'Repair Cost Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (222, 'label', 'DeviceUtilizationAnalysis', '使用情况统计', 'Utilization Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (223, 'label', 'SparePartsConsumptionAnalysis', '备件消耗统计', 'Spare Parts Consumption', NULL, -1);
-INSERT INTO "i18n_message" VALUES (224, 'label', 'DeviceFailureAnalysis', '故障分类统计', 'Device Failure Analysis', NULL, -1);
+INSERT INTO "i18n_message" VALUES (224, 'label', 'DeviceFailureAnalysis', '故障分类统计', 'Asset Failure Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (225, 'label', 'DeviceOperationMonitor', '运营监控', 'Operation Monitor', NULL, -1);
 INSERT INTO "i18n_message" VALUES (226, 'label', 'PreventiveMaintainceMgmt', '预防维护', 'Preventive Maint. Mgmt.', NULL, -1);
-INSERT INTO "i18n_message" VALUES (227, 'label', 'PreventiveMaintaincePlanning', '保养统计', 'Preventive Maint. Planning', NULL, -1);
-INSERT INTO "i18n_message" VALUES (258, 'label', 'PmRecord', '保养记录', 'Checklist Mgmt.', NULL, -1);
-INSERT INTO "i18n_message" VALUES (228, 'label', 'DeviceMetrologyMgmt', '计量管理', 'Device Metrology Mgmt.', NULL, -1);
-INSERT INTO "i18n_message" VALUES (229, 'label', 'DeviceQualityControl', '质控管理', 'Device Quality Control', NULL, -1);
+INSERT INTO "i18n_message" VALUES (227, 'label', 'PreventiveMaintaincePlanning', '保养统计', 'Maintainance Report', NULL, -1);
+INSERT INTO "i18n_message" VALUES (258, 'label', 'PmRecord', '保养记录', 'Maintainance Record', NULL, -1);
+INSERT INTO "i18n_message" VALUES (228, 'label', 'DeviceMetrologyMgmt', '计量管理', 'Asset Metering Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (229, 'label', 'DeviceQualityControl', '质控管理', 'Asset Quality Control', NULL, -1);
 INSERT INTO "i18n_message" VALUES (230, 'label', 'DeviceAdverseEventMgmt', '不良事件上报', 'Adverse Event Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (231, 'label', 'DeviceMedicalAccidentMgmt', '医疗事故风险监控', 'Medical Accident Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (232, 'label', 'AssetKnowledgeBaseMgmt', '知识文档', 'Asset KM Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (233, 'label', 'AssetDocMgmt', '文档管理', 'Asset Documentation Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (234, 'label', 'AssetKMMgmt', '知识库管理', 'Asset KM Mgmt.', NULL, -1);
-INSERT INTO "i18n_message" VALUES (235, 'label', 'DeviceMgmtForum', '管理论坛', 'Device Mgmt. Forum', NULL, -1);
-INSERT INTO "i18n_message" VALUES (236, 'label', 'DeviceApplication', '应用/维修培训管理', 'Device Training Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (235, 'label', 'DeviceMgmtForum', '管理论坛', 'Asset Mgmt. Forum', NULL, -1);
+INSERT INTO "i18n_message" VALUES (236, 'label', 'DeviceApplication', '应用/维修培训管理', 'Asset Training Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (237, 'label', 'DeviceUpgradMgmt', '升级管理', 'DeviceUpgradMgmt', NULL, -1);
-INSERT INTO "i18n_message" VALUES (238, 'label', 'AdvancedDeviceInfoTracking', '扫描详情统计', 'Advanced Machine Data Mgmt.', NULL, -1);
+INSERT INTO "i18n_message" VALUES (238, 'label', 'AdvancedDeviceInfoTracking', '扫描详情统计', 'Detailed Utilization Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (239, 'label', 'DeviceOperationKPIAnalysis', '绩效分析', 'Operation KPI Analysis', NULL, -1);
-INSERT INTO "i18n_message" VALUES (240, 'label', 'DeviceROIAnalysis', '平均投资回报分析', 'Device ROI Analysis', NULL, -1);
-INSERT INTO "i18n_message" VALUES (241, 'label', 'DeviceKPIAnalysis', '绩效分析', 'Device KPI Analysis', NULL, -1);
-INSERT INTO "i18n_message" VALUES (242, 'label', 'DeviceKPIForecast', '绩效预测', 'Device KPI Forecast', NULL, -1);
-INSERT INTO "i18n_message" VALUES (243, 'label', 'DeviceCostAnalysis', '成本统计分析', 'Device Cost Analysis', NULL, -1);
+INSERT INTO "i18n_message" VALUES (240, 'label', 'DeviceROIAnalysis', '平均投资回报分析', 'Asset ROI Analysis', NULL, -1);
+INSERT INTO "i18n_message" VALUES (241, 'label', 'DeviceKPIAnalysis', '绩效分析', 'Asset KPI Analysis', NULL, -1);
+INSERT INTO "i18n_message" VALUES (242, 'label', 'DeviceKPIForecast', '绩效预测', 'Asset KPI Forecast', NULL, -1);
+INSERT INTO "i18n_message" VALUES (243, 'label', 'DeviceCostAnalysis', '成本统计分析', 'Asset Cost Analysis', NULL, -1);
 INSERT INTO "i18n_message" VALUES (244, 'label', 'DevicePurchaseDecisionSupport', '辅助决策分析', 'Purchase Decision Support', NULL, -1);
 INSERT INTO "i18n_message" VALUES (245, 'label', 'SysAdmin', '系统配置', 'System Mgmt.', NULL, -1);
 INSERT INTO "i18n_message" VALUES (246, 'label', 'SiteAdmin', '租户管理', 'Site Mgmt.', NULL, -1);
@@ -160,7 +160,7 @@ INSERT INTO "i18n_message" VALUES (401, 'label', 'SiteInfo', '医联体/租户�
 INSERT INTO "i18n_message" VALUES (402, 'label', 'OrgInfo', '组织机构信息', 'Organization Info', NULL, -1);
 INSERT INTO "i18n_message" VALUES (403, 'label', 'UserAccount', '用户帐号信息', 'User Account Info', NULL, -1);
 INSERT INTO "i18n_message" VALUES (404, 'label', 'AssetInfo', '资产信息', 'Asset Info', NULL, -1);
-INSERT INTO "i18n_message" VALUES (405, 'label', 'WorkOrder', '维修工单', 'Preventive Maintainance Order', NULL, -1);
+INSERT INTO "i18n_message" VALUES (405, 'label', 'WorkOrder', '维修工单', 'Work Order', NULL, -1);
 INSERT INTO "i18n_message" VALUES (406, 'label', 'WorkOrderStep', '工单步骤', 'Work Order Steps', NULL, -1);
 INSERT INTO "i18n_message" VALUES (407, 'label', 'WorkOrderStepDetail', '工单详情', 'Work Order Step Details', NULL, -1);
 
@@ -378,19 +378,19 @@ INSERT INTO "i18n_message" VALUES (1511,'woSteps','2', '审核','Approve',null,-
 INSERT INTO "i18n_message" VALUES (1512,'woSteps','3', '派工','Assign',null,-1);
 INSERT INTO "i18n_message" VALUES (1513,'woSteps','4', '领工','Accept',null,-1);
 INSERT INTO "i18n_message" VALUES (1514,'woSteps','5', '维修','Repair',null,-1);
-INSERT INTO "i18n_message" VALUES (1515,'woSteps','6', '关单','Close',null,-1);
+INSERT INTO "i18n_message" VALUES (1515,'woSteps','6', '关单','Closed',null,-1);
 
 INSERT INTO "i18n_message" VALUES (1517,'assetStatus','1', '正常','Up',null,-1);
 INSERT INTO "i18n_message" VALUES (1518,'assetStatus','2', '停机','Down',null,-1);
 INSERT INTO "i18n_message" VALUES (1519,'assetStatus','3', '有异常','Partial',null,-1);
 
 INSERT INTO "i18n_message" VALUES (1520,'checklistType','1','巡检','Inspection',null,-1);
-INSERT INTO "i18n_message" VALUES (1521,'checklistType','2','计量','Inspection',null,-1);
-INSERT INTO "i18n_message" VALUES (1522,'checklistType','3','质控','Inspection',null,-1);
+INSERT INTO "i18n_message" VALUES (1521,'checklistType','2','计量','Metering',null,-1);
+INSERT INTO "i18n_message" VALUES (1522,'checklistType','3','质控','Quality Control',null,-1);
 
 INSERT INTO "i18n_message" VALUES (1523,'casePriority','1','紧急','Normal',null,-1);
 INSERT INTO "i18n_message" VALUES (1524,'casePriority','2','重要','Important',null,-1);
-INSERT INTO "i18n_message" VALUES (1525,'casePriority','3','一般','Emergent',null,-1);
+INSERT INTO "i18n_message" VALUES (1525,'casePriority','3','一般','Urgent',null,-1);
 
 
 
@@ -548,7 +548,7 @@ INSERT INTO "i18n_message" VALUES (5025,'label','deviceDTlg_3', '停机','Downti
 INSERT INTO "i18n_message" VALUES (5026,'label','devicePerfhd', '设备绩效分析','Performance',null,-1);
 INSERT INTO "i18n_message" VALUES (5027,'label','assetTopPerfhd', '利润最高设备类型','Top asset type',null,-1);
 INSERT INTO "i18n_message" VALUES (5028,'label','deptTopPerfhd', '利润最高科室','Top department',null,-1);
-INSERT INTO "i18n_message" VALUES (5029,'label','assetsDashboardhd', '设备绩效分析汇总','Top Department',null,-1);
+INSERT INTO "i18n_message" VALUES (5029,'label','assetsDashboardhd', '设备绩效分析汇总','Asset KPI Detail List',null,-1);
 INSERT INTO "i18n_message" VALUES (5030,'label','assetsDashboardclm1', '资产名称','Asset',null,-1);
 INSERT INTO "i18n_message" VALUES (5031,'label','assetsDashboardclm4', '时间','Date',null,-1);
 INSERT INTO "i18n_message" VALUES (5032,'label','assetsDashboardclm2','序列号','Serial Number',null,-1);
@@ -584,12 +584,12 @@ INSERT INTO "i18n_message" VALUES (5059,'label','friendlyTips', '友情提示','
 -- asset head
 
 INSERT INTO "i18n_message" VALUES (5401,'label','assetHead_status', '设备状态','Device Status',null,-1);
-INSERT INTO "i18n_message" VALUES (5402,'label','assetHead_tile_maintenance', '维修中','In Maintenance',null,-1);
-INSERT INTO "i18n_message" VALUES (5403,'label','assetHead_tile_off', '停机中','Off',null,-1);
-INSERT INTO "i18n_message" VALUES (5404,'label','assetHead_tile_out', '保修期到期（2个月内）','Nearly Out Of Maintenance (within 2 months)',null,-1);
-INSERT INTO "i18n_message" VALUES (5405,'label','assetHead_tile_preventive', '保养（1周内）','Preventive Maintenance (within 1 week)',null,-1);
-INSERT INTO "i18n_message" VALUES (5406,'label','assetHead_tile_metrology', '设备计量（2个月内）','Metrology (within 2 months)',null,-1);
-INSERT INTO "i18n_message" VALUES (5407,'label','assetHead_tile_quality', '设备质控（2个月内）','Quality Control (within 2 months)',null,-1);
+INSERT INTO "i18n_message" VALUES (5402,'label','assetHead_tile_maintenance', '维修中','In Repairing',null,-1);
+INSERT INTO "i18n_message" VALUES (5403,'label','assetHead_tile_off', '停机中','Down(Out of Service)',null,-1);
+INSERT INTO "i18n_message" VALUES (5404,'label','assetHead_tile_out', '保修期到期（2个月内）','MSA to be expired in 2 months',null,-1);
+INSERT INTO "i18n_message" VALUES (5405,'label','assetHead_tile_preventive', '保养（1周内）','Preventive Maintenance in 1 week',null,-1);
+INSERT INTO "i18n_message" VALUES (5406,'label','assetHead_tile_metrology', '设备计量（2个月内）','Metering in 2 months',null,-1);
+INSERT INTO "i18n_message" VALUES (5407,'label','assetHead_tile_quality', '设备质控（2个月内）','Quality Control in 2 months',null,-1);
 
 INSERT INTO "i18n_message" VALUES (5411,'label','assetHead_tile_maintenance_progressSeries', '维修流程','Progress',null,-1);
 INSERT INTO "i18n_message" VALUES (5412,'label','assetHead_tile_maintenance_progress', '维修流程：','Progress:',null,-1);
@@ -602,9 +602,9 @@ INSERT INTO "i18n_message" VALUES (5415,'label','assetHead_tile_off_reason', '�
 INSERT INTO "i18n_message" VALUES (5431,'label','staff_title', '我的工单管理','My Work Orders',null,-1);
 INSERT INTO "i18n_message" VALUES (5435,'label','staff_tile_inspection', '巡检','Inspect',null,-1);
 INSERT INTO "i18n_message" VALUES (5436,'label','staff_tile_meter', '计量','Meter',null,-1);
-INSERT INTO "i18n_message" VALUES (5437,'label','staff_tile_quality', '质控','Check',null,-1);
-INSERT INTO "i18n_message" VALUES (5438,'label','staff_tile_maintenance', '维修','Maintain',null,-1);
-INSERT INTO "i18n_message" VALUES (5439,'label','staff_tile_preventive', '保养','Prevent',null,-1);
+INSERT INTO "i18n_message" VALUES (5437,'label','staff_tile_quality', '质控','QC',null,-1);
+INSERT INTO "i18n_message" VALUES (5438,'label','staff_tile_maintenance', '维修','Repair',null,-1);
+INSERT INTO "i18n_message" VALUES (5439,'label','staff_tile_preventive', '保养','Maintain',null,-1);
 
 -- device maintenance
 
