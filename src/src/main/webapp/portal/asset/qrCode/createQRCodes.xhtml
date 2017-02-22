@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.QRCodeMgmt}"/>
+            </div>
+
+            <div class="ui-g-12 card">
+                <h:form>
+                    <p:commandButton value="#{msg.QRCodeRefresh}"  update="dataGrid" actionListener="#{qRCodeController.createBatchCode()}" styleClass="ui-priority-primary" />
+                
+
+                <p:dataGrid id="dataGrid" var="item" value="#{qRCodeController.qrCodeList}"  columns="3" layout="grid"
+                            rows="12" paginator="false" >
+
+                    <f:facet name="header">#{msg.QRCodeRefresh}</f:facet>
+
+                    <p:panel header="#{item}" style="text-align:center">
+                        <h:panelGrid columns="1" style="width:100%">
+                            <p:barcode value="#{item}" type="qr" height="100" format="png"/>
+                            <!--<h:outputText value="#{item}" />-->
+                        </h:panelGrid>
+                    </p:panel>
+
+                </p:dataGrid>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
