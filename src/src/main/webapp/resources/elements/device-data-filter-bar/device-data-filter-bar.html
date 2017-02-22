@@ -9,8 +9,8 @@
 <dom-module id="device-data-filter-bar">
   <template>
     <style include="device-data-filter-bar-styles"></style>
-    <div class="flex flex--row flex--center">
-      <div class="flex--item u-1/4 text--center">
+    <div class="toolbar flex flex--row flex--left">
+      <div class="flex--item text--center">
         <px-rangepicker
           id="rangepicker"
           range="{{range}}"
@@ -20,7 +20,7 @@
           show-buttons="true">
         </px-rangepicker>
       </div>
-      <div class="flex--item u-3/4">
+      <div class="u-mh+ flex--item">
         <label for="device-filter">筛选条件</label>
         <px-dropdown id="device-filter" class="u-mh+" display-value="[[_displayValue]]" selected-key="{{selectedType}}">
           <px-dropdown-content class="px-dropdown-content"

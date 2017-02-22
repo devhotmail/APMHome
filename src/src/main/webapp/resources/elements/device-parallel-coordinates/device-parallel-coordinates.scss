@@ -6,6 +6,8 @@ $series-line-color: rgba($dv-light-gray, .1);
 
 :host {
   height: calc(100vh - 60px);
+  padding-top: 40px;
+  min-width: 800px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,9 +23,10 @@ $series-line-color: rgba($dv-light-gray, .1);
 
 .sorting-dropdown {
   position: absolute;
-  width: 145px;
+  min-width: 125px;
   top: -10px;
-  left: 70px;
+  /* use percentage better coordinate with other scales on smaller screen size */
+  left: 5%;
 }
 
 .canvas {
