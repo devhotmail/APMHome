@@ -314,11 +314,8 @@
         _renderDeviceList: function(selection, dimension, height) {
           var scale = dimension.scale;
           var devices = selection.selectAll('.sector').data(this.data);
-          var devicesEnter = devices.enter()
+          var deviceNameTxt = devices.enter()
           .append('text')
-          .text(function(d) {
-            return d.name;
-          })
           .attr('id', function(d) {
             return ['axis-label', dimension.name, d.id].join('-');
           })
@@ -327,6 +324,24 @@
           .attr('transform', d3Transform().translate(function(d) {
             return [0, scale(d.name)];
           }));
+
+          deviceNameTxt.append('tspan')
+          .attr('class', 'fullname')
+          .text(function(d) {
+            return d.name;
+          });
+
+          deviceNameTxt.append('tspan')
+          .attr('class', 'shortname')
+          .text(function(d) {
+            // limit text length in ten letter
+            var _name = d.name.trim();
+            if (_name.length > 10) {
+              return _name.slice(0, 8) + '...';
+            } else {
+              return _name;
+            }
+          });
         },
         _renderDimension: function(selection, dimension, height) {
           function tickData(tick) {

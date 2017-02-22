@@ -75,6 +75,10 @@ $series-line-color: rgba($dv-light-gray, .1);
   &.title {
     font-weight: bold;
   }
+
+  tspan.fullname {
+    display: none;
+  }
 }
 
 .axis line,
@@ -132,6 +136,14 @@ $series-line-color: rgba($dv-light-gray, .1);
   .axis text.active {
     fill: $dv-basic-blue;
     font-weight: bold;
+
+    tspan.fullname {
+      display: block;
+    }
+
+    tspan.shortname {
+      display: none;
+    }
   }
   .foreground path.active {
     stroke: $dv-basic-blue;
