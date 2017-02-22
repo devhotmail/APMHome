@@ -13,8 +13,8 @@
 
   <ui:define name="content">
     <template is="dom-bind">
-      <device-data-filter-bar selected-year="{{year}}" selected-type="{{filterBy}}"></device-data-filter-bar>
-      <device-parallel-coordinates year="{{year}}" filter-by="{{filterBy}}"></device-parallel-coordinates>
+      <device-data-filter-bar from="{{from}}" to="{{to}}" filter-by="{{filterBy}}"></device-data-filter-bar>
+      <device-parallel-coordinates from="{{from}}" to="{{to}}" filter-by="{{filterBy}}"></device-parallel-coordinates>
     </template>
   </ui:define>
 </ui:composition>

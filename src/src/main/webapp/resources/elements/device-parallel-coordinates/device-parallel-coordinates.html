@@ -74,6 +74,9 @@
             type: Array,
             computed: '_getDimensions(data, margin, height)'
           },
+          filterBy: String,
+          from: String,
+          to: String,
           data: Array,
           benchmarkSuffix: {
             value: '_bm',
@@ -83,6 +86,7 @@
         observers: [
           '_replot(width, height, data)',
           'saveOptionsInHistory(sortBy)',
+          '_loadData(from, to, filterBy, sortBy)',
         ],
         behaviors: [
           Polymer.IronResizableBehavior
@@ -589,9 +593,19 @@
           options['sort'] = value;
           location.hash = '#' + URI().query(options).query();
         },
+        _buildQuery: function() {
+          return URI().query({
+            'from': this.from,
+            'to': this.to,
+            'orderby': this.sortBy,
+            'dept': this.filterBy,
+            'limit': 20,
+            'start': 0
+          }).query();
+        },
         _loadData: function() {
           var _this = this;
-          return fetch('mock/device-dimensions.json', {
+          return fetch('mock/device-dimensions.json?'+ this._buildQuery(), {
             credentials: 'same-origin'
           }).then(function(res) {
             return res.json();

@@ -22,7 +22,7 @@
       </div>
       <div class="u-mh+ flex--item">
         <label for="device-filter">筛选条件</label>
-        <px-dropdown id="device-filter" class="u-mh+" display-value="[[_displayValue]]" selected-key="{{selectedType}}">
+        <px-dropdown id="device-filter" class="u-mh+" display-value="[[_displayValue]]" selected-key="{{filterBy}}">
           <px-dropdown-content class="px-dropdown-content"
                                max-cont-character-width="10"
                                extend-dropdown="true"
@@ -34,54 +34,83 @@
     </div>
   </template>
   <script>
-    Polymer({
-      is: 'device-data-filter-bar',
-      properties: {
-        selectOptions: Array,
-        selectedType: {
-          type: String,
-          notify: true,
-        },
-        _displayValue: {
-          computed: '_getDisplayValue(selectedType, selectOptions)'
-        }
-      },
-      observers: [
-        'saveOptionsInHistory(selectedType)',
-      ],
-      ready: function() {
-        var _this = this;
-        this.restoreOptionsFromHistory();
-        fetch('mock/device-filter-options.json').then(function(res) {
-          return res.json();
-        }).then(function(list) {
-          _this.set('selectOptions', list);
+    (
+      function() {
+        var DATE_FORMAT = 'YYYY-MM-DD';
+
+        Polymer({
+          is: 'device-data-filter-bar',
+          properties: {
+            selectOptions: Array,
+            filterBy: {
+              type: String,
+              notify: true,
+            },
+            from: {
+              type: String,
+              notify: true
+            },
+            to: {
+              type: String,
+              notify: true
+            },
+            _displayValue: {
+              computed: '_getDisplayValue(filterBy, selectOptions)'
+            }
+          },
+          observers: [
+            '_extractStartto(range)',
+            'saveOptionsInHistory("filter", filterBy)',
+            'saveOptionsInHistory("from", from)',
+            'saveOptionsInHistory("to", to)',
+          ],
+          ready: function() {
+            var _this = this;
+
+            // setup data from location hash
+            this.restoreOptionsFromHistory('filter', 'filterBy');
+            this.restoreOptionsFromHistory('from', 'from');
+            this.restoreOptionsFromHistory('to', 'to');
+
+            fetch('mock/device-filter-options.json').then(function(res) {
+              return res.json();
+            }).then(function(list) {
+              _this.set('selectOptions', list);
+            });
+
+            var range = {
+              from: moment().toISOString(),
+              to: moment().add(1, 'y').toISOString()
+            };
+
+            this.set('range', range);
+          },
+          _getDisplayValue: function(key, options) {
+            return options.find(function(item) {
+              return item.key == key;
+            }).val;
+          },
+          _getfrom: function(range, type) {
+            return range[type];
+          },
+          _extractStartto: function(range) {
+            this.set('from', moment(range.from).format(DATE_FORMAT));
+            this.set('to', moment(range.to).format(DATE_FORMAT));
+          },
+          restoreOptionsFromHistory: function(name, prop) {
+            var options = URI().query(URI().fragment()).query(true);
+            this.set(prop, options[name] || 0);
+          },
+          saveOptionsInHistory: function(name, val) {
+            if (!val) {
+              return;
+            }
+            var options = URI().query(URI().fragment()).query(true);
+            options[name] = val;
+            location.hash = '#' + URI().query(options).query();
+          }
         });
-
-        var range = {
-          from: moment().toISOString(),
-          to: moment().add(1, 'y').toISOString()
-        };
-
-        this.set('range', range);
-      },
-      restoreOptionsFromHistory: function() {
-        var options = URI().query(URI().fragment()).query(true);
-        this.set('selectedType', options.filter || 0);
-      },
-      _getDisplayValue: function(key, options) {
-        return options.find(function(item) {
-          return item.key == key;
-        }).val;
-      },
-      saveOptionsInHistory: function(value) {
-        if (!value) {
-          return;
-        }
-        var options = URI().query(URI().fragment()).query(true);
-        options['filter'] = value;
-        location.hash = '#' + URI().query(options).query();
       }
-    });
+    )();
   </script>
 </dom-module>
