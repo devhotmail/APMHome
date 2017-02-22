@@ -276,5 +276,4 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         return asset.getHospitalId();
     }
 
-    public List<
 }
