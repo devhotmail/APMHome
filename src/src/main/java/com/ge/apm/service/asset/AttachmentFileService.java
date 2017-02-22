@@ -20,10 +20,10 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.servlet.http.Part;
+import org.apache.commons.codec.binary.Base64;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
-import sun.misc.BASE64Decoder;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -133,11 +133,11 @@ public class AttachmentFileService {
 
     public Integer uploadBase64File(String fileString,String fileName) {
         fileString = fileString.substring(fileString.indexOf("base64,")+7);
-        BASE64Decoder decoder = new BASE64Decoder();
+        Base64 decoder = new Base64();
         InputStream is = null;
         Integer returnId = 0;
         try {
-            byte[] bytes = decoder.decodeBuffer(fileString);
+            byte[] bytes = decoder.decode(fileString);
             for (int i = 0; i < bytes.length; ++i) {
                 if (bytes[i] < 0) {// 调整异常数据
                     bytes[i] += 256;
@@ -146,7 +146,7 @@ public class AttachmentFileService {
             is = new ByteArrayInputStream(bytes);
             returnId = fileUploaddao.saveUploadFile(is, bytes.length, fileName);
             
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if(is != null) {
