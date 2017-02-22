@@ -30,6 +30,8 @@ import javax.servlet.http.Part;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
+import org.primefaces.json.JSONArray;
+import org.primefaces.json.JSONObject;
 import webapp.framework.dao.GenericRepository;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
@@ -62,8 +64,10 @@ public class WechatAssetCreateController extends JpaCRUDController<AssetInfo> {
     private List<Part> pictures;
 
     private WxJsapiSignature jsSignature = null;
-    
+
     private String uploaderFileId = null;
+
+    private String uploaderFiles;
 
     @Override
     protected void init() {
@@ -75,16 +79,24 @@ public class WechatAssetCreateController extends JpaCRUDController<AssetInfo> {
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(WechatAssetCreateController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        test();
 
-        if (null == jsSignature) {
-            WxMpService wxMpService = WebUtil.getBean(WxMpService.class);
-            try {
-                HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-                jsSignature = wxMpService.createJsapiSignature(request.getRequestURL().toString() + "?" + request.getQueryString());
-            } catch (WxErrorException ex) {
-                Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+//        if (null == jsSignature) {
+//            WxMpService wxMpService = WebUtil.getBean(WxMpService.class);
+//            try {
+//                HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//                jsSignature = wxMpService.createJsapiSignature(request.getRequestURL().toString() + "?" + request.getQueryString());
+//            } catch (WxErrorException ex) {
+//                Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+    }
+
+    private void test() {
+        String str = "{'list':[{'name':'name1','src':'src1'},{'name':'name2','src':'src3'}]}";
+//        String str = "{'list':[]}";
+        JSONObject data = new JSONObject(str);
+        String d = "";
     }
 
     @Override
@@ -161,8 +173,13 @@ public class WechatAssetCreateController extends JpaCRUDController<AssetInfo> {
     @Override
     public void onBeforeSave(AssetInfo object) {
         OrgInfo org = orgDao.findById(object.getClinicalDeptId());
+        object.setClinicalOwnerId(clinicalOwner.getId());
         object.setClinicalDeptName(org.getName());
+        object.setClinicalDeptId(org.getId());
+        object.setClinicalOwnerTel(clinicalOwner.getTelephone());
+        object.setClinicalOwnerName(clinicalOwner.getName());
         object.setAssetOwnerName(this.assetOwner.getName());
+        object.setAssetOwnerId(assetOwner.getId());
 
     }
 
@@ -170,59 +187,77 @@ public class WechatAssetCreateController extends JpaCRUDController<AssetInfo> {
     public void onAfterNewObject(AssetInfo object, boolean isOK) {
         resultStatus = isOK;
         if (isOK) {
-
+            if (null != uploaderFiles || uploaderFiles.length() > 0) {
+                saveAttachement(uploaderFiles);
+            }
         }
     }
 
-   
-    private void saveAttachement(Part file){
+//    private void saveAttachement(Part file){
+//            AssetFileAttachment attach = new AssetFileAttachment();
+//            String fileName = picture.getSubmittedFileName();
+//            attach.setName(fileName);
+//            attach.setFileType("1");
+//            attach.setSiteId(UserContextService.getCurrentUserAccount().getSiteId());
+//            attach.setAssetId(selected.getId());
+//            attach.setHospitalId(selected.getHospitalId());
+//            Integer uploadFileId = fileService.uploadFile(file);
+//            attach.setFileId(uploadFileId);
+//            AssetFileAttachmentRepository attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
+//            attachDao.save(attach);
+//    }
+//     private void saveAttachement(String fileId) throws WxErrorException{
+//            WxMpService wxMpService = WebUtil.getBean(WxMpService.class);
+//            File file = wxMpService.getMaterialService().mediaDownload(fileId);
+//            AssetFileAttachment attach = new AssetFileAttachment();
+//            String fileName =file.getName();
+//            if(fileName.length()>60){
+//                fileName = fileName.substring(fileName.length()-60);
+//            }
+//            attach.setName(fileName);
+//            attach.setFileType("1");
+//            attach.setSiteId(UserContextService.getCurrentUserAccount().getSiteId());
+//            attach.setAssetId(selected.getId());
+//            attach.setHospitalId(selected.getHospitalId());
+//            
+//            Integer uploadFileId;
+//            uploadFileId = fileService.uploadFile(file);
+//            attach.setFileId(uploadFileId);
+//            AssetFileAttachmentRepository attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
+//            attachDao.save(attach);
+//            
+//    }
+    private void saveAttachement(String uploaderFiles) {
+        JSONObject data = new JSONObject(uploaderFiles);
+        JSONArray fileList = data.getJSONArray("pics");
+        for (int i = 0; i < fileList.length(); i++) {
+            JSONObject item = (JSONObject) fileList.getJSONObject(i);
+            String fileName = item.getString("name");
+
             AssetFileAttachment attach = new AssetFileAttachment();
-            String fileName = picture.getSubmittedFileName();
             attach.setName(fileName);
             attach.setFileType("1");
             attach.setSiteId(UserContextService.getCurrentUserAccount().getSiteId());
             attach.setAssetId(selected.getId());
             attach.setHospitalId(selected.getHospitalId());
-            Integer uploadFileId = fileService.uploadFile(file);
+            Integer uploadFileId = fileService.uploadBase64File(item.getString("src"), fileName);
             attach.setFileId(uploadFileId);
             AssetFileAttachmentRepository attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
             attachDao.save(attach);
+        }
+
     }
-    
-     private void saveAttachement(String fileId) throws WxErrorException{
-            WxMpService wxMpService = WebUtil.getBean(WxMpService.class);
-            File file = wxMpService.getMaterialService().mediaDownload(fileId);
-            AssetFileAttachment attach = new AssetFileAttachment();
-            String fileName =file.getName();
-            if(fileName.length()>60){
-                fileName = fileName.substring(fileName.length()-60);
-            }
-            attach.setName(fileName);
-            attach.setFileType("1");
-            attach.setSiteId(UserContextService.getCurrentUserAccount().getSiteId());
-            attach.setAssetId(selected.getId());
-            attach.setHospitalId(selected.getHospitalId());
-            
-            Integer uploadFileId;
-            uploadFileId = fileService.uploadFile(file);
-            attach.setFileId(uploadFileId);
-            AssetFileAttachmentRepository attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
-            attachDao.save(attach);
-            
-    }
-    
+
     public void applySave() {
         this.save();
-        if (null != picture) {
-            saveAttachement(picture);
-        }
-        if(null!=uploaderFileId){
-            try {
-                saveAttachement(uploaderFileId);
-            } catch (WxErrorException ex) {
-                Logger.getLogger(WechatAssetCreateController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+
+//        if(null!=uploaderFileId){
+//            try {
+//                saveAttachement(uploaderFileId);
+//            } catch (WxErrorException ex) {
+//                Logger.getLogger(WechatAssetCreateController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
     }
 
     @Override
@@ -280,6 +315,14 @@ public class WechatAssetCreateController extends JpaCRUDController<AssetInfo> {
 
     public void setUploaderFileId(String uploaderFileId) {
         this.uploaderFileId = uploaderFileId;
+    }
+
+    public String getUploaderFiles() {
+        return uploaderFiles;
+    }
+
+    public void setUploaderFiles(String uploaderFiles) {
+        this.uploaderFiles = uploaderFiles;
     }
 
 }
