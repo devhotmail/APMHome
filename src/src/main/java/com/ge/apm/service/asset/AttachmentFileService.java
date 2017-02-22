@@ -7,6 +7,7 @@ package com.ge.apm.service.asset;
 
 import com.ge.apm.dao.FileUploadDao;
 import com.ge.apm.service.wechat.CoreService;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import javax.servlet.http.Part;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
+import sun.misc.BASE64Decoder;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -118,6 +120,35 @@ public class AttachmentFileService {
             WebUtil.addErrorMessage(WebUtil.getMessage("fileTransFail"));
             Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
+            if(is != null) {
+                try{
+                    is.close();
+                }catch (IOException ex) {
+                    Logger.getLogger(CoreService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return returnId;
+    }
+
+    public Integer uploadBase64File(String fileString,String fileName) {
+        fileString = fileString.substring(fileString.indexOf("base64,")+7);
+        BASE64Decoder decoder = new BASE64Decoder();
+        InputStream is = null;
+        Integer returnId = 0;
+        try {
+            byte[] bytes = decoder.decodeBuffer(fileString);
+            for (int i = 0; i < bytes.length; ++i) {
+                if (bytes[i] < 0) {// 调整异常数据
+                    bytes[i] += 256;
+                }
+            }
+            is = new ByteArrayInputStream(bytes);
+            returnId = fileUploaddao.saveUploadFile(is, bytes.length, fileName);
+            
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
             if(is != null) {
                 try{
                     is.close();
