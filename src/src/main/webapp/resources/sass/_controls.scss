@@ -6,7 +6,7 @@
     .dropcell.px-dropdown {
       border-radius: 1rem;
       background-color: transparent;
-      border-color: $text-color-default;
+      border: 1px solid $text-color-default;
 
       &:hover {
         border-color: $highlight-color;
@@ -33,6 +33,31 @@
     .px-dropdown--listitem:hover {
       background-color: transparent;
       color: $highlight-color;
+    }
+  }
+
+  px-datetime-field {
+    .dt-text-field {
+      border-radius: 1rem;
+      padding: .4rem .8rem;
+    }
+  }
+
+  px-datetime-entry {
+    .dtIcon {
+      color: $text-color-default;
+    }
+    .text-input,
+    .dtIcon {
+      &, & label {
+        color: $text-color-default;
+      }
+    }
+  }
+
+  px-pagination {
+    .pager .btn {
+      font-size: 1rem;
     }
   }
 
