@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="import" href="../../bower_components/px-data-table/px-pagination.html">
 <link rel="import" href="device-parallel-coordinates-styles.html">
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
 
@@ -9,16 +10,22 @@
   <template>
     <style include="device-parallel-coordinates-styles"></style>
     <div id="chart" class="canvas">
-      <svg id="svg" width$="[[width]]" height$="[[height]]"></svg>
-      <!-- sort selector -->
+      <div class="flex flex--col">
+        <svg id="svg" width$="[[width]]" height$="[[height]]"></svg>
+        <!-- sort selector -->
       <px-dropdown id="sortBy" class="sorting-dropdown" display-value="[[_getSortDisplayValue(sortBy, _sortOptions)]]" selected-key="{{sortBy}}">
-        <px-dropdown-content class="px-dropdown-content"
-                             max-cont-character-width="10"
-                             extend-dropdown="true"
-                             extend-dropdown-by="15"
-                             items="[[_sortOptions]]">
-        </px-dropdown-content>
-      </px-dropdown>
+          <px-dropdown-content class="px-dropdown-content"
+                               max-cont-character-width="10"
+                               extend-dropdown="true"
+                               extend-dropdown-by="15"
+                               items="[[_sortOptions]]">
+          </px-dropdown-content>
+        </px-dropdown>
+        <!-- Pagination controls -->
+        <px-pagination id="pagination" number-of-items="[[pageTotal]]" page-size="{{pageSize}}"
+                       first-item-index-to-display="{{pageStart}}">
+        </px-pagination>
+      </div>
     </div>
   </template>
   <script>
@@ -51,6 +58,15 @@
         properties: {
           width: Number,
           height: Number,
+          pageSize: {
+            type: Number,
+            value: 20
+          },
+          pageStart: {
+            type: Number,
+            value: 0
+          },
+          pageTotal: Number,
           sortBy: {
             type: String,
           },
@@ -86,7 +102,8 @@
         observers: [
           '_replot(width, height, data)',
           'saveOptionsInHistory(sortBy)',
-          '_loadData(from, to, filterBy, sortBy)',
+          '_loadData(from, to, filterBy, sortBy, pageStart, pageSize)',
+          '_pager(pageStart, pageTotal, pageStart)',
         ],
         behaviors: [
           Polymer.IronResizableBehavior
@@ -558,6 +575,9 @@
           this.$.svg.innerHTML = '';
           this.debounce('replot', this.render, 500);
         },
+        _pager: function() {
+          console.log('pager update:', arguments);
+        },
         ready: function() {
           this._loadData();
           this.restoreOptionsFromHistory();
@@ -599,8 +619,8 @@
             'to': this.to,
             'orderby': this.sortBy,
             'dept': this.filterBy,
-            'limit': 20,
-            'start': 0
+            'limit': this.pageSize,
+            'start': this.pageStart
           }).query();
         },
         _loadData: function() {
@@ -611,6 +631,8 @@
             return res.json();
           }).then(function(data) {
             _this.set('data', data.items);
+            _this.set('pageStart', data.pages.start);
+            _this.set('pageTotal', data.pages.total);
             _this.set('scales', data.ruler);
           });
         },

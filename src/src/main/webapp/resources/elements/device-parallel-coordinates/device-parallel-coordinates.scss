@@ -1,20 +1,27 @@
 // Settings
 @import "px-colors-design/_settings.colors.scss";
+@import "px-colors-design/_settings.colors.scss";
 
 $label-text-color: $gray8;
 $series-line-color: rgba($dv-light-gray, .1);
 
 :host {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 100px);
   padding-top: 40px;
   min-width: 800px;
-  display: flex;
+  display: block;
   align-items: center;
   justify-content: center;
+  --px-btn-disabled-background: transparent;
 }
 
 #chart {
   position: relative;
+}
+
+#pagination {
+  align-self: flex-end;
+  width: auto;
 }
 
 .dimension-title.name {

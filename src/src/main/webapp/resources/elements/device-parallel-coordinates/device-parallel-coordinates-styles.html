@@ -43,21 +43,25 @@
      * Dark
      */
 :host {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 100px);
   padding-top: 40px;
   min-width: 800px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: block;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
-          justify-content: center; }
+          justify-content: center;
+  --px-btn-disabled-background: transparent; }
 
 #chart {
   position: relative; }
+
+#pagination {
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+  width: auto; }
 
 .dimension-title.name {
   display: none; }
