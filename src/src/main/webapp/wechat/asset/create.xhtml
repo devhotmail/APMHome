@@ -12,8 +12,10 @@
         <title>新增资产</title>
         <h:outputStylesheet name="wechat/weui.min.css" />
         <script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/jquery-2.0.0.min.js"/>
-        <script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/jweixin-1.0.0.js"/>
+        <!--<script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/jweixin-1.0.0.js"/>-->
+        <script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/MegaPixImage.js"/>
         <script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/createAsset.js"/>
+        <script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/exif.js"/>
 
     </h:head>
     <h:body>
@@ -25,8 +27,8 @@
                 </a>
             </div>
         </div>
-        
-        
+
+
         <h:form id="assetForm" enctype="multipart/form-data" rendered="#{!wechatAssetCreateController.resultStatus}">
 
             <div class="weui-cells weui-cells_form">
@@ -134,8 +136,9 @@
                                 <ul class="weui-uploader__files" id="uploaderFiles">
                                 </ul>
                                 <div class="weui-uploader__input-box">
-                                    <h:inputFile id="uploaderInput" value="#{wechatAssetCreateController.picture}" class="weui-uploader__input" />
-                                    <h:inputHidden id="uploaderFileId" value="#{wechatAssetCreateController.uploaderFileId}" />
+                                    <h:inputFile id="uploaderInput"  class="weui-uploader__input" />
+                                    <h:inputHidden id="uploaderFileId" value="#{wechatAssetCreateController.uploaderFiles}" />
+
                                 </div>
                             </div>
                         </div>
@@ -146,40 +149,48 @@
             </div>
 
             <div class="weui-btn-area">
-                <h:commandButton value="#{msg.Save}" class="weui-btn weui-btn_primary"   type="submit"  actionListener="#{wechatAssetCreateController.applySave()}"   />
+                <h:commandButton value="#{msg.Save}" class="weui-btn weui-btn_primary"   type="submit"  actionListener="#{wechatAssetCreateController.applySave()}"  onclick="js:beforeSubmit();"/>
             </div>
         </h:form>
-        
+
         <h:panelGroup rendered="#{wechatAssetCreateController.resultStatus}">
-        <div class="page">
-            <div class="weui-msg">
-                <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
-                <div class="weui-msg__text-area">
-                    <h2 class="weui-msg__title">保存成功</h2>
-                </div>
-                <div class="weui-msg__opr-area">
-                    <p class="weui-btn-area">
-                        <!--<a href="create.xhtml" class="weui-btn weui-btn_primary">继续添加</a>-->
-                        <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_primary">返回菜单</a>
-                    </p>
+            <div class="page">
+                <div class="weui-msg">
+                    <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+                    <div class="weui-msg__text-area">
+                        <h2 class="weui-msg__title">保存成功</h2>
+                    </div>
+                    <div class="weui-msg__opr-area">
+                        <p class="weui-btn-area">
+                            <a href="create.xhtml" class="weui-btn weui-btn_primary">继续添加</a>
+                            <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_primary">返回菜单</a>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-            </h:panelGroup>
+        </h:panelGroup>
 
 
 
     </h:body>
     <script>
         $("#assetForm\\:name").attr('placeholder', '请输入...');
-        wx.config({
-            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-            appId: '#{wechatAssetCreateController.jsSignature.appid}', // 必填，公众号的唯一标识
-            timestamp:#{wechatAssetCreateController.jsSignature.timestamp}, // 必填，生成签名的时间戳
-            nonceStr: '#{wechatAssetCreateController.jsSignature.noncestr}', // 必填，生成签名的随机串
-            signature: '#{wechatAssetCreateController.jsSignature.signature}', // 必填，签名，
-            jsApiList: ['chooseImage','uploadImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-        });
+        function beforeSubmit() {
+            var pics =new Array();
+            var uploads  = {pics: pics};
+            var reg = "^url\\((.+)\\)$";
+            var list = $("#uploaderFiles");
+            $.each(list.children(), function () {
+                var src = this.style.backgroundImage;
+                uploads.pics.push({
+                    name: this.title,
+                    src: src.match(reg)[1]
+                });
+            });
+            $("#assetForm\\:uploaderInput")[0].outerHTML="";
+            $uploaderFileId = $("#assetForm\\:uploaderFileId");
+            $("#assetForm\\:uploaderFileId").val(JSON.stringify(uploads));
+        }
 
     </script>
 </html>
