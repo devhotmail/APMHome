@@ -64,7 +64,7 @@
           },
           pageStart: {
             type: Number,
-            value: 10
+            value: 1
           },
           pageTotal: Number,
           sortBy: {
@@ -647,7 +647,7 @@
             'orderby': this.sortBy,
             'dept': this.filterBy,
             'limit': this.pageSize,
-            'start': this.pageStart
+            'start': this.pageStart > 0 ? this.pageStart - 1 : this.pageStart
           }).query();
         },
         _loadData: function() {
@@ -658,7 +658,7 @@
             return res.json();
           }).then(function(data) {
             _this.set('data', data.items);
-            _this.set('pageStart', data.pages.start);
+            _this.set('pageStart', data.pages.start + 1);
             _this.set('pageTotal', data.pages.total);
             _this.set('scales', data.ruler);
           });
