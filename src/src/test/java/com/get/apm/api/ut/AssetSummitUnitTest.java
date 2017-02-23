@@ -90,7 +90,7 @@ public class AssetSummitUnitTest {
         .parameter("exam_count", ThreadLocalRandom.current().nextInt(0, 100))
         .parameter("exam_duration", ThreadLocalRandom.current().nextInt(1, 80000))
         .parameter("down_time", ThreadLocalRandom.current().nextInt(1, 500))
-        .parameter("work_order_count", ThreadLocalRandom.current().nextInt(0, 1))
+        .parameter("work_order_count", ThreadLocalRandom.current().nextInt(0, 2))
         .parameter("rating", ThreadLocalRandom.current().nextInt(1, 999))
         .parameter("created", t._7)
         .parameter("last_modified", t._7)
