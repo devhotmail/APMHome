@@ -91,7 +91,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>${surefire.version}</version>
+				<version>2.4.3</version>
 				<configuration>
 					<showSuccess>false</showSuccess>
 					<!--<argLine>-Xmx512m -XX:MaxPermSize=256m</argLine>-->
@@ -342,11 +342,6 @@
 			<artifactId>freemarker</artifactId>
 			<version>2.3.21</version>
 			<type>jar</type>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.24</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -629,9 +624,9 @@
 			<version>2.0.5</version>
 		</dependency>
 		<dependency>
-			<groupId>io.reactivex</groupId>
+			<groupId>io.reactivex.rxjava2</groupId>
 			<artifactId>rxjava</artifactId>
-			<version>1.2.5</version>
+			<version>2.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.davidmoten</groupId>
@@ -686,7 +681,6 @@
 			<artifactId>retrofit</artifactId>
 			<version>2.1.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
@@ -709,15 +703,6 @@
 		</pluginRepository>
 	</pluginRepositories>
 	<repositories>
-		<repository>
-			<id>prime-repo</id>
-			<name>Prime Technology Maven Repository</name>
-			<url>http://repository.primefaces.org</url>
-			<layout>default</layout>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
 		<repository>
 			<id>aliyun</id>
 			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
@@ -750,22 +735,6 @@
 		</resources>
 		<plugins>
 			<plugin>
-				<artifactId>exec-maven-plugin</artifactId>
-				<groupId>org.codehaus.mojo</groupId>
-				<executions>
-					<execution>
-						<id>about</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>${basedir}/about.sh</executable>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<version>1.0</version>
@@ -784,6 +753,22 @@
 									<version>${jdk.version}</version>
 								</requireJavaVersion>
 							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>exec-maven-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<executions>
+					<execution>
+						<id>about</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${basedir}/about.sh</executable>
 						</configuration>
 					</execution>
 				</executions>
@@ -823,40 +808,6 @@
 						<logTimeZone>GMT+8:00</logTimeZone>
 					</requestLog>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-idea-plugin</artifactId>
-				<version>2.2</version>
-				<configuration>
-					<downloadSources>true</downloadSources>
-					<jdkLevel>${jdk.version}</jdkLevel>
-					<dependenciesAsLibraries>true</dependenciesAsLibraries>
-					<useFullNames>false</useFullNames>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<downloadSources>true</downloadSources>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<version>2.3</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>2.3</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

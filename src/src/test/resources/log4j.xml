@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="Console" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS}[%t]%-5p %-20c:%L - %m%n"/>
+		</layout>
+	</appender>
+
+	<appender name="File" class="org.apache.log4j.RollingFileAppender">
+		<!--<param name="File" value="${project.name}-${project.version}.log" />-->
+		<param name="File" value="logs/RisSi-Server.log"/>
+		<param name="MaxFileSize" value="2048KB"/>
+		<param name="MaxBackupIndex" value="20"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS}[%t]%-5p %-20c:%L - %msg%n"/>
+		</layout>
+	</appender>
+
+	<logger name="com.demo">
+		<level value="${log4j.level}"/>
+	</logger>
+
+	<logger name="com.ge.apm.view">
+		<level value="info"/>
+	</logger>
+
+	<logger name="com.demo.dao">
+		<level value="warn"/>
+	</logger>
+
+	<logger name="webapp.framework.web.filter">
+		<level value="warn"/>
+	</logger>
+
+	<logger name="org.springframework.transaction">
+		<level value="warn"/>
+	</logger>
+	<logger name="org.springframework.orm.hibernate3">
+		<level value="warn"/>
+	</logger>
+
+	<logger name="org.hibernate.cache.EhCacheProvider">
+		<level value="error"/>
+	</logger>
+
+	<logger name="org.hibernate">
+		<level value="warn"/>
+	</logger>
+
+	<logger name="org.springframework.security">
+		<level value="warn"/>
+	</logger>
+	<logger name="org.apache.commons">
+		<level value="warn"/>
+	</logger>
+	<logger name="org.springframework">
+		<level value="warn"/>
+	</logger>
+	<logger name="org.springframework.beans.factory.support">
+		<level value="warn"/>
+	</logger>
+
+	<logger name="net.sf.ehcache">
+		<level value="warn"/>
+	</logger>
+
+	<logger name="druid.sql">
+		<level value="error"/>
+	</logger>
+
+	<logger name="druid.sql.DataSource">
+		<level value="error"/>
+	</logger>
+
+	<logger name="druid.sql.Connection">
+		<level value="error"/>
+	</logger>
+
+	<logger name="druid.sql.Statement">
+		<level value="error"/>
+	</logger>
+
+	<logger name="druid.sql.ResultSet">
+		<level value="error"/>
+	</logger>
+
+	<root>
+		<priority value="info"/>
+		<appender-ref ref="Console"/>
+		<appender-ref ref="File"/>
+	</root>
+</log4j:configuration>
