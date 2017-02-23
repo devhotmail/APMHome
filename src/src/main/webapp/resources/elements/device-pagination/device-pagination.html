@@ -7,7 +7,6 @@
     <style include="device-pagination-styles"></style>
     <div class="u-pl+ u-ml+ summary">
       <span
-        class="btn btn--bare btn--pagination u-p- previous"
         class$="{{_getPrevCls(current)}}"
         on-click="handlePrev">
         <iron-icon icon="fa:fa-angle-left"></iron-icon>
@@ -24,8 +23,8 @@
             on-click="handleShowInput">{{current}}</span>
         </template>
         <span> / {{total}}</span>
+      </span>
       <span
-        class="btn btn--bare btn--pagination u-p- next"
         class$="{{_getNextCls(current, total)}}"
         on-click="handleNext">
         <iron-icon icon="fa:fa-angle-right"></iron-icon>
@@ -52,10 +51,10 @@
       }
     },
     _getPrevCls: function (current) {
-      return current === 1 ? 'btn--disabled' : '';
+      return [current === 1 ? 'disabled' : '', 'pagination-btn pagination-prev'].join(' ');
     },
     _getNextCls: function (current, total) {
-      return current === total ? 'btn--disabled' : '';
+      return [current === total ? 'disabled' : '', 'pagination-btn pagination-next'].join(' ');
     },
     handlePrev: function () {
       if (this.current > 1) this.changePage(this.current - 1);
