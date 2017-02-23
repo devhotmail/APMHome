@@ -5,6 +5,7 @@ import com.github.davidmoten.rx.jdbc.ConnectionProviderFromDataSource;
 import com.github.davidmoten.rx.jdbc.Database;
 import javaslang.Tuple;
 import javaslang.Tuple6;
+import javaslang.collection.HashMap;
 import javaslang.collection.Stream;
 import org.apache.ibatis.jdbc.SQL;
 import org.junit.After;
@@ -18,6 +19,7 @@ import rx.Observable;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class AssetSummitUnitTest {
@@ -67,12 +69,38 @@ public class AssetSummitUnitTest {
     db.close();
   }
 
+  private Map<String, Integer> gen() {
+    final int workOrderCount = ThreadLocalRandom.current().nextInt(0, 2) * ThreadLocalRandom.current().nextInt(0, 2);
+    final int downTime = workOrderCount * ThreadLocalRandom.current().nextInt(3600, 86400);
+    final int maintenanceCost = downTime * ThreadLocalRandom.current().nextInt(1, 5);
+    final int deprecationCost = ThreadLocalRandom.current().nextInt(50, 300);
+    final int examCount = ThreadLocalRandom.current().nextInt(60, 200) * Math.abs(86400 - downTime) / 86400;
+    final int examDuration = examCount * ThreadLocalRandom.current().nextInt(400, 420);
+    final int filmCount = examCount * ThreadLocalRandom.current().nextInt(1, 9);
+    final int exposeCount = examCount * ThreadLocalRandom.current().nextInt(1, 9);
+    final int injectCount = examCount * ThreadLocalRandom.current().nextInt(1, 9);
+    final int revenue = examCount * ThreadLocalRandom.current().nextInt(100, 900);
+    final int rating = Math.abs(revenue - maintenanceCost - deprecationCost) * examCount / 10000;
+
+    return HashMap.of("revenue", revenue)
+      .put("maintenance_cost", maintenanceCost)
+      .put("deprecation_cost", deprecationCost)
+      .put("inject_count", injectCount)
+      .put("expose_count", exposeCount)
+      .put("film_count", filmCount)
+      .put("exam_count", examCount)
+      .put("exam_duration", examDuration)
+      .put("down_time", downTime)
+      .put("work_order_count", workOrderCount)
+      .put("rating", rating)
+      .toJavaMap();
+  }
 
   @Ignore
   @Test
-  public void testFlatMap() {
+  public void testGenerate() {
     Observable.from(dates)
-      .flatMap(date -> assets.map(t -> Tuple.of(t._1, t._2, t._3, t._4, t._5, t._6, date)))
+      .flatMap(date -> assets.map(t -> Tuple.of(t._1, t._2, t._3, t._4, t._5, t._6, date, gen())))
       .subscribe(t -> db
         .update(sql)
         .parameter("site_id", t._1)
@@ -81,17 +109,17 @@ public class AssetSummitUnitTest {
         .parameter("asset_group", t._4)
         .parameter("dept_id", t._5)
         .parameter("supplier_id", t._6)
-        .parameter("revenue", ThreadLocalRandom.current().nextInt(1, 999))
-        .parameter("maintenance_cost", ThreadLocalRandom.current().nextInt(1, 500))
-        .parameter("deprecation_cost", ThreadLocalRandom.current().nextInt(1, 500))
-        .parameter("inject_count", ThreadLocalRandom.current().nextInt(1, 200))
-        .parameter("expose_count", ThreadLocalRandom.current().nextInt(0, 200))
-        .parameter("film_count", ThreadLocalRandom.current().nextInt(0, 100))
-        .parameter("exam_count", ThreadLocalRandom.current().nextInt(0, 100))
-        .parameter("exam_duration", ThreadLocalRandom.current().nextInt(1, 80000))
-        .parameter("down_time", ThreadLocalRandom.current().nextInt(1, 500))
-        .parameter("work_order_count", ThreadLocalRandom.current().nextInt(0, 2))
-        .parameter("rating", ThreadLocalRandom.current().nextInt(1, 999))
+        .parameter("revenue", t._8.get("revenue"))
+        .parameter("maintenance_cost", t._8.get("maintenance_cost"))
+        .parameter("deprecation_cost", t._8.get("deprecation_cost"))
+        .parameter("inject_count", t._8.get("inject_count"))
+        .parameter("expose_count", t._8.get("expose_count"))
+        .parameter("film_count", t._8.get("film_count"))
+        .parameter("exam_count", t._8.get("exam_count"))
+        .parameter("exam_duration", t._8.get("exam_duration"))
+        .parameter("down_time", t._8.get("down_time"))
+        .parameter("work_order_count", t._8.get("work_order_count"))
+        .parameter("rating", t._8.get("rating"))
         .parameter("created", t._7)
         .parameter("last_modified", t._7)
         .returnGeneratedKeys()
