@@ -1,0 +1,11 @@
+.counter {
+  user-select: none;
+
+  input {
+    width: 20px;
+  }
+}
+
+.current {
+  cursor: pointer;
+}

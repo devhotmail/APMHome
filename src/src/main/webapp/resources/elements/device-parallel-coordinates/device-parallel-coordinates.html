@@ -1,10 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
-<link rel="import" href="../../bower_components/px-data-table/px-pagination.html">
+<link rel="import" href="../device-pagination/device-pagination.html">
 <link rel="import" href="device-parallel-coordinates-styles.html">
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
-
 
 <dom-module id="device-parallel-coordinates">
   <template>
@@ -22,9 +21,7 @@
           </px-dropdown-content>
         </px-dropdown>
         <!-- Pagination controls -->
-        <px-pagination id="pagination" number-of-items="[[pageTotal]]" page-size="{{pageSize}}"
-                       first-item-index-to-display="{{pageStart}}">
-        </px-pagination>
+        <device-pagination id="pagination"></device-pagination>
       </div>
     </div>
   </template>
