@@ -32,6 +32,7 @@
 
       var SECTOR_MIN_STEP_FACTOR = .1;
       var $ = d3.select;
+      var $$ = d3.selectAll;
 
       function notNull(val) {
         return val !== null;
@@ -148,7 +149,7 @@
           .attr('dy', '.85em')
           .attr('text-anchor', 'middle')
           .attr('transform', d3Transform().translate(function(d) {
-            return [x(d.name), 0]
+            return [x(d.name), 0];
           }))
           .text(function(d) {
             return d.label;
@@ -185,15 +186,15 @@
             }
           });
 
-          root.append("g")
-          .attr("class", "background")
+          root.insert("g", ':first-child')
+          .attr("class", "foreground")
           .selectAll("path")
           .data(data)
           .enter().append("path")
           .attr("d", draw);
 
-          root.append("g")
-          .attr("class", "foreground")
+          root.insert("g", ':first-child')
+          .attr("class", "background")
           .selectAll("path")
           .data(data)
           .enter().append("path")
@@ -296,6 +297,7 @@
           function mouseout(d) {
             root.classed("active", false);
             projection.classed("inactive", false);
+            _this._highlightSector(false);
             // make all items inactive
             valueLabels.classed('active', false);
           }
@@ -486,7 +488,7 @@
 
           if(id) {
             // name axis
-            d3.selectAll('.axis.axis-name text.label').each(function toggleActive(d) {
+            $$('.axis.axis-name text.label').each(function toggleActive(d) {
               $(this).classed('active', d.id === id);
             });
             var item = this.data.find(function(d) {
@@ -499,7 +501,7 @@
           }
 
           function highlightSector(name, item) {
-            d3.selectAll('.axis.axis-' + name + ' .sector').each(function toggleActive(d_sector) {
+            $$('.axis.axis-' + name + ' .sector').each(function toggleActive(d_sector) {
               var val = item[name];
               var b = val >= d_sector.lastValue && val <= d_sector.value;
               $(this).classed('active', b);
@@ -510,13 +512,24 @@
           var name = sector.name;
           if(sector) {
             // name axis
-            d3.selectAll('.axis.axis-name text.label').each(function toggleActive(d) {
-              $(this).classed('active', valueInSector(d[name]));
-            });
-            d3.selectAll('.background path,.foreground path').each(function toggleActive(d) {
+            $$([
+              '.axis.axis-name text.label',
+              '.background path',
+              '.foreground path'
+            ].join(',')).each(function toggleActive(d) {
               $(this).classed('active', valueInSector(d[name]));
             });
           }
+
+          // column title
+          $$('.dimension-title').each(function toggleActive(d) {
+            $(this).classed('active', d.name === name);
+            var transform = $(this).attr('transform').replace(/scale\([^)]+\)/, '');
+            if (d.name === name) {
+              transform += ' scale(1.1)';
+            }
+            $(this).attr('transform', transform);
+          });
 
           function valueInSector(val) {
             return val >= sector.lastValue && val <= sector.value;

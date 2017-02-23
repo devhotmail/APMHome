@@ -87,10 +87,8 @@ $series-line-color: rgba($dv-light-gray, .1);
 }
 
 .sector {
-  opacity: .7;
-
   rect {
-    fill: rgba($dv-dark-blue, .8);
+    fill: $dv-basic-blue;
   }
 
   .label {
@@ -125,14 +123,25 @@ $series-line-color: rgba($dv-light-gray, .1);
 }
 
 .chart-body.active {
-  .sector.active {
-    opacity: 1;
-    .label {
-      fill: $white;
+  .sector {
+    &:not(.active) {
+      rect {
+        fill: lighten($dv-basic-blue, 20%);
+      }
+    }
+
+    &.active {
+      .label {
+        fill: $white;
+      }
     }
   }
+
+  .dimension-title.active {
+    font-weight: bold;
+  }
+
   .axis text.active {
-    fill: $dv-basic-blue;
     font-weight: bold;
 
     tspan.fullname {
@@ -144,11 +153,11 @@ $series-line-color: rgba($dv-light-gray, .1);
     }
   }
   .foreground path.active {
-    stroke: $dv-basic-blue;
+    stroke: lighten($dv-basic-blue, 15%);
     stroke-width: 3px;
   }
   .benchmark path.active {
-    stroke: $dv-basic-purple;
+    stroke: lighten($dv-basic-purple, 15%);
     stroke-width: 3px;
   }
 }
