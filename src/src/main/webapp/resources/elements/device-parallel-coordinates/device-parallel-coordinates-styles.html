@@ -103,6 +103,8 @@
     text-anchor: end; }
   .axis text.title {
     font-weight: bold; }
+  .axis text tspan.fullname {
+    display: none; }
 
 .axis line,
 .axis path {
@@ -147,6 +149,10 @@
 .chart-body.active .axis text.active {
   fill: #5da5da;
   font-weight: bold; }
+  .chart-body.active .axis text.active tspan.fullname {
+    display: block; }
+  .chart-body.active .axis text.active tspan.shortname {
+    display: none; }
 
 .chart-body.active .foreground path.active {
   stroke: #5da5da;
