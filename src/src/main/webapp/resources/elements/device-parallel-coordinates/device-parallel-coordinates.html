@@ -73,27 +73,28 @@
           _sortOptions: {
             type: Array,
             // "comprehensive" sort by default
-            computed: "_getSortOptions(data, dimensions)"
+            computed: "_getSortOptions(scales, dimensions)"
           },
           margin: {
             type: Object,
             value: function() {
               return {
-                top: 50,
+                top: 40,
                 right: 40,
-                bottom: 20,
+                bottom: 32,
                 left: 40
               };
             },
           },
           dimensions: {
             type: Array,
-            computed: '_getDimensions(data, margin, height)'
+            computed: '_getDimensions(scales, margin, height)'
           },
           filterBy: String,
           from: String,
           to: String,
           data: Array,
+          scales: Object,
           benchmarkSuffix: {
             value: '_bm',
             readOnly: true
@@ -160,7 +161,7 @@
           .enter().append("g")
           .attr("class", "dimension")
           .attr("transform", d3Transform().translate(function(d) {
-            return [x(d.name), 0]
+            return [x(d.name), 20]
           }));
 
           // massage dimension with scale definitions (rules)
@@ -172,7 +173,10 @@
             // the measurement axis
             if (dimension.type === Number) {
               extent = scaleDef[dimension.name];
-              domain = [extent.min, extent.max];
+              domain = [
+                extent.ticks[0],
+                extent.ticks[extent.ticks.length - 1]
+              ];
             }
             // the ordinal axis
             else {
@@ -181,9 +185,6 @@
               });
             }
             dimension.scale.domain(domain);
-            if (ticks) {
-              dimension.scale.ticks(ticks);
-            }
           });
 
           root.insert("g", ':first-child')
@@ -217,7 +218,6 @@
           // render value/bm_value label
           var valueGroup = root.append('g')
           .attr('class', 'value-group')
-          .attr('transform', 'translate(0, -20)')
           .selectAll('g')
           .data(data)
           .enter().append('g')
@@ -366,16 +366,10 @@
           var scaleDef = this.scales;
           var extent = scaleDef[dimension.name];
           var format = dimension.format || function(val) { return val; };
-          var span = extent.max - extent.min;
-          var tickNum = Math.round(( span ) / extent.step);
+          var span = extent.ticks[extent.ticks.length - 1] - extent.ticks[0];
 
           // unique sorted ticks
-          var ticks = d3.set(
-            Array.prototype.concat.call([],
-              domain[0],
-              scale.ticks(tickNum),
-              domain[1])
-          )
+          var ticks = d3.set(extent.ticks)
           .values()
           .map(Number)
           .sort(asc);
@@ -535,9 +529,8 @@
             return val >= sector.lastValue && val <= sector.value;
           }
         },
-        _getDimensions: function(data, margin, height) {
+        _getDimensions: function(scales, margin, height) {
           height = height - this.margin.top - this.margin.bottom;
-          var definition = data[0];
           var currency = d3.format(",.2s");
           var dims = [
             {
@@ -585,15 +578,18 @@
               }
             }
           ];
+          var _this = this;
           return dims.map(function(dimension) {
             var name = dimension.name;
+            var defs = scales[name];
+
             if (name === 'name') {
-              dimension.label = definition['rating_text'];
+              dimension.label = '';
               return dimension;
+            } else {
+              dimension.label = defs['text'] + '(' + defs['unit'] + ')';
             }
-            var label = definition[name + '_text'];
-            var unit = definition[name + '_unit'];
-            dimension.label = label + '(' + unit + ')';
+
             return dimension;
           });
         },
@@ -609,15 +605,16 @@
           this._loadData();
           this.restoreOptionsFromHistory();
         },
-        _getSortOptions: function(data, dimensions) {
-          var definition = data[0];
+        _getSortOptions: function(scales, dimensions) {
+          var _this = this;
           var list = dimensions.map(function(dimension) {
             if(!dimension.sortable)
                 return null;
             var sortBy = dimension.name;
+            var definition = scales[sortBy];
             return {
               key: sortBy,
-              val: sortBy === 'profit' ? '设备综合排名' : definition[dimension.name + '_text']
+              val: sortBy === 'profit' ? '设备综合排名' : definition.text
             };
           }).filter(notNull);
 
