@@ -34,6 +34,11 @@
       background-color: transparent;
       color: $highlight-color;
     }
+
+    .px-dropdown--list {
+      border-radius: 15px;
+      border: 1px solid #595959;
+    }
   }
 
   px-datetime-field {

@@ -161,7 +161,7 @@
           .enter().append("g")
           .attr("class", "dimension")
           .attr("transform", d3Transform().translate(function(d) {
-            return [x(d.name), 20]
+            return [x(d.name), 0]
           }));
 
           // massage dimension with scale definitions (rules)
