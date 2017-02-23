@@ -3,35 +3,46 @@ package com.get.apm.api.ft;
 import com.google.common.collect.ImmutableMap;
 import okhttp3.ResponseBody;
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.*;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ProfitApiTest extends AbstractApiTest {
-  private Map<String, String> queryMap = new HashMap<>();
-  private ProfitApiTestsInterface tests = this.retrofit.create(ProfitApiTestsInterface.class);
+  private ProfitApiTestsInterface tests;
+
+  public ProfitApiTest() {
+    super();
+    tests = this.getRetrofit().create(ProfitApiTestsInterface.class);
+  }
 
   private void doOkTest(ProfitApiTestsInterface tests, Map<String, String> queryMap) throws IOException {
-    Response<ResponseBody> response = tests.profit(this.Cookie, queryMap).execute();
+    Response<ResponseBody> response = tests.profit(this.getCookie(), queryMap).execute();
+    Assertions.assertThat(response).isNotNull();
+    Assertions.assertThat(response.body()).isNotNull();
     Assertions.assertThat(response.body().contentType().toString()).isEqualTo("application/json;charset=UTF-8");
     Assertions.assertThat(response.body().string()).contains("总收入");
   }
 
   private void doNegativeTest(ProfitApiTestsInterface tests, Map<String, String> queryMap) throws IOException {
-    Assertions.assertThat(tests.profit(this.Cookie, queryMap).execute().code()).isGreaterThanOrEqualTo(400);
+    Assertions.assertThat(tests.profit(this.getCookie(), queryMap).execute().code()).isGreaterThanOrEqualTo(400);
   }
 
   private void doWrongPathTest(ProfitApiTestsInterface tests, String wrongPath) throws IOException {
     Call<ResponseBody> call;
-    call = tests.wrongPath(this.Cookie, wrongPath);
+    call = tests.wrongPath(this.getCookie(), wrongPath);
     Response response;
     response = call.execute();
     Assertions.assertThat(response.code()).isEqualTo(404);
+  }
+
+  @Before
+  public void configEnv() throws IOException {
+    this.login("admin", "111");
   }
 
 
@@ -237,6 +248,7 @@ public class ProfitApiTest extends AbstractApiTest {
 
     doNegativeTest(tests, ImmutableMap.of("year", "2016", "type", "4", "dept", "5", "month", "4"));
   }
+
 }
 
 
