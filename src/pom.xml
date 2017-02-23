@@ -42,8 +42,9 @@
 		<hibernate.use.second.level.cache>true</hibernate.use.second.level.cache>
 		<hibernate.use.query.cache>true</hibernate.use.query.cache>
 
-		<maven.test.skip>true</maven.test.skip>
+		<maven.test.skip>false</maven.test.skip>
 		<jackson.version>2.8.1</jackson.version>
+		<surefire.version>2.19.1</surefire.version>
 	</properties>
 	<profiles>
 		<profile>
@@ -61,13 +62,36 @@
 				<hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</hibernate.dialect>
 			</properties>
 		</profile>
+
+		<profile>
+			<id>ut</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<includedTests>**/ut/*.java</includedTests>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>ft</id>
+			<activation>
+				<property>
+					<name>currentTest</name>
+					<value>ft</value>
+				</property>
+			</activation>
+			<properties>
+				<includedTests>**/ft/*.java</includedTests>
+			</properties>
+		</profile>
 	</profiles>
 	<reporting>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.4.3</version>
+				<version>${surefire.version}</version>
 				<configuration>
 					<showSuccess>false</showSuccess>
 					<!--<argLine>-Xmx512m -XX:MaxPermSize=256m</argLine>-->
@@ -837,9 +861,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.4.3</version>
+				<version>${surefire.version}</version>
 				<configuration>
 					<argLine>-Xmx512m -XX:MaxPermSize=256m</argLine>
+					<includes>
+						<include>${includedTests}</include>
+					</includes>
 				</configuration>
 			</plugin>
 			<plugin>
