@@ -15,7 +15,7 @@
         <template is="dom-if" if="{{showInput}}">
           <input id="currentInput"
             type="text"
-            value="{{current::input}}"
+            value="{{inputVal::input}}"
             on-keydown="handleInputKeydown">
         </template>
         <template is="dom-if" if="{{!showInput}}">
@@ -43,13 +43,21 @@
       },
       current: {
         type: Number,
-        value: 1
+        value: 1,
+        notify: true
+      },
+      inputVal: {
+        type: Number 
       },
       showInput: {
         type: Boolean,
         value: false
       }
     },
+    observers: [
+      '_watcher(current)'
+    ],
+    _watcher(val){ console.log(val)},
     _getPrevCls: function (current) {
       return [current === 1 ? 'disabled' : '', 'pagination-btn pagination-prev'].join(' ');
     },
@@ -66,25 +74,27 @@
       if (n) this.current = n;
     },
     handleShowInput: function () {
+      this.inputVal = this.current;
       this.showInput = true;
       this.async((function() {
         this.$.counter.querySelector('#currentInput').focus();
       }).bind(this));
     },
-    updateCurrentWithUI: function () {
+    updateCurrent: function () {
       if (this.current > this.total) this.current = this.total;
       if (this.current < 1) this.current = 1;
+      this.current = parseInt(this.inputVal);
       this.showInput = false;
     },
     handleInputKeydown: function (e) {
       var keycode = event.which || event.keyCode;
-      if (keycode === 13) this.updateCurrentWithUI();
+      if (keycode === 13) this.updateCurrent();
     },
     handleBlur: function (e) {
       var inputEl = this.$.counter.querySelector('#currentInput');
       if (inputEl && inputEl.contains(e.target)) return;
       // when blur
-      this.updateCurrentWithUI();
+      if (this.showInput) this.updateCurrent();
     },
     ready: function () {
       window.addEventListener('mousedown', this.handleBlur.bind(this));

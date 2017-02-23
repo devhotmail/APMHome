@@ -21,7 +21,9 @@
           </px-dropdown-content>
         </px-dropdown>
         <!-- Pagination controls -->
-        <device-pagination id="pagination"></device-pagination>
+        <device-pagination id="pagination"
+          total="[[pageTotal]]"
+          current="{{pageStart}}"></device-pagination>
       </div>
     </div>
   </template>
@@ -61,7 +63,7 @@
           },
           pageStart: {
             type: Number,
-            value: 0
+            value: 10
           },
           pageTotal: Number,
           sortBy: {
@@ -100,7 +102,7 @@
           '_replot(width, height, data)',
           'saveOptionsInHistory(sortBy)',
           '_loadData(from, to, filterBy, sortBy, pageStart, pageSize)',
-          '_pager(pageStart, pageTotal, pageStart)',
+          '_pager(pageStart, pageTotal)',
         ],
         behaviors: [
           Polymer.IronResizableBehavior
