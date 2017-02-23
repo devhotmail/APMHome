@@ -53,14 +53,13 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  --px-btn-disabled-background: transparent; }
+  --px-btn-disabled-background: transparent;
+  --device-pagination-color: #595959; }
 
 #chart {
   position: relative; }
 
 #pagination {
-  -ms-flex-item-align: end;
-      align-self: flex-end;
   width: auto; }
 
 .dimension-title.name {
@@ -72,6 +71,10 @@
   top: -15px;
   /* use percentage better coordinate with other scales on smaller screen size */
   left: 5%; }
+
+device-pagination {
+  margin-left: 5%;
+}
 
 .canvas {
   width: 100%;
@@ -112,17 +115,16 @@
   stroke: #595959;
   shape-rendering: crispEdges; }
 
-.sector {
-  opacity: .7; }
-  .sector rect {
-    fill: rgba(38, 93, 171, 0.8); }
-  .sector .label {
-    fill: #f7f7fc;
-    -webkit-writing-mode: tb;
-        -ms-writing-mode: tb;
-            writing-mode: tb;
-    font-size: .8rem;
-    cursor: default; }
+.sector rect {
+  fill: #5da5da; }
+
+.sector .label {
+  fill: #f7f7fc;
+  -webkit-writing-mode: tb;
+      -ms-writing-mode: tb;
+          writing-mode: tb;
+  font-size: .8rem;
+  cursor: default; }
 
 .label {
   -webkit-transition: fill 125ms linear;
@@ -141,13 +143,16 @@
 .value-group .benchmark-val {
   fill: #b276b2; }
 
-.chart-body.active .sector.active {
-  opacity: 1; }
-  .chart-body.active .sector.active .label {
-    fill: white; }
+.chart-body.active .sector:not(.active) rect {
+  fill: #b0d3ed; }
+
+.chart-body.active .sector.active .label {
+  fill: white; }
+
+.chart-body.active .dimension-title.active {
+  font-weight: bold; }
 
 .chart-body.active .axis text.active {
-  fill: #5da5da;
   font-weight: bold; }
   .chart-body.active .axis text.active tspan.fullname {
     display: block; }
@@ -155,11 +160,11 @@
     display: none; }
 
 .chart-body.active .foreground path.active {
-  stroke: #5da5da;
+  stroke: #9bc8e8;
   stroke-width: 3px; }
 
 .chart-body.active .benchmark path.active {
-  stroke: #b276b2;
+  stroke: #cea7ce;
   stroke-width: 3px; }
 
 </style>

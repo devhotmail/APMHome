@@ -12,6 +12,7 @@ $series-line-color: rgba($dv-light-gray, .1);
   align-items: center;
   justify-content: center;
   --px-btn-disabled-background: transparent;
+  --device-pagination-color: $text-color-default;
 }
 
 #chart {
@@ -32,6 +33,10 @@ $series-line-color: rgba($dv-light-gray, .1);
   top: -15px;
   /* use percentage better coordinate with other scales on smaller screen size */
   left: 5%;
+}
+
+device-pagination {
+  margin-left: 5%;
 }
 
 .canvas {
