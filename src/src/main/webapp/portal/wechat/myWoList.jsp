@@ -21,9 +21,9 @@
             .page{
                 position: absolute;
                 top: 0; bottom: 0; left: 0; right: 0;
-                opacity: 1; background: white;
+                opacity: 1;
             }
-            @-webkit-keyframes slideIn {
+            @keyframes slideIn {
                 from {
                     transform: translate3d(100%, 0, 0);
                     opacity: 0;
@@ -107,7 +107,7 @@
         </style>
         <script>var WEB_ROOT = '${ctx}/';</script>
     </head>
-    <body>
+    <body style="background-color:#f8f8f8">
         <div id="container" class="container"></div>
         <div id="loadingToast" style="display:none;">
             <div class="weui-mask_transparent"></div>
@@ -116,15 +116,46 @@
                 <p class="weui-toast__content"></p>
             </div>
         </div>
+        <div class="js_dialog" id="jsdialog" style="display: none;">
+            <div class="weui-mask"></div>
+            <div class="weui-dialog">
+                <div class="weui-dialog__bd"></div>
+                <div class="weui-dialog__ft">
+                    <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary"></a>
+                </div>
+            </div>
+        </div>
         <script type="text/javascript">
             var $loadingToast = $('#loadingToast');
+            var $js_dialog = $('#jsdialog');
+            $js_dialog.on('click', '.weui-dialog__btn', function(){
+                $(this).parents('.js_dialog').fadeOut(200);
+                if ($(this).html() === '确定') {
+                    history.back();
+                    pageManager.loadList();
+                }
+            });
+            
             $(function(){
-//                $('#container').append($('#wolist').html());
-                
+                var appId = '${appId}';
+                var timestamp = '${timestamp}';
+                var nonceStr = '${nonceStr}';
+                var signature = '${signature}';
+                wx.config({
+                    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    appId: appId, // 必填，公众号的唯一标识
+                    timestamp: timestamp, // 必填，生成签名的时间戳
+                    nonceStr: nonceStr, // 必填，生成签名的随机串
+                    signature: signature,// 必填，签名，见附录1
+                    jsApiList: ['chooseImage','uploadImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                });
+
                 window.pageManager = {
                     _pageStack: [],
                     _pageIndex: 0,
                     woId: null,
+                    siteId: null,
+                    stepCost: [],
                     init: function(){
                         var self = this;
                         $(window).on('hashchange', function () {
@@ -136,19 +167,32 @@
                                 self._go(page);
                             }
                         });
+                        $(window).on('popstate', function() {
+                            var hashLocation = location.hash;
+                            if (hashLocation == '')
+                                WeixinJSBridge.call('closeWindow');
+                        });
                         this.go('#wolist');
                     },
                     go: function(page) {
                         location.hash = page;   
                     },
                     _go: function(page) {
+                        var self = this;
                         this._pageIndex++;
                         history.replaceState && history.replaceState({_pageIndex: this._pageIndex}, '', location.href);
                         var html = $(page).html()+'<\/script>';
                         var $html = $(html);
-                        $html.addClass('slideIn');
+                        $html.addClass('slideIn').on('animationend webkitAnimationEnd', function () {
+                            $html.removeClass('slideIn');
+                        });
                         $('#container').append($html);
-                        this._pageStack.push({dom: $html});
+                        $(window).scrollTop(0);
+                        //hidden previous one
+                        if (self._pageStack.length != 0){
+                            $(self._pageStack[self._pageStack.length-1].dom[0]).hide();
+                        }
+                        self._pageStack.push({dom: $html});
                     },
                     _back: function() {
                         this._pageIndex--;
@@ -159,6 +203,16 @@
                         stack.dom.addClass('slideOut').on('animationend webkitAnimationEnd', function () {
                             stack.dom.remove();
                         });
+                        if (this._pageStack.length != 0){
+                            $(this._pageStack[this._pageStack.length-1].dom[0]).show();
+                        }
+                    },
+                    formdata: function(array){
+                        var data = {};
+                        $.each(array, function(index, value){
+                            data[value.name] = value.value;
+                        });
+                        return data;
                     }
                 }
                 pageManager.init();
@@ -188,40 +242,45 @@
             <script type="text/javascript">
                 $(function(){
                     //fetch data from server
-                    $loadingToast.fadeIn(100);
-                    $loadingToast.find('.weui-toast__content').html('数据加载中...');
-                    var $ui_list = $('#ui_list');
-                    var tmpl = $('#wo_li').html();
-                    $.ajax({
-                        url: WEB_ROOT+'web/wolistdata',
-                        type: 'get',
-                        contentType: 'application/json',
-                        success: function(ret) {
-                            if (ret && ret.length !=0) {
-                                $.each(ret, function(idx, value){
-                                    var $tmpl = $(tmpl);
-                                    $tmpl.find('#li_title').html('工单编号：'+ value['id']).attr('woid', value['id']);
-                                    $tmpl.find('#li_ft').html(value['requestTime']);
-                                    var lcs = $tmpl.find('#li_context p');
-                                    $(lcs[0]).html('资产编号：'+value['assetId']);
-                                    $(lcs[1]).html('资产名称：'+value['assetName']);
-                                    $(lcs[2]).html('工单状态：'+value['currentStepName']);
-                                    $ui_list.append($tmpl);
-                                });
-                                $loadingToast.fadeOut(100);
-                            } else {
-                                $loadingToast.fadeOut(100);
-                                $('#container').empty();
-                                $('#container').append($('#no_data').html());
+                    pageManager.loadList = function(){
+                        $loadingToast.fadeIn(100);
+                        $loadingToast.find('.weui-toast__content').html('数据加载中...');
+                        var $ui_list = $('#ui_list');
+                        $ui_list.empty();
+                        var tmpl = $('#wo_li').html();
+                        $.ajax({
+                            url: WEB_ROOT+'web/wolistdata',
+                            type: 'get',
+                            contentType: 'application/json',
+                            success: function(ret) {
+                                if (ret && ret.length !=0) {
+                                    $.each(ret, function(idx, value){
+                                        var $tmpl = $(tmpl);
+                                        $tmpl.find('#li_title').html('工单编号：'+ value['id']).attr('woid', value['id']);
+                                        $tmpl.find('#li_ft').html(value['requestTime']);
+                                        var lcs = $tmpl.find('#li_context p');
+                                        $(lcs[0]).html('资产编号：'+value['assetId']);
+                                        $(lcs[1]).html('资产名称：'+value['assetName']);
+                                        $(lcs[2]).html('工单状态：'+value['currentStepName']);
+                                        $ui_list.append($tmpl);
+                                    });
+                                    $loadingToast.fadeOut(100);
+                                } else {
+                                    $loadingToast.fadeOut(100);
+                                    $('#container').empty();
+                                    $('#container').append($('#no_data').html());
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                    pageManager.loadList();
 
                     //bind click event
                     $('#ui_list').on('click', '.weui-cell_access', function(){
                         $loadingToast.show();
                         $loadingToast.find('.weui-toast__content').html('数据加载中...');
                         pageManager.woId = $(this).parent().find('#li_title').attr('woid');
+                        pageManager.stepCost = [];
                         pageManager.go('#woDetail');
                     });
                 });
@@ -247,7 +306,7 @@
         </script>
         <script type="text/html" id="woDetail">
             <div class="page">
-                <div class="page__hd" style="height:50px;">
+                <div class="page__hd" style="height:63px;">
                     <div class="wo_container">
                         <ul class="progressbar">
                             <li>报修</li>
@@ -259,7 +318,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="page__bd">
+                <div class="page__bd ">
                     <div class="weui-gallery" id="gallery">
                         <span class="weui-gallery__img" id="galleryImg"></span>
                         <div class="weui-gallery__opr">
@@ -268,68 +327,75 @@
                             </a>
                         </div>
                     </div>
-
+                    <div id="dialogs">
+                        <div class="js_dialog" id="iosDialog2" style="display: none;">
+                            <div class="weui-mask"></div>
+                            <div class="weui-dialog">
+                                <div class="weui-dialog__bd">只能上传一张照片</div>
+                                <div class="weui-dialog__ft">
+                                    <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <form id="woForm">
-                        <div class="weui-cells weui-cells_form">
-                            <div class="weui-cell">
-                                <div class="weui-cell__hd"><label class="weui-label">工单名称</label></div>
-                                <div class="weui-cell__bd">
-                                    <input class="weui-input" id="name" name="name" type="text" readonly="readonly"/>
+                        <div class="weui-form-preview">
+                            <div class="weui-form-preview__bd">
+                                <div class="weui-form-preview__item">
+                                    <label class="weui-form-preview__label">工单名称</label>
+                                    <span class="weui-form-preview__value" id="name"/>
                                 </div>
-                            </div>
-                            <div class="weui-cell">
-                                <div class="weui-cell__hd"><label class="weui-label">资产名称</label></div>
-                                <div class="weui-cell__bd">
-                                    <input id="assetName" name="assetName" class="weui-input" type="text" readonly="readonly"/>
+                                <div class="weui-form-preview__item">
+                                    <label class="weui-form-preview__label">资产名称</label>
+                                    <span class="weui-form-preview__value" id="assetName"></span>
                                     <input id="closeReason" type="hidden" name="closeReason"/><!--用来存放图片serverId -->
+                                    <input id="id" type="hidden" name="id"/>
+                                </div>
+                                <div class="weui-form-preview__item">
+                                    <label class="weui-form-preview__label">负责人</label>
+                                    <span class="weui-form-preview__value" id="caseOwnerName"></span>
+                                </div>
+                                <div class="weui-form-preview__item">
+                                    <label class="weui-form-preview__label">报修人</label>
+                                    <span class="weui-form-preview__value" id="requestorName"></span>
+                                </div>
+                                <div class="weui-form-preview__item">
+                                    <label class="weui-form-preview__label">报修时间</label>
+                                    <span class="weui-form-preview__value" id="requestTime"></span>
+                                </div>
+                                <div class="weui-form-preview__item">
+                                    <label class="weui-form-preview__label">创建者</label>
+                                    <span class="weui-form-preview__value" id="creatorName"></span>
+                                </div>
+                                <div class="weui-form-preview__item">
+                                    <label class="weui-form-preview__label">当前处理人</label>
+                                    <span class="weui-form-preview__value" id="currentPersonName"></span>
+                                </div>
+                                <div class="weui-form-preview__item">
+                                    <label class="weui-form-preview__label">故障现象</label>
+                                    <span class="weui-form-preview__value" id="requestReason"></span>
                                 </div>
                             </div>
-                            <div class="weui-cell">
-                                <div class="weui-cell__hd"><label class="weui-label">负责人</label></div>
+                            <a class="weui-cell weui-cell_access" href="javascript:;" data-page="#stepDetail">
                                 <div class="weui-cell__bd">
-                                    <input id="caseOwnerName" name="caseOwnerName" readonly="readonly" class="weui-input" type="text"/>
-                                </div>
-                            </div>
-                            <div class="weui-cell">
-                                <div class="weui-cell__hd"><label for="requestorName" class="weui-label">报修人</label></div>
-                                <div class="weui-cell__bd">
-                                    <input id="requestorName" name="requestorName" readonly="readonly" class="weui-input" type="text"/>
-                                </div>
-                            </div>
-
-                            <div class="weui-cell">
-                                <div class="weui-cell__hd"><label for="requestTime" class="weui-label">报修时间</label></div>
-                                <div class="weui-cell__bd">
-                                    <input id="requestTime" name="requestTime" class="weui-input" type="datetime-local" readonly="readonly"/>
-                                </div>
-                            </div>
-
-                            <div class="weui-cell">
-                                <div class="weui-cell__hd"><label for="creatorName" class="weui-label">创建者</label></div>
-                                <div class="weui-cell__bd">
-                                    <input id="creatorName" name="creatorName" readonly="readonly" class="weui-input" type="text" value="${creatorName}"/>
-                                </div>
-                            </div>
-                            <div class="weui-cell">
-                                <div class="weui-cell__hd"><label for="currentPersonName" class="weui-label">当前处理人</label></div>
-                                <div class="weui-cell__bd">
-                                    <input id="currentPersonName" name="currentPersonName" readonly="readonly" class="weui-input" type="text"/>
-                                </div>
-                            </div>
-                            <div class="weui-cell"><label for="requestReason" class="weui-label">故障现象</label></div>
-                            <div class="weui-cell">
-                                <div class="weui-cell__bd">
-                                    <textarea name="requestReason" id="requestReason" class="weui-textarea" readonly="readonly" rows="3"></textarea>
-                                </div>
-                            </div>
-                            <a class="weui-cell weui-cell_access" href="javascript:;">
-                                <div class="weui-cell__bd">
-                                    <p>工单步骤</p>
+                                    <p style="color: #999;">工单步骤</p>
                                 </div>
                                 <div class="weui-cell__ft">
                                 </div>
                             </a>
-
+                        </div>
+                        <div class="weui-cells weui-cells_form">
+                            <a class="weui-cell weui-cell_access" href="javascript:;" data-page="#step_cost">
+                                <div class="weui-cell__bd">
+                                    <p>资源费用</p>
+                                </div>
+                                <div class="weui-cell__ft" style="font-size:16px">增加</div>
+                            </a>
+                            <div class="weui-cell" style="padding-top:0; padding-bottom: 0">
+                                <div class="weui-cells costList" style="margin-top: 0;">
+                                </div>
+                            </div>
                             <div class="weui-cell">
                                 <div class="weui-cell__hd"><label for="currentPersonId" class="weui-label">下步处理人*</label></div>
                                 <div class="weui-cell__bd">
@@ -422,14 +488,67 @@
                         </div>
                     </form>
 
-                    <div class="weui-btn-area">
-                        <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">提交</a>
+                    <div class="weui-form-preview__ft">
+                        <a href="javascript:;" class="weui-form-preview__btn weui-btn_default" id="transfer">
+                            <p class="weui-grid__label">转单</p>
+                        </a>
+                        <a href="javascript:;" class="weui-form-preview__btn weui-btn_default" id="closewo">
+                            <p class="weui-grid__label">关单</p>
+                        </a>
+                        <a href="javascript:;" class="weui-form-preview__btn weui-btn_primary" id="submit">
+                            <p class="weui-grid__label">完成</p>
+                        </a>
                     </div>
                 </div>
             </div>
 
             <script type="text/javascript">
                 $(function(){
+                    var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+                        $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+                        $uploaderInput = $("#uploaderInput"),
+                        $uploaderFiles = $("#uploaderFiles");
+                    $uploaderInput.on("click", function(e){
+                        if($uploaderFiles.children().length === 1){
+                            $('#iosDialog2').fadeIn(200);
+                            return false;
+                        }
+                        upload();
+                        return false;
+                    });
+                    $uploaderFiles.on("click", "li", function(){
+                        $galleryImg.attr("style", this.getAttribute("style"));
+                        $gallery.fadeIn(100);
+                    });
+                    $gallery.on("click", function(){
+                        $gallery.fadeOut(100);
+                    });
+                    $('#dialogs').on('click', '.weui-dialog__btn', function(){
+                        $(this).parents('.js_dialog').fadeOut(200);
+                    });
+                    $('.weui-gallery__del').on('click', function(){
+                        $uploaderFiles.children().remove();
+                    });
+                    function upload() {
+                        wx.chooseImage({
+                            count: 1, // 默认9
+                            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                            success: function (res) {
+                                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                                $uploaderFiles.append($(tmpl.replace('#url#', localIds)));
+                                wx.uploadImage({
+                                    localId: localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
+                                    isShowProgressTips: 1, // 默认为1，显示进度提示
+                                    success: function (res) {
+                                        var serverId = res.serverId; // 返回图片的服务器端ID
+                                        $('#closeReason').val(serverId);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    
                     //初始化下拉框
                     initData('casePriority', 'casePriority');
                     initData('caseType', 'caseType');
@@ -479,11 +598,16 @@
                         success: function(ret) {
                             if (ret) {
                                 var step = ret.currentStepId;
+                                pageManager.siteId = ret.siteId;
                                 $.each($('.progressbar').children(), function(idx, val){
                                     if (idx < step) {
                                         $(val).addClass('active');
                                     }
                                 });
+                                if (step >= 6) {
+                                    $('#submit').hide();
+                                    $('#closewo').removeClass('weui-btn_default').addClass('weui-btn_primary');
+                                }
                                 //set value
                                 setJsonValue(ret);
                                 $loadingToast.fadeOut(100);
@@ -497,12 +621,17 @@
                         if (!obj) return;
                         $.each(obj, function(idx, val){
                             var $idx = $('#'+idx);
+                            if ($idx.length == 0) return;
                             if ('datetime-local' == $idx.attr('type')) {
                                 val = val.replace(' ', 'T');
                                 $idx.val(val);
                             } else if ('checkbox' == $idx.attr('type')) {
                                 if (val) {
                                     $idx.attr('checked', 'checked');
+                                }
+                            } else if ('span' == $idx[0].localName) {
+                                if (val) {
+                                    $idx.html(val);
                                 }
                             } else {
                                 $idx.val(val);
@@ -513,9 +642,55 @@
                     //bind click event
                     $('#woForm').on('click', '.weui-cell_access', function(){
                         $loadingToast.show();
-                        $loadingToast.find('.weui-toast__content').html('数据加载中...');
-                        pageManager.go('#stepDetail');
+                        $loadingToast.find('.weui-toast__content').html('数据保存中...');
+                        pageManager.go($(this).data('page'));
                     });
+
+                    //提交工单
+                    $('#submit').click(function(){finishWo('save');});
+                    $('#transfer').click(function(){finishWo('transfer');});
+                    $('#closewo').click(function(){finishWo('close');});
+                    
+                    function finishWo(type) {
+                        var array = $('#woForm').serializeArray();
+                        var formdata = pageManager.formdata(array);
+                        if(formdata['isInternal'] === 'on') {
+                            formdata['isInternal'] = true;
+                        } else {
+                            formdata['isInternal'] = false;
+                        }
+                        formdata.type = type;
+                        formdata.stepDetails = pageManager.stepCost;
+//                        formdata['requestTime'] = formdata['requestTime'].replace('T', ' ');
+//                        var flag = formValidate();
+//                        if (!flag) return;
+                        var $loadingToast = $('#loadingToast');
+                        $.ajax({
+                            url: WEB_ROOT+'web/finishwo',
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify(formdata),
+                            success: function(ret) {
+                                $loadingToast.fadeOut(100);
+                                if (ret == 'success') {
+                                    $js_dialog.find('.weui-dialog__bd').html('数据保存成功');
+                                    $js_dialog.find('.weui-dialog__ft .weui-dialog__btn').html('确定');
+                                } else {
+                                    $js_dialog.find('.weui-dialog__bd').html('数据保存失败');
+                                    $js_dialog.find('.weui-dialog__ft .weui-dialog__btn').html('取消');
+                                }
+                                $js_dialog.fadeIn(200);
+                            },
+                            error: function(ret){
+                                $loadingToast.fadeOut(100);
+                                $js_dialog.find('.weui-dialog__bd').html('数据保存失败');
+                                $js_dialog.find('.weui-dialog__ft .weui-dialog__btn').html('取消');
+                                $js_dialog.fadeIn(200);
+                            }
+                        });
+                        if ($loadingToast.css('display') != 'none') return;
+                        $loadingToast.fadeIn(100);
+                    }
 
                 });
         </script>
@@ -553,7 +728,7 @@
                                         type: 'get',
                                         data: {id: val.id},
                                         contentType: 'application/json',
-                                        success: function(ret) {debugger;
+                                        success: function(ret) {
                                             if (ret && ret.length != 0) {
                                                 var costtmpl = '<div class="weui-cell">'+
                                                     '<div class="weui-cell__bd">'+
@@ -609,6 +784,82 @@
                     <img style="width:100%" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=">
                 </div>
             </div>
+        </script>
+
+        <script type="text/html" id="step_cost">
+            <div class="page">
+                <form id="costForm">
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd"><label class="weui-label">工时(小时)</label></div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" id="manHours" name="manHours" type="text" pattern="[0-9]"/>
+                            </div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd"><label class="weui-label">备件</label></div>
+                            <div class="weui-cell__bd">
+                                <input id="accessory" name="accessory" class="weui-input" type="text"/>
+                            </div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd"><label class="weui-label">数量</label></div>
+                            <div class="weui-cell__bd">
+                                <input id="accessoryQuantity" name="accessoryQuantity" class="weui-input" type="text"/>
+                            </div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd"><label for="requestorName" class="weui-label">单价(元)</label></div>
+                            <div class="weui-cell__bd">
+                                <input id="accessoryPrice" name="accessoryPrice" class="weui-input" type="text"/>
+                            </div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd"><label for="requestorName" class="weui-label">其他费用(元)</label></div>
+                            <div class="weui-cell__bd">
+                                <input id="otherExpense" name="otherExpense" class="weui-input" type="text"/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="weui-btn-area">
+                    <a class="weui-btn weui-btn_primary" href="javascript:" id="costSubmit">提交</a>
+                    <div style="height:10px"></div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                $(function(){
+                    $loadingToast.fadeOut(100);
+                    $('.costList').on('click', '.weui-icon-cancel', function(){
+                        var $costList = $(this).parent().parent();
+                        pageManager.stepCost.slice($costList.data('id'), 1);
+                        $costList.remove();
+                    });
+                    $('#costSubmit').click(function(){
+                        var array = $('#costForm').serializeArray();
+                        var costData = pageManager.formdata(array);
+                        costData.siteId = pageManager.siteId;
+                        pageManager.stepCost.push(costData);
+                        insertCostList(costData);
+                        history.back();
+                    });
+
+                    function insertCostList(value){
+                        var $costList = $('.costList');
+                        var index = $costList.children().length;
+                        var tempui = '<div class="weui-cell">'+
+                                '<div class="weui-cell__bd"><p>' +
+                                '内部工时(小时)：'+value.manHours
+                                +',  备件：'+value.accessory
+                                +',  数量：'+value.accessoryQuantity
+                                +',  单价(元)：'+value.accessoryPrice
+                                +',  其他费用(元)：'+value.otherExpense +
+                                '</p></div>'+
+                                '<div class="weui-cell__ft"><i class="weui-icon-cancel"></i></div></div>';
+                        $costList.append($(tempui).attr('data-id', index));
+                    }
+                });
         </script>
 
     </body>

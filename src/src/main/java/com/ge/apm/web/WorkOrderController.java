@@ -9,6 +9,7 @@ import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.service.wechat.CoreService;
 import com.ge.apm.service.wechat.WorkOrderWeChatService;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -108,7 +109,19 @@ public class WorkOrderController {
     }
     
     @RequestMapping(value = "wolistpage")
-    public String woListPage() {
+    public String woListPage(HttpServletRequest request,HttpServletResponse response, Model model) {
+        WxJsapiSignature s = null;
+        try {
+            s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
+        } catch (WxErrorException ex) {
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+            return "myWoList";
+        }
+        model.addAttribute("appId",s.getAppid());
+        model.addAttribute("timestamp",s.getTimestamp());
+        model.addAttribute("nonceStr",s.getNoncestr());
+        model.addAttribute("signature",s.getSignature());
+        
         return "myWoList";
     }
     
@@ -130,6 +143,16 @@ public class WorkOrderController {
     @RequestMapping(value = "detailcost")
     public @ResponseBody Object detailCost(Integer id){
         return woWcService.stepDetail(id);
+    }
+
+    @RequestMapping(value = "finishwo")
+    public @ResponseBody Object finishWo(HttpServletRequest request, @RequestBody Map map){
+        try {
+            return woWcService.finishWo(request, map);
+        } catch (Exception ex) {
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+            return "error";
+        }
     }
     
 }

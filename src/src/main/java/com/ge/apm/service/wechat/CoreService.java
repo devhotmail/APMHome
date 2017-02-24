@@ -207,7 +207,7 @@ public class CoreService {
         file.delete();
     }
     
-    private int uploadFile(File file) {
+    public int uploadFile(File file) {
         Integer returnId = 0;
         InputStream is = null;
         try {
@@ -227,7 +227,7 @@ public class CoreService {
         }
         return returnId;
     }
-    private String getFileName(File file) {
+    public String getFileName(File file) {
         String fileName = "";
         try {
             fileName = new String(file.getName().getBytes(), "utf-8");
