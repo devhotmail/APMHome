@@ -1,0 +1,14 @@
+<script src="../../bower_components/fastclick/lib/fastclick.js"></script>
+     
+<!--fast click polyfill-->
+<dom-module id="fastclick">
+  <template></template>
+
+  <script>
+    if ('addEventListener' in document) {
+      document.addEventListener('DOMContentLoaded', function() {
+        FastClick.attach(document.body);
+      }, false);
+    }
+  </script>
+</dom-module>
