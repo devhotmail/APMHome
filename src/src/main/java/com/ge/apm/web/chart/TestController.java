@@ -42,7 +42,7 @@ public class TestController {
     @RequestMapping(value = "/excute", method = RequestMethod.GET )
     @ResponseBody
     public String excuteTask(){
-    	assetCostDataService.excuteTask();
+    	assetCostDataService.aggregateCostData();
     	return "success";
     }
 }

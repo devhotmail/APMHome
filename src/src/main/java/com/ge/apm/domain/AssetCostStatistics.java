@@ -1,6 +1,8 @@
 package com.ge.apm.domain;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import org.joda.time.DateTime;
 
 public class AssetCostStatistics implements Serializable{
@@ -25,8 +27,10 @@ public class AssetCostStatistics implements Serializable{
 	
 	//========wo=============//
 	private Integer woId;//订单id
-	private DateTime requestTime;//报修时间
-	private DateTime confirmedDownTime;//宕机时间
+//	private DateTime requestTime;//报修时间
+//	private DateTime confirmedDownTime;//宕机时间
+	private Date requestTime;//报修时间
+	private Date confirmedDownTime;//宕机时间
 	private Boolean woStatus;//工单状态
 	
 	public Integer getSupplierId() {
@@ -47,16 +51,16 @@ public class AssetCostStatistics implements Serializable{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	public DateTime getRequestTime() {
+	public Date getRequestTime() {
 		return requestTime;
 	}
-	public void setRequestTime(DateTime requestTime) {
+	public void setRequestTime(Date requestTime) {
 		this.requestTime = requestTime;
 	}
-	public DateTime getConfirmedDownTime() {
+	public Date getConfirmedDownTime() {
 		return confirmedDownTime;
 	}
-	public void setConfirmedDownTime(DateTime confirmedDownTime) {
+	public void setConfirmedDownTime(Date confirmedDownTime) {
 		this.confirmedDownTime = confirmedDownTime;
 	}
 	public Integer getAssetId() {

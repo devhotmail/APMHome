@@ -20,7 +20,7 @@ public class AssetInfoProvider {
 	
 	public String fetchDownTimeAsset(){
 		StringBuilder sb = new StringBuilder();
-		sb.append("select ai. id,wo.request_time,wo.confirmed_down_time from ");
+		sb.append("select ai. id asset_id,wo.request_time,wo.confirmed_down_time down_time from ");
 		sb.append("asset_info ai join work_order wo on ai. id = wo.asset_id and ai.is_valid = true ");
 		sb.append("where ai.status = 2 and date(wo.request_time)=date(now()) ");
 		sb.append("group by ai. id,wo.confirmed_down_time,wo.request_time ");

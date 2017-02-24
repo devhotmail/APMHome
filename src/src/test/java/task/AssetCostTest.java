@@ -19,8 +19,8 @@ public class AssetCostTest extends BaseJunit4Test{
 	@Transactional
     @Rollback(true) 
 	public void test(){
-//		assetCostDataService.excuteTask();
-		System.out.println("impl interface "+assetCostDataService);
-		System.out.println("impl itself "+dataService);
+		assetCostDataService.aggregateCostData();
+//		System.out.println("impl interface "+assetCostDataService);
+//		System.out.println("impl itself "+dataService);
 	}
 }

@@ -1,12 +1,12 @@
 package com.ge.apm.domain;
 
-import org.joda.time.DateTime;
+import java.util.Date;
 
 public class DownTimeAsset {
 	private Integer assetId;//资产id
-	private DateTime requestTime;//工单创建时间
-	private DateTime downTime;//宕机时间
-	private Boolean isCal;//是否已计算
+	private Date requestTime;//工单创建时间
+	private Date downTime;//宕机时间
+	private Boolean isCal = false;//是否已计算
 	
 	public Boolean getIsCal() {
 		return isCal;
@@ -20,16 +20,16 @@ public class DownTimeAsset {
 	public void setAssetId(Integer assetId) {
 		this.assetId = assetId;
 	}
-	public DateTime getRequestTime() {
+	public Date getRequestTime() {
 		return requestTime;
 	}
-	public void setRequestTime(DateTime requestTime) {
+	public void setRequestTime(Date requestTime) {
 		this.requestTime = requestTime;
 	}
-	public DateTime getDownTime() {
+	public Date getDownTime() {
 		return downTime;
 	}
-	public void setDownTime(DateTime downTime) {
+	public void setDownTime(Date downTime) {
 		this.downTime = downTime;
 	}
 	

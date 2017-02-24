@@ -26,7 +26,7 @@ import com.ge.apm.domain.DownTimeAsset;
  *
  * @author 212547631
  */
-@Component
+//@Component
 public class AssetCostDataAggregator {
 	
 	private final static Logger logger = LoggerFactory.getLogger(AssetCostDataAggregator.class);
@@ -80,11 +80,11 @@ public class AssetCostDataAggregator {
     			if(map.get(acs.getAssetId()).getIsCal()){
     				continue;
     			}else{
-    				acs.setRequestTime(map.get(acs.getAssetId()).getRequestTime());
-    				acs.setConfirmedDownTime(map.get(acs.getAssetId()).getDownTime());
+//    				acs.setRequestTime(map.get(acs.getAssetId()).getRequestTime());
+//    				acs.setConfirmedDownTime(map.get(acs.getAssetId()).getDownTime());
     			}
     		}
-    		excute(acs);
+//    		excute(acs);
     		if(map.containsKey(acs.getAssetId())){
     			DownTimeAsset dta = map.get(acs.getAssetId());
     			dta.setIsCal(true);
@@ -100,8 +100,8 @@ public class AssetCostDataAggregator {
 			public DownTimeAsset mapRow(ResultSet rs, int i) throws SQLException {
 				DownTimeAsset dta = new DownTimeAsset();
 				dta.setAssetId(rs.getInt("asset_id"));
-				dta.setRequestTime(rs.getDate("request_time") == null ?null:new DateTime(rs.getDate("request_time").getTime()));
-				dta.setDownTime(rs.getDate("confirmed_down_time")== null ?null:new DateTime(rs.getDate("confirmed_down_time").getTime()));
+//				dta.setRequestTime(rs.getDate("request_time") == null ?null:new DateTime(rs.getDate("request_time").getTime()));
+//				dta.setDownTime(rs.getDate("confirmed_down_time")== null ?null:new DateTime(rs.getDate("confirmed_down_time").getTime()));
 				return dta;
 			}
     	});
@@ -118,8 +118,8 @@ public class AssetCostDataAggregator {
 				acs.setAssetGroup(rs.getInt("asset_group"));
 				acs.setDeptId(rs.getInt("dept_id"));
 				acs.setStatus(rs.getInt("status"));
-				acs.setRequestTime(rs.getDate("request_time") == null ?null:new DateTime(rs.getDate("request_time").getTime()));
-				acs.setConfirmedDownTime(rs.getDate("confirmed_down_time")== null ?null:new DateTime(rs.getDate("confirmed_down_time").getTime()));
+//				acs.setRequestTime(rs.getDate("request_time") == null ?null:new DateTime(rs.getDate("request_time").getTime()));
+//				acs.setConfirmedDownTime(rs.getDate("confirmed_down_time")== null ?null:new DateTime(rs.getDate("confirmed_down_time").getTime()));
 				acs.setWoStatus(rs.getBoolean("is_closed"));
 				return acs;
 			}
@@ -127,34 +127,34 @@ public class AssetCostDataAggregator {
     	return assetInfos;
     }
     
-    public void excute(AssetCostStatistics assetCostStatistics ){
-    	//1、查询资产
-    	//2、计算宕机时间
-		DateTime confirmDownTime = assetCostStatistics.getConfirmedDownTime();
-		DateTime requestTime = assetCostStatistics.getRequestTime();
-		if(assetCostStatistics.getStatus().intValue() == ASSET_STATUS_DOWN){
-			DateTime now =new DateTime();
-			if(confirmDownTime != null){
-				if(Days.daysBetween(now, confirmDownTime).getDays()>1){
-					assetCostStatistics.setDownTime(ONE_DAY);
-				}else{
-					assetCostStatistics.setDownTime(Seconds.secondsBetween(now, confirmDownTime).getSeconds());
-				}
-			}else{
-				if(Days.daysBetween(now, requestTime).getDays()>1){
-					assetCostStatistics.setDownTime(ONE_DAY);
-				}else{
-					assetCostStatistics.setDownTime(Seconds.secondsBetween(now, requestTime).getSeconds());
-				}
-			}
-		}else{
-			assetCostStatistics.setDownTime(0);
-		}
-		assetCostStatistics.setWorkOrderCount(getWorkOrderCount(assetCostStatistics.getAssetId()));
-    	//3、计算维修费用
-		
-    	//4、计算折旧费用
-    }
+//    public void excute(AssetCostStatistics assetCostStatistics ){
+//    	//1、查询资产
+//    	//2、计算宕机时间
+//		DateTime confirmDownTime = null;//assetCostStatistics.getConfirmedDownTime();
+//		DateTime requestTime = null;//assetCostStatistics.getRequestTime();
+//		if(assetCostStatistics.getStatus().intValue() == ASSET_STATUS_DOWN){
+//			DateTime now =new DateTime();
+//			if(confirmDownTime != null){
+//				if(Days.daysBetween(now, confirmDownTime).getDays()>1){
+//					assetCostStatistics.setDownTime(ONE_DAY);
+//				}else{
+//					assetCostStatistics.setDownTime(Seconds.secondsBetween(now, confirmDownTime).getSeconds());
+//				}
+//			}else{
+//				if(Days.daysBetween(now, requestTime).getDays()>1){
+//					assetCostStatistics.setDownTime(ONE_DAY);
+//				}else{
+//					assetCostStatistics.setDownTime(Seconds.secondsBetween(now, requestTime).getSeconds());
+//				}
+//			}
+//		}else{
+//			assetCostStatistics.setDownTime(0);
+//		}
+//		assetCostStatistics.setWorkOrderCount(getWorkOrderCount(assetCostStatistics.getAssetId()));
+//    	//3、计算维修费用
+//		
+//    	//4、计算折旧费用
+//    }
     
     private Integer getWorkOrderCount(int assetId) {
     	return jdbcTemplate.queryForObject(QUERY_WORK_ORDER_NUM, Integer.TYPE,assetId);

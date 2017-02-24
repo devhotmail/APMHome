@@ -567,7 +567,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
-            <version>1.0.27</version>
+            <version>1.0.28</version>
         </dependency>
         <dependency>
             <groupId>com.typesafe</groupId>

@@ -41,13 +41,14 @@ public class AssetCostDataService {
 	/***
 	 * 批量执行任务
 	 */
-	public void excuteTask(){
+	public void aggregateCostData(){
 		// 1、获取资产名称
 		List<AssetCostStatistics> assetInfos =  assetInfoMapper.fetchAssetInfo();
     	if(CollectionUtils.isEmpty(assetInfos)){
 			logger.error("assetInfos is empty");
 			return;
     	}
+    	logger.info("assetInfos size is {}",assetInfos.size());
     	// 查出当天所有宕机资产，找出最早的一条，然后以该条记录的时间计算宕机时间
     	List<DownTimeAsset> downTimeAsset = assetInfoMapper.fetchDownTimeAsset();
     	Map<Integer,DownTimeAsset> map = new HashMap<Integer,DownTimeAsset>();
@@ -78,7 +79,7 @@ public class AssetCostDataService {
 	 * 根据assetId获取执行单元
 	 * @param assetId
 	 */
-	public void excuteTaskByAssetId(Integer assetId){
+	public void aggregateCostDataByAssetId(Integer assetId){
 		AssetCostStatistics assetCostStatistics = 	assetInfoMapper.fetchAssetCostStatisticsByAssetId(assetId);
 		if(assetCostStatistics == null){
 			logger.error("can not find AssetCostStatistics by assetId,assetId is {}",assetId);
@@ -94,22 +95,25 @@ public class AssetCostDataService {
 	public void excuteTaskByAsset(AssetCostStatistics assetCostStatistics){
     	//1、查询资产
     	//2、计算宕机时间
-		DateTime confirmDownTime = assetCostStatistics.getConfirmedDownTime();
-		DateTime requestTime = assetCostStatistics.getRequestTime();
+		
+		Date confirmDownTime = assetCostStatistics.getConfirmedDownTime();
+		Date requestTime =assetCostStatistics.getRequestTime();
 		if(assetCostStatistics.getStatus().intValue() == ASSET_STATUS_DOWN){
 			DateTime nowTime =new DateTime();
 			DateTime endOfDay = nowTime.secondOfDay().withMaximumValue();
 			if(confirmDownTime != null){
-				if(Days.daysBetween(endOfDay, confirmDownTime).getDays()>1){
+				DateTime dt = new DateTime(confirmDownTime);
+				if(Days.daysBetween(endOfDay, dt).getDays()>1){
 					assetCostStatistics.setDownTime(ONE_DAY);
 				}else{
-					assetCostStatistics.setDownTime(Seconds.secondsBetween(endOfDay, confirmDownTime).getSeconds());
+					assetCostStatistics.setDownTime(Seconds.secondsBetween(endOfDay, dt).getSeconds());
 				}
 			}else{
-				if(Days.daysBetween(endOfDay, requestTime).getDays()>1){
+				DateTime dt = new DateTime(requestTime);
+				if(Days.daysBetween(endOfDay, dt).getDays()>1){
 					assetCostStatistics.setDownTime(ONE_DAY);
 				}else{
-					assetCostStatistics.setDownTime(Seconds.secondsBetween(endOfDay, requestTime).getSeconds());
+					assetCostStatistics.setDownTime(Seconds.secondsBetween(endOfDay, dt).getSeconds());
 				}
 			}
 		}else{
