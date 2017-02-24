@@ -31,6 +31,8 @@
     define('device-parallel-coordinates', ['context'], function(context) {
 
       var SECTOR_MIN_STEP_FACTOR = .1;
+      var SECTOR_NUM = 6;
+
       var $ = d3.select;
       var $$ = d3.selectAll;
 
@@ -130,9 +132,6 @@
           .padding([.5])
           .range([0, width]);
 
-          var line = d3.line()
-          .curve(d3.curveMonotoneX)
-          .defined(function(d) { return !isNaN(d[1]); });
           var yAxis = d3.axisLeft();
 
           var root = svg.append("g").classed('chart-body', true)
@@ -156,12 +155,15 @@
             return d.label;
           });
 
-          var dimension = root.selectAll(".dimension")
+          // charting area w/ dimension titles
+          var main = root.append('g').attr('transform', d3Transform().translate(0, 20));
+
+          var dimension = main.selectAll(".dimension")
           .data(dimensions)
           .enter().append("g")
           .attr("class", "dimension")
           .attr("transform", d3Transform().translate(function(d) {
-            return [x(d.name), 0]
+            return [x(d.name)];
           }));
 
           // massage dimension with scale definitions (rules)
@@ -185,34 +187,6 @@
               });
             }
             dimension.scale.domain(domain);
-          });
-
-          root.insert("g", ':first-child')
-          .attr("class", "foreground")
-          .selectAll("path")
-          .data(data)
-          .enter().append("path")
-          .attr("d", draw);
-
-          root.insert("g", ':first-child')
-          .attr("class", "background")
-          .selectAll("path")
-          .data(data)
-          .enter().append("path")
-          .attr("d", draw);
-
-          // render benchmark
-          root.append('g')
-          .attr('class', 'benchmark')
-          .selectAll('path')
-          .data(data)
-          .enter().append('path')
-          .attr('d', function(d) {
-            return line(dimensions.map(function(dimension) {
-              var _name = dimension.name;
-              var _key = _name === 'name' ? _name : _name + _this.benchmarkSuffix;
-              return [x(_name), dimension.scale(d[_key])];
-            }));
           });
 
           // render value/bm_value label
@@ -264,6 +238,29 @@
             }
           });
 
+          // rely on dimensions offset rendered above
+          main.insert("g", ':first-child')
+          .attr("class", "foreground")
+          .selectAll("path")
+          .data(data)
+          .enter().append("path")
+          .attr("d", curveLine(dimensions));
+
+          main.insert("g", ':first-child')
+          .attr("class", "background")
+          .selectAll("path")
+          .data(data)
+          .enter().append("path")
+          .attr("d", curveLine(dimensions));
+
+          // render benchmark
+          main.append('g')
+          .attr('class', 'benchmark')
+          .selectAll('path')
+          .data(data)
+          .enter().append('path')
+          .attr('d', curveLine(dimensions, this.benchmarkSuffix));
+
           // Rebind the axis data to simplify mouseover.
           root.select(".axis").selectAll("text:not(.title)")
           .attr("class", "label")
@@ -306,10 +303,39 @@
             this.parentNode.appendChild(this);
           }
 
-          function draw(d) {
-            return line(dimensions.map(function(dimension) {
-              return [x(dimension.name), dimension.scale(d[dimension.name])];
-            }));
+          function curveLine(dimensions, suffix) {
+            var line = d3.line()
+            .curve(d3.curveMonotoneX)
+            .defined(function(d) { return !isNaN(d[1]); });
+            suffix = suffix || '';
+
+            return function(d) {
+              return line(dimensions.map(function(dimension) {
+                var _name = dimension.name;
+                var _key = _name === 'name' ? _name : _name + suffix;
+                var val = d[_key];
+                var sec, scale;
+                var sectors = dimension.sectors;
+
+                // Ordinal Scale
+                if (dimension.type === String) {
+                  scale = dimension.scale;
+                } else {
+                  scale = dimension.scale;
+                  sec = sectors.find(function(sec, i) {
+                    return val >= sec.lastValue && val <= sec.value;
+                  });
+
+                  if (!sec) {
+                    throw new Error(d.name + ': invalid device value out of range - ' + +_key + ':' + val);
+                  }
+
+                  scale = d3.scaleLinear().domain([sec.lastValue, sec.value]).range([sec.y0, sec.y1]);
+                }
+
+                return [x(_name), scale(val)];
+              }));
+            }
           }
         },
         _renderDeviceList: function(selection, dimension, height) {
@@ -360,16 +386,31 @@
             return a - b;
           }
 
+          var bar_w = 24;
+          var radius = 10;
+          var padding = 10;
+          var textPadding = 5;
           var scale = dimension.scale;
           var dimension = selection.data()[0];
-          var domain = scale.domain();
           var scaleDef = this.scales;
           var extent = scaleDef[dimension.name];
+          var ticks = extent.ticks;
+          var min = ticks[0];
+          var max = ticks[ticks.length - 1];
           var format = dimension.format || function(val) { return val; };
-          var span = extent.ticks[extent.ticks.length - 1] - extent.ticks[0];
+          var span = max - min;
+
+          // if user-defined ticks not found
+          if (ticks.length === 2) {
+            ticks = Array.prototype.concat.call([],
+              min,
+              scale.domain([min, max]).ticks(SECTOR_NUM - 2),
+              max
+            );
+          }
 
           // unique sorted ticks
-          var ticks = d3.set(extent.ticks)
+          ticks = d3.set(ticks)
           .values()
           .map(Number)
           .sort(asc);
@@ -397,18 +438,26 @@
 
           var data = ticks.map(function(tick, i) {
             var lastTick = ticks[i - 1];
+            var y0, y1;
             if (i === 0) {
               return null;
             } else {
+
+              y0 = scale(lastTick) - ( i === 0 ? 0 : padding / 2 );
+              y1 = scale(tick) + ( i === ticks.length - 1 ? 0 : padding / 2 );
+
               return {
                 name: dimension.name,
                 lastValue: lastTick,
                 value: tick,
-                y0: scale(lastTick),
-                y1: scale(tick)
+                y0: y0,
+                y1: y1
               };
             }
           }).filter(notNull);
+
+          // save the dimension sectors for later use
+          dimension.sectors = data;
 
           var sectors = selection.selectAll('.sector').data(data);
           var sectorsEnter = sectors.enter()
@@ -418,15 +467,8 @@
             return [0, d.y1];
           }));
 
-          var bar_w = 24;
-          var radius = 10;
-          var padding = 10;
-          var textPadding = 15;
-
           function sector_size(d) {
-            return (
-                d.y0 - d.y1
-              ) - padding;
+            return d.y0 - d.y1;
           }
 
           // sector region
@@ -438,11 +480,8 @@
           .attr("x", function(d) {
             return - bar_w / 2;
           })
-          .attr("y", function(d) {
-            return padding / 2;
-          })
           .attr("height", function(d, i, list) {
-            return d.y0 - d.y1 - ((i === 0) ? 0 : padding);
+            return d.y0 - d.y1;
           });
 
           // sector text label
