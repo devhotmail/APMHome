@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.camel.Main;
 import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -12,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.ge.apm.dao.mapper.AssetCostStatisticsMapper;
 import com.ge.apm.dao.mapper.AssetDepreciationMapper;
 import com.ge.apm.dao.mapper.AssetInfoMapper;
 import com.ge.apm.dao.mapper.WorkOrderMapper;
@@ -38,41 +42,49 @@ public class AssetCostDataService {
 	@Autowired
 	AssetDepreciationMapper assetDepreciationMapper;
 	
+	@Autowired
+	AssetCostStatisticsMapper assetCostStatisticsMapper;
+	
 	/***
 	 * 批量执行任务
 	 */
 	public void aggregateCostData(){
 		// 1、获取资产名称
-		List<AssetCostStatistics> assetInfos =  assetInfoMapper.fetchAssetInfo();
-    	if(CollectionUtils.isEmpty(assetInfos)){
-			logger.error("assetInfos is empty");
+		List<AssetCostStatistics> acss =  assetInfoMapper.fetchAssetInfo();
+		if(CollectionUtils.isEmpty(acss)){
+			logger.error("acss is empty,today is {}",new DateTime());
 			return;
-    	}
-    	logger.info("assetInfos size is {}",assetInfos.size());
+		}
+		logger.info("assetInfos size is {}",acss.size());
+		for (AssetCostStatistics acs : acss) {
+			AssetCostStatistics assetCostStatistics = assetInfoMapper.fetchAssetCostStatisticsByAssetId(acs.getAssetId());
+			excuteTaskByAsset(assetCostStatistics);
+		}
+		
     	// 查出当天所有宕机资产，找出最早的一条，然后以该条记录的时间计算宕机时间
-    	List<DownTimeAsset> downTimeAsset = assetInfoMapper.fetchDownTimeAsset();
-    	Map<Integer,DownTimeAsset> map = new HashMap<Integer,DownTimeAsset>();
-    	if(CollectionUtils.isNotEmpty(downTimeAsset)){
-    		for (DownTimeAsset dta : downTimeAsset) {
-				map.put(dta.getAssetId(), dta);
-			}
-    	}
-    	for (AssetCostStatistics acs : assetInfos) {
-    		if(map.containsKey(acs.getAssetId())){
-    			if(map.get(acs.getAssetId()).getIsCal()){
-    				continue;
-    			}else{
-    				acs.setRequestTime(map.get(acs.getAssetId()).getRequestTime());
-    				acs.setConfirmedDownTime(map.get(acs.getAssetId()).getDownTime());
-    			}
-    		}
-    		excuteTaskByAsset(acs);
-    		if(map.containsKey(acs.getAssetId())){
-    			DownTimeAsset dta = map.get(acs.getAssetId());
-    			dta.setIsCal(true);
-    			map.put(acs.getAssetId(), dta);
-    		}
-    	}
+//    	List<DownTimeAsset> downTimeAsset = assetInfoMapper.fetchDownTimeAsset();
+//    	Map<Integer,DownTimeAsset> map = new HashMap<Integer,DownTimeAsset>();
+//    	if(CollectionUtils.isNotEmpty(downTimeAsset)){
+//    		for (DownTimeAsset dta : downTimeAsset) {
+//				map.put(dta.getAssetId(), dta);
+//			}
+//    	}
+//    	for (AssetCostStatistics acs : assetInfos) {
+//    		if(map.containsKey(acs.getAssetId())){
+//    			if(map.get(acs.getAssetId()).getIsCal()){
+//    				continue;
+//    			}else{
+//    				acs.setRequestTime(map.get(acs.getAssetId()).getRequestTime());
+//    				acs.setConfirmedDownTime(map.get(acs.getAssetId()).getDownTime());
+//    			}
+//    		}
+//    		excuteTaskByAsset(acs);
+//    		if(map.containsKey(acs.getAssetId())){
+//    			DownTimeAsset dta = map.get(acs.getAssetId());
+//    			dta.setIsCal(true);
+//    			map.put(acs.getAssetId(), dta);
+//    		}
+//    	}
 	}
 	
 	/***
@@ -103,17 +115,17 @@ public class AssetCostDataService {
 			DateTime endOfDay = nowTime.secondOfDay().withMaximumValue();
 			if(confirmDownTime != null){
 				DateTime dt = new DateTime(confirmDownTime);
-				if(Days.daysBetween(endOfDay, dt).getDays()>1){
+				if(Days.daysBetween(dt, endOfDay).getDays()>1){
 					assetCostStatistics.setDownTime(ONE_DAY);
 				}else{
-					assetCostStatistics.setDownTime(Seconds.secondsBetween(endOfDay, dt).getSeconds());
+					assetCostStatistics.setDownTime(Seconds.secondsBetween(dt, endOfDay).getSeconds());
 				}
 			}else{
 				DateTime dt = new DateTime(requestTime);
-				if(Days.daysBetween(endOfDay, dt).getDays()>1){
+				if(Days.daysBetween(dt, endOfDay).getDays()>1){
 					assetCostStatistics.setDownTime(ONE_DAY);
 				}else{
-					assetCostStatistics.setDownTime(Seconds.secondsBetween(endOfDay, dt).getSeconds());
+					assetCostStatistics.setDownTime(Seconds.secondsBetween(dt, endOfDay).getSeconds());
 				}
 			}
 		}else{
@@ -127,6 +139,10 @@ public class AssetCostDataService {
 		
     	//4、计算折旧费用
 		assetCostStatistics.setDeprecationCost(calAssetDepreciation(assetCostStatistics.getAssetId()));
+		if(logger.isDebugEnabled()){
+			logger.debug("current assetCostStatistics is {}",assetCostStatistics);
+		}
+		assetCostStatisticsMapper.updateAssetCostStatistics(assetCostStatistics);
 	}
 
 	private Double calAssetDepreciation(Integer assetId) {

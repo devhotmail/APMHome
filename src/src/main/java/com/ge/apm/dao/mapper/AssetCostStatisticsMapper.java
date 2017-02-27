@@ -8,5 +8,5 @@ import com.ge.apm.domain.AssetCostStatistics;
 public interface AssetCostStatisticsMapper {
 	
 	@UpdateProvider(type = AssetCostStatisticsProvider.class,method = "updateAssetCostStatistics")
-	public Integer addAssetCostStatistics(AssetCostStatistics assetCostStatistics);
+	public Integer updateAssetCostStatistics(AssetCostStatistics assetCostStatistics);
 }
