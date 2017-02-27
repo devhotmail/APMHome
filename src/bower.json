@@ -12,6 +12,9 @@
     "tests"
   ],
   "dependencies": {
+    "es6-promise": "^3.3.1",
+    "imd": "#master",
+    "fetch": "^2.0.1",
     "inuitcss": "^6.0.0-beta.4",
     "px-colors-design": "~0.2.20",
     "polymer": "^1.7.0",
