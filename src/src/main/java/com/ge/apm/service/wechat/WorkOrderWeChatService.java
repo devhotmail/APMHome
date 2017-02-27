@@ -130,4 +130,13 @@ public class WorkOrderWeChatService {
         file.delete();
     }
     
+    public List<WorkOrder> assetWorkOrderList(HttpServletRequest request, Integer assetId) {
+        List<SearchFilter> searchFilters = new ArrayList<>();
+        UserAccount ua = UserContext.getCurrentLoginUser(request);
+        searchFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, ua.getSiteId()));
+        searchFilters.add(new SearchFilter("assetId", SearchFilter.Operator.EQ, assetId));
+        searchFilters.add(new SearchFilter("isClosed", SearchFilter.Operator.EQ, true));
+        return woDao.findBySearchFilter(searchFilters);
+    }
+    
 }

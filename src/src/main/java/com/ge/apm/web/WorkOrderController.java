@@ -108,6 +108,13 @@ public class WorkOrderController {
         }
     }
     
+    /**
+     * my work order list page, only rute to the page
+     * @param request
+     * @param response
+     * @param model
+     * @return 
+     */
     @RequestMapping(value = "wolistpage")
     public String woListPage(HttpServletRequest request,HttpServletResponse response, Model model) {
         WxJsapiSignature s = null;
@@ -125,26 +132,52 @@ public class WorkOrderController {
         return "myWoList";
     }
     
+    /**
+     * my work order list page data
+     * @param request
+     * @return 
+     */
     @RequestMapping(value = "wolistdata")
     public @ResponseBody Object woListData(HttpServletRequest request) {
         return woWcService.woList(request);
     }
 
+    /**
+     * work order detail, the data of one work order
+     * @param id
+     * @return 
+     */
     @RequestMapping(value = "wodetail")
     public @ResponseBody Object woDetail(Integer id){
         return woWcService.woDetail(id);
     }
 
+    /**
+     * work order steps, all steps of the work order
+     * @param id
+     * @return 
+     */
     @RequestMapping(value = "wostepdetail")
     public @ResponseBody Object woStepDetail(Integer id){
         return woWcService.woStep(id);
     }
 
+    /**
+     * every step's cost, the workorderstepdetails
+     * @param id
+     * @return 
+     */
     @RequestMapping(value = "detailcost")
     public @ResponseBody Object detailCost(Integer id){
         return woWcService.stepDetail(id);
     }
 
+    /**
+     * finish one work order
+     * @param request
+     * @param map
+     * @return 
+     */
     @RequestMapping(value = "finishwo")
     public @ResponseBody Object finishWo(HttpServletRequest request, @RequestBody Map map){
         try {
@@ -153,6 +186,16 @@ public class WorkOrderController {
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
             return "error";
         }
+    }
+    
+    /**
+     * work order list data associate with the asset
+     * @param request
+     * @return 
+     */
+    @RequestMapping(value = "assetwolist")
+    public @ResponseBody Object assetWorkOrderList(HttpServletRequest request, Integer assetId) {
+        return woWcService.assetWorkOrderList(request, assetId);
     }
     
 }

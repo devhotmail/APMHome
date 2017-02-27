@@ -43,9 +43,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.mp.api.WxMpMessageHandler;
+import me.chanjar.weixin.mp.api.WxMpMessageRouter;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.util.TimeUtil;
@@ -74,6 +80,14 @@ public class CoreService {
     protected I18nMessageRepository msgDao;
     @Autowired
     protected UaaService uaaService;
+    @Autowired 
+    protected WxMpMessageHandler textHandler;
+    private WxMpMessageRouter router;
+    
+    @PostConstruct
+    public void init() {
+        this.refreshRouter();
+    }
 
     public void requestGet(String urlWithParams) throws IOException {
         CloseableHttpClient httpclient = HttpClientBuilder.create().build();
@@ -301,6 +315,24 @@ public class CoreService {
 
         ExternalLoginHandler loginHandler = WebUtil.getServiceBean(ExternalLoginHandler.class);
         return loginHandler.doLoginByWeChatOpenId(weChatOpenId, request, response);
+    }
+    
+    public void refreshRouter() {
+        final WxMpMessageRouter newRouter = new WxMpMessageRouter(
+            this.wxMpService);
+        // 关注事件
+        newRouter.rule().async(false).msgType(WxConsts.XML_MSG_TEXT).handler(this.textHandler).end();
+        this.router = newRouter;
+    }
+
+    public WxMpXmlOutMessage route(WxMpXmlMessage inMessage) {
+        try {
+            return this.router.route(inMessage);
+        } catch (Exception ex) {
+            Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
     }
     
 }

@@ -132,7 +132,7 @@
                 $(this).parents('.js_dialog').fadeOut(200);
                 if ($(this).html() === '确定') {
                     history.back();
-                    pageManager.loadList();
+                    pageManager.loadList('ui_list', 'wolistdata');
                 }
             });
             
@@ -213,6 +213,38 @@
                             data[value.name] = value.value;
                         });
                         return data;
+                    }, 
+                    loadList : function(listId, url, data){
+                        $loadingToast.fadeIn(100);
+                        $loadingToast.find('.weui-toast__content').html('数据加载中...');
+                        var $ui_list = $('#'+listId);
+                        $ui_list.empty();
+                        var tmpl = $('#wo_li').html();
+                        $.ajax({
+                            url: WEB_ROOT+'web/'+url,
+                            type: 'get',
+                            data: data,
+                            contentType: 'application/json',
+                            success: function(ret) {
+                                if (ret && ret.length !=0) {
+                                    $.each(ret, function(idx, value){
+                                        var $tmpl = $(tmpl);
+                                        $tmpl.find('#li_title').html('工单编号：'+ value['id']).attr('woid', value['id']);
+                                        $tmpl.find('#li_ft').html(value['requestTime']);
+                                        var lcs = $tmpl.find('#li_context p');
+                                        $(lcs[0]).html('资产编号：'+value['assetId']);
+                                        $(lcs[1]).html('资产名称：'+value['assetName']);
+                                        $(lcs[2]).html('工单状态：'+value['currentStepName']);
+                                        $ui_list.append($tmpl);
+                                    });
+                                    $loadingToast.fadeOut(100);
+                                } else {
+                                    $loadingToast.fadeOut(100);
+                                    $('#container').empty();
+                                    $('#container').append($('#no_data').html());
+                                }
+                            }
+                        });
                     }
                 }
                 pageManager.init();
@@ -242,38 +274,7 @@
             <script type="text/javascript">
                 $(function(){
                     //fetch data from server
-                    pageManager.loadList = function(){
-                        $loadingToast.fadeIn(100);
-                        $loadingToast.find('.weui-toast__content').html('数据加载中...');
-                        var $ui_list = $('#ui_list');
-                        $ui_list.empty();
-                        var tmpl = $('#wo_li').html();
-                        $.ajax({
-                            url: WEB_ROOT+'web/wolistdata',
-                            type: 'get',
-                            contentType: 'application/json',
-                            success: function(ret) {
-                                if (ret && ret.length !=0) {
-                                    $.each(ret, function(idx, value){
-                                        var $tmpl = $(tmpl);
-                                        $tmpl.find('#li_title').html('工单编号：'+ value['id']).attr('woid', value['id']);
-                                        $tmpl.find('#li_ft').html(value['requestTime']);
-                                        var lcs = $tmpl.find('#li_context p');
-                                        $(lcs[0]).html('资产编号：'+value['assetId']);
-                                        $(lcs[1]).html('资产名称：'+value['assetName']);
-                                        $(lcs[2]).html('工单状态：'+value['currentStepName']);
-                                        $ui_list.append($tmpl);
-                                    });
-                                    $loadingToast.fadeOut(100);
-                                } else {
-                                    $loadingToast.fadeOut(100);
-                                    $('#container').empty();
-                                    $('#container').append($('#no_data').html());
-                                }
-                            }
-                        });
-                    }
-                    pageManager.loadList();
+                    pageManager.loadList('ui_list', 'wolistdata');
 
                     //bind click event
                     $('#ui_list').on('click', '.weui-cell_access', function(){
@@ -384,6 +385,13 @@
                                 <div class="weui-cell__ft">
                                 </div>
                             </a>
+                            <a class="weui-cell weui-cell_access" href="javascript:;" data-page="#hisWoList">
+                                <div class="weui-cell__bd">
+                                    <p style="color: #999;">历史工单</p>
+                                </div>
+                                <div class="weui-cell__ft">
+                                </div>
+                            </a>
                         </div>
                         <div class="weui-cells weui-cells_form">
                             <a class="weui-cell weui-cell_access" href="javascript:;" data-page="#step_cost">
@@ -402,7 +410,6 @@
                                     <div class="weui-cell weui-cell_select">
                                         <div class="weui-cell__bd">
                                             <select class="weui-select" name="currentPersonId" id="currentPersonId" required="required">
-                                                <option value="">请选择...</option>
                                             </select>
                                         </div>
                                     </div>
@@ -599,6 +606,7 @@
                             if (ret) {
                                 var step = ret.currentStepId;
                                 pageManager.siteId = ret.siteId;
+                                pageManager.assetId = ret.assetId;
                                 $.each($('.progressbar').children(), function(idx, val){
                                     if (idx < step) {
                                         $(val).addClass('active');
@@ -859,6 +867,21 @@
                                 '<div class="weui-cell__ft"><i class="weui-icon-cancel"></i></div></div>';
                         $costList.append($(tempui).attr('data-id', index));
                     }
+                });
+        </script>
+        
+        <script type="text/html" id="hisWoList">
+            <div class="page">
+                <div id="hisList" class="page__bd page__bd_spacing">
+                </div>
+            </div>
+            <script type="text/javascript">
+                pageManager.loadList('hisList', 'assetwolist', {assetId: pageManager.assetId});
+
+                //bind click event
+                $('#hisList').on('click', '.weui-cell_access', function(){
+                    pageManager.woId = $(this).parent().find('#li_title').attr('woid');
+                    pageManager.go('#stepDetail');
                 });
         </script>
 
