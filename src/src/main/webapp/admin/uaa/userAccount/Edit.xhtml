@@ -13,6 +13,13 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{userAccountController.selected != null}">
                         <h:panelGroup>
+                            <label class="label">#{msg.orgId}*</label>
+                            <p:selectOneMenu value="#{userAccountController.selected.orgInfoId}" required="true" requiredMessage="#{msg.orgId} #{msg.ValidationRequire}">
+                                <f:selectItems value="#{userAccountController.orgList}" var="org" itemLabel="#{userAccountController.getOrgName(org.id, '/')}" itemValue="#{org.id}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <p:spacer/>
+                        <h:panelGroup>
                             <label class="label">#{msg.login_name}*</label>
                             <p:inputText id="loginName" value="#{userAccountController.selected.loginName}" required="true" requiredMessage="#{msg.login_name} #{msg.ValidationRequire}"/>
                         </h:panelGroup>

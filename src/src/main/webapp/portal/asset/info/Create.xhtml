@@ -8,7 +8,7 @@
     <ui:define name="content">
         <div class="ui-g clearfix">
             <div class="ui-g-12 card cardTitle">
-                <p:outputLabel class="pageTitle" value="#{msg.AssetInfo}"/>
+                <p:outputLabel class="pageTitle" value="#{assetInfoController.CRUDActionName} #{msg.AssetInfo}"/>
             </div>
 
             <div class="ui-g-12 card">
@@ -41,7 +41,7 @@
                                 <p:selectOneMenu id="assetOwnerName" value="#{assetInfoController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="true" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}" >
                                     <p:ajax listener="#{assetInfoController.onOwnerChange}" process="@this" update="assetOwnerTel"/>
                                     <f:selectItem itemLabel="" />
-                                    <f:selectItems value="#{assetInfoController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                    <f:selectItems value="#{assetInfoController.getOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
                                     <p:column>
                                         <h:outputText value="#{t.name}"/>
                                     </p:column>
@@ -64,23 +64,44 @@
                                     <f:selectItems value="#{assetInfoService.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                             </h:panelGroup>
+                            <p:spacer/>
                             <h:panelGroup>
                                 <label class="label">#{msg.clinicalDeptName}*</label>
-                                <!--<p:inputText id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptName}"/>-->
                                 <p:selectOneMenu id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptId}" required="true" requiredMessage="#{msg.clinicalDeptName} #{msg.ValidationRequire}">
+                                    <p:ajax  listener="#{assetInfoController.onClinicalDeptChange()}" update="clinicalOwnerName clinicalOwnerTel" />
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{assetInfoController.getClinicalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                    <f:selectItems value="#{assetInfoController.getClinicalDeptList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                             </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.clinicalOwnerName}*</label>
+                                <p:selectOneMenu id="clinicalOwnerName" value="#{assetInfoController.clinicalOwner}" converter="userAccountConverter" var="t" required="true" requiredMessage="#{msg.clinicalOwnerId} #{msg.ValidationRequire}">
+                                    <p:ajax  listener="#{assetInfoController.onClinicalOwnerChange()}" update="clinicalOwnerTel" />
+                                    <f:selectItem itemLabel=""/>
+                                    <f:selectItems value="#{assetInfoController.getClinicalOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                    <p:column>
+                                        <h:outputText value="#{t.name}"/>
+                                    </p:column>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.clinicalOwnerTel}</label>
+                                <p:inputText id="clinicalOwnerTel" value="#{assetInfoController.selected.clinicalOwnerTel}" readonly="true"/>
+                            </h:panelGroup>
+                            
                             <h:panelGroup>
                                 <label class="label">#{msg.manufacture}</label>
                                 <p:inputText id="manufacture" value="#{assetInfoController.selected.manufacture}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.vendor}</label>
-                                <p:selectOneMenu id="vendor" value="#{assetInfoController.selected.vendor}">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{supplierController.supplierList}" var="item" itemLabel="#{item.name}" itemValue="#{item.name}"/>
+                                <p:selectOneMenu id="vendor" value="#{assetInfoController.supplier}" converter="supplierConverter" var="t"  filter="true" filterMatchMode="startsWith" required="true" requiredMessage="#{msg.vendor} #{msg.ValidationRequire}" >
+                                    <p:ajax  listener="#{assetInfoController.onSupplierChange()}" process="@parent"/>
+                                    <f:selectItem itemLabel=""/>
+                                    <f:selectItems value="#{supplierController.supplierList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                    <p:column>
+                                        <h:outputText value="#{t.name}"/>
+                                    </p:column>
                                 </p:selectOneMenu>
 
                             </h:panelGroup>
@@ -110,7 +131,10 @@
                                 <label class="label">#{msg.barcode}</label>
                                 <p:inputText id="barcode" value="#{assetInfoController.selected.barcode}"/>
                             </h:panelGroup>
-                            <p:spacer/>
+                            <h:panelGroup>
+                                <label class="label">#{msg.registrationNo}</label>
+                                <p:inputText id="registrationNo" value="#{assetInfoController.selected.registrationNo}" />
+                            </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.modalityId}</label>
                                 <p:inputText id="modalityId" value="#{assetInfoController.selected.modalityId}"/>
@@ -183,6 +207,10 @@
                                 <p:calendar timeZone="GMT+8"  id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.installDate} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>
+                                <label class="label">#{msg.factoryWarrantyDate}*</label>
+                                <p:calendar timeZone="GMT+8"  id="factoryWarrantyDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.factoryWarrantyDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" />
+                            </h:panelGroup>
+                            <h:panelGroup>
                                 <label class="label">#{msg.warrantyDate}</label>
                                 <p:calendar timeZone="GMT+8"  id="warrantyDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.warrantyDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
@@ -208,7 +236,7 @@
                         <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                             <h:panelGroup>
                                 <label class="label">#{msg.purchasePrice}*</label>
-                                <p:inputNumber minValue="0" decimalPlaces="2" id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" required="true" requiredMessage="#{msg.purchasePrice} #{msg.ValidationRequire}"/>
+                                <p:inputNumber minValue="0" decimalPlaces="2" id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" />
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.salvageValue}</label>

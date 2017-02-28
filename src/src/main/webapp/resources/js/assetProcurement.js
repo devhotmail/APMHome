@@ -20,7 +20,10 @@
     },
     resetAxesOnResize: false,
     highlighter: {
-      show: true
+      show: true,
+      tooltipAxes: 'y',
+      formatString: null,
+      tooltipFormatString: '%s'
     },
     axes: {
       xaxis: {

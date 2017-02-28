@@ -31,6 +31,15 @@
                         <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.name}"/>
                         </p:column>
+                        <p:column headerText="#{msg.contractType}" sortBy="#{item.contractType}" filterBy="#{item.contractType}" filterMatchMode="EQ">
+                            <h:outputText value="#{fieldMsg.fieldValue('contractType', item.contractType)}"/>
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('contractType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                        </p:column>
                         <p:column headerText="#{msg.startTime}" sortBy="#{item.startDate}" >
                             <f:facet name="filter">
                                 <p:inputText id="filterStartTime" widgetVar="varFilterStartTime" value="#{inspectionOrderController.startFormatTime}"/>

@@ -28,6 +28,11 @@ import webapp.framework.web.WebUtil;
 @ViewScoped
 public class UserAccountController extends JpaCRUDController<UserAccount> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1L;
+
 	public static final String DEFAULT_USER_ROLE = "设备科科员";
 
     UserAccountRepository dao = null;
@@ -42,14 +47,14 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
 
         UserAccount loginUser = UserContextService.getCurrentUserAccount();
         setSiteId(loginUser.getSiteId());
-        
+        /*
         orgTree = buildOrgTree(UserContextService.getSiteId(), loginUser.getOrgInfoId());
         try{
             DefaultTreeNode selectedNode = (DefaultTreeNode)orgTree.getData();
             this.selectedOrg = (OrgInfo) selectedNode.getData();
         }
         catch(Exception ex){
-        }
+        }*/
     }
     private int siteId;
     public int getSiteId() {
@@ -59,6 +64,7 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
         this.siteId = siteId;
         SiteInfoRepository siteDao = WebUtil.getBean(SiteInfoRepository.class);
         selectedSite = siteDao.findById(siteId);
+        orgList = uaaService.getFullOrgListBySiteId(siteId);
         buildOrgTree(siteId, null);
     }
     
@@ -66,9 +72,34 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     public SiteInfo getSelectedSite() {
         return selectedSite;
     }
+
+    private List<OrgInfo> orgList;
+    public List<OrgInfo> getOrgList() {
+        return orgList;
+    }
+    public String getOrgName(int orgId, String hospitalNameDelimiter){
+        for(OrgInfo org: orgList){
+            if(orgId==org.getId()){
+                if(org.getId().equals(org.getHospitalId()))
+                    return org.getName();
+                else
+                    return org.getHospital()+hospitalNameDelimiter+org.getName();
+            }
+        }
+        return "";
+    }
     
     public TreeNode buildOrgTree(int siteId, Integer selectedOrgId){
-        orgTree = uaaService.getFullOrgTreeBySiteId(siteId, selectedOrgId);
+        OrgInfo rootOrg = new OrgInfo();
+        rootOrg.setId(-1);
+        rootOrg.setName(WebUtil.getMessage("AllHospitals"));
+        
+        DefaultTreeNode rootNode = new DefaultTreeNode("org", rootOrg, null);
+        rootNode.setRowKey("org_"+rootOrg.getId());
+        rootNode.setExpanded(true);
+        
+        orgTree = uaaService.getFullOrgTreeBySiteId(rootNode, siteId, selectedOrgId);
+
         try{
             selectedOrg = null;
             DefaultTreeNode selectedNode = (DefaultTreeNode)orgTree.getData();
@@ -95,9 +126,12 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     protected Page<UserAccount> loadData(PageRequest pageRequest) {
         this.selected = null;
         if ( selectedOrg == null) {
-            return dao.getBySiteId(pageRequest, UserContextService.getSiteId());
+            return dao.getBySiteId(pageRequest, this.siteId);
         } else {
-            return dao.getByOrgInfoId(pageRequest, selectedOrg.getId());
+            if(selectedOrg.getId()==-1)
+                return dao.getBySiteId(pageRequest, this.siteId);
+            else
+                return dao.getByOrgInfoId(pageRequest, selectedOrg.getId());
         }
     }
 
@@ -177,9 +211,6 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     public void prepareCreate() throws InstantiationException, IllegalAccessException{
         super.prepareCreate();
         
-        selected.setSiteId(selectedOrg.getSiteId());
-        selected.setHospitalId(selectedOrg.getHospitalId());
-        selected.setOrgInfoId(selectedOrg.getId());
         selected.setPlainPassword("123456");
         try {
             selected.entryptPassword();
@@ -206,6 +237,20 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
         
         loginName = loginName.replace(" ", "");
         user.setLoginName(loginName);
+        
+        if(selected.getOrgInfoId()!=null){
+            for(OrgInfo org: orgList){
+                if(org.getId().equals(selected.getOrgInfoId())){
+                    selected.setHospitalId(org.getHospitalId());
+                    selected.setSiteId(org.getSiteId());
+                }                    
+            }
+        }
+        else{
+            selected.setSiteId(selectedOrg.getSiteId());
+            selected.setHospitalId(selectedOrg.getHospitalId());
+            selected.setOrgInfoId(selectedOrg.getId());
+        }
     }
     
     public void resetPassword() {

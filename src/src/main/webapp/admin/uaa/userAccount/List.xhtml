@@ -32,7 +32,7 @@
                                 <p:ajax process="@this" event="collapse"/>
 
                                 <p:treeNode type="org">
-                                    <h:outputText value="#{node.name}"/>
+                                    <h:outputText value="#{node}"/>
                                 </p:treeNode>
                             </p:tree>
                         </p:scrollPanel>
@@ -51,6 +51,9 @@
                         <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton roleButton resetPassButton"/>
                         <p:ajax event="filter" listener="#{userAccountController.onFilter}" update="createButton editButton viewButton deleteButton roleButton resetPassButton"/>
 
+                        <p:column headerText="#{msg.orgId}" sortBy="#{item.orgInfoId}">
+                            <h:outputText value="#{userAccountController.getOrgName(item.orgInfoId, '/')}"/>
+                        </p:column>
                         <p:column headerText="#{msg.login_name}" sortBy="#{item.loginName}">
                             <h:outputText value="#{item.loginName}"/>
                         </p:column>

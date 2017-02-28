@@ -6,6 +6,7 @@
 package com.ge.apm.dao;
 
 import java.io.InputStream;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,7 +42,8 @@ public class FileUploadDao {
     }
 
     public Integer saveUploadFile(InputStream contentStream, int contentLength, String fileName) throws SQLException {
-        PreparedStatement ps = template.getDataSource().getConnection().prepareStatement(SQL_SAVE, Statement.RETURN_GENERATED_KEYS);
+        Connection con = template.getDataSource().getConnection();
+        PreparedStatement ps = con.prepareStatement(SQL_SAVE, Statement.RETURN_GENERATED_KEYS);
         ResultSet rs = null;
         try{
             ps.setString(1, fileName);
@@ -55,6 +57,7 @@ public class FileUploadDao {
         finally{
             if(rs!=null) rs.close();
             if(ps!=null) ps.close();
+            if(con!=null) con.close();
         }
     }
 
