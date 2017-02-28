@@ -1,0 +1,159 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../fastclick/fastclick.html">
+<link rel="import" href="../modernizr/modernizr.html">
+<link rel="import" href="asset-procurement-styles.html">
+<script src="../../bower_components/innersvg-polyfill/innersvg.js"></script>
+<script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
+<script src="../../bower_components/urijs/src/URI.js"></script>
+
+<dom-module id="asset-procurement">
+  <template>
+    <style include="asset-procurement-styles"></style>
+    <div id="chart" class="chart-container">
+      <svg id="svg" width$="[[width]]" height$="[[height]]"></svg>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'asset-procurement',
+      properties: {
+        width: Number,
+        height: Number,
+        data: Object
+      },
+      behaviors: [
+        Polymer.IronResizableBehavior
+      ],
+      listeners: {
+        'iron-resize': 'handleResize'
+      },
+      observers: [
+        'redraw(width, height, data)'
+      ],
+      handleResize: function() {
+        var rect = this.$.chart.getBoundingClientRect();
+        this.set('width', rect.width);
+        this.set('height', rect.height);
+      },
+      loadData: function() {
+        return fetch('mock/asset-procurement.json')
+        .then(function(res) {
+          return res.json();
+        }).then((function(data) {
+          this.data = data;
+        }).bind(this));
+      },
+      redraw: function() {
+        this.$.svg.innerHTML = '';
+        this.debounce('redraw', this.render, 500);
+      },
+      render: function() {
+        var svg = d3.select(this.$.svg);
+        var margin = 20;
+        var diameter = Math.min.call(null, this.width, this.height);
+
+        var g = svg.append('g')
+        .attr('transform', d3Transform().translate(this.width / 2, this.height / 2));
+
+        var color = d3.scaleLinear()
+        .domain([-1, 5])
+        .range(['rgb(128, 128, 128)', 'rgb(256, 256, 256)'])
+        .interpolate(d3.interpolateRgb);
+
+        var pack = d3.pack()
+        .size([diameter - margin, diameter - margin])
+        .padding(2);
+        
+        var root = d3.hierarchy(this.data)
+        .sum(function(d) { return d.size; })
+        .sort(function(a, b) { return b.value - a.value; })
+
+        var focus = root;
+        var nodes = pack(root).descendants();
+        var view;
+
+        var circle = g.selectAll('circle')
+        .data(nodes)
+        .enter().append('circle')
+        .attr('class', function(d) {
+          return d.parent ? d.children ? 'node' : 'node node--leaf' : 'node node--root';
+        })
+        .attr('stroke-width', 1)
+        .attr('stroke', 'white')
+        .style('fill', function(d) {
+          return d.children ? color(d.depth) : 'white';
+        })
+        .on('click', function(d) {
+          if (focus !== d) {
+            zoom(d);
+            d3.event.stopPropagation();
+          }
+        });
+
+        var text = g.selectAll('text')
+        .data(nodes)
+        .enter().append('text')
+        .attr('class', 'label')
+        .style('fill-opacity', function(d) {
+          return d.parent === root ? 1 : 0;
+        })
+        .style('display', function(d) {
+          return d.parent === root ? 'inline' : 'none';
+        })
+        .text(function(d) {
+          return d.data.name;
+        });
+
+        var node = g.selectAll('circle,text');
+
+        svg.on('click', function() {
+            zoom(root);
+        });
+
+        zoomTo([root.x, root.y, root.r * 2 + margin]);
+
+        function zoom(d) {
+          var focus0 = focus;
+          var focus = d;
+
+          var transition = d3.transition()
+            .duration(d3.event.altKey ? 7500 : 750)
+            .tween('zoom', function (d) {
+              var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+              return function (t) { zoomTo(i(t)); }
+            });
+
+          transition.selectAll('text')
+            .filter(function (d) {
+              return d.parent === focus || this.style.display === 'inline';
+            })
+            .style('fill-opacity', function (d) {
+              return d.parent === focus ? 1 : 0;
+            })
+            .on('start', function (d) {
+              if (d.parent === focus) this.style.display = 'inline';
+            })
+            .on('end', function (d) {
+              if (d.parent !== focus) this.style.display = 'none';
+            });
+        }
+
+        function zoomTo(v) {
+          var k = diameter / v[2];
+          view = v;
+          node.attr('transform', function (d) {
+            return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
+          })
+          circle.attr('r', function (d) {
+            return d.r * k;
+          });
+        }
+      
+      },
+      ready: function() {
+        this.loadData();
+      }
+    })
+  </script>
+</dom-module>
