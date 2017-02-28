@@ -91,7 +91,7 @@
         </route>
 
         <route>
-            <from uri="quartz://quartzAssetCostDataAggregation?cron=*+30+*+*+*+?"/>
+            <from uri="quartz://quartzAssetCostDataAggregation?cron=*+*+*/12+*+*+?"/>
             <to uri="direct:aggregateAssetCostData"/>
         </route>
 

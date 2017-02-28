@@ -40,7 +40,7 @@ public class AssetCostStatisticsProvider {
 		if(intIsNotNull(assetCostStatistics.getWorkOrderCount())){
 			sb.append(" work_order_count =#{workOrderCount}");
 		}
-		sb.append("where asset_id = #{assetId} and created = date(now())");
+		sb.append(" where asset_id = #{assetId} and created = date(now())");
 		if(logger.isInfoEnabled()){
 			logger.info("updateAssetCostStatistics sql is {}",sb.toString());
 		}

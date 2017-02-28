@@ -32,7 +32,15 @@ public class AssetCostStatistics implements Serializable{
 	private Date requestTime;//报修时间
 	private Date confirmedDownTime;//宕机时间
 	private Boolean woStatus;//工单状态
+	private Date day;//计算日期
 	
+	
+	public Date getDay() {
+		return day;
+	}
+	public void setDay(Date day) {
+		this.day = day;
+	}
 	public Integer getSupplierId() {
 		return supplierId;
 	}
