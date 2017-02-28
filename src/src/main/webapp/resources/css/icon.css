@@ -1,0 +1,21 @@
+@charset "UTF-8";
+.ui-icon-carat-2-n-s:before {
+/*content: ""; */
+ content: ""; 
+/*content: ""; */
+color:#dcdada;}
+
+.ui-icon-triangle-1-n:before {
+/*  content: ""; */
+content: ""; 
+/*content: ""; */
+color:#dcdada;}
+
+.ui-icon-triangle-1-s:before {
+/*  content: ""; }*/
+content: ""; 
+color:#dcdada;}
+
+.ui-selectonemenu-trigger > .ui-icon-triangle-1-s:before {
+content: "";
+color: #8a8383!important;}

@@ -36,7 +36,7 @@ public class FieldValueMessageController implements Serializable{
             return value;
     }
     
-    public String fieldValue(String fieldName, String msgKey){
+    public static String fieldValue(String fieldName, String msgKey){
         return doGetFieldValue(fieldName, msgKey);
     }
     

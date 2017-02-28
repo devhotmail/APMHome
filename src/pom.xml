@@ -41,6 +41,7 @@
     <hibernate.ehcache.configuration.file>ehcache.xml</hibernate.ehcache.configuration.file>
     <hibernate.use.second.level.cache>true</hibernate.use.second.level.cache>
     <hibernate.use.query.cache>true</hibernate.use.query.cache>
+    <mybatis.version>3.4.2</mybatis.version>
 
     <maven.test.skip>false</maven.test.skip>
     <jackson.version>2.8.1</jackson.version>

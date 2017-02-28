@@ -2,7 +2,7 @@
 Make sure you have NodeJS installed, make sure you have npm, bower installed.
 
 ```!bash
-npm install 
+npm install
 bower install -F
 gulp
 ```

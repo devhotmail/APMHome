@@ -22,10 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ge.apm.dao.AssetFileAttachmentRepository;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.OrgInfoRepository;
+import com.ge.apm.dao.SupplierRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.OrgInfo;
+import com.ge.apm.domain.Supplier;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AssetDepreciationService;
 import com.ge.apm.service.asset.AttachmentFileService;
@@ -42,14 +44,21 @@ import webapp.framework.web.mvc.JpaCRUDController;
 @ViewScoped
 public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
+    private static final long serialVersionUID = -1L;
+
     AssetInfoRepository dao = null;
 
     AssetFileAttachmentRepository attachDao = null;
 
+    private UserAccountRepository userDao;
+
     private boolean resultStatus;
 
+    private UserAccount clinicalOwner;
+    private Supplier supplier;
+    
     private UserAccount owner;
-    private List<UserAccount> ownerList;
+//    private List<UserAccount> ownerList;
     private List<OrgInfo> ownerOrgList;
 
     private List<AssetFileAttachment> attachements;
@@ -67,10 +76,25 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     Boolean terminate;
 
+    protected void setSelectedByUrlParam(String encodeUrl, String paramName){
+        setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeUrl, paramName)));
+        
+        owner = userDao.findById(selected.getAssetOwnerId());
+        
+        if (null != selected.getClinicalOwnerId()) {
+            clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
+        }
+
+        if (null != selected.getSupplierId()) {
+            SupplierRepository supplierDao = WebUtil.getBean(SupplierRepository.class);
+            supplier = supplierDao.findById(selected.getSupplierId());
+        }
+    }
+    
     @Override
     protected void init() {
         dao = WebUtil.getBean(AssetInfoRepository.class);
-        UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
+        userDao = WebUtil.getBean(UserAccountRepository.class);
         UserContextService userContextService = WebUtil.getBean(UserContextService.class);
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         orgDao = WebUtil.getBean(OrgInfoRepository.class);
@@ -95,22 +119,19 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             }
         } else if ("View".equalsIgnoreCase(actionName)) {
             // setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
-            owner = userDao.findById(selected.getAssetOwnerId());
+            setSelectedByUrlParam(encodeStr, "selectedid");
             prepareView();
         } else if ("Edit".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
-            owner = userDao.findById(selected.getAssetOwnerId());
+            setSelectedByUrlParam(encodeStr, "selectedid");
             prepareEdit();
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-            setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
-            owner = userDao.findById(selected.getAssetOwnerId());
+            setSelectedByUrlParam(encodeStr, "selectedid");
             prepareDelete();
         }
 
-        ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
+//        ownerList = uuaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
         ownerOrgList = uuaService.getOrgListByHospitalId(UserContextService.getCurrentUserAccount().getHospitalId());
         if (searchFilters == null) {
             searchFilters = new ArrayList<SearchFilter>();
@@ -150,6 +171,16 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public String getDetailPage() {
         operation = "Detail.xhtml?actionName=View&selectedid=" + selected.getId() + "&asset_name=" + selected.getName();
         return operation;
+    }
+
+    public String getDetailPage(String assetId, String assetName) {
+        operation = "Detail.xhtml?actionName=View&selectedid=" + assetId + "&asset_name=" + assetName;
+        return UrlEncryptController.encodeUrlParam(operation);
+    }
+
+    public String getEditPage(String assetId, String assetName) {
+        operation = "Create.xhtml?actionName=Edit&selectedid=" + assetId + "&asset_name=" + assetName;
+        return UrlEncryptController.encodeUrlParam(operation);
     }
 
     public void assembleMaintainData() {
@@ -251,9 +282,9 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             return "";
         }
     }
-    
-    public String getListPageLink(){
-        return "List?faces-redirect=true" + (this.isTerminate()?"&terminate=true":"") ;
+
+    public String getListPageLink() {
+        return "List?faces-redirect=true" + (this.isTerminate() ? "&terminate=true" : "");
     }
 
     public UserAccount getOwner() {
@@ -268,14 +299,6 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         this.owner = owner;
     }
 
-    public List<UserAccount> getOwnerList() {
-        return ownerList;
-    }
-
-    public void setOwnerList(List<UserAccount> ownerList) {
-        this.ownerList = ownerList;
-    }
-
     public void onOwnerChange() {
         if (null != owner) {
             selected.setAssetOwnerId(owner.getId());
@@ -284,6 +307,28 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
+    public void onClinicalDeptChange() {
+        this.clinicalOwner = null;
+        selected.setClinicalOwnerId(null);
+        selected.setClinicalOwnerName(null);
+        selected.setClinicalOwnerTel(null);
+    }
+
+    public void onClinicalOwnerChange() {
+        if (null != clinicalOwner) {
+            selected.setClinicalOwnerId(clinicalOwner.getId());
+            selected.setClinicalOwnerName(clinicalOwner.getName());
+            selected.setClinicalOwnerTel(clinicalOwner.getTelephone());
+        }
+    }
+
+    public void onSupplierChange() {
+        if (null != supplier) {
+            selected.setSupplierId(supplier.getId());
+            selected.setVendor(supplier.getName());
+        }
+    }
+    
     public void handleFileUpload(FileUploadEvent event) {
 
         String type = event.getComponent().getId();
@@ -357,15 +402,35 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     public void onHospitalChange() {
         this.owner = null;
-        this.ownerList = uuaService.getUserList(selected.getHospitalId());
     }
 
-    public List<OrgInfo> getClinicalList() {
+    public List<OrgInfo> getClinicalDeptList() {
         List<SearchFilter> OrgInfoFilters = new ArrayList<>();
-//        UserContextService.setHospitalFilter(OrgInfoFilters);
-//        OrgInfoFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, this.selected.getSiteId()));
         OrgInfoFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, selected.getHospitalId()));
         return orgDao.findBySearchFilter(OrgInfoFilters);
+    }
+
+    public List<UserAccount> getOwnerList() {
+
+        Integer hospitalId;
+        if (selected != null) {
+            hospitalId = selected.getHospitalId();
+        } else {
+            hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
+        }
+
+        List<UserAccount> res = userDao.getAssetOnwers(UserContextService.getSiteId(), hospitalId);
+        return res;
+    }
+
+    public List<UserAccount> getClinicalOwnerList() {
+        List<SearchFilter> usersFilters = new ArrayList<>();
+        if (null != selected.getClinicalDeptId()) {
+            usersFilters.add(new SearchFilter("orgInfoId", SearchFilter.Operator.EQ, selected.getClinicalDeptId()));
+            return userDao.findBySearchFilter(usersFilters);
+        } else {
+            return new ArrayList<UserAccount>();
+        }
     }
 
     public boolean isTimeValidate() {
@@ -499,10 +564,26 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public Boolean isTerminate() {
-        if(null!= selected){
+        if (null != selected) {
             return !selected.getIsValid();
         }
         return terminate;
     }
 
+    public UserAccount getClinicalOwner() {
+        return clinicalOwner;
+    }
+
+    public void setClinicalOwner(UserAccount clinicalOwner) {
+        this.clinicalOwner = clinicalOwner;
+    }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
+    
 }

@@ -58,6 +58,8 @@ public class AssetInfo implements Serializable {
     @Size(max = 64)
     @Column(name = "vendor")
     private String vendor;
+    @Column(name = "supplier_id")
+    private Integer supplierId;
     @Size(max = 64)
     @Column(name = "maitanance")
     private String maitanance;
@@ -146,6 +148,24 @@ public class AssetInfo implements Serializable {
     @Column(name = "last_stocktake_date")
     @Temporal(TemporalType.DATE)
     private Date lastStockTakeDate;
+
+    @Column(name = "clinical_owner_id")
+    private Integer clinicalOwnerId;
+    @Size(max = 16)
+    @Column(name = "clinical_owner_name")
+    private String clinicalOwnerName;
+    @Size(max = 16)
+    @Column(name = "clinical_owner_tel")
+    private String clinicalOwnerTel;
+    @Size(max = 64)
+    @Column(name = "registration_no")
+    private String registrationNo;
+    @Column(name = "factory_warranty_date")
+    @Temporal(TemporalType.DATE)
+    private Date factoryWarrantyDate;
+    @Size(max = 256)
+    @Column(name = "qr_code")
+    private String qrCode;
     
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "purchase_price")
@@ -541,6 +561,62 @@ public class AssetInfo implements Serializable {
     		return;
     	}
        this.lifecycle = new Double(lifecycle * 12).intValue();
+    }
+
+    public Integer getClinicalOwnerId() {
+        return clinicalOwnerId;
+    }
+
+    public void setClinicalOwnerId(Integer clinicalOwnerId) {
+        this.clinicalOwnerId = clinicalOwnerId;
+    }
+
+    public String getClinicalOwnerName() {
+        return clinicalOwnerName;
+    }
+
+    public void setClinicalOwnerName(String clinicalOwnerName) {
+        this.clinicalOwnerName = clinicalOwnerName;
+    }
+
+    public String getClinicalOwnerTel() {
+        return clinicalOwnerTel;
+    }
+
+    public void setClinicalOwnerTel(String clinicalOwnerTel) {
+        this.clinicalOwnerTel = clinicalOwnerTel;
+    }
+
+    public String getRegistrationNo() {
+        return registrationNo;
+    }
+
+    public void setRegistrationNo(String registrationNo) {
+        this.registrationNo = registrationNo;
+    }
+
+    public Date getFactoryWarrantyDate() {
+        return factoryWarrantyDate;
+    }
+
+    public void setFactoryWarrantyDate(Date factoryWarrantyDate) {
+        this.factoryWarrantyDate = factoryWarrantyDate;
+    }
+
+    public Integer getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
     
     @Override

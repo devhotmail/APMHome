@@ -2,6 +2,7 @@
  */
 package com.ge.apm.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -60,9 +61,11 @@ public class WorkOrderStep implements Serializable {
     private String ownerName;
     @Column(name = "start_time")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date startTime;
     @Column(name = "end_time")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date endTime;
     @Size(max = 128)
     @Column(name = "description")
