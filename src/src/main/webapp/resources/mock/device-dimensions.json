@@ -1,0 +1,116 @@
+{
+  "pages": {
+    "total": 43,
+    "limit": 20,
+    "start": 3
+  },
+  "items": [
+    {
+      "id": "32",
+      "name": "ct001ct0011",
+      "type": "CT",
+      "dept": "放射科",
+      "rating": 4387,
+      "scan": 869,
+      "scan_bm": 754,
+      "exposure": 580,
+      "exposure_bm": 300,
+      "usage": 543.23,
+      "usage_bm": 426.86,
+      "fix": 8,
+      "fix_bm": 4,
+      "stop": 1.2,
+      "stop_bm": 2.5,
+      "profit": 1.0245322E5,
+      "profit_bm": 2.0245322E5,
+      "profit_label": "10.2",
+      "profit_bm_label": "20.2"
+    },
+    {
+      "id": "12",
+      "name": "MR001",
+      "type": "MR",
+      "dept": "妇产科",
+      "rating": 3937,
+      "scan": 769,
+      "scan_bm": 574,
+      "exposure": 875.23,
+      "exposure_bm": 995.98,
+      "usage": 647.23,
+      "usage_bm": 722.86,
+      "fix": 0,
+      "fix_bm": 0.8,
+      "stop": 0.0,
+      "stop_bm": 1.6,
+      "profit": 5.8245322E6,
+      "profit_bm": 6.3245322E5,
+      "profit_label": "582.5",
+      "profit_bm_label": "632.5"
+    }
+  ],
+  "ruler": {
+    "rating": {
+      "text": "设备综合排名"
+    },
+    "scan": {
+      "unit": "次",
+      "text": "扫描量",
+      "ticks": [
+        360,
+        3610
+      ]
+    },
+    "exposure": {
+      "unit": "单位",
+      "text": "曝光量",
+      "ticks": [
+        20,
+        1420
+      ]
+    },
+    "usage": {
+      "unit": "小时",
+      "text": "使用时间",
+      "ticks": [
+        120,
+        8720
+      ]
+    },
+    "fix": {
+      "unit": "次",
+      "text": "维修次数",
+      "ticks": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ]
+    },
+    "stop": {
+      "unit": "%",
+      "text": "停机率",
+      "ticks": [
+        0,
+        6,
+        12,
+        18,
+        24,
+        30
+      ]
+    },
+    "profit": {
+      "unit": "万元",
+      "text": "利润",
+      "ticks": [
+        20e3,
+        720e4
+      ]
+    }
+  },
+  "link": {
+    "ref": "self",
+    "href": "https://dew.io/api/list?from=2015-01-12&to2016-01-12"
+  }
+}

@@ -50,6 +50,9 @@ gulp.task('sass:compile:module', function() {
   ])
   .pipe(sass({
     style: 'compressed',
+    includePaths: [
+      'src/main/webapp/resources/sass/'
+    ],
     importer: importOnce,
     importOnce: {
       index: true,
