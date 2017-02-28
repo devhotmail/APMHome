@@ -54,10 +54,6 @@
         value: false
       }
     },
-    observers: [
-      '_watcher(current)'
-    ],
-    _watcher(val){ console.log(val)},
     _getPrevCls: function (current) {
       return [current === 1 ? 'disabled' : '', 'pagination-btn pagination-prev'].join(' ');
     },
