@@ -6,6 +6,7 @@ $series-line-color: rgba($dv-light-gray, .1);
 
 :host {
   height: calc(100vh - 80px);
+  content: 'viewport-units-buggyfill; height: calc(100vh - 80px);';
   padding-top: 40px;
   min-width: 800px;
   display: block;
@@ -17,6 +18,10 @@ $series-line-color: rgba($dv-light-gray, .1);
 
 #chart {
   position: relative;
+}
+
+.chart-bg {
+  fill: transparent;
 }
 
 #pagination {

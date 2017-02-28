@@ -10,7 +10,10 @@
     <style include="device-parallel-coordinates-styles"></style>
     <div id="chart" class="canvas">
       <div class="flex flex--col">
-        <svg id="svg" width$="[[width]]" height$="[[height]]"></svg>
+        <svg id="svg" width$="[[width]]" height$="[[height]]" touch-action="none">
+          <rect id="chartBg" class="chart-bg" width$="[[width]]" height$="[[height]]"></rect>
+          <g id="chartBody" class="chart-body"></g>
+        </svg>
         <!-- sort selector -->
       <px-dropdown id="sortBy" class="sorting-dropdown" display-value="[[_getSortDisplayValue(sortBy, _sortOptions)]]" selected-key="{{sortBy}}">
           <px-dropdown-content class="px-dropdown-content"
@@ -120,7 +123,9 @@
             width = this.width - margin.left - margin.right,
             height = this.height - margin.top - margin.bottom;
 
-          var svg = d3.select(this.$.svg);
+          var svg = $(this.$.svg);
+          var bg = $(this.$.chartBg);
+          var root = $(this.$.chartBody);
 
           var dimensions = this.dimensions;
           var data = this.data;
@@ -134,8 +139,7 @@
 
           var yAxis = d3.axisLeft();
 
-          var root = svg.append("g").classed('chart-body', true)
-          .attr('transform', d3Transform().translate(margin.left, margin.top));
+          root.attr('transform', d3Transform().translate(margin.left, margin.top));
 
           // render parallel's name
           var parallelNamesGroup = root.append('g')
@@ -266,19 +270,24 @@
           .attr("class", "label")
           .data(data, function(d) { return d.name || d; });
 
-          var projection = root.selectAll(".axis .sector,.axis .label,.background path,.foreground path,.benchmark path")
-          .on("mouseover", mouseover)
-          .on("mouseout", mouseout);
+          var projection = root.selectAll(".axis .sector,.axis .label,.background path,.foreground path,.benchmark path");
+          if (Modernizr.touchevents) {
+            projection.on("pointerdown", showHighlight);
+            // use the background layer to trigger hide
+            bg.on('pointerdown', hideHighlight);
+          } else {
+            projection.on("pointerenter", showHighlight).on("pointerleave", hideHighlight);
+          }
+
 
           var valueLabels = root.select('.value-group')
           .selectAll('g.value');
 
           this.scopeSubtree(this.$.svg);
 
-          function mouseover(d) {
+          function showHighlight(d) {
             root.classed("active", true);
             projection.classed("active", function(p) { return p === d; });
-            projection.filter(function(p) { return p === d; }).each(moveToFront);
             // make the value of target item active
             valueLabels.classed('active', function(p) { return p.id === d.id; });
 
@@ -291,16 +300,12 @@
             }
           }
 
-          function mouseout(d) {
+          function hideHighlight() {
             root.classed("active", false);
             projection.classed("inactive", false);
             _this._highlightSector(false);
             // make all items inactive
             valueLabels.classed('active', false);
-          }
-
-          function moveToFront() {
-            this.parentNode.appendChild(this);
           }
 
           function curveLine(dimensions, suffix) {
@@ -634,7 +639,7 @@
         },
         _replot: function(width, height) {
           var key = this.queryUrl;
-          this.$.svg.innerHTML = '';
+          this.$.chartBody.innerHTML = '';
           this.debounce('replot', this.render, 500);
         },
         _pager: function() {
