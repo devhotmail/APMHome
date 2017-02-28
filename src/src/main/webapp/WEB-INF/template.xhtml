@@ -8,9 +8,7 @@
 <ui:insert name="preRenderView"/>
 <h:head>
     <ui:include src="../commonHead.xhtml"/>
-    <f:facet name="first">
-        <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}"/>
-    </f:facet>
+    <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}"/>
     <title>GE APM</title>
     <h:outputScript name="js/nanoscroller.js" library="ultima-layout"/>
     <h:outputScript name="js/layout.js" library="ultima-layout"/>
