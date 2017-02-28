@@ -1,6 +1,5 @@
 package com.ge.apm.view.wechat.config;
 
-import javax.faces.context.FacesContext;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.menu.WxMenu;
 import me.chanjar.weixin.common.bean.menu.WxMenuButton;
@@ -13,10 +12,10 @@ public class MenuConfig {
      *
      * @return
      */
-    public static WxMenu getMenu(WxMpService wxMpService) {
-
-        String serverName = FacesContext.getCurrentInstance().getExternalContext().getRequestServerName();
-        serverName = "http://" + serverName + "/geapm";
+    public static WxMenu getMenu(WxMpService wxMpService, String serverName) {
+        if (serverName.endsWith("/")) {
+            serverName = serverName.substring(0, serverName.length()-1);
+        }
         WxMenu menu = new WxMenu();
         WxMenuButton button1 = new WxMenuButton();
         button1.setName("设备信息");
@@ -25,11 +24,12 @@ public class MenuConfig {
         WxMenuButton button11 = new WxMenuButton();
         button11.setType(WxConsts.BUTTON_VIEW);
         button11.setName("查看设备信息");
-        button11.setUrl(serverName + "/wechat/asset/view.xhtml");
+        button11.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/11", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button12 = new WxMenuButton();
         button12.setType(WxConsts.BUTTON_VIEW);
         button12.setName("新增设备");
-        button12.setUrl(serverName + "/wechat/asset/create.xhtml");
+        button12.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/12", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        
         button1.getSubButtons().add(button11);
         button1.getSubButtons().add(button12);
 
@@ -38,28 +38,33 @@ public class MenuConfig {
         WxMenuButton button21 = new WxMenuButton();
         button21.setType(WxConsts.BUTTON_VIEW);
         button21.setName("新增报修");
-        button21.setUrl(serverName + "/wechat/wo/create.xhtml");
+        button21.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/21", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button22 = new WxMenuButton();
         button22.setType(WxConsts.BUTTON_VIEW);
         button22.setName("报修处理进度");
-        button22.setUrl(serverName + "/wechat/wo/process.xhtml");
+        button22.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/23", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        WxMenuButton button23 = new WxMenuButton();
+        button23.setType(WxConsts.BUTTON_VIEW);
+        button23.setName("我的工单");
+        button23.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/24", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         button2.getSubButtons().add(button21);
         button2.getSubButtons().add(button22);
-
+        button2.getSubButtons().add(button23);
+        
         WxMenuButton button3 = new WxMenuButton();
         button3.setName("我的帐号");
         WxMenuButton button31 = new WxMenuButton();
         button31.setType(WxConsts.BUTTON_VIEW);
         button31.setName("APM帐号信息");
-        button31.setUrl(serverName + "/wechat/uaa/account.xhtml");
+        button31.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/31", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button32 = new WxMenuButton();
         button32.setType(WxConsts.BUTTON_VIEW);
         button32.setName("APM重置密码");
-        button32.setUrl(serverName + "/wechat/uaa/resetPass.xhtml");
+        button32.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName+"/web/menu/32", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button33 = new WxMenuButton();
         button33.setType(WxConsts.BUTTON_VIEW);
         button33.setName("APM帐号绑定");
-        button33.setUrl(serverName + "/wechat/uaa/bindAccount.xhtml");
+        button33.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName+"/web/menu/33", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         button3.getSubButtons().add(button31);
         button3.getSubButtons().add(button32);
         button3.getSubButtons().add(button33);

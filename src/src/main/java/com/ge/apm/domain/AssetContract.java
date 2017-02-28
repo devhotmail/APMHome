@@ -68,6 +68,9 @@ public class AssetContract implements Serializable {
     @NotNull
     private Integer hospitalId;
 
+    @Column(name = "contract_type")
+    private Integer contractType;
+
     public Integer getHospitalId() {
         return hospitalId;
     }
@@ -157,6 +160,14 @@ public class AssetContract implements Serializable {
 
     public void setContractAmount(double contractAmount) {
         this.contractAmount = contractAmount;
+    }
+
+    public Integer getContractType() {
+        return contractType;
+    }
+
+    public void setContractType(Integer contractType) {
+        this.contractType = contractType;
     }
 
     @Override

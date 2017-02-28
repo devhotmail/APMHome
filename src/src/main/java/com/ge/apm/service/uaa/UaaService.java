@@ -159,6 +159,17 @@ public class UaaService {
     
     }
 
+    public DefaultTreeNode getFullOrgTreeBySiteId(DefaultTreeNode rootNode, int siteId, Integer selectedOrgId){
+        OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
+        List<OrgInfo> fullOrgList = orgInfoDao.getFullOrgListBySiteId(siteId);
+
+        DefaultTreeNode root = new DefaultTreeNode("Root", null);
+        root.getChildren().add(rootNode);
+                
+        buildOrgTree(fullOrgList, rootNode, selectedOrgId);
+        return root;
+    }
+    
     public DefaultTreeNode getFullOrgTreeBySiteId(int siteId, Integer selectedOrgId){
         OrgInfoRepository orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
         List<OrgInfo> fullOrgList = orgInfoDao.getFullOrgListBySiteId(siteId);
