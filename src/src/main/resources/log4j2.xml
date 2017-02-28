@@ -7,7 +7,7 @@
   </appenders>
 
   <loggers>
-    <root level="info">
+    <root additivity="false" level="info">
       <appender-ref ref="Console"/>
     </root>
     <logger name="com.demo" additivity="false" level="${log4j.level}">
