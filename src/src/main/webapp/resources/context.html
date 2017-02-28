@@ -1,0 +1,28 @@
+<script>
+  define('context', function() {
+    return {
+      /**
+       * Resolve URL from "base" tag context path
+       */
+      resolveUrl: function(path) {
+        return URI(document.getElementsByTagName('base')[0].getAttribute('href').replace(/\/resources\//, path)).toString();
+      },
+
+      /**
+       * Login user info
+       */
+      user: function() {
+        var $userId = document.querySelector('#userId');
+        var $userLoginName = document.querySelector('#userLoginName');
+        var $siteId = document.querySelector('#userSiteId');
+        var $siteName = document.querySelector('#userSiteName');
+        return {
+          id: $userId && $userId.value,
+          name: $userLoginName && $userLoginName.value,
+          siteId: $siteId && $siteId.value,
+          siteName: $siteName && $siteName.value,
+        };
+      }
+    };
+  });
+</script>
