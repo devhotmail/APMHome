@@ -1,9 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../fastclick/fastclick.html">
+<link rel="import" href="../modernizr/modernizr.html">
 <link rel="import" href="device-revenue-chart-styles.html">
 <script src="../../bower_components/innersvg-polyfill/innersvg.js"></script>
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
-<script src="../../bower_components/lscache/lscache.js"></script>
 <script src="../../bower_components/urijs/src/URI.js"></script>
 
 <dom-module id="device-revenue-chart">
@@ -16,7 +17,10 @@
     </div>
   </template>
   <script>
-    define('device-revenue-chart', ['context'], function(context) {
+    define('device-revenue-chart', [
+      'context',
+      'lscache'
+    ], function(context, lscache) {
         function project(x, radius) {
           var angle = ( x - 180 ) / 180 * Math.PI;
           return [radius * Math.cos(angle), radius * Math.sin(angle)];
@@ -168,18 +172,21 @@
           // Center the gauge within the parent SVG.
           var gaugeGroup = gauge.append('g')
           .attr('class', 'gauge')
-          .attr('transform', 'translate(' + locationX + ',' + locationY + ')')
-          // using mouse event for hover effect
-          .on('mouseover', function(d, i, nodeList) {
-            var currentNodeGroup = d3.select(nodeList[i]).node().parentNode;
-            var selected = d3.select(currentNodeGroup).classed('selected');
-            if (!selected) gauge.classed('active', true);
-          })
-          .on('mouseout', function(d, i, nodeList) {
-            var currentNodeGroup = d3.select(nodeList[i]).node().parentNode;
-            var selected = d3.select(currentNodeGroup).classed('selected');
-            if (!selected) gauge.classed('active', false);
-          });
+          .attr('transform', 'translate(' + locationX + ',' + locationY + ')');
+
+          if (!Modernizr.touchevents) { 
+            // using mouse event for hover effect in pc view
+            gaugeGroup.on('mouseover', function(d, i, nodeList) {
+              var currentNodeGroup = d3.select(nodeList[i]).node().parentNode;
+              var selected = d3.select(currentNodeGroup).classed('selected');
+              if (!selected) gauge.classed('active', true);
+            })
+            .on('mouseout', function(d, i, nodeList) {
+              var currentNodeGroup = d3.select(nodeList[i]).node().parentNode;
+              var selected = d3.select(currentNodeGroup).classed('selected');
+              if (!selected) gauge.classed('active', false);
+            });
+          }
 
           gaugeGroup.append('circle')
           .attr('class', 'filter-circle')

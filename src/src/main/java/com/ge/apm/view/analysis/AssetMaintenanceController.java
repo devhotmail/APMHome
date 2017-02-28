@@ -20,7 +20,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.*;
 
 @ManagedBean
@@ -106,13 +105,8 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     }
 
     private static final boolean validateDate(Date startDate, Date endDate) {
-        if (new DateTime(startDate).plusMonths(1).isBefore(new DateTime(endDate)) &&
-            new DateTime(startDate).plusYears(3).plusDays(1).isAfter(new DateTime(endDate))) {
-            return true;
-        }
-        else {
-            return false;
-        }
+      return new DateTime(startDate).plusMonths(1).isBefore(new DateTime(endDate)) &&
+        new DateTime(startDate).plusYears(3).plusDays(1).isAfter(new DateTime(endDate));
     }
 
     private int assetId;
@@ -797,22 +791,13 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     // 设备故障分布：按单台设备（前40台）
 
     private final static String SQL_LIST_TOP_ERROR_DEVICE_ALL = "" +
-            "SELECT asset.name AS key, COALESCE(temporary.value, 0) AS value " +
-            "FROM ( " +
-            "        SELECT * " +
-            "        FROM asset_info AS asset " +
-            "        WHERE asset.hospital_id = :#hospital_id " +
-            ") AS asset " +
-            "LEFT OUTER JOIN ( " +
-            "        SELECT asset.id AS key, CAST(count(*) AS INTEGER) AS value " +
+      "        SELECT asset.name AS key, CAST(count(*) AS INTEGER) AS value " +
             "        FROM work_order AS work, " +
             "             asset_info AS asset " +
             "        WHERE work.asset_id = asset.id " +
             "          AND asset.hospital_id = :#hospital_id" +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        GROUP BY asset.id " +
-            ") AS temporary " +
-            "ON asset.id = temporary.key " +
             "ORDER BY value DESC " +
             "LIMIT 40 " +
             ";";
@@ -953,7 +938,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     @SuppressWarnings("unchecked")
 	private final static <T> T convertToScalar(List<Map<String, Object>> list, T fallback) {
         FluentIterable<Map<String, Object>> iterable = FluentIterable.from(list);
-        return (T)iterable.first().or(ImmutableMap.of("scalar", (Object)fallback)).get("scalar");
+      return (T) iterable.first().or(ImmutableMap.of("scalar", fallback)).get("scalar");
     }
 
     private final static BarChartModel convertToBarChartModel(List<Map<String, Object>> list, String xLabel, String yLabel) {
