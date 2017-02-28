@@ -2,6 +2,7 @@
 <ehcache updateCheck="false" monitoring="autodetect">
 	<diskStore path="java.io.tmpdir/ehcache/hibernate"/>
 	<sizeOfPolicy maxDepth="999" maxDepthExceededBehavior="abort"/>
+
 	<defaultCache
 		maxBytesLocalHeap="10m"
 		eternal="false"
