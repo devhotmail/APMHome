@@ -12,7 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import me.chanjar.weixin.common.exception.WxErrorException;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import me.chanjar.weixin.mp.api.WxMpService;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
@@ -27,17 +28,21 @@ public class WeChatController extends JpaCRUDController<WorkOrder>{
     
     WorkOrderRepository dao = null;
     WxMpService wxMpService = null;
+    String domianUrl;
     
     @Override
     protected void init() {
         dao = WebUtil.getBean(WorkOrderRepository.class);
         wxMpService = WebUtil.getBean(WxMpService.class);
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String serverName = request.getRequestURL().toString();
+        domianUrl = serverName.replace("/portal/wechat/createMenu.xhtml", "");
     }
     
     public void createMenu() {
         try {
-            wxMpService.getMenuService().menuCreate(MenuConfig.getMenu(wxMpService));
-        } catch (WxErrorException ex) {
+            wxMpService.getMenuService().menuCreate(MenuConfig.getMenu(wxMpService, domianUrl));
+        } catch (Exception ex) {
             WebUtil.addSuccessMessage("菜单创建失败。");
             Logger.getLogger(WeChatController.class.getName()).log(Level.SEVERE, null, ex);
             return;
@@ -49,5 +54,13 @@ public class WeChatController extends JpaCRUDController<WorkOrder>{
     protected WorkOrderRepository getDAO() {
         return dao;
     }
-    
+
+    public String getDomianUrl() {
+        return domianUrl;
+    }
+
+    public void setDomianUrl(String domianUrl) {
+        this.domianUrl = domianUrl;
+    }
+
 }

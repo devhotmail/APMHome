@@ -16,61 +16,11 @@
 
         </div>
 
-
-        <div class="ui-g">
-            <div class="ui-md-6 ui-lg-3">
-                <div class="epsilon u-mv-">#{msg.deviceScanStat}</div>
-                <p:outputPanel id="value_scan">
-                    <div class="text--banner u-mt+ delta">
-                        <h:outputText value="#{assetUsageSingleController.valueScan}"/>
-                        <span class="text--unit text--secondary epsilon">#{msg.countlb}</span>
-                    </div>
-                </p:outputPanel>
-            </div>
-            <div class="ui-md-6 ui-lg-3">
-                <div class="epsilon u-mv-">#{msg.deviceExpoStat}</div>
-                <p:outputPanel id="value_expo">
-                    <div class="text--banner u-mt+ delta">
-                        <h:outputText value="#{assetUsageSingleController.valueExpo}"/>
-                        <span class="text--unit text--secondary epsilon">#{msg.countlb}</span>
-                    </div>
-                </p:outputPanel>
-            </div>
-            <div class="visible-portable divide-line-bottom"></div>
-            <div class="ui-md-12 ui-lg-6">
-                <div class="ui-g">
-                    <div class="ui-md-4">
-                        <div class="epsilon u-mb--">#{msg.deviceUsageStat_1}</div>
-                        <p:outputPanel id="value_usage_1">
-                            <div class="text--banner epsilon">
-                                <h:outputText value="#{assetUsageSingleController.valueWait}"/>
-                                <span class="text--unit text--secondary epsilon">#{msg.hourslb}</span>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                    <div class="ui-md-4">
-                        <div class="epsilon u-mb--">#{msg.deviceUsageStat_2}</div>
-                        <p:outputPanel id="value_usage_2">
-                            <div class="text--banner epsilon">
-                                <h:outputText value="#{assetUsageSingleController.valueInuse}"/>
-                                <span class="text--unit text--secondary epsilon">#{msg.hourslb}</span>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                    <div class="ui-md-4">
-                        <div class="epsilon u-mb--">#{msg.deviceUsageStat_3}</div>
-                        <p:outputPanel id="value_usage_3">
-                            <div class="text--banner epsilon">
-                                <h:outputText value="#{assetUsageSingleController.valueDT}"/>
-                                <span class="text--unit text--secondary epsilon">#{msg.hourslb}</span>
-                            </div>
-                        </p:outputPanel>
-                    </div>
-                </div>
-                <p:chart widgetVar="deviceStat" class="chart-device-stat" id="value_usage_bar" type="bar"
-                         model="#{assetUsageSingleController.deviceStat}"/>
-            </div>
-        </div>
+        <div class="ui-g-12 card">
+            <p:link outcome="/portal/analysis/assetUsageSingle.xhtml" value="#{msg.DeviceUtilizationAnalysis}">
+                <f:param name="asset_name" value="#{assetInfoController.selected.name}" />
+                <f:param name="asset_id" value="#{assetInfoController.selected.id}" />
+            </p:link>
         <br/>
 
         <p:accordionPanel id="accordion" multiple="false" >
@@ -104,7 +54,7 @@
                             </h:panelGroup>
                             <h:panelGroup >
                                 <label class="label">#{msg.purchasePrice}</label>
-                                <p:inputText value="#{assetInfoController.selected.purchasePrice}" readonly="true"/>
+                                <p:inputNumber minValue="0" decimalPlaces="2" id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" readonly="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.status}</label>
@@ -171,10 +121,13 @@
                         <p:inputText id="barcode" value="#{assetInfoController.selected.barcode}" readonly="true"/>
                     </h:panelGroup>
                     <h:panelGroup>
+                        <label class="label">#{msg.registrationNo}</label>
+                        <p:inputText id="registrationNo" value="#{assetInfoController.selected.registrationNo}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
                         <label class="label">#{msg.modalityId}</label>
                         <p:inputText id="modalityId" value="#{assetInfoController.selected.modalityId}" readonly="true"/>
                     </h:panelGroup>
-                    <p:spacer/>
                     <h:panelGroup>
                         <label class="label">#{msg.locationCode}</label>
                         <p:inputText id="locationCode" value="#{assetInfoController.selected.locationCode}" readonly="true"/>
@@ -200,6 +153,16 @@
                         <p:inputText id="assetOwnerTel" value="#{assetInfoController.selected.assetOwnerTel}" readonly="true"/>
                     </h:panelGroup>
                     <h:panelGroup>
+                        <label class="label">#{msg.clinicalOwnerName}</label>
+                        <p:inputText id="clinicalOwnerName" value="#{assetInfoController.selected.clinicalOwnerName}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.clinicalOwnerTel}</label>
+                        <p:inputText id="clinicalOwnerTel" value="#{assetInfoController.selected.clinicalOwnerTel}" readonly="true"/>
+                    </h:panelGroup>
+                    
+                    
+                    <h:panelGroup>
                         <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isValid}" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
                     </h:panelGroup>
 
@@ -223,6 +186,13 @@
                             <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                         </p:inputText>
                         <!--<p:calendar timeZone="GMT+8"  id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.factoryWarrantyDate}*</label>
+                        <p:inputText id="factoryWarrantyDate" value="#{assetInfoController.selected.factoryWarrantyDate}" readonly="true">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <!--<p:calendar timeZone="GMT+8"  id="factoryWarrantyDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.factoryWarrantyDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" />-->
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.terminateDate}</label>
@@ -262,7 +232,7 @@
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.depreciationMethod}</label>
-                        <p:inputText id="depreciationMethod" value="#{assetInfoController.selected.depreciationMethod}" readonly="true"/>
+                        <p:inputText id="depreciationMethod" value="#{fieldMsg.fieldValue('depreciationMethodList', assetInfoController.selected.depreciationMethod)}" readonly="true"/>
                     </h:panelGroup>
 
                 </p:panelGrid>
@@ -460,16 +430,15 @@
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>
-                <p:tab title="#{msg.QRCode}" rendered="false">
-                    <p:barcode value="0123456789" type="qr" height="200" format="png"/>
+                <p:tab title="#{msg.QRCode}" rendered="true">
+                    <p:barcode value="#{assetInfoController.selected.id.toString()}" type="qr" height="200" format="png"/>
                 </p:tab>
             </p:tabView>
         </h:form>
         
-        <p:fieldset style="margin-bottom:20px">
             <h:panelGroup >
-                <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="#{assetInfoController.getListPageLink()}" immediate="true"  update=":growl" style="float:left"/>
+                <p:commandButton id="returnButton" value="#{msg.Return}" icon="ui-icon-arrow-back" action="#{assetInfoController.getListPageLink()}" immediate="true"  update=":growl" style="float:left"/>
             </h:panelGroup>
-        </p:fieldset>
+        </div>
     </ui:define>
 </ui:composition>

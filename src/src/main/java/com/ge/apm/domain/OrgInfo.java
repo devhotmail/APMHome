@@ -2,6 +2,8 @@
  */
 package com.ge.apm.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
@@ -46,6 +48,7 @@ public class OrgInfo implements Serializable {
     
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     private OrgInfo parentOrg;
 
     @Column(name = "hospital_id")
@@ -91,6 +94,7 @@ public class OrgInfo implements Serializable {
         this.parentOrg = parentOrg;
     }
 
+    @JsonIgnore
     public OrgInfo getHospital(){
         OrgInfo org = this;
         while(org!=null){

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:insert name="preRenderView"/>
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}" />
+        </f:facet>
+        <title>GE APM</title>
+        <h:outputScript name="js/nanoscroller.js" library="ultima-layout" />
+        <h:outputScript name="js/layout.js" library="ultima-layout" />
+        <h:outputScript name="js/ripple.js" library="ultima-layout" />
+        <h:outputScript name="js/swipe.js" library="ultima-layout" />
+        <h:outputStylesheet name="css/main.css" />
+        <h:outputScript name="js/main.js" />
+        <h:outputScript name="js/primefaces-locale_zh.js" />
+        <ui:insert name="head"/>
+    </h:head>
+
+    <h:body styleClass="main-body #{guestPreferences.compact ? 'layout-compact' : null}">
+        <ui:include src="./google-analytics.xhtml"/>
+        <p:growl id="growl" autoUpdate="true" showDetail="false"  showSummary="true"/>
+        <!--<div class="layout-wrapper #{guestPreferences.menuLayout}">-->
+<!--            <ui:include src="./topbar.xhtml" />
+            <ui:include src="./menu.xhtml" />-->
+            <div class="layout-main">
+                <ui:insert name="content"/>
+                <ui:include src="./footer.xhtml" />
+            </div>
+        <!--</div>-->
+        
+        <p:dialog widgetVar="statusDialog" modal="false" class="ajaxStatusDialog" draggable="false" closable="false" resizable="false" showHeader="false">
+            <i class="fa fa-circle-o-notch fa-spin ajax-loader" style="zoom: 1.5;color: orange;" aria-hidden="true"></i>
+        </p:dialog>
+
+        <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()" />
+
+        <h:outputStylesheet name="css/nanoscroller.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/animate.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/icon.css" />
+        <p:confirmDialog global="true">
+            <p:commandButton process="@this" value="#{msg.Confirm}" type="button" styleClass="ui-confirmdialog-yes uiButton" icon="ui-icon-check"/>
+            <p:commandButton process="@this" value="#{msg.Cancel}" type="button" immediate="true" styleClass="ui-confirmdialog-no uiButton" icon="ui-icon-close"/>
+        </p:confirmDialog>
+    </h:body>
+
+</html>
