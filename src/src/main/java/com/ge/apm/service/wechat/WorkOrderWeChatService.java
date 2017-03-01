@@ -5,10 +5,12 @@
  */
 package com.ge.apm.service.wechat;
 
+import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.FileUploadDao;
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.dao.WorkOrderStepDetailRepository;
 import com.ge.apm.dao.WorkOrderStepRepository;
+import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import java.util.ArrayList;
@@ -19,6 +21,9 @@ import com.ge.apm.domain.WorkOrderStep;
 import com.ge.apm.domain.WorkOrderStepDetail;
 import com.ge.apm.service.wo.WorkOrderService;
 import java.io.File;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -50,6 +55,8 @@ public class WorkOrderWeChatService {
     protected WxMpService wxMpService;
     @Autowired
     protected CoreService coreService;
+    @Autowired
+    protected AssetInfoRepository assetDao;
     
     public List<WorkOrder> woList(HttpServletRequest request) {
         List<SearchFilter> searchFilters = new ArrayList<>();
@@ -78,6 +85,12 @@ public class WorkOrderWeChatService {
         String serverId = (String)map.remove("closeReason");
         String comments = (String)map.remove("comments");
         Object stepDetails = map.remove("stepDetails");
+        String assetStatus = ""+map.remove("assetStatus");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date conDownTime = sdf.parse(map.remove("confirmedDownTime")+"");
+        Date conUpTime = sdf.parse(map.remove("confirmedUpTime")+"");
+        workOrder.setConfirmedDownTime(conDownTime);
+        workOrder.setConfirmedUpTime(conUpTime);
         
         BeanUtils.populate(workOrder, map);
         List<WorkOrderStep> currentWoSteps = woStepDao.getByWorkOrderIdAndStepId(workOrder.getId(), workOrder.getCurrentStepId());
@@ -103,6 +116,11 @@ public class WorkOrderWeChatService {
                 woService.closeWorkOrder(workOrder, currentWoStep);
                 break;
         }
+        
+        //change asset status
+        AssetInfo ai = assetDao.findById(workOrder.getAssetId());
+        ai.setStatus(Integer.parseInt(assetStatus));
+        assetDao.save(ai);
         
         //保存完成后，再把上传的图片保存
         if (serverId != null && !"".equals(serverId))
@@ -137,6 +155,15 @@ public class WorkOrderWeChatService {
         searchFilters.add(new SearchFilter("assetId", SearchFilter.Operator.EQ, assetId));
         searchFilters.add(new SearchFilter("isClosed", SearchFilter.Operator.EQ, true));
         return woDao.findBySearchFilter(searchFilters);
+    }
+    
+    public InputStream getFile(int fileId) throws Exception {
+        Object[] obj = coreService.getFile(fileId);
+        if (obj != null && obj.length != 0) {
+            return (InputStream)obj[1];
+        } else {
+            return null;
+        }
     }
     
 }

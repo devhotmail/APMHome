@@ -55,7 +55,7 @@ public class WorkOrder implements Serializable {
     @NotNull
     @Column(name = "create_time")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
     @Basic(optional = false)
     @NotNull
@@ -70,7 +70,7 @@ public class WorkOrder implements Serializable {
     @NotNull
     @Column(name = "request_time")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date requestTime;
     @Basic(optional = false)
     @NotNull
@@ -127,8 +127,10 @@ public class WorkOrder implements Serializable {
     private Double totalPrice;
     @Column(name = "confirmed_down_time")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date confirmedDownTime;
     @Column(name = "confirmed_up_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Temporal(TemporalType.TIMESTAMP)
     private Date confirmedUpTime;
 

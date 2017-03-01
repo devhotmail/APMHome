@@ -251,6 +251,11 @@ public class CoreService {
         return fileName;
     }
     
+    public Object[] getFile(int fileId) throws Exception{
+        FileUploadDao fileUploaddao = new FileUploadDao();
+        return fileUploaddao.getAttachmentFile(fileId);
+    }
+    
     public UserAccount getLoginUser(HttpServletRequest request) {
         return userDao.getByLoginName(UserContext.getUsername(request));
     }

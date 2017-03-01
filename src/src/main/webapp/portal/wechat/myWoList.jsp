@@ -393,6 +393,33 @@
                                 </div>
                             </a>
                         </div>
+                        
+                        <div class="weui-cells">
+                            <div class="weui-cell">
+                                <div class="weui-cell__hd"><label for="assetStatus" class="weui-label">资产状态</label></div>
+                                <div class="weui-cell__bd">
+                                    <div class="weui-cell weui-cell_select">
+                                        <div class="weui-cell__bd">
+                                            <select class="weui-select" name="assetStatus" id="assetStatus" >
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="weui-cell">
+                                <div class="weui-cell__hd"><label for="confirmedDownTime" class="weui-label">停机时间</label></div>
+                                <div class="weui-cell__bd">
+                                    <input id="confirmedDownTime" name="confirmedDownTime" class="weui-input" type="datetime-local"/>
+                                </div>
+                            </div>
+                            <div class="weui-cell">
+                                <div class="weui-cell__hd"><label for="confirmedUpTime" class="weui-label">恢复时间</label></div>
+                                <div class="weui-cell__bd">
+                                    <input id="confirmedUpTime" name="confirmedUpTime" class="weui-input" type="datetime-local"/>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="weui-cells weui-cells_form">
                             <a class="weui-cell weui-cell_access" href="javascript:;" data-page="#step_cost">
                                 <div class="weui-cell__bd">
@@ -560,6 +587,7 @@
                     initData('casePriority', 'casePriority');
                     initData('caseType', 'caseType');
                     initData('caseSubType', 'caseSubType');
+                    initData('assetStatus', 'assetStatus');
                     function initData(keyId, msgType, defaultSelected) {
                         $.ajax({
                             type: "GET",
@@ -616,14 +644,30 @@
                                     $('#submit').hide();
                                     $('#closewo').removeClass('weui-btn_default').addClass('weui-btn_primary');
                                 }
+                                $('[data-page="#stepDetail"]').attr('data-woid', pageManager.woId);
                                 //set value
                                 setJsonValue(ret);
+                                //set asset status
+                                setAssetStatus();
                                 $loadingToast.fadeOut(100);
                             } else {
 
                             }
                         }
                     });
+                    
+                    function setAssetStatus() {
+                        $.ajax({
+                            type: "GET",
+                            url: WEB_ROOT+"web/findasset",
+                            data: {'assetId': pageManager.assetId},
+                            success:function(ret) {
+                                if (ret) {
+                                    $('#assetStatus').val(ret.status);
+                                }
+                            }
+                        });
+                    }
 
                     function setJsonValue(obj) {
                         if (!obj) return;
@@ -631,7 +675,18 @@
                             var $idx = $('#'+idx);
                             if ($idx.length == 0) return;
                             if ('datetime-local' == $idx.attr('type')) {
-                                val = val.replace(' ', 'T');
+                                if (!val) {
+                                    var datetime = new Date();
+                                    var month = datetime.getMonth()+1;
+                                    var date = datetime.getDate();
+                                    var hours = datetime.getHours();
+                                    var mins = datetime.getMinutes();
+                                    var secs = datetime.getSeconds();
+                                    val = datetime.getFullYear()+'-'+(month>9?month:'0'+month)+'-'+(date>9?date:'0'+date)
+                                            +'T'+(hours>9?hours:'0'+hours)+':'+(mins>9?mins:'0'+mins) + ':'+(secs>9?secs:'0'+secs);
+                                } else {
+                                    val = val.replace(' ', 'T');
+                                }
                                 $idx.val(val);
                             } else if ('checkbox' == $idx.attr('type')) {
                                 if (val) {
@@ -651,7 +706,16 @@
                     $('#woForm').on('click', '.weui-cell_access', function(){
                         $loadingToast.show();
                         $loadingToast.find('.weui-toast__content').html('数据保存中...');
-                        pageManager.go($(this).data('page'));
+                        var pageName = $(this).data('page');
+                        if (pageName === '#stepDetail') {
+                            pageManager.woId = $(this).data('woid');
+                        }
+                        pageManager.go(pageName);
+                    });
+                    $('.costList').on('click', '.weui-icon-cancel', function(){
+                        var $costList = $(this).parent().parent();
+                        pageManager.stepCost.splice($costList.data('id'), 1);
+                        $costList.remove();
                     });
 
                     //提交工单
@@ -669,7 +733,8 @@
                         }
                         formdata.type = type;
                         formdata.stepDetails = pageManager.stepCost;
-//                        formdata['requestTime'] = formdata['requestTime'].replace('T', ' ');
+                        formdata['confirmedDownTime'] = formdata['confirmedDownTime'].replace('T', ' ');
+                        formdata['confirmedUpTime'] = formdata['confirmedUpTime'].replace('T', ' ');
 //                        var flag = formValidate();
 //                        if (!flag) return;
                         var $loadingToast = $('#loadingToast');
@@ -729,7 +794,11 @@
                                     $($spans[2]).html(val.description);
                                     $step_list.append($tmpl);
                                     //show pic
-
+                                    if (val.fileId) {
+                                        var $img = $tmpl.find('img');
+                                        $img.attr('src', WEB_ROOT+'web/image/'+val.fileId);
+                                        $img.show();
+                                    }
                                     //find cost list
                                     $.ajax({
                                         url: WEB_ROOT+'web/detailcost',
@@ -789,7 +858,7 @@
                     </div>
                 </div>
                 <div class="weui-cell">
-                    <img style="width:100%" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=">
+                    <img style="width:100%;display:none;">
                 </div>
             </div>
         </script>
@@ -801,31 +870,43 @@
                         <div class="weui-cell">
                             <div class="weui-cell__hd"><label class="weui-label">工时(小时)</label></div>
                             <div class="weui-cell__bd">
-                                <input class="weui-input" id="manHours" name="manHours" type="text" pattern="[0-9]"/>
+                                <input class="weui-input" id="manHours" name="manHours" type="number"/>
+                            </div>
+                            <div class="weui-cell__ft">
+                                <i class="weui-icon-warn"></i>
                             </div>
                         </div>
                         <div class="weui-cell">
                             <div class="weui-cell__hd"><label class="weui-label">备件</label></div>
                             <div class="weui-cell__bd">
-                                <input id="accessory" name="accessory" class="weui-input" type="text"/>
+                                <input id="accessory" name="accessory" class="weui-input" type="text" maxlength="60" size="60"/>
                             </div>
                         </div>
                         <div class="weui-cell">
                             <div class="weui-cell__hd"><label class="weui-label">数量</label></div>
                             <div class="weui-cell__bd">
-                                <input id="accessoryQuantity" name="accessoryQuantity" class="weui-input" type="text"/>
+                                <input id="accessoryQuantity" name="accessoryQuantity" class="weui-input" type="number" />
+                            </div>
+                            <div class="weui-cell__ft">
+                                <i class="weui-icon-warn"></i>
                             </div>
                         </div>
                         <div class="weui-cell">
                             <div class="weui-cell__hd"><label for="requestorName" class="weui-label">单价(元)</label></div>
                             <div class="weui-cell__bd">
-                                <input id="accessoryPrice" name="accessoryPrice" class="weui-input" type="text"/>
+                                <input id="accessoryPrice" name="accessoryPrice" class="weui-input" type="number" />
+                            </div>
+                            <div class="weui-cell__ft">
+                                <i class="weui-icon-warn"></i>
                             </div>
                         </div>
                         <div class="weui-cell">
                             <div class="weui-cell__hd"><label for="requestorName" class="weui-label">其他费用(元)</label></div>
                             <div class="weui-cell__bd">
-                                <input id="otherExpense" name="otherExpense" class="weui-input" type="text"/>
+                                <input id="otherExpense" name="otherExpense" class="weui-input" type="number" />
+                            </div>
+                            <div class="weui-cell__ft">
+                                <i class="weui-icon-warn"></i>
                             </div>
                         </div>
                     </div>
@@ -839,14 +920,14 @@
             <script type="text/javascript">
                 $(function(){
                     $loadingToast.fadeOut(100);
-                    $('.costList').on('click', '.weui-icon-cancel', function(){
-                        var $costList = $(this).parent().parent();
-                        pageManager.stepCost.slice($costList.data('id'), 1);
-                        $costList.remove();
-                    });
                     $('#costSubmit').click(function(){
                         var array = $('#costForm').serializeArray();
                         var costData = pageManager.formdata(array);
+                        if (costData.manHours===''&&costData.accessory===''&&costData.accessoryQuantity===''
+                                &&costData.accessoryPrice===''&&costData.otherExpense===''){
+                            history.back();
+                            return;
+                        }
                         costData.siteId = pageManager.siteId;
                         pageManager.stepCost.push(costData);
                         insertCostList(costData);
