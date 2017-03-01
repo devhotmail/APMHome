@@ -1,0 +1,102 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
+
+<link rel="import" href="device-pagination-styles.html">
+<dom-module id="device-pagination">
+  <template>
+    <style include="device-pagination-styles"></style>
+    <div>
+      <span
+        class$="{{_getPrevCls(current)}}"
+        on-click="handlePrev">
+        <iron-icon icon="fa:fa-angle-left"></iron-icon>
+      </span>
+      <span class="counter" id="counter">
+        <template is="dom-if" if="{{showInput}}">
+          <input id="currentInput"
+            type="text"
+            value="{{inputVal::input}}"
+            on-keydown="handleInputKeydown">
+        </template>
+        <template is="dom-if" if="{{!showInput}}">
+          <span class="current"
+            on-click="handleShowInput">{{current}}</span>
+        </template>
+        <span> / {{total}}</span>
+      </span>
+      <span
+        class$="{{_getNextCls(current, total)}}"
+        on-click="handleNext">
+        <iron-icon icon="fa:fa-angle-right"></iron-icon>
+      </span>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'device-pagination',
+    properties: {
+      total: {
+        type: Number,
+        value: 5
+      },
+      current: {
+        type: Number,
+        value: 1,
+        notify: true
+      },
+      inputVal: {
+        type: Number 
+      },
+      showInput: {
+        type: Boolean,
+        value: false
+      }
+    },
+    _getPrevCls: function (current) {
+      return [current === 1 ? 'disabled' : '', 'pagination-btn pagination-prev'].join(' ');
+    },
+    _getNextCls: function (current, total) {
+      return [current === total ? 'disabled' : '', 'pagination-btn pagination-next'].join(' ');
+    },
+    handlePrev: function () {
+      if (this.current > 1) this.changePage(this.current - 1);
+    },
+    handleNext: function () {
+      if (this.current < this.total) this.changePage(this.current + 1);
+    },
+    changePage: function (n) {
+      if (n) this.current = n;
+    },
+    handleShowInput: function () {
+      this.inputVal = this.current;
+      this.showInput = true;
+      this.async((function() {
+        this.$.counter.querySelector('#currentInput').focus();
+      }).bind(this));
+    },
+    updateCurrent: function () {
+      if (this.current > this.total) this.current = this.total;
+      if (this.current < 1) this.current = 1;
+      this.current = parseInt(this.inputVal);
+      this.showInput = false;
+    },
+    handleInputKeydown: function (e) {
+      var keycode = event.which || event.keyCode;
+      if (keycode === 13) this.updateCurrent();
+    },
+    handleBlur: function (e) {
+      var inputEl = this.$.counter.querySelector('#currentInput');
+      if (inputEl && inputEl.contains(e.target)) return;
+      // when blur
+      if (this.showInput) this.updateCurrent();
+    },
+    ready: function () {
+      window.addEventListener('mousedown', this.handleBlur.bind(this));
+    },
+    detached: function () {
+      window.removeEventListener('mousedown', this.handleBlur.bind(this));
+    }
+  });
+</script>

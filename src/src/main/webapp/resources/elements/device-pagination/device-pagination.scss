@@ -1,0 +1,23 @@
+:host {
+  color: var(--device-pagination-color, #000);
+}
+
+.pagination-btn {
+  cursor: pointer;
+  &.disabled {
+    color: #b6c3cc;
+    cursor: not-allowed;
+  }
+}
+
+.counter {
+  user-select: none;
+
+  input {
+    width: 20px;
+  }
+}
+
+.current {
+  cursor: pointer;
+}
