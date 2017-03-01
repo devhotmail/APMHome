@@ -65,14 +65,20 @@ public class CommonService {
   @Cacheable(cacheNames = "springCache", key = "'commonService.findDepts.'+#siteId+'.'+#hospitalId")
   public Map<Integer, String> findDepts(int siteId, int hospitalId) {
     return db
-      .select(
-        new SQL().SELECT_DISTINCT("clinical_dept_id", "clinical_dept_name")
-          .FROM("asset_info")
-          .WHERE("site_id = :site_id ")
-          .WHERE("hospital_id = :hospital_id").toString())
+      .select(new SQL().SELECT_DISTINCT("clinical_dept_id", "clinical_dept_name").FROM("asset_info").WHERE("site_id = :site_id ").WHERE("hospital_id = :hospital_id").toString())
       .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
       .getAs(Integer.class, String.class)
       .toMap(Tuple2::_1, tuple -> Option.of(tuple._2()).getOrElse(""))
+      .toBlocking()
+      .single();
+  }
+
+  @Cacheable(cacheNames = "springCache", key = "'commonService.findSuppliers.'+#siteId")
+  public Map<Integer, String> findSuppliers(int siteId) {
+    return db
+      .select(new SQL().SELECT("id", "name").FROM("supplier").WHERE("site_id = :site_id").toString())
+      .parameter("site_id", siteId).getAs(Integer.class, String.class)
+      .toMap(Tuple2::_1, Tuple2::_2)
       .toBlocking()
       .single();
   }
