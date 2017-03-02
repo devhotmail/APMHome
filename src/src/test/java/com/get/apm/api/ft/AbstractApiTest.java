@@ -45,7 +45,7 @@ public class AbstractApiTest {
       .proxy(proxyTest)
       .addInterceptor(new Interceptor() {
         @Override
-        public Response intercept(Interceptor.Chain chain) throws IOException {
+        public Response intercept(Chain chain) throws IOException {
           Request request = chain.request();
           Stopwatch stopwatch = Stopwatch.createStarted();
           log.info("Sending request {}", request.url());
