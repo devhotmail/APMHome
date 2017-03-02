@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 
@@ -30,10 +29,12 @@ town pre-fetching resources, etc. -->
 <h:body styleClass="main-body #{guestPreferences.compact ? 'layout-compact' : null}">
     <ui:include src="./google-analytics.xhtml"/>
     <form class="user-info">
-        <h:inputHidden id="userId" value="#{userContextService.loginUser.id}"/>
-        <h:inputHidden id="userLoginName" value="#{userContextService.loginUser.loginName}"/>
-        <h:inputHidden id="userSiteId" value="#{userContextService.siteInfo.id}"/>
-        <h:inputHidden id="userSiteName" value="#{userContextService.siteInfo.name}"/>
+        <h:inputHidden id="userId" value="#{userContextService.loginUserId}"/>
+        <h:inputHidden id="userLoginName" value="#{userContextService.loginUserName}"/>
+        <h:inputHidden id="userSiteId" value="#{userContextService.loginUserSiteId}"/>
+        <h:inputHidden id="userSiteName" value="#{userContextService.loginUserSiteName}"/>
+        <h:inputHidden id="userHospitalId" value="#{userContextService.loginUserHospitalId}"/>
+        <h:inputHidden id="userOrgId" value="#{userContextService.loginUserOrgInfoId}"/>
     </form>
     <p:growl id="growl" autoUpdate="true" showDetail="false" showSummary="true"/>
     <div class="layout-wrapper #{guestPreferences.menuLayout}">
