@@ -73,9 +73,7 @@ public class AssetsApi {
         .put("ref", "self")
         .put("href", String.format("%s?orderby=%s&limit=%s&start=%s", request.getRequestURL(), orderBy, limit, start)).build())
       .build();
-
-
-    return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS)).body(body);
+    return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(body);
   }
 
 }
