@@ -1,0 +1,304 @@
+@import "px-colors-design/_settings.colors.scss";
+@import "_theme";
+
+/********************************/
+/* APM Light Theme for Px Components */
+/********************************/
+
+
+$d-black: rgb(0, 0, 0);
+$d-gray10: rgb(36, 35, 38);
+$d-gray9: rgb(59, 59, 63);
+$d-gray8: rgb(82, 81, 86);
+$d-gray7: rgb(124, 124, 132);
+$d-gray6: rgb(153, 153, 163);
+$d-gray5: rgb(177, 177, 188);
+$d-gray4: rgb(209, 208, 216);
+$d-gray3: rgb(228, 228, 234);
+$d-gray2: rgb(239, 239, 244);
+$d-gray1: rgb(247, 247, 252);
+$d-white: rgb(255, 255, 255);
+
+// Aliased for the Queen's English
+$d-grey10: $d-gray10;
+$d-grey9: $d-gray9;
+$d-grey8: $d-gray8;
+$d-grey7: $d-gray7;
+$d-grey6: $d-gray6;
+$d-grey5: $d-gray5;
+$d-grey4: $d-gray4;
+$d-grey3: $d-gray3;
+$d-grey2: $d-gray2;
+$d-grey1: $d-gray1;
+
+// Buttons
+
+$d-primary-blue: rgba(91, 132, 215, 1);
+$d-primary-blue-hover: rgb(98, 147, 237);
+$d-primary-blue-pressed: rgb(73, 106, 172);
+
+// Selections
+
+$d-select-blue-default: rgb(63, 148, 246);
+$d-select-blue-hover: rgb(57, 135, 221);
+$d-select-blue-pressed: rgb(45, 121, 191);
+
+// Alerts
+
+$d-alert-red: rgb(191, 48, 44);
+$d-alert-orange: rgb(204, 112, 50);
+$d-alert-yellow: rgb(204, 155, 0);
+$d-alert-blue: rgb(17, 98, 153);
+$d-alert-green: rgb(96, 127, 20);
+
+$text-color-default: rgb(124, 124, 132);
+$main-bg-color: rgba(234, 234, 234, 1);
+
+:root {
+
+  --px-base-text-color: $text-color-default;
+  --px-base-background-color: $main-bg-color;
+
+  // Actionable Text & Icons
+  --px-actionable-text-color: $text-color-default;
+  --px-actionable-text-color--hover: $d-primary-blue-hover;
+  --px-actionable-text-color--active: $d-primary-blue-pressed;
+  --px-selectable-text-color: $text-color-default;
+  --px-selectable-text-color--hover: $d-select-blue-hover;
+  --px-selectable-text-color--active: $d-select-blue-pressed;
+  --px-actionable-alt-text-color: $text-color-default;
+  --px-actionable-alt-text-color--hover: $d-primary-blue-hover;
+  --px-actionable-alt-text-color--active: $d-primary-blue-pressed;
+
+  // Button Group
+  --px-btn-group-text-color: $text-color-default;
+  --px-btn-group-background-color: $d-select-blue-default;
+  --px-btn-group-background-color--hover: $d-select-blue-hover;
+  --px-btn-group-background-color--pressed: $d-select-blue-pressed;
+  --px-btn-group-border-color: $d-primary-blue;
+  --px-btn-group-border-color--hover: rgba($d-black, 0);
+  --px-btn-group-border-color--pressed: rgba($d-black, 0);
+
+  // Buttons
+  --px-btn-border-color: $d-primary-blue;
+  --px-btn-border-color--hover: $d-primary-blue-hover;
+  --px-btn-border-color--pressed: $d-primary-blue-pressed;
+  --px-btn-shadow--light: rgba($d-white, 0.15);
+  --px-btn-background: $d-primary-blue;
+  --px-btn-background--hover: $d-primary-blue-hover;
+  --px-btn-background--pressed: $d-primary-blue-pressed;
+  --px-btn-color: $d-gray4;
+  --px-btn-shadow: rgba($d-black, 0.15);
+  --px-btn-bare-color--visited: $d-gray6;
+  --px-btn-bare-color--hover: $d-primary-blue-hover;
+  --px-btn-bare-color--pressed: $d-primary-blue-pressed;
+  --px-btn-primary-bare-color--visited: $d-primary-blue-pressed;
+  --px-btn-primary-bare-color--hover: $d-primary-blue-hover;
+  --px-btn-primary-bare-color--pressed: $d-primary-blue-pressed;
+  --px-btn-primary-border-color: $d-primary-blue-hover;
+  --px-btn-primary-background: $d-primary-blue;
+  --px-btn-primary-background--hover: $d-primary-blue-hover;
+  --px-btn-primary-background--pressed: $d-primary-blue-pressed;
+  --px-btn-primary-color: $d-gray4;
+  --px-btn-tertiary-color: $d-primary-blue;
+  --px-btn-disabled-background: $d-gray7;
+
+  // Code
+  --px-code-text-color: $d-gray4;
+  --px-code-border-color: rgba($d-black, 0);
+
+  // Forms
+  --px-input-text-color: $d-gray6;
+  --px-input-text-color--placeholder: $d-gray8;
+  --px-input-background-color: transparent;
+  --px-input-border-color--inner: transparent;
+  --px-input-border-color--outer: $text-color-default;
+  --px-input-border-color--inner--focused: transparent;
+  --px-input-border-color--outer--focused: $d-primary-blue-hover;
+  --px-input-text-color--disabled: $d-gray3;
+  --px-input-background-color--disabled: $d-gray7;
+  // --px-input-text-color--readonly: TODO;
+  // --px-input-background-color--readonly: TODO;
+  // --px-input-border-color--readonly: TODO;
+  // --px-input-text-color--help: TODO;
+  --px-select-background-color: transparent;
+  --px-select-text-color: $text-color-default;
+  // --px-select-chevron-color: $d-gray4;
+  --px-select-shadow-color--dark: rgba($d-white, .15);
+  --px-select-shadow-color--light: rgba($d-white, .15);
+  --px-select-text-color--disabled: $d-gray10;
+  // --px-select-chevron-color--disabled: $d-gray15;
+  --px-validation-warning-text-color: $d-alert-orange;
+  --px-validation-error-text-color: $d-alert-red;
+  --px-validation-success-text-color: $d-alert-green;
+
+  // Input Group
+  --px-input-group-text-color: $d-gray8;
+  --px-input-group-icon-color: $d-gray8;
+
+  // Toggle
+  --px-toggle-switch-color: $d-gray6;
+  --px-toggle-switch-border-color: $d-gray8;
+  --px-toggle-switch-shadow-color: rgba($d-black, .15);
+  --px-toggle-border-color--off: $d-gray10;
+  --px-toggle-background-color--on: $d-select-blue-default;
+  --px-toggle-border-color--on: $d-select-blue-hover;
+
+  // Alert Label
+  --px-alert-label-text-color--alert: $d-white;
+  --px-alert-label-background-color--alert: $d-alert-red;
+  --px-alert-label-text-color--warning: $d-white;
+  --px-alert-label-background-color--warning: $d-alert-orange;
+  --px-alert-label-text-color--error: $d-white;
+  --px-alert-label-background-color--error: $d-alert-yellow;
+  --px-alert-label-text-color--info: $d-white;
+  --px-alert-label-background-color--info: $d-alert-blue;
+  --px-alert-label-text-color--healthy: $d-white;
+  --px-alert-label-background-color--healthy: $d-black;
+  --px-alert-label-border-color--healthy: rgba($d-black, 0);
+  --px-alert-label-text-color--inverted: $d-black;
+  --px-alert-label-background-color--inverted: $d-gray4;
+  --px-alert-label-text-color--unknown: $d-white;
+
+  // Alert Message
+  --px-alert-message-background-color: $d-black;
+  --px-alert-message-icon-outline-color: rgba($d-black, 0);
+  --px-alert-message-icon-text-color: $d-white;
+  --px-alert-message-alert-color: $d-alert-red;
+  --px-alert-message-warning-color: $d-alert-orange;
+  --px-alert-message-error-color: $d-alert-yellow;
+  --px-alert-message-info-color: $d-alert-blue;
+
+  // Data Table
+  --px-data-table-cell-border-validation--failed: $d-alert-red;
+  --px-data-table-cell-border-color--selected: $d-select-blue-default;
+  --px-data-table-cell--selected: $d-select-blue-default;
+  --px-data-table-cell-background-color--selected: $d-select-blue-default;
+  --px-data-table-row-border-top-color--selected: $d-select-blue-default;
+  --px-data-table-row-border-bottom-color--selected: $d-select-blue-default;
+  --px-data-table-cell-text-color--selected: $d-gray4;
+  --px-data-table-cell-text-color-validation--failed: $d-alert-red;
+  --px-data-table-cell-text-color--sorted: $d-select-blue-default;
+  --px-data-table-cell-border-validation--failed: $d-alert-red;
+  --px-data-table-results-text-color--none: $d-gray4;
+  --px-data-table-btn-pagination-number-background-color: $d-select-blue-default;
+  --px-data-table-btn-pagination-number-text-color: $d-gray3;
+  --px-data-table-btn-pagination-number-background-color--hover: $d-select-blue-hover;
+  --px-data-table-btn-pagination-number-text-color--hover: $d-gray3;
+  --px-data-table-insertion-indicator-td-background-color: $d-primary-blue;
+  --px-data-table-tr--filter: $d-black;
+  --px-data-table-text-color--dragged: $d-primary-blue;
+  --cell--value__highlight--color__high: $d-alert-red;
+  --cell--value__highlight--color__medium: $d-alert-yellow;
+  --cell--value__highlight--color__low: $d-alert-blue;
+
+  //// Datetime Components
+
+  // Calendar Picker
+  --px-calendar-background-color: $d-primary-blue;
+  --px-calendar-background-color--hover: $d-primary-blue-hover;
+  --px-calendar-background-color--pressed: $d-primary-blue-pressed;
+  --px-calendar-background-color--selected: $d-select-blue-default;
+  --px-calendar-background-color--selected--hover: $d-select-blue-hover;
+  --px-calendar-background-color--selected--pressed: $d-select-blue-pressed;
+  --px-calendar-text-color: $text-color-default;
+  --px-calendar-text-color--hover: $d-gray3;
+  --px-calendar-text-color--selected: $d-gray2;
+  --px-calendar-labels--text-color: $d-gray10;
+  --px-calendar-sub-labels--text-color: $d-gray8;
+
+  // Datetime Common
+  --px-datetime-entry-selected: $d-select-blue-default;
+
+  // Datetime Field
+  --px-datetime-border-color-validation--failed: $d-alert-red;
+
+  // Datetime Picker
+  --px-datetime-picker-background-color: $d-primary-blue;
+  --px-datetime-picker-background-color--hover: $d-primary-blue-hover;
+  --px-datetime-picker-background-color--pressed: $d-primary-blue-pressed;
+  --px-datetime-picker-border-color: $d-primary-blue;
+  --px-datetime-picker-overlay-color: rgba($d-black, 0.15);
+
+  // Datetime Range Field
+  --px-datetime-range-field-text-color-validation--failed: $d-alert-red;
+
+  // Datetime Range Panel
+  --px-range-panel-border-color: $d-primary-blue;
+  --px-range-panel-background-color: $main-bg-color;
+  --px-range-panel-text-color: $d-primary-blue;
+  --px-range-panel-overlay-color: rgba($d-white, 0.15);
+  --px-range-panel-background-color--hover: $d-primary-blue;
+  --px-range-panel-background-color--pressed: $d-primary-blue-pressed;
+  --px-range-panel-text-color--selected: $d-select-blue-default;
+  --px-range-panel-text-color--selected--hover: $d-select-blue-hover;
+  --px-range-panel-text-color--selected--pressed: $d-select-blue-pressed;
+
+  // Rangepicker
+  --px-rangepicker-overlay-color: rgba($d-black, 0.15);
+
+  // Dropdown
+  --px-dropdown-bg-color--default: transparent;
+  --px-dropdown-text-color: $d-primary-blue;
+  --px-dropdown-border-color: $d-primary-blue;
+  --px-dropdown-text-color--hover: $d-gray4;
+  --px-dropdown-text-color--pressed: $d-gray4;
+  --px-dropdown-text--opened: $d-gray4;
+  --px-dropdown-list-item-background-color: $d-select-blue-default;
+  --px-dropdown-list-item-text-color: $d-gray4;
+  --px-dropdown-content-text-color: $d-gray4;
+
+  // File Upload
+  --px-file-upload-validation-color: $d-alert-red;
+  --px-file-upload-dropzone-border-color: rgba($d-black, .15);
+
+  // KPI
+  --px-kpi-text-color: $d-gray4;
+
+  // Modal
+  --px-modal-background-color: $d-gray4;
+  --px-modal-overlay-color: rgba($d-black, .15);
+  --px-modal-border-color: $d-gray4;
+
+  // Overlay
+  --px-overlay-light-color: rgba($d-black, .15);
+  --px-overlay-dark-color: rgba($d-black, 0.65);
+
+  // Popover
+  --px-popover-background-color: $d-gray4;
+  --px-popover-border-color: $d-gray4;
+  --px-popover-text-color: $d-gray10;
+
+  // Progress Bar
+  --px-progress-bar-fill-color: $d-select-blue-default;
+  --px-progress-bar-stripe-color: $d-select-blue-hover;
+
+
+  // Spinner
+  --px-spinner-fill-color: $d-select-blue-default;
+  --px-spinner-background-color: $d-gray6;
+
+  // Tabs
+  --px-tab-background-color: $main-bg-color;
+  --px-tab-background-color--selected: $d-white;
+  --px-tab-text-color: $d-gray4;
+  --px-tab-text-color--selected: $d-select-blue-default;
+  --px-tab-text-color--bare: $d-gray4;
+
+  // Tooltip
+  --px-tooltip-background-color: $d-black;
+  --px-tooltip-text-color: $d-gray4;
+
+  --px-tooltip-light-text-color: $d-gray4;
+  --px-tooltip-light-border-color: transparent;
+
+  // Typeahead
+  --px-typeahead-background-color: $main-bg-color;
+  --px-typeahead-background-color--selected: $d-select-blue-default;
+  --px-typeahead-border-color: $d-primary-blue;
+  --px-typeahead-border-color--focus: $d-select-blue-default;
+  --px-typeahead-box-shadow-color: $d-black;
+  --px-typeahead-box-shadow-color--focus: $d-black;
+  --px-typeahead-text-color: $d-gray4;
+  --px-typeahead-text-color--selected: $d-gray4;
+}

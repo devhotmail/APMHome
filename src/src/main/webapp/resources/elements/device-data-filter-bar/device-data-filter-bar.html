@@ -1,0 +1,116 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="import" href="../../bower_components/px-rangepicker/px-rangepicker.html">
+<link rel="import" href="../../moment.html">
+<link rel="import" href="../../uri.html">
+<link rel="import" href="device-data-filter-bar-styles.html">
+
+
+<dom-module id="device-data-filter-bar">
+  <template>
+    <style include="device-data-filter-bar-styles"></style>
+    <div class="toolbar flex flex--row flex--left">
+      <div class="flex--item text--center">
+        <px-rangepicker
+          id="rangepicker"
+          range="{{range}}"
+          hide-time="true"
+          date-format="YYYY/MM/DD"
+          time-format="hh:mm:ss A"
+          show-buttons="true">
+        </px-rangepicker>
+      </div>
+      <div class="u-mh+ flex--item">
+        <label for="device-filter">筛选条件</label>
+        <px-dropdown id="device-filter" class="u-mh+" display-value="[[_displayValue]]" selected-key="{{filterBy}}">
+          <px-dropdown-content class="px-dropdown-content"
+                               max-cont-character-width="10"
+                               extend-dropdown="true"
+                               extend-dropdown-by="15"
+                               items="[[selectOptions]]">
+          </px-dropdown-content>
+        </px-dropdown>
+      </div>
+    </div>
+  </template>
+  <script>
+    (
+      function() {
+        var DATE_FORMAT = 'YYYY-MM-DD';
+
+        Polymer({
+          is: 'device-data-filter-bar',
+          properties: {
+            selectOptions: Array,
+            filterBy: {
+              type: String,
+              notify: true,
+            },
+            from: {
+              type: String,
+              notify: true
+            },
+            to: {
+              type: String,
+              notify: true
+            },
+            _displayValue: {
+              computed: '_getDisplayValue(filterBy, selectOptions)'
+            }
+          },
+          observers: [
+            '_extractStartto(range)',
+            'saveOptionsInHistory("filter", filterBy)',
+            'saveOptionsInHistory("from", from)',
+            'saveOptionsInHistory("to", to)',
+          ],
+          ready: function() {
+            var _this = this;
+
+            // setup data from location hash
+            this.restoreOptionsFromHistory('filter', 'filterBy');
+            this.restoreOptionsFromHistory('from', 'from');
+            this.restoreOptionsFromHistory('to', 'to');
+
+            fetch('mock/device-filter-options.json').then(function(res) {
+              return res.json();
+            }).then(function(list) {
+              _this.set('selectOptions', list);
+            });
+
+            var range = {
+              from: moment().toISOString(),
+              to: moment().add(1, 'y').toISOString()
+            };
+
+            this.set('range', range);
+          },
+          _getDisplayValue: function(key, options) {
+            return options.find(function(item) {
+              return item.key == key;
+            }).val;
+          },
+          _getfrom: function(range, type) {
+            return range[type];
+          },
+          _extractStartto: function(range) {
+            this.set('from', moment(range.from).format(DATE_FORMAT));
+            this.set('to', moment(range.to).format(DATE_FORMAT));
+          },
+          restoreOptionsFromHistory: function(name, prop) {
+            var options = URI().query(URI().fragment()).query(true);
+            this.set(prop, options[name] || 0);
+          },
+          saveOptionsInHistory: function(name, val) {
+            if (!val) {
+              return;
+            }
+            var options = URI().query(URI().fragment()).query(true);
+            options[name] = val;
+            location.hash = '#' + URI().query(options).query();
+          }
+        });
+      }
+    )();
+  </script>
+</dom-module>
