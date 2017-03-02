@@ -14,7 +14,7 @@
     </div>
   </template>
   <script>
-    function waveDefaultConfig() {
+    function getWaveConf() {
       return {
         circleThickness: 1, // The outer circle stroke width
         circleColor: '#178BCA', // The color of the outer circle.
@@ -116,89 +116,6 @@
 
         assetGroup.each(renderNode)
 
-        function renderNode(node) {
-          var config = waveDefaultConfig()
-          var assetGroup = d3.select(this)
-
-          var radius = node.r
-          var elementId = node.data.id
-          var value = node.data.usage * 100
-
-          var fillPercent = Math.max(0, Math.min(100, value)) / 100
-
-          var waveHeightScale = d3.scaleLinear()
-          .range([config.waveHeight, config.waveHeight])
-          .domain([0, 100])
-
-          var textPixels = (config.textSize * radius / 2)
-          var textValue = parseInt(value)
-
-          var circleThickness = config.circleThickness
-
-          var fillCircleMargin = circleThickness
-          var fillCircleRadius = radius
-          var waveHeight = fillCircleRadius * waveHeightScale(fillPercent * 100)
-
-          var waveLength = fillCircleRadius * 2 / config.waveCount
-          var waveClipCount = 1 + config.waveCount
-          var waveClipWidth = waveLength * waveClipCount
-
-          // Text
-          assetGroup.append('text')
-          .text(textValue + '%')
-          .attr('class', 'liquidFillGaugeText')
-          .attr('text-anchor', 'middle')
-          .attr('font-size', textPixels + 'px')
-          .attr('fill', config.textColor)
-          .attr('dy', '.35em')
-
-          assetGroup.append('circle')
-          .attr('fill', config.waveColor)
-          .attr('r', radius)
-          .attr('clip-path', 'url(#clipWave' + elementId + ')')
-
-          // Scales for controlling the size of the clipping path.
-          var waveScaleX = d3.scaleLinear().range([0, waveClipWidth]).domain([0, 1])
-          var waveScaleY = d3.scaleLinear().range([0, waveHeight]).domain([0, 1])
-
-          // The clipping wave area.
-          var clipArea = d3.area()
-          .x(function (d) {
-            return waveScaleX(d.x)
-          })
-          .y0(function (d) {
-            return waveScaleY(Math.sin((1 - config.waveCount + d.y) * Math.PI * 2))
-          })
-          .y1(function (d) {
-            return (fillCircleRadius * 2 + waveHeight)
-          })
-
-          // Data for building the clip wave area.
-          var data = []
-          for (var i = 0; i <= 40 * waveClipCount; i++) {
-            data.push({
-              x: i / (40 * waveClipCount),
-              y: i / 40
-            })
-          }
-
-          var waveGroup = assetGroup.append('defs')
-          .append('clipPath')
-          .attr('id', 'clipWave' + elementId)
-
-          waveGroup.append('path')
-          .datum(data)
-          .attr('d', clipArea)
-          .attr('T', 0)
-
-          var waveRiseScale = d3.scaleLinear()
-          .range([(fillCircleMargin + fillCircleRadius * 2 + waveHeight), (fillCircleMargin - waveHeight)])
-          .domain([0, 1])
-
-          var waveGroupXPosition = fillCircleMargin + fillCircleRadius - waveClipWidth
-          waveGroup.attr('transform', 'translate(' + waveGroupXPosition + ',' + waveRiseScale(fillPercent) + ')')
-        }
-
         var text = g.selectAll('text')
         .data(nodes)
         .enter().append('text')
@@ -212,8 +129,6 @@
         .text(function(d) {
           return d.data.name;
         });
-
-        var node = g.selectAll('circle,text');
 
         svg.on('click', function() {
           zoom(root);
@@ -240,13 +155,100 @@
           view = v;
 
           assetGroup
+          .attr('transform-origin', '50% 50%')
           .attr('transform', function (d) {
             return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
           })
-          .attr('transform-origin', '50% 50%')
-
-          assetGroup.selectAll('circle,text')
+          .selectAll('circle,text')
           .attr('transform', 'scale(' + k + ')')
+        }
+
+        function renderNode(node) {
+          var config = getWaveConf()
+          var assetGroup = d3.select(this)
+
+          var radius = node.r
+          var elementId = node.data.id
+          var value = node.data.usage * 100
+
+          var fillPercent = Math.max(0, Math.min(100, value)) / 100
+
+          var circleThickness = config.circleThickness
+
+          var fillCircleMargin = circleThickness
+          var fillCircleRadius = radius
+
+          assetGroup.append('circle')
+          .attr('fill', config.waveColor)
+          .attr('r', radius)
+          .attr('pointer-events', 'none')
+          .attr('clip-path', 'url(#clipWave' + elementId + ')')
+
+          // Text
+          var textPixels = config.textSize * radius / 2
+          var textValue = parseInt(value)
+          
+          assetGroup.append('text')
+          .text(textValue + '%')
+          .attr('pointer-events', 'none')
+          .attr('text-anchor', 'middle')
+          .attr('font-size', textPixels + 'px')
+          .attr('fill', config.textColor)
+          .attr('dy', '.35em')
+          .style('user-select', 'none')
+
+          // Wave clip effect
+          var waveHeight = fillCircleRadius * config.waveHeight
+
+          var waveLength = fillCircleRadius * 2 / config.waveCount
+          var waveClipCount = 1 + config.waveCount
+          var waveClipWidth = waveLength * waveClipCount
+
+          // Scales for controlling the size of the clipping path.
+          var waveScaleX = d3.scaleLinear().range([0, waveClipWidth]).domain([0, 1])
+          var waveScaleY = d3.scaleLinear().range([0, waveHeight]).domain([0, 1])
+
+          // The clipping wave area.
+          var clipArea = d3.area()
+          .x(function (d) {
+            return waveScaleX(d.x)
+          })
+          .y0(function (d) {
+            return waveScaleY(Math.sin((1 - config.waveCount + d.y) * Math.PI * 2))
+          })
+          .y1(function (d) {
+            return fillCircleRadius * 2 + waveHeight
+          })
+
+          // Data for building the clip wave area.
+          var data = []
+          for (var i = 0; i <= 40 * waveClipCount; i++) {
+            data.push({
+              x: i / (40 * waveClipCount),
+              y: i / 40
+            })
+          }
+
+          // console.log(data)
+
+          var waveGroup = assetGroup.append('defs')
+          .append('clipPath')
+          .attr('id', 'clipWave' + elementId)
+
+          waveGroup.append('path')
+          .datum(data)
+          .attr('d', clipArea)
+          .attr('T', 0)
+
+          var waveRiseScale = d3.scaleLinear()
+          .range([
+            fillCircleMargin + fillCircleRadius + waveHeight,
+            -(fillCircleMargin + fillCircleRadius - waveHeight)
+          ])
+          .domain([0, 1])
+
+          var waveGroupXPosition = fillCircleMargin + fillCircleRadius - waveClipWidth
+          waveGroup.attr('transform', 'translate(' + waveGroupXPosition + ',' + waveRiseScale(fillPercent) + ')')
         }
       },
       ready: function() {
