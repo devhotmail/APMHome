@@ -53,9 +53,9 @@ public class ProfitApi {
                                                         @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
     log.info("year:{}, groupby:{}, type:{}, dept:{}, month:{}, limit:{}, start:{}", year, groupBy, type, dept, month, limit, start);
     UserAccount user = UserContext.getCurrentLoginUser();
-    Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
+    Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
-    Map<Integer, String> months = Observable.from(commonService.findFields(user.getSiteId(), "month").entrySet()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
+    Map<Integer, String> months = Observable.from(commonService.findFields(user.getSiteId(), "month").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, Tuple3<Integer, String, String>> hospitals = commonService.findHospitals();
     log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (!Range.closed(DateTime.now().getYear() - 3, DateTime.now().getYear()).contains(year)) {

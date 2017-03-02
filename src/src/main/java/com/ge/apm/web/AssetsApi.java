@@ -46,7 +46,7 @@ public class AssetsApi {
                                                            @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
     log.info("orderBy:{}, limit:{}, start:{}", orderBy, limit, start);
     UserAccount user = UserContext.getCurrentLoginUser();
-    Map<Integer, String> types = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
+    Map<Integer, String> types = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> suppliers = commonService.findSuppliers(user.getSiteId());
     Observable<Tuple7<Integer, String, Integer, String, Integer, Money, LocalDate>> assets = assetsService.findAssets(user.getSiteId(), user.getHospitalId(), orderBy);
