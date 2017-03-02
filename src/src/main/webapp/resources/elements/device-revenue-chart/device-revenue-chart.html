@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../behavior/context.html">
 <link rel="import" href="../fastclick/fastclick.html">
 <link rel="import" href="../modernizr/modernizr.html">
 <link rel="import" href="device-revenue-chart-styles.html">
@@ -18,9 +19,9 @@
   </template>
   <script>
     define('device-revenue-chart', [
-      'context',
+      'behavior/context',
       'lscache'
-    ], function(context, lscache) {
+    ], function(ContextBehavior, lscache) {
         function project(x, radius) {
           var angle = ( x - 180 ) / 180 * Math.PI;
           return [radius * Math.cos(angle), radius * Math.sin(angle)];
@@ -174,7 +175,7 @@
           .attr('class', 'gauge')
           .attr('transform', 'translate(' + locationX + ',' + locationY + ')');
 
-          if (!Modernizr.touchevents) { 
+          if (!Modernizr.touchevents) {
             // using mouse event for hover effect in pc view
             gaugeGroup.on('mouseover', function(d, i, nodeList) {
               var currentNodeGroup = d3.select(nodeList[i]).node().parentNode;
@@ -203,7 +204,7 @@
           .attr('stroke-width', config.circleThickness)
           .attr('cx', radius)
           .attr('cy', radius);
-          
+
           // Text to show current node's name
           // at least depth over 0
           if (config.showLabel) {
@@ -231,7 +232,7 @@
             var pos = [x0, y0];
             if (absolutePos[0] === 0) pos = [0, y0];
             if (absolutePos[0] > 0) pos = [-x0, y0];
-            
+
             // draw text to this group
             var labelGroup = gauge.append('g')
             .attr('class', 'labels')
@@ -611,18 +612,16 @@
 
         Polymer({
           is: 'device-revenue-chart',
+          behaviors: [
+            Polymer.IronResizableBehavior,
+            ContextBehavior
+          ],
           properties: {
-            apiBaseUrl: {
-              type: String,
-              value: function() {
-                return context.resolveUrl('/api/profit');
-              }
-            },
             year: Number,
             groupBy: String,
             queryUrl: {
               type: String,
-              computed: 'computeQueryUrl(apiBaseUrl, year, groupBy)'
+              computed: 'computeQueryUrl(year, groupBy)'
             },
             isAttached: Boolean,
             _pageStartHistoryL1: {
@@ -705,9 +704,6 @@
             '_computeLastStartL2(_pageStartHistoryL2.*)',
             '_queryChanged(year, groupBy, isAttached)',
             '_replot(width, height)'
-          ],
-          behaviors: [
-            Polymer.IronResizableBehavior
           ],
           listeners: {
             'iron-resize': '_onResize'
@@ -1085,7 +1081,7 @@
             var data = Object.assign({children: children}, parent.data);
             var tree = d3.hierarchy(data);
             tree.data = parent.parent.data;
-            
+
             // calc start angle
             var result = layout_orbit(tree, {
               start: START_ANGEL,
@@ -1544,8 +1540,8 @@
             // any server data transformation happens here, before entering cache
             return item;
           },
-          computeQueryUrl: function(baseUri, year, groupBy) {
-            var uri = URI(this.apiBaseUrl).addQuery('year', year).addQuery('groupby', groupBy);
+          computeQueryUrl: function(year, groupBy) {
+            var uri = URI(this.resolveApiUrl('/api/profit')).addQuery('year', year).addQuery('groupby', groupBy);
             if (groupBy === 'device') {
               uri.removeQuery('groupby');
             }

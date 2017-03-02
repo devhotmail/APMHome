@@ -1,0 +1,18 @@
+<script>
+  define('behavior/context', ['context'], function(context) {
+    return {
+      properties: {
+        /**
+         * user context info like session
+         */
+        user: Object
+      },
+      resolveApiUrl: function(url) {
+        return context.resolveUrl(url);
+      },
+      ready: function() {
+        this.set('user', context.user());
+      },
+    };
+  });
+</script>
