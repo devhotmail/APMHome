@@ -6,6 +6,8 @@ import com.github.davidmoten.rx.jdbc.ConnectionProvider;
 import com.github.davidmoten.rx.jdbc.Database;
 import com.github.davidmoten.rx.jdbc.tuple.Tuple2;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.primitives.Ints;
 import javaslang.Tuple;
 import javaslang.Tuple3;
 import javaslang.collection.HashMap;
@@ -37,13 +39,27 @@ public class CommonService {
     db = Database.from(connectionProvider);
   }
 
+  @Cacheable(cacheNames = "springCache", key = "'commonService.findAllMessages'")
+  public Iterable<ImmutableMap<String, Object>> findAllMessages() {
+    return db.select(new SQL().SELECT("id", "msg_type", "msg_key", "value_zh", "value_en", "value_tw", "site_id").FROM("i18n_message").toString())
+      .getAs(Integer.class, String.class, String.class, String.class, String.class, String.class, Integer.class)
+      .map(t -> new ImmutableMap.Builder<String, Object>()
+        .put("id", Option.of(t._1()).getOrElse(0))
+        .put("msg_type", Option.of(t._2()).getOrElse(""))
+        .put("msg_key", Option.of(t._3()).getOrElse(""))
+        .put("value_zh", Option.of(t._4()).getOrElse(""))
+        .put("value_en", Option.of(t._5()).getOrElse(""))
+        .put("value_tw", Option.of(t._6()).getOrElse(""))
+        .put("site_id", Option.of(t._7()).getOrElse(0)).build())
+      .sorted((l, r) -> Option.of(Ints.tryParse(l.get("id").toString())).getOrElse(0) - Option.of(Ints.tryParse(r.get("id").toString())).getOrElse(0))
+      .toBlocking().toIterable();
+  }
+
+  @Cacheable(cacheNames = "springCache", key = "'commonService.findFields.'+#siteId+'.'+#type")
   public Map<String, String> findFields(int siteId, String type) {
-    return Observable.from(DbMessageSource.getMessageCache(siteId).entrySet())
+    return Observable.from(Option.of(DbMessageSource.getMessageCache(siteId)).filter(map -> map.entrySet().stream().anyMatch(entry -> entry.getValue().getMsgType().equalsIgnoreCase(type))).getOrElse(DbMessageSource.getMessageCache(-1)).entrySet())
       .filter(entry -> entry.getValue().getMsgType().equalsIgnoreCase(type))
-      .map(Map.Entry::getValue)
-      .toMap(I18nMessage::getMsgKey, I18nMessage::getValueZh)
-      .toBlocking()
-      .single();
+      .map(Map.Entry::getValue).toMap(I18nMessage::getMsgKey, I18nMessage::getValueZh).toBlocking().single();
   }
 
   @Cacheable(cacheNames = "springCache", key = "'commonService.findHospitals'")
