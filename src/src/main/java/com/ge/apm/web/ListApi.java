@@ -75,15 +75,18 @@ public class ListApi {
 
 		return ResponseEntity.ok()
 				.cacheControl(
-						CacheControl.maxAge(1, TimeUnit.HOURS))
-				.body(new ImmutableMap.Builder<String, Object>().put("pages",
-						new ImmutableMap.Builder<String, Object>()
-								.put("total", ListService.queryForCount(site_id, hospital_id, from, to))
-								.put("limit", limit).put("start", start).build())
+						CacheControl.maxAge(1, TimeUnit.DAYS))
+				.body(new ImmutableMap.Builder<String, Object>()
+						.put("pages",
+								new ImmutableMap.Builder<String, Object>()
+									.put("total", ListService.queryForCount(site_id, hospital_id, from, to) )
+									.put("limit", limit)
+									.put("start", start)
+									.build() )
 
 						.put("ruler", jsonRuler(
 								ListService.queryForTickMin(site_id, hospital_id, dept, type, from, to),
-								ListService.queryForTickMax(site_id, hospital_id, dept, type, from, to)))
+								ListService.queryForTickMax(site_id, hospital_id, dept, type, from, to)) )
 
 						.put("items",
 								jsonAsset(request, limit, start,
@@ -92,8 +95,15 @@ public class ListApi {
 												ListService.queryForBasic(site_id, hospital_id, from, to),
 												ListService.queryForOp(site_id, hospital_id, from, to),
 												ListService.queryForRoi(site_id, hospital_id, from, to),
-												ListService.queryForBm(site_id, hospital_id, from, to))))
-
+												ListService.queryForBm(site_id, hospital_id, from, to))) )
+				        .put("link", 
+				        		new ImmutableMap.Builder<String, Object>()
+				        			.put("ref", "self")
+				        			.put("href",
+				        					Option.of(from).map(v -> 
+				        						String.format("%s?from=%s&to=%s&dept=%s&type=%s&orderby=%s&limit=%s&start=%s", 
+				        								request.getRequestURL(), from, to, dept, type, orderby, limit, start) ).getOrElse("N/A") )
+				        			.build() )
 						.build());
 
 	}
@@ -119,7 +129,8 @@ public class ListApi {
 										t1._1(), t1._2(), t1._3(), t1._4(), t1._5(),
 										t2._2(), t2._3(), t2._4(), 1.0*t2._5()/t3._4()/24/36, t2._6(),
 										t3._2(), t3._3(), t3._4(),
-										t4._2()*t3._4(), t4._3()*t3._4(), t4._4()*t3._4(), t4._5()*t3._4(), t4._6()*t3._4(), t4._7()*t3._4() ) );
+										t4._2()*t3._4(), t4._3()*t3._4(), t4._4()*t3._4(), t4._5()*t3._4(), t4._6()*t3._4(), t4._7()*t3._4() ) ) 
+							.cache();
 
 		result = dept == Integer.MIN_VALUE ? result : result.filter(t19 -> t19.getElement3()==dept);
 
@@ -228,6 +239,8 @@ public class ListApi {
 				.map(asset -> new ImmutableMap.Builder<String, Object>()
 						.put("id",
 								Option.of(asset.getElement0()).getOrElse(0) )
+						.put("name",
+								Option.of(asset.getElement1()).getOrElse("N/A") )
 						.put("type",
 								Option.of(asset.getElement2()).getOrElse(0) )
 						.put("dept",
