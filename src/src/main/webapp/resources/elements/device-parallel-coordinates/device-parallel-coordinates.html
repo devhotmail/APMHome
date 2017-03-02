@@ -108,8 +108,7 @@
         observers: [
           '_replot(width, height, data)',
           'saveOptionsInHistory(sortBy)',
-          '_loadData(from, to, filterBy, sortBy, pageStart, pageSize)',
-          '_pager(pageStart, pageTotal)',
+          '_loadData(from, to, filterBy, sortBy, pageStart, pageSize)'
         ],
         behaviors: [
           Polymer.IronResizableBehavior
@@ -641,9 +640,6 @@
           var key = this.queryUrl;
           this.$.chartBody.innerHTML = '';
           this.debounce('replot', this.render, 500);
-        },
-        _pager: function() {
-          console.log('pager update:', arguments);
         },
         ready: function() {
           this._loadData();
