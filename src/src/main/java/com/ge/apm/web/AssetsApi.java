@@ -20,6 +20,7 @@ import rx.Observable;
 import webapp.framework.web.service.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
@@ -40,7 +41,7 @@ public class AssetsApi {
   @ResponseBody
   public ResponseEntity<Map<String, Object>> handleRequest(HttpServletRequest request,
                                                            @Pattern(regexp = "type|dept|supplier|price|yoa") @RequestParam(value = "orderby", required = false, defaultValue = "type") String orderBy,
-                                                           @Min(1) @RequestParam(value = "limit", required = false) Integer limit,
+                                                           @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(value = "limit", required = false) Integer limit,
                                                            @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
     log.info("orderBy:{}, limit:{}, start:{}", orderBy, limit, start);
     UserAccount user = UserContext.getCurrentLoginUser();
