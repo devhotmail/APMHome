@@ -12,16 +12,16 @@
        * Login user info
        */
       user: function() {
-        var $userId = document.querySelector('#userId');
-        var $userLoginName = document.querySelector('#userLoginName');
-        var $siteId = document.querySelector('#userSiteId');
-        var $siteName = document.querySelector('#userSiteName');
-        return {
-          id: $userId && $userId.value,
-          name: $userLoginName && $userLoginName.value,
-          siteId: $siteId && $siteId.value,
-          siteName: $siteName && $siteName.value,
-        };
+        var $ctx = document.querySelector('#user-context');
+        var $elements = $ctx && $ctx.elements;
+        var context = {};
+        if ($elements && $elements.length) {
+          for (var i = 0, element; i < $elements.length; i++) {
+            element = $elements[i];
+            context[element.id] = element.value;
+          }
+        }
+        return context;
       }
     };
   });
