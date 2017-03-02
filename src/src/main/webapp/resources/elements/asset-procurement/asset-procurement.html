@@ -3,7 +3,6 @@
 <link rel="import" href="../fastclick/fastclick.html">
 <link rel="import" href="../modernizr/modernizr.html">
 <link rel="import" href="asset-procurement-styles.html">
-<script src="../../bower_components/innersvg-polyfill/innersvg.js"></script>
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
 <script src="../../bower_components/urijs/src/URI.js"></script>
 
@@ -15,6 +14,19 @@
     </div>
   </template>
   <script>
+    function waveDefaultConfig() {
+      return {
+        circleThickness: 1, // The outer circle stroke width
+        circleColor: '#178BCA', // The color of the outer circle.
+        waveHeight: 0.05, // The wave height as a percentage of wave circle's radius
+        waveCount: 1, // The number of full waves per width of the wave circle.
+        waveColor: '#178BCA', // The color of the fill wave.
+        textSize: 1, // The relative height of the text to display in the wave circle. 1 = 50%
+        textColor: '#045681', // The color of the value text when the wave does not overlap it.
+        waveTextColor: '#A4DBf8' // The color of the value text when the wave overlaps it.
+      }
+    }
+
     Polymer({
       is: 'asset-procurement',
       properties: {
@@ -73,11 +85,22 @@
         var nodes = pack(root).descendants();
         var view;
 
-        var circle = g.selectAll('circle')
+        var assetGroup = g
+        .selectAll('g')
         .data(nodes)
-        .enter().append('circle')
+        .enter().append('g')
+        .attr('class', 'asset')
+
+        assetGroup        
+        .append('circle')
+        .attr('r', function(d) {
+          return d.r;
+        })
         .attr('class', function(d) {
           return d.parent ? d.children ? 'node' : 'node node--leaf' : 'node node--root';
+        })
+        .attr('id', function(d) {
+          return 'circle-' + d.data.id;
         })
         .attr('stroke-width', 1)
         .attr('stroke', 'white')
@@ -90,6 +113,91 @@
             d3.event.stopPropagation();
           }
         });
+
+        assetGroup.each(renderNode)
+
+        function renderNode(node) {
+          var config = waveDefaultConfig()
+          var assetGroup = d3.select(this)
+
+          var radius = node.r
+          var elementId = node.data.id
+          var value = node.data.usage * 100
+
+          var fillPercent = Math.max(0, Math.min(100, value)) / 100
+
+          var waveHeightScale = d3.scaleLinear()
+          .range([config.waveHeight, config.waveHeight])
+          .domain([0, 100])
+
+          var textPixels = (config.textSize * radius / 2)
+          var textValue = parseInt(value)
+
+          var circleThickness = config.circleThickness
+
+          var fillCircleMargin = circleThickness
+          var fillCircleRadius = radius
+          var waveHeight = fillCircleRadius * waveHeightScale(fillPercent * 100)
+
+          var waveLength = fillCircleRadius * 2 / config.waveCount
+          var waveClipCount = 1 + config.waveCount
+          var waveClipWidth = waveLength * waveClipCount
+
+          // Text
+          assetGroup.append('text')
+          .text(textValue + '%')
+          .attr('class', 'liquidFillGaugeText')
+          .attr('text-anchor', 'middle')
+          .attr('font-size', textPixels + 'px')
+          .attr('fill', config.textColor)
+          .attr('dy', '.35em')
+
+          assetGroup.append('circle')
+          .attr('fill', config.waveColor)
+          .attr('r', radius)
+          .attr('clip-path', 'url(#clipWave' + elementId + ')')
+
+          // Scales for controlling the size of the clipping path.
+          var waveScaleX = d3.scaleLinear().range([0, waveClipWidth]).domain([0, 1])
+          var waveScaleY = d3.scaleLinear().range([0, waveHeight]).domain([0, 1])
+
+          // The clipping wave area.
+          var clipArea = d3.area()
+          .x(function (d) {
+            return waveScaleX(d.x)
+          })
+          .y0(function (d) {
+            return waveScaleY(Math.sin((1 - config.waveCount + d.y) * Math.PI * 2))
+          })
+          .y1(function (d) {
+            return (fillCircleRadius * 2 + waveHeight)
+          })
+
+          // Data for building the clip wave area.
+          var data = []
+          for (var i = 0; i <= 40 * waveClipCount; i++) {
+            data.push({
+              x: i / (40 * waveClipCount),
+              y: i / 40
+            })
+          }
+
+          var waveGroup = assetGroup.append('defs')
+          .append('clipPath')
+          .attr('id', 'clipWave' + elementId)
+
+          waveGroup.append('path')
+          .datum(data)
+          .attr('d', clipArea)
+          .attr('T', 0)
+
+          var waveRiseScale = d3.scaleLinear()
+          .range([(fillCircleMargin + fillCircleRadius * 2 + waveHeight), (fillCircleMargin - waveHeight)])
+          .domain([0, 1])
+
+          var waveGroupXPosition = fillCircleMargin + fillCircleRadius - waveClipWidth
+          waveGroup.attr('transform', 'translate(' + waveGroupXPosition + ',' + waveRiseScale(fillPercent) + ')')
+        }
 
         var text = g.selectAll('text')
         .data(nodes)
@@ -108,7 +216,7 @@
         var node = g.selectAll('circle,text');
 
         svg.on('click', function() {
-            zoom(root);
+          zoom(root);
         });
 
         zoomTo([root.x, root.y, root.r * 2 + margin]);
@@ -118,38 +226,28 @@
           var focus = d;
 
           var transition = d3.transition()
-            .duration(d3.event.altKey ? 7500 : 750)
-            .tween('zoom', function (d) {
-              var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
-              return function (t) { zoomTo(i(t)); }
-            });
-
-          transition.selectAll('text')
-            .filter(function (d) {
-              return d.parent === focus || this.style.display === 'inline';
-            })
-            .style('fill-opacity', function (d) {
-              return d.parent === focus ? 1 : 0;
-            })
-            .on('start', function (d) {
-              if (d.parent === focus) this.style.display = 'inline';
-            })
-            .on('end', function (d) {
-              if (d.parent !== focus) this.style.display = 'none';
-            });
+          .duration(d3.event.altKey ? 7500 : 750)
+          .tween('zoom', function () {
+            var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+            return function (t) {
+              zoomTo(i(t));
+            }
+          });
         }
 
         function zoomTo(v) {
           var k = diameter / v[2];
           view = v;
-          node.attr('transform', function (d) {
+
+          assetGroup
+          .attr('transform', function (d) {
             return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
           })
-          circle.attr('r', function (d) {
-            return d.r * k;
-          });
+          .attr('transform-origin', '50% 50%')
+
+          assetGroup.selectAll('circle,text')
+          .attr('transform', 'scale(' + k + ')')
         }
-      
       },
       ready: function() {
         this.loadData();
