@@ -1,0 +1,71 @@
+<script>
+  define('behavior/fetch-cached', ['lscache'], function(lscache) {
+
+    var PRE_FETCH_NUM = 100;
+    var MAXAGE_REGEX = /max-age=(\d+)/;
+
+    // ensure data has "items" and "pages" properties
+    function assertPaginationDataShape(data) {
+      var pages = data.pages;
+      var items = data.items;
+      if(!(pages && 'start' in pages && 'total' in pages)){
+        throw new Error('Expect key: "pages" to present in data');
+      }
+
+      if(!(items && Array.isArray(items))){
+        throw new Error('Expect key "items" to present in data');
+      }
+    }
+
+    return {
+      fetchOptions: function(opt) {
+        this._options = opt;
+      },
+      fetchPage: function(url, start, limit) {
+        return new Promise(function(resolve, reject) {
+          var cached = lscache.get(url);
+          var items = cached ? cached.items : [];
+          var length = cached ? items.length : 0;
+          var pages = cached ? cached.pages : {start: 0};
+          var end = start + limit;
+
+          if (!cached || ( length < pages.total && end > length )) {
+            url = URI(url).addQuery({
+              'start': length,
+              'limit': limit + PRE_FETCH_NUM
+            }).toString();
+            var opt = Object.assign({credentials: 'same-origin'}, this._options);
+            fetch(url, opt).then(function(res) {
+              // check "Cache-Control" for cache expiration
+              var cache_control = res.headers.get('Cache-Control');
+              var max_age = cache_control.match(MAXAGE_REGEX);
+              if (max_age) {
+                max_age = +max_age[1] / 60;
+              }
+              res.json().then(function(data) {
+                assertPaginationDataShape(data);
+                // expand the list of cached items
+                data.items = items.concat(data.items);
+                // update page start
+                data.pages.start = pages.start;
+                // update cache copy
+                lscache.set(url, data, max_age);
+                resolve(data);
+              });
+            });
+          } else {
+            resolve(cached);
+          }
+        }).then(function(data) {
+          var items = data.items;
+          var pages = data.pages;
+          // create user requested page view
+          data.items = items.slice(start, start + limit);
+          data.pages.start = start;
+          data.pages.limit = limit;
+          return data;
+        });
+      },
+    };
+  });
+</script>
