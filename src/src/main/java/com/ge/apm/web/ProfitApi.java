@@ -48,7 +48,7 @@ public class ProfitApi {
                                                         @Min(1) @RequestParam(value = "type", required = false) Integer type,
                                                         @Min(1) @RequestParam(value = "dept", required = false) Integer dept,
                                                         @Min(1) @Max(12) @RequestParam(value = "month", required = false) Integer month,
-                                                        @Min(1) @Max(50) @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
+                                                        @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(value = "limit", required = false) Integer limit,
                                                         @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
     log.info("year:{}, groupby:{}, type:{}, dept:{}, month:{}, limit:{}, start:{}", year, groupBy, type, dept, month, limit, start);
     UserAccount user = UserContext.getCurrentLoginUser();
@@ -119,7 +119,7 @@ public class ProfitApi {
   }
 
   private Iterable<ImmutableMap<String, Object>> mapItems(HttpServletRequest request, Observable<Tuple4<Integer, String, Money, Money>> children, int year, String groupBy, Integer type, Integer dept, Integer month, Integer limit, Integer start) {
-    return children.skip(start).limit(limit).map(child -> new ImmutableMap.Builder<String, Object>()
+    return children.skip(start).limit(Option.of(limit).getOrElse(Integer.MAX_VALUE)).map(child -> new ImmutableMap.Builder<String, Object>()
       .put("id", child._1)
       .put("name", Option.of(child._2).getOrElseThrow(() -> new IllegalArgumentException(String.format("snd value of %s is null", child))))
       .put("type", Option.of(groupBy).orElse(Option.of(type).map(i -> "type")).orElse(Option.of(dept).map(i -> "dept")).orElse(Option.of(month).map(i -> "month")).getOrElse("asset"))
@@ -140,7 +140,7 @@ public class ProfitApi {
     Map<String, Object> body = new ImmutableMap.Builder<String, Object>()
       .put("pages", new ImmutableMap.Builder<String, Object>()
         .put("total", children.count().toBlocking().single())
-        .put("limit", limit)
+        .put("limit", Option.of(limit).getOrElse(Integer.MAX_VALUE))
         .put("start", start)
         .build())
       .put("root", new ImmutableMap.Builder<String, Object>()
