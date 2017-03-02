@@ -20,7 +20,6 @@ import rx.Observable;
 import webapp.framework.web.service.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
@@ -41,7 +40,7 @@ public class AssetsApi {
   @ResponseBody
   public ResponseEntity<Map<String, Object>> handleRequest(HttpServletRequest request,
                                                            @Pattern(regexp = "type|dept|supplier|price|yoa") @RequestParam(value = "orderby", required = false, defaultValue = "type") String orderBy,
-                                                           @Min(1) @Max(50) @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
+                                                           @Min(1) @RequestParam(value = "limit", required = false) Integer limit,
                                                            @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
     log.info("orderBy:{}, limit:{}, start:{}", orderBy, limit, start);
     UserAccount user = UserContext.getCurrentLoginUser();
@@ -55,8 +54,8 @@ public class AssetsApi {
   private ResponseEntity<Map<String, Object>> serialize(HttpServletRequest request, Map<Integer, String> types, Map<Integer, String> depts, Map<Integer, String> suppliers, Observable<Tuple7<Integer, String, Integer, String, Integer, Money, LocalDate>> assets, String orderBy, int limit, int start) {
     final Observable<Tuple7<Integer, String, String, String, String, Double, LocalDate>> items = assets.map(t -> Tuple.of(t._1, t._2, types.get(t._3), t._4, suppliers.get(t._5), t._6.getNumber().doubleValue(), t._7));
     final Map<String, Object> body = new ImmutableMap.Builder<String, Object>()
-      .put("pages", new ImmutableMap.Builder<String, Object>().put("total", assets.count().toBlocking().single()).put("limit", limit).put("start", start).build())
-      .put("items", items.skip(start).limit(limit).map(t -> new ImmutableMap.Builder<String, Object>()
+      .put("pages", new ImmutableMap.Builder<String, Object>().put("total", assets.count().toBlocking().single()).put("limit", Option.of(limit).getOrElse(Integer.MAX_VALUE)).put("start", start).build())
+      .put("items", items.skip(start).limit(Option.of(limit).getOrElse(Integer.MAX_VALUE)).map(t -> new ImmutableMap.Builder<String, Object>()
         .put("id", t._1)
         .put("name", t._2)
         .put("type", Option.of(t._3).getOrElseThrow(() -> new IllegalArgumentException(String.format("type should not be %s", t._3))))

@@ -72,7 +72,7 @@ public class AbstractApiTest {
     Try.of(() -> this.getRetrofit().create(LoginInterface.class).testLogin(RequestBody.create(MediaType.parse("text/plain"), loginInfo)).execute())
       .filter(response -> Try.of(() -> response.body().string()).getOrElse("").contains("redirect"))
       .onSuccess(response -> this.setCookie(response.headers().get("Set-Cookie")))
-      .onFailure(e -> Assertions.fail("login failed, please check if formdata has been changed."));
+      .onFailure(e -> Assertions.fail("login failed, please check if form-data has been changed."));
   }
 }
 
