@@ -5,6 +5,7 @@ import com.ge.apm.service.api.AssetsService;
 import com.ge.apm.service.api.CommonService;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.primitives.Ints;
 import javaslang.Tuple;
 import javaslang.Tuple7;
 import javaslang.control.Option;
@@ -45,7 +46,7 @@ public class AssetsApi {
                                                            @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
     log.info("orderBy:{}, limit:{}, start:{}", orderBy, limit, start);
     UserAccount user = UserContext.getCurrentLoginUser();
-    Map<Integer, String> types = commonService.findFields(user.getSiteId(), "assetGroup");
+    Map<Integer, String> types = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> suppliers = commonService.findSuppliers(user.getSiteId());
     Observable<Tuple7<Integer, String, Integer, String, Integer, Money, LocalDate>> assets = assetsService.findAssets(user.getSiteId(), user.getHospitalId(), orderBy);

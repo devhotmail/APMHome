@@ -6,7 +6,6 @@ import com.github.davidmoten.rx.jdbc.ConnectionProvider;
 import com.github.davidmoten.rx.jdbc.Database;
 import com.github.davidmoten.rx.jdbc.tuple.Tuple2;
 import com.google.common.base.Strings;
-import com.google.common.primitives.Ints;
 import javaslang.Tuple;
 import javaslang.Tuple3;
 import javaslang.collection.HashMap;
@@ -36,18 +35,13 @@ public class CommonService {
   @PostConstruct
   public void init() {
     db = Database.from(connectionProvider);
-    // load messages before it can be used, otherwise we will get NullPointerException when first time DbMessageSource.getMessageCache() is called.
-    DbMessageSource.reLoadMessages();
   }
 
-
-  @Cacheable(cacheNames = "springCache", key = "'commonService.findFields.'+#siteId+'.'+#type")
-  public Map<Integer, String> findFields(int siteId, String type) {
-    return Observable.from(Option
-      .of(DbMessageSource.getMessageCache(siteId)).filter(map -> map.entrySet().stream().anyMatch(entry -> entry.getValue().getMsgType().equalsIgnoreCase(type))).getOrElse(DbMessageSource.getMessageCache(-1)).entrySet())
+  public Map<String, String> findFields(int siteId, String type) {
+    return Observable.from(DbMessageSource.getMessageCache(siteId).entrySet())
       .filter(entry -> entry.getValue().getMsgType().equalsIgnoreCase(type))
       .map(Map.Entry::getValue)
-      .toMap(msg -> Ints.tryParse(msg.getMsgKey()), I18nMessage::getValueZh)
+      .toMap(I18nMessage::getMsgKey, I18nMessage::getValueZh)
       .toBlocking()
       .single();
   }
