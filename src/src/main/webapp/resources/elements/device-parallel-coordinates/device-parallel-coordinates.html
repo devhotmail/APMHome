@@ -1,5 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../behavior/context.html">
+<link rel="import" href="../behavior/fetch-cached.html">
+<link rel="import" href="../numbro/numbro.html">
 <link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
 <link rel="import" href="../device-pagination/device-pagination.html">
 <link rel="import" href="device-parallel-coordinates-styles.html">
@@ -10,12 +13,15 @@
     <style include="device-parallel-coordinates-styles"></style>
     <div id="chart" class="canvas">
       <div class="flex flex--col">
+        <template is="dom-if" if="[[!data.length]]">
+          <div class="placeholder empty">暂无可用设备数据</div>
+        </template>
         <svg id="svg" width$="[[width]]" height$="[[height]]" touch-action="none">
           <rect id="chartBg" class="chart-bg" width$="[[width]]" height$="[[height]]"></rect>
           <g id="chartBody" class="chart-body"></g>
         </svg>
         <!-- sort selector -->
-      <px-dropdown id="sortBy" class="sorting-dropdown" display-value="[[_getSortDisplayValue(sortBy, _sortOptions)]]" selected-key="{{sortBy}}">
+        <px-dropdown id="sortBy" class="sorting-dropdown" display-value="[[_getSortDisplayValue(sortBy, _sortOptions)]]" selected-key="{{sortBy}}">
           <px-dropdown-content class="px-dropdown-content"
                                max-cont-character-width="10"
                                extend-dropdown="true"
@@ -25,14 +31,16 @@
         </px-dropdown>
         <!-- Pagination controls -->
         <device-pagination id="pagination"
-          total="[[pageTotal]]"
-          current="{{pageStart}}"></device-pagination>
+                           total="[[pageTotal]]"
+                           current="{{pageStart}}"></device-pagination>
       </div>
     </div>
   </template>
   <script>
-    define('device-parallel-coordinates', ['context'], function(context) {
-
+    define('device-parallel-coordinates', [
+      'behavior/context',
+      'behavior/fetch-cached'
+    ], function(ContextBehavior, FetchCachedBehavior) {
       var SECTOR_MIN_STEP_FACTOR = .1;
       var SECTOR_NUM = 6;
 
@@ -60,6 +68,11 @@
 
       Polymer({
         is: 'device-parallel-coordinates',
+        behaviors: [
+          Polymer.IronResizableBehavior,
+          ContextBehavior,
+          FetchCachedBehavior
+        ],
         properties: {
           width: Number,
           height: Number,
@@ -100,6 +113,10 @@
           to: String,
           data: Array,
           scales: Object,
+          _queryUrl: {
+            type: String,
+            computed: '_getQueryUrl(from, to, sortBy, filterBy)'
+          },
           benchmarkSuffix: {
             value: '_bm',
             readOnly: true
@@ -109,9 +126,6 @@
           '_replot(width, height, data)',
           'saveOptionsInHistory(sortBy)',
           '_loadData(from, to, filterBy, sortBy, pageStart, pageSize)'
-        ],
-        behaviors: [
-          Polymer.IronResizableBehavior
         ],
         listeners: {
           'iron-resize': '_onResize'
@@ -161,6 +175,9 @@
           // charting area w/ dimension titles
           var main = root.append('g').attr('transform', d3Transform().translate(0, 20));
 
+          if (!data.length) {
+            return;
+          }
           var dimension = main.selectAll(".dimension")
           .data(dimensions)
           .enter().append("g")
@@ -331,7 +348,9 @@
                   });
 
                   if (!sec) {
-                    throw new Error(d.name + ': invalid device value out of range - ' + +_key + ':' + val);
+                    throw new Error(d.name + ': invalid value out of range' +
+                      '('+sectors[0].lastValue + ' : ' + sectors[sectors.length - 1].value + ')' +
+                      ' - ' + _key + ':' + val);
                   }
 
                   scale = d3.scaleLinear().domain([sec.lastValue, sec.value]).range([sec.y0, sec.y1]);
@@ -402,6 +421,14 @@
           var min = ticks[0];
           var max = ticks[ticks.length - 1];
           var format = dimension.format || function(val) { return val; };
+
+          // handle no range
+          if (max === min) {
+            max = (
+                min === 0 ? 1 : min
+              ) * SECTOR_NUM;
+          }
+
           var span = max - min;
 
           // if user-defined ticks not found
@@ -617,7 +644,7 @@
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
               format: function(val) {
-                return currency(val/1e4);
+                return numbro(val).formatCurrency();
               }
             }
           ];
@@ -642,14 +669,13 @@
           this.debounce('replot', this.render, 500);
         },
         ready: function() {
-          this._loadData();
           this.restoreOptionsFromHistory();
         },
         _getSortOptions: function(scales, dimensions) {
           var _this = this;
           var list = dimensions.map(function(dimension) {
             if(!dimension.sortable)
-                return null;
+              return null;
             var sortBy = dimension.name;
             var definition = scales[sortBy];
             return {
@@ -677,26 +703,25 @@
           options['sort'] = value;
           location.hash = '#' + URI().query(options).query();
         },
-        _buildQuery: function() {
-          return URI().query({
+        _getQueryUrl: function() {
+          return URI(this.resolveApiUrl('/api/list')).query({
             'from': this.from,
             'to': this.to,
             'orderby': this.sortBy,
-            'dept': this.filterBy,
-            'limit': this.pageSize,
-            'start': this.pageStart > 0 ? this.pageStart - 1 : this.pageStart
-          }).query();
+            'type': this.filterBy || undefined,
+            'dept': this.user.orgId
+          }).toString();
         },
         _loadData: function() {
           var _this = this;
-          return fetch('mock/device-dimensions.json?'+ this._buildQuery(), {
-            credentials: 'same-origin'
-          }).then(function(res) {
-            return res.json();
-          }).then(function(data) {
+          return this.fetchPage(
+            this._queryUrl,
+            this.pageStart - 1,
+            this.pageSize
+          ).then(function(data) {
             _this.set('data', data.items);
             _this.set('pageStart', data.pages.start + 1);
-            _this.set('pageTotal', data.pages.total);
+            _this.set('pageTotal', Math.ceil(data.pages.total / _this.pageSize));
             _this.set('scales', data.ruler);
           });
         },
