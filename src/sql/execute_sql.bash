@@ -23,4 +23,4 @@ psql -X -f i18n_message.sql --echo-all --set ON_ERROR_STOP=on
 # psql -X -f demo_data.sql --echo-all --set ON_ERROR_STOP=on
 # psql -X -f test_data.sql --echo-all --set ON_ERROR_STOP=on
 psql -X -f test_data.sql --echo-all --set ON_ERROR_STOP=on
-psql -X -f alter_database.sql --echo-all --set ON_ERROR_STOP=off
+psql -X -f asset_summit.sql --echo-all --set ON_ERROR_STOP=off

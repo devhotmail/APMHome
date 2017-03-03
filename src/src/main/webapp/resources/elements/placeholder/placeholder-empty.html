@@ -1,0 +1,19 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="placeholder-empty-styles.html">
+
+<dom-module id="placeholder-empty">
+  <template>
+    <style include="placeholder-empty-styles"></style>
+    <div class="empty-placeholder flex flex--row flex--middle">
+      <svg viewBox="0 0 412.533 412.533">
+        <use class="icon" xlink:href="img/blank.svg#icon"></use>
+      </svg>
+      <span class="label flex__item u-p++">暂无可用设备数据</span>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'placeholder-empty'
+    });
+  </script>
+</dom-module>

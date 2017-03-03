@@ -1,7 +1,11 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../behavior/context.html">
+<link rel="import" href="../behavior/fetch-cached.html">
+<link rel="import" href="../numbro/numbro.html">
 <link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
 <link rel="import" href="../device-pagination/device-pagination.html">
+<link rel="import" href="../placeholder/placeholder-empty.html">
 <link rel="import" href="device-parallel-coordinates-styles.html">
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
 
@@ -10,12 +14,15 @@
     <style include="device-parallel-coordinates-styles"></style>
     <div id="chart" class="canvas">
       <div class="flex flex--col">
+        <template is="dom-if" if="[[!data.length]]">
+         <placeholder-empty></placeholder-empty>
+        </template>
         <svg id="svg" width$="[[width]]" height$="[[height]]" touch-action="none">
           <rect id="chartBg" class="chart-bg" width$="[[width]]" height$="[[height]]"></rect>
           <g id="chartBody" class="chart-body"></g>
         </svg>
         <!-- sort selector -->
-      <px-dropdown id="sortBy" class="sorting-dropdown" display-value="[[_getSortDisplayValue(sortBy, _sortOptions)]]" selected-key="{{sortBy}}">
+        <px-dropdown id="sortBy" class="sorting-dropdown" display-value="[[_getSortDisplayValue(sortBy, _sortOptions)]]" selected-key="{{sortBy}}">
           <px-dropdown-content class="px-dropdown-content"
                                max-cont-character-width="10"
                                extend-dropdown="true"
@@ -25,14 +32,16 @@
         </px-dropdown>
         <!-- Pagination controls -->
         <device-pagination id="pagination"
-          total="[[pageTotal]]"
-          current="{{pageStart}}"></device-pagination>
+                           total="[[pageTotal]]"
+                           current="{{pageStart}}"></device-pagination>
       </div>
     </div>
   </template>
   <script>
-    define('device-parallel-coordinates', ['context'], function(context) {
-
+    define('device-parallel-coordinates', [
+      'behavior/context',
+      'behavior/fetch-cached'
+    ], function(ContextBehavior, FetchCachedBehavior) {
       var SECTOR_MIN_STEP_FACTOR = .1;
       var SECTOR_NUM = 6;
 
@@ -58,8 +67,25 @@
         }
       }
 
+      function digit_short(val) {
+        return numbro(val).format('0[.]0a');
+      }
+
+      function percentage(val) {
+        return numbro(val).format('2 a');
+      }
+
+      function currency_short(val) {
+        return numbro(val).formatCurrency();
+      }
+
       Polymer({
         is: 'device-parallel-coordinates',
+        behaviors: [
+          Polymer.IronResizableBehavior,
+          ContextBehavior,
+          FetchCachedBehavior
+        ],
         properties: {
           width: Number,
           height: Number,
@@ -100,6 +126,10 @@
           to: String,
           data: Array,
           scales: Object,
+          _queryUrl: {
+            type: String,
+            computed: '_getQueryUrl(from, to, sortBy, filterBy)'
+          },
           benchmarkSuffix: {
             value: '_bm',
             readOnly: true
@@ -109,9 +139,6 @@
           '_replot(width, height, data)',
           'saveOptionsInHistory(sortBy)',
           '_loadData(from, to, filterBy, sortBy, pageStart, pageSize)'
-        ],
-        behaviors: [
-          Polymer.IronResizableBehavior
         ],
         listeners: {
           'iron-resize': '_onResize'
@@ -161,6 +188,9 @@
           // charting area w/ dimension titles
           var main = root.append('g').attr('transform', d3Transform().translate(0, 20));
 
+          if (!data.length) {
+            return;
+          }
           var dimension = main.selectAll(".dimension")
           .data(dimensions)
           .enter().append("g")
@@ -205,6 +235,8 @@
 
           dimensions.forEach(function(dimension) {
             var _name = dimension.name;
+            var _type = dimension.type;
+            var _format = dimension.format;
 
             var _textWrapper = valueGroup.append('text')
             .attr('text-anchor', 'middle')
@@ -216,13 +248,19 @@
             _textWrapper.append('tspan')
             .attr('x', '0')
             .attr('class', 'actual-val')
-            .text(function(d) {return _name === 'name' ? '实际值' : d[_name]});
+            .text(function(d) {
+              var val = d[_name];
+              return _type === String ? '实际值' : _format ? _format(val) : val;
+            });
 
             _textWrapper.append('tspan')
             .attr('class', 'benchmark-val')
             .attr('x', '0')
             .attr('dy', '1em')
-            .text(function(d) {return _name === 'name' ? '基准值' : d[_name + _this.benchmarkSuffix]});
+            .text(function(d) {
+              var val = d[_name + _this.benchmarkSuffix];
+              return _type === String ? '基准值' : _format ? _format(val) : val;
+            });
           });
 
           var axis = dimension.append("g")
@@ -327,11 +365,23 @@
                 } else {
                   scale = dimension.scale;
                   sec = sectors.find(function(sec, i) {
+
+                    if (i === 0 && val < sec.lastValue) {
+                      sec.lastValue = val;
+                      return sec;
+                    }
+                    if (i === sectors.length - 1 && val > sec.value) {
+                      sec.value = val;
+                      return sec;
+                    }
+
                     return val >= sec.lastValue && val <= sec.value;
                   });
 
                   if (!sec) {
-                    throw new Error(d.name + ': invalid device value out of range - ' + +_key + ':' + val);
+                    throw new Error(d.name + ': invalid value out of range' +
+                      '('+sectors[0].lastValue + ' : ' + sectors[sectors.length - 1].value + ')' +
+                      ' - ' + _key + ':' + val);
                   }
 
                   scale = d3.scaleLinear().domain([sec.lastValue, sec.value]).range([sec.y0, sec.y1]);
@@ -402,6 +452,14 @@
           var min = ticks[0];
           var max = ticks[ticks.length - 1];
           var format = dimension.format || function(val) { return val; };
+
+          // handle no range
+          if (max === min) {
+            max = (
+                min === 0 ? 1 : min
+              ) * SECTOR_NUM;
+          }
+
           var span = max - min;
 
           // if user-defined ticks not found
@@ -574,7 +632,6 @@
         },
         _getDimensions: function(scales, margin, height) {
           height = height - this.margin.top - this.margin.bottom;
-          var currency = d3.format(",.2s");
           var dims = [
             {
               name: "name",
@@ -585,30 +642,35 @@
               name: "scan",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
+              format: digit_short,
               sortable: true
             },
             {
               name: "exposure",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
+              format: digit_short,
               sortable: true
             },
             {
               name: "usage",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
+              format: digit_short,
               sortable: true
             },
             {
               name: "fix",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
+              format: digit_short,
               sortable: true
             },
             {
               name: "stop",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
+              format: percentage,
               sortable: true
             },
             {
@@ -616,9 +678,7 @@
               sortable: true,
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
-              format: function(val) {
-                return currency(val/1e4);
-              }
+              format: currency_short
             }
           ];
           var _this = this;
@@ -642,14 +702,13 @@
           this.debounce('replot', this.render, 500);
         },
         ready: function() {
-          this._loadData();
           this.restoreOptionsFromHistory();
         },
         _getSortOptions: function(scales, dimensions) {
           var _this = this;
           var list = dimensions.map(function(dimension) {
             if(!dimension.sortable)
-                return null;
+              return null;
             var sortBy = dimension.name;
             var definition = scales[sortBy];
             return {
@@ -677,26 +736,24 @@
           options['sort'] = value;
           location.hash = '#' + URI().query(options).query();
         },
-        _buildQuery: function() {
-          return URI().query({
+        _getQueryUrl: function() {
+          return URI(this.resolveApiUrl('/api/list')).query({
             'from': this.from,
             'to': this.to,
             'orderby': this.sortBy,
-            'dept': this.filterBy,
-            'limit': this.pageSize,
-            'start': this.pageStart > 0 ? this.pageStart - 1 : this.pageStart
-          }).query();
+            'type': this.filterBy || undefined,
+            'dept': this.user.orgId
+          }).toString();
         },
         _loadData: function() {
           var _this = this;
-          return fetch('mock/device-dimensions.json?'+ this._buildQuery(), {
-            credentials: 'same-origin'
-          }).then(function(res) {
-            return res.json();
-          }).then(function(data) {
+          var size = this.pageSize;
+          var start = (this.pageStart - 1) * size;
+          return this.fetchPage(
+            this._queryUrl, start, size
+          ).then(function(data) {
             _this.set('data', data.items);
-            _this.set('pageStart', data.pages.start + 1);
-            _this.set('pageTotal', data.pages.total);
+            _this.set('pageTotal', Math.ceil(data.pages.total / _this.pageSize));
             _this.set('scales', data.ruler);
           });
         },

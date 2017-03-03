@@ -1,0 +1,36 @@
+<script src="../../bower_components/numbro/numbro.js"></script>
+<script>
+  numbro.culture('zh-CN', {
+    langLocaleCode: 'zh-CN',
+    cultureCode: 'zh-CN',
+    delimiters: {
+      thousands: ',',
+      decimal: '.'
+    },
+    abbreviations: {
+      'thousand': '千',
+      'ten-thousand': '万',
+      'million': '百万',
+      'billion': '十亿',
+      'trillion': '兆'
+    },
+    ordinal: function() {
+      return '.';
+    },
+    currency: {
+      symbol: '',
+      position: 'postfix'
+    },
+    defaults: {
+      currencyFormat: '0[.]0a'
+    },
+    formats: {
+      fourDigits: '4 a',
+      fullWithTwoDecimals: '$ ,0.00',
+      fullWithTwoDecimalsNoCurrency: ',0.00',
+      fullWithNoDecimals: '$ ,0'
+    }
+  });
+  numbro.culture('zh-CN');
+//  console.log(numbro(12300).formatCurrency());
+</script>
