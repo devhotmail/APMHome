@@ -6,6 +6,7 @@ import com.ge.apm.service.api.ProfitService;
 import com.ge.apm.service.utils.CNY;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Range;
+import com.google.common.primitives.Ints;
 import javaslang.Tuple;
 import javaslang.Tuple2;
 import javaslang.Tuple3;
@@ -52,9 +53,9 @@ public class ProfitApi {
                                                         @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
     log.info("year:{}, groupby:{}, type:{}, dept:{}, month:{}, limit:{}, start:{}", year, groupBy, type, dept, month, limit, start);
     UserAccount user = UserContext.getCurrentLoginUser();
-    Map<Integer, String> groups = commonService.findFields(user.getSiteId(), "assetGroup");
+    Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
-    Map<Integer, String> months = commonService.findFields(user.getSiteId(), "month");
+    Map<Integer, String> months = Observable.from(commonService.findFields(user.getSiteId(), "month").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, Tuple3<Integer, String, String>> hospitals = commonService.findHospitals();
     log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (!Range.closed(DateTime.now().getYear() - 3, DateTime.now().getYear()).contains(year)) {
@@ -133,7 +134,7 @@ public class ProfitApi {
         .put("ref", "child")
         .put("href", Option.of(groupBy).map(v -> String.format("%s?year=%s&%s=%s", request.getRequestURL(), year, groupBy, child._1)).getOrElse(""))
         .build())
-      .build()).toBlocking().toIterable();
+      .build()).cache().toBlocking().toIterable();
   }
 
   private ResponseEntity<Map<String, Object>> serialize(HttpServletRequest request, Map<Integer, String> groups, Map<Integer, String> depts, Map<Integer, String> months, Observable<Tuple4<Integer, String, Money, Money>> children, int year, String groupBy, Integer type, Integer dept, Integer month, Integer limit, Integer start) {
