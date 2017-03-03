@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ehcache updateCheck="false" monitoring="autodetect">
-	<diskStore path="java.io.tmpdir/ehcache/hibernate"/>
-	<sizeOfPolicy maxDepth="999" maxDepthExceededBehavior="abort"/>
-	<defaultCache
-		maxBytesLocalHeap="10m"
-		eternal="false"
-		timeToIdleSeconds="86400"
-		timeToLiveSeconds="86400"
-		memoryStoreEvictionPolicy="LFU"
-		overflowToDisk="false"
-		diskPersistent="false"
-		statistics="false"/>
-	<cache
-		name="springCache"
-		maxBytesLocalHeap="30m"
-		eternal="false"
-		timeToIdleSeconds="86400"
-		timeToLiveSeconds="86400"
-		memoryStoreEvictionPolicy="LFU"
-		overflowToDisk="false"
-		diskPersistent="false"
-		statistics="false"/>
+<ehcache updateCheck="false" monitoring="autodetect" maxBytesLocalHeap="300m">
+  <diskStore path="java.io.tmpdir/ehcache/hibernate"/>
+  <sizeOfPolicy maxDepth="999" maxDepthExceededBehavior="abort"/>
+  <defaultCache
+    eternal="false"
+    timeToIdleSeconds="86400"
+    timeToLiveSeconds="86400"
+    memoryStoreEvictionPolicy="LFU"
+    overflowToDisk="false"
+    diskPersistent="false"
+    statistics="false"/>
+  <cache
+    name="springCache"
+    eternal="false"
+    timeToIdleSeconds="86400"
+    timeToLiveSeconds="86400"
+    memoryStoreEvictionPolicy="LFU"
+    overflowToDisk="false"
+    diskPersistent="false"
+    statistics="false"/>
 </ehcache>
