@@ -71,8 +71,8 @@ public class MessageApi {
 
   @RequestMapping(path = "/{id}", method = RequestMethod.GET)
   @ResponseBody
-  public ResponseEntity<ImmutableMap<String, Object>> requestById(HttpServletRequest request,
-                                                                  @Min(1) @PathVariable Integer id) {
+  public ResponseEntity<? extends Map<String, Object>> requestById(HttpServletRequest request,
+                                                                   @Min(1) @PathVariable Integer id) {
     return Option.of(StreamSupport.stream(commonService.findAllMessages().spliterator(), true).filter(t -> t._1.equals(id)).findFirst().orElse(null))
       .map(t -> ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
         .body(new ImmutableMap.Builder<String, Object>()
