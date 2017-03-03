@@ -5,6 +5,7 @@
 <link rel="import" href="../numbro/numbro.html">
 <link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
 <link rel="import" href="../device-pagination/device-pagination.html">
+<link rel="import" href="../placeholder/placeholder-empty.html">
 <link rel="import" href="device-parallel-coordinates-styles.html">
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
 
@@ -14,7 +15,7 @@
     <div id="chart" class="canvas">
       <div class="flex flex--col">
         <template is="dom-if" if="[[!data.length]]">
-          <div class="placeholder empty">暂无可用设备数据</div>
+         <placeholder-empty></placeholder-empty>
         </template>
         <svg id="svg" width$="[[width]]" height$="[[height]]" touch-action="none">
           <rect id="chartBg" class="chart-bg" width$="[[width]]" height$="[[height]]"></rect>
@@ -64,6 +65,18 @@
           self.text(text + '...');
           textLength = this.getComputedTextLength();
         }
+      }
+
+      function digit_short(val) {
+        return numbro(val).format('0[.]0a');
+      }
+
+      function percentage(val) {
+        return numbro(val).format('2 a');
+      }
+
+      function currency_short(val) {
+        return numbro(val).formatCurrency();
       }
 
       Polymer({
@@ -222,6 +235,8 @@
 
           dimensions.forEach(function(dimension) {
             var _name = dimension.name;
+            var _type = dimension.type;
+            var _format = dimension.format;
 
             var _textWrapper = valueGroup.append('text')
             .attr('text-anchor', 'middle')
@@ -233,13 +248,19 @@
             _textWrapper.append('tspan')
             .attr('x', '0')
             .attr('class', 'actual-val')
-            .text(function(d) {return _name === 'name' ? '实际值' : d[_name]});
+            .text(function(d) {
+              var val = d[_name];
+              return _type === String ? '实际值' : _format ? _format(val) : val;
+            });
 
             _textWrapper.append('tspan')
             .attr('class', 'benchmark-val')
             .attr('x', '0')
             .attr('dy', '1em')
-            .text(function(d) {return _name === 'name' ? '基准值' : d[_name + _this.benchmarkSuffix]});
+            .text(function(d) {
+              var val = d[_name + _this.benchmarkSuffix];
+              return _type === String ? '基准值' : _format ? _format(val) : val;
+            });
           });
 
           var axis = dimension.append("g")
@@ -344,6 +365,16 @@
                 } else {
                   scale = dimension.scale;
                   sec = sectors.find(function(sec, i) {
+
+                    if (i === 0 && val < sec.lastValue) {
+                      sec.lastValue = val;
+                      return sec;
+                    }
+                    if (i === sectors.length - 1 && val > sec.value) {
+                      sec.value = val;
+                      return sec;
+                    }
+
                     return val >= sec.lastValue && val <= sec.value;
                   });
 
@@ -601,7 +632,6 @@
         },
         _getDimensions: function(scales, margin, height) {
           height = height - this.margin.top - this.margin.bottom;
-          var currency = d3.format(",.2s");
           var dims = [
             {
               name: "name",
@@ -612,30 +642,35 @@
               name: "scan",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
+              format: digit_short,
               sortable: true
             },
             {
               name: "exposure",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
+              format: digit_short,
               sortable: true
             },
             {
               name: "usage",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
+              format: digit_short,
               sortable: true
             },
             {
               name: "fix",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
+              format: digit_short,
               sortable: true
             },
             {
               name: "stop",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
+              format: percentage,
               sortable: true
             },
             {
@@ -643,9 +678,7 @@
               sortable: true,
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
-              format: function(val) {
-                return numbro(val).formatCurrency();
-              }
+              format: currency_short
             }
           ];
           var _this = this;
@@ -714,13 +747,12 @@
         },
         _loadData: function() {
           var _this = this;
+          var size = this.pageSize;
+          var start = (this.pageStart - 1) * size;
           return this.fetchPage(
-            this._queryUrl,
-            this.pageStart - 1,
-            this.pageSize
+            this._queryUrl, start, size
           ).then(function(data) {
             _this.set('data', data.items);
-            _this.set('pageStart', data.pages.start + 1);
             _this.set('pageTotal', Math.ceil(data.pages.total / _this.pageSize));
             _this.set('scales', data.ruler);
           });
