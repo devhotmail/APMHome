@@ -6,18 +6,18 @@ import com.ge.apm.service.api.ListService;
 import com.ge.apm.service.api.ProfitService;
 import com.ge.apm.service.utils.CNY;
 import com.ge.apm.view.sysutil.UserContextService;
-import com.github.davidmoten.rx.jdbc.tuple.Tuple5;
-import com.github.davidmoten.rx.jdbc.tuple.Tuple7;
-import com.github.davidmoten.rx.jdbc.tuple.Tuple6;
-import com.github.davidmoten.rx.jdbc.tuple.Tuple2;
-import com.github.davidmoten.rx.jdbc.tuple.Tuple4;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.ImmutableList;
 
 import javaslang.control.Option;
+
+import org.simpleflatmapper.tuple.Tuple12;
 import org.simpleflatmapper.tuple.Tuple18;
 import org.simpleflatmapper.tuple.Tuple19;
+import org.simpleflatmapper.tuple.Tuple5;
+import org.simpleflatmapper.tuple.Tuple6;
+import org.simpleflatmapper.tuple.Tuple8;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,29 +79,30 @@ public class ListApi {
 				.body(new ImmutableMap.Builder<String, Object>()
 						.put("pages",
 								new ImmutableMap.Builder<String, Object>()
-									.put("total", ListService.queryForCount(site_id, hospital_id, from, to) )
+									.put("total", ListService.queryForCount(site_id, hospital_id, dept, type, from, to) )
 									.put("limit", limit)
 									.put("start", start)
 									.build() )
 
 						.put("ruler", jsonRuler(
-								ListService.queryForTickMin(site_id, hospital_id, dept, type, from, to),
-								ListService.queryForTickMax(site_id, hospital_id, dept, type, from, to)) )
+								ListService.queryForTick(
+								ListService.queryForMinMax(site_id, hospital_id, dept, type, from, to), 
+								ListService.queryForBmTick(site_id, hospital_id, dept, type, from, to) ) ) )
 
 						.put("items",
 								jsonAsset(request, limit, start,
-										queryMergeData(
+										queryFilterData ( dept, type, orderby,      
+												queryMergeData(
 												dept, type, orderby,
 												ListService.queryForBasic(site_id, hospital_id, from, to),
 												ListService.queryForOp(site_id, hospital_id, from, to),
-												ListService.queryForRoi(site_id, hospital_id, from, to),
-												ListService.queryForBm(site_id, hospital_id, from, to))) )
-				        .put("link", 
+												ListService.queryForBm(site_id, hospital_id, from, to))) ) )
+				        .put("link",
 				        		new ImmutableMap.Builder<String, Object>()
 				        			.put("ref", "self")
 				        			.put("href",
-				        					Option.of(from).map(v -> 
-				        						String.format("%s?from=%s&to=%s&dept=%s&type=%s&orderby=%s&limit=%s&start=%s", 
+				        					Option.of(from).map(v ->
+				        						String.format("%s?from=%s&to=%s&dept=%s&type=%s&orderby=%s&limit=%s&start=%s",
 				        								request.getRequestURL(), from, to, dept, type, orderby, limit, start) ).getOrElse("N/A") )
 				        			.build() )
 						.build());
@@ -112,50 +113,70 @@ public class ListApi {
 			queryMergeData(
 					Integer dept, Integer type, String orderby,
 					Observable<Tuple5<Integer, String, Integer, Integer, String>> queryBasic,
-					Observable<Tuple6<Integer, Double, Integer, Double, Integer, Integer>> queryOp,
-					Observable<Tuple4<Integer, Double, Double, Integer>> queryRoi,
-					Observable<Tuple7<Integer, Double, Integer, Double, Double, Integer, Double>> queryBm) {
+					Observable<Tuple8<Double, Integer, Double, Double, Integer, Double, Double, Integer>> queryOp,
+					Observable<Tuple6<Double, Integer, Double, Double, Integer, Double>> queryBm) {
 
-		Observable<Tuple19<Integer, String, Integer, Integer, String,
-							Double, Integer, Double, Double, Integer,
-							Double, Double, Integer,
-							Double, Integer, Double, Double, Integer, Double>> result =
-				Observable.zip(queryBasic, queryOp, queryRoi, queryBm,
-					(t1, t2, t3, t4) ->
+		return Observable.zip(queryBasic, queryOp, queryBm,
+					(t1, t2, t3) ->
 							new Tuple19<Integer, String, Integer, Integer, String,
-										Double, Integer, Double, Double, Integer,
-										Double, Double, Integer,
+										Double, Integer, Double, Double, Integer, Double, Double, Integer,
 										Double, Integer, Double, Double, Integer, Double>(
-										t1._1(), t1._2(), t1._3(), t1._4(), t1._5(),
-										t2._2(), t2._3(), t2._4(), 1.0*t2._5()/t3._4()/24/36, t2._6(),
-										t3._2(), t3._3(), t3._4(),
-										t4._2()*t3._4(), t4._3()*t3._4(), t4._4()*t3._4(), t4._5()*t3._4(), t4._6()*t3._4(), t4._7()*t3._4() ) ) 
+										t1.getElement0(), t1.getElement1(), t1.getElement2(), t1.getElement3(), t1.getElement4(),
+										t2.getElement0(), t2.getElement1(), t2.getElement2(), t2.getElement3(), t2.getElement4(), t2.getElement5(), t2.getElement6(), t2.getElement7(),
+										t3.getElement0(), t3.getElement1(), t3.getElement2(), t3.getElement3(), t3.getElement4(), t3.getElement5() ) )
 							.cache();
+		
 
-		result = dept == Integer.MIN_VALUE ? result : result.filter(t19 -> t19.getElement3()==dept);
+	}
 
-		result = type == Integer.MIN_VALUE ? result : result.filter(t19 -> t19.getElement2()==type);
+	public Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>>
+			queryFilterData(
+				Integer dept, Integer type, String orderby,
+				Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>> asset_info ) {
+
+		asset_info = dept == Integer.MIN_VALUE ? asset_info : asset_info.filter(t19 -> t19.getElement3()==dept);
+
+		asset_info = type == Integer.MIN_VALUE ? asset_info : asset_info.filter(t19 -> t19.getElement2()==type);
+
+		return asset_info;
+
+	}
+
+
+	public Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>>
+			minmaxData(
+				Integer dept, Integer type, String orderby,
+				Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>> asset_info ) {
+
+		return null;
+
+	}
+
+
+	public Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>>
+			querySortedData(
+				Integer dept, Integer type, String orderby,
+				Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>> asset_info ) {
 
 		if (orderby.equals("id"))
-			return result;
+			return asset_info;
 		else if ( orderby.equals("scan"))
-			return result.sorted((l, r) -> l.getElement6() - r.getElement6() );
+			return asset_info.sorted((l, r) -> r.getElement6() - l.getElement6() );
 		else if ( orderby.equals("exposure"))
-			return result.sorted((l, r) -> (int) Math.ceil(100000*l.getElement5() - 100000*r.getElement5()) );
+			return asset_info.sorted((l, r) -> (int) Math.ceil(100000*r.getElement5() - 100000*l.getElement5()) );
 		else if ( orderby.equals("usage"))
-			return result.sorted((l, r) -> (int) Math.ceil(100000*l.getElement7() - 100000*r.getElement7()) );
+			return asset_info.sorted((l, r) -> (int) Math.ceil(100000*r.getElement7() - 100000*l.getElement7()) );
 		else if ( orderby.equals("fix"))
-			return result.sorted((l, r) -> l.getElement9() - r.getElement9() );
+			return asset_info.sorted((l, r) -> r.getElement9() - l.getElement9() );
 		else if ( orderby.equals("stop"))
-			return result.sorted((l, r) -> (int) Math.ceil(100000*l.getElement8() - 100000*r.getElement8()) );
+			return asset_info.sorted((l, r) -> (int) Math.ceil(100000*r.getElement8() - 100000*l.getElement8()) );
 		else
-			return result.sorted((l, r) -> (int) Math.ceil(100000*l.getElement11() - 100000*r.getElement11()) );
+			return asset_info.sorted((l, r) -> (int) Math.ceil(100000*r.getElement11() - 100000*l.getElement11()) );
 
 	}
 
 	private ImmutableMap<String, Object> jsonRuler(
-			Tuple6<Double, Integer, Double, Integer, Integer, Double> tickMin,
-			Tuple6<Double, Integer, Double, Integer, Integer, Double> tickMax) {
+				Tuple12<Double, Double, Integer, Integer, Double, Double, Double, Double, Integer, Integer, Double, Double> ticks) {
 
 		return new ImmutableMap.Builder<String, Object>()
 				.put("rating", new ImmutableMap.Builder<String, Object>()
@@ -168,8 +189,8 @@ public class ListApi {
 								.put("text", "扫描量")
 								.put("ticks",
 								new ImmutableList.Builder<Integer>()
-									.add(Option.of(tickMin._2()).getOrElse(0) )
-									.add(Option.of(tickMax._2()).getOrElse(0) )
+									.add(Option.of(ticks.getElement2()).getOrElse(0) )
+									.add(Option.of(ticks.getElement3()).getOrElse(0) )
 									.build())
 								.build())
 
@@ -179,8 +200,8 @@ public class ListApi {
 								.put("text", "曝光量")
 								.put("ticks",
 										new ImmutableList.Builder<Double>()
-											.add(Option.of(tickMin._1()).getOrElse(0.0) )
-											.add(Option.of(tickMax._1()).getOrElse(0.0) )
+											.add(Option.of(ticks.getElement0()).getOrElse(0.0) )
+											.add(Option.of(ticks.getElement1()).getOrElse(0.0) )
 											.build())
 								.build())
 
@@ -190,8 +211,8 @@ public class ListApi {
 								.put("text", "使用时间")
 								.put("ticks",
 										new ImmutableList.Builder<Double>()
-											.add(Option.of(tickMin._3()).getOrElse(0.0) )
-											.add(Option.of(tickMax._3()).getOrElse(0.0) )
+											.add(Option.of(ticks.getElement4()).getOrElse(0.0) )
+											.add(Option.of(ticks.getElement5()).getOrElse(0.0) )
 											.build())
 								.build())
 
@@ -200,8 +221,8 @@ public class ListApi {
 								.put("text", "维修次数")
 								.put("ticks",
 										new ImmutableList.Builder<Integer>()
-											.add(Option.of(tickMin._5()).getOrElse(0) )
-											.add(Option.of(tickMax._5()).getOrElse(0) )
+											.add(Option.of(ticks.getElement8()).getOrElse(0) )
+											.add(Option.of(ticks.getElement9()).getOrElse(0) )
 											.build())
 								.build())
 
@@ -222,8 +243,8 @@ public class ListApi {
 								.put("text", "利润")
 								.put("ticks",
 										new ImmutableList.Builder<Double>()
-											.add(Option.of(tickMin._6()).getOrElse(0.0) )
-											.add(Option.of(tickMax._6()).getOrElse(0.0) )
+											.add(Option.of(ticks.getElement10()).getOrElse(0.0) )
+											.add(Option.of(ticks.getElement11()).getOrElse(0.0) )
 											.build())
 								.build())
 
