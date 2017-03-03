@@ -1,24 +1,24 @@
 {
-  "name": "flare",
+  "name": "All",
   "usage": 0.57,
   "children": [
     {
-      "name": "analytics",
+      "name": "CT",
       "children": [
         {
-          "name": "cluster",
+          "name": "CT-1",
           "size": 120,
           "usage": 0.24,
           "id": 111
         },
         {
-          "name": "graph",
+          "name": "CT-2",
           "size": 1300,
           "usage": 0.98,
           "id": 112
         },
         {
-          "name": "optimization",
+          "name": "CT-3",
           "size": 7074,
           "usage": 0.1,
           "id": 113
@@ -28,70 +28,70 @@
       "id": 110
     },
     {
-      "name": "animate",
+      "name": "MR",
       "children": [
         {
-          "name": "Easing",
+          "name": "MR-1",
           "size": 17010,
           "usage": 0.81,
           "id": 121
         },
         {
-          "name": "FunctionSequence",
+          "name": "MR-2",
           "size": 5842,
           "usage": 0.23,
           "id": 122
         },
         {
-          "name": "ISchedulable",
+          "name": "MR-3",
           "size": 1041,
           "usage": 0.45,
           "id": 123
         },
         {
-          "name": "Parallel",
+          "name": "MR-4",
           "size": 5176,
           "usage": 0.79,
           "id": 124
         },
         {
-          "name": "Pause",
+          "name": "MR-5",
           "size": 449,
           "usage": 0.97,
           "id": 125
         },
         {
-          "name": "Scheduler",
+          "name": "MR-6",
           "size": 5593,
           "usage": 0.81,
           "id": 126
         },
         {
-          "name": "Sequence",
+          "name": "MR-7",
           "size": 5534,
           "usage": 0.52,
           "id": 127
         },
         {
-          "name": "Transition",
+          "name": "MR-8",
           "size": 9201,
           "usage": 0.12,
           "id": 128
         },
         {
-          "name": "Transitioner",
+          "name": "MR-9",
           "size": 19975,
           "usage": 0.81,
           "id": 129
         },
         {
-          "name": "TransitionEvent",
+          "name": "MR-10",
           "size": 1116,
           "usage": 0.54,
           "id": 130
         },
         {
-          "name": "Tween",
+          "name": "MR-11",
           "size": 6006,
           "usage": 0.46,
           "id": 131
@@ -101,28 +101,22 @@
       "id": 120
     },
     {
-      "name": "display",
+      "name": "DSA",
       "children": [
         {
-          "name": "DirtySprite",
-          "size": 8833,
-          "usage": 0.98,
-          "id": 131
-        },
-        {
-          "name": "LineSprite",
+          "name": "DSA-1",
           "size": 1732,
           "usage": 0.97,
           "id": 132
         },
         {
-          "name": "RectSprite",
+          "name": "DSA-2",
           "size": 3623,
           "usage": 1.2,
           "id": 133
         },
         {
-          "name": "TextSprite",
+          "name": "DSA-3",
           "size": 10066,
           "usage": 0.99,
           "id": 134
@@ -132,10 +126,10 @@
       "id": 130
     },
     {
-      "name": "flex",
+      "name": "RF",
       "children": [
         {
-          "name": "FlareVis",
+          "name": "RF-1",
           "size": 4116,
           "usage": 0.73,
           "id": 141
@@ -145,52 +139,52 @@
       "id": 140
     },
     {
-      "name": "physics",
+      "name": "CR",
       "children": [
         {
-          "name": "DragForce",
+          "name": "CR-1",
           "size": 1082,
           "usage": 0.05,
           "id": 151
         },
         {
-          "name": "GravityForce",
+          "name": "CR-2",
           "size": 1336,
           "usage": 0.4,
           "id": 152
         },
         {
-          "name": "IForce",
+          "name": "CR-3",
           "size": 319,
           "usage": 0.27,
           "id": 153
         },
         {
-          "name": "NBodyForce",
+          "name": "CR-4",
           "size": 10498,
           "usage": 0.46,
           "id": 154
         },
         {
-          "name": "Particle",
+          "name": "CR-5",
           "size": 2822,
           "usage": 0.28,
           "id": 155
         },
         {
-          "name": "Simulation",
+          "name": "CR-6",
           "size": 9983,
           "usage": 0.16,
           "id": 156
         },
         {
-          "name": "Spring",
+          "name": "CR-7",
           "size": 2213,
           "usage": 0.03,
           "id": 157
         },
         {
-          "name": "SpringForce",
+          "name": "CR-8",
           "size": 1681,
           "usage": 0.75,
           "id": 158
@@ -200,76 +194,76 @@
       "id": 150
     },
     {
-      "name": "query",
+      "name": "DR",
       "children": [
         {
-          "name": "Arithmetic",
+          "name": "DR-1",
           "size": 3891,
           "usage": 0.99,
           "id": 161
         },
         {
-          "name": "Average",
+          "name": "DR-2",
           "size": 891,
           "usage": 0.53,
           "id": 162
         },
         {
-          "name": "BinaryExpression",
+          "name": "DR-3",
           "size": 2893,
           "usage": 0.07,
           "id": 163
         },
         {
-          "name": "Comparison",
+          "name": "DR-4",
           "size": 5103,
           "usage": 0.82,
           "id": 164
         },
         {
-          "name": "CompositeExpression",
+          "name": "DR-5",
           "size": 3677,
           "usage": 0.58,
           "id": 165
         },
         {
-          "name": "Expression",
+          "name": "DR-6",
           "size": 5130,
           "usage": 0.1,
           "id": 166
         },
         {
-          "name": "ExpressionIterator",
+          "name": "DR-7",
           "size": 3617,
           "usage": 0.25,
           "id": 167
         },
         {
-          "name": "Fn",
+          "name": "DR-8",
           "size": 3240,
           "usage": 0.32,
           "id": 168
         },
         {
-          "name": "If",
+          "name": "DR-9",
           "size": 2732,
           "usage": 1.1,
           "id": 169
         },
         {
-          "name": "IsA",
+          "name": "DR-10",
           "size": 2039,
           "usage": 0.19,
           "id": 170
         },
         {
-          "name": "Literal",
+          "name": "DR-11",
           "size": 1214,
           "usage": 0.01,
           "id": 171
         },
         {
-          "name": "Match",
+          "name": "DR-12",
           "size": 3748,
           "usage": 0.61,
           "id": 172
@@ -279,40 +273,40 @@
       "id": 160
     },
     {
-      "name": "scale",
+      "name": "D1",
       "children": [
         {
-          "name": "IScaleMap",
+          "name": "D1-1",
           "size": 2105,
           "usage": 0.83,
           "id": 171
         },
         {
-          "name": "LinearScale",
+          "name": "D1-2",
           "size": 1316,
           "usage": 0.25,
           "id": 172
         },
         {
-          "name": "LogScale",
+          "name": "D1-3",
           "size": 3151,
           "usage": 0.06,
           "id": 173
         },
         {
-          "name": "OrdinalScale",
+          "name": "D1-4",
           "size": 3770,
           "usage": 0.48,
           "id": 174
         },
         {
-          "name": "QuantileScale",
+          "name": "D1-5",
           "size": 2435,
           "usage": 0.61,
           "id": 175
         },
         {
-          "name": "QuantitativeScale",
+          "name": "D1-6",
           "size": 4839,
           "usage": 0.82,
           "id": 176
@@ -322,76 +316,76 @@
       "id": 170
     },
     {
-      "name": "util",
+      "name": "D2",
       "children": [
         {
-          "name": "Arrays",
+          "name": "D2-1",
           "size": 8258,
           "usage": 0.66,
           "id": 181
         },
         {
-          "name": "Dates",
+          "name": "D2-2",
           "size": 8217,
           "usage": 0.91,
           "id": 182
         },
         {
-          "name": "Filter",
+          "name": "D2-3",
           "size": 2324,
           "usage": 0.17,
           "id": 183
         },
         {
-          "name": "Geometry",
+          "name": "D2-4",
           "size": 10993,
           "usage": 0.54,
           "id": 184
         },
         {
-          "name": "IValueProxy",
+          "name": "D2-5",
           "size": 874,
           "usage": 0.89,
           "id": 185
         },
         {
-          "name": "Maths",
+          "name": "D2-6",
           "size": 17705,
           "usage": 0.54,
           "id": 186
         },
         {
-          "name": "Orientation",
+          "name": "D2-7",
           "size": 1486,
           "usage": 0.35,
           "id": 187
         },
         {
-          "name": "Property",
+          "name": "D2-8",
           "size": 5559,
           "usage": 0.36,
           "id": 188
         },
         {
-          "name": "Shapes",
+          "name": "D2-9",
           "size": 19118,
           "usage": 0.14,
           "id": 189
         },
         {
-          "name": "Sort",
+          "name": "D2-10",
           "size": 6887,
           "usage": 0.1,
           "id": 190
         },
         {
-          "name": "Stats",
+          "name": "D2-11",
           "size": 6557,
           "usage": 0.56,
           "id": 191
         },
         {
-          "name": "Strings",
+          "name": "D2-12",
           "size": 22026,
           "usage": 0.49,
           "id": 192
