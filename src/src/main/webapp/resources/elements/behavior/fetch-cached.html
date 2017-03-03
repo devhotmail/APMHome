@@ -17,6 +17,14 @@
       }
     }
 
+    // check session timeout redirected to login page
+    function checkSessionTimeout(url) {
+      // check ajax timeout
+      if (/login\.xhtml$/.test(url)) {
+        location.href = url;
+      }
+    }
+
     return {
       fetchOptions: function(opt) {
         this._options = opt;
@@ -28,14 +36,15 @@
           var length = cached ? items.length : 0;
           var pages = cached ? cached.pages : {start: 0};
           var end = start + limit;
+          var fetchUrl;
 
           if (!cached || ( length < pages.total && end > length )) {
-            url = URI(url).addQuery({
-              'start': length,
-              'limit': limit + PRE_FETCH_NUM
-            }).toString();
+            fetchUrl = URI(url).addQuery({ 'start': length, 'limit': limit + PRE_FETCH_NUM}).toString();
             var opt = Object.assign({credentials: 'same-origin'}, this._options);
-            fetch(url, opt).then(function(res) {
+            fetch(fetchUrl, opt).then(function(res) {
+
+              checkSessionTimeout(res.url);
+
               // check "Cache-Control" for cache expiration
               var cache_control = res.headers.get('Cache-Control');
               var max_age = cache_control.match(MAXAGE_REGEX);
