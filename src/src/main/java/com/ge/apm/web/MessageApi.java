@@ -5,6 +5,7 @@ import com.ge.apm.service.api.CommonService;
 import com.github.davidmoten.rx.jdbc.ConnectionProvider;
 import com.github.davidmoten.rx.jdbc.Database;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.primitives.Ints;
 import javaslang.control.Option;
 import javaslang.control.Try;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -46,9 +48,20 @@ public class MessageApi {
   public ResponseEntity<Map<String, Object>> requestAll(HttpServletRequest request,
                                                         @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(value = "limit", required = false, defaultValue = "30") Integer limit,
                                                         @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
-    return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ImmutableMap.Builder<String, Object>()
-      .put("pages", new ImmutableMap.Builder<String, Object>().put("total", StreamSupport.stream(commonService.findAllMessages().spliterator(), true).count()).put("limit", limit).put("start", start).build())
-      .put("messages", StreamSupport.stream(commonService.findAllMessages().spliterator(), false).skip(start).limit(limit).collect(Collectors.toList())).build());
+    return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
+      .body(new ImmutableMap.Builder<String, Object>()
+        .put("pages", new ImmutableMap.Builder<String, Object>().put("total", StreamSupport.stream(commonService.findAllMessages().spliterator(), true).count()).put("limit", limit).put("start", start).build())
+        .put("messages", StreamSupport.stream(commonService.findAllMessages().spliterator(), false).skip(start).limit(limit)
+          .map(t -> new ImmutableMap.Builder<String, Object>()
+            .put("id", Option.of(t._1()).getOrElse(0))
+            .put("msg_type", Option.of(t._2()).getOrElse(""))
+            .put("msg_key", Option.of(t._3()).getOrElse(""))
+            .put("value_zh", Option.of(t._4()).getOrElse(""))
+            .put("value_en", Option.of(t._5()).getOrElse(""))
+            .put("value_tw", Option.of(t._6()).getOrElse(""))
+            .put("site_id", Option.of(t._7()).getOrElse(0)).build())
+          .sorted(Comparator.comparingInt(m -> Option.of(Ints.tryParse(m.get("id").toString())).getOrElse(0)))
+          .collect(Collectors.toList())).build());
   }
 
   @RequestMapping(method = RequestMethod.GET)
