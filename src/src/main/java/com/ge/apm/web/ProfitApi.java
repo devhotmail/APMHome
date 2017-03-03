@@ -134,7 +134,7 @@ public class ProfitApi {
         .put("ref", "child")
         .put("href", Option.of(groupBy).map(v -> String.format("%s?year=%s&%s=%s", request.getRequestURL(), year, groupBy, child._1)).getOrElse(""))
         .build())
-      .build()).toBlocking().toIterable();
+      .build()).cache().toBlocking().toIterable();
   }
 
   private ResponseEntity<Map<String, Object>> serialize(HttpServletRequest request, Map<Integer, String> groups, Map<Integer, String> depts, Map<Integer, String> months, Observable<Tuple4<Integer, String, Money, Money>> children, int year, String groupBy, Integer type, Integer dept, Integer month, Integer limit, Integer start) {
