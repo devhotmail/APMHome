@@ -1,6 +1,5 @@
 package com.ge.apm.web;
 
-import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.service.api.CommonService;
 import com.github.davidmoten.rx.jdbc.ConnectionProvider;
 import com.github.davidmoten.rx.jdbc.Database;
@@ -15,7 +14,6 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import webapp.framework.web.service.DbMessageSource;
 import webapp.framework.web.service.UserContext;
 
 import javax.annotation.Resource;
@@ -73,9 +71,19 @@ public class MessageApi {
 
   @RequestMapping(path = "/{id}", method = RequestMethod.GET)
   @ResponseBody
-  public ResponseEntity<I18nMessage> requestById(HttpServletRequest request,
-                                                 @Min(1) @PathVariable Integer id) {
-    return Option.of(DbMessageSource.getMessageCache(UserContext.getCurrentLoginUser().getSiteId()).values().stream().parallel().filter(m -> m.getId().equals(id)).findFirst().orElse(null)).map(m -> ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(m)).getOrElse(ResponseEntity.badRequest().body(new I18nMessage()));
+  public ResponseEntity<ImmutableMap<String, Object>> requestById(HttpServletRequest request,
+                                                                  @Min(1) @PathVariable Integer id) {
+    return Option.of(StreamSupport.stream(commonService.findAllMessages().spliterator(), true).filter(t -> t._1.equals(id)).findFirst().orElse(null))
+      .map(t -> ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
+        .body(new ImmutableMap.Builder<String, Object>()
+          .put("id", Option.of(t._1()).getOrElse(0))
+          .put("msg_type", Option.of(t._2()).getOrElse(""))
+          .put("msg_key", Option.of(t._3()).getOrElse(""))
+          .put("value_zh", Option.of(t._4()).getOrElse(""))
+          .put("value_en", Option.of(t._5()).getOrElse(""))
+          .put("value_tw", Option.of(t._6()).getOrElse(""))
+          .put("site_id", Option.of(t._7()).getOrElse(0)).build()))
+      .getOrElse(ResponseEntity.badRequest().body(ImmutableMap.of()));
   }
 
 }
