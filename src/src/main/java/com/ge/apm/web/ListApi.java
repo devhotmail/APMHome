@@ -59,19 +59,38 @@ public class ListApi {
 			@Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
 
 		UserAccount user = UserContext.getCurrentLoginUser();
-
-		if (Option.of(dept).isEmpty())	dept = Integer.MIN_VALUE;
-		if (Option.of(type).isEmpty())	type = Integer.MIN_VALUE;
+		int site_id = user.getSiteId();
+		int hospital_id = user.getHospitalId();
 		if (Option.of(limit).isEmpty())	limit = Integer.MAX_VALUE;
 
 		if (Option.of(from).isDefined() && Option.of(to).isDefined())
-			return createResponseBody(request, from, to, orderby, user.getSiteId(), user.getHospitalId(), dept, type, limit, start);
+			return createResponseBody(
+				request, limit, start,
+				getHref(request.getRequestURL().toString(), from, to, dept, type, orderby, limit, start),
+				filterQueryData(
+					dept, type, orderby,
+					mergeQueryData(
+						ListService.queryForBasic(site_id, hospital_id, from, to),
+						ListService.queryForOp(site_id, hospital_id, from, to),
+						ListService.queryForBm(site_id, hospital_id, from, to) ) ),
+				queryForTick(
+					ListService.queryForMinMax(site_id, hospital_id, dept, type, from, to),
+					ListService.queryForBmTick(site_id, hospital_id, dept, type, from, to),
+					to.compareTo(from) ) );
 		else
 			return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Parameter unmatched"));
 	}
 
-	private ResponseEntity<Map<String, Object>> createResponseBody(HttpServletRequest request, Date from, Date to,
-			String orderby, int site_id, int hospital_id, int dept, int type, int limit, int start) {
+	private String getHref(String requestUrl, Date from, Date to, Integer dept, Integer type, String orderby, Integer limit, Integer start ) {
+
+		return String.format("%s?from=%s&to=%s&dept=%s&type=%s&orderby=%s&limit=%s&start=%s", requestUrl, from, to, dept, type, orderby, limit, start);
+	}
+
+	private ResponseEntity<Map<String, Object>> createResponseBody(
+				HttpServletRequest request, Integer limit, Integer start, String href,
+				Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>> asset_info,
+				Tuple12<Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double> ticks
+				) {
 
 		return ResponseEntity.ok()
 				.cacheControl(
@@ -79,104 +98,86 @@ public class ListApi {
 				.body(new ImmutableMap.Builder<String, Object>()
 						.put("pages",
 								new ImmutableMap.Builder<String, Object>()
-									.put("total", ListService.queryForCount(site_id, hospital_id, dept, type, from, to) )
+									.put("total", asset_info.count().toBlocking().single() )
 									.put("limit", limit)
 									.put("start", start)
 									.build() )
 
-						.put("ruler", jsonRuler(
-								ListService.queryForTick(
-								ListService.queryForMinMax(site_id, hospital_id, dept, type, from, to), 
-								ListService.queryForBmTick(site_id, hospital_id, dept, type, from, to) ) ) )
+						.put("ruler", jsonRuler(ticks) )
 
-						.put("items",
-								jsonAsset(request, limit, start,
-										queryFilterData ( dept, type, orderby,      
-												queryMergeData(
-												dept, type, orderby,
-												ListService.queryForBasic(site_id, hospital_id, from, to),
-												ListService.queryForOp(site_id, hospital_id, from, to),
-												ListService.queryForBm(site_id, hospital_id, from, to))) ) )
-				        .put("link",
-				        		new ImmutableMap.Builder<String, Object>()
-				        			.put("ref", "self")
-				        			.put("href",
-				        					Option.of(from).map(v ->
-				        						String.format("%s?from=%s&to=%s&dept=%s&type=%s&orderby=%s&limit=%s&start=%s",
-				        								request.getRequestURL(), from, to, dept, type, orderby, limit, start) ).getOrElse("N/A") )
-				        			.build() )
+						.put("items", jsonAsset(request, limit, start, asset_info) )
+
+						.put("link",
+								new ImmutableMap.Builder<String, Object>()
+									.put("ref", "self")
+									.put("href", href )
+									.build() )
 						.build());
 
 	}
 
-	public Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>>
-			queryMergeData(
-					Integer dept, Integer type, String orderby,
+	public Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>>
+			mergeQueryData(
 					Observable<Tuple5<Integer, String, Integer, Integer, String>> queryBasic,
 					Observable<Tuple8<Double, Integer, Double, Double, Integer, Double, Double, Integer>> queryOp,
-					Observable<Tuple6<Double, Integer, Double, Double, Integer, Double>> queryBm) {
+					Observable<Tuple6<Double, Double, Double, Double, Double, Double>> queryBm) {
 
 		return Observable.zip(queryBasic, queryOp, queryBm,
 					(t1, t2, t3) ->
 							new Tuple19<Integer, String, Integer, Integer, String,
 										Double, Integer, Double, Double, Integer, Double, Double, Integer,
-										Double, Integer, Double, Double, Integer, Double>(
+										Double, Double, Double, Double, Double, Double>(
 										t1.getElement0(), t1.getElement1(), t1.getElement2(), t1.getElement3(), t1.getElement4(),
 										t2.getElement0(), t2.getElement1(), t2.getElement2(), t2.getElement3(), t2.getElement4(), t2.getElement5(), t2.getElement6(), t2.getElement7(),
-										t3.getElement0(), t3.getElement1(), t3.getElement2(), t3.getElement3(), t3.getElement4(), t3.getElement5() ) )
+										t3.getElement0()*t2.getElement7(), t3.getElement1()*t2.getElement7(), t3.getElement2()*t2.getElement7(), t3.getElement3(), t3.getElement4()*t2.getElement7(), t3.getElement5()*t2.getElement7() ) )
 							.cache();
-		
-
 	}
 
-	public Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>>
-			queryFilterData(
+	public Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>>
+			filterQueryData(
 				Integer dept, Integer type, String orderby,
-				Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>> asset_info ) {
+				Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>> asset_info ) {
 
-		asset_info = dept == Integer.MIN_VALUE ? asset_info : asset_info.filter(t19 -> t19.getElement3()==dept);
+		asset_info = dept == null ? asset_info : asset_info.filter(t19 -> t19.getElement3()==dept);
 
-		asset_info = type == Integer.MIN_VALUE ? asset_info : asset_info.filter(t19 -> t19.getElement2()==type);
-
-		return asset_info;
-
-	}
-
-
-	public Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>>
-			minmaxData(
-				Integer dept, Integer type, String orderby,
-				Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>> asset_info ) {
-
-		return null;
-
-	}
-
-
-	public Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>>
-			querySortedData(
-				Integer dept, Integer type, String orderby,
-				Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>> asset_info ) {
+		asset_info = type == null ? asset_info : asset_info.filter(t19 -> t19.getElement2()==type);
 
 		if (orderby.equals("id"))
 			return asset_info;
-		else if ( orderby.equals("scan"))
-			return asset_info.sorted((l, r) -> r.getElement6() - l.getElement6() );
 		else if ( orderby.equals("exposure"))
-			return asset_info.sorted((l, r) -> (int) Math.ceil(100000*r.getElement5() - 100000*l.getElement5()) );
+			return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement5() - 100000*r.getElement5()) );
+		else if ( orderby.equals("scan"))
+			return asset_info.sorted((r, l) -> l.getElement6() - r.getElement6() );
 		else if ( orderby.equals("usage"))
-			return asset_info.sorted((l, r) -> (int) Math.ceil(100000*r.getElement7() - 100000*l.getElement7()) );
-		else if ( orderby.equals("fix"))
-			return asset_info.sorted((l, r) -> r.getElement9() - l.getElement9() );
+			return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement7() - 100000*r.getElement7()) );
 		else if ( orderby.equals("stop"))
-			return asset_info.sorted((l, r) -> (int) Math.ceil(100000*r.getElement8() - 100000*l.getElement8()) );
+			return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement8() - 100000*r.getElement8()) );
+		else if ( orderby.equals("fix"))
+			return asset_info.sorted((r, l) -> l.getElement9() - r.getElement9() );
 		else
-			return asset_info.sorted((l, r) -> (int) Math.ceil(100000*r.getElement11() - 100000*l.getElement11()) );
+			return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement11() - 100000*r.getElement11()) );
 
 	}
 
+	public Tuple12<Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double> queryForTick (
+			Tuple12<Double, Double, Integer, Integer, Double, Double, Double, Double, Integer, Integer, Double, Double> tick1,
+			Tuple12<Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double> tick2,
+			Integer day
+			) {
+
+		return new Tuple12<Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double> (
+
+			Math.min(tick1.getElement0(), tick2.getElement0()*day), Math.max(tick1.getElement1(), tick2.getElement1()*day),
+			Math.min(tick1.getElement2(), tick2.getElement2()*day), Math.max(tick1.getElement3(), tick2.getElement3()*day),
+			Math.min(tick1.getElement4(), tick2.getElement4()*day), Math.max(tick1.getElement5(), tick2.getElement5()*day),
+			Math.min(tick1.getElement6(), tick2.getElement6()), Math.max(tick1.getElement7(), tick2.getElement7()),
+			Math.min(tick1.getElement8(), tick2.getElement8()*day), Math.max(tick1.getElement9(), tick2.getElement9()*day),
+			Math.min(tick1.getElement10(), tick2.getElement10()*day), Math.max(tick1.getElement11(), tick2.getElement11()*day) );
+	}
+
+
 	private ImmutableMap<String, Object> jsonRuler(
-				Tuple12<Double, Double, Integer, Integer, Double, Double, Double, Double, Integer, Integer, Double, Double> ticks) {
+				Tuple12<Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double> ticks) {
 
 		return new ImmutableMap.Builder<String, Object>()
 				.put("rating", new ImmutableMap.Builder<String, Object>()
@@ -188,9 +189,9 @@ public class ListApi {
 								.put("unit", "次")
 								.put("text", "扫描量")
 								.put("ticks",
-								new ImmutableList.Builder<Integer>()
-									.add(Option.of(ticks.getElement2()).getOrElse(0) )
-									.add(Option.of(ticks.getElement3()).getOrElse(0) )
+								new ImmutableList.Builder<Double>()
+									.add(Option.of(ticks.getElement2()).getOrElse(0.0) )
+									.add(Option.of(ticks.getElement3()).getOrElse(0.0) )
 									.build())
 								.build())
 
@@ -220,9 +221,9 @@ public class ListApi {
 						new ImmutableMap.Builder<String, Object>().put("unit", "次")
 								.put("text", "维修次数")
 								.put("ticks",
-										new ImmutableList.Builder<Integer>()
-											.add(Option.of(ticks.getElement8()).getOrElse(0) )
-											.add(Option.of(ticks.getElement9()).getOrElse(0) )
+										new ImmutableList.Builder<Double>()
+											.add(Option.of(ticks.getElement8()).getOrElse(0.0) )
+											.add(Option.of(ticks.getElement9()).getOrElse(0.0) )
 											.build())
 								.build())
 
@@ -232,8 +233,8 @@ public class ListApi {
 								.put("text", "停机率")
 								.put("ticks",
 										new ImmutableList.Builder<Double>()
-											.add(0.0)
-											.add(100.0)
+											.add(Option.of(ticks.getElement6()).getOrElse(0.0))
+											.add(Option.of(ticks.getElement7()).getOrElse(0.0))
 											.build())
 								.build())
 
@@ -252,7 +253,7 @@ public class ListApi {
 	}
 
 	private Iterable<ImmutableMap<String, Object>> jsonAsset(HttpServletRequest request, Integer limit, Integer start,
-			Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Integer, Double, Double, Integer, Double>> asset_info) {
+			Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>> asset_info) {
 
 		return asset_info.
 				skip(start).
@@ -283,13 +284,13 @@ public class ListApi {
 						.put("exposure_bm",
 								Option.of(asset.getElement13()).getOrElse(0.0) )
 						.put("scan_bm",
-								Option.of(asset.getElement14()).getOrElse(0) )
+								Option.of(asset.getElement14()).getOrElse(0.0) )
 						.put("usage_bm",
 								Option.of(asset.getElement15()).getOrElse(0.0) )
 						.put("stop_bm",
 								Option.of(asset.getElement16()).getOrElse(0.0) )
 						.put("fix_bm",
-								Option.of(asset.getElement17()).getOrElse(0) )
+								Option.of(asset.getElement17()).getOrElse(0.0) )
 						.put("profit_bm",
 								Option.of(asset.getElement18()).getOrElse(0.0) )
 						.build())
