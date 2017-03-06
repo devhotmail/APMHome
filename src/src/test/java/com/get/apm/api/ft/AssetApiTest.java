@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import okhttp3.ResponseBody;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -13,6 +14,7 @@ import retrofit2.http.*;
 import java.io.IOException;
 import java.util.Map;
 
+@Ignore
 public class AssetApiTest extends AbstractApiTest {
   private AssetApiTestInterface tests;
 
