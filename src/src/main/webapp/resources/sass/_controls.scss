@@ -24,20 +24,17 @@
     }
 
     .px-dropdown--content {
+      margin-top: .5rem;
       color: $text-color-default;
-      border-color: transparent;
       background: $main-bg-color;
       text-align: left;
+      border-radius: 15px;
+      border: 1px solid #595959;
     }
 
     .px-dropdown--listitem:hover {
       background-color: transparent;
       color: $highlight-color;
-    }
-
-    .px-dropdown--list {
-      border-radius: 15px;
-      border: 1px solid #595959;
     }
   }
 
