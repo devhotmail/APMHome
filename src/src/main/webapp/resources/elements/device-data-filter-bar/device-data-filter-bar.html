@@ -34,98 +34,115 @@
     </div>
   </template>
   <script>
-    (
-      function() {
-        var DATE_FORMAT = 'YYYY-MM-DD';
+    define('device-data-filter-bar', [
+      'behavior/context',
+      'behavior/fetch-cached'
+    ], function(ContextBehavior, FetchCachedBehavior) {
 
-        Polymer({
-          is: 'device-data-filter-bar',
-          properties: {
-            selectOptions: Array,
-            filterBy: {
-              type: String,
-              notify: true,
-            },
-            from: {
-              type: String,
-              notify: true
-            },
-            to: {
-              type: String,
-              notify: true
-            },
-            _displayValue: {
-              computed: '_getDisplayValue(filterBy, selectOptions)'
-            }
-          },
-          observers: [
-            'setToSimpleDate(range)',
-            'fromSimpleDate(from, to)',
-            'saveOptionsInHistory("filter", filterBy)',
-            'saveOptionsInHistory("from", from)',
-            'saveOptionsInHistory("to", to)',
-          ],
-          ready: function() {
-            var _this = this;
+      var DATE_FORMAT = 'YYYY-MM-DD';
 
-            // setup data from location hash
-            this.restoreOptionsFromHistory({
-              'filter': 'filterBy',
-              'from': 'from',
-              'to': 'to'
-            });
-
-            fetch('mock/device-filter-options.json').then(function(res) {
-              return res.json();
-            }).then(function(list) {
-              _this.set('selectOptions', list);
-            });
-
-            // init default time range
-            if (!this.from) {
-              this.set('from', moment().subtract(1, 'y').format(DATE_FORMAT));
-              this.set('to', moment().format(DATE_FORMAT));
-            }
+      Polymer({
+        is: 'device-data-filter-bar',
+        properties: {
+          selectOptions: Array,
+          filterBy: {
+            type: String,
+            notify: true,
+            value: 0,
           },
-          _getDisplayValue: function(key, options) {
-            return options.find(function(item) {
-              return item.key == key;
-            }).val;
+          from: {
+            type: String,
+            notify: true
           },
-          setToSimpleDate: function(range) {
-            if (!this.from) {
-              return;
-            }
-            this.set('from', moment(range.from).format(DATE_FORMAT));
-            this.set('to', moment(range.to).format(DATE_FORMAT));
+          to: {
+            type: String,
+            notify: true
           },
-          fromSimpleDate: function(from, to) {
-            this.set('range', {
-              from: moment(from).toISOString(),
-              to: moment(to).toISOString(),
-            });
+          _displayValue: {
+            computed: '_getDisplayValue(filterBy, selectOptions)'
           },
-          restoreOptionsFromHistory: function(props) {
-            var options = URI().query(URI().fragment()).query(true);
-            var _this = this;
-            Object.keys(props).forEach(function(key) {
-              var path;
-              if (key in options) {
-                path = props[key];
-                _this.set(path, options[key]);
-              }
-            });
-          },
-          saveOptionsInHistory: function(name, val) {
-            if (!val) {
-              return;
-            }
-            var options = URI().query(URI().fragment()).query(true);
-            options[name] = val;
-            location.hash = '#' + URI().query(options).query();
+          _queryUrl: {
+            type: String,
+            computed: '_getQueryUrl()'
           }
-        });
-      }
-    )();
+        },
+        observers: [
+          'setToSimpleDate(range)',
+          'fromSimpleDate(from, to)',
+          'saveOptionsInHistory("filter", filterBy)',
+          'saveOptionsInHistory("from", from)',
+          'saveOptionsInHistory("to", to)',
+        ],
+        behaviors: [
+          ContextBehavior,
+          FetchCachedBehavior
+        ],
+        ready: function() {
+          var _this = this;
+
+          // setup data from location hash
+          this.restoreOptionsFromHistory({
+            'filter': 'filterBy',
+            'from': 'from',
+            'to': 'to'
+          });
+
+          this.fetchPage(this._getQueryUrl()).then(function(res) {
+            var list = Object.keys(res).map(function(i) { return {val: res[+i], key: i}; });
+            list = [{"val": "全部设备", "key": 0}].concat(list);
+            _this.set('selectOptions', list);
+          });
+
+          // init default time range
+          if (!this.from) {
+            this.set('from', moment().subtract(1, 'y').format(DATE_FORMAT));
+            this.set('to', moment().format(DATE_FORMAT));
+          }
+        },
+        _getQueryUrl: function() {
+          return URI(this.resolveApiUrl('/api/msg')).query({
+            'type': 'assetGroup',
+          }).toString();
+        },
+        _getDisplayValue: function(key, options) {
+          return options.find(function(item) {
+            return item.key == key;
+          }).val;
+        },
+        setToSimpleDate: function(range) {
+          if (!this.from) {
+            return;
+          }
+          this.set('from', moment(range.from).format(DATE_FORMAT));
+          this.set('to', moment(range.to).format(DATE_FORMAT));
+        },
+        fromSimpleDate: function(from, to) {
+          this.set('range', {
+            from: moment(from).toISOString(),
+            to: moment(to).toISOString(),
+          });
+        },
+        restoreOptionsFromHistory: function(props) {
+          var options = URI().query(URI().fragment()).query(true);
+          var _this = this;
+          Object.keys(props).forEach(function(key) {
+            var path;
+            if (key in options) {
+              path = props[key];
+              _this.set(path, options[key]);
+            }
+          });
+        },
+        saveOptionsInHistory: function(name, val) {
+          if (!val) {
+            return;
+          }
+          var options = URI().query(URI().fragment()).query(true);
+          options[name] = val;
+          location.hash = '#' + URI().query(options).query();
+        }
+      });
+
+    });
   </script>
 </dom-module>

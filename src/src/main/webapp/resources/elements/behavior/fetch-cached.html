@@ -29,17 +29,37 @@
       fetchOptions: function(opt) {
         this._options = opt;
       },
+      /**
+       * fetch a list of data from the URL, and utilizing local-storage to cache the response,
+       * support for optional pagination parameters "start" and "limit" to
+       * @param url API endpoint URL
+       * @param start Start offset of this request, if this is a paginated API (response data has "pages" and "items" section)
+       * @param limit Number of items of this request,  if this is a paginated API (response data has "pages" and "items" section)
+       */
       fetchPage: function(url, start, limit) {
+        // without specifying "start" and "limit"
+        var is_paging = (start !== undefined && limit !== undefined);
+
         return new Promise(function(resolve, reject) {
           var cached = lscache.get(url);
-          var items = cached ? cached.items : [];
-          var length = cached ? items.length : 0;
-          var pages = cached ? cached.pages : {start: 0};
-          var end = start + limit;
           var fetchUrl;
 
-          if (!cached || ( length < pages.total && end > length )) {
-            fetchUrl = URI(url).addQuery({ 'start': length, 'limit': limit + PRE_FETCH_NUM}).toString();
+          if(is_paging) {
+            var items = cached ? cached.items : [];
+            var length = cached ? items.length : 0;
+            var pages = cached ? cached.pages : {start: 0};
+            var end = start + limit;
+          }
+
+          if (!cached || is_paging && ( length < pages.total && end > length )) {
+
+            fetchUrl = URI(url);
+
+            if (is_paging) {
+              fetchUrl.addQuery({'start': length, 'limit': limit + PRE_FETCH_NUM});
+            }
+
+            fetchUrl = fetchUrl.toString();
             var opt = Object.assign({credentials: 'same-origin'}, this._options);
             fetch(fetchUrl, opt).then(function(res) {
 
@@ -52,11 +72,15 @@
                 max_age = +max_age[1] / 60;
               }
               res.json().then(function(data) {
-                assertPaginationDataShape(data);
-                // expand the list of cached items
-                data.items = items.concat(data.items);
-                // update page start
-                data.pages.start = pages.start;
+
+                if (is_paging) {
+                  assertPaginationDataShape(data);
+                  // expand the list of cached items
+                  data.items = items.concat(data.items);
+                  // update page start
+                  data.pages.start = pages.start;
+                }
+
                 // update cache copy
                 lscache.set(url, data, max_age);
                 resolve(data);
@@ -66,12 +90,12 @@
             resolve(cached);
           }
         }).then(function(data) {
-          var items = data.items;
-          var pages = data.pages;
-          // create user requested page view
-          data.items = items.slice(start, start + limit);
-          data.pages.start = start;
-          data.pages.limit = limit;
+          // create user requested paging view
+          if (is_paging) {
+            data.items = data.items.slice(start, start + limit);
+            data.pages.start = start;
+            data.pages.limit = limit;
+          }
           return data;
         });
       },
