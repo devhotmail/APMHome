@@ -215,8 +215,6 @@ public class ProfitApiTest extends AbstractApiTest {
   public void testWrongLimit() throws IOException {
     doNegativeTest(tests, ImmutableMap.of("year", "2016", "limit", "0"));
 
-    doNegativeTest(tests, ImmutableMap.of("year", "2016", "limit", "51"));
-
     doNegativeTest(tests, ImmutableMap.of("year", "2016", "limit", "dh"));
 
     doNegativeTest(tests, ImmutableMap.of("year", "2016", "limit", "-1"));
