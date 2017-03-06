@@ -26,6 +26,29 @@
       }
     }
 
+    function wavePath(percent, radius) {
+      if (percent > 1) {
+        return 'M' + radius + ' 0'
+          + 'm'+ (-radius) + ', 0'
+          + 'a' + radius + ',' + radius + ' 0 1,0 ' + (radius * 2) + ',0'
+          + 'a' + radius + ',' + radius + ' 0 1,0 ' + (radius * -2) + ',0'
+      } else {
+        var part = 1 - percent * 2
+        var h = part * radius
+        var w = Math.sqrt(Math.pow(radius, 2) - Math.pow(h, 2))
+
+        var defaultWaveHeight = 0.1 // The wave height as a percentage of wave circle's radius
+        var waveScaleY = d3.scaleLinear().range([0.035, 0.03]).domain([1 - defaultWaveHeight, 1])
+        var waveHeight = (percent + defaultWaveHeight > 1) ? waveScaleY(percent) : defaultWaveHeight
+
+        return 'M' + (radius - w) + ' ' + h
+        + 'A' + radius + ',' + radius + ' 1' + (percent > 0.5 ? ' 1,0 ' : ' 0,0 ') + (radius + w) + ',' + h
+        + 'q' + -w / 2 + ' ' + radius * waveHeight + ' ' + -w + ' 0'
+        + 't' + -w + ' ' +  0
+        + 'z'
+      }
+    }
+
     Polymer({
       is: 'asset-procurement',
       properties: {
@@ -79,17 +102,22 @@
         var nodes = pack(root).descendants();
         var view;
 
+        var config = getDefaultConf();
+
         var assetGroup = g
         .selectAll('g')
         .data(nodes)
         .enter().append('g')
         .attr('class', 'asset')
-        // .style('display', function(d) {
-        //   return d.parent === root ? 'inline' : 'none';
-        // });
 
         assetGroup        
         .append('circle')
+        .attr('percent', function(d) {
+          return d.data.usage* 100
+        })
+        .attr('name-id', function(d) {
+          return d.data.name + '-' + d.data.id
+        })
         .attr('r', function(d) {
           return d.r;
         })
@@ -111,9 +139,19 @@
           }
         });
 
-        var config = getDefaultConf();
-
-        assetGroup.each(renderWave);
+        assetGroup.append('g')
+        .attr('class', 'wave')
+        .append('path')
+        .attr('pointer-events', 'none')
+        .attr('d', function(d) {
+          var percent = d.data.usage;
+          var radius = d.r;
+          return wavePath(percent, radius);
+        })
+        .attr('transform', function(d) {
+          return 'translate(' + (-d.r) + ',' + 0 + ')';
+        })
+        .attr('fill', config.waveColor);
 
         var text = g.append('g')
         .selectAll('text')
@@ -134,15 +172,6 @@
         .text(function(d) {
           return parseInt(d.data.usage* 100) + '%'
         })
-        // .style('display', function(d) { return d.parent === root ? 'inline' : 'none'; })
-        // .append('tspan')
-        // .text(function(d) {
-        //   return parseInt(d.data.usage* 100) + '%'
-        // })
-        // .append('tspan')
-        // .text(function(d) {
-        //   return d.data.name
-        // })
 
         svg.on('click', function() {
           zoom(root);
@@ -180,17 +209,7 @@
           transition.selectAll('circle.node--leaf')
           .attr('fill', function(d) {
             return (d !== focus && d.parent !== focus) ? 'none' : 'black';
-          })
-
-          // .style('fill-opacity', function(d) {
-          //   return (d === focus || d.parent === focus) ? 1 : 0;
-          // })
-          // .on('start', function(d) {
-          //   if (d === focus || d.parent === focus) this.style.display = 'inline';
-          // })
-          // .on('end', function(d) {
-          //   if (d !== focus && d.parent !== focus) this.style.display = 'none';
-          // });
+          });
         }
 
         function zoomTo(v) {
@@ -217,80 +236,8 @@
             return d === focus ? 0.5 : (d.parent === focus ? 1 : 0.5);
             // return d === focus ? 0.75 : (d.parent === focus ? 1 : 0.5);
           })
-          .selectAll('circle')
-          .attr('transform', 'scale(' + k + ')')
-        }
-
-        function renderWave(node) {
-          var assetGroup = d3.select(this)
-
-          var radius = node.r
-          var elementId = node.data.id
-          var value = node.data.usage * 100
-
-          var fillPercent = Math.max(0, Math.min(100, value)) / 100
-
-          var circleThickness = config.circleThickness
-
-          var fillCircleMargin = circleThickness
-          var fillCircleRadius = radius
-
-          assetGroup.append('circle')
-          .attr('fill', config.waveColor)
-          .attr('r', radius)
-          .attr('pointer-events', 'none')
-          .attr('clip-path', 'url(#clipWave' + elementId + ')')
-
-          // Wave clip effect
-          var waveHeight = fillCircleRadius * config.waveHeight
-
-          var waveLength = fillCircleRadius * 2 / config.waveCount
-          var waveClipCount = 1 + config.waveCount
-          var waveClipWidth = waveLength * waveClipCount
-
-          // Scales for controlling the size of the clipping path.
-          var waveScaleX = d3.scaleLinear().range([0, waveClipWidth]).domain([0, 1])
-          var waveScaleY = d3.scaleLinear().range([0, waveHeight]).domain([0, 1])
-
-          // The clipping wave area.
-          var clipArea = d3.area()
-          .x(function (d) {
-            return waveScaleX(d.x)
-          })
-          .y0(function (d) {
-            return waveScaleY(Math.sin((1 - config.waveCount + d.y) * Math.PI * 2))
-          })
-          .y1(function (d) {
-            return fillCircleRadius * 2 + waveHeight
-          })
-
-          // Data for building the clip wave area.
-          var data = []
-          for (var i = 0; i <= 40 * waveClipCount; i++) {
-            data.push({
-              x: i / (40 * waveClipCount),
-              y: i / 40
-            })
-          }
-
-          var waveGroup = assetGroup.append('defs')
-          .append('clipPath')
-          .attr('id', 'clipWave' + elementId)
-
-          waveGroup.append('path')
-          .datum(data)
-          .attr('d', clipArea)
-          .attr('T', 0)
-
-          var waveRiseScale = d3.scaleLinear()
-          .range([
-            fillCircleMargin + fillCircleRadius + waveHeight,
-            -(fillCircleMargin + fillCircleRadius - waveHeight)
-          ])
-          .domain([0, 1])
-
-          var waveGroupXPosition = fillCircleMargin + fillCircleRadius - waveClipWidth
-          waveGroup.attr('transform', 'translate(' + waveGroupXPosition + ',' + waveRiseScale(fillPercent) + ')')
+          .selectAll('circle, g.wave')
+          .attr('transform', 'scale(' + k + ')');
         }
       },
       ready: function() {
