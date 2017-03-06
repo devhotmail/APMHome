@@ -10,13 +10,11 @@
     <ui:include src="../commonHead.xhtml"/>
     <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}"/>
     <title>GE APM</title>
-    <h:outputScript name="js/layout2.js" library="ultima-layout"/>
-    <h:outputScript name="js/ripple.js" library="ultima-layout"/>
-    <h:outputScript name="js/swipe.js" library="ultima-layout"/>
+
     <!-- web components shim -->
     <h:outputScript name="bower_components/webcomponentsjs/webcomponents-lite.min.js"/>
     <h:outputStylesheet name="css/shell.css"/>
-    <h:outputScript name="js/main.js"/>
+
     <link rel="import" href="elements/px-theme-apm-lighton/px-theme-apm-lighton-styles.html"/>
     <style include="px-theme-apm-lighton-styles" is="custom-style"></style>
 
@@ -24,6 +22,12 @@
 (instead of dynamically loading it later in JS) is that the parser can go to
 town pre-fetching resources, etc. -->
     <link id="main-element-import" rel="import" href="loader.html"/>
+
+    <!-- PF UI libs -->
+    <h:outputScript name="js/layout2.js" library="ultima-layout"/>
+    <h:outputScript name="js/ripple.js" library="ultima-layout"/>
+    <h:outputScript name="js/swipe.js" library="ultima-layout"/>
+    <h:outputScript name="js/primefaces-locale_zh.js"/>
 
     <ui:insert name="head"/>
 </h:head>

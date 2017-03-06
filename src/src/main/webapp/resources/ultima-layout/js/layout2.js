@@ -97,6 +97,15 @@ PrimeFaces.widget.Ultima = PrimeFaces.widget.BaseWidget.extend({
         }
       }
     });
+
+    // on menu close fire window resize event - to help re-plot charts
+    var TRANSITION_END = 'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend';
+    this.menuButton.on('click', function() {
+      // incorporate animation
+      $('.layout-main').one(TRANSITION_END, function() {
+        $(window).trigger('resize');
+      })
+    });
   },
   _checkMenuState: function() {
     function widthChanged(mediaQueryList) {
