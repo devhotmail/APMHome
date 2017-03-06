@@ -8,3 +8,8 @@ src/src/main/webapp/resources/elements/**/*-styles.html
 *.iml
 src/sql/test_data.sql
 src/src/main/webapp/about.html
+src/.project
+src/.classpath
+src/.settings
+src/geapm.iml
+src/src/main/webapp/WEB-INF/sun-web.xml

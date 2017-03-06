@@ -2,19 +2,13 @@
  */
 package com.ge.apm.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -61,6 +55,7 @@ public class WorkOrder implements Serializable {
     @NotNull
     @Column(name = "create_time")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date createTime;
     @Basic(optional = false)
     @NotNull
@@ -75,6 +70,7 @@ public class WorkOrder implements Serializable {
     @NotNull
     @Column(name = "request_time")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date requestTime;
     @Basic(optional = false)
     @NotNull
@@ -141,6 +137,19 @@ public class WorkOrder implements Serializable {
     @NotNull
     private Integer assetId;
 
+    @Column(name = "from_dept_id")
+    private Integer fromDeptId;
+    @Column(name = "from_dept_name")
+    @Size(max = 64)
+    private String fromDeptName;
+    @Column(name = "ticket_no")
+    @Size(max = 32)
+    private String ticketNo;
+    @Column(name = "reponse_time")
+    private Integer responseTime; //in minutes
+    @Column(name = "repaire_time")
+    private Integer repaireTime; //in minutes
+    
     public WorkOrder() {
     }
 
@@ -391,6 +400,46 @@ public class WorkOrder implements Serializable {
             return this.requestReason;
         else
             return this.requestReason.substring(1,20)+"...";
+    }
+
+    public Integer getFromDeptId() {
+        return fromDeptId;
+    }
+
+    public void setFromDeptId(Integer fromDeptId) {
+        this.fromDeptId = fromDeptId;
+    }
+
+    public String getFromDeptName() {
+        return fromDeptName;
+    }
+
+    public void setFromDeptName(String fromDeptName) {
+        this.fromDeptName = fromDeptName;
+    }
+
+    public String getTicketNo() {
+        return ticketNo;
+    }
+
+    public void setTicketNo(String ticketNo) {
+        this.ticketNo = ticketNo;
+    }
+
+    public Integer getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(Integer responseTime) {
+        this.responseTime = responseTime;
+    }
+
+    public Integer getRepaireTime() {
+        return repaireTime;
+    }
+
+    public void setRepaireTime(Integer repaireTime) {
+        this.repaireTime = repaireTime;
     }
     
     @Override

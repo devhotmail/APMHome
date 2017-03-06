@@ -5,14 +5,23 @@
  */
 package com.ge.apm.web;
 
+import com.ge.apm.service.wechat.CoreService;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import webapp.framework.context.ExternalLoginHandler;
 
 /**
  *
@@ -25,7 +34,11 @@ public class WeChatCoreController {
     protected WxMpConfigStorage configStorage;
     @Autowired
     protected WxMpService wxMpService;
-    
+    @Autowired
+    protected CoreService coreService;
+
+    @Autowired
+    protected ExternalLoginHandler loginHandler;
     /**
      * 微信公众号webservice主服务接口，提供与微信服务器的信息交互
      *
@@ -55,7 +68,9 @@ public class WeChatCoreController {
             response.getWriter().println(echoStrOut);
             return;
         }
-
+        System.out.println("current token is \n"+wxMpService.getAccessToken());
+        String apiTicket = wxMpService.getJsapiTicket();
+        System.out.println("current apiTicket is \n"+apiTicket);
 //        String encryptType = StringUtils.isBlank(request.getParameter("encrypt_type"))
 //            ? "raw"
 //            : request.getParameter("encrypt_type");
@@ -82,6 +97,21 @@ public class WeChatCoreController {
 
         response.getWriter().println("不可识别的加密类型");
         return;
+    }
+    
+    /**
+     * 授权页面
+     * @param request
+     * @param response 
+     */
+    @RequestMapping(value = "authurl")
+    public String authUrl() {
+        return "userInfo";
+    }
+    
+    @RequestMapping(value = "binduser")
+    public @ResponseBody String bindUser(HttpServletRequest request,HttpServletResponse response, String openId, String username, String password) throws WxErrorException{
+        return coreService.bindingUserInfo(request, response, openId, username, password)==0?"success":"failed";
     }
     
 }

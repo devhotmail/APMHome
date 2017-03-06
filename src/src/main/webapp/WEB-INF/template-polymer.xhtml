@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 
 <ui:insert name="preRenderView"/>
 <h:head>
     <base href="#{request.contextPath}/resources/"/>
-    <f:facet name="first">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-        <meta name="apple-mobile-web-app-capable" content="yes"/>
-        <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}"/>
-    </f:facet>
+    <ui:include src="../commonHead.xhtml"/>
+    <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}"/>
     <title>GE APM</title>
     <h:outputScript name="js/layout2.js" library="ultima-layout"/>
     <h:outputScript name="js/ripple.js" library="ultima-layout"/>
@@ -23,6 +17,8 @@
     <h:outputScript name="bower_components/webcomponentsjs/webcomponents-lite.min.js"/>
     <h:outputStylesheet name="css/shell.css"/>
     <h:outputScript name="js/main.js"/>
+    <link rel="import" href="elements/px-theme-apm-lighton/px-theme-apm-lighton-styles.html"/>
+    <style include="px-theme-apm-lighton-styles" is="custom-style"></style>
 
     <!-- Async HTML Imports do not block rending. Benefit of keeping it declarative
 (instead of dynamically loading it later in JS) is that the parser can go to
@@ -34,11 +30,13 @@ town pre-fetching resources, etc. -->
 
 <h:body styleClass="main-body #{guestPreferences.compact ? 'layout-compact' : null}">
     <ui:include src="./google-analytics.xhtml"/>
-    <form class="user-info">
-        <h:inputHidden id="userId" value="#{userContextService.loginUser.id}"/>
-        <h:inputHidden id="userLoginName" value="#{userContextService.loginUser.loginName}"/>
-        <h:inputHidden id="userSiteId" value="#{userContextService.siteInfo.id}"/>
-        <h:inputHidden id="userSiteName" value="#{userContextService.siteInfo.name}"/>
+    <form id="user-context">
+        <h:inputHidden id="id" value="#{userContextService.loginUserId}"/>
+        <h:inputHidden id="name" value="#{userContextService.loginUserName}"/>
+        <h:inputHidden id="siteId" value="#{userContextService.loginUserSiteId}"/>
+        <h:inputHidden id="siteName" value="#{userContextService.loginUserSiteName}"/>
+        <h:inputHidden id="hospitalId" value="#{userContextService.loginUserHospitalId}"/>
+        <h:inputHidden id="orgId" value="#{userContextService.loginUserOrgInfoId}"/>
     </form>
     <p:growl id="growl" autoUpdate="true" showDetail="false" showSummary="true"/>
     <div class="layout-wrapper #{guestPreferences.menuLayout}">

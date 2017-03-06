@@ -1,0 +1,14 @@
+@import "px-button-group-design/_objects.button-group.scss";
+
+:host {
+  display: block;
+}
+
+.toolbar {
+  margin-left: 5%;
+}
+
+px-dropdown {
+  min-width: 100px;
+  display: inline-block;
+}

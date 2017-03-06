@@ -1,0 +1,768 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../behavior/context.html">
+<link rel="import" href="../behavior/fetch-cached.html">
+<link rel="import" href="../numbro/numbro.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="import" href="../device-pagination/device-pagination.html">
+<link rel="import" href="../placeholder/placeholder-empty.html">
+<link rel="import" href="device-parallel-coordinates-styles.html">
+<script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
+
+<dom-module id="device-parallel-coordinates">
+  <template>
+    <style include="device-parallel-coordinates-styles"></style>
+    <div id="chart" class="canvas">
+      <div class="flex flex--col">
+        <template is="dom-if" if="[[!data.length]]">
+         <placeholder-empty></placeholder-empty>
+        </template>
+        <svg id="svg" width$="[[width]]" height$="[[height]]" touch-action="none">
+          <rect id="chartBg" class="chart-bg" width$="[[width]]" height$="[[height]]"></rect>
+          <g id="chartBody" class="chart-body"></g>
+        </svg>
+        <!-- sort selector -->
+        <px-dropdown id="sortBy" class="sorting-dropdown" display-value="[[_getSortDisplayValue(sortBy, _sortOptions)]]" selected-key="{{sortBy}}">
+          <px-dropdown-content class="px-dropdown-content"
+                               max-cont-character-width="10"
+                               extend-dropdown="true"
+                               extend-dropdown-by="15"
+                               items="[[_sortOptions]]">
+          </px-dropdown-content>
+        </px-dropdown>
+        <!-- Pagination controls -->
+        <device-pagination id="pagination"
+                           total="[[pageTotal]]"
+                           current="{{pageStart}}"></device-pagination>
+      </div>
+    </div>
+  </template>
+  <script>
+    define('device-parallel-coordinates', [
+      'behavior/context',
+      'behavior/fetch-cached'
+    ], function(ContextBehavior, FetchCachedBehavior) {
+      var SECTOR_MIN_STEP_FACTOR = .1;
+      var SECTOR_NUM = 6;
+
+      var $ = d3.select;
+      var $$ = d3.selectAll;
+
+      function notNull(val) {
+        return val !== null;
+      }
+
+      function ellipsis(d) {
+        // tspan text ellipsis to "width" attr
+        var self = $(this),
+          textLength = this.getComputedTextLength(),
+          text = self.text();
+
+        while ((
+          textLength > self.attr('width')
+        ) && text.length > 0) {
+          text = text.slice(0, -1);
+          self.text(text + '...');
+          textLength = this.getComputedTextLength();
+        }
+      }
+
+      function digit_short(val) {
+        return numbro(val).format('0[.]0a');
+      }
+
+      function percentage(val) {
+        return numbro(val).format('2 a');
+      }
+
+      function currency_short(val) {
+        return numbro(val).formatCurrency();
+      }
+
+      Polymer({
+        is: 'device-parallel-coordinates',
+        behaviors: [
+          Polymer.IronResizableBehavior,
+          ContextBehavior,
+          FetchCachedBehavior
+        ],
+        properties: {
+          width: Number,
+          height: Number,
+          pageSize: {
+            type: Number,
+            value: 20
+          },
+          pageStart: {
+            type: Number,
+            value: 1
+          },
+          pageTotal: Number,
+          sortBy: {
+            type: String,
+          },
+          _sortOptions: {
+            type: Array,
+            // "comprehensive" sort by default
+            computed: "_getSortOptions(scales, dimensions)"
+          },
+          margin: {
+            type: Object,
+            value: function() {
+              return {
+                top: 40,
+                right: 40,
+                bottom: 32,
+                left: 40
+              };
+            },
+          },
+          dimensions: {
+            type: Array,
+            computed: '_getDimensions(scales, margin, height)'
+          },
+          filterBy: String,
+          from: String,
+          to: String,
+          data: Array,
+          scales: Object,
+          _queryUrl: {
+            type: String,
+            computed: '_getQueryUrl(from, to, sortBy, filterBy)'
+          },
+          benchmarkSuffix: {
+            value: '_bm',
+            readOnly: true
+          }
+        },
+        observers: [
+          '_replot(width, height, data)',
+          'saveOptionsInHistory(sortBy)',
+          '_loadData(from, to, filterBy, sortBy, pageStart, pageSize)'
+        ],
+        listeners: {
+          'iron-resize': '_onResize'
+        },
+        render: function() {
+          var _this = this;
+          var margin = this.margin,
+            width = this.width - margin.left - margin.right,
+            height = this.height - margin.top - margin.bottom;
+
+          var svg = $(this.$.svg);
+          var bg = $(this.$.chartBg);
+          var root = $(this.$.chartBody);
+
+          var dimensions = this.dimensions;
+          var data = this.data;
+
+          var x = d3.scalePoint()
+          .domain(dimensions.map(function(d) {
+            return d.name;
+          }))
+          .padding([.5])
+          .range([0, width]);
+
+          var yAxis = d3.axisLeft();
+
+          root.attr('transform', d3Transform().translate(margin.left, margin.top));
+
+          // render parallel's name
+          var parallelNamesGroup = root.append('g')
+          .attr('transform', d3Transform().translate(0, -margin.top))
+          .selectAll('.parallel-names')
+          .data(dimensions)
+          .enter().append('text')
+          .attr('class', function(d) {
+            return ['dimension-title', d.name].join(' ')
+          })
+          .attr('dy', '.85em')
+          .attr('text-anchor', 'middle')
+          .attr('transform', d3Transform().translate(function(d) {
+            return [x(d.name), 0];
+          }))
+          .text(function(d) {
+            return d.label;
+          });
+
+          // charting area w/ dimension titles
+          var main = root.append('g').attr('transform', d3Transform().translate(0, 20));
+
+          if (!data.length) {
+            return;
+          }
+          var dimension = main.selectAll(".dimension")
+          .data(dimensions)
+          .enter().append("g")
+          .attr("class", "dimension")
+          .attr("transform", d3Transform().translate(function(d) {
+            return [x(d.name)];
+          }));
+
+          // massage dimension with scale definitions (rules)
+          dimensions.forEach(function(dimension) {
+            var domain;
+            var scaleDef = _this.scales;
+            var extent;
+            var ticks;
+            // the measurement axis
+            if (dimension.type === Number) {
+              extent = scaleDef[dimension.name];
+              domain = [
+                extent.ticks[0],
+                extent.ticks[extent.ticks.length - 1]
+              ];
+            }
+            // the ordinal axis
+            else {
+              domain = data.map(function(d) {
+                return d[dimension.name];
+              });
+            }
+            dimension.scale.domain(domain);
+          });
+
+          // render value/bm_value label
+          var valueGroup = root.append('g')
+          .attr('class', 'value-group')
+          .selectAll('g')
+          .data(data)
+          .enter().append('g')
+          .attr('class', 'value')
+          .attr('id', function(d) {
+            return 'value-' + d.id;
+          })
+
+          dimensions.forEach(function(dimension) {
+            var _name = dimension.name;
+            var _type = dimension.type;
+            var _format = dimension.format;
+
+            var _textWrapper = valueGroup.append('text')
+            .attr('text-anchor', 'middle')
+            .attr('font-size', 'small')
+            .attr('transform', d3Transform().translate(function(d) {
+              return [x(_name), 0];
+            }));
+
+            _textWrapper.append('tspan')
+            .attr('x', '0')
+            .attr('class', 'actual-val')
+            .text(function(d) {
+              var val = d[_name];
+              return _type === String ? '实际值' : _format ? _format(val) : val;
+            });
+
+            _textWrapper.append('tspan')
+            .attr('class', 'benchmark-val')
+            .attr('x', '0')
+            .attr('dy', '1em')
+            .text(function(d) {
+              var val = d[_name + _this.benchmarkSuffix];
+              return _type === String ? '基准值' : _format ? _format(val) : val;
+            });
+          });
+
+          var axis = dimension.append("g")
+          .attr("class", function(d) {
+            return ['axis', 'axis-' + d.name].join(' ');
+          });
+
+          axis.each(function(d) {
+            var scale = d.scale;
+            switch(d.name) {
+              case 'name':
+                d3.select(this).call(_this._renderDeviceList.bind(_this), d, height);
+                break;
+              default:
+                d3.select(this).call(_this._renderDimension.bind(_this), d, height);
+            }
+          });
+
+          // rely on dimensions offset rendered above
+          main.insert("g", ':first-child')
+          .attr("class", "foreground")
+          .selectAll("path")
+          .data(data)
+          .enter().append("path")
+          .attr("d", curveLine(dimensions));
+
+          main.insert("g", ':first-child')
+          .attr("class", "background")
+          .selectAll("path")
+          .data(data)
+          .enter().append("path")
+          .attr("d", curveLine(dimensions));
+
+          // render benchmark
+          main.append('g')
+          .attr('class', 'benchmark')
+          .selectAll('path')
+          .data(data)
+          .enter().append('path')
+          .attr('d', curveLine(dimensions, this.benchmarkSuffix));
+
+          // Rebind the axis data to simplify mouseover.
+          root.select(".axis").selectAll("text:not(.title)")
+          .attr("class", "label")
+          .data(data, function(d) { return d.name || d; });
+
+          var projection = root.selectAll(".axis .sector,.axis .label,.background path,.foreground path,.benchmark path");
+          if (Modernizr.touchevents) {
+            projection.on("pointerdown", showHighlight);
+            // use the background layer to trigger hide
+            bg.on('pointerdown', hideHighlight);
+          } else {
+            projection.on("pointerenter", showHighlight).on("pointerleave", hideHighlight);
+          }
+
+
+          var valueLabels = root.select('.value-group')
+          .selectAll('g.value');
+
+          this.scopeSubtree(this.$.svg);
+
+          function showHighlight(d) {
+            root.classed("active", true);
+            projection.classed("active", function(p) { return p === d; });
+            // make the value of target item active
+            valueLabels.classed('active', function(p) { return p.id === d.id; });
+
+            // highlight one series
+            if(d.id)
+              _this._highlightSeries(d.id);
+            // highlight one sector
+            else if(d.value) {
+              _this._highlightSector(d);
+            }
+          }
+
+          function hideHighlight() {
+            root.classed("active", false);
+            projection.classed("inactive", false);
+            _this._highlightSector(false);
+            // make all items inactive
+            valueLabels.classed('active', false);
+          }
+
+          function curveLine(dimensions, suffix) {
+            var line = d3.line()
+            .curve(d3.curveMonotoneX)
+            .defined(function(d) { return !isNaN(d[1]); });
+            suffix = suffix || '';
+
+            return function(d) {
+              return line(dimensions.map(function(dimension) {
+                var _name = dimension.name;
+                var _key = _name === 'name' ? _name : _name + suffix;
+                var val = d[_key];
+                var sec, scale;
+                var sectors = dimension.sectors;
+
+                // Ordinal Scale
+                if (dimension.type === String) {
+                  scale = dimension.scale;
+                } else {
+                  scale = dimension.scale;
+                  sec = sectors.find(function(sec, i) {
+
+                    if (i === 0 && val < sec.lastValue) {
+                      sec.lastValue = val;
+                      return sec;
+                    }
+                    if (i === sectors.length - 1 && val > sec.value) {
+                      sec.value = val;
+                      return sec;
+                    }
+
+                    return val >= sec.lastValue && val <= sec.value;
+                  });
+
+                  if (!sec) {
+                    throw new Error(d.name + ': invalid value out of range' +
+                      '('+sectors[0].lastValue + ' : ' + sectors[sectors.length - 1].value + ')' +
+                      ' - ' + _key + ':' + val);
+                  }
+
+                  scale = d3.scaleLinear().domain([sec.lastValue, sec.value]).range([sec.y0, sec.y1]);
+                }
+
+                return [x(_name), scale(val)];
+              }));
+            }
+          }
+        },
+        _renderDeviceList: function(selection, dimension, height) {
+          var scale = dimension.scale;
+          var devices = selection.selectAll('.sector').data(this.data);
+          var deviceNameTxt = devices.enter()
+          .append('text')
+          .attr('id', function(d) {
+            return ['axis-label', dimension.name, d.id].join('-');
+          })
+          .attr('dy', '.35em')
+          .attr('class', 'label')
+          .attr('transform', d3Transform().translate(function(d) {
+            return [0, scale(d.name)];
+          }));
+
+          deviceNameTxt.append('tspan')
+          .attr('class', 'fullname')
+          .text(function(d) {
+            return d.name;
+          });
+
+          deviceNameTxt.append('tspan')
+          .attr('class', 'shortname')
+          .text(function(d) {
+            // limit text length in ten letter
+            var _name = d.name.trim();
+            if (_name.length > 10) {
+              return _name.slice(0, 8) + '...';
+            } else {
+              return _name;
+            }
+          });
+        },
+        _renderDimension: function(selection, dimension, height) {
+          function tickData(tick) {
+            return {
+              tick: tick,
+              value: scale(tick)
+            };
+          }
+
+          function notNull(val) {
+            return val !== null;
+          }
+
+          function asc(a, b) {
+            return a - b;
+          }
+
+          var bar_w = 24;
+          var radius = 10;
+          var padding = 10;
+          var textPadding = 5;
+          var scale = dimension.scale;
+          var dimension = selection.data()[0];
+          var scaleDef = this.scales;
+          var extent = scaleDef[dimension.name];
+          var ticks = extent.ticks;
+          var min = ticks[0];
+          var max = ticks[ticks.length - 1];
+          var format = dimension.format || function(val) { return val; };
+
+          // handle no range
+          if (max === min) {
+            max = (
+                min === 0 ? 1 : min
+              ) * SECTOR_NUM;
+          }
+
+          var span = max - min;
+
+          // if user-defined ticks not found
+          if (ticks.length === 2) {
+            ticks = Array.prototype.concat.call([],
+              min,
+              scale.domain([min, max]).ticks(SECTOR_NUM - 2),
+              max
+            );
+          }
+
+          // unique sorted ticks
+          ticks = d3.set(ticks)
+          .values()
+          .map(Number)
+          .sort(asc);
+
+          // merge small chunk together
+          var step;
+          var lastTick;
+          for (var i = 0, tick, length = ticks.length; tick = ticks[i], i < length; i++) {
+            if (i === 0) {
+              continue;
+            }
+            lastTick = ticks[i - 1];
+            step = tick - lastTick;
+            if (step < span * SECTOR_MIN_STEP_FACTOR) {
+              if (i === length - 1) {
+                ticks.splice(i - 1, 1);
+                break;
+              } else {
+                ticks.splice(i, 1);
+                length--;
+                i--;
+              }
+            }
+          }
+
+          var data = ticks.map(function(tick, i) {
+            var lastTick = ticks[i - 1];
+            var y0, y1;
+            if (i === 0) {
+              return null;
+            } else {
+
+              y0 = scale(lastTick) - ( i === 0 ? 0 : padding / 2 );
+              y1 = scale(tick) + ( i === ticks.length - 1 ? 0 : padding / 2 );
+
+              return {
+                name: dimension.name,
+                lastValue: lastTick,
+                value: tick,
+                y0: y0,
+                y1: y1
+              };
+            }
+          }).filter(notNull);
+
+          // save the dimension sectors for later use
+          dimension.sectors = data;
+
+          var sectors = selection.selectAll('.sector').data(data);
+          var sectorsEnter = sectors.enter()
+          .append('g')
+          .attr('class', 'sector')
+          .attr('transform', d3Transform().translate(function(d) {
+            return [0, d.y1];
+          }));
+
+          function sector_size(d) {
+            return d.y0 - d.y1;
+          }
+
+          // sector region
+          sectorsEnter
+          .append("rect")
+          .attr("rx", radius)
+          .attr("ry", radius)
+          .attr("width", bar_w)
+          .attr("x", function(d) {
+            return - bar_w / 2;
+          })
+          .attr("height", function(d, i, list) {
+            return d.y0 - d.y1;
+          });
+
+          // sector text label
+          sectorsEnter
+          .append('text')
+          .append('tspan')
+          .attr('width', function(d) {
+            return d.y0 - d.y1 - textPadding;
+          })
+          .attr('class', 'label')
+          .text(function(d) {
+            return [format(d.value), format(d.lastValue)].join('-')
+          })
+          .each(function clip(d, i) {
+            var text_size = this.getComputedTextLength();
+            var width = $(this).attr('width');
+            // text overflowed
+            if(text_size > width) {
+              // last value
+              if (i === data.length - 1) {
+                $(this).text([format(d.lastValue), '+'].join(' '));
+              }
+              // first value
+              if (i === 0) {
+                $(this).text(['<', format(d.value)].join(' '));
+              }
+            }
+          })
+          .each(ellipsis)
+          .attr('y', function(d) {
+            return ( d.y0 - d.y1 ) / 2;
+          });
+
+          sectors = sectors.merge(sectorsEnter);
+        },
+        _highlightSeries: function(id) {
+
+          if(id) {
+            // name axis
+            $$('.axis.axis-name text.label').each(function toggleActive(d) {
+              $(this).classed('active', d.id === id);
+            });
+            var item = this.data.find(function(d) {
+              return d.id === id;
+            });
+            // other axis
+            this.dimensions.forEach(function(d) {
+              highlightSector(d.name, item);
+            })
+          }
+
+          function highlightSector(name, item) {
+            $$('.axis.axis-' + name + ' .sector').each(function toggleActive(d_sector) {
+              var val = item[name];
+              var b = val >= d_sector.lastValue && val <= d_sector.value;
+              $(this).classed('active', b);
+            });
+          }
+        },
+        _highlightSector: function(sector) {
+          var name = sector.name;
+          if(sector) {
+            // name axis
+            $$([
+              '.axis.axis-name text.label',
+              '.background path',
+              '.foreground path'
+            ].join(',')).each(function toggleActive(d) {
+              $(this).classed('active', valueInSector(d[name]));
+            });
+          }
+
+          // column title
+          $$('.dimension-title').each(function toggleActive(d) {
+            $(this).classed('active', d.name === name);
+            var transform = $(this).attr('transform').replace(/scale\([^)]+\)/, '');
+            if (d.name === name) {
+              transform += ' scale(1.1)';
+            }
+            $(this).attr('transform', transform);
+          });
+
+          function valueInSector(val) {
+            return val >= sector.lastValue && val <= sector.value;
+          }
+        },
+        _getDimensions: function(scales, margin, height) {
+          height = height - this.margin.top - this.margin.bottom;
+          var dims = [
+            {
+              name: "name",
+              scale: d3.scaleBand().range([0, height]).padding(.1),
+              type: String,
+            },
+            {
+              name: "scan",
+              scale: d3.scaleLinear().range([height, 0]),
+              type: Number,
+              format: digit_short,
+              sortable: true
+            },
+            {
+              name: "exposure",
+              scale: d3.scaleLinear().range([height, 0]),
+              type: Number,
+              format: digit_short,
+              sortable: true
+            },
+            {
+              name: "usage",
+              scale: d3.scaleLinear().range([height, 0]),
+              type: Number,
+              format: digit_short,
+              sortable: true
+            },
+            {
+              name: "fix",
+              scale: d3.scaleLinear().range([height, 0]),
+              type: Number,
+              format: digit_short,
+              sortable: true
+            },
+            {
+              name: "stop",
+              scale: d3.scaleLinear().range([height, 0]),
+              type: Number,
+              format: percentage,
+              sortable: true
+            },
+            {
+              name: "profit",
+              sortable: true,
+              scale: d3.scaleLinear().range([height, 0]),
+              type: Number,
+              format: currency_short
+            }
+          ];
+          var _this = this;
+          return dims.map(function(dimension) {
+            var name = dimension.name;
+            var defs = scales[name];
+
+            if (name === 'name') {
+              dimension.label = '';
+              return dimension;
+            } else {
+              dimension.label = defs['text'] + '(' + defs['unit'] + ')';
+            }
+
+            return dimension;
+          });
+        },
+        _replot: function(width, height) {
+          var key = this.queryUrl;
+          this.$.chartBody.innerHTML = '';
+          this.debounce('replot', this.render, 500);
+        },
+        ready: function() {
+          this.restoreOptionsFromHistory();
+        },
+        _getSortOptions: function(scales, dimensions) {
+          var _this = this;
+          var list = dimensions.map(function(dimension) {
+            if(!dimension.sortable)
+              return null;
+            var sortBy = dimension.name;
+            var definition = scales[sortBy];
+            return {
+              key: sortBy,
+              val: sortBy === 'profit' ? '设备综合排名' : definition.text
+            };
+          }).filter(notNull);
+
+          return list;
+        },
+        _getSortDisplayValue: function(key, options) {
+          return options.find(function(opt) {
+            return opt.key === key;
+          }).val;
+        },
+        restoreOptionsFromHistory: function() {
+          var options = URI().query(URI().fragment()).query(true);
+          this.set('sortBy', options.sort || 'profit');
+        },
+        saveOptionsInHistory: function(value) {
+          if (!value) {
+            return;
+          }
+          var options = URI().query(URI().fragment()).query(true);
+          options['sort'] = value;
+          location.hash = '#' + URI().query(options).query();
+        },
+        _getQueryUrl: function() {
+          return URI(this.resolveApiUrl('/api/list')).query({
+            'from': this.from,
+            'to': this.to,
+            'orderby': this.sortBy,
+            'type': this.filterBy || undefined,
+            'dept': this.user.orgId
+          }).toString();
+        },
+        _loadData: function() {
+          var _this = this;
+          var size = this.pageSize;
+          var start = (this.pageStart - 1) * size;
+          return this.fetchPage(
+            this._queryUrl, start, size
+          ).then(function(data) {
+            _this.set('data', data.items);
+            _this.set('pageTotal', Math.ceil(data.pages.total / _this.pageSize));
+            _this.set('scales', data.ruler);
+          });
+        },
+        _onResize: function() {
+          var rect = this.$.chart.getBoundingClientRect();
+          this.set('width', rect.width);
+          this.set('height', rect.height);
+        },
+      });
+    });
+  </script>
+</dom-module>

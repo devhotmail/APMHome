@@ -43,6 +43,9 @@
                         <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton roleButton"/>
                         <p:ajax event="filter" listener="#{userAccountController.onFilter}" oncomplete="rc();"/>
 
+                        <p:column headerText="#{msg.orgId}" sortBy="#{item.orgInfoId}">
+                            <h:outputText value="#{userAccountController.getOrgName(item.orgInfoId, '/')}"/>
+                        </p:column>
                         <p:column headerText="#{msg.login_name}" sortBy="#{item.loginName}" filterBy="#{item.loginName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.loginName}"/>
                         </p:column>

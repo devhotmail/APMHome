@@ -255,6 +255,7 @@ public class UserAccount implements Serializable {
 
     @Transient
     private List<String> userRoleNames;
+    @JsonIgnore
     public List<String> getRoleNames(){
         if(userRoleNames==null) {
             userRoleNames = new ArrayList<String>();

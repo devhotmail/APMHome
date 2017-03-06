@@ -3,10 +3,11 @@ instances: 1
 memory: 2048M
 disk_quota: 2048M
 stack: cflinuxfs2
+buildpack: https://github.com/cloudfoundry/java-buildpack.git#v3.13
 path: ./target/geapm-1.0.0.war
 
 applications:
-- name: geapmuat2
+- name: geapmuat3
   env:
     JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
     WEB_ANALYTICS_CFG: 'ga:{enabled:true, id:UA-89957306-1}'

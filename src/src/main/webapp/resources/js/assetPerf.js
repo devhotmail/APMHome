@@ -72,7 +72,10 @@
 
   var base_bar_chart = {
     highlighter: {
-      show: true
+      show: true,
+      tooltipAxes: 'y',
+      formatString: null,
+      tooltipFormatString: '%s'
     },
     seriesDefaults: {
       useNegativeColors: false,

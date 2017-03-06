@@ -1,12 +1,12 @@
+@import "_theme";
+
 .layout-compact .layout-wrapper {
-  $highlight-color: rgba(91, 132, 215, 1);
-  $default-color: $gray7;
 
   px-dropdown {
     .dropcell.px-dropdown {
       border-radius: 1rem;
       background-color: transparent;
-      border-color: $default-color;
+      border: 1px solid $text-color-default;
 
       &:hover {
         border-color: $highlight-color;
@@ -20,14 +20,16 @@
     }
 
     px-dropdown-text, px-dropdown-chevron {
-      color: $default-color;
+      color: $text-color-default;
     }
 
     .px-dropdown--content {
-      color: $default-color;
-      background: transparent;
-      border-color: transparent;
+      margin-top: .5rem;
+      color: $text-color-default;
+      background: $main-bg-color;
       text-align: left;
+      border-radius: 15px;
+      border: 1px solid #595959;
     }
 
     .px-dropdown--listitem:hover {
@@ -36,12 +38,37 @@
     }
   }
 
+  px-datetime-field {
+    .dt-text-field {
+      border-radius: 1rem;
+      padding: .4rem .8rem;
+    }
+  }
+
+  px-datetime-entry {
+    .dtIcon {
+      color: $text-color-default;
+    }
+    .text-input,
+    .dtIcon {
+      &, & label {
+        color: $text-color-default;
+      }
+    }
+  }
+
+  px-pagination {
+    .pager .btn {
+      font-size: 1rem;
+    }
+  }
+
   .btn-group {
     .btn {
       border-radius: 1rem !important;
-      color: $default-color;
+      color: $text-color-default;
       background-color: transparent;
-      border-color: $default-color;
+      border-color: $text-color-default;
 
       &:hover {
         color: $highlight-color;

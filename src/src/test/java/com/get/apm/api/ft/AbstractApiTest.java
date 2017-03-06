@@ -3,11 +3,11 @@ package com.get.apm.api.ft;
 import com.google.common.base.Stopwatch;
 import com.typesafe.config.ConfigFactory;
 import javaslang.control.Option;
+import javaslang.control.Try;
 import okhttp3.*;
 import org.assertj.core.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.http.Body;
@@ -45,7 +45,7 @@ public class AbstractApiTest {
       .proxy(proxyTest)
       .addInterceptor(new Interceptor() {
         @Override
-        public Response intercept(Interceptor.Chain chain) throws IOException {
+        public Response intercept(Chain chain) throws IOException {
           Request request = chain.request();
           Stopwatch stopwatch = Stopwatch.createStarted();
           log.info("Sending request {}", request.url());
@@ -67,25 +67,13 @@ public class AbstractApiTest {
   }
 
 
-  public void login(String username, String password) throws IOException {
-    LoginInterface loginInterface = this.getRetrofit().create(LoginInterface.class);
-    String loginInfo = "javax.faces.partial.ajax=true&javax.faces.source=j_idt19&javax.faces.partial.execute=%40all&javax.faces.partial.render=growl&j_idt19=j_idt19&j_idt13=j_idt13&j_username=" + Option.of(username).getOrElse(System.getProperty("j_username", "admin")) + "&j_password=" + Option.of(password).getOrElse(System.getProperty("j_password", "111")) + "&javax.faces.ViewState=stateless";
-    RequestBody body = RequestBody.create(MediaType.parse("text/plain"), loginInfo);
-
-    retrofit2.Response<ResponseBody> response;
-    Call<ResponseBody> call = loginInterface.testLogin(body);
-    try {
-      response = call.execute();
-    } catch (Throwable t) {
-      t.printStackTrace();
-      throw t;
-    }
-    //log.info(response.body().string());
-    Assertions.assertThat(response.body().string()).contains("redirect");
-    this.setCookie(response.headers().get("Set-Cookie"));
+  public void login(String username, String password) {
+    String loginInfo = "javax.faces.partial.ajax=true&javax.faces.source=j_idt20&javax.faces.partial.execute=%40all&javax.faces.partial.render=growl&j_idt20=j_idt20&j_idt14=j_idt14&j_username=" + Option.of(username).getOrElse(System.getProperty("j_username", "admin")) + "&j_password=" + Option.of(password).getOrElse(System.getProperty("j_password", "111")) + "&javax.faces.ViewState=stateless";
+    Try.of(() -> this.getRetrofit().create(LoginInterface.class).testLogin(RequestBody.create(MediaType.parse("text/plain"), loginInfo)).execute())
+      .filter(response -> Try.of(() -> response.body().string()).getOrElse("").contains("redirect"))
+      .onSuccess(response -> this.setCookie(response.headers().get("Set-Cookie")))
+      .onFailure(e -> Assertions.fail("login failed, please check if formdata has been changed."));
   }
-
-
 }
 
 

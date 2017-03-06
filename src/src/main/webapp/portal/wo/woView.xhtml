@@ -81,6 +81,15 @@
                         <label class="label">#{msg.totalPrice}</label>
                         <p:outputLabel value="#{workOrderController.selected.totalPrice}" />
                     </h:panelGroup>
+                    <p:spacer/>
+                    <h:panelGroup>
+                        <label class="label">#{msg.confirmedStartTime}</label>
+                        <p:outputLabel value="#{workOrderController.selected.confirmedDownTime}" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.confirmedEndTime}</label>
+                        <p:outputLabel value="#{workOrderController.selected.confirmedUpTime}" />
+                    </h:panelGroup>
                 </p:panelGrid>
 
                 <p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group">
