@@ -29,7 +29,7 @@ public class assetExamDataAggregator {
         {
             HashMap<String,AssetClinicalRecordPojo> hm1= new HashMap<String,AssetClinicalRecordPojo>();
             HashMap<String,AssetSummit> hm2= new HashMap<String,AssetSummit>();
-              List<AssetClinicalRecordPojo> acrplist = acrr.getAssetExamDataAggregator();
+            List<AssetClinicalRecordPojo> acrplist = acrr.getAssetExamDataAggregator();
             //初始化hm1 key
             for(AssetClinicalRecordPojo accr:acrr.getAssetExamDataAggregator()){
                 hm1.put(accr.getAssetIds()+"-"+accr.getHospitalIds()+"-"+accr.getSiteIds(),accr);
