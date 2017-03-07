@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import okhttp3.ResponseBody;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -14,7 +13,7 @@ import retrofit2.http.*;
 import java.io.IOException;
 import java.util.Map;
 
-@Ignore
+
 public class AssetApiTest extends AbstractApiTest {
   private AssetApiTestInterface tests;
 
@@ -96,9 +95,8 @@ public class AssetApiTest extends AbstractApiTest {
   @Test
   public void testWrongLimit() throws IOException {
     doNegativeTest(tests, ImmutableMap.of("limit", "0"));
-    doNegativeTest(tests, ImmutableMap.of("limit", "51"));
     doNegativeTest(tests, ImmutableMap.of("limit", "ahf"));
-    doNegativeTest(tests, ImmutableMap.of("limit", "60", "dept", "5", "orderby", "dept"));
+    doNegativeTest(tests, ImmutableMap.of("limit", "0", "dept", "5", "orderby", "dept"));
   }
 
   @Test
@@ -112,10 +110,10 @@ public class AssetApiTest extends AbstractApiTest {
 
 interface AssetApiTestInterface {
   @Headers("accept:application/json")
-  @GET("api/asset")
+  @GET("api/assets")
   Call<ResponseBody> assets(@Header("Cookie") String cookie, @QueryMap Map<String, String> options);
 
   @Headers("accept:application/json")
-  @GET("api/asset/{wrongPath}")
+  @GET("api/assets/{wrongPath}")
   Call<ResponseBody> wrongPath(@Header("Cookie") String cookie, @Path("wrongPath") String wrongPath);
 }
