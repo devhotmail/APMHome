@@ -179,34 +179,39 @@
         .enter().append('g')
         .attr('class', function(d) {
           return d.parent ? d.children ? 'text' : 'text text-leaf' : 'text text-root';
+        })
+        .each(function(d) {
+          var element = d3.select(this);
+          // Center text
+          var textCenter = element.append('g')
+          .attr('class', 'text-center')
+          .attr('pointer-events', 'none')
+          .style('display', function(d) {
+            return d.parent == root ? 'inline' : 'none';
+          })
+          .style('fill-opacity', function(d) {
+            return d.parent === root ? 1 : 0;
+          })
+          .call(renderText);
+
+          if (d.children) {
+            // Top text
+            var textTop = element
+            .append('g')
+            .attr('class', 'text-top')
+            .attr('transform', function(d) {
+              return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition + ')';
+            })
+            .attr('pointer-events', 'none')
+            .style('display', function(d) {
+              return d === root ? 'inline' : 'none';
+            })
+            .style('fill-opacity', function(d) {
+              return d === root ? 1 : 0;
+            })
+            .call(renderText);
+          }
         });
-
-        var textTop = textGroup
-        .append('g')
-        .attr('class', 'text-top')
-        .attr('transform', function(d) {
-          return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition + ')'
-        })
-        .attr('pointer-events', 'none')
-        .style('display', function(d) {
-          return d === root ? 'inline' : 'none';
-        })
-        .style('fill-opacity', function(d) {
-          return d === root ? 1 : 0;
-        })
-        .call(renderText);
-
-        var textCenter = textGroup
-        .append('g')
-        .attr('class', 'text-center')
-        .attr('pointer-events', 'none')
-        .style('display', function(d) {
-          return d.parent == root ? 'inline' : 'none';
-        })
-        .style('fill-opacity', function(d) {
-          return d.parent === root ? 1 : 0;
-        })
-        .call(renderText);
 
         svg.on('click', function() {
           zoom(root);
@@ -239,7 +244,7 @@
             return d === focus || this.style.display === 'inline';
           })
           .style('fill-opacity', function(d) {
-            return d === focus ? 1 : 0;
+            return (d === focus) ? 1 : 0;
           })
           .on('start', function(d) {
             if (d === focus) this.style.display = 'inline';
@@ -250,16 +255,16 @@
 
           transition.selectAll('g.text-center')
           .filter(function(d) {
-            return d.parent === focus || this.style.display === 'inline';
+            return d.parent === focus || d === focus  || this.style.display === 'inline';
           })
           .style('fill-opacity', function(d) {
-            return d.parent === focus ? 1 : 0;
+            return (d.parent === focus || (d === focus && !d.children)) ? 1 : 0;
           })
           .on('start', function(d) {
-            if (d.parent === focus) this.style.display = 'inline';
+            if (d.parent === focus || (d === focus && !d.children)) this.style.display = 'inline';
           })
           .on('end', function(d) {
-            if (d.parent !== focus) this.style.display = 'none';
+            if (d.parent !== focus && (d !== focus || d.children)) this.style.display = 'none';
           });
         }
 
