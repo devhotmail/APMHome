@@ -7,14 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ge.apm.domain.BatchAssetCost;
 import com.ge.apm.domain.UserAccount;
-import com.ge.apm.service.analysis.AssetCostDataService;
 import com.ge.apm.service.uaa.UserAccountService;
 
 @Controller
@@ -23,9 +20,6 @@ public class TestController {
 	
 	@Autowired
 	UserAccountService userAccountService;
-	
-	@Autowired
-	AssetCostDataService assetCostDataService;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET )
@@ -41,17 +35,4 @@ public class TestController {
         return userAccountService.getUserAccount();
     }
     
-    @RequestMapping(value = "/excute", method = RequestMethod.GET )
-    @ResponseBody
-    public String excuteTask(){
-    	assetCostDataService.aggregateCostData();
-    	return "success";
-    }
-    
-    @RequestMapping(value = "/calByDay", method = RequestMethod.POST )
-    @ResponseBody
-    public String calByDay(@RequestBody BatchAssetCost bac){
-    	assetCostDataService.calByDay(bac);
-    	return "success";
-    }
 }

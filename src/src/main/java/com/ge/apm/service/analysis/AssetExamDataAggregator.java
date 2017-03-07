@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import org.joda.time.DateTime;
+import webapp.framework.broker.SiBroker;
+import webapp.framework.util.TimeUtil;
 
 /**
  *
@@ -73,5 +76,24 @@ public class AssetExamDataAggregator {
         List<AssetClinicalRecordPojo> acrplist = acrr.getAssetExamDataAggregatorByDate(date1,date2);
         System.out.println("-------->"+acrplist.size());
 
+    
+    public void test(){
+        DateTime dtFrom = TimeUtil.timeNow().minusDays(100);
+        DateTime dtTo = dtFrom.plusDays(5);
+        
+        initAssetAggregationDataByDateRange(dtFrom.toDate(), dtTo.toDate());
+    }
+    
+    public void initAssetAggregationDataByDateRange(Date fromDate, Date toDate){
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        DateTime dtFrom = TimeUtil.toJodaDate(fromDate);
+        DateTime dtTo = TimeUtil.toJodaDate(toDate).plusDays(1);
+
+        while(dtFrom.isBefore(dtTo)){
+            params.put("theDate", TimeUtil.toString(dtFrom.toDate(), 0, "yyyy-MM-dd"));
+            SiBroker.sendMessageWithHeaders("direct:initAssetAggregationDataByDateRange", null, params);
+            dtFrom = dtFrom.plusDays(1);
+        }
+        
     }
 }

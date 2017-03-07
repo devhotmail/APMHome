@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Seconds;
@@ -28,6 +29,7 @@ public class AssetCostDataService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	private static final int ASSET_STATUS_DOWN = 2;
 	private static final int ONE_DAY = 24 * 60 * 60;
+	private static final int DAY = 1;
 	
 	@Autowired
 	AssetInfoMapper assetInfoMapper;
@@ -44,17 +46,23 @@ public class AssetCostDataService {
 	/***
 	 * 批量执行任务
 	 */
-	public void aggregateCostData(){
+	public String aggregateCostData(){
 		List<AssetCostStatistics> acss =  assetInfoMapper.fetchAssetInfo();
 		if(CollectionUtils.isEmpty(acss)){
 			logger.error("acss is empty,today is {}",new DateTime());
-			return;
+			return "failure";
 		}
 		logger.info("assetInfos size is {}",acss.size());
-		for (AssetCostStatistics acs : acss) {
-			AssetCostStatistics assetCostStatistics = assetInfoMapper.fetchAssetCostStatisticsByAssetId(acs.getAssetId(),new Date());
-			assetCostStatistics.setDay(new Date());
-			excuteTaskByAsset(assetCostStatistics);
+		try{
+			for (AssetCostStatistics acs : acss) {
+				AssetCostStatistics assetCostStatistics = assetInfoMapper.fetchAssetCostStatisticsByAssetId(acs.getAssetId(),new Date());
+				assetCostStatistics.setDay(new Date());
+				excuteTaskByAsset(assetCostStatistics);
+			}
+			return "success";
+		}catch(Exception e){
+			logger.error("aggregateCostData error,msg is {}",e.getMessage());
+			return "failure";
 		}
 	}
 	
@@ -67,7 +75,7 @@ public class AssetCostDataService {
 		}
 		List<AssetCostStatistics> acss =  assetInfoMapper.fetchAssetInfoByDay(day);
 		if(CollectionUtils.isEmpty(acss)){
-			logger.error("acss is empty,today is {}",day);
+			logger.error("acss is empty,today is {}",new SimpleDateFormat("yyyy-MM-dd").format(day));
 			return;
 		}
 		logger.info("assetInfos size is {}",acss.size());
@@ -159,6 +167,31 @@ public class AssetCostDataService {
 			}
 			return "success";
 		}catch(Exception e){
+			logger.error("calByDay error,param is {}",bac);
+			logger.error("calByDay error,message is {}",e.getMessage());
+			return "failue";
+		}
+	}
+	
+	public String calByFromTo(BatchAssetCost bac){
+		if(bac == null){
+			return "illegal param";
+		}
+		if(StringUtils.isEmpty(bac.getFrom()) || StringUtils.isEmpty(bac.getTo())){
+			return "from or to is empty !";
+		}
+		try{
+			DateTime from = new DateTime(bac.getFrom());
+			DateTime to = new DateTime(bac.getTo());
+			while(from.isBefore(to)||from.isEqual(to)){
+				logger.info("calByFromTo begin ,current day is {}",from.toString());
+				aggregateCostDataByDay(from.toDate());
+				from = from.plusDays(DAY);
+			}
+			return "success";
+		}catch(Exception e){
+			logger.error("calByFromTo error,param is {}",bac);
+			logger.error("calByFromTo error,message is {}",e.getMessage());
 			return "failue";
 		}
 	}
