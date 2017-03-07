@@ -14,17 +14,14 @@
     </div>
   </template>
   <script>
-    function getDefaultConf() {
-      return {
-        circleThickness: 1, // The outer circle stroke width
-        circleColor: 'rgb(168,167,166)', // The color of the outer circle.
-        waveHeight: 0.05, // The wave height as a percentage of wave circle's radius
-        waveCount: 1, // The number of full waves per width of the wave circle.
-        waveColor: 'rgb(168,167,166)', // The color of the fill wave.
-        textColor: '#fff', // The color of the value text when the wave does not overlap it.
-        waveTextColor: '#A4DBf8' // The color of the value text when the wave overlaps it.
-      }
-    }
+    var colorSet = {
+      wave: { // Color of the fill wave
+        gray: 'rgb(148, 147, 146)',
+        orange: 'rgb(232, 136, 56)',
+        yellow: 'rgb(236, 219, 84)'
+      },
+      text: '#fff' // Text color
+    };
 
     function wavePath(percent, radius) {
       if (percent > 1) {
@@ -87,7 +84,7 @@
         var margin = 20;
         var diameter = Math.min.call(null, this.width, this.height);
 
-        var g = svg.append('g')
+        var wrapperG = svg.append('g')
         .attr('transform', d3Transform().translate(this.width / 2, this.height / 2));
 
         var pack = d3.pack()
@@ -102,9 +99,7 @@
         var nodes = pack(root).descendants();
         var view;
 
-        var config = getDefaultConf();
-
-        var assetGroup = g
+        var assetGroup = wrapperG
         .selectAll('g')
         .data(nodes)
         .enter().append('g')
@@ -144,22 +139,30 @@
         .append('path')
         .attr('pointer-events', 'none')
         .attr('d', function(d) {
-          var percent = d.data.usage;
-          var radius = d.r;
-          return wavePath(percent, radius);
+          return wavePath(d.data.usage, d.r);
         })
         .attr('transform', function(d) {
           return 'translate(' + (-d.r) + ',' + 0 + ')';
         })
-        .attr('fill', config.waveColor);
+        .attr('fill', function(d) {
+          var percent = d.data.usage;
+          var waveColor = colorSet.wave;
+          if (percent >= 1) {
+            return waveColor.orange;
+          } else if (percent <= 0.3) {
+            return waveColor.yellow;
+          } else {
+            return waveColor.gray;
+          }
+        });
 
-        var text = g.append('g')
+        var text = wrapperG.append('g')
         .selectAll('text')
         .data(nodes)
         .enter().append('text')
         .attr('pointer-events', 'none')
         .attr('text-anchor', 'middle')
-        .attr('fill', config.textColor)
+        .attr('fill', colorSet.text)
         .attr('dy', '.35em')
         .attr('font-size', '20px')
         .style('user-select', 'none')
