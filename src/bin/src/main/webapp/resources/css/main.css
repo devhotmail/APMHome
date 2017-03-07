@@ -1,0 +1,252 @@
+html{
+background-color: #6e7072;    
+}
+.topbar, .topbar-left {
+  height: 60px!important;
+}
+.layout-main {
+padding-top: 60px!important;
+padding-left: 0!important;
+padding-right: 0!important;
+background-color: #6e7072;
+}
+.layout-menu{
+top: 60px!important;
+}
+.ultima-menu{
+margin-top: 0px!important;
+}
+#profile-menu li:last-child{
+margin-bottom: 2px!important;
+}
+.card{
+border-radius: 0px!important;
+margin-bottom: 6px!important;
+margin-left: 6px!important;
+margin-right: 6px!important;
+box-shadow: none!important;
+-webkit-box-shadow: none!important;
+}
+.cardTitle{
+height: 60px!important;
+margin-left: 0px!important;
+margin-right: 0px!important;
+text-align: center!important;
+}
+.pageTitle {
+font-size: 1.33333rem!important;
+line-height: 1!important;
+}
+.ajaxStatusDialog{
+background: transparent!important;
+border: none!important;
+-moz-box-shadow: none!important;
+-webkit-box-shadow: none!important;
+box-shadow: none!important;
+}
+.ui-growl{
+z-index: 9999!important;
+width: auto!important;
+height: auto!important;
+}
+.ui-growl-item{
+background-color: rgb(255, 193, 7)!important;
+opacity: 0.8;
+padding-left: 30px!important;
+float: left!important;
+width: 200px!important;
+height: auto!important;
+}
+.ui-growl-title{
+padding-bottom: 0px!important;
+}
+.ui-growl-message{
+color: black!important;
+}
+.ui-growl-message p, .ui-growl-image{
+display: none!important;
+height: 0!important;
+}
+.ui-dialog{
+z-index: 1900!important;
+}
+.ui-datepicker{
+z-index: 2000!important;
+}
+.ui-selectonemenu-panel {
+z-index: 2000!important;
+}
+.layout-wrapper.menu-layout-overlay .topbar {
+z-index: 1800!important;
+}
+ .layout-menu .profile {
+padding-top: 10px!important; 
+height: 65px!important;
+background: none!important;
+}
+.ui-datatable .ui-widget-header{
+background-color: transparent!important;
+text-align: right!important;
+}
+.ui-widget-header{
+background-color: #e8e8e8!important;
+border: 0!important;
+color: black!important;
+}
+.ui-paginator, .ui-paginator .ui-paginator-page{
+color: black!important;
+}
+.ui-paginator .ui-state-active{
+color: white!important;
+}
+
+.ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-last, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-prev {
+color: black!important;
+}
+.ui-paginator .ui-button-icon-only{
+zoom: 0.8!important;
+}
+.ui-chkbox {
+width: 95%!important;
+}
+.ui-chkbox .ui-state-focus .ui-icon-check{
+background-color: #3e464c!important;
+}
+.ui-chkbox .ui-chkbox-box .ui-icon-check{
+color: #ffffff!important;
+}
+.tree .ui-chkbox .ui-chkbox-box .ui-icon-check{
+color: black!important;
+}
+
+.ui-tree .ui-chkbox {
+width: 18px!important;
+}
+.label {
+display: block!important;
+color: #999!important;
+font-size: 12px!important;
+}
+.popupIconButton{
+float: next!important;
+background-color: #7f8c8d!important;
+height:26px!important;
+width: 22px!important;
+zoom: 0.8!important;
+}
+.inputWithPopupButton{
+width: 80%!important;
+}
+.ui-panelgrid .ui-selectonemenu{
+}
+.ui-calendar .ui-inputfield{
+padding: 0!important;
+}
+.ui-calendar .ui-button-text{
+padding: 0!important;
+}
+.ui-datepicker tbody td, .ui-datepicker tbody td a{
+padding-top: 0px!important;
+padding-bottom: 0px!important;
+}
+.ui-datepicker-calendar{
+line-height: 14px!important;
+margin-bottom: 0px!important;
+}
+.ui-timepicker-div dl{
+margin-bottom: 5px!important;
+}
+.ui_tpicker_time_label, .ui_tpicker_hour_label, .ui_tpicker_minute_label, .ui_tpicker_second_label{
+margin-bottom: 0px!important;
+margin-top: 11px!important;
+padding-bottom: 0px!important;
+padding-top: 0px!important;
+}
+.ui_tpicker_time, .ui_tpicker_hour, .ui_tpicker_minute, .ui_tpicker_second{
+margin-bottom: 0px!important;
+margin-top: 26px!important;
+padding-bottom: 0px!important;
+xpadding-top: 5px!important;
+}
+
+table.ui-selectoneradio{
+vertical-align: top!important;
+border-spacing: 1px!important;
+height: 17px!important;
+}
+.ui-selectmanycheckbox.ui-widget td, .ui-selectoneradio.ui-widget td, .ui-selectoneradio.ui-widget label {
+border-width: 0px!important;
+margin: 0px!important;
+padding: 0px!important;
+vertical-align: top!important;
+height: 17px!important;
+line-height: 17px!important;
+border-image-width: 0!important;
+}
+.flatButton{
+padding: 10px!important;
+}
+.flatIcon{
+padding: 0px!important;
+zoom: 0.8!important;
+}
+.flatButton, .flatIcon{
+-webkit-box-shadow: none!important;
+box-shadow: none!important;
+background-color:transparent!important;
+color: black!important;
+height: 12px!important;
+width: 3px!important;
+vertical-align: middle!important;
+}
+.flatButton.ui-state-hover, .flatIcon.ui-state-hover{
+background-color: #777d81!important;
+}
+.textCenter{
+text-align: center!important;
+}
+.priorityItem{
+background-color: rgb(0, 188, 212); 
+color: rgb(255, 255, 255);
+padding-left: 5px; 
+padding-right: 5px; 
+}
+.priorityItem1{
+background-color: rgb(255, 87, 34); 
+}
+.priorityItem2{
+background-color: rgb(255, 193, 7); 
+}
+.priorityItem3{
+background-color: rgb(0, 188, 212); 
+}
+.ui-chkbox .ui-chkbox-box{
+opacity: 1!important;
+}
+.uiButton, .uiButton .ui-icon{
+background-color: rgb(62, 70, 76)!important;
+color: #fff!important;
+}
+td{
+text-align:center;
+}
+.ui-datatable thead th.ui-state-active{
+background-color: rgb(255, 255, 255)!important;
+color: black!important;
+border-color:  #bdbdbd!important;
+border-top-width: 3px!important;
+border-top-style: solid!important;
+border-top-color: #5180ce!important;
+outline-color: transparent!important;
+}
+.ui-datatable thead th.ui-state-active .ui-inputfield, body .ui-datatable thead th.ui-state-highlight .ui-inputfield{
+color: black!important;
+}
+.xui-column-title{
+white-space: nowrap!important;
+word-wrap: break-word!important;
+overflow: hidden!important;
+}
+.ui-tree-container{
+overflow: visible!important;
+}

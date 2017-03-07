@@ -1,0 +1,135 @@
+@import "predix";
+@import "objects";
+@import "charts";
+
+body .ui-tooltip {
+  .ui-tooltip-arrow {
+    display: none;
+  }
+  .ui-tooltip-text {
+    @include tooltip;
+  }
+}
+
+.layout-compact .layout-main {
+  .ui-datatable table {
+    table-layout: auto;
+    margin: 0;
+    td {
+      vertical-align: top;
+    }
+  }
+
+  .ui-datatable-tablewrapper {
+    overflow: hidden;
+  }
+
+  .ui-datatable.maintenance-forecast {
+    table {
+      overflow: hidden;
+      thead {
+        th {
+          padding: .5rem 0;
+          overflow: visible;
+          border: 0;
+          position: relative;
+          text-align: left;
+
+          &:first-child {
+            padding-left: 1rem;
+          }
+
+          &::after {
+            content: "";
+            display: block;
+            background-color: #cacaca;
+            width: 1px;
+            right: -1px;
+            top: 0;
+            height: 99999px;
+            position: absolute;
+          }
+        }
+      }
+      tbody {
+        border: 1px;
+
+        tr.ui-datatable-even {
+          background-color: transparent;
+        }
+
+        tr.ui-widget-content td {
+          padding: 0;
+          width: 6px;
+          box-sizing: content-box;
+
+          &:not(:first-child) {
+            border-left-width: 0;
+            border-right-width: 0;
+          }
+
+          > .tinted {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            background-color: $dv-basic-pink;
+
+            &.lightly-tinted {
+              opacity: .6;
+            }
+
+          }
+
+          &:first-child {
+            padding: .6rem 1rem;
+            width: auto;
+          }
+        }
+      }
+    }
+  }
+
+  .ui-datatable.maintenance-pmstats {
+    table {
+      thead {
+        th {
+          overflow: visible;
+          border: 0;
+          padding: .5rem 0;
+          position: relative;
+          text-align: left;
+          &:first-child {
+            padding-left: 1rem;
+          }
+        }
+      }
+
+      tbody {
+        tr.ui-datatable-even {
+          background-color: transparent;
+        }
+
+        tr.ui-widget-content td {
+          padding: 0;
+          width: 2rem;
+          box-sizing: content-box;
+
+          > .tinted {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            background-color: $dv-basic-pink;
+          }
+
+          &:first-child {
+            padding: 0 1rem;
+            vertical-align: middle;
+            height: 2rem;
+            width: auto;
+          }
+        }
+      }
+    }
+  }
+
+}

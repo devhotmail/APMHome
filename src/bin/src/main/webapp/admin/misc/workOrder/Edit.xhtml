@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="WorkOrderEditDlg" widgetVar="WorkOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workOrderCrudController.CRUDActionName} #{msg.WorkOrder}">
+            <h:form id="WorkOrderEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workOrderCrudController.selected != null}">
+                        <h:panelGroup>
+                            <label class="label">#{msg.siteId}*</label>
+                            <p:inputText id="siteId" value="#{workOrderCrudController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.hospitalId}*</label>
+                            <p:inputText id="hospitalId" value="#{workOrderCrudController.selected.hospitalId}"  required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetName}*</label>
+                            <p:inputText id="assetName" value="#{workOrderCrudController.selected.assetName}"  required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.name}*</label>
+                            <p:inputText id="name" value="#{workOrderCrudController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.creatorId}*</label>
+                            <p:inputText id="creatorId" value="#{workOrderCrudController.selected.creatorId}"  required="true" requiredMessage="#{msg.creatorId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.creatorName}*</label>
+                            <p:inputText id="creatorName" value="#{workOrderCrudController.selected.creatorName}"  required="true" requiredMessage="#{msg.creatorName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.createTime}*</label>
+                            <p:calendar timeZone="GMT+8"  id="createTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderCrudController.selected.createTime}" required="true" requiredMessage="#{msg.createTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.requestorId}*</label>
+                            <p:inputText id="requestorId" value="#{workOrderCrudController.selected.requestorId}"  required="true" requiredMessage="#{msg.requestorId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.requestorName}*</label>
+                            <p:inputText id="requestorName" value="#{workOrderCrudController.selected.requestorName}"  required="true" requiredMessage="#{msg.requestorName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.requestTime}*</label>
+                            <p:calendar timeZone="GMT+8"  id="requestTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderCrudController.selected.requestTime}" required="true" requiredMessage="#{msg.requestTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.requestReason}*</label>
+                            <p:inputText id="requestReason" value="#{workOrderCrudController.selected.requestReason}"  required="true" requiredMessage="#{msg.requestReason} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.caseOwnerId}</label>
+                            <p:inputText id="caseOwnerId" value="#{workOrderCrudController.selected.caseOwnerId}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.caseOwnerName}</label>
+                            <p:inputText id="caseOwnerName" value="#{workOrderCrudController.selected.caseOwnerName}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.caseType}</label>
+                            <p:inputText id="caseType" value="#{workOrderCrudController.selected.caseType}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.caseSubType}</label>
+                            <p:inputText id="caseSubType" value="#{workOrderCrudController.selected.caseSubType}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.casePriority}*</label>
+                            <p:inputText id="casePriority" value="#{workOrderCrudController.selected.casePriority}"  required="true" requiredMessage="#{msg.casePriority} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.isInternal}*</label>
+                            <p:selectBooleanCheckbox id="isInternal" itemLabel="#{msg.isInternal}" value="#{workOrderCrudController.selected.isInternal}" required="true" requiredMessage="#{msg.isInternal} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.currentPersonId}*</label>
+                            <p:inputText id="currentPersonId" value="#{workOrderCrudController.selected.currentPersonId}"  required="true" requiredMessage="#{msg.currentPersonId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.currentPersonName}</label>
+                            <p:inputText id="currentPersonName" value="#{workOrderCrudController.selected.currentPersonName}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.currentStepId}*</label>
+                            <p:inputText id="currentStepId" value="#{workOrderCrudController.selected.currentStepId}"  required="true" requiredMessage="#{msg.currentStepId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.currentStepName}*</label>
+                            <p:inputText id="currentStepName" value="#{workOrderCrudController.selected.currentStepName}"  required="true" requiredMessage="#{msg.currentStepName} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.isClosed}*</label>
+                            <p:selectBooleanCheckbox id="isClosed" itemLabel="#{msg.isClosed}" value="#{workOrderCrudController.selected.isClosed}" required="true" requiredMessage="#{msg.isClosed} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.closeReason}</label>
+                            <p:inputText id="closeReason" value="#{workOrderCrudController.selected.closeReason}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.comments}</label>
+                            <p:inputText id="comments" value="#{workOrderCrudController.selected.comments}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.totalManHour}</label>
+                            <p:inputText id="totalManHour" value="#{workOrderCrudController.selected.totalManHour}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.totalPrice}</label>
+                            <p:inputText id="totalPrice" value="#{workOrderCrudController.selected.totalPrice}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.confirmedDownTime}</label>
+                            <p:calendar timeZone="GMT+8"  id="confirmedDownTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderCrudController.selected.confirmedDownTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.confirmedUpTime}</label>
+                            <p:calendar timeZone="GMT+8"  id="confirmedUpTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderCrudController.selected.confirmedUpTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetId}*</label>
+                            <p:inputText id="assetId" value="#{workOrderCrudController.selected.assetId}"  required="true" requiredMessage="#{msg.assetId} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{workOrderCrudController.save}" value="#{msg.Save}" update=":WorkOrderListForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'WorkOrderEditDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('WorkOrderEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

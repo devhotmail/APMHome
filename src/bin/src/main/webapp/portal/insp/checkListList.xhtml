@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.checkListSetting}"/>
+            </div>
+
+            <div class="ui-g-12">
+                <h:form id="checkListQueryForm">
+
+                    <div class="ui-g-12 ui-lg-4">
+                        <div class="card" style="height:400px;">
+
+                            <p:scrollPanel style="width:98%;height:95%;border: 0" mode="native" >
+                                <h:panelGroup rendered="#{userContextService.hasRole('MultiHospital')}">
+                                    <label class="label">#{msg.hospitalId}</label>
+                                    <p:selectOneMenu id="hospitalIdSelect" value="#{inspectionChecklistController.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}" rendered="#{userContextService.hasRole('MultiHospital')}" >
+                                        <p:ajax   listener="#{inspectionChecklistController.onHospitalChange}"  update="assetTree" />
+                                        <f:selectItems value="#{assetInfoService.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                                <label class="label">#{msg.searchAssetByDept} #{msg.ChecklistType}</label>
+                                <p:tree id="assetTree" class="tree" style="width: 95%;border:0;" value="#{inspectionChecklistController.orgAssetTree}" var="node" dynamic="false" cache="false" selectionMode="single" selection="#{inspectionChecklistController.selectedNode}" highlight="true">
+                                    <p:ajax event="select" listener="#{inspectionChecklistController.onSelectTreeNode}" update=":checkListQueryForm:datalist"/>
+                                    <p:treeNode type="org">
+                                        <h:outputText value="#{node.name}"/>
+                                    </p:treeNode>
+                                    <p:treeNode type="asset" icon="ui-icon-wifi-tethering">
+                                        <h:outputText value="#{node.name}"/>
+                                    </p:treeNode>
+                                    <p:treeNode type="checklist">
+                                        <h:outputText value="#{node[1]}"/>
+                                    </p:treeNode>
+                                </p:tree>
+                            </p:scrollPanel>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-lg-8">
+                        <div class="card" style="height:400px;">
+
+                            <p:dataTable id="datalist" value="#{inspectionChecklistController.checklistitemList}" var="item" widgetVar="varDataList"
+                                         selectionMode="single" selection="#{inspectionChecklistController.selected}"
+                                         paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true" style="height:95%;"
+                                         rowKey="#{item.id}" sortMode="single"  sortOrder="ascending" sortBy="#{item.displayOrder}"
+                                         paginatorTemplate="{Toolbar} {CurrentPageReport}" rowIndexVar="rowIndex" emptyMessage="#{msg.noRecordFound}"
+                                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" draggableRows="true" scrollable="true" scrollHeight="290">
+
+                                <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
+                                <p:ajax event="rowReorder" listener="#{inspectionChecklistController.onRowReorder}" update="saveOrder"/>
+
+                                <p:column headerText="#{fieldMsg.fieldValue('checklistType', inspectionChecklistController.checklistType)} #{msg.checkListSetting}">
+                                    <h:outputText value="#{item.item}" />
+                                </p:column>
+                                <f:facet name="{Toolbar}">
+                                    <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{inspectionChecklistController.prepareCreate}" update=":InspectionChecklistEditDlg" oncomplete="PF('InspectionChecklistEditDialog').show()" disabled="#{0 == inspectionChecklistController.checklistType}"/>
+                                    <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{inspectionChecklistController.prepareEdit}" update=":InspectionChecklistEditDlg" oncomplete="PF('InspectionChecklistEditDialog').show()" disabled="#{empty inspectionChecklistController.selected}"/>
+                                    <p:commandButton id="deleteButton" icon="ui-icon-close" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{inspectionChecklistController.delete}"  update=":InspectionChecklistViewDlg, :checkListQueryForm:datalist, :growl"  disabled="#{empty inspectionChecklistController.selected}">
+                                        <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>
+                                    </p:commandButton>
+                                    <p:commandButton id="saveOrder" icon="ui-icon-save" class="btn btn-sm btn-gray" title="#{msg.saveOrder}" actionListener="#{inspectionChecklistController.saveOrder}"  update="saveOrder datalist" disabled="#{not inspectionChecklistController.isOrderChange}"/>
+                                    <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                                        <p:dataExporter type="xls" target="datalist" fileName="InspectionChecklist_export"/>
+                                    </p:commandButton>
+
+                                </f:facet>
+                            </p:dataTable>
+
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+        <ui:include src="checkListEdit.xhtml"/>
+        <ui:include src="checkListView.xhtml"/>
+
+        <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,81 @@
+@import "predix";
+@import "objects";
+@import "charts";
+
+$type-color: rgba(182, 195, 203, 1),rgba(93, 165, 218, 1),rgba(240, 126, 110, 1);
+
+@mixin get-bgc($num) {
+  background-color: nth($type-color, $num);
+}
+
+.usage-sum-right {
+  .ui-md-4 {
+    text-align: center;
+  }
+
+  .usage-sum-wrapper {
+    display: inline-block;
+    text-align: left;
+  }
+
+  .usage-sum-text {
+    position: relative;
+
+    &::before {
+      display: block;
+      content: '';
+      position: absolute;
+      right: 100%; // fallback for `calc` not supported
+      right: calc(100% + 5px);
+      top: 50%;
+      transform: translate(0, -50%);
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  @each $num in (1,2,3) {
+    .ui-md-4:nth-child(#{$num}) .usage-sum-text::before {
+      @include get-bgc($num);
+    }
+  }  
+}
+
+.chart-device-stat {
+  height: 50px;
+  .jqplot-axis.jqplot-xaxis, .jqplot-axis.jqplot-yaxis, .jqplot-title {
+    display: none;
+  }
+
+  .jqplot-point-label {
+    position: relative;
+    color: transparent;
+
+    &:after {
+      content: '';
+      position: absolute;
+      background: $main-bg-color;
+      display: block;
+      width: 5px;
+      height: 18px;
+      right: -10px;
+      top: 0;
+    }
+  }
+}
+
+.text--unit {
+  font-size: 70%;
+}
+
+@include media-query(lg) {
+  .text--scale {
+    font-size: 99%;
+  }
+}
+
+@include media-query(nomenu) {
+  .text--scale {
+    font-size: 90%;
+  }
+}

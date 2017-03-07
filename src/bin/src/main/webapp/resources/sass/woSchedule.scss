@@ -1,0 +1,258 @@
+@import "predix";
+@import "objects";
+
+$type-1: rgba(254,89,91,1);
+$type-2: rgba(56,150,248,1);
+$type-3: rgba(118,215,56,1);
+$type-4: rgba(156,154,255,1);
+$type-5: rgba(245,166,35,1);
+
+$type-color: $type-1 $type-2 $type-3 $type-4 $type-5;
+
+@mixin get-bgc($num) {
+  background-color: nth($type-color, $num);
+}
+
+@mixin get-color($num) {
+  color: nth($type-color, $num);
+}
+
+.status::before {
+  content: '';
+  color: black;
+  display: inline-block;
+  position: relative;
+  top: 2px;
+  font-size: 1em;
+  width: 1em;
+  height: 1em;
+  margin: 0 5px;
+  vertical-align: baseline;
+}
+
+@each $num in (1,2,3,4,5) {
+  .status--#{$num}::before {
+    @include get-bgc($num);
+  }
+}
+
+.calendar {
+  margin: 0 5px 5px;
+  padding: 30px 30px 15px;
+  background-color: #fff;
+}
+
+.calendar-footer {
+  text-align: right;
+}
+
+// event tooltip styles
+.event-tooltip {
+  background-color: #fff;
+  color: $gray8;
+
+  .title {
+    color: #000;
+    font-size: larger;
+    font-weight: bolder;
+  }
+}
+
+.event-count {
+  font-size: 50px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+@each $num in (1,2,3,4,5) {
+  .event-type-#{$num} {
+    @include get-color($num);
+  }
+}
+
+// reset part
+.main-body {
+
+  // reset ui-tooltip default styles
+  .ui-tooltip.ui-widget.ui-shadow.ui-corner-all {
+    box-shadow: none;
+  }
+
+  .fc {
+    // different event type class
+
+    @each $num in (1,2,3,4,5) {
+      .fc-event.event-type-#{$num} {
+        @include get-bgc($num);
+      }
+    }
+
+    // hide event time
+    .fc-content .fc-time {
+      display: none;
+    }
+
+    // reset fc-event default styles
+
+    .fc-event {
+      line-height: 2;
+      color: #fff;
+      border-radius: 0;
+      border-width: 0;
+
+      &.closed {
+        opacity: .5;
+      }
+    }
+    // reset layout of toolbar
+    .fc-toolbar {
+      height: 40px;
+      position: relative;
+    }
+
+    .fc-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate3d(-50%, -50%, 0);
+
+      > h2 {
+        font-size: 20px;
+        font-weight: normal;
+        line-height: 1;
+      }
+    }
+
+    .fc-left {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translate3d(0, -50%, 0);
+
+      > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .fc-today-button {
+        border-radius: 0;
+        border-left-width: 0 !important;
+        border-right-width: 0 !important;
+        border-top-color: $gray4;
+        border-bottom-color: $gray4;
+        box-shadow: none !important;
+        opacity: 1 !important;
+
+        &.ui-state-disabled,
+        &.ui-state-disabled:hover {
+          background-color: rgba(248,248,248,1);
+        }
+      }
+
+      // same bgc and hover bgc for fc-left buttons
+      .fc-next-button,
+      .fc-prev-button,
+      .fc-today-button {
+        background-color: rgba(216,216,216,1);
+        &:hover {
+          background-color: rgba(216,216,216,.7);
+        }
+
+        .ink {
+          display: none;
+        }
+      }
+
+      // reset for next/prev button
+      .fc-next-button,
+      .fc-prev-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        color: $dv-basic-blue;
+        border: 1px solid $gray4;
+        outline: none!important;
+        box-shadow: none;
+        background-size: auto 15px;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        &:hover {
+          background-color: rgba(216,216,216,.7);
+        }
+
+        .ui-icon,
+        .ink {
+          display: none;
+        }
+      }
+
+      .fc-prev-button {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATwAAAIAAgMAAABiOzjeAAAACVBMVEUAAABAh+k+h+jQbC3AAAAAAnRSTlMAgJsrThgAAAJHSURBVHja7d2xbcMwFAZhs/EQmcbzZJo3hBtxypQHpJCLHCAhOA5wAD/WxP/441mvh3qe4/a+3m7v+1Bza28V8Ln3qHx7v1W+vQ+XD0CHD0CHD0CHD0CFD0CHD0CHD0CHD0CFD0CHD0CHD0CHD0CFTwV80huJD0CHD0CHD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CHD0CHD0CJD0CHD0CLD0CDD0CHj57Lt98u3x6Xb7/iiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvvwfepdft8P73H5/+8AAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMM8L8CHtfvbZ8CzvV75WeAxx323k8A5w57+daeP4AOH4AOH4ASH4AOH4AOH4AOH4ASH4AOH4AOH4AOH4ASH4AOH4AOH4AOH4ASH4AOH4AOH4AOH4AuH4DwOYDwOYDwOYDwKYDwOYDwOYDwOYDwKYDwOYDwqYBj9JbFByB8DiB8KuA4vSXxAQifAwifCThWb8EnAcLnAMLnAY7XW/BJgPA5gPBZgGP2FnwSIHwOIHwO4Li99YvvB7j7Lr4VMsfwAAAAAElFTkSuQmCC');
+      }
+
+      .fc-next-button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATwAAAIAAgMAAABiOzjeAAAACVBMVEUAAABAh+k+h+jQbC3AAAAAAnRSTlMAgJsrThgAAAJFSURBVHja7d2xbcMwAAVRs+EQnibzZBoO4UacMuUhjWzAB0jFcYAD+Mj+P/6f8fNQz1xu7/lye7+Hmht7q4Bz76Xy7f1S+fY+XD4AHT4AHT4AHT4AFT4AHT4AHT4AHT4AFT4AHT4AHT4AHT4AFT4VcNJbEh+ADh+ADh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+ADh+ADh+AEh+ADh+AFh+AX/AJgPQswOd2Aed2AccOMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAP8qHf5fd+8h/1f4osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7744osvvvjiiy+++OKLL7778J33juv3tucp3/V75WeAxx323ucJ3x328q09fwAdPgAdPgAlPgAdPgAdPgAdPgAlPgAdPgAdPgAdPgAlPgAdPgAdPgAdPgAlPgAdPgAdPgAdPgBdPgDhcwDhcwDhcwDhUwDhcwDhcwDhcwDhUwDhcwDhUwGX0RsWH4DwOYDwqYDL6Q2JD0D4HED4TMBl9QZ8EiB8DiB8HuDyegM+CRA+BxA+C3CZvQGfBAifAwifA7jc3viW7w+Qti6+KYuXiQAAAABJRU5ErkJggg==');
+      }
+    }
+
+    .ui-widget-header {
+      background-color: #fff!important;
+    }
+
+    .ui-widget-content {
+      border-color: rgba(206,206,206,1);
+    }
+
+    // reset the way of highlight today
+    .fc-bg .fc-today {
+      background-color: transparent;
+    }
+
+    .fc-content-skeleton {
+      .fc-day-number {
+        padding-left: 15px;
+        padding-top: 12px;
+        text-align: left;
+        font-size: 20px;
+      }
+
+      .fc-today {
+        position: relative;
+
+        &::after {
+          position: absolute;
+          left: 8px;
+          top: 4px;
+          z-index: -1;
+          display: block;
+          content: '';
+          border-radius: 50%;
+          background-color: $dv-basic-blue;
+          width: 35px;
+          height: 35px;
+        }
+      }
+    }
+  }
+
+  // keep calendar in one screen
+  @media(min-width: 1335px) {
+    .fc-row:not(.ui-widget-header) {
+      height: 120px!important;
+    }
+  }
+
+  @media(max-height: 960px) {
+    .fc-row:not(.ui-widget-header) {
+      max-height:90px!important;
+    }
+  }
+}

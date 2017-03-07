@@ -1,0 +1,170 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Charts</ui:define>
+
+	<ui:define name="head">
+		<h:outputStylesheet name="css/assetUsageAll.css"/>
+		<h:outputScript name="js/assetUsageAll.js"/>
+                <style type="text/css">
+.ui-growl-title{
+color: black!important;
+}
+.ui-growl-message p{
+display: inline!important;
+height: auto!important;
+}
+                </style>
+	</ui:define>
+
+	<ui:define name="content">
+		<header>
+			<div class="card--title text--center">
+				<div class="ui-g">
+					<div class="ui-g-1">
+						<h:form id="WorkOrderEditForm" class="text--left">
+							<p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}"
+										  value="#{assetUsageAllController.assetName}">
+
+								<p:menuitem value="#{msg.selectAssetSingle}"
+											actionListener="#{selectAssetController.prepareDialogCallback(assetUsageAllController, ':WorkOrderEditForm:selAsset')}"
+											process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+											oncomplete="PF('varSelectAssetDlg').show()"/>
+								<p:separator/>
+
+								<p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"/>
+
+							</p:menuButton>
+						</h:form>
+					</div>
+					<div class="ui-g-10">
+						<span class="epsilon">#{msg.DeviceUtilizationAnalysis}</span>
+					</div>
+				</div>
+			</div>
+			<div class="card--summary">
+				<div class="ui-g">
+					<div class="ui-md-2">
+						<div class="text--scale epsilon u-mv-">#{msg.deviceScanStat}</div>
+						<p:outputPanel id="value_scan">
+							<div class="text--scale u-mt+ delta">
+								<h:outputText value="#{assetUsageAllController.valueScan}"/>
+								<span class="text--unit text--secondary epsilon">#{msg.countlb}</span>
+							</div>
+						</p:outputPanel>
+					</div>
+					<div class="ui-md-2">
+						<div class="text--scale epsilon u-mv-">#{msg.deviceExpoStat}</div>
+						<p:outputPanel id="value_expo">
+							<div class="text--scale u-mt+ delta">
+								<h:outputText value="#{assetUsageAllController.valueExpo}"/>
+								<span class="text--unit text--secondary epsilon">#{msg.countlb}</span>
+							</div>
+						</p:outputPanel>
+					</div>
+					<div class="ui-md-8 usage-sum-right">
+						<div class="ui-g">
+							<div class="ui-md-4">
+								<div class="usage-sum-wrapper">
+									<div class="usage-sum-text text--scale zeta u-mb--">#{msg.deviceUsageStat_1}</div>
+									<p:outputPanel id="value_usage_1">
+										<div class="text--scale epsilon">
+											<h:outputText value="#{assetUsageAllController.valueWait}"/>
+											<span class="text--unit text--secondary epsilon">#{msg.hourslb}</span>
+										</div>
+									</p:outputPanel>
+								</div>
+							</div>
+							<div class="ui-md-4">
+								<div class="usage-sum-wrapper">
+									<div class="usage-sum-text text--scale zeta u-mb--">#{msg.deviceUsageStat_2}</div>
+									<p:outputPanel id="value_usage_2">
+										<div class="text--scale epsilon">
+											<h:outputText value="#{assetUsageAllController.valueInuse}"/>
+											<span class="text--unit text--secondary epsilon">#{msg.hourslb}</span>
+										</div>
+									</p:outputPanel>
+								</div>
+							</div>
+							<div class="ui-md-4">
+								<div class="usage-sum-wrapper">
+									<div class="usage-sum-text text--scale zeta u-mb--">#{msg.deviceUsageStat_3}</div>
+									<p:outputPanel id="value_usage_3">
+										<div class="text--scale epsilon">
+											<h:outputText value="#{assetUsageAllController.valueDT}"/>
+											<span class="text--unit text--secondary epsilon">#{msg.hourslb}</span>
+										</div>
+									</p:outputPanel>
+								</div>
+							</div>
+						</div>
+						<div class="chart-device-stat horizontal">
+							<p:chart widgetVar="deviceStat" id="value_usage_bar" type="bar"
+									 model="#{assetUsageAllController.deviceStat}"/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="block">
+				<h:form id="form2">
+                                    <p:growl id="calendar_submit" life="100000" showDetail="true"/>
+					<div class="calendar-range-picker flex flex--row flex--center flex--justify">
+						<p:calendar timeZone="GMT+8"  id="start_date_button" value="#{assetUsageAllController.startDate}"
+									showOn="button"/>
+						<label>#{msg.selectSearchInterval_1}</label>
+						<p:calendar timeZone="GMT+8"  id="end_date_button" value="#{assetUsageAllController.endDate}"
+									showOn="button"/>
+						<label> </label>
+						<p:commandButton id="submit_date" class="btn btn--large" value="#{msg.selectSearchInterval_2}"
+										 update="calendar_submit value_scan value_expo value_usage_1 value_usage_2 value_usage_3 value_usage_bar scan_bar exposure_bar usage_bar dt_bar"
+										 actionListener="#{assetUsageAllController.submit}"/>
+					</div>
+				</h:form>	
+				</div>
+			</div>
+
+			<!-- Chart 1: Device Scan -->
+			<div class="ui-g-12">
+				<div class="block">
+					<h3 class="block-title">#{msg.deviceScanhd}</h3>
+					<p:chart id="scan_bar" type="bar"
+						model="#{assetUsageAllController.deviceScan}" responsive="true" />
+				</div>
+			</div>
+
+			<!-- Chart 2: Device Exposure -->
+			<div class="ui-g-12">
+				<div class="block">
+					<h3 class="block-title">#{msg.deviceExpohd}</h3>
+					<p:chart id="exposure_bar" type="bar" model="#{assetUsageAllController.deviceExpo}" responsive="true" />
+				</div>
+			</div>
+
+			<!-- Chart 3: Device Usage -->
+			<div class="ui-g-12">
+				<div class="block">
+					<h3 class="block-title">#{msg.deviceUsagehd}</h3>
+					<p:chart id="usage_bar" type="bar" model="#{assetUsageAllController.deviceUsage}" responsive="true" />
+				</div>
+			</div>
+
+			<!-- Chart 4: Device Downtime -->
+			<div class="ui-g-12">
+				<div class="block">
+					<h3 class="block-title">#{msg.deviceDThd}</h3>
+					<p:chart id="dt_bar" type="bar" model="#{assetUsageAllController.deviceDT}" responsive="true" />
+				</div>
+			</div>
+		</div>
+
+		<ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
+	</ui:define>
+
+</ui:composition>

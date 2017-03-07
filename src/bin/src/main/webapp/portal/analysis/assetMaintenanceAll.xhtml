@@ -1,0 +1,154 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/assetMaintenanceAll.css"/>
+        <h:outputScript name="js/assetMaintenance.js"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
+
+        <header>
+            <div class="card--title text--center">
+                <div class="ui-g">
+                    <div class="ui-g-1">
+                        <h:form id="WorkOrderEditForm" class="text--left">
+                            <p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}"
+                                          value="#{assetMaintenanceController.assetName}">
+
+                                <p:menuitem value="#{msg.selectAssetSingle}"
+                                            actionListener="#{selectAssetController.prepareDialogCallback(assetMaintenanceController, ':WorkOrderEditForm:selAsset')}"
+                                            process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+                                            oncomplete="PF('varSelectAssetDlg').show()"/>
+                                <p:separator/>
+
+                                <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"/>
+
+                            </p:menuButton>
+                        </h:form>
+                    </div>
+                    <div class="ui-g-10">
+                        <span class="epsilon">#{msg.DeviceMaintainanceEventAnalysis}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card--summary">
+                <div class="ui-g">
+                    <div class="ui-lg-3">
+                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_reasonTile}</div>
+                        <div class="text--banner u-mt- delta">
+                            <h:outputText id="maintenanceR11" value="#{assetMaintenanceController.topErrorReason}"/>
+                        </div>
+                    </div>
+                    <div class="ui-lg-3">
+                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_stepTile}</div>
+                        <div class="text--banner u-mt- delta">
+                            <h:outputText id="maintenanceR12" value="#{assetMaintenanceController.topErrorStep}"/>
+                        </div>
+                    </div>
+                    <div class="ui-lg-3">
+                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_roomTile}</div>
+                        <div class="text--banner u-mt- delta">
+                            <h:outputText id="maintenanceR13" value="#{assetMaintenanceController.topErrorRoom}"/>
+                        </div>
+                    </div>
+                    <div class="ui-lg-3">
+                        <div class="epsilon u-mv-">#{msg.maintenanceAnalysis_categoryTile}</div>
+                        <div class="text--banner u-mt- delta">
+                            <h:outputText id="maintenanceR14" value="#{assetMaintenanceController.topErrorDeviceType}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h:form class="block">
+                    <p:growl id="calendar_submit" showDetail="true"/>
+
+                    <div class="calendar-range-picker flex flex--row flex--center flex--justify">
+                        <p:calendar timeZone="GMT+8"  id="start_date_button"
+                                    value="#{assetMaintenanceController.startDate}"
+                                    showOn="button"/>
+                        <label>#{msg.selectSearchInterval_1}</label>
+                        <p:calendar timeZone="GMT+8"  id="end_date_button"
+                                    value="#{assetMaintenanceController.endDate}"
+                                    showOn="button"/>
+                        <p:commandButton value="确定"
+                                         update="calendar_submit maintenanceR11 maintenanceR12 maintenanceR13 maintenanceR14 maintenanceR2 maintenanceR3 maintenanceR41 maintenanceR42 maintenanceR43 maintenanceR5"
+                                         actionListener="#{assetMaintenanceController.submit}"/>
+                    </div>
+                </h:form>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="block">
+                    <h3 class="block-title">#{msg.maintenanceAnalysis_reasonChart}</h3>
+                    <p:chart id="maintenanceR2" class="maintenance-chart2" type="bar" model="#{assetMaintenanceController.errorReasonChart}" responsive="true"/>
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="block">
+                    <h3 class="block-title">#{msg.maintenanceAnalysis_timeChart}</h3>
+                    <div class="chart-device-stat horizontal">
+                        <p:chart id="maintenanceR3" class="maintenance-chart3" type="bar"
+                                 model="#{assetMaintenanceController.errorStepChart}" responsive="true"/>
+                    </div>
+                    <div class="u-mh++">
+                        <div class="maintenance-chart4">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <h:outputText rendered="#{not empty assetMaintenanceController.errorTimePerStep.get(0)}"
+                                                  value="#{msg.maintenanceAnalysis_timeChart_section}"/>
+                                </div>
+                                <p:outputPanel rendered="#{not empty assetMaintenanceController.errorTimePerStep.get(0)}"
+                                               class="ui-g-4 col-1">
+                                    <p:chart id="maintenanceR41" type="pie"
+                                             styleClass="#{assetMaintenanceController.errorTimePerStep.get(0).getKey()}"
+                                             model="#{assetMaintenanceController.errorTimePerStep.get(0).getValue()}"/>
+                                </p:outputPanel>
+                                <p:outputPanel rendered="#{not empty assetMaintenanceController.errorTimePerStep.get(1)}"
+                                               class="ui-g-4 col-2 divide-line-left">
+                                    <p:chart id="maintenanceR42" type="pie"
+                                             styleClass="#{assetMaintenanceController.errorTimePerStep.get(1).getKey()}"
+                                             model="#{assetMaintenanceController.errorTimePerStep.get(1).getValue()}"/>
+                                </p:outputPanel>
+                                <p:outputPanel rendered="#{not empty assetMaintenanceController.errorTimePerStep.get(2)}"
+                                               class="ui-g-4 col-3 divide-line-left">
+                                    <p:chart id="maintenanceR43" type="pie"
+                                             styleClass="#{assetMaintenanceController.errorTimePerStep.get(2).getKey()}"
+                                             model="#{assetMaintenanceController.errorTimePerStep.get(2).getValue()}"/>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="block maintenance-chart5">
+                    <h3 class="block-title">#{msg.maintenanceAnalysis_distributionChart}</h3>
+                    <p:tabView id="maintenanceR5" style="min-height:400px">
+                        <p:tab title="#{msg.maintenanceAnalysis_distributionChart_room}">
+                            <p:chart id="maintenanceR51" type="bar" model="#{assetMaintenanceController.errorRoomChart}" responsive="true"/>
+                        </p:tab>
+                        <p:tab title="#{msg.maintenanceAnalysis_distributionChart_category}">
+                            <p:chart id="maintenanceR52" type="bar" model="#{assetMaintenanceController.errorDeviceTypeChart}" responsive="true"/>
+                        </p:tab>
+                        <p:tab title="#{msg.maintenanceAnalysis_distributionChart_device}">
+                            <p:chart id="maintenanceR53" widgetVar="chart-bar-thin" type="bar" model="#{assetMaintenanceController.topErrorDeviceChart}" responsive="true"/>
+                        </p:tab>
+                    </p:tabView>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,151 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Charts</ui:define>
+
+	<ui:define name="head">
+		<h:outputStylesheet name="css/assetUsageAll.css"/>
+		<h:outputScript name="js/assetUsageAll.js"/>
+	</ui:define>
+
+
+	<ui:define name="content">
+		<header>
+			<div class="card--title text--center">
+				<div class="ui-g">
+					<div class="ui-g-1">
+						<h:form id="WorkOrderEditForm" class="text--left">
+							<p:menuButton id="selAsset" placeholder="#{msg.selectAssetChoose}"
+										  value="#{assetUsageSingleController.assetName}">
+
+								<p:menuitem value="#{msg.selectAssetSingle}"
+											actionListener="#{selectAssetController.prepareDialogCallback(assetUsageSingleController, ':WorkOrderEditForm:selAsset')}"
+											process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg"
+											oncomplete="PF('varSelectAssetDlg').show()"/>
+								<p:separator/>
+
+								<p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}"
+											url="/portal/analysis/assetUsageAll.xhtml"/>
+
+							</p:menuButton>
+						</h:form>
+					</div>
+					<div class="ui-g-10">
+						<span class="epsilon">#{msg.DeviceUtilizationAnalysis}</span>
+					</div>
+				</div>
+			</div>
+			<div class="card--summary">
+				<div class="ui-g">
+					<div class="ui-md-6 ui-lg-3">
+						<div class="epsilon u-mv-">#{msg.deviceScanStat}</div>
+						<p:outputPanel id="value_scan">
+							<div class="text--banner u-mt+ delta">
+								<h:outputText value="#{assetUsageSingleController.valueScan}"/>
+								<span class="text--unit text--secondary epsilon">#{msg.countlb}</span>
+							</div>
+						</p:outputPanel>
+					</div>
+					<div class="ui-md-6 ui-lg-3">
+						<div class="epsilon u-mv-">#{msg.deviceExpoStat}</div>
+						<p:outputPanel id="value_expo">
+							<div class="text--banner u-mt+ delta">
+								<h:outputText value="#{assetUsageSingleController.valueExpo}"/>
+								<span class="text--unit text--secondary epsilon">#{msg.countlb}</span>
+							</div>
+						</p:outputPanel>
+					</div>
+					<div class="visible-portable divide-line-bottom"></div>
+					<div class="ui-md-12 ui-lg-6">
+						<div class="ui-g">
+							<div class="ui-md-4">
+								<div class="epsilon u-mb--">#{msg.deviceUsageStat_1}</div>
+								<p:outputPanel id="value_usage_1">
+									<div class="text--banner epsilon">
+										<h:outputText value="#{assetUsageSingleController.valueWait}"/>
+										<span class="text--unit text--secondary epsilon">#{msg.hourslb}</span>
+									</div>
+								</p:outputPanel>
+							</div>
+							<div class="ui-md-4">
+								<div class="epsilon u-mb--">#{msg.deviceUsageStat_2}</div>
+								<p:outputPanel id="value_usage_2">
+									<div class="text--banner epsilon">
+										<h:outputText value="#{assetUsageSingleController.valueInuse}"/>
+										<span class="text--unit text--secondary epsilon">#{msg.hourslb}</span>
+									</div>
+								</p:outputPanel>
+							</div>
+							<div class="ui-md-4">
+								<div class="epsilon u-mb--">#{msg.deviceUsageStat_3}</div>
+								<p:outputPanel id="value_usage_3">
+									<div class="text--banner epsilon">
+										<h:outputText value="#{assetUsageSingleController.valueDT}"/>
+										<span class="text--unit text--secondary epsilon">#{msg.hourslb}</span>
+									</div>
+								</p:outputPanel>
+							</div>
+						</div>
+						<p:chart widgetVar="deviceStat" class="chart-device-stat" id="value_usage_bar" type="bar"
+								 model="#{assetUsageSingleController.deviceStat}"/>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="block">
+				<h:form id="form2">
+					<p:growl id="calendar_submit" showDetail="true"/>
+					<div class="calendar-range-picker flex flex--row flex--center flex--justify">
+						<p:calendar timeZone="GMT+8"  id="start_date_button" value="#{assetUsageSingleController.startDate}"
+									showOn="button"/>
+						<label>#{msg.selectSearchInterval_1}</label>
+						<p:calendar timeZone="GMT+8"  id="end_date_button" value="#{assetUsageSingleController.endDate}"
+									showOn="button"/>
+						<label> </label>
+						<p:commandButton id="submit_date" class="btn btn--large" value="#{msg.selectSearchInterval_2}"
+										 update="calendar_submit value_scan value_expo value_usage_1 value_usage_2 value_usage_3 value_usage_bar scan_bar exposure_bar usage_bar"
+										 actionListener="#{assetUsageSingleController.submit}"/>
+					</div>
+				</h:form>	
+				</div>
+			</div>
+
+			<!-- Chart 1: Device Scan -->
+			<div class="ui-g-12">
+				<div class="block">
+					<h3 class="block-title">#{msg.deviceScanhd}</h3>
+					<p:chart id="scan_bar" type="line"
+							 model="#{assetUsageSingleController.deviceScan}" responsive="true"/>
+				</div>
+			</div>
+
+			<!-- Chart 2: Device Exposure -->
+			<div class="ui-g-12">
+				<div class="block">
+					<h3 class="block-title">#{msg.deviceExpohd}</h3>
+					<p:chart id="exposure_bar" type="line" model="#{assetUsageSingleController.deviceExpo}"
+							 responsive="true"/>
+				</div>
+			</div>
+
+			<!-- Chart 3: Device Usage -->
+			<div class="ui-g-12">
+				<div class="block">
+					<h3 class="block-title">#{msg.deviceUsagehd}</h3>
+					<p:chart id="usage_bar" type="line" model="#{assetUsageSingleController.deviceUsage}"
+							 style="height:300px"/>
+				</div>
+			</div>
+
+		</div>
+
+		<ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
+	</ui:define>
+
+</ui:composition>
