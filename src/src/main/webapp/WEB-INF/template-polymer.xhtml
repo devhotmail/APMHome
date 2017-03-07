@@ -8,15 +8,12 @@
 <h:head>
     <base href="#{request.contextPath}/resources/"/>
     <ui:include src="../commonHead.xhtml"/>
-    <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}"/>
     <title>GE APM</title>
-    <h:outputScript name="js/layout2.js" library="ultima-layout"/>
-    <h:outputScript name="js/ripple.js" library="ultima-layout"/>
-    <h:outputScript name="js/swipe.js" library="ultima-layout"/>
+
     <!-- web components shim -->
     <h:outputScript name="bower_components/webcomponentsjs/webcomponents-lite.min.js"/>
     <h:outputStylesheet name="css/shell.css"/>
-    <h:outputScript name="js/main.js"/>
+
     <link rel="import" href="elements/px-theme-apm-lighton/px-theme-apm-lighton-styles.html"/>
     <style include="px-theme-apm-lighton-styles" is="custom-style"></style>
 
@@ -24,6 +21,12 @@
 (instead of dynamically loading it later in JS) is that the parser can go to
 town pre-fetching resources, etc. -->
     <link id="main-element-import" rel="import" href="loader.html"/>
+
+    <!-- PF UI scripts -->
+    <h:outputScript name="js/layout.js" library="ultima-layout"/>
+    <h:outputScript name="js/ripple.js" library="ultima-layout"/>
+    <h:outputScript name="js/swipe.js" library="ultima-layout"/>
+    <h:outputScript name="js/primefaces-locale_zh.js"/>
 
     <ui:insert name="head"/>
 </h:head>
@@ -40,7 +43,7 @@ town pre-fetching resources, etc. -->
     </form>
     <p:growl id="growl" autoUpdate="true" showDetail="false" showSummary="true"/>
     <div class="layout-wrapper #{guestPreferences.menuLayout}">
-        <ui:include src="./menu2.xhtml"/>
+        <ui:include src="./menu.xhtml"/>
         <div class="layout-main">
             <ui:insert name="content"/>
         </div>
@@ -57,7 +60,6 @@ town pre-fetching resources, etc. -->
     <h:outputStylesheet name="css/animate.css" library="ultima-layout"/>
     <h:outputStylesheet name="css/ripple.css" library="ultima-layout"/>
     <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout"/>
-    <h:outputStylesheet name="css/icon.css"/>
     <p:confirmDialog global="true">
         <p:commandButton process="@this" value="#{msg.Confirm}" type="button" styleClass="ui-confirmdialog-yes uiButton" icon="ui-icon-check"/>
         <p:commandButton process="@this" value="#{msg.Cancel}" type="button" immediate="true" styleClass="ui-confirmdialog-no uiButton" icon="ui-icon-close"/>

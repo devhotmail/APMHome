@@ -1,44 +1,18 @@
-<ui:composition
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:f="http://java.sun.com/jsf/core"
-  xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:ui="http://java.sun.com/jsf/facelets"
-  xmlns:p="http://primefaces.org/ui"
-  xmlns:pu="http://primefaces.org/ultima">
-
-    <h:form id="menuform">
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pu="http://primefaces.org/ultima">
+    
+    <h:form id="menuform"> 
         <div class="layout-menu #{guestPreferences.menuClass}">
-            <div class="nano">
-                <div class="nano-content menu-scroll-content">
-                    <ui:fragment
-                    rendered="#{guestPreferences.profileMode == 'inline' and guestPreferences.menuLayout != 'menu-layout-static menu-layout-horizontal'}">
-                        <ul id="profile-menu" class="ultima-menu" style="display: block;">
-                            <li role="menuitem">
-                                <a>
-                                    <span class="profile-name">#{msg.Welcome}, #{userContextService.userName}</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <h:panelGroup rendered="#{localeService.language eq 'zh'}">
-                                    <a href="#{request.requestURL}?locale=en" class="ripplelink">
-                                        <i class="material-icons">translate</i>
-                                        <span>English Version</span>
-                                    </a>
-                                </h:panelGroup>
-                            </li>
-                            <li role="menuitem">
-                                <h:panelGroup rendered="#{localeService.language eq 'en'}">
-                                    <a href="#{request.requestURL}?locale=zh" class="ripplelink">
-                                        <i class="material-icons">translate</i>
-                                        <span>中文版</span>
-                                    </a>
-                                </h:panelGroup>
-                            </li>
-                        </ul>
-                    </ui:fragment>
-                    <ui:include src="./menu-content.xhtml"/>
-                </div>
-            </div>
+            <ui:include src="./ge-logo.xhtml" />
+            <a id="menu-button" class="flex flex--row flex--middle flex--center u-mv--" href="javascript:;">
+                <i class="material-icons">dehaze</i>
+            </a>
+            <ui:include src="./menu-content.xhtml"/>
         </div>
     </h:form>
 </ui:composition>

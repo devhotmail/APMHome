@@ -37,6 +37,9 @@ $inuit-enable-btn--large: true;
 
 $inuit-enable-table--small: true;
 
+// relocate font-awesome path
+$fa-font-path: "../../resources/bower_components/font-awesome/fonts" !default;
+
 $breakpoints: (
 /* Predix breakpoints */
 "palm" "screen and (max-width: 47.9rem)",
