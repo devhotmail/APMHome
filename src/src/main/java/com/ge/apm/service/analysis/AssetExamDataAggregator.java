@@ -19,7 +19,7 @@ import webapp.framework.util.TimeUtil;
  * @author 212547631
  */
 @Component
-public class assetExamDataAggregator {
+public class AssetExamDataAggregator {
     @Autowired
     AssetClinicalRecordRepository acrr;
     @Autowired
