@@ -54,7 +54,7 @@ public class AssetsApi {
   }
 
   private ResponseEntity<Map<String, Object>> serialize(HttpServletRequest request, Map<Integer, String> types, Map<Integer, String> depts, Map<Integer, String> suppliers, Observable<Tuple7<Integer, String, Integer, Integer, Integer, Money, LocalDate>> assets, String orderBy, Integer limit, Integer start) {
-    final Observable<Tuple7<Integer, String, String, String, String, Double, LocalDate>> items = assets.map(t -> Tuple.of(t._1, t._2, types.get(t._3), Option.of(depts.get(t._4)).getOrElse(Option.of(t._4).map(Object::toString).getOrElse("")), suppliers.get(t._5), t._6.getNumber().doubleValue(), t._7));
+    final Observable<Tuple7<Integer, String, String, String, String, Double, LocalDate>> items = assets.map(t -> Tuple.of(t._1, t._2, types.get(t._3), Option.of(depts.get(t._4)).getOrElse(Option.of(t._4).map(Object::toString).getOrElse("")), Option.of(suppliers.get(t._5)).getOrElse(Option.of(t._4).map(Object::toString).getOrElse("")), t._6.getNumber().doubleValue(), t._7));
     final Map<String, Object> body = new ImmutableMap.Builder<String, Object>()
       .put("pages", new ImmutableMap.Builder<String, Object>().put("total", assets.count().toBlocking().single()).put("limit", Option.of(limit).getOrElse(Integer.MAX_VALUE)).put("start", start).build())
       .put("items", items.skip(start).limit(Option.of(limit).getOrElse(Integer.MAX_VALUE)).map(t -> new ImmutableMap.Builder<String, Object>()
