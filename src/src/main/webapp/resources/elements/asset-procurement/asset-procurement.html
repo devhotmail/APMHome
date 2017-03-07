@@ -14,14 +14,33 @@
     </div>
   </template>
   <script>
-    var colorSet = {
-      wave: { // Color of the fill wave
+    var constants = {
+      waveColor: { // Color of the fill wave
         gray: 'rgb(148, 147, 146)',
         orange: 'rgb(232, 136, 56)',
         yellow: 'rgb(236, 219, 84)'
       },
-      text: '#fff' // Text color
+      textColor: '#fff', // Text color
+      fontScale: 0.1, // Text size relatived to circle's radius
+      textTopPosition: 0.85 // Percentage of height to show text top in the asset circle
     };
+
+    function commonTextAttr(selection) {
+      selection.attr('text-anchor', 'middle')
+      .attr('fill', constants.textColor)
+      .style('user-select', 'none');
+    }
+
+    function getColorByPercent(percent) {
+      var waveColor = constants.waveColor;
+      if (percent >= 1) {
+        return waveColor.orange;
+      } else if (percent <= 0.3) {
+        return waveColor.yellow;
+      } else {
+        return waveColor.gray;
+      }
+    }
 
     function wavePath(percent, radius) {
       if (percent > 1) {
@@ -84,7 +103,7 @@
         var margin = 20;
         var diameter = Math.min.call(null, this.width, this.height);
 
-        var wrapperG = svg.append('g')
+        var wrapperGroup = svg.append('g')
         .attr('transform', d3Transform().translate(this.width / 2, this.height / 2));
 
         var pack = d3.pack()
@@ -99,7 +118,7 @@
         var nodes = pack(root).descendants();
         var view;
 
-        var assetGroup = wrapperG
+        var assetGroup = wrapperGroup
         .selectAll('g')
         .data(nodes)
         .enter().append('g')
@@ -117,13 +136,15 @@
           return d.r;
         })
         .attr('class', function(d) {
-          return d.parent ? d.children ? 'node' : 'node node--leaf' : 'node node--root';
+          return d.parent ? d.children ? 'node' : 'node node-leaf' : 'node node-root';
         })
         .attr('id', function(d) {
           return 'circle-' + d.data.id;
         })
         .attr('stroke-width', 1)
-        .attr('stroke', 'white')
+        .attr('stroke', function(d) {
+          return getColorByPercent(d.data.usage);
+        })
         .attr('fill', function(d) {
           return (d !== focus && d.parent !== focus) ? 'none' : 'black';
         })
@@ -134,8 +155,10 @@
           }
         });
 
-        assetGroup.append('g')
-        .attr('class', 'wave')
+        var waveGroup = assetGroup.append('g')
+        .attr('class', 'wave');
+
+        waveGroup
         .append('path')
         .attr('pointer-events', 'none')
         .attr('d', function(d) {
@@ -145,42 +168,53 @@
           return 'translate(' + (-d.r) + ',' + 0 + ')';
         })
         .attr('fill', function(d) {
-          var percent = d.data.usage;
-          var waveColor = colorSet.wave;
-          if (percent >= 1) {
-            return waveColor.orange;
-          } else if (percent <= 0.3) {
-            return waveColor.yellow;
-          } else {
-            return waveColor.gray;
-          }
+          return getColorByPercent(d.data.usage);
         });
 
-        var text = wrapperG.append('g')
-        .selectAll('text')
+        var textGroup = wrapperGroup
+        .append('g')
+        .attr('class', 'asset-texts')
+        .selectAll('g')
         .data(nodes)
-        .enter().append('text')
+        .enter().append('g')
+        .attr('class', function(d) {
+          return d.parent ? d.children ? 'text' : 'text text-leaf' : 'text text-root';
+        });
+
+        var textTop = textGroup
+        .append('g')
+        .attr('class', 'text-top')
+        .attr('transform', function(d) {
+          return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition + ')'
+        })
         .attr('pointer-events', 'none')
-        .attr('text-anchor', 'middle')
-        .attr('fill', colorSet.text)
-        .attr('dy', '.35em')
-        .attr('font-size', '20px')
-        .style('user-select', 'none')
-        .style('fill-opacity', function(d) {
-          return (d === root || d.parent === root) ? 1 : 0;
-        })
         .style('display', function(d) {
-          return (d === root || d.parent === root) ? 'inline' : 'none';
+          return d === root ? 'inline' : 'none';
         })
-        .text(function(d) {
-          return parseInt(d.data.usage* 100) + '%'
+        .style('fill-opacity', function(d) {
+          return d === root ? 1 : 0;
         })
+        .call(renderText);
+
+        var textCenter = textGroup
+        .append('g')
+        .attr('class', 'text-center')
+        .attr('pointer-events', 'none')
+        .style('display', function(d) {
+          return d.parent == root ? 'inline' : 'none';
+        })
+        .style('fill-opacity', function(d) {
+          return d.parent === root ? 1 : 0;
+        })
+        .call(renderText);
 
         svg.on('click', function() {
           zoom(root);
         });
 
         zoomTo([root.x, root.y, root.r * 2 + margin]);
+
+        this.scopeSubtree(this.$.chart, true);
 
         function zoom(d) {
           var focus0 = focus;
@@ -195,23 +229,37 @@
             }
           });
 
-          transition.selectAll('text')
-          .filter(function(d) {
-            return d === focus || d.parent === focus || this.style.display === 'inline';
-          })
-          .style('fill-opacity', function(d) {
-            return (d === focus || d.parent === focus) ? 1 : 0;
-          })
-          .on('start', function(d) {
-            if (d === focus || d.parent === focus) this.style.display = 'inline';
-          })
-          .on('end', function(d) {
-            if (d !== focus && d.parent !== focus) this.style.display = 'none';
-          });
-
-          transition.selectAll('circle.node--leaf')
+          transition.selectAll('circle.node-leaf')
           .attr('fill', function(d) {
             return (d !== focus && d.parent !== focus) ? 'none' : 'black';
+          });
+
+          transition.selectAll('g.text-top')
+          .filter(function(d) {
+            return d === focus || this.style.display === 'inline';
+          })
+          .style('fill-opacity', function(d) {
+            return d === focus ? 1 : 0;
+          })
+          .on('start', function(d) {
+            if (d === focus) this.style.display = 'inline';
+          })
+          .on('end', function(d) {
+            if (d !== focus) this.style.display = 'none';
+          });
+
+          transition.selectAll('g.text-center')
+          .filter(function(d) {
+            return d.parent === focus || this.style.display === 'inline';
+          })
+          .style('fill-opacity', function(d) {
+            return d.parent === focus ? 1 : 0;
+          })
+          .on('start', function(d) {
+            if (d.parent === focus) this.style.display = 'inline';
+          })
+          .on('end', function(d) {
+            if (d.parent !== focus) this.style.display = 'none';
           });
         }
 
@@ -219,9 +267,9 @@
           var k = diameter / v[2];
           view = v;
 
-          text.attr('transform', function (d) {
+          textGroup.attr('transform', function (d) {
             return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
-          })
+          });
 
           assetGroup
           .attr('transform-origin', '50% 50%')
@@ -240,7 +288,62 @@
             // return d === focus ? 0.75 : (d.parent === focus ? 1 : 0.5);
           })
           .selectAll('circle, g.wave')
-          .attr('transform', 'scale(' + k + ')');
+          .attr('transform', 'scale(' + k + ')')
+
+          // move text-top when scale changes
+          textGroup.selectAll('g.text-top')
+          .attr('transform', function(d) {
+            return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k + ')'
+          });
+        }
+        
+        function renderText(selection) {
+          // Text for asset name display
+          selection.append('text')
+          .attr('dy', '-0.35em')
+          .attr('class', 'asset-name')
+          .attr('font-size', function(d) {
+            return '20px'
+            return d.r * constants.fontScale + 'px';
+          })
+          .text(function(d) {
+            return d.data.name;
+          })
+          .call(commonTextAttr);
+
+          // Text for usage display
+          selection.append('text')
+          .attr('y', function(d) {
+            return d.r * 0.1;
+          })
+          .attr('font-size', function(d) {
+            return '20px'
+            return d.r * constants.fontScale * 0.8 + 'px';
+          })
+          .text(function(d) {
+            return '平均使用率预测' + parseInt(d.data.usage * 100) + '%';
+          })
+          .call(commonTextAttr);
+
+          // Text for overload assets
+          selection.append('text')
+          .attr('y', function(d) {
+            return d.r * 0.25;
+          })
+          .attr('font-size', function(d) {
+            return '20px'
+            return d.r * constants.fontScale * 0.8 + 'px';
+          })
+          .text(function(d) {
+            var overload = 0;
+            if (Array.isArray(d.children)) {
+              overload = d.children.filter(function(n) {
+                return n.data.usage > 1
+              }).length;
+            }
+            return overload > 0 ? overload + '单台使用率预测 > 100%' : null;
+          })
+          .call(commonTextAttr);
         }
       },
       ready: function() {

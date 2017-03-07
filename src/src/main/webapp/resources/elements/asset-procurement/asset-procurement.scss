@@ -6,3 +6,12 @@
     user-select: none;
   }
 }
+
+.asset-texts {
+  .text-root {
+    .text-top text:not(.asset-name),
+    .text-center {
+      display: none;
+    }
+  }
+}
