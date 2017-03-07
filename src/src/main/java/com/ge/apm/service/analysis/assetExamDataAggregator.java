@@ -6,6 +6,8 @@ import com.ge.apm.dao.AssetClinicalRecordRepository;
 import com.ge.apm.dao.AssetSummitRepository;
 import com.ge.apm.domain.AssetSummit;
 import com.ge.apm.pojo.AssetClinicalRecordPojo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +18,8 @@ import java.util.*;
  * @author 212547631
  */
 @Component
-public class assetExamDataAggregator {
+public class AssetExamDataAggregator {
+    private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     AssetClinicalRecordRepository acrr;
     @Autowired
@@ -30,6 +33,8 @@ public class assetExamDataAggregator {
             HashMap<String,AssetClinicalRecordPojo> hm1= new HashMap<String,AssetClinicalRecordPojo>();
             HashMap<String,AssetSummit> hm2= new HashMap<String,AssetSummit>();
             List<AssetClinicalRecordPojo> acrplist = acrr.getAssetExamDataAggregator();
+            logger.info("Asset Clinical Record size {}",acrplist.size());
+
             //初始化hm1 key
             for(AssetClinicalRecordPojo accr:acrr.getAssetExamDataAggregator()){
                 hm1.put(accr.getAssetIds()+"-"+accr.getHospitalIds()+"-"+accr.getSiteIds(),accr);
@@ -60,5 +65,13 @@ public class assetExamDataAggregator {
     }
 
     public void aggregateExamDataByAssetId(int assetId){
+    }
+
+    public void aggregateExamDataByDate(Date date1,Date date2){
+        System.out.println("aggregateExamDataByDate----->");
+        System.out.println("date1  "+date1.toString());
+        List<AssetClinicalRecordPojo> acrplist = acrr.getAssetExamDataAggregatorByDate(date1,date2);
+        System.out.println("-------->"+acrplist.size());
+
     }
 }

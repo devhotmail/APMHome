@@ -13,3 +13,5 @@ src/.classpath
 src/.settings
 src/geapm.iml
 src/src/main/webapp/WEB-INF/sun-web.xml
+.DS_Store
+.gitignore

@@ -2,25 +2,22 @@
  */
 package com.ge.apm.service.analysis;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.ge.apm.dao.AssetDepreciationRepository;
+import com.ge.apm.dao.WorkOrderStepDetailRepository;
+import com.ge.apm.domain.AssetCostStatistics;
+import com.ge.apm.domain.DownTimeAsset;
 import org.apache.commons.collections.CollectionUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Seconds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
-import com.ge.apm.dao.AssetDepreciationRepository;
-import com.ge.apm.dao.WorkOrderStepDetailRepository;
-import com.ge.apm.domain.AssetCostStatistics;
-import com.ge.apm.domain.DownTimeAsset;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *

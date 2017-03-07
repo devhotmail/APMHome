@@ -36,7 +36,7 @@
 
     <!-- <bean id="assetCostDataAggregator" class="com.ge.apm.service.analysis.AssetCostDataAggregator"/> -->
      <bean id="assetCostDataAggregator" class="com.ge.apm.service.analysis.AssetCostDataService"/>
-    <bean id="assetExamDataAggregator" class="com.ge.apm.service.analysis.assetExamDataAggregator"/>
+    <bean id="assetExamDataAggregator" class="com.ge.apm.service.analysis.AssetExamDataAggregator"/>
         
     <routeContext id="route_main" xmlns="http://camel.apache.org/schema/spring">
         <route>
