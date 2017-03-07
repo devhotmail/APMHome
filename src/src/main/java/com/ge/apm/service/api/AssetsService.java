@@ -32,14 +32,14 @@ public class AssetsService {
   }
 
   @Cacheable(cacheNames = "springCache", key = "'assetsService.findAssets.'+#siteId+'.'+#hospitalId+'.orderBy'+#orderBy")
-  public Observable<Tuple7<Integer, String, Integer, String, Integer, Money, LocalDate>> findAssets(int siteId, int hospitalId, String orderBy) {
+  public Observable<Tuple7<Integer, String, Integer, Integer, Integer, Money, LocalDate>> findAssets(int siteId, int hospitalId, String orderBy) {
     return db
       .select(new SQL()
-        .SELECT("id", "name", "asset_group as type", "clinical_dept_name as dept", "supplier_id as supplier", "purchase_price as price", "arrive_date as yoa")
+        .SELECT("id", "name", "asset_group as type", "clinical_dept_id as dept", "supplier_id as supplier", "purchase_price as price", "arrive_date as yoa")
         .FROM("asset_info")
         .WHERE("site_id = :site_id").WHERE("hospital_id = :hospital_id").ORDER_BY(Option.of(orderBy).getOrElse("id")).toString())
       .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
-      .getAs(Integer.class, String.class, Integer.class, String.class, Integer.class, Double.class, LocalDate.class)
+      .getAs(Integer.class, String.class, Integer.class, Integer.class, Integer.class, Double.class, LocalDate.class)
       .map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4(), t._5(), CNY.money(Option.of(t._6()).getOrElse(0D)), Option.of(t._7()).getOrElse(LocalDate.now())))
       .cache();
   }

@@ -49,12 +49,12 @@ public class AssetsApi {
     Map<Integer, String> types = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> suppliers = commonService.findSuppliers(user.getSiteId());
-    Observable<Tuple7<Integer, String, Integer, String, Integer, Money, LocalDate>> assets = assetsService.findAssets(user.getSiteId(), user.getHospitalId(), orderBy);
+    Observable<Tuple7<Integer, String, Integer, Integer, Integer, Money, LocalDate>> assets = assetsService.findAssets(user.getSiteId(), user.getHospitalId(), orderBy);
     return serialize(request, types, depts, suppliers, assets, orderBy, limit, start);
   }
 
-  private ResponseEntity<Map<String, Object>> serialize(HttpServletRequest request, Map<Integer, String> types, Map<Integer, String> depts, Map<Integer, String> suppliers, Observable<Tuple7<Integer, String, Integer, String, Integer, Money, LocalDate>> assets, String orderBy, Integer limit, Integer start) {
-    final Observable<Tuple7<Integer, String, String, String, String, Double, LocalDate>> items = assets.map(t -> Tuple.of(t._1, t._2, types.get(t._3), t._4, suppliers.get(t._5), t._6.getNumber().doubleValue(), t._7));
+  private ResponseEntity<Map<String, Object>> serialize(HttpServletRequest request, Map<Integer, String> types, Map<Integer, String> depts, Map<Integer, String> suppliers, Observable<Tuple7<Integer, String, Integer, Integer, Integer, Money, LocalDate>> assets, String orderBy, Integer limit, Integer start) {
+    final Observable<Tuple7<Integer, String, String, String, String, Double, LocalDate>> items = assets.map(t -> Tuple.of(t._1, t._2, types.get(t._3), Option.of(depts.get(t._4)).getOrElse(Option.of(t._4).map(Object::toString).getOrElse("")), suppliers.get(t._5), t._6.getNumber().doubleValue(), t._7));
     final Map<String, Object> body = new ImmutableMap.Builder<String, Object>()
       .put("pages", new ImmutableMap.Builder<String, Object>().put("total", assets.count().toBlocking().single()).put("limit", Option.of(limit).getOrElse(Integer.MAX_VALUE)).put("start", start).build())
       .put("items", items.skip(start).limit(Option.of(limit).getOrElse(Integer.MAX_VALUE)).map(t -> new ImmutableMap.Builder<String, Object>()
