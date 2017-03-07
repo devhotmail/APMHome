@@ -6,15 +6,15 @@ import com.ge.apm.dao.AssetClinicalRecordRepository;
 import com.ge.apm.dao.AssetSummitRepository;
 import com.ge.apm.domain.AssetSummit;
 import com.ge.apm.pojo.AssetClinicalRecordPojo;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
-import org.joda.time.DateTime;
 import webapp.framework.broker.SiBroker;
 import webapp.framework.util.TimeUtil;
+
+import java.util.*;
 
 /**
  *
@@ -70,11 +70,12 @@ public class AssetExamDataAggregator {
     public void aggregateExamDataByAssetId(int assetId){
     }
 
-    public void aggregateExamDataByDate(Date date1,Date date2){
+    public void aggregateExamDataByDate(Date date1,Date date2) {
         System.out.println("aggregateExamDataByDate----->");
-        System.out.println("date1  "+date1.toString());
-        List<AssetClinicalRecordPojo> acrplist = acrr.getAssetExamDataAggregatorByDate(date1,date2);
-        System.out.println("-------->"+acrplist.size());
+        System.out.println("date1  " + date1.toString());
+        List<AssetClinicalRecordPojo> acrplist = acrr.getAssetExamDataAggregatorByDate(date1, date2);
+        System.out.println("-------->" + acrplist.size());
+    }
 
     
     public void test(){
