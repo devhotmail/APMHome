@@ -1,4 +1,28 @@
-#chart {
+:host {
+  width: 100%;
+  display: flex;
+}
+
+$related-info-width: 260px;
+$kpi-legend-width: 25px;
+$gap: 10px;
+
+$gray: rgb(148, 147, 146);
+$orange: rgb(232, 136, 56);
+$yellow: rgb(236, 219, 84);
+$color-set: $orange $yellow $gray;
+
+.asset-texts {
+  .text-root {
+    .text-top text:not(.asset-name),
+    .text-center {
+      display: none;
+    }
+  }
+}
+
+#chart { 
+  width: calc(100% - #{$related-info-width});
   height: calc(100vh - 30px);
   background-color: #000;
 
@@ -7,11 +31,56 @@
   }
 }
 
-.asset-texts {
-  .text-root {
-    .text-top text:not(.asset-name),
-    .text-center {
-      display: none;
+.related-info {
+  width: $related-info-width;
+  margin-top: 100px;
+  padding: 40px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.type-select {
+  input[type=radio] {
+    display: none;
+  }
+
+  .btn {
+    width: 120px;
+    display: block;
+  }
+}
+
+px-dropdown {
+  width: 180px;
+  margin-bottom: 30px;
+}
+
+.kpis {
+  .kpi {
+    display: flex;
+    align-items: center;
+    margin-top: 50px;
+    font-size: 16px;
+    
+    &::before {
+      display: inline-block;
+      content: '';
+      width: $kpi-legend-width;
+      height: $kpi-legend-width;
+      margin-right: $gap;
+      border-radius: 50%;
+      background-color: $yellow;
     }
+
+    @each $num in (1,2,3) {
+      &.kpi-#{$num - 1}::before {
+        background-color: nth($color-set, $num);
+      }
+    }
+  }
+
+  .kpi-detail {
+    margin-left: $kpi-legend-width + $gap;
   }
 }

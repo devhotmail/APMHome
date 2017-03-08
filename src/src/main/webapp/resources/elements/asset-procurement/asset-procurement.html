@@ -12,6 +12,45 @@
     <div id="chart" class="chart-container">
       <svg id="svg" width$="[[width]]" height$="[[height]]"></svg>
     </div>
+    <div class="related-info">
+      <div class="type-select btn-group">
+        <template is="dom-repeat" items="[[selectOpts]]">
+          <input
+            type="radio"
+            id$="opt-[[index]]"
+            value="[[item.val]]"
+            name="select-opts"
+            checked="[[_isChecked(item)]]"
+            on-click="handleSelect">
+          <label class="btn u-mb" for$="opt-[[index]]">
+            [[item.key]]
+          </label>
+        </template>
+      </div>
+      <div class="kpis">
+        <template is="dom-if" if="[[currentKPIs.length]]">
+          <template is="dom-repeat" items="[[currentKPIs]]">
+            <div class$="kpi kpi-[[index]]">
+              使用率预测&gt;100%
+            </div>
+            <div class="kpi-detail">
+              <template is="dom-if" if="{{item.conclusion.group}}">
+                <h1>[[item.conclusion.group]]类型</h1>
+              </template>
+              <template is="dom-if" if="{{item.conclusion.single}}">
+                <h1>[[item.conclusion.single]]台设备</h1>
+              </template>
+            </div>
+          </template>
+        </template>
+        当前设备:
+        <h2>[[focus.data.name]]</h2>
+        当前平均使用率预测:
+        <h2>[[focus.data.usage]]</h2>
+        当前建议为
+        <h2>建议购买一台新设备</h2>
+      </div>
+    </div>
   </template>
   <script>
     var constants = {
@@ -24,6 +63,33 @@
       fontScale: 0.1, // Text size relatived to circle's radius
       textTopPosition: 0.85 // Percentage of height to show text top in the asset circle
     };
+
+    var sectionalizer = [
+      {
+        key: 'orange',
+        loadStatus: 'high',
+        desc: '使用率预测&gt;100%',
+        filter: function(n) {
+          return n >= 1;
+        }
+      },
+      {
+        key: 'yellow',
+        loadStatus: 'low',
+        desc: '使用率预测&rt;30%',
+        filter: function(n) {
+          return n <= 0.3;
+        }
+      },
+      {
+        key: 'gray',
+        loadStatus: 'normal',
+        desc: '30%&lt;使用率预测&lt;100%',
+        filter: function(n) {
+          return n > 0.3 && n < 1;
+        }
+      }
+    ];
 
     function commonTextAttr(selection) {
       selection.attr('text-anchor', 'middle')
@@ -70,7 +136,32 @@
       properties: {
         width: Number,
         height: Number,
-        data: Object
+        data: Object,
+        focus: {
+          type: Object
+        },
+        currentKPIs: {
+          type: Array,
+          computed: 'getCurrentKPIs(focus)'
+        },
+        selectOpts: {
+          type: Array,
+          readOnly: true,
+          value: [
+            {
+              'key': '按设备类型',
+              'val': 'type'
+            },
+            {
+              'key': '按科室',
+              'val': 'dept'
+            }
+          ]
+        },
+        selectedOpt: {
+          type: String,
+          value: 'type'
+        }
       },
       behaviors: [
         Polymer.IronResizableBehavior
@@ -81,17 +172,65 @@
       observers: [
         'redraw(width, height, data)'
       ],
+      getCurrentKPIs: function(focus) {
+        var conclusion = focus.data.conclusion;
+        if (!conclusion) return [];
+
+        return Object.keys(conclusion).map(function(n) {
+          return {
+            color: n,
+            conclusion: conclusion[n]
+          }
+        });
+      },
+      _isChecked: function(n) {
+        return n.val == this.selectedOpt;
+      },
+      handleSelect: function(e) {
+        this.set('selectedOpt', e.target.value);
+      },
       handleResize: function() {
         var rect = this.$.chart.getBoundingClientRect();
         this.set('width', rect.width);
         this.set('height', rect.height);
+      },
+      conclude: function(data) {
+        // get conclusion for children in 1st layer
+        data.children = data.children.map(function(m) {
+          m.conclusion = sectionalizer.reduce(function(prev,next) {
+            prev[next.loadStatus] = {};
+            prev[next.loadStatus].single = m.children.filter(function(i) {
+              return next.filter(i.usage);
+            }).length;
+            return prev;
+          }, {});
+          return m;
+        });
+
+        // get conclusion for root
+        data.conclusion = sectionalizer.reduce(function(prev, next) {
+          prev[next.loadStatus] = {};
+          var result = data.children.reduce(function(pr, ne) {
+            pr = pr + ne.conclusion[next.loadStatus].single;
+            return pr;
+          }, 0);
+          prev[next.loadStatus].single = result;
+
+          prev[next.loadStatus].group = data.children.filter(function(i) {
+            return next.filter(i.usage);
+          }).length;
+          
+          return prev;
+        }, {});
+
+        return data;
       },
       loadData: function() {
         return fetch('mock/asset-procurement.json')
         .then(function(res) {
           return res.json();
         }).then((function(data) {
-          this.data = data;
+          this.data = this.conclude(data);
         }).bind(this));
       },
       redraw: function() {
@@ -115,6 +254,7 @@
         .sort(function(a, b) { return b.value - a.value; })
 
         var focus = root;
+        this.set('focus', focus);
         var nodes = pack(root).descendants();
         var view;
 
@@ -221,9 +361,12 @@
 
         this.scopeSubtree(this.$.chart, true);
 
+        var _this = this;
+
         function zoom(d) {
           var focus0 = focus;
           focus = d;
+          _this.set('focus', focus);
 
           var transition = d3.transition()
           .duration(d3.event.altKey ? 7500 : 750)
@@ -322,7 +465,7 @@
             return d.r * 0.1;
           })
           .attr('font-size', function(d) {
-            return '20px'
+            return '16px'
             return d.r * constants.fontScale * 0.8 + 'px';
           })
           .text(function(d) {
@@ -336,7 +479,7 @@
             return d.r * 0.25;
           })
           .attr('font-size', function(d) {
-            return '20px'
+            return '16px'
             return d.r * constants.fontScale * 0.8 + 'px';
           })
           .text(function(d) {
@@ -346,7 +489,7 @@
                 return n.data.usage > 1
               }).length;
             }
-            return overload > 0 ? overload + '单台使用率预测 > 100%' : null;
+            return overload > 0 ? overload + '台使用率预测 > 100%' : null;
           })
           .call(commonTextAttr);
         }
