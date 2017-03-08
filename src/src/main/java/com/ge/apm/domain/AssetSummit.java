@@ -1,19 +1,9 @@
 package com.ge.apm.domain;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -59,7 +49,7 @@ public class AssetSummit implements Serializable {
     @Column(name = "expose_count")
     private Double exposeCount;
     @Column(name = "film_count")
-    private Integer filmCount;
+    private Long filmCount;
     @Column(name = "exam_count")
     private Integer examCount;
     @Column(name = "exam_duration")
@@ -179,11 +169,11 @@ public class AssetSummit implements Serializable {
         this.exposeCount = exposeCount;
     }
 
-    public Integer getFilmCount() {
+    public Long getFilmCount() {
         return filmCount;
     }
 
-    public void setFilmCount(Integer filmCount) {
+    public void setFilmCount(Long filmCount) {
         this.filmCount = filmCount;
     }
 
@@ -199,7 +189,7 @@ public class AssetSummit implements Serializable {
         return examDuration;
     }
 
-    public void setExamDuration(Integer examDuration) {
+    public void setExamDuration(int examDuration) {
         this.examDuration = examDuration;
     }
 
@@ -275,5 +265,5 @@ public class AssetSummit implements Serializable {
     public String toString() {
         return "com.ge.apm.domain.AssetSummit[ id=" + id + " ]";
     }
-    
+
 }
