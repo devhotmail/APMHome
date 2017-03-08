@@ -6,6 +6,8 @@ import com.ge.apm.dao.AssetClinicalRecordRepository;
 import com.ge.apm.dao.AssetSummitRepository;
 import com.ge.apm.domain.AssetSummit;
 import com.ge.apm.pojo.AssetClinicalRecordPojo;
+import com.jcraft.jsch.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -78,7 +80,8 @@ public class AssetExamDataAggregator {
         DateTime dtTo = TimeUtil.toJodaDate(toDate).plusDays(1);
 
         while(dtFrom.isBefore(dtTo)){
-            params.put("theDate", TimeUtil.toString(dtFrom.toDate(), 0, "yyyy-MM-dd"));
+            //params.put("theDate", TimeUtil.toString(dtFrom.toDate(), 0, "yyyy-MM-dd"));
+            params.put("theDate", dtFrom.toDate());
             SiBroker.sendMessageWithHeaders("direct:initAssetAggregationDataByDateRange", null, params);
             dtFrom = dtFrom.plusDays(1);
         }
