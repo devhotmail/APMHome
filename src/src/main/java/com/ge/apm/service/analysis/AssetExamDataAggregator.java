@@ -24,38 +24,38 @@ import java.util.*;
 public class AssetExamDataAggregator {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
-    AssetClinicalRecordRepository acrr;
+    AssetClinicalRecordRepository assetClinicalRecordRepository;
     @Autowired
-    AssetSummitRepository asmr;
-    /*以examdate,siteid,hospitalid,assetid聚合clinical_record的priceAmount等数据，
-    并更新至asset_summit的revenue
-    PostgreSQL的update不支持双表语法, 使用两个hashmap来减少嵌套for循环的关联数据的查询
-    */
-    public void aggregateExamData(){
-        {
-            HashMap<String,AssetClinicalRecordPojo> hm1= new HashMap<String,AssetClinicalRecordPojo>();
-            HashMap<String,AssetSummit> hm2= new HashMap<String,AssetSummit>();
-            List<AssetClinicalRecordPojo> acrplist = acrr.getAssetExamDataAggregator();
-            logger.info("Asset Clinical Record size {}",acrplist.size());
+    AssetSummitRepository assetSummitRepository;
 
-            //初始化hm1 key
-            for(AssetClinicalRecordPojo accr:acrr.getAssetExamDataAggregator()){
-                hm1.put(accr.getAssetIds()+"-"+accr.getHospitalIds()+"-"+accr.getSiteIds(),accr);
-            }
-            //  List<AssetSummit> asmList = asmr.getAssetSummit();
+    /*以examdate,siteid,hospitalid,assetid聚合clinical_record的priceAmount等数据，
+      并更新至asset_summit的revenue
+      PostgreSQL的update不支持双表语法, 使用两个hashmap来减少嵌套for循环的关联数据的查询
+      */
+    public String operatorAggregator(List<AssetClinicalRecordPojo> acrpList){
+        HashMap<String,AssetClinicalRecordPojo> hmRepo= new HashMap<String,AssetClinicalRecordPojo>();
+        HashMap<String,AssetSummit> hmSumit= new HashMap<String,AssetSummit>();
+        //初始化hmRepo key
+        List<AssetSummit> summitList=assetSummitRepository.getAssetSummit();
+        for(AssetClinicalRecordPojo accr:acrpList){
+            hmRepo.put(accr.getAssetIds()+"-"+accr.getHospitalIds()+"-"+accr.getSiteIds()+":"+accr.getExamDate(),accr);
+        }
+
+        //初始化hm2 key
+        for(AssetSummit asm :summitList){
+            hmSumit.put(asm.getAssetId()+"-"+asm.getHospitalId()+"-"+asm.getSiteId()+":"+asm.getCreated(),asm);
+        }
+
+        //hmRepo 是 clinical_record表 hmSumit是_summit表索引  两个key都为assetid-hospitalid-siteid
+        try {
             List<AssetSummit> asmupdateList= new ArrayList<AssetSummit>();
-            //初始化hm2 key
-            for(AssetSummit asm :asmr.getAssetSummit()){
-                hm2.put(asm.getAssetId()+"-"+asm.getHospitalId()+"-"+asm.getSiteId(),asm);
-            }
-            //hm1 是 clinical_record表 hm2是_summit表  两个key都为assetid-hospitalid-siteid
-            Iterator iter =hm1.entrySet().iterator();
+            Iterator iter =hmRepo.entrySet().iterator();
             while(iter.hasNext()){
                 Map.Entry entry = (Map.Entry) iter.next();
                 Object key = entry.getKey();
-                if(hm2.containsKey(key)){
-                    AssetClinicalRecordPojo accrp = hm1.get(key);
-                    AssetSummit asm = hm2.get(key);
+                if(hmSumit.containsKey(key)){
+                    AssetClinicalRecordPojo accrp = hmRepo.get(key);
+                    AssetSummit asm = hmSumit.get(key);
                     asm.setRevenue(accrp.getPriceAmounts());
                     asm.setExposeCount(accrp.getExposeCounts());
                     asm.setFilmCount(accrp.getFilmCounts());
@@ -63,28 +63,43 @@ public class AssetExamDataAggregator {
                     asmupdateList.add(asm);
                 }
             }
-            asmr.save(asmupdateList);
+            assetSummitRepository.save(asmupdateList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "failure";
         }
+        return "success";
+    }
+
+
+    public String aggregateExamData(){
+            List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregator();
+            logger.info("Asset Clinical Record size {}",acrpList.size());
+            operatorAggregator(acrpList);
+        return "success";
     }
 
     public void aggregateExamDataByAssetId(int assetId){
     }
 
-    public void aggregateExamDataByDate(Date date1,Date date2) {
-        System.out.println("aggregateExamDataByDate----->");
-        System.out.println("date1  " + date1.toString());
-        List<AssetClinicalRecordPojo> acrplist = acrr.getAssetExamDataAggregatorByDate(date1, date2);
-        System.out.println("-------->" + acrplist.size());
+    public void aggregateExamDataByRangeDate(Date from,Date to) {
+        List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.aggreateAssetByRange(from,to);
     }
 
-    
+    public void aggregateExamDataByDay(Date date) {
+        List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregatorByDate(date);
+        operatorAggregator(acrpList);
+
+    }
+
+
     public void test(){
         DateTime dtFrom = TimeUtil.timeNow().minusDays(100);
         DateTime dtTo = dtFrom.plusDays(5);
-        
+
         initAssetAggregationDataByDateRange(dtFrom.toDate(), dtTo.toDate());
     }
-    
+
     public void initAssetAggregationDataByDateRange(Date fromDate, Date toDate){
         HashMap<String, Object> params = new HashMap<String, Object>();
         DateTime dtFrom = TimeUtil.toJodaDate(fromDate);
@@ -95,6 +110,6 @@ public class AssetExamDataAggregator {
             SiBroker.sendMessageWithHeaders("direct:initAssetAggregationDataByDateRange", null, params);
             dtFrom = dtFrom.plusDays(1);
         }
-        
+
     }
 }

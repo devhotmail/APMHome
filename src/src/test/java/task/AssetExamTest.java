@@ -29,20 +29,30 @@ public class AssetExamTest extends BaseJunit4Test{
 
     @Test
     @Transactional
-    @Rollback(true)
+    @Rollback(false)
     public void testAggregateExamDataByDate()throws Exception{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date1 = sdf.parse("2014-11-10");
-        Date date2 = sdf.parse("2015-09-18");
-        System.out.println("assetClinicalRecordRepository.getAssetExamDataAggregatorByDate(date1,date2)-- "+assetClinicalRecordRepository.getAssetExamDataAggregatorByDate(date1,date2).size());
-
+        Date from = sdf.parse("2014-11-10");
+        Date to = sdf.parse("2015-09-18");
+        assetExamDataAggregator.aggregateExamDataByRangeDate(from,to);
     }
     @Test
     @Transactional
-    @Rollback(true)
-    public void testAggregateExamData()throws Exception{
-        System.out.println(" assetClinicalRecordRepository.getAssetExamDataAggregator()  "+ assetClinicalRecordRepository.getAssetExamDataAggregator().size());
+    @Rollback(false)
+    public void testAggregateExamDataByDay()throws Exception{
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse("2017-03-07");
+        assetExamDataAggregator.aggregateExamDataByDay(date);
 
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void testAggregateExamData()throws Exception{
+
+        assetExamDataAggregator.aggregateExamData();
+        //    assetExamDataAggregator.aggregateExamData__bak();
 
     }
 

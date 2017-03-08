@@ -1,5 +1,7 @@
 package com.ge.apm.pojo;
 
+import java.util.Date;
+
 /**
  * Created by lsg on 22/2/2017.
  */
@@ -11,6 +13,7 @@ public class AssetClinicalRecordPojo {
     private int siteIds;
     private int hospitalIds;
     private  int assetIds;
+    private Date examDate;
 
     private Long examDurations;
     private Double priceAmounts;
@@ -18,15 +21,26 @@ public class AssetClinicalRecordPojo {
     private Double exposeCounts;
     private Long filmCounts;
 
-    public AssetClinicalRecordPojo(int siteIds, int hospitalIds, int assetIds, Long examDurations, Double priceAmounts, Double injectCounts, Double exposeCounts, Long filmCounts) {
+    public AssetClinicalRecordPojo(int siteIds, int hospitalIds, int assetIds,Date examDate, Long examDurations, Double priceAmounts, Double injectCounts, Double exposeCounts, Long filmCounts) {
         this.siteIds = siteIds;
         this.hospitalIds = hospitalIds;
         this.assetIds = assetIds;
+        this.examDate=examDate;
+
         this.examDurations = examDurations;
         this.priceAmounts = priceAmounts;
         this.injectCounts = injectCounts;
         this.exposeCounts = exposeCounts;
         this.filmCounts = filmCounts;
+
+    }
+
+    public Date getExamDate() {
+        return examDate;
+    }
+
+    public void setExamDate(Date examDate) {
+        this.examDate = examDate;
     }
 
     public int getSiteIds() {
