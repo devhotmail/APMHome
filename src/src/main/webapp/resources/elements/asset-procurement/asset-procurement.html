@@ -9,6 +9,18 @@
 <dom-module id="asset-procurement">
   <template>
     <style include="asset-procurement-styles"></style>
+    <svg style="position:absolute;width:0;height:0;visibility:hidden">
+      <defs>
+        <symbol id="icon-adjust" viewBox="0 0 1792 1792">
+          <path d="M896 1440v-1088q-148 0-273 73t-198 198-73 273 73 273 198 198 273 73zm768-544q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z" />
+        </symbol>
+        <symbol>
+          <svg id="icon-clock" viewBox="0 0 1792 1792">
+            <path d="M1024 544v448q0 14-9 23t-23 9h-320q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h224v-352q0-14 9-23t23-9h64q14 0 23 9t9 23zm416 352q0-148-73-273t-198-198-273-73-273 73-198 198-73 273 73 273 198 198 273 73 273-73 198-198 73-273zm224 0q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z" />
+          </svg>
+        </symbol>
+      </defs>
+    </svg>
     <div id="chart" class="chart-container">
       <svg id="svg" width$="[[width]]" height$="[[height]]"></svg>
     </div>
@@ -28,6 +40,12 @@
         </template>
       </div>
       <div class="kpis">
+        当前设备:
+        <h2>[[focus.data.name]]</h2>
+        当前平均使用率预测:
+        <h2>[[focus.data.usage]]</h2>
+        当前建议为
+        <h2>建议购买一台新设备</h2>
         <template is="dom-if" if="[[currentKPIs.length]]">
           <template is="dom-repeat" items="[[currentKPIs]]">
             <div class$="kpi kpi-[[index]]">
@@ -35,7 +53,7 @@
             </div>
             <div class="kpi-detail">
               <template is="dom-if" if="{{item.conclusion.group}}">
-                <h1>[[item.conclusion.group]]类型</h1>
+                <h1>[[item.conclusion.group]][[selectOptsZh]]</h1>
               </template>
               <template is="dom-if" if="{{item.conclusion.single}}">
                 <h1>[[item.conclusion.single]]台设备</h1>
@@ -43,12 +61,20 @@
             </div>
           </template>
         </template>
-        当前设备:
-        <h2>[[focus.data.name]]</h2>
-        当前平均使用率预测:
-        <h2>[[focus.data.usage]]</h2>
-        当前建议为
-        <h2>建议购买一台新设备</h2>
+      </div>
+      <div class="legends">
+        <div class="legend">
+          <span>
+            <svg class="svg-icon"><use xlink:href="#icon-adjust"></use></svg>
+          </span>
+          <span class="legend-tip">平均使用率预测(%)</span>
+        </div>
+        <div class="legend">
+          <span>
+            <svg class="svg-icon"><use xlink:href="#icon-clock"></use></svg>
+          </span>
+          <span class="legend-tip">使用率预测超过100%的设备(台)</span>
+        </div>
       </div>
     </div>
   </template>
@@ -149,18 +175,24 @@
           readOnly: true,
           value: [
             {
-              'key': '按设备类型',
-              'val': 'type'
+              key: '按设备类型',
+              val: 'type',
+              zh: '类型'
             },
             {
-              'key': '按科室',
-              'val': 'dept'
+              key: '按科室',
+              val: 'dept',
+              zh: '科室'
             }
           ]
         },
         selectedOpt: {
           type: String,
           value: 'type'
+        },
+        selectOptsZh: {
+          type: String,
+          computed: '_getSelectOptsZh(selectedOpt)'
         }
       },
       behaviors: [
@@ -170,8 +202,21 @@
         'iron-resize': 'handleResize'
       },
       observers: [
-        'redraw(width, height, data)'
+        'redraw(width, height, data)',
+        'changeQuery(selectedOpt)'
       ],
+      changeQuery: function(selectedOpt) {
+        var uri = URI('').addQuery('groupby', selectedOpt);
+        var new_hash = uri.query();
+        location.hash = '#' + new_hash;
+      },
+      _getSelectOptsZh: function(opt) {
+        var pos = this.selectOpts.map(function(n) {
+          return n.val;
+        }).indexOf(opt);
+        var index = pos > -1 ? pos : 0;
+        return this.selectOpts[index].zh;
+      },
       getCurrentKPIs: function(focus) {
         var conclusion = focus.data.conclusion;
         if (!conclusion) return [];
@@ -225,8 +270,9 @@
 
         return data;
       },
-      loadData: function() {
-        return fetch('mock/asset-procurement.json')
+      loadData: function(obj) {
+        var groupby = (obj && obj.groupby) ? obj.groupby : this.selectOpts[0].val;
+        return fetch('mock/asset-procurement.json' + '?groupby=' + groupby)
         .then(function(res) {
           return res.json();
         }).then((function(data) {
@@ -494,8 +540,26 @@
           .call(commonTextAttr);
         }
       },
-      ready: function() {
-        this.loadData();
+      reloadData: function(e) {
+        var hashObj = this.getFragObj(e.newURL.href);
+        this.loadData(hashObj);        
+      },
+      getFragObj: function(url) {
+        var fragment = new URI(window.location.href).fragment();
+        if (!fragment) return null;
+        return fragment.split('&').reduce(function(prev, next) {
+          var result = next.split('=');
+          prev[result[0]] = result[1];
+          return prev;
+        }, {});
+      },
+      ready: function() {        
+        var hashObj = this.getFragObj(window.location.href);
+        this.loadData(hashObj);
+        window.addEventListener('hashchange', this.reloadData.bind(this));
+      },
+      detached: function() {
+        window.removeEventListener('hashchange', this.reloadData.bind(this));
       }
     })
   </script>
