@@ -36,14 +36,16 @@
         <h2>建议购买一台新设备</h2>
         <template is="dom-if" if="[[currentKPIs.length]]">
           <template is="dom-repeat" items="[[currentKPIs]]">
-            <div class$="kpi kpi-[[index]]">
-              使用率预测&gt;100%
-            </div>
+            <template is="dom-if" if="[[showKpi(item.conclusion)]]">
+              <div class$="kpi kpi-[[index]]">
+                [[item.desc]]
+              </div>
+            </template>
             <div class="kpi-detail">
-              <template is="dom-if" if="{{item.conclusion.group}}">
+              <template is="dom-if" if="[[item.conclusion.group]]">
                 <h1>[[item.conclusion.group]][[selectOptsZh]]</h1>
               </template>
-              <template is="dom-if" if="{{item.conclusion.single}}">
+              <template is="dom-if" if="[[item.conclusion.single]]">
                 <h1>[[item.conclusion.single]]台设备</h1>
               </template>
             </div>
@@ -78,7 +80,7 @@
       {
         key: 'orange',
         loadStatus: 'high',
-        desc: '使用率预测&gt;100%',
+        desc: '使用率预测>100%',
         filter: function(n) {
           return n >= 1;
         }
@@ -86,7 +88,7 @@
       {
         key: 'yellow',
         loadStatus: 'low',
-        desc: '使用率预测&rt;30%',
+        desc: '使用率预测<30%',
         filter: function(n) {
           return n <= 0.3;
         }
@@ -94,7 +96,7 @@
       {
         key: 'gray',
         loadStatus: 'normal',
-        desc: '30%&lt;使用率预测&lt;100%',
+        desc: '30%<使用率预测<100%',
         filter: function(n) {
           return n > 0.3 && n < 1;
         }
@@ -176,7 +178,7 @@
         },
         selectOptsZh: {
           type: String,
-          computed: '_getSelectOptsZh(selectedOpt)'
+          computed: 'getSelectOptsZh(selectedOpt)'
         }
       },
       behaviors: [
@@ -194,20 +196,35 @@
         var new_hash = uri.query();
         location.hash = '#' + new_hash;
       },
-      _getSelectOptsZh: function(opt) {
+      getSelectOptsZh: function(opt) {
         var pos = this.selectOpts.map(function(n) {
           return n.val;
         }).indexOf(opt);
         var index = pos > -1 ? pos : 0;
         return this.selectOpts[index].zh;
       },
+      showKpi: function(conclusion) {
+        return conclusion.group || conclusion.single;
+      },
       getCurrentKPIs: function(focus) {
         var conclusion = focus.data.conclusion;
         if (!conclusion) return [];
 
+        function findDesc(status) {
+          var k = 0;
+          while(k < sectionalizer.length) {
+            if (sectionalizer[k].loadStatus === status) {
+              return sectionalizer[k].desc;
+            }
+            k++;
+          }
+          return '';
+        }
+
         return Object.keys(conclusion).map(function(n) {
           return {
-            color: n,
+            loadStatus: n,
+            desc: findDesc(n),
             conclusion: conclusion[n]
           }
         });
@@ -267,6 +284,14 @@
         this.$.svg.innerHTML = '';
         this.debounce('redraw', this.render, 500);
       },
+      nodeAdaptor: function(nodes) {
+        return nodes.map(function(n) {
+          if (n.parent && n.parent.children.length === 1) {
+            n.r = n.r * 0.8;
+          }
+          return n;
+        })
+      },
       render: function() {
         var svg = d3.select(this.$.svg);
         var margin = 20;
@@ -283,10 +308,13 @@
         .sum(function(d) { return d.size; })
         .sort(function(a, b) { return b.value - a.value; })
 
-        var focus = root;
-        this.set('focus', focus);
         var nodes = pack(root).descendants();
+        var focus = root;
         var view;
+
+        this.set('focus', focus);
+        // adaptor for those nodes which has a single child
+        nodes = this.nodeAdaptor(nodes);
 
         var assetGroup = wrapperGroup
         .selectAll('g')
@@ -372,7 +400,6 @@
             .attr('transform', function(d) {
               return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition + ')';
             })
-            .attr('pointer-events', 'none')
             .style('display', function(d) {
               return d === root ? 'inline' : 'none';
             })

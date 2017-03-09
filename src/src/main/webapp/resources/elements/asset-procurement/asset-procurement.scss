@@ -19,22 +19,6 @@ $color-set: $orange $yellow $gray;
       display: none;
     }
   }
-
-  // .icon {
-  //   font-family: 'FontAwesome';
-  //   display: inline-block;
-  //   font: normal normal normal 14px/1 FontAwesome;
-  //   font-size: inherit;
-  //   text-rendering: auto;
-  //   -webkit-font-smoothing: antialiased;
-  // }
-
-  // .icon-clock::before {
-  //   content: '\f017';
-  // }
-  // .icon-adjust::before {
-  //   content: '\f042';
-  // }
 }
 
 #chart { 
@@ -44,12 +28,13 @@ $color-set: $orange $yellow $gray;
 
   text {
     user-select: none;
+    pointer-events: none;
   }
 }
 
 .related-info {
   width: $related-info-width;
-  margin-top: 100px;
+  margin-top: 10vh;
   padding: 40px 10px;
   display: flex;
   flex-direction: column;
@@ -73,10 +58,11 @@ px-dropdown {
 }
 
 .kpis {
+  padding-top: 30px;
+
   .kpi {
     display: flex;
     align-items: center;
-    margin-top: 50px;
     font-size: 16px;
     
     &::before {
