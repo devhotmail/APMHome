@@ -42,13 +42,14 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         userContextService = WebUtil.getBean(UserContextService.class);
         qrCode = WebUtil.getRequestParameter("qrCode");
-        action = WebUtil.getRequestParameter("action");
         String assetId = WebUtil.getRequestParameter("assetId");
         if (null != assetId && assetId.length() > 0) {
             assetInfo = assetDao.findById(Integer.parseInt(assetId));
         } else if (qrCode != null && qrCode.length() > 0) {
             assetInfo = findAsset(qrCode);
         }
+        
+        
 
     }
 
