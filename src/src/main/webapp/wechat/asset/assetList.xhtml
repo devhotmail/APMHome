@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>#{msg.SelectOneMessage}</title>
+        <h:outputStylesheet name="wechat/weui.min.css" />
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/jquery-2.0.0.min.js"/>
+        <!--<script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/jweixin-1.0.0.js"/>-->
+
+    </h:head>
+    <body>
+        <div class="page__bd">
+            <div class="weui-panel weui-panel_access">
+                <div class="weui-panel__hd">
+                    <h:form id="assetList" >
+                        <div class="weui-search-bar__box">
+                            <i class="weui-icon-search"></i>
+                            <h:inputText  class="weui-search-bar__input" id="searchInput" value="#{wxAssetInfoController.searchStr}"   onchange="search()"/>
+                            <a href="javascript:clear()" class="weui-icon-clear" id="searchClear"></a>
+                        </div>
+                        <p:remoteCommand name="search" actionListener="#{wxAssetInfoController.onSearch}" update="dataList" />
+                    </h:form>
+                </div>
+                <div class="weui-panel__bd">
+                    <p:dataScroller id="dataList" value="#{wxAssetInfoController.getAssetList()}" var="asset" chunkSize="10" style="border: 0">
+                        <h:link  outcome="bindQRCode.xhtml" class="weui-media-box weui-media-box_appmsg">
+                            <f:param name="assetId" value="#{asset.id}"/>
+                            <f:param name="action" value="bind"/>
+                            <f:param name="qrCode" value="#{wxAssetInfoController.qrCode}" disable="#{empty wxAssetInfoController.qrCode}"/>
+                            <div class="weui-media-box__hd">
+                                <img id="icoassetGroup" class="weui-media-box__thumb icoassetGroup" src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{asset.assetGroup}.ico" />
+                            </div>
+                            <div class="weui-media-box__bd">
+                                <h4 class="weui-media-box__title">#{asset.name}</h4>
+                                <p class="weui-media-box__desc">#{asset.clinicalDeptName}</p>
+                            </div>
+                        </h:link>
+                    </p:dataScroller>
+                </div>
+            </div>
+        </div>
+
+    </body>
+    <script>
+          function clear(){
+            $("#assetList\\:searchInput").val('');
+            search();
+        }
+    </script>
+</html>
