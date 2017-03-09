@@ -9,18 +9,6 @@
 <dom-module id="asset-procurement">
   <template>
     <style include="asset-procurement-styles"></style>
-    <svg style="position:absolute;width:0;height:0;visibility:hidden">
-      <defs>
-        <symbol id="icon-adjust" viewBox="0 0 1792 1792">
-          <path d="M896 1440v-1088q-148 0-273 73t-198 198-73 273 73 273 198 198 273 73zm768-544q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z" />
-        </symbol>
-        <symbol>
-          <svg id="icon-clock" viewBox="0 0 1792 1792">
-            <path d="M1024 544v448q0 14-9 23t-23 9h-320q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h224v-352q0-14 9-23t23-9h64q14 0 23 9t9 23zm416 352q0-148-73-273t-198-198-273-73-273 73-198 198-73 273 73 273 198 198 273 73 273-73 198-198 73-273zm224 0q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z" />
-          </svg>
-        </symbol>
-      </defs>
-    </svg>
     <div id="chart" class="chart-container">
       <svg id="svg" width$="[[width]]" height$="[[height]]"></svg>
     </div>
@@ -64,15 +52,11 @@
       </div>
       <div class="legends">
         <div class="legend">
-          <span>
-            <svg class="svg-icon"><use xlink:href="#icon-adjust"></use></svg>
-          </span>
+          <i class="fa fa-clock-o" aria-hidden="true"></i>
           <span class="legend-tip">平均使用率预测(%)</span>
         </div>
         <div class="legend">
-          <span>
-            <svg class="svg-icon"><use xlink:href="#icon-clock"></use></svg>
-          </span>
+          <i class="fa fa-adjust" aria-hidden="true"></i>
           <span class="legend-tip">使用率预测超过100%的设备(台)</span>
         </div>
       </div>
@@ -494,50 +478,59 @@
         function renderText(selection) {
           // Text for asset name display
           selection.append('text')
-          .attr('dy', '-0.35em')
+          // .attr('dy', '-0.35em')
           .attr('class', 'asset-name')
-          .attr('font-size', function(d) {
-            return '20px'
-            return d.r * constants.fontScale + 'px';
-          })
+          .attr('font-size', 20)
           .text(function(d) {
             return d.data.name;
           })
           .call(commonTextAttr);
 
           // Text for usage display
-          selection.append('text')
-          .attr('y', function(d) {
-            return d.r * 0.1;
-          })
-          .attr('font-size', function(d) {
-            return '16px'
-            return d.r * constants.fontScale * 0.8 + 'px';
-          })
-          .text(function(d) {
-            return '平均使用率预测' + parseInt(d.data.usage * 100) + '%';
-          })
+          var usageTxt = selection.append('text')
+          .attr('y', 20)
+          .attr('font-size', 16)
           .call(commonTextAttr);
 
-          // Text for overload assets
-          selection.append('text')
-          .attr('y', function(d) {
-            return d.r * 0.25;
-          })
-          .attr('font-size', function(d) {
-            return '16px'
-            return d.r * constants.fontScale * 0.8 + 'px';
-          })
+          // icon: fa-adjust
+          usageTxt
+          .append('tspan')
+          .attr('font-family','FontAwesome')
+          .text('\uf017' + ' ');
+
+          usageTxt
+          .append('tspan')
           .text(function(d) {
+            return parseInt(d.data.usage * 100) + '%';
+          });
+          
+          // Text for overload assets
+          selection.each(function(d) {
             var overload = 0;
             if (Array.isArray(d.children)) {
               overload = d.children.filter(function(n) {
                 return n.data.usage > 1
               }).length;
             }
-            return overload > 0 ? overload + '台使用率预测 > 100%' : null;
+
+            if (overload > 0) {
+              var overloadTxt = d3.select(this)
+              .append('text')
+              .attr('y', 36)
+              .attr('font-size', 16)
+              .call(commonTextAttr);
+
+              // icon: fa-clock-o
+              overloadTxt
+              .append('tspan')
+              .attr('font-family','FontAwesome')
+              .text('\uf042' + ' ');
+
+              overloadTxt
+              .append('tspan')
+              .text(overload + '台');
+            }
           })
-          .call(commonTextAttr);
         }
       },
       reloadData: function(e) {
