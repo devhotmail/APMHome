@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ import java.util.Map;
  *
  * @author 212547631
  */
-//@Component
+@Component
 public class AssetCostDataAggregator {
 	
 	private final static Logger logger = LoggerFactory.getLogger(AssetCostDataAggregator.class);
@@ -34,10 +35,10 @@ public class AssetCostDataAggregator {
     private AssetDepreciationRepository depreciationDao;
 
     @Autowired
-    private WorkOrderStepDetailRepository woStepDetailDao;
-    
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+	private WorkOrderStepDetailRepository woStepDetailDao;
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
     
     private static final String QUERY_ASSET_INFO =
     		"select ai.id asset_id,ai.site_id,ai.hospital_id,ai.asset_group,ai.asset_dept_id dept_id,"+

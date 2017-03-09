@@ -33,7 +33,7 @@ public interface AssetClinicalRecordRepository extends GenericRepository<AssetCl
             "sum(filmCount) as filmCounts  ) " +
             "from AssetClinicalRecord  acr " +
             "GROUP BY acr.examDate,acr.siteId,acr.hospitalId,acr.assetId "+
-            "having exam_date > :from and exam_date < :to"
+            "having exam_date >= :from and exam_date <= :to"
     )
     public List<AssetClinicalRecordPojo> aggreateAssetByRange(@Param("from") Date date1, @Param("to") Date date2);
 

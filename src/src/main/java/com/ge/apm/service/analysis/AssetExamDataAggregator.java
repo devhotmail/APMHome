@@ -10,7 +10,6 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import webapp.framework.broker.SiBroker;
 import webapp.framework.util.TimeUtil;
 
@@ -20,7 +19,7 @@ import java.util.*;
  *
  * @author 212547631
  */
-@Component
+//@Component
 public class AssetExamDataAggregator {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
@@ -56,7 +55,7 @@ public class AssetExamDataAggregator {
                 if(hmSumit.containsKey(key)){
                     AssetClinicalRecordPojo accrp = hmRepo.get(key);
                     AssetSummit asm = hmSumit.get(key);
-                    asm.setRevenue(accrp.getPriceAmounts());
+                    asm.setRevenue((Math.round(accrp.getPriceAmounts()*100.0)/100.0));
                     asm.setExposeCount(accrp.getExposeCounts());
                     asm.setFilmCount(accrp.getFilmCounts());
                     asm.setInjectCount(accrp.getInjectCounts());
@@ -86,9 +85,10 @@ public class AssetExamDataAggregator {
         List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.aggreateAssetByRange(from,to);
     }
 
-    public void aggregateExamDataByDay(Date date) {
+    public String aggregateExamDataByDay(Date date) {
         List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregatorByDate(date);
         operatorAggregator(acrpList);
+        return "success";
 
     }
 

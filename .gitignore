@@ -1,3 +1,4 @@
+Test*.java
 src/src/main/resources/database.properties
 *.class
 *.bak
@@ -19,3 +20,6 @@ src/geapm.iml
 src/src/main/webapp/WEB-INF/sun-web.xml
 .DS_Store
 .gitignore
+log4j.properties
+MyFunTest.java
+applicationContext-test.xml
