@@ -81,10 +81,9 @@ public class AssetExamDataAggregator {
     public void aggregateExamDataByAssetId(int assetId){
     }
 
-    public String aggregateExamDataByRangeDate(Date from,Date to) {
+    public void aggregateExamDataByRangeDate(Date from,Date to) {
         List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.aggreateAssetByRange(from,to);
         operatorAggregator(acrpList);
-        return "success";
     }
 
     public String aggregateExamDataByDay(Date date) {

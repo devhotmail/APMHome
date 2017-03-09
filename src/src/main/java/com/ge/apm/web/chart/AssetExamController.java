@@ -36,7 +36,7 @@ public class AssetExamController {
     @RequestMapping(value = "/aggreFromTo", method = RequestMethod.POST)
     @ResponseBody
     public String aggreFromTo(@RequestBody BatchAssetExam batchAssetExam) {
-
+        logger.info("----aggreFromTo--batchAssetExam--bODY->"+ batchAssetExam.getFrom());
         assetExamDataService.aggrateExamebyRange(batchAssetExam);
         return "success";
     }
@@ -44,7 +44,7 @@ public class AssetExamController {
     @RequestMapping(value = "/aggreByDay", method = RequestMethod.POST)
     @ResponseBody
     public String aggreByDay(@RequestBody BatchAssetExam batchAssetExam) {
-        logger.info("----aggreFromTo--batchAssetExam--bODY->"+ batchAssetExam.getCalDay());
+
         assetExamDataService.assetExamAggregatorByday(batchAssetExam);
         return "success";
     }
