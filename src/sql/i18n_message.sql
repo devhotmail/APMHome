@@ -80,6 +80,14 @@ INSERT INTO "i18n_message" VALUES (76, 'label', 'TerminatedAsset', '报废资产
 INSERT INTO "i18n_message" VALUES (77, 'label', 'QRCodeMgmt', '设备编码', 'Asset Code', NULL, -1);
 INSERT INTO "i18n_message" VALUES (78, 'label', 'GenerateQRCodes', '生成二维码', 'Generate Code', NULL, -1);
 INSERT INTO "i18n_message" VALUES (79, 'label', 'QRCodeRefresh', '换一批', 'Refresh QRCode', NULL, -1);
+INSERT INTO "i18n_message" VALUES (80, 'label', 'GetQRCode', '扫码成功', 'Got QRCode', NULL, -1);
+INSERT INTO "i18n_message" VALUES (81, 'label', 'FoundAsset', '找到设备', 'Found asset', NULL, -1);
+INSERT INTO "i18n_message" VALUES (82, 'label', 'NotFoundAsset', '未找到设备', 'Cannot founud asset', NULL, -1);
+INSERT INTO "i18n_message" VALUES (83, 'label', 'BindAsset', '绑定已有资产', 'Binding sset', NULL, -1);
+INSERT INTO "i18n_message" VALUES (84, 'label', 'PhotoList', '照片列表', 'Photo List', NULL, -1);
+INSERT INTO "i18n_message" VALUES (85, 'label', 'ScanCode', '扫码', 'Scan Code', NULL, -1);
+INSERT INTO "i18n_message" VALUES (86, 'label', 'PictureUpload', '图片上传', 'Upload pictures', NULL, -1);
+INSERT INTO "i18n_message" VALUES (87, 'label', 'ContinueAdd', '继续添加', 'Add Next One', NULL, -1);
 
 
 -- menu item names  ( id from 200 to  399)
