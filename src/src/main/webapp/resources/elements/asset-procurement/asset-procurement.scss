@@ -13,11 +13,8 @@ $yellow: rgb(236, 219, 84);
 $color-set: $orange $yellow $gray;
 
 .asset-texts {
-  .text-root {
-    .text-top text:not(.asset-name),
-    .text-center {
-      display: none;
-    }
+  .text-root .text-center {
+    display: none;
   }
 }
 
