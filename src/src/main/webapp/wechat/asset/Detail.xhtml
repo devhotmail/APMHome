@@ -101,6 +101,7 @@ and open the template in the editor.
                 </div>
             </div>
 
+        <h:panelGroup  rendered="#{not empty wxAssetInfoController.assetInfo}" >  
             <div class="page__bd">
                 <div class="weui-cells">
                     <div class="weui-cell">
@@ -205,6 +206,22 @@ and open the template in the editor.
                     </p>
                 </div>
             </div>
+        </h:panelGroup>
+        <h:panelGroup  rendered="#{empty wxAssetInfoController.assetInfo}" >  
+            <div class="page">
+                    <div class="weui-msg">
+                        <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+                        <p>#{msg.NotFoundAsset}</p>
+                        <p>#{wxAssetInfoController.qrCode}</p>
+                        <div class="weui-msg__opr-area">
+                            <p class="weui-btn-area">
+                                <a href="assetList.xhtml?action=list&amp;qrCode=#{wxAssetInfoController.qrCode}" class="weui-btn weui-btn_primary">#{msg.BindAsset}</a>
+                                <a href="create.xhtml?qrCode=#{wxAssetInfoController.qrCode}" class="weui-btn weui-btn_primary">#{msg.Create}#{msg.AssetInfo}</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+        </h:panelGroup>
     </body>
     <script>
         function showBRCode() {
