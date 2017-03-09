@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <f:facet name="first">
@@ -9,188 +9,15 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <meta name="apple-mobile-web-app-capable" content="yes" />
         </f:facet>
-        <title>新增资产</title>
+        <title>#{wechatAssetCreateController.CRUDActionName}#{msg.AssetInfo}</title>
         <h:outputStylesheet name="wechat/weui.min.css" />
-        <script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/jquery-2.0.0.min.js"/>
-        <!--<script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/jweixin-1.0.0.js"/>-->
-        <script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/MegaPixImage.js"/>
-        <script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/createAsset.js"/>
-        <script type="text/javascript" src="#{wechatAssetCreateController.getContextPath()}/resources/wechat/exif.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/jquery-2.0.0.min.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/MegaPixImage.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/createAsset.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/exif.js"/>
 
     </h:head>
     <h:body>
-        <div class="weui-gallery" id="gallery">
-            <span class="weui-gallery__img" id="galleryImg"></span>
-            <div class="weui-gallery__opr">
-                <a href="javascript:" class="weui-gallery__del">
-                    <i class="weui-icon-delete weui-icon_gallery-delete"></i>
-                </a>
-            </div>
-        </div>
-
-
-        <h:form id="assetForm" enctype="multipart/form-data" rendered="#{!wechatAssetCreateController.resultStatus}">
-
-            <div class="weui-cells weui-cells_form">
-                <div class="weui-cell">
-                    <div class="weui-cell__hd"><label class="weui-label">#{msg.name}</label></div>
-                    <div class="weui-cell__bd">
-                        <h:inputText class="weui-input" id="name"  value="#{wechatAssetCreateController.selected.name}" />
-                    </div>
-                    <div class="weui-cell__ft">
-                        <i class="weui-icon-warn"></i>
-                    </div>
-                </div>
-
-                <div class="weui-cell">
-                    <div class="weui-cell__hd"><label class="weui-label">#{msg.assetGroup}</label></div>
-                    <div class="weui-cell__bd">
-                        <div class="weui-cell weui-cell_select">
-                            <div class="weui-cell__bd">
-                                <h:selectOneMenu class="weui-select" value="#{wechatAssetCreateController.selected.assetGroup}" required="true" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                </h:selectOneMenu>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <h:panelGroup rendered="#{userContextService.hasRole('MultiHospital')}">
-                    <div class="weui-cell"  >
-                        <div class="weui-cell__hd"><label class="weui-label">#{msg.hospitalId}</label></div>
-                        <div class="weui-cell__bd">
-                            <div class="weui-cell weui-cell_select">
-                                <div class="weui-cell__bd">
-                                    <h:selectOneMenu class="weui-select" value="#{wechatAssetCreateController.selected.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}" >
-                                        <p:ajax  listener="#{wechatAssetCreateController.onHospitalChange}" update="clinicalDeptName assetOwnerName clinicalOwnerName" />
-                                        <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                        <f:selectItems value="#{assetInfoService.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                    </h:selectOneMenu>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </h:panelGroup>
-
-                <div class="weui-cell">
-                    <div class="weui-cell__hd"><label class="weui-label">#{msg.assetOwnerName}</label></div>
-                    <div class="weui-cell__bd">
-                        <div class="weui-cell weui-cell_select">
-                            <div class="weui-cell__bd">
-                                <h:selectOneMenu id="assetOwnerName" class="weui-select" value="#{wechatAssetCreateController.assetOwner}" converter="userAccountConverter" required="true" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}">
-                                    <p:ajax listener="#{wechatAssetCreateController.onOwnerChange}" />
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{wechatAssetCreateController.getOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
-                                    <p:column>
-                                        <h:outputText value="#{t.name}"/>
-                                    </p:column>
-                                </h:selectOneMenu>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <div class="weui-cell"  >
-                    <div class="weui-cell__hd"><label class="weui-label">#{msg.clinicalDeptName}</label></div>
-                    <div class="weui-cell__bd">
-                        <div class="weui-cell weui-cell_select">
-                            <div class="weui-cell__bd">
-                                <h:selectOneMenu id="clinicalDeptName" class="weui-select" value="#{wechatAssetCreateController.selected.clinicalDeptId}" required="true" requiredMessage="#{msg.clinicalDeptName} #{msg.ValidationRequire}">
-                                    <p:ajax  listener="#{wechatAssetCreateController.onClinicalDeptChange()}" update="clinicalOwnerName" />
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{wechatAssetCreateController.getClinicalDeptList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                </h:selectOneMenu>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="weui-cell"  >
-                    <div class="weui-cell__hd"><label class="weui-label">#{msg.clinicalOwnerName}</label></div>
-                    <div class="weui-cell__bd">
-                        <div class="weui-cell weui-cell_select">
-                            <div class="weui-cell__bd">
-                                <h:selectOneMenu class="weui-select" id="clinicalOwnerName" value="#{wechatAssetCreateController.clinicalOwner}" converter="userAccountConverter" required="true" requiredMessage="#{msg.clinicalOwnerId} #{msg.ValidationRequire}">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{wechatAssetCreateController.getClinicalOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
-                                    <p:column>
-                                        <h:outputText value="#{t.name}"/>
-                                    </p:column>
-                                </h:selectOneMenu>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <div class="weui-uploader">
-                            <div class="weui-uploader__hd">
-                                <p class="weui-uploader__title">图片上传</p>
-                            </div>
-                            <div class="weui-uploader__bd">
-                                <ul class="weui-uploader__files" id="uploaderFiles">
-                                </ul>
-                                <div class="weui-uploader__input-box">
-                                    <h:inputFile id="uploaderInput"  class="weui-uploader__input" />
-                                    <h:inputHidden id="uploaderFileId" value="#{wechatAssetCreateController.uploaderFiles}" />
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-
-            <div class="weui-btn-area">
-                <h:commandButton value="#{msg.Save}" class="weui-btn weui-btn_primary"   type="submit"  actionListener="#{wechatAssetCreateController.applySave()}"  onclick="js:beforeSubmit();"/>
-            </div>
-        </h:form>
-
-        <h:panelGroup rendered="#{wechatAssetCreateController.resultStatus}">
-            <div class="page">
-                <div class="weui-msg">
-                    <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
-                    <div class="weui-msg__text-area">
-                        <h2 class="weui-msg__title">保存成功</h2>
-                    </div>
-                    <div class="weui-msg__opr-area">
-                        <p class="weui-btn-area">
-                            <a href="create.xhtml" class="weui-btn weui-btn_primary">继续添加</a>
-                            <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_primary">返回菜单</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </h:panelGroup>
-
-
-
+        <ui:include src="edit.xhtml"/>
     </h:body>
-    <script>
-        $("#assetForm\\:name").attr('placeholder', '请输入...');
-        function beforeSubmit() {
-            var pics =new Array();
-            var uploads  = {pics: pics};
-            var reg = "^url\\((.+)\\)$";
-            var list = $("#uploaderFiles");
-            $.each(list.children(), function () {
-                var src = this.style.backgroundImage;
-                uploads.pics.push({
-                    name: this.title,
-                    src: src.match(reg)[1]
-                });
-            });
-            $("#assetForm\\:uploaderInput")[0].outerHTML="";
-            $uploaderFileId = $("#assetForm\\:uploaderFileId");
-            $("#assetForm\\:uploaderFileId").val(JSON.stringify(uploads));
-        }
-
-    </script>
 </html>
