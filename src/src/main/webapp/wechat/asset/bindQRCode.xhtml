@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <!--<title>新增资产</title>-->
+        <h:outputStylesheet name="wechat/weui.min.css" />
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/jquery-2.0.0.min.js"/>
+        <!--<script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/jweixin-1.0.0.js"/>-->
+
+    </h:head>
+    <h:body>
+        <div class="page__bd">
+            <h:panelGroup rendered="#{!wxAssetInfoController.bindResult}">
+                <div class="weui-panel weui-panel_access">
+                    <div class="weui-panel__hd">#{msg.QRCode}#{msg.BindAsset}</div>
+                    <div class="weui-panel__bd">
+                        <div class="weui-media-box weui-media-box_appmsg">
+                            <div class="weui-media-box__hd">
+                                <img id="icoassetGroup" class="weui-media-box__thumb icoassetGroup" src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{wxAssetInfoController.assetInfo.assetGroup}.ico" />
+                            </div>
+                            <div class="weui-media-box__bd">
+                                <h4 class="weui-media-box__title">#{wxAssetInfoController.assetInfo.name}</h4>
+                                <p class="weui-media-box__desc">#{wxAssetInfoController.assetInfo.clinicalDeptName}</p>
+                            </div>
+                        </div>
+                        <div class="weui-media-box">
+                            <div class="weui-media-box__bd">
+                                <p class="weui-media-box__desc">#{msg.aliasName}：#{wxAssetInfoController.assetInfo.name}</p>
+                                <p class="weui-media-box__desc">#{msg.clinicalDeptName}：#{wxAssetInfoController.assetInfo.clinicalDeptName}</p>
+                                <p class="weui-media-box__desc">#{msg.assetOwnerName}：#{wxAssetInfoController.assetInfo.assetOwnerName}</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <h:panelGroup  rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}">
+                    <div class="weui-msg">
+                        <div class="icon-box__ctn">
+                            <p class="icon-box__title"><i class="weui-icon-warn "></i>#{msg.WarningForUpdateQRCode}</p>
+                        </div>
+                    </div>
+                </h:panelGroup>
+
+
+
+                <div class="weui-msg__opr-area">
+                    <h:form>
+                        <p class="weui-btn-area">
+                            <h:commandButton value="#{msg.Bind}" class="weui-btn weui-btn_primary"   type="submit"  actionListener="#{wxAssetInfoController.bindingAsset()}" />
+                            <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_default">#{msg.Return}</a>
+                        </p>
+                    </h:form>
+                </div>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{wxAssetInfoController.bindResult}">
+                <div class="page">
+                    <div class="weui-msg">
+                        <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+                        <div class="weui-msg__text-area">
+                            <h2 class="weui-msg__title">绑定设备成功</h2>
+                        </div>
+                        <div class="weui-msg__opr-area">
+                            <p class="weui-btn-area">
+                                <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_primary">#{msg.Return}</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </div>
+
+    </h:body>
+</html>
