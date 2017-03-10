@@ -1,0 +1,55 @@
+{
+  "pages": {
+    "total": 6,
+    "limit": 50,
+    "start": 0
+  },
+  "root": {
+    "name": "total",
+    "type": "stats",
+    "label": "待处理设备",
+    "count": 10
+  },
+  "items": [
+    {
+      "id": 0,
+      "name": "repairing",
+      "label": "维修中",
+      "count": 2,
+      "link": {
+        "ref": "self",
+        "href": "http://localhost:8080/geapm/api/profit?year=2016&groupby=type"
+      }
+    },
+    {
+      "id": 1,
+      "name": "stopped",
+      "label": "停机中",
+      "count": 2
+    },
+    {
+      "id": 3,
+      "name": "due",
+      "label": "保修期到期 (2个月内)",
+      "count": 3
+    },
+    {
+      "id": 4,
+      "name": "repairing",
+      "label": "预防性维护 (一周内)",
+      "count": 1
+    },
+    {
+      "id": 5,
+      "name": "",
+      "label": "设备计量 (2个月内)",
+      "count": 1
+    },
+    {
+      "id": 6,
+      "name": "",
+      "label": "设备质控 (2个月内)",
+      "count": 1
+    }
+  ]
+}

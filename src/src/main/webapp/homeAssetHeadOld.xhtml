@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template-polymer.xhtml">
+
+    <ui:define name="title">HomeAssetHead</ui:define>
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/homeAssetHead.css"/>
+        <h:outputScript name="js/homeAssetHead.js"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <header>
+                <div class="card--title text--center">
+                    <span class="epsilon">#{msg.HomePage}</span>
+                </div>
+                <div class="card--summary">
+                    <p:chart id="statusBar" type="bar" model="#{homeAssetHeadController.barModel}" responsive="true"/>
+                </div>
+            </header>
+
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="block">
+                        <h3 class="block-title">#{msg.assetHead_status}</h3>
+                        <div class="card--device-status">
+                            <div class="ui-g">
+                                <div class="ui-g-4 ui-md-6 ui-lg-4">
+                                    <a href="./portal/wo/woList.xhtml?isClosed=false" class="block">
+                                        <p class="epsilon">#{msg.assetHead_tile_maintenance}</p>
+                                        <p class="epsilon text--secondary">#{msg.assetHead_tile_maintenance_progressSeries}</p>
+                                        <ul class="list-inline list-bare">
+                                            <ui:repeat
+                                            value="#{homeAssetHeadController.stepCounts.entrySet().toArray()}"
+                                            var="entry"
+                                            varStatus="status">
+                                                <li>
+                                                    <span
+                                                    class="status status--#{status.index+1}">#{entry.key}</span><span>(#{entry.value})</span>
+                                                </li>
+                                            </ui:repeat>
+                                        </ul>
+                                        <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInMt}</h1>
+                                        <div class="block-footer">
+                                            <ui:repeat value="#{homeAssetHeadController.assetsInMt}" var="asset">
+                                                <p>#{asset.asset}</p>
+                                                <ul class="list-inline list-bare layout layout--middle layout--center">
+                                                    <li class="layout__item u-1/2">#{msg.assetHead_tile_maintenance_progress}<span
+                                                                                        class="status status--#{asset.stepId}"/>#{asset.stepName}
+                                                    </li>
+                                                    <li class="layout__item u-1/2">#{msg.assetHead_tile_maintenance_owner}<span/>#{asset.owner}</li>
+                                                </ul>
+                                            </ui:repeat>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="ui-g-4 ui-md-6 ui-lg-4">
+                                    <a href="./portal/asset/info/List.xhtml?assetStatus=2" class="block">
+                                        <p class="epsilon">#{msg.assetHead_tile_off}</p>
+                                        <h1 class="beta text--center">#{homeAssetHeadController.assetNumberStopped}</h1>
+                                        <div class="block-footer">
+                                            <ui:repeat value="#{homeAssetHeadController.assetsStopped}" var="asset">
+                                                <p>#{asset.asset}</p>
+                                                <ul class="list-inline list-bare layout layout--middle layout--center">
+                                                    <li class="layout__item u-1/2">#{msg.assetHead_tile_off_time}<span>#{asset.downTime}</span>
+                                                    </li>
+                                                    <li class="layout__item u-1/2">#{msg.assetHead_tile_off_reason}<span>#{fieldMsg.fieldValue('caseType', asset.downReason)}</span>
+                                                    </li>
+                                                </ul>
+                                            </ui:repeat>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="ui-g-4 ui-md-6 ui-lg-4">
+                                    <a href="./portal/asset/info/List.xhtml?model=1" class="block">
+                                        <p class="epsilon">#{msg.assetHead_tile_out}</p>
+                                        <h1 class="beta text--center">
+                                            #{homeAssetHeadController.assetNumberWarrantyExpired}</h1>
+                                        <div class="block-footer">
+                                            <ui:repeat value="#{homeAssetHeadController.assetsWarrantyExpired}"
+                                                       var="asset">
+                                                <div class="layout layout--middle">
+                                                    <p class="layout__item u-1/2">#{asset.asset}</p>
+                                                    <p class="layout__item u-1/2"><span>#{asset.warrantyDate}</span></p>
+                                                </div>
+                                            </ui:repeat>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="ui-g-4 ui-md-6 ui-lg-4">
+                                    <a href="./portal/pm/List.xhtml?model=1" class="block">
+                                        <p class="epsilon">#{msg.assetHead_tile_preventive}</p>
+                                        <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInPm}</h1>
+                                        <div class="block-footer">
+                                            <ui:repeat value="#{homeAssetHeadController.assetsInPm}" var="asset">
+                                                <div class="layout layout--middle">
+                                                    <p class="layout__item u-1/2">#{asset.asset}</p>
+                                                    <p class="layout__item u-1/2"><span>#{asset.pmDate}</span></p>
+                                                </div>
+                                            </ui:repeat>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="ui-g-4 ui-md-6 ui-lg-4">
+                                    <a href="./portal/insp/MetrologyOrderList.xhtml?model=1" class="block">
+                                        <p class="epsilon">#{msg.assetHead_tile_metrology}</p>
+                                        <h1 class="beta text--center">
+                                            #{homeAssetHeadController.assetNumberInMetering}</h1>
+                                        <div class="block-footer">
+                                            <ui:repeat value="#{homeAssetHeadController.assetsInMetering}" var="asset">
+                                                <div class="layout layout--middle">
+                                                    <p class="layout__item u-1/2">#{asset.asset}</p>
+                                                    <p class="layout__item u-1/2"><span>#{asset.meteringDate}</span></p>
+                                                </div>
+                                            </ui:repeat>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="ui-g-4 ui-md-6 ui-lg-4">
+                                    <a href="./portal/insp/QualityCtrlOrderList.xhtml?model=1" class="block">
+                                        <p class="epsilon">#{msg.assetHead_tile_quality}</p>
+                                        <h1 class="beta text--center">#{homeAssetHeadController.assetNumberInQa}</h1>
+                                        <div class="block-footer">
+                                            <ui:repeat value="#{homeAssetHeadController.assetsInQa}" var="asset">
+                                                <div class="layout layout--middle">
+                                                    <p class="layout__item u-1/2">#{asset.asset}</p>
+                                                    <p class="layout__item u-1/2"><span>#{asset.qaDate}</span></p>
+                                                </div>
+                                            </ui:repeat>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
