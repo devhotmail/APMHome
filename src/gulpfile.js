@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const autoprefixer = require('gulp-autoprefixer');
+const postcss = require('gulp-postcss');
 const stylemod = require('gulp-style-modules');
 const sass = require('gulp-sass');
 const gulp = require('gulp');
@@ -29,7 +29,10 @@ gulp.task('sass:compile:css', function() {
     }
   })
   .on('error', sass.logError))
-  .pipe(autoprefixer())
+  .pipe(postcss([
+    require('autoprefixer')(),
+    require('postcss-viewport-units')()
+  ]))
   .pipe(cssmin({
     advanced: false,
     aggressiveMerging: false,
@@ -61,7 +64,10 @@ gulp.task('sass:compile:module', function() {
     }
   })
   .on('error', sass.logError))
-  .pipe(autoprefixer())
+  .pipe(postcss([
+    require('autoprefixer')(),
+    require('postcss-viewport-units')()
+  ]))
   .pipe(stylemod({
     // All files will be named 'styles.html'
     filename: function(file) {
