@@ -13,12 +13,6 @@ $orange: rgb(232, 136, 56);
 $yellow: rgb(236, 219, 84);
 $color-set: $orange $yellow $gray;
 
-.asset-texts {
-  .text-root .text-center {
-    display: none;
-  }
-}
-
 #chart { 
   width: calc(100% - #{$related-info-width});
   height: 100%;
@@ -32,6 +26,12 @@ $color-set: $orange $yellow $gray;
   text {
     user-select: none;
     pointer-events: none;
+  }
+}
+
+.asset-texts {
+  .text-root .text-center {
+    display: none;
   }
 }
 
@@ -50,16 +50,20 @@ $color-set: $orange $yellow $gray;
   flex-direction: column;
   align-items: center;
 
-  input[type=radio] {
-    display: none;
-  }
-
-  .label-wrapper {
-    text-align: center;
-  }
-
   .btn {
     width: 120px;
+    margin-left: 0!important;
+
+    + .btn {
+      margin-top: 15px;
+    }
+
+    &.active {
+      background: #5b84d7;
+      border-color: #5b84d7;
+      color: #fff!important;
+      box-shadow: none;
+    }
   }
 }
 
@@ -106,13 +110,5 @@ px-dropdown {
 
   .legend-tip {
     margin-left: 5px;
-  }
-
-  .svg-icon {
-    width: 1.2em;
-    height: 1.2em;
-    vertical-align: -0.3em;
-    fill: currentColor;
-    overflow: hidden;
   }
 }

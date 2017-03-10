@@ -1,8 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
-<link rel="import" href="../fastclick/fastclick.html">
 <link rel="import" href="../modernizr/modernizr.html">
 <link rel="import" href="asset-procurement-styles.html">
+<script src="../../bower_components/d3/d3.min.js"></script>
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
 <script src="../../bower_components/urijs/src/URI.js"></script>
 
@@ -15,16 +15,10 @@
     <div class="related-info">
       <div class="type-select btn-group">
         <template is="dom-repeat" items="[[selectOpts]]">
-          <input
-            type="radio"
-            id$="opt-[[index]]"
-            value="[[item.val]]"
-            name="select-opts"
-            checked="[[_isChecked(item)]]"
-            on-click="handleSelect">
-          <label class="btn u-mb" for$="opt-[[index]]">
+          <div class$="[[computedCls(item.val, selectedOpt)]]"
+            on-click="handleSelect2">
             [[item.key]]
-          </label>
+          </div>
         </template>
       </div>
       <div class="kpis">
@@ -180,7 +174,7 @@
         },
         selectOptsZh: {
           type: String,
-          computed: 'getSelectOptsZh(selectedOpt)'
+          computed: 'getSelectedOptZh(selectedOpt)'
         }
       },
       behaviors: [
@@ -193,6 +187,9 @@
         'redraw(width, height, data)',
         'changeQuery(selectedOpt)'
       ],
+      computedCls: function(val, selectedOpt) {
+        return val === selectedOpt ? 'active btn' : 'btn';
+      },
       decimal2Percent: function(decimal) {
         return parseInt(decimal * 100) + '%';
       },
@@ -201,7 +198,7 @@
         var new_hash = uri.query();
         location.hash = '#' + new_hash;
       },
-      getSelectOptsZh: function(opt) {
+      getSelectedOptZh: function(opt) {
         var pos = this.selectOpts.map(function(n) {
           return n.val;
         }).indexOf(opt);
@@ -239,6 +236,10 @@
       },
       handleSelect: function(e) {
         this.set('selectedOpt', e.target.value);
+      },
+      handleSelect2: function(e) {
+        // console.log(e.model.item)
+        this.set('selectedOpt', e.model.item.val);
       },
       handleResize: function() {
         var rect = this.$.chart.getBoundingClientRect();
