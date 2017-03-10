@@ -132,9 +132,9 @@
 
         </div>
         <h:commandButton  id="submit" actionListener="#{wechatAssetCreateController.applySave()}"   type="submit"  style="display: none"/>
-    <div class="weui-btn-area">
-        <a  class="weui-btn weui-btn_primary" value="#{msg.Save}"  onclick="js:beforeSubmit();" >#{msg.Save}</a>
-    </div>
+        <div class="weui-btn-area">
+            <a  class="weui-btn weui-btn_primary" value="#{msg.Save}"  onclick="js:beforeSubmit();" >#{msg.Save}</a>
+        </div>
     </h:form>
 
     <h:panelGroup rendered="#{wechatAssetCreateController.resultStatus}">
@@ -142,7 +142,7 @@
             <div class="weui-msg">
                 <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
                 <div class="weui-msg__text-area">
-                    <h2 class="weui-msg__title">保存成功</h2>
+                    <h2 class="weui-msg__title">#{msg.DataSavedOK}</h2>
                 </div>
                 <div class="weui-msg__opr-area">
                     <p class="weui-btn-area">
@@ -154,8 +154,17 @@
         </div>
     </h:panelGroup>
 
+    <div class="weui-msg__extra-area">
+        <div class="weui-footer">
+            <p class="weui-footer__links">
+                <a href="javascript:void(0);" class="weui-footer__link"></a>
+            </p>
+            <p class="weui-footer__text">Copyright © 2016-2017 GE Healthcare</p>
+        </div>
+    </div>
+
     <script>
-        $("#assetForm\\:name").attr('placeholder', '请输入...');
+        $("#assetForm\\:name").attr('placeholder', '#{msg.PleaseInput}...');
         function beforeSubmit() {
             var flag = formValidate();
             if (!flag)
@@ -192,15 +201,15 @@
             }
 
             var selectInputs = $('#assetForm').find('select');
-            $.each(selectInputs,function(idx, value){
-                if (value.value === "" || value.value ==='#{msg.selectOneMessage}'){
+            $.each(selectInputs, function (idx, value) {
+                if (value.value === "" || value.value === '#{msg.selectOneMessage}') {
                     flag = false;
                     $(value).parent().parent().parent().parent().addClass('weui-cell_warn');
-                }else{
+                } else {
                     $(value).parent().parent().parent().parent().removeClass('weui-cell_warn');
                 }
             });
-            
+
             return flag;
         }
 

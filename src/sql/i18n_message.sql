@@ -89,6 +89,10 @@ INSERT INTO "i18n_message" VALUES (85, 'label', 'ScanCode', '扫码', 'Scan Code
 INSERT INTO "i18n_message" VALUES (86, 'label', 'PictureUpload', '图片上传', 'Upload pictures', NULL, -1);
 INSERT INTO "i18n_message" VALUES (87, 'label', 'ContinueAdd', '继续添加', 'Add Next One', NULL, -1);
 INSERT INTO "i18n_message" VALUES (88, 'label', 'Bind', '绑定', 'Binding', NULL, -1);
+INSERT INTO "i18n_message" VALUES (89, 'label', 'OldPassword', '旧密码', 'Old Password', NULL, -1);
+INSERT INTO "i18n_message" VALUES (90, 'label', 'PleaseInput', '请输入', 'Please Input', NULL, -1);
+INSERT INTO "i18n_message" VALUES (91, 'label', 'NewPass', '新密码', 'New Password', NULL, -1);
+INSERT INTO "i18n_message" VALUES (92, 'label', 'ConfirmPass', '确认密码', 'Confirm Password', NULL, -1);
 
 
 -- menu item names  ( id from 200 to  399)
