@@ -14,6 +14,7 @@ public interface AssetClinicalRecordRepository extends GenericRepository<AssetCl
     //全量聚合
     @Query("select new com.ge.apm.pojo.AssetClinicalRecordPojo(" +
             "siteId as siteIds,hospitalId as hospitalIds,assetId as assetIds, examDate as examDate, " +
+            "count(examDuration) as examCount, " +
             "sum(examDuration) as examDurations ," +
             "sum(priceAmount) as priceAmounts ," +
             "sum(injectCount) as injectsCounts ," +
@@ -25,7 +26,8 @@ public interface AssetClinicalRecordRepository extends GenericRepository<AssetCl
 
     //按指定日期聚合
     @Query("select new com.ge.apm.pojo.AssetClinicalRecordPojo(" +
-            "siteId as siteIds,hospitalId as hospitalIds,assetId as assetIds, examDate as examDate, " +
+            "siteId as siteIds,hospitalId as hospitalIds,assetId as assetIds, examDate as examDate," +
+            "count(examDuration) as examCount," +
             "sum(examDuration) as examDurations ," +
             "sum(priceAmount) as priceAmounts ," +
             "sum(injectCount) as injectsCounts ," +
@@ -41,6 +43,7 @@ public interface AssetClinicalRecordRepository extends GenericRepository<AssetCl
     //按当天聚合
     @Query("select new com.ge.apm.pojo.AssetClinicalRecordPojo(" +
             "siteId as siteIds,hospitalId as hospitalIds,assetId as assetIds, examDate as examDate, " +
+            "count(examDuration) as examCount," +
             "sum(examDuration) as examDurations ," +
             "sum(priceAmount) as priceAmounts ," +
             "sum(injectCount) as injectsCounts ," +

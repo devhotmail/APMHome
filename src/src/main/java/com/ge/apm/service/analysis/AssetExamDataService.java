@@ -1,8 +1,11 @@
 package com.ge.apm.service.analysis;
 
 import com.ge.apm.domain.BatchAssetExam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,16 +16,29 @@ import java.util.Date;
 @Service
 public class AssetExamDataService {
 
-
+    private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     AssetExamDataAggregator assetExamDataAggregator;
 
-    //全量聚合
+    /***
+     * 	全量聚合
+     */
+    @Transactional
     public String assetExamAggregator(){
-        assetExamDataAggregator.aggregateExamData();
+
+        try {
+            assetExamDataAggregator.aggregateExamData();
+        } catch (Exception e) {
+            logger.error("assetExamDataAggregator failed ",e.getMessage());
+            return "failure";
+        }
         return "success";
     }
-    //按当天的聚合
+
+    /***
+     * 	按当天的聚合
+     */
+    @Transactional
     public String assetExamAggregatorByday(BatchAssetExam batchAssetExam){
         if(batchAssetExam == null){
             return "illegal param";
@@ -33,12 +49,16 @@ public class AssetExamDataService {
             date = sdf.parse(batchAssetExam.getCalDay());
             assetExamDataAggregator.aggregateExamDataByDay(date);
         } catch (Exception e) {
+            logger.error("assetExamAggregatorByday failed ",e.getMessage());
             return "failue";
         }
         return "success";
     }
 
-    //按选定的日期聚合
+    /***
+     * 	按选定的日期聚合
+     */
+    @Transactional
     public String aggrateExamebyRange(BatchAssetExam batchAssetExam){
         if(batchAssetExam == null){
             return "illegal param";
@@ -55,6 +75,7 @@ public class AssetExamDataService {
             }
             assetExamDataAggregator.aggregateExamDataByRangeDate(from,to);
         } catch (Exception e) {
+            logger.error("aggregateExamDataByRangeDate failed ",e.getMessage());
             return "failue";
         }
         return "success";

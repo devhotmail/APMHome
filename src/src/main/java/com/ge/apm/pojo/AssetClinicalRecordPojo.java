@@ -7,13 +7,11 @@ import java.util.Date;
  */
 public class AssetClinicalRecordPojo {
 
-
-
-
     private int siteIds;
     private int hospitalIds;
     private  int assetIds;
     private Date examDate;
+    private Long examCount;
 
     private Long examDurations;
     private Double priceAmounts;
@@ -21,11 +19,12 @@ public class AssetClinicalRecordPojo {
     private Double exposeCounts;
     private Long filmCounts;
 
-    public AssetClinicalRecordPojo(int siteIds, int hospitalIds, int assetIds,Date examDate, Long examDurations, Double priceAmounts, Double injectCounts, Double exposeCounts, Long filmCounts) {
+    public AssetClinicalRecordPojo(int siteIds, int hospitalIds, int assetIds,Date examDate,long examCount, Long examDurations, Double priceAmounts, Double injectCounts, Double exposeCounts, Long filmCounts) {
         this.siteIds = siteIds;
         this.hospitalIds = hospitalIds;
         this.assetIds = assetIds;
         this.examDate=examDate;
+        this.examCount=examCount;
 
         this.examDurations = examDurations;
         this.priceAmounts = priceAmounts;
@@ -33,6 +32,14 @@ public class AssetClinicalRecordPojo {
         this.exposeCounts = exposeCounts;
         this.filmCounts = filmCounts;
 
+    }
+
+    public Long getExamCount() {
+        return examCount;
+    }
+
+    public void setExamCount(Long examCount) {
+        this.examCount = examCount;
     }
 
     public Date getExamDate() {

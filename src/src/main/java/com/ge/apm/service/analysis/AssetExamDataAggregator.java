@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import webapp.framework.broker.SiBroker;
 import webapp.framework.util.TimeUtil;
 
@@ -19,7 +20,7 @@ import java.util.*;
  *
  * @author 212547631
  */
-//@Component
+@Component
 public class AssetExamDataAggregator {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
@@ -59,7 +60,10 @@ public class AssetExamDataAggregator {
                     asm.setExposeCount(accrp.getExposeCounts());
                     asm.setFilmCount(accrp.getFilmCounts());
                     asm.setInjectCount(accrp.getInjectCounts());
+                    asm.setExamCount(accrp.getExamCount().intValue());
                     asmupdateList.add(asm);
+                }else{ //在submit中不存在的 需要加入
+
                 }
             }
             assetSummitRepository.save(asmupdateList);
@@ -82,7 +86,9 @@ public class AssetExamDataAggregator {
     }
 
     public String aggregateExamDataByRangeDate(Date from,Date to) {
+
         List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.aggreateAssetByRange(from,to);
+        initAssetAggregationDataByDateRange(from, to);
         operatorAggregator(acrpList);
         return "success";
     }
@@ -106,7 +112,8 @@ public class AssetExamDataAggregator {
         HashMap<String, Object> params = new HashMap<String, Object>();
         DateTime dtFrom = TimeUtil.toJodaDate(fromDate);
         DateTime dtTo = TimeUtil.toJodaDate(toDate).plusDays(1);
-
+       /* Date from = sdf.parse("2014-11-10");
+        Date to = sdf.parse("2015-09-18");*/
         while(dtFrom.isBefore(dtTo)){
             params.put("theDate", TimeUtil.toString(dtFrom.toDate(), 0, "yyyy-MM-dd"));
             SiBroker.sendMessageWithHeaders("direct:initAssetAggregationDataByDateRange", null, params);
