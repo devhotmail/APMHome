@@ -1,10 +1,10 @@
 {
   "name": "All Assets",
   "usage": 0.57,
-  "children": [
+  "items": [
     {
       "name": "CT",
-      "children": [
+      "items": [
         {
           "name": "CT-1",
           "size": 120,
@@ -29,7 +29,7 @@
     },
     {
       "name": "MR",
-      "children": [
+      "items": [
         {
           "name": "MR-1",
           "size": 17010,
@@ -102,7 +102,8 @@
     },
     {
       "name": "DSA",
-      "children": [
+      "suggestion": "建议购买1台新设备",
+      "items": [
         {
           "name": "DSA-1",
           "size": 1732,
@@ -127,7 +128,7 @@
     },
     {
       "name": "RF",
-      "children": [
+      "items": [
         {
           "name": "RF-1",
           "size": 4116,
@@ -140,7 +141,8 @@
     },
     {
       "name": "CR",
-      "children": [
+      "suggestion": "建议提高使用率",
+      "items": [
         {
           "name": "CR-1",
           "size": 1082,
@@ -195,7 +197,8 @@
     },
     {
       "name": "DR",
-      "children": [
+      "suggestion": "建议合理使用设备",
+      "items": [
         {
           "name": "DR-1",
           "size": 3891,
@@ -274,7 +277,7 @@
     },
     {
       "name": "D1",
-      "children": [
+      "items": [
         {
           "name": "D1-1",
           "size": 2105,
@@ -317,7 +320,7 @@
     },
     {
       "name": "D2",
-      "children": [
+      "items": [
         {
           "name": "D2-1",
           "size": 8258,

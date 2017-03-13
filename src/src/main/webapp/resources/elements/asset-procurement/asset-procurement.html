@@ -29,9 +29,9 @@
         <h2>[[focus.data.name]]</h2>
         当前平均使用率预测:
         <h2>[[decimal2Percent(focus.data.usage)]]</h2>
-        <template is="dom-if" if="[[focus.data.advise]]">
+        <template is="dom-if" if="[[focus.data.suggestion]]">
           当前建议为
-          <h2>[[focus.data.advise]]</h2>
+          <h2>[[focus.data.suggestion]]</h2>
         </template>
         <template is="dom-if" if="[[currentKPIs.length]]">
           <template is="dom-repeat" items="[[currentKPIs]]">
@@ -252,26 +252,15 @@
           this.set('height', rect.height);
         },
         conclude: function(data) {
-          // get conclusion/advise for children in 1st layer
-          data.children = data.children.map(function(m) {
+          // get conclusion in 1st layer
+          data.items = data.items.map(function(m) {
             m.conclusion = sectionalizer.reduce(function(prev,next) {
               prev[next.loadStatus] = {};
-              prev[next.loadStatus].single = m.children.filter(function(i) {
+              prev[next.loadStatus].single = m.items.filter(function(i) {
                 return next.filter(i.usage);
               }).length;
               return prev;
             }, {});
-
-            // attach advise to data
-            if (m.usage <= 0.3) m.advise = '建议提高使用率';
-
-            if (m.conclusion.high.single) {
-              if (m.usage > 1) {
-                m.advise = '建议购买' + m.conclusion.high.single + '台新设备';
-              } else {
-                m.advise = '建议合理使用设备';
-              }
-            }
 
             return m;
           });
@@ -279,13 +268,13 @@
           // get conclusion for root
           data.conclusion = sectionalizer.reduce(function(prev, next) {
             prev[next.loadStatus] = {};
-            var result = data.children.reduce(function(pr, ne) {
+            var result = data.items.reduce(function(pr, ne) {
               pr = pr + ne.conclusion[next.loadStatus].single;
               return pr;
             }, 0);
             prev[next.loadStatus].single = result;
 
-            prev[next.loadStatus].group = data.children.filter(function(i) {
+            prev[next.loadStatus].group = data.items.filter(function(i) {
               return next.filter(i.usage);
             }).length;
             
@@ -337,8 +326,10 @@
           .size([diameter - margin, diameter - margin])
           .padding(2);
           
-          var root = d3.hierarchy(this.data)
-          .sum(function(d) { return d.size; })
+          var root = d3.hierarchy(this.data, function(d) {
+            // field `items` from api
+            return d.items;
+          }).sum(function(d) { return d.size; })
           .sort(function(a, b) { return b.value - a.value; })
 
           var nodes = pack(root).descendants();
@@ -357,20 +348,11 @@
 
           assetGroup        
           .append('circle')
-          .attr('percent', function(d) {
-            return d.data.usage* 100
-          })
-          .attr('name-id', function(d) {
-            return d.data.name + '-' + d.data.id
-          })
           .attr('r', function(d) {
             return d.r;
           })
           .attr('class', function(d) {
             return d.parent ? d.children ? 'node' : 'node node-leaf' : 'node node-root';
-          })
-          .attr('id', function(d) {
-            return 'circle-' + d.data.id;
           })
           .attr('stroke-width', 1)
           .attr('stroke', function(d) {
@@ -594,12 +576,12 @@
 
                 // Advice text render here
                 if (adviceIncluded ||  (!adviceIncluded && d.r > 100)) {
-                  if (d.data.advise) {
+                  if (d.data.suggestion) {
                     var overloadTxt = d3.select(this)
                     .append('text')
                     .attr('y', overload ? 60 : 50)
                     .attr('font-size', 20)
-                    .text(d.data.advise)
+                    .text(d.data.suggestion)
                     .call(commonTextAttr);
                   }
                 }
