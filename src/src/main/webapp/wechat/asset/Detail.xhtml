@@ -200,11 +200,13 @@ and open the template in the editor.
                     </div>
                 </div>
 
+                <h:panelGroup rendered="#{not empty wxAssetInfoController.currentUser}">
                 <div class="weui-msg__opr-area">
                     <p class="weui-btn-area">
                         <a href="create.xhtml?action=Edit&amp;assetid=#{wxAssetInfoController.assetInfo.id}" class="weui-btn weui-btn_plain-primary">#{msg.Edit}</a>
                     </p>
                 </div>
+                    </h:panelGroup>
             </div>
         </h:panelGroup>
         <h:panelGroup  rendered="#{empty wxAssetInfoController.assetInfo}" >  
