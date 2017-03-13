@@ -1,5 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../behavior/context.html">
+<link rel="import" href="../behavior/fetch-cached.html">
 <link rel="import" href="../hashchange4IE/hashchange4IE.html">
 <link rel="import" href="asset-procurement-styles.html">
 <script src="../../bower_components/d3/d3.min.js"></script>
@@ -140,479 +142,492 @@
       }
     }
 
-    Polymer({
-      is: 'asset-procurement',
-      properties: {
-        width: Number,
-        height: Number,
-        data: Object,
-        focus: {
-          type: Object
-        },
-        currentKPIs: {
-          type: Array,
-          computed: 'getCurrentKPIs(focus)'
-        },
-        selectOpts: {
-          type: Array,
-          readOnly: true,
-          value: [
-            {
-              key: '按设备类型',
-              val: 'type',
-              zh: '类型'
-            },
-            {
-              key: '按科室',
-              val: 'dept',
-              zh: '科室'
-            }
-          ]
-        },
-        selectedOpt: {
-          type: String,
-          value: 'type'
-        },
-        selectOptsZh: {
-          type: String,
-          computed: 'getSelectedOptZh(selectedOpt)'
-        }
-      },
-      behaviors: [
-        Polymer.IronResizableBehavior
-      ],
-      listeners: {
-        'iron-resize': 'handleResize'
-      },
-      observers: [
-        'redraw(width, height, data)',
-        'changeQuery(selectedOpt)'
-      ],
-      computedCls: function(val, selectedOpt) {
-        return val === selectedOpt ? 'active btn' : 'btn';
-      },
-      decimal2Percent: function(decimal) {
-        return parseInt(decimal * 100) + '%';
-      },
-      changeQuery: function(selectedOpt) {
-        var uri = URI('').addQuery('groupby', selectedOpt);
-        var new_hash = uri.query();
-        location.hash = '#' + new_hash;
-      },
-      getSelectedOptZh: function(opt) {
-        var pos = this.selectOpts.map(function(n) {
-          return n.val;
-        }).indexOf(opt);
-        var index = pos > -1 ? pos : 0;
-        return this.selectOpts[index].zh;
-      },
-      showKpi: function(conclusion) {
-        return conclusion.group || conclusion.single;
-      },
-      getCurrentKPIs: function(focus) {
-        var conclusion = focus.data.conclusion;
-        if (!conclusion) return [];
-
-        function findDesc(status) {
-          var k = 0;
-          while(k < sectionalizer.length) {
-            if (sectionalizer[k].loadStatus === status) {
-              return sectionalizer[k].desc;
-            }
-            k++;
+    define('asset-procurement', [
+      'behavior/context',
+      'behavior/fetch-cached'
+    ], function(ContextBehavior, FetchCachedBehavior) {
+      Polymer({
+        is: 'asset-procurement',
+        properties: {
+          width: Number,
+          height: Number,
+          data: Object,
+          focus: {
+            type: Object
+          },
+          currentKPIs: {
+            type: Array,
+            computed: 'getCurrentKPIs(focus)'
+          },
+          selectOpts: {
+            type: Array,
+            readOnly: true,
+            value: [
+              {
+                key: '按设备类型',
+                val: 'type',
+                zh: '类型'
+              },
+              {
+                key: '按科室',
+                val: 'dept',
+                zh: '科室'
+              }
+            ]
+          },
+          selectedOpt: {
+            type: String,
+            value: 'type'
+          },
+          selectOptsZh: {
+            type: String,
+            computed: 'getSelectedOptZh(selectedOpt)'
           }
-          return '';
-        }
+        },
+        behaviors: [
+          Polymer.IronResizableBehavior,
+          ContextBehavior,
+          FetchCachedBehavior
+        ],
+        listeners: {
+          'iron-resize': 'handleResize'
+        },
+        observers: [
+          'redraw(width, height, data)',
+          'changeQuery(selectedOpt)'
+        ],
+        computedCls: function(val, selectedOpt) {
+          return val === selectedOpt ? 'active btn' : 'btn';
+        },
+        decimal2Percent: function(decimal) {
+          return parseInt(decimal * 100) + '%';
+        },
+        changeQuery: function(selectedOpt) {
+          var uri = URI('').addQuery('groupby', selectedOpt);
+          var new_hash = uri.query();
+          location.hash = '#' + new_hash;
+        },
+        getSelectedOptZh: function(opt) {
+          var pos = this.selectOpts.map(function(n) {
+            return n.val;
+          }).indexOf(opt);
+          var index = pos > -1 ? pos : 0;
+          return this.selectOpts[index].zh;
+        },
+        showKpi: function(conclusion) {
+          return conclusion.group || conclusion.single;
+        },
+        getCurrentKPIs: function(focus) {
+          var conclusion = focus.data.conclusion;
+          if (!conclusion) return [];
 
-        return Object.keys(conclusion).map(function(n) {
-          return {
-            loadStatus: n,
-            desc: findDesc(n),
-            conclusion: conclusion[n]
+          function findDesc(status) {
+            var k = 0;
+            while(k < sectionalizer.length) {
+              if (sectionalizer[k].loadStatus === status) {
+                return sectionalizer[k].desc;
+              }
+              k++;
+            }
+            return '';
           }
-        });
-      },
-      _isChecked: function(n) {
-        return n.val == this.selectedOpt;
-      },
-      handleSelect: function(e) {
-        this.set('selectedOpt', e.model.item.val);
-      },
-      handleResize: function() {
-        var rect = this.$.chart.getBoundingClientRect();
-        this.set('width', rect.width);
-        this.set('height', rect.height);
-      },
-      conclude: function(data) {
-        // get conclusion/advise for children in 1st layer
-        data.children = data.children.map(function(m) {
-          m.conclusion = sectionalizer.reduce(function(prev,next) {
+
+          return Object.keys(conclusion).map(function(n) {
+            return {
+              loadStatus: n,
+              desc: findDesc(n),
+              conclusion: conclusion[n]
+            }
+          });
+        },
+        _isChecked: function(n) {
+          return n.val == this.selectedOpt;
+        },
+        handleSelect: function(e) {
+          this.set('selectedOpt', e.model.item.val);
+        },
+        handleResize: function() {
+          var rect = this.$.chart.getBoundingClientRect();
+          this.set('width', rect.width);
+          this.set('height', rect.height);
+        },
+        conclude: function(data) {
+          // get conclusion/advise for children in 1st layer
+          data.children = data.children.map(function(m) {
+            m.conclusion = sectionalizer.reduce(function(prev,next) {
+              prev[next.loadStatus] = {};
+              prev[next.loadStatus].single = m.children.filter(function(i) {
+                return next.filter(i.usage);
+              }).length;
+              return prev;
+            }, {});
+
+            // attach advise to data
+            if (m.usage <= 0.3) m.advise = '建议提高使用率';
+
+            if (m.conclusion.high.single) {
+              if (m.usage > 1) {
+                m.advise = '建议购买' + m.conclusion.high.single + '台新设备';
+              } else {
+                m.advise = '建议合理使用设备';
+              }
+            }
+
+            return m;
+          });
+
+          // get conclusion for root
+          data.conclusion = sectionalizer.reduce(function(prev, next) {
             prev[next.loadStatus] = {};
-            prev[next.loadStatus].single = m.children.filter(function(i) {
+            var result = data.children.reduce(function(pr, ne) {
+              pr = pr + ne.conclusion[next.loadStatus].single;
+              return pr;
+            }, 0);
+            prev[next.loadStatus].single = result;
+
+            prev[next.loadStatus].group = data.children.filter(function(i) {
               return next.filter(i.usage);
             }).length;
+            
             return prev;
           }, {});
 
-          // attach advise to data
-          if (m.usage <= 0.3) m.advise = '建议提高使用率';
+          return data;
+        },
+        loadData: function(obj) {
+          var groupby = (obj && obj.groupby) ? obj.groupby : this.selectOpts[0].val;
 
-          if (m.conclusion.high.single) {
-            if (m.usage > 1) {
-              m.advise = '建议购买' + m.conclusion.high.single + '台新设备';
-            } else {
-              m.advise = '建议合理使用设备';
+          var url = URI(this.resolveApiUrl('/resources/mock/asset-procurement.json')).query({
+            groupby: groupby
+          }).toString();
+
+          return this.fetchPage(url)
+          .then((function(data) {
+            this.data = this.conclude(data);
+          }).bind(this));
+
+          return fetch('mock/asset-procurement.json' + '?groupby=' + groupby)
+          .then(function(res) {
+            return res.json();
+          }).then((function(data) {
+            this.data = this.conclude(data);
+          }).bind(this));
+        },
+        redraw: function() {
+          this.$.svg.innerHTML = '';
+          this.debounce('redraw', this.render, 500);
+        },
+        nodeAdaptor: function(nodes) {
+          return nodes.map(function(n) {
+            if (n.parent && n.parent.children.length === 1) {
+              n.r = n.r * 0.8;
             }
-          }
+            return n;
+          })
+        },
+        render: function() {
+          var svg = d3.select(this.$.svg);
+          var margin = 20;
+          var diameter = Math.min.call(null, this.width, this.height);
 
-          return m;
-        });
+          var wrapperGroup = svg.append('g')
+          .attr('transform', d3Transform().translate(this.width / 2, this.height / 2));
 
-        // get conclusion for root
-        data.conclusion = sectionalizer.reduce(function(prev, next) {
-          prev[next.loadStatus] = {};
-          var result = data.children.reduce(function(pr, ne) {
-            pr = pr + ne.conclusion[next.loadStatus].single;
-            return pr;
-          }, 0);
-          prev[next.loadStatus].single = result;
-
-          prev[next.loadStatus].group = data.children.filter(function(i) {
-            return next.filter(i.usage);
-          }).length;
+          var pack = d3.pack()
+          .size([diameter - margin, diameter - margin])
+          .padding(2);
           
-          return prev;
-        }, {});
+          var root = d3.hierarchy(this.data)
+          .sum(function(d) { return d.size; })
+          .sort(function(a, b) { return b.value - a.value; })
 
-        return data;
-      },
-      loadData: function(obj) {
-        var groupby = (obj && obj.groupby) ? obj.groupby : this.selectOpts[0].val;
-        return fetch('mock/asset-procurement.json' + '?groupby=' + groupby)
-        .then(function(res) {
-          return res.json();
-        }).then((function(data) {
-          this.data = this.conclude(data);
-        }).bind(this));
-      },
-      redraw: function() {
-        this.$.svg.innerHTML = '';
-        this.debounce('redraw', this.render, 500);
-      },
-      nodeAdaptor: function(nodes) {
-        return nodes.map(function(n) {
-          if (n.parent && n.parent.children.length === 1) {
-            n.r = n.r * 0.8;
-          }
-          return n;
-        })
-      },
-      render: function() {
-        var svg = d3.select(this.$.svg);
-        var margin = 20;
-        var diameter = Math.min.call(null, this.width, this.height);
+          var nodes = pack(root).descendants();
+          var focus = root;
+          var view;
 
-        var wrapperGroup = svg.append('g')
-        .attr('transform', d3Transform().translate(this.width / 2, this.height / 2));
+          this.set('focus', focus);
+          // adaptor for those nodes which has a single child
+          nodes = this.nodeAdaptor(nodes);
 
-        var pack = d3.pack()
-        .size([diameter - margin, diameter - margin])
-        .padding(2);
-        
-        var root = d3.hierarchy(this.data)
-        .sum(function(d) { return d.size; })
-        .sort(function(a, b) { return b.value - a.value; })
+          var assetGroup = wrapperGroup
+          .selectAll('g')
+          .data(nodes)
+          .enter().append('g')
+          .attr('class', 'asset')
 
-        var nodes = pack(root).descendants();
-        var focus = root;
-        var view;
-
-        this.set('focus', focus);
-        // adaptor for those nodes which has a single child
-        nodes = this.nodeAdaptor(nodes);
-
-        var assetGroup = wrapperGroup
-        .selectAll('g')
-        .data(nodes)
-        .enter().append('g')
-        .attr('class', 'asset')
-
-        assetGroup        
-        .append('circle')
-        .attr('percent', function(d) {
-          return d.data.usage* 100
-        })
-        .attr('name-id', function(d) {
-          return d.data.name + '-' + d.data.id
-        })
-        .attr('r', function(d) {
-          return d.r;
-        })
-        .attr('class', function(d) {
-          return d.parent ? d.children ? 'node' : 'node node-leaf' : 'node node-root';
-        })
-        .attr('id', function(d) {
-          return 'circle-' + d.data.id;
-        })
-        .attr('stroke-width', 1)
-        .attr('stroke', function(d) {
-          return getColorByPercent(d.data.usage);
-        })
-        .attr('fill', function(d) {
-          return (d !== focus && d.parent !== focus) ? 'none' : 'black';
-        })
-        .on('click', function(d) {
-          if (focus !== d) {
-            zoom(d);
-            d3.event.stopPropagation();
-          }
-        });
-
-        var waveGroup = assetGroup.append('g')
-        .attr('class', 'wave');
-
-        waveGroup
-        .append('path')
-        .attr('pointer-events', 'none')
-        .attr('d', function(d) {
-          return wavePath(d.data.usage, d.r);
-        })
-        .attr('transform', function(d) {
-          return 'translate(' + (-d.r) + ',' + 0 + ')';
-        })
-        .attr('fill', function(d) {
-          return getColorByPercent(d.data.usage);
-        });
-
-        var textGroup = wrapperGroup
-        .append('g')
-        .attr('class', 'asset-texts')
-        .selectAll('g')
-        .data(nodes)
-        .enter().append('g')
-        .attr('class', function(d) {
-          return d.parent ? d.children ? 'text' : 'text text-leaf' : 'text text-root';
-        })
-        .each(function(d) {
-          var element = d3.select(this);
-          // Center text
-          var textCenter = element.append('g')
-          .attr('class', 'text-center')
-          .attr('pointer-events', 'none')
-          .style('display', function(d) {
-            return d.parent == root ? 'inline' : 'none';
+          assetGroup        
+          .append('circle')
+          .attr('percent', function(d) {
+            return d.data.usage* 100
           })
-          .style('fill-opacity', function(d) {
-            return d.parent === root ? 1 : 0;
+          .attr('name-id', function(d) {
+            return d.data.name + '-' + d.data.id
           })
-          .call(renderText(false));
-
-          if (d.children) {
-            // Top text
-            var textTop = element
-            .append('g')
-            .attr('class', 'text-top')
-            .attr('transform', function(d) {
-              return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition + ')';
-            })
-            .style('display', function(d) {
-              return d === root ? 'inline' : 'none';
-            })
-            .style('fill-opacity', function(d) {
-              return d === root ? 1 : 0;
-            })
-            .call(renderText(true));
-          }
-        });
-
-        svg.on('click', function() {
-          zoom(root);
-        });
-
-        zoomTo([root.x, root.y, root.r * 2 + margin]);
-
-        this.scopeSubtree(this.$.chart, true);
-
-        var _this = this;
-
-        function zoom(d) {
-          var focus0 = focus;
-          focus = d;
-          _this.set('focus', focus);
-
-          var transition = d3.transition()
-          .duration(d3.event.altKey ? 7500 : 750)
-          .tween('zoom', function () {
-            var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
-            return function (t) {
-              zoomTo(i(t));
-            }
-          });
-
-          transition.selectAll('circle.node-leaf')
+          .attr('r', function(d) {
+            return d.r;
+          })
+          .attr('class', function(d) {
+            return d.parent ? d.children ? 'node' : 'node node-leaf' : 'node node-root';
+          })
+          .attr('id', function(d) {
+            return 'circle-' + d.data.id;
+          })
+          .attr('stroke-width', 1)
+          .attr('stroke', function(d) {
+            return getColorByPercent(d.data.usage);
+          })
           .attr('fill', function(d) {
             return (d !== focus && d.parent !== focus) ? 'none' : 'black';
-          });
-
-          transition.selectAll('g.text-top')
-          .filter(function(d) {
-            return d === focus || this.style.display === 'inline';
           })
-          .style('fill-opacity', function(d) {
-            return (d === focus) ? 1 : 0;
-          })
-          .on('start', function(d) {
-            if (d === focus) this.style.display = 'inline';
-          })
-          .on('end', function(d) {
-            if (d !== focus) this.style.display = 'none';
-          });
-
-          transition.selectAll('g.text-center')
-          .filter(function(d) {
-            return d.parent === focus || d === focus  || this.style.display === 'inline';
-          })
-          .style('fill-opacity', function(d) {
-            return (d.parent === focus || (d === focus && !d.children)) ? 1 : 0;
-          })
-          .on('start', function(d) {
-            if (d.parent === focus || (d === focus && !d.children)) this.style.display = 'inline';
-          })
-          .on('end', function(d) {
-            if (d.parent !== focus && (d !== focus || d.children)) this.style.display = 'none';
-          });
-        }
-
-        function zoomTo(v) {
-          var k = diameter / v[2];
-          view = v;
-
-          textGroup.attr('transform', function (d) {
-            return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
-          });
-
-          assetGroup
-          .attr('transform-origin', '50% 50%')
-          .attr('transform', function (d) {
-            return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
-          })
-          .style('opacity', function(d) {
-            if (d === focus) {
-              if (d.children) return 0.5;
-              return 1;
-            } else {
-              if (d.parent === focus) return 1;
-              return 0.5;
+          .on('click', function(d) {
+            if (focus !== d) {
+              zoom(d);
+              d3.event.stopPropagation();
             }
-            return d === focus ? 0.5 : (d.parent === focus ? 1 : 0.5);
-            // return d === focus ? 0.75 : (d.parent === focus ? 1 : 0.5);
-          })
-          .selectAll('circle, g.wave')
-          .attr('transform', 'scale(' + k + ')')
-
-          // move text-top when scale changes
-          textGroup.selectAll('g.text-top')
-          .attr('transform', function(d) {
-            return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k + ')'
           });
-        }
 
-        function renderText(adviceIncluded) {
-          return function (selection) {
-            // Text for asset name display
-            selection.append('text')
-            // .attr('dy', '-0.35em')
-            .attr('class', 'asset-name')
-            .attr('font-size', 20)
-            .text(function(d) {
-              return d.data.name;
+          var waveGroup = assetGroup.append('g')
+          .attr('class', 'wave');
+
+          waveGroup
+          .append('path')
+          .attr('pointer-events', 'none')
+          .attr('d', function(d) {
+            return wavePath(d.data.usage, d.r);
+          })
+          .attr('transform', function(d) {
+            return 'translate(' + (-d.r) + ',' + 0 + ')';
+          })
+          .attr('fill', function(d) {
+            return getColorByPercent(d.data.usage);
+          });
+
+          var textGroup = wrapperGroup
+          .append('g')
+          .attr('class', 'asset-texts')
+          .selectAll('g')
+          .data(nodes)
+          .enter().append('g')
+          .attr('class', function(d) {
+            return d.parent ? d.children ? 'text' : 'text text-leaf' : 'text text-root';
+          })
+          .each(function(d) {
+            var element = d3.select(this);
+            // Center text
+            var textCenter = element.append('g')
+            .attr('class', 'text-center')
+            .attr('pointer-events', 'none')
+            .style('display', function(d) {
+              return d.parent == root ? 'inline' : 'none';
             })
-            .call(commonTextAttr);
+            .style('fill-opacity', function(d) {
+              return d.parent === root ? 1 : 0;
+            })
+            .call(renderText(false));
 
-            // Text for usage display
-            var usageTxt = selection.append('text')
-            .attr('y', 20)
-            .attr('font-size', 16)
-            .call(commonTextAttr);
+            if (d.children) {
+              // Top text
+              var textTop = element
+              .append('g')
+              .attr('class', 'text-top')
+              .attr('transform', function(d) {
+                return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition + ')';
+              })
+              .style('display', function(d) {
+                return d === root ? 'inline' : 'none';
+              })
+              .style('fill-opacity', function(d) {
+                return d === root ? 1 : 0;
+              })
+              .call(renderText(true));
+            }
+          });
 
-            // icon: fa-adjust
-            usageTxt
-            .append('tspan')
-            .attr('font-family','FontAwesome')
-            .text('\uf017' + ' ');
+          svg.on('click', function() {
+            zoom(root);
+          });
 
-            usageTxt
-            .append('tspan')
-            .text(function(d) {
-              return parseInt(d.data.usage * 100) + '%';
+          zoomTo([root.x, root.y, root.r * 2 + margin]);
+
+          this.scopeSubtree(this.$.chart, true);
+
+          var _this = this;
+
+          function zoom(d) {
+            var focus0 = focus;
+            focus = d;
+            _this.set('focus', focus);
+
+            var transition = d3.transition()
+            .duration(d3.event.altKey ? 7500 : 750)
+            .tween('zoom', function () {
+              var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+              return function (t) {
+                zoomTo(i(t));
+              }
             });
-            
-            // Text for overload assets
-            selection.each(function(d) {
-              var overload = 0;
-              if (Array.isArray(d.children)) {
-                overload = d.children.filter(function(n) {
-                  return n.data.usage > 1
-                }).length;
+
+            transition.selectAll('circle.node-leaf')
+            .attr('fill', function(d) {
+              return (d !== focus && d.parent !== focus) ? 'none' : 'black';
+            });
+
+            transition.selectAll('g.text-top')
+            .filter(function(d) {
+              return d === focus || this.style.display === 'inline';
+            })
+            .style('fill-opacity', function(d) {
+              return (d === focus) ? 1 : 0;
+            })
+            .on('start', function(d) {
+              if (d === focus) this.style.display = 'inline';
+            })
+            .on('end', function(d) {
+              if (d !== focus) this.style.display = 'none';
+            });
+
+            transition.selectAll('g.text-center')
+            .filter(function(d) {
+              return d.parent === focus || d === focus  || this.style.display === 'inline';
+            })
+            .style('fill-opacity', function(d) {
+              return (d.parent === focus || (d === focus && !d.children)) ? 1 : 0;
+            })
+            .on('start', function(d) {
+              if (d.parent === focus || (d === focus && !d.children)) this.style.display = 'inline';
+            })
+            .on('end', function(d) {
+              if (d.parent !== focus && (d !== focus || d.children)) this.style.display = 'none';
+            });
+          }
+
+          function zoomTo(v) {
+            var k = diameter / v[2];
+            view = v;
+
+            textGroup.attr('transform', function (d) {
+              return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
+            });
+
+            assetGroup
+            .attr('transform-origin', '50% 50%')
+            .attr('transform', function (d) {
+              return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
+            })
+            .style('opacity', function(d) {
+              if (d === focus) {
+                if (d.children) return 0.5;
+                return 1;
+              } else {
+                if (d.parent === focus) return 1;
+                return 0.5;
               }
+              return d === focus ? 0.5 : (d.parent === focus ? 1 : 0.5);
+              // return d === focus ? 0.75 : (d.parent === focus ? 1 : 0.5);
+            })
+            .selectAll('circle, g.wave')
+            .attr('transform', 'scale(' + k + ')')
 
-              if (overload > 0) {
-                var overloadTxt = d3.select(this)
-                .append('text')
-                .attr('y', 36)
-                .attr('font-size', 16)
-                .call(commonTextAttr);
+            // move text-top when scale changes
+            textGroup.selectAll('g.text-top')
+            .attr('transform', function(d) {
+              return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k + ')'
+            });
+          }
 
-                // icon: fa-clock-o
-                overloadTxt
-                .append('tspan')
-                .attr('font-family','FontAwesome')
-                .text('\uf042' + ' ');
+          function renderText(adviceIncluded) {
+            return function (selection) {
+              // Text for asset name display
+              selection.append('text')
+              // .attr('dy', '-0.35em')
+              .attr('class', 'asset-name')
+              .attr('font-size', 20)
+              .text(function(d) {
+                return d.data.name;
+              })
+              .call(commonTextAttr);
 
-                overloadTxt
-                .append('tspan')
-                .text(overload + '台');
-              }
+              // Text for usage display
+              var usageTxt = selection.append('text')
+              .attr('y', 20)
+              .attr('font-size', 16)
+              .call(commonTextAttr);
 
-              // Advice text render here
-              if (adviceIncluded ||  (!adviceIncluded && d.r > 100)) {
-                if (d.data.advise) {
+              // icon: fa-adjust
+              usageTxt
+              .append('tspan')
+              .attr('font-family','FontAwesome')
+              .text('\uf017' + ' ');
+
+              usageTxt
+              .append('tspan')
+              .text(function(d) {
+                return parseInt(d.data.usage * 100) + '%';
+              });
+              
+              // Text for overload assets
+              selection.each(function(d) {
+                var overload = 0;
+                if (Array.isArray(d.children)) {
+                  overload = d.children.filter(function(n) {
+                    return n.data.usage > 1
+                  }).length;
+                }
+
+                if (overload > 0) {
                   var overloadTxt = d3.select(this)
                   .append('text')
-                  .attr('y', overload ? 60 : 50)
-                  .attr('font-size', 20)
-                  .text(d.data.advise)
+                  .attr('y', 36)
+                  .attr('font-size', 16)
                   .call(commonTextAttr);
+
+                  // icon: fa-clock-o
+                  overloadTxt
+                  .append('tspan')
+                  .attr('font-family','FontAwesome')
+                  .text('\uf042' + ' ');
+
+                  overloadTxt
+                  .append('tspan')
+                  .text(overload + '台');
                 }
-              }
-            })
+
+                // Advice text render here
+                if (adviceIncluded ||  (!adviceIncluded && d.r > 100)) {
+                  if (d.data.advise) {
+                    var overloadTxt = d3.select(this)
+                    .append('text')
+                    .attr('y', overload ? 60 : 50)
+                    .attr('font-size', 20)
+                    .text(d.data.advise)
+                    .call(commonTextAttr);
+                  }
+                }
+              })
+            }
           }
-        }
-      },
-      reloadData: function(e) {
-        var oldHashObj = this.getFragObj(e.oldURL);
-        var hashObj = this.getFragObj(e.newURL);
-        if (hashObj.groupby && (hashObj.groupby !== oldHashObj.groupby)) {
+        },
+        reloadData: function(e) {
+          var oldHashObj = this.getFragObj(e.oldURL);
+          var hashObj = this.getFragObj(e.newURL);
+          // prevent request when the same `groupby`
+          if (hashObj.groupby && (hashObj.groupby !== oldHashObj.groupby)) {
+            this.loadData(hashObj);
+          }
+        },
+        getFragObj: function(url) {
+          var uriObj = new URI(url);
+          return uriObj.query(uriObj.fragment()).query(true);
+        },
+        ready: function() {        
+          var hashObj = this.getFragObj(window.location.href);
           this.loadData(hashObj);
+          window.addEventListener('hashchange', this.reloadData.bind(this));
+        },
+        detached: function() {
+          window.removeEventListener('hashchange', this.reloadData.bind(this));
         }
-      },
-      getFragObj: function(url) {
-        var fragment = new URI(window.location.href).fragment();
-        if (!fragment) return {};
-        return fragment.split('&').reduce(function(prev, next) {
-          var result = next.split('=');
-          prev[result[0]] = result[1];
-          return prev;
-        }, {});
-      },
-      ready: function() {        
-        var hashObj = this.getFragObj(window.location.href);
-        this.loadData(hashObj);
-        window.addEventListener('hashchange', this.reloadData.bind(this));
-      },
-      detached: function() {
-        window.removeEventListener('hashchange', this.reloadData.bind(this));
-      }
+      })
     })
   </script>
 </dom-module>
