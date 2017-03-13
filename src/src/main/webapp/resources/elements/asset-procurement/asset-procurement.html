@@ -1,10 +1,11 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
-<link rel="import" href="../modernizr/modernizr.html">
+<link rel="import" href="../hashchange4IE/hashchange4IE.html">
 <link rel="import" href="asset-procurement-styles.html">
 <script src="../../bower_components/d3/d3.min.js"></script>
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
 <script src="../../bower_components/urijs/src/URI.js"></script>
+<script src="../../bower_components/innersvg-polyfill/innersvg.js"></script>
 
 <dom-module id="asset-procurement">
   <template>
@@ -16,7 +17,7 @@
       <div class="type-select btn-group">
         <template is="dom-repeat" items="[[selectOpts]]">
           <div class$="[[computedCls(item.val, selectedOpt)]]"
-            on-click="handleSelect2">
+            on-click="handleSelect">
             [[item.key]]
           </div>
         </template>
@@ -235,10 +236,6 @@
         return n.val == this.selectedOpt;
       },
       handleSelect: function(e) {
-        this.set('selectedOpt', e.target.value);
-      },
-      handleSelect2: function(e) {
-        // console.log(e.model.item)
         this.set('selectedOpt', e.model.item.val);
       },
       handleResize: function() {
@@ -593,12 +590,15 @@
         }
       },
       reloadData: function(e) {
-        var hashObj = this.getFragObj(e.newURL.href);
-        this.loadData(hashObj);        
+        var oldHashObj = this.getFragObj(e.oldURL);
+        var hashObj = this.getFragObj(e.newURL);
+        if (hashObj.groupby && (hashObj.groupby !== oldHashObj.groupby)) {
+          this.loadData(hashObj);
+        }
       },
       getFragObj: function(url) {
         var fragment = new URI(window.location.href).fragment();
-        if (!fragment) return null;
+        if (!fragment) return {};
         return fragment.split('&').reduce(function(prev, next) {
           var result = next.split('=');
           prev[result[0]] = result[1];
