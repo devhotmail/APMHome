@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
     private AssetInfoRepository assetDao;
     private AssetFileAttachmentRepository attachDao = null;
     private UserContextService userContextService;
+    UserAccount currentUser;
     private AssetInfo assetInfo;
     private String qrCode;
 
@@ -41,11 +43,15 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         assetDao = WebUtil.getBean(AssetInfoRepository.class);
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         userContextService = WebUtil.getBean(UserContextService.class);
+        currentUser = userContextService.getLoginUser();
         qrCode = WebUtil.getRequestParameter("qrCode");
         String assetId = WebUtil.getRequestParameter("assetId");
         if (null != assetId && assetId.length() > 0) {
             assetInfo = assetDao.findById(Integer.parseInt(assetId));
         } else if (qrCode != null && qrCode.length() > 0) {
+            if(qrCode.length()>36){
+                qrCode = qrCode.substring(qrCode.length()-36);
+            }
             assetInfo = findAsset(qrCode);
         }
         
@@ -136,6 +142,10 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
 
     public void setSearchStr(String searchStr) {
         this.searchStr = searchStr;
+    }
+
+    public UserAccount getCurrentUser() {
+        return currentUser;
     }
 
     
