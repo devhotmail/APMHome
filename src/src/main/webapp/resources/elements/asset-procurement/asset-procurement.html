@@ -174,8 +174,7 @@
             ]
           },
           selectedOpt: {
-            type: String,
-            value: 'type'
+            type: String
           },
           selectOptsZh: {
             type: String,
@@ -192,6 +191,7 @@
         },
         observers: [
           'redraw(width, height, data)',
+          'loadData(selectedOpt)',
           'changeQuery(selectedOpt)'
         ],
         computedCls: function(val, selectedOpt) {
@@ -281,9 +281,7 @@
 
           return data;
         },
-        loadData: function(obj) {
-          var groupby = (obj && obj.groupby) ? obj.groupby : this.selectOpts[0].val;
-
+        loadData: function(groupby) {
           var url = URI(this.resolveApiUrl('/resources/mock/asset-procurement.json')).query({
             groupby: groupby
           }).toString();
@@ -301,7 +299,7 @@
           }).bind(this));
         },
         redraw: function() {
-          d3.select(this.$.svg).selectAll('*').remove();
+          d3.select('#svg > *').remove();
           this.debounce('redraw', this.render, 500);
         },
         nodeAdaptor: function(nodes) {
@@ -587,10 +585,6 @@
             }
           }
         },
-        reloadData: function(e) {
-          var hashObj = this.getFragObj(e.newURL);
-          this.loadData(hashObj);
-        },
         getFragObj: function(url) {
           var fragment = new URI(window.location.href).fragment();
           if (!fragment) return {};
@@ -600,13 +594,10 @@
             return prev;
           }, {});
         },
-        ready: function() {        
+        ready: function() {
           var hashObj = this.getFragObj(window.location.href);
-          this.loadData(hashObj);
-          window.addEventListener('hashchange', this.reloadData.bind(this));
-        },
-        detached: function() {
-          window.removeEventListener('hashchange', this.reloadData.bind(this));
+          var groupby = hashObj.groupby ? hashObj.groupby : this.selectOpts[0].val;
+          this.set('selectedOpt', groupby);
         }
       })
     })
