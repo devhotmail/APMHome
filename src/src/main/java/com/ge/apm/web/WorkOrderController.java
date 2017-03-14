@@ -6,12 +6,14 @@
 package com.ge.apm.web;
 
 import com.ge.apm.dao.AssetInfoRepository;
+import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.service.wechat.CoreService;
 import com.ge.apm.service.wechat.WorkOrderWeChatService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,7 +70,10 @@ public class WorkOrderController {
     
     @RequestMapping(value="findasset")
     public @ResponseBody Object findAsset(String assetId) {
-        return assetDao.findById(Integer.parseInt(assetId));
+        List<AssetInfo> list = assetDao.getByQrCode(assetId);
+        if (list.isEmpty())
+            return null;
+        return list.get(0);
     }
     
     @RequestMapping(value="saveworkorder")
@@ -223,6 +228,43 @@ public class WorkOrderController {
                     Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, e);
                 }   
               }
+        }
+    }
+    
+    @RequestMapping(value = "voicerecord")
+    public String voiceRecord(HttpServletRequest request,HttpServletResponse response, Model model) {
+        WxJsapiSignature s = null;
+        try {
+            s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
+        } catch (WxErrorException ex) {
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+            return "woCreate";
+        }
+        model.addAttribute("appId",s.getAppid());
+        model.addAttribute("timestamp",s.getTimestamp());
+        model.addAttribute("nonceStr",s.getNoncestr());
+        model.addAttribute("signature",s.getSignature());
+        
+        return "voiceRecord";
+    }
+    @RequestMapping(value="savevoice")
+    public @ResponseBody Object savevoice(@RequestBody String serverId) {
+        try{
+            service.saveVoice(serverId);
+        }catch(Exception ex){
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+            return "failed";
+        }
+        return "success";
+    }
+    @RequestMapping(value = "/media")
+    public @ResponseBody String uploadMediaToWeChat() {
+        try{
+            InputStream is = woWcService.getFile(10);
+            return service.uploadMediaToWechat(is);
+        }catch(Exception ex){
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
         }
     }
     
