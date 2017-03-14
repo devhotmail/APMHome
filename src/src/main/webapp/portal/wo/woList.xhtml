@@ -8,8 +8,9 @@
     <ui:define name="preRenderView">
         <f:metadata>
             <f:viewParam name="isClosed" value="#{workOrderController.filterIsClosed}"/>
+            <f:viewParam name="aid" value="#{workOrderController.filterAssetId}"/>
         </f:metadata>
-        <f:event type="preRenderView" listener="#{workOrderController.setIsClosedFilter()}"/>
+        <f:event type="preRenderView" listener="#{workOrderController.setViewFilter()}"/>
     </ui:define>
 
     <ui:define name="head">

@@ -519,6 +519,7 @@ INSERT INTO "i18n_message" VALUES (3030,'message','ResetConformation', '重置�
 INSERT INTO "i18n_message" VALUES (3031,'message','ResetConformationMsg', '您确定要重置选定用户的密码么?','Are you sure to reset selected user password?',null,-1);
 INSERT INTO "i18n_message" VALUES (3032,'message','passwordResetTips', '您使用的是系统初始密码。为保证您的帐号安全，建议您立即修改密码.','Please change the initial password for safety.',null,-1);
 INSERT INTO "i18n_message" VALUES (3033,'message','AllHospitals', '所有院区','All Hospitals',null,-1);
+INSERT INTO "i18n_message" VALUES (3034,'message','ViewHistoryWorkOrder', '查看历史报修','View History Work Orders',null,-1);
 
 -- Chart label/lengend （id from 5000 to 5500）
 INSERT INTO "i18n_message" VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan #',null,-1);

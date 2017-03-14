@@ -32,7 +32,15 @@ public class AssetCostStatistics implements Serializable{
 	private Date requestTime;//报修时间
 	private Date confirmedDownTime;//宕机时间
 	private Boolean woStatus;//工单状态
+	private Date day;//计算日期
 	
+	
+	public Date getDay() {
+		return day;
+	}
+	public void setDay(Date day) {
+		this.day = day;
+	}
 	public Integer getSupplierId() {
 		return supplierId;
 	}
@@ -152,6 +160,52 @@ public class AssetCostStatistics implements Serializable{
 	}
 	public void setRating(Integer rating) {
 		this.rating = rating;
+	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AssetCostStatistics [id=");
+		builder.append(id);
+		builder.append(", assetId=");
+		builder.append(assetId);
+		builder.append(", siteId=");
+		builder.append(siteId);
+		builder.append(", hospitalId=");
+		builder.append(hospitalId);
+		builder.append(", assetGroup=");
+		builder.append(assetGroup);
+		builder.append(", deptId=");
+		builder.append(deptId);
+		builder.append(", supplierId=");
+		builder.append(supplierId);
+		builder.append(", assetName=");
+		builder.append(assetName);
+		builder.append(", maintenanceCost=");
+		builder.append(maintenanceCost);
+		builder.append(", deprecationCost=");
+		builder.append(deprecationCost);
+		builder.append(", downTime=");
+		builder.append(downTime);
+		builder.append(", workOrderCount=");
+		builder.append(workOrderCount);
+		builder.append(", created=");
+		builder.append(created);
+		builder.append(", lastModified=");
+		builder.append(lastModified);
+		builder.append(", rating=");
+		builder.append(rating);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append(", woId=");
+		builder.append(woId);
+		builder.append(", requestTime=");
+		builder.append(requestTime);
+		builder.append(", confirmedDownTime=");
+		builder.append(confirmedDownTime);
+		builder.append(", woStatus=");
+		builder.append(woStatus);
+		builder.append("]");
+		return builder.toString();
 	}
 	
 	
