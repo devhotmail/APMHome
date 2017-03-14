@@ -1,10 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../d3/d3.html">
 <link rel="import" href="../lodash/lodash.html">
 <link rel="import" href="../../lscache.html"/>
 <link rel="import" href="bubble-radial-chart-styles.html">
 <script src="../../bower_components/d3/d3.min.js"></script>
-<script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
 <script src="../../bower_components/urijs/src/URI.js"></script>
 
 <dom-module id="bubble-radial-chart">
@@ -605,6 +605,20 @@
               type: Array,
               value: []
             },
+            gaugeRadiusL2: {
+              type: Object,
+              value: {
+                max: GAUGE_RADIUS_MAX,
+                min: GAUGE_RADIUS_MIN
+              }
+            },
+            gaugeRadiusL1: {
+              type: Object,
+              value: {
+                max: GAUGE_RADIUS_MAX,
+                min: GAUGE_RADIUS_MIN
+              }
+            },
             _pageStartHistoryL2: {
               type: Array,
               value: []
@@ -671,7 +685,12 @@
             },
             openingNodeL1: {
               type: Object,
+              notify: true,
               observer:  'handleOrbit1Collapsed'
+            },
+            openingNode: {
+              type: Object,
+              notify: true
             },
             width: Number,
             height: Number
@@ -679,7 +698,6 @@
           observers: [
             '_computeLastStartL1(_pageStartHistoryL1.*)',
             '_computeLastStartL2(_pageStartHistoryL2.*)',
-            '_queryChanged(queryUrl, isAttached)',
             '_replot(width, height)'
           ],
           listeners: {
@@ -1058,7 +1076,6 @@
 
             var data = Object.assign({children: children}, parent.data);
             var tree = d3.hierarchy(data);
-            tree.data = parent.parent.data;
 
             // calc start angle
             var result = layout_orbit(tree, {
@@ -1238,14 +1255,12 @@
             }
             _this.openingNodeL1 = node;
 
-            var uri = URI(this.queryUrl)
-            .removeQuery('groupby')
-            .addQuery(this.groupBy, node.data.id)
-            .toString();
+            _this.fire('open-node', node);
 
-            _this.loadData(uri, 2).then(function() {
-              var close = _this.renderCurrPage(uri, 2).close;
+            _this.loadData(this.queryUrl, 2).then(function() {
+              var close = _this.renderCurrPage(_this.queryUrl, 2).close;
               _this.closeNodeL1 = function() {
+                _this.fire('close-node', node);
                 return close().then(function() {
                   var uri = node.parent.data.link.href;
                   _this.plotPager(uri, 1);
@@ -1282,15 +1297,14 @@
               this.pop('_pageStartHistoryL2');
             }
           },
-          _queryChanged: function(url) {
+          attached: function() {
             var _this = this;
+            this.set('isAttached', true);
+            var url = this.queryUrl;
             this.resetChart();
             this.loadData(url, 1).then(function() {
               _this.renderCurrPage(url);
             });
-          },
-          attached: function() {
-            this.set('isAttached', true);
           },
           // Load next "n" more items from the URL and add them to cache
           loadData: function(url, level) {
@@ -1341,6 +1355,13 @@
             }
 
             function setMaxData() {
+              var root = lscache.get(cacheKey + '/root');
+              // notify the chart data load
+              _this.fire('data-load', {
+                items: list,
+                root: root,
+                level: level
+              });
               _this.set('maxValueL' + level, list[0].revenue);
             }
           },
@@ -1546,10 +1567,10 @@
             };
           },
           _computeRadiusScaleL1: function(val) {
-            return d3.scaleLinear().range([GAUGE_RADIUS_MIN, GAUGE_RADIUS_MAX]).domain([0, val]);
+            return d3.scaleLinear().range([this.gaugeRadiusL1.min, this.gaugeRadiusL1.max]).domain([0, val]);
           },
           _computeRadiusScaleL2: function(val) {
-            return d3.scaleLinear().range([GAUGE_RADIUS_MIN, GAUGE_RADIUS_MAX]).domain([0, val]);
+            return d3.scaleLinear().range([this.gaugeRadiusL2.min, this.gaugeRadiusL2.max]).domain([0, val]);
           },
           _getCanvas: function() {
             return d3.select(this.$.canvas);

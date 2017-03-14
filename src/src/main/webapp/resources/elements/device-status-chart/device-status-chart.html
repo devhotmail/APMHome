@@ -1,12 +1,32 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
 <link rel="import" href="../bubble-radial-chart/bubble-radial-chart.html">
+<link rel="import" href="device-status-chart-styles.html">
+<link rel="import" href="../d3/d3.html">
 <link rel="import" href="../behavior/context.html">
 
 <dom-module id="device-status-chart">
   <template>
+    <style include="device-status-chart-styles"></style>
 
-    <bubble-radial-chart id="chart" query-url="[[queryUrl]]" group-by="[['type']]" bubble-extend="[[_bubbleExtend]]" transform-data="[[_transformItem]]"  bubble-config="[[_bubbleConfig]]"></bubble-radial-chart>
+    <!-- step chart -->
+    <svg id="steps">
+      <text class="legend-label"></text>
+      <g class="legend"></g>
+    </svg>
+
+    <bubble-radial-chart id="chart"
+       query-url="[[queryUrl]]"
+       group-by="[['type']]"
+       bubble-extend="[[_bubbleExtend]]"
+       on-open-node="handleOpenNode"
+       on-close-node="handleCloseNode"
+       on-data-load="handleLoadData"
+       gauge-radius-l1="[[_gaugeRadiusL1]]"
+       gauge-radius-l2="[[_gaugeRadiusL2]]"
+       transform-data="[[_transformItem]]"
+       bubble-config="[[_bubbleConfig]]">
+    </bubble-radial-chart>
   </template>
   <script>
     define('device-status-chart', [
@@ -34,6 +54,17 @@
         'rgb(218, 218, 225)',
         'rgb(217, 224, 216)'
       ]);
+
+      var step_fills = d3.scaleOrdinal([
+        'rgb(136,189,230)',
+        'rgb(251,178,88)',
+        'rgb(144,205,151)',
+        'rgb(246,170,201)',
+        'rgb(191,165,84)',
+        'rgb(188,153,199)',
+        'rgb(237,221,70)',
+      ]);
+      var r = 80;
 
       function wrap(text, width) {
         var words = text.text().split(/\s+/).reverse(),
@@ -70,61 +101,243 @@
       Polymer({
         is: 'device-status-chart',
         properties: {
-          foo: {
-            type: String,
-            value: 'bar'
+          steps: {
+            type: Array,
+          },
+          category: {
+            type: Number,
+            value: null
           },
           queryUrl: {
             type: String,
-            computed: '_computeQueryUrl(foo)'
-          },
+            computed: '_computeQueryUrl(category)'
+          }
         },
         behaviors: [
           ContextBehavior
         ],
-        observers: [],
-        _computeQueryUrl: function() {
-          return URI('mock/device-status-data.json').toString();
-//          return URI(this.resolveApiUrl('/api/device-status')).toString();
+        observers: [
+          'renderSteps(steps)'
+        ],
+        _computeQueryUrl: function(category) {
+          return URI('mock/api-health' +
+            ( category ? '-' + category : '') + '.json').toString();
+        },
+        handleOpenNode: function(evt, node) {
+          this.category = node.data.category;
+        },
+        handleCloseNode: function() {
+          this.steps = null;
+        },
+        handleLoadData: function(evt, data) {
+          this.steps = data.root.legends;
+        },
+        renderSteps: function(steps) {
+          steps = steps || [];
+
+          var canvas = $(this.$.steps);
+
+          // legend
+          var legend_label = canvas.select('.legend-label');
+
+          // legend labels
+          var labels = legend_label.selectAll('.step-label').data(steps);
+
+          labels.enter()
+          .append('tspan')
+          .classed('step-label', 1)
+          .merge(labels)
+          .attr('fill', function(d, i) {
+            return step_fills(i);
+          })
+          .attr('x', 0)
+          .attr('dy', '1.2rem')
+          .text(function(d) {
+            return ['S1:', d.display, '（' + d.count + '）'].join(' ');
+          });
+
+          labels.exit().remove();
+
+          var radius = legend_label.node().getBoundingClientRect().height / 2;
+          legend_label.attr('transform', d3Transform().translate(radius * 2 + 10, 0))
+
+          // legend donut
+          var donut = d3.pie().value(function(d) { return d.count; });
+          var arc = d3.arc()
+          .innerRadius(radius - 20)
+          .outerRadius(radius - 10)
+          .padAngle(.05);
+
+          // legend
+          var legend = canvas.select('.legend')
+          .attr('transform', d3Transform().translate(radius, radius));
+
+          // arcs
+          var arcs = legend.selectAll('.step').data(donut(steps));
+
+          arcs.enter()
+          .append('path')
+          .classed('step', 1)
+          .style('fill', function(d, i) {
+            return step_fills(i);
+          })
+          .merge(arcs)
+          .attr('d', arc);
+
+          arcs.exit().remove();
         },
         ready: function() {
+          this._gaugeRadiusL2 = {
+            min: 100,
+            max: 100
+          };
+          this._gaugeRadiusL1 = {
+            min: 60,
+            max: 100
+          };
+
           this._bubbleExtend = function(element, node) {
-            element = $(element)
+            element = $(element);
             var textPixels = 50;
             var radius = node.circle.r;
             var size = radius*2;
 
-            element.append('text')
-            .classed('node--text-label', 1)
-            .text(node.data.name)
-            .attr('text-anchor', 'middle')
-            .attr('font-size', textPixels / 3 + 'px')
-            .attr('fill', '#fff')
-            .attr('transform', 'translate(' + [0, -.6 * radius].join(',') + ')')
-            .call(wrap, size - 10);
+            var label;
 
-            element.append('text')
-            .classed('node--text-label', 1)
-            .text(node.data.count)
-            .attr('text-anchor', 'middle')
-            .attr('font-size', textPixels + 'px')
-            .attr('font-weight', 'bold')
-            .attr('fill', '#fff')
-            .attr('transform', 'translate(' + [0, .2 * radius].join(',') + ')');
+            switch(node.orbitIndex) {
 
-            element.append('text')
-            .classed('node--text-label', 1)
-            .text(node.data['unit-label'])
-            .attr('text-anchor', 'middle')
-            .attr('font-size', textPixels/3 + 'px')
-            .attr('fill', '#fff')
-            .attr('transform', 'translate(' + [0, .6 * radius].join(',') + ')');
-          }
+              // level 0 and level 1
+              case 0:
+              case 1:
 
+                // display text
+                element.append('text')
+                .classed('node--text-label', 1)
+                .text(node.data.display)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', textPixels / 3 + 'px')
+                .attr('fill', '#fff')
+                .attr('transform', 'translate(' + [0, -.6 * radius].join(',') + ')')
+                .call(wrap, size - 10);
+
+                // count
+                element.append('text')
+                .classed('node--text-label', 1)
+                .text(node.data.count)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', textPixels + 'px')
+                .attr('font-weight', 'bold')
+                .attr('fill', '#fff')
+                .attr('transform', 'translate(' + [0, .2 * radius].join(',') + ')');
+
+                // unit
+                element.append('text')
+                .classed('node--text-label', 1)
+                .text(node.data['unit-label'])
+                .attr('text-anchor', 'middle')
+                .attr('font-size', textPixels / 3 + 'px')
+                .attr('fill', '#fff')
+                .attr('transform', 'translate(' + [0, .6 * radius].join(',') + ')');
+                break;
+
+                // level 2
+                case 2:
+                  var category = node.parent.data.category;
+                  switch(category) {
+
+                    case 1:
+                      // display text
+                      var label = element.append('text')
+                      .classed('node--text-label', 1)
+                      .attr('text-anchor', 'left')
+                      .attr('alignment-baseline', 'middle')
+                      .attr('font-size', textPixels / 3 + 'px')
+                      .attr('fill', '#fff');
+
+                      // title
+                      label.append('tspan')
+                      .attr('x', 0)
+                      .text(node.data.name);
+
+                      // stage
+                      label.append('tspan')
+                      .attr('x', 0)
+                      .attr('dy', '1.5em')
+                      .text('维修流程：');
+                      label.append('tspan')
+                      .text(node.data.stage);
+
+                      // owner label
+                      label.append('tspan')
+                      .attr('x', 0)
+                      .attr('dy', '1.5em')
+                      .text('负责人：')
+                      label.append('tspan')
+                      .text(node.data.owner);
+
+                      label.attr('transform', function() {
+                        var rect = label.node().getBBox();
+                        return d3Transform().translate(-rect.width / 2, -rect.height / 2)();
+                      });
+
+                    break;
+
+                    // 保修期到期, 预防性维护，设备计量，设备质控
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+
+                      // display text
+                      label = element.append('text')
+                      .classed('node--text-label', 1)
+                      .attr('text-anchor', 'left')
+                      .attr('alignment-baseline', 'middle')
+                      .attr('font-size', textPixels / 3 + 'px')
+                      .attr('fill', '#fff');
+
+                      // title
+                      label.append('tspan')
+                      .attr('x', 0)
+                      .text(node.data.name);
+
+                      // date-time
+                      label.append('tspan')
+                      .attr('x', 0)
+                      .attr('dy', '1.5em')
+                      .text(node.data.date);
+
+                      // description label
+                      if (node.data.description) {
+                        label.append('tspan')
+                        .attr('x', 0)
+                        .attr('dy', '1.5em')
+                        .text('原因：')
+                        label.append('tspan')
+                        .text(node.data.description);
+                      }
+
+                      label.attr('transform', function() {
+                        var rect = label.node().getBBox();
+                        return d3Transform().translate(-rect.width / 2, -rect.height / 2)();
+                      });
+                      break;
+                  }
+            }
+          };
           this._bubbleConfig = function(node, i, config) {
+            var level = node.orbitIndex;
+
+            var colorId = i;
+            // use category as color index for level3 and above
+            if (level > 1) {
+              colorId = node.parent.data.category - 1;
+            }
+
             config.height = config.width = node.size * 2;
-            config.circleColor = gauge_color(i);
-            config.fillColor = gauge_color(i);
+            config.circleColor = gauge_color(colorId);
+            config.fillColor = gauge_color(colorId);
             config.showWave = false;
             config.showLabel = false;
             config.waveAnimateTime = 5000;
@@ -139,13 +352,17 @@
             return config;
           };
           this._transformItem = function(item) {
-            item.name = item.label;
-            if (!( 'revenue' in item )) {
-              item.revenue = 1;
+            if (!item.name) {
+              item.name = item.display;
             }
+
+            if (!('revenue' in item)) {
+              item.revenue = 'category' in item ? item.count : 1;
+            }
+
             item['unit-label'] = '台';
             return item;
-          }
+          };
         }
       });
     });

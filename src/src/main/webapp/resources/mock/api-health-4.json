@@ -1,0 +1,46 @@
+{
+  "pages": {
+    "total": 2,
+    "limit": 50,
+    "start": 0
+  },
+  "items": [
+    {
+      "id": 22,
+      "name": "西门子核磁Avanto",
+      "date": "2016-10-15",
+      "link": {
+        "ref": "redirect",
+        "href": "https://app_url_prefix/portal/asset/info/List.xhtml?assetStatus=2"
+      }
+    },
+    {
+      "id": 23,
+      "name": "通用电气彩超LIGIQ",
+      "date": "2016-10-15",
+      "link": {
+        "ref": "redirect",
+        "href": "https://app_url_prefix/portal/asset/info/List.xhtml?assetStatus=2"
+      }
+    },
+    {
+      "id": 24,
+      "name": "西门子彩超LOGIQ",
+      "date": "2016-10-17",
+      "link": {
+        "ref": "redirect",
+        "href": "https://app_url_prefix/portal/asset/info/List.xhtml?assetStatus=2"
+      }
+    }
+  ],
+  "root": {
+    "category": 5,
+    "display": "预防性维护（一周内）",
+    "count": 3,
+    "unit": "台",
+    "link": {
+      "ref": "self",
+      "href": "https://app_url_prefix/api/health?category=1"
+    }
+  }
+}

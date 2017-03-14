@@ -1,0 +1,72 @@
+{
+  "pages": {
+    "total": 6,
+    "limit": 50,
+    "start": 0
+  },
+  "items": [
+    {
+      "category": 1,
+      "display": "维修中",
+      "count": 10,
+      "link": {
+        "ref": "child",
+        "href": "https://app_url_prefix/api/health?category=1"
+      }
+    },
+    {
+      "category": 2,
+      "display": "停机中",
+      "count": 2,
+      "link": {
+        "ref": "child",
+        "href": "https://app_url_prefix/api/health?category=2"
+      }
+    },
+    {
+      "category": 3,
+      "display": "保修期到期",
+      "count": 3,
+      "link": {
+        "ref": "child",
+        "href": "https://app_url_prefix/api/health?category=3"
+      }
+    },
+    {
+      "category": 4,
+      "display": "预防性维护",
+      "count": 4,
+      "link": {
+        "ref": "child",
+        "href": "https://app_url_prefix/api/health?category=4"
+      }
+    },
+    {
+      "category": 5,
+      "display": "设备计量",
+      "count": 1,
+      "link": {
+        "ref": "child",
+        "href": "https://app_url_prefix/api/health?category=5"
+      }
+    },
+    {
+      "category": 6,
+      "display": "设备质控",
+      "count": 1,
+      "link": {
+        "ref": "child",
+        "href": "https://app_url_prefix/api/health?category=6"
+      }
+    }
+  ],
+  "root": {
+    "category": 0,
+    "display": "待处理总设备",
+    "count": 6,
+    "link": {
+      "ref": "self",
+      "href": "https://app_url_prefix/api/health"
+    }
+  }
+}
