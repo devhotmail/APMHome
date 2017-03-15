@@ -869,26 +869,5 @@ $(function () {
             checkEquipCode(url, cb);
     }
 
-    function ScanQRCode(cb, skip_check) {
-        if (wechatSDK.config.signature) {
-            wechatSDK.scanQRCode(1, function (resp) {
-                var partsOfStr = resp.resultStr.split(',');
-
-                // see issue #994: http://redmine.yixiubao.cn/issues/994
-                // finance code has multi-lines
-                var lines = resp.resultStr.split('\n');
-                var code = resp.resultStr;
-                // it's bar code
-                if (partsOfStr.length > 1 && lines.length < 2) {
-                    code = partsOfStr[1];
-                }
-                handleScanResult(code, cb, skip_check);
-            });
-        } else {
-            debug_scan_qr(function(url) {
-                handleScanResult(url, cb, skip_check);
-            });
-        }
-    }
 });
 

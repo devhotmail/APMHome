@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ge.apm.web;
+package com.ge.apm.web.wo;
 
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.domain.AssetInfo;
@@ -65,7 +65,7 @@ public class WorkOrderController {
         model.addAttribute("creatorName", service.getLoginUser(request).getName());
                 
         
-        return "woCreate";
+        return "scanWoReport";
     }
     
     @RequestMapping(value="findasset")

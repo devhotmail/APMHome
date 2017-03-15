@@ -14,13 +14,6 @@
             nonceStr: '', 
             signature: '',
             jsApiList: [
-                'onMenuShareTimeline',
-                'onMenuShareAppMessage',
-                'onMenuShareQQ',
-                'onMenuShareWeibo',
-                'hideOptionMenu',
-                'showOptionMenu',
-                'hideMenuItems',
                 'scanQRCode',
                 'chooseImage',
                 'uploadImage',
@@ -36,17 +29,11 @@
                 'uploadVoice',
                 'downloadVoice',
                 'closeWindow'
-            ] 
+            ]
         },
-        pagename: '',
-        callbackUrl: null,
 
         init: function () {
             wx.config(wechatSDK.config);
-
-            wx.ready(function () {
-                
-            });
         },
 
         setAppId: function (appid) {
@@ -64,14 +51,16 @@
         },
 
         scanQRCode: function (needResult, callback) {
-            return wx.scanQRCode({
-                needResult: needResult === 0 ? 0 : 1,
-                scanType: ["qrCode", "barCode"],
-                success: function (res) {
-                    if (callback !== undefined) {
-                        callback(res.resultStr);
+            wx.ready(function(){
+                wx.scanQRCode({
+                    needResult: needResult === 0 ? 0 : 1,
+                    scanType: ["qrCode", "barCode"],
+                    success: function (res) {
+                        if (callback !== undefined) {
+                            callback(res.resultStr);
+                        }
                     }
-                }
+                });
             });
         },
 
@@ -82,17 +71,17 @@
                 sourceType: ['album', 'camera'],
                 success: function (res) {
                     if (onSuccess !== undefined) {
-                        onSuccess(res);
+                        onSuccess(res.localIds);
                     }
                 },
                 cancel: function (res) {
                     if (onFailed !== undefined) {
-                        onFailed(res);
+                        onFailed(res.localIds);
                     }
                 },
                 fail: function (res) {
                     if (onFailed !== undefined) {
-                        onFailed(res);
+                        onFailed(res.localIds);
                     }
                 }
             });
@@ -157,7 +146,7 @@
             }
             var i = 0,
                 length = serverIds.length,
-                localIds = [];
+                localIds = [],
                 failedServerIds = [];
             function download() {
                 wx.downloadImage({
@@ -288,25 +277,8 @@
                     }
                 }
             });
-        },
-
-        complete_report: function (err_msg, sharing_type) {
-            // share complete
-            $('.share-mask').hide();
-            if (wechatSDK.callbackUrl) {
-                setTimeout(function() {
-                   location.href = wechatSDK.callbackUrl;
-                }, 1500);
-            }
-        },
-
-        cancel_report: function (err_msg) {
-            // share cancel
-            $('.share-mask').hide();
-            if (wechatSDK.callbackUrl) {
-                location.href = wechatSDK.callbackUrl;
-            }
         }
+
     };
 
     window.wechatSDK = wechatSDK;

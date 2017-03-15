@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ge.apm.web;
+package com.ge.apm.web.wechat;
 
 import com.ge.apm.service.wechat.CoreService;
 import javax.servlet.http.HttpServletRequest;

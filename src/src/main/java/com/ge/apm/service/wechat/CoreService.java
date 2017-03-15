@@ -14,7 +14,7 @@ import com.ge.apm.service.utils.Digests;
 import com.ge.apm.service.wo.WorkOrderService;
 import java.io.File;
 import java.io.FileInputStream;
-import com.ge.apm.web.WeChatCoreController;
+import com.ge.apm.web.wechat.WeChatCoreController;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
