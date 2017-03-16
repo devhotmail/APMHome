@@ -22,7 +22,7 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author 212547631
+ * @author 212579464
  */
 @Entity
 @Table(name = "asset_info")
@@ -58,9 +58,6 @@ public class AssetInfo implements Serializable {
     @Size(max = 64)
     @Column(name = "vendor")
     private String vendor;
-    @Column(name = "supplier_id")
-    private Integer supplierId;
-    @Size(max = 64)
     @Column(name = "maitanance")
     private String maitanance;
     @Size(max = 32)
@@ -147,26 +144,7 @@ public class AssetInfo implements Serializable {
     private Date lastQaDate;
     @Column(name = "last_stocktake_date")
     @Temporal(TemporalType.DATE)
-    private Date lastStockTakeDate;
-
-    @Column(name = "clinical_owner_id")
-    private Integer clinicalOwnerId;
-    @Size(max = 16)
-    @Column(name = "clinical_owner_name")
-    private String clinicalOwnerName;
-    @Size(max = 16)
-    @Column(name = "clinical_owner_tel")
-    private String clinicalOwnerTel;
-    @Size(max = 64)
-    @Column(name = "registration_no")
-    private String registrationNo;
-    @Column(name = "factory_warranty_date")
-    @Temporal(TemporalType.DATE)
-    private Date factoryWarrantyDate;
-    @Size(max = 256)
-    @Column(name = "qr_code")
-    private String qrCode;
-    
+    private Date lastStocktakeDate;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "purchase_price")
     private Double purchasePrice;
@@ -176,6 +154,40 @@ public class AssetInfo implements Serializable {
     private Integer lifecycle;
     @Column(name = "depreciation_method")
     private Integer depreciationMethod;
+    @Column(name = "registration_no")
+    private String registrationNo;
+    @Column(name = "factory_warranty_date")
+    @Temporal(TemporalType.DATE)
+    private Date factoryWarrantyDate;
+    @Column(name = "supplier_id")
+    private Integer supplierId;
+    @Column(name = "qr_code")
+    private String qrCode;
+    @Column(name = "asset_owner_id2")
+    private Integer assetOwnerId2;
+    @Column(name = "asset_owner_name2")
+    private String assetOwnerName2;
+    @Column(name = "asset_owner_tel2")
+    private String assetOwnerTel2;
+    @Column(name = "fe_user_id")
+    private Integer feUserId;
+    @Column(name = "dispatch_mode")
+    private Integer dispatchMode;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetInfo")
+//    private Collection<AssetClinicalRecord> assetClinicalRecordCollection;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetInfo")
+//    private Collection<AssetFileAttachment> assetFileAttachmentCollection;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetInfo")
+//    private Collection<WorkOrder> workOrderCollection;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetInfo")
+//    private Collection<AssetDepreciation> assetDepreciationCollection;
+//    @JoinColumn(name = "hospital_id", referencedColumnName = "id")
+//    @ManyToOne(optional = false)
+//    private OrgInfo orgInfo;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetInfo")
+//    private Collection<PmOrder> pmOrderCollection;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetInfo")
+//    private Collection<InspectionChecklist> inspectionChecklistCollection;
 
     @Column(name = "hospital_id")
     @Basic(optional = false)
@@ -509,12 +521,12 @@ public class AssetInfo implements Serializable {
         this.lastQaDate = lastQaDate;
     }
 
-    public Date getLastStockTakeDate() {
-        return lastStockTakeDate;
+    public Date getLastStocktakeDate() {
+        return lastStocktakeDate;
     }
 
-    public void setLastStockTakeDate(Date lastStockTakeDate) {
-        this.lastStockTakeDate = lastStockTakeDate;
+    public void setLastStocktakeDate(Date lastStocktakeDate) {
+        this.lastStocktakeDate = lastStocktakeDate;
     }
 
     public Double getPurchasePrice() {
@@ -562,31 +574,7 @@ public class AssetInfo implements Serializable {
     	}
        this.lifecycle = new Double(lifecycle * 12).intValue();
     }
-
-    public Integer getClinicalOwnerId() {
-        return clinicalOwnerId;
-    }
-
-    public void setClinicalOwnerId(Integer clinicalOwnerId) {
-        this.clinicalOwnerId = clinicalOwnerId;
-    }
-
-    public String getClinicalOwnerName() {
-        return clinicalOwnerName;
-    }
-
-    public void setClinicalOwnerName(String clinicalOwnerName) {
-        this.clinicalOwnerName = clinicalOwnerName;
-    }
-
-    public String getClinicalOwnerTel() {
-        return clinicalOwnerTel;
-    }
-
-    public void setClinicalOwnerTel(String clinicalOwnerTel) {
-        this.clinicalOwnerTel = clinicalOwnerTel;
-    }
-
+    
     public String getRegistrationNo() {
         return registrationNo;
     }
@@ -618,7 +606,47 @@ public class AssetInfo implements Serializable {
     public void setQrCode(String qrCode) {
         this.qrCode = qrCode;
     }
-    
+
+    public Integer getAssetOwnerId2() {
+        return assetOwnerId2;
+    }
+
+    public void setAssetOwnerId2(Integer assetOwnerId2) {
+        this.assetOwnerId2 = assetOwnerId2;
+    }
+
+    public String getAssetOwnerName2() {
+        return assetOwnerName2;
+    }
+
+    public void setAssetOwnerName2(String assetOwnerName2) {
+        this.assetOwnerName2 = assetOwnerName2;
+    }
+
+    public String getAssetOwnerTel2() {
+        return assetOwnerTel2;
+    }
+
+    public void setAssetOwnerTel2(String assetOwnerTel2) {
+        this.assetOwnerTel2 = assetOwnerTel2;
+    }
+
+    public Integer getFeUserId() {
+        return feUserId;
+    }
+
+    public void setFeUserId(Integer feUserId) {
+        this.feUserId = feUserId;
+    }
+
+    public Integer getDispatchMode() {
+        return dispatchMode;
+    }
+
+    public void setDispatchMode(Integer dispatchMode) {
+        this.dispatchMode = dispatchMode;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
