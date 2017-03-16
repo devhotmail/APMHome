@@ -6,12 +6,9 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -44,19 +41,22 @@ public class WorkOrderStepDetail implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "accessory_price")
     private Double accessoryPrice;
-
     @Column(name = "other_expense")
     private Double otherExpense;
-    
+    @Column(name = "cowoker_user_id")
+    private Integer cowokerUserId;
+    @Column(name = "cowoker_user_name")
+    private String cowokerUserName;
+
     @Column(name = "step_id")
     @Basic(optional = false)
     @NotNull
     private Integer workOrderStepId;
 
-    @JoinColumn(name = "step_id", referencedColumnName = "id", insertable = false, updatable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private WorkOrderStep workOrderStep;
-    
+//    @JoinColumn(name = "step_id", referencedColumnName = "id", insertable = false, updatable = false)
+//    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+//    private WorkOrderStep workOrderStep;
+
     public WorkOrderStepDetail() {
     }
 
@@ -131,6 +131,22 @@ public class WorkOrderStepDetail implements Serializable {
 
     public void setOtherExpense(Double otherExpense) {
         this.otherExpense = otherExpense;
+    }
+
+    public Integer getCowokerUserId() {
+        return cowokerUserId;
+    }
+
+    public void setCowokerUserId(Integer cowokerUserId) {
+        this.cowokerUserId = cowokerUserId;
+    }
+
+    public String getCowokerUserName() {
+        return cowokerUserName;
+    }
+
+    public void setCowokerUserName(String cowokerUserName) {
+        this.cowokerUserName = cowokerUserName;
     }
 
     @Override
