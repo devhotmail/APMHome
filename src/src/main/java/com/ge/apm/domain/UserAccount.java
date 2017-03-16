@@ -96,7 +96,7 @@ public class UserAccount implements Serializable {
     private boolean isActive;
     @Column(name = "is_online")
     private Boolean isOnline;
-    @Column(name = "site_id")
+     @Column(name = "site_id")
     private Integer siteId;
     @Column(name = "hospital_id")
     private Integer hospitalId;
@@ -112,14 +112,16 @@ public class UserAccount implements Serializable {
 
     @Column(name = "wechat_id")
     private String weChatId;
-    
+    @Column(name = "leader_user_id")
+    private Integer leaderUserId;
+
     @Transient
     private String plainPassword;
     
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount", fetch = FetchType.LAZY)
     private List<UserRole> userRoleList;
-
+    
     @Column(name = "org_id")
     @Basic(optional = false)
     @NotNull
@@ -245,7 +247,7 @@ public class UserAccount implements Serializable {
         this.lastLoginTime = lastLoginTime;
     }
 
-    public List<UserRole> getUserRoleList() {
+     public List<UserRole> getUserRoleList() {
         return userRoleList;
     }
 
@@ -253,7 +255,7 @@ public class UserAccount implements Serializable {
         this.userRoleList = userRoleList;
     }
 
-    @Transient
+     @Transient
     private List<String> userRoleNames;
     @JsonIgnore
     public List<String> getRoleNames(){
@@ -270,7 +272,7 @@ public class UserAccount implements Serializable {
 
         return userRoleNames;
     }
-
+    
     public Integer getHospitalId() {
         return hospitalId;
     }
@@ -278,7 +280,7 @@ public class UserAccount implements Serializable {
     public void setHospitalId(Integer hospitalId) {
         this.hospitalId = hospitalId;
     }
-
+    
     public String getWeChatId() {
         return weChatId;
     }
@@ -294,7 +296,7 @@ public class UserAccount implements Serializable {
     public void setPwdSalt(String pwdSalt) {
         this.pwdSalt = pwdSalt;
     }
-
+    
     public String getPlainPassword() {
         return plainPassword;
     }
@@ -302,15 +304,23 @@ public class UserAccount implements Serializable {
     public void setPlainPassword(String plainPassword) {
         this.plainPassword = plainPassword;
     }
-
-    public void entryptPassword() throws NoSuchAlgorithmException {
+    
+     public void entryptPassword() throws NoSuchAlgorithmException {
         byte[] salt = Digests.generateSalt(SALT_SIZE);
         setPwdSalt(Digests.encodeHex(salt));
             
         byte[] hashPassword = Digests.sha1(getPlainPassword().getBytes(), salt, HASH_INTERATIONS);
         setPassword(Digests.encodeHex(hashPassword));
     }
-        
+     
+    public Integer getLeaderUserId() {
+        return leaderUserId;
+    }
+
+    public void setLeaderUserId(Integer leaderUserId) {
+        this.leaderUserId = leaderUserId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -335,5 +345,5 @@ public class UserAccount implements Serializable {
     public String toString() {
         return "com.ge.apm.domain.UserAccount[ id=" + id + " ]";
     }
-
+    
 }
