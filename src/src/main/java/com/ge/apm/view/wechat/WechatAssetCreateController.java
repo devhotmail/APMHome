@@ -68,9 +68,9 @@ public class WechatAssetCreateController extends JpaCRUDController<AssetInfo> {
             if ( selected.getAssetOwnerId() > 0) {
                 this.assetOwner = userDao.findById(selected.getAssetOwnerId());
             }
-            if (null != selected.getClinicalOwnerId() && selected.getClinicalOwnerId() > 0) {
-                this.clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
-            }
+//            if (null != selected.getClinicalOwnerId() && selected.getClinicalOwnerId() > 0) {
+//                this.clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
+//            }
         } else {
 
             try {
@@ -123,9 +123,9 @@ public class WechatAssetCreateController extends JpaCRUDController<AssetInfo> {
 
     public void onClinicalDeptChange() {
         this.clinicalOwner = null;
-        selected.setClinicalOwnerId(null);
-        selected.setClinicalOwnerName(null);
-        selected.setClinicalOwnerTel(null);
+//        selected.setClinicalOwnerId(null);
+//        selected.setClinicalOwnerName(null);
+//        selected.setClinicalOwnerTel(null);
     }
 
     public List<OrgInfo> getClinicalDeptList() {
@@ -160,11 +160,11 @@ public class WechatAssetCreateController extends JpaCRUDController<AssetInfo> {
     @Override
     public void onBeforeSave(AssetInfo object) {
         OrgInfo org = orgDao.findById(object.getClinicalDeptId());
-        object.setClinicalOwnerId(clinicalOwner.getId());
+//        object.setClinicalOwnerId(clinicalOwner.getId());
         object.setClinicalDeptName(org.getName());
         object.setClinicalDeptId(org.getId());
-        object.setClinicalOwnerTel(clinicalOwner.getTelephone());
-        object.setClinicalOwnerName(clinicalOwner.getName());
+//        object.setClinicalOwnerTel(clinicalOwner.getTelephone());
+//        object.setClinicalOwnerName(clinicalOwner.getName());
         object.setAssetOwnerName(this.assetOwner.getName());
         object.setAssetOwnerId(assetOwner.getId());
 
