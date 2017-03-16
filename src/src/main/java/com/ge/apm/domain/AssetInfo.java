@@ -22,7 +22,7 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author 212579464
+ * @author 212547631
  */
 @Entity
 @Table(name = "asset_info")
@@ -58,6 +58,9 @@ public class AssetInfo implements Serializable {
     @Size(max = 64)
     @Column(name = "vendor")
     private String vendor;
+    @Column(name = "supplier_id")
+    private Integer supplierId;
+    @Size(max = 64)
     @Column(name = "maitanance")
     private String maitanance;
     @Size(max = 32)
@@ -144,25 +147,17 @@ public class AssetInfo implements Serializable {
     private Date lastQaDate;
     @Column(name = "last_stocktake_date")
     @Temporal(TemporalType.DATE)
-    private Date lastStocktakeDate;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "purchase_price")
-    private Double purchasePrice;
-    @Column(name = "salvage_value")
-    private Double salvageValue;
-    @Column(name = "lifecycle")
-    private Integer lifecycle;
-    @Column(name = "depreciation_method")
-    private Integer depreciationMethod;
+    private Date lastStockTakeDate;
+    @Size(max = 64)
     @Column(name = "registration_no")
     private String registrationNo;
     @Column(name = "factory_warranty_date")
     @Temporal(TemporalType.DATE)
     private Date factoryWarrantyDate;
-    @Column(name = "supplier_id")
-    private Integer supplierId;
+    @Size(max = 256)
     @Column(name = "qr_code")
     private String qrCode;
+    
     @Column(name = "asset_owner_id2")
     private Integer assetOwnerId2;
     @Column(name = "asset_owner_name2")
@@ -173,21 +168,16 @@ public class AssetInfo implements Serializable {
     private Integer feUserId;
     @Column(name = "dispatch_mode")
     private Integer dispatchMode;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetInfo")
-//    private Collection<AssetClinicalRecord> assetClinicalRecordCollection;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetInfo")
-//    private Collection<AssetFileAttachment> assetFileAttachmentCollection;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetInfo")
-//    private Collection<WorkOrder> workOrderCollection;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetInfo")
-//    private Collection<AssetDepreciation> assetDepreciationCollection;
-//    @JoinColumn(name = "hospital_id", referencedColumnName = "id")
-//    @ManyToOne(optional = false)
-//    private OrgInfo orgInfo;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetInfo")
-//    private Collection<PmOrder> pmOrderCollection;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetInfo")
-//    private Collection<InspectionChecklist> inspectionChecklistCollection;
+    
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "purchase_price")
+    private Double purchasePrice;
+    @Column(name = "salvage_value")
+    private Double salvageValue;
+    @Column(name = "lifecycle")
+    private Integer lifecycle;
+    @Column(name = "depreciation_method")
+    private Integer depreciationMethod;
 
     @Column(name = "hospital_id")
     @Basic(optional = false)
@@ -521,12 +511,12 @@ public class AssetInfo implements Serializable {
         this.lastQaDate = lastQaDate;
     }
 
-    public Date getLastStocktakeDate() {
-        return lastStocktakeDate;
+    public Date getLastStockTakeDate() {
+        return lastStockTakeDate;
     }
 
-    public void setLastStocktakeDate(Date lastStocktakeDate) {
-        this.lastStocktakeDate = lastStocktakeDate;
+    public void setLastStockTakeDate(Date lastStockTakeDate) {
+        this.lastStockTakeDate = lastStockTakeDate;
     }
 
     public Double getPurchasePrice() {
@@ -574,7 +564,7 @@ public class AssetInfo implements Serializable {
     	}
        this.lifecycle = new Double(lifecycle * 12).intValue();
     }
-    
+
     public String getRegistrationNo() {
         return registrationNo;
     }
@@ -646,7 +636,9 @@ public class AssetInfo implements Serializable {
     public void setDispatchMode(Integer dispatchMode) {
         this.dispatchMode = dispatchMode;
     }
-
+    
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;
