@@ -4,11 +4,19 @@ package com.ge.apm.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -39,26 +47,6 @@ public class WorkOrder implements Serializable {
     private String assetName;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 32)
-    @Column(name = "name")
-    private String name;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "creator_id")
-    private Integer creatorId;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 16)
-    @Column(name = "creator_name")
-    private String creatorName;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "create_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date createTime;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "requestor_id")
     private Integer requestorId;
     @Basic(optional = false)
@@ -77,11 +65,6 @@ public class WorkOrder implements Serializable {
     @Size(min = 1, max = 256)
     @Column(name = "request_reason")
     private String requestReason;
-    @Column(name = "case_owner_id")
-    private Integer caseOwnerId;
-    @Size(max = 16)
-    @Column(name = "case_owner_name")
-    private String caseOwnerName;
     @Column(name = "case_type")
     private Integer caseType;
     @Column(name = "case_sub_type")
@@ -90,10 +73,6 @@ public class WorkOrder implements Serializable {
     @NotNull
     @Column(name = "case_priority")
     private Integer casePriority;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "is_internal")
-    private boolean isInternal;
     @Basic(optional = false)
     @NotNull
     @Column(name = "current_person_id")
@@ -105,21 +84,6 @@ public class WorkOrder implements Serializable {
     @NotNull
     @Column(name = "current_step_id")
     private Integer currentStepId;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 16)
-    @Column(name = "current_step_name")
-    private String currentStepName;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "is_closed")
-    private boolean isClosed;
-    @Size(max = 256)
-    @Column(name = "close_reason")
-    private String closeReason;
-    @Size(max = 256)
-    @Column(name = "comments")
-    private String comments;
     @Column(name = "total_man_hour")
     private Integer totalManHour;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -133,12 +97,8 @@ public class WorkOrder implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Temporal(TemporalType.TIMESTAMP)
     private Date confirmedUpTime;
-
-    @Column(name = "asset_id")
-    @Basic(optional = false)
-    @NotNull
-    private Integer assetId;
-
+    @Column(name = "current_step_name")
+    private String currentStepName;
     @Column(name = "from_dept_id")
     private Integer fromDeptId;
     @Column(name = "from_dept_name")
@@ -150,8 +110,29 @@ public class WorkOrder implements Serializable {
     @Column(name = "reponse_time")
     private Integer responseTime; //in minutes
     @Column(name = "repaire_time")
-    private Integer repaireTime; //in minutes
+    private Integer repaireTime;
+    @Column(name = "status")
+    private Integer status;
+    @Column(name = "int_ext_type")
+    private Integer intExtType;
+    @Column(name = "parent_wo_id")
+    private Integer parentWoId;
+    @Column(name = "feedback_rating")
+    private Integer feedbackRating;
+    @Column(name = "feedback_comment")
+    private String feedbackComment;
+    @Column(name = "request_reason_voice")
+    private Integer requestReasonVoice;
+    @Column(name = "pat_actions")
+    private String patActions;
+    @Column(name = "pat_tests")
+    private String patTests;
     
+    @Column(name = "asset_id")
+    @Basic(optional = false)
+    @NotNull
+    private Integer assetId;
+
     public WorkOrder() {
     }
 
@@ -162,13 +143,19 @@ public class WorkOrder implements Serializable {
     public void setHospitalId(Integer hospitalId) {
         this.hospitalId = hospitalId;
     }
-
-    public String getAssetName() {
-        return assetName;
-    }
-
-    public void setAssetName(String assetName) {
+    
+    public WorkOrder(Integer id, int siteId, int hospitalId, String assetName, int requestorId, String requestorName, Date requestTime, String requestReason, int casePriority, int currentPersonId, int currentStepId) {
+        this.id = id;
+        this.siteId = siteId;
+        this.hospitalId = hospitalId;
         this.assetName = assetName;
+        this.requestorId = requestorId;
+        this.requestorName = requestorName;
+        this.requestTime = requestTime;
+        this.requestReason = requestReason;
+        this.casePriority = casePriority;
+        this.currentPersonId = currentPersonId;
+        this.currentStepId = currentStepId;
     }
 
     public Integer getId() {
@@ -187,36 +174,14 @@ public class WorkOrder implements Serializable {
         this.siteId = siteId;
     }
 
-    public String getName() {
-        return name;
+
+
+    public String getAssetName() {
+        return assetName;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(Integer creatorId) {
-        this.creatorId = creatorId;
-    }
-
-    public String getCreatorName() {
-        return creatorName;
-    }
-
-    public void setCreatorName(String creatorName) {
-        this.creatorName = creatorName;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
     }
 
     public Integer getRequestorId() {
@@ -251,22 +216,6 @@ public class WorkOrder implements Serializable {
         this.requestReason = requestReason;
     }
 
-    public Integer getCaseOwnerId() {
-        return caseOwnerId;
-    }
-
-    public void setCaseOwnerId(Integer caseOwnerId) {
-        this.caseOwnerId = caseOwnerId;
-    }
-
-    public String getCaseOwnerName() {
-        return caseOwnerName;
-    }
-
-    public void setCaseOwnerName(String caseOwnerName) {
-        this.caseOwnerName = caseOwnerName;
-    }
-
     public Integer getCaseType() {
         return caseType;
     }
@@ -289,14 +238,6 @@ public class WorkOrder implements Serializable {
 
     public void setCasePriority(Integer casePriority) {
         this.casePriority = casePriority;
-    }
-
-    public boolean getIsInternal() {
-        return isInternal;
-    }
-
-    public void setIsInternal(boolean isInternal) {
-        this.isInternal = isInternal;
     }
 
     public Integer getCurrentPersonId() {
@@ -323,38 +264,14 @@ public class WorkOrder implements Serializable {
         this.currentStepId = currentStepId;
     }
 
-    public String getCurrentStepName() {
+     public String getCurrentStepName() {
         return currentStepName;
     }
 
     public void setCurrentStepName(String currentStepName) {
         this.currentStepName = currentStepName;
     }
-
-    public boolean getIsClosed() {
-        return isClosed;
-    }
-
-    public void setIsClosed(boolean isClosed) {
-        this.isClosed = isClosed;
-    }
-
-    public String getCloseReason() {
-        return closeReason;
-    }
-
-    public void setCloseReason(String closeReason) {
-        this.closeReason = closeReason;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
+    
     public Integer getTotalManHour() {
         return totalManHour;
     }
@@ -390,18 +307,9 @@ public class WorkOrder implements Serializable {
     public Integer getAssetId() {
         return assetId;
     }
-
+   
     public void setAssetId(Integer assetId) {
         this.assetId = assetId;
-    }
-
-    public String getRequestReasonInShort(){
-        if(this.requestReason==null) return null;
-        
-        if(this.requestReason.length()<=20)
-            return this.requestReason;
-        else
-            return this.requestReason.substring(1,20)+"...";
     }
 
     public Integer getFromDeptId() {
@@ -443,7 +351,71 @@ public class WorkOrder implements Serializable {
     public void setRepaireTime(Integer repaireTime) {
         this.repaireTime = repaireTime;
     }
-    
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getIntExtType() {
+        return intExtType;
+    }
+
+    public void setIntExtType(Integer intExtType) {
+        this.intExtType = intExtType;
+    }
+
+    public Integer getParentWoId() {
+        return parentWoId;
+    }
+
+    public void setParentWoId(Integer parentWoId) {
+        this.parentWoId = parentWoId;
+    }
+
+    public Integer getFeedbackRating() {
+        return feedbackRating;
+    }
+
+    public void setFeedbackRating(Integer feedbackRating) {
+        this.feedbackRating = feedbackRating;
+    }
+
+    public String getFeedbackComment() {
+        return feedbackComment;
+    }
+
+    public void setFeedbackComment(String feedbackComment) {
+        this.feedbackComment = feedbackComment;
+    }
+
+    public Integer getRequestReasonVoice() {
+        return requestReasonVoice;
+    }
+
+    public void setRequestReasonVoice(Integer requestReasonVoice) {
+        this.requestReasonVoice = requestReasonVoice;
+    }
+
+    public String getPatActions() {
+        return patActions;
+    }
+
+    public void setPatActions(String patActions) {
+        this.patActions = patActions;
+    }
+
+    public String getPatTests() {
+        return patTests;
+    }
+
+    public void setPatTests(String patTests) {
+        this.patTests = patTests;
+    }
+
     @Override
     public int hashCode() {
         Integer hash = 0;
