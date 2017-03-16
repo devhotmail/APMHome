@@ -13,6 +13,7 @@ import com.ge.apm.service.wechat.WorkOrderWeChatService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -53,27 +54,31 @@ public class WorkOrderController {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
         } catch (WxErrorException ex) {
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
-            return "woCreate";
+            return "wo/scanWoReport";
         }
         model.addAttribute("appId",s.getAppid());
         model.addAttribute("timestamp",s.getTimestamp());
         model.addAttribute("nonceStr",s.getNoncestr());
         model.addAttribute("signature",s.getSignature());
-        //初始化信息
-        model.addAttribute("casePriority", 3);
-        model.addAttribute("isInternal", true);
-        model.addAttribute("creatorName", service.getLoginUser(request).getName());
-                
         
-        return "scanWoReport";
+        model.addAttribute("casePriority", 3);
+        
+        return "wo/scanWoReport";
     }
     
-    @RequestMapping(value="findasset")
-    public @ResponseBody Object findAsset(String assetId) {
-        List<AssetInfo> list = assetDao.getByQrCode(assetId);
+    @RequestMapping(value="findassetinfo")
+    public @ResponseBody Object findAssetInfo(String qrCode) {
+        List<AssetInfo> list = assetDao.getByQrCode(qrCode);
         if (list.isEmpty())
             return null;
-        return list.get(0);
+        AssetInfo info = list.get(0);
+        Map map = new HashMap();
+        map.put("assetId", info.getId());
+        map.put("assetName", info.getName());
+        map.put("supplier", info.getSupplierId()==null?"":service.getSupplierName(info.getSupplierId()));
+        map.put("assetGroup", service.getMsgValue("assetGroup", info.getAssetGroup().toString()));
+        map.put("assetStatus", service.getMsgValue("assetStatus", info.getStatus()+""));
+        return map;
     }
     
     @RequestMapping(value="saveworkorder")

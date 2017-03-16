@@ -2,10 +2,12 @@ package com.ge.apm.service.wechat;
 
 import com.ge.apm.dao.FileUploadDao;
 import com.ge.apm.dao.I18nMessageRepository;
+import com.ge.apm.dao.SupplierRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.dao.WorkOrderStepRepository;
 import com.ge.apm.domain.I18nMessage;
+import com.ge.apm.domain.Supplier;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderStep;
@@ -84,6 +86,8 @@ public class CoreService {
     @Autowired 
     protected WxMpMessageHandler textHandler;
     private WxMpMessageRouter router;
+    @Autowired
+    protected SupplierRepository supplierDao;
     
     @PostConstruct
     public void init() {
@@ -265,6 +269,13 @@ public class CoreService {
         return msgDao.getByMsgType(msgType);
     }
     
+    public Object getMsgValue(String msgType, String key) {
+        List<I18nMessage> msgs = msgDao.getByMsgTypeAndSiteIdAndMsgKey(msgType, -1, key);
+        if (msgs != null && !msgs.isEmpty())
+            return msgs.get(0).getValueZh();
+        return null;
+    }
+    
     public List<Map<String, Object>> getUsersInHospital(HttpServletRequest request){
         List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
         List<UserAccount> uas = uaaService.getUserList(getLoginUser(request).getHospitalId());
@@ -349,6 +360,11 @@ public class CoreService {
     public String uploadMediaToWechat(InputStream inputStream) throws Exception{
         WxMediaUploadResult res = wxMpService.getMaterialService().mediaUpload(WxConsts.MEDIA_VOICE, WxConsts.FILE_AMR, inputStream);
         return res.getMediaId();
+    }
+    
+    public String getSupplierName(int id) {
+        Supplier s = supplierDao.findById(id);
+        return s == null ? null : s.getName();
     }
     
 }

@@ -23,7 +23,7 @@
     
     <bean id="jspResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
         <property name="order" value="0" />  
-        <property name="prefix" value="/portal/wechat/"/>  
+        <property name="prefix" value="/wechat/"/>  
         <property name="suffix" value=".jsp"/>  
     </bean>  
         
