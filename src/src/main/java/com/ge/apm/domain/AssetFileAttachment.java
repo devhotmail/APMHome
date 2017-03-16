@@ -9,8 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -43,13 +41,26 @@ public class AssetFileAttachment implements Serializable {
     @Size(min = 1, max = 64)
     @Column(name = "file_type")
     private String fileType;
+    @Column(name = "asset_id")
+    @Basic(optional = false)
+    @NotNull
+    private Integer assetId;
     @Column(name = "file_id")
     private Integer fileId;
     @Column(name = "hospital_id")
+    @Basic(optional = false)
+    @NotNull
     private Integer hospitalId;
-    @JoinColumn(name = "asset_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private AssetInfo assetInfo;
+
+    public Integer getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
+    }
+    
+    
 
     public AssetFileAttachment() {
     }
@@ -58,7 +69,7 @@ public class AssetFileAttachment implements Serializable {
         this.id = id;
     }
 
-    public AssetFileAttachment(Integer id, int siteId, String name, String fileType) {
+    public AssetFileAttachment(Integer id, int siteId, String name, String fileType, String fileUrl) {
         this.id = id;
         this.siteId = siteId;
         this.name = name;
@@ -97,6 +108,14 @@ public class AssetFileAttachment implements Serializable {
         this.fileType = fileType;
     }
 
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
+    }
+
     public Integer getFileId() {
         return fileId;
     }
@@ -104,23 +123,7 @@ public class AssetFileAttachment implements Serializable {
     public void setFileId(Integer fileId) {
         this.fileId = fileId;
     }
-
-    public Integer getHospitalId() {
-        return hospitalId;
-    }
-
-    public void setHospitalId(Integer hospitalId) {
-        this.hospitalId = hospitalId;
-    }
-
-    public AssetInfo getAssetInfo() {
-        return assetInfo;
-    }
-
-    public void setAssetInfo(AssetInfo assetInfo) {
-        this.assetInfo = assetInfo;
-    }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;
