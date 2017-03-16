@@ -1,6 +1,6 @@
 /*
  */
-package newpackage;
+package com.ge.apm.domain;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
