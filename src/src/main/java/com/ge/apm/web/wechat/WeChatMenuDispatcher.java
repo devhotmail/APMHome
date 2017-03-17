@@ -48,14 +48,18 @@ public class WeChatMenuDispatcher {
         URL_MAP = new HashMap<>();
         URL_MAP.put("11", "/wechat/asset/List.xhtml");
         URL_MAP.put("12", "/wechat/asset/QRCreate.xhtml");
-        URL_MAP.put("21", "/web/wocreate");
-        URL_MAP.put("23", "/web/repairprocess");
-        URL_MAP.put("22", "/wechat/wo/process.xhtml");
+        
+        URL_MAP.put("21", "/web/scanworeport");
+        URL_MAP.put("22", "/web/myreport");
+//        URL_MAP.put("23", "/web/repairprocess");
+        
         URL_MAP.put("31", "/wechat/uaa/viewUserAccount.xhtml");
         URL_MAP.put("32", "/wechat/uaa/resetAccountPassword.xhtml");
         URL_MAP.put("33", "/web/authurl");
-        URL_MAP.put("24", "/web/wolistpage");
-        URL_MAP.put("333", "/web/voicerecord");
+        
+        URL_MAP.put("34", "/web/scanwodetail");
+        URL_MAP.put("35", "/web/mywolist");
+//        URL_MAP.put("333", "/web/voicerecord");
     }
 
     public static Map<String, String> getUrlMap() {

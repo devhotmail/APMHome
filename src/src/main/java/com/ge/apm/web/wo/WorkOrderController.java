@@ -47,7 +47,7 @@ public class WorkOrderController {
     @Autowired
     private WorkOrderWeChatService woWcService;
     
-    @RequestMapping(value = "wocreate")
+    @RequestMapping(value = "scanworeport")
     public String woCreate(HttpServletRequest request,HttpServletResponse response, Model model) {
         WxJsapiSignature s = null;
         try {
@@ -129,7 +129,7 @@ public class WorkOrderController {
      * @param model
      * @return 
      */
-    @RequestMapping(value = "wolistpage")
+    @RequestMapping(value = "mywolist")
     public String woListPage(HttpServletRequest request,HttpServletResponse response, Model model) {
         WxJsapiSignature s = null;
         try {
@@ -143,7 +143,7 @@ public class WorkOrderController {
         model.addAttribute("nonceStr",s.getNoncestr());
         model.addAttribute("signature",s.getSignature());
         
-        return "myWoList";
+        return "wo/myWoList";
     }
     
     /**
