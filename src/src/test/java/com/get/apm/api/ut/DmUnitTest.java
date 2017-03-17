@@ -13,6 +13,8 @@ import rx.Observable;
 
 import java.util.Map;
 
+import static javaslang.API.*;
+
 public class DmUnitTest {
   private Observable<Tuple5<Integer, Double, String, Integer, Double>> p;
 
@@ -32,10 +34,24 @@ public class DmUnitTest {
     return List.ofAll(p.toBlocking().toIterable()).groupBy(t -> t._4).mapValues(lst -> Tuple.of(Stats.of(lst.map(t -> t._5).toJavaList()).mean(), lst.map(t -> Tuple.of(t._1, t._2, t._3, t._5)))).toJavaMap();
   }
 
+  private String dm(Double maxUsage, Double averageUsage) {
+    return Match(Tuple.of(maxUsage, averageUsage)).of(
+      Case($(t -> t._2 > 1D), "建议购买新设备"),
+      Case($(t -> t._1 > 1D), "建议合理安排使用"),
+      Case($(t -> t._2 <= 0.3D), "建议提高使用率"),
+      Case($(), "")
+    );
+  }
+
   @Test
   public void resolveObservable() {
     // averageUsage(p).forEach(kv -> System.out.println(kv));
     System.out.println(averageUsage(p));
+  }
+
+  @Test
+  public void testDm() {
+
   }
 
 }
