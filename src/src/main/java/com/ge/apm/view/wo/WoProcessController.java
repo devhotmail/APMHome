@@ -89,19 +89,13 @@ public class WoProcessController extends JpaCRUDController<WorkOrder> {
         
         workOrder.setSiteId(loginUser.getSiteId());
         workOrder.setHospitalId(loginUser.getHospitalId());
-        workOrder.setCreatorId(loginUser.getId());
-        workOrder.setCreatorName(loginUser.getName());
         
-        workOrder.setCreateTime(TimeUtil.now());
         workOrder.setCurrentStepId(1);
         
         workOrder.setCasePriority(3);
 
         workOrder.setTotalManHour(0);
         workOrder.setTotalPrice(0.0);
-        
-        workOrder.setIsInternal(true);
-        workOrder.setIsClosed(false);
     }
 
     @Override
@@ -148,8 +142,6 @@ public class WoProcessController extends JpaCRUDController<WorkOrder> {
         if(this.selected==null) return;
         this.selected.setAssetId(asset.getId());
         this.selected.setAssetName(asset.getName());
-        this.selected.setCaseOwnerId(asset.getAssetOwnerId());
-        this.selected.setCaseOwnerName(asset.getAssetOwnerName());
     }
     
 }

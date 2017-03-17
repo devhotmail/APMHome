@@ -141,10 +141,6 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         selected.setSiteId(loginUser.getSiteId());
 //        hospitalId改为从设备上面取
 //        selected.setHospitalId(loginUser.getHospitalId());
-        selected.setCreatorId(loginUser.getId());
-        selected.setCreatorName(loginUser.getName());
-        
-        selected.setCreateTime(TimeUtil.now());
         selected.setCurrentStepId(1);
         
         selected.setCasePriority(3);
@@ -152,17 +148,12 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         selected.setTotalManHour(0);
         selected.setTotalPrice(0.0);
         
-        selected.setIsInternal(true);
-        selected.setIsClosed(false);
-        
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");
         String assetId = (String)UrlEncryptController.getValueFromMap(encodeStr,"assetId");
         if (assetId != null && !"".equals(assetId)) {
             selected.setAssetId(Integer.parseInt(assetId));
             selected.setAssetName((String) UrlEncryptController.getValueFromMap(encodeStr,"assetName"));
-            selected.setCaseOwnerId(Integer.parseInt((String)UrlEncryptController.getValueFromMap(encodeStr,"assetOwnerId")));
-            selected.setCaseOwnerName((String) UrlEncryptController.getValueFromMap(encodeStr,"assetOwnerName"));
             selected.setHospitalId(getHospitalIdFromAsset(Integer.parseInt(assetId)));
         }
 
@@ -178,8 +169,6 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         if(this.selected==null) return;
         this.selected.setAssetId(asset.getId());
         this.selected.setAssetName(asset.getName());
-        this.selected.setCaseOwnerId(asset.getAssetOwnerId());
-        this.selected.setCaseOwnerName(asset.getAssetOwnerName());
         selected.setHospitalId(asset.getHospitalId());
     }
     

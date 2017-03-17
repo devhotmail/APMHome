@@ -76,8 +76,6 @@ public class WorkOrderService {
         if(currentWoStep!=null){
             if(wo!=null){
                 currentWoStep.setWorkOrderId(wo.getId());
-                currentWoStep.setOwnerId(wo.getCaseOwnerId());
-                currentWoStep.setOwnerName(wo.getCaseOwnerName());
             }
             
             try{
@@ -93,8 +91,6 @@ public class WorkOrderService {
         if(nextWoStep!=null){
             if(wo!=null){
                 nextWoStep.setWorkOrderId(wo.getId());
-                nextWoStep.setOwnerId(wo.getCaseOwnerId());
-                nextWoStep.setOwnerName(wo.getCaseOwnerName());
             }
             
             try{
@@ -117,16 +113,11 @@ public class WorkOrderService {
         else 
             wo.setRequestorName("N/A");
         
-        if(wo.getCaseOwnerId().equals(wo.getCurrentPersonId())){
-            wo.setCurrentPersonName(wo.getCaseOwnerName());
-        }
-        else{
-            user = uaaService.getUserById(wo.getCurrentPersonId());
-            if(user!=null)
-                wo.setCurrentPersonName(user.getName());
-            else
-                wo.setCurrentPersonName("N/A");
-        }
+        user = uaaService.getUserById(wo.getCurrentPersonId());
+        if(user!=null)
+            wo.setCurrentPersonName(user.getName());
+        else
+            wo.setCurrentPersonName("N/A");
     }
     
     public void createWorkOrderStep(WorkOrder wo, WorkOrderStep currentWoStep) throws Exception{
@@ -180,7 +171,6 @@ public class WorkOrderService {
 
     public void closeWorkOrder(WorkOrder wo, WorkOrderStep currentWoStep) throws Exception{
         wo.setCurrentStepId(6);
-        wo.setIsClosed(true);
         currentWoStep.setEndTime(TimeUtil.now());
         
         WorkOrderRepository woDao = WebUtil.getBean(WorkOrderRepository.class);
@@ -196,9 +186,6 @@ public class WorkOrderService {
             }
         }
         catch(Exception ex){
-            // rollback WorkOrder changes
-            wo.setIsClosed(false);
-            
             throw ex;
         }        
     }
@@ -212,9 +199,6 @@ public class WorkOrderService {
             saveWorkOrderStep(wo, currentWoStep, nextWoStep);
         }
         catch(Exception ex){
-            // rollback WorkOrder changes
-            wo.setIsClosed(false);
-            
             throw ex;
         }        
         //do wechat push

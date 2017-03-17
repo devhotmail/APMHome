@@ -64,7 +64,7 @@ public class RepairProcessController {
     public List<WorkOrder> findRepairList(HttpServletResponse response,
                                           HttpServletRequest httpServletRequest,Integer assetId, Model model) {
         System.out.println("findRepairList--->");
-        List<WorkOrder> workOrderList = workOrderDao.findByAssetIdAndIsClosed(assetId,false);
+        List<WorkOrder> workOrderList = workOrderDao.findByAssetIdAndIntExtType(assetId, 1);
         model.addAttribute("data",workOrderList);
         return workOrderList;
 

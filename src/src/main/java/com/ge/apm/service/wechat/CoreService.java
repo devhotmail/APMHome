@@ -181,12 +181,9 @@ public class CoreService {
     public void saveWorkOrder(WorkOrder workOrder, HttpServletRequest request) throws Exception{
         UserAccount loginUser =getLoginUser(request);
         workOrder.setSiteId(loginUser.getSiteId());
-        workOrder.setCreatorId(loginUser.getId());
-        workOrder.setCreateTime(TimeUtil.now());
         workOrder.setCurrentStepId(1);
         workOrder.setTotalManHour(0);
         workOrder.setTotalPrice(0.0);
-        workOrder.setIsClosed(false);
         
 //        selected.setAssetId(Integer.parseInt(assetId));
 //        selected.setAssetName((String) UrlEncryptController.getValueFromMap(encodeStr,"assetName"));
@@ -195,8 +192,7 @@ public class CoreService {
 //        selected.setHospitalId(getHospitalIdFromAsset(Integer.parseInt(assetId)));
 
         WorkOrderStep step = woService.initWorkOrderCurrentStep(workOrder);
-        String serverId = workOrder.getCloseReason();
-        workOrder.setCloseReason(null);
+        String serverId = null;
         woService.createWorkOrderStep(workOrder, step);
         //保存完成后，再把上传的图片保存
         if (serverId != null)
