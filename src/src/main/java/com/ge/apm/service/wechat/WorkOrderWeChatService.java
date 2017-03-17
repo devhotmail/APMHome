@@ -62,7 +62,6 @@ public class WorkOrderWeChatService {
         List<SearchFilter> searchFilters = new ArrayList<>();
         UserAccount ua = UserContext.getCurrentLoginUser(request);
         searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, ua.getId()));
-        searchFilters.add(new SearchFilter("isClosed", SearchFilter.Operator.EQ, false));
         return woDao.findBySearchFilter(searchFilters);
     }
 

@@ -14,7 +14,7 @@
         <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0"/>
         <title>帐号绑定</title>
         <!-- 引入 WeUI -->
-        <link rel="stylesheet" href="${ctx}/resources/wechat/weui.min.css"/>
+        <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
         <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
     </head>
     <body>

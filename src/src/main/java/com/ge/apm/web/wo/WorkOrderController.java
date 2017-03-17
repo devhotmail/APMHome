@@ -48,7 +48,7 @@ public class WorkOrderController {
     private WorkOrderWeChatService woWcService;
     
     @RequestMapping(value = "scanworeport")
-    public String woCreate(HttpServletRequest request,HttpServletResponse response, Model model) {
+    public String scanWoReport(HttpServletRequest request,HttpServletResponse response, Model model) {
         WxJsapiSignature s = null;
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
@@ -64,6 +64,64 @@ public class WorkOrderController {
         model.addAttribute("casePriority", 3);
         
         return "wo/scanWoReport";
+    }
+    
+    @RequestMapping(value = "myreport")
+    public String myReport(HttpServletRequest request,HttpServletResponse response, Model model) {
+        WxJsapiSignature s = null;
+        try {
+            s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
+        } catch (WxErrorException ex) {
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+            return "wo/myReport";
+        }
+        model.addAttribute("appId",s.getAppid());
+        model.addAttribute("timestamp",s.getTimestamp());
+        model.addAttribute("nonceStr",s.getNoncestr());
+        model.addAttribute("signature",s.getSignature());
+        
+        return "wo/myReport";
+    }
+    
+    @RequestMapping(value = "scanwodetail")
+    public String scanWoDetail(HttpServletRequest request,HttpServletResponse response, Model model) {
+        WxJsapiSignature s = null;
+        try {
+            s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
+        } catch (WxErrorException ex) {
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+            return "wo/scanWoDetail";
+        }
+        model.addAttribute("appId",s.getAppid());
+        model.addAttribute("timestamp",s.getTimestamp());
+        model.addAttribute("nonceStr",s.getNoncestr());
+        model.addAttribute("signature",s.getSignature());
+        
+        return "wo/scanWoDetail";
+    }
+    
+    /**
+     * my work order list page, only rute to the page
+     * @param request
+     * @param response
+     * @param model
+     * @return 
+     */
+    @RequestMapping(value = "mywolist")
+    public String woListPage(HttpServletRequest request,HttpServletResponse response, Model model) {
+        WxJsapiSignature s = null;
+        try {
+            s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
+        } catch (WxErrorException ex) {
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+            return "wo/myWoList";
+        }
+        model.addAttribute("appId",s.getAppid());
+        model.addAttribute("timestamp",s.getTimestamp());
+        model.addAttribute("nonceStr",s.getNoncestr());
+        model.addAttribute("signature",s.getSignature());
+        
+        return "wo/myWoList";
     }
     
     @RequestMapping(value="findassetinfo")
@@ -120,30 +178,6 @@ public class WorkOrderController {
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-    }
-    
-    /**
-     * my work order list page, only rute to the page
-     * @param request
-     * @param response
-     * @param model
-     * @return 
-     */
-    @RequestMapping(value = "mywolist")
-    public String woListPage(HttpServletRequest request,HttpServletResponse response, Model model) {
-        WxJsapiSignature s = null;
-        try {
-            s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
-        } catch (WxErrorException ex) {
-            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
-            return "myWoList";
-        }
-        model.addAttribute("appId",s.getAppid());
-        model.addAttribute("timestamp",s.getTimestamp());
-        model.addAttribute("nonceStr",s.getNoncestr());
-        model.addAttribute("signature",s.getSignature());
-        
-        return "wo/myWoList";
     }
     
     /**

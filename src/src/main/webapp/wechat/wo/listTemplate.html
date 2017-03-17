@@ -1,16 +1,32 @@
-<script type="text/html" id="listItem">
+<script type="text/html" id="ts_listItem">
     <div class="weui-cells">
         <div class="weui-cell">
             <div class="weui-cell__bd">
                 <h4></h4>
             </div>
-            <div class="weui-cell__ft"></div>
+            <div class="ftitle weui-cell__ft"></div>
         </div>
         <a class="weui-cell weui-cell_access" href="javascript:;">
-            <div class="weui-cell__bd">
+            <div class="show-data weui-cell__bd">
             </div>
             <div class="weui-cell__ft">
             </div>
         </a>
+    </div>
+</script>
+
+<script type="text/html" id="ts_no_data">
+    <div class="page">
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="weui-icon-info weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h2 class="weui-msg__title">暂时没有工单</h2>
+            </div>
+            <div class="weui-msg__opr-area">
+                <p class="weui-btn-area">
+                    <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_primary">返回菜单</a>
+                </p>
+            </div>
+        </div>
     </div>
 </script>
