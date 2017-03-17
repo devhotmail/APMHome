@@ -7,6 +7,7 @@ import javaslang.Tuple2;
 import javaslang.Tuple4;
 import javaslang.Tuple5;
 import javaslang.collection.List;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import rx.Observable;
@@ -45,12 +46,15 @@ public class DmUnitTest {
 
   @Test
   public void resolveObservable() {
-    // averageUsage(p).forEach(kv -> System.out.println(kv));
-    System.out.println(averageUsage(p));
+    Assertions.assertThat(averageUsage(p)).containsKeys(1, 2, 3, 5);
   }
 
   @Test
   public void testDm() {
+    Assertions.assertThat(dm(1.03D, 0.25D)).isEqualToIgnoringCase("建议合理安排使用");
+    Assertions.assertThat(dm(1.23D, 1.05D)).isEqualToIgnoringCase("建议购买新设备");
+    Assertions.assertThat(dm(0.53D, 0.25D)).isEqualToIgnoringCase("建议提高使用率");
+    Assertions.assertThat(dm(0.53D, 0.35D)).isEqualToIgnoringCase("");
 
   }
 
