@@ -5,26 +5,9 @@
  */
 package com.ge.apm.service.wechat;
 
-import com.ge.apm.dao.AssetInfoRepository;
-import com.ge.apm.dao.FileUploadDao;
-import com.ge.apm.dao.WorkOrderRepository;
-import com.ge.apm.dao.WorkOrderStepDetailRepository;
-import com.ge.apm.dao.WorkOrderStepRepository;
-import com.ge.apm.domain.AssetInfo;
-import com.ge.apm.domain.UserAccount;
-import com.ge.apm.domain.WorkOrder;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-
-import com.ge.apm.domain.WorkOrderStep;
-import com.ge.apm.domain.WorkOrderStepDetail;
+import com.ge.apm.dao.*;
+import com.ge.apm.domain.*;
 import com.ge.apm.service.wo.WorkOrderService;
-import java.io.File;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import net.sf.json.JSONArray;
@@ -35,6 +18,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.service.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -61,6 +53,7 @@ public class WorkOrderWeChatService {
     public List<WorkOrder> woList(HttpServletRequest request) {
         List<SearchFilter> searchFilters = new ArrayList<>();
         UserAccount ua = UserContext.getCurrentLoginUser(request);
+
         searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, ua.getId()));
         searchFilters.add(new SearchFilter("isClosed", SearchFilter.Operator.EQ, false));
         return woDao.findBySearchFilter(searchFilters);
