@@ -4,31 +4,30 @@ import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.dao.WorkOrderStepRepository;
-import com.ge.apm.domain.SiteInfo;
-import com.ge.apm.domain.UserAccount;
-import com.ge.apm.domain.WorkOrder;
-import com.ge.apm.domain.WorkOrderStep;
-import com.ge.apm.domain.WorkOrderStepDetail;
+import com.ge.apm.domain.*;
 import com.ge.apm.service.uaa.UaaService;
-import java.util.Date;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import webapp.framework.dao.SearchFilter;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.service.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author 212547631
  */
-@Component
+@Service
 public class WorkOrderService {
     private static final Logger logger = Logger.getLogger(WorkOrderService.class);
     
@@ -40,7 +39,29 @@ public class WorkOrderService {
     private WxMpService wxService;
     @Autowired
     private UserAccountRepository userDao;
-    
+    @Autowired
+    private WorkOrderRepository workOrderRepository;
+
+    public List<WorkOrder> findWorkOrderByStatus(int status)throws Exception{
+        List<WorkOrder> byStatus = workOrderRepository.findByStatus(status);
+        return byStatus;
+    }
+    public  List<WorkOrder>  findWorkOrderByCon(HttpServletRequest request){
+        List<SearchFilter> searchFilters = new ArrayList<>();
+
+
+        UserAccount ua = UserContext.getCurrentLoginUser(request);
+        System.out.println(request.getParameter("requestorId"));
+        searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, request.getParameter("status")));
+        searchFilters.add(new SearchFilter("requestorId", SearchFilter.Operator.EQ, request.getParameter("requestorId")));
+        return workOrderRepository.findBySearchFilter(searchFilters);
+    }
+    //public List<WorkOrder>
+
+    public  List<WorkOrder>  findWorkOrderByContest(Integer requestorId){
+        return workOrderRepository.findByRequestorId(requestorId);
+    }
+
     public WorkOrderStep initWorkOrderCurrentStep(WorkOrder wo){
         WorkOrderStep woStep = new WorkOrderStep();
 
