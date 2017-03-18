@@ -4,15 +4,8 @@ import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.dao.WorkOrderStepRepository;
-import com.ge.apm.domain.SiteInfo;
-import com.ge.apm.domain.UserAccount;
-import com.ge.apm.domain.WorkOrder;
-import com.ge.apm.domain.WorkOrderStep;
-import com.ge.apm.domain.WorkOrderStepDetail;
+import com.ge.apm.domain.*;
 import com.ge.apm.service.uaa.UaaService;
-import java.util.Date;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
@@ -23,6 +16,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  *
