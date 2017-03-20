@@ -56,13 +56,12 @@
       ]);
 
       var step_fills = d3.scaleOrdinal([
-        'rgb(136,189,230)',
-        'rgb(251,178,88)',
-        'rgb(144,205,151)',
-        'rgb(246,170,201)',
-        'rgb(191,165,84)',
-        'rgb(188,153,199)',
-        'rgb(237,221,70)',
+        'rgb(50, 97, 88)',
+        'rgb(51, 57, 93)',
+        'rgb(95, 52, 92)',
+        'rgb(94, 95, 51)',
+        'rgb(49, 90, 93)',
+        'rgb(76, 95, 52)'
       ]);
       var r = 80;
 
@@ -130,7 +129,14 @@
           this.steps = null;
         },
         handleLoadData: function(evt, data) {
-          this.steps = data.root.legends;
+          this.steps = data.root.stages;
+        },
+        _createSteps: function(stageId) {
+          return this.steps.map(function(step) {
+            return {
+              completed: step.id <= stageId
+            };
+          });
         },
         renderSteps: function(steps) {
           steps = steps || [];
@@ -195,6 +201,7 @@
             min: 60,
             max: 100
           };
+          var _this = this;
 
           this._bubbleExtend = function(element, node) {
             element = $(element);
@@ -203,7 +210,6 @@
             var size = radius*2;
 
             var label;
-
             switch(node.orbitIndex) {
 
               // level 0 and level 1
@@ -280,7 +286,32 @@
                         return d3Transform().translate(-rect.width / 2, -rect.height / 2)();
                       });
 
-                    break;
+                      var steps = _this._createSteps(node.data.stage);
+                      var outlineRadius = radius + 5;
+
+                      // equally divided donut
+                      var donut = d3.pie().value(function(d) { return 1; });
+                      var arc = d3.arc()
+                      .innerRadius(outlineRadius)
+                      .outerRadius(outlineRadius + 10)
+                      .padAngle(.05);
+
+                      // stage status donut
+                      var donutElement = element
+                      .append('g')
+                      .classed('steps', 1);
+
+                      var arcs = donutElement.selectAll('.step')
+                      .data(donut(steps))
+                      .enter()
+                      .append('path')
+                      .classed('step', 1)
+                      .style('fill', function(d, i) {
+                        return d.data.completed ? step_fills(i) : 'transparent';
+                      })
+                      .attr('d', arc);
+
+                      break;
 
                     // 保修期到期, 预防性维护，设备计量，设备质控
                     case 2:

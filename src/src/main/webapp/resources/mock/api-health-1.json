@@ -1,6 +1,6 @@
 {
     "pages": {
-        "total": 12,
+        "total": 2,
         "limit": 50,
         "start": 0
     },
@@ -9,7 +9,7 @@
             "id": 10,
             "name": "西门子核磁Avanto",
             "owner": "张小小",
-            "stage": "申请",
+            "stage": 1,
             "link": {
                 "ref": "redirect",
                 "href": "https://app_url_prefix/portal/wo/woList.xhtml?isClosed=false"
@@ -19,7 +19,7 @@
             "id": 11,
             "name": "通用电气彩超LOGIQ",
             "owner": "王村",
-            "stage": "领工",
+            "stage": 4,
             "link": {
                 "ref": "redirect",
                 "href": "https://app_url_prefix/portal/wo/woList.xhtml?isClosed=false"
@@ -30,39 +30,39 @@
         "category": 1,
         "display": "维修中",
         "count": 2,
-        "legends": [
+        "stages": [
             {
-                "legend": 1,
+                "id": 1,
                 "display": "申请",
                 "count": 3,
                 "unit": "台"
             },
             {
-                "legend": 2,
+                "id": 2,
                 "display": "审核",
                 "count": 3,
                 "unit": "台"
             },
             {
-                "legend": 3,
+                "id": 3,
                 "display": "派工",
                 "count": 1,
                 "unit": "台"
             },
             {
-                "legend": 4,
+                "id": 4,
                 "display": "领工",
                 "count": 2,
                 "unit": "台"
             },
             {
-                "legend": 5,
+                "id": 5,
                 "display": "维修",
                 "count": 2,
                 "unit": "台"
             },
             {
-                "legend": 6,
+                "id": 6,
                 "display": "关单",
                 "count": 1,
                 "unit": "台"
