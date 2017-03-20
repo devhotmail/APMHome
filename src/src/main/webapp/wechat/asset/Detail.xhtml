@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <f:facet name="first">
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>#{msg.AssetInfoDetail}</title>
+        <h:outputStylesheet name="wechat/weui.min.css" />
+        <h:outputStylesheet name="wechat/photoswipe.css" />
+        <h:outputStylesheet name="wechat/default-skin.css" />
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/jquery-2.0.0.min.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/photoswipe.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/photoswipe-ui-default.min.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/detail.js"/>
+
+    </h:head>
+    <body>
+        <!-- Root element of PhotoSwipe. Must have class pswp. -->
+        <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+            <!-- Background of PhotoSwipe. 
+                 It's a separate element as animating opacity is faster than rgba(). -->
+            <div class="pswp__bg"></div>
+
+            <!-- Slides wrapper with overflow:hidden. -->
+            <div class="pswp__scroll-wrap">
+
+                <!-- Container that holds slides. 
+                    PhotoSwipe keeps only 3 of them in the DOM to save memory.
+                    Don't modify these 3 pswp__item elements, data is added later on. -->
+                <div class="pswp__container">
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                </div>
+
+                <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+                <div class="pswp__ui pswp__ui--hidden">
+
+                    <div class="pswp__top-bar">
+
+                        <!--  Controls are self-explanatory. Order can be changed. -->
+
+                        <div class="pswp__counter"></div>
+
+                        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                        <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                        <!-- element will get class pswp__preloader- -active when preloader is running -->
+                        <div class="pswp__preloader">
+                            <div class="pswp__preloader__icn">
+                                <div class="pswp__preloader__cut">
+                                    <div class="pswp__preloader__donut"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                        <div class="pswp__share-tooltip"></div> 
+                    </div>
+
+                    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                    </button>
+
+                    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                    </button>
+
+                    <div class="pswp__caption">
+                        <div class="pswp__caption__center"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+            <div class="weui-gallery" id="gallery">
+                <span class="weui-gallery__img" id="galleryImg"></span>
+                <div class="weui-gallery__opr">
+                    <a href="javascript:" class="weui-gallery__del">
+                        <!--<i class="weui-icon-delete weui-icon_gallery-delete"></i>-->
+                    </a>
+                </div>
+            </div>
+
+        <h:panelGroup  rendered="#{not empty wxAssetInfoController.assetInfo}" >  
+            <div class="page__bd">
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
+                            <img style="width: 50px;display: block"  src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{wxAssetInfoController.assetInfo.assetGroup}.ico"/>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p>#{wxAssetInfoController.assetInfo.name}</p>
+                            <p style="font-size: 13px;color: #888888;">#{wxAssetInfoController.assetInfo.aliasName}</p>
+                        </div>
+                    </div>
+                    <div class="weui-cell weui-cell_access">
+                        <div class="weui-cell__hd">
+                            <label class="weui-label">#{msg.vendor}</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <span style="vertical-align: middle">#{wxAssetInfoController.assetInfo.vendor}</span>
+                        </div>
+                    </div>
+                    <div class="weui-cell weui-cell_access" onclick="javascript:showBRCode();">
+                        <div class="weui-cell__bd">
+                            <label class="weui-label">#{msg.qrCode}</label>
+                        </div>
+                        <!--<div class="weui-cell__ft" >-->
+                        <p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />
+                        <!--</div>-->
+                    </div>
+                    <div class="weui-cell weui-cell_access">
+                        <div class="weui-cell__hd">
+                            <label class="weui-label">#{msg.clinicalDeptName}</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <span style="vertical-align: middle">#{wxAssetInfoController.assetInfo.clinicalDeptName}</span>
+                        </div>
+
+                    </div>
+                    <div class="weui-cell weui-cell_access">
+                        <div class="weui-cell__hd">
+                            <label class="weui-label">#{msg.assetOwnerName}</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <span style="vertical-align: middle">#{wxAssetInfoController.assetInfo.assetOwnerName}</span>
+                        </div>
+                    </div>
+                    <div class="weui-cell weui-cell_access">
+                        <div class="weui-cell__hd">
+                            <label class="weui-label">#{msg.assetOwnerTel}</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <span style="vertical-align: middle">#{wxAssetInfoController.assetInfo.assetOwnerTel}</span>
+                        </div>
+                    </div>
+                    <div class="weui-cell weui-cell_access">
+                        <div class="weui-cell__hd">
+                            <label class="weui-label">#{msg.purchaseDate}</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <span style="vertical-align: middle">#{wxAssetInfoController.assetInfo.purchaseDate}</span>
+                        </div>
+                    </div>
+                    <div class="weui-cell weui-cell_access">
+                        <div class="weui-cell__hd">
+                            <label class="weui-label">#{msg.warrantyDate}</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <span style="vertical-align: middle">#{wxAssetInfoController.assetInfo.warrantyDate}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="weui-cell weui-cell_access">
+                        <div class="weui-cell__hd">
+                            <label class="weui-label">#{msg.status}</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <span style="vertical-align: middle">#{fieldMsg.fieldValue('assetStatus',wxAssetInfoController.assetInfo.status)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <span style="vertical-align: middle">#{msg.PhotoList}</span>
+                        </div>
+                        <div class="my-gallery weui-cell__hd" data-pswp-uid="1" style="position: relative;">
+                            <c:forEach items="#{wxAssetInfoController.getPictureList(wxAssetInfoController.assetInfo.id)}" var="fileitem">
+                                <figure style="display: inline">
+                                    <a href="" data-size="800x600">
+                                        <p:graphicImage  value="#{pictureService.getImage()}"   height="50px" width="50px" style="margin-left: 5px">
+                                            <f:param name="pictureId" value="#{fileitem.fileId}" />
+                                        </p:graphicImage>
+                                    </a>
+                                </figure>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGroup rendered="#{not empty wxAssetInfoController.currentUser}">
+                <div class="weui-msg__opr-area">
+                    <p class="weui-btn-area">
+                        <a href="create.xhtml?action=Edit&amp;assetid=#{wxAssetInfoController.assetInfo.id}" class="weui-btn weui-btn_plain-primary">#{msg.Edit}</a>
+                    </p>
+                </div>
+                    </h:panelGroup>
+            </div>
+        </h:panelGroup>
+        <h:panelGroup  rendered="#{empty wxAssetInfoController.assetInfo}" >  
+            <div class="page">
+                    <div class="weui-msg">
+                        <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+                        <p>#{msg.NotFoundAsset}</p>
+                        <p>#{wxAssetInfoController.qrCode}</p>
+                        <div class="weui-msg__opr-area">
+                            <p class="weui-btn-area">
+                                <a href="assetList.xhtml?action=list&amp;qrCode=#{wxAssetInfoController.qrCode}" class="weui-btn weui-btn_primary">#{msg.BindAsset}</a>
+                                <a href="create.xhtml?qrCode=#{wxAssetInfoController.qrCode}" class="weui-btn weui-btn_primary">#{msg.Create}#{msg.AssetInfo}</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+        </h:panelGroup>
+        <div class="weui-msg__extra-area">
+            <div class="weui-footer">
+                <p class="weui-footer__links">
+                    <a href="javascript:void(0);" class="weui-footer__link"></a>
+                </p>
+                <p class="weui-footer__text">Copyright © 2016-2017 GE Healthcare</p>
+            </div>
+        </div>
+    </body>
+    <script>
+        function showBRCode() {
+            var imgt = "background-image:url(#url#)";
+            $("#galleryImg").attr("style", imgt.replace('#url#', $("#qrcode")[0].src));
+            $("#gallery").fadeIn(100);
+        }
+
+        $("#gallery").on("click", function () {
+            $("#gallery").fadeOut(100);
+        });
+
+
+
+    </script>
+
+
+</html>

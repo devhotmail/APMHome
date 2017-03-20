@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ge.apm.dao.mapper.AssetCostStatisticsMapper;
 import com.ge.apm.dao.mapper.AssetDepreciationMapper;
 import com.ge.apm.dao.mapper.AssetInfoMapper;
@@ -43,9 +45,13 @@ public class AssetCostDataService {
 	@Autowired
 	AssetCostStatisticsMapper assetCostStatisticsMapper;
 	
+	@Autowired
+	AssetExamDataAggregator assetExamDataAggregator;
+	
 	/***
 	 * 批量执行任务
 	 */
+	@Transactional
 	public String aggregateCostData(){
 		List<AssetCostStatistics> acss =  assetInfoMapper.fetchAssetInfo();
 		if(CollectionUtils.isEmpty(acss)){
@@ -69,6 +75,7 @@ public class AssetCostDataService {
 	/***
 	 * 	按天批量执行任务
 	 */
+	@Transactional
 	public void aggregateCostDataByDay(Date day){
 		if(day == null){
 			day = new Date();
@@ -91,6 +98,7 @@ public class AssetCostDataService {
 	 * 根据assetId获取执行单元
 	 * @param assetId
 	 */
+	@Transactional
 	public void aggregateCostDataByAssetId(Integer assetId,Date day){
 		AssetCostStatistics assetCostStatistics = 	assetInfoMapper.fetchAssetCostStatisticsByAssetId(assetId,day);
 		if(assetCostStatistics == null){
@@ -150,6 +158,7 @@ public class AssetCostDataService {
 		return sum == null ? 0 : sum/days;
 	}
 	
+	@Transactional
 	public String calByDay(BatchAssetCost bac){
 		try{
 			if(bac == null){
@@ -173,6 +182,7 @@ public class AssetCostDataService {
 		}
 	}
 	
+	@Transactional
 	public String calByFromTo(BatchAssetCost bac){
 		if(bac == null){
 			return "illegal param";
@@ -183,6 +193,7 @@ public class AssetCostDataService {
 		try{
 			DateTime from = new DateTime(bac.getFrom());
 			DateTime to = new DateTime(bac.getTo());
+			assetExamDataAggregator.initAssetAggregationDataByDateRange(from.toDate(), to.toDate());
 			while(from.isBefore(to)||from.isEqual(to)){
 				logger.info("calByFromTo begin ,current day is {}",from.toString());
 				aggregateCostDataByDay(from.toDate());

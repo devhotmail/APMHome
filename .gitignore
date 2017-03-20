@@ -1,3 +1,9 @@
+web.xml
+Test*.java
+src/src/main/resources/database.properties
+*.class
+*.bak
+database.properties
 src/bower_components/
 src/logs
 src/node_modules/
@@ -13,3 +19,8 @@ src/.classpath
 src/.settings
 src/geapm.iml
 src/src/main/webapp/WEB-INF/sun-web.xml
+.DS_Store
+.gitignore
+log4j.properties
+MyFunTest.java
+applicationContext-test.xml

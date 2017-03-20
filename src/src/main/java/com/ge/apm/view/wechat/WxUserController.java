@@ -2,72 +2,81 @@ package com.ge.apm.view.wechat;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.impl.WxUserServiceImpl;
-import webapp.framework.dao.GenericRepository;
+import javax.annotation.PostConstruct;
 import webapp.framework.web.WebUtil;
-import webapp.framework.web.mvc.JpaCRUDController;
 import webapp.framework.web.service.UserContext;
 
 @ManagedBean
 @ViewScoped
-public class WxUserController extends JpaCRUDController<UserAccount>{
+public class WxUserController {
 
-	private static final long serialVersionUID = -1L;
-	private UserAccount currentUser;
-//	private String newPassword;
-	private String confirmPassword;
-	
+    private UserAccount currentUser;
+    private String confirmPassword;
     private WxUserServiceImpl wxUserService;
-	
-    private Logger logger = LoggerFactory.getLogger(getClass());
-    
-    @Override
+    private String oldPassword;
+    private String newPassword;
+    private Boolean showResult = false;
+    private String msg;
+
+    @PostConstruct
     protected void init() {
-    	currentUser = UserContext.getCurrentLoginUser();
-    	wxUserService = WebUtil.getBean(WxUserServiceImpl.class);
+        currentUser = UserContext.getCurrentLoginUser();
+        wxUserService = WebUtil.getBean(WxUserServiceImpl.class);
     }
 
-   public UserAccount getCurrentUser() {
-		return currentUser;
-	}
+    public UserAccount getCurrentUser() {
+        return currentUser;
+    }
 
-	public void setCurrentUser(UserAccount currentUser) {
-		this.currentUser = currentUser;
-	}
-   
-   public void resetPassword(){
-	   logger.info("confirmPwd is {}",confirmPassword);
-//	   if(!newPassword.equals(confirmPassword)){
-//		   WebUtil.addSuccessMessage(WebUtil.getMessage("PasswordNotMatch"));
-//		   return;
-//	   }
-	   wxUserService.resetPassword(currentUser.getWeChatId(), confirmPassword);
-//	   newPassword = null;
-	   confirmPassword = null;
-   }
-    
-	@Override
-	protected GenericRepository<UserAccount> getDAO() {
-		return null;
-	}
+    public void setCurrentUser(UserAccount currentUser) {
+        this.currentUser = currentUser;
+    }
 
-//	public String getNewPassword() {
-//		return newPassword;
-//	}
-//
-//	public void setNewPassword(String newPassword) {
-//		this.newPassword = newPassword;
-//	}
+    public String getHospitalName() {
+        return wxUserService.getHospitalName(currentUser);
+    }
 
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
+    public void resetPassword() {
+        showResult = true;
+        if (!wxUserService.validateOldPassword(currentUser, oldPassword)) {
+            this.msg = WebUtil.getMessage("security_error");
+        } else if (!wxUserService.resetPassword(currentUser, newPassword)) {
+            this.msg = WebUtil.getMessage("PersistenceErrorOccured");
+        }
+    }
 
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
-	}
-	
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public Boolean getShowResult() {
+        return showResult;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
 }
