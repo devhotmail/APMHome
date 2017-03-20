@@ -715,12 +715,6 @@ INSERT INTO "i18n_message" VALUES (5604,'label','assetROI', '设备投资回报'
 INSERT INTO "i18n_message" VALUES (5605,'label','profitDistro', '利润科室分布','Profit Distribution by Department',null,-1);
 INSERT INTO "i18n_message" VALUES (5606,'label','assetType', '设备类型','Asset Type',null,-1);
 
-INSERT INTO "i18n_message" VALUES (5607,'clinicalDeptId','1', '超声诊断室','Radiation Dept',null,-1);
-INSERT INTO "i18n_message" VALUES (5608,'clinicalDeptId','2', '肿瘤中心','Tumour Dept',null,-1);
-INSERT INTO "i18n_message" VALUES (5609,'clinicalDeptId','3', '心超室','Heart Ultrasonic Dept',null,-1);
-INSERT INTO "i18n_message" VALUES (5610,'clinicalDeptId','4', '放射科','Ultrasonic Dept',null,-1);
-INSERT INTO "i18n_message" VALUES (5611,'clinicalDeptId','5', '心导管室','Heart Dept',null,-1);
-
 INSERT INTO "i18n_message" VALUES (5621,'label','assetAnnual', '设备绩效年报（元）','Asset Performance Annual Report',null,-1);
 INSERT INTO "i18n_message" VALUES (5622,'label','assetAnnualForecast', '设备绩效年报预测（元）','Asset Performance Forecast Report',null,-1);
 INSERT INTO "i18n_message" VALUES (5623,'label','assetAnnualForecast_title', '设备绩效预测','Asset Performance Annual Report',null,-1);
