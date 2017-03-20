@@ -4,6 +4,7 @@ $(function () {
     app.toggleJsdialog = toggleJsdialog;
     app.fullListItem = fullListItem;
     app.activeProgressBar = activeProgressBar;
+    app.initUserSelect = initUserSelect;
     
     /////////////////////////
     /**
@@ -66,6 +67,21 @@ $(function () {
         $.each($('.progressbar').children(), function(idx, val){
             if (idx < step) {
                 $(val).addClass('active');
+            }
+        });
+    }
+    
+    function initUserSelect(keyId, msgType) {
+        $.ajax({
+            type: "GET",
+            url: WEB_ROOT+"web/" +msgType,
+            success:function(ret) {
+                if (ret) {
+                    $('#'+keyId).append($('<option>请选择...</option>'));
+                    $.each(ret, function(idx, val){
+                        $('#'+keyId).append($('<option value="'+val.id+'">'+val.name+'</option>'));
+                    });
+                }
             }
         });
     }

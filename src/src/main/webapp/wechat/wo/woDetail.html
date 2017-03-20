@@ -1,3 +1,4 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="page">
     <jsp:include page="progressbar.html"/>
     
@@ -57,8 +58,14 @@
             </div>
         </div>
         
-        <!--问题追踪-->
-        <jsp:include page="msgTemplate.html"/>
+        <c:if test="true">
+            <!--派工-->
+            <jsp:include page="assignWo.html"/>
+        </c:if>
+        <c:if test="${}">
+            <!--交互详情-->
+            <jsp:include page="msgTemplate.html"/>
+        </c:if>
         
     </div>
     

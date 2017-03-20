@@ -16,7 +16,7 @@
         <!-- 引入 WeUI -->
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/wo/woprogress.css"/>
-        <script src="${ctx}/resources/wechat/js/utils/jquery-2.0.0.min.js"></script>
+        <script src="${ctx}/resources/wechat/js/utils/jquery-3.1.1.min.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/jweixin-1.0.0.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/wechatsdk.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/pagemanager.js"></script>
@@ -29,7 +29,6 @@
         <div id="container" class="container">
             <jsp:include page="woDetail.html"/>
         </div>
-        
         
         <div style="margin-bottom: 20px"></div>
     </body>

@@ -33,33 +33,57 @@
         </script>
         <script type="text/html" id="ts_myReports">
             <div class="page">
-                <div id="myReports" class="page__bd page__bd_spacing">
+                <div class="page__bd" style="height: 100%;">
+                    <div class="weui-tab">
+                        <div class="weui-navbar">
+                            <div class="weui-navbar__item weui-bar__item_on" data-close="1">
+                                未关闭工单
+                            </div>
+                            <div class="weui-navbar__item" data-close="2">
+                                已关闭工单
+                            </div>
+                        </div>
+                        <div class="weui-tab__panel">
+                            <div id="myReports" class="page__bd page__bd_spacing">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <script type="text/javascript">
                 $(function(){
-                    //fetch data from server    wolistdata is the restful url
-                    $.get(WEB_ROOT+'web/wolistdata', function(ret) {
-                        if (ret && ret.length !== 0) {
-                            var data = [];
-                            $.each(ret, function(i, v){
-                                data.push({title:'工单编号: '+ v['id'], 
-                                           ftitle: v['requestTime'], 
-                                           data : ['资产名称：'+v['assetName'],
-                                                   '工单状态：'+v['currentStepName'],
-                                                   '紧急程序：'+v['casePriority']]});
-                            });
-                            //show the data list
-                            app.fullListItem('myReports', data);
-                        } else {
-                            $('#container').empty();
-                            $('#container').append($('#ts_no_data').html());
-                        }
-                    });
-
+                    
+                    //data search function
+                    function loadData(close) {
+                        //fetch data from server    wolistdata is the restful url
+                        $.get(WEB_ROOT+'web/wolistdata', {}, function(ret) {
+                            if (ret && ret.length !== 0) {
+                                var data = [];
+                                $.each(ret, function(i, v){
+                                    data.push({title:'工单编号: '+ v['id'], 
+                                               ftitle: v['requestTime'], 
+                                               data : ['资产名称：'+v['assetName'],
+                                                       '工单状态：'+v['currentStepName'],
+                                                       '紧急程序：'+v['casePriority']]});
+                                });
+                                //show the data list
+                                app.fullListItem('myReports', data);
+                            } else {
+                                $('#container').empty();
+                                $('#container').append($('#ts_no_data').html());
+                            }
+                        });
+                    }
+                    
                     //bind click event
                     $('#myReports').on('click', '.weui-cell_access', function(){
                     });
+                    $('.weui-navbar__item').on('click', function () {
+                        $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+                        //do the search action     1-在修 / 2-完成 / 3-取消
+                        loadData($(this).data('close'));
+                    });
+                    loadData(1);
                 });
         </script>
            

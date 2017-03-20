@@ -6,7 +6,7 @@ window.pageManager = {
     stepCost: [],
     init: function(pageId){
         var self = this;
-        $(window).on('popstate', function() {debugger;
+        $(window).on('popstate', function() {
             var hashLocation = location.hash;
             if (hashLocation == '') {
                 WeixinJSBridge.call('closeWindow');

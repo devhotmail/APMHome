@@ -1,0 +1,28 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:if test="${}">
+    <!--派工-->
+    <div class="weui-cells__title">维修人员*</div>
+    <div class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <div class="weui-cell weui-cell_select">
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" name="currentPersonId" id="currentPersonId" >
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            app.initUserSelect('currentPersonId', 'getcurrentperson');
+        });
+    </script>
+</c:if>
+
+<div class="weui-btn-area" style="margin-bottom: 20px">
+    <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">
+        ${}
+    </a>
+</div>

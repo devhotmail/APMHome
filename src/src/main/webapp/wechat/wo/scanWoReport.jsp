@@ -15,7 +15,7 @@
         <title>新增报修</title>
         <!-- 引入 WeUI -->
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
-        <script src="${ctx}/resources/wechat/js/utils/jquery-2.0.0.min.js"></script>
+        <script src="${ctx}/resources/wechat/js/utils/jquery-3.1.1.min.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/jweixin-1.0.0.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/wechatsdk.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/pagemanager.js"></script>
