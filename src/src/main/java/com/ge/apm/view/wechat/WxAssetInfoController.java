@@ -31,8 +31,11 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
     private AssetInfo assetInfo;
     private String qrCode;
 
-    private String action;
     private String searchStr;
+    private String searchGroup;
+    private Boolean searchStatRun = true;
+    private Boolean searchStatStop = true;
+    private Boolean searchStatPartial = true;
 
     private StreamedContent picture;
 
@@ -49,13 +52,11 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         if (null != assetId && assetId.length() > 0) {
             assetInfo = assetDao.findById(Integer.parseInt(assetId));
         } else if (qrCode != null && qrCode.length() > 0) {
-            if(qrCode.length()>36){
-                qrCode = qrCode.substring(qrCode.length()-36);
+            if (qrCode.length() > 36) {
+                qrCode = qrCode.substring(qrCode.length() - 36);
             }
             assetInfo = findAsset(qrCode);
         }
-        
-        
 
     }
 
@@ -71,7 +72,6 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         }
         return pictures;
     }
-
 
     private AssetInfo findAsset(String qrCode) {
         if (null == qrCode || qrCode.length() == 0) {
@@ -95,18 +95,30 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
-    public void onSearch(){
+    public void onSearch() {
     }
-    
+
     public List<AssetInfo> getAssetList() {
-        
+
         List<SearchFilter> sfs = new ArrayList();
         sfs.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, UserContextService.getSiteId()));
-        if(!userContextService.hasRole("MultiHospital")){
+        if (!userContextService.hasRole("MultiHospital")) {
             sfs.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, UserContextService.getCurrentUserAccount().getHospitalId()));
         }
-        if(null!=searchStr ){
+        if (null != searchStr) {
             sfs.add(new SearchFilter("name", SearchFilter.Operator.LIKE, searchStr));
+        }
+        if (null != searchGroup) {
+            sfs.add(new SearchFilter("assetGroup", SearchFilter.Operator.EQ, searchGroup));
+        }
+        if (!searchStatRun) {
+            sfs.add(new SearchFilter("status", SearchFilter.Operator.NE, 1));
+        }
+        if (!searchStatStop) {
+            sfs.add(new SearchFilter("status", SearchFilter.Operator.NE, 2));
+        }
+        if (!searchStatPartial) {
+            sfs.add(new SearchFilter("status", SearchFilter.Operator.NE, 3));
         }
         return assetDao.findBySearchFilter(sfs);
     }
@@ -148,5 +160,38 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         return currentUser;
     }
 
+    public String getSearchGroup() {
+        return searchGroup;
+    }
+
+    public void setSearchGroup(String searchGroup) {
+        this.searchGroup = searchGroup;
+    }
+
+    public Boolean getSearchStatRun() {
+        return searchStatRun;
+    }
+
+    public void setSearchStatRun(Boolean searchStatRun) {
+        this.searchStatRun = searchStatRun;
+    }
+
+    public Boolean getSearchStatStop() {
+        return searchStatStop;
+    }
+
+    public void setSearchStatStop(Boolean searchStatStop) {
+        this.searchStatStop = searchStatStop;
+    }
+
+    public Boolean getSearchStatPartial() {
+        return searchStatPartial;
+    }
+
+    public void setSearchStatPartial(Boolean searchStatPartial) {
+        this.searchStatPartial = searchStatPartial;
+    }
     
+    
+
 }
