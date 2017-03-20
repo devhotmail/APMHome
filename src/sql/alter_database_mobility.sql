@@ -52,7 +52,7 @@ file_id int not null
 );
 alter table qr_code_attachment add primary key (id);
 
-
+drop table if exists account_application
 create table account_application(
 id serial not null,
 wechat_id varchar(64) not null, 
