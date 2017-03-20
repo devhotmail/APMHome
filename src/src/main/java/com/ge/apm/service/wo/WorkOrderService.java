@@ -1,6 +1,7 @@
 package com.ge.apm.service.wo;
 
 import com.ge.apm.dao.SiteInfoRepository;
+import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.dao.WorkOrderStepRepository;
 import com.ge.apm.domain.SiteInfo;
@@ -9,7 +10,13 @@ import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderStep;
 import com.ge.apm.domain.WorkOrderStepDetail;
 import com.ge.apm.service.uaa.UaaService;
+import java.util.Date;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +36,10 @@ public class WorkOrderService {
     private SiteInfoRepository siteDao;
     @Autowired
     private WorkOrderStepRepository stepDao;
+    @Autowired
+    private WxMpService wxService;
+    @Autowired
+    private UserAccountRepository userDao;
     
     public WorkOrderStep initWorkOrderCurrentStep(WorkOrder wo){
         WorkOrderStep woStep = new WorkOrderStep();
@@ -143,6 +154,9 @@ public class WorkOrderService {
             
             throw ex;
         }
+        //do wechat push
+        sendTemplateMsg(wo, currentWoStep, nextWoStep);
+        
         //judge whether continue, if auto_stepX is true then continue
         int currentStep = wo.getCurrentStepId();
         if ( wo.getSiteId() == null) return;
@@ -203,6 +217,8 @@ public class WorkOrderService {
             
             throw ex;
         }        
+        //do wechat push
+        sendTemplateMsg(wo, currentWoStep, null);
     }
     
     private void saveTotalTimeAndPrice(WorkOrderRepository woDao, WorkOrder wo, WorkOrderStep wos) {
@@ -223,6 +239,44 @@ public class WorkOrderService {
         wo.setTotalManHour(totalManHour);
         wo.setTotalPrice(totalPrice);
         woDao.save(wo);
+    }
+    
+    //do wechat push
+    @Autowired
+    private  HttpServletRequest request;
+    private void sendTemplateMsg(WorkOrder wo, WorkOrderStep currentWoStep, WorkOrderStep nextWoStep) {
+        if (currentWoStep.getStepId() != 1) {
+            //工单报修者 requestorId
+            UserAccount user = userDao.findById(wo.getRequestorId());
+            WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+                    .toUser(user.getWeChatId()).templateId("4N0nfZ0fXstReD-FcBu-d6tUsTcwBEIND-0wmOh0cO8").build();
+            if (currentWoStep.getStepId() == 6){
+                templateMessage.addWxMpTemplateData(
+                    new WxMpTemplateData("first", "工单已关单","#FF00FF"));
+                templateMessage.addWxMpTemplateData(
+                    new WxMpTemplateData("performance", "工单已关单","#FF00FF"));
+                templateMessage.addWxMpTemplateData(
+                    new WxMpTemplateData("time", "2017-3-13 17:23:34","#FF00FF"));
+                templateMessage.addWxMpTemplateData(
+                    new WxMpTemplateData("remark", currentWoStep.getStepName()+"已完成，工单已关单","#FF00FF"));
+            } else {
+                templateMessage.addWxMpTemplateData(
+                    new WxMpTemplateData("first", "工单已关单","#FF00FF"));
+                templateMessage.addWxMpTemplateData(
+                    new WxMpTemplateData("performance", "工单已关单","#FF00FF"));
+                templateMessage.addWxMpTemplateData(
+                    new WxMpTemplateData("time", "2017-3-13 17:23:34","#FF00FF"));
+                templateMessage.addWxMpTemplateData(
+                    new WxMpTemplateData("remark", currentWoStep.getStepName()+"已完成，当前状态为"+nextWoStep.getStepName(),"#FF00FF"));
+            }
+            String serverName = request.getRequestURL().toString().replace("/web/finishwo", "");
+            templateMessage.setUrl(wxService.oauth2buildAuthorizationUrl(serverName+"/web/menu/31", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+            try{
+                wxService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+            } catch (Exception e) {
+                logger.error("消息发送失败");
+            }
+        }
     }
     
 }

@@ -2,31 +2,29 @@
  */
 package com.ge.apm.service.analysis;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.ge.apm.dao.AssetDepreciationRepository;
+import com.ge.apm.dao.WorkOrderStepDetailRepository;
+import com.ge.apm.domain.AssetCostStatistics;
+import com.ge.apm.domain.DownTimeAsset;
 import org.apache.commons.collections.CollectionUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Seconds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import com.ge.apm.dao.AssetDepreciationRepository;
-import com.ge.apm.dao.WorkOrderStepDetailRepository;
-import com.ge.apm.domain.AssetCostStatistics;
-import com.ge.apm.domain.DownTimeAsset;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author 212547631
  */
-//@Component
+@Component
 public class AssetCostDataAggregator {
 	
 	private final static Logger logger = LoggerFactory.getLogger(AssetCostDataAggregator.class);
@@ -37,10 +35,10 @@ public class AssetCostDataAggregator {
     private AssetDepreciationRepository depreciationDao;
 
     @Autowired
-    private WorkOrderStepDetailRepository woStepDetailDao;
-    
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+	private WorkOrderStepDetailRepository woStepDetailDao;
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
     
     private static final String QUERY_ASSET_INFO =
     		"select ai.id asset_id,ai.site_id,ai.hospital_id,ai.asset_group,ai.asset_dept_id dept_id,"+

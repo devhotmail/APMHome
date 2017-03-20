@@ -1,4 +1,4 @@
-准备工作：
+﻿准备工作：
 -> IDE(推荐NetBeans)
 -> maven(NetBeans的安装中自带 maven)
 -> JDK 1.8
@@ -42,3 +42,4 @@ mvn compile
 mvn test
 mvn package
 mvn jetty:run
+

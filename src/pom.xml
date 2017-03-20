@@ -528,6 +528,17 @@
       <version>2.2</version>
     </dependency>
     <dependency>
+      <groupId>org.springframework.webflow</groupId>
+      <artifactId>spring-faces</artifactId>
+      <version>2.4.2.RELEASE</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>spring-js</artifactId>
+          <groupId>org.springframework.webflow</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-taglibs</artifactId>
       <version>3.1.0.RELEASE</version>
@@ -581,7 +592,7 @@
     <dependency>
       <groupId>com.alibaba</groupId>
       <artifactId>druid</artifactId>
-      <version>1.0.27</version>
+      <version>1.0.28</version>
     </dependency>
     <dependency>
       <groupId>com.typesafe</groupId>
@@ -613,6 +624,11 @@
       <groupId>io.javaslang</groupId>
       <artifactId>javaslang</artifactId>
       <version>2.0.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.21.0-GA</version>
     </dependency>
     <dependency>
       <groupId>org.simpleflatmapper</groupId>

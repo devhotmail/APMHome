@@ -245,6 +245,32 @@
                         signature: signature,// 必填，签名，见附录1
                         jsApiList: ['scanQRCode','chooseImage','uploadImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
                     });
+                    wx.ready(function(){
+                        wx.scanQRCode({
+                            needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                            scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                            success: function (res) {
+                                var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                                if (result.length > 36) {
+                                    result = result.substr(result.length-36);
+                                }
+                                $.ajax({
+                                    type: "GET",
+                                    url: WEB_ROOT+"web/findasset",
+                                    data: {'assetId': result},
+                                    success:function(ret) {
+                                        if (ret) {
+                                            $('#assetId').val(ret.id);
+                                            $('#assetName').val(ret.name);
+                                            $('#caseOwnerId').val(ret.assetOwnerId);
+                                            $('#caseOwnerName').val(ret.assetOwnerName);
+                                            $('#hospitalId').val(ret.hospitalId);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    });
                     
                     var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
                         $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
@@ -271,6 +297,18 @@
                     $('.weui-gallery__del').on('click', function(){
                         $uploaderFiles.children().remove();
                     });
+                    
+                    (function(){
+                        var datetime = new Date();
+                        var month = datetime.getMonth()+1;
+                        var date = datetime.getDate();
+                        var hours = datetime.getHours();
+                        var mins = datetime.getMinutes();
+                        var secs = datetime.getSeconds();
+                        var val = datetime.getFullYear()+'-'+(month>9?month:'0'+month)+'-'+(date>9?date:'0'+date)
+                                +'T'+(hours>9?hours:'0'+hours)+':'+(mins>9?mins:'0'+mins) + ':'+(secs>9?secs:'0'+secs);
+                        $('#requestTime').val(val);
+                    })();
                     
                     //初始化下拉框
                     initData('casePriority', 'casePriority', '${casePriority}');
@@ -312,29 +350,6 @@
                         });
                     }
                     
-                    wx.ready(function(){
-                        wx.scanQRCode({
-                            needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                            scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                            success: function (res) {
-                                var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                                $.ajax({
-                                    type: "GET",
-                                    url: WEB_ROOT+"web/findasset",
-                                    data: {'assetId': result},
-                                    success:function(ret) {
-                                        if (ret) {
-                                            $('#assetId').val(ret.id);
-                                            $('#assetName').val(ret.name);
-                                            $('#caseOwnerId').val(ret.assetOwnerId);
-                                            $('#caseOwnerName').val(ret.assetOwnerName);
-                                            $('#hospitalId').val(ret.hospitalId);
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    });
                     //提交工单
                     $('#submit').click(function(){
                         var array = $('#assetForm').serializeArray();

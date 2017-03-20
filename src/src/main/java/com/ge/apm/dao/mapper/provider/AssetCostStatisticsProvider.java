@@ -1,42 +1,49 @@
 package com.ge.apm.dao.mapper.provider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ge.apm.domain.AssetCostStatistics;
 
 public class AssetCostStatisticsProvider {
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	public String updateAssetCostStatistics(AssetCostStatistics assetCostStatistics){
 		StringBuilder sb = new StringBuilder();
-		sb.append("update asset_submit set ");
+		sb.append("update asset_summit set id=id, ");
 		if(intIsNotNull(assetCostStatistics.getSiteId())){
-			sb.append("site_id = #{siteId},");
+			sb.append(" site_id = #{siteId},");
 		}
 		if(intIsNotNull(assetCostStatistics.getHospitalId())){
-			sb.append("hospital_id = #{hospitalId},");
+			sb.append(" hospital_id = #{hospitalId},");
 		}
 		if(intIsNotNull(assetCostStatistics.getAssetGroup())){
-			sb.append("asset_group = #{assetGroup},");
+			sb.append(" asset_group = #{assetGroup},");
 		}
 		if(intIsNotNull(assetCostStatistics.getDeptId())){
-			sb.append("dept_id = #{deptId},");
+			sb.append(" dept_id = #{deptId},");
 		}
 		if(assetCostStatistics.getAssetName() != null){
-			sb.append("asset_name = #{assetName},");
+			sb.append(" asset_name = #{assetName},");
 		}
 		if(intIsNotNull(assetCostStatistics.getSupplierId())){
-			sb.append("supplier_id = #{supplierId},");
+			sb.append(" supplier_id = #{supplierId},");
 		}
 		if(doubleIsNotNull(assetCostStatistics.getMaintenanceCost())){
-			sb.append("maintenance_cost = #{maintenanceCost},");
+			sb.append(" maintenance_cost = #{maintenanceCost},");
 		}
 		if(doubleIsNotNull(assetCostStatistics.getDeprecationCost())){
-			sb.append("deprecation_cost = #{deprecationCost},");
+			sb.append(" deprecation_cost = #{deprecationCost},");
 		}
 		if(intIsNotNull(assetCostStatistics.getDownTime())){
-			sb.append("down_time =#{downTime},");
+			sb.append(" down_time =#{downTime},");
 		}
 		if(intIsNotNull(assetCostStatistics.getWorkOrderCount())){
-			sb.append("work_order_count =#{workOrderCount},");
+			sb.append(" work_order_count =#{workOrderCount}");
 		}
-		sb.append("1 = 1 where asset_id = #{assetId}");
+		sb.append(" where asset_id = #{assetId} and created = date(now())");
+		if(logger.isInfoEnabled()){
+			logger.info("updateAssetCostStatistics sql is {}",sb.toString());
+		}
 		return sb.toString();
 	}
 	

@@ -72,7 +72,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
     protected Page<WorkOrder> loadData(PageRequest pageRequest) {
         //only show my tasks
         setLoginUserFilter();
-        
+/*        
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");
         String assetId = (String)UrlEncryptController.getValueFromMap(encodeStr,"assetId");
@@ -82,7 +82,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         if (assetIdFromUrl != null){
             searchFilters.add(new SearchFilter("assetId", SearchFilter.Operator.EQ, assetIdFromUrl));
         }
-        
+*/        
         this.selected = null;
         
         return dao.findBySearchFilter(this.searchFilters, pageRequest);
@@ -215,13 +215,33 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
     public void setFilterIsClosed(String filterIsClosed) {
         this.filterIsClosed = filterIsClosed;
     }
+
+    public String filterAssetId;
+
+    public String getFilterAssetId() {
+        return filterAssetId;
+    }
+
+    public void setFilterAssetId(String filterAssetId) {
+        this.filterAssetId = filterAssetId;
+    }
     
-    public void setIsClosedFilter(){
-        if(filterIsClosed==null) return;
-        if (!("true".equals(filterIsClosed) || "false".equals(filterIsClosed))) return;
+    public void setViewFilter(){
+        if(filterIsClosed!=null){
+            if (("true".equals(filterIsClosed) || "false".equals(filterIsClosed))){
+                if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+                searchFilters.add(new SearchFilter("isClosed", SearchFilter.Operator.EQ, Boolean.parseBoolean(filterIsClosed)));
+            }
+        }
         
-        if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
-        searchFilters.add(new SearchFilter("isClosed", SearchFilter.Operator.EQ, Boolean.parseBoolean(filterIsClosed)));
+        if(filterAssetId!=null){
+            if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
+            try{
+                searchFilters.add(new SearchFilter("assetId", SearchFilter.Operator.EQ, Integer.parseInt(filterAssetId)));
+            }
+            catch(Exception ex){
+            }
+        }        
     }
     
     private int assetStatus;

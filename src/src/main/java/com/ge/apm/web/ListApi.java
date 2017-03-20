@@ -78,7 +78,7 @@ public class ListApi {
 					ListService.queryForBmTick(site_id, hospital_id, dept, type, from, to),
 					to.compareTo(from) ) );
 		else
-			return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Parameter unmatched"));
+			return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Bad Request"));
 	}
 
 	private String getHref(String requestUrl, Date from, Date to, Integer dept, Integer type, String orderby, Integer limit, Integer start ) {
@@ -293,7 +293,7 @@ public class ListApi {
 								Option.of(asset.getElement17()).getOrElse(0.0) )
 						.put("profit_bm",
 								Option.of(asset.getElement18()).getOrElse(0.0) )
-						.build())
+						.build() )
 						.toBlocking()
 						.toIterable();
 

@@ -1,50 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
 <!DOCTYPE html>
-<html 	xmlns="http://www.w3.org/1999/xhtml"
- 			xmlns:h="http://java.sun.com/jsf/html"
-            xmlns:f="http://java.sun.com/jsf/core"
-            xmlns:p="http://primefaces.org/ui"
-            xmlns:pm="http://primefaces.org/mobile">
-            
-     <f:view renderKitId="PRIMEFACES_MOBILE" />
-     
-     <h:head>
- 		我的信息
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>#{msg.UserAccount}</title>
+        <h:outputStylesheet name="wechat/weui.min.css" />
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/jquery-2.0.0.min.js"/>
+
     </h:head>
-    
-    <h:body>    
-         <pm:page>
-            <pm:header title="我的信息" ></pm:header>
-        <pm:content>
-	    	<pm:field>
-	             <h:outputLabel value="#{msg.login_name} : " for="loginName" >
-	           		<h:outputText value="#{wxUserController.currentUser.loginName}"/>
-	          	</h:outputLabel>
-	    	</pm:field>
-	    	<BR />
-	    	<pm:field>
-	             <h:outputLabel value="#{msg.name} : " for="name" >
-	           		<h:outputText value="#{wxUserController.currentUser.name}"/>
-	          	</h:outputLabel>
-	    	</pm:field>
-			 <BR /> 
-			<pm:field>
-			    <h:outputLabel value="手机号:"  for="telephone" >
-			    	<h:outputText value="#{wxUserController.currentUser.telephone}"/>
-			    </h:outputLabel>
-			</pm:field>
-			 <BR /> 
-			<pm:field>
-			    <h:outputLabel  value="邮箱:" for="email">
-			    	<h:outputText value="#{wxUserController.currentUser.email}"/>
-			    </h:outputLabel>
-			</pm:field>
-<!--         <BR /> 
-		<pm:field>
-		    <h:outputLabel  value="角色:" for="email">
-		    	<h:outputText value="#{wxUserController.currentUser.email}"/>
-		    </h:outputLabel>
-		</pm:field> -->
-		          </pm:content> 
-            </pm:page>
+    <h:body>
+        <div class="page">
+            <div class="page__bd">
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">#{msg.login_name}</div>
+                        <div class="weui-cell__ft">#{wxUserController.currentUser.loginName}</div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">#{msg.name}</div>
+                        <div class="weui-cell__ft">#{wxUserController.currentUser.name}</div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">#{msg.hospitalId}</div>
+                        <div class="weui-cell__ft">#{wxUserController.getHospitalName()}</div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">#{msg.telephone}</div>
+                        <div class="weui-cell__ft">#{wxUserController.currentUser.telephone}</div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">#{msg.email}</div>
+                        <div class="weui-cell__ft">#{wxUserController.currentUser.email}</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="weui-msg__opr-area page__ft">
+                <p class="weui-btn-area">
+                    <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_primary">#{msg.Return}</a>
+                </p>
+            </div>
+
+        </div>
+        <div class="weui-msg__extra-area">
+            <div class="weui-footer">
+                <p class="weui-footer__links">
+                    <a href="javascript:void(0);" class="weui-footer__link"></a>
+                </p>
+                <p class="weui-footer__text">Copyright © 2016-2017 GE Healthcare</p>
+            </div>
+        </div>
+
     </h:body>
 </html>
