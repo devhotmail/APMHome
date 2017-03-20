@@ -1,6 +1,20 @@
 {
   "name": "All Assets",
   "usage": 0.57,
+  "suggestions": [
+    {
+      "title": "建议提高使用率",
+      "content": "1种类型"
+    },
+    {
+      "title": "建议购买新设备",
+      "content": "2种类型"
+    },
+    {
+      "title": "建议合理使用设备",
+      "content": "3种类型"
+    }
+  ],
   "items": [
     {
       "name": "CT",
@@ -102,7 +116,12 @@
     },
     {
       "name": "DSA",
-      "suggestion": "建议购买1台新设备",
+      "suggestions": [
+        {
+          "title": "建议购买新设备",
+          "content": "1台设备"
+        }
+      ],
       "items": [
         {
           "name": "DSA-1",
@@ -141,7 +160,12 @@
     },
     {
       "name": "CR",
-      "suggestion": "建议提高使用率",
+      "suggestions": [
+        {
+          "title": "建议提高使用率",
+          "content": "2台设备"
+        }
+      ],
       "items": [
         {
           "name": "CR-1",
@@ -197,7 +221,12 @@
     },
     {
       "name": "DR",
-      "suggestion": "建议合理使用设备",
+      "suggestions": [
+        {
+          "title": "建议合理使用设备",
+          "content": "1台设备"
+        }
+      ],
       "items": [
         {
           "name": "DR-1",

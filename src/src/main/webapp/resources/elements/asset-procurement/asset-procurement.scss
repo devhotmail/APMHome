@@ -16,7 +16,6 @@ $color-set: $orange $yellow $gray;
 #chart { 
   width: calc(100% - #{$related-info-width});
   height: 100%;
-  background-color: #000;
 
   // remove highlight when tap link in mobile safari
   svg * {
@@ -111,4 +110,9 @@ px-dropdown {
   .legend-tip {
     margin-left: 5px;
   }
+}
+
+.divider {
+  border-top: 1px solid rgb(186, 186, 186);
+  margin: 10px 0;
 }

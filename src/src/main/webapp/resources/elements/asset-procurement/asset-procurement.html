@@ -23,30 +23,30 @@
         </template>
       </div>
       <div class="kpis">
-        当前[[selectOptsZh]]:
-        <h2>[[focus.data.name]]</h2>
+        <h3>当前位置: [[focus.data.name]]</h3>
         当前平均使用率预测:
         <h2>[[decimal2Percent(focus.data.usage)]]</h2>
-        <template is="dom-if" if="[[focus.data.suggestion]]">
-          当前建议为
-          <h2>[[focus.data.suggestion]]</h2>
+        <template is="dom-if" if="[[isArray(focus.data.suggestions)]]">
+          <template is="dom-repeat" items="[[focus.data.suggestions]]">
+            <div>[[item.title]]</div>
+            <h2>[[item.content]]</h2>
+          </template>
+          <div class="divider"></div>
         </template>
         <template is="dom-if" if="[[currentKPIs.length]]">
           <template is="dom-repeat" items="[[currentKPIs]]">
-            <template is="dom-if" if="[[showKpi(item.conclusion)]]">
+            <template is="dom-if" if="[[item.conclusion]]">
               <div class$="kpi kpi-[[index]]">
                 [[item.desc]]
               </div>
             </template>
             <div class="kpi-detail">
-              <template is="dom-if" if="[[item.conclusion.group]]">
-                <h1>[[item.conclusion.group]][[selectOptsZh]]</h1>
-              </template>
-              <template is="dom-if" if="[[item.conclusion.single]]">
-                <h1>[[item.conclusion.single]]台设备</h1>
+              <template is="dom-if" if="[[item.conclusion]]">
+                <h2>[[item.conclusion]]台设备</h2>
               </template>
             </div>
           </template>
+          <div class="divider"></div>
         </template>
       </div>
       <div class="legends">
@@ -58,20 +58,23 @@
           <i class="fa fa-adjust" aria-hidden="true"></i>
           <span class="legend-tip">使用率预测超过100%的设备(台)</span>
         </div>
+        <div class="legend">球大小与设备利润预测相关</div>
       </div>
     </div>
   </template>
   <script>
     var constants = {
       waveColor: { // Color of the fill wave
-        gray: 'rgb(148, 147, 146)',
-        orange: 'rgb(232, 136, 56)',
-        yellow: 'rgb(236, 219, 84)'
+        gray: 'rgb(178, 178, 178)',
+        orange: 'rgb(277, 110, 21)',
+        yellow: 'rgb(235, 220, 81)'
       },
-      textColor: '#fff', // Text color
+      textColor: 'rgb(111, 111, 111)', // Text color
       fontScale: 0.1, // Text size relatived to circle's radius
       textTopPosition: 0.85 // Percentage of height to show text top in the asset circle
     };
+
+    // #e26d26 #b3b3b3; #ebda51;
 
     var sectionalizer = [
       {
@@ -194,6 +197,7 @@
           'loadData(selectedOpt)',
           'changeQuery(selectedOpt)'
         ],
+        isArray: Array.isArray,
         computedCls: function(val, selectedOpt) {
           return val === selectedOpt ? 'active btn' : 'btn';
         },
@@ -211,9 +215,6 @@
           }).indexOf(opt);
           var index = pos > -1 ? pos : 0;
           return this.selectOpts[index].zh;
-        },
-        showKpi: function(conclusion) {
-          return conclusion.group || conclusion.single;
         },
         getCurrentKPIs: function(focus) {
           var conclusion = focus.data.conclusion;
@@ -254,7 +255,7 @@
           data.items = data.items.map(function(m) {
             m.conclusion = sectionalizer.reduce(function(prev,next) {
               prev[next.loadStatus] = {};
-              prev[next.loadStatus].single = m.items.filter(function(i) {
+              prev[next.loadStatus] = m.items.filter(function(i) {
                 return next.filter(i.usage);
               }).length;
               return prev;
@@ -267,14 +268,14 @@
           data.conclusion = sectionalizer.reduce(function(prev, next) {
             prev[next.loadStatus] = {};
             var result = data.items.reduce(function(pr, ne) {
-              pr = pr + ne.conclusion[next.loadStatus].single;
+              pr = pr + ne.conclusion[next.loadStatus];
               return pr;
             }, 0);
-            prev[next.loadStatus].single = result;
+            prev[next.loadStatus] = result;
 
-            prev[next.loadStatus].group = data.items.filter(function(i) {
-              return next.filter(i.usage);
-            }).length;
+            // prev[next.loadStatus].group = data.items.filter(function(i) {
+            //   return next.filter(i.usage);
+            // }).length;
             
             return prev;
           }, {});
@@ -286,10 +287,10 @@
             groupby: groupby
           }).toString();
 
-          return this.fetchPage(url)
-          .then((function(data) {
-            this.data = this.conclude(data);
-          }).bind(this));
+          // return this.fetchPage(url)
+          // .then((function(data) {
+          //   this.data = this.conclude(data);
+          // }).bind(this));
 
           return fetch('mock/asset-procurement.json' + '?groupby=' + groupby)
           .then(function(res) {
@@ -355,7 +356,7 @@
             return getColorByPercent(d.data.usage);
           })
           .attr('fill', function(d) {
-            return (d !== focus && d.parent !== focus) ? 'none' : 'black';
+            return (d !== focus && d.parent !== focus) ? 'none' : 'transparent';
           })
           .on('click', function(d) {
             if (focus !== d) {
@@ -447,7 +448,7 @@
 
             transition.selectAll('circle.node-leaf')
             .attr('fill', function(d) {
-              return (d !== focus && d.parent !== focus) ? 'none' : 'black';
+              return (d !== focus && d.parent !== focus) ? 'none' : 'transparent';
             });
 
             transition.selectAll('g.text-top')
@@ -494,14 +495,12 @@
             })
             .style('opacity', function(d) {
               if (d === focus) {
-                if (d.children) return 0.5;
+                if (d.children) return 0.6;
                 return 1;
               } else {
                 if (d.parent === focus) return 1;
-                return 0.5;
+                return 0.6;
               }
-              return d === focus ? 0.5 : (d.parent === focus ? 1 : 0.5);
-              // return d === focus ? 0.75 : (d.parent === focus ? 1 : 0.5);
             })
             .selectAll('circle, g.wave')
             .attr('transform', 'scale(' + k + ')')
@@ -572,12 +571,12 @@
 
                 // Advice text render here
                 if (adviceIncluded ||  (!adviceIncluded && d.r > 100)) {
-                  if (d.data.suggestion) {
+                  if (d.data.suggestions && d.data.suggestions.length) {
                     var overloadTxt = d3.select(this)
                     .append('text')
                     .attr('y', overload ? 60 : 50)
                     .attr('font-size', 20)
-                    .text(d.data.suggestion)
+                    .text(d.data.suggestions[0].title)
                     .call(commonTextAttr);
                   }
                 }
