@@ -22,44 +22,81 @@ and open the template in the editor.
     </h:head>
     <body>
         <div class="page__bd">
-            <div class="weui-panel weui-panel_access">
-                <div class="weui-panel__hd">
-                    <div class="weui-flex">
-                        <div >
-                            <button  id="scan"  class="weui-btn weui-btn_mini weui-btn_primary" >#{msg.ScanCode}</button>
-                        </div>
-                        <div class="weui-flex__item">
-                            <h:form id="assetList" >
-                                <div class="weui-search-bar__box">
-                                    <i class="weui-icon-search"></i>
-                                    <h:inputText  class="weui-search-bar__input" id="searchInput" value="#{wxAssetInfoController.searchStr}"   onchange="search()"/>
-                                    <a href="javascript:clear()" class="weui-icon-clear" id="searchClear"></a>
-                                </div>
-                                <p:remoteCommand name="search" actionListener="#{wxAssetInfoController.onSearch}" update="dataList" />
-                            </h:form>
+
+            <h:form id="assetList" >
+                <div class="weui-search-bar" id="searchBar">
+                    <div class="weui-search-bar__form">
+                        <div class="weui-search-bar__box ">
+                            <i class="weui-icon-search"></i>
+                            <h:inputText  class="weui-search-bar__input" id="searchInput" value="#{wxAssetInfoController.searchStr}"   onchange="search()"/>
+                            <a href="javascript:clear()" class="weui-icon-clear" id="searchClear"></a>
                         </div>
                     </div>
 
                 </div>
-                <div class="weui-panel__bd">
-                    <p:dataScroller id="dataList" value="#{wxAssetInfoController.getAssetList()}" var="asset" chunkSize="10" style="border: 0">
-                        <h:link  outcome="Detail.xhtml" class="weui-media-box weui-media-box_appmsg">
-                            <f:param name="assetId" value="#{asset.id}"/>
-                            <f:param name="action" value="view"/>
-                            <!--<f:param name="qrCode" value="#{wxAssetInfoController.qrCode}" disable="#{empty wxAssetInfoController.qrCode}"/>-->
-                            <div class="weui-media-box__hd">
-                                <img id="icoassetGroup" class="weui-media-box__thumb icoassetGroup" src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{asset.assetGroup}.ico" />
-                            </div>
-                            <div class="weui-media-box__bd">
-                                <h4 class="weui-media-box__title">#{asset.name}</h4>
-                                <p class="weui-media-box__desc">#{asset.clinicalDeptName}</p>
-                            </div>
-                        </h:link>
-                        <!--<p:separator ></p:separator>-->
-                    </p:dataScroller>
+                <div class="weui-cell weui-cell_select weui-s">
+                    <div class="weui-cell__hd">
+                        #{msg.assetGroup}
+                    </div>
+                    <div class="weui-cell__bd">
+                        <h:selectOneMenu id="assetGroup" class="weui-select" value="#{wxAssetInfoController.searchGroup}" onchange="search()">
+                            <f:selectItem itemLabel="全部"/>
+                            <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                        </h:selectOneMenu>
+                    </div>
                 </div>
-            </div>
+                <div class="weui-cell weui-cells_checkbox">
+                    <div class="weui-cell__hd">
+                        状态
+                    </div>
+                    <label class="weui-cell weui-check__label" for="assetList:running"></label>
+                    <div class="weui-cell__bd">
+                        <h:selectBooleanCheckbox id="running" class="weui-check" value="#{wxAssetInfoController.searchStatRun}" onchange="search()"/>
+                        <i class="weui-icon-checked"></i>正常
+                    </div>
+                    <label class="weui-cell weui-check__label" for="assetList:stoped"></label>
+                    <div class="weui-cell__bd">
+                        <h:selectBooleanCheckbox id="stoped" class="weui-check" value="#{wxAssetInfoController.searchStatStop}" />
+                        <i class="weui-icon-checked"></i>停机
+                    </div>
+                    <label class="weui-cell weui-check__label" for="assetList:partial"></label>
+                    <div class="weui-cell__bd">
+                        <h:selectBooleanCheckbox id="partial" class="weui-check" value="#{wxAssetInfoController.searchStatPartial}" />
+                        <i class="weui-icon-checked"></i>异常
+                    </div>
+                </div>
+                <p:remoteCommand name="search" actionListener="#{wxAssetInfoController.onSearch}" update="dataList" />
+            </h:form>
+
+
         </div>
+        <!--<div class="weui-page__bd">-->
+        <p:dataScroller id="dataList" value="#{wxAssetInfoController.getAssetList()}" var="asset" chunkSize="10"  rowIndexVar="row"  >
+            <f:facet name="header">
+                <div >
+                总计： #{wxAssetInfoController.getAssetList().size()}
+                    </div>
+            </f:facet>
+            <h:link  outcome="Detail.xhtml" class="weui-media-box weui-media-box_appmsg">
+                <f:param name="assetId" value="#{asset.id}"/>
+                <f:param name="action" value="view"/>
+                <!--<f:param name="qrCode" value="#{wxAssetInfoController.qrCode}" disable="#{empty wxAssetInfoController.qrCode}"/>-->
+                <div class="weui-media-box__hd">
+                    <img id="icoassetGroup" class="weui-media-box__thumb icoassetGroup" src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{asset.assetGroup}.ico" />
+                </div>
+                <div class="weui-media-box__bd">
+                    <h4 class="weui-media-box__title">#{asset.name}</h4>
+                    <p class="weui-media-box__desc"><span> #{asset.clinicalDeptName}</span><span> #{asset.assetOwnerName}</span><span> #{asset.assetOwnerName2}</span></p>
+                    <p class="weui-media-box__desc">#{asset.manufacture}</p>
+                </div>
+                <div class="weui-media-box__ft">
+                    <p  style="height: 60px">#{asset.status==1?"运行":""}#{asset.status==2?"停机":""}#{asset.status==3?"异常":""}</p>
+                </div>
+            </h:link>
+            <p:separator ></p:separator>
+        </p:dataScroller>
+        <!--</div>-->
+
         <div class="weui-msg__extra-area">
             <div class="weui-footer">
                 <p class="weui-footer__links">
@@ -72,30 +109,6 @@ and open the template in the editor.
     <script type="text/javascript">
         $("#assetList\\:searchInput").attr('placeholder', '搜索...');
 
-        var jsSignature = #{wechatUtilService.getJsSignature()};
-        wx.config({
-            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-            appId: jsSignature.appid, // 必填，公众号的唯一标识
-            timestamp: jsSignature.timestamp, // 必填，生成签名的时间戳
-            nonceStr: jsSignature.noncestr, // 必填，生成签名的随机串
-            signature: jsSignature.signature, // 必填，签名，见附录1
-            jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-        });
-
-        wx.ready(function () {
-            $("#scan").click(function () {
-                wx.scanQRCode({
-                    needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                    scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                    success: function (res) {
-                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                        window.location.href = "Detail.xhtml?qrCode=" + result;
-                        debugger;
-                    }
-                });
-            });
-//            $("#scan").click();
-        });
 
         function clear() {
             $("#assetList\\:searchInput").val('');
