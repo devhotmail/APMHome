@@ -18,7 +18,7 @@
     <bubble-radial-chart id="chart"
        query-url="[[queryUrl]]"
        group-by="[['type']]"
-       bubble-extend="[[_bubbleExtend]]"
+       render-gauge="[[_renderGauge]]"
        on-open-node="handleOpenNode"
        on-close-node="handleCloseNode"
        on-data-load="handleLoadData"
@@ -203,7 +203,7 @@
           };
           var _this = this;
 
-          this._bubbleExtend = function(element, node) {
+          this._renderGauge = function(element, node) {
             element = $(element);
             var textPixels = 50;
             var radius = node.circle.r;

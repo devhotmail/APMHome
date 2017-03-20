@@ -244,9 +244,6 @@
               .text('占总利润' + parseInt(ratioInProfit * 100) + '%');
             }
           }
-          var labelsGroup = gaugeGroup.append('g').
-          attr('fill', config.textColor).
-          attr('transform', 'translate(' + [radius, radius].join(',') + ')');
 
           if(config.showWave) {
             // The clipping wave area.
@@ -285,62 +282,63 @@
             if (config.waveAnimate) {
               animateWave();
             }
+          }
 
-          // text group to show revenue and profit value with text tips
-          var fullTipGroup = labelsGroup.append('g')
-          .attr('class', 'full-tips');
+          var labelsGroup = gaugeGroup.append('g')
+          .attr('fill', config.textColor)
+          .attr('transform', 'translate(' + [radius, radius].join(',') + ')');
 
-          // text group to show revenue and profit value
-          var lightTipGroup = labelsGroup.append('g')
-          .attr('class', 'light-tips');
+          var func = this.renderGauge;
+          if (func) {
+            func(labelsGroup.node(), node, config);
+          } else {
 
-          // revenue value
-          var revenue = +node.data.revenue_label;
-          var text1FinalVal = parseFloat(revenue).toFixed(2);
-          var text1Unit = node.data.revenue_label_unit;
-          var text1StartVal = config.valueCountUp ? config.minValue : text1FinalVal;
-
-          fullTipGroup.append('text')
-          .text('收入')
-          .attr('text-anchor', 'middle')
-          .attr('font-size', textPixels + 'px')
-          .attr('transform', 'translate(' + [0, -textPixels].join(',') + ')');
-
-          fullTipGroup.append('text')
-          .text(textFormat(text1FinalVal, text1Unit))
-          .attr('text-anchor', 'middle')
-          .attr('font-size', textPixels + 'px');
-
-          var text1 = lightTipGroup.append("text")
-          .text(textFormat(text1FinalVal, text1Unit))
-          .attr("class", "liquidFillGaugeText")
-          .attr("text-anchor", "middle")
-          .attr("font-size", textPixels + "px");
-
-          // profit value
-          var profit = +node.data.profit_label;
-          var text2FinalVal = parseFloat(profit).toFixed(2);
-          var text2Unit = node.data.profit_label_unit;
-          var text2StartVal = config.valueCountUp ? config.minValue : text2FinalVal;
-
-          var text2 = lightTipGroup.append("text")
-          .text(textFormat(text2StartVal, text2Unit))
-          .attr("class", "liquidFillGaugeText")
-          .attr("text-anchor", "middle")
-          .attr("font-size", textPixels + "px")
-          .attr('transform', 'translate(' + [0, textPixels].join(',') + ')');
-
-          fullTipGroup.append('text')
-          .text('利润')
-          .attr('text-anchor', 'middle')
-          .attr('font-size', textPixels + 'px')
-          .attr('transform', 'translate(' + [0, textPixels].join(',') + ')');
-
-          fullTipGroup.append('text')
-          .text(textFormat(text2FinalVal, text2Unit))
-          .attr('text-anchor', 'middle')
-          .attr('font-size', textPixels + 'px')
-          .attr('transform', 'translate(' + [0, textPixels * 2].join(',') + ')');
+            // text group to show revenue and profit value with text tips
+            var fullTipGroup = labelsGroup.append('g')
+            .attr('class', 'full-tips');
+            // text group to show revenue and profit value
+            var lightTipGroup = labelsGroup.append('g')
+            .attr('class', 'light-tips');
+            // revenue value
+            var revenue = +node.data.revenue_label;
+            var text1FinalVal = parseFloat(revenue).toFixed(2);
+            var text1Unit = node.data.revenue_label_unit;
+            var text1StartVal = config.valueCountUp ? config.minValue : text1FinalVal;
+            fullTipGroup.append('text')
+            .text('收入')
+            .attr('text-anchor', 'middle')
+            .attr('font-size', textPixels + 'px')
+            .attr('transform', 'translate(' + [0, -textPixels].join(',') + ')');
+            fullTipGroup.append('text')
+            .text(textFormat(text1FinalVal, text1Unit))
+            .attr('text-anchor', 'middle')
+            .attr('font-size', textPixels + 'px');
+            var text1 = lightTipGroup.append("text")
+            .text(textFormat(text1FinalVal, text1Unit))
+            .attr("class", "liquidFillGaugeText")
+            .attr("text-anchor", "middle")
+            .attr("font-size", textPixels + "px");
+            // profit value
+            var profit = +node.data.profit_label;
+            var text2FinalVal = parseFloat(profit).toFixed(2);
+            var text2Unit = node.data.profit_label_unit;
+            var text2StartVal = config.valueCountUp ? config.minValue : text2FinalVal;
+            var text2 = lightTipGroup.append("text")
+            .text(textFormat(text2StartVal, text2Unit))
+            .attr("class", "liquidFillGaugeText")
+            .attr("text-anchor", "middle")
+            .attr("font-size", textPixels + "px")
+            .attr('transform', 'translate(' + [0, textPixels].join(',') + ')');
+            fullTipGroup.append('text')
+            .text('利润')
+            .attr('text-anchor', 'middle')
+            .attr('font-size', textPixels + 'px')
+            .attr('transform', 'translate(' + [0, textPixels].join(',') + ')');
+            fullTipGroup.append('text')
+            .text(textFormat(text2FinalVal, text2Unit))
+            .attr('text-anchor', 'middle')
+            .attr('font-size', textPixels + 'px')
+            .attr('transform', 'translate(' + [0, textPixels * 2].join(',') + ')');
 
             // Make the value count up.
             if (config.valueCountUp) {
@@ -361,10 +359,6 @@
             }
           }
 
-          var func = this.bubbleExtend;
-          if (func) {
-            func(labelsGroup.node(), node, config);
-          }
           // Rounding functions so that the correct number of decimal places
           // is always displayed as the value counts up.
           function textFormat(value, unit) { return Math.round(value) + unit; };
@@ -580,6 +574,10 @@
                 };
               }
             },
+            /**
+             * Use this function to render gauge content
+             */
+            renderGauge: Function,
             /**
              * Use this function to customize the bubble config
              */
