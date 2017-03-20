@@ -87,14 +87,14 @@ public class DmApi {
   private Tuple2<Seq<ImmutableMap<String, Object>>, Double> mapItems(Map<Integer, String> groups, javaslang.collection.Map<Integer, Tuple3<Double, Double, javaslang.collection.List<Tuple4<Integer, Double, String, Double>>>> items) {
     return Tuple.of(
       items.map((k, v) -> Tuple.of(k, new ImmutableMap.Builder<String, Object>()
-        .put("id", k)
-        .put("name", groups.get(k))
+        .put("id", Option.of(k).getOrElseThrow(() -> new IllegalArgumentException(String.format("group Id should not be %s", k))))
+        .put("name", Option.of(groups.get(k)).getOrElseThrow(() -> new IllegalArgumentException(String.format("group name should not be %s", groups.get(k)))))
         .put("usage", v._1)
         .put("suggestion", calculateSuggestion(v._2, v._1))
         .put("items", v._3.map(sub -> new ImmutableMap.Builder<String, Object>()
           .put("id", sub._1)
-          .put("name", sub._3)
-          .put("size", sub._2)
+          .put("name", Option.of(sub._3).getOrElseThrow(() -> new IllegalArgumentException(String.format("Asset name should not be %s", sub._3))))
+          .put("size", Option.of(sub._2).getOrElseThrow(() -> new IllegalArgumentException(String.format("Purchase price should not be %s", sub._2))))
           .put("usage", sub._4)
           .build()).toJavaList())
         .build())).values(),
