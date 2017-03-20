@@ -11,7 +11,7 @@ public class AssetCostTest extends BaseJunit4Test{
 
 	@Autowired
 	AssetCostDataService assetCostDataService;
-	
+
 	@Autowired
 	DataService dataService;
 	

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>#{msg.AssetInfo}</title>
+        <h:outputStylesheet name="wechat/weui.min.css" />
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/jquery-2.0.0.min.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/jweixin-1.0.0.js"/>
+    </h:head>
+    <body>
+        <div class="page__bd">
+            <div class="weui-panel weui-panel_access">
+                <div class="weui-panel__hd">
+                    <div class="weui-flex">
+                        <div >
+                            <button  id="scan"  class="weui-btn weui-btn_mini weui-btn_primary" >#{msg.ScanCode}</button>
+                        </div>
+                        <div class="weui-flex__item">
+                            <h:form id="assetList" >
+                                <div class="weui-search-bar__box">
+                                    <i class="weui-icon-search"></i>
+                                    <h:inputText  class="weui-search-bar__input" id="searchInput" value="#{wxAssetInfoController.searchStr}"   onchange="search()"/>
+                                    <a href="javascript:clear()" class="weui-icon-clear" id="searchClear"></a>
+                                </div>
+                                <p:remoteCommand name="search" actionListener="#{wxAssetInfoController.onSearch}" update="dataList" />
+                            </h:form>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="weui-panel__bd">
+                    <p:dataScroller id="dataList" value="#{wxAssetInfoController.getAssetList()}" var="asset" chunkSize="10" style="border: 0">
+                        <h:link  outcome="Detail.xhtml" class="weui-media-box weui-media-box_appmsg">
+                            <f:param name="assetId" value="#{asset.id}"/>
+                            <f:param name="action" value="view"/>
+                            <!--<f:param name="qrCode" value="#{wxAssetInfoController.qrCode}" disable="#{empty wxAssetInfoController.qrCode}"/>-->
+                            <div class="weui-media-box__hd">
+                                <img id="icoassetGroup" class="weui-media-box__thumb icoassetGroup" src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{asset.assetGroup}.ico" />
+                            </div>
+                            <div class="weui-media-box__bd">
+                                <h4 class="weui-media-box__title">#{asset.name}</h4>
+                                <p class="weui-media-box__desc">#{asset.clinicalDeptName}</p>
+                            </div>
+                        </h:link>
+                        <!--<p:separator ></p:separator>-->
+                    </p:dataScroller>
+                </div>
+            </div>
+        </div>
+        <div class="weui-msg__extra-area">
+            <div class="weui-footer">
+                <p class="weui-footer__links">
+                    <a href="javascript:void(0);" class="weui-footer__link"></a>
+                </p>
+                <p class="weui-footer__text">Copyright © 2016-2017 GE Healthcare</p>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        $("#assetList\\:searchInput").attr('placeholder', '搜索...');
+
+        var jsSignature = #{wechatUtilService.getJsSignature()};
+        wx.config({
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: jsSignature.appid, // 必填，公众号的唯一标识
+            timestamp: jsSignature.timestamp, // 必填，生成签名的时间戳
+            nonceStr: jsSignature.noncestr, // 必填，生成签名的随机串
+            signature: jsSignature.signature, // 必填，签名，见附录1
+            jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+
+        wx.ready(function () {
+            $("#scan").click(function () {
+                wx.scanQRCode({
+                    needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                    success: function (res) {
+                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                        window.location.href = "Detail.xhtml?qrCode=" + result;
+                        debugger;
+                    }
+                });
+            });
+//            $("#scan").click();
+        });
+
+        function clear() {
+            $("#assetList\\:searchInput").val('');
+            search();
+        }
+
+    </script>
+</html>

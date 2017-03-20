@@ -48,6 +48,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.mp.api.WxMpMessageHandler;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
@@ -338,6 +339,16 @@ public class CoreService {
         }
 
         return null;
+    }
+    
+    public void saveVoice(String serverId) throws Exception{
+        WorkOrder workOrder = new WorkOrder();
+        workOrder.setId(38);
+        upload(workOrder, serverId);
+    }
+    public String uploadMediaToWechat(InputStream inputStream) throws Exception{
+        WxMediaUploadResult res = wxMpService.getMaterialService().mediaUpload(WxConsts.MEDIA_VOICE, WxConsts.FILE_AMR, inputStream);
+        return res.getMediaId();
     }
     
 }

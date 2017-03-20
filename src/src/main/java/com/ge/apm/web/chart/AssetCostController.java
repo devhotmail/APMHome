@@ -11,25 +11,25 @@ import com.ge.apm.domain.BatchAssetCost;
 import com.ge.apm.service.analysis.AssetCostDataService;
 
 @Controller
-@RequestMapping("/asset")
+@RequestMapping("/assetCost")
 public class AssetCostController {
 
 	@Autowired
 	AssetCostDataService assetCostDataService;
 
-	@RequestMapping(value = "/excute", method = RequestMethod.GET)
+	@RequestMapping(value = "/today", method = RequestMethod.PUT)
 	@ResponseBody
 	public String excuteTask() {
 		return assetCostDataService.aggregateCostData();
 	}
 
-	@RequestMapping(value = "/calByDay", method = RequestMethod.POST)
+	@RequestMapping(value = "/day", method = RequestMethod.PUT)
 	@ResponseBody
 	public String calByDay(@RequestBody BatchAssetCost bac) {
 		return assetCostDataService.calByDay(bac);
 	}
 	
-	@RequestMapping(value = "/calByFromTo", method = RequestMethod.POST)
+	@RequestMapping(value = "/fromTo", method = RequestMethod.PUT)
 	@ResponseBody
 	public String calByFromTo(@RequestBody BatchAssetCost bac) {
 		return assetCostDataService.calByFromTo(bac);

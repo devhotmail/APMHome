@@ -1,10 +1,11 @@
 package webapp.framework.broker;
 
-import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.ProducerTemplate;
 import webapp.framework.web.WebUtil;
+
+import java.util.Map;
 
 /**
  *
