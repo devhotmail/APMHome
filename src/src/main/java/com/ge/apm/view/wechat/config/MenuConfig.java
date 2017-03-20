@@ -47,7 +47,7 @@ public class MenuConfig {
         WxMenuButton button22 = new WxMenuButton();
         button22.setType(WxConsts.BUTTON_VIEW);
         button22.setName("我的报修单");
-        button22.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/23", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        button22.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/22", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         button2.getSubButtons().add(button21);
         button2.getSubButtons().add(button22);
         
@@ -55,12 +55,12 @@ public class MenuConfig {
         button3.setName("我的工单");
         WxMenuButton button31 = new WxMenuButton();
         button31.setType(WxConsts.BUTTON_VIEW);
-        button31.setName("工单管理");
-        button31.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/24", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
-//        WxMenuButton button32 = new WxMenuButton();
-//        button32.setType(WxConsts.BUTTON_SCANCODE_WAITMSG);
-//        button32.setName("扫码");
-//        button32.setKey("scan");
+        button31.setName("扫码操作");
+        button31.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/34", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        WxMenuButton button32 = new WxMenuButton();
+        button32.setType(WxConsts.BUTTON_VIEW);
+        button32.setName("工单管理");
+        button32.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/35", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
 //        WxMenuButton button33 = new WxMenuButton();
 //        button33.setType(WxConsts.BUTTON_VIEW);
 //        button33.setName("voiceRecord");
@@ -86,7 +86,7 @@ public class MenuConfig {
 //        button32.getSubButtons().add(button323);
         
         button3.getSubButtons().add(button31);
-//        button3.getSubButtons().add(button32);
+        button3.getSubButtons().add(button32);
 //        button3.getSubButtons().add(button33);
 
         menu.getButtons().add(button1);

@@ -4,23 +4,23 @@ window.pageManager = {
     woId: null,
     siteId: null,
     stepCost: [],
-    init: function(){
+    init: function(pageId){
         var self = this;
-        $(window).on('hashchange', function () {
-            var state = history.state || {};
-            var page = location.hash.indexOf('#') === 0 ? location.hash : '#';
-            if (state._pageIndex <= self._pageIndex ) {
-                self._back();
+        $(window).on('popstate', function() {debugger;
+            var hashLocation = location.hash;
+            if (hashLocation == '') {
+                WeixinJSBridge.call('closeWindow');
             } else {
-                self._go(page);
+                var state = history.state || {};
+                var page = location.hash.indexOf('#') === 0 ? location.hash : '#';
+                if (state._pageIndex <= self._pageIndex ) {
+                    self._back();
+                } else {
+                    self._go(page);
+                }
             }
         });
-        $(window).on('popstate', function() {
-            var hashLocation = location.hash;
-            if (hashLocation == '')
-                WeixinJSBridge.call('closeWindow');
-        });
-        this.go('#wolist');
+        this.go('#'+pageId);
     },
     go: function(page) {
         location.hash = page;   
@@ -65,32 +65,14 @@ window.pageManager = {
     loadList : function(listId, url, data){
         $loadingToast.fadeIn(100);
         $loadingToast.find('.weui-toast__content').html('数据加载中...');
-        var $ui_list = $('#'+listId);
-        $ui_list.empty();
-        var tmpl = $('#wo_li').html();
-        $.ajax({
-            url: WEB_ROOT+'web/'+url,
-            type: 'get',
-            data: data,
-            contentType: 'application/json',
-            success: function(ret) {
-                if (ret && ret.length !=0) {
-                    $.each(ret, function(idx, value){
-                        var $tmpl = $(tmpl);
-                        $tmpl.find('#li_title').html('工单编号：'+ value['id']).attr('woid', value['id']);
-                        $tmpl.find('#li_ft').html(value['requestTime']);
-                        var lcs = $tmpl.find('#li_context p');
-                        $(lcs[0]).html('资产编号：'+value['assetId']);
-                        $(lcs[1]).html('资产名称：'+value['assetName']);
-                        $(lcs[2]).html('工单状态：'+value['currentStepName']);
-                        $ui_list.append($tmpl);
-                    });
-                    $loadingToast.fadeOut(100);
-                } else {
-                    $loadingToast.fadeOut(100);
-                    $('#container').empty();
-                    $('#container').append($('#no_data').html());
-                }
+        $.get(WEB_ROOT+'web/'+url, data, function(ret) {
+            if (ret && ret.length !== 0) {
+                
+                $loadingToast.fadeOut(100);
+            } else {
+                $loadingToast.fadeOut(100);
+                $('#container').empty();
+                $('#container').append($('#ts_no_data').html());
             }
         });
     }
