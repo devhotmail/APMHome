@@ -59,10 +59,12 @@ wechat_id varchar(64) not null,
 name varchar(32) not null,	--真实姓名
 telephone varchar(16) not null,	--电话
 hospital_name varchar(64) not null,	--所属医院或供应商
+clinical_dept_name varchar(32),	--所属临床科室
 role_id int not null,	--角色ID
 comment varchar(128),	--备注
 application_date date,	--帐号申请日期
-status int	-- 1-待审批 / 2-审批通过 / 3-拒绝
+status int,	-- 1-待审批 / 2-审批通过 / 3-拒绝
+password varchar(16)  --密码
 );
 alter table account_application add primary key (id);
 
@@ -87,7 +89,7 @@ alter table work_order add column feedback_comment varchar(128); --评价comment
 alter table work_order add column request_reason_voice int;	--故障说明(语音)
 alter table work_order add column pat_actions varchar(128);  --PAT 的 Actions(解决方案)
 alter table work_order add column pat_tests varchar(128);	 --PAT 的 Tests(测试方法)
-
+alter table work_order add column close_time timestamp;	 --关单时间
 
 alter table work_order_step_detail add column cowoker_user_id int; --协作者
 alter table work_order_step_detail add column cowoker_user_name varchar(16); --协作者姓名
@@ -123,7 +125,8 @@ dispatch_user_name varchar(16),	--派工人
 timeout_dispatch int, --派工环节的超时提醒阈值(分钟)
 timeout_accept int,   --接单环节的超时提醒阈值(分钟)
 timeout_repair int, --维修环节的超时提醒阈值(分钟)
-timeout_close int --关单环节的超时提醒阈值(分钟)
+timeout_close int, --关单环节的超时提醒阈值(分钟)
+order_reopen_timeframe int --二次开单的最大时间间隔
 );
 alter table workflow_config add primary key (id);
 
