@@ -139,6 +139,15 @@ public class WorkOrderController {
         return map;
     }
     
+    @RequestMapping(value="scanaction")
+    public @ResponseBody Object scanAction(String qrCode) {
+        List<AssetInfo> list = assetDao.getByQrCode(qrCode);
+        if (list.isEmpty())
+            return null;
+        AssetInfo info = list.get(0);
+        return woWcService.scanAction(info);
+    }
+    
     @RequestMapping(value="saveworkorder")
     public @ResponseBody Object saveWorkOrder(HttpServletRequest request, @RequestBody WorkOrder workOrder) {
         try{

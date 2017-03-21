@@ -158,4 +158,13 @@ public class WorkOrderWeChatService {
         }
     }
     
+    /**
+     * 扫码接单、签到、关单
+     * @param info
+     * @return 
+     */
+    public WorkOrder scanAction(AssetInfo info) {
+        return woDao.findByAssetIdAndStatus(info.getId(), 1);
+    }
+    
 }

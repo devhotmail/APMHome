@@ -5,6 +5,7 @@ $(function () {
     app.fullListItem = fullListItem;
     app.activeProgressBar = activeProgressBar;
     app.initUserSelect = initUserSelect;
+    app.setFormJsonValue = setFormJsonValue;
     
     /////////////////////////
     /**
@@ -82,6 +83,39 @@ $(function () {
                         $('#'+keyId).append($('<option value="'+val.id+'">'+val.name+'</option>'));
                     });
                 }
+            }
+        });
+    }
+    
+    function setFormJsonValue(obj) {
+        if (!obj) return;
+        $.each(obj, function(idx, val){
+            var $idx = $('#'+idx);
+            if ($idx.length == 0) return;
+            if ('datetime-local' == $idx.attr('type')) {
+                if (!val) {
+                    var datetime = new Date();
+                    var month = datetime.getMonth()+1;
+                    var date = datetime.getDate();
+                    var hours = datetime.getHours();
+                    var mins = datetime.getMinutes();
+                    var secs = datetime.getSeconds();
+                    val = datetime.getFullYear()+'-'+(month>9?month:'0'+month)+'-'+(date>9?date:'0'+date)
+                            +'T'+(hours>9?hours:'0'+hours)+':'+(mins>9?mins:'0'+mins) + ':'+(secs>9?secs:'0'+secs);
+                } else {
+                    val = val.replace(' ', 'T');
+                }
+                $idx.val(val);
+            } else if ('checkbox' == $idx.attr('type')) {
+                if (val) {
+                    $idx.attr('checked', 'checked');
+                }
+            } else if ('span' == $idx[0].localName) {
+                if (val) {
+                    $idx.html(val);
+                }
+            } else {
+                $idx.val(val);
             }
         });
     }

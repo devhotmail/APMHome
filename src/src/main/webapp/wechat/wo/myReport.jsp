@@ -15,6 +15,7 @@
         <title>我的报修单</title>
         <!-- 引入 WeUI -->
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
+        <link rel="stylesheet" href="${ctx}/resources/wechat/css/wo/woprogress.css"/>
         <script src="${ctx}/resources/wechat/js/utils/jquery-3.1.1.min.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/jweixin-1.0.0.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/wechatsdk.js"></script>
@@ -56,7 +57,7 @@
                     //data search function
                     function loadData(close) {
                         //fetch data from server    wolistdata is the restful url
-                        $.get(WEB_ROOT+'web/wolistdata', {}, function(ret) {
+                        $.get(WEB_ROOT+'web/workorder', {status: close}, function(ret) {
                             if (ret && ret.length !== 0) {
                                 var data = [];
                                 $.each(ret, function(i, v){
@@ -77,6 +78,9 @@
                     
                     //bind click event
                     $('#myReports').on('click', '.weui-cell_access', function(){
+                        pageManager.woId = $(this).parent().find('h4').html().split(': ')[1];
+                        pageManager.showMsgs = true;
+                        pageManager.go('#ts_wodetail');
                     });
                     $('.weui-navbar__item').on('click', function () {
                         $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
@@ -87,6 +91,8 @@
                 });
         </script>
            
+        <jsp:include page="woDetail.html"/>
+        <jsp:include page="msgTemplate.html"/>
         <jsp:include page="listTemplate.html"/>
         <jsp:include page="tipsTemplate.html"/>
     </body>

@@ -53,7 +53,7 @@ public class WorkOrderService {
         UserAccount ua = UserContext.getCurrentLoginUser(request);
         System.out.println(request.getParameter("requestorId"));
         searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, request.getParameter("status")));
-        searchFilters.add(new SearchFilter("requestorId", SearchFilter.Operator.EQ, request.getParameter("requestorId")));
+        searchFilters.add(new SearchFilter("requestorId", SearchFilter.Operator.EQ, ua.getId()));
         return workOrderRepository.findBySearchFilter(searchFilters);
     }
 
