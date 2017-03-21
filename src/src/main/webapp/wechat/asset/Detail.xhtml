@@ -118,22 +118,16 @@ and open the template in the editor.
                             <div  class="weui-panel">
                                 <div class="weui-panel__hd">设备图片</div>
                                 <div class="weui-panel__bd">
-                                    <div class="weui-cell">
-                                        <div class="weui-uploader__bd">
-                                            <ul class="weui-uploader__files" id="uploaderFiles" >
-                                                <c:forEach items="#{wxAssetInfoController.getPictureList(wxAssetInfoController.assetInfo.id)}" var="fileitem">
-                                                    <li class="weui-uploader__file" >
-                                                        <figure style="display: inline">
-                                                            <a href="" data-size="800x600">
-                                                                <p:graphicImage  value="#{pictureService.getImage()}"   height="80px" width="80px" >
-                                                                    <f:param name="pictureId" value="#{fileitem.fileId}" />
-                                                                </p:graphicImage>
-                                                            </a>
-                                                        </figure>
-                                                    </li>
-                                                </c:forEach>
-                                            </ul>
-                                        </div>
+                                    <div class="weui-cell my-gallery" data-pswp-uid="1">
+                                        <c:forEach items="#{wxAssetInfoController.getPictureList(wxAssetInfoController.assetInfo.id)}" var="fileitem">
+                                            <figure style="display: inline; padding-right: 8px;">
+                                                <a href="" data-size="800x600">
+                                                    <p:graphicImage  value="#{pictureService.getImage()}"   height="80px" width="80px" >
+                                                        <f:param name="pictureId" value="#{fileitem.fileId}" />
+                                                    </p:graphicImage>
+                                                </a>
+                                            </figure>
+                                        </c:forEach>
                                     </div>
 
                                 </div>
@@ -143,42 +137,82 @@ and open the template in the editor.
                                 <div class="weui-panel__hd">设备基本属性</div>
                                 <div class="weui-panel__bd">
                                     <div class="weui-cell">
+                                        <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
+                                            <img style="width: 50px;display: block"  src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{wxAssetInfoController.assetInfo.assetGroup}.ico"/>
+                                        </div>
+                                        <div class="weui-cell__bd">
+                                            <p>#{wxAssetInfoController.assetInfo.name}</p>
+                                            <p style="font-size: 13px;color: #888888;">#{wxAssetInfoController.assetInfo.aliasName}</p>
+                                        </div>
+                                        <div class="weui-cell__ft" id="subscriberStat">
+                                            <h:form id="subscriberStatus">
+                                                <p>#{wxAssetInfoController.messageSubscriber.receiveMsgMode=='0'?'未关注':''}#{wxAssetInfoController.messageSubscriber.receiveMsgMode=='1'?'已关注':''}#{wxAssetInfoController.messageSubscriber.receiveMsgMode=='2'?'部分关注':''}</p>
+                                            </h:form>
+                                            <p><a href="javascript:settingSubscribe();"> 订阅设置</a></p>
+                                        </div>
+                                    </div>
+                                    <div class="weui-cell">
                                         <div class="weui-cell__hd">
                                             <label class="weui-label">#{msg.status}</label>
                                         </div>
-                                        <div class="weui-cell__bd">
-                                            <span style="vertical-align: middle">#{fieldMsg.fieldValue('assetStatus',wxAssetInfoController.assetInfo.status)}</span>
-                                        </div>
+                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('assetStatus',wxAssetInfoController.assetInfo.status)}</div>
                                         <div class="weui-cell__ft">
                                             <i class="#{wxAssetInfoController.assetInfo.status==1?'weui-icon-success':(wxAssetInfoController.assetInfo.status==2?'weui-icon-warn':'weui-icon-info-circle')}" />
                                         </div>
                                     </div>
                                     <div class="weui-cell">
                                         <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.assetGroup}</label>
+                                            <label class="weui-label">供应商</label>
                                         </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.manufacture}</div>
+                                    </div>
+                                    <div class="weui-cell" onclick="javascript:showBRCode();">
                                         <div class="weui-cell__bd">
-                                            <span style="vertical-align: middle">#{fieldMsg.fieldValue('assetgroup',wxAssetInfoController.assetInfo.assetGroup)}</span>
+                                            <label class="weui-label">#{msg.qrCode}</label>
+                                        </div>
+                                        <div class="weui-cell__ft">
+                                            <p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />
                                         </div>
                                     </div>
                                     <div class="weui-cell">
                                         <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.assetGroup}</label>
+                                            <label class="weui-label">#{msg.clinicalDeptName}</label>
                                         </div>
-                                        <div class="weui-cell__bd">
-                                            <span style="vertical-align: middle">#{fieldMsg.fieldValue('assetgroup',wxAssetInfoController.assetInfo.assetGroup)}</span>
-                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.clinicalDeptName}</div>
                                     </div>
                                     <div class="weui-cell">
                                         <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.assetGroup}</label>
+                                            <label class="weui-label">负责人1</label>
                                         </div>
-                                        <div class="weui-cell__bd">
-                                            <span style="vertical-align: middle">#{fieldMsg.fieldValue('assetgroup',wxAssetInfoController.assetInfo.assetGroup)}</span>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.assetOwnerName}</div>
+                                        <div class="weui-cell__ft">#{wxAssetInfoController.assetInfo.assetOwnerTel}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">负责人2</label>
                                         </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.assetOwnerName2}</div>
+                                        <div class="weui-cell__ft">#{wxAssetInfoController.assetInfo.assetOwnerTel2}</div>
+                                    </div>
+                                    <div class="weui-cell weui-cell_access">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.purchaseDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.purchaseDate}</div>
+                                    </div>
+                                    <div class="weui-cell weui-cell_access">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.warrantyDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.warrantyDate}</div>
                                     </div>
 
                                 </div>
+                            </div>
+                            <div class="weui-msg__opr-area">
+                                <p class="weui-btn-area">
+                                    <a href="create.xhtml?action=Edit&amp;assetid=#{wxAssetInfoController.assetInfo.id}" class="weui-btn weui-btn_primary">新增报修</a>
+                                </p>
                             </div>
 
                         </div>
@@ -208,7 +242,7 @@ and open the template in the editor.
                                             <label class="weui-label">#{msg.qrCode}</label>
                                         </div>
                                         <!--<div class="weui-cell__ft" >-->
-                                        <p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />
+                                        <!--<p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />-->
                                         <!--</div>-->
                                     </div>
                                     <div class="weui-cell weui-cell_access">
@@ -263,24 +297,6 @@ and open the template in the editor.
                                     </div>
                                 </div>
 
-                                <div class="weui-cells">
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__bd">
-                                            <span style="vertical-align: middle">#{msg.PhotoList}</span>
-                                        </div>
-                                        <div class="my-gallery weui-cell__hd" data-pswp-uid="1" style="position: relative;">
-                                            <c:forEach items="#{wxAssetInfoController.getPictureList(wxAssetInfoController.assetInfo.id)}" var="fileitem">
-                                                <figure style="display: inline">
-                                                    <a href="" data-size="800x600">
-                                                        <p:graphicImage  value="#{pictureService.getImage()}"   height="50px" width="50px" style="margin-left: 5px">
-                                                            <f:param name="pictureId" value="#{fileitem.fileId}" />
-                                                        </p:graphicImage>
-                                                    </a>
-                                                </figure>
-                                            </c:forEach>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <h:panelGroup rendered="#{not empty wxAssetInfoController.currentUser}">
                                     <div class="weui-msg__opr-area">
@@ -315,16 +331,82 @@ and open the template in the editor.
                 </div>
             </div>
         </h:panelGroup>
-        <div class="weui-msg__extra-area">
-            <div class="weui-footer">
-                <p class="weui-footer__links">
-                    <a href="javascript:void(0);" class="weui-footer__link"></a>
-                </p>
-                <p class="weui-footer__text">Copyright © 2016-2017 GE Healthcare</p>
-            </div>
+
+        <div id="dialogs">
+
+            <!--BEGIN dialog1-->
+            <h:form id="subscribrSetting">
+                <div class="js_dialog" id="settingDialog" style="display: none;">
+                    <div class="weui-mask"></div>
+                    <div class="weui-dialog">
+                        <div class="weui-dialog__hd"><strong class="weui-dialog__title">订阅设置</strong></div>
+                        <div class="weui-dialog__bd page__bd">
+                            <div class="weui-cells__title" style="text-align:left;color: #000000;">关注选项</div>
+                            <div class="weui-cells weui-cells_radio">
+                                <label class="weui-cell weui-check__label" for="subscribrSetting:subsMsgRadio:0">
+                                    <div class="weui-cell__hd">工单全部消息</div>
+                                    <div class="weui-cell__bd"></div>
+                                    <div class="weui-cell__ft">
+                                        <input type="radio" class="weui-check" name="subscribrSetting:subsMsgRadio" id="subscribrSetting:subsMsgRadio:0" value="1" checked="#{wxAssetInfoController.messageSubscriber.receiveMsgMode==1?'checked':''}"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="subscribrSetting:subsMsgRadio:1">
+                                    <div class="weui-cell__hd">工单主要消息</div>
+                                    <div class="weui-cell__bd"></div>
+                                    <div class="weui-cell__ft">
+                                        <input type="radio" class="weui-check" name="subscribrSetting:subsMsgRadio" id="subscribrSetting:subsMsgRadio:1" value="2" checked="#{wxAssetInfoController.messageSubscriber.receiveMsgMode==2?'checked':''}"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="subscribrSetting:subsMsgRadio:2">
+                                    <div class="weui-cell__hd">取消关注</div>
+                                    <div class="weui-cell__bd"></div>
+                                    <div class="weui-cell__ft">
+                                        <input type="radio" class="weui-check" name="subscribrSetting:subsMsgRadio" id="subscribrSetting:subsMsgRadio:2" value="0" checked="#{wxAssetInfoController.messageSubscriber.receiveMsgMode==0?'checked':''}"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="weui-cells__title" style="text-align:left;color: #000000;">接收选项</div>
+                            <div class="weui-cells">
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">工单超时消息</div>
+                                    <div class="weui-cell__bd"></div>
+                                    <div class="weui-cell__ft">
+                                        <label for="subscribrSetting:isReceiveTimeoutMsg" class="weui-switch-cp">
+                                            <h:selectBooleanCheckbox id="isReceiveTimeoutMsg" class="weui-switch-cp__input"   value="#{wxAssetInfoController.messageSubscriber.isReceiveTimeoutMsg}"/>
+                                            <div class="weui-switch-cp__box"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">工单对话消息</div>
+                                    <div class="weui-cell__bd"></div>
+                                    <div class="weui-cell__ft">
+                                        <label for="subscribrSetting:isReceiveChatMsg" class="weui-switch-cp">
+                                            <h:selectBooleanCheckbox id="isReceiveChatMsg" class="weui-switch-cp__input" value="#{wxAssetInfoController.messageSubscriber.isReceiveChatMsg}" />
+                                            <div class="weui-switch-cp__box"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p:remoteCommand actionListener="#{wxAssetInfoController.settingMsgSubscriber()}" name="settingSubmit"  update=":subscriberStatus" />
+                        <div class="weui-dialog__ft">
+                            <a href="javascript:closeDialog();" class="weui-dialog__btn weui-dialog__btn_default">取消</a>
+                            <a href="javascript:settingSubmit();closeDialog();" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
         </div>
     </body>
     <script>
+        var closeDialog = function () {
+            $('#settingDialog').fadeOut(200);
+        };
+
         function showBRCode() {
             var imgt = "background-image:url(#url#)";
             $("#galleryImg").attr("style", imgt.replace('#url#', $("#qrcode")[0].src));
@@ -340,6 +422,11 @@ and open the template in the editor.
             var tabid = this.id + "Panel";
             $("#" + tabid).removeClass("weui-tab__content").siblings().addClass('weui-tab__content');
         });
+
+        function settingSubscribe() {
+            var $iosDialog1 = $('#settingDialog');
+            $iosDialog1.fadeIn(200);
+        }
 
 
 
