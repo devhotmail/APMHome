@@ -16,8 +16,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.service.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +38,8 @@ public class WorkOrderService {
     private WxMpService wxService;
     @Autowired
     private UserAccountRepository userDao;
+    @Autowired
+    private WorkOrderRepository workOrderRepository;
     
     public WorkOrderStep initWorkOrderCurrentStep(WorkOrder wo){
         WorkOrderStep woStep = new WorkOrderStep();
@@ -53,7 +57,58 @@ public class WorkOrderService {
         
         return woStep;
     }
-    
+    @Transactional
+    public void workWorderCreate()throws RuntimeException{
+        /*  判断否是二次开单  --> 判断派工模式
+        * 1（拿siteid和assetid还有hospitalid来作为该设备是否是唯一的）
+        *2
+        * */
+        //select * from work_order where  (close_time::timestamp)::date > (select now() - interval '7 day')::date  and  asset_id =68 and hospital_id=2 and site_id=2
+//gl:requestor 就是申请保修的,curent_person_d: 自动派单时为-1，手动派单时为设备科科长.
+        //gl: select from user_account ua , sys_role  sr where sr.role_id =2 and ua.user_id = ?
+        UserAccount currentUsr= UserContext.getCurrentLoginUser();
+WorkOrder neWorkOrder=null;
+        WorkOrder reopenWorkOrder =isReopenWorkOrder(currentUsr.getHospitalId(), 1,  currentUsr.getSiteId());
+      //gl: current user's asset header
+        UserAccount userAccount=  userDao.getAssetHead( currentUsr.getSiteId(),currentUsr.getHospitalId()).get(0);
+//workOrder不为空 表示是二次开单了
+        if(reopenWorkOrder !=null && userAccount !=null){//true is reopen
+            //relating to parent parent_wo_id(work_order)
+            neWorkOrder=initWorkOrder(currentUsr,userAccount,reopenWorkOrder,true);
+        }else{ //非二次开单
+            neWorkOrder=initWorkOrder(currentUsr,userAccount,reopenWorkOrder,false);
+
+        }
+workOrderRepository.save(neWorkOrder);
+
+    }
+    private WorkOrder isReopenWorkOrder(Integer hospitalId,Integer assetId, Integer siteId){
+//workOrderRepository.
+        return null;
+    }
+    private WorkOrder initWorkOrder(UserAccount currentUsr,UserAccount userAccount,WorkOrder workOrder,boolean isReopen){
+        WorkOrder neWorkOrder = new WorkOrder();
+        neWorkOrder.setSiteId(currentUsr.getSiteId());
+        neWorkOrder.setAssetName("assetname");
+        neWorkOrder.setRequestorId(currentUsr.getId());
+        neWorkOrder.setRequestorName(currentUsr.getName());
+        neWorkOrder.setRequestTime(new Date());
+        neWorkOrder.setRequestReason("request reason");
+        neWorkOrder.setCaseType(1);//---------from fonrt
+        neWorkOrder.setCaseSubType(1);//-----
+        neWorkOrder.setCasePriority(1);//---------
+        if(isReopen){
+            neWorkOrder.setParentWoId(workOrder.getParentWoId());
+        }
+        neWorkOrder.setCurrentPersonId(userAccount.getId());
+        neWorkOrder.setCurrentPersonName(userAccount.getName());
+        neWorkOrder.setCurrentStepId(2);//--------
+        neWorkOrder.setCurrentStepName("审核");
+        neWorkOrder.setTotalManHour(0);//----?
+        neWorkOrder.setTotalPrice(0.0);//----?
+        return neWorkOrder;
+
+    }
     @Transactional
     public void saveWorkOrderStep(WorkOrder wo, WorkOrderStep currentWoStep, WorkOrderStep nextWoStep) throws RuntimeException{
         WorkOrderRepository woDao = WebUtil.getBean(WorkOrderRepository.class);

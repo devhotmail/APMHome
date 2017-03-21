@@ -29,6 +29,9 @@ public interface UserAccountRepository extends GenericRepository<UserAccount> {
     @Query("SELECT distinct u FROM UserAccount u,UserRole ur where u.id=ur.userId and ((ur.roleId='6' and u.siteId=?1 ) or (u.hospitalId=?2 and ur.roleId=3 ))")
     List<UserAccount> getAssetOnwers(int siteId,int hospitalId);
 
+    @Query("SELECT distinct u FROM UserAccount u,UserRole ur where u.id=ur.userId and ((ur.roleId='2' and u.siteId=?1 ) or (u.hospitalId=?2 and ur.roleId=2 ))")
+    List<UserAccount> getAssetHead(int siteId,int hospitalId);
+
     List<UserAccount> getBySiteId(int siteId);
     
     Page<UserAccount> getBySiteId(Pageable pageRequest, int siteId);

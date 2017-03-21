@@ -72,6 +72,11 @@ public class WorkOrder implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date requestTime;
+
+    @Column(name = "close_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date closeTime;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 256)
@@ -444,9 +449,15 @@ public class WorkOrder implements Serializable {
     public void setPatTests(String patTests) {
         this.patTests = patTests;
     }
-    
-    
-    
+
+    public Date getCloseTime() {
+        return closeTime;
+    }
+
+    public void setCloseTime(Date closeTime) {
+        this.closeTime = closeTime;
+    }
+
     @Override
     public int hashCode() {
         Integer hash = 0;

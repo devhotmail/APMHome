@@ -2,14 +2,8 @@
  */
 package com.ge.apm.domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  *
@@ -47,6 +41,9 @@ public class WorkflowConfig implements Serializable {
     @Column(name = "timeout_close")
     private Integer timeoutClose;
 
+
+    @Column(name = "order_reopen_timeframe")
+    private Integer orderReopenTimeframe;
     public WorkflowConfig() {
     }
 
@@ -139,6 +136,14 @@ public class WorkflowConfig implements Serializable {
 
     public void setTimeoutClose(Integer timeoutClose) {
         this.timeoutClose = timeoutClose;
+    }
+
+    public Integer getOrderReopenTimeframe() {
+        return orderReopenTimeframe;
+    }
+
+    public void setOrderReopenTimeframe(Integer orderReopenTimeframe) {
+        this.orderReopenTimeframe = orderReopenTimeframe;
     }
 
     @Override
