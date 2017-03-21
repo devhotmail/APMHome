@@ -64,7 +64,9 @@ public class HealthApi {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getAssetHealth(HttpServletRequest request,
-			@Min(1) @Max(6) @RequestParam(value = "category", required = false) Integer category ) {
+			@Min(1) @Max(6) @RequestParam(value = "category", required = false) Integer category, 
+			@Min(1) @RequestParam(value = "limit", required = false ) Integer limit,
+			@Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
 
 		UserAccount user = UserContext.getCurrentLoginUser();
 		int site_id = user.getSiteId();
@@ -72,7 +74,8 @@ public class HealthApi {
 
 		if (Option.of(category).isEmpty())
 			category = 0;
-
+		if (Option.of(limit).isEmpty())	limit = Integer.MAX_VALUE;
+		
 		switch(category) {
 
 			case 0:
@@ -83,22 +86,22 @@ public class HealthApi {
 					healthService.queryForMeterqa(site_id, hospital_id, 2),
 					healthService.queryForMeterqa(site_id, hospital_id, 3) );
 			case 1:
-				return createResponseBody(category, request, healthService.queryForMaintain(site_id, hospital_id) );
+				return createResponseBody(category, request, healthService.queryForMaintain(site_id, hospital_id), start, limit );
 				
 			case 2:
-				return createResponseBody(category, healthService.queryForOutage(site_id, hospital_id), request);
+				return createResponseBody(category, healthService.queryForOutage(site_id, hospital_id), request, start, limit);
 				
 			case 3:
-				return createResponseBody(healthService.queryForWarranty(site_id, hospital_id), category, request);
+				return createResponseBody(healthService.queryForWarranty(site_id, hospital_id), category, request, start, limit);
 						
 			case 4:
-				return createResponseBody(healthService.queryForPm(site_id, hospital_id), category, request);
+				return createResponseBody(healthService.queryForPm(site_id, hospital_id), category, request, start, limit);
 						
 			case 5:
-				return createResponseBody(healthService.queryForMeterqa(site_id, hospital_id, 2), category, request);
+				return createResponseBody(healthService.queryForMeterqa(site_id, hospital_id, 2), category, request, start, limit);
 						
 			case 6:
-				return createResponseBody(healthService.queryForMeterqa(site_id, hospital_id, 3), category, request);
+				return createResponseBody(healthService.queryForMeterqa(site_id, hospital_id, 3), category, request, start, limit);
 				
 			default:
 				return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Bad Request"));
@@ -151,6 +154,53 @@ public class HealthApi {
 
 	}
 
+	private String getHref(Integer category, String url, Integer count) {
+
+		if (count==0)
+			return "";
+
+		switch(category) {
+			case 0:
+				return url;
+
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+				return String.format("%s%s%d", url, categorized, category);
+
+			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
+			case 16:
+				return String.format("%s%s", url.substring(0, url.indexOf("/api/health") ), redirect_1);
+
+			case 20:
+				return String.format("%s%s", url.substring(0, url.indexOf("/api/health") ), redirect_2);
+
+			case 30:
+				return String.format("%s%s", url.substring(0, url.indexOf("/api/health") ), redirect_3);
+
+			case 40:
+				return String.format("%s%s", url.substring(0, url.indexOf("/api/health") ), redirect_4);
+
+			case 50:
+				return String.format("%s%s", url.substring(0, url.indexOf("/api/health") ), redirect_5);
+
+			case 60:
+				return String.format("%s%s", url.substring(0, url.indexOf("/api/health") ), redirect_6);
+			
+			default:
+				return "";
+
+		}
+
+	}
+	
 	private String getRef(String node) {
 
 		switch(node) {
@@ -292,7 +342,7 @@ public class HealthApi {
 	}
 			
 		private ResponseEntity<Map<String, Object>> createResponseBody(Integer category, HttpServletRequest request, 
-					Observable<Tuple5<Integer, String, Integer, String, String>> asset_health_1 ) {
+					Observable<Tuple5<Integer, String, Integer, String, String>> asset_health_1, Integer start, Integer limit ) {
 			
 			return ResponseEntity.ok()
 
@@ -308,7 +358,7 @@ public class HealthApi {
 
 						.put("stages", jsonLegends(asset_health_1 ) )
 
-						.put("items", jsonAssets(category, request, asset_health_1 ) )
+						.put("items", jsonAssets(category, request, asset_health_1, start, limit ) )
 
 						.put("root",
 								new ImmutableMap.Builder<String, Object>()
@@ -326,7 +376,7 @@ public class HealthApi {
 		}
 		
 		private ResponseEntity<Map<String, Object>> createResponseBody(Integer category,  
-				Observable<Tuple4<Integer, String, String, Integer>> asset_health_2, HttpServletRequest request ) {
+				Observable<Tuple4<Integer, String, String, Integer>> asset_health_2, HttpServletRequest request, Integer start, Integer limit ) {
 
 			return ResponseEntity.ok()
 
@@ -340,7 +390,7 @@ public class HealthApi {
 										.put("total", queryForCount(asset_health_2) )
 										.build() )
 
-							.put("items", jsonAssets(category, asset_health_2, request ) )
+							.put("items", jsonAssets(category, asset_health_2, request, start, limit ) )
 
 							.put("root",
 									new ImmutableMap.Builder<String, Object>()
@@ -358,7 +408,7 @@ public class HealthApi {
 		}
 		
 		private ResponseEntity<Map<String, Object>> createResponseBody(Observable<Tuple3<Integer, String, String>> asset_health_3456, 
-				Integer category, HttpServletRequest request ) {
+				Integer category, HttpServletRequest request, Integer start, Integer limit ) {
 
 			return ResponseEntity.ok()
 
@@ -372,7 +422,7 @@ public class HealthApi {
 										.put("total", queryForCount(asset_health_3456) )
 										.build() )
 
-							.put("items", jsonAssets(asset_health_3456, category, request ) )
+							.put("items", jsonAssets(asset_health_3456, category, request, start, limit ) )
 
 							.put("root",
 									new ImmutableMap.Builder<String, Object>()
@@ -407,8 +457,8 @@ public class HealthApi {
 								.put("unit", getUnit())
 								.put("link",
 										new ImmutableMap.Builder<String, Object>()
-										.put("ref", getRef("root") )
-										.put("href", getHref(1, url ) )
+										.put("ref", getRef("branch") )
+										.put("href", getHref(1, url, queryForCount(asset_health_1)) )
 										.build() )
 								.build() )
 
@@ -419,8 +469,8 @@ public class HealthApi {
 								.put("unit", getUnit())
 								.put("link",
 										new ImmutableMap.Builder<String, Object>()
-										.put("ref", getRef("root") )
-										.put("href", getHref(2, url ) )
+										.put("ref", getRef("branch") )
+										.put("href", getHref(2, url, queryForCount(asset_health_2) ) )
 										.build() )
 								.build() )
 
@@ -431,8 +481,8 @@ public class HealthApi {
 								.put("unit", getUnit())
 								.put("link",
 										new ImmutableMap.Builder<String, Object>()
-										.put("ref", getRef("root") )
-										.put("href", getHref(3, url ) )
+										.put("ref", getRef("branch") )
+										.put("href", getHref(3, url, queryForCount(asset_health_3) ) )
 										.build() )
 								.build() )
 
@@ -443,8 +493,8 @@ public class HealthApi {
 								.put("unit", getUnit())
 								.put("link",
 										new ImmutableMap.Builder<String, Object>()
-										.put("ref", getRef("root") )
-										.put("href", getHref(4, url ) )
+										.put("ref", getRef("branch") )
+										.put("href", getHref(4, url, queryForCount(asset_health_4) ) )
 										.build() )
 								.build() )
 
@@ -455,8 +505,8 @@ public class HealthApi {
 								.put("unit", getUnit())
 								.put("link",
 										new ImmutableMap.Builder<String, Object>()
-										.put("ref", getRef("root") )
-										.put("href", getHref(5, url ) )
+										.put("ref", getRef("branch") )
+										.put("href", getHref(5, url, queryForCount(asset_health_5) ) )
 										.build() )
 								.build() )
 
@@ -467,8 +517,8 @@ public class HealthApi {
 								.put("unit", getUnit())
 								.put("link",
 										new ImmutableMap.Builder<String, Object>()
-										.put("ref", getRef("root") )
-										.put("href", getHref(6, url ) )
+										.put("ref", getRef("branch") )
+										.put("href", getHref(6, url, queryForCount(asset_health_6) ) )
 										.build() )
 								.build() )
 
@@ -525,9 +575,11 @@ public class HealthApi {
 				.build();
 	}
 	
-	private Iterable<ImmutableMap<String, Object>> jsonAssets(Integer category, HttpServletRequest request, Observable<Tuple5<Integer, String, Integer, String, String>> asset_health_1) {
+	private Iterable<ImmutableMap<String, Object>> jsonAssets(Integer category, HttpServletRequest request, Observable<Tuple5<Integer, String, Integer, String, String>> asset_health_1, Integer start, Integer limit) {
 
 		return asset_health_1
+				.skip(start)
+				.limit(limit)
 				.map(asset -> new ImmutableMap.Builder<String, Object>()
 						.put("id",
 								Option.of(asset.getElement0()).getOrElse(-1) )
@@ -548,9 +600,11 @@ public class HealthApi {
 	}
 	
 	
-	private Iterable<ImmutableMap<String, Object>> jsonAssets(Integer category, Observable<Tuple4<Integer, String, String, Integer>> asset_health_2, HttpServletRequest request) {
+	private Iterable<ImmutableMap<String, Object>> jsonAssets(Integer category, Observable<Tuple4<Integer, String, String, Integer>> asset_health_2, HttpServletRequest request, Integer start, Integer limit) {
 
 		return asset_health_2
+				.skip(start)
+				.limit(limit)
 				.map(asset -> new ImmutableMap.Builder<String, Object>()
 						.put("id",
 								Option.of(asset.getElement0()).getOrElse(0) )
@@ -571,9 +625,11 @@ public class HealthApi {
 	}
 	
 	
-	private Iterable<ImmutableMap<String, Object>> jsonAssets(Observable<Tuple3<Integer, String, String>> asset_health_3, Integer category, HttpServletRequest request) {
+	private Iterable<ImmutableMap<String, Object>> jsonAssets(Observable<Tuple3<Integer, String, String>> asset_health_3, Integer category, HttpServletRequest request, Integer start, Integer limit) {
 
 		return asset_health_3
+				.skip(start)
+				.limit(limit)
 				.map(asset -> new ImmutableMap.Builder<String, Object>()
 						.put("id",
 								Option.of(asset.getElement0()).getOrElse(0) )
