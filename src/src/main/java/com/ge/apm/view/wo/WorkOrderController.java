@@ -1,11 +1,6 @@
 package com.ge.apm.view.wo;
 
 import com.ge.apm.dao.AssetInfoRepository;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
@@ -13,15 +8,20 @@ import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
-import java.util.ArrayList;
-import java.util.List;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.math.NumberUtils;
 import org.primefaces.event.TabChangeEvent;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import webapp.framework.dao.SearchFilter;
-import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.JpaCRUDController;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @ManagedBean
 @ViewScoped
@@ -34,6 +34,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
 
     @Override
     protected void init() {
+        //gl:init()
         loginUser = UserContextService.getCurrentUserAccount();
 
         this.filterByHospital = true;
@@ -163,6 +164,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
 
     @Override
     public void onServerEvent(String eventName, Object eventObject){
+        //gl:
         AssetInfo asset = (AssetInfo) eventObject;
         if(asset==null) return;
         

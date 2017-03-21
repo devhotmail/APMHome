@@ -14,6 +14,12 @@ public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
     public List<WorkOrder> findByAssetId(Integer assetId);
 
     public List<WorkOrder> findByAssetIdAndIntExtType(Integer assetId, int intExtType);
+    public List<WorkOrder> findByStatus(int status);
+    public List<WorkOrder>  findByRequestorId(int requestorId);
+
+
+
+
 
 
 //gl:todo 7 是应该可配的
