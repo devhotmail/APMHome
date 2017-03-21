@@ -31,13 +31,23 @@ WorkOrderService workOrderService;
        /* List<WorkOrder> reopenWorkOrder = workOrderRepository.isReopenWorkOrder(2, 2, 2);
         System.out.println(reopenWorkOrder.size()+"-------->");*/
 
-workOrderService.workWorderCreate();
+workOrderService.workWorderCreate(2);
 
         //user  科员 siteid 2 hospitalid 2 de header is who
        /* UserAccount userAccount = userDao.getAssetHead(2, 2).get(0);
         System.out.println(userAccount.getName());*/
     }
 
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void assignWorkOrder()throws Exception{
+        //20006:workorder id, 3:userid the guy who is assgend  3: stepid
+       // workOrderRepository.updateWorkderOrder(20006,3 ,"wangtian",3);
+        //test service
+
+        workOrderService.assignWorkOrder(20006,5,"Desc");
+    }
 
     @Test
     @Transactional

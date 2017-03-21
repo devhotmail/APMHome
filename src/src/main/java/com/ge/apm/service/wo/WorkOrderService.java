@@ -79,6 +79,32 @@ public class WorkOrderService {
 
         return woStep;
     }
+    @Autowired
+    WorkOrderStepRepository workOrderStepRepository;
+
+    @Transactional
+    public  void assignWorkOrder(Integer woId,Integer userId,String desc) throws RuntimeException{
+        int stepId=3; //分派工单后 状态应该设置为3-接单
+        WorkOrder wo = workOrderRepository.getById(woId);
+        if(wo==null){
+            System.out.println("xxxxxx------"+"数据库中没有该工单");
+        }
+        //1 update work order table
+        UserAccount user = userDao.getById(userId);
+        workOrderRepository.updateWorkderOrder(woId,userId,user.getName(),stepId);
+        //2 insert  work order step
+        WorkOrderStep wds = new WorkOrderStep();
+        wds.setSiteId(wo.getSiteId());
+        wds.setStepId(stepId);
+        wds.setStepName("stepname");
+        wds.setOwnerId(userId);
+        wds.setOwnerName(user.getName());
+        wds.setWorkOrderId(wo.getId());
+        wds.setDescription(desc);
+        wds.setStartTime(new Date());
+        workOrderStepRepository.save(wds);
+    }
+
     @Transactional
     public void workWorderCreate(Integer assetId)throws RuntimeException{
         /*  判断否是二次开单  --> 判断派工模式
@@ -88,7 +114,7 @@ public class WorkOrderService {
         //select * from work_order where  (close_time::timestamp)::date > (select now() - interval '7 day')::date  and  asset_id =68 and hospital_id=2 and site_id=2
 //gl:requestor 就是申请保修的,curent_person_d: 自动派单时为-1，手动派单时为设备科科长.
         //gl: select from user_account ua , sys_role  sr where sr.role_id =2 and ua.user_id = ?
-       // UserAccount currentUsr= UserContext.getCurrentLoginUser();
+        // UserAccount currentUsr= UserContext.getCurrentLoginUser();
         UserAccount currentUsr = new UserAccount();
         currentUsr.setId(2);currentUsr.setName("keyuan");currentUsr.setHospitalId(2);
         currentUsr.setSiteId(2);
@@ -129,17 +155,17 @@ public class WorkOrderService {
         }
         neWorkOrder.setCurrentPersonId(headerAccount.getId());
         neWorkOrder.setCurrentPersonName(headerAccount.getName());
-        neWorkOrder.setCurrentStepId(2);//--------
+        neWorkOrder.setCurrentStepId(2);// gl: 表示步骤是开单
         neWorkOrder.setCurrentStepName("审核");
         neWorkOrder.setTotalManHour(0);//----?
         neWorkOrder.setTotalPrice(0.0);//----?
         //not null
-     neWorkOrder.setRequestorId(1);
+        neWorkOrder.setRequestorId(1);
 
-     neWorkOrder.setRequestTime(new Date());
-     neWorkOrder.setRequestReason("reason");
-     neWorkOrder.setCasePriority(1);
-     neWorkOrder.setAssetId(assetId);
+        neWorkOrder.setRequestTime(new Date());
+        neWorkOrder.setRequestReason("reason");
+        neWorkOrder.setCasePriority(1);
+        neWorkOrder.setAssetId(assetId);
 
 
         return neWorkOrder;

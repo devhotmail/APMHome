@@ -43,6 +43,16 @@ public class RepairProcessController {
 
     }
 
+    @RequestMapping(value = "/workorder/{workOrderId}/{userId}/{desc}")
+    @ResponseBody
+    public void assignWorkOrder(@PathVariable Integer workOrderId ,@PathVariable Integer userId,String desc) throws RuntimeException
+    {
+        workOrderService.assignWorkOrder(workOrderId,userId,desc);
+
+    }
+
+
+
     @RequestMapping(value = "repairprocess")
     public String repairProcess(HttpServletResponse response,
                                 HttpServletRequest httpServletRequest,
