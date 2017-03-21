@@ -19,7 +19,7 @@ public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
 //    public List<WorkOrder> isReopenWorkOrder();
 
 
-    @Query("select wo from WorkOrder wo where  (wo.closeTime::timestamp)::date > (select now() - interval \'7 day\')::date  and wo.assetId =:assetId and wo.hospitalId=:hospitalId and wo.siteId=:siteId")
+    @Query("select wo from WorkOrder wo where  (CURRENT_TIMESTAMP() - close_time >2000)  and wo.assetId =:assetId and wo.hospitalId=:hospitalId and wo.siteId=:siteId")
     public List<WorkOrder> isReopenWorkOrder(@Param("assetId") Integer assetId, @Param("hospitalId") Integer hospitalId, @Param("siteId")Integer siteId);
 
     /*@Query("select wo from WorkOrder wo where  (wo.closeTime::timestamp)::date > (select now() - interval '7 day')::date  and  wo.assetId =:assetId and wo.hospitalId=:hospitalId and wo.siteId=:siteId")
