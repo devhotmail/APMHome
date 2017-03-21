@@ -51,13 +51,18 @@
         behaviors: [
           ContextBehavior
         ],
-        observers: [],
+        observers: [
+          '_handleFilterChange(year, groupBy)'
+        ],
         _computeQueryUrl: function(year, groupBy) {
           var uri = URI(this.resolveApiUrl('/api/profit')).addQuery('year', year).addQuery('groupby', groupBy);
           if (groupBy === 'device') {
             uri.removeQuery('groupby');
           }
           return uri.toString();
+        },
+        _handleFilterChange: function(year, groupBy) {
+          this.$.chart.load();
         },
         ready: function() {
           this._bubbleConfig = function(node, i, config) {

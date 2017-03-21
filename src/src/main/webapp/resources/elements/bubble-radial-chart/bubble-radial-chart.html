@@ -1296,8 +1296,12 @@
           attached: function() {
             var _this = this;
             this.set('isAttached', true);
+            this.load();
+          },
+          load: function() {
             this.resetChart();
             var url = this.queryUrl;
+            var _this = this;
             this.loadData(url, 1).then(function() {
               _this.renderCurrPage(url);
             });
