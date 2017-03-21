@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.ge.apm.service.utils.TimeUtils;
+
 /**
  *
  * @author 212579464
@@ -52,8 +54,14 @@ public class AccountApplication implements Serializable {
     private Integer status;
     
     private String password;
+    private String applyDate;
     
-    @Column(name = "clinical_dept_name")
+    
+    public String getApplyDate() {
+    	return TimeUtils.getStrDate(applicationDate, null);
+	}
+
+	@Column(name = "clinical_dept_name")
     private String clinicalDeptName;
     
 	public AccountApplication() {
@@ -145,6 +153,7 @@ public class AccountApplication implements Serializable {
     }
 
     public Date getApplicationDate() {
+    	
         return applicationDate;
     }
 

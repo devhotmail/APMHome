@@ -1,5 +1,7 @@
 package com.ge.apm.view.uaa;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -20,12 +22,19 @@ public class UserRegistrationController extends JpaCRUDController<AccountApplica
 	private AccountApplicationService accountApplicationService;
 	private AccountApplication accountApplication;
 	private UserRegistrationRepository userRegistrationRepository;
+	private String condition;
+	private Integer applyId;
 	
     @Override
     protected void init() {
         filterBySite = false;
         accountApplicationService = WebUtil.getBean(AccountApplicationService.class);
-        accountApplication = new AccountApplication();
+        String applyId = WebUtil.getRequestParameter("applyId");
+        if(applyId != null){
+        	accountApplication = accountApplicationService.getApplyById(Integer.parseInt(applyId));
+        }else{
+        	accountApplication = new AccountApplication();
+        }
         userRegistrationRepository = WebUtil.getBean(UserRegistrationRepository.class);
     }
     
@@ -38,6 +47,10 @@ public class UserRegistrationController extends JpaCRUDController<AccountApplica
     	
     }
     
+    public List<AccountApplication> getApplyList(){
+    	String openId = "openId609";
+    	return accountApplicationService.getApplyList(openId);
+    }
 	
 	@Override
 	protected GenericRepository<AccountApplication> getDAO() {
@@ -51,4 +64,22 @@ public class UserRegistrationController extends JpaCRUDController<AccountApplica
 	public void setAccountApplication(AccountApplication accountApplication) {
 		this.accountApplication = accountApplication;
 	}
+
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+
+	public Integer getApplyId() {
+		return applyId;
+	}
+
+	public void setApplyId(Integer applyId) {
+		this.applyId = applyId;
+	}
+	
+	
 }
