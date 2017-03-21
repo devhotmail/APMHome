@@ -19,12 +19,11 @@
        query-url="[[queryUrl]]"
        group-by="[['type']]"
        render-gauge="[[_renderGauge]]"
-       on-open-node="handleOpenNode"
-       on-close-node="handleCloseNode"
+       on-opening-node-l1-changed="handleOpenNode"
        on-data-load="handleLoadData"
        gauge-radius-l1="[[_gaugeRadiusL1]]"
        gauge-radius-l2="[[_gaugeRadiusL2]]"
-       transform-data="[[_transformItem]]"
+       transform-data="[[_transformData]]"
        bubble-config="[[_bubbleConfig]]">
     </bubble-radial-chart>
   </template>
@@ -63,7 +62,6 @@
         'rgb(49, 90, 93)',
         'rgb(76, 95, 52)'
       ]);
-      var r = 80;
 
       function wrap(text, width) {
         var words = text.text().split(/\s+/).reverse(),
@@ -91,6 +89,18 @@
         }
       }
 
+      function _transformItem(item) {
+        if (!item.name) {
+          item.name = item.display;
+        }
+        if (!(
+            'revenue' in item
+          )) {
+          item.revenue = 'category' in item ? item.count : 1;
+        }
+        item['unit-label'] = '台';
+        return item;
+      }
 
       // http://browserhacks.com/#hack-2f32c95ac8c021c463de0fdf685acb29
       function isIE() {
@@ -119,14 +129,19 @@
           'renderSteps(steps)'
         ],
         _computeQueryUrl: function(category) {
-          return URI('mock/api-health' +
-            ( category ? '-' + category : '') + '.json').toString();
+          var uri = URI(this.resolveApiUrl('/api/health'));
+          if (typeof category === 'number') {
+            uri.addQuery('category', category);
+          }
+          return uri.toString();
         },
-        handleOpenNode: function(evt, node) {
-          this.category = node.data.category;
-        },
-        handleCloseNode: function() {
-          this.steps = null;
+        handleOpenNode: function(evt, data) {
+          var node = data.value;
+          if(node) {
+            this.category = node.data.category;
+          } else {
+            this.steps = null;
+          }
         },
         handleLoadData: function(evt, data) {
           this.steps = data.root.stages;
@@ -194,12 +209,13 @@
         },
         ready: function() {
           this._gaugeRadiusL2 = {
-            min: 100,
-            max: 100
+            min: 80,
+            max: 80
           };
+
           this._gaugeRadiusL1 = {
-            min: 60,
-            max: 100
+            min: 70,
+            max: 70
           };
           var _this = this;
 
@@ -271,7 +287,9 @@
                       .attr('dy', '1.5em')
                       .text('维修流程：');
                       label.append('tspan')
-                      .text(node.data.stage);
+                      .text(_this.steps.find(function(stg) {
+                        return stg.id = node.data.stage
+                      }).display);
 
                       // owner label
                       label.append('tspan')
@@ -340,13 +358,13 @@
                       .text(node.data.date);
 
                       // description label
-                      if (node.data.description) {
+                      if (node.data.desc) {
                         label.append('tspan')
                         .attr('x', 0)
                         .attr('dy', '1.5em')
                         .text('原因：')
                         label.append('tspan')
-                        .text(node.data.description);
+                        .text(node.data.desc);
                       }
 
                       label.attr('transform', function() {
@@ -382,17 +400,16 @@
             config.valueCountUp = !isIE();
             return config;
           };
-          this._transformItem = function(item) {
-            if (!item.name) {
-              item.name = item.display;
+
+          this._transformData = function(data) {
+            if (data.stages) {
+              data.root.stages = data.stages;
             }
 
-            if (!('revenue' in item)) {
-              item.revenue = 'category' in item ? item.count : 1;
-            }
+            data.root = _transformItem(data.root);
+            data.items = data.items.map(_transformItem);
 
-            item['unit-label'] = '台';
-            return item;
+            return data;
           };
         }
       });

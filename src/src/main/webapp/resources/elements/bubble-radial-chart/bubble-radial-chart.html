@@ -65,7 +65,7 @@
         }
 
         function hasChildren(node) {
-          return node.data.link && node.data.link.href !== '';
+          return node.data.link && node.data.link.href;
         }
 
         // http://browserhacks.com/#hack-2f32c95ac8c021c463de0fdf685acb29
@@ -684,7 +684,7 @@
             openingNodeL1: {
               type: Object,
               notify: true,
-              observer:  'handleOrbit1Collapsed'
+              observer:  'changeL1Node'
             },
             openingNode: {
               type: Object,
@@ -1253,12 +1253,10 @@
             }
             _this.openingNodeL1 = node;
 
-            _this.fire('open-node', node);
-
             _this.loadData(this.queryUrl, 2).then(function() {
               var close = _this.renderCurrPage(_this.queryUrl, 2).close;
               _this.closeNodeL1 = function() {
-                _this.fire('close-node', node);
+                _this.openingNodeL1 = null;
                 return close().then(function() {
                   var uri = node.parent.data.link.href;
                   _this.plotPager(uri, 1);
@@ -1266,7 +1264,7 @@
               }
             });
           },
-          handleOrbit1Collapsed: function(node) {
+          changeL1Node: function(node) {
             var svg = d3.select(this.$.chartSvg);
             // add/remove `expanded` for root node when orbit two closed
             svg.classed('expanded', !!node);
@@ -1298,8 +1296,8 @@
           attached: function() {
             var _this = this;
             this.set('isAttached', true);
-            var url = this.queryUrl;
             this.resetChart();
+            var url = this.queryUrl;
             this.loadData(url, 1).then(function() {
               _this.renderCurrPage(url);
             });
@@ -1340,12 +1338,12 @@
                   };
                 });
               }).then(function(res) {
-                var data = res.data;
+                var data = _this.transformData(res.data);
                 var cache_age = res.maxAge;
-                list = list.concat(data.items.map(_this.transformData));
+                list = list.concat(data.items);
 //                cache_age = 1;
                 lscache.set(cacheKey, list, cache_age);
-                lscache.set(cacheKey + '/root', _this.transformData(data.root), cache_age);
+                lscache.set(cacheKey + '/root', data.root, cache_age);
                 lscache.set(cacheKey + '/pages', data.pages, cache_age);
               }).then(setMaxData);
             } {
@@ -1360,7 +1358,9 @@
                 root: root,
                 level: level
               });
-              _this.set('maxValueL' + level, list[0].revenue);
+              if(list.length) {
+                _this.set('maxValueL' + level, list[0].revenue);
+              }
             }
           },
           hasData: function(url) {
@@ -1577,10 +1577,10 @@
             return d3Transform().translate(layout.offsetX, layout.offsetY)();
           },
           _replot: function(width, height) {
-            var key = this.queryUrl;
+            this.resetChart();
             this.debounce('replot', function() {
+              var key = this.queryUrl;
               if (this.hasData(key)) {
-                this.resetChart();
                 this.renderCurrPage(key, 1, false);
               }
             }, 500);
