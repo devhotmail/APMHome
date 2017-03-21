@@ -8,10 +8,14 @@ import org.slf4j.LoggerFactory;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.MessageSubscriber;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.service.asset.MessageSubscriberService;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.List;
+import javax.faces.application.FacesMessage;
+import javax.faces.convert.ConverterException;
 import org.primefaces.model.StreamedContent;
 import webapp.framework.dao.GenericRepository;
 import webapp.framework.dao.SearchFilter;
@@ -25,6 +29,7 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
     private static final long serialVersionUID = -1L;
     private Logger logger = LoggerFactory.getLogger(getClass());
     private AssetInfoRepository assetDao;
+    private MessageSubscriberService msService;
     private AssetFileAttachmentRepository attachDao = null;
     private UserContextService userContextService;
     UserAccount currentUser;
@@ -40,12 +45,15 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
     private StreamedContent picture;
 
     private Boolean bindResult = false;
+    
+    private MessageSubscriber messageSubscriber;
 
     @Override
     protected void init() {
         assetDao = WebUtil.getBean(AssetInfoRepository.class);
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         userContextService = WebUtil.getBean(UserContextService.class);
+        msService = WebUtil.getBean(MessageSubscriberService.class);
         currentUser = userContextService.getLoginUser();
         qrCode = WebUtil.getRequestParameter("qrCode");
         String assetId = WebUtil.getRequestParameter("assetId");
@@ -56,6 +64,24 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
                 qrCode = qrCode.substring(qrCode.length() - 36);
             }
             assetInfo = findAsset(qrCode);
+        }
+        if(null!= assetInfo){
+            if(assetInfo.getSiteId()!=currentUser.getSiteId() ){
+                assetInfo = null;
+            }
+            if(!assetInfo.getHospitalId().equals(currentUser.getHospitalId()) && !userContextService.hasRole("MultiHospital")){
+                 assetInfo = null;
+            }
+        }
+        if(null!= assetInfo){
+            messageSubscriber = msService.getMessageSubscriber(assetInfo.getId(),currentUser.getId());
+            if(null == messageSubscriber){
+                messageSubscriber = new MessageSubscriber();
+                messageSubscriber.setAssetId(assetInfo.getId());
+                messageSubscriber.setSiteId(assetInfo.getSiteId());
+                messageSubscriber.setHospitalId(assetInfo.getHospitalId());
+                messageSubscriber.setSubscribeUserId(currentUser.getId());
+            }
         }
 
     }
@@ -123,6 +149,16 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         return assetDao.findBySearchFilter(sfs);
     }
 
+    public void settingMsgSubscriber(){
+        int receibeMode = Integer.parseInt(WebUtil.getRequestParameter("subscribrSetting:subsMsgRadio"));
+        messageSubscriber.setReceiveMsgMode(receibeMode);
+        if(msService.saveOrUpdate(messageSubscriber)){
+            WebUtil.addSuccessMessage("保存成功");
+        }else{
+            WebUtil.addErrorMessage("保存失败");
+        }
+    }
+    
     @Override
     protected GenericRepository<AssetInfo> getDAO() {
         return assetDao;
@@ -191,7 +227,14 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
     public void setSearchStatPartial(Boolean searchStatPartial) {
         this.searchStatPartial = searchStatPartial;
     }
-    
+
+    public MessageSubscriber getMessageSubscriber() {
+        return messageSubscriber;
+    }
+
+    public void setMessageSubscriber(MessageSubscriber messageSubscriber) {
+        this.messageSubscriber = messageSubscriber;
+    }
     
 
 }
