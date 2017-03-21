@@ -52,6 +52,8 @@ public class AccountApplication implements Serializable {
     private Integer status;
     
     private String password;
+    
+    @Column(name = "clinical_dept_name")
     private String clinicalDeptName;
     
 	public AccountApplication() {

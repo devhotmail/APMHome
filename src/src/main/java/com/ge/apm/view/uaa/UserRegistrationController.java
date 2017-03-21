@@ -2,6 +2,8 @@ package com.ge.apm.view.uaa;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+
+import com.ge.apm.dao.UserRegistrationRepository;
 import com.ge.apm.domain.AccountApplication;
 import com.ge.apm.service.uaa.AccountApplicationService;
 import com.ge.apm.service.utils.WeiXinUtils;
@@ -17,19 +19,20 @@ public class UserRegistrationController extends JpaCRUDController<AccountApplica
 	private static final long serialVersionUID = 1L;
 	private AccountApplicationService accountApplicationService;
 	private AccountApplication accountApplication;
+	private UserRegistrationRepository userRegistrationRepository;
 	
     @Override
     protected void init() {
-        filterBySite = true;
+        filterBySite = false;
         accountApplicationService = WebUtil.getBean(AccountApplicationService.class);
         accountApplication = new AccountApplication();
+        userRegistrationRepository = WebUtil.getBean(UserRegistrationRepository.class);
     }
     
     public void submit(){
     	System.out.println(accountApplication);
     	if(accountApplication != null){
     		accountApplication.setWechatId(WeiXinUtils.getWxUserOpenId());
-//    		accountApplication.setRoleId(1);
     	}
     	accountApplicationService.applyRegistration(this.accountApplication);
     	
@@ -38,7 +41,7 @@ public class UserRegistrationController extends JpaCRUDController<AccountApplica
 	
 	@Override
 	protected GenericRepository<AccountApplication> getDAO() {
-		return null;
+		return userRegistrationRepository;
 	}
 
 	public AccountApplication getAccountApplication() {
