@@ -203,7 +203,7 @@ public class AssetCostDataService {
 		}catch(Exception e){
 			logger.error("calByFromTo error,param is {}",bac);
 			logger.error("calByFromTo error,message is {}",e.getMessage());
-			return "failue";
+			throw e;
 		}
 	}
 }
