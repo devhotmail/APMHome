@@ -3,6 +3,7 @@ package com.ge.apm.web.wo;
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.service.wechat.CoreService;
+import com.ge.apm.service.wo.WorkOrderService;
 import com.ge.apm.view.sysutil.FieldValueMessageController;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
@@ -10,6 +11,7 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import webapp.framework.web.WebUtil;
@@ -29,12 +31,15 @@ public class RepairProcessController {
     protected WxMpService wxMpService;
      @Autowired
      protected CoreService coreService;
+     @Autowired
+             protected WorkOrderService workOrderService;
     WorkOrderRepository workOrderDao = WebUtil.getBean(WorkOrderRepository.class);
 
-    @RequestMapping(value = "repairprocess")
+    @RequestMapping(value = "/workorder/{assetId}")
     @ResponseBody
-    public void test()
+    public void createWorkOrder(@PathVariable Integer assetId) throws RuntimeException
     {
+        workOrderService.workWorderCreate(assetId);
 
     }
 

@@ -80,7 +80,7 @@ public class WorkOrderService {
         return woStep;
     }
     @Transactional
-    public void workWorderCreate()throws RuntimeException{
+    public void workWorderCreate(Integer assetId)throws RuntimeException{
         /*  判断否是二次开单  --> 判断派工模式
         * 1（拿siteid和assetid还有hospitalid来作为该设备是否是唯一的）
         *2
@@ -101,11 +101,11 @@ public class WorkOrderService {
         if(reopenWorkOrder.size() >0 && assetHead.size()>0){//true is reopen
             System.out.println("是二次开单的工单创建");
             //relating to parent parent_wo_id(work_order)
-            neWorkOrder=initWorkOrder(2,currentUsr,assetHead.get(0),reopenWorkOrder.get(0),true);
+            neWorkOrder=initWorkOrder(assetId,currentUsr,assetHead.get(0),reopenWorkOrder.get(0),true);
         }else{ //非二次开单
             System.out.println("不是二次开单的工单创建");
             //非二次开单第三个参数就为空 即不需要父工单
-            neWorkOrder=initWorkOrder(2,currentUsr,assetHead.get(0),null,false);
+            neWorkOrder=initWorkOrder(assetId,currentUsr,assetHead.get(0),null,false);
 
         }
         workOrderRepository.save(neWorkOrder);
