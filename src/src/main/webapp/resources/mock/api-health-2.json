@@ -1,0 +1,39 @@
+{
+    "pages": {
+        "total": 2,
+        "limit": 50,
+        "start": 0
+    },
+    "items": [
+        {
+            "id": 12,
+            "name": "西门子核磁Avanto",
+            "date": "2017-03-17",
+            "description": "磁头损坏",
+            "link": {
+                "ref": "redirect",
+                "href": "https://app_url_prefix/portal/asset/info/List.xhtml?assetStatus=2"
+            }
+        },
+        {
+            "id": 13,
+            "name": "通用电气彩超LOGIQ",
+            "date": "2017-04-17",
+            "description": "磁头损坏",
+            "link": {
+                "ref": "redirect",
+                "href": "https://app_url_prefix/portal/asset/info/List.xhtml?assetStatus=2"
+            }
+        }
+    ],
+    "root": {
+        "category": 2,
+        "display": "停机中",
+        "count": 2,
+        "unit": "台",
+        "link": {
+            "ref": "self",
+            "href": "https://app_url_prefix/api/health?category=1"
+        }
+    }
+}

@@ -1,0 +1,1600 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../d3/d3.html">
+<link rel="import" href="../lodash/lodash.html">
+<link rel="import" href="../../lscache.html"/>
+<link rel="import" href="bubble-radial-chart-styles.html">
+<script src="../../bower_components/d3/d3.min.js"></script>
+<script src="../../bower_components/urijs/src/URI.js"></script>
+
+<dom-module id="bubble-radial-chart">
+  <template>
+    <style include="bubble-radial-chart-styles"></style>
+    <div id="chart" class="chart-container">
+      <div id="layers"></div>
+      <svg id="chartSvg" class$="[[_svgEnvClass]]" width$="[[width]]" height$="[[height]]">
+        <g id="canvas" class="canvas" transform$="[[_canvasTransform]]"></g>
+      </svg>
+    </div>
+  </template>
+  <script>
+    define('bubble-radial-chart', [
+      'lscache'
+    ], function(lscache) {
+        function project(x, radius) {
+          var angle = ( x - 180 ) / 180 * Math.PI;
+          return [radius * Math.cos(angle), radius * Math.sin(angle)];
+        }
+
+        // calc the circular geometry from node size properties
+        function circular_geom(node) {
+          var center = project(node.x, node.y);
+          return {
+            r: node.size,
+            center: center,
+            peak: [center[0], center[1] - node.size]
+          };
+        }
+
+        function intersectByAngles(x1, y1, x2, y2, alp1, alp2) {
+          var u = x2 - x1
+          var v = y2 - y1
+          var a3 = Math.sqrt(u * u + v * v)
+          var alp3 = Math.PI - alp1 - alp2
+          var a2 = a3 * Math.sin(alp2) / Math.sin(alp3)
+          var RHS1 = x1 * u + y1 * v + a2 * a3 * Math.cos(alp1)
+          var RHS2 = y2 * u - x2 * v + a2 * a3 * Math.sin(alp1)
+          return [
+            (1.0 / (a3 * a3)) * (u * RHS1 - v * RHS2),
+            (1.0 / (a3 * a3)) * (v * RHS1 + u * RHS2)
+          ];
+        }
+
+        function getControls(d0, d1, angel0, angel1, mu0, mu1) {
+          var result = intersectByAngles(d0[0], d0[1], d1[0], d1[1], angel0, angel1);
+          var x2 = result[0];
+          var y2 = result[1];
+          return {
+            control1: [(x2 - d0[0]) * mu0 + d0[0], (y2 - d0[1]) * mu0 + d0[1]],
+            control2: [(x2 - d1[0]) * mu1 + d1[0], (y2 - d1[1]) * mu1 + d1[1]]
+          }
+        }
+
+        function deg2rad(angle) {
+          return (angle / 180) * Math.PI;
+        }
+
+        function hasChildren(node) {
+          return node.data.link && node.data.link.href;
+        }
+
+        // http://browserhacks.com/#hack-2f32c95ac8c021c463de0fdf685acb29
+        function isIE() {
+          return window.navigator.msPointerEnabled;
+        }
+
+        function renderGauge(element, node, index, config) {
+          var gauge = d3.select(element);
+          var data = node.data;
+          var radius = node.circle.r;
+          var locationX = -parseInt(config.width) / 2;
+          var locationY = -parseInt(config.height) / 2;
+          var fillPercent = Math.max(config.minValue, Math.min(config.maxValue, +node.data.profit_label)) / config.maxValue;
+          var waveHeightScale;
+          if (config.waveHeightScaling) {
+            waveHeightScale = d3.scaleLinear()
+            .range([0, config.waveHeight, 0])
+            .domain([0, 50, 100]);
+          } else {
+            waveHeightScale = d3.scaleLinear()
+            .range([config.waveHeight, config.waveHeight])
+            .domain([0, 100]);
+          }
+          var textPixels = config.textSize * radius / 3;
+          if (textPixels < 12) textPixels = 12;
+
+          var circleThickness = config.circleThickness;
+          var circleFillGap = config.circleFillGap * radius;
+          var fillCircleMargin = circleThickness + circleFillGap;
+          var fillCircleRadius = radius - fillCircleMargin;
+          var waveHeight = fillCircleRadius * waveHeightScale(fillPercent * 100);
+          var waveLength = fillCircleRadius * 2 / config.waveCount;
+          var waveClipCount = 1 + config.waveCount;
+          var waveClipWidth = waveLength * waveClipCount;
+          var labelUnit = data.label_unit;
+
+          // Data for building the clip wave area.
+          var data = [];
+          for (var i = 0; i <= 40 * waveClipCount; i++) {
+            data.push({
+              x: i / (
+                40 * waveClipCount
+              ),
+              y: (
+                i / (
+                  40
+                )
+              )
+            });
+          }
+          // Scales for drawing the outer circle.
+          var gaugeCircleX = d3.scaleLinear().range([0, 2 * Math.PI]).domain([0, 1]);
+          var gaugeCircleY = d3.scaleLinear().range([0, radius]).domain([0, radius]);
+          // Scales for controlling the size of the clipping path.
+          var waveScaleX = d3.scaleLinear().range([0, waveClipWidth]).domain([0, 1]);
+          var waveScaleY = d3.scaleLinear().range([0, waveHeight]).domain([0, 1]);
+          // Scales for controlling the position of the clipping path.
+          var waveRiseScale = d3.scaleLinear()
+          // The clipping area size is the height of the fill circle + the wave height, so we position the clip wave
+          // such that the it will overlap the fill circle at all when at 0%, and will totally cover the fill
+          // circle at 100%.
+          .range([fillCircleMargin + fillCircleRadius * 2 + waveHeight, fillCircleMargin-waveHeight])
+          .domain([0, 1]);
+          var waveAnimateScale = d3.scaleLinear()
+          .range([0, waveClipWidth - fillCircleRadius * 2]) // Push the clip area one full wave then snap back.
+          .domain([0, 1]);
+
+          // Scale for controlling the position of the text within the gauge.
+          var textRiseScaleY = d3.scaleLinear()
+          .range([fillCircleMargin + fillCircleRadius*2, fillCircleMargin + (fillCircleRadius * 2* (1-fillPercent)) + textPixels * 0.7])
+          .domain([0, 1]);
+
+          // Center the gauge within the parent SVG.
+          var gaugeGroup = gauge.append('g')
+          .attr('class', 'gauge')
+          .attr('transform', 'translate(' + locationX + ',' + locationY + ')');
+
+          if (!Modernizr.touchevents) {
+            // using mouse event for hover effect in pc view
+            gaugeGroup.on('mouseover', function(d, i, nodeList) {
+              var currentNodeGroup = d3.select(nodeList[i]).node().parentNode;
+              var selected = d3.select(currentNodeGroup).classed('selected');
+              if (!selected) gauge.classed('active', true);
+            })
+            .on('mouseout', function(d, i, nodeList) {
+              var currentNodeGroup = d3.select(nodeList[i]).node().parentNode;
+              var selected = d3.select(currentNodeGroup).classed('selected');
+              if (!selected) gauge.classed('active', false);
+            });
+          }
+
+          gaugeGroup.append('circle')
+          .attr('class', 'filter-circle')
+          .attr('r', radius)
+          .attr('fill', 'none')
+          .attr('cx', radius)
+          .attr('cy', radius);
+
+          gaugeGroup.append('circle')
+          .attr('class', 'outer-circle')
+          .attr('r', radius)
+          .attr('fill', config.fillColor)
+          .attr('stroke', config.circleColor)
+          .attr('stroke-width', config.circleThickness)
+          .attr('cx', radius)
+          .attr('cy', radius);
+
+
+          // Text to show current node's name
+          // at least depth over 0
+          if(config.showLabel) {
+            var distance = 50;
+            var _radius = radius + distance;
+
+            // position according to center of the circle
+            var absolutePos = project(node.x, node.y);
+            var x0 = Math.abs(absolutePos[0]);
+            var y0 = Math.abs(absolutePos[1]);
+
+            // distance tree root center of the circle
+            // the line between these two pointers is vertical
+            var root2Center = Math.sin(START_ANGEL * Math.PI/180) * node.y;
+
+            // position according to tree root node
+            var x = x0;
+            var y = Math.abs(y0 - root2Center);
+
+            var distance2Parent = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+
+            var x0 = x / distance2Parent * _radius;
+            var y0 = y / distance2Parent * _radius;
+
+            var pos = [x0, y0];
+            if (absolutePos[0] === 0) pos = [0, y0];
+            if (absolutePos[0] > 0) pos = [-x0, y0];
+
+            // draw text to this group
+            var labelGroup = gauge.append('g')
+            .attr('class', 'labels')
+            .attr('transform', function() {
+              return 'translate(' + pos.join(',') + ')';
+            });
+
+            var labelFontSize = 14;
+
+            var _text = node.data.name;
+            var lineCount = 1;
+
+            labelGroup.append('text')
+            .attr('fill', config.waveColor)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', labelFontSize)
+            .text(_text.slice(0, 6));
+
+            if (_text.length > 7) {
+              labelGroup.append('text')
+              .attr('fill', config.waveColor)
+              .attr('text-anchor', 'middle')
+              .attr('font-size', labelFontSize)
+              .attr('transform', 'translate(' + [0, labelFontSize] + ')')
+              .text(_text.length > 12 ? _text.slice(6, 11) + '...' : _text.slice(6));
+
+              lineCount = 2;
+            }
+
+            if (node.orbitIndex === 1) {
+              var ratioInProfit = node.data.profit / node.parent.data.profit;
+
+              labelGroup.append('text')
+              .attr('class', 'profit-ratio')
+              .attr('font-size', labelFontSize)
+              .attr('text-anchor', 'middle')
+              .attr('fill', config.waveColor)
+              .attr('transform', 'translate(' + [0, labelFontSize * lineCount] + ')')
+              .text('占总利润' + parseInt(ratioInProfit * 100) + '%');
+            }
+          }
+
+          if(config.showWave) {
+            // The clipping wave area.
+            var clipArea = d3.area().x(function(d) { return waveScaleX(d.x); }).y0(function(d) {
+              return waveScaleY(Math.sin(Math.PI * 2 * config.waveOffset * -1 + Math.PI * 2 * (
+                  1 - config.waveCount
+                ) + d.y * 2 * Math.PI));
+            }).y1(function(d) {
+              return (
+                fillCircleRadius * 2 + waveHeight
+              );
+            });
+            var clip_wave_id = gauge.attr('id');
+            var waveGroup = gaugeGroup.append("defs").append("clipPath").attr("id", "clipWave" + clip_wave_id);
+            var wave = waveGroup.append("path").datum(data).attr("d", clipArea).attr("T", 0);
+            // The inner circle with the clipping wave attached.
+            var fillCircleGroup = gaugeGroup.append("g").attr("clip-path", "url(#clipWave" + clip_wave_id + ")");
+            fillCircleGroup.append("circle").
+            attr("cx", radius).
+            attr("cy", radius).
+            attr("r", fillCircleRadius).
+            attr("fill", config.waveColor);
+
+            // Make the wave rise. wave and waveGroup are separate so that horizontal and vertical movement can be controlled independently.
+            var waveGroupXPosition = fillCircleMargin + fillCircleRadius * 2 - waveClipWidth;
+            if (config.waveRise) {
+              waveGroup.attr('transform', 'translate(' + waveGroupXPosition + ',' + waveRiseScale(0) + ')').
+              transition().
+              duration(config.waveRiseTime).
+              attr('transform', 'translate(' + waveGroupXPosition + ',' + waveRiseScale(fillPercent) + ')')
+              // This transform is necessary to get the clip wave positioned correctly when waveRise=true and waveAnimate=false. The wave will not position correctly without this, but it's not clear why this is actually necessary.
+              .on("start", function() { wave.attr('transform', 'translate(1,0)'); });
+            } else {
+              waveGroup.attr('transform', 'translate(' + waveGroupXPosition + ',' + waveRiseScale(fillPercent) + ')');
+            }
+            if (config.waveAnimate) {
+              animateWave();
+            }
+          }
+
+          var labelsGroup = gaugeGroup.append('g')
+          .attr('fill', config.textColor)
+          .attr('transform', 'translate(' + [radius, radius].join(',') + ')');
+
+          var func = this.renderGauge;
+          if (func) {
+            func(labelsGroup.node(), node, config);
+          } else {
+
+            // text group to show revenue and profit value with text tips
+            var fullTipGroup = labelsGroup.append('g')
+            .attr('class', 'full-tips');
+            // text group to show revenue and profit value
+            var lightTipGroup = labelsGroup.append('g')
+            .attr('class', 'light-tips');
+            // revenue value
+            var revenue = +node.data.revenue_label;
+            var text1FinalVal = parseFloat(revenue).toFixed(2);
+            var text1Unit = node.data.revenue_label_unit;
+            var text1StartVal = config.valueCountUp ? config.minValue : text1FinalVal;
+            fullTipGroup.append('text')
+            .text('收入')
+            .attr('text-anchor', 'middle')
+            .attr('font-size', textPixels + 'px')
+            .attr('transform', 'translate(' + [0, -textPixels].join(',') + ')');
+            fullTipGroup.append('text')
+            .text(textFormat(text1FinalVal, text1Unit))
+            .attr('text-anchor', 'middle')
+            .attr('font-size', textPixels + 'px');
+            var text1 = lightTipGroup.append("text")
+            .text(textFormat(text1FinalVal, text1Unit))
+            .attr("class", "liquidFillGaugeText")
+            .attr("text-anchor", "middle")
+            .attr("font-size", textPixels + "px");
+            // profit value
+            var profit = +node.data.profit_label;
+            var text2FinalVal = parseFloat(profit).toFixed(2);
+            var text2Unit = node.data.profit_label_unit;
+            var text2StartVal = config.valueCountUp ? config.minValue : text2FinalVal;
+            var text2 = lightTipGroup.append("text")
+            .text(textFormat(text2StartVal, text2Unit))
+            .attr("class", "liquidFillGaugeText")
+            .attr("text-anchor", "middle")
+            .attr("font-size", textPixels + "px")
+            .attr('transform', 'translate(' + [0, textPixels].join(',') + ')');
+            fullTipGroup.append('text')
+            .text('利润')
+            .attr('text-anchor', 'middle')
+            .attr('font-size', textPixels + 'px')
+            .attr('transform', 'translate(' + [0, textPixels].join(',') + ')');
+            fullTipGroup.append('text')
+            .text(textFormat(text2FinalVal, text2Unit))
+            .attr('text-anchor', 'middle')
+            .attr('font-size', textPixels + 'px')
+            .attr('transform', 'translate(' + [0, textPixels * 2].join(',') + ')');
+
+            // Make the value count up.
+            if (config.valueCountUp) {
+              function textTweenFn(start, final, unit) {
+                return function() {
+                  var node = this;
+                  var i = d3.interpolate(parseInt(start), parseInt(final));
+                  return function(t) {
+                    node.textContent = textFormat(i(t), unit);
+                  }
+                }
+              }
+
+              var textTween1 = textTweenFn(text1StartVal, text1FinalVal, text1Unit);
+              var textTween2 = textTweenFn(text2StartVal, text2FinalVal, text2Unit);
+              text1.transition().duration(config.waveRiseTime).tween('text', textTween1);
+              text2.transition().duration(config.waveRiseTime).tween('text', textTween2);
+            }
+          }
+
+          // Rounding functions so that the correct number of decimal places
+          // is always displayed as the value counts up.
+          function textFormat(value, unit) { return Math.round(value) + unit; };
+
+          function animateWave() {
+            wave.attr('transform', 'translate(' + waveAnimateScale(wave.attr('T')) + ',0)');
+            wave.transition()
+            .duration(config.waveAnimateTime * (
+                1 - wave.attr('T')
+              ))
+            .ease(d3.easeLinear)
+            .attr('transform', 'translate(' + waveAnimateScale(1) + ',0)')
+            .attr('T', 1)
+            .on('end', function() {
+              wave.attr('T', 0);
+              animateWave(config.waveAnimateTime);
+            });
+          }
+        }
+
+        function nodeRadius(node) {
+          var data = node.data;
+          var parent = node.parent;
+          var scale;
+          if (parent) {
+            scale = data.revenue / parent.data.revenue;
+            return gauge_size(scale > 1 ? 1 : scale);
+          }
+          return ROOT_RADIUS;
+        }
+
+        // get window innerHeight
+        var innerHeight = window.innerHeight > 828 ? 828 : window.innerHeight;
+
+        // how much degree of the arc is off screen
+        var START_ANGEL = 45;
+        var PAGINATION_BUFFER = 50;
+        var PAGE_MAX = 20;
+        var PAGER_BORDER_COLOR = 'rgba(177,177,188, 1)';
+        var PAGER_START_ANGEL = START_ANGEL - 3;
+        // how much degree to separate adjacent orbit items
+        var MARGIN_ANGEL = 1;
+        // the least height this chart desires
+        var MIN_HEIGHT = 600;
+        // root node size, calc on demand by "layout" method
+        var ROOT_RADIUS;
+        // transition duration
+        var DURATION = 750;
+        // page transition duration
+        var DURATION_PAGING = 1000;
+        var PAGER_RADIUS = 20;
+        var HTTP_MAXAGE_REGEXP = /max-age=(\d+)/;
+        // max radius for gauge
+        var GAUGE_RADIUS_MAX = 75 / 828 * innerHeight;
+        var GAUGE_RADIUS_MIN = 30 / 828 * innerHeight;
+        // id counter seed
+        var i = 0;
+
+        function renderNode(component, node, i) {
+          var _defaultConfig = component.defaultBubbleConfig;
+          var _config = component.bubbleConfig;
+
+          if (typeof _config === 'function') {
+            _config = _config.call(component, node, i, _defaultConfig);
+          } else {
+            _config = Object.assign({}, _defaultConfig, _config);
+          }
+
+          renderGauge.call(component, this, node, i, _config);
+        }
+
+        function layout_root(root, radius) {
+          root.x = 90;
+          root.y = this.layout.rootOffsetY;
+          root.size = ROOT_RADIUS;
+          root.circle = circular_geom(root);
+          root.parent = null;
+          root.orbitIndex = 0;
+          return root;
+        }
+
+        function layout_orbit(root, options) {
+          var nodes = root.children;
+          var parent = options.layoutParent || root;
+          var margin = options.margin;
+          var maxR = options.canvasRadius;
+          var startDeg = options.start || 0;
+          // scale based on value of this node
+          var sizeScale = options.sizeScale;
+          // scale based on current orbit radius
+          var radiusScale = d3.scaleLinear().domain([maxR, 0]).range([1, 0]);
+          var endDeg = (options.end || 180) - startDeg;
+          var orbitIndex = options.orbitIndex || 1;
+          var arcDeg = 0;
+          var lastDeg = 0;
+          var thisDeg = 0;
+          var max = 0;
+          // item radius v.s. orbit radius
+          var r, R = options.radius, degEach, scale = radiusScale(R);
+
+          for (var i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
+            r = sizeScale(node.data.revenue) * scale;
+            thisDeg = Math.atan(r / R) * ( 180 / Math.PI );
+            // degree increments
+            arcDeg += ( thisDeg + margin ) * 2;
+            if (arcDeg < endDeg) {
+              max++;
+            } else {
+              break;
+            }
+          }
+
+          var parentDeg = parent.x - START_ANGEL;
+          var totalDeg = 180 - START_ANGEL * 2;
+          var delta;
+
+          if (arcDeg / 2 < parentDeg) {
+            startDeg = parentDeg - arcDeg / 2;
+            delta = parent.x + arcDeg / 2 + START_ANGEL - 180;
+            // compensate if the arc exceeds horizon
+            if (delta > 0) {
+              startDeg -= delta;
+            }
+          } else if (arcDeg / 2 > parentDeg) {
+            startDeg = 0;
+          }
+          startDeg += START_ANGEL;
+
+          // start deg fixed
+          var deg = startDeg;
+
+
+          // slice the layout tree to only keep layout items
+          root.children = root.children.slice(0, max);
+          nodes = root.children;
+
+          for (i = 0, node, lastNode, length = nodes.length; node = nodes[i], i < length; i++) {
+            r = sizeScale(node.data.revenue) * scale;
+            thisDeg = Math.atan(r / R) * ( 180 / Math.PI );
+            node.x = deg + thisDeg + margin;
+            node.y = R;
+            node.size = r;
+            node.scale = scale;
+            node.orbitIndex = orbitIndex;
+            node.circle = circular_geom(node);
+
+            // degree increments
+            deg += ( thisDeg + margin ) * 2;
+          }
+
+          return {
+            count: max,
+            deg: deg - startDeg
+          };
+        }
+
+        function parseTransformRotate(element) {
+          var rotate;
+          var match = element.getAttribute('transform').match(/rotate\(([^)]+)\)/);
+          if (match) {
+            rotate = match[1].split(',');
+            return {
+              deg: rotate[0],
+              x: +rotate[1],
+              y: +rotate[2]
+            };
+          }
+          return null;
+        }
+
+        function pageEntered(page) {
+          // remove opacity inline styles
+          var $el = d3.select(this).style('opacity', '');
+          $el.classed('curr-page next-page prev-page', false);
+          $el.classed(page + '-page', true);
+        }
+
+        Polymer({
+          is: 'bubble-radial-chart',
+          behaviors: [
+            Polymer.IronResizableBehavior,
+          ],
+          properties: {
+            /**
+             * The default bubble config.
+             */
+            defaultBubbleConfig: {
+              type: Object,
+              value: function() {
+                return {
+                  width: 100, // The gauge minimum value.
+                  height: 100, // The gauge minimum value.
+                  minValue: 0, // The gauge minimum value.
+                  maxValue: 100, // The gauge maximum value.
+                  circleThickness: 1, // The outer circle thickness as pixels
+                  circleFillGap: 0.05, // The size of the gap between the outer circle and wave circle as a percentage of the outer circles radius.
+                  circleColor: "#178BCA", // The color of the outer circle.
+                  showWave: true, // Display wave in circle
+                  waveHeight: 0.05, // The wave height as a percentage of the radius of the wave circle.
+                  waveCount: 1, // The number of full waves per width of the wave circle.
+                  waveRiseTime: 1000, // The amount of time in milliseconds for the wave to rise from 0 to it's final height.
+                  waveAnimateTime: 18000, // The amount of time in milliseconds for a full wave to enter the wave circle.
+                  waveRise: true, // Control if the wave should rise from 0 to it's full height, or start at it's full height.
+                  waveHeightScaling: true, // Controls wave size scaling at low and high fill percentages. When true, wave height reaches it's maximum at 50% fill, and minimum at 0% and 100% fill. This helps to prevent the wave from making the wave circle from appear totally full or empty when near it's minimum or maximum fill.
+                  waveAnimate: true, // Controls if the wave scrolls or is static.
+                  waveColor: "#178BCA", // The color of the fill wave.
+                  waveOffset: 0, // The amount to initially offset the wave. 0 = no offset. 1 = offset of one full wave.
+                  textVertPosition: .5, // The height at which to display the percentage text withing the wave circle. 0 = bottom, 1 = top.
+                  textSize: 1, // The relative height of the text to display in the wave circle. 1 = 50%
+                  valueCountUp: true, // If true, the displayed value counts up from 0 to it's final value upon loading. If false, the final value is displayed.
+                  textColor: "#045681", // The color of the value text when the wave does not overlap it.
+                  waveTextColor: 'rgba(89, 89, 89, 1)' // The color of the value text when the wave overlaps it.
+                };
+              }
+            },
+            /**
+             * Use this function to render gauge content
+             */
+            renderGauge: Function,
+            /**
+             * Use this function to customize the bubble config
+             */
+            bubbleConfig: Object,
+            /**
+             * Any server data transformation before entering cache
+             */
+            transformData: {
+              type: Function,
+              value: function() {
+                return function(item) {
+                  return item;
+                }
+              }
+            },
+            groupBy: {
+              type: String,
+              value: ''
+            },
+            queryUrl: String,
+            isAttached: Boolean,
+            _pageStartHistoryL1: {
+              type: Array,
+              value: []
+            },
+            gaugeRadiusL2: {
+              type: Object,
+              value: {
+                max: GAUGE_RADIUS_MAX,
+                min: GAUGE_RADIUS_MIN
+              }
+            },
+            gaugeRadiusL1: {
+              type: Object,
+              value: {
+                max: GAUGE_RADIUS_MAX,
+                min: GAUGE_RADIUS_MIN
+              }
+            },
+            _pageStartHistoryL2: {
+              type: Array,
+              value: []
+            },
+            _canvasTransform: {
+              type: String,
+              computed: '_computeCanvasTranslate(layout)'
+            },
+            _svgEnvClass: {
+              type: String,
+              value: function() {
+                return isIE()? 'ie': '';
+              }
+            },
+            canvas: {
+              type: Object,
+              computed: '_getCanvas(isAttached)'
+            },
+            pageLastStartL1: {
+              type: Number
+            },
+            pageStartL1: {
+              type: Number,
+              value: 0,
+              observer: '_pageChangedL1'
+            },
+            pageStartL2: {
+              type: Number,
+              value: 0,
+              observer: '_pageChangedL2'
+            },
+            pageOffsetL1: {
+              type: Number,
+              value: 0
+            },
+            pageEndL1: {
+              type: Number,
+              value: 0
+            },
+            maxValueL1: {
+              type: Number,
+              value: 0
+            },
+            maxValueL2: {
+              type: Number,
+              value: 0
+            },
+            radiusScaleL1: {
+              type: Function,
+              computed: '_computeRadiusScaleL1(maxValueL1)'
+            },
+            radiusScaleL2: {
+              type: Function,
+              computed: '_computeRadiusScaleL2(maxValueL2)'
+            },
+            isPaging: {
+              type: Boolean,
+              value: false,
+              observer: 'enterLeavePaging'
+            },
+            layout: {
+              type: Object,
+              computed: 'computeLayout(width, height)'
+            },
+            openingNodeL1: {
+              type: Object,
+              notify: true,
+              observer:  'changeL1Node'
+            },
+            openingNode: {
+              type: Object,
+              notify: true
+            },
+            width: Number,
+            height: Number
+          },
+          observers: [
+            '_computeLastStartL1(_pageStartHistoryL1.*)',
+            '_computeLastStartL2(_pageStartHistoryL2.*)',
+            '_replot(width, height)'
+          ],
+          listeners: {
+            'iron-resize': '_onResize'
+          },
+          plotRoot: function(root) {
+            var _this = this;
+            var canvas = this.canvas;
+            var radius = this.layout.radius;
+            var offsetX = this.layout.offsetX;
+            var offsetY = this.layout.offsetY;
+            var node = layout_root.call(this, { data: root}, radius);
+
+            // DOM clean up
+            canvas.select('.orbit0').remove();
+
+            var root = canvas.append("g")
+            .attr('class', 'orbit orbit0');
+
+            // Update the nodes
+            root.selectAll('g.node')
+            .data([node]).enter().append("g")
+            .attr('class', 'node node--internal')
+            .attr("transform", function(d) {
+              return "translate(" + project(d.x, d.y) + ")";
+            })
+            .append('g').attr('class', 'node node--transform')
+            .style('cursor', 'pointer')
+            .on('click', function handleClickRoot() {
+
+              // remove all `active` and `selected` classes for each node in orbit one
+              d3.selectAll('.orbit1 .node--leaf')
+              .classed('active', false)
+              .classed('selected', false);
+
+              // check if there's a 2nd orbit now
+              if (_this.openingNodeL1) {
+                _this.closeNodeL1().then(function() {
+                  _this.openingNodeL1 = null;
+                  _this.resetOrbitL1();
+                });
+              }
+            })
+            .each(_.partial(renderNode, _this));
+          },
+          plotPager: function(url, level) {
+            var _this = this;
+            var width = this.width,
+              height = this.height,
+              radius = this.layout.radius,
+              offsetX = this.layout.offsetX,
+              offsetY = this.layout.offsetY;
+
+            var list = lscache.get(url) || [];
+            var pages = lscache.get(url + '/pages');
+            var total = pages? pages.total : list.length;
+            var hasNext = total > this.get('pageOffsetL'+level);
+            var hasPrev = this.get('pageStartL'+level) > 0;
+
+            var pagers = [
+              {
+                type: 'prev',
+                enabled: hasPrev,
+                x: PAGER_START_ANGEL,
+                y: radius,
+              },
+              {
+                type: 'next',
+                enabled: hasNext,
+                x: 180 - PAGER_START_ANGEL,
+                y: radius,
+              }
+            ];
+
+            var root = this.canvas.select('g.pagination');
+            if (root.empty()) {
+              root = this.canvas.append("g").attr('class', 'pagination')
+            }
+
+            var nodes = root.selectAll('g.pager').data(pagers, function(d) {
+              return d.type;
+            });
+
+            nodes = nodes.enter().append("g")
+            .attr('class', 'pager')
+            .attr("transform", function(d) {
+              return "translate(" + project(d.x, d.y) + ")";
+            })
+            .merge(nodes);
+
+            nodes.style('display', function(d) {
+              return d.enabled? 'block': 'none';
+            }).each(function(d) {
+              var root = d3.select(this);
+
+              var nodes = root.selectAll('g.page-btn').data([d], function(d) { return d.type; });
+              var nodes_enter = nodes.enter()
+              .append("g")
+              .attr('class', 'page-btn')
+              .on('mouseover', function(d) {
+                d3.select(this).classed('active', true);
+              })
+              .on('mouseout', function(d) {
+                d3.select(this).classed('active', false);
+              });
+
+              nodes_enter.append("circle")
+              .attr("cx", PAGER_RADIUS / 2)
+              .attr("cy", PAGER_RADIUS / 2)
+              .attr("r", PAGER_RADIUS)
+              .style("fill", 'transparent')
+              .style("stroke", PAGER_BORDER_COLOR)
+              .style("stroke-width", "2px")
+              .attr('class', function(d) {
+                return 'btn-' + d.type;
+              });
+
+              nodes_enter.append('path')
+              .attr('d', d3.symbol().type(d3.symbolTriangle).size(PAGER_RADIUS * 10))
+              .attr('transform',
+                d3Transform()
+                .translate(PAGER_RADIUS / 2, PAGER_RADIUS / 2)
+                .rotate(180))
+              .style('fill', PAGER_BORDER_COLOR);
+
+              nodes = nodes.merge(nodes_enter);
+              nodes.on('click', null).on('click', function handlePagerClick() {
+                var type = d.type;
+                type === 'next' ? _this.openNextPage(url, level) : _this.openPrevPage(url, level);
+              });
+            });
+          },
+          plotL1: function(root, children, animation) {
+            var data = Object.assign({children: children}, root);
+            var _this = this;
+            var _opening = null;
+            var tree = d3.hierarchy(data);
+
+            // layout start
+            var svg = d3.select(this.$.chartSvg),
+              radius = this.layout.radius,
+              offsetX = this.layout.offsetX,
+              offsetY = this.layout.offsetY;
+
+            // add drop shadow for hovering/selected
+            var filter = svg.append('defs')
+            .append('filter')
+            .attr('id', 'drop-shadow')
+            .attr('filterUnits', 'userSpaceOnUse')
+            .attr('x', '-40%')
+            .attr('y', '-40%')
+            .attr('width', '180%')
+            .attr('height', '180%');
+
+            filter.append('feGaussianBlur')
+            .attr('in', 'SourceAlpha')
+            .attr('stdDeviation', 3)
+            .attr('result', 'blurOut');
+
+            filter.append('feOffset')
+            .attr('dx', 3)
+            .attr('dy', 3)
+            .attr('result', 'offsetblur');
+
+            filter.append('feOffset')
+            .attr('dx', -3)
+            .attr('dy', -3)
+            .attr('result', 'offsetblur');
+
+            var feMerge = filter.append('feMerge');
+
+            feMerge.append('feMergeNode')
+            .attr('in', 'BackgroundAlpha')
+
+            feMerge.append('feMergeNode')
+            .attr('in', 'SourceGraphic');
+
+            feMerge.append('feMergeNode')
+            .attr('in', 'SourceGraphic');
+
+            var page = this.canvas
+              .insert('g', ':first-child')
+              .attr('class', 'orbit orbit1')
+              .attr('transform', d3Transform().rotate(0));
+
+            // Calc root node layout
+            layout_root.call(this, tree, radius);
+            var result = layout_orbit(tree, {
+              start: START_ANGEL,
+              end: 180 - START_ANGEL,
+              radius: radius,
+              sizeScale: this.radiusScaleL1,
+              canvasRadius: radius,
+              margin: MARGIN_ANGEL,
+              orbitIndex: 1
+            });
+
+            var nodes = tree.children;
+            var links = tree.links();
+
+            var link = page.selectAll('.link')
+            .data(nodes, function(d) {
+              return d.data.id;
+            });
+
+            // Enter any new links at the parent's previous position.
+            var linkEnter = link.enter().append('path')
+            .attr('class', 'link')
+            .attr('d', function(d) {
+              // the origin and endpoint is the same: circle peak of parent
+              return 'M' + d.parent.circle.peak + 'L' + (
+                  animation === false ? d.circle.center : d.parent.circle.peak
+                );
+            });
+
+            if (animation !== false) {
+              link.merge(linkEnter)
+              .transition()
+              .duration(DURATION)
+              .attr('d', function(d) {
+                // origin: circle peak of parent
+                // endpoint: circle center of current node
+                return 'M' + d.parent.circle.peak + 'L' + d.circle.center;
+              });
+            }
+
+            // Update the nodes
+            var node = page.selectAll('g.node')
+            .data(nodes, function(d) {
+              return d.data.id || (d.data.id = ++i);
+            });
+
+            var nodeEnter = node.enter().append('g')
+            .attr('class', function(d) {
+              return 'node ' + (d.children ? 'node--internal' : 'node--leaf');
+            })
+            .attr('transform', function(d) {
+              // keep original position same as tree root
+              var _node = d.parent ? d.parent : d;
+              return 'translate(' + (
+                  animation === false ? d.circle.center : _node.circle.center
+                ) + ')';
+            })
+            .attr('id', function(d) {
+              return 'node-' + d.data.id;
+            })
+            .style('cursor', function(d) {
+              return hasChildren(d) ? 'pointer' : 'normal';
+            })
+            .on('click', function(d) {
+              if(hasChildren(d)) {
+                handleClick.apply(null, arguments);
+              }
+            })
+            .each(_.partial(renderNode, _this));
+
+            if(animation !== false) {
+              // Transition child nodes to their new position.
+              node.merge(nodeEnter)
+              .transition()
+              .duration(DURATION)
+              .attr('transform', function(d) {
+                // move to own position
+                return 'translate(' + d.circle.center + ')';
+              });
+            }
+
+            // Save previous position
+            nodes.forEach(function(d) {
+              d.x0 = d.x;
+              d.y0 = d.y;
+              d.circle0 = d.circle;
+            });
+
+            this.scopeSubtree(this.$.chart, true);
+
+            return Object.assign(result, {
+              element: page
+            });
+
+            function handleClick(targetNode, i, nodeList) {
+
+              // remove all `active` class and `selected` attr for each node in orbit one
+              d3.selectAll('.orbit1 .node')
+              .classed('active', false)
+              .classed('selected', false);
+
+              // add `active` and `selected` classes for current node in orbit one
+              d3.select(nodeList[i])
+              .classed('active', true)
+              .classed('selected', true);
+
+              // build a new smaller tree layout
+              var new_radius = _this.layout.collapsedRadius;
+              var root_scale = _this.layout.rootScaleRatio;
+              var root_radius_new = ROOT_RADIUS * root_scale;
+              var root_offset = ( ROOT_RADIUS - root_radius_new ) * 2;
+
+              layout_orbit(tree, {
+                start: START_ANGEL,
+                end: 180 - START_ANGEL,
+                radius: new_radius,
+                sizeScale: _this.radiusScaleL1,
+                canvasRadius: radius,
+                margin: MARGIN_ANGEL,
+                orbitIndex: 1
+              });
+
+              var rootNode = svg.select('.orbit0 .node--transform');
+              rootNode.transition()
+              .duration(DURATION)
+              .attr('transform', function() {
+                return d3Transform().translate(0, root_offset / 2).scale(root_scale)();
+              });
+
+              // rerender subtree's children
+              page.selectAll('g.node')
+              .transition()
+              .duration(DURATION)
+              .attr('transform', function(d) {
+                return 'translate(' + d.circle.center + ')';
+              })
+              .on('end', function(d) {
+                // when this opening node is in position.
+                if (d.data.id === targetNode.data.id) {
+                  _this.handleOpenNode(targetNode);
+                }
+              })
+              .each(function(d, i, nodeList) {
+                // make the orbit and gauge smaller
+                d3.select(nodeList[i])
+                .select('g.gauge')
+                .transition()
+                .duration(DURATION)
+                .attr('transform', function(d) {
+                  var scale =  2 / 3;
+
+                  var originR = d.circle0.r;
+                  // Stash origin peak
+                  d.circle.peak0 = d.circle.peak;
+                  // replace `peak` field with new value
+                  d.circle.peak = [d.circle.center[0], d.circle.center[1] - scale * originR];
+                  var pos = [originR, originR].map(function(n) {
+                    return -n * scale;
+                  });
+
+                  return 'translate(' + pos.join(',') + ')' + ' scale(' + scale + ')';
+                });
+              });
+
+              page.selectAll('.link')
+              .transition()
+              .duration(DURATION)
+              .attr('d', function(d) {
+                var peak = d.parent.circle.peak.slice(0);
+                peak[1] += root_offset;
+                // origin: circle0 peak of parent
+                // endpoint: circle center of current node
+                // circle0 is an alias of the previous circle
+                return 'M' + peak + 'L' + d.circle.center;
+              });
+            }
+          },
+          plotL2: function(parent, children) {
+            var _this = this;
+            // layout start
+            var width = this.width,
+              height = this.height,
+              radius = this.layout.radiusL2,
+              offsetX = this.layout.offsetX,
+              offsetY = this.layout.offsetY;
+
+            var page = this.canvas.insert('g', ':first-child')
+            .attr('class', 'orbit orbit2')
+            .attr('transform', d3Transform().rotate(0))
+
+            var data = Object.assign({children: children}, parent.data);
+            var tree = d3.hierarchy(data);
+
+            // calc start angle
+            var result = layout_orbit(tree, {
+              start: START_ANGEL,
+              end: 180 - START_ANGEL,
+              radius: radius,
+              sizeScale: this.radiusScaleL2,
+              layoutParent: parent,
+              canvasRadius: radius,
+              margin: MARGIN_ANGEL,
+              orbitIndex: 2
+            });
+
+            var nodes = tree.children;
+            var links = tree.links();
+            var link = page.selectAll('.link')
+            .data(nodes, function(d) {
+              return d.data.id;
+            });
+
+            // Enter any new links at the parent's previous position.
+            var linkEnter = link.enter().append('path')
+            .attr('class', 'link')
+            .attr('d', function(d) {
+              // origin and endpoint are the same
+              return 'M' + parent.circle.peak + 'L' + parent.circle.peak;
+            });
+
+            var linkUpdate = link.merge(linkEnter)
+            .transition()
+            .delay(DURATION / 2)
+            .duration(DURATION / 2)
+            .ease(d3.easeQuadOut)
+            .attr('d', function(d, i) {
+              // origin: circle peak of parent (named `node` here)
+              // endpoint: circle center of current node
+
+              var source = parent.circle.peak;
+              var target = d.circle.center;
+
+              if (Math.abs(parent.x - 90) < MARGIN_ANGEL * 2) {
+                return 'M' + source + 'L' + target;
+              }
+
+              var angel0 = 30;
+              var angel1 = 18;
+              var coefficient0 = 0.533;
+              var coefficient1 = 0.851;
+
+              if (parent.x < 90) {
+                angel0 = -angel0;
+                angel1 = -angel1;
+              }
+
+              if ((parent.x < 90 && d.x < parent.x) || (parent.x > 90 && d.x > parent.x)) {
+                coefficient0 = 0;
+                coefficient1 = 0;
+              }
+
+              var controls = getControls(
+                source, target,
+                deg2rad(angel0), deg2rad(angel1),
+                coefficient0, coefficient1
+              );
+
+              return 'M' + parent.circle.peak
+                + 'C' + controls.control1 + ' ' + controls.control2 + ' ' + d.circle.center;
+            });
+
+            var groups = page.selectAll('g.node')
+            .data(nodes, function(d) {
+              return d.data.id || (
+                  d.data.id = ++i
+                )
+            });
+
+            var nodeEnter = groups.enter().append("g")
+            .attr('class', 'node node--leaf')
+            .attr("transform", function(d) {
+              // original position (parent `node` circle center)
+              return 'translate(' + parent.circle.center + ')';
+            })
+            .each(_.partial(renderNode, _this));
+
+            // Transition nodes to their new position.
+            var nodeUpdate = groups.merge(nodeEnter)
+            .transition()
+            .duration(DURATION / 2)
+            .attr('transform', function(d) {
+              // own position
+              return 'translate(' + d.circle.center + ')';
+            });
+
+            return Object.assign(result, {
+              element: page,
+              close: this.handleCloseNode.bind(this, parent)
+            });
+          },
+          handleCloseNode: function(parent) {
+            var _this = this;
+            return new Promise(function(resolve, reject) {
+              var page = _this.canvas.select('.orbit2.curr-page');
+              var nodes = page.selectAll('g.node');
+              var links = page.selectAll('path.link');
+              nodes.transition()
+              .duration(DURATION / 2)
+              .attr('transform', function(d) {
+                // back to original position (parent `node` circle center)
+                return 'translate(' + parent.circle.center + ')';
+              })
+              .on('end', function(d, i) {
+                // when orbit 2 is closed
+                if (i === 0) {
+                  page.remove();
+                  resolve();
+                }
+              });
+              links.transition()
+              .duration(DURATION / 2)
+              .attr('d', function(d) {
+                // back to original position (parent `node` circle peak)
+                return 'M' + parent.circle.peak + 'L' + parent.circle.peak;
+              });
+            });
+          },
+          // dynamic function later bind in "renderCurrPage"
+          closeNodeL1: function() {
+            return Promise.resolve();
+          },
+          // dynamic function later bind in "plotL1"
+          resetOrbitL1: function() {
+            var page = this.canvas.selectAll('.orbit1.curr-page');
+            var rootTransform = this.canvas.select('.orbit0 .node--transform');
+
+            // restore root size & position
+            rootTransform.transition()
+            .duration(DURATION)
+            .attr('transform', '');
+
+            // reset to render subtree
+            page.selectAll('g.node')
+            .transition()
+            .duration(DURATION)
+            .attr('transform', function(d) {
+              // move to original position
+              return 'translate(' + d.circle0.center + ')';
+            })
+            .each(function(d, i, nodeList) {
+              // reset the gauge size and position
+              d3.select(nodeList[i])
+              .select('g.gauge')
+              .transition()
+              .duration(DURATION)
+              .attr('transform', function(d) {
+                var pos = [d.size, d.size].map(function(n) {
+                  return -n;
+                });
+                return 'translate(' + pos.join(',') + ')';
+              });
+            });
+
+            page.selectAll('.link')
+            .transition()
+            .duration(DURATION)
+            .attr('d', function(d) {
+              // origin: circle0 peak of parent
+              // endpoint: circle0 center of current node
+              // circle0 is an alias of the previous circle
+              return 'M' + d.parent.circle.peak + 'L' + d.circle0.center;
+            });
+          },
+          handleOpenNode: function(node) {
+            var _this = this;
+            // check if the node is already opened
+            if (this.openingNodeL1 && this.openingNodeL1.data.id == node.data.id) {
+              return false;
+            }
+            _this.openingNodeL1 = node;
+
+            _this.loadData(this.queryUrl, 2).then(function() {
+              var close = _this.renderCurrPage(_this.queryUrl, 2).close;
+              _this.closeNodeL1 = function() {
+                _this.openingNodeL1 = null;
+                return close().then(function() {
+                  var uri = node.parent.data.link.href;
+                  _this.plotPager(uri, 1);
+                });
+              }
+            });
+          },
+          changeL1Node: function(node) {
+            var svg = d3.select(this.$.chartSvg);
+            // add/remove `expanded` for root node when orbit two closed
+            svg.classed('expanded', !!node);
+          },
+          _computeLastStartL1: function() {
+            var history = this._pageStartHistoryL1;
+            this.pageLastStartL1 = history[history.length - 1];
+          },
+          _computeLastStartL2: function() {
+            var history = this._pageStartHistoryL2;
+            this.pageLastStartL2 = history[history.length - 1];
+          },
+          _pageChangedL1: function(newVal, oldVal) {
+            // on page changed build the offset history, in order to navigate backwards.
+            if (oldVal === undefined || newVal > oldVal) {
+              this.push('_pageStartHistoryL1', oldVal);
+            } else {
+              this.pop('_pageStartHistoryL1');
+            }
+          },
+          _pageChangedL2: function(newVal, oldVal) {
+            // on page changed build the offset history, in order to navigate backwards.
+            if (oldVal === undefined || newVal > oldVal) {
+              this.push('_pageStartHistoryL2', oldVal);
+            } else {
+              this.pop('_pageStartHistoryL2');
+            }
+          },
+          attached: function() {
+            var _this = this;
+            this.set('isAttached', true);
+            this.load();
+          },
+          load: function() {
+            this.resetChart();
+            var url = this.queryUrl;
+            var _this = this;
+            this.loadData(url, 1).then(function() {
+              _this.renderCurrPage(url);
+            });
+          },
+          // Load next "n" more items from the URL and add them to cache
+          loadData: function(url, level) {
+            var _this = this;
+            var cacheKey = url;
+            var list = lscache.get(cacheKey) || [];
+            var pages = lscache.get(cacheKey + '/pages');
+            var length = list.length || 0;
+            var offset = this.get('pageOffsetL'+ level);
+
+            // read the furthest offset
+            if (!pages || (length < pages.total && (length - offset) < PAGE_MAX)) {
+              url = URI(url).addQuery({
+                'start': length,
+                'limit': PAGINATION_BUFFER
+              }).toString();
+
+              return fetch(url, {
+                credentials: 'same-origin'
+              }).then(function(res) {
+                // check "Cache-Control" for cache expiration
+                var cache_control = res.headers.get('Cache-Control');
+                var max_age;
+                if(cache_control) {
+                  max_age = cache_control.match(HTTP_MAXAGE_REGEXP);
+                  if (max_age) {
+                    max_age = +max_age[1] / 60;
+                  }
+                }
+
+                return res.json().then(function(data) {
+                  return {
+                    maxAge: max_age,
+                    data: data
+                  };
+                });
+              }).then(function(res) {
+                var data = _this.transformData(res.data);
+                var cache_age = res.maxAge;
+                list = list.concat(data.items);
+//                cache_age = 1;
+                lscache.set(cacheKey, list, cache_age);
+                lscache.set(cacheKey + '/root', data.root, cache_age);
+                lscache.set(cacheKey + '/pages', data.pages, cache_age);
+              }).then(setMaxData);
+            } {
+              return Promise.resolve().then(setMaxData);
+            }
+
+            function setMaxData() {
+              var root = lscache.get(cacheKey + '/root');
+              // notify the chart data load
+              _this.fire('data-load', {
+                items: list,
+                root: root,
+                level: level
+              });
+              if(list.length) {
+                _this.set('maxValueL' + level, list[0].revenue);
+              }
+            }
+          },
+          hasData: function(url) {
+            return !!lscache.get(url + '/root');
+          },
+          renderCurrPage: function(key, level, animation) {
+            level = level || 1;
+            var parent;
+            // plot root on level1
+            if (level === 1) {
+              parent = lscache.get(key + '/root');
+              this.plotRoot(parent);
+            } else {
+              parent = this.openingNodeL1;
+            }
+            var start = this.get('pageStartL' + level);
+            var list = lscache.get(key) || [];
+            list = list.slice(start);
+            this.removePage(level, 'curr');
+            var result = this['plotL' + level].call(this, parent, list, animation);
+            result.element.classed('curr-page', true);
+            this.set('pageOffsetL' + level, result.count);
+            this.renderNextPage(key, level);
+            this.renderPrevPage(key, level);
+            this.plotPager(key, level);
+            return result;
+          },
+          renderNextPage: function(key, level) {
+            var offset = this.get('pageOffsetL' + level);
+            var list = lscache.get(key) || [];
+            var result;
+            var parent;
+            // check if next page exists
+            if (list.length > offset) {
+              list = list.slice(offset);
+              // plot root on level1
+              if (level === 1) {
+                parent = lscache.get(key + '/root');
+              } else {
+                parent = this.openingNodeL1;
+              }
+
+              this.removePage(level, 'next');
+              result = this['plotL' + level].call(this, parent, list);
+              result.element.classed('next-page', true).attr('transform', d3Transform().rotate(90));
+              this.set('pageEndL'+level, offset + result.count);
+            }
+          },
+          renderPrevPage: function(key, level) {
+            var start = this.get('pageLastStartL' + level),
+              end = this.get('pageStartL' + level),
+              list = lscache.get(key) || [],
+              result,
+              parent;
+
+            if (end) {
+              list = list.slice(start, end);
+              // plot root on level1
+              if (level === 1) {
+                parent = lscache.get(key + '/root');
+              } else {
+                parent = this.openingNodeL1;
+              }
+              this.removePage(level, 'prev');
+              result = this['plotL' + level].call(this, parent, list);
+              result.element.classed('prev-page', true).attr('transform', d3Transform().rotate(-90));
+            }
+          },
+          openNextPage: function(key, level) {
+            var _this = this;
+
+            // move page offset counter-clockwise
+            this.set('pageStartL' + level, this.get('pageOffsetL' + level));
+            this.set('pageOffsetL' + level, this.get('pageEndL' + level));
+            delete this['pageEndL' + level];
+
+            d3.select('.orbit' + level + '.next-page')
+            .transition()
+            .duration(DURATION_PAGING)
+            .style('opacity', 1)
+            .attr('transform', d3Transform().rotate(0))
+            .on('start', function() {
+              _this.isPaging = true;
+            })
+            .on('end', function() {
+              pageEntered.call(this, 'curr');
+              _this.isPaging = false;
+              // load next page
+              _this.loadData(key, level).then(function() {
+                _this.renderNextPage(key, level);
+                _this.plotPager(key, level);
+              });
+            });
+
+            d3.select('.orbit' + level + '.curr-page')
+            .transition()
+            .duration(DURATION_PAGING)
+            .style('opacity', 0)
+            .attr('transform', d3Transform().rotate(-90))
+            .on('end', function() {
+              pageEntered.call(this, 'prev');
+              // reconcile dom
+              _this.scopeSubtree(this);
+            });
+
+            // kick out previous
+            d3.select('.orbit' + level + '.prev-page').remove();
+          },
+          openPrevPage: function(key, level) {
+            var _this = this;
+
+            // move page offset clockwise
+            this.set('pageEndL' + level, this.get('pageOffsetL' + level));
+            this.set('pageOffsetL' + level, this.get('pageStartL' + level));
+            this.set('pageStartL' + level, this.get('pageLastStartL' + level));
+
+            d3.select('.orbit' + level + '.prev-page')
+            .transition()
+            .duration(DURATION_PAGING)
+            .style('opacity', 1)
+            .attr('transform', d3Transform().rotate(0))
+            .on('start', function() {
+              _this.isPaging = true;
+            })
+            .on('end', function() {
+              _this.isPaging = false;
+              pageEntered.call(this, 'curr');
+              // reconcile dom
+              _this.scopeSubtree(this);
+
+              // load prev page
+              _this.renderPrevPage(key, level);
+              _this.plotPager(key, level);
+            });
+
+            d3.select('.orbit' + level + '.curr-page')
+            .transition()
+            .style('opacity', 0)
+            .duration(DURATION_PAGING)
+            .attr('transform', d3Transform().rotate(90))
+            .on('end', function() {
+              pageEntered.call(this, 'next');
+              // reconcile dom
+              _this.scopeSubtree(this);
+            });
+
+            // kick out next
+            d3.select('.orbit' + level + '.next-page').remove();
+          },
+          removePage: function(level, type) {
+            var $sel = '.orbit' + level;
+            if (type) {
+              $sel += '.' + type + '-page';
+            }
+
+            var $page = d3.select(this.$.chartSvg).select($sel);
+            $page.remove();
+          },
+          resetChart: function() {
+            this.resetPaginationLevel(1);
+            this.resetPaginationLevel(2);
+            this.openingNodeL1 = null;
+            this.isPaging = false;
+            this.$.canvas.innerHTML = '';
+          },
+          resetPaginationLevel: function(level) {
+            level = level || 1;
+            this.set('pageStartL' + level, 0);
+            this.set('pageOffsetL' + level, 0);
+            this.set('pageLastL' + level, 0);
+          },
+          enterLeavePaging: function() {
+            d3.select(this.$.chartSvg).classed('in-transition', this.isPaging);
+          },
+          computeLayout: function() {
+            var rect = this.$.chartSvg.getBoundingClientRect();
+            var width = this.width;
+            var radius = width / 2 + width * .1;
+            var height = Math.max(this.height, MIN_HEIGHT);
+            var rootRadius = ROOT_RADIUS = Math.min(height * .16, 140);
+
+            // offsetY divided by the arc
+            var invisible = Math.sin(START_ANGEL * Math.PI / 180) * radius;
+            var visible = radius - invisible;
+
+            // offset scale ratio based on canvas height
+            var ratio = {
+              marginTop: .23,
+              root2Orbit1:  .5,
+              root2Orbit1Collapsed:  .27
+            };
+
+            return {
+              radius: radius,
+              rootRadius: rootRadius,
+              radiusL2: radius + 50,
+              offsetX: this.width / 2,
+              rootScaleRatio: .6,
+              offsetY: radius + height * ratio.marginTop,
+              rootOffsetY: radius - height * ratio.root2Orbit1,
+              collapsedRadius: radius - height * ratio.root2Orbit1Collapsed
+            };
+          },
+          _computeRadiusScaleL1: function(val) {
+            return d3.scaleLinear().range([this.gaugeRadiusL1.min, this.gaugeRadiusL1.max]).domain([0, val]);
+          },
+          _computeRadiusScaleL2: function(val) {
+            return d3.scaleLinear().range([this.gaugeRadiusL2.min, this.gaugeRadiusL2.max]).domain([0, val]);
+          },
+          _getCanvas: function() {
+            return d3.select(this.$.canvas);
+          },
+          _computeCanvasTranslate: function(layout) {
+            return d3Transform().translate(layout.offsetX, layout.offsetY)();
+          },
+          _replot: function(width, height) {
+            this.resetChart();
+            this.debounce('replot', function() {
+              var key = this.queryUrl;
+              if (this.hasData(key)) {
+                this.renderCurrPage(key, 1, false);
+              }
+            }, 500);
+          },
+          _onResize: function() {
+            var rect = this.$.chart.getBoundingClientRect();
+            this.set('width', rect.width);
+            this.set('height', rect.height);
+          }
+        });
+    });
+  </script>
+</dom-module>
