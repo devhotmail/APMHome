@@ -255,9 +255,9 @@ public class ListApi {
 	private Iterable<ImmutableMap<String, Object>> jsonAsset(HttpServletRequest request, Integer limit, Integer start,
 			Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>> asset_info) {
 
-		return asset_info.
-				skip(start).
-				limit(limit)
+		return asset_info
+				.skip(start)
+				.limit(limit)
 				.map(asset -> new ImmutableMap.Builder<String, Object>()
 						.put("id",
 								Option.of(asset.getElement0()).getOrElse(0) )
