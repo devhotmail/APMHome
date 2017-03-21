@@ -32,6 +32,13 @@ public class RepairProcessController {
     WorkOrderRepository workOrderDao = WebUtil.getBean(WorkOrderRepository.class);
 
     @RequestMapping(value = "repairprocess")
+    @ResponseBody
+    public void test()
+    {
+
+    }
+
+    @RequestMapping(value = "repairprocess")
     public String repairProcess(HttpServletResponse response,
                                 HttpServletRequest httpServletRequest,
                                 Model model) {

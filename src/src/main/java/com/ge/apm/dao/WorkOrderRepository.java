@@ -15,19 +15,10 @@ public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
 
     public List<WorkOrder> findByAssetIdAndIntExtType(Integer assetId, int intExtType);
 
-//    @Query("select wo from WorkOrder wo ")
-//    public List<WorkOrder> isReopenWorkOrder();
 
-
-    @Query("select wo from WorkOrder wo where  (CURRENT_TIMESTAMP() - close_time >2000)  and wo.assetId =:assetId and wo.hospitalId=:hospitalId and wo.siteId=:siteId")
-    public List<WorkOrder> isReopenWorkOrder(@Param("assetId") Integer assetId, @Param("hospitalId") Integer hospitalId, @Param("siteId")Integer siteId);
-
-    /*@Query("select wo from WorkOrder wo where  (wo.closeTime::timestamp)::date > (select now() - interval '7 day')::date  and  wo.assetId =:assetId and wo.hospitalId=:hospitalId and wo.siteId=:siteId")
+//gl:todo 7 是应该可配的
+    @Query("select wo from WorkOrder wo where wo.assetId=:assetId and wo.hospitalId=:hospitalId and wo.siteId=:siteId and cast(wo.closeTime as date)+7>now() ")
     public List<WorkOrder> isReopenWorkOrder(@Param("assetId") Integer assetId,@Param("hospitalId") Integer hospitalId,@Param("siteId")Integer siteId);
-*/
-
-/*select * from work_order where  (close_time::timestamp)::date > (select now() - interval '7 day')::date  and  asset_id =68 and hospital_id=2 and site_id=2
-*/
 
 
 }
