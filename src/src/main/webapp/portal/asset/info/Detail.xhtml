@@ -152,14 +152,14 @@
                         <label class="label">#{msg.assetOwnerTel}</label>
                         <p:inputText id="assetOwnerTel" value="#{assetInfoController.selected.assetOwnerTel}" readonly="true"/>
                     </h:panelGroup>
-                    <h:panelGroup>
+<!--                    <h:panelGroup>
                         <label class="label">#{msg.clinicalOwnerName}</label>
                         <p:inputText id="clinicalOwnerName" value="#{assetInfoController.selected.clinicalOwnerName}" readonly="true"/>
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.clinicalOwnerTel}</label>
                         <p:inputText id="clinicalOwnerTel" value="#{assetInfoController.selected.clinicalOwnerTel}" readonly="true"/>
-                    </h:panelGroup>
+                    </h:panelGroup>-->
                     
                     
                     <h:panelGroup>
@@ -430,8 +430,8 @@
                         </p:commandButton>
                     </p:dataList>
                 </p:tab>
-                <p:tab title="#{msg.QRCode}" rendered="true">
-                    <p:barcode value="#{assetInfoController.selected.id.toString()}" type="qr" height="200" format="png"/>
+                <p:tab title="#{msg.QRCode}" rendered="#{not empty assetInfoController.selected.qrCode}">
+                    <p:barcode value="#{assetInfoController.selected.qrCode}" type="qr" height="200" format="png"/>
                 </p:tab>
             </p:tabView>
         </h:form>
