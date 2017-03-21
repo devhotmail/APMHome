@@ -68,12 +68,12 @@
                             <h:panelGroup>
                                 <label class="label">#{msg.clinicalDeptName}*</label>
                                 <p:selectOneMenu id="clinicalDeptName" value="#{assetInfoController.selected.clinicalDeptId}" required="true" requiredMessage="#{msg.clinicalDeptName} #{msg.ValidationRequire}">
-                                    <p:ajax  listener="#{assetInfoController.onClinicalDeptChange()}" update="clinicalOwnerName clinicalOwnerTel" />
+                                    <!--<p:ajax  listener="#{assetInfoController.onClinicalDeptChange()}" update="clinicalOwnerName clinicalOwnerTel" />-->
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                     <f:selectItems value="#{assetInfoController.getClinicalDeptList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                             </h:panelGroup>
-                            <h:panelGroup>
+<!--                            <h:panelGroup>
                                 <label class="label">#{msg.clinicalOwnerName}*</label>
                                 <p:selectOneMenu id="clinicalOwnerName" value="#{assetInfoController.clinicalOwner}" converter="userAccountConverter" var="t" required="true" requiredMessage="#{msg.clinicalOwnerId} #{msg.ValidationRequire}">
                                     <p:ajax  listener="#{assetInfoController.onClinicalOwnerChange()}" update="clinicalOwnerTel" />
@@ -83,11 +83,11 @@
                                         <h:outputText value="#{t.name}"/>
                                     </p:column>
                                 </p:selectOneMenu>
-                            </h:panelGroup>
-                            <h:panelGroup>
+                            </h:panelGroup>-->
+<!--                            <h:panelGroup>
                                 <label class="label">#{msg.clinicalOwnerTel}</label>
                                 <p:inputText id="clinicalOwnerTel" value="#{assetInfoController.selected.clinicalOwnerTel}" readonly="true"/>
-                            </h:panelGroup>
+                            </h:panelGroup>-->
                             
                             <h:panelGroup>
                                 <label class="label">#{msg.manufacture}</label>
