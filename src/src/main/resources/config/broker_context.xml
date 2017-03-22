@@ -26,6 +26,9 @@
         <errorHandler id="ignoreErrorHandler">
             <redeliveryPolicy maximumRedeliveries="0" redeliveryDelay="100" retryAttemptedLogLevel="WARN"/>
         </errorHandler>
+        <errorHandler id="autoRetryErrorHandler">
+            <redeliveryPolicy maximumRedeliveries="3" redeliveryDelay="10000" retryAttemptedLogLevel="WARN"/>
+        </errorHandler>
 
         <routeContextRef ref="route_main"/>
         <!--

@@ -39,6 +39,21 @@
     <bean id="assetExamDataAggregator" class="com.ge.apm.service.analysis.AssetExamDataAggregator"/>
         
     <routeContext id="route_main" xmlns="http://camel.apache.org/schema/spring">
+        <route id="testWxMessage">
+            <from uri="servlet:///testMsg?servletName=MyServlet"/>
+            <removeHeaders pattern="Camel*"/>
+            <log message="---- headers: ${headers}" loggingLevel="ERROR"/>
+            <to uri="direct:wxSendMessage"/>
+        </route>
+        <route id="wxSendMessage">
+            <from uri="direct:wxSendMessage"/>
+            <wireTap uri="direct:asyncWxSendMessage"/>
+        </route>
+        <route id="asyncWxSendMessage" errorHandlerRef="autoRetryErrorHandler">
+            <from uri="direct:asyncWxSendMessage"/>
+            <to uri="bean:coreService?method=doSendWxTemplateMessage"/>
+        </route>
+
         <route>
             <from uri="cxf:bean:clinicalDataServiceEndpoint"/>
             <setHeader headerName="CamelBeanMethodName"><simple>${headers.SOAPAction}</simple></setHeader>
