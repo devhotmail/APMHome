@@ -38,7 +38,7 @@ hospital_id int not null,
 qr_code varchar(16) not null,
 issue_date date not null,	-- 发行日期
 submit_date date,	--扫码建档日期
-submit_wechat_id int,	--扫码建档者 openId
+submit_wechat_id varchar(64),	--扫码建档者 openId
 comment varchar(512),	--备注
 status int not null -- 1:已发行(未上传) / 2: 已上传(待建档) / 3: 已建档(待删除)
 );
@@ -52,6 +52,7 @@ file_id int not null
 );
 alter table qr_code_attachment add primary key (id);
 
+/*
 drop table if exists account_application
 create table account_application(
 id serial not null,
@@ -67,6 +68,7 @@ status int,	-- 1-待审批 / 2-审批通过 / 3-拒绝
 password varchar(16)  --密码
 );
 alter table account_application add primary key (id);
+*/
 
 create table message_subscriber(
 id serial not null,
@@ -87,9 +89,11 @@ alter table work_order add column parent_wo_id int;	--二次工单
 alter table work_order add column feedback_rating int;  --默认是0, 打分范围:1~5 
 alter table work_order add column feedback_comment varchar(128); --评价comments
 alter table work_order add column request_reason_voice int;	--故障说明(语音)
+alter table work_order add column pat_problems varchar(128);  --PAT 的 Problems(问题描述)
 alter table work_order add column pat_actions varchar(128);  --PAT 的 Actions(解决方案)
 alter table work_order add column pat_tests varchar(128);	 --PAT 的 Tests(测试方法)
 alter table work_order add column close_time timestamp;	 --关单时间
+alter table work_order add column estimated_close_time timestamp;	 --预估修复时间
 
 alter table work_order_step_detail add column cowoker_user_id int; --协作者
 alter table work_order_step_detail add column cowoker_user_name varchar(16); --协作者姓名
