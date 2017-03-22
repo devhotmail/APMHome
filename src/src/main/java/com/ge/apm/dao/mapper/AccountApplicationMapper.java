@@ -15,10 +15,15 @@ public interface AccountApplicationMapper {
 	@Select("select * from account_application where wechat_id = #{openId} order by application_date desc")
 	public List<AccountApplication> getApplyList(String openId);
 	
+	//TODO add openId
 	@Select("select * from account_application order by application_date desc")
 	public List<AccountApplication> getAll();
 	
 	@Select("select * from account_application where id = #{applyId}")
 	public AccountApplication getApplyById(Integer applyId);
+
+	//TODO add openId
+	@Select("select * from account_application where to_char(application_date,'yyyymmdd') = #{date}")
+	public List<AccountApplication> getApplyByDate(String date);
 	
 }

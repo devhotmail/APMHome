@@ -25,5 +25,9 @@ public class AccountApplicationService {
 	public AccountApplication getApplyById(Integer applyId) {
 		return accountApplicationMapper.getApplyById(applyId);
 	}
+
+	public List<AccountApplication> getApplyByDate(String date) {
+		return accountApplicationMapper.getApplyByDate(date);
+	}
 	
 }

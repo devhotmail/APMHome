@@ -47,6 +47,15 @@ public class UserRegistrationController extends JpaCRUDController<AccountApplica
     	
     }
     
+    public List<AccountApplication> filterByDate(){
+    	String date = "20170322";
+    	String openId = "";
+    	System.out.println(condition);
+    	List<AccountApplication> result = accountApplicationService.getApplyByDate(date);
+    	System.out.println(result.size());
+    	return result;
+    }
+    
     public List<AccountApplication> getApplyList(){
     	String openId = "openId609";
     	return accountApplicationService.getApplyList(openId);

@@ -17,24 +17,22 @@ and open the template in the editor.
 	</f:facet>
 	<title>#{msg.AssetInfo}</title>
 	<h:outputStylesheet name="wechat/css/weui.min.css" />
-	<script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jquery-2.0.0.min.js" />
+	<script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jquery-3.1.1.min.js" />
 	<script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jweixin-1.0.0.js" />
 </h:head>
 <body>
 	<div class="page__bd">
-		<h:form id="assetList">
+		<h:form id="applyList">
 			<div class="weui-search-bar" id="searchBar">
 				<div class="weui-search-bar__form">
 					<div class="weui-search-bar__box ">
 						<i class="weui-icon-search"></i>
-						<h:inputText class="weui-search-bar__input" id="searchInput"
-							value="#{userRegistrationController.condition}"
-							onchange="search()" />
-						<a href="javascript:clear()" class="weui-icon-clear"
-							id="searchClear"></a>
+						<h:inputText class="weui-search-bar__input" id="searchInput" value="#{userRegistrationController.condition}" onchange="search()"  />
+						<a href="javascript:clear()" class="weui-icon-clear" id="searchClear"></a>
 					</div>
 				</div>
 			</div>
+			<p:remoteCommand name="search" actionListener="#{userRegistrationController.filterByDate}" update="dataList" />
 		</h:form>
 	</div>
 	<p:dataScroller id="dataList" value="#{userRegistrationController.getApplyList()}" var="apply" chunkSize="10" rowIndexVar="row">
@@ -60,9 +58,9 @@ and open the template in the editor.
 	</p:dataScroller>
 </body>
 <script type="text/javascript">
-	$("#assetList\\:searchInput").attr('placeholder', '搜索...');
+	$("#applyList\\:searchInput").attr('placeholder', '按日期搜索(如20170101)');
 	function clear() {
-		$("#assetList\\:searchInput").val('');
+		$("#applyList\\:searchInput").val('');
 		search();
 	}
 </script>
