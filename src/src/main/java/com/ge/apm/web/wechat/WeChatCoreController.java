@@ -107,8 +107,9 @@ public class WeChatCoreController {
     }
     
     @RequestMapping(value = "binduser")
-    public @ResponseBody String bindUser(HttpServletRequest request,HttpServletResponse response, String openId, String username, String password) throws WxErrorException{
-        return coreService.bindingUserInfo(request, response, openId, username, password)==0?"success":"failed";
+    public @ResponseBody String bindUser(HttpServletRequest request,HttpServletResponse response, String openId,
+    		String username, String password, String newPwd, String confirmPwd) throws WxErrorException{
+        return coreService.bindingUserInfo(request, response, openId, username, password, newPwd, confirmPwd)==0?"success":"failed";
     }
     
 }

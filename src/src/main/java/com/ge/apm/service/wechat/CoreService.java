@@ -20,6 +20,8 @@ import com.ge.apm.web.wechat.WeChatCoreController;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -38,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,18 +145,31 @@ public class CoreService {
     }
     
     @Transactional
-    public int bindingUserInfo(HttpServletRequest request,HttpServletResponse response, String openId, String username, String password) {
+    public int bindingUserInfo(HttpServletRequest request,HttpServletResponse response, String openId, String username, 
+    																	String password, String newPwd, String confirmPwd) {
+    	UserAccount ua = userValidate(username, password);
+//    	if(StringUtils.isEmpty(newPwd) || StringUtils.isEmpty(confirmPwd) || (!newPwd.equals(confirmPwd))){
+//    		return 1;//
+//    	}
+    	if (ua == null ){//账号密码校验
+    		return 1;//绑定失败
+    	}
         WxMpUser user = getUserInfo(openId, null);
-        UserAccount ua = userValidate(username, password);
-        if (ua == null || user == null){
-            return 1;//绑定失败
-        } else {
-            ua.setWeChatId(openId);
-            userDao.save(ua);
-            //主动登录
-            loginByWeChatOpenId(openId, request, response);
-            return 0;//绑定成功
+        if(user == null){//微信校验
+        	return 1;
         }
+       //更新密码 
+        try {
+        	ua.setPlainPassword(newPwd);
+            ua.entryptPassword();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        ua.setWeChatId(openId);
+        userDao.save(ua);
+        //主动登录
+        loginByWeChatOpenId(openId, request, response);
+        return 0;//绑定成功
     }
     
     private UserAccount userValidate(String username, String password) {
