@@ -14,10 +14,11 @@ import javaslang.control.Option;
 
 import org.simpleflatmapper.tuple.Tuple12;
 import org.simpleflatmapper.tuple.Tuple18;
-import org.simpleflatmapper.tuple.Tuple19;
+import org.simpleflatmapper.tuple.Tuple20;
 import org.simpleflatmapper.tuple.Tuple5;
 import org.simpleflatmapper.tuple.Tuple6;
 import org.simpleflatmapper.tuple.Tuple8;
+import org.simpleflatmapper.tuple.Tuple9;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class ListApi {
 	public ResponseEntity<Map<String, Object>> getList(HttpServletRequest request,
 			@RequestParam(value = "from", required = true) Date from,
 			@RequestParam(value = "to", required = true) Date to,
-			@Pattern(regexp = "id|scan|exposure|usage|fix|stop|profit") @RequestParam(value = "orderby", required = false, defaultValue = "id") String orderby,
+			@Pattern(regexp = "rating|scan|exposure|usage|fix|stop|profit") @RequestParam(value = "orderby", required = false, defaultValue = "rating") String orderby,
 			@Min(0) @RequestParam(value = "dept", required = false) Integer dept,
 			@Min(0) @RequestParam(value = "type", required = false) Integer type,
 			@Min(1) @RequestParam(value = "limit", required = false ) Integer limit,
@@ -88,7 +89,7 @@ public class ListApi {
 
 	private ResponseEntity<Map<String, Object>> createResponseBody(
 				HttpServletRequest request, Integer limit, Integer start, String href,
-				Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>> asset_info,
+				Observable<Tuple20<Integer, String, Integer, Integer, String, Double, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>> asset_info,
 				Tuple12<Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double, Double> ticks
 				) {
 
@@ -116,46 +117,46 @@ public class ListApi {
 
 	}
 
-	public Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>>
+	public Observable<Tuple20<Integer, String, Integer, Integer, String, Double, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>>
 			mergeQueryData(
 					Observable<Tuple5<Integer, String, Integer, Integer, String>> queryBasic,
-					Observable<Tuple8<Double, Integer, Double, Double, Integer, Double, Double, Integer>> queryOp,
+					Observable<Tuple9<Double, Double, Integer, Double, Double, Integer, Double, Double, Integer>> queryOp,
 					Observable<Tuple6<Double, Double, Double, Double, Double, Double>> queryBm) {
 
 		return Observable.zip(queryBasic, queryOp, queryBm,
 					(t1, t2, t3) ->
-							new Tuple19<Integer, String, Integer, Integer, String,
-										Double, Integer, Double, Double, Integer, Double, Double, Integer,
+							new Tuple20<Integer, String, Integer, Integer, String,
+										Double, Double, Integer, Double, Double, Integer, Double, Double, Integer,
 										Double, Double, Double, Double, Double, Double>(
 										t1.getElement0(), t1.getElement1(), t1.getElement2(), t1.getElement3(), t1.getElement4(),
-										t2.getElement0(), t2.getElement1(), t2.getElement2(), t2.getElement3(), t2.getElement4(), t2.getElement5(), t2.getElement6(), t2.getElement7(),
+										t2.getElement0(), t2.getElement1(), t2.getElement2(), t2.getElement3(), t2.getElement4(), t2.getElement5(), t2.getElement6(), t2.getElement7(), t2.getElement8(),
 										t3.getElement0()*t2.getElement7(), t3.getElement1()*t2.getElement7(), t3.getElement2()*t2.getElement7(), t3.getElement3(), t3.getElement4()*t2.getElement7(), t3.getElement5()*t2.getElement7() ) )
 							.cache();
 	}
 
-	public Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>>
+	public Observable<Tuple20<Integer, String, Integer, Integer, String, Double, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>>
 			filterQueryData(
 				Integer dept, Integer type, String orderby,
-				Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>> asset_info ) {
+				Observable<Tuple20<Integer, String, Integer, Integer, String, Double, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>> asset_info ) {
 
 		asset_info = dept == null ? asset_info : asset_info.filter(t19 -> t19.getElement3()==dept);
 
 		asset_info = type == null ? asset_info : asset_info.filter(t19 -> t19.getElement2()==type);
 
-		if (orderby.equals("id"))
-			return asset_info;
-		else if ( orderby.equals("exposure"))
+		if (orderby.equals("rating"))
 			return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement5() - 100000*r.getElement5()) );
+		else if ( orderby.equals("exposure"))
+			return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement6() - 100000*r.getElement6()) );
 		else if ( orderby.equals("scan"))
-			return asset_info.sorted((r, l) -> l.getElement6() - r.getElement6() );
+			return asset_info.sorted((r, l) -> l.getElement7() - r.getElement7() );
 		else if ( orderby.equals("usage"))
-			return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement7() - 100000*r.getElement7()) );
-		else if ( orderby.equals("stop"))
 			return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement8() - 100000*r.getElement8()) );
+		else if ( orderby.equals("stop"))
+			return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement9() - 100000*r.getElement9()) );
 		else if ( orderby.equals("fix"))
-			return asset_info.sorted((r, l) -> l.getElement9() - r.getElement9() );
+			return asset_info.sorted((r, l) -> l.getElement10() - r.getElement10() );
 		else
-			return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement11() - 100000*r.getElement11()) );
+			return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement12() - 100000*r.getElement12()) );
 
 	}
 
@@ -253,7 +254,7 @@ public class ListApi {
 	}
 
 	private Iterable<ImmutableMap<String, Object>> jsonAsset(HttpServletRequest request, Integer limit, Integer start,
-			Observable<Tuple19<Integer, String, Integer, Integer, String, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>> asset_info) {
+			Observable<Tuple20<Integer, String, Integer, Integer, String, Double, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>> asset_info) {
 
 		return asset_info
 				.skip(start)
@@ -267,32 +268,34 @@ public class ListApi {
 								Option.of(asset.getElement2()).getOrElse(0) )
 						.put("dept",
 								Option.of(asset.getElement4()).getOrElse("N/A") )
+						.put("rating",
+								Option.of(asset.getElement5()).getOrElse(-1.0) )
 						.put("exposure",
-								Option.of(asset.getElement5()).getOrElse(0.0) )
+								Option.of(asset.getElement6()).getOrElse(0.0) )
 						.put("scan",
-								Option.of(asset.getElement6()).getOrElse(0) )
+								Option.of(asset.getElement7()).getOrElse(0) )
 						.put("usage",
-								Option.of(asset.getElement7()).getOrElse(0.0) )
-						.put("stop",
 								Option.of(asset.getElement8()).getOrElse(0.0) )
+						.put("stop",
+								Option.of(asset.getElement9()).getOrElse(0.0) )
 						.put("fix",
-								Option.of(asset.getElement9()).getOrElse(0) )
+								Option.of(asset.getElement10()).getOrElse(0) )
 						.put("revenue",
-								Option.of(asset.getElement10()).getOrElse(0.0) )
-						.put("profit",
 								Option.of(asset.getElement11()).getOrElse(0.0) )
+						.put("profit",
+								Option.of(asset.getElement12()).getOrElse(0.0) )
 						.put("exposure_bm",
-								Option.of(asset.getElement13()).getOrElse(0.0) )
-						.put("scan_bm",
 								Option.of(asset.getElement14()).getOrElse(0.0) )
-						.put("usage_bm",
+						.put("scan_bm",
 								Option.of(asset.getElement15()).getOrElse(0.0) )
-						.put("stop_bm",
+						.put("usage_bm",
 								Option.of(asset.getElement16()).getOrElse(0.0) )
-						.put("fix_bm",
+						.put("stop_bm",
 								Option.of(asset.getElement17()).getOrElse(0.0) )
-						.put("profit_bm",
+						.put("fix_bm",
 								Option.of(asset.getElement18()).getOrElse(0.0) )
+						.put("profit_bm",
+								Option.of(asset.getElement19()).getOrElse(0.0) )
 						.build() )
 						.toBlocking()
 						.toIterable();

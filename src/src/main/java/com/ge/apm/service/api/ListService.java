@@ -8,7 +8,7 @@ import javaslang.control.Option;
 import org.simpleflatmapper.tuple.Tuple12;
 import org.simpleflatmapper.tuple.Tuple5;
 import org.simpleflatmapper.tuple.Tuple6;
-import org.simpleflatmapper.tuple.Tuple8;
+import org.simpleflatmapper.tuple.Tuple9;
 import org.springframework.stereotype.Service;
 import rx.Observable;
 
@@ -56,13 +56,13 @@ public class ListService {
 
 // #2
 	private static final String asset_op
-		= " SELECT SUM(expose_count) as exposure, SUM(exam_count) as scan, SUM(exam_duration)/3600.0 as usage, SUM(down_time)/86400 as stop, SUM(work_order_count) as fix, SUM(revenue) as revenue, SUM(revenue - maintenance_cost - deprecation_cost) as profit, COUNT(*) as day "
+		= " SELECT AVG(rating) as rating, SUM(expose_count) as exposure, SUM(exam_count) as scan, SUM(exam_duration)/3600.0 as usage, SUM(down_time)/86400 as stop, SUM(work_order_count) as fix, SUM(revenue) as revenue, SUM(revenue - maintenance_cost - deprecation_cost) as profit, COUNT(*) as day "
 		+ " FROM asset_summit "
 		+ " WHERE site_id = :site_id AND hospital_id = :hospital_id AND created >= :from AND created <= :to "
 		+ " GROUP BY asset_id "
 		+ " ORDER BY asset_id ";
 
-	public Observable<Tuple8<Double, Integer, Double, Double, Integer, Double, Double, Integer>> queryForOp(Integer site_id, Integer hospital_id, Date from, Date to) {
+	public Observable<Tuple9<Double, Double, Integer, Double, Double, Integer, Double, Double, Integer>> queryForOp(Integer site_id, Integer hospital_id, Date from, Date to) {
 
 		return db.select(asset_op)
 			  .parameter("site_id", site_id)
@@ -71,8 +71,8 @@ public class ListService {
 			  .parameter("to", to)
 			  //    |   exposure   |    scan     |    usage     |    stop      |     fix     |   revenue    |   profit    |    day     |
 			  .get(rs ->
-			  		new Tuple8<Double, Integer, Double, Double, Integer, Double, Double, Integer> (
-			  				rs.getDouble("exposure"), rs.getInt("scan"), rs.getDouble("usage"), 100.0*rs.getDouble("stop")/rs.getInt("day"), rs.getInt("fix"), rs.getDouble("revenue"), rs.getDouble("profit"), rs.getInt("day") ) );
+			  		new Tuple9<Double, Double, Integer, Double, Double, Integer, Double, Double, Integer> (
+			  				rs.getDouble("rating"), rs.getDouble("exposure"), rs.getInt("scan"), rs.getDouble("usage"), 100.0*rs.getDouble("stop")/rs.getInt("day"), rs.getInt("fix"), rs.getDouble("revenue"), rs.getDouble("profit"), rs.getInt("day") ) );
 
   }
 
