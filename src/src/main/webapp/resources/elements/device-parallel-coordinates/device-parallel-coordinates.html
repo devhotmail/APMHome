@@ -73,7 +73,11 @@
       }
 
       function percentage(val) {
-        return numbro(val).format('2 a');
+        return numbro(val/100).format('0.0%');
+      }
+
+      function integer(val) {
+        return numbro(val).format('0a');
       }
 
       function currency_short(val) {
@@ -453,6 +457,7 @@
           var min = ticks[0];
           var max = ticks[ticks.length - 1];
           var format = dimension.format || function(val) { return val; };
+          var segmentFormat = dimension.segmentFormat || format;
 
           // handle no range
           if (max === min) {
@@ -556,7 +561,7 @@
           })
           .attr('class', 'label')
           .text(function(d) {
-            return [format(d.value), format(d.lastValue)].join('-')
+            return [segmentFormat(d.value), segmentFormat(d.lastValue)].join('-')
           })
           .each(function clip(d, i) {
             var text_size = this.getComputedTextLength();
@@ -565,11 +570,11 @@
             if(text_size > width) {
               // last value
               if (i === data.length - 1) {
-                $(this).text([format(d.lastValue), '+'].join(' '));
+                $(this).text([segmentFormat(d.lastValue), '+'].join(' '));
               }
               // first value
               if (i === 0) {
-                $(this).text(['<', format(d.value)].join(' '));
+                $(this).text(['<', segmentFormat(d.value)].join(' '));
               }
             }
           })
@@ -672,6 +677,7 @@
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
               format: percentage,
+              segmentFormat: integer,
               sortable: true
             },
             {
