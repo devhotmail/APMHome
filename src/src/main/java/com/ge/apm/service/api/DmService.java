@@ -38,7 +38,7 @@ public class DmService {
     log.info("siteId: {}; hospitalId: {} groupBy: {} endDay:{}", siteId, hospitalId, groupBy, endDay.toString());
     Observable<Tuple5<Integer, Double, String, Integer, Double>> result =
       db.select(new SQL()
-        .SELECT("ai.id", "ai.purchase_price as size", "ai.name", "ai." + Option.when(groupBy.equals("dept"), "clinical_dept_id").getOrElse("asset_group") + " as group_id", "ai.purchase_date", "COALESCE(sum(asu.exam_duration),0) as use_time")
+        .SELECT("ai.id", "ai.purchase_price as size", "ai.name", "ai." + Option.when(groupBy.equals("dept"), "clinical_dept_id").getOrElse("asset_group") + " as group_id", "ai.install_date", "COALESCE(sum(asu.exam_duration),0) as use_time")
         .FROM("asset_info ai")
         .LEFT_OUTER_JOIN("asset_summit asu on ai.id = asu.asset_id")
         .WHERE("ai.is_valid = true")
@@ -46,6 +46,8 @@ public class DmService {
         .WHERE("ai.hospital_id = :hospital_id")
         .WHERE("asu.created > :start_day")
         .WHERE("asu.created <= :end_day")
+        .WHERE("ai.install_date IS NOT NULL")
+        .WHERE("ai.purchase_price IS NOT NULL")
         .GROUP_BY("ai.id")
         .ORDER_BY("group_id").toString())
         .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
