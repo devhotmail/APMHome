@@ -301,7 +301,7 @@
             .attr('class', 'light-tips');
             // revenue value
             var revenue = +node.data.revenue_label;
-            var text1FinalVal = parseFloat(revenue).toFixed(2);
+            var text1FinalVal = +revenue;
             var text1Unit = node.data.revenue_label_unit;
             var text1StartVal = config.valueCountUp ? config.minValue : text1FinalVal;
             fullTipGroup.append('text')
@@ -320,7 +320,7 @@
             .attr("font-size", textPixels + "px");
             // profit value
             var profit = +node.data.profit_label;
-            var text2FinalVal = parseFloat(profit).toFixed(2);
+            var text2FinalVal = +profit;
             var text2Unit = node.data.profit_label_unit;
             var text2StartVal = config.valueCountUp ? config.minValue : text2FinalVal;
             var text2 = lightTipGroup.append("text")
@@ -345,9 +345,9 @@
               function textTweenFn(start, final, unit) {
                 return function() {
                   var node = this;
-                  var i = d3.interpolate(parseInt(start), parseInt(final));
+                  var i = d3.interpolate(start, final);
                   return function(t) {
-                    node.textContent = textFormat(i(t), unit);
+                    node.textContent = textFormat(+i(t).toFixed(1), unit);
                   }
                 }
               }
@@ -361,7 +361,7 @@
 
           // Rounding functions so that the correct number of decimal places
           // is always displayed as the value counts up.
-          function textFormat(value, unit) { return Math.round(value) + unit; };
+          function textFormat(value, unit) { return value + unit; };
 
           function animateWave() {
             wave.attr('transform', 'translate(' + waveAnimateScale(wave.attr('T')) + ',0)');

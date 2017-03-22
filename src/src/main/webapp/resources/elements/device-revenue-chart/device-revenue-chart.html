@@ -66,9 +66,16 @@
         },
         ready: function() {
           this._bubbleConfig = function(node, i, config) {
+            var level = node.orbitIndex;
+
+            // use same color as parent level for level3 and above
+            var colorId = (
+                level > 1 ? node.parent.data.id : node.data.id
+              ) - 1;
+
             config.height = config.width = node.size * 2;
-            config.circleColor = config.waveColor = gauge_color(i);
-            config.fillColor = gauge_fills(i);
+            config.circleColor = config.waveColor = gauge_color(colorId);
+            config.fillColor = gauge_fills(colorId);
             config.showWave = true;
             config.waveAnimateTime = 5000;
             config.waveHeight = 0.15;
