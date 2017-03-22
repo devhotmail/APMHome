@@ -62,21 +62,20 @@ public class ListApiTest extends AbstractApiTest {
 
   @Test
   public void testOrderby() throws IOException {
-    //doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "rating"));
+    doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "rating"));
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "scan"));
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "exposure"));
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "usage"));
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "fix"));
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "stop"));
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "profit"));
-    doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "id"));
   }
 
   @Test
   public void testDeptAndOrderby() throws IOException {
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "dept", "30", "orderby", "exposure"));
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "dept", "5", "orderby", "fix"));
-    //doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "dept", "23", "orderby", "rating"));
+    doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "dept", "23", "orderby", "rating"));
   }
 
   @Test
