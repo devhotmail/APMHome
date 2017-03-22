@@ -29,7 +29,9 @@
         <h2>[[decimal2Percent(focus.data.usage)]]</h2>
         <template is="dom-if" if="[[isArray(focus.data.suggestions)]]">
           <template is="dom-repeat" items="[[focus.data.suggestions]]">
-            <div>[[item.title]]</div>
+            <template is="dom-if" if="[[item.title]]">
+              <div>[[item.title]]</div>
+            </template>
             <template is="dom-if" if="[[item.addition]]">
               <h2>[[item.addition]]</h2>
             </template>
@@ -356,14 +358,20 @@
             var element = d3.select(this);
             element.on('mouseover', function() {
               if (d === root) return;
-              var textEl = d3.select('#text-' + d.data.id);
-              textEl.classed('hover', true);
+              var textEl = d3.select('#text-' + d.data.id + ' .text-center');
+              if (!canShowText(d)) {
+                textEl.style('display', 'inline')
+                .style('fill-opacity', 1);
+              }
             });
 
             element.on('mouseleave', function() {
               if (d === root) return;
-              var textEl = d3.select('#text-' + d.data.id);
-              textEl.classed('hover', false);
+              var textEl = d3.select('#text-' + d.data.id + ' .text-center');
+              if (!canShowText(d)) {
+                textEl.style('display', 'none')
+                .style('fill-opacity', 0);
+              }
             });
           });
 
@@ -398,13 +406,13 @@
           .each(function(d) {
             var element = d3.select(this);
 
-            var maxR = getMaxR(d);
+            var showText = canShowText(d);
             // Center text
             var textCenter = element.append('g')
             .attr('class', 'text-center')
             .attr('pointer-events', 'none')
             .style('fill-opacity', function() {
-              return d.parent === root ? (d.r * _this.scaleK > maxR ? 1 : 0) : 0;
+              return d.parent === root ? (showText ? 1 : 0) : 0;
             })
             .call(renderText(false));
 
@@ -442,8 +450,8 @@
             var target = [focus.x, focus.y, focus.r * 2 + margin];
 
             // final scale after transition
-            var k = diameter / target[2];
-            _this.set('scaleK', k);
+            var finalScale = diameter / target[2];
+            _this.set('scaleK', finalScale);
 
             var transition = d3.transition()
             .duration(d3.event.altKey ? 7500 : 750)
@@ -480,16 +488,14 @@
             .style('fill-opacity', function(d) {
               // when circle isn't big enough just hide all texts insides
               if (d.parent === focus || (d === focus && !d.children)) {
-                var maxR = getMaxR(d);
-                return d.r * _this.scaleK < maxR ? 0 : 1;
+                return canShowText(d) ? 1 : 0;
               } else {
                 return 0;
               }
             })
             .on('start', function(d) {
               if (d.parent === focus || (d === focus && !d.children)) {
-                var maxR = getMaxR(d);
-                if (d.r * _this.scaleK > maxR) {
+                if (canShowText(d)) {
                   this.style.display = 'inline';
                 } else {
                   this.style.display = 'none';
@@ -500,18 +506,19 @@
               if (d.parent !== focus && (d !== focus || d.children)) {
                 this.style.display = 'none';
               }
-              var maxR = getMaxR(d);
-              if (d.r * _this.scaleK < maxR) {
+              if (!canShowText(d)) {
                 this.style.display = 'none';
               }
             });
           }
 
-          function getMaxR(d) {
-            var maxX = d.data.name.length * 16;
-            var maxY = 10 + 16;
-            if (d.data.conclusion && d.data.conclusion.high) maxY += 16;
-            return Math.max.call(Math, maxX, maxY) / 1.5;
+          function canShowText(d) {
+            var maxX = (d.data.name.length > 5 ? d.data.name.length : 5) * 16;
+            var maxY = 16 + 14;
+            if (d.data.conclusion && d.data.conclusion.high) maxY += 14;
+            var maxLength = Math.max.call(Math, maxX, maxY);
+            // console.log(d.data.name.length, maxX, maxY, maxLength, _this.scaleK * d.r * 2)
+            return _this.scaleK * d.r * 2 > maxLength;
           }
 
           function zoomTo(v) {
