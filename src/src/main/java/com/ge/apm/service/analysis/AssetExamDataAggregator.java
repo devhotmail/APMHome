@@ -40,7 +40,6 @@ public class AssetExamDataAggregator {
         for(AssetClinicalRecordPojo accr:acrpList){
             hmRepo.put(accr.getAssetIds()+"-"+accr.getHospitalIds()+"-"+accr.getSiteIds()+":"+accr.getExamDate(),accr);
         }
-
         //初始化hm2 key
         for(AssetSummit asm :summitList){
             hmSumit.put(asm.getAssetId()+"-"+asm.getHospitalId()+"-"+asm.getSiteId()+":"+asm.getCreated(),asm);
@@ -62,8 +61,6 @@ public class AssetExamDataAggregator {
                     asm.setInjectCount(accrp.getInjectCounts());
                     asm.setExamCount(accrp.getExamCount().intValue());
                     asmupdateList.add(asm);
-                }else{ //在submit中不存在的 需要加入
-
                 }
             }
             assetSummitRepository.save(asmupdateList);
@@ -74,8 +71,10 @@ public class AssetExamDataAggregator {
         return "success";
     }
 
-
+  //全量聚合
     public String aggregateExamData(){
+        /*以examdate,siteid,hospitalid,assetid聚合clinical_record的priceAmount等数据，
+      并更新至asset_summit的revenue*/
             List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregator();
             logger.info("Asset Clinical Record size {}",acrpList.size());
             operatorAggregator(acrpList);

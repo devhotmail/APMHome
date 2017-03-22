@@ -7,10 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by lsg on 7/3/2017.
@@ -33,21 +30,37 @@ public class AssetExamController {
         return "success";
     }
 
-    @RequestMapping(value = "/aggreFromTo", method = RequestMethod.POST)
+    @RequestMapping(value = "/assetExam/fromTo", method = RequestMethod.PUT)
     @ResponseBody
     public String aggreFromTo(@RequestBody BatchAssetExam batchAssetExam) {
 
         assetExamDataService.aggrateExamebyRange(batchAssetExam);
         return "success";
     }
+    @RequestMapping(value = "/assetExam/date", method = RequestMethod.PUT)
+    @ResponseBody
+    public String aggreByDay(@RequestBody BatchAssetExam batchAssetExam) {
+        logger.info("---- --batchAssetExam--bODY->"+ batchAssetExam.getCalDay());
+        assetExamDataService.assetExamAggregatorByday(batchAssetExam);
+        return "success";
+    }
 
-    @RequestMapping(value = "/aggreByDay", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/aggreByDay", method = RequestMethod.POST)
     @ResponseBody
     public String aggreByDay(@RequestBody BatchAssetExam batchAssetExam) {
         logger.info("----aggreFromTo--batchAssetExam--bODY->"+ batchAssetExam.getCalDay());
         assetExamDataService.assetExamAggregatorByday(batchAssetExam);
         return "success";
-    }
+    }*/
+
+    /*@RequestMapping(value = "/workorder/{workOrderId}/{userId}/{desc}")
+    @ResponseBody
+    public void assignWorkOrder(@PathVariable Integer workOrderId , @PathVariable Integer userId, String desc) throws RuntimeException
+    {
+        workOrderService.assignWorkOrder(workOrderId,userId,desc);
+
+    }*/
+
 
 
 }
