@@ -511,8 +511,7 @@
             var maxX = d.data.name.length * 16;
             var maxY = 10 + 16;
             if (d.data.conclusion && d.data.conclusion.high) maxY += 16;
-            return maxY;
-            return Math.max.call(Math, maxX, maxY);
+            return Math.max.call(Math, maxX, maxY) / 1.5;
           }
 
           function zoomTo(v) {
@@ -570,13 +569,11 @@
               .append('tspan')
               .attr('font-family','DewIcon')
               .attr('font-size', 14)
-              // .attr('fill', '#b3b3b3')
               .text('\uE002' + ' ');
 
               usageTxt
               .append('tspan')
-              .attr('dy', '-0.2ex')
-              // .attr('alignment-baseline', 'middle')
+              .attr('dy', '-0.05em')
               .text(function(d) {
                 return parseInt(d.data.usage * 100) + '%';
               });
@@ -607,7 +604,7 @@
 
                   overloadTxt
                   .append('tspan')
-                  .attr('dy', '-0.2ex')
+                  .attr('dy', '-0.05em')
                   .text(overload + '台');
                 }
 
