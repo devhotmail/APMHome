@@ -3,16 +3,14 @@
   "usage": 0.57,
   "suggestions": [
     {
-      "title": "建议提高使用率",
-      "content": "1种类型"
+      "title": "建议提高使用率"
     },
     {
-      "title": "建议购买新设备",
-      "content": "2种类型"
+      "title": "建议购买",
+      "addition": "2种类型"
     },
     {
-      "title": "建议合理使用设备",
-      "content": "3种类型"
+      "title": "建议合理使用设备"
     }
   ],
   "items": [
@@ -118,8 +116,8 @@
       "name": "DSA",
       "suggestions": [
         {
-          "title": "建议购买新设备",
-          "content": "1台设备"
+          "title": "建议购买",
+          "addition": "1台设备"
         }
       ],
       "items": [
@@ -162,8 +160,7 @@
       "name": "CR",
       "suggestions": [
         {
-          "title": "建议提高使用率",
-          "content": "2台设备"
+          "title": "建议提高使用率"
         }
       ],
       "items": [
@@ -223,8 +220,7 @@
       "name": "DR",
       "suggestions": [
         {
-          "title": "建议合理使用设备",
-          "content": "1台设备"
+          "title": "建议合理使用设备"
         }
       ],
       "items": [

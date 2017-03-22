@@ -3,6 +3,7 @@
 <link rel="import" href="../behavior/context.html">
 <link rel="import" href="../behavior/fetch-cached.html">
 <link rel="import" href="asset-procurement-styles.html">
+<link rel="stylesheet" href="../../css/dewIcons.css">
 <script src="../../bower_components/d3/d3.min.js"></script>
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
 <script src="../../bower_components/urijs/src/URI.js"></script>
@@ -29,7 +30,9 @@
         <template is="dom-if" if="[[isArray(focus.data.suggestions)]]">
           <template is="dom-repeat" items="[[focus.data.suggestions]]">
             <div>[[item.title]]</div>
-            <h2>[[item.content]]</h2>
+            <template is="dom-if" if="[[item.addition]]">
+              <h2>[[item.addition]]</h2>
+            </template>
           </template>
           <div class="divider"></div>
         </template>
@@ -50,13 +53,18 @@
         </template>
       </div>
       <div class="legends">
+        <h3>图示说明</h3>
         <div class="legend">
-          <i class="fa fa-clock-o" aria-hidden="true"></i>
+          <i class="dewicon-circle-high" style="color:#b3b3b3"></i>
           <span class="legend-tip">平均使用率预测(%)</span>
         </div>
         <div class="legend">
-          <i class="fa fa-adjust" aria-hidden="true"></i>
-          <span class="legend-tip">使用率预测超过100%的设备(台)</span>
+          <i class="dewicon-circle-full" style="color:#e26d26"></i>
+          <span class="legend-tip">单台使用率预测&gt;100%</span>
+        </div>
+        <div class="legend">
+          <i class="dewicon-circle-low" style="color:#ebda51"></i>
+          <span class="legend-tip">单台使用率预测&lt;30%</span>
         </div>
         <div class="legend">球大小与设备利润预测相关</div>
       </div>
@@ -74,8 +82,6 @@
       textTopPosition: 0.85 // Percentage of height to show text top in the asset circle
     };
 
-    // #e26d26 #b3b3b3; #ebda51;
-
     var sectionalizer = [
       {
         key: 'orange',
@@ -91,14 +97,6 @@
         desc: '使用率预测<30%',
         filter: function(n) {
           return n <= 0.3;
-        }
-      },
-      {
-        key: 'gray',
-        loadStatus: 'normal',
-        desc: '30%<使用率预测<100%',
-        filter: function(n) {
-          return n > 0.3 && n < 1;
         }
       }
     ];
@@ -179,9 +177,9 @@
           selectedOpt: {
             type: String
           },
-          selectOptsZh: {
-            type: String,
-            computed: 'getSelectedOptZh(selectedOpt)'
+          scaleK: {
+            type: Number,
+            value: 1
           }
         },
         behaviors: [
@@ -208,13 +206,6 @@
           var uri = URI('').addQuery('groupby', selectedOpt);
           var new_hash = uri.query();
           location.hash = '#' + new_hash;
-        },
-        getSelectedOptZh: function(opt) {
-          var pos = this.selectOpts.map(function(n) {
-            return n.val;
-          }).indexOf(opt);
-          var index = pos > -1 ? pos : 0;
-          return this.selectOpts[index].zh;
         },
         getCurrentKPIs: function(focus) {
           var conclusion = focus.data.conclusion;
@@ -272,10 +263,6 @@
               return pr;
             }, 0);
             prev[next.loadStatus] = result;
-
-            // prev[next.loadStatus].group = data.items.filter(function(i) {
-            //   return next.filter(i.usage);
-            // }).length;
             
             return prev;
           }, {});
@@ -283,14 +270,14 @@
           return data;
         },
         loadData: function(groupby) {
-          var url = URI(this.resolveApiUrl('/resources/mock/asset-procurement.json')).query({
+          var url = URI(this.resolveApiUrl('/api/dm')).query({
             groupby: groupby
           }).toString();
 
-          // return this.fetchPage(url)
-          // .then((function(data) {
-          //   this.data = this.conclude(data);
-          // }).bind(this));
+          return this.fetchPage(url)
+          .then((function(data) {
+            this.data = this.conclude(data);
+          }).bind(this));
 
           return fetch('mock/asset-procurement.json' + '?groupby=' + groupby)
           .then(function(res) {
@@ -312,6 +299,7 @@
           })
         },
         render: function() {
+          var _this = this;
           var svg = d3.select(this.$.svg);
           var margin = 20;
           var diameter = Math.min.call(null, this.width, this.height);
@@ -363,6 +351,20 @@
               zoom(d);
               d3.event.stopPropagation();
             }
+          })
+          .each(function(d) {
+            var element = d3.select(this);
+            element.on('mouseover', function() {
+              if (d === root) return;
+              var textEl = d3.select('#text-' + d.data.id);
+              textEl.classed('hover', true);
+            });
+
+            element.on('mouseleave', function() {
+              if (d === root) return;
+              var textEl = d3.select('#text-' + d.data.id);
+              textEl.classed('hover', false);
+            });
           });
 
           var waveGroup = assetGroup.append('g')
@@ -390,17 +392,19 @@
           .attr('class', function(d) {
             return d.parent ? d.children ? 'text' : 'text text-leaf' : 'text text-root';
           })
+          .attr('id', function(d) {
+            return 'text-' + d.data.id;
+          })
           .each(function(d) {
             var element = d3.select(this);
+
+            var maxR = getMaxR(d);
             // Center text
             var textCenter = element.append('g')
             .attr('class', 'text-center')
             .attr('pointer-events', 'none')
-            .style('display', function(d) {
-              return d.parent == root ? 'inline' : 'none';
-            })
-            .style('fill-opacity', function(d) {
-              return d.parent === root ? 1 : 0;
+            .style('fill-opacity', function() {
+              return d.parent === root ? (d.r * _this.scaleK > maxR ? 1 : 0) : 0;
             })
             .call(renderText(false));
 
@@ -409,13 +413,13 @@
               var textTop = element
               .append('g')
               .attr('class', 'text-top')
-              .attr('transform', function(d) {
+              .attr('transform', function() {
                 return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition + ')';
               })
               .style('display', function(d) {
                 return d === root ? 'inline' : 'none';
               })
-              .style('fill-opacity', function(d) {
+              .style('fill-opacity', function() {
                 return d === root ? 1 : 0;
               })
               .call(renderText(true));
@@ -430,17 +434,21 @@
 
           this.scopeSubtree(this.$.chart, true);
 
-          var _this = this;
-
           function zoom(d) {
             var focus0 = focus;
             focus = d;
             _this.set('focus', focus);
 
+            var target = [focus.x, focus.y, focus.r * 2 + margin];
+
+            // final scale after transition
+            var k = diameter / target[2];
+            _this.set('scaleK', k);
+
             var transition = d3.transition()
             .duration(d3.event.altKey ? 7500 : 750)
             .tween('zoom', function () {
-              var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+              var i = d3.interpolateZoom(view, target);
               return function (t) {
                 zoomTo(i(t));
               }
@@ -470,14 +478,41 @@
               return d.parent === focus || d === focus  || this.style.display === 'inline';
             })
             .style('fill-opacity', function(d) {
-              return (d.parent === focus || (d === focus && !d.children)) ? 1 : 0;
+              // when circle isn't big enough just hide all texts insides
+              if (d.parent === focus || (d === focus && !d.children)) {
+                var maxR = getMaxR(d);
+                return d.r * _this.scaleK < maxR ? 0 : 1;
+              } else {
+                return 0;
+              }
             })
             .on('start', function(d) {
-              if (d.parent === focus || (d === focus && !d.children)) this.style.display = 'inline';
+              if (d.parent === focus || (d === focus && !d.children)) {
+                var maxR = getMaxR(d);
+                if (d.r * _this.scaleK > maxR) {
+                  this.style.display = 'inline';
+                } else {
+                  this.style.display = 'none';
+                }
+              }
             })
             .on('end', function(d) {
-              if (d.parent !== focus && (d !== focus || d.children)) this.style.display = 'none';
+              if (d.parent !== focus && (d !== focus || d.children)) {
+                this.style.display = 'none';
+              }
+              var maxR = getMaxR(d);
+              if (d.r * _this.scaleK < maxR) {
+                this.style.display = 'none';
+              }
             });
+          }
+
+          function getMaxR(d) {
+            var maxX = d.data.name.length * 16;
+            var maxY = 10 + 16;
+            if (d.data.conclusion && d.data.conclusion.high) maxY += 16;
+            return maxY;
+            return Math.max.call(Math, maxX, maxY);
           }
 
           function zoomTo(v) {
@@ -533,11 +568,15 @@
               // icon: fa-adjust
               usageTxt
               .append('tspan')
-              .attr('font-family','FontAwesome')
-              .text('\uf017' + ' ');
+              .attr('font-family','DewIcon')
+              .attr('font-size', 14)
+              // .attr('fill', '#b3b3b3')
+              .text('\uE002' + ' ');
 
               usageTxt
               .append('tspan')
+              .attr('dy', '-0.2ex')
+              // .attr('alignment-baseline', 'middle')
               .text(function(d) {
                 return parseInt(d.data.usage * 100) + '%';
               });
@@ -561,11 +600,14 @@
                   // icon: fa-clock-o
                   overloadTxt
                   .append('tspan')
-                  .attr('font-family','FontAwesome')
-                  .text('\uf042' + ' ');
+                  .attr('font-family','DewIcon')
+                  .attr('font-size', 14)
+                  .style('fill', '#e26d26')
+                  .text('\uE001' + ' ');
 
                   overloadTxt
                   .append('tspan')
+                  .attr('dy', '-0.2ex')
                   .text(overload + '台');
                 }
 

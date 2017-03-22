@@ -29,8 +29,15 @@ $color-set: $orange $yellow $gray;
 }
 
 .asset-texts {
-  .text-root .text-center {
-    display: none;
+  .text:hover text {
+    fill: red;
+  }
+
+  .text-root {
+    .text-top :not(.asset-name),
+    .text-center {
+      display: none;
+    }
   }
 }
 
@@ -106,6 +113,10 @@ px-dropdown {
   align-items: center;
   line-height: 1.5;
   text-align: left;
+
+  i {
+    font-size: 24px;
+  }
 
   .legend-tip {
     margin-left: 5px;
