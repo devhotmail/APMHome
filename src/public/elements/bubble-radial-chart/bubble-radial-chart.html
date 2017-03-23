@@ -1294,9 +1294,7 @@
             }
           },
           attached: function() {
-            var _this = this;
             this.set('isAttached', true);
-            this.load();
           },
           load: function() {
             this.resetChart();
@@ -1586,6 +1584,8 @@
               var key = this.queryUrl;
               if (this.hasData(key)) {
                 this.renderCurrPage(key, 1, false);
+              } else {
+                this.load();
               }
             }, 500);
           },
