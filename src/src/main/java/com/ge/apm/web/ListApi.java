@@ -130,7 +130,7 @@ public class ListApi {
 										Double, Double, Double, Double, Double, Double>(
 										t1.getElement0(), t1.getElement1(), t1.getElement2(), t1.getElement3(), t1.getElement4(),
 										t2.getElement0(), t2.getElement1(), t2.getElement2(), t2.getElement3(), t2.getElement4(), t2.getElement5(), t2.getElement6(), t2.getElement7(), t2.getElement8(),
-										t3.getElement0()*t2.getElement7(), t3.getElement1()*t2.getElement7(), t3.getElement2()*t2.getElement7(), t3.getElement3(), t3.getElement4()*t2.getElement7(), t3.getElement5()*t2.getElement7() ) )
+										t3.getElement0()*t2.getElement8(), t3.getElement1()*t2.getElement8(), t3.getElement2()*t2.getElement8(), t3.getElement3(), t3.getElement4()*t2.getElement8(), t3.getElement5()*t2.getElement8() ) )
 							.cache();
 	}
 
