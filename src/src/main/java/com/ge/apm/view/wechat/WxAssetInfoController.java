@@ -14,8 +14,6 @@ import com.ge.apm.service.asset.MessageSubscriberService;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.List;
-import javax.faces.application.FacesMessage;
-import javax.faces.convert.ConverterException;
 import org.primefaces.model.StreamedContent;
 import webapp.framework.dao.GenericRepository;
 import webapp.framework.dao.SearchFilter;
