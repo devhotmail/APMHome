@@ -319,13 +319,13 @@ and open the template in the editor.
         <h:panelGroup  rendered="#{empty wxAssetInfoController.assetInfo}" >  
             <div class="page">
                 <div class="weui-msg">
-                    <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+                    <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
                     <p>#{msg.NotFoundAsset}</p>
                     <p>#{wxAssetInfoController.qrCode}</p>
                     <div class="weui-msg__opr-area">
                         <p class="weui-btn-area">
-                            <a href="assetList.xhtml?action=list&amp;qrCode=#{wxAssetInfoController.qrCode}" class="weui-btn weui-btn_primary">#{msg.BindAsset}</a>
-                            <a href="create.xhtml?qrCode=#{wxAssetInfoController.qrCode}" class="weui-btn weui-btn_primary">#{msg.Create}#{msg.AssetInfo}</a>
+                            <!--<a href="assetList.xhtml?action=list&amp;qrCode=#{wxAssetInfoController.qrCode}" class="weui-btn weui-btn_primary">#{msg.BindAsset}</a>-->
+                            <a href="List.xhtml" class="weui-btn weui-btn_primary">返回设备列表</a>
                         </p>
                     </div>
                 </div>
