@@ -595,7 +595,17 @@ INSERT INTO "i18n_message" VALUES (5057,'label','selectSearchInterval_2', '确�
 INSERT INTO "i18n_message" VALUES (5058,'label','deviceUsagelg_3', '停机','Downtime',null,-1);
 INSERT INTO "i18n_message" VALUES (5059,'label','friendlyTips', '友情提示','friendly tips',null,-1);
 
+INSERT INTO "i18n_message" VALUES (5060,'dispatchMode','1','专人派工','specially-assigned',null,-1);
+INSERT INTO "i18n_message" VALUES (5061,'dispatchMode','2','抢单','ask for ',null,-1);
+INSERT INTO "i18n_message" VALUES (5062,'dispatchMode','3','自动派工','automatic',null,-1);
 
+INSERT INTO "i18n_message" VALUES (5063,'label','WorkFlowConfig','工作流配置','workflow config',null,-1);
+INSERT INTO "i18n_message" VALUES (5064,'label','dispatchMode','派工模式','dispatch mode',null,-1);
+INSERT INTO "i18n_message" VALUES (5065,'label','dispatchUserName','派工人','dispatch username',null,-1);
+INSERT INTO "i18n_message" VALUES (5066,'label','timeoutDispatch','派工超时时间','dispatch timeout',null,-1);
+INSERT INTO "i18n_message" VALUES (5067,'label','timeoutAccept','接单超时时间','accept timeout',null,-1);
+INSERT INTO "i18n_message" VALUES (5068,'label','timeoutRepair','维修超时时间','repair timeout',null,-1);
+INSERT INTO "i18n_message" VALUES (5069,'label','timeoutClose','关单超时时间','close timeout',null,-1);
 
 
 -- asset head

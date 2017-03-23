@@ -11,46 +11,41 @@
         <p:dialog id="WorkflowConfigEditDlg" widgetVar="WorkflowConfigEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workflowConfigController.CRUDActionName} #{msg.WorkflowConfig}">
             <h:form id="WorkflowConfigEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workflowConfigController.selected != null}">
- <!--                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="id" value="#{workflowConfigController.selected.id}"  required="true" requiredMessage="#{msg.id} #{msg.ValidationRequire}"/>
-                            <label>#{msg.id}*</label>
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workflowConfigController.selected != null}">
+                        <h:panelGroup>
+                            <label class = "label">#{msg.dispatchMode}</label>
+                             <p:selectOneMenu value="#{workflowConfigController.selected.dispatchMode}" >
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('dispatchMode')}" var="item"  itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                             </p:selectOneMenu>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="siteId" value="#{workflowConfigController.selected.siteId}"  required="true" requiredMessage="#{msg.siteId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.siteId}*</label>
-                        </h:panelGroup> -->
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="hospitalId" value="#{workflowConfigController.selected.hospitalId}"  required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}"/>
-                            <label>#{msg.hospitalId}*</label>
+                        <h:panelGroup >
+                           	<label class="label">#{msg.dispatchUserName}</label>
+                            <p:selectOneMenu id="dispatchUserId" value="#{workflowConfigController.owner}" 
+                            		converter="userAccountConverter"  var="t"  filter="true"  filterMatchMode="startsWith" required="true" 
+                            		requiredMessage="#{msg.ownerId} #{msg.ValidationRequire}" >
+                                <f:selectItem itemLabel="" />
+                                <f:selectItems value="#{workflowConfigController.dispatchUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                <p:column>
+                                    <h:outputText value="#{t.name}"/>
+                                </p:column>
+                            </p:selectOneMenu>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="dispatchMode" value="#{workflowConfigController.selected.dispatchMode}"  required="true" requiredMessage="#{msg.dispatchMode} #{msg.ValidationRequire}"/>
-                            <label>#{msg.dispatchMode}*</label>
-                        </h:panelGroup>
-<!--                         <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="dispatchUserId" value="#{workflowConfigController.selected.dispatchUserId}" />
-                            <label>#{msg.dispatchUserId}</label>
-                        </h:panelGroup> -->
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="dispatchUserName" value="#{workflowConfigController.selected.dispatchUserName}" />
-                            <label>#{msg.dispatchUserName}</label>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        
+                        <h:panelGroup>
+                            <label class="label">#{msg.timeoutDispatch}</label>
                             <p:inputText id="timeoutDispatch" value="#{workflowConfigController.selected.timeoutDispatch}" />
-                            <label>#{msg.timeoutDispatch}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup >
+                            <label class="label">#{msg.timeoutAccept}</label>
                             <p:inputText id="timeoutAccept" value="#{workflowConfigController.selected.timeoutAccept}" />
-                            <label>#{msg.timeoutAccept}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.timeoutRepair}</label>
                             <p:inputText id="timeoutRepair" value="#{workflowConfigController.selected.timeoutRepair}" />
-                            <label>#{msg.timeoutRepair}</label>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
+                        <h:panelGroup>
+                            <label class="label">#{msg.timeoutClose}</label>
                             <p:inputText id="timeoutClose" value="#{workflowConfigController.selected.timeoutClose}" />
-                            <label>#{msg.timeoutClose}</label>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>
