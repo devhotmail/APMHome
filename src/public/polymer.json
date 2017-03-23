@@ -1,0 +1,24 @@
+{
+  "entrypoint": "public/index.html",
+  "shell": "public/loader.html",
+  "fragments": [
+    "public/pages/home-head.html",
+    "public/pages/home-dept-head.html",
+    "public/pages/home-asset-head.html"
+  ],
+  "source": [
+    "public/*.html",
+    "public/elements/**/*"
+  ],
+  "includeDependencies": [
+    "public/bower_components/font-awesome/fonts/**/*",
+    "public/css/**/*",
+    "public/icons/**/*",
+    "public/img/**/*",
+    "public/js/**/*",
+    "public/jquery_notification/**/*",
+    "public/ultima-layout/**/*",
+    "public/wechat/**/*",
+    "public/mock/**/*"
+  ]
+}

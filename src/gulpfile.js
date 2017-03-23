@@ -1,15 +1,17 @@
 'use strict';
 
 const path = require('path');
+const symlink = require('gulp-symlink');
 const autoprefixer = require('gulp-autoprefixer');
 const stylemod = require('gulp-style-modules');
+const del = require('del')
 const sass = require('gulp-sass');
 const gulp = require('gulp');
 const cssmin = require('gulp-cssmin');
 const importOnce = require('node-sass-import-once');
-const src = 'src/main/webapp/resources/sass/*.scss';
-const src_comp = 'src/main/webapp/resources/elements/**/*.scss';
-const dest = 'src/main/webapp/resources/css/';
+const src = 'public/sass/*.scss';
+const src_comp = 'public/elements/**/*.scss';
+const dest = 'src/main/webapp/resources';
 
 // -------------------------------------
 //   Task: Compile: Sass
@@ -36,7 +38,7 @@ gulp.task('sass:compile:css', function() {
     keepBreaks: true,
     keepSpecialComments:0
   }))
-  .pipe(gulp.dest(dest));
+  .pipe(gulp.dest(path.join(dest, 'css')));
 });
 
 gulp.task('sass:compile:module', function() {
@@ -50,9 +52,7 @@ gulp.task('sass:compile:module', function() {
   ])
   .pipe(sass({
     style: 'compressed',
-    includePaths: [
-      'src/main/webapp/resources/sass/'
-    ],
+    includePaths: ['public/sass'],
     importer: importOnce,
     importOnce: {
       index: true,
@@ -87,5 +87,21 @@ gulp.task('sass:watch', function() {
   gulp.watch(src_comp, ['sass:compile:module']);
 });
 
-gulp.task('default', ['sass:compile:css', 'sass:compile:module']);
+gulp.task('default', ['sass:compile:css', 'sass:compile:module', 'build']);
 gulp.task('watch', ['default', 'sass:watch']);
+gulp.task('clean', function clean() {
+  return del(dest);
+});
+gulp.task('bundle', ['clean'], require('./task.bundle')(gulp, 'dist'));
+gulp.task('dev', ['clean'], function symlink() {
+  return gulp.src('public').pipe(symlink(dest));
+});
+gulp.task('build', ['bundle'], function bundle() {
+  return gulp.src([
+    'dist/public/**/*'
+  ], {base: 'dist/public'})
+  .pipe(gulp.dest(dest))
+  .on('end', function() {
+    return del(['dist']);
+  });
+});
