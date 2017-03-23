@@ -1,0 +1,209 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.Create}#{msg.AssetInfo}"/>
+            </div>
+            <div class="ui-g-12 card ">
+                <p:fieldset legend="基本资料" id="accordion" >
+
+                    <div class="ui-g-7">
+                        <p:galleria value="#{assetCreateController.pictureList}" var="attach" panelWidth="500" panelHeight="313" showCaption="false"  autoPlay="false">
+                            <p:graphicImage  value="#{pictureService.getImage()}"  height="313"  width="500">
+                                <f:param name="pictureId" value="#{attach.fileId}" />
+                            </p:graphicImage>
+                        </p:galleria>
+
+                    </div>
+                    <div class="ui-g-5">
+
+
+                        <p:media value="" width="300" height="100" player="quicktime" >
+                            <f:param name="autoPlay" value="false"  />
+                        </p:media>
+
+                        <p:fieldset legend="文字描述" id="textComment" >
+                            #{assetCreateController.createRequest.comment}
+                        </p:fieldset>
+
+                    </div>
+
+                </p:fieldset>
+            </div>
+            <div class="ui-g-12 card ">
+                <p:tabView>
+                    <p:tab title="创建">
+                        <h:form id="CreateAsset">
+                            <p:fieldset  style="margin-bottom:20px">
+                                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.name}*</label>
+                                        <p:inputText id="name" value="#{assetCreateController.assetInfo.name}"  required="false" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.aliasName}</label>
+                                        <p:inputText id="aliasName" value="#{assetCreateController.assetInfo.aliasName}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.assetGroup}*</label>
+                                        <p:selectOneMenu id="assetGroup" value="#{assetCreateController.assetInfo.assetGroup}" required="false" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
+                                            <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                            <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.hospitalId}</label>
+                                        <p:inputText id="hospitalId" value="#{assetCreateController.getHospitalName()}" readonly="true"/>
+                                    </h:panelGroup>
+                                    <!--<p:spacer/>-->
+                                    <h:panelGroup >
+                                        <label class="label">#{msg.assetOwnerName}*</label>
+                                        <p:selectOneMenu id="assetOwnerName" value="#{assetCreateController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="true" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}" >
+                                            <f:selectItem itemLabel="" />
+                                            <f:selectItems value="#{assetCreateController.getOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                            <p:column>
+                                                <h:outputText value="#{t.name}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputText value="#{t.telephone}"/>
+                                            </p:column>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.clinicalDeptName}*</label>
+                                        <p:selectOneMenu id="clinicalDeptName" value="#{assetCreateController.assetInfo.clinicalDeptId}" required="false" requiredMessage="#{msg.clinicalDeptName} #{msg.ValidationRequire}">
+                                            <!--<p:ajax  listener="#{assetInfoController.onClinicalDeptChange()}" update="clinicalOwnerName clinicalOwnerTel" />-->
+                                            <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                            <f:selectItems value="#{assetCreateController.getClinicalDeptList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.manufacture}</label>
+                                        <p:inputText id="manufacture" value="#{assetCreateController.assetInfo.manufacture}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.maitanance}</label>
+                                        <p:inputText id="maitanance" value="#{assetCreateController.assetInfo.maitanance}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.maitananceTel}</label>
+                                        <p:inputText id="maitananceTel" value="#{assetCreateController.assetInfo.maitananceTel}"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:fieldset>
+
+                            <p:fieldset  style="margin-bottom:20px">
+                                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.departNum}</label>
+                                        <p:inputText id="departNum2" value="#{assetCreateController.assetInfo.departNum}"/>
+
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.financingNum}</label>
+                                        <p:inputText id="financingNum2" value="#{assetCreateController.assetInfo.financingNum}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.registrationNo}</label>
+                                        <p:inputText id="registrationNo" value="#{assetCreateController.assetInfo.registrationNo}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.modalityId}</label>
+                                        <p:inputText id="modalityId" value="#{assetCreateController.assetInfo.modalityId}"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:fieldset>
+
+                            <p:fieldset  style="margin-bottom:20px">
+                                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.functionType}</label>
+                                        <p:inputText id="functionType" value="#{assetCreateController.assetInfo.functionType}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.functionGrade}</label>
+                                        <p:selectOneMenu id="functionGrade" value="#{assetCreateController.assetInfo.functionGrade}">
+                                            <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                            <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionGrade')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+                                    <h:panelGroup >
+                                        <label class="label">#{msg.functionGroup}</label>
+                                        <p:selectOneMenu id="functionGroup" value="#{assetCreateController.assetInfo.functionGroup}" style="width: 100%">
+                                            <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                            <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+                                    <p:spacer/>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.locationCode}</label>
+                                        <p:inputText id="locationCode" value="#{assetCreateController.assetInfo.locationCode}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.locationName}</label>
+                                        <p:inputText id="locationName" value="#{assetCreateController.assetInfo.locationName}"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:fieldset>
+
+                            <p:fieldset  style="margin-bottom:20px">
+                                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.manufactDate}</label>
+                                        <p:calendar timeZone="GMT+8"  id="manufactDate" pattern="yyyy/MM/dd" value="#{assetCreateController.assetInfo.manufactDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"  />
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:fieldset>
+
+                            <p:fieldset legend="选择图片作为资产附件保存"  style="margin-bottom:20px">
+                                <p:selectManyCheckbox id="custom" value="#{assetCreateController.selectedPictures}"  layout="custom">
+                                    <f:selectItems value="#{assetCreateController.pictureList}" var="item"  itemValue="#{item.fileId}" />
+                                </p:selectManyCheckbox>
+                                <c:forEach items="#{assetCreateController.pictureList}" var="item" varStatus="status">
+                                    <div class="ui-grid-col-2" style="text-align:center">
+                                        <p:graphicImage  value="#{pictureService.getImage()}"  height="60"  width="80">
+                                            <f:param name="pictureId" value="#{item.fileId}" />
+                                        </p:graphicImage>
+                                        <p:checkbox id="opt#{item.id}" for="custom" itemIndex="#{status.index}" />
+                                    </div>
+                                </c:forEach>
+                            </p:fieldset>
+
+
+                            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                                <h:panelGroup >
+                                    <p:commandButton value="#{msg.Save}" icon="ui-icon-check" action="#{assetCreateController.applyChange()}" validateClient="true" update=":growl" style="float:left"/>
+                                    <!--<p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="#{assetCreateController.getListPageLink()}" immediate="true"  update=":growl" style="float:left"/>-->
+                                </h:panelGroup>
+                            </p:panelGrid>
+
+
+
+                        </h:form>
+
+                    </p:tab>
+                    <p:tab title="拒绝退回">
+
+                    </p:tab>
+
+                </p:tabView>
+
+            </div>
+
+
+        </div>
+    </ui:define>
+
+
+</ui:composition>
