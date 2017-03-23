@@ -21,41 +21,103 @@
                     </div>
                 </div>
             </div>
-
-            <!--图片 -->
-            <div class="weui-cells__title">故障图片上传<div class="weui-uploader__info" style="float: right;">0/5</div></div>
-            <div class="weui-cells">
-                <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <div class="weui-uploader">
-                            <div class="weui-uploader__bd">
-                                <ul class="weui-uploader__files" id="uploaderFiles">
-                                </ul>
-                                <div class="weui-uploader__input-box">
-                                    <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" />
+            
+            <div id="issueDescribe">
+                <!--图片 -->
+                <div class="weui-cells__title">故障图片上传<div class="weui-uploader__info" style="float: right;">0/5</div></div>
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <div class="weui-uploader">
+                                <div class="weui-uploader__bd">
+                                    <ul class="weui-uploader__files" id="uploaderFiles">
+                                    </ul>
+                                    <div class="weui-uploader__input-box">
+                                        <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!--语音-->
-            <div class="weui-cells__title">故障语音描述</div>
-            <div class="weui-cells">
-                <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <button class="weui-btn voice-btn" type="button" id="replay">播放</button>
+                <!--语音-->
+                <div class="weui-cells__title">故障语音描述</div>
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <button class="weui-btn voice-btn" type="button" id="replay">播放</button>
+                        </div>
+                    </div>
+                </div>
+                <!--故障现象-->
+                <div class="weui-cells__title">故障文字描述</div>
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <span name="requestReason" id="requestReason">
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!--故障现象-->
-            <div class="weui-cells__title">故障文字描述</div>
-            <div class="weui-cells">
-                <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <span name="requestReason" id="requestReason">
-                        </span>
+            
+            <div id="pat" style="display:none">
+                <!--故障明细-->
+                <div class="weui-cells__title">故障明细</div>
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">故障类别</label></div>
+                        <div class="weui-cell__bd">
+                            <div class="weui-cell weui-cell_select">
+                                <div class="weui-cell__bd">
+                                    <select class="weui-select" name="caseType" id="caseType">
+                                        <option value="">请选择...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">故障子类别</label></div>
+                        <div class="weui-cell__bd">
+                            <div class="weui-cell weui-cell_select">
+                                <div class="weui-cell__bd">
+                                    <select class="weui-select" name="caseSubType" id="caseSubType">
+                                        <option value="">请选择...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">问题描述</label></div>
+                        <div class="weui-cell__bd">
+                            <textarea name="patProblems" id="patProblems" class="weui-textarea" rows="2" placeholder="请输入..."></textarea>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">解决方案</label></div>
+                        <div class="weui-cell__bd">
+                            <textarea name="patActions" id="patActions" class="weui-textarea" rows="2" placeholder="请输入..."></textarea>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">测试方法</label></div>
+                        <div class="weui-cell__bd">
+                            <textarea name="patTests" id="patTests" class="weui-textarea" placeholder="请输入..." rows="2" ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <!--物料明细-->
+                <div class="weui-cells__title">物料明细</div>
+                <div class="weui-cells">
+                    <a class="weui-cell weui-cell_access" href="javascript:;">
+                        <div class="show-data weui-cell__bd">
+                            <span style="color: #999">没有数据</span>
+                        </div>
+                        <div class="weui-cell__ft">
+                        </div>
+                    </a>
                 </div>
             </div>
     
@@ -88,15 +150,62 @@
                     </div>
                 </div>
             </div>
-
-            <div id="submitType" style="display: none">
-                <div class="weui-btn-area" style="margin-bottom: 20px">
-                    <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">
-                    </a>
+            
+            <div id="showTime" style="display: none">
+                <!--派工-->
+                <div class="weui-cells__title">预估解决时间*</div>
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <input id="estimatedCloseTime" name="estimatedCloseTime" class="weui-input" type="datetime-local"/>
+                        </div>
+                    </div>
                 </div>
             </div>
+            
+            <!--评价-->
+            <div id="showReView" style="display: none">
+                <div class="weui-cells__title">评分*</div>
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <div class="weui-rater">
+                                <a data-num="1" class="weui-rater-box"> <span class="weui-rater-inner">★</span> </a>
+                                <a data-num="2" class="weui-rater-box"> <span class="weui-rater-inner">★</span> </a>
+                                <a data-num="3" class="weui-rater-box"> <span class="weui-rater-inner">★</span> </a>
+                                <a data-num="4" class="weui-rater-box"> <span class="weui-rater-inner">★</span> </a>
+                                <a data-num="5" class="weui-rater-box"> <span class="weui-rater-inner">★</span> </a>
+                             </div>
+                            <div id="fen" class="weui_cells_title" style="float:right"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!--备注-->
+            <div id="showComment" style="display: none">
+                <div class="weui-cells__title">备注</div>
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <textarea name="description" id="description" class="weui-textarea" placeholder="请输入..." rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="submitType" style="display: none">
+                <div id="errorMsg" style="color:red;text-align: center;"></div>
+                <div class="weui-btn-area">
+                    <a class="weui-btn weui-btn_primary" href="javascript:" id="submit"></a>
+                    <a class="weui-btn weui-btn_primary" href="javascript:" id="otherSubmit"></a>
+                    <a class="weui-btn weui-btn_primary" href="javascript:" id="returnSubmit">回退</a>
+                </div>
+            </div>
+            <div style="height:20px;"></div>
 
         </div>
+        
     </div>
     <script type="text/javascript">
         $(function(){
@@ -128,15 +237,101 @@
                 app.initUserSelect('currentPersonId', 'getcurrentperson');
             }
             
+            if (pageManager.showTime) {
+                $('#showTime').show();
+                if ($('#estimatedCloseTime').val() === "") {
+                    $('#estimatedCloseTime').val(app.initWechatTime());
+                }
+            }
+            
             if (pageManager.showBtn) {
                 $('#submitType').show();
                 switch(pageManager.step) {
-                    case 2: $('#submit').html('派单');break;
+                    case 2: $('#submit').html('派单');$('#returnSubmit').hide();break;
                     case 3: $('#submit').html('领单');break;
-                    case 4: $('#submit').html('签到');break;
-                    case 5: $('#submit').html('关单');break;
-                    default: $('#submit').html('反馈');
+                    case 4: pageManager.signUp?$('#submit').html('签到'):$('#submit').hide();
+                            $('#otherSubmit').html('关单');break;
+                    case 5: $('#submit').html('确认关单');$('#returnSubmit').hide();break;
+                    default: $('#submit').html('反馈');$('#returnSubmit').hide();
                 }
+            }
+            
+            if (pageManager.showComment){
+                $('#showComment').show();
+            }
+            if (pageManager.showReView){
+                $('#showReView').show();
+            }
+            if (pageManager.showPat) {
+                $('#pat').show();
+                $('#issueDescribe').hide();
+                $('#showComment').hide();
+            }
+            
+            $(".weui-rater a").click(function(){
+                var num = $(this).data('num');
+                pageManager.feedbackRating = num;
+                $("#fen").html(num+'分');
+                $(".weui-rater a").removeClass('checked');
+                for(var i = 0; i < num;i++){
+                    $(".weui-rater a").eq(i).addClass('checked');
+                }
+            });
+            
+            $('#submit').click(function(){
+                $('#errorMsg').html('');
+                var data = colletionData();
+                var flag = validateData(data);
+                if (flag){
+                    return;
+                }
+                post(data);
+            });
+            $('#otherSubmit').click(function(){
+                post({woId: pageManager.woId, description: $('#description').val()});
+            });
+            $('#returnSubmit').click(function(){
+                var data = colletionReturnData();
+                post(data);
+            });
+            function post(data){
+                $.ajax({
+                    url: WEB_ROOT+'web/finishwo',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(ret) {
+                        if (ret === 'success') {
+                            if (pageManager.entryType === 'scan') {
+                                pageManager.init('ts_msg_success');
+                            } else {
+                                pageManager.go('');
+                            }
+                        } else {
+
+                        }
+                    },
+                    error: function(ret){
+                    }
+                });
+            }
+            function colletionData() {
+                switch(pageManager.step) {
+                    case 2: return {woId: pageManager.woId, currentPersonId: $('#currentPersonId').val()};
+                    case 3: return {woId: pageManager.woId, estimatedCloseTime: $('#estimatedCloseTime').val(), description: $('#description').val()};
+                    case 4: return {woId: pageManager.woId, description: $('#description').val()};
+                    case 6: return {woId: pageManager.woId, feedbackRating: pageManager.feedbackRating, description: $('#description').val() };
+                }
+            }
+            function validateData(data) {
+                switch(pageManager.step) {
+                    case 2: if (!data.currentPersonId){$('#errorMsg').html('维修人员 必填');} return !data.currentPersonId;
+                    case 3: if (!data.estimatedCloseTime){$('#errorMsg').html('预估解决时间 必填');} return !data.estimatedCloseTime;
+                    case 6: if(!data.feedbackRating){$('#errorMsg').html('请先评分');} return !data.feedbackRating;
+                }
+            }
+            function colletionReturnData() {
+                return {woId: pageManager.woId, description: $('#description').val()};
             }
             
         });

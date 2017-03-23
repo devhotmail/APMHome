@@ -58,8 +58,8 @@
                     function loadData(close) {
                         //fetch data from server    wolistdata is the restful url
                         $.get(WEB_ROOT+'web/workorder', {status: close}, function(ret) {
+                            var data = [];
                             if (ret && ret.length !== 0) {
-                                var data = [];
                                 $.each(ret, function(i, v){
                                     data.push({title:'工单编号: '+ v['id'], 
                                                ftitle: v['requestTime'], 
@@ -67,12 +67,9 @@
                                                        '工单状态：'+v['currentStepName'],
                                                        '紧急程序：'+v['casePriority']]});
                                 });
-                                //show the data list
-                                app.fullListItem('myReports', data);
-                            } else {
-                                $('#container').empty();
-                                $('#container').append($('#ts_no_data').html());
-                            }
+                            } 
+                            //show the data list
+                            app.fullListItem('myReports', data);
                         });
                     }
                     

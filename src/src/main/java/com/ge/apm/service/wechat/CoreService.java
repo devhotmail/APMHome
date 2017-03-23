@@ -60,7 +60,6 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import org.springframework.transaction.annotation.Transactional;
-import webapp.framework.util.TimeUtil;
 import webapp.framework.context.ExternalLoginHandler;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.service.UserContext;
@@ -300,9 +299,9 @@ public class CoreService {
         return list;
     }
     
-    public List<Map<String, Object>> getUsersWithAssetHeadOrStaffRole(HttpServletRequest request){
+    public List<Map<String, Object>> getUsersWithAssetStaffRole(HttpServletRequest request){
         List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
-        List<UserAccount> uas = uaaService.getUsersWithAssetHeadOrStaffRole(getLoginUser(request).getHospitalId());
+        List<UserAccount> uas = uaaService.getUsersWithAssetStaffRole(getLoginUser(request).getHospitalId());
         for(UserAccount ua :uas) {
             Map<String,Object> map = new HashMap<String, Object>();
             map.put("id", ua.getId());

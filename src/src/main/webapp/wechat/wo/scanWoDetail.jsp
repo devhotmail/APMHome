@@ -40,9 +40,17 @@
                     $.get(WEB_ROOT+"web/scanaction", {'qrCode': qrCode}, function(ret){
                         if (ret) {
                             pageManager.woId = ret.id;
-                            pageManager.showAssign = ret.currentStepId === 2;
-                            pageManager.showBtn = true;
+                            pageManager.showBtn = ret.currentStepId === 6?
+                                ret.requestorId ==ret.currentPersonId && ret.currentPersonId == '${userId}':
+                                        ret.currentPersonId == '${userId}';
+                            pageManager.showReView = ret.currentStepId === 6;
+                            pageManager.showAssign = ret.currentStepId === 2 && pageManager.showBtn;
                             pageManager.step = ret.currentStepId;
+                            pageManager.showTime = ret.currentStepId >= 3 && pageManager.showBtn && ret.currentStepId <5;
+                            pageManager.showComment = ret.currentStepId > 2;
+                            pageManager.signUp = ret.currentStepId === 4 && pageManager.showBtn && ret.pointStepNumber === 1;
+                            pageManager.entryType = 'scan';
+                            pageManager.showPat = ret.currentStepId === 5 && pageManager.showBtn;
                             pageManager.init('ts_wodetail');
                         } else {
                             pageManager.init('ts_msg_notfound');
@@ -54,7 +62,6 @@
         </script>
             
         <jsp:include page="woDetail.html"/>
-        <jsp:include page="woAction.html"/>
         <jsp:include page="tipsTemplate.html"/>
     </body>
 </html>

@@ -15,6 +15,7 @@
         <title>新增报修</title>
         <!-- 引入 WeUI -->
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
+        <link rel="stylesheet" href="${ctx}/resources/wechat/css/wo/woprogress.css"/>
         <script src="${ctx}/resources/wechat/js/utils/jquery-3.1.1.min.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/jweixin-1.0.0.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/wechatsdk.js"></script>
@@ -25,7 +26,40 @@
         </script>
     </head>
     <body style="background-color:#f8f8f8">
-        <div id="container" class="container">
+        <div id="container" class="container"></div>
+            
+        <script type="text/javascript">
+            $(function(){
+                wechatSDK.setAppId('${appId}');
+                wechatSDK.setSignature('${timestamp}', '${nonceStr}', '${signature}');
+                wechatSDK.init();
+
+                wechatSDK.scanQRCode(1, function(qrCode) {
+                        if (qrCode.length > 16) {
+                            qrCode = qrCode.substr(qrCode.length-16);
+                        }
+                        $.get(WEB_ROOT+"web/findassetinfo", {'qrCode': qrCode}, function(ret){
+                            if (ret && ret.assetId) {
+                                if (ret.view) {
+                                    pageManager.woId = ret.woId;
+                                    pageManager.init('ts_wodetail');
+                                } else {
+                                    pageManager.init('ts_scanAsset');
+                                }
+//                                $('#assetId').val(ret.assetId);
+//                                $('#assetName').html(ret.assetName);
+//                                $('#supplier').html(ret.supplier);
+//                                $('#assetGroup').html(ret.assetGroup);
+//                                $('#assetStatus').html(ret.assetStatus);
+                            } else {
+                                pageManager.init('ts_asset_notfound');
+                            }
+                        });
+                    });
+            });
+        </script>
+        
+        <script type="text/html" id="ts_scanAsset">
             <div class="page">
                 <div class="page__bd">
                     
@@ -113,127 +147,108 @@
                         </div>
                     </form>
 
-                    <div class="weui-btn-area" style="margin-bottom: 20px">
+                    <div class="weui-btn-area">
                         <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">提交</a>
                     </div>
+                    <div style="height:20px;"></div>
                 </div>
             </div>
-        </div>
-            
-        <script type="text/javascript">
-            $(function(){
-                wechatSDK.setAppId('${appId}');
-                wechatSDK.setSignature('${timestamp}', '${nonceStr}', '${signature}');
-                wechatSDK.init();
+            <script>
+                $(function(){
+                    //init casePriority
+                    app.initSelectData('casePriority', 'casePriority', '${casePriority}');
 
-                wechatSDK.scanQRCode(1, function(qrCode) {
-                        if (qrCode.length > 16) {
-                            qrCode = qrCode.substr(qrCode.length-16);
+                    var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+                        $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+                        $uploaderInput = $("#uploaderInput"),
+                        $uploaderFiles = $("#uploaderFiles");
+                    $uploaderInput.on("click", function(e){
+                        if($uploaderFiles.children().size() === 5){
+                            $('#iosDialog2').fadeIn(200);
+                            return false;
                         }
-                        $.get(WEB_ROOT+"web/findassetinfo", {'qrCode': qrCode}, function(ret){
-                            if (ret) {
-                                $('#assetId').val(ret.assetId);
-                                $('#assetName').html(ret.assetName);
-                                $('#supplier').html(ret.supplier);
-                                $('#assetGroup').html(ret.assetGroup);
-                                $('#assetStatus').html(ret.assetStatus);
+                        upload();
+                        return false;
+                    });
+                    $uploaderFiles.on("click", "li", function(){
+                        $galleryImg.attr("style", this.getAttribute("style"));
+                        $gallery.fadeIn(100);
+                    });
+                    $gallery.on("click", function(){
+                        $gallery.fadeOut(100);
+                    });
+                    $('#dialogs').on('click', '.weui-dialog__btn', function(){
+                        $(this).parents('.js_dialog').fadeOut(200);
+                    });
+                    $('.weui-gallery__del').on('click', function(){
+                        $uploaderFiles.children().remove();
+                    });
+
+                    //提交工单
+                    $('#submit').click(function(){
+                        if(!$('#assetId').val()){
+
+                        }
+                        var assetData = {};
+                        $.each(array, function(index, value){
+                            assetData[value.name] = value.value;
+                        });
+                        if(assetData['isInternal'] == 'on') {
+                            assetData['isInternal'] = true;
+                        } else {
+                            assetData['isInternal'] = false;
+                        }
+                        assetData['requestTime'] = assetData['requestTime'].replace('T', ' ');
+                        var flag = formValidate();
+                        if (!flag) return;
+                        var $loadingToast = $('#loadingToast');
+                        $.ajax({
+                            url: WEB_ROOT+'web/saveworkorder',
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify(assetData),
+                            success: function(ret) {
+                                if (ret == 'success') {
+                                    $loadingToast.fadeOut(100);
+                                    $('#container').empty();
+                                    $('#container').append($('#msg_success').html());
+                                } else {
+                                    $('#container').empty();
+                                    $('#container').append($('#msg_failed').html());
+                                }
                             }
                         });
+                        if ($loadingToast.css('display') != 'none') return;
+                        $loadingToast.fadeIn(100);
                     });
-                //init casePriority
-                app.initSelectData('casePriority', 'casePriority', '${casePriority}');
-                
-                var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
-                    $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
-                    $uploaderInput = $("#uploaderInput"),
-                    $uploaderFiles = $("#uploaderFiles");
-                $uploaderInput.on("click", function(e){
-                    if($uploaderFiles.children().size() === 5){
-                        $('#iosDialog2').fadeIn(200);
-                        return false;
-                    }
-                    upload();
-                    return false;
-                });
-                $uploaderFiles.on("click", "li", function(){
-                    $galleryImg.attr("style", this.getAttribute("style"));
-                    $gallery.fadeIn(100);
-                });
-                $gallery.on("click", function(){
-                    $gallery.fadeOut(100);
-                });
-                $('#dialogs').on('click', '.weui-dialog__btn', function(){
-                    $(this).parents('.js_dialog').fadeOut(200);
-                });
-                $('.weui-gallery__del').on('click', function(){
-                    $uploaderFiles.children().remove();
-                });
 
-                //提交工单
-                $('#submit').click(function(){
-                    if(!$('#assetId').val()){
-                        
+                    function formValidate() {
+
                     }
-                    var assetData = {};
-                    $.each(array, function(index, value){
-                        assetData[value.name] = value.value;
-                    });
-                    if(assetData['isInternal'] == 'on') {
-                        assetData['isInternal'] = true;
-                    } else {
-                        assetData['isInternal'] = false;
-                    }
-                    assetData['requestTime'] = assetData['requestTime'].replace('T', ' ');
-                    var flag = formValidate();
-                    if (!flag) return;
-                    var $loadingToast = $('#loadingToast');
-                    $.ajax({
-                        url: WEB_ROOT+'web/saveworkorder',
-                        type: 'post',
-                        contentType: 'application/json',
-                        data: JSON.stringify(assetData),
-                        success: function(ret) {
-                            if (ret == 'success') {
-                                $loadingToast.fadeOut(100);
-                                $('#container').empty();
-                                $('#container').append($('#msg_success').html());
-                            } else {
-                                $('#container').empty();
-                                $('#container').append($('#msg_failed').html());
+
+                    function upload() {
+                        wx.chooseImage({
+                            count: 5, // 默认9
+                            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                            success: function (res) {
+                                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                                $uploaderFiles.append($(tmpl.replace('#url#', localIds)));
+                                wx.uploadImage({
+                                    localId: localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
+                                    isShowProgressTips: 1, // 默认为1，显示进度提示
+                                    success: function (res) {
+                                        var serverId = res.serverId; // 返回图片的服务器端ID
+                                        $('#closeReason').val(serverId);
+                                    }
+                                });
                             }
-                        }
-                    });
-                    if ($loadingToast.css('display') != 'none') return;
-                    $loadingToast.fadeIn(100);
+                        });
+                    }
                 });
-
-                function formValidate() {
-                    
-                }
-
-                function upload() {
-                    wx.chooseImage({
-                        count: 5, // 默认9
-                        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                        success: function (res) {
-                            var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                            $uploaderFiles.append($(tmpl.replace('#url#', localIds)));
-                            wx.uploadImage({
-                                localId: localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
-                                isShowProgressTips: 1, // 默认为1，显示进度提示
-                                success: function (res) {
-                                    var serverId = res.serverId; // 返回图片的服务器端ID
-                                    $('#closeReason').val(serverId);
-                                }
-                            });
-                        }
-                    });
-                }
-
-            });
         </script>
         
+        <jsp:include page="woDetail.html"/>
         <jsp:include page="tipsTemplate.html"/>
     </body>
 </html>

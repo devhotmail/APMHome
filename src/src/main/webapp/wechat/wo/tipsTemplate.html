@@ -30,12 +30,44 @@
     </div>
 </script>
 
+<script type="text/html" id="ts_role_not_found">
+    <div class="page">
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h2 class="weui-msg__title">您权限不足，无法查看</h2>
+            </div>
+            <div class="weui-msg__opr-area">
+                <p class="weui-btn-area">
+                    <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_primary">返回菜单</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</script>
+
 <script type="text/html" id="ts_msg_notfound">
     <div class="page">
         <div class="weui-msg">
             <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
             <div class="weui-msg__text-area">
                 <h2 class="weui-msg__title">资产没有进行中的工单...</h2>
+            </div>
+            <div class="weui-msg__opr-area">
+                <p class="weui-btn-area">
+                    <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_primary">返回菜单</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="ts_asset_notfound">
+    <div class="page">
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h2 class="weui-msg__title">没有找到该资产，请确认二维码是否正确</h2>
             </div>
             <div class="weui-msg__opr-area">
                 <p class="weui-btn-area">
