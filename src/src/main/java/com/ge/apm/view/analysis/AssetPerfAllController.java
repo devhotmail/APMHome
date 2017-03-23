@@ -127,7 +127,7 @@ public class AssetPerfAllController implements Serializable, ServerEventInterfac
     private static final String DB3TL
             = "SELECT left_table.name, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
-            + "LEFT JOIN (SELECT total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
+            + "LEFT JOIN (SELECT total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE status = 2 AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY left_table.name "
             + "ORDER BY left_table.name ";

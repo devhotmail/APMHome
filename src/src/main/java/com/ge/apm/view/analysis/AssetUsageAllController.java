@@ -210,7 +210,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 	private static final String DTTL
             = "SELECT left_table.name, right_table.diff/3600 dt "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
-            + "LEFT JOIN (SELECT SUM(EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time)) diff, asset_id FROM work_order WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
+            + "LEFT JOIN (SELECT SUM(EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time)) diff, asset_id FROM work_order WHERE status = 2 AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "ORDER BY left_table.name ";
 
@@ -218,7 +218,7 @@ public class AssetUsageAllController implements Serializable, ServerEventInterfa
 	private static final String BENCHDTTL
             = "SELECT left_table.name, left_table.asset_group, right_table.diff/36/(date(:#endDate) - date(:#startDate))/24 dtbench "
             + "FROM (SELECT id, name, asset_group FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id) left_table "
-            + "LEFT JOIN (SELECT asset_group, SUM(EXTRACT(EPOCH FROM(confirmed_up_time-confirmed_down_time))) / COUNT(DISTINCT(asset_id)) diff FROM asset_info JOIN work_order ON asset_info.id = work_order.asset_id WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_group) right_table "
+            + "LEFT JOIN (SELECT asset_group, SUM(EXTRACT(EPOCH FROM(confirmed_up_time-confirmed_down_time))) / COUNT(DISTINCT(asset_id)) diff FROM asset_info JOIN work_order ON asset_info.id = work_order.asset_id WHERE status = 2 AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_group) right_table "
             + "ON left_table.asset_group = right_table.asset_group "
             + "ORDER BY left_table.name ";
 
