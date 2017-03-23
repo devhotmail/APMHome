@@ -8,9 +8,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Range;
 import com.google.common.primitives.Ints;
 import javaslang.Tuple;
-import javaslang.Tuple2;
-import javaslang.Tuple3;
 import javaslang.Tuple4;
+import javaslang.Tuple5;
+import javaslang.collection.List;
 import javaslang.control.Option;
 import org.javamoney.moneta.Money;
 import org.joda.time.DateTime;
@@ -56,67 +56,37 @@ public class ProfitApi {
     Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> months = Observable.from(commonService.findFields(user.getSiteId(), "month").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
-    Map<Integer, Tuple3<Integer, String, String>> hospitals = commonService.findHospitals();
     log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (!Range.closed(DateTime.now().getYear() - 3, DateTime.now().getYear()).contains(year)) {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "input data is not supported"));
-    } else if ("type".equals(groupBy) && Option.of(type).isEmpty() && Option.of(dept).isEmpty() && Option.of(month).isEmpty()) {
-      return serialize(request, groups, depts, months,
-        calcRoot(groups, profitService.findRevenuesGroupByType(user.getSiteId(), user.getHospitalId(), year),
-          profitService.findDeprecationsGroupByType(user.getSiteId(), user.getHospitalId(), year),
-          profitService.findCostsGroupByType(user.getSiteId(), user.getHospitalId(), year)),
-        year, groupBy, type, dept, month, limit, start);
-    } else if (Option.of(groupBy).isEmpty() && Option.of(type).isDefined() && Option.of(dept).isEmpty() && Option.of(month).isEmpty()) {
-      return serialize(request, groups, depts, months,
-        calcChild(profitService.findRevenuesByType(user.getSiteId(), user.getHospitalId(), year, type),
-          profitService.findDeprecationsByType(user.getSiteId(), user.getHospitalId(), year, type),
-          profitService.findCostsByType(user.getSiteId(), user.getHospitalId(), year, type)),
-        year, groupBy, type, dept, month, limit, start);
-    } else if ("dept".equals(groupBy) && Option.of(type).isEmpty() && Option.of(dept).isEmpty() && Option.of(month).isEmpty()) {
-      return serialize(request, groups, depts, months,
-        calcRoot(depts, profitService.findRevenuesGroupByDept(user.getSiteId(), user.getHospitalId(), year),
-          profitService.findDeprecationsGroupByDept(user.getSiteId(), user.getHospitalId(), year),
-          profitService.findCostsGroupByDept(user.getSiteId(), user.getHospitalId(), year)),
-        year, groupBy, type, dept, month, limit, start);
-    } else if (Option.of(groupBy).isEmpty() && Option.of(type).isEmpty() && Option.of(dept).isDefined() && Option.of(month).isEmpty()) {
-      return serialize(request, groups, depts, months,
-        calcChild(profitService.findRevenuesByDept(user.getSiteId(), user.getHospitalId(), year, dept),
-          profitService.findDeprecationsByDept(user.getSiteId(), user.getHospitalId(), year, dept),
-          profitService.findCostsByDept(user.getSiteId(), user.getHospitalId(), year, dept)),
-        year, groupBy, type, dept, month, limit, start);
-    } else if ("month".equals(groupBy) && Option.of(type).isEmpty() && Option.of(dept).isEmpty() && Option.of(month).isEmpty()) {
-      return serialize(request, groups, depts, months,
-        calcRoot(months, profitService.findRevenuesGroupByMonth(user.getSiteId(), user.getHospitalId(), year),
-          profitService.findDeprecationsGroupByMonth(user.getSiteId(), user.getHospitalId(), year),
-          profitService.findCostsGroupByMonth(user.getSiteId(), user.getHospitalId(), year)),
-        year, groupBy, type, dept, month, limit, start);
-    } else if (Option.of(groupBy).isEmpty() && Option.of(type).isEmpty() && Option.of(dept).isEmpty() && Option.of(month).isDefined()) {
-      return serialize(request, groups, depts, months,
-        calcChild(profitService.findRevenuesByMonth(user.getSiteId(), user.getHospitalId(), year, month),
-          profitService.findDeprecationsByMonth(user.getSiteId(), user.getHospitalId(), year, month),
-          profitService.findCostsByMonth(user.getSiteId(), user.getHospitalId(), year, month)),
-        year, groupBy, type, dept, month, limit, start);
     } else if (Option.of(groupBy).isEmpty() && Option.of(type).isEmpty() && Option.of(dept).isEmpty() && Option.of(month).isEmpty()) {
       return serialize(request, groups, depts, months,
-        calcChild(profitService.findRevenues(user.getSiteId(), user.getHospitalId(), year),
-          profitService.findDeprecations(user.getSiteId(), user.getHospitalId(), year),
-          profitService.findCosts(user.getSiteId(), user.getHospitalId(), year)),
+        calcChild(profitService.findRvnCstByYear(user.getSiteId(), user.getHospitalId(), year)),
+        year, groupBy, type, dept, month, limit, start);
+    } else if (Option.of(groupBy).isDefined() && Option.of(type).isEmpty() && Option.of(dept).isEmpty() && Option.of(month).isEmpty()) {
+      return serialize(request, groups, depts, months,
+        calcRoot(Option.when("type".equals(groupBy), groups).getOrElse(Option.when("dept".equals(groupBy), depts).getOrElse(months)),
+          profitService.findRvnCstGroupBy(user.getSiteId(), user.getHospitalId(), year, groupBy)),
+        year, groupBy, type, dept, month, limit, start);
+    } else if (Option.of(groupBy).isEmpty() && List.of(dept, type, month).count(v -> Option.of(v).isDefined()) == 1) {
+      return serialize(request, groups, depts, months,
+        calcChild(profitService.findRvnCstForEachType(user.getSiteId(), user.getHospitalId(), year,
+          Option.when(Option.of(type).isDefined(), "type").getOrElse(Option.when(Option.of(dept).isDefined(), "dept").getOrElse("month")),
+          Option.of(dept).orElse(Option.of(type)).getOrElse(month))),
         year, groupBy, type, dept, month, limit, start);
     } else {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "input data is not supported"));
     }
   }
 
-  private Observable<Tuple4<Integer, String, Money, Money>> calcRoot(Map<Integer, String> map, Observable<Tuple2<Integer, Money>> revenues, Observable<Tuple2<Integer, Money>> deprecations, Observable<Tuple2<Integer, Money>> costs) {
-    return Observable.zip(revenues, deprecations, costs, (revenue, deprecation, cost) ->
-      Tuple.of(revenue._1, map.get(revenue._1), revenue._2, revenue._2.subtract(deprecation._2).subtract(cost._2))
-    ).filter(t -> Option.of(t._2).isDefined()).sorted((l, r) -> r._3.getNumber().intValue() - l._3.getNumber().intValue()).cache();
+  private Observable<Tuple4<Integer, String, Money, Money>> calcRoot(Map<Integer, String> map, Observable<Tuple4<Integer, Money, Money, Money>> rvnCst) {
+    return rvnCst.map(v -> Tuple.of(v._1, map.get(v._1), v._2, v._2.subtract(v._3).subtract(v._4)))
+      .filter(t -> Option.of(t._2).isDefined()).sorted((l, r) -> r._3.getNumber().intValue() - l._3.getNumber().intValue()).cache();
   }
 
-  private Observable<Tuple4<Integer, String, Money, Money>> calcChild(Observable<Tuple3<Integer, String, Money>> revenues, Observable<Tuple3<Integer, String, Money>> deprecations, Observable<Tuple3<Integer, String, Money>> costs) {
-    return Observable.zip(revenues, deprecations, costs, (revenue, deprecation, cost) ->
-      Tuple.of(revenue._1, revenue._2, revenue._3, revenue._3.subtract(deprecation._3).subtract(cost._3))
-    ).sorted((l, r) -> r._3.getNumber().intValue() - l._3.getNumber().intValue()).cache();
+  private Observable<Tuple4<Integer, String, Money, Money>> calcChild(Observable<Tuple5<Integer, String, Money, Money, Money>> rvnCst) {
+    return rvnCst.map(v -> Tuple.of(v._1, v._2, v._3, v._3.subtract(v._4).subtract(v._5)))
+      .filter(t -> Option.of(t._2).isDefined()).sorted((l, r) -> r._3.getNumber().intValue() - l._3.getNumber().intValue()).cache();
   }
 
   private Iterable<ImmutableMap<String, Object>> mapItems(HttpServletRequest request, Observable<Tuple4<Integer, String, Money, Money>> children, int year, String groupBy, Integer type, Integer dept, Integer month, Integer limit, Integer start) {
@@ -147,8 +117,8 @@ public class ProfitApi {
       .put("root", new ImmutableMap.Builder<String, Object>()
         .put("name", Option.of(groupBy).map(v -> "total")
           .orElse(Option.of(type).flatMap(v -> Option.of(groups.get(v))))
-          .orElse(Option.of(dept).flatMap(v -> Option.of(groups.get(v))))
-          .orElse(Option.of(month).flatMap(v -> Option.of(groups.get(v))))
+          .orElse(Option.of(dept).flatMap(v -> Option.of(depts.get(v))))
+          .orElse(Option.of(month).flatMap(v -> Option.of(months.get(v))))
           .getOrElse("asset"))
         .put("type", Option.of(groupBy).orElse(Option.of(type).map(i -> "type")).orElse(Option.of(dept).map(i -> "dept")).orElse(Option.of(month).map(i -> "month")).getOrElse("asset"))
         .put("revenue", ProfitService.sumRevenue(children))
