@@ -41,17 +41,11 @@
     <routeContext id="route_main" xmlns="http://camel.apache.org/schema/spring">
         <route id="testWxMessage">
             <from uri="servlet:///testMsg?servletName=MyServlet"/>
-            <removeHeaders pattern="Camel*"/>
-            <log message="---- headers: ${headers}" loggingLevel="ERROR"/>
             <to uri="direct:wxSendMessage"/>
         </route>
-        <route id="wxSendMessage">
+        <route id="wxSendMessage"  errorHandlerRef="autoRetryErrorHandler">
             <from uri="direct:wxSendMessage"/>
-            <wireTap uri="direct:asyncWxSendMessage"/>
-        </route>
-        <route id="asyncWxSendMessage" errorHandlerRef="autoRetryErrorHandler">
-            <from uri="direct:asyncWxSendMessage"/>
-            <to uri="bean:coreService?method=doSendWxTemplateMessage"/>
+            <wireTap uri="bean:coreService?method=doSendWxTemplateMessage"/>
         </route>
 
         <route>
