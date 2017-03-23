@@ -37,6 +37,15 @@ public class WorkOrder implements Serializable {
     @Size(min = 1, max = 64)
     @Column(name = "asset_name")
     private String assetName;
+
+    @Size(min = 1, max = 256)
+    @Column(name = "problems")
+    private String problems;
+
+    @Column(name = "estimated_close_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date estimatedCloseTime;
 //    @Basic(optional = false)
 //    @NotNull
 //    @Size(min = 1, max = 32)
@@ -175,6 +184,22 @@ public class WorkOrder implements Serializable {
     private String patTests;
     
     public WorkOrder() {
+    }
+
+    public String getProblems() {
+        return problems;
+    }
+
+    public void setProblems(String problems) {
+        this.problems = problems;
+    }
+
+    public Date getEstimatedCloseTime() {
+        return estimatedCloseTime;
+    }
+
+    public void setEstimatedCloseTime(Date estimatedCloseTime) {
+        this.estimatedCloseTime = estimatedCloseTime;
     }
 
     public Integer getHospitalId() {

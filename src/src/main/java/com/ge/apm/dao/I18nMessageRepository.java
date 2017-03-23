@@ -12,4 +12,6 @@ public interface I18nMessageRepository extends GenericRepository<I18nMessage> {
     public List<I18nMessage> getByMsgTypeAndSiteIdAndMsgKey(String msgType, Integer siteId, String msgKey);
     
     public List<I18nMessage> getByMsgType(String msgType);
+
+    public I18nMessage getByMsgTypeAndMsgKey(String msgType, String msgKey);
 }

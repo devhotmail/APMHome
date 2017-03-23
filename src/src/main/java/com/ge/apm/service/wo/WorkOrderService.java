@@ -1,11 +1,9 @@
 package com.ge.apm.service.wo;
 
-import com.ge.apm.dao.SiteInfoRepository;
-import com.ge.apm.dao.UserAccountRepository;
-import com.ge.apm.dao.WorkOrderRepository;
-import com.ge.apm.dao.WorkOrderStepRepository;
+import com.ge.apm.dao.*;
 import com.ge.apm.domain.*;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.view.sysutil.UserContextService;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
@@ -20,9 +18,7 @@ import webapp.framework.web.WebUtil;
 import webapp.framework.web.service.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -81,28 +77,108 @@ public class WorkOrderService {
     }
     @Autowired
     WorkOrderStepRepository workOrderStepRepository;
-
+    @Autowired
+    I18nMessageRepository i18nMessageRepository;
     @Transactional
-    public  void assignWorkOrder(Integer woId,Integer userId,String desc) throws RuntimeException{
-        int stepId=3; //分派工单后 状态应该设置为3-接单
+    public  void assignWorkOrder(HashMap<String,Object>hm) throws RuntimeException{
+        Integer woId= (Integer)hm.get("woId");
+        Date date = (Date)hm.get("strDate");
+        String desc =(String)hm.get("desc");
+        int assigneeId = Integer.parseInt(String.valueOf(hm.get("assigneeId")));
+
         WorkOrder wo = workOrderRepository.getById(woId);
+        int currentStepId = wo.getCurrentStepId();
+
         if(wo==null){
             System.out.println("xxxxxx------"+"数据库中没有该工单");
         }
+
         //1 update work order table
-        UserAccount user = userDao.getById(userId);
-        workOrderRepository.updateWorkderOrder(woId,userId,user.getName(),stepId);
-        //2 insert  work order step
-        WorkOrderStep wds = new WorkOrderStep();
-        wds.setSiteId(wo.getSiteId());
-        wds.setStepId(stepId);
-        wds.setStepName("stepname");
-        wds.setOwnerId(userId);
+        UserAccount user = userDao.getById(assigneeId);
+        wo.setCurrentPersonId(user.getId());
+        wo.setCurrentPersonName(user.getName());
+        wo.setCurrentStepId(currentStepId+1);
+        workOrderRepository.save(wo);
+        //2.1  update endtime in wos for last step workorder
+        WorkOrderStep currentStep = workOrderStepRepository.getByWorkOrderIdAndStepId(woId,currentStepId).get(0);
+        currentStep.setEndTime(new Date());
+        workOrderStepRepository.save(currentStep);
+        //2.2 create next work order step
+        WorkOrderStep wds =  newWorkOrderStep(wo);//new WorkOrderStep();
+        wds.setOwnerId(user.getId());
         wds.setOwnerName(user.getName());
-        wds.setWorkOrderId(wo.getId());
         wds.setDescription(desc);
-        wds.setStartTime(new Date());
         workOrderStepRepository.save(wds);
+    }
+
+
+    @Transactional
+    public void takeWorkOrder(HashMap<String,Object> hm)throws Exception{
+        //update work order ->  current step id ,estimatedTime
+        Integer woId= (Integer)hm.get("woId");
+        WorkOrder wo = workOrderRepository.getById(woId);
+        Date estimatedCloseTime = (Date)hm.get("estimatedCloseTime");
+        wo.setEstimatedCloseTime(estimatedCloseTime);
+        String desc =(String)hm.get("desc");
+        int currentStepId = wo.getCurrentStepId();
+        wo.setCurrentStepId(currentStepId+1);
+        String stepName = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps", String.valueOf(currentStepId+1)).getValueZh();
+        wo.setCurrentStepName(stepName);
+        workOrderRepository.save(wo);
+
+        //create new work-order-step
+        WorkOrderStep wds = new WorkOrderStep();
+        wds = newWorkOrderStep(wo);
+        wds.setDescription(desc);
+
+        workOrderStepRepository.save(wds);
+
+    }
+    @Transactional
+    public void maintain(HashMap<String,Object> hm){
+        //update work order->  current step id
+        Integer woId= (Integer)hm.get("woId");
+        WorkOrder wo = workOrderRepository.getById(woId);
+
+        workOrderUpdate(wo);
+        //create work-order-step
+        WorkOrderStep wds = new WorkOrderStep();
+        wds = newWorkOrderStep(wo);
+        workOrderStepRepository.save(wds);
+        //update end time for work-order-step
+        updateEndTime(wo);
+    }
+    @Transactional
+    private void workOrderUpdate(WorkOrder wo){
+        int currentStepId = wo.getCurrentStepId();
+        wo.setCurrentStepId(currentStepId+1);
+        String stepName = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps", String.valueOf(currentStepId+1)).getValueZh();
+        wo.setCurrentStepName(stepName);
+        workOrderRepository.save(wo);
+    }
+
+    private WorkOrderStep newWorkOrderStep(WorkOrder wo){
+        UserAccount currentUserAccount = UserContextService.getCurrentUserAccount();
+        WorkOrderStep wds = new WorkOrderStep();
+        wds.setOwnerId(currentUserAccount.getId());
+        wds.setOwnerName(currentUserAccount.getName());
+        wds.setStartTime(new Date());
+
+        wds.setWorkOrderId(wo.getId());
+        wds.setSiteId(wo.getSiteId());
+
+        int currentStepId = wo.getCurrentStepId();
+        wo.setCurrentStepId(currentStepId+1);
+        String stepName = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps", String.valueOf(currentStepId+1)).getValueZh();
+        wo.setCurrentStepName(stepName);
+        return wds;
+    }
+    @Transactional
+    private void updateEndTime(WorkOrder wo){
+        //2.1  update endtime in wos for last step workorder
+        WorkOrderStep workOrderStep = workOrderStepRepository.getByWorkOrderIdAndStepId(wo.getId(),wo.getCurrentStepId()).get(0);
+        workOrderStep.setEndTime(new Date());
+        workOrderStepRepository.save(workOrderStep);
     }
 
     @Transactional
@@ -166,6 +242,7 @@ public class WorkOrderService {
         neWorkOrder.setRequestReason("reason");
         neWorkOrder.setCasePriority(1);
         neWorkOrder.setAssetId(assetId);
+        neWorkOrder.setStatus(1);
 
 
         return neWorkOrder;
