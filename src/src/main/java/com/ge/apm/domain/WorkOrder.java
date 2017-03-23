@@ -37,7 +37,16 @@ public class WorkOrder implements Serializable {
     @Size(min = 1, max = 64)
     @Column(name = "asset_name")
     private String assetName;
-//    @Basic(optional = false)
+
+    @Size(min = 1, max = 256)
+    @Column(name = "problems")
+    private String problems;
+
+    @Column(name = "estimated_close_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date estimatedCloseTime;
+    //    @Basic(optional = false)
 //    @NotNull
 //    @Size(min = 1, max = 32)
 //    @Column(name = "name")
@@ -72,12 +81,17 @@ public class WorkOrder implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date requestTime;
+
+    @Column(name = "close_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date closeTime;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 256)
     @Column(name = "request_reason")
     private String requestReason;
-//    @Column(name = "case_owner_id")
+    //    @Column(name = "case_owner_id")
 //    private Integer caseOwnerId;
 //    @Size(max = 16)
 //    @Column(name = "case_owner_name")
@@ -90,7 +104,7 @@ public class WorkOrder implements Serializable {
     @NotNull
     @Column(name = "case_priority")
     private Integer casePriority;
-//    @Basic(optional = false)
+    //    @Basic(optional = false)
 //    @NotNull
 //    @Column(name = "is_internal")
 //    private boolean isInternal;
@@ -110,7 +124,7 @@ public class WorkOrder implements Serializable {
     @Size(min = 1, max = 16)
     @Column(name = "current_step_name")
     private String currentStepName;
-//    @Basic(optional = false)
+    //    @Basic(optional = false)
 //    @NotNull
 //    @Column(name = "is_closed")
 //    private boolean isClosed;
@@ -151,7 +165,7 @@ public class WorkOrder implements Serializable {
     private Integer responseTime; //in minutes
     @Column(name = "repaire_time")
     private Integer repaireTime; //in minutes
-    
+
     @Column(name = "status")
     private Integer status;
     @Column(name = "int_ext_type")
@@ -168,8 +182,24 @@ public class WorkOrder implements Serializable {
     private String patActions;
     @Column(name = "pat_tests")
     private String patTests;
-    
+
     public WorkOrder() {
+    }
+
+    public String getProblems() {
+        return problems;
+    }
+
+    public void setProblems(String problems) {
+        this.problems = problems;
+    }
+
+    public Date getEstimatedCloseTime() {
+        return estimatedCloseTime;
+    }
+
+    public void setEstimatedCloseTime(Date estimatedCloseTime) {
+        this.estimatedCloseTime = estimatedCloseTime;
     }
 
     public Integer getHospitalId() {
@@ -334,7 +364,7 @@ public class WorkOrder implements Serializable {
 
     public String getRequestReasonInShort(){
         if(this.requestReason==null) return null;
-        
+
         if(this.requestReason.length()<=20)
             return this.requestReason;
         else
@@ -444,18 +474,15 @@ public class WorkOrder implements Serializable {
     public void setPatTests(String patTests) {
         this.patTests = patTests;
     }
-    
-    @Transient
-    private int pointStepNumber;
-    public void setPointStepNumber(int pointStepNumber) {
-        this.pointStepNumber = pointStepNumber;
+
+    public Date getCloseTime() {
+        return closeTime;
     }
-    public int getPointStepNumber(){
-        return this.pointStepNumber;
+
+    public void setCloseTime(Date closeTime) {
+        this.closeTime = closeTime;
     }
-    
-    
-    
+
     @Override
     public int hashCode() {
         Integer hash = 0;
@@ -480,5 +507,5 @@ public class WorkOrder implements Serializable {
     public String toString() {
         return "com.ge.apm.domain.WorkOrder[ id=" + id + " ]";
     }
-    
+
 }

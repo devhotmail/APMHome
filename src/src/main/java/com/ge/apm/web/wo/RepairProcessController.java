@@ -2,7 +2,9 @@ package com.ge.apm.web.wo;
 
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.domain.WorkOrder;
+import com.ge.apm.domain.WorkOrderPoJo;
 import com.ge.apm.service.wechat.CoreService;
+import com.ge.apm.service.wo.WorkOrderService;
 import com.ge.apm.view.sysutil.FieldValueMessageController;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
@@ -10,8 +12,7 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import webapp.framework.web.WebUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +28,53 @@ public class RepairProcessController {
     protected WxMpConfigStorage configStorage;
     @Autowired
     protected WxMpService wxMpService;
-     @Autowired
-     protected CoreService coreService;
+    @Autowired
+    protected CoreService coreService;
+    @Autowired
+    protected WorkOrderService workOrderService;
     WorkOrderRepository workOrderDao = WebUtil.getBean(WorkOrderRepository.class);
+    /*开单 */
+    @RequestMapping(value = "/workorderCreate",method = RequestMethod.POST)
+    @ResponseBody
+    public void createWorkOrder(@PathVariable Integer assetId) throws Exception
+    {
+        workOrderService.workWorderCreate(assetId);
+
+    }
+
+    /*派单*/
+    @RequestMapping(value = "/workorderAssign",method = RequestMethod.PUT)
+    @ResponseBody
+    public void assignWorkOrder(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    {
+        workOrderService.assignWorkOrder(wopo);
+
+    }
+
+    @RequestMapping(value = "/workorderSign")
+    @ResponseBody
+    public void signWorkOrder(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    {
+        workOrderService.signWorkOrder(wopo);
+
+    }
+    @RequestMapping(value = "/workorderRepair")
+    @ResponseBody
+    public void repair(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    {
+        workOrderService.takeWorkOrder(wopo);
+
+    }
+
+    @RequestMapping(value = "/workorderClose")
+    @ResponseBody
+    public void takeWorkOrder(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    {
+        workOrderService.closeWorkOrder(wopo);
+
+    }
+
+
 
     @RequestMapping(value = "repairprocess")
     public String repairProcess(HttpServletResponse response,
