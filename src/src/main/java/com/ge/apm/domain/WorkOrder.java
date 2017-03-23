@@ -482,7 +482,14 @@ public class WorkOrder implements Serializable {
     public void setCloseTime(Date closeTime) {
         this.closeTime = closeTime;
     }
-
+    @Transient
+    private int pointStepNumber;
+    public void setPointStepNumber(int pointStepNumber) {
+        this.pointStepNumber = pointStepNumber;
+    }
+    public int getPointStepNumber(){
+        return this.pointStepNumber;
+    }
     @Override
     public int hashCode() {
         Integer hash = 0;
