@@ -64,6 +64,10 @@ import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.apache.camel.Headers;
 import org.springframework.beans.factory.annotation.Value;
+<<<<<<< HEAD
+=======
+import org.springframework.context.annotation.Configuration;
+>>>>>>> wx send message: web url can be read from environment or conf file
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.broker.SiBroker;
 import webapp.framework.context.ExternalLoginHandler;
@@ -75,6 +79,7 @@ import webapp.framework.web.service.UserContext;
  * Email:liumingbo2008@gmail.com
  */
 @Service
+@Configuration
 public class CoreService {
 
     @Autowired
@@ -100,7 +105,11 @@ public class CoreService {
     @PostConstruct
     public void init() {
         this.refreshRouter();
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> wx send message: web url can be read from environment or conf file
         if (!Strings.isNullOrEmpty(System.getenv("webContextUrl"))) {
             webContextUrl = System.getenv("webContextUrl");
         }
@@ -118,11 +127,9 @@ public class CoreService {
         httpget.setConfig(requestConfig);
 
         CloseableHttpResponse response = httpclient.execute(httpget);
-        System.out.println("StatusCode -> " + response.getStatusLine().getStatusCode());
 
         HttpEntity entity = response.getEntity();
         String jsonStr = EntityUtils.toString(entity);
-        System.out.println(jsonStr);
 
         httpget.releaseConnection();
     }
@@ -134,11 +141,9 @@ public class CoreService {
         httppost.setEntity(new UrlEncodedFormEntity(params, StandardCharsets.UTF_8));
 
         CloseableHttpResponse response = httpclient.execute(httppost);
-        System.out.println(response.toString());
 
         HttpEntity entity = response.getEntity();
         String jsonStr = EntityUtils.toString(entity, "utf-8");
-        System.out.println(jsonStr);
 
         httppost.releaseConnection();
     }
@@ -387,16 +392,9 @@ public class CoreService {
         Supplier s = supplierDao.findById(id);
         return s == null ? null : s.getName();
     }
-    
-    private static String serverName = null;
-    private String getServerName(){
-        if(serverName==null){
-            //read servername from DB
-            serverName = "/";
-        }
 
-        return serverName;
-    }
+    @Value("#{wxProperties.webContextUrl}")
+    private String webContextUrl;
     
     @Value("#{wxProperties.webContextUrl}")
     private String webContextUrl;
@@ -426,11 +424,18 @@ public class CoreService {
         WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
                 .toUser(params.get("userWeChatId").toString()).templateId(params.get("wxTemplateId").toString()).build();
 
+<<<<<<< HEAD
         String textColor = "#000000";
         templateMessage.addWxMpTemplateData( new WxMpTemplateData("first", params.get("msgTitle").toString(),textColor));
         templateMessage.addWxMpTemplateData( new WxMpTemplateData("performance", params.get("msgBrief").toString(),textColor));
         templateMessage.addWxMpTemplateData( new WxMpTemplateData("remark", params.get("msgDetails").toString(),textColor));
         templateMessage.addWxMpTemplateData( new WxMpTemplateData("time", params.get("msgDateTime").toString(),textColor));
+=======
+        templateMessage.addWxMpTemplateData( new WxMpTemplateData("first", params.get("msgTitle").toString(),"#FF00FF"));
+        templateMessage.addWxMpTemplateData( new WxMpTemplateData("performance", params.get("msgBrief").toString(),"#FF00FF"));
+        templateMessage.addWxMpTemplateData( new WxMpTemplateData("remark", params.get("msgDetails").toString(),"#FF00FF"));
+        templateMessage.addWxMpTemplateData( new WxMpTemplateData("time", params.get("msgDateTime").toString(),"#FF00FF"));
+>>>>>>> wx send message: web url can be read from environment or conf file
         Object linkUrl = params.get("linkUrl");
         if( linkUrl!=null && !"".equals(linkUrl) )
             templateMessage.setUrl(wxMpService.oauth2buildAuthorizationUrl(webContextUrl+params.get("linkUrl").toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
