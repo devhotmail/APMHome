@@ -280,13 +280,6 @@
           .then((function(data) {
             this.data = this.conclude(data);
           }).bind(this));
-
-          return fetch('mock/asset-procurement.json' + '?groupby=' + groupby)
-          .then(function(res) {
-            return res.json();
-          }).then((function(data) {
-            this.data = this.conclude(data);
-          }).bind(this));
         },
         redraw: function() {
           d3.select('#svg > *').remove();
