@@ -161,9 +161,33 @@ public class WorkflowConfig implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "com.ge.apm.domain.WorkflowConfig[ id=" + id + " ]";
-    }
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("WorkflowConfig [id=");
+		builder.append(id);
+		builder.append(", siteId=");
+		builder.append(siteId);
+		builder.append(", hospitalId=");
+		builder.append(hospitalId);
+		builder.append(", dispatchMode=");
+		builder.append(dispatchMode);
+		builder.append(", dispatchUserId=");
+		builder.append(dispatchUserId);
+		builder.append(", dispatchUserName=");
+		builder.append(dispatchUserName);
+		builder.append(", timeoutDispatch=");
+		builder.append(timeoutDispatch);
+		builder.append(", timeoutAccept=");
+		builder.append(timeoutAccept);
+		builder.append(", timeoutRepair=");
+		builder.append(timeoutRepair);
+		builder.append(", timeoutClose=");
+		builder.append(timeoutClose);
+		builder.append("]");
+		return builder.toString();
+	}
+
+
     
 }

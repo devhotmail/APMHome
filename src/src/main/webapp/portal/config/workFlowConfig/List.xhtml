@@ -24,24 +24,18 @@
 
                     <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
                     <p:ajax event="filter" listener="#{workflowConfigController.onFilter}" update="createButton editButton viewButton deleteButton"/>
-                    
-<!--                     <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.id}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.siteId}"/>
-                    </p:column>
-                    <p:column headerText="#{msg.hospitalId}" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.hospitalId}"/>
-                    </p:column> -->
+
                     <p:column headerText="#{msg.dispatchMode}" sortBy="#{item.dispatchMode}" filterBy="#{item.dispatchMode}" filterMatchMode="EQ">
                         <h:outputText value="#{item.dispatchMode}"/>
                     </p:column>
-<!--                     <p:column headerText="#{msg.dispatchUserId}" sortBy="#{item.dispatchUserId}" filterBy="#{item.dispatchUserId}" filterMatchMode="EQ">
-                        <h:outputText value="#{item.dispatchUserId}"/>
-                    </p:column> -->
                     <p:column headerText="#{msg.dispatchUserName}" sortBy="#{item.dispatchUserName}" filterBy="#{item.dispatchUserName}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.dispatchUserName}"/>
+                        <f:facet name="filter">
+                               <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                   <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                   <f:selectItems value="#{pmOrderController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                               </p:selectOneMenu>
+                           	</f:facet>
                     </p:column>
                     <p:column headerText="#{msg.timeoutDispatch}" sortBy="#{item.timeoutDispatch}" filterBy="#{item.timeoutDispatch}" filterMatchMode="EQ">
                         <h:outputText value="#{item.timeoutDispatch}"/>

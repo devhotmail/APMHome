@@ -17,6 +17,7 @@ import com.ge.apm.service.wo.WorkOrderService;
 import java.io.File;
 import java.io.FileInputStream;
 import com.ge.apm.web.wechat.WeChatCoreController;
+import com.google.common.base.Strings;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
@@ -59,7 +60,13 @@ import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
+import org.apache.camel.Headers;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
+import webapp.framework.broker.SiBroker;
 import webapp.framework.context.ExternalLoginHandler;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.service.UserContext;
@@ -69,6 +76,7 @@ import webapp.framework.web.service.UserContext;
  * Email:liumingbo2008@gmail.com
  */
 @Service
+@Configuration
 public class CoreService {
 
     @Autowired
@@ -94,6 +102,9 @@ public class CoreService {
     @PostConstruct
     public void init() {
         this.refreshRouter();
+        if (!Strings.isNullOrEmpty(System.getenv("webContextUrl"))) {
+            webContextUrl = System.getenv("webContextUrl");
+        }
     }
 
     public void requestGet(String urlWithParams) throws IOException {
@@ -108,11 +119,9 @@ public class CoreService {
         httpget.setConfig(requestConfig);
 
         CloseableHttpResponse response = httpclient.execute(httpget);
-        System.out.println("StatusCode -> " + response.getStatusLine().getStatusCode());
 
         HttpEntity entity = response.getEntity();
         String jsonStr = EntityUtils.toString(entity);
-        System.out.println(jsonStr);
 
         httpget.releaseConnection();
     }
@@ -124,11 +133,9 @@ public class CoreService {
         httppost.setEntity(new UrlEncodedFormEntity(params, StandardCharsets.UTF_8));
 
         CloseableHttpResponse response = httpclient.execute(httppost);
-        System.out.println(response.toString());
 
         HttpEntity entity = response.getEntity();
         String jsonStr = EntityUtils.toString(entity, "utf-8");
-        System.out.println(jsonStr);
 
         httppost.releaseConnection();
     }
@@ -377,5 +384,47 @@ public class CoreService {
         Supplier s = supplierDao.findById(id);
         return s == null ? null : s.getName();
     }
+
+    @Value("#{wxProperties.webContextUrl}")
+    private String webContextUrl;
     
+    public void sendWxTemplateMessage(String userWeChatId, String wxTemplateId, String msgTitle, String msgBrief, String msgDetails, String msgDateTime, String linkUrl){
+        HashMap<String, Object> params = new HashMap<>();
+
+        params.put("userWeChatId", userWeChatId);
+        params.put("wxTemplateId", wxTemplateId);
+        params.put("msgTitle", msgTitle);
+        params.put("msgBrief", msgBrief);
+        params.put("msgDetails", msgDetails);
+        params.put("msgDateTime", msgDateTime);
+
+        if(linkUrl==null || "".equals(linkUrl.trim())) 
+            linkUrl = null;
+        else
+            linkUrl = linkUrl.trim();
+        
+        params.put("linkUrl", linkUrl);
+
+        //let camel route call doSendWxTemplateMessage in async mode and retry 3 times
+        SiBroker.sendMessageWithHeaders("direct:wxSendMessage", null, params);
+    }
+    
+    public void doSendWxTemplateMessage(@Headers Map<String, Object> params) throws WxErrorException{
+        WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+                .toUser(params.get("userWeChatId").toString()).templateId(params.get("wxTemplateId").toString()).build();
+
+        String textColor = "#000000";
+        templateMessage.addWxMpTemplateData( new WxMpTemplateData("first", params.get("msgTitle").toString(),textColor));
+        templateMessage.addWxMpTemplateData( new WxMpTemplateData("performance", params.get("msgBrief").toString(),textColor));
+        templateMessage.addWxMpTemplateData( new WxMpTemplateData("remark", params.get("msgDetails").toString(),textColor));
+        templateMessage.addWxMpTemplateData( new WxMpTemplateData("time", params.get("msgDateTime").toString(),textColor));
+
+        Object linkUrl = params.get("linkUrl");
+        if( linkUrl!=null && !"".equals(linkUrl) )
+            templateMessage.setUrl(wxMpService.oauth2buildAuthorizationUrl(webContextUrl+params.get("linkUrl").toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        else
+            templateMessage.setUrl("");
+        
+        wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+    }    
 }

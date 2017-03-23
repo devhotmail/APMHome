@@ -11,17 +11,17 @@
         <p:dialog id="WorkflowConfigViewDlg" widgetVar="WorkflowConfigViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{workflowConfigController.CRUDActionName} #{msg.WorkflowConfig}">
             <h:form id="WorkflowConfigViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{workflowConfigController.selected != null}">
+                    <p:panelGrid columns="4" rendered="#{workflowConfigController.selected != null}">
 <!--                         <h:outputLabel value="#{msg.id}" for="id" />
                         <h:outputText value="#{workflowConfigController.selected.id}"/>
-                        <h:outputLabel value="#{msg.siteId}" for="siteId" /> -->
-                        <h:outputText value="#{workflowConfigController.selected.siteId}"/>
-                        <h:outputLabel value="#{msg.hospitalId}" for="hospitalId" />
-                        <h:outputText value="#{workflowConfigController.selected.hospitalId}"/>
+                        <h:outputLabel value="#{msg.siteId}" for="siteId" /> 
+                        <h:outputText value="#{workflowConfigController.selected.siteId}"/>-->
+<!--                         <h:outputLabel value="#{msg.hospitalId}" for="hospitalId" /> -->
+<!--                         <h:outputText value="#{workflowConfigController.selected.hospitalId}"/> -->
                         <h:outputLabel value="#{msg.dispatchMode}" for="dispatchMode" />
                         <h:outputText value="#{workflowConfigController.selected.dispatchMode}"/>
                  <!--        <h:outputLabel value="#{msg.dispatchUserId}" for="dispatchUserId" /> -->
-                        <h:outputText value="#{workflowConfigController.selected.dispatchUserId}"/>
+                       <!--  <h:outputText value="#{workflowConfigController.selected.dispatchUserId}"/> -->
                         <h:outputLabel value="#{msg.dispatchUserName}" for="dispatchUserName" />
                         <h:outputText value="#{workflowConfigController.selected.dispatchUserName}"/>
                         <h:outputLabel value="#{msg.timeoutDispatch}" for="timeoutDispatch" />
