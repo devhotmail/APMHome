@@ -64,10 +64,7 @@ import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.apache.camel.Headers;
 import org.springframework.beans.factory.annotation.Value;
-<<<<<<< HEAD
-=======
 import org.springframework.context.annotation.Configuration;
->>>>>>> wx send message: web url can be read from environment or conf file
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.broker.SiBroker;
 import webapp.framework.context.ExternalLoginHandler;
@@ -105,11 +102,6 @@ public class CoreService {
     @PostConstruct
     public void init() {
         this.refreshRouter();
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> wx send message: web url can be read from environment or conf file
         if (!Strings.isNullOrEmpty(System.getenv("webContextUrl"))) {
             webContextUrl = System.getenv("webContextUrl");
         }
@@ -396,9 +388,6 @@ public class CoreService {
     @Value("#{wxProperties.webContextUrl}")
     private String webContextUrl;
     
-    @Value("#{wxProperties.webContextUrl}")
-    private String webContextUrl;
-    
     public void sendWxTemplateMessage(String userWeChatId, String wxTemplateId, String msgTitle, String msgBrief, String msgDetails, String msgDateTime, String linkUrl){
         HashMap<String, Object> params = new HashMap<>();
 
@@ -424,24 +413,12 @@ public class CoreService {
         WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
                 .toUser(params.get("userWeChatId").toString()).templateId(params.get("wxTemplateId").toString()).build();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> update wx send message files
         String textColor = "#000000";
         templateMessage.addWxMpTemplateData( new WxMpTemplateData("first", params.get("msgTitle").toString(),textColor));
         templateMessage.addWxMpTemplateData( new WxMpTemplateData("performance", params.get("msgBrief").toString(),textColor));
         templateMessage.addWxMpTemplateData( new WxMpTemplateData("remark", params.get("msgDetails").toString(),textColor));
         templateMessage.addWxMpTemplateData( new WxMpTemplateData("time", params.get("msgDateTime").toString(),textColor));
-<<<<<<< HEAD
-=======
-        templateMessage.addWxMpTemplateData( new WxMpTemplateData("first", params.get("msgTitle").toString(),"#FF00FF"));
-        templateMessage.addWxMpTemplateData( new WxMpTemplateData("performance", params.get("msgBrief").toString(),"#FF00FF"));
-        templateMessage.addWxMpTemplateData( new WxMpTemplateData("remark", params.get("msgDetails").toString(),"#FF00FF"));
-        templateMessage.addWxMpTemplateData( new WxMpTemplateData("time", params.get("msgDateTime").toString(),"#FF00FF"));
->>>>>>> wx send message: web url can be read from environment or conf file
-=======
->>>>>>> update wx send message files
+
         Object linkUrl = params.get("linkUrl");
         if( linkUrl!=null && !"".equals(linkUrl) )
             templateMessage.setUrl(wxMpService.oauth2buildAuthorizationUrl(webContextUrl+params.get("linkUrl").toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
