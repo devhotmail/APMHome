@@ -18,6 +18,8 @@ import webapp.framework.web.WebUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by lsg on 17/1/2017.
@@ -36,41 +38,46 @@ public class RepairProcessController {
     /*开单 */
     @RequestMapping(value = "/workorderCreate",method = RequestMethod.POST)
     @ResponseBody
-    public void createWorkOrder(@RequestBody WorkOrderPoJo wopo) throws Exception
+    public String createWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo) throws Exception
     {
-        workOrderService.workWorderCreate(wopo);
-
+        try{
+        workOrderService.workWorderCreate(request, wopo);
+            return "success";
+        } catch(Exception e){
+            Logger.getLogger(RepairProcessController.class.getName()).log(Level.SEVERE, null, e);
+            return "error";
+        }
     }
 
     /*派单*/
-    @RequestMapping(value = "/workorderAssign",method = RequestMethod.PUT)
+    @RequestMapping(value = "/workorderAssign")
     @ResponseBody
-    public void assignWorkOrder(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    public void assignWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo ) throws Exception
     {
-        workOrderService.assignWorkOrder(wopo);
+        workOrderService.assignWorkOrder(request, wopo);
 
     }
 
     @RequestMapping(value = "/workorderSign")
     @ResponseBody
-    public void signWorkOrder(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    public void signWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo ) throws Exception
     {
-        workOrderService.signWorkOrder(wopo);
+        workOrderService.signWorkOrder(request, wopo);
 
     }
     @RequestMapping(value = "/workorderRepair")
     @ResponseBody
-    public void repair(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    public void repair(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo ) throws Exception
     {
-        workOrderService.takeWorkOrder(wopo);
+        workOrderService.takeWorkOrder(request, wopo);
 
     }
 
     @RequestMapping(value = "/workorderClose")
     @ResponseBody
-    public void takeWorkOrder(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    public void takeWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo ) throws Exception
     {
-        workOrderService.closeWorkOrder(wopo);
+        workOrderService.closeWorkOrder(request, wopo);
 
     }
 

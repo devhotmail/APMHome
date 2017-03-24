@@ -297,7 +297,7 @@ public class WorkOrderController {
                 } catch (IOException e) {
                     Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, e);
                 }   
-              }
+            }
         }
     }
     
@@ -328,13 +328,23 @@ public class WorkOrderController {
         return "success";
     }
     @RequestMapping(value = "/media")
-    public @ResponseBody String uploadMediaToWeChat() {
+    public @ResponseBody String uploadMediaToWeChat(String serverId) {
         try{
-            InputStream is = woWcService.getFile(10);
+            InputStream is = woWcService.getFile(Integer.parseInt(serverId));
             return service.uploadMediaToWechat(is);
         }catch(Exception ex){
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
             return "";
+        }
+    }
+    
+    @RequestMapping(value = "/wo_img_list")
+    public @ResponseBody Object getWoImgList(String woId) {
+        try{
+            return woWcService.getWoImgList(Integer.parseInt(woId));
+        }catch(Exception ex){
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
     

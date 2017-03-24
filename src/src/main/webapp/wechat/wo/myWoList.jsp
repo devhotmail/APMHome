@@ -21,11 +21,18 @@
         <script src="${ctx}/resources/wechat/js/utils/wechatsdk.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/pagemanager.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/app.js"></script>
+        <link rel="stylesheet" href="${ctx}/resources/wechat/css/photoswipe.css"/>
+        <link rel="stylesheet" href="${ctx}/resources/wechat/css/default-skin.css"/>
+        <script src="${ctx}/resources/wechat/js/photoswipe.js"></script>
+        <script src="${ctx}/resources/wechat/js/photoswipe-ui-default.min.js"></script>
+    
         <script>
             var WEB_ROOT = '${ctx}/';
         </script>
     </head>
     <body style="background-color:#f8f8f8">
+        <jsp:include page="imgshow.html"/>
+        
         <div id="container" class="container"></div>
         <script>
             $(function(){
@@ -138,5 +145,6 @@
         <jsp:include page="msgTemplate.html"/>
         <jsp:include page="listTemplate.html"/>
         <jsp:include page="tipsTemplate.html"/>
+        
     </body>
 </html>

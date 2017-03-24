@@ -66,7 +66,7 @@
 
         chooseImages: function (maxCount, onSuccess, onFailed) {
             wx.chooseImage({
-                count: Math.min(Math.max(maxCount, 0), 9),
+                count: maxCount>9?9:maxCount,
                 sizeType: ['compressed'],
                 sourceType: ['album', 'camera'],
                 success: function (res) {

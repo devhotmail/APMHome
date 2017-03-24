@@ -51,6 +51,8 @@ public class WorkOrderWeChatService {
     protected AssetInfoRepository assetDao;
     @Autowired
     protected UserRoleRepository roleDao;
+    @Autowired
+    protected WorkOrderPhotoRepository photoDao;
     
     public List<WorkOrder> woList(HttpServletRequest request, String stepId) {
         UserAccount ua = UserContext.getCurrentLoginUser(request);
@@ -192,6 +194,10 @@ public class WorkOrderWeChatService {
             list.add(userRole.getRole().getName());
         }
         return list;
+    }
+    
+    public List<WorkOrderPhoto> getWoImgList(int woId) {
+        return photoDao.findByWorkOrderId(woId);
     }
     
 }

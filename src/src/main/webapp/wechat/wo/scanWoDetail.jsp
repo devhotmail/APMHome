@@ -16,11 +16,15 @@
         <!-- 引入 WeUI -->
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/wo/woprogress.css"/>
+        <link rel="stylesheet" href="${ctx}/resources/wechat/css/default-skin.css"/>
+        <link rel="stylesheet" href="${ctx}/resources/wechat/css/photoswipe.css"/>
         <script src="${ctx}/resources/wechat/js/utils/jquery-3.1.1.min.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/jweixin-1.0.0.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/wechatsdk.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/pagemanager.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/app.js"></script>
+        <script src="${ctx}/resources/wechat/js/photoswipe.js"></script>
+        <script src="${ctx}/resources/wechat/js/photoswipe-ui-default.min.js"></script>
         <script>
             var WEB_ROOT = '${ctx}/';
         </script>
@@ -60,7 +64,8 @@
                 
             });
         </script>
-            
+        
+        <jsp:include page="imgshow.html"/>
         <jsp:include page="woDetail.html"/>
         <jsp:include page="tipsTemplate.html"/>
     </body>
