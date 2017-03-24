@@ -62,13 +62,13 @@ public class RepairProcessController {
     @ResponseBody
     public void repair(@RequestBody WorkOrderPoJo wopo ) throws Exception
     {
-        workOrderService.takeWorkOrder(wopo);
+        workOrderService.repairWorkOrder(wopo);
 
     }
 
     @RequestMapping(value = "/workorderClose")
     @ResponseBody
-    public void takeWorkOrder(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    public void workorderClose(@RequestBody WorkOrderPoJo wopo ) throws Exception
     {
         workOrderService.closeWorkOrder(wopo);
 
