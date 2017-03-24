@@ -76,7 +76,7 @@ public class RepairProcessController {
 
 
 
-    @RequestMapping(value = "repairprocess")
+    @RequestMapping(value = "/repairprocess")
     public String repairProcess(HttpServletResponse response,
                                 HttpServletRequest httpServletRequest,
                                 Model model) {

@@ -151,18 +151,18 @@ public class WorkOrderService {
 
     }
 
-
     @Transactional
     public void signWorkOrder(WorkOrderPoJo wopo)throws  Exception{
-        Integer woId= Integer.valueOf(wopo.getWoId());
-        WorkOrder wo = workOrderRepository.getById(woId);
-        workOrderUpdate(wo);
-        WorkOrderStep wds = initWorkOrderStep(wo);
-        workOrderStepRepository.save(wds);
-        updateEndTime(wo);
+        //gl:签到和维修的逻辑完全一样
+        signRepair(wopo);
     }
     @Transactional
-    public void repair(WorkOrderPoJo wopo)throws Exception{
+    public void repairWorkOrder(WorkOrderPoJo wopo)throws Exception{
+        //gl:签到和维修的逻辑完全一样
+       signRepair(wopo);
+    }
+    @Transactional
+    public void signRepair(WorkOrderPoJo wopo)throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
         WorkOrder wo = workOrderRepository.getById(woId);
         workOrderUpdate(wo);
