@@ -102,11 +102,11 @@ public class WorkOrderService {
         if(reopenWorkOrder.size() >0 && assetHead.size()>0){//true is reopen
             System.out.println("是二次开单的工单创建");
             //relating to parent parent_wo_id(work_order)
-            neWorkOrder=initWorkOrder(assetId,assetHead.get(0),reopenWorkOrder.get(0),true);
+            neWorkOrder=initWorkOrder(assetId,currentUsr,reopenWorkOrder.get(0),true);
         }else{ //非二次开单
             System.out.println("不是二次开单的工单创建");
             //非二次开单第三个参数就为空 即不需要父工单
-            neWorkOrder=initWorkOrder(assetId,assetHead.get(0),null,false);
+            neWorkOrder=initWorkOrder(assetId, currentUsr,null,false);
 
         }
         workOrderRepository.save(neWorkOrder);
@@ -227,8 +227,10 @@ public class WorkOrderService {
         }
 
     }
+@Autowired
+    WorkflowConfigRepository workflowConfigRepository;
+    private WorkOrder initWorkOrder(Integer assetId,UserAccount usr,WorkOrder reopenWorkOrder,boolean isReopen){
 
-    private WorkOrder initWorkOrder(Integer assetId,UserAccount headerAccount,WorkOrder reopenWorkOrder,boolean isReopen){
         WorkOrder neWorkOrder = new WorkOrder();
         UserAccount currentUserAccount = UserContextService.getCurrentUserAccount();
         neWorkOrder.setSiteId(currentUserAccount.getSiteId());
@@ -238,14 +240,15 @@ public class WorkOrderService {
         neWorkOrder.setRequestTime(new Date());
         neWorkOrder.setRequestReason("request reason");
         neWorkOrder.setCaseType(1);//---------from fonrt
-        neWorkOrder.setCaseSubType(1);//-----
-        neWorkOrder.setCasePriority(1);//---------
+        neWorkOrder.setCaseSubType(1);
+        neWorkOrder.setCasePriority(1);
         neWorkOrder.setHospitalId(currentUserAccount.getHospitalId());
         if(isReopen){
             neWorkOrder.setParentWoId(reopenWorkOrder.getId());
         }
-        neWorkOrder.setCurrentPersonId(headerAccount.getId());
-        neWorkOrder.setCurrentPersonName(headerAccount.getName());
+        WorkflowConfig wfc = workflowConfigRepository.getBySiteIdAndHospitalId(usr.getSiteId(), usr.getHospitalId());
+neWorkOrder.setCurrentPersonId(wfc.getDispatchUserId());
+        neWorkOrder.setCurrentPersonName(wfc.getDispatchUserName());
         neWorkOrder.setCurrentStepId(2);// gl: 表示步骤是开单
         neWorkOrder.setCurrentStepName("审核");
         neWorkOrder.setTotalManHour(0);//----?

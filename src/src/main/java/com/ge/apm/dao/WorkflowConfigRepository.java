@@ -5,4 +5,5 @@ import webapp.framework.dao.GenericRepository;
 
 public interface WorkflowConfigRepository extends GenericRepository<WorkflowConfig> {
 
+    public WorkflowConfig  getBySiteIdAndHospitalId(Integer siteId,Integer hospitalId);
 }
