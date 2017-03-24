@@ -8,9 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.SiteInfoRepository;
+import com.ge.apm.dao.WorkflowConfigRepository;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.SiteInfo;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.domain.WorkflowConfig;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
 import org.primefaces.event.NodeSelectEvent;
@@ -141,9 +143,31 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
 
     public void saveSelectedOrg(){
         super.save();
+        initWorkflowConfig();
+        
         buildOrdTree();
     }
     
+    public void initWorkflowConfig(){
+        if(!selected.getHospitalId().equals(selected.getId())) return;
+        
+        WorkflowConfigRepository wfConfigDao = WebUtil.getBean(WorkflowConfigRepository.class);
+        WorkflowConfig wfConfig = wfConfigDao.findById(selected.getHospitalId());
+        if(wfConfig==null){
+            wfConfig = new WorkflowConfig();
+            wfConfig.setHospitalId(selected.getHospitalId());
+            wfConfig.setSiteId(selected.getSiteId());
+            
+            wfConfig.setDispatchMode(1);
+            wfConfig.setTimeoutDispatch(30);
+            wfConfig.setTimeoutAccept(30);
+            wfConfig.setTimeoutRepair(300);  //5 hours
+            wfConfig.setTimeoutClose(30);
+            
+            wfConfigDao.save(wfConfig);
+        }
+    }
+
     public void deleteSelectedOrg(){
         super.delete();
         buildOrdTree();

@@ -385,7 +385,7 @@ public class CoreService {
         return s == null ? null : s.getName();
     }
 
-    @Value("#{wxProperties.webContextUrl}")
+    //@Value("#{wxProperties.webContextUrl}")
     private String webContextUrl;
     
     public void sendWxTemplateMessage(String userWeChatId, String wxTemplateId, String msgTitle, String msgBrief, String msgDetails, String msgDateTime, String linkUrl){
