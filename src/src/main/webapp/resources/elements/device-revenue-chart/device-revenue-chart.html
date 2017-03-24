@@ -6,7 +6,8 @@
 
 <dom-module id="device-revenue-chart">
   <template>
-    <bubble-radial-chart id="chart" query-url="[[queryUrl]]" bubble-config="[[_bubbleConfig]]"></bubble-radial-chart>
+    <bubble-radial-chart id="chart" query-url="[[queryUrl]]"
+      on-opening-node-l1-changed="handleOpenNode" bubble-config="[[_bubbleConfig]]"></bubble-radial-chart>
   </template>
   <script>
     define('device-revenue-chart', [
