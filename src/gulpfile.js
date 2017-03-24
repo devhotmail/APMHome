@@ -2,6 +2,7 @@
 
 const path = require('path');
 const symlink = require('gulp-symlink');
+const sequence = require('gulp-sequence');
 const autoprefixer = require('gulp-autoprefixer');
 const stylemod = require('gulp-style-modules');
 const del = require('del')
@@ -38,7 +39,7 @@ gulp.task('sass:compile:css', function() {
     keepBreaks: true,
     keepSpecialComments:0
   }))
-  .pipe(gulp.dest(path.join(dest, 'css')));
+  .pipe(gulp.dest('public/css'));
 });
 
 gulp.task('sass:compile:module', function() {
@@ -86,17 +87,15 @@ gulp.task('sass:watch', function() {
   gulp.watch(src, ['sass:compile:css']);
   gulp.watch(src_comp, ['sass:compile:module']);
 });
-
-gulp.task('default', ['sass:compile:css', 'sass:compile:module', 'build']);
-gulp.task('watch', ['default', 'sass:watch']);
+gulp.task('css', ['sass:compile:css', 'sass:compile:module']);
 gulp.task('clean', function clean() {
   return del(dest);
 });
 gulp.task('bundle', ['clean'], require('./task.bundle')(gulp, 'dist'));
-gulp.task('dev', ['clean'], function symlink() {
+gulp.task('source', ['clean'], function() {
   return gulp.src('public').pipe(symlink(dest));
 });
-gulp.task('build', ['bundle'], function bundle() {
+gulp.task('dist', ['bundle'], function() {
   return gulp.src([
     'dist/public/**/*'
   ], {base: 'dist/public'})
@@ -105,3 +104,6 @@ gulp.task('build', ['bundle'], function bundle() {
     return del(['dist']);
   });
 });
+
+gulp.task('default', sequence('css', 'source', 'sass:watch'));
+gulp.task('build', sequence('css', 'dist'));
