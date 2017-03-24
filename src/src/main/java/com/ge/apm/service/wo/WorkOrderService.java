@@ -85,7 +85,7 @@ public class WorkOrderService {
 
 
     @Transactional
-    public void workWorderCreate(Integer assetId)throws RuntimeException{
+    public void workWorderCreate(WorkOrderPoJo wop)throws Exception{
         /*  判断是否二次开单  --> 判断派工模式
         * 1（拿siteid和assetid还有hospitalid来作为该设备是否是唯一的）
         * */
@@ -94,21 +94,12 @@ public class WorkOrderService {
         //gl: select from user_account ua , sys_role  sr where sr.role_id =2 and ua.user_id = ?
          UserAccount currentUsr= UserContext.getCurrentLoginUser();
         WorkOrder neWorkOrder=null;
-        List<WorkOrder> reopenWorkOrder = workOrderRepository.isReopenWorkOrder(2, currentUsr.getHospitalId(), currentUsr.getSiteId());
+        List<WorkOrder> reopenWorkOrder = workOrderRepository.isReopenWorkOrder(wop.getAssetId(), currentUsr.getHospitalId(), currentUsr.getSiteId());
 
-        //gl: assetHead当前资产负责人
-        List<UserAccount> assetHead = userDao.getAssetHead(currentUsr.getSiteId(), currentUsr.getHospitalId());
-//workOrder不为空 表示是二次开单了
-        if(reopenWorkOrder.size() >0 && assetHead.size()>0){//true is reopen
-            System.out.println("是二次开单的工单创建");
-            //relating to parent parent_wo_id(work_order)
-            neWorkOrder=initWorkOrder(assetId,currentUsr,reopenWorkOrder.get(0),true);
-        }else{ //非二次开单
-            System.out.println("不是二次开单的工单创建");
-            //非二次开单第三个参数就为空 即不需要父工单
-            neWorkOrder=initWorkOrder(assetId, currentUsr,null,false);
-
+        if(reopenWorkOrder.size() >0 ){//true is reopen
+            wop.setReOpen(true);
         }
+        neWorkOrder=initWorkOrder(wop,currentUsr,reopenWorkOrder,wop.isReOpen());
         workOrderRepository.save(neWorkOrder);
     }
     @Transactional
@@ -227,39 +218,43 @@ public class WorkOrderService {
         }
 
     }
+    @Autowired
+    AssetInfoRepository assetInfoRepository;
 @Autowired
     WorkflowConfigRepository workflowConfigRepository;
-    private WorkOrder initWorkOrder(Integer assetId,UserAccount usr,WorkOrder reopenWorkOrder,boolean isReopen){
+    private WorkOrder initWorkOrder(WorkOrderPoJo wop,UserAccount usr,List<WorkOrder> reopenWorkOrder,boolean isReopen) throws Exception{
 
         WorkOrder neWorkOrder = new WorkOrder();
         UserAccount currentUserAccount = UserContextService.getCurrentUserAccount();
         neWorkOrder.setSiteId(currentUserAccount.getSiteId());
-        neWorkOrder.setAssetName("assetnasssme");
+        if(assetInfoRepository.getById(wop.getAssetId())==null){
+            throw new Exception("该资产在数据中找不到");
+        }
+        neWorkOrder.setAssetName(assetInfoRepository.getById(wop.getAssetId()).getName());
         neWorkOrder.setRequestorId(currentUserAccount.getId());
         neWorkOrder.setRequestorName(currentUserAccount.getName());
         neWorkOrder.setRequestTime(new Date());
-        neWorkOrder.setRequestReason("request reason");
-        neWorkOrder.setCaseType(1);//---------from fonrt
+        neWorkOrder.setRequestReason(wop.getReason());
+        neWorkOrder.setCaseType(1);
         neWorkOrder.setCaseSubType(1);
         neWorkOrder.setCasePriority(1);
         neWorkOrder.setHospitalId(currentUserAccount.getHospitalId());
-        if(isReopen){
-            neWorkOrder.setParentWoId(reopenWorkOrder.getId());
+        if(reopenWorkOrder.size()>0){
+            neWorkOrder.setParentWoId(reopenWorkOrder.get(0).getId());
         }
         WorkflowConfig wfc = workflowConfigRepository.getBySiteIdAndHospitalId(usr.getSiteId(), usr.getHospitalId());
 neWorkOrder.setCurrentPersonId(wfc.getDispatchUserId());
         neWorkOrder.setCurrentPersonName(wfc.getDispatchUserName());
         neWorkOrder.setCurrentStepId(2);// gl: 表示步骤是开单
-        neWorkOrder.setCurrentStepName("审核");
-        neWorkOrder.setTotalManHour(0);//----?
-        neWorkOrder.setTotalPrice(0.0);//----?
-
+        neWorkOrder.setCurrentStepName(i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",Integer.toString(2)).getValueZh()) ;
+        neWorkOrder.setTotalManHour(0);//gl:----?
+        neWorkOrder.setTotalPrice(0.0);//gl:----?
 
         neWorkOrder.setRequestTime(new Date());
-        neWorkOrder.setRequestReason("reason");
-        neWorkOrder.setCasePriority(1);
-        neWorkOrder.setAssetId(assetId);
-        neWorkOrder.setStatus(1);
+        neWorkOrder.setRequestReason(wop.getReason());
+        neWorkOrder.setCasePriority(Integer.valueOf(wop.getPriority()));
+        neWorkOrder.setAssetId(wop.getAssetId());
+        neWorkOrder.setStatus(1);  //gl: -- 1-在修 / 2-完成 / 3-取消
         return neWorkOrder;
     }
     @Transactional

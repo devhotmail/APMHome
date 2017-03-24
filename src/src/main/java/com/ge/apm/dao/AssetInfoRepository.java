@@ -24,6 +24,6 @@ public interface AssetInfoRepository extends GenericRepository<AssetInfo> {
     @Query("update AssetInfo ai set ai.lastPmDate = now() where id = ?1 and siteId = ?2")
     public void updateAssetInfoPmOrderDate(int id,int siteId);
     
-    
+    public AssetInfo getById(Integer id);
     
 }

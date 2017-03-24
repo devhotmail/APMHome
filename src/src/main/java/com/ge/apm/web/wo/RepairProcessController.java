@@ -36,9 +36,9 @@ public class RepairProcessController {
     /*开单 */
     @RequestMapping(value = "/workorderCreate",method = RequestMethod.POST)
     @ResponseBody
-    public void createWorkOrder(@PathVariable Integer assetId) throws Exception
+    public void createWorkOrder(@RequestBody WorkOrderPoJo wopo) throws Exception
     {
-        workOrderService.workWorderCreate(assetId);
+        workOrderService.workWorderCreate(wopo);
 
     }
 

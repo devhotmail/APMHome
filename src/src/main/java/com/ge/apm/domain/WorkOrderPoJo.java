@@ -10,6 +10,33 @@ public class WorkOrderPoJo {
     String desc;
     String estimatedCloseTime;
     String assigneeId;
+    String reason;
+    String  priority;
+    boolean reOpen;
+
+    public boolean isReOpen() {
+        return reOpen;
+    }
+
+    public void setReOpen(boolean reOpen) {
+        this.reOpen = reOpen;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 
     public Integer getAssetId() {
         return assetId;
