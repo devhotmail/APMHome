@@ -39,8 +39,8 @@ public class WorkOrder implements Serializable {
     private String assetName;
 
     @Size(min = 1, max = 256)
-    @Column(name = "problems")
-    private String problems;
+    @Column(name = "pat_problems")
+    private String patProblems;
 
     @Column(name = "estimated_close_time")
     @Temporal(TemporalType.TIMESTAMP)
@@ -186,12 +186,12 @@ public class WorkOrder implements Serializable {
     public WorkOrder() {
     }
 
-    public String getProblems() {
-        return problems;
+    public String getPatProblems() {
+        return patProblems;
     }
 
-    public void setProblems(String problems) {
-        this.problems = problems;
+    public void setPatProblems(String patProblems) {
+        this.patProblems = patProblems;
     }
 
     public Date getEstimatedCloseTime() {
