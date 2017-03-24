@@ -86,17 +86,13 @@ public class WorkOrderService {
 
     @Transactional
     public void workWorderCreate(Integer assetId)throws RuntimeException{
-        /*  判断否是二次开单  --> 判断派工模式
+        /*  判断是否二次开单  --> 判断派工模式
         * 1（拿siteid和assetid还有hospitalid来作为该设备是否是唯一的）
-        *2
         * */
         //select * from work_order where  (close_time::timestamp)::date > (select now() - interval '7 day')::date  and  asset_id =68 and hospital_id=2 and site_id=2
 //gl:requestor 就是申请保修的,curent_person_d: 自动派单时为-1，手动派单时为设备科科长.
         //gl: select from user_account ua , sys_role  sr where sr.role_id =2 and ua.user_id = ?
          UserAccount currentUsr= UserContext.getCurrentLoginUser();
-       // UserAccount currentUsr = new UserAccount();
-        /*currentUsr.setId(2);currentUsr.setName("keyuan");currentUsr.setHospitalId(2);
-        currentUsr.setSiteId(2);*/
         WorkOrder neWorkOrder=null;
         List<WorkOrder> reopenWorkOrder = workOrderRepository.isReopenWorkOrder(2, currentUsr.getHospitalId(), currentUsr.getSiteId());
 
