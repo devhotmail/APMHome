@@ -22,7 +22,7 @@ public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
 
 
     @Modifying
-    @Query("update WorkOrder wo set wo.currentPersonId=?2 ,wo.currentPersonNagit me=?3 ,wo.currentStepId=?4 where wo.id=?1")
+    @Query("update WorkOrder wo set wo.currentPersonId=?2 ,wo.currentPersonName=?3 ,wo.currentStepId=?4 where wo.id=?1")
     public void updateWorkderOrder(Integer woId, Integer userId, String userName,Integer stepId);
 
     //gl:todo 7 是应该可配的
