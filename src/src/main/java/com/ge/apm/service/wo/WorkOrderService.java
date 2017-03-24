@@ -153,14 +153,14 @@ public class WorkOrderService {
 
     @Transactional
     public void signWorkOrder(WorkOrderPoJo wopo)throws  Exception{
-        //gl:签到和维修的逻辑完全一样
         signRepair(wopo);
     }
     @Transactional
     public void repairWorkOrder(WorkOrderPoJo wopo)throws Exception{
-        //gl:签到和维修的逻辑完全一样
        signRepair(wopo);
     }
+
+    //gl://gl:签到和维修的逻辑完全一样,签到和维修复用
     @Transactional
     public void signRepair(WorkOrderPoJo wopo)throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
