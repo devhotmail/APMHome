@@ -120,6 +120,22 @@
           queryUrl: {
             type: String,
             computed: '_computeQueryUrl(category)'
+          },
+          _gaugeRadiusL2: {
+            value: function() {
+              return {
+                min: 80,
+                max: 80
+              };
+            }
+          },
+          _gaugeRadiusL1: {
+            value: function() {
+              return {
+                min: 70,
+                max: 70
+              };
+            }
           }
         },
         behaviors: [
@@ -173,8 +189,8 @@
           })
           .attr('x', 0)
           .attr('dy', '1.2rem')
-          .text(function(d) {
-            return ['S1:', d.display, '（' + d.count + '）'].join(' ');
+          .text(function(d, i) {
+            return ['S'+(i+1), ':', d.display, '（' + d.count + '）'].join(' ');
           });
 
           labels.exit().remove();
@@ -208,15 +224,6 @@
           arcs.exit().remove();
         },
         ready: function() {
-          this._gaugeRadiusL2 = {
-            min: 80,
-            max: 80
-          };
-
-          this._gaugeRadiusL1 = {
-            min: 70,
-            max: 70
-          };
           var _this = this;
 
           this._renderGauge = function(element, node) {
@@ -288,7 +295,7 @@
                       .text('维修流程：');
                       label.append('tspan')
                       .text(_this.steps.find(function(stg) {
-                        return stg.id = node.data.stage
+                        return stg.id == node.data.stage
                       }).display);
 
                       // owner label

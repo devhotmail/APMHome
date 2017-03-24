@@ -1253,8 +1253,11 @@
             }
             _this.openingNodeL1 = node;
 
-            _this.loadData(this.queryUrl, 2).then(function() {
-              var close = _this.renderCurrPage(_this.queryUrl, 2).close;
+            // fetch url for the next level nodes
+            var url = node.data.link.href;
+
+            _this.loadData(url, 2).then(function() {
+              var close = _this.renderCurrPage(url, 2).close;
               _this.closeNodeL1 = function() {
                 _this.openingNodeL1 = null;
                 return close().then(function() {
@@ -1581,9 +1584,9 @@
           _replot: function(width, height) {
             this.resetChart();
             this.debounce('replot', function() {
-              var key = this.queryUrl;
-              if (this.hasData(key)) {
-                this.renderCurrPage(key, 1, false);
+              var url = this.queryUrl;
+              if (this.hasData(url)) {
+                this.renderCurrPage(url, 1, false);
               } else {
                 this.load();
               }

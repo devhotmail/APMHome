@@ -75,16 +75,16 @@ public class DmApi {
   }
 
 
-  private Map<String, String> calculateSuggestion(Integer NumGreaterThan1, Double averageUsage, Integer numOfAssets) {
+  private List<ImmutableMap<String, String>> calculateSuggestion(Integer NumGreaterThan1, Double averageUsage, Integer numOfAssets) {
     return Match(Tuple.of(NumGreaterThan1, averageUsage)).of(
-      Case($(t -> t._2 > 1D), ImmutableMap.of("title", SUGGESTION_BUY, "addition", String.format("%s台设备", (int) Math.ceil((averageUsage - 1) * numOfAssets)))),
-      Case($(t -> t._1 > 0), ImmutableMap.of("title", SUGGESTION_ADJUST)),
-      Case($(t -> t._2 <= 0.3D), ImmutableMap.of("title", SUGGESTION_RAISE)),
-      Case($(), ImmutableMap.of("title", "")));
+      Case($(t -> t._2 > 1D), javaslang.collection.List.of(ImmutableMap.of("title", SUGGESTION_BUY, "addition", String.format("%s台设备", (int) Math.ceil((averageUsage - 1) * numOfAssets)))).toJavaList()),
+      Case($(t -> t._1 > 0), javaslang.collection.List.of(ImmutableMap.of("title", SUGGESTION_ADJUST)).toJavaList()),
+      Case($(t -> t._2 <= 0.3D), javaslang.collection.List.of(ImmutableMap.of("title", SUGGESTION_RAISE)).toJavaList()),
+      Case($(), javaslang.collection.List.of(ImmutableMap.of("title", "")).toJavaList()));
   }
 
   private List<Map<String, String>> calculateTotalSuggestion(Seq<ImmutableMap<String, Object>> items, String groupBy) {
-    Seq<String> suggestions = items.map(v -> ((ImmutableMap<String, String>) v.get("suggestions")).get("title"));
+    Seq<String> suggestions = items.map(v -> ((List<ImmutableMap<String, String>>) v.get("suggestions")).get(0).get("title"));
     int numBuy = suggestions.count(v -> v.equals(SUGGESTION_BUY));
     int numAjst = suggestions.count(v -> v.equals(SUGGESTION_ADJUST));
     int numRse = suggestions.count(v -> v.equals(SUGGESTION_RAISE));
