@@ -45,7 +45,7 @@ public class QrCodeLib implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date submitDate;
     @Column(name = "submit_wechat_id")
-    private Integer submitWechatId;
+    private String submitWechatId;
     @Column(name = "comment")
     private String comment;
     @Basic(optional = false)
@@ -116,11 +116,11 @@ public class QrCodeLib implements Serializable {
         this.submitDate = submitDate;
     }
 
-    public Integer getSubmitWechatId() {
+    public String getSubmitWechatId() {
         return submitWechatId;
     }
 
-    public void setSubmitWechatId(Integer submitWechatId) {
+    public void setSubmitWechatId(String submitWechatId) {
         this.submitWechatId = submitWechatId;
     }
 

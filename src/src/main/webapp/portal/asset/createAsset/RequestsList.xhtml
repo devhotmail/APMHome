@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+
+                <p align="center">
+                    <b>#{msg.QrCodeLib}</b>
+                </p>
+            <h:form id="QrCodeLibListForm">
+                <p:dataTable id="datalist" value="#{qrCodeLibController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{qrCodeLibController.selected}"
+                    lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                    rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                    currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                    rows="20" emptyMessage="#{msg.noRecordFound}"
+                    rowsPerPageTemplate="20,40,60,90">
+
+                    <!--<p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>-->
+                    <p:ajax event="filter" listener="#{qrCodeLibController.onFilter}" />
+                    
+<!--                    <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>-->
+                    <p:column headerText="#{msg.siteId}" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
+                        <h:outputText value="#{qrCodeLibController.getSiteName(item.siteId)}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.hospitalId}" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
+                        <h:outputText value="#{qrCodeLibController.getHospitalName(item.hospitalId)}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.qrCode}" filterBy="#{item.qrCode}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.qrCode}"/>
+                    </p:column>
+                    <p:column headerText="#{msg.issueDate}" sortBy="#{item.issueDate}" filterBy="#{item.issueDate}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
+                        </f:facet>
+                        <h:outputText value="#{item.issueDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.submitDate}" sortBy="#{item.submitDate}" filterBy="#{item.submitDate}" filterMatchMode="GTE">
+                        <f:facet name="filter">
+                            <p:inputMask mask="9999-99-99 #{msg.filterTo} 9999-99-99" onkeyup="filterByDateField(event, this, 'varDataList', ' #{msg.filterTo} ');" onblur="filterByDateFieldOnBlur(this, ' #{msg.filterTo} ');"/>
+                        </f:facet>
+                        <h:outputText value="#{item.submitDate}">
+                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msg.submitWechatId}" sortBy="#{item.submitWechatId}" filterBy="#{item.submitWechatId}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.submitWechatId}"/>
+                    </p:column>
+<!--                    <p:column headerText="#{msg.comment}" sortBy="#{item.comment}" filterBy="#{item.comment}" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.comment}"/>
+                    </p:column>-->
+                    <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.status}"/>
+                    </p:column>
+                    <p:column headerText="创建" >
+                        <p:link   outcome="CreateAsset"   target="_blank">#{msg.Create}
+                            <f:param name="qrCode" value="#{item.qrCode}" />
+                        </p:link >
+                    </p:column>
+                    
+                    <!--<f:facet name="{Toolbar}">-->
+<!--                        <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                            <p:dataExporter type="xls" target="datalist" fileName="QrCodeLib_export"/>
+                        </p:commandButton>
+                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{qrCodeLibController.prepareCreate}" update=":QrCodeLibEditDlg" oncomplete="PF('QrCodeLibEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" class="btn btn-sm btn-gray" title="#{msg.View}" actionListener="#{qrCodeLibController.prepareView}" update=":QrCodeLibViewDlg" oncomplete="PF('QrCodeLibViewDialog').show()" disabled="#{empty qrCodeLibController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{qrCodeLibController.prepareEdit}" update=":QrCodeLibEditDlg" oncomplete="PF('QrCodeLibEditDialog').show()" disabled="#{empty qrCodeLibController.selected}"/>
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash" class="btn btn-sm btn-gray" title="#{msg.Delete}" actionListener="#{qrCodeLibController.prepareDelete}" update=":QrCodeLibViewDlg" oncomplete="PF('QrCodeLibViewDialog').show()" disabled="#{empty qrCodeLibController.selected}"/>-->
+                    <!--</f:facet>-->
+                </p:dataTable>
+            </h:form>
+
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>
