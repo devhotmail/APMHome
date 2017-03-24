@@ -64,7 +64,7 @@
           return (angle / 180) * Math.PI;
         }
 
-        function hasChildren(node) {
+        function hasLink(node) {
           return node.data.link && node.data.link.href;
         }
 
@@ -943,10 +943,10 @@
               return 'node-' + d.data.id;
             })
             .style('cursor', function(d) {
-              return hasChildren(d) ? 'pointer' : 'normal';
+              return hasLink(d) ? 'pointer' : 'normal';
             })
             .on('click', function(d) {
-              if(hasChildren(d)) {
+              if(hasLink(d)) {
                 handleClick.apply(null, arguments);
               }
             })
@@ -1155,6 +1155,14 @@
             .attr("transform", function(d) {
               // original position (parent `node` circle center)
               return 'translate(' + parent.circle.center + ')';
+            })
+            .style('cursor', function(d) {
+              return hasLink(d) ? 'pointer' : 'normal';
+            })
+            .on('click', function handleClickNode(node) {
+              if (hasLink(node)) {
+                window.open(node.data.link.href, '_blank');
+              }
             })
             .each(_.partial(renderNode, _this));
 
