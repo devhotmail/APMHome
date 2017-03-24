@@ -288,7 +288,7 @@
                       .text('维修流程：');
                       label.append('tspan')
                       .text(_this.steps.find(function(stg) {
-                        return stg.id = node.data.stage
+                        return stg.id == node.data.stage
                       }).display);
 
                       // owner label
