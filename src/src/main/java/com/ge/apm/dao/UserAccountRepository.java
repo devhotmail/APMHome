@@ -38,4 +38,6 @@ public interface UserAccountRepository extends GenericRepository<UserAccount> {
     Page<UserAccount> getByOrgInfoId(Pageable pageRequest, int orgInfoId);
     UserAccount getByWeChatId(String weChatId);
 
+    /* sysrole.id=2*/
+
 }

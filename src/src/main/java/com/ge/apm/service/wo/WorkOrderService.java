@@ -93,24 +93,24 @@ public class WorkOrderService {
         //select * from work_order where  (close_time::timestamp)::date > (select now() - interval '7 day')::date  and  asset_id =68 and hospital_id=2 and site_id=2
 //gl:requestor 就是申请保修的,curent_person_d: 自动派单时为-1，手动派单时为设备科科长.
         //gl: select from user_account ua , sys_role  sr where sr.role_id =2 and ua.user_id = ?
-        // UserAccount currentUsr= UserContext.getCurrentLoginUser();
-        UserAccount currentUsr = new UserAccount();
-        currentUsr.setId(2);currentUsr.setName("keyuan");currentUsr.setHospitalId(2);
-        currentUsr.setSiteId(2);
+         UserAccount currentUsr= UserContext.getCurrentLoginUser();
+       // UserAccount currentUsr = new UserAccount();
+        /*currentUsr.setId(2);currentUsr.setName("keyuan");currentUsr.setHospitalId(2);
+        currentUsr.setSiteId(2);*/
         WorkOrder neWorkOrder=null;
         List<WorkOrder> reopenWorkOrder = workOrderRepository.isReopenWorkOrder(2, currentUsr.getHospitalId(), currentUsr.getSiteId());
 
-        //gl: current user's asset header , currentUse 2,2
+        //gl: assetHead当前资产负责人
         List<UserAccount> assetHead = userDao.getAssetHead(currentUsr.getSiteId(), currentUsr.getHospitalId());
 //workOrder不为空 表示是二次开单了
         if(reopenWorkOrder.size() >0 && assetHead.size()>0){//true is reopen
             System.out.println("是二次开单的工单创建");
             //relating to parent parent_wo_id(work_order)
-            neWorkOrder=initWorkOrder(assetId,currentUsr,assetHead.get(0),reopenWorkOrder.get(0),true);
+            neWorkOrder=initWorkOrder(assetId,assetHead.get(0),reopenWorkOrder.get(0),true);
         }else{ //非二次开单
             System.out.println("不是二次开单的工单创建");
             //非二次开单第三个参数就为空 即不需要父工单
-            neWorkOrder=initWorkOrder(assetId,currentUsr,assetHead.get(0),null,false);
+            neWorkOrder=initWorkOrder(assetId,assetHead.get(0),null,false);
 
         }
         workOrderRepository.save(neWorkOrder);
@@ -118,21 +118,12 @@ public class WorkOrderService {
     }
     @Transactional
     public  void assignWorkOrder(WorkOrderPoJo wopo) throws Exception{
-        ;
-       /* Integer woId= (Integer)hm.get("woId");
-        Date date = (Date)hm.get("strDate");
-        String desc =(String)hm.get("desc");
-        int assigneeId = Integer.parseInt(String.valueOf(hm.get("assigneeId")));*/
         Integer woId= Integer.valueOf(wopo.getWoId());
         Date date =new SimpleDateFormat("yyyy-MM-dd").parse(wopo.getStrDate());
         String desc = wopo.getDesc();
         int assigneeId = Integer.parseInt(wopo.getAssigneeId());
         WorkOrder wo = workOrderRepository.getById(woId);
         int currentStepId = wo.getCurrentStepId();
-
-        if(wo==null){
-            System.out.println("xxxxxx------"+"数据库中没有该工单");
-        }
 
         //1 update work order table
         UserAccount user = userDao.getById(assigneeId);
@@ -242,18 +233,19 @@ public class WorkOrderService {
 
     }
 
-    private WorkOrder initWorkOrder(Integer assetId,UserAccount currentUsr,UserAccount headerAccount,WorkOrder reopenWorkOrder,boolean isReopen){
+    private WorkOrder initWorkOrder(Integer assetId,UserAccount headerAccount,WorkOrder reopenWorkOrder,boolean isReopen){
         WorkOrder neWorkOrder = new WorkOrder();
-        neWorkOrder.setSiteId(currentUsr.getSiteId());
+        UserAccount currentUserAccount = UserContextService.getCurrentUserAccount();
+        neWorkOrder.setSiteId(currentUserAccount.getSiteId());
         neWorkOrder.setAssetName("assetnasssme");
-        neWorkOrder.setRequestorId(currentUsr.getId());
-        neWorkOrder.setRequestorName(currentUsr.getName());
+        neWorkOrder.setRequestorId(currentUserAccount.getId());
+        neWorkOrder.setRequestorName(currentUserAccount.getName());
         neWorkOrder.setRequestTime(new Date());
         neWorkOrder.setRequestReason("request reason");
         neWorkOrder.setCaseType(1);//---------from fonrt
         neWorkOrder.setCaseSubType(1);//-----
         neWorkOrder.setCasePriority(1);//---------
-        neWorkOrder.setHospitalId(currentUsr.getHospitalId());
+        neWorkOrder.setHospitalId(currentUserAccount.getHospitalId());
         if(isReopen){
             neWorkOrder.setParentWoId(reopenWorkOrder.getId());
         }
@@ -263,24 +255,19 @@ public class WorkOrderService {
         neWorkOrder.setCurrentStepName("审核");
         neWorkOrder.setTotalManHour(0);//----?
         neWorkOrder.setTotalPrice(0.0);//----?
-        //not null
-        neWorkOrder.setRequestorId(1);
+
 
         neWorkOrder.setRequestTime(new Date());
         neWorkOrder.setRequestReason("reason");
         neWorkOrder.setCasePriority(1);
         neWorkOrder.setAssetId(assetId);
         neWorkOrder.setStatus(1);
-
-
         return neWorkOrder;
-
     }
     @Transactional
     public void saveWorkOrderStep(WorkOrder wo, WorkOrderStep currentWoStep, WorkOrderStep nextWoStep) throws RuntimeException{
         WorkOrderRepository woDao = WebUtil.getBean(WorkOrderRepository.class);
         WorkOrderStepRepository woStepDao = WebUtil.getBean(WorkOrderStepRepository.class);
-
         if(wo!=null){
             try{
                 wo.setCurrentStepName(WebUtil.getMessage("woSteps"+"-"+wo.getCurrentStepId()));
@@ -290,7 +277,6 @@ public class WorkOrderService {
                 throw new RuntimeException("Failed to save WorkOrder:"+ex.getMessage());
             }
         }
-
         if(currentWoStep!=null){
             if(wo!=null){
                 currentWoStep.setWorkOrderId(wo.getId());

@@ -4,12 +4,20 @@ package com.ge.apm.domain;
  * Created by lsg on 23/3/2017.
  */
 public class WorkOrderPoJo {
+    Integer assetId;
     String woId;
     String  strDate;
     String desc;
     String estimatedCloseTime;
     String assigneeId;
 
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
+    }
 
     public String getWoId() {
         return woId;
