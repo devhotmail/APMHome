@@ -318,8 +318,8 @@
             }
             function colletionData() {
                 switch(pageManager.step) {
-                    case 2: pageManager.woUrl = 'workorderAssign';return {woId: pageManager.woId, currentPersonId: $('#currentPersonId').val()};
-                    case 3: pageManager.woUrl = '';return {woId: pageManager.woId, estimatedCloseTime: $('#estimatedCloseTime').val(), description: $('#description').val()};
+                    case 2: pageManager.woUrl = 'workorderAssign';return {woId: pageManager.woId, assigneeId: $('#currentPersonId').val()};
+                    case 3: pageManager.woUrl = 'takeworkorder';return {woId: pageManager.woId, estimatedCloseTime: $('#estimatedCloseTime').val(), description: $('#description').val()};
                     case 4: pageManager.woUrl = 'workorderSign';return {woId: pageManager.woId, description: $('#description').val()};
                     case 5: pageManager.woUrl = 'workorderClose';return {woId: pageManager.woId, description: $('#description').val()};
                     case 6: pageManager.woUrl = '';return {woId: pageManager.woId, feedbackRating: pageManager.feedbackRating, description: $('#description').val() };
@@ -327,7 +327,7 @@
             }
             function validateData(data) {
                 switch(pageManager.step) {
-                    case 2: if (!data.currentPersonId){$('#errorMsg').html('维修人员 必填');} return !data.currentPersonId;
+                    case 2: if (!data.assigneeId){$('#errorMsg').html('维修人员 必填');} return !data.assigneeId;
                     case 3: if (!data.estimatedCloseTime){$('#errorMsg').html('预估解决时间 必填');} return !data.estimatedCloseTime;
                     case 6: if(!data.feedbackRating){$('#errorMsg').html('请先评分');} return !data.feedbackRating;
                 }

@@ -100,6 +100,11 @@ public class WorkOrderService {
         }
         neWorkOrder=initWorkOrder(wop,currentUsr,reopenWorkOrder,wop.isReOpen());
         workOrderRepository.save(neWorkOrder);
+        WorkOrderStep wds = initWorkOrderStep(request, neWorkOrder);
+        WorkflowConfig wfc = workflowConfigRepository.getBySiteIdAndHospitalId(currentUsr.getSiteId(), currentUsr.getHospitalId());
+        wds.setOwnerId(wfc.getDispatchUserId());
+        wds.setOwnerName(wfc.getDispatchUserName());
+        workOrderStepRepository.save(wds);
     }
     @Transactional
     public  void assignWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo) throws Exception{
@@ -138,43 +143,42 @@ public class WorkOrderService {
         wo.setEstimatedCloseTime(estimatedCloseTime);
         String desc = wopo.getDesc();
 
+        // update end time for last work step
+        updateEndTime(wo);
         //1 update work order
         workOrderUpdate(request, wo);
         //2 create new work-order-step
         WorkOrderStep wds = initWorkOrderStep(request, wo);
         wds.setDescription(desc);
         workOrderStepRepository.save(wds);
-        // update end time for last work step
-        updateEndTime(wo);
-
     }
 
     @Transactional
     public void signWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws  Exception{
-        signRepair(request, wopo);
-    }
-    @Transactional
-    public void repairWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
-       signRepair(request, wopo);
-    }
-
-    //gl://gl:签到和维修的逻辑完全一样,签到和维修复用
-    @Transactional
-    public void signRepair(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
         WorkOrder wo = workOrderRepository.getById(woId);
+        updateEndTime(wo);
+        WorkOrderStep wds = initWorkOrderStep(request, wo);
+        workOrderStepRepository.save(wds);
+    }
+
+    @Transactional
+    public void repairWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
+        Integer woId= Integer.valueOf(wopo.getWoId());
+        WorkOrder wo = workOrderRepository.getById(woId);
+        updateEndTime(wo);
         workOrderUpdate(request, wo);
         WorkOrderStep wds = initWorkOrderStep(request, wo);
         workOrderStepRepository.save(wds);
-        updateEndTime(wo);
     }
     @Transactional
     public void closeWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
         WorkOrder wo = workOrderRepository.getById(woId);
-        wo.setStatus(2);
-        workOrderRepository.save(wo);
         updateEndTime(wo);
+        wo.setStatus(2);
+        wo.setCloseTime(new Date());
+        workOrderUpdate(request, wo);
     }
     @Transactional
     private void workOrderUpdate(HttpServletRequest request, WorkOrder wo)throws  Exception{
@@ -197,15 +201,16 @@ public class WorkOrderService {
         wds.setWorkOrderId(wo.getId());
         wds.setSiteId(wo.getSiteId());
         int currentStepId = wo.getCurrentStepId();
-        wo.setCurrentStepId(currentStepId+1);
-        String stepName = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps", String.valueOf(currentStepId+1)).getValueZh();
+        wo.setCurrentStepId(currentStepId);
+        wds.setStepId(currentStepId);
+        String stepName = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps", String.valueOf(currentStepId)).getValueZh();
         wo.setCurrentStepName(stepName);
+        wds.setStepName(stepName);
         return wds;
     }
     @Transactional
     private void updateEndTime(WorkOrder wo)throws Exception{
         //2.1  update endtime in wos for last step workorder
-        WorkOrderStep workOrderStep = workOrderStepRepository.getByWorkOrderIdAndStepId(wo.getId(),wo.getCurrentStepId()).get(0);
         List<WorkOrderStep> wosList =workOrderStepRepository.getByWorkOrderIdAndStepId(wo.getId(),wo.getCurrentStepId());
         if(wosList.size()>0){
             WorkOrderStep wos = wosList.get(0);
