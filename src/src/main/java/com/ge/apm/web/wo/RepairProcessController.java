@@ -18,6 +18,8 @@ import webapp.framework.web.WebUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by lsg on 17/1/2017.
@@ -36,42 +38,79 @@ public class RepairProcessController {
     /*开单 */
     @RequestMapping(value = "/workorderCreate",method = RequestMethod.POST)
     @ResponseBody
-    public void createWorkOrder(@RequestBody WorkOrderPoJo wopo) throws Exception
+    public String createWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo) throws Exception
     {
-        workOrderService.workWorderCreate(wopo);
-
+        try{
+            workOrderService.workWorderCreate(request, wopo);
+            return "success";
+        } catch(Exception e){
+            Logger.getLogger(RepairProcessController.class.getName()).log(Level.SEVERE, null, e);
+            return "error";
+        }
     }
 
     /*派单*/
-    @RequestMapping(value = "/workorderAssign",method = RequestMethod.PUT)
+    @RequestMapping(value = "/workorderAssign")
     @ResponseBody
-    public void assignWorkOrder(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    public String assignWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo ) throws Exception
     {
-        workOrderService.assignWorkOrder(wopo);
-
+        try{
+            workOrderService.assignWorkOrder(request, wopo);
+            return "success";
+        } catch(Exception e){
+            Logger.getLogger(RepairProcessController.class.getName()).log(Level.SEVERE, null, e);
+            return "error";
+        }
     }
 
     @RequestMapping(value = "/workorderSign")
     @ResponseBody
-    public void signWorkOrder(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    public String signWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo ) throws Exception
     {
-        workOrderService.signWorkOrder(wopo);
-
+        try{
+            workOrderService.signWorkOrder(request, wopo);
+            return "success";
+        } catch(Exception e){
+            Logger.getLogger(RepairProcessController.class.getName()).log(Level.SEVERE, null, e);
+            return "error";
+        }
+    }
+    @RequestMapping(value = "/takeworkorder")
+    @ResponseBody
+    public String takeWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo ) throws Exception
+    {
+        try{
+            workOrderService.takeWorkOrder(request, wopo);
+            return "success";
+        } catch(Exception e){
+            Logger.getLogger(RepairProcessController.class.getName()).log(Level.SEVERE, null, e);
+            return "error";
+        }
     }
     @RequestMapping(value = "/workorderRepair")
     @ResponseBody
-    public void repair(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    public String repair(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo ) throws Exception
     {
-        workOrderService.repairWorkOrder(wopo);
-
+        try{
+            workOrderService.repairWorkOrder(request, wopo);
+            return "success";
+        } catch(Exception e){
+            Logger.getLogger(RepairProcessController.class.getName()).log(Level.SEVERE, null, e);
+            return "error";
+        }
     }
 
     @RequestMapping(value = "/workorderClose")
     @ResponseBody
-    public void workorderClose(@RequestBody WorkOrderPoJo wopo ) throws Exception
+    public String closeWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo ) throws Exception
     {
-        workOrderService.closeWorkOrder(wopo);
-
+        try{
+            workOrderService.closeWorkOrder(request, wopo);
+            return "success";
+        } catch(Exception e){
+            Logger.getLogger(RepairProcessController.class.getName()).log(Level.SEVERE, null, e);
+            return "error";
+        }
     }
 
 

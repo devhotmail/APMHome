@@ -3,7 +3,6 @@ package com.ge.apm.service.wo;
 import com.ge.apm.dao.*;
 import com.ge.apm.domain.*;
 import com.ge.apm.service.uaa.UaaService;
-import com.ge.apm.view.sysutil.UserContextService;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
@@ -85,14 +84,14 @@ public class WorkOrderService {
 
 
     @Transactional
-    public void workWorderCreate(WorkOrderPoJo wop)throws Exception{
+    public void workWorderCreate(HttpServletRequest request, WorkOrderPoJo wop)throws Exception{
         /*  判断是否二次开单  --> 判断派工模式
         * 1（拿siteid和assetid还有hospitalid来作为该设备是否是唯一的）
         * */
         //select * from work_order where  (close_time::timestamp)::date > (select now() - interval '7 day')::date  and  asset_id =68 and hospital_id=2 and site_id=2
 //gl:requestor 就是申请保修的,curent_person_d: 自动派单时为-1，手动派单时为设备科科长.
         //gl: select from user_account ua , sys_role  sr where sr.role_id =2 and ua.user_id = ?
-         UserAccount currentUsr= UserContext.getCurrentLoginUser();
+         UserAccount currentUsr= UserContext.getCurrentLoginUser(request);
         WorkOrder neWorkOrder=null;
         List<WorkOrder> reopenWorkOrder = workOrderRepository.isReopenWorkOrder(wop.getAssetId(), currentUsr.getHospitalId(), currentUsr.getSiteId());
 
@@ -101,11 +100,15 @@ public class WorkOrderService {
         }
         neWorkOrder=initWorkOrder(wop,currentUsr,reopenWorkOrder,wop.isReOpen());
         workOrderRepository.save(neWorkOrder);
+        WorkOrderStep wds = initWorkOrderStep(request, neWorkOrder);
+        WorkflowConfig wfc = workflowConfigRepository.getBySiteIdAndHospitalId(currentUsr.getSiteId(), currentUsr.getHospitalId());
+        wds.setOwnerId(wfc.getDispatchUserId());
+        wds.setOwnerName(wfc.getDispatchUserName());
+        workOrderStepRepository.save(wds);
     }
     @Transactional
-    public  void assignWorkOrder(WorkOrderPoJo wopo) throws Exception{
+    public  void assignWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo) throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
-        Date date =new SimpleDateFormat("yyyy-MM-dd").parse(wopo.getStrDate());
         String desc = wopo.getDesc();
         int assigneeId = Integer.parseInt(wopo.getAssigneeId());
         WorkOrder wo = workOrderRepository.getById(woId);
@@ -124,7 +127,7 @@ public class WorkOrderService {
         currentStep.setEndTime(new Date());
         workOrderStepRepository.save(currentStep);
         //3 create next work order step
-        WorkOrderStep wds =  initWorkOrderStep(wo);//new WorkOrderStep();
+        WorkOrderStep wds =  initWorkOrderStep(request, wo);//new WorkOrderStep();
         wds.setOwnerId(user.getId());
         wds.setOwnerName(user.getName());
         wds.setDescription(desc);
@@ -133,54 +136,52 @@ public class WorkOrderService {
 
 
     @Transactional
-    public void takeWorkOrder(WorkOrderPoJo wopo)throws Exception{
+    public void takeWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
         WorkOrder wo = workOrderRepository.getById(woId);
         Date estimatedCloseTime =new SimpleDateFormat("yyyy-MM-dd").parse(wopo.getEstimatedCloseTime());
         wo.setEstimatedCloseTime(estimatedCloseTime);
         String desc = wopo.getDesc();
 
-        //1 update work order
-        workOrderUpdate(wo);
-        //2 create new work-order-step
-        WorkOrderStep wds = initWorkOrderStep(wo);
-        wds.setDescription(desc);
-        workOrderStepRepository.save(wds);
         // update end time for last work step
         updateEndTime(wo);
-
-    }
-
-    @Transactional
-    public void signWorkOrder(WorkOrderPoJo wopo)throws  Exception{
-        signRepair(wopo);
-    }
-    @Transactional
-    public void repairWorkOrder(WorkOrderPoJo wopo)throws Exception{
-       signRepair(wopo);
-    }
-
-    //gl://gl:签到和维修的逻辑完全一样,签到和维修复用
-    @Transactional
-    public void signRepair(WorkOrderPoJo wopo)throws Exception{
-        Integer woId= Integer.valueOf(wopo.getWoId());
-        WorkOrder wo = workOrderRepository.getById(woId);
-        workOrderUpdate(wo);
-        WorkOrderStep wds = initWorkOrderStep(wo);
+        //1 update work order
+        workOrderUpdate(request, wo);
+        //2 create new work-order-step
+        WorkOrderStep wds = initWorkOrderStep(request, wo);
+        wds.setDescription(desc);
         workOrderStepRepository.save(wds);
-        updateEndTime(wo);
     }
+
     @Transactional
-    public void closeWorkOrder(WorkOrderPoJo wopo)throws Exception{
+    public void signWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws  Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
         WorkOrder wo = workOrderRepository.getById(woId);
-        wo.setStatus(2);
-        workOrderRepository.save(wo);
         updateEndTime(wo);
+        WorkOrderStep wds = initWorkOrderStep(request, wo);
+        workOrderStepRepository.save(wds);
     }
     @Transactional
-    private void workOrderUpdate(WorkOrder wo)throws  Exception{
-        UserAccount currentUserAccount = UserContextService.getCurrentUserAccount();
+    public void repairWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
+        Integer woId= Integer.valueOf(wopo.getWoId());
+        WorkOrder wo = workOrderRepository.getById(woId);
+        updateEndTime(wo);
+        workOrderUpdate(request, wo);
+        WorkOrderStep wds = initWorkOrderStep(request, wo);
+        workOrderStepRepository.save(wds);
+    }
+    @Transactional
+    public void closeWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
+        Integer woId= Integer.valueOf(wopo.getWoId());
+        WorkOrder wo = workOrderRepository.getById(woId);
+        updateEndTime(wo);
+        wo.setStatus(2);
+        wo.setCloseTime(new Date());
+        workOrderUpdate(request, wo);
+    }
+    @Transactional
+    private void workOrderUpdate(HttpServletRequest request, WorkOrder wo)throws  Exception{
+        UserAccount currentUserAccount = UserContext.getCurrentLoginUser(request);
         wo.setCurrentPersonId(currentUserAccount.getId());
         wo.setCurrentPersonName(currentUserAccount.getName());
         int currentStepId = wo.getCurrentStepId();
@@ -190,8 +191,8 @@ public class WorkOrderService {
         workOrderRepository.save(wo);
     }
 
-    private WorkOrderStep initWorkOrderStep(WorkOrder wo ) throws Exception{
-        UserAccount currentUserAccount = UserContextService.getCurrentUserAccount();
+    private WorkOrderStep initWorkOrderStep(HttpServletRequest request, WorkOrder wo ) throws Exception{
+        UserAccount currentUserAccount = UserContext.getCurrentLoginUser(request);
         WorkOrderStep wds = new WorkOrderStep();
         wds.setOwnerId(currentUserAccount.getId());
         wds.setOwnerName(currentUserAccount.getName());
@@ -199,15 +200,16 @@ public class WorkOrderService {
         wds.setWorkOrderId(wo.getId());
         wds.setSiteId(wo.getSiteId());
         int currentStepId = wo.getCurrentStepId();
-        wo.setCurrentStepId(currentStepId+1);
-        String stepName = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps", String.valueOf(currentStepId+1)).getValueZh();
+        wo.setCurrentStepId(currentStepId);
+        wds.setStepId(currentStepId);
+        String stepName = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps", String.valueOf(currentStepId)).getValueZh();
         wo.setCurrentStepName(stepName);
+        wds.setStepName(stepName);
         return wds;
     }
     @Transactional
     private void updateEndTime(WorkOrder wo)throws Exception{
         //2.1  update endtime in wos for last step workorder
-        WorkOrderStep workOrderStep = workOrderStepRepository.getByWorkOrderIdAndStepId(wo.getId(),wo.getCurrentStepId()).get(0);
         List<WorkOrderStep> wosList =workOrderStepRepository.getByWorkOrderIdAndStepId(wo.getId(),wo.getCurrentStepId());
         if(wosList.size()>0){
             WorkOrderStep wos = wosList.get(0);
@@ -225,20 +227,19 @@ public class WorkOrderService {
     private WorkOrder initWorkOrder(WorkOrderPoJo wop,UserAccount usr,List<WorkOrder> reopenWorkOrder,boolean isReopen) throws Exception{
 
         WorkOrder neWorkOrder = new WorkOrder();
-        UserAccount currentUserAccount = UserContextService.getCurrentUserAccount();
-        neWorkOrder.setSiteId(currentUserAccount.getSiteId());
+        neWorkOrder.setSiteId(usr.getSiteId());
         if(assetInfoRepository.getById(wop.getAssetId())==null){
             throw new Exception("该资产在数据中找不到");
         }
         neWorkOrder.setAssetName(assetInfoRepository.getById(wop.getAssetId()).getName());
-        neWorkOrder.setRequestorId(currentUserAccount.getId());
-        neWorkOrder.setRequestorName(currentUserAccount.getName());
+        neWorkOrder.setRequestorId(usr.getId());
+        neWorkOrder.setRequestorName(usr.getName());
         neWorkOrder.setRequestTime(new Date());
         neWorkOrder.setRequestReason(wop.getReason());
         neWorkOrder.setCaseType(1);
         neWorkOrder.setCaseSubType(1);
         neWorkOrder.setCasePriority(1);
-        neWorkOrder.setHospitalId(currentUserAccount.getHospitalId());
+        neWorkOrder.setHospitalId(usr.getHospitalId());
         if(reopenWorkOrder.size()>0){
             neWorkOrder.setParentWoId(reopenWorkOrder.get(0).getId());
         }

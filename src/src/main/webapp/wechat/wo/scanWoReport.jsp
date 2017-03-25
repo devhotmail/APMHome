@@ -33,6 +33,9 @@
                 wechatSDK.setAppId('${appId}');
                 wechatSDK.setSignature('${timestamp}', '${nonceStr}', '${signature}');
                 wechatSDK.init();
+                
+                //default page
+                
 
                 wechatSDK.scanQRCode(1, function(qrCode) {
                         if (qrCode.length > 16) {
@@ -44,8 +47,10 @@
                                     pageManager.woId = ret.woId;
                                     pageManager.init('ts_wodetail');
                                 } else {
+                                    pageManager.assetId = ret.assetId;
                                     pageManager.init('ts_scanAsset');
                                 }
+                                
 //                                $('#assetId').val(ret.assetId);
 //                                $('#assetName').html(ret.assetName);
 //                                $('#supplier').html(ret.supplier);
@@ -111,7 +116,7 @@
                         </div>
 
                         <!--图片 -->
-                        <div class="weui-cells__title">故障图片上传<div class="weui-uploader__info" style="float: right;">0/5</div></div>
+                        <div class="weui-cells__title">故障图片上传<div class="weui-uploader__info" style="float: right;"><span id="countnum">0</span>/5</div></div>
                         <div class="weui-cells">
                             <div class="weui-cell">
                                 <div class="weui-cell__bd">
@@ -121,6 +126,7 @@
                                             </ul>
                                             <div class="weui-uploader__input-box">
                                                 <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" />
+                                                <input type="hidden" id="deleteImg">
                                             </div>
                                         </div>
                                     </div>
@@ -132,7 +138,11 @@
                         <div class="weui-cells">
                             <div class="weui-cell">
                                 <div class="weui-cell__bd">
-                                    <button class="weui-btn voice-btn" type="button" id="replay">播放</button>
+                                    <a class="weui-btn weui-btn_plain-primary" type="button" id="record">点击 开始录音</a>
+                                    <a class="weui-btn weui-btn_plain-primary" type="button" id="play" style="margin-top:0">播放</a>
+                                </div>
+                                <div class="weui-cell__ft">
+                                    <i class="weui-icon-cancel" id="cancel"></i>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +156,8 @@
                             </div>
                         </div>
                     </form>
-
+                    
+                    <div id="errorMsg" style="color:red;text-align: center;"></div>
                     <div class="weui-btn-area">
                         <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">提交</a>
                     </div>
@@ -157,20 +168,23 @@
                 $(function(){
                     //init casePriority
                     app.initSelectData('casePriority', 'casePriority', '${casePriority}');
-
+                    pageManager.serverIds = [];
+                    
+                    //图片功能开始
                     var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
                         $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
                         $uploaderInput = $("#uploaderInput"),
                         $uploaderFiles = $("#uploaderFiles");
                     $uploaderInput.on("click", function(e){
-                        if($uploaderFiles.children().size() === 5){
+                        if($uploaderFiles.children().length >= 5){
                             $('#iosDialog2').fadeIn(200);
                             return false;
                         }
-                        upload();
+                        wechatSDK.chooseImages(5-$uploaderFiles.children().length, upload);
                         return false;
                     });
                     $uploaderFiles.on("click", "li", function(){
+                        $('#deleteImg').val($(this).data('serid'));
                         $galleryImg.attr("style", this.getAttribute("style"));
                         $gallery.fadeIn(100);
                     });
@@ -181,70 +195,148 @@
                         $(this).parents('.js_dialog').fadeOut(200);
                     });
                     $('.weui-gallery__del').on('click', function(){
-                        $uploaderFiles.children().remove();
+                        var serid = $('#deleteImg').val();
+                        $uploaderFiles.find('[data-serid='+serid+']').remove();
+                        pageManager.serverIds.splice(pageManager.serverIds.indexOf(serid),1);
+                        $('#countnum').html($uploaderFiles.children().length);
                     });
-
-                    //提交工单
-                    $('#submit').click(function(){
-                        if(!$('#assetId').val()){
-
-                        }
-                        var assetData = {};
-                        $.each(array, function(index, value){
-                            assetData[value.name] = value.value;
-                        });
-                        if(assetData['isInternal'] == 'on') {
-                            assetData['isInternal'] = true;
-                        } else {
-                            assetData['isInternal'] = false;
-                        }
-                        assetData['requestTime'] = assetData['requestTime'].replace('T', ' ');
-                        var flag = formValidate();
-                        if (!flag) return;
-                        var $loadingToast = $('#loadingToast');
-                        $.ajax({
-                            url: WEB_ROOT+'web/saveworkorder',
-                            type: 'post',
-                            contentType: 'application/json',
-                            data: JSON.stringify(assetData),
-                            success: function(ret) {
-                                if (ret == 'success') {
-                                    $loadingToast.fadeOut(100);
-                                    $('#container').empty();
-                                    $('#container').append($('#msg_success').html());
-                                } else {
-                                    $('#container').empty();
-                                    $('#container').append($('#msg_failed').html());
-                                }
-                            }
-                        });
-                        if ($loadingToast.css('display') != 'none') return;
-                        $loadingToast.fadeIn(100);
-                    });
-
-                    function formValidate() {
-
-                    }
-
-                    function upload() {
-                        wx.chooseImage({
-                            count: 5, // 默认9
-                            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                            success: function (res) {
-                                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                                $uploaderFiles.append($(tmpl.replace('#url#', localIds)));
+                    function upload(res) {
+                        function uploadImg(res, j) {
+                            if (j>res.length-1) return;
+                            if($uploaderFiles.children().length < 5){
                                 wx.uploadImage({
-                                    localId: localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
-                                    isShowProgressTips: 1, // 默认为1，显示进度提示
-                                    success: function (res) {
-                                        var serverId = res.serverId; // 返回图片的服务器端ID
-                                        $('#closeReason').val(serverId);
+                                    localId: res[j],
+                                    isShowProgressTips: 1,
+                                    success: function (rest) {
+                                        pageManager.serverIds.push(rest.serverId);
+                                        $uploaderFiles.append($(tmpl.replace('#url#', res[j])).attr('data-serid', rest.serverId));
+                                        $('#countnum').html($uploaderFiles.children().length);
+                                        j++;
+                                        uploadImg(res, j);
                                     }
                                 });
                             }
+                        }
+                        uploadImg(res, 0);
+                    }
+                    //图片功能结束
+                    
+                    //语音功能开始
+                    var voiceId = null;
+                    var recording = false;
+                    var playing = false;
+                    $('#record').click(function(){
+                        if (recording) {
+                            recording = false;
+                            $(this).html('点击 开始录音');
+                            $('#play').show();
+                            $('#cancel').show();
+                            $('#record').hide();
+                            var self = this;
+                            wx.stopRecord({
+                                success: function(res) {
+                                    voiceId = res.localId;
+                                    recording = false;
+                                    $(self).html('点击 开始录音');
+                                    $('#play').show();
+                                    $('#cancel').show();
+                                    $('#record').hide();
+                                    uploadVoice();
+                                }
+                            });
+                            wx.onVoiceRecordEnd({
+                                complete: function (res) {
+                                    voiceId = res.localId; 
+                                    recording = false;
+                                    $(self).html('点击 开始录音');
+                                    $('#play').show();
+                                    $('#cancel').show();
+                                    $('#record').hide();
+                                    uploadVoice();
+                                }
+                            });
+                        } else {
+                            recording = true;
+                            $(this).html('点击 结束录音');
+                            wx.startRecord();
+                        } 
+                    });
+                    $('#play').click(function(){
+                        if (playing) {
+                            playing = false;
+                            $(this).html('播放');
+                            wx.stopVoice({
+                                localId: voiceId
+                            });
+                        } else {
+                            playing = true;
+                            $(this).html('停止');
+                            wx.playVoice({
+                                localId: voiceId
+                            });
+                            var self = this;
+                            wx.onVoicePlayEnd({
+                                success: function (res) {
+                                    voiceId = res.localId; // 返回音频的本地ID
+                                    playing = false;
+                                    $(self).html('播放');
+                                }
+                            });
+                        }
+                    });
+                    $('#cancel').click(function(){
+                        $('#play').hide();
+                        $('#record').show();
+                        $('#cancel').hide();
+                        voiceId = null;
+                    });
+                    $('#play').hide();
+                    $('#cancel').hide();
+                    function uploadVoice(){
+                        wechatSDK.uploadVoice(voiceId, function(voiceSerId){
+                            pageManager.voiceSerId = voiceSerId;
                         });
                     }
+                    //语音功能结束
+
+                    //提交工单
+                    $('#submit').click(function(){
+                        $('#errorMsg').html('');
+                        var rReason = $('#requestReason').val();
+                        if (!voiceId && !rReason){
+                            $('#errorMsg').html('语音和文字至少一项有内容');
+                            return;
+                        }
+                        
+                        var data = {
+                            assetId: pageManager.assetId,
+                            voiceSerId: pageManager.voiceSerId,
+                            imgSerIds: pageManager.serverIds,
+                            priority: $('#casePriority').val(),
+                            reason: rReason
+                        };
+                        $.ajax({
+                            url: WEB_ROOT+'web/workorderCreate',
+                            type: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify(data),
+                            success: function(ret) {
+                                $loadingToast.fadeOut(100);
+                                if (ret === 'success') {
+                                    $('#container').empty();
+                                    $('#container').append($('#ts_msg_success').html());
+                                } else {
+                                    $('#container').empty();
+                                    $('#container').append($('#ts_msg_failed').html());
+                                }
+                            }
+                        });
+                            
+                        var $loadingToast = $('#loadingToast');
+                        if ($loadingToast.css('display') !== 'none') return;
+                        $loadingToast.fadeIn(100);
+                    });
+
                 });
         </script>
         
