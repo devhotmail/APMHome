@@ -9,30 +9,31 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0"/>
-        <title>帐号绑定</title>
-        <!-- 引入 WeUI -->
-        <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
-        <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
-    </head>
-    <body>
-        <div id="container" class="container"></div>
-        <script>
-            $(function(){
-                $('#container').append($('#create').html());
-            });
-        </script>
-        <script type="text/html" id="create">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,user-scalable=0" />
+<title>帐号绑定</title>
+<!-- 引入 WeUI -->
+<link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css" />
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+	<div id="container" class="container"></div>
+	<script>
+		$(function() {
+			$('#container').append($('#create').html());
+		});
+	</script>
+	<script type="text/html" id="create">
             <div class="page">
                 <div class="page__bd"> 
                     <form id="userForm">
                         <div class="weui-cells weui-cells_form">
                             <div class="weui-cell">
-                                <div class="weui-cell__hd"><label class="weui-label">用户名</label></div>
+                                <div class="weui-cell__hd"><label class="weui-label">手机号</label></div>
                                 <div class="weui-cell__bd">
-                                    <input id="username" name="username" class="weui-input" type="text" placeholder="请输入用户名"/>
+                                    <input id="username" name="username" class="weui-input" type="text" placeholder="请输入手机号"/>
                                     <input id="openId" type="hidden" name="openId" value="${openId}"/>
                                 </div>
                             </div>
@@ -40,6 +41,18 @@
                                 <div class="weui-cell__hd"><label class="weui-label">密码</label></div>
                                 <div class="weui-cell__bd">
                                     <input id="password" name="password" class="weui-input" type="password" placeholder="请输入密码"/>
+                                </div>
+                            </div>
+							<div class="weui-cell">
+                                <div class="weui-cell__hd"><label class="weui-label">新密码</label></div>
+                                <div class="weui-cell__bd">
+                                    <input id="newPwd" name="newPwd" class="weui-input" type="password" placeholder="请输入新密码"/>
+                                </div>
+                            </div>
+							<div class="weui-cell">
+                                <div class="weui-cell__hd"><label class="weui-label">确认新密码</label></div>
+                                <div class="weui-cell__bd">
+                                    <input id="confirmPwd" name="confirmPwd" class="weui-input" type="password" placeholder="请重新输入新密码"/>
                                 </div>
                             </div>
                         </div>
@@ -57,15 +70,37 @@
                     </div>
                 </div>
             </div>
+
             <script type="text/javascript">
                 var WEB_ROOT = '${ctx}/';
                 $(function(){
                     $('#submit').click(function(){
-                        var $loadingToast = $('#loadingToast');
+			var flag = true;			
+            var Inputs = $('#userForm').find('input');
+            $.each(Inputs, function (idx, value) {
+                if (value.type === "password") {
+                    if (value.value === "") {
+                        flag = false;
+                        $(value).parent().parent().addClass('weui-cell_warn');
+                    } else {
+                        $(value).parent().parent().removeClass('weui-cell_warn');
+                    }
+                }
+            });
+            if (flag) {
+                var confirmPwd = $("#confirmPwd")[0];
+                if ($("#newPwd")[0].value != confirmPwd.value) {
+                    flag = false;
+                    $(confirmPwd).parent().parent().addClass('weui-cell_warn');
+                    confirmPwd.value = "";
+                }
+            }							
+			if(flag){
+				var $loadingToast = $('#loadingToast');
                         $.ajax({
                             url: WEB_ROOT+'web/binduser',
                             type: 'post',
-                            data: {'username': $('#username').val(), 'password': $('#password').val(), 'openId': $('#openId').val()},
+                            data: {'username': $('#username').val(), 'password': $('#password').val(), 'openId': $('#openId').val(),'newPwd':$('#newPwd').val()},
                             beforeSend: function( xhr ) { 
                                 xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
                                 },
@@ -82,10 +117,12 @@
                         });
                         if ($loadingToast.css('display') != 'none') return;
                         $loadingToast.fadeIn(100);
+						}
                     });
                 });
+		                  
         </script>
-        <script type="text/html" id="msg_success">
+	<script type="text/html" id="msg_success">
             <div class="page">
                 <div class="weui-msg">
                     <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
@@ -100,7 +137,7 @@
                 </div>
             </div>
         </script>
-        <script type="text/html" id="msg_failed">
+	<script type="text/html" id="msg_failed">
             <div class="page">
                 <div class="weui-msg">
                     <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
@@ -116,5 +153,5 @@
                 </div>
             </div>
         </script>
-    </body>
+</body>
 </html>

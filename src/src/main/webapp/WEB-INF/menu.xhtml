@@ -47,6 +47,7 @@
                             <p:menuitem id="um08" value="#{msg.SupplierMgmt}" outcome="/portal/supplier/List.xhtml"/>
                             <p:menuitem id="um081" value="#{msg.TerminatedAsset}" outcome="/portal/asset/info/List.xhtml?terminate=true"/>
                             <p:menuitem id="um082" value="#{msg.QRCodeMgmt}" outcome="/portal/asset/qrCode/qrCodeList.xhtml"/>
+                            <p:menuitem id="um083" value="#{msg.Create}#{msg.AssetInfo}" outcome="/portal/asset/createAsset/RequestsList.xhtml"/>
                         </p:submenu>
                         <p:submenu id="um09" label="#{msg.WorkOrderMgmt}" icon="fa fa-wrench" rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
                             <p:menuitem id="um10" value="#{msg.ServiceRequestMgmt}" outcome="/portal/wo/woList.xhtml"/>
@@ -98,6 +99,7 @@
                             <p:menuitem id="um491" value="#{msg.SupplierMgmt}"  rendered="false" outcome="/portal/supplier/List.xhtml"/>
                             <p:menuitem id="um492" value="#{msg.ChecklistAdmin}" rendered="false" outcome="/portal/insp/checkListList.xhtml"/>
                             <p:menuitem id="um493" value="#{msg.SysCodeConfig}" outcome="/portal/config/FieldCodeTypeConfig.xhtml"/>
+                            <p:menuitem id="um494" value="#{msg.WorkFlowConfig}" outcome="/portal/config/workFlowConfig/List.xhtml"/>
                         </p:submenu>
                         
                         <p:menuitem id="um53" value="#{msg.profile}" icon="person" outcome="/portal/profile.xhtml"/>

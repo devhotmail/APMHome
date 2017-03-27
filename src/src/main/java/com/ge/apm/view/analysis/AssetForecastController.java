@@ -91,7 +91,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "where to_char(w.request_time, 'yyyy-mm') " +
                     "between to_char(now() - interval '2 year', 'yyyy-mm') " +
                     "and to_char(now(), 'yyyy-mm') " +
-                    "and a.id = w.asset_id and w.is_closed = true " +
+                    "and a.id = w.asset_id and w.status = 2 " +
                     "and a.hospital_id = :#hospital_id " +
                     "group by key order by key;";
 
@@ -123,7 +123,7 @@ public class AssetForecastController extends SqlConfigurableChartController impl
                     "where to_char(w.request_time, 'yyyy-mm') " +
                     "between to_char(now() - interval '2 year', 'yyyy-mm') " +
                     "and to_char(now(), 'yyyy-mm') " +
-                    "and a.id = w.asset_id and w.is_closed = true " +
+                    "and a.id = w.asset_id and w.status = 2 " +
                     "and a.hospital_id = :#hospital_id " +
                     "and a.id = :#assetId " +
                     "group by key order by key;";

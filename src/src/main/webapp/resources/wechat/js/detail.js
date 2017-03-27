@@ -150,9 +150,9 @@ $(function () {
                 },
                 fullscreenEl: false, // 是否支持全屏按钮
                 shareButtons: [
-                    {id: 'wechat', label: '分享微信', url: '#'},
-                    {id: 'weibo', label: '新浪微博', url: '#'},
-                    {id: 'download', label: '保存图片', url: '{{raw_image_url}}', download: true}
+//                    {id: 'wechat', label: '分享微信', url: '#'},
+//                    {id: 'weibo', label: '新浪微博', url: '#'},
+//                    {id: 'download', label: '保存图片', url: '{{raw_image_url}}', download: true}
                 ], // 分享按钮
 
                 // define gallery index (for URL)

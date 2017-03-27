@@ -50,7 +50,7 @@ public class WeChatMenuDispatcher {
         //URL_MAP.put("12", "/wechat/asset/QRCreate.xhtml");
         URL_MAP.put("12", "/web/qrCreateAsset");
         
-        URL_MAP.put("21", "/web/scanworeport");
+        URL_MAP.put("21", "/wechat/wo/scanAssetList.xhtml");
         URL_MAP.put("22", "/web/myreport");
 //        URL_MAP.put("23", "/web/repairprocess");
         
@@ -93,7 +93,7 @@ public class WeChatMenuDispatcher {
         }
 
         if (isBinded) {
-                return  "redirect:" +  URL_MAP.get(index);
+                return  "redirect:" +  URL_MAP.get(index)+"?"+request.getQueryString();
             }else{
                 return "userInfo";
             }

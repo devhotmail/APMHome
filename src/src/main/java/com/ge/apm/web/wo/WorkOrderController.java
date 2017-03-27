@@ -7,6 +7,7 @@ package com.ge.apm.web.wo;
 
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.service.wechat.CoreService;
 import com.ge.apm.service.wechat.WorkOrderWeChatService;
@@ -62,6 +63,7 @@ public class WorkOrderController {
         model.addAttribute("signature",s.getSignature());
         
         model.addAttribute("casePriority", 3);
+        model.addAttribute("qrCode", request.getParameter("qrCode"));
         
         return "wo/scanWoReport";
     }
@@ -85,6 +87,8 @@ public class WorkOrderController {
     
     @RequestMapping(value = "scanwodetail")
     public String scanWoDetail(HttpServletRequest request,HttpServletResponse response, Model model) {
+        UserAccount ua = service.getLoginUser(request);
+        model.addAttribute("userId", ua.getId());
         WxJsapiSignature s = null;
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
@@ -96,6 +100,8 @@ public class WorkOrderController {
         model.addAttribute("timestamp",s.getTimestamp());
         model.addAttribute("nonceStr",s.getNoncestr());
         model.addAttribute("signature",s.getSignature());
+        
+        model.addAttribute("qrCode", request.getParameter("qrCode"));
         
         return "wo/scanWoDetail";
     }
@@ -109,6 +115,8 @@ public class WorkOrderController {
      */
     @RequestMapping(value = "mywolist")
     public String woListPage(HttpServletRequest request,HttpServletResponse response, Model model) {
+        UserAccount ua = service.getLoginUser(request);
+        model.addAttribute("userId", ua.getId());
         WxJsapiSignature s = null;
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
@@ -136,7 +144,27 @@ public class WorkOrderController {
         map.put("supplier", info.getSupplierId()==null?"":service.getSupplierName(info.getSupplierId()));
         map.put("assetGroup", service.getMsgValue("assetGroup", info.getAssetGroup().toString()));
         map.put("assetStatus", service.getMsgValue("assetStatus", info.getStatus()+""));
+        
+        WorkOrder wo = woWcService.scanAction(info);
+        if (wo != null) {
+            map.put("woId", wo.getId());
+            map.put("view", true);
+        }
         return map;
+    }
+    
+    @RequestMapping(value="scanaction")
+    public @ResponseBody Object scanAction(String qrCode) {
+        List<AssetInfo> list = assetDao.getByQrCode(qrCode);
+        if (list.isEmpty())
+            return null;
+        AssetInfo info = list.get(0);
+        return woWcService.scanAction(info);
+    }
+    
+    @RequestMapping(value="choosetab")
+    public @ResponseBody Object chooseTab(HttpServletRequest request) {
+        return woWcService.chooseTab(request)?1:2;
     }
     
     @RequestMapping(value="saveworkorder")
@@ -173,7 +201,7 @@ public class WorkOrderController {
     @RequestMapping(value="getcurrentperson")
     public @ResponseBody Object getCurrentPerson(HttpServletRequest request, HttpServletResponse response) {
         try{
-            return service.getUsersWithAssetHeadOrStaffRole(request);
+            return service.getUsersWithAssetStaffRole(request);
         }catch(Exception ex){
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -186,8 +214,8 @@ public class WorkOrderController {
      * @return 
      */
     @RequestMapping(value = "wolistdata")
-    public @ResponseBody Object woListData(HttpServletRequest request) {
-        return woWcService.woList(request);
+    public @ResponseBody Object woListData(HttpServletRequest request, String stepId) {
+        return woWcService.woList(request, stepId);
     }
 
     /**
@@ -266,7 +294,7 @@ public class WorkOrderController {
                 } catch (IOException e) {
                     Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, e);
                 }   
-              }
+            }
         }
     }
     
@@ -297,13 +325,23 @@ public class WorkOrderController {
         return "success";
     }
     @RequestMapping(value = "/media")
-    public @ResponseBody String uploadMediaToWeChat() {
+    public @ResponseBody String uploadMediaToWeChat(String serverId) {
         try{
-            InputStream is = woWcService.getFile(10);
+            InputStream is = woWcService.getFile(Integer.parseInt(serverId));
             return service.uploadMediaToWechat(is);
         }catch(Exception ex){
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
             return "";
+        }
+    }
+    
+    @RequestMapping(value = "/wo_img_list")
+    public @ResponseBody Object getWoImgList(String woId) {
+        try{
+            return woWcService.getWoImgList(Integer.parseInt(woId));
+        }catch(Exception ex){
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
     

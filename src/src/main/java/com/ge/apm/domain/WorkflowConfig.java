@@ -46,6 +46,8 @@ public class WorkflowConfig implements Serializable {
     private Integer timeoutRepair;
     @Column(name = "timeout_close")
     private Integer timeoutClose;
+    @Column(name="order_reopen_timeframe")
+    private Integer orderReopenTimeframe;
 
     public WorkflowConfig() {
     }
@@ -141,6 +143,14 @@ public class WorkflowConfig implements Serializable {
         this.timeoutClose = timeoutClose;
     }
 
+    public Integer getOrderReopenTimeframe() {
+        return orderReopenTimeframe;
+    }
+
+    public void setOrderReopenTimeframe(Integer orderReopenTimeframe) {
+        this.orderReopenTimeframe = orderReopenTimeframe;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -161,9 +171,33 @@ public class WorkflowConfig implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "com.ge.apm.domain.WorkflowConfig[ id=" + id + " ]";
-    }
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("WorkflowConfig [id=");
+		builder.append(id);
+		builder.append(", siteId=");
+		builder.append(siteId);
+		builder.append(", hospitalId=");
+		builder.append(hospitalId);
+		builder.append(", dispatchMode=");
+		builder.append(dispatchMode);
+		builder.append(", dispatchUserId=");
+		builder.append(dispatchUserId);
+		builder.append(", dispatchUserName=");
+		builder.append(dispatchUserName);
+		builder.append(", timeoutDispatch=");
+		builder.append(timeoutDispatch);
+		builder.append(", timeoutAccept=");
+		builder.append(timeoutAccept);
+		builder.append(", timeoutRepair=");
+		builder.append(timeoutRepair);
+		builder.append(", timeoutClose=");
+		builder.append(timeoutClose);
+		builder.append("]");
+		return builder.toString();
+	}
+
+
     
 }

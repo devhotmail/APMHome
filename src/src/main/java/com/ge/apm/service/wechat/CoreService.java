@@ -4,12 +4,14 @@ import com.ge.apm.dao.FileUploadDao;
 import com.ge.apm.dao.I18nMessageRepository;
 import com.ge.apm.dao.SupplierRepository;
 import com.ge.apm.dao.UserAccountRepository;
+import com.ge.apm.dao.WorkOrderPhotoRepository;
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.dao.WorkOrderStepRepository;
 import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.Supplier;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
+import com.ge.apm.domain.WorkOrderPhoto;
 import com.ge.apm.domain.WorkOrderStep;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.service.utils.Digests;
@@ -17,9 +19,11 @@ import com.ge.apm.service.wo.WorkOrderService;
 import java.io.File;
 import java.io.FileInputStream;
 import com.ge.apm.web.wechat.WeChatCoreController;
+import com.google.common.base.Strings;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -38,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,8 +61,13 @@ import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
+import org.apache.camel.Headers;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
-import webapp.framework.util.TimeUtil;
+import webapp.framework.broker.SiBroker;
 import webapp.framework.context.ExternalLoginHandler;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.service.UserContext;
@@ -67,6 +77,7 @@ import webapp.framework.web.service.UserContext;
  * Email:liumingbo2008@gmail.com
  */
 @Service
+@Configuration
 public class CoreService {
 
     @Autowired
@@ -88,10 +99,15 @@ public class CoreService {
     private WxMpMessageRouter router;
     @Autowired
     protected SupplierRepository supplierDao;
+    @Autowired
+    protected WorkOrderPhotoRepository photoDao;
     
     @PostConstruct
     public void init() {
         this.refreshRouter();
+        if (!Strings.isNullOrEmpty(System.getenv("webContextUrl"))) {
+            webContextUrl = System.getenv("webContextUrl");
+        }
     }
 
     public void requestGet(String urlWithParams) throws IOException {
@@ -106,11 +122,9 @@ public class CoreService {
         httpget.setConfig(requestConfig);
 
         CloseableHttpResponse response = httpclient.execute(httpget);
-        System.out.println("StatusCode -> " + response.getStatusLine().getStatusCode());
 
         HttpEntity entity = response.getEntity();
         String jsonStr = EntityUtils.toString(entity);
-        System.out.println(jsonStr);
 
         httpget.releaseConnection();
     }
@@ -122,11 +136,9 @@ public class CoreService {
         httppost.setEntity(new UrlEncodedFormEntity(params, StandardCharsets.UTF_8));
 
         CloseableHttpResponse response = httpclient.execute(httppost);
-        System.out.println(response.toString());
 
         HttpEntity entity = response.getEntity();
         String jsonStr = EntityUtils.toString(entity, "utf-8");
-        System.out.println(jsonStr);
 
         httppost.releaseConnection();
     }
@@ -142,18 +154,31 @@ public class CoreService {
     }
     
     @Transactional
-    public int bindingUserInfo(HttpServletRequest request,HttpServletResponse response, String openId, String username, String password) {
+    public int bindingUserInfo(HttpServletRequest request,HttpServletResponse response, String openId, String username, 
+    																	String password, String newPwd, String confirmPwd) {
+    	UserAccount ua = userValidate(username, password);
+//    	if(StringUtils.isEmpty(newPwd) || StringUtils.isEmpty(confirmPwd) || (!newPwd.equals(confirmPwd))){
+//    		return 1;//
+//    	}
+    	if (ua == null ){//账号密码校验
+    		return 1;//绑定失败
+    	}
         WxMpUser user = getUserInfo(openId, null);
-        UserAccount ua = userValidate(username, password);
-        if (ua == null || user == null){
-            return 1;//绑定失败
-        } else {
-            ua.setWeChatId(openId);
-            userDao.save(ua);
-            //主动登录
-            loginByWeChatOpenId(openId, request, response);
-            return 0;//绑定成功
+        if(user == null){//微信校验
+        	return 1;
         }
+       //更新密码 
+        try {
+        	ua.setPlainPassword(newPwd);
+            ua.entryptPassword();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        ua.setWeChatId(openId);
+        userDao.save(ua);
+        //主动登录
+        loginByWeChatOpenId(openId, request, response);
+        return 0;//绑定成功
     }
     
     private UserAccount userValidate(String username, String password) {
@@ -196,29 +221,33 @@ public class CoreService {
         woService.createWorkOrderStep(workOrder, step);
         //保存完成后，再把上传的图片保存
         if (serverId != null)
-            upload(workOrder, serverId);
+            uploadImage(workOrder, serverId);
     }
     
     @Transactional
-    public void upload(WorkOrder workOrder, String serverId) throws WxErrorException {
+    public void uploadVoice(WorkOrder workOrder, String serverId) throws WxErrorException {
         File file = wxMpService.getMaterialService().mediaDownload(serverId);
         if (file == null)
             return;
         Integer uploadFileId = uploadFile(file);
-        String fileName = getFileName(file);
-        List<WorkOrderStep> steps = stepDao.getByWorkOrderIdAndStepId(workOrder.getId(), 1);
-        if (steps == null || steps.size() == 0) return;
-        //如果有文件则删除以前的文件
-        WorkOrderStep step = steps.get(0);
-        if (step.getFileId() != null) {
-            FileUploadDao fileUploaddao = new FileUploadDao();
-            fileUploaddao.deleteUploadFile(step.getFileId());
-        }
-        step.setAttachmentUrl(fileName);
+        if (uploadFileId == 0) 
+            return;
+        workOrder.setRequestReasonVoice(uploadFileId);
+        file.delete();
+    }
+    
+    public void uploadImage(WorkOrder workOrder, String serverId) throws WxErrorException {
+        File file = wxMpService.getMaterialService().mediaDownload(serverId);
+        if (file == null)
+            return;
+        Integer uploadFileId = uploadFile(file);
         if (uploadFileId > 0) {
-            step.setFileId(uploadFileId);
+            WorkOrderPhoto photo = new WorkOrderPhoto();
+            photo.setPhotoId(uploadFileId);
+            photo.setSiteId(workOrder.getSiteId());
+            photo.setWorkOrderId(workOrder.getId());
+            photoDao.save(photo);
         }
-        stepDao.save(step);
         file.delete();
     }
     
@@ -284,9 +313,9 @@ public class CoreService {
         return list;
     }
     
-    public List<Map<String, Object>> getUsersWithAssetHeadOrStaffRole(HttpServletRequest request){
+    public List<Map<String, Object>> getUsersWithAssetStaffRole(HttpServletRequest request){
         List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
-        List<UserAccount> uas = uaaService.getUsersWithAssetHeadOrStaffRole(getLoginUser(request).getHospitalId());
+        List<UserAccount> uas = uaaService.getUsersWithAssetStaffRole(getLoginUser(request).getHospitalId());
         for(UserAccount ua :uas) {
             Map<String,Object> map = new HashMap<String, Object>();
             map.put("id", ua.getId());
@@ -351,7 +380,7 @@ public class CoreService {
     public void saveVoice(String serverId) throws Exception{
         WorkOrder workOrder = new WorkOrder();
         workOrder.setId(38);
-        upload(workOrder, serverId);
+        uploadVoice(workOrder, serverId);
     }
     public String uploadMediaToWechat(InputStream inputStream) throws Exception{
         WxMediaUploadResult res = wxMpService.getMaterialService().mediaUpload(WxConsts.MEDIA_VOICE, WxConsts.FILE_AMR, inputStream);
@@ -362,5 +391,47 @@ public class CoreService {
         Supplier s = supplierDao.findById(id);
         return s == null ? null : s.getName();
     }
+
+    @Value("#{wxProperties.webContextUrl}")
+    private String webContextUrl;
     
+    public void sendWxTemplateMessage(String userWeChatId, String wxTemplateId, String msgTitle, String msgBrief, String msgDetails, String msgDateTime, String linkUrl){
+        HashMap<String, Object> params = new HashMap<>();
+
+        params.put("userWeChatId", userWeChatId);
+        params.put("wxTemplateId", wxTemplateId);
+        params.put("msgTitle", msgTitle);
+        params.put("msgBrief", msgBrief);
+        params.put("msgDetails", msgDetails);
+        params.put("msgDateTime", msgDateTime);
+
+        if(linkUrl==null || "".equals(linkUrl.trim())) 
+            linkUrl = null;
+        else
+            linkUrl = linkUrl.trim();
+        
+        params.put("linkUrl", linkUrl);
+
+        //let camel route call doSendWxTemplateMessage in async mode and retry 3 times
+        SiBroker.sendMessageWithHeaders("direct:wxSendMessage", null, params);
+    }
+    
+    public void doSendWxTemplateMessage(@Headers Map<String, Object> params) throws WxErrorException{
+        WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+                .toUser(params.get("userWeChatId").toString()).templateId(params.get("wxTemplateId").toString()).build();
+
+        String textColor = "#000000";
+        templateMessage.addWxMpTemplateData( new WxMpTemplateData("first", params.get("msgTitle").toString(),textColor));
+        templateMessage.addWxMpTemplateData( new WxMpTemplateData("performance", params.get("msgBrief").toString(),textColor));
+        templateMessage.addWxMpTemplateData( new WxMpTemplateData("remark", params.get("msgDetails").toString(),textColor));
+        templateMessage.addWxMpTemplateData( new WxMpTemplateData("time", params.get("msgDateTime").toString(),textColor));
+
+        Object linkUrl = params.get("linkUrl");
+        if( linkUrl!=null && !"".equals(linkUrl) )
+            templateMessage.setUrl(wxMpService.oauth2buildAuthorizationUrl(webContextUrl+params.get("linkUrl").toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        else
+            templateMessage.setUrl("");
+        
+        wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+    }    
 }

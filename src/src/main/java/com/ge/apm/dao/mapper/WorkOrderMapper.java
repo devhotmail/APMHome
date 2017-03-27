@@ -10,7 +10,7 @@ public interface WorkOrderMapper {
 				  "where date(wo.request_time)=date(#{day}) and ai.id=#{assetId}")
 	public Integer fetchWorkOrdersByAssetId(@Param("assetId") Integer assetId,@Param("day") Date day);
 
-	@Select("select sum(total_price) from work_order wo where asset_id=#{assetId} and wo.is_closed = true and "+
+	@Select("select sum(total_price) from work_order wo where asset_id=#{assetId} and wo.status = 2 and "+
 					"date(wo.request_time)=date(#{day}) group by date(#{day})")
 	public Double fetchWorkOrderCost(@Param("assetId") Integer assetId,@Param("day") Date day);
 

@@ -2,7 +2,9 @@ package com.ge.apm.web.wo;
 
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.domain.WorkOrder;
+import com.ge.apm.domain.WorkOrderPoJo;
 import com.ge.apm.service.wechat.CoreService;
+import com.ge.apm.service.wo.WorkOrderService;
 import com.ge.apm.view.sysutil.FieldValueMessageController;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
@@ -10,13 +12,14 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import webapp.framework.web.WebUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by lsg on 17/1/2017.
@@ -27,11 +30,47 @@ public class RepairProcessController {
     protected WxMpConfigStorage configStorage;
     @Autowired
     protected WxMpService wxMpService;
-     @Autowired
-     protected CoreService coreService;
+    @Autowired
+    protected CoreService coreService;
+    @Autowired
+    protected WorkOrderService workOrderService;
     WorkOrderRepository workOrderDao = WebUtil.getBean(WorkOrderRepository.class);
+    /*开单 */
+    @RequestMapping(value = "/workorderCreate",method = RequestMethod.POST)
+    @ResponseBody
+    public String createWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo) throws Exception
+    {
+        try{
+            return workOrderService.workWorderCreate(request, wopo);
+        } catch(Exception e){
+            Logger.getLogger(RepairProcessController.class.getName()).log(Level.SEVERE, null, e);
+            return "error";
+        }
+    }
 
-    @RequestMapping(value = "repairprocess")
+    @RequestMapping(value = "/workorderaction")
+    @ResponseBody
+    public String assignWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo ) throws Exception
+    {
+        try{
+            switch (wopo.getActionType()) {
+                case "assign" : workOrderService.assignWorkOrder(request, wopo);break;
+                case "take" : workOrderService.takeWorkOrder(request, wopo);break;
+                case "sign" : workOrderService.signWorkOrder(request, wopo);break;
+                case "repair" : workOrderService.repairWorkOrder(request, wopo);break;
+                case "close" : workOrderService.closeWorkOrder(request, wopo);break;
+                case "return" : workOrderService.returnWorkOrder(request, wopo);break;
+                case "fatchwo": workOrderService.fatchWorkOrder(request, wopo);break;
+                default: workOrderService.feedbackWorkOrder(request, wopo);
+            }
+            return "success";
+        } catch(Exception e){
+            Logger.getLogger(RepairProcessController.class.getName()).log(Level.SEVERE, null, e);
+            return "error";
+        }
+    }
+
+    @RequestMapping(value = "/repairprocess")
     public String repairProcess(HttpServletResponse response,
                                 HttpServletRequest httpServletRequest,
                                 Model model) {

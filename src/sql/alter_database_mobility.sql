@@ -19,6 +19,7 @@ alter table work_order drop column name;
 --- end of drop unused columns
 
 
+alter table asset_summit alter column rating type float;
 ALTER TABLE user_account ADD CONSTRAINT uk_user_account_wechat_id UNIQUE (wechat_id);
 alter table user_account add COLUMN leader_user_id int;
 
@@ -38,7 +39,7 @@ hospital_id int not null,
 qr_code varchar(16) not null,
 issue_date date not null,	-- 发行日期
 submit_date date,	--扫码建档日期
-submit_wechat_id int,	--扫码建档者 openId
+submit_wechat_id varchar(64),	--扫码建档者 openId
 comment varchar(512),	--备注
 status int not null -- 1:已发行(未上传) / 2: 已上传(待建档) / 3: 已建档(待删除)
 );
@@ -52,19 +53,23 @@ file_id int not null
 );
 alter table qr_code_attachment add primary key (id);
 
-
+/*
+drop table if exists account_application
 create table account_application(
 id serial not null,
 wechat_id varchar(64) not null, 
 name varchar(32) not null,	--真实姓名
 telephone varchar(16) not null,	--电话
 hospital_name varchar(64) not null,	--所属医院或供应商
+clinical_dept_name varchar(32),	--所属临床科室
 role_id int not null,	--角色ID
 comment varchar(128),	--备注
 application_date date,	--帐号申请日期
-status int	-- 1-待审批 / 2-审批通过 / 3-拒绝
+status int,	-- 1-待审批 / 2-审批通过 / 3-拒绝
+password varchar(16)  --密码
 );
 alter table account_application add primary key (id);
+*/
 
 create table message_subscriber(
 id serial not null,
@@ -79,15 +84,17 @@ is_receive_chat_msg bool not null	--是否接收聊天消息
 alter table message_subscriber add primary key (id);
 
 
-alter table work_order add column status int;  -- 1-在修 / 2-完成 / 3-取消
+alter table work_order add column status int;  -- 1-在修 / 2-完成 / 3-取消  (2: 0分表明没有评价过)
 alter table work_order add column int_ext_type int;  -- 1-内部 / 2-外部 / 3-混合
 alter table work_order add column parent_wo_id int;	--二次工单
 alter table work_order add column feedback_rating int;  --默认是0, 打分范围:1~5 
 alter table work_order add column feedback_comment varchar(128); --评价comments
 alter table work_order add column request_reason_voice int;	--故障说明(语音)
+alter table work_order add column pat_problems varchar(128);  --PAT 的 Problems(问题描述)
 alter table work_order add column pat_actions varchar(128);  --PAT 的 Actions(解决方案)
 alter table work_order add column pat_tests varchar(128);	 --PAT 的 Tests(测试方法)
-
+alter table work_order add column close_time timestamp;	 --关单时间
+alter table work_order add column estimated_close_time timestamp;	 --预估修复时间
 
 alter table work_order_step_detail add column cowoker_user_id int; --协作者
 alter table work_order_step_detail add column cowoker_user_name varchar(16); --协作者姓名
@@ -123,7 +130,8 @@ dispatch_user_name varchar(16),	--派工人
 timeout_dispatch int, --派工环节的超时提醒阈值(分钟)
 timeout_accept int,   --接单环节的超时提醒阈值(分钟)
 timeout_repair int, --维修环节的超时提醒阈值(分钟)
-timeout_close int --关单环节的超时提醒阈值(分钟)
+timeout_close int, --关单环节的超时提醒阈值(分钟)
+order_reopen_timeframe int --二次开单的最大时间间隔
 );
 alter table workflow_config add primary key (id);
 

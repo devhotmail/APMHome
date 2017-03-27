@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<title>#{msg.ApplyRegistration}</title>
+	<h:outputStylesheet name="wechat/css/weui.min.css" />
+	<script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jquery-3.1.1.min.js" />
+
+</h:head>
+<h:body>
+	
+	<div>
+		<img src="#{wechatUtilService.getContextPath()}/resources/img/ge.png" >GE APM资产云管家</img>
+	</div>
+	<h:form id="applyRegistration" enctype="application/x-www-form-urlencoded" acceptcharset="UTF-8" >
+		<div class="page__bd">
+			<div class="weui-cells">
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">
+						<label class="weui-label">医院及院区</label>
+					</div>
+					<div class="weui-cell__bd">
+						<h:inputText id="hospitalName" class="weui-input" type="text" placeholder="上海瑞慈东院"  value="#{userRegistrationController.accountApplication.hospitalName}" />
+					</div>
+				</div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">
+						<label class="weui-label">科室</label>
+					</div>
+					<div class="weui-cell__bd">
+						<h:inputText id="deptName" class="weui-input" type="text" placeholder="放射科" value="#{userRegistrationController.accountApplication.clinicalDeptName}" />
+					</div>
+				</div>
+				
+				 <div class="weui-cell">
+	                <div class="weui-cell__hd"><label class="weui-label">角色</label></div>
+	                <div class="weui-cell__bd">
+	                    <div class="weui-cell weui-cell_select">
+	                        <div class="weui-cell__bd">
+	                            <h:selectOneMenu id="roleId" class="weui-select" value="#{userRegistrationController.accountApplication.roleId}" >
+	                                <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+	                                <f:selectItems value="#{sysRoleController.getItemList()}" var="item" itemLabel="#{item.roleDesc}" itemValue="#{item.id}"/>
+	                            </h:selectOneMenu>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd">
+						<label class="weui-label">姓名</label>
+					</div>
+					<div class="weui-cell__bd">
+						<h:inputText id="name" class="weui-input" type="text" placeholder="张三" value="#{userRegistrationController.accountApplication.name}" />
+					</div>
+				</div>
+				
+				<div class="weui-cell">
+					<div class="weui-cell__hd">
+						<label class="weui-label">手机号</label>
+					</div>
+					<div class="weui-cell__bd">
+						<h:inputText id="mobile" class="weui-input" type="text" placeholder="请输入手机号，作为用户名"  value="#{userRegistrationController.accountApplication.telephone}" />
+					</div>
+				</div>
+				
+		        <div class="weui-cell">
+		        	<div class="weui-cell__hd">
+						<label class="weui-label">备注</label>
+					</div>
+		            <div class="weui-cell__bd">
+		                <!-- <div class="weui-cell__bd"> -->
+		                    <h:inputTextarea id="comment" class="weui-textarea" placeholder="我是瑞慈医院的工作人员或我是维护人员" rows="3"  value="#{userRegistrationController.accountApplication.comment}" />
+		                    <div class="weui-textarea-counter"><span>0</span>/200</div>
+		              <!--   </div> -->
+		            </div>
+		        </div>
+
+				<div class="weui-cell weui-cells_form">
+					<div class="weui-cell__hd">
+						<label class="weui-label">密码</label>
+					</div>
+					<div class="weui-cell__bd">
+						<h:inputSecret class="weui-input" id="newPassword" value="password1"  placeholder="最少6位(数字或字母，也是登录管理平台的密码)" />
+					</div>
+					<div class="weui-cell__ft">
+						<i class="weui-icon-warn"></i>
+					</div>
+				</div>
+
+				<div class="weui-cell weui-cells_form">
+					<div class="weui-cell__hd">
+						<label class="weui-label">#{msg.ConfirmPass}</label>
+					</div>
+					<div class="weui-cell__bd">
+						<h:inputSecret class="weui-input" id="confirmNewPassword" value="#{userRegistrationController.accountApplication.password}"  />
+					</div>
+					<div class="weui-cell__ft">
+						<i class="weui-icon-warn"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<h:commandButton id="submit" actionListener="#{userRegistrationController.submit()}" type="submit" style="display: none" />
+
+		<div class="weui-msg__opr-area page__ft">
+			<div class="weui-btn-area">
+				<a class="weui-btn weui-btn_primary" value="#{msg.Save}" onclick="js:formValidate();">#{msg.Submit}</a>
+			</div>
+			<p class="weui-btn-area">
+				<a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_default">#{msg.Return}</a>
+			</p>
+		</div>
+	</h:form>
+	<!-- 	</div> -->
+</h:body>
+
+<script>
+/* 	$("#applyRegistration\\:newPassword").attr('placeholder','#{msg.PleaseInput}#{msg.NewPass}');
+	$("#applyRegistration\\:confirmNewPassword").attr('placeholder','#{msg.ConfirmNewPassword}'); */
+	function formValidate() {
+		var flag = true;
+		
+		if(flag){
+			var hospitalName = $("#applyRegistration\\:hospitalName")[0];
+			if(hospitalName.value === ""){
+				flag = false;
+				$(hospitalName).parent().parent().addClass('weui-cell_warn');
+			}else{
+				$(hospitalName).parent().parent().removeClass('weui-cell_warn');
+			}
+		}
+		
+		if(flag){
+			var roleId =$("#applyRegistration\\:roleId")[0];
+			if(roleId.value === 0){
+				flag = false;
+				$(roleId).parent().parent().addClass('weui-cell_warn');
+			}else{
+				$(roleId).parent().parent().removeClass('weui-cell_warn');
+			}
+		}
+		
+		if(flag){
+			var name =$("#applyRegistration\\:name")[0];
+			if(name.value === ""){
+				flag = false;
+				$(name).parent().parent().addClass('weui-cell_warn');
+			}else{
+				$(name).parent().parent().removeClass('weui-cell_warn');
+			}
+		}
+		
+		if(flag){
+			var mobile = $("#applyRegistration\\:mobile")[0];
+			if(mobile.value === ""){
+				flag = false;
+				$(mobile).parent().parent().addClass('weui-cell_warn');
+			}else{
+				$(mobile).parent().parent().removeClass('weui-cell_warn');
+			}
+			
+			var reg = /^1[34578]\d{9}$/; //^1[3|4|5|7|8][0-9]\d{4,8}$/; 
+			if(!reg.test(mobile.value)){
+				flag = false;
+				//$("#applyRegistration\\:mobile").attr('placeholder','手机格式不正确!');
+				$(mobile).parent().parent().addClass('weui-cell_warn');
+			}else{
+				$(mobile).parent().parent().removeClass('weui-cell_warn');
+			}
+		}
+		
+		if(flag){
+			var Inputs = $('#applyRegistration').find('input');
+			$.each(Inputs, function(idx, value) {
+				if (value.type === "password") {
+					if (value.value === "") {
+						flag = false;
+						$(value).parent().parent().addClass('weui-cell_warn');
+					} else {
+						$(value).parent().parent().removeClass('weui-cell_warn');
+					}
+				}
+			});
+		}
+
+		if (flag) {
+			var confirmPass = $("#applyRegistration\\:confirmNewPassword")[0];
+			if ($("#applyRegistration\\:newPassword")[0].value != confirmPass.value) {
+				flag = false;
+				$(confirmPass).parent().parent().addClass('weui-cell_warn');
+				confirmPass.value = "";
+			}
+		}
+
+		if (flag) {
+			$("#applyRegistration\\:submit").click();
+		}
+	}
+</script>
+</html>

@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.ge.apm.service.utils.TimeUtils;
+
 /**
  *
  * @author 212579464
@@ -50,11 +52,38 @@ public class AccountApplication implements Serializable {
     private Date applicationDate;
     @Column(name = "status")
     private Integer status;
+    
+    private String password;
+    private String applyDate;
+    
+    
+    public String getApplyDate() {
+    	return TimeUtils.getStrDate(applicationDate, null);
+	}
 
-    public AccountApplication() {
+	@Column(name = "clinical_dept_name")
+    private String clinicalDeptName;
+    
+	public AccountApplication() {
     }
+	
+    public String getPassword() {
+		return password;
+	}
 
-    public AccountApplication(Integer id) {
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+    public String getClinicalDeptName() {
+		return clinicalDeptName;
+	}
+
+	public void setClinicalDeptName(String clinicalDeptName) {
+		this.clinicalDeptName = clinicalDeptName;
+	}
+
+	public AccountApplication(Integer id) {
         this.id = id;
     }
 
@@ -124,6 +153,7 @@ public class AccountApplication implements Serializable {
     }
 
     public Date getApplicationDate() {
+    	
         return applicationDate;
     }
 
@@ -159,9 +189,35 @@ public class AccountApplication implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "com.ge.apm.domain.AccountApplication[ id=" + id + " ]";
-    }
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AccountApplication [id=");
+		builder.append(id);
+		builder.append(", wechatId=");
+		builder.append(wechatId);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", telephone=");
+		builder.append(telephone);
+		builder.append(", hospitalName=");
+		builder.append(hospitalName);
+		builder.append(", roleId=");
+		builder.append(roleId);
+		builder.append(", comment=");
+		builder.append(comment);
+		builder.append(", applicationDate=");
+		builder.append(applicationDate);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append(", password=");
+		builder.append(password);
+		builder.append(", clinicalDeptName=");
+		builder.append(clinicalDeptName);
+		builder.append("]");
+		return builder.toString();
+	}
+	
+    
     
 }

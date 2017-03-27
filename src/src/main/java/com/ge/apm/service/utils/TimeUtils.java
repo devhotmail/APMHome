@@ -27,4 +27,5 @@ public class TimeUtils {
 		DateTime dt = new DateTime(date);
 		return dt.toString(format);
 	}
+	
 }

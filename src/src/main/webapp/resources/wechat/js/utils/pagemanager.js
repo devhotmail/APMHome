@@ -1,4 +1,5 @@
 window.pageManager = {
+    _hash: null,
     _pageStack: [],
     _pageIndex: 0,
     woId: null,
@@ -6,11 +7,13 @@ window.pageManager = {
     stepCost: [],
     init: function(pageId){
         var self = this;
-        $(window).on('popstate', function() {debugger;
+        $(window).on('popstate', function() {
+            if (location.hash === self._hash)return;
             var hashLocation = location.hash;
             if (hashLocation == '') {
                 WeixinJSBridge.call('closeWindow');
             } else {
+                self._hash = location.hash;
                 var state = history.state || {};
                 var page = location.hash.indexOf('#') === 0 ? location.hash : '#';
                 if (state._pageIndex <= self._pageIndex ) {

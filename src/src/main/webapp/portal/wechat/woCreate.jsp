@@ -14,9 +14,9 @@
         <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0"/>
         <title>新增报修</title>
         <!-- 引入 WeUI -->
-        <link rel="stylesheet" href="${ctx}/resources/wechat/weui.min.css"/>
-        <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
-        <script src="${ctx}/resources/wechat/jweixin-1.0.0.js"></script>
+        <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
+        <script src="${ctx}/resources/wechat/js/utils/jquery-3.1.1.min.js"></script>
+        <script src="${ctx}/resources/wechat/js/utils/jweixin-1.0.0.js"></script>
         <script>var WEB_ROOT = '${ctx}/';</script>
     </head>
     <body>

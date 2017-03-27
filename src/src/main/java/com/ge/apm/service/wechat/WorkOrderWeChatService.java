@@ -49,13 +49,24 @@ public class WorkOrderWeChatService {
     protected CoreService coreService;
     @Autowired
     protected AssetInfoRepository assetDao;
+    @Autowired
+    protected UserRoleRepository roleDao;
+    @Autowired
+    protected WorkOrderPhotoRepository photoDao;
+    @Autowired
+    private WorkflowConfigRepository woConDao;
     
-    public List<WorkOrder> woList(HttpServletRequest request) {
-        List<SearchFilter> searchFilters = new ArrayList<>();
+    public List<WorkOrder> woList(HttpServletRequest request, String stepId) {
         UserAccount ua = UserContext.getCurrentLoginUser(request);
-
-        searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, ua.getId()));
-        return woDao.findBySearchFilter(searchFilters);
+        List<WorkOrder> wos = null;
+        switch(stepId) {
+            case "1": wos = woDao.getNeedAssignWorkOrder(ua.getId());break;
+            case "2": wos = woDao.getAssignedWorkOrder(ua.getId());break;
+            case "3": wos = woDao.getUnAcceptedWorkOrder(ua.getId());break;
+            case "4": wos = woDao.getAcceptedWorkOrder(ua.getId());break;
+            default: wos = woDao.getOtherPersonWorkOrder(ua.getId(), ua.getSiteId());
+        }
+        return wos;
     }
 
     public WorkOrder woDetail(Integer id) {
@@ -156,6 +167,45 @@ public class WorkOrderWeChatService {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * 扫码接单、签到、关单
+     * @param info
+     * @return 
+     */
+    public WorkOrder scanAction(AssetInfo info) {
+        WorkOrder wo =  woDao.findByAssetIdAndStatus(info.getId(), 1);
+        if (wo == null)
+            return null;
+        List<WorkOrderStep> steps = woStepDao.getByWorkOrderIdAndStepIdAndWithoutEndTime(wo.getId(), wo.getCurrentStepId());
+        wo.setPointStepNumber(steps.size());
+        return wo;
+    }
+    
+    /**
+     * get current login user's role names
+     * @param request   get code to find user account
+     * @return 
+     */
+    public List<String> getLoginUserRoleName(HttpServletRequest request) {
+        UserAccount loginUser = coreService.getLoginUser(request);
+        List<UserRole> roles = roleDao.findByUserId(loginUser.getId());
+        List<String> list = new ArrayList<String>();
+        for (UserRole userRole : roles) {
+            list.add(userRole.getRole().getName());
+        }
+        return list;
+    }
+    
+    public List<WorkOrderPhoto> getWoImgList(int woId) {
+        return photoDao.findByWorkOrderId(woId);
+    }
+    
+    public boolean chooseTab(HttpServletRequest request) {
+        UserAccount currentUsr= UserContext.getCurrentLoginUser(request);
+        WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(currentUsr.getSiteId(), currentUsr.getHospitalId());
+        return !(woc == null || woc.getDispatchUserId() != currentUsr.getId());
     }
     
 }

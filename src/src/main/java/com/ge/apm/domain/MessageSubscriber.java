@@ -37,6 +37,8 @@ public class MessageSubscriber implements Serializable {
     @Basic(optional = false)
     @Column(name = "subscribe_user_id")
     private int subscribeUserId;
+    
+    // receiveMsgMode: 0: no subscribe ; 1:all subscribe 2:partial subscribe
     @Basic(optional = false)
     @Column(name = "receive_msg_mode")
     private int receiveMsgMode;

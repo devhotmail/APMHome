@@ -57,7 +57,7 @@ public class FileUploadDao {
         finally{
             if(rs!=null) rs.close();
             if(ps!=null) ps.close();
-            if(con!=null) con.close();
+            con.close();
         }
     }
 
@@ -66,7 +66,8 @@ public class FileUploadDao {
     }
 
     public Object[] getAttachmentFile(Integer id) throws SQLException {
-        PreparedStatement ps = template.getDataSource().getConnection().prepareStatement(SQL_QUERY);
+        Connection con = template.getDataSource().getConnection();
+        PreparedStatement ps = con.prepareStatement(SQL_QUERY);
         ResultSet rs = null;
         try{
             ps.setInt(1, id);
@@ -78,11 +79,13 @@ public class FileUploadDao {
         finally{
             if(rs!=null) rs.close();
             if(ps!=null) ps.close();
+            con.close();
         }
     }
 
     public String getFileNameById(Integer fileId) throws SQLException {
-        PreparedStatement ps = template.getDataSource().getConnection().prepareStatement(SQL_QUERY_NAME_BY_ID);
+        Connection con = template.getDataSource().getConnection();
+        PreparedStatement ps = con.prepareStatement(SQL_QUERY_NAME_BY_ID);
         ResultSet rs = null;
         try{
             ps.setInt(1, fileId);
@@ -93,6 +96,7 @@ public class FileUploadDao {
         finally{
             if(rs!=null) rs.close();
             if(ps!=null) ps.close();
+            con.close();
         }
     }
 }

@@ -1,0 +1,87 @@
+<script type="text/html" id="step_cost">
+    <div class="page">
+        <form id="costForm">
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">工时(小时)</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" id="manHours" name="manHours" type="number"/>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <i class="weui-icon-warn"></i>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">备件</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="accessory" name="accessory" class="weui-input" type="text" maxlength="60" size="60"/>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">数量</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="accessoryQuantity" name="accessoryQuantity" class="weui-input" type="number" />
+                    </div>
+                    <div class="weui-cell__ft">
+                        <i class="weui-icon-warn"></i>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label for="requestorName" class="weui-label">单价(元)</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="accessoryPrice" name="accessoryPrice" class="weui-input" type="number" />
+                    </div>
+                    <div class="weui-cell__ft">
+                        <i class="weui-icon-warn"></i>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label for="requestorName" class="weui-label">其他费用(元)</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="otherExpense" name="otherExpense" class="weui-input" type="number" />
+                    </div>
+                    <div class="weui-cell__ft">
+                        <i class="weui-icon-warn"></i>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:" id="costSubmit">提交</a>
+            <div style="height:10px"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function(){
+            $loadingToast.fadeOut(100);
+            $('#costSubmit').click(function(){
+                var array = $('#costForm').serializeArray();
+                var costData = pageManager.formdata(array);
+                if (costData.manHours===''&&costData.accessory===''&&costData.accessoryQuantity===''
+                        &&costData.accessoryPrice===''&&costData.otherExpense===''){
+                    history.back();
+                    return;
+                }
+                costData.siteId = pageManager.siteId;
+                pageManager.stepCost.push(costData);
+                insertCostList(costData);
+                history.back();
+            });
+
+            function insertCostList(value){
+                var $costList = $('.costList');
+                var index = $costList.children().length;
+                var tempui = '<div class="weui-cell">'+
+                        '<div class="weui-cell__bd"><p>' +
+                        '内部工时(小时)：'+value.manHours
+                        +',  备件：'+value.accessory
+                        +',  数量：'+value.accessoryQuantity
+                        +',  单价(元)：'+value.accessoryPrice
+                        +',  其他费用(元)：'+value.otherExpense +
+                        '</p></div>'+
+                        '<div class="weui-cell__ft"><i class="weui-icon-cancel"></i></div></div>';
+                $costList.append($(tempui).attr('data-id', index));
+            }
+        });
+</script>

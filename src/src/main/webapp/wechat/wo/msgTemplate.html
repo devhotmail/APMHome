@@ -1,37 +1,44 @@
-<div class="weui-cells__title">交互详情</div>
-<div class="weui-cells">
-    <a class="weui-cell weui-cell_access" href="javascript:;">
-        <div class="show-data weui-cell__bd">
-            <span style="color: #999">dddddd明天下午会有东西过来，过来就会处理</span>
-        </div>
-        <div class="weui-cell__ft">
-        </div>
-    </a>
-</div>
-
 <script type="text/html" id="ts_msglist">
-    <div class="page">
-        <div class="weui-cells">
-            <div class="weui-cell">
-                <div class="weui-cell__bd">
-                    <span>维修人员</span>
-                </div>
-                <div class="ftitle weui-cell__ft">2017-02-03 12:34:23</div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__bd"><span style="color: #999">dddddd明天下午会有东西过来，过来就会处理</span>
-                </div>
-            </div>
-        </div>
+    <div class="page msglist">
         
         <div class="weui-cells" style="position: fixed;bottom: 0;width: 100%;">
             <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    <textarea class="weui-textarea" placeholder="请输入文本"></textarea>
+                    <textarea class="weui-textarea" placeholder="请输入内容..."></textarea>
                 </div>
                 <div class="weui-cell__ft">
                     <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary">发送</a>
                 </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            var html = $('#ts_msgItem').html();
+            var $html = $(html);
+            var $page = $('.msglist');
+            $.get(WEB_ROOT+'web/msg/'+ pageManager.woId, function(ret) {
+                if (ret && ret.length !== 0) {
+                    $.each(ret, function(idx, val){
+                        $html.find('.user_name').html(val.senderUserName);
+                        $html.find('.time_class').html(val.sendTime);
+                        $html.find('.msg_class').html(val.message);
+                        $page.append($html);
+                    });
+                } 
+            });
+        });
+</script>
+<script type="text/html" id="ts_msgItem">
+    <div class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <span class='user_name'></span>
+            </div>
+            <div class="time_class weui-cell__ft"></div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd"><span class="msg_class" style="color: #999"></span>
             </div>
         </div>
     </div>
