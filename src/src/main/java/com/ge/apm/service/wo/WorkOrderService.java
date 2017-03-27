@@ -88,10 +88,9 @@ public class WorkOrderService {
         /*  判断是否二次开单  --> 判断派工模式
         * 1（拿siteid和assetid还有hospitalid来作为该设备是否是唯一的）
         * */
-        //select * from work_order where  (close_time::timestamp)::date > (select now() - interval '7 day')::date  and  asset_id =68 and hospital_id=2 and site_id=2
-//gl:requestor 就是申请保修的,curent_person_d: 自动派单时为-1，手动派单时为设备科科长.
+        //gl:requestor 就是申请保修的,curent_person_d: 自动派单时为-1，手动派单时为设备科科长.
         //gl: select from user_account ua , sys_role  sr where sr.role_id =2 and ua.user_id = ?
-         UserAccount currentUsr= UserContext.getCurrentLoginUser(request);
+        UserAccount currentUsr= UserContext.getCurrentLoginUser(request);
         WorkOrder neWorkOrder=null;
         List<WorkOrder> reopenWorkOrder = workOrderRepository.isReopenWorkOrder(wop.getAssetId(), currentUsr.getHospitalId(), currentUsr.getSiteId());
 
@@ -222,7 +221,7 @@ public class WorkOrderService {
     }
     @Autowired
     AssetInfoRepository assetInfoRepository;
-@Autowired
+    @Autowired
     WorkflowConfigRepository workflowConfigRepository;
     private WorkOrder initWorkOrder(WorkOrderPoJo wop,UserAccount usr,List<WorkOrder> reopenWorkOrder,boolean isReopen) throws Exception{
 
@@ -244,7 +243,7 @@ public class WorkOrderService {
             neWorkOrder.setParentWoId(reopenWorkOrder.get(0).getId());
         }
         WorkflowConfig wfc = workflowConfigRepository.getBySiteIdAndHospitalId(usr.getSiteId(), usr.getHospitalId());
-neWorkOrder.setCurrentPersonId(wfc.getDispatchUserId());
+        neWorkOrder.setCurrentPersonId(wfc.getDispatchUserId());
         neWorkOrder.setCurrentPersonName(wfc.getDispatchUserName());
         neWorkOrder.setCurrentStepId(2);// gl: 表示步骤是开单
         neWorkOrder.setCurrentStepName(i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",Integer.toString(2)).getValueZh()) ;
