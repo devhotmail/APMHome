@@ -290,6 +290,7 @@
             if (n.parent && n.parent.children.length === 1) {
               n.r = n.r * 0.8;
             }
+            n.data.id = n.depth + '-' + n.data.id
             return n;
           })
         },
