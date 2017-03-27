@@ -27,14 +27,17 @@
 @function dewicon-char($filename) {
 	$char: "";
 
-	@if $filename == circle-full {
+	@if $filename == blank {
 		$char: "\E001";
 	}
-	@if $filename == circle-high {
+	@if $filename == circle-full {
 		$char: "\E002";
 	}
-	@if $filename == circle-low {
+	@if $filename == circle-high {
 		$char: "\E003";
+	}
+	@if $filename == circle-low {
+		$char: "\E004";
 	}
 
 	@return $char;
@@ -51,6 +54,9 @@
 	}
 }
 
+.dewicon-blank {
+	@include dewicon(blank);
+}
 .dewicon-circle-full {
 	@include dewicon(circle-full);
 }

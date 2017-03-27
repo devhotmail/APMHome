@@ -7,19 +7,13 @@
   top: 50%;
   transform: translateX(-50%);
 
-  svg {
-    width: 60px;
-    * {
-      fill: inherit;
-    }
-  }
-
   .label {
     font-size: 1.4rem;
   }
 
-  /* style cross shadow-dom */
-  use.icon {
+  .icon {
+    font-size: 40px;
+    transform: translateY(-20px);
     fill: $gray7;
   }
 }

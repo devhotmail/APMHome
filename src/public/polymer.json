@@ -13,6 +13,7 @@
   ],
   "includeDependencies": [
     "public/bower_components/font-awesome/fonts/**/*",
+    "public/bower_components/webcomponentsjs/*.js",
     "public/css/**/*",
     "public/icons/**/*",
     "public/fonts/**/*",

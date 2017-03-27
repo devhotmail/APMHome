@@ -120,7 +120,7 @@ gulp.task('sass:watch', function() {
   gulp.watch(src, ['sass:compile:css']);
   gulp.watch(src_comp, ['sass:compile:module']);
 });
-gulp.task('css', ['sass:compile:css', 'sass:compile:module']);
+gulp.task('css', ['sass:compile:css', 'sass:compile:module', 'iconfont']);
 gulp.task('clean', function clean() {
   return del(dest);
 });
