@@ -1,0 +1,129 @@
+:host {
+  width: 100%;
+  height: calc(100vh - 30px);
+  display: flex;
+}
+
+$related-info-width: 260px;
+$kpi-legend-circle-r: 25px;
+$gap: 10px;
+
+$gray: rgb(148, 147, 146);
+$orange: rgb(232, 136, 56);
+$yellow: rgb(236, 219, 84);
+$color-set: $orange $yellow $gray;
+
+#chart { 
+  width: calc(100% - #{$related-info-width});
+  height: 100%;
+
+  // remove highlight when tap link in mobile safari
+  svg * {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+  }
+
+  text {
+    user-select: none;
+    pointer-events: none;
+  }
+}
+
+.asset-texts {
+  .text:hover text {
+    fill: red;
+  }
+
+  .text-root {
+    .text-top :not(.asset-name),
+    .text-center {
+      display: none;
+    }
+  }
+}
+
+.related-info {
+  width: $related-info-width;
+  height: 100%;
+  padding-top: 8vh;
+  padding-left: 20px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.type-select {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .btn {
+    width: 120px;
+    margin-left: 0!important;
+
+    + .btn {
+      margin-top: 15px;
+    }
+
+    &.active {
+      background: #5b84d7;
+      border-color: #5b84d7;
+      color: #fff!important;
+      box-shadow: none;
+    }
+  }
+}
+
+px-dropdown {
+  width: 180px;
+  margin-bottom: 30px;
+}
+
+.kpis {
+  padding-top: 3vh;
+
+  .kpi {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    
+    &::before {
+      display: inline-block;
+      content: '';
+      width: $kpi-legend-circle-r;
+      height: $kpi-legend-circle-r;
+      margin-right: $gap;
+      border-radius: 50%;
+      background-color: $yellow;
+    }
+
+    @each $num in (1,2,3) {
+      &.kpi-#{$num - 1}::before {
+        background-color: nth($color-set, $num);
+      }
+    }
+  }
+
+  .kpi-detail {
+    margin-left: $kpi-legend-circle-r + $gap;
+  }
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  line-height: 1.5;
+  text-align: left;
+
+  i {
+    font-size: 24px;
+  }
+
+  .legend-tip {
+    margin-left: 5px;
+  }
+}
+
+.divider {
+  border-top: 1px solid rgb(186, 186, 186);
+  margin: 10px 0;
+}

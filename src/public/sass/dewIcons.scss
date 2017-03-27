@@ -1,0 +1,62 @@
+@font-face {
+	font-family: "DewIcon";
+	src: url('../fonts/DewIcon.eot');
+	src: url('../fonts/DewIcon.eot?#iefix') format('eot'),
+		url('../fonts/DewIcon.woff2') format('woff2'),
+		url('../fonts/DewIcon.woff') format('woff'),
+		url('../fonts/DewIcon.ttf') format('truetype'),
+		url('../fonts/DewIcon.svg#DewIcon') format('svg');
+}
+
+@mixin dewicon-styles {
+	font-family: "DewIcon";
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	// speak: none; // only necessary if not using the private unicode range (firstGlyph option)
+	text-decoration: none;
+	text-transform: none;
+}
+
+%dewicon {
+	@include dewicon-styles;
+}
+
+@function dewicon-char($filename) {
+	$char: "";
+
+	@if $filename == circle-full {
+		$char: "\E001";
+	}
+	@if $filename == circle-high {
+		$char: "\E002";
+	}
+	@if $filename == circle-low {
+		$char: "\E003";
+	}
+
+	@return $char;
+}
+
+@mixin dewicon($filename, $insert: before, $extend: true) {
+	&:#{$insert} {
+		@if $extend {
+			@extend %dewicon;
+		} @else {
+			@include dewicon-styles;
+		}
+		content: dewicon-char($filename);
+	}
+}
+
+.dewicon-circle-full {
+	@include dewicon(circle-full);
+}
+.dewicon-circle-high {
+	@include dewicon(circle-high);
+}
+.dewicon-circle-low {
+	@include dewicon(circle-low);
+}
