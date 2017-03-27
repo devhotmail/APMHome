@@ -68,9 +68,9 @@
 
               // check "Cache-Control" for cache expiration
               var cache_control = res.headers.get('Cache-Control');
-              var max_age = cache_control.match(MAXAGE_REGEX);
-              if (max_age) {
-                max_age = +max_age[1] / 60;
+              if (cache_control) {
+                var max_age = cache_control.match(MAXAGE_REGEX);
+                if (max_age) max_age = +max_age[1] / 60;
               }
               res.json().then(function(data) {
 
