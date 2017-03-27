@@ -25,28 +25,25 @@ public class AssetExamController {
     @Autowired
     AssetExamDataAggregator assetExamDataAggregator;
     //http://localhost:8087/geapm/web/assetExam/excute
-    @RequestMapping(value = "/excute", method = RequestMethod.GET)
-    @ResponseBody
-    public String excute() {
-
-        assetExamDataAggregator.aggregateExamData();
-        return "success";
-    }
 
     @RequestMapping(value = "/aggreFromTo", method = RequestMethod.POST)
     @ResponseBody
     public String aggreFromTo(@RequestBody BatchAssetExam batchAssetExam) {
 
-        assetExamDataService.aggrateExamebyRange(batchAssetExam);
-        return "success";
+       return  assetExamDataService.aggrateExambyRange(batchAssetExam);
     }
 
     @RequestMapping(value = "/aggreByDay", method = RequestMethod.POST)
     @ResponseBody
     public String aggreByDay(@RequestBody BatchAssetExam batchAssetExam) {
         logger.info("----aggreFromTo--batchAssetExam--bODY->"+ batchAssetExam.getCalDay());
-        assetExamDataService.assetExamAggregatorByday(batchAssetExam);
-        return "success";
+       return  assetExamDataService.assetExamAggregatorByday(batchAssetExam);
+    }
+    @RequestMapping(value = "/rating", method = RequestMethod.PUT)
+    @ResponseBody
+    public String calRating() throws Exception {
+       return  assetExamDataService.calRating();
+
     }
 
 

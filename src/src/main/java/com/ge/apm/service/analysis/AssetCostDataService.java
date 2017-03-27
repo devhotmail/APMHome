@@ -1,8 +1,8 @@
 package com.ge.apm.service.analysis;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import com.ge.apm.dao.mapper.*;
+import com.ge.apm.domain.AssetCostStatistics;
+import com.ge.apm.domain.BatchAssetCost;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -14,12 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ge.apm.dao.mapper.AssetCostStatisticsMapper;
-import com.ge.apm.dao.mapper.AssetDepreciationMapper;
-import com.ge.apm.dao.mapper.AssetInfoMapper;
-import com.ge.apm.dao.mapper.WorkOrderMapper;
-import com.ge.apm.domain.AssetCostStatistics;
-import com.ge.apm.domain.BatchAssetCost;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /***
  * 计算资产的宕机时间和成本
@@ -47,7 +44,7 @@ public class AssetCostDataService {
 	
 	@Autowired
 	AssetExamDataAggregator assetExamDataAggregator;
-	
+
 	/***
 	 * 批量执行任务
 	 */

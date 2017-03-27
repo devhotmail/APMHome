@@ -34,7 +34,7 @@ public class AssetExamTest extends BaseJunit4Test{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date from = sdf.parse("2014-11-10");
         Date to = sdf.parse("2015-09-18");
-        assetExamDataAggregator.aggregateExamDataByRangeDate(from,to);
+       // assetExamDataAggregator.aggregateExamDataByRangeDate(from,to);
     }
     @Test
     @Transactional
@@ -51,7 +51,7 @@ public class AssetExamTest extends BaseJunit4Test{
     @Rollback(false)
     public void testAggregateExamData()throws Exception{
 
-        assetExamDataAggregator.aggregateExamData();
+      //  assetExamDataAggregator.aggregateExamData();
         //    assetExamDataAggregator.aggregateExamData__bak();
 
     }
