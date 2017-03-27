@@ -46,10 +46,12 @@ public class WorkflowConfig implements Serializable {
     private Integer timeoutRepair;
     @Column(name = "timeout_close")
     private Integer timeoutClose;
+    
     @Column(name="order_reopen_timeframe")
-    private Integer orderReopenTimeframe;
-
-    public WorkflowConfig() {
+    
+    private Integer orderReopenTimeframe;//二次开单的最大时间间隔
+    
+	public WorkflowConfig() {
     }
 
     public WorkflowConfig(Integer id) {

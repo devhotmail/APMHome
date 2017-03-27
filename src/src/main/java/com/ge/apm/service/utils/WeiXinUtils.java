@@ -1,6 +1,10 @@
 package com.ge.apm.service.utils;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,5 +36,10 @@ public class WeiXinUtils {
 	public static String getWxUserOpenId(){
 		//TODO get user openId
 		return "openId"+new Random().nextInt(1000);
+	}
+
+	public static List<Integer> removeDuplicateId(List<Integer> users) {
+		Set<Integer> set = new HashSet<Integer>(users);
+		return new ArrayList<Integer>(set);
 	}
 }

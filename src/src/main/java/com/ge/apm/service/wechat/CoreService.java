@@ -104,8 +104,10 @@ public class CoreService {
     
     @PostConstruct
     public void init() {
+    	System.out.println("1================"+System.getenv("webContextUrl"));
         this.refreshRouter();
         if (!Strings.isNullOrEmpty(System.getenv("webContextUrl"))) {
+        	System.out.println("2================"+System.getenv("webContextUrl"));
             webContextUrl = System.getenv("webContextUrl");
         }
     }
