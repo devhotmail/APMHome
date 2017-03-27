@@ -28,7 +28,6 @@
 
         <intercept-url pattern="/web/**" access="permitAll"/>
         
-        <intercept-url pattern="/**/wechat/asset/Detail.xhtml" access="permitAll"/>
         <intercept-url pattern="/**/wechat/asset/**" access="isAuthenticated()"/>
         <intercept-url pattern="/**/wechat/**" access="permitAll"/>
 
@@ -48,6 +47,7 @@
         <intercept-url pattern="/portal/i18n/FieldCodeType.xhtml**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead')"/> <!-- 系统编码配置 -->
                 
         <!-- 设备档案 -->
+        <intercept-url pattern="/portal/asset/createAsset/createInfo**" access="permitAll"/> 
         <intercept-url pattern="/portal/asset/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/> 
         
         <!-- 维修管理 -->
