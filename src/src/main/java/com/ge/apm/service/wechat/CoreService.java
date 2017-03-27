@@ -394,8 +394,12 @@ public class CoreService {
         return s == null ? null : s.getName();
     }
 
-    @Value("#{wxProperties.webContextUrl}")
+//    @Value("#{wxProperties.webContextUrl}")
     private String webContextUrl;
+    
+    public String getWoDetailUrl(Integer woId) {
+        return "/web/menu/34?woId="+ woId;
+    }
     
     public void sendWxTemplateMessage(String userWeChatId, String wxTemplateId, String msgTitle, String msgBrief, String msgDetails, String msgDateTime, String linkUrl){
         HashMap<String, Object> params = new HashMap<>();

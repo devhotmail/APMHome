@@ -184,6 +184,20 @@ public class WorkOrderWeChatService {
     }
     
     /**
+     * 从消息找到工单
+     * @param info
+     * @return 
+     */
+    public WorkOrder scanActionByWoId(Integer woId) {
+        WorkOrder wo =  woDao.getById(woId);
+        if (wo == null)
+            return null;
+        List<WorkOrderStep> steps = woStepDao.getByWorkOrderIdAndStepIdAndWithoutEndTime(wo.getId(), wo.getCurrentStepId());
+        wo.setPointStepNumber(steps.size());
+        return wo;
+    }
+    
+    /**
      * get current login user's role names
      * @param request   get code to find user account
      * @return 

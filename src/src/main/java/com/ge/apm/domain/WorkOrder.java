@@ -38,7 +38,7 @@ public class WorkOrder implements Serializable {
     @Column(name = "asset_name")
     private String assetName;
 
-    @Size(min = 1, max = 256)
+    @Size(min = 0, max = 256)
     @Column(name = "pat_problems")
     private String patProblems;
 

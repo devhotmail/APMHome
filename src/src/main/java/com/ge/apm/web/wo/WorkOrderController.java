@@ -101,7 +101,7 @@ public class WorkOrderController {
         model.addAttribute("nonceStr",s.getNoncestr());
         model.addAttribute("signature",s.getSignature());
         
-        model.addAttribute("qrCode", request.getParameter("qrCode"));
+        model.addAttribute("woId", request.getParameter("woId"));
         
         return "wo/scanWoDetail";
     }
@@ -154,12 +154,18 @@ public class WorkOrderController {
     }
     
     @RequestMapping(value="scanaction")
-    public @ResponseBody Object scanAction(String qrCode) {
-        List<AssetInfo> list = assetDao.getByQrCode(qrCode);
-        if (list.isEmpty())
-            return null;
-        AssetInfo info = list.get(0);
-        return woWcService.scanAction(info);
+    public @ResponseBody Object scanAction(String qrCode, String woId) {
+        WorkOrder wo = null;
+        if (woId != null && !"".equals(woId)) {
+            wo = woWcService.scanActionByWoId(Integer.parseInt(woId));
+        } else {
+            List<AssetInfo> list = assetDao.getByQrCode(qrCode);
+            if (list.isEmpty())
+                return null;
+            AssetInfo info = list.get(0);
+            wo = woWcService.scanAction(info);
+        }
+        return wo;
     }
     
     @RequestMapping(value="choosetab")

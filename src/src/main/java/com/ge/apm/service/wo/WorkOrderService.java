@@ -554,7 +554,7 @@ public class WorkOrderService {
         String msgBrief = msgTitle + "已完成";
         String msgDetails = "";
         String msgDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        String linkUrl = "/web/menu/34?qrCode=1";
+        String linkUrl = cService.getWoDetailUrl(wo.getId());
         // subscriber
         List<MessageSubscriber> sber = null;
         switch(wo.getCurrentStepId()-1) {
