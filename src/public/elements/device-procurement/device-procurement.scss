@@ -13,32 +13,8 @@ $orange: rgb(232, 136, 56);
 $yellow: rgb(236, 219, 84);
 $color-set: $orange $yellow $gray;
 
-#chart { 
+.chart-wrapper {
   width: calc(100% - #{$related-info-width});
-  height: 100%;
-
-  // remove highlight when tap link in mobile safari
-  svg * {
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
-  }
-
-  text {
-    user-select: none;
-    pointer-events: none;
-  }
-}
-
-.asset-texts {
-  .text:hover text {
-    fill: red;
-  }
-
-  .text-root {
-    .text-top :not(.asset-name),
-    .text-center {
-      display: none;
-    }
-  }
 }
 
 .related-info {
@@ -53,16 +29,12 @@ $color-set: $orange $yellow $gray;
 
 .type-select {
   display: flex;
-  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
 
   .btn {
-    width: 120px;
+    width: 100px;
     margin-left: 0!important;
-
-    + .btn {
-      margin-top: 15px;
-    }
 
     &.active {
       background: #5b84d7;

@@ -2,15 +2,16 @@
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../behavior/context.html">
 <link rel="import" href="../behavior/fetch-cached.html">
-<link rel="import" href="../modernizr/modernizr.html">
+<link rel="import" href="../zoom-pack-chart/zoom-pack-chart.html">
 <link rel="import" href="device-procurement-styles.html">
-<link rel="import" href="../d3/d3.html">
+<link rel="stylesheet" href="../../css/dewIcons.css">
+<link rel="import" href="../../uri.html">
 
 <dom-module id="device-procurement">
   <template>
     <style include="device-procurement-styles"></style>
-    <div id="chart" class="chart-container">
-      <svg id="svg" width$="[[width]]" height$="[[height]]"></svg>
+    <div class="chart-wrapper">
+      <zoom-pack-chart chart-data="[[data]]"></zoom-pack-chart>
     </div>
     <div class="related-info">
       <div class="type-select btn-group">
@@ -71,17 +72,6 @@
     </div>
   </template>
   <script>
-    var constants = {
-      waveColor: { // Color of the fill wave
-        gray: 'rgb(178, 178, 178)',
-        orange: 'rgb(277, 110, 21)',
-        yellow: 'rgb(235, 220, 81)'
-      },
-      textColor: 'rgb(111, 111, 111)', // Text color
-      fontScale: 0.1, // Text size relatived to circle's radius
-      textTopPosition: 0.85 // Percentage of height to show text top in the asset circle
-    };
-
     var sectionalizer = [
       {
         key: 'orange',
@@ -101,46 +91,6 @@
       }
     ];
 
-    function commonTextAttr(selection) {
-      selection.attr('text-anchor', 'middle')
-      .attr('fill', constants.textColor)
-      .style('user-select', 'none');
-    }
-
-    function getColorByPercent(percent) {
-      var waveColor = constants.waveColor;
-      if (percent >= 1) {
-        return waveColor.orange;
-      } else if (percent <= 0.3) {
-        return waveColor.yellow;
-      } else {
-        return waveColor.gray;
-      }
-    }
-
-    function wavePath(percent, radius) {
-      if (percent > 1) {
-        return 'M' + radius + ' 0'
-          + 'm'+ (-radius) + ', 0'
-          + 'a' + radius + ',' + radius + ' 0 1,0 ' + (radius * 2) + ',0'
-          + 'a' + radius + ',' + radius + ' 0 1,0 ' + (radius * -2) + ',0'
-      } else {
-        var part = 1 - percent * 2
-        var h = part * radius
-        var w = Math.sqrt(Math.pow(radius, 2) - Math.pow(h, 2))
-
-        var defaultWaveHeight = 0.1 // The wave height as a percentage of wave circle's radius
-        var waveScaleY = d3.scaleLinear().range([0.035, 0.03]).domain([1 - defaultWaveHeight, 1])
-        var waveHeight = (percent + defaultWaveHeight > 1) ? waveScaleY(percent) : defaultWaveHeight
-
-        return 'M' + (radius - w) + ' ' + h
-        + 'A' + radius + ',' + radius + ' 1' + (percent > 0.5 ? ' 1,0 ' : ' 0,0 ') + (radius + w) + ',' + h
-        + 'q' + -w / 2 + ' ' + radius * waveHeight + ' ' + -w + ' 0'
-        + 't' + -w + ' ' +  0
-        + 'z'
-      }
-    }
-
     define('device-procurement', [
       'behavior/context',
       'behavior/fetch-cached'
@@ -148,8 +98,6 @@
       Polymer({
         is: 'device-procurement',
         properties: {
-          width: Number,
-          height: Number,
           data: Object,
           focus: {
             type: Object
@@ -183,15 +131,10 @@
           }
         },
         behaviors: [
-          Polymer.IronResizableBehavior,
           ContextBehavior,
           FetchCachedBehavior
         ],
-        listeners: {
-          'iron-resize': 'handleResize'
-        },
         observers: [
-          'redraw(width, height, data)',
           'loadData(selectedOpt)',
           'changeQuery(selectedOpt)'
         ],
@@ -236,12 +179,7 @@
         handleSelect: function(e) {
           this.set('selectedOpt', e.model.item.val);
         },
-        handleResize: function() {
-          var rect = this.$.chart.getBoundingClientRect();
-          this.set('width', rect.width);
-          this.set('height', rect.height);
-        },
-        conclude: function(data) {
+        dataConverter: function(data) {
           // get conclusion in 1st layer
           data.items = data.items.map(function(m) {
             m.conclusion = sectionalizer.reduce(function(prev,next) {
@@ -274,356 +212,12 @@
             groupby: groupby
           }).toString();
 
+          localStorage.clear()
+
           return this.fetchPage(url)
           .then((function(data) {
-            this.data = this.conclude(data);
+            this.data = this.dataConverter(data);
           }).bind(this));
-        },
-        redraw: function() {
-          d3.select('#svg > *').remove();
-          this.debounce('redraw', this.render, 500);
-        },
-        nodeAdaptor: function(nodes) {
-          return nodes.map(function(n) {
-            if (n.parent && n.parent.children.length === 1) {
-              n.r = n.r * 0.8;
-            }
-            n.data.id = n.depth + '-' + n.data.id
-            return n;
-          })
-        },
-        render: function() {
-          var _this = this;
-          var svg = d3.select(this.$.svg);
-          var margin = 20;
-          var diameter = Math.min.call(null, this.width, this.height);
-
-          var wrapperGroup = svg.append('g')
-          .attr('transform', d3Transform().translate(this.width / 2, this.height / 2));
-
-          var pack = d3.pack()
-          .size([diameter - margin, diameter - margin])
-          .padding(2);
-          
-          var root = d3.hierarchy(this.data, function(d) {
-            // field `items` from api
-            return d.items;
-          }).sum(function(d) { return d.size; })
-          .sort(function(a, b) { return b.value - a.value; })
-
-          var nodes = pack(root).descendants();
-          var focus = root;
-          var view;
-
-          this.set('focus', focus);
-          // adaptor for those nodes which has a single child
-          nodes = this.nodeAdaptor(nodes);
-
-          var assetGroup = wrapperGroup
-          .selectAll('g')
-          .data(nodes)
-          .enter().append('g')
-          .attr('class', 'asset')
-
-          assetGroup        
-          .append('circle')
-          .attr('r', function(d) {
-            return d.r;
-          })
-          .attr('class', function(d) {
-            return d.parent ? d.children ? 'node' : 'node node-leaf' : 'node node-root';
-          })
-          .attr('stroke-width', 1)
-          .attr('stroke', function(d) {
-            return getColorByPercent(d.data.usage);
-          })
-          .attr('fill', function(d) {
-            return (d !== focus && d.parent !== focus) ? 'none' : 'transparent';
-          })
-          .on('click', function(d) {
-            if (focus !== d) {
-              zoom(d);
-              d3.event.stopPropagation();
-            }
-          })
-          .each(function(d) {
-            var element = d3.select(this);
-
-            if (!Modernizr.touchevents) {
-              element.on('mouseover', function() {
-                if (d === root) return;
-                var textEl = d3.select('#text-' + d.data.id + ' .text-center');
-                if (!canShowText(d) && d.parent === focus) {
-                  textEl.style('display', 'inline')
-                  .style('fill-opacity', 1);
-                }
-              });
-
-              element.on('mouseleave', function() {
-                if (d === root) return;
-                var textEl = d3.select('#text-' + d.data.id + ' .text-center');
-                if (!canShowText(d) && d.parent === focus) {
-                  textEl.style('display', 'none')
-                  .style('fill-opacity', 0);
-                }
-              });
-            }
-          });
-
-          var waveGroup = assetGroup.append('g')
-          .attr('class', 'wave');
-
-          waveGroup
-          .append('path')
-          .attr('pointer-events', 'none')
-          .attr('d', function(d) {
-            return wavePath(d.data.usage, d.r);
-          })
-          .attr('transform', function(d) {
-            return 'translate(' + (-d.r) + ',' + 0 + ')';
-          })
-          .attr('fill', function(d) {
-            return getColorByPercent(d.data.usage);
-          });
-
-          var textGroup = wrapperGroup
-          .append('g')
-          .attr('class', 'asset-texts')
-          .selectAll('g')
-          .data(nodes)
-          .enter().append('g')
-          .attr('class', function(d) {
-            return d.parent ? d.children ? 'text' : 'text text-leaf' : 'text text-root';
-          })
-          .attr('id', function(d) {
-            return 'text-' + d.data.id;
-          })
-          .each(function(d) {
-            var element = d3.select(this);
-
-            var showText = canShowText(d);
-            // Center text
-            var textCenter = element.append('g')
-            .attr('class', 'text-center')
-            .attr('pointer-events', 'none')
-            .style('fill-opacity', function() {
-              return d.parent === root ? (showText ? 1 : 0) : 0;
-            })
-            .call(renderText(false));
-
-            if (d.children) {
-              // Top text
-              var textTop = element
-              .append('g')
-              .attr('class', 'text-top')
-              .attr('transform', function() {
-                return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition + ')';
-              })
-              .style('display', function(d) {
-                return d === root ? 'inline' : 'none';
-              })
-              .style('fill-opacity', function() {
-                return d === root ? 1 : 0;
-              })
-              .call(renderText(true));
-            }
-          });
-
-          svg.on('click', function() {
-            zoom(root);
-          });
-
-          zoomTo([root.x, root.y, root.r * 2 + margin]);
-
-          this.scopeSubtree(this.$.chart, true);
-
-          function zoom(d) {
-            var focus0 = focus;
-            focus = d;
-            _this.set('focus', focus);
-
-            var target = [focus.x, focus.y, focus.r * 2 + margin];
-
-            // final scale after transition
-            var finalScale = diameter / target[2];
-            _this.set('scaleK', finalScale);
-
-            var transition = d3.transition()
-            .duration(d3.event.altKey ? 7500 : 750)
-            .tween('zoom', function () {
-              var i = d3.interpolateZoom(view, target);
-              return function (t) {
-                zoomTo(i(t));
-              }
-            });
-
-            transition.selectAll('circle.node-leaf')
-            .attr('fill', function(d) {
-              return (d !== focus && d.parent !== focus) ? 'none' : 'transparent';
-            });
-
-            transition.selectAll('g.text-top')
-            .filter(function(d) {
-              return d === focus || this.style.display === 'inline';
-            })
-            .style('fill-opacity', function(d) {
-              return (d === focus) ? 1 : 0;
-            })
-            .on('start', function(d) {
-              if (d === focus) this.style.display = 'inline';
-            })
-            .on('end', function(d) {
-              if (d !== focus) this.style.display = 'none';
-            });
-
-            transition.selectAll('g.text-center')
-            .filter(function(d) {
-              return d.parent === focus || d === focus  || this.style.display === 'inline';
-            })
-            .style('fill-opacity', function(d) {
-              // when circle isn't big enough just hide all texts insides
-              if (d.parent === focus || (d === focus && !d.children)) {
-                return canShowText(d) ? 1 : 0;
-              } else {
-                return 0;
-              }
-            })
-            .on('start', function(d) {
-              if (d.parent === focus || (d === focus && !d.children)) {
-                if (canShowText(d)) {
-                  this.style.display = 'inline';
-                } else {
-                  this.style.display = 'none';
-                }
-              }
-            })
-            .on('end', function(d) {
-              if (d.parent !== focus && (d !== focus || d.children)) {
-                this.style.display = 'none';
-              }
-              if (!canShowText(d)) {
-                this.style.display = 'none';
-              }
-            });
-          }
-
-          function canShowText(d) {
-            var maxX = (d.data.name.length > 5 ? d.data.name.length : 5) * 16;
-            var maxY = 16 + 14;
-            if (d.data.conclusion && d.data.conclusion.high) maxY += 14;
-            var maxLength = Math.max.call(Math, maxX, maxY);
-            // console.log(d.data.name.length, maxX, maxY, maxLength, _this.scaleK * d.r * 2)
-            return _this.scaleK * d.r * 2 > maxLength;
-          }
-
-          function zoomTo(v) {
-            var k = diameter / v[2];
-            view = v;
-
-            textGroup.attr('transform', function (d) {
-              return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
-            });
-
-            assetGroup
-            .attr('transform-origin', '50% 50%')
-            .attr('transform', function (d) {
-              return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
-            })
-            .style('opacity', function(d) {
-              if (d === focus) {
-                if (d.children) return 0.6;
-                return 1;
-              } else {
-                if (d.parent === focus) return 1;
-                return 0.6;
-              }
-            })
-            .selectAll('circle, g.wave')
-            .attr('transform', 'scale(' + k + ')')
-
-            // move text-top when scale changes
-            textGroup.selectAll('g.text-top')
-            .attr('transform', function(d) {
-              return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k + ')'
-            });
-          }
-
-          function renderText(adviceIncluded) {
-            return function (selection) {
-              // Text for asset name display
-              selection.append('text')
-              // .attr('dy', '-0.35em')
-              .attr('class', 'asset-name')
-              .attr('font-size', 20)
-              .text(function(d) {
-                return d.data.name;
-              })
-              .call(commonTextAttr);
-
-              // Text for usage display
-              var usageTxt = selection.append('text')
-              .attr('y', 20)
-              .attr('font-size', 16)
-              .call(commonTextAttr);
-
-              // icon: fa-adjust
-              usageTxt
-              .append('tspan')
-              .attr('font-family','DewIcon')
-              .attr('font-size', 14)
-              .text('\uE002' + ' ');
-
-              usageTxt
-              .append('tspan')
-              .attr('dy', '-0.05em')
-              .text(function(d) {
-                return parseInt(d.data.usage * 100) + '%';
-              });
-              
-              // Text for overload assets
-              selection.each(function(d) {
-                var overload = 0;
-                if (Array.isArray(d.children)) {
-                  overload = d.children.filter(function(n) {
-                    return n.data.usage > 1
-                  }).length;
-                }
-
-                if (overload > 0) {
-                  var overloadTxt = d3.select(this)
-                  .append('text')
-                  .attr('y', 36)
-                  .attr('font-size', 16)
-                  .call(commonTextAttr);
-
-                  // icon: fa-clock-o
-                  overloadTxt
-                  .append('tspan')
-                  .attr('font-family','DewIcon')
-                  .attr('font-size', 14)
-                  .style('fill', '#e26d26')
-                  .text('\uE001' + ' ');
-
-                  overloadTxt
-                  .append('tspan')
-                  .attr('dy', '-0.05em')
-                  .text(overload + '台');
-                }
-
-                // Advice text render here
-                if (adviceIncluded ||  (!adviceIncluded && d.r > 100)) {
-                  if (d.data.suggestions && d.data.suggestions.length) {
-                    var overloadTxt = d3.select(this)
-                    .append('text')
-                    .attr('y', overload ? 60 : 50)
-                    .attr('font-size', 20)
-                    .text(d.data.suggestions[0].title)
-                    .call(commonTextAttr);
-                  }
-                }
-              })
-            }
-          }
         },
         getFragObj: function(url) {
           var fragment = new URI(window.location.href).fragment();
