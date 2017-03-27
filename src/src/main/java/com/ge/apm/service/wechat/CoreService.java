@@ -390,7 +390,7 @@ public class CoreService {
         return s == null ? null : s.getName();
     }
 
-//    @Value("#{wxProperties.webContextUrl}")
+    @Value("#{wxProperties.webContextUrl}")
     private String webContextUrl;
     
     public String getWoDetailUrl(Integer woId) {

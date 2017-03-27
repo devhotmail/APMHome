@@ -211,7 +211,7 @@ and open the template in the editor.
                             </div>
                             <div class="weui-msg__opr-area">
                                 <p class="weui-btn-area">
-                                    <a href="create.xhtml?action=Edit&amp;assetid=#{wxAssetInfoController.assetInfo.id}" class="weui-btn weui-btn_primary">新增报修</a>
+                                    <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增报修</a>
                                 </p>
                             </div>
 

@@ -1,4 +1,4 @@
-<script type="text/html" id="step_cost">
+<script type="text/html" id="ts_step_cost">
     <div class="page">
         <form id="costForm">
             <div class="weui-cells weui-cells_form">
@@ -44,6 +44,18 @@
                         <i class="weui-icon-warn"></i>
                     </div>
                 </div>
+                <div class="weui-cell">
+                    <input id="cowokerUserName" name="cowokerUserName" type="hidden"/>
+                    <div class="weui-cell__hd"><label for="cowokerUserId" class="weui-label">协作者</label></div>
+                    <div class="weui-cell__bd">
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__bd">
+                                <select class="weui-select" name="cowokerUserId" id="cowokerUserId" >
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
         <div class="weui-btn-area">
@@ -54,16 +66,19 @@
 
     <script type="text/javascript">
         $(function(){
-            $loadingToast.fadeOut(100);
+            app.initUserSelect('cowokerUserId', 'getcurrentperson');
+            $('#cowokerUserId').change(function(){
+                $('#cowokerUserName').val($('#cowokerUserId option:selected').html());
+            });
+            
             $('#costSubmit').click(function(){
                 var array = $('#costForm').serializeArray();
                 var costData = pageManager.formdata(array);
                 if (costData.manHours===''&&costData.accessory===''&&costData.accessoryQuantity===''
-                        &&costData.accessoryPrice===''&&costData.otherExpense===''){
+                        &&costData.accessoryPrice===''&&costData.otherExpense===''&&costData.cowokerUserId === ''){
                     history.back();
                     return;
                 }
-                costData.siteId = pageManager.siteId;
                 pageManager.stepCost.push(costData);
                 insertCostList(costData);
                 history.back();
@@ -78,7 +93,8 @@
                         +',  备件：'+value.accessory
                         +',  数量：'+value.accessoryQuantity
                         +',  单价(元)：'+value.accessoryPrice
-                        +',  其他费用(元)：'+value.otherExpense +
+                        +',  其他费用(元)：'+value.otherExpense 
+                        +',  协作人：'+value.cowokerUserName +
                         '</p></div>'+
                         '<div class="weui-cell__ft"><i class="weui-icon-cancel"></i></div></div>';
                 $costList.append($(tempui).attr('data-id', index));
