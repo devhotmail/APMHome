@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -64,6 +65,7 @@ import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.apache.camel.Headers;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,10 +106,8 @@ public class CoreService {
     
     @PostConstruct
     public void init() {
-    	System.out.println("1================"+System.getenv("webContextUrl"));
         this.refreshRouter();
         if (!Strings.isNullOrEmpty(System.getenv("webContextUrl"))) {
-        	System.out.println("2================"+System.getenv("webContextUrl"));
             webContextUrl = System.getenv("webContextUrl");
         }
     }
@@ -159,17 +159,13 @@ public class CoreService {
     public int bindingUserInfo(HttpServletRequest request,HttpServletResponse response, String openId, String username, 
     																	String password, String newPwd, String confirmPwd) {
     	UserAccount ua = userValidate(username, password);
-//    	if(StringUtils.isEmpty(newPwd) || StringUtils.isEmpty(confirmPwd) || (!newPwd.equals(confirmPwd))){
-//    		return 1;//
-//    	}
-    	if (ua == null ){//账号密码校验
+    	if (ua == null ){
     		return 1;//绑定失败
     	}
         WxMpUser user = getUserInfo(openId, null);
         if(user == null){//微信校验
         	return 1;
         }
-       //更新密码 
         try {
         	ua.setPlainPassword(newPwd);
             ua.entryptPassword();
@@ -404,25 +400,25 @@ public class CoreService {
     public void sendWxTemplateMessage(String userWeChatId, String wxTemplateId, String msgTitle, String msgBrief, String msgDetails, String msgDateTime, String linkUrl){
         HashMap<String, Object> params = new HashMap<>();
 
-        params.put("userWeChatId", userWeChatId);
-        params.put("wxTemplateId", wxTemplateId);
-        params.put("msgTitle", msgTitle);
-        params.put("msgBrief", msgBrief);
-        params.put("msgDetails", msgDetails);
-        params.put("msgDateTime", msgDateTime);
+        params.put("_userWeChatId", userWeChatId);
+        params.put("_wxTemplateId", wxTemplateId);
+        params.put("_msgTitle", msgTitle);
+        params.put("_msgBrief", msgBrief);
+        params.put("_msgDetails", msgDetails);
+        params.put("_msgDateTime", msgDateTime);
 
         if(linkUrl==null || "".equals(linkUrl.trim())) 
             linkUrl = null;
         else
             linkUrl = linkUrl.trim();
         
-        params.put("linkUrl", linkUrl);
+        params.put("_linkUrl", linkUrl);
 
         //let camel route call doSendWxTemplateMessage in async mode and retry 3 times
         SiBroker.sendMessageWithHeaders("direct:wxSendMessage", null, params);
     }
     
-    public void doSendWxTemplateMessage(@Headers Map<String, Object> params) throws WxErrorException{
+/*    public void doSendWxTemplateMessage(@Headers Map<String, Object> params) throws WxErrorException{
         WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
                 .toUser(params.get("userWeChatId").toString()).templateId(params.get("wxTemplateId").toString()).build();
 
@@ -439,5 +435,33 @@ public class CoreService {
             templateMessage.setUrl("");
         
         wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
-    }    
+    } */   
+    
+    public void sendWxTemplateMessage(String openId, String templateId, Map<String,Object> map){
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("openId", openId);
+        params.put("templateId", templateId);
+        if(map != null){
+        	params.putAll(map);
+        }
+        SiBroker.sendMessageWithHeaders("direct:wxSendMessage", null, params);
+    }
+    
+	public void doSendWxTemplateMessage(@Headers Map<String, Object> map) throws WxErrorException {
+		WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder().toUser((String)map.get("openId")).templateId((String)map.get("templateId")).build();
+		String textColor = "#000000";
+		Set<String> keys = map.keySet();
+		if (!CollectionUtils.isEmpty(keys)) {
+			for (String key : keys) {
+				if(key.startsWith("_")){
+					templateMessage.addWxMpTemplateData(new WxMpTemplateData(key, (String) map.get(key), textColor));
+					if (key.equals("_linkUrl")) {
+						//templateMessage.setUrl(wxMpService.oauth2buildAuthorizationUrl(webContextUrl + map.get(key).toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+						templateMessage.setUrl((String)map.get(key));
+					}
+				}
+			}
+		}
+		wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+	}
 }

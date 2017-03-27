@@ -39,11 +39,11 @@ public class UserRegistrationController extends JpaCRUDController<AccountApplica
     }
     
     public void submit(){
-    	System.out.println(accountApplication);
-    	if(accountApplication != null){
-    		accountApplication.setWechatId(WeiXinUtils.getWxUserOpenId());
-    	}
-    	accountApplicationService.applyRegistration(this.accountApplication);
+//    	System.out.println(accountApplication);
+//    	if(accountApplication != null){
+//    		accountApplication.setWechatId(WeiXinUtils.getWxUserOpenId());
+//    	}
+//    	accountApplicationService.applyRegistration(this.accountApplication);
     	
     }
     

@@ -1,6 +1,8 @@
 package com.ge.apm.web.chart;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,11 +54,16 @@ public class TestController {
     @RequestMapping(value = "/push_wx", method = RequestMethod.GET )
     @ResponseBody
     public String pushWX() {
-    	
     		String openId = "otf1us5X8vbPlgpSK2C7aXKPxu6Q";
-    		String templateId = "H21qYjx-0Yy8HII4lQa33XBp3zkIvPLB-ONAIMvICBw";
-    		coreService.sendWxTemplateMessage(openId, templateId, null, null, null, null,null);
+    		String templateId = "N57cA1JvT1KMsmNLmWh5_nOM6rag-QHGQ4zWicwnzGI";
+    		Map<String ,Object> map = new HashMap<String,Object>();
+    		map.put("_assetName", "CT MR");
+    		map.put("_status", "维修中");
+    		map.put("_currentPerson", "科员");
+    		map.put("_linkUrl", "www.baidu.com");
+    		coreService.sendWxTemplateMessage(openId, templateId,map);
          return "success";
+         
     }
     
 }
