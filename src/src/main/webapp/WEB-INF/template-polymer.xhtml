@@ -11,11 +11,10 @@
     <title>GE APM</title>
 
     <!-- web components shim -->
-    <h:outputScript name="bower_components/webcomponentsjs/webcomponents-lite.min.js"/>
-    <h:outputStylesheet name="css/shell.css"/>
+    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/shell.css" />
+    <link rel="stylesheet" type="text/css" href="css/dewIcons.css" />
 
-    <link rel="import" href="elements/px-theme-apm-lighton/px-theme-apm-lighton-styles.html"/>
-    <style include="px-theme-apm-lighton-styles" is="custom-style"></style>
 
     <!-- Async HTML Imports do not block rending. Benefit of keeping it declarative
 (instead of dynamically loading it later in JS) is that the parser can go to

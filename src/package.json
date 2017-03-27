@@ -4,12 +4,15 @@
   "description": "",
   "main": "gulpfile.js",
   "scripts": {
+    "dev": "gulp",
+    "build": "gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "autoprefixer": "^6.7.6",
+    "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-cssmin": "^0.1.7",
@@ -17,9 +20,12 @@
     "gulp-iconfont-css": "^2.1.0",
     "gulp-postcss": "^6.3.0",
     "gulp-sass": "^2.3.2",
+    "gulp-sequence": "^0.4.6",
     "gulp-style-modules": "^0.1.0",
+    "gulp-symlink": "^2.1.4",
     "node-sass": "^3.11.2",
     "node-sass-import-once": "^1.2.0",
-    "postcss-viewport-units": "^0.1.2"
+    "postcss-viewport-units": "^0.1.2",
+    "polymer-build": "^0.8.4"
   }
 }

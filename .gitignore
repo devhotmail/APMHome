@@ -5,11 +5,12 @@ src/src/main/resources/database.properties
 *.bak
 database.properties
 src/bower_components/
+src/public/elements/**/*-styles.html
+src/public/css
 src/logs
 src/node_modules/
 src/target/
-src/src/main/webapp/resources/css
-src/src/main/webapp/resources/elements/**/*-styles.html
+src/src/main/webapp/resources
 .idea/
 *.iml
 src/sql/test_data.sql
