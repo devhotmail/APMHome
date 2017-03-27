@@ -84,7 +84,7 @@ public class ListApi {
 
 	private String getHref(String requestUrl, Date from, Date to, Integer dept, Integer type, String orderby, Integer limit, Integer start ) {
 
-		return String.format("%s?from=%s&to=%s&dept=%s&type=%s&orderby=%s&limit=%s&start=%s", requestUrl, from, to, dept, type, orderby, limit, start);
+		return String.format("%s?from=%s&to=%s&dept=%s&type=%s&orderby=%s&limit=%s&start=%s", requestUrl.replace("http", "https"), from, to, dept, type, orderby, limit, start);
 	}
 
 	private ResponseEntity<Map<String, Object>> createResponseBody(

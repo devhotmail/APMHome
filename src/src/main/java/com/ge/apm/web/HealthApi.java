@@ -112,6 +112,8 @@ public class HealthApi {
 
 	private String getHref(Integer category, String url) {
 
+		url = url.replace("http", "https");
+		
 		switch(category) {
 			case 0:
 				return url;
@@ -156,6 +158,8 @@ public class HealthApi {
 
 	private String getHref(Integer category, String url, Integer count) {
 
+		url = url.replace("http", "https");
+		
 		if (count==0)
 			return "";
 
