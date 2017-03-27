@@ -29,12 +29,12 @@ var RongIMLib;
                 }, 200);
             }
             else {
-                var list = ["../../../resources/js/pcmdata-2.0.0.min.js", "../../../resources/js/libamr-2.0.1.min.js"];
-                for (var i = 0, len = list.length; i < len; i++) {
-                    var script = document.createElement("script");
-                    script.src = list[i];
-                    document.head.appendChild(script);
-                }
+//                var list = ["../../../resources/js/pcmdata-2.0.0.min.js", "../../../resources/js/libamr-2.0.1.min.js"];
+//                for (var i = 0, len = list.length; i < len; i++) {
+//                    var script = document.createElement("script");
+//                    script.src = list[i];
+//                    document.head.appendChild(script);
+//                }
             }
             this.isInit = true;
         };
