@@ -113,4 +113,12 @@ public class AssetCreateService {
         qrLibDao.save(qrLibItem);
     }
 
+    public List<QrCodeAttachment> getQrCodeAudioList(String qrCode) {
+         List<SearchFilter> qrCodeFilters = new ArrayList<>();
+        qrCodeFilters.add(new SearchFilter("qrCodeId", SearchFilter.Operator.EQ, qrCode));
+        qrCodeFilters.add(new SearchFilter("fileType", SearchFilter.Operator.EQ, 2));
+        List<QrCodeAttachment> picsList = qrCodeAttachDao.findBySearchFilter(qrCodeFilters);
+        return picsList;
+    }
+
 }
