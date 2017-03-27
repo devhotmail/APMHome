@@ -19,6 +19,7 @@ alter table work_order drop column name;
 --- end of drop unused columns
 
 
+alter table asset_summit alter column rating type float;
 ALTER TABLE user_account ADD CONSTRAINT uk_user_account_wechat_id UNIQUE (wechat_id);
 alter table user_account add COLUMN leader_user_id int;
 
@@ -83,7 +84,7 @@ is_receive_chat_msg bool not null	--是否接收聊天消息
 alter table message_subscriber add primary key (id);
 
 
-alter table work_order add column status int;  -- 1-在修 / 2-完成 / 3-取消
+alter table work_order add column status int;  -- 1-在修 / 2-完成 / 3-取消  (2: 0分表明没有评价过)
 alter table work_order add column int_ext_type int;  -- 1-内部 / 2-外部 / 3-混合
 alter table work_order add column parent_wo_id int;	--二次工单
 alter table work_order add column feedback_rating int;  --默认是0, 打分范围:1~5 
