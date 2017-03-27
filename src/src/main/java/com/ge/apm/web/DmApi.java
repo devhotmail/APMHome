@@ -80,7 +80,7 @@ public class DmApi {
       Case($(t -> t._2 > 1D), javaslang.collection.List.of(ImmutableMap.of("title", SUGGESTION_BUY, "addition", String.format("%s台设备", (int) Math.ceil((averageUsage - 1) * numOfAssets)))).toJavaList()),
       Case($(t -> t._1 > 0), javaslang.collection.List.of(ImmutableMap.of("title", SUGGESTION_ADJUST)).toJavaList()),
       Case($(t -> t._2 <= 0.3D), javaslang.collection.List.of(ImmutableMap.of("title", SUGGESTION_RAISE)).toJavaList()),
-      Case($(), javaslang.collection.List.of(ImmutableMap.of("title", "")).toJavaList()));
+      Case($(), javaslang.collection.List.of(new ImmutableMap.Builder<String, String>().build()).toJavaList()));
   }
 
   private List<Map<String, String>> calculateTotalSuggestion(Seq<ImmutableMap<String, Object>> items, String groupBy) {
