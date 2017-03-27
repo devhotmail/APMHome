@@ -3,6 +3,7 @@
 const path = require('path');
 const symlink = require('gulp-symlink');
 const sequence = require('gulp-sequence');
+const postcss = require('gulp-postcss');
 const autoprefixer = require('gulp-autoprefixer');
 const stylemod = require('gulp-style-modules');
 const del = require('del')
@@ -16,7 +17,6 @@ const iconfontCss = require('gulp-iconfont-css');
 const src = 'public/sass/*.scss';
 const src_comp = 'public/elements/**/*.scss';
 const dest = 'src/main/webapp/resources';
-
 // -------------------------------------
 //   Task: Compile: Sass
 // -------------------------------------
@@ -35,7 +35,10 @@ gulp.task('sass:compile:css', function() {
     }
   })
   .on('error', sass.logError))
-  .pipe(autoprefixer())
+  .pipe(postcss([
+    require('autoprefixer')(),
+    require('postcss-viewport-units')()
+  ]))
   .pipe(cssmin({
     advanced: false,
     aggressiveMerging: false,
@@ -65,7 +68,10 @@ gulp.task('sass:compile:module', function() {
     }
   })
   .on('error', sass.logError))
-  .pipe(autoprefixer())
+  .pipe(postcss([
+    require('autoprefixer')(),
+    require('postcss-viewport-units')()
+  ]))
   .pipe(stylemod({
     // All files will be named 'styles.html'
     filename: function(file) {
@@ -80,6 +86,30 @@ gulp.task('sass:compile:module', function() {
   .pipe(gulp.dest(function(file) {
     return file.base;
   }));
+});
+
+// -------------------------------------
+//   Task: Custom Icon Fonts
+// -------------------------------------
+const fontName = 'DewIcon';
+gulp.task('iconfont', function() {
+  return gulp.src([
+    'public/assets/*.svg'
+  ])
+  .pipe(iconfontCss({
+    fontName,
+    path: 'public/sass/_icons-template.scss',
+    targetPath: '../sass/dewIcons.scss',
+    fontPath: '../fonts/',
+    cssClass: 'dewicon'
+  }))
+  .pipe(iconfont({
+    fontName,
+    prependUnicode: true,
+    formats: ['ttf', 'eot', 'woff', 'woff2', 'svg'],
+    timestamp: Math.round(Date.now() / 1000)
+  }))
+  .pipe(gulp.dest('public/fonts/'));
 });
 
 // -------------------------------------
@@ -110,28 +140,3 @@ gulp.task('dist', ['bundle'], function() {
 
 gulp.task('default', sequence('css', 'source', 'sass:watch'));
 gulp.task('build', sequence('css', 'dist'));
-
-/**
- * Task for custom icon font
- */
-const fontName = 'DewIcon';
- 
-gulp.task('iconfont', function(){
-  return gulp.src([
-    'public/assets/*.svg'
-  ])
-  .pipe(iconfontCss({
-    fontName,
-    path: 'public/sass/_icons-template.scss',
-    targetPath: '../sass/dewIcons.scss',
-    fontPath: '../fonts/',
-    cssClass: 'dewicon'
-  }))
-  .pipe(iconfont({
-    fontName,
-    prependUnicode: true,
-    formats: ['ttf', 'eot', 'woff', 'woff2', 'svg'],
-    timestamp: Math.round(Date.now()/1000)
-  }))
-  .pipe(gulp.dest('public/fonts/'));
-});

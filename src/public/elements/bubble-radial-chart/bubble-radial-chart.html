@@ -4,8 +4,7 @@
 <link rel="import" href="../lodash/lodash.html">
 <link rel="import" href="../../lscache.html"/>
 <link rel="import" href="bubble-radial-chart-styles.html">
-<script src="../../bower_components/d3/d3.min.js"></script>
-<script src="../../bower_components/urijs/src/URI.js"></script>
+<link rel="import" href="../../uri.html">
 
 <dom-module id="bubble-radial-chart">
   <template>
@@ -64,7 +63,7 @@
           return (angle / 180) * Math.PI;
         }
 
-        function hasChildren(node) {
+        function hasLink(node) {
           return node.data.link && node.data.link.href;
         }
 
@@ -943,10 +942,10 @@
               return 'node-' + d.data.id;
             })
             .style('cursor', function(d) {
-              return hasChildren(d) ? 'pointer' : 'normal';
+              return hasLink(d) ? 'pointer' : 'normal';
             })
             .on('click', function(d) {
-              if(hasChildren(d)) {
+              if(hasLink(d)) {
                 handleClick.apply(null, arguments);
               }
             })
@@ -1155,6 +1154,14 @@
             .attr("transform", function(d) {
               // original position (parent `node` circle center)
               return 'translate(' + parent.circle.center + ')';
+            })
+            .style('cursor', function(d) {
+              return hasLink(d) ? 'pointer' : 'normal';
+            })
+            .on('click', function handleClickNode(node) {
+              if (hasLink(node)) {
+                window.open(node.data.link.href, '_blank');
+              }
             })
             .each(_.partial(renderNode, _this));
 

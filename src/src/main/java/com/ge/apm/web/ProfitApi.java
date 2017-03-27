@@ -132,7 +132,7 @@ public class ProfitApi {
       .put("profit_label_unit", CNY.desc(child._4)._2)
       .put("link", new ImmutableMap.Builder<String, Object>()
         .put("ref", "child")
-        .put("href", Option.of(groupBy).map(v -> String.format("%s?year=%s&%s=%s", request.getRequestURL(), year, groupBy, child._1)).getOrElse(""))
+        .put("href", Option.of(groupBy).map(v -> String.format("%s?year=%s&%s=%s", request.getRequestURL().toString().replace("http", "https"), year, groupBy, child._1)).getOrElse(""))
         .build())
       .build()).cache().toBlocking().toIterable();
   }
@@ -161,10 +161,10 @@ public class ProfitApi {
         .put("profit_text", "总利润")
         .put("link", new ImmutableMap.Builder<String, Object>()
           .put("ref", "self")
-          .put("href", Option.of(groupBy).map(v -> String.format("%s?year=%s&groupby=%s", request.getRequestURL(), year, v))
-            .orElse(Option.of(type).map(v -> String.format("%s?year=%s&type=%s", request.getRequestURL(), year, v)))
-            .orElse(Option.of(dept).map(v -> String.format("%s?year=%s&dept=%s", request.getRequestURL(), year, v)))
-            .orElse(Option.of(dept).map(v -> String.format("%s?year=%s&month=%s", request.getRequestURL(), year, v)))
+          .put("href", Option.of(groupBy).map(v -> String.format("%s?year=%s&groupby=%s", request.getRequestURL().toString().replace("http", "https"), year, v))
+            .orElse(Option.of(type).map(v -> String.format("%s?year=%s&type=%s", request.getRequestURL().toString().replace("http", "https"), year, v)))
+            .orElse(Option.of(dept).map(v -> String.format("%s?year=%s&dept=%s", request.getRequestURL().toString().replace("http", "https"), year, v)))
+            .orElse(Option.of(dept).map(v -> String.format("%s?year=%s&month=%s", request.getRequestURL().toString().replace("http", "https"), year, v)))
             .getOrElse(String.format("%s?year=%s", request.getRequestURL(), year)))
           .build())
         .build())

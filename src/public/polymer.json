@@ -4,7 +4,8 @@
   "fragments": [
     "public/pages/home-head.html",
     "public/pages/home-dept-head.html",
-    "public/pages/home-asset-head.html"
+    "public/pages/home-asset-head.html",
+    "public/pages/asset-procurement.html"
   ],
   "source": [
     "public/*.html",
@@ -14,6 +15,7 @@
     "public/bower_components/font-awesome/fonts/**/*",
     "public/css/**/*",
     "public/icons/**/*",
+    "public/fonts/**/*",
     "public/img/**/*",
     "public/js/**/*",
     "public/jquery_notification/**/*",
