@@ -6,7 +6,6 @@ import com.ge.apm.dao.AssetClinicalRecordRepository;
 import com.ge.apm.dao.AssetSummitRepository;
 import com.ge.apm.domain.AssetSummit;
 import com.ge.apm.pojo.AssetClinicalRecordPojo;
-import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,7 @@ public class AssetExamDataAggregator {
       并更新至asset_summit的revenue
       PostgreSQL的update不支持双表语法, 使用两个hashmap来减少嵌套for循环的关联数据的查询
       */
-    public String operatorAggregator_deprecated(List<AssetClinicalRecordPojo> acrpList){
+  /*  public String operatorAggregator_deprecated(List<AssetClinicalRecordPojo> acrpList){
         HashMap<String,AssetClinicalRecordPojo> hmRepo= new HashMap<String,AssetClinicalRecordPojo>();
         HashMap<String,AssetSummit> hmSumit= new HashMap<String,AssetSummit>();
         //初始化hmRepo key
@@ -76,15 +75,24 @@ public class AssetExamDataAggregator {
         }
         return "success";
     }
+*/
 
+    public String aggregateExamData(){
+            List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregator();
+            logger.info("Asset Clinical Record size {}",acrpList.size());
 
+        return "success";
+    }
+
+    public void aggregateExamDataByAssetId(int assetId){
+    }
     @Transactional
-    public String aggregateExamDataByDay(Date date) {
+    public String aggregateExamDataByDay(Date date) throws Exception {
         List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregatorByDate(date);
-        if(CollectionUtils.isEmpty(acrpList)){
+        /*if(CollectionUtils.isEmpty(acrpList)){
             logger.error("acrpList is empty,today is {}",new DateTime());
             return "failure";
-        }
+        }*/
         List<AssetSummit> asmUpdateList= new ArrayList<AssetSummit>();
         for(AssetClinicalRecordPojo accrp:acrpList){
             AssetSummit asm = new AssetSummit();
@@ -97,7 +105,7 @@ public class AssetExamDataAggregator {
             asm.setExamCount(accrp.getExamCount().intValue());
             asmUpdateList.add(asm);
         }
-        assetSummitRepository.save(asmUpdateList);
+       // assetSummitRepository.save(asmUpdateList);
         return "success";
 
     }
@@ -118,6 +126,7 @@ public class AssetExamDataAggregator {
         Date to = sdf.parse("2015-09-18");*/
         while(dtFrom.isBefore(dtTo)){
             params.put("theDate", TimeUtil.toString(dtFrom.toDate(), 0, "yyyy-MM-dd"));
+            //gl:route_main.xml
             SiBroker.sendMessageWithHeaders("direct:initAssetAggregationDataByDateRange", null, params);
             dtFrom = dtFrom.plusDays(1);
         }

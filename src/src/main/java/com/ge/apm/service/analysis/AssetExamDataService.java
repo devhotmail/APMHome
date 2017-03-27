@@ -72,6 +72,7 @@ public class AssetExamDataService {
                     logger.info("calByFromTo begin ,current day is {}",from.toString());
                     assetExamDataAggregator.aggregateExamDataByDay(from.toDate());
                     from = from.plusDays(DAY);
+
                 }
                 return "success";
             }catch(Exception e){
