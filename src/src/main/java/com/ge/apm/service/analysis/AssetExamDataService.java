@@ -29,8 +29,6 @@ public class AssetExamDataService {
     @Autowired
     AssetExamDataAggregator assetExamDataAggregator;
 
-
-
     /***
      * 	按当天的聚合
      */
@@ -82,13 +80,14 @@ public class AssetExamDataService {
             }
         }
     }
-
+    /***
+     * 	计算rating的值
+     */
     @Transactional
     public String calRating() {
         double npw=2/5f,icw=1/5f,ecw=1/5f,fcw=1/5f;
         double nprofit=0.0f,ic=0.0f,ec=0.0f,fc=0.0f,weightedSum=0.0f,np=0.0f;
         //min max based on 1 year
-        //nprofit: select (revenue-maintenance_cost-deprecation_cost) as nprofit
         //gl: nest sql are not support in HQL ,take mybatis here to look for max and min
         try{
             AssetSummitMaxMinPojo asmm = assetSummitMapper.fetchAssetSummit();
