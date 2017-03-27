@@ -1,4 +1,5 @@
 --- begin of drop unused columns
+/*
 alter table asset_info drop COLUMN clinical_owner_id;
 alter table asset_info drop COLUMN clinical_owner_name;
 alter table asset_info drop COLUMN clinical_owner_tel;
@@ -15,7 +16,7 @@ alter table work_order drop column case_owner_id;
 alter table work_order drop column case_owner_name;
 alter table work_order drop column is_internal;
 alter table work_order drop column name;
-
+*/
 --- end of drop unused columns
 
 
