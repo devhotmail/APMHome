@@ -12,7 +12,7 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0"/>
-        <title>新增报修</title>
+        <title>报修</title>
         <!-- 引入 WeUI -->
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/wo/woprogress.css"/>
@@ -34,33 +34,27 @@
                 wechatSDK.setSignature('${timestamp}', '${nonceStr}', '${signature}');
                 wechatSDK.init();
                 
-                //default page
-                
-
-                wechatSDK.scanQRCode(1, function(qrCode) {
-                        if (qrCode.length > 16) {
-                            qrCode = qrCode.substr(qrCode.length-16);
+                var qrCode = '${qrCode}';
+                $.get(WEB_ROOT+"web/findassetinfo", {'qrCode': qrCode}, function(ret){
+                    if (ret && ret.assetId) {
+                        if (ret.view) {
+                            pageManager.woId = ret.woId;
+                            pageManager.showTime = true;
+                            pageManager.init('ts_wodetail');
+                        } else {
+                            pageManager.assetId = ret.assetId;
+                            pageManager.init('ts_scanAsset');
                         }
-                        $.get(WEB_ROOT+"web/findassetinfo", {'qrCode': qrCode}, function(ret){
-                            if (ret && ret.assetId) {
-                                if (ret.view) {
-                                    pageManager.woId = ret.woId;
-                                    pageManager.init('ts_wodetail');
-                                } else {
-                                    pageManager.assetId = ret.assetId;
-                                    pageManager.init('ts_scanAsset');
-                                }
-                                
+
 //                                $('#assetId').val(ret.assetId);
 //                                $('#assetName').html(ret.assetName);
 //                                $('#supplier').html(ret.supplier);
 //                                $('#assetGroup').html(ret.assetGroup);
 //                                $('#assetStatus').html(ret.assetStatus);
-                            } else {
-                                pageManager.init('ts_asset_notfound');
-                            }
-                        });
-                    });
+                    } else {
+                        pageManager.init('ts_asset_notfound');
+                    }
+                });
             });
         </script>
         
@@ -310,8 +304,8 @@
                         
                         var data = {
                             assetId: pageManager.assetId,
-                            voiceSerId: pageManager.voiceSerId,
-                            imgSerIds: pageManager.serverIds,
+                            voiceId: pageManager.voiceSerId,
+                            imgIds: pageManager.serverIds.toString(),
                             priority: $('#casePriority').val(),
                             reason: rReason
                         };

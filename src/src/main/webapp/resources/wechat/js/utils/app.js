@@ -56,6 +56,9 @@ $(function () {
             $.each(value.data, function(i, v){
                 parentEl.append('<p>'+v+'</p>');
             });
+            if (value.rater === 0) {
+                $tmpl.find('.reportview').html('未评分');
+            }
             $ui_list.append($tmpl);
         });
     }

@@ -153,7 +153,7 @@
                 <div class="weui-cells">
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
-                            <input id="estimatedCloseTime" name="estimatedCloseTime" class="weui-input" type="datetime-local"/>
+                            <input id="estimatedCloseTime" name="estimatedCloseTime" class="weui-input" type="datetime-local" readonly="readonly"/>
                         </div>
                     </div>
                 </div>
@@ -196,6 +196,7 @@
                     <a class="weui-btn weui-btn_primary" href="javascript:" id="submit"></a>
                     <a class="weui-btn weui-btn_primary" href="javascript:" id="otherSubmit"></a>
                     <a class="weui-btn weui-btn_primary" href="javascript:" id="returnSubmit">回退</a>
+                    <a class="weui-btn weui-btn_primary" href="javascript:" id="takeOtherWo"></a>
                 </div>
             </div>
             <div style="height:20px;"></div>
@@ -205,108 +206,159 @@
     </div>
     <script type="text/javascript">
         $(function(){
-            $.get(WEB_ROOT+'web/wodetail', {id: pageManager.woId}, function(ret) {
-                if (ret) {
-                    app.activeProgressBar(ret.currentStepId);
-                    //set value
-                    app.setFormJsonValue(ret);
-                    
-                    pageManager.voice = ret.requestReasonVoice;
-                    mediaShow();
-                } 
-            });
-            if (pageManager.showMsgs) {
-                $('#showMsgs').show();
-                $.get(WEB_ROOT+'web/msg/'+ pageManager.woId, function(ret) {
-                    if (ret && ret.length !== 0) {
-                        var msg = ret[0];
-                        $('#showMsgs').find('span').html(msg.message);
-                    } else {
-                        $('#showMsgs').find('span').html('暂时还没有交互信息');
+            function reloadDetail() {
+                $.get(WEB_ROOT+'web/wodetail', {id: pageManager.woId}, function(ret) {
+                    if (ret) {
+                        app.activeProgressBar(ret.currentStepId);
+                        //set value
+                        app.setFormJsonValue(ret);
+
+                        pageManager.voice = ret.requestReasonVoice;
+                        pageManager.step = ret.currentStepId;
+                        pageManager.workOrder = ret;
+                        
+                        pageManager.showReView = ret.currentStepId === 6;
+                        pageManager.showAssign = ret.currentStepId === 2 && pageManager.showBtn;
+                        pageManager.showTime = ret.currentStepId >= 3 && pageManager.showBtn && ret.currentStepId <5;
+                        pageManager.showComment = ret.currentStepId > 2 && pageManager.showBtn;
+                        pageManager.showPat = ret.currentStepId === 5 && pageManager.showBtn;
+                        
+                        if (pageManager.voice) {
+                            mediaShow();
+                        }
+                        if (!pageManager.showBtn && pageManager.showReView) {
+                            raterShow();
+                        }
+                        initdetail();
+                    } 
+                });
+            }
+            reloadDetail();
+            
+            function initdetail() {
+                if (pageManager.showMsgs) {
+                    $('#showMsgs').show();
+                    $.get(WEB_ROOT+'web/msg/'+ pageManager.woId, function(ret) {
+                        if (ret && ret.length !== 0) {
+                            var msg = ret[0];
+                            $('#showMsgs').find('span').html(msg.message);
+                        } else {
+                            $('#showMsgs').find('span').html('暂时还没有交互信息');
+                        }
+                    });
+                }
+
+                $('#showMsgs').on('click', '.weui-cell_access', function(){
+                    pageManager.go('#ts_msglist');
+                });
+            
+                if (pageManager.showAssign) {
+                    $('#showAssign').show();
+                    app.initUserSelect('currentPersonId', 'getcurrentperson');
+                }
+            
+                if (pageManager.showTime && pageManager.step >= 3 ) {
+                    $('#showTime').show();
+                    if ($('#estimatedCloseTime').val() === "") {
+                        $('#estimatedCloseTime').val(app.initWechatTime());
                     }
+                    if (pageManager.entryType !== 'scanreport') {
+                        $('#estimatedCloseTime').removeAttr('readonly');
+                    }
+                }
+            
+                if (pageManager.showBtn) {
+                    $('#submitType').show();
+                    if (pageManager.takeOtherWo){
+                        $('#takeOtherWo').html('获取工单');$('#returnSubmit').hide();
+                    } else{
+                        switch(pageManager.step) {
+                            case 2: $('#submit').html('派单');$('#returnSubmit').hide();break;
+                            case 3: $('#submit').html('领单');break;
+                            case 4: pageManager.signUp?$('#submit').html('签到'):$('#submit').hide();
+                                    $('#otherSubmit').html('关单');break;
+                            case 5: $('#submit').html('确认关单').show();$('#returnSubmit').hide();$('#otherSubmit').hide();break;
+                            default: $('#submit').html('反馈');$('#returnSubmit').hide();
+                        }
+                    }
+                }
+            
+                if (pageManager.showComment){
+                    $('#showComment').show();
+                }
+                if (pageManager.showReView){
+                    $('#showReView').show();
+                }
+                if (pageManager.showPat) {
+                    $('#pat').show();
+                    $('#issueDescribe').hide();
+                    $('#showComment').hide();
+                    app.initSelectData('caseType', 'caseType');
+                    app.initSelectData('caseSubType', 'caseSubType');
+                }
+            
+                $(".weui-rater a").click(function(){
+                    var num = $(this).data('num');
+                    pageManager.feedbackRating = num;
+                    $("#fen").html(num+'分');
+                    $(".weui-rater a").removeClass('checked');
+                    for(var i = 0; i < num;i++){
+                        $(".weui-rater a").eq(i).addClass('checked');
+                    }
+                });
+            
+                $('#submit').click(function(){
+                    $('#errorMsg').html('');
+                    var data = colletionData();
+                    var flag = validateData(data);
+                    if (flag){
+                        return;
+                    }
+                    pageManager.actionType = '';
+                    post(data);
+                });
+                $('#otherSubmit').click(function(){
+                    pageManager.actionType = 'repair';
+                    post({woId: pageManager.woId, actionType: 'repair', desc: $('#description').val()});
+                });
+                $('#returnSubmit').click(function(){
+                    var data = colletionReturnData();
+                    if(!data.desc){
+                        $('#errorMsg').html('请填写回退备注');
+                        return;
+                    } 
+                    post(data);
+                });
+                $('#takeOtherWo').click(function(){
+                    pageManager.actionType = 'fatchwo';
+                    post({woId: pageManager.woId, actionType: 'fatchwo', estimatedCloseTime: $('#estimatedCloseTime').val().replace('T', ' '), desc: $('#description').val()});
                 });
             }
             
-            $('#showMsgs').on('click', '.weui-cell_access', function(){
-                pageManager.go('#ts_msglist');
-            });
-            
-            if (pageManager.showAssign) {
-                $('#showAssign').show();
-                app.initUserSelect('currentPersonId', 'getcurrentperson');
-            }
-            
-            if (pageManager.showTime) {
-                $('#showTime').show();
-                if ($('#estimatedCloseTime').val() === "") {
-                    $('#estimatedCloseTime').val(app.initWechatTime());
-                }
-            }
-            
-            if (pageManager.showBtn) {
-                $('#submitType').show();
-                switch(pageManager.step) {
-                    case 2: $('#submit').html('派单');$('#returnSubmit').hide();break;
-                    case 3: $('#submit').html('领单');break;
-                    case 4: pageManager.signUp?$('#submit').html('签到'):$('#submit').hide();
-                            $('#otherSubmit').html('关单');break;
-                    case 5: $('#submit').html('确认关单');$('#returnSubmit').hide();break;
-                    default: $('#submit').html('反馈');$('#returnSubmit').hide();
-                }
-            }
-            
-            if (pageManager.showComment){
-                $('#showComment').show();
-            }
-            if (pageManager.showReView){
-                $('#showReView').show();
-            }
-            if (pageManager.showPat) {
-                $('#pat').show();
-                $('#issueDescribe').hide();
-                $('#showComment').hide();
-            }
-            
-            $(".weui-rater a").click(function(){
-                var num = $(this).data('num');
-                pageManager.feedbackRating = num;
-                $("#fen").html(num+'分');
-                $(".weui-rater a").removeClass('checked');
-                for(var i = 0; i < num;i++){
-                    $(".weui-rater a").eq(i).addClass('checked');
-                }
-            });
-            
-            $('#submit').click(function(){
-                $('#errorMsg').html('');
-                var data = colletionData();
-                var flag = validateData(data);
-                if (flag){
-                    return;
-                }
-                post(data);
-            });
-            $('#otherSubmit').click(function(){
-                pageManager.woUrl = 'workorderRepair';
-                post({woId: pageManager.woId, description: $('#description').val()});
-            });
-            $('#returnSubmit').click(function(){
-                pageManager.woUrl = '';
-                var data = colletionReturnData();
-                post(data);
-            });
             function post(data){
                 $.ajax({
-                    url: WEB_ROOT+'web/'+pageManager.woUrl,
+                    url: WEB_ROOT+'web/workorderaction',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     success: function(ret) {
                         if (ret === 'success') {
                             if (pageManager.entryType === 'scan') {
-                                pageManager.init('ts_msg_success');
-                            } else {
-                                pageManager.go('');
+                                if (pageManager.actionType === 'repair') {
+                                    reloadDetail();
+                                } else {
+                                    pageManager.init('ts_msg_success');
+                                }
+                            } else if (pageManager.entryType === 'wolist'){
+                                if (pageManager.actionType === 'repair') {
+                                    reloadDetail();
+                                } else {
+                                    pageManager.mywolist();
+                                    history.back();
+                                }
+                            }else {
+                                pageManager.myreportList(2);
+                                history.back();
                             }
                         } else {
                             
@@ -318,11 +370,13 @@
             }
             function colletionData() {
                 switch(pageManager.step) {
-                    case 2: pageManager.woUrl = 'workorderAssign';return {woId: pageManager.woId, assigneeId: $('#currentPersonId').val()};
-                    case 3: pageManager.woUrl = 'takeworkorder';return {woId: pageManager.woId, estimatedCloseTime: $('#estimatedCloseTime').val(), description: $('#description').val()};
-                    case 4: pageManager.woUrl = 'workorderSign';return {woId: pageManager.woId, description: $('#description').val()};
-                    case 5: pageManager.woUrl = 'workorderClose';return {woId: pageManager.woId, description: $('#description').val()};
-                    case 6: pageManager.woUrl = '';return {woId: pageManager.woId, feedbackRating: pageManager.feedbackRating, description: $('#description').val() };
+                    case 2: return {woId: pageManager.woId, actionType: 'assign', assigneeId: $('#currentPersonId').val()};
+                    case 3: return {woId: pageManager.woId, actionType: 'take', estimatedCloseTime: $('#estimatedCloseTime').val().replace('T', ' '), desc: $('#description').val()};
+                    case 4: return {woId: pageManager.woId, actionType: 'sign', desc: $('#description').val()};
+                    case 5: return {woId: pageManager.woId, actionType: 'close', desc: $('#description').val(),
+                                    patProblems: $('#patProblems').val(), patActions: $('#patActions').val(), patTests: $('#patTests').val(),
+                                    caseType: $('#caseType').val(), caseSubType: $('#caseSubType').val()};
+                    case 6: return {woId: pageManager.woId, actionType: 'feedback', feedbackRating: pageManager.feedbackRating, desc: $('#description').val() };
                 }
             }
             function validateData(data) {
@@ -333,7 +387,7 @@
                 }
             }
             function colletionReturnData() {
-                return {woId: pageManager.woId, description: $('#description').val()};
+                return {woId: pageManager.woId, actionType: 'return', desc: $('#description').val()};
             }
             
             function renderImgs() {
@@ -386,6 +440,16 @@
                         }
                     });
                 }
+            }
+            
+            function raterShow() {
+                var num = pageManager.workOrder.feedbackRating;
+                $("#fen").html(num+'分');
+                for(var i = 0; i < num;i++){
+                    $(".weui-rater a").eq(i).addClass('checked');
+                }
+                $('.weui-rater a').off('click');
+                $('#description').attr('readonly', 'readonly').val(pageManager.workOrder.feedbackComment);
             }
             
         });

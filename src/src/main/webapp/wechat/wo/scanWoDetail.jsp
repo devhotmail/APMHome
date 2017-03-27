@@ -36,31 +36,34 @@
                 wechatSDK.setAppId('${appId}');
                 wechatSDK.setSignature('${timestamp}', '${nonceStr}', '${signature}');
                 wechatSDK.init();
-
-                wechatSDK.scanQRCode(1, function(qrCode) {
-                    if (qrCode.length > 16) {
-                        qrCode = qrCode.substr(qrCode.length-16);
-                    }
-                    $.get(WEB_ROOT+"web/scanaction", {'qrCode': qrCode}, function(ret){
+                
+                function initWoDetail(qrcode) {
+                    $.get(WEB_ROOT+"web/scanaction", {'qrCode': qrcode}, function(ret){
                         if (ret) {
                             pageManager.woId = ret.id;
+                            pageManager.entryType = 'scan';
+                            pageManager.signUp = ret.currentStepId === 4 && pageManager.showBtn && ret.pointStepNumber === 1;
                             pageManager.showBtn = ret.currentStepId === 6?
                                 ret.requestorId ==ret.currentPersonId && ret.currentPersonId == '${userId}':
                                         ret.currentPersonId == '${userId}';
-                            pageManager.showReView = ret.currentStepId === 6;
-                            pageManager.showAssign = ret.currentStepId === 2 && pageManager.showBtn;
-                            pageManager.step = ret.currentStepId;
-                            pageManager.showTime = ret.currentStepId >= 3 && pageManager.showBtn && ret.currentStepId <5;
-                            pageManager.showComment = ret.currentStepId > 2;
-                            pageManager.signUp = ret.currentStepId === 4 && pageManager.showBtn && ret.pointStepNumber === 1;
-                            pageManager.entryType = 'scan';
-                            pageManager.showPat = ret.currentStepId === 5 && pageManager.showBtn;
                             pageManager.init('ts_wodetail');
                         } else {
                             pageManager.init('ts_msg_notfound');
                         }
                     });
-                });
+                }
+
+                var qrCode = '${qrCode}';
+                if (qrCode){
+                    initWoDetail(qrCode);
+                }else {
+                    wechatSDK.scanQRCode(1, function(qrcode) {
+                        if (qrcode.length > 16) {
+                            qrcode = qrcode.substr(qrcode.length-16);
+                        }
+                        initWoDetail(qrcode);
+                    });
+                }
                 
             });
         </script>

@@ -46,6 +46,8 @@ public class WorkflowConfig implements Serializable {
     private Integer timeoutRepair;
     @Column(name = "timeout_close")
     private Integer timeoutClose;
+    @Column(name="order_reopen_timeframe")
+    private Integer orderReopenTimeframe;
 
     public WorkflowConfig() {
     }
@@ -139,6 +141,14 @@ public class WorkflowConfig implements Serializable {
 
     public void setTimeoutClose(Integer timeoutClose) {
         this.timeoutClose = timeoutClose;
+    }
+
+    public Integer getOrderReopenTimeframe() {
+        return orderReopenTimeframe;
+    }
+
+    public void setOrderReopenTimeframe(Integer orderReopenTimeframe) {
+        this.orderReopenTimeframe = orderReopenTimeframe;
     }
 
     @Override

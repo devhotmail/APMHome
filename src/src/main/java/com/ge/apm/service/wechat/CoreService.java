@@ -4,12 +4,14 @@ import com.ge.apm.dao.FileUploadDao;
 import com.ge.apm.dao.I18nMessageRepository;
 import com.ge.apm.dao.SupplierRepository;
 import com.ge.apm.dao.UserAccountRepository;
+import com.ge.apm.dao.WorkOrderPhotoRepository;
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.dao.WorkOrderStepRepository;
 import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.Supplier;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
+import com.ge.apm.domain.WorkOrderPhoto;
 import com.ge.apm.domain.WorkOrderStep;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.service.utils.Digests;
@@ -22,7 +24,6 @@ import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -98,6 +99,8 @@ public class CoreService {
     private WxMpMessageRouter router;
     @Autowired
     protected SupplierRepository supplierDao;
+    @Autowired
+    protected WorkOrderPhotoRepository photoDao;
     
     @PostConstruct
     public void init() {
@@ -218,29 +221,33 @@ public class CoreService {
         woService.createWorkOrderStep(workOrder, step);
         //保存完成后，再把上传的图片保存
         if (serverId != null)
-            upload(workOrder, serverId);
+            uploadImage(workOrder, serverId);
     }
     
     @Transactional
-    public void upload(WorkOrder workOrder, String serverId) throws WxErrorException {
+    public void uploadVoice(WorkOrder workOrder, String serverId) throws WxErrorException {
         File file = wxMpService.getMaterialService().mediaDownload(serverId);
         if (file == null)
             return;
         Integer uploadFileId = uploadFile(file);
-        String fileName = getFileName(file);
-        List<WorkOrderStep> steps = stepDao.getByWorkOrderIdAndStepId(workOrder.getId(), 1);
-        if (steps == null || steps.size() == 0) return;
-        //如果有文件则删除以前的文件
-        WorkOrderStep step = steps.get(0);
-        if (step.getFileId() != null) {
-            FileUploadDao fileUploaddao = new FileUploadDao();
-            fileUploaddao.deleteUploadFile(step.getFileId());
-        }
-        step.setAttachmentUrl(fileName);
+        if (uploadFileId == 0) 
+            return;
+        workOrder.setRequestReasonVoice(uploadFileId);
+        file.delete();
+    }
+    
+    public void uploadImage(WorkOrder workOrder, String serverId) throws WxErrorException {
+        File file = wxMpService.getMaterialService().mediaDownload(serverId);
+        if (file == null)
+            return;
+        Integer uploadFileId = uploadFile(file);
         if (uploadFileId > 0) {
-            step.setFileId(uploadFileId);
+            WorkOrderPhoto photo = new WorkOrderPhoto();
+            photo.setPhotoId(uploadFileId);
+            photo.setSiteId(workOrder.getSiteId());
+            photo.setWorkOrderId(workOrder.getId());
+            photoDao.save(photo);
         }
-        stepDao.save(step);
         file.delete();
     }
     
@@ -373,7 +380,7 @@ public class CoreService {
     public void saveVoice(String serverId) throws Exception{
         WorkOrder workOrder = new WorkOrder();
         workOrder.setId(38);
-        upload(workOrder, serverId);
+        uploadVoice(workOrder, serverId);
     }
     public String uploadMediaToWechat(InputStream inputStream) throws Exception{
         WxMediaUploadResult res = wxMpService.getMaterialService().mediaUpload(WxConsts.MEDIA_VOICE, WxConsts.FILE_AMR, inputStream);
@@ -385,7 +392,7 @@ public class CoreService {
         return s == null ? null : s.getName();
     }
 
-    //@Value("#{wxProperties.webContextUrl}")
+    @Value("#{wxProperties.webContextUrl}")
     private String webContextUrl;
     
     public void sendWxTemplateMessage(String userWeChatId, String wxTemplateId, String msgTitle, String msgBrief, String msgDetails, String msgDateTime, String linkUrl){

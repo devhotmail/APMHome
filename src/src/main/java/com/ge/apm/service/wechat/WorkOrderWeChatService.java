@@ -53,6 +53,8 @@ public class WorkOrderWeChatService {
     protected UserRoleRepository roleDao;
     @Autowired
     protected WorkOrderPhotoRepository photoDao;
+    @Autowired
+    private WorkflowConfigRepository woConDao;
     
     public List<WorkOrder> woList(HttpServletRequest request, String stepId) {
         UserAccount ua = UserContext.getCurrentLoginUser(request);
@@ -176,7 +178,7 @@ public class WorkOrderWeChatService {
         WorkOrder wo =  woDao.findByAssetIdAndStatus(info.getId(), 1);
         if (wo == null)
             return null;
-        List<WorkOrderStep> steps = woStepDao.getByWorkOrderIdAndStepId(wo.getId(), wo.getCurrentStepId());
+        List<WorkOrderStep> steps = woStepDao.getByWorkOrderIdAndStepIdAndWithoutEndTime(wo.getId(), wo.getCurrentStepId());
         wo.setPointStepNumber(steps.size());
         return wo;
     }
@@ -198,6 +200,12 @@ public class WorkOrderWeChatService {
     
     public List<WorkOrderPhoto> getWoImgList(int woId) {
         return photoDao.findByWorkOrderId(woId);
+    }
+    
+    public boolean chooseTab(HttpServletRequest request) {
+        UserAccount currentUsr= UserContext.getCurrentLoginUser(request);
+        WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(currentUsr.getSiteId(), currentUsr.getHospitalId());
+        return !(woc == null || woc.getDispatchUserId() != currentUsr.getId());
     }
     
 }

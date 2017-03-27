@@ -39,9 +39,9 @@
                 //show the tabs by the role of the user
                 $.get(WEB_ROOT+'web/choosetab', function(ret){
                     if (ret) {
-                        if (ret === 1) { // assetHead
+                        if (ret === 1) { // assigner
                             pageManager.assetHead = true;
-                        } else { // assetStaff
+                        } else { // worker
                             pageManager.assetHead = false;
                         }
                         pageManager.init('ts_mywoList');
@@ -82,62 +82,53 @@
             </div>
             <script type="text/javascript">
                 $(function(){
-                    
-                    //data search function
-                    function loadData(step) {
-                        //fetch data from server    wolistdata is the restful url
-                        $.get(WEB_ROOT+'web/wolistdata', {stepId: step}, function(ret) {
-                            pageManager.workOrders = [];
-                            var data = [];
-                            if (ret && ret.length !== 0) {
-                                $.each(ret, function(i, v){
-                                    pageManager.workOrders[v['id']] = v;
-                                    data.push({title:'工单编号: '+ v['id'], 
-                                               ftitle: v['requestTime'], 
-                                               data : ['资产名称：'+v['assetName'],
-                                                       '工单状态：'+v['currentStepName'],
-                                                       '紧急程序：'+v['casePriority']]});
-                                });
-                            } 
-                            //show the data list
-                            app.fullListItem('wolist', data);
+                    pageManager.mywolist = function(){
+                        //data search function
+                        function loadData(step) {
+                            //fetch data from server    wolistdata is the restful url
+                            $.get(WEB_ROOT+'web/wolistdata', {stepId: step}, function(ret) {
+                                pageManager.workOrders = [];
+                                var data = [];
+                                if (ret && ret.length !== 0) {
+                                    $.each(ret, function(i, v){
+                                        pageManager.workOrders[v['id']] = v;
+                                        data.push({title:'工单编号: '+ v['id'], 
+                                                   ftitle: v['requestTime'], 
+                                                   data : ['资产名称：'+v['assetName'],
+                                                           '工单状态：'+v['currentStepName'],
+                                                           '紧急程序：'+v['casePriority']]});
+                                    });
+                                } 
+                                //show the data list
+                                app.fullListItem('wolist', data);
+                            });
+                        }
+
+                        //bind click event
+                        $('#wolist').on('click', '.weui-cell_access', function(){
+                            pageManager.woId = $(this).parent().find('h4').html().split(': ')[1];
+
+                            var wo = pageManager.workOrders[pageManager.woId];
+                            pageManager.entryType = 'wolist';
+                            pageManager.showBtn = wo.currentPersonId == '${userId}' || !pageManager.assetHead;
+                            pageManager.takeOtherWo = !pageManager.assetHead && wo.currentPersonId != '${userId}';
+                            pageManager.go('#ts_wodetail');
                         });
+                        $('.weui-navbar__item').on('click', function () {
+                            $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+                            //do the search action     1-在修 / 2-完成 / 3-取消
+                            loadData($(this).data('step'));
+                        });
+
+                        if (pageManager.assetHead) {
+                            $('.staffRole').hide();
+                            loadData(1);
+                        } else {
+                            $('.headRole').hide();
+                            loadData(3);
+                        }
                     }
-                    
-                    //bind click event
-                    $('#wolist').on('click', '.weui-cell_access', function(){
-                        pageManager.woId = $(this).parent().find('h4').html().split(': ')[1];
-                        
-                        var wo = pageManager.workOrders[pageManager.woId];
-//                        pageManager.showMsgs = wo.currentStepId === 4;
-                        pageManager.showBtn = wo.currentStepId === 6?false:true;
-                        pageManager.showAssign = wo.currentStepId === 2 && pageManager.showBtn;
-                        pageManager.step = wo.currentStepId;
-                        pageManager.showTime = wo.currentStepId >= 3 && pageManager.showBtn && wo.currentStepId <5;
-                        
-                        pageManager.showReView = false;
-                        
-                        pageManager.showComment = wo.currentStepId > 2;
-                        pageManager.signUp = wo.currentStepId === 4 && pageManager.showBtn && wo.pointStepNumber === 1;
-                        pageManager.entryType = 'wolist';
-                        pageManager.showPat = wo.currentStepId === 5 && pageManager.showBtn;
-                        
-                        pageManager.go('#ts_wodetail');
-                    });
-                    $('.weui-navbar__item').on('click', function () {
-                        $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
-                        //do the search action     1-在修 / 2-完成 / 3-取消
-                        loadData($(this).data('step'));
-                    });
-                    
-                    if (pageManager.assetHead) {
-                        $('.staffRole').hide();
-                        loadData(1);
-                    } else {
-                        $('.headRole').hide();
-                        loadData(3);
-                    }
-                    
+                    pageManager.mywolist();
                 });
         </script>
         
@@ -145,6 +136,5 @@
         <jsp:include page="msgTemplate.html"/>
         <jsp:include page="listTemplate.html"/>
         <jsp:include page="tipsTemplate.html"/>
-        
     </body>
 </html>

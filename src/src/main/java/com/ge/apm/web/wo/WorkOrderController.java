@@ -63,6 +63,7 @@ public class WorkOrderController {
         model.addAttribute("signature",s.getSignature());
         
         model.addAttribute("casePriority", 3);
+        model.addAttribute("qrCode", request.getParameter("qrCode"));
         
         return "wo/scanWoReport";
     }
@@ -100,6 +101,8 @@ public class WorkOrderController {
         model.addAttribute("nonceStr",s.getNoncestr());
         model.addAttribute("signature",s.getSignature());
         
+        model.addAttribute("qrCode", request.getParameter("qrCode"));
+        
         return "wo/scanWoDetail";
     }
     
@@ -112,6 +115,8 @@ public class WorkOrderController {
      */
     @RequestMapping(value = "mywolist")
     public String woListPage(HttpServletRequest request,HttpServletResponse response, Model model) {
+        UserAccount ua = service.getLoginUser(request);
+        model.addAttribute("userId", ua.getId());
         WxJsapiSignature s = null;
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
@@ -159,15 +164,7 @@ public class WorkOrderController {
     
     @RequestMapping(value="choosetab")
     public @ResponseBody Object chooseTab(HttpServletRequest request) {
-        List<String> roles = woWcService.getLoginUserRoleName(request);
-        if (roles != null) {
-            if (roles.contains("AssetHead")) {
-                return 1;  //设备科主任
-            } else if (roles.contains("AssetStaff")) {
-                return 2; //设备科科员
-            }
-        }
-        return null;
+        return woWcService.chooseTab(request)?1:2;
     }
     
     @RequestMapping(value="saveworkorder")
