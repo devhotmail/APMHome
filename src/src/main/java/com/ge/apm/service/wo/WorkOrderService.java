@@ -571,7 +571,7 @@ public class WorkOrderService {
     }
     
     public void sendWoMsgs(WorkOrder wo) {
-        String wxTemplateId = "LNIvwPKBpR4zE8V2fXEMx7-aYyXUx-Hwd6MAHaklloo";
+        String wxTemplateId = "4N0nfZ0fXstReD-FcBu-d6tUsTcwBEIND-0wmOh0cO8";
         String msgTitle = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",wo.getCurrentStepId()-1+"").getValueZh();
         String msgBrief = msgTitle + "已完成";
         String msgDetails = "";

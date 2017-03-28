@@ -46,9 +46,9 @@ public class WeChatMenuDispatcher {
     
     static {
         URL_MAP = new HashMap<>();
-        URL_MAP.put("11", "/wechat/asset/List.xhtml");
+        URL_MAP.put("12", "/wechat/asset/List.xhtml");
         //URL_MAP.put("12", "/wechat/asset/QRCreate.xhtml");
-        URL_MAP.put("12", "/web/qrCreateAsset");
+        URL_MAP.put("11", "/web/qrCreateAsset");
         
         URL_MAP.put("21", "/wechat/wo/scanAssetList.xhtml");
         URL_MAP.put("22", "/web/myreport");
@@ -88,7 +88,7 @@ public class WeChatMenuDispatcher {
             Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        if(index.equals("12")){
+        if(index.equals("11")){
             return  "redirect:" +  URL_MAP.get(index) + "/" + openId;
         }
 
