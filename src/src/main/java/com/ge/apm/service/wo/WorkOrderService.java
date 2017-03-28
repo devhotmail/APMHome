@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
 
 /**
  *
@@ -45,6 +47,8 @@ public class WorkOrderService {
     @Autowired
     private WorkOrderStepRepository workOrderStepRepository;
     @Autowired
+    private WorkOrderStepDetailRepository woDetailDao;
+    @Autowired
     private I18nMessageRepository i18nMessageRepository;
     @Autowired
     private WorkflowConfigRepository woConDao;
@@ -60,11 +64,8 @@ public class WorkOrderService {
         return byStatus;
     }
     public  List<WorkOrder>  findWorkOrderByCon(HttpServletRequest request){
-        List<SearchFilter> searchFilters = new ArrayList<>();
         UserAccount ua = UserContext.getCurrentLoginUser(request);
-        searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, request.getParameter("status")));
-        searchFilters.add(new SearchFilter("requestorId", SearchFilter.Operator.EQ, ua.getId()));
-        return workOrderRepository.findBySearchFilter(searchFilters);
+        return workOrderRepository.findByRequestorIdAndStatusOrderById(ua.getId(), Integer.parseInt(request.getParameter("status")));
     }
     //public List<WorkOrder>
 
@@ -196,7 +197,6 @@ public class WorkOrderService {
         workOrderStepRepository.save(wds);
         sendWoMsgs(wo);
     }
-
     @Transactional
     public void repairWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
@@ -211,7 +211,7 @@ public class WorkOrderService {
     public void closeWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
         WorkOrder wo = workOrderRepository.getById(woId);
-        updateEndTime(wo, wopo.getDesc());
+        WorkOrderStep wos = updateEndTime(wo, wopo.getDesc());
         wo.setStatus(2);
         wo.setCloseTime(new Date());
         wo.setCaseType(wopo.getCaseType()==null?0:Integer.parseInt(wopo.getCaseType()));
@@ -220,6 +220,16 @@ public class WorkOrderService {
         wo.setPatProblems(wopo.getPatProblems());
         wo.setPatTests(wopo.getPatTests());
         workOrderUpdate(request, wo);
+        
+        JSONArray array = JSONArray.fromObject(wopo.getStepDetail());
+        List<WorkOrderStepDetail> list = JSONArray.toList(array, new WorkOrderStepDetail(), new JsonConfig());
+        if (list != null && !list.isEmpty()) {
+            for (WorkOrderStepDetail sd : list) {
+                sd.setWorkOrderStepId(wos.getId());
+            }
+            woDetailDao.save(list);
+        }
+        
         sendWoMsgs(wo);
     }
     @Transactional
@@ -265,6 +275,18 @@ public class WorkOrderService {
         sendWoMsgs(wo);
     }
     
+    
+    @Transactional
+    public void cancelWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
+        Integer woId= Integer.valueOf(wopo.getWoId());
+        WorkOrder wo = workOrderRepository.getById(woId);
+        updateEndTime(wo, wopo.getDesc());
+        wo.setStatus(3);
+        wo.setCloseTime(new Date());
+        workOrderRepository.save(wo);
+        sendWoMsgs(wo);
+    }
+    
     @Transactional
     public void feedbackWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
@@ -301,14 +323,14 @@ public class WorkOrderService {
         return wds;
     }
     @Transactional
-    private void updateEndTime(WorkOrder wo, String desc)throws Exception{
+    private WorkOrderStep updateEndTime(WorkOrder wo, String desc)throws Exception{
         //2.1  update endtime in wos for last step workorder
         List<WorkOrderStep> wosList =workOrderStepRepository.getByWorkOrderIdAndStepId(wo.getId(),wo.getCurrentStepId());
         if(wosList.size()>0){
             WorkOrderStep wos = wosList.get(0);
             wos.setEndTime(new Date());
             wos.setDescription(desc);
-            workOrderStepRepository.save(wos);
+            return workOrderStepRepository.save(wos);
         }else{
             throw new Exception("work order step missing");
         }
@@ -549,12 +571,12 @@ public class WorkOrderService {
     }
     
     public void sendWoMsgs(WorkOrder wo) {
-        String wxTemplateId = "LNIvwPKBpR4zE8V2fXEMx7-aYyXUx-Hwd6MAHaklloo";
+        String wxTemplateId = "4N0nfZ0fXstReD-FcBu-d6tUsTcwBEIND-0wmOh0cO8";
         String msgTitle = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",wo.getCurrentStepId()-1+"").getValueZh();
         String msgBrief = msgTitle + "已完成";
         String msgDetails = "";
         String msgDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        String linkUrl = "/web/menu/34?qrCode=1";
+        String linkUrl = cService.getWoDetailUrl(wo.getId());
         // subscriber
         List<MessageSubscriber> sber = null;
         switch(wo.getCurrentStepId()-1) {

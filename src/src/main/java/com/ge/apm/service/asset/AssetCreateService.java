@@ -98,9 +98,9 @@ public class AssetCreateService {
         attachDao.save(attachList);
     }
 
-    public List<QrCodeAttachment> getQrCodePictureList(String qrCode) {
+    public List<QrCodeAttachment> getQrCodePictureList(Integer qrCodeLibId) {
         List<SearchFilter> qrCodeFilters = new ArrayList<>();
-        qrCodeFilters.add(new SearchFilter("qrCodeId", SearchFilter.Operator.EQ, qrCode));
+        qrCodeFilters.add(new SearchFilter("qrCodeId", SearchFilter.Operator.EQ, qrCodeLibId));
         qrCodeFilters.add(new SearchFilter("fileType", SearchFilter.Operator.EQ, 1));
         List<QrCodeAttachment> picsList = qrCodeAttachDao.findBySearchFilter(qrCodeFilters);
         return picsList;
@@ -111,6 +111,14 @@ public class AssetCreateService {
         QrCodeLib qrLibItem = qrLibDao.findByQrCode(qrCode);
         qrLibItem.setStatus(i);
         qrLibDao.save(qrLibItem);
+    }
+
+    public List<QrCodeAttachment> getQrCodeAudioList(Integer qrCodeLibId) {
+         List<SearchFilter> qrCodeFilters = new ArrayList<>();
+        qrCodeFilters.add(new SearchFilter("qrCodeId", SearchFilter.Operator.EQ, qrCodeLibId));
+        qrCodeFilters.add(new SearchFilter("fileType", SearchFilter.Operator.EQ, 2));
+        List<QrCodeAttachment> picsList = qrCodeAttachDao.findBySearchFilter(qrCodeFilters);
+        return picsList;
     }
 
 }

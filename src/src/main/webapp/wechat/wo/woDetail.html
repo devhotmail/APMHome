@@ -9,17 +9,25 @@
             <div class="weui-form-preview">
                 <div class="weui-form-preview__bd">
                     <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">供应商</label>
+                        <span class="weui-form-preview__value" id="supplier"></span>
+                    </div>
+                    <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">资产名称</label>
                         <span class="weui-form-preview__value" id="assetName"></span>
                         <input id="assetId" type="hidden"/>
                     </div>
                     <div class="weui-form-preview__item">
-                        <label class="weui-form-preview__label">供应商</label>
-                        <span class="weui-form-preview__value" id="supplier"></span>
+                        <label class="weui-form-preview__label">所属科室</label>
+                        <span class="weui-form-preview__value" id="clinicalDeptName"></span>
                     </div>
                     <div class="weui-form-preview__item">
-                        <label class="weui-form-preview__label">紧急程度</label>
+                        <label class="weui-form-preview__label">型号</label>
                         <span class="weui-form-preview__value" id="assetGroup"></span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">安放地址</label>
+                        <span class="weui-form-preview__value" id="locationName"></span>
                     </div>
                 </div>
             </div>
@@ -67,7 +75,7 @@
                             <div class="weui-cell weui-cell_select">
                                 <div class="weui-cell__bd">
                                     <select class="weui-select" name="caseType" id="caseType">
-                                        <option value="">请选择...</option>
+                                        <option value="0">请选择...</option>
                                     </select>
                                 </div>
                             </div>
@@ -79,7 +87,7 @@
                             <div class="weui-cell weui-cell_select">
                                 <div class="weui-cell__bd">
                                     <select class="weui-select" name="caseSubType" id="caseSubType">
-                                        <option value="">请选择...</option>
+                                        <option value="0">请选择...</option>
                                     </select>
                                 </div>
                             </div>
@@ -105,15 +113,21 @@
                     </div>
                 </div>
                 <!--物料明细-->
-                <div class="weui-cells__title">物料明细</div>
-                <div class="weui-cells">
-                    <a class="weui-cell weui-cell_access" href="javascript:;">
-                        <div class="show-data weui-cell__bd">
-                            <span style="color: #999">没有数据</span>
+                <div id="stepCost" >
+                    <div class="weui-cells__title">物料明细</div>
+                    <div class="weui-cells">
+                        <a class="weui-cell weui-cell_access" href="javascript:;">
+                            <div class="show-data weui-cell__bd">
+                                <span style="color: #999">增加</span>
+                            </div>
+                            <div class="weui-cell__ft">
+                            </div>
+                        </a>
+                        <div class="weui-cell" style="padding-top:0; padding-bottom: 0">
+                            <div class="weui-cells costList" style="margin-top: 0;">
+                            </div>
                         </div>
-                        <div class="weui-cell__ft">
-                        </div>
-                    </a>
+                    </div>
                 </div>
             </div>
     
@@ -197,6 +211,7 @@
                     <a class="weui-btn weui-btn_primary" href="javascript:" id="otherSubmit"></a>
                     <a class="weui-btn weui-btn_primary" href="javascript:" id="returnSubmit">回退</a>
                     <a class="weui-btn weui-btn_primary" href="javascript:" id="takeOtherWo"></a>
+                    <a class="weui-btn weui-btn_primary" href="javascript:" id="cancelWo"></a>
                 </div>
             </div>
             <div style="height:20px;"></div>
@@ -218,10 +233,15 @@
                         pageManager.workOrder = ret;
                         
                         pageManager.showReView = ret.currentStepId === 6;
-                        pageManager.showAssign = ret.currentStepId === 2 && pageManager.showBtn;
+                        pageManager.showAssign = ret.currentStepId === 2 && pageManager.showBtn && !pageManager.showCancel;
                         pageManager.showTime = ret.currentStepId >= 3 && pageManager.showBtn && ret.currentStepId <5;
-                        pageManager.showComment = ret.currentStepId > 2 && pageManager.showBtn;
+                        pageManager.showComment = (ret.currentStepId > 2 && pageManager.showBtn) || pageManager.showCancel;
                         pageManager.showPat = ret.currentStepId === 5 && pageManager.showBtn;
+                        pageManager.showCancel = pageManager.showCancel && ret.currentStepId < 3;
+                        if (pageManager.entryType === 'myreport1') {
+                            pageManager.showBtn = pageManager.showCancel || ret.CurrentStepId === 6;
+                            pageManager.showComment = pageManager.showCancel;
+                        }
                         
                         if (pageManager.voice) {
                             mediaShow();
@@ -262,16 +282,20 @@
                     if ($('#estimatedCloseTime').val() === "") {
                         $('#estimatedCloseTime').val(app.initWechatTime());
                     }
-                    if (pageManager.entryType !== 'scanreport') {
+                    if (pageManager.entryType !== 'myreport1') {
                         $('#estimatedCloseTime').removeAttr('readonly');
                     }
+                } else {
+                    $('#showTime').hide();
                 }
             
                 if (pageManager.showBtn) {
                     $('#submitType').show();
                     if (pageManager.takeOtherWo){
-                        $('#takeOtherWo').html('获取工单');$('#returnSubmit').hide();
-                    } else{
+                        $('#takeOtherWo').html('获取工单');$('#takeOtherWo').siblings().hide();
+                    } else if(pageManager.showCancel){
+                        $('#cancelWo').html('取消');$('#cancelWo').siblings().hide();
+                    } else {
                         switch(pageManager.step) {
                             case 2: $('#submit').html('派单');$('#returnSubmit').hide();break;
                             case 3: $('#submit').html('领单');break;
@@ -295,6 +319,14 @@
                     $('#showComment').hide();
                     app.initSelectData('caseType', 'caseType');
                     app.initSelectData('caseSubType', 'caseSubType');
+                    $('#stepCost').on('click', '.weui-cell_access', function(){
+                        pageManager.go('#ts_step_cost');
+                    });
+                    $('.costList').on('click', '.weui-icon-cancel', function(){
+                        var $costList = $(this).parent().parent();
+                        pageManager.stepCost.splice($costList.data('id'), 1);
+                        $costList.remove();
+                    });
                 }
             
                 $(".weui-rater a").click(function(){
@@ -333,15 +365,27 @@
                     pageManager.actionType = 'fatchwo';
                     post({woId: pageManager.woId, actionType: 'fatchwo', estimatedCloseTime: $('#estimatedCloseTime').val().replace('T', ' '), desc: $('#description').val()});
                 });
+                $('#cancelWo').click(function(){
+                    pageManager.actionType = 'cancel';
+                    if(!$('#description').val()){
+                        $('#errorMsg').html('请填写取消备注');
+                        return;
+                    } 
+                    post({woId: pageManager.woId, actionType: 'cancel', desc: $('#description').val()});
+                });
             }
             
             function post(data){
+                var $loadingToast = $('#loadingToast');
+                if ($loadingToast.css('display') !== 'none') return;
+                $loadingToast.fadeIn(100);
                 $.ajax({
                     url: WEB_ROOT+'web/workorderaction',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     success: function(ret) {
+                        $loadingToast.fadeOut(100);
                         if (ret === 'success') {
                             if (pageManager.entryType === 'scan') {
                                 if (pageManager.actionType === 'repair') {
@@ -357,7 +401,11 @@
                                     history.back();
                                 }
                             }else {
-                                pageManager.myreportList(2);
+                                if (pageManager.showCancel){
+                                    pageManager.myreportList(1);
+                                } else {
+                                    pageManager.myreportList(2);
+                                }
                                 history.back();
                             }
                         } else {
@@ -375,7 +423,7 @@
                     case 4: return {woId: pageManager.woId, actionType: 'sign', desc: $('#description').val()};
                     case 5: return {woId: pageManager.woId, actionType: 'close', desc: $('#description').val(),
                                     patProblems: $('#patProblems').val(), patActions: $('#patActions').val(), patTests: $('#patTests').val(),
-                                    caseType: $('#caseType').val(), caseSubType: $('#caseSubType').val()};
+                                    caseType: $('#caseType').val(), caseSubType: $('#caseSubType').val(), stepDetail: pageManager.stepCost};
                     case 6: return {woId: pageManager.woId, actionType: 'feedback', feedbackRating: pageManager.feedbackRating, desc: $('#description').val() };
                 }
             }

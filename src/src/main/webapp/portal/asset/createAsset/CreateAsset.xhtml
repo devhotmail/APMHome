@@ -6,6 +6,12 @@
                 template="/WEB-INF/template.xhtml"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
+
+    <ui:define name="head">
+        <h:outputScript name="js/voice.js"/>
+        <h:outputScript name="js/pcmdata-2.0.0.min.js"/>
+        <h:outputScript name="js/libamr-2.0.1.min.js"/>
+    </ui:define>
     <ui:define name="content">
         <div class="ui-g">
             <div class="ui-g-12 card cardTitle">
@@ -13,21 +19,32 @@
             </div>
             <div class="ui-g-12 card ">
                 <p:fieldset legend="基本资料" id="accordion" >
-
                     <div class="ui-g-7">
                         <p:galleria value="#{assetCreateController.pictureList}" var="attach" panelWidth="500" panelHeight="313" showCaption="false"  autoPlay="false">
                             <p:graphicImage  value="#{pictureService.getImage()}"  height="313"  width="500">
                                 <f:param name="pictureId" value="#{attach.fileId}" />
                             </p:graphicImage>
                         </p:galleria>
-
                     </div>
                     <div class="ui-g-5">
+                        <p:fieldset legend="语音描述" id="audioComment" >
+                            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                                <c:forEach  items="#{assetCreateController.audioList}" var="item" varStatus="status">
+                                    <h:panelGroup>
+                                        <h:inputHidden id="audio#{status.index}" value="#{assetCreateController.getAudioBase64(item.fileId)}"/>
+                                        <button id="playAudio#{status.index}" >play</button>
+                                        <button id="stopAudio#{status.index}" >stop</button>
+                                    </h:panelGroup>
+                                </c:forEach>
+                            </p:panelGrid>
+                        </p:fieldset>
 
-
-                        <p:media value="" width="300" height="100" player="quicktime" >
-                            <f:param name="autoPlay" value="false"  />
-                        </p:media>
+                        <!--<c:forEach items="#{assetCreateController.audioList}" var="item">-->
+<!--                            <p:media value="#{pictureService.getImage()}" width="300" height="100" player="quicktime" >
+                                <f:param name="pictureId" value="73" />
+                                <f:param name="autoPlay" value="false"  />
+                            </p:media>-->
+                        <!--</c:forEach>-->
 
                         <p:fieldset legend="文字描述" id="textComment" >
                             #{assetCreateController.createRequest.comment}
@@ -194,7 +211,19 @@
 
                     </p:tab>
                     <p:tab title="拒绝退回">
+                        <h:form>
+                            <p:fieldset legend="退回原因">
 
+                                <p:inputTextarea value="" rows="6" cols="50" required="true" requiredMessage="原因必须填写"/>
+                            </p:fieldset>
+                            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                                <h:panelGroup >
+                                    <p:commandButton value="退回" icon="ui-icon-check" action="#{assetCreateController.returnBack()}" validateClient="true" update=":growl" style="float:left"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+
+
+                        </h:form>
                     </p:tab>
 
                 </p:tabView>
@@ -203,6 +232,39 @@
 
 
         </div>
+        <script>
+
+            $playButtons = $("button[id*='playAudio']");
+            $stopButtons = $("button[id*='stopAudio']");
+            $.each($stopButtons, function (idx, value) {
+                value.disabled = true;
+            });
+
+            $playButtons.on("click", function () {
+                $.each($playButtons, function (idx, value) {
+                    value.disabled = true;
+                });
+                var stopid = this.id.replace("play", "stop");
+                $.each($stopButtons, function (idx, value) {
+                    value.disabled = (value.id !== stopid);
+                });
+                RongIMLib.RongIMVoice.init();
+                var base64Str = $(this).parent().find('input').val();
+                RongIMLib.RongIMVoice.play(base64Str);
+            });
+
+            $stopButtons.on("click", function () {
+                $.each($playButtons, function (idx, value) {
+                    value.disabled = false;
+                });
+                $.each($stopButtons, function (idx, value) {
+                    value.disabled = true;
+                });
+                RongIMLib.RongIMVoice.stop();
+            });
+            
+
+        </script>
     </ui:define>
 
 

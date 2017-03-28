@@ -7,6 +7,7 @@ $(function () {
     app.initUserSelect = initUserSelect;
     app.setFormJsonValue = setFormJsonValue;
     app.initWechatTime = initWechatTime;
+    app.intCasePriority = intCasePriority;
     
     /////////////////////////
     /**
@@ -21,7 +22,9 @@ $(function () {
             {'msgType': msgType},
             function(ret) {
                 if (ret) {
+                    pageManager.msgTypes[msgType] = {};
                     $.each(ret, function(idx, val){
+                        pageManager.msgTypes[msgType][val.msgKey] = val.valueZh;
                         if (defaultSelected && val.msgKey === defaultSelected) {
                             $('#'+keyId).append($('<option value="'+val.msgKey+'" selected="selected">'+val.valueZh+'</option>'));
                         } else {
@@ -31,6 +34,20 @@ $(function () {
                 }
             }
         );
+    }
+    
+    function intCasePriority() {
+        $.ajax({
+            url: WEB_ROOT+"web/getmsg",
+            data: {'msgType': 'casePriority'},
+            async: false,
+            success: function(ret) {
+                pageManager.msgTypes['casePriority'] = {};
+                $.each(ret, function(idx, val){
+                    pageManager.msgTypes['casePriority'][val.msgKey] = val.valueZh;
+                });
+            }
+        });
     }
     
     function toggleJsdialog(showOrHide) {
@@ -51,7 +68,7 @@ $(function () {
         $.each(datas, function(idx, value){
             var $tmpl = $(tmpl);
             $tmpl.find('h4').html(value.title);
-            $tmpl.find('.ftitle').html(value.ftitle);
+            $tmpl.find('.ftitle').html(value.ftitle).css('color',value.ftitleColor);
             var parentEl = $tmpl.find('.show-data');
             $.each(value.data, function(i, v){
                 parentEl.append('<p>'+v+'</p>');

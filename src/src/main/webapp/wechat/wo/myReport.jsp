@@ -30,6 +30,7 @@
         <script>
             $(function(){
                 pageManager.init('ts_myReports');
+                app.intCasePriority();
             });
         </script>
         <script type="text/html" id="ts_myReports">
@@ -53,34 +54,42 @@
             </div>
             <script type="text/javascript">
                 $(function(){
-                    
                     //data search function
                     pageManager.myreportList = function(close) {
+                        var $loadingToast1 = $('#loadingToast1');
+                        if ($loadingToast1.css('display') !== 'none') return;
+                        $loadingToast1.fadeIn(100);
                         //fetch data from server    wolistdata is the restful url
                         if (close === 1) {
-                            pageManager.entryType = 'scanreport';
+                            pageManager.entryType = 'myreport1';
                             pageManager.showTime = true;
                             pageManager.showReView = false;
                             pageManager.showComment = false;
+                            pageManager.showCancel = true;
                         } else {
                             pageManager.showTime = false;
                             pageManager.showReView = true;
                             pageManager.showComment = true;
+                            pageManager.showCancel = false;
+                            pageManager.entryType = 'myreport2';
                         }
                         $.get(WEB_ROOT+'web/workorder', {status: close}, function(ret) {
                             var data = [];
                             if (ret && ret.length !== 0) {
                                 $.each(ret, function(i, v){
                                     data.push({title:'工单编号: '+ v['id'], 
-                                               ftitle: v['requestTime'], 
+                                               ftitle: pageManager.msgTypes['casePriority'][v['casePriority']], 
+                                               ftitleColor : v['casePriority']===1?'#F76260':v['casePriority']===2?'#FFBE00':'#09BB07',
                                                rater: (close === 2 ? v['feedbackRating']: -1),
-                                               data : ['资产名称：'+v['assetName'],
+                                               data : ['资产编号：'+v['assetId'],
+                                                        '资产名称：'+v['assetName'],
                                                        '工单状态：'+v['currentStepName'],
-                                                       '紧急程序：'+v['casePriority']]});
+                                                       '当前人员：'+v['currentPersonName']]});
                                 });
                             } 
                             //show the data list
                             app.fullListItem('myReports', data);
+                            $loadingToast1.fadeOut(100);
                         });
                     }
                     
@@ -91,7 +100,7 @@
                         if($(this).find('.reportview').html()) {
                             pageManager.showBtn = true;
                         } else {
-                            pageManager.showBtn = false;
+                            pageManager.showBtn = false || pageManager.showCancel;
                         }
                         pageManager.go('#ts_wodetail');
                     });

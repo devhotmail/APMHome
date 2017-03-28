@@ -61,6 +61,7 @@ public class RepairProcessController {
                 case "close" : workOrderService.closeWorkOrder(request, wopo);break;
                 case "return" : workOrderService.returnWorkOrder(request, wopo);break;
                 case "fatchwo": workOrderService.fatchWorkOrder(request, wopo);break;
+                case "cancel": workOrderService.cancelWorkOrder(request, wopo);break;
                 default: workOrderService.feedbackWorkOrder(request, wopo);
             }
             return "success";
@@ -102,7 +103,6 @@ public class RepairProcessController {
     @ResponseBody
     public List<WorkOrder> findRepairList(HttpServletResponse response,
                                           HttpServletRequest httpServletRequest,Integer assetId, Model model) {
-        System.out.println("findRepairList--->");
         List<WorkOrder> workOrderList = workOrderDao.findByAssetIdAndIntExtType(assetId, 1);
         model.addAttribute("data",workOrderList);
         return workOrderList;

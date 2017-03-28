@@ -16,7 +16,7 @@ public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
     public List<WorkOrder> findByAssetIdAndIntExtType(Integer assetId, int intExtType);
     public List<WorkOrder> findByStatus(int status);
     public List<WorkOrder>  findByRequestorId(int requestorId);
-
+    public List<WorkOrder> findByRequestorIdAndStatusOrderById(int requestorId, int status);
 
 
     @Modifying

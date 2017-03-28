@@ -82,5 +82,10 @@ public class AssetExamDataService {
     }
 
 
+    public void ranking(){
+
+    }
+
+
 
 }

@@ -14,6 +14,7 @@ import com.ge.apm.service.wechat.WorkOrderWeChatService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +102,7 @@ public class WorkOrderController {
         model.addAttribute("nonceStr",s.getNoncestr());
         model.addAttribute("signature",s.getSignature());
         
-        model.addAttribute("qrCode", request.getParameter("qrCode"));
+        model.addAttribute("woId", request.getParameter("woId"));
         
         return "wo/scanWoDetail";
     }
@@ -154,17 +155,23 @@ public class WorkOrderController {
     }
     
     @RequestMapping(value="scanaction")
-    public @ResponseBody Object scanAction(String qrCode) {
-        List<AssetInfo> list = assetDao.getByQrCode(qrCode);
-        if (list.isEmpty())
-            return null;
-        AssetInfo info = list.get(0);
-        return woWcService.scanAction(info);
+    public @ResponseBody Object scanAction(String qrCode, String woId) {
+        WorkOrder wo = null;
+        if (woId != null && !"".equals(woId)) {
+            wo = woWcService.scanActionByWoId(Integer.parseInt(woId));
+        } else {
+            List<AssetInfo> list = assetDao.getByQrCode(qrCode);
+            if (list.isEmpty())
+                return null;
+            AssetInfo info = list.get(0);
+            wo = woWcService.scanAction(info);
+        }
+        return wo;
     }
     
     @RequestMapping(value="choosetab")
     public @ResponseBody Object chooseTab(HttpServletRequest request) {
-        return woWcService.chooseTab(request)?1:2;
+        return woWcService.chooseTab(request);
     }
     
     @RequestMapping(value="saveworkorder")
@@ -225,7 +232,28 @@ public class WorkOrderController {
      */
     @RequestMapping(value = "wodetail")
     public @ResponseBody Object woDetail(Integer id){
-        return woWcService.woDetail(id);
+        WorkOrder wo = woWcService.woDetail(id);
+        if (wo == null)
+            return null;
+        Map map = new HashMap();
+        map.put("woId", wo.getId());
+        map.put("requestReasonVoice", wo.getRequestReasonVoice());
+        map.put("currentStepId", wo.getCurrentStepId());
+        map.put("requestReason", wo.getRequestReason());
+        map.put("estimatedCloseTime", wo.getEstimatedCloseTime()==null?null:new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getEstimatedCloseTime()));
+        map.put("feedbackRating", wo.getFeedbackRating());
+        map.put("feedbackComment", wo.getFeedbackComment());
+        AssetInfo ai = assetDao.getById(wo.getAssetId());
+        if (ai == null)
+            return map;
+        map.put("assetId", ai.getId());
+        map.put("assetName", ai.getName());
+        map.put("supplier", ai.getSupplierId()==null?"":service.getSupplierName(ai.getSupplierId()));
+        map.put("assetGroup", service.getMsgValue("assetGroup", ai.getAssetGroup().toString()));
+        map.put("assetStatus", service.getMsgValue("assetStatus", ai.getStatus()+""));
+        map.put("clinicalDeptName", ai.getClinicalDeptName());
+        map.put("locationName", ai.getLocationName());
+        return map;
     }
 
     /**

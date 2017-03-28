@@ -37,15 +37,18 @@
                 wechatSDK.setSignature('${timestamp}', '${nonceStr}', '${signature}');
                 wechatSDK.init();
                 
-                function initWoDetail(qrcode) {
-                    $.get(WEB_ROOT+"web/scanaction", {'qrCode': qrcode}, function(ret){
+                function initWoDetail(qrcode, woId) {
+                    $.get(WEB_ROOT+"web/scanaction", {'qrCode': qrcode, 'woId': woId}, function(ret){
                         if (ret) {
                             pageManager.woId = ret.id;
                             pageManager.entryType = 'scan';
                             pageManager.signUp = ret.currentStepId === 4 && pageManager.showBtn && ret.pointStepNumber === 1;
                             pageManager.showBtn = ret.currentStepId === 6?
-                                ret.requestorId ==ret.currentPersonId && ret.currentPersonId == '${userId}':
+                                ret.requestorId ==ret.currentPersonId && ret.currentPersonId == '${userId}'&& ret.feedbackRating === 0:
                                         ret.currentPersonId == '${userId}';
+                            if (ret.currentStepId === 6 && ret.requestorId != '${userId}') {
+                                pageManager.init('ts_msg_notfound');
+                            }
                             pageManager.init('ts_wodetail');
                         } else {
                             pageManager.init('ts_msg_notfound');
@@ -53,15 +56,15 @@
                     });
                 }
 
-                var qrCode = '${qrCode}';
-                if (qrCode){
-                    initWoDetail(qrCode);
+                var woId = '${woId}';
+                if (woId){
+                    initWoDetail('', woId);
                 }else {
                     wechatSDK.scanQRCode(1, function(qrcode) {
                         if (qrcode.length > 16) {
                             qrcode = qrcode.substr(qrcode.length-16);
                         }
-                        initWoDetail(qrcode);
+                        initWoDetail(qrcode, '');
                     });
                 }
                 
@@ -71,5 +74,6 @@
         <jsp:include page="imgshow.html"/>
         <jsp:include page="woDetail.html"/>
         <jsp:include page="tipsTemplate.html"/>
+        <jsp:include page="workorderCost.html"/>
     </body>
 </html>

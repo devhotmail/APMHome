@@ -11,6 +11,7 @@ import com.ge.apm.domain.QrCodeAttachment;
 import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AssetCreateService;
+import com.ge.apm.service.asset.AttachmentFileService;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -28,17 +29,20 @@ public class AssetCreateController {
     private AssetInfo assetInfo;
     private QrCodeLib createRequest;
     private AssetCreateService acServie;
+    private AttachmentFileService attachFileService;
 
     private Integer[] selectedPictures;
 
     private UserAccount owner;
     
     List<QrCodeAttachment> pictureList;
+    List<QrCodeAttachment> audioList;
 
     @PostConstruct
     protected void init() {
         String qrCode = WebUtil.getRequestParameter("qrCode");
         acServie = WebUtil.getBean(AssetCreateService.class);
+        attachFileService = WebUtil.getBean(AttachmentFileService.class);
         createRequest = acServie.getCreateRequest(qrCode);
         
         
@@ -50,7 +54,8 @@ public class AssetCreateController {
         assetInfo.setStatus(1);
 //        pictureList = getPicturesList();
         
-        pictureList = acServie.getQrCodePictureList(qrCode);
+        pictureList = acServie.getQrCodePictureList(createRequest.getId());
+        audioList = acServie.getQrCodeAudioList(createRequest.getId());
 
     }
 
@@ -89,6 +94,14 @@ public class AssetCreateController {
         }
     }
     
+    public String getAudioBase64(Integer fileId){
+        String audio = attachFileService.getBase64File(fileId);
+        return "data:audio/x-mpeg;base64,".concat(audio);
+    }
+    
+    public void returnBack(){
+        
+    }
 
     public List<UserAccount> getOwnerList() {
         List<UserAccount> res = acServie.getAssetOnwers(assetInfo.getSiteId(), assetInfo.getHospitalId());
@@ -126,6 +139,10 @@ public class AssetCreateController {
 
     public List<QrCodeAttachment> getPictureList() {
         return pictureList;
+    }
+
+    public List<QrCodeAttachment> getAudioList() {
+        return audioList;
     }
     
 
