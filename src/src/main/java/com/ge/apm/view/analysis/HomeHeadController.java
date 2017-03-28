@@ -118,7 +118,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
                     "where to_char(w.request_time, 'yyyy-mm') " +
                     "between to_char(now() - interval '1 year', 'yyyy-mm') " +
                     "and to_char(now(), 'yyyy-mm') " +
-                    "and a.id = w.asset_id and w.status = 2 " +
+                    "and a.id = w.asset_id and w.is_closed = true " +
                     "and a.hospital_id = :#hospital_id " +
                     "group by key order by key;";*/
 
@@ -127,7 +127,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
                     "sum(w.total_price) as value " +
                     "from asset_info a, work_order w " +
                     "where extract(year from w.request_time) = :#targetYear " +
-                    "and a.id = w.asset_id and w.status = 2 " +
+                    "and a.id = w.asset_id and w.is_closed = true " +
                     "and a.hospital_id = :#hospital_id " +
                     "group by key order by key;";
 
@@ -148,7 +148,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
                     "where to_char(w.request_time, 'yyyy-mm') " +
                     "between to_char(now() - interval '2 year', 'yyyy-mm') " +
                     "and to_char(now(), 'yyyy-mm') " +
-                    "and a.id = w.asset_id and w.status = 2 " +
+                    "and a.id = w.asset_id and w.is_closed = true " +
                     "and a.hospital_id = :#hospital_id " +
                     "group by key order by key;";
 
@@ -546,7 +546,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
                 "where w.asset_id = a.id " +
                 "and a.hospital_id = :#hospital_id " +
                 "and extract(year from w.request_time) = :#targetYear " +
-                "and w.status = 2 " +
+                "and w.is_closed = true " +
                 "group by a.clinical_dept_name " +
                 "order by a.clinical_dept_name asc;";
         List<Map<String, Object>> w = prepareData(sql, sqlParams);
@@ -654,7 +654,7 @@ public class HomeHeadController extends SqlConfigurableChartController {
             + "from asset_info a left join work_order w "
             + "on w.asset_id = a.id and a.hospital_id = :#hospital_id "
             + "and extract(year from w.request_time) = :#targetYear "
-            + "and w.status = 2 "
+            + "and w.is_closed = true "
             + "group by a.asset_group order by a.asset_group asc;";
         
         List<Map<String, Object>> w = prepareData(sql, sqlParams);

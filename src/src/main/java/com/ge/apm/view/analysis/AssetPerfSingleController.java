@@ -177,7 +177,7 @@ public class AssetPerfSingleController implements ServerEventInterface {
     private String DB3TLYEAR
             = "SELECT key, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
             + "FROM (SELECT id FROM asset_info WHERE id = :#assetId) left_table "
-            + "LEFT JOIN (SELECT TO_CHAR(create_time, 'yyyy') AS key, total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE status = 2 AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
+            + "LEFT JOIN (SELECT TO_CHAR(create_time, 'yyyy') AS key, total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY key "
             + "ORDER BY key ";
@@ -199,7 +199,7 @@ public class AssetPerfSingleController implements ServerEventInterface {
     private String DB3TLMONTH
             = "SELECT key, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
             + "FROM (SELECT id FROM asset_info WHERE id = :#assetId) left_table "
-            + "LEFT JOIN (SELECT TO_CHAR(create_time, 'yyyy-mm') AS key, total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE status = 2 AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
+            + "LEFT JOIN (SELECT TO_CHAR(create_time, 'yyyy-mm') AS key, total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY key "
             + "ORDER BY key ";
@@ -221,7 +221,7 @@ public class AssetPerfSingleController implements ServerEventInterface {
     private String DB3TLDAY
             = "SELECT key, COUNT(right_table) repair, SUM(right_table.total_price) price, SUM(diff)/60/60 dt "
             + "FROM (SELECT id FROM asset_info WHERE id = :#assetId) left_table "
-            + "LEFT JOIN (SELECT TO_CHAR(create_time, 'yyyy-mm-dd') AS key, total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE status = 2 AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
+            + "LEFT JOIN (SELECT TO_CHAR(create_time, 'yyyy-mm-dd') AS key, total_price, EXTRACT(EPOCH FROM confirmed_up_time-confirmed_down_time) diff, asset_id FROM work_order WHERE is_closed = true AND EXTRACT(YEAR FROM create_time) = :#targetYear) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "GROUP BY key "
             + "ORDER BY key ";

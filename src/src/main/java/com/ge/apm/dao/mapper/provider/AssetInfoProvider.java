@@ -24,7 +24,7 @@ public class AssetInfoProvider {
 		Date day = (Date) param.get("day");
 		StringBuilder sb = new StringBuilder();
 		sb.append("select ai. id asset_id,ai.site_id,ai.hospital_id,ai.asset_group,ai.clinical_dept_id dept_id,ai.status,ai.supplier_id, ");
-		sb.append("wo.request_time,wo.confirmed_down_time,wo.status wo_status,wo.id wo_id ");
+		sb.append("wo.request_time,wo.confirmed_down_time,wo.is_closed wo_status,wo.id wo_id ");
 		sb.append("from asset_info ai left join work_order wo ");
 		sb.append("on ai. id = wo.asset_id and ai. id = "+assetId );
 		if(day == null){

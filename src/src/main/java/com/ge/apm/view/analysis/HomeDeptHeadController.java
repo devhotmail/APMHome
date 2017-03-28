@@ -167,7 +167,7 @@ public class HomeDeptHeadController implements Serializable {
     private static final String MAINTAINTL
             = "SELECT left_table.name, right_table.sum "
             + "FROM (SELECT id, name FROM asset_info WHERE is_valid = true AND hospital_id = :#hospital_id AND clinical_dept_id = :#clinical_dept_id) left_table "
-            + "LEFT JOIN (SELECT SUM(total_price), asset_id FROM work_order WHERE status = 2 AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
+            + "LEFT JOIN (SELECT SUM(total_price), asset_id FROM work_order WHERE is_closed = true AND create_time BETWEEN :#startDate AND :#endDate GROUP BY asset_id) right_table "
             + "ON left_table.id = right_table.asset_id "
             + "ORDER BY left_table.name ";
 

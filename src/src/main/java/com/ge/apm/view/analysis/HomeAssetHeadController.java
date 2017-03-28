@@ -73,7 +73,7 @@ public class HomeAssetHeadController extends SqlConfigurableChartController {
 
     public HomeAssetHeadController() {
         queries = new HashMap<>();
-        queries.put("assetsInMt", "select asset_name, current_step_id as step_id, current_step_name as step_name, case_owner_name as owner_name from work_order where status = 2 and site_id=:#site_id and hospital_id=:#hospital_id");
+        queries.put("assetsInMt", "select asset_name, current_step_id as step_id, current_step_name as step_name, case_owner_name as owner_name from work_order where is_closed=false and site_id=:#site_id and hospital_id=:#hospital_id");
         queries.put("assetsStopped", "select ai.name as asset_name, wo.create_time as down_time, wo.case_type as case_type from asset_info ai join (select tw.asset_id, tw.create_time, wkod.case_type  from (select asset_id, max(create_time) as create_time from work_order group by asset_id) tw join work_order wkod on tw.asset_id = wkod.asset_id where tw.create_time = wkod.create_time) as wo on ai.id = wo.asset_id where ai.is_valid = true and ai.status = 2 and ai.site_id = :#site_id and ai.hospital_id = :#hospital_id order by down_time,asset_name,case_type");
         queries.put("assetsWarrantyExpired", "select a.name as asset_name, a.warranty_date as warranty_date from asset_info a where a.is_valid = true and a.warranty_date <= (now() + interval '2 months')  and a.site_id = :#site_id and a.hospital_id = :#hospital_id order by a.warranty_date");
         queries.put("assetsInPm", "select a.asset_name,a.start_time as pm_date from pm_order a where a.site_id=:#site_id and a.hospital_id=:#hospital_id and a.is_finished=false and a.start_time<(now() + interval '1 weeks') order by a.start_time");
