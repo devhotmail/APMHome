@@ -16,8 +16,16 @@ public class WorkFlow {
     private Integer currentPersonId;
     
     private Integer ownerId;//work_order_step owner_id
+    private String ownerName;//work_order_step ownerName
     private Date startTime;//work_order_step start_time
     
+    
+	public String getOwnerName() {
+		return ownerName;
+	}
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
+	}
 	public Integer getOwnerId() {
 		return ownerId;
 	}

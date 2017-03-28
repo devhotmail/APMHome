@@ -17,17 +17,17 @@ public interface WorkOrderMapper {
 					"date(wo.request_time)=date(#{day}) group by date(#{day})")
 	public Double fetchWorkOrderCost(@Param("assetId") Integer assetId,@Param("day") Date day);
 	
-	@Select("select  id,site_id,hospital_id,current_person_id,current_step_id,parent_wo_id from work_order where status = 1 ")
+	@Select("select  id,site_id,hospital_id,asset_name,current_person_id,current_step_id,current_person_name,parent_wo_id from work_order where status = 1 ")
 	public List<WorkOrder> fetchUnFinishedWorkList();
 	
-	@Select("select  owner_id ,start_time,work_order_id from work_order_step where step_id <= #{currentStepId} and work_order_id = #{id} "+
+	@Select("select  owner_id,owner_name ,start_time,work_order_id from work_order_step where step_id <= #{currentStepId} and work_order_id = #{id} "+
 	"order by start_time desc ")
 	public List<WorkFlow> fetchWorkFlowList(WorkOrder workOrder);
 
 	@Select("select * from workflow_config where site_id =#{siteId} and hospital_id =#{hospitalId}")
 	public WorkflowConfig fetchWorkflowConfig(@Param("siteId") Integer siteId,@Param("hospitalId") Integer hospitalId);
 	
-	@Select("select id ,request_time from work_order  where id = #{parentWoId}")
+	@Select("select id ,request_time,current_person_id from work_order  where id = #{parentWoId}")
 	public WorkOrder fetchParentWorkOrder(Integer parentWoId);
 
 }
