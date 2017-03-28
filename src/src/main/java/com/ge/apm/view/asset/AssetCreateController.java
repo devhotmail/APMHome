@@ -96,7 +96,7 @@ public class AssetCreateController {
     
     public String getAudioBase64(Integer fileId){
         String audio = attachFileService.getBase64File(fileId);
-        return "data:audio/x-mpeg;base64,".concat(audio);
+        return audio;
     }
     
     public void returnBack(){

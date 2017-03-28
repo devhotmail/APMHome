@@ -219,91 +219,30 @@ and open the template in the editor.
                         <div id="tab2Panel" class="weui-tab__content">
 
                             <div class="page__bd">
-                                <div class="weui-cells">
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
-                                            <img style="width: 50px;display: block"  src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{wxAssetInfoController.assetInfo.assetGroup}.ico"/>
+                                <c:forEach  items="#{wxAssetInfoController.woList}" var="item" >
+                                    <div class="weui-cells">
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__bd">
+                                                <h4>工单编号: #{item.id}</h4>
+                                            </div>
+                                            <div class="ftitle weui-cell__ft" style="#{item.casePriority==1?'color:red':''}#{item.casePriority==2?'color:orange':'color:green'};">#{fieldMsg.fieldValue("casePriority",item.casePriority)}</div>
                                         </div>
-                                        <div class="weui-cell__bd">
-                                            <p>#{wxAssetInfoController.assetInfo.name}</p>
-                                            <p style="font-size: 13px;color: #888888;">#{wxAssetInfoController.assetInfo.aliasName}</p>
+                                        <a class="weui-cell weui-cell_access" href="#{wechatUtilService.getContextPath()}/web/scanwodetail?woId=#{item.id}">
+                                            <div class="show-data weui-cell__bd">
+                                                <p>资产编号：#{item.id}</p><p>资产名称：#{item.assetName}</p><p>工单状态：#{item.currentStepName}</p></div>
+                                            <div class="weui-cell__ft reportview"></div>
+                                        </a>
+                                    </div>
+                                </c:forEach>
+                                <h:panelGroup rendered="#{empty wxAssetInfoController.woList}">
+                                    <div class="weui-cells">
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__bd">
+                                                <h4> #{msg.noRecordFound}</h4>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="weui-cell weui-cell_access">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.vendor}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">
-                                            <span style="vertical-align: middle">#{wxAssetInfoController.assetInfo.vendor}</span>
-                                        </div>
-                                    </div>
-                                    <div class="weui-cell weui-cell_access" onclick="javascript:showBRCode();">
-                                        <div class="weui-cell__bd">
-                                            <label class="weui-label">#{msg.qrCode}</label>
-                                        </div>
-                                        <!--<div class="weui-cell__ft" >-->
-                                        <!--<p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />-->
-                                        <!--</div>-->
-                                    </div>
-                                    <div class="weui-cell weui-cell_access">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.clinicalDeptName}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">
-                                            <span style="vertical-align: middle">#{wxAssetInfoController.assetInfo.clinicalDeptName}</span>
-                                        </div>
-
-                                    </div>
-                                    <div class="weui-cell weui-cell_access">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.assetOwnerName}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">
-                                            <span style="vertical-align: middle">#{wxAssetInfoController.assetInfo.assetOwnerName}</span>
-                                        </div>
-                                    </div>
-                                    <div class="weui-cell weui-cell_access">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.assetOwnerTel}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">
-                                            <span style="vertical-align: middle">#{wxAssetInfoController.assetInfo.assetOwnerTel}</span>
-                                        </div>
-                                    </div>
-                                    <div class="weui-cell weui-cell_access">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.purchaseDate}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">
-                                            <span style="vertical-align: middle">#{wxAssetInfoController.assetInfo.purchaseDate}</span>
-                                        </div>
-                                    </div>
-                                    <div class="weui-cell weui-cell_access">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.warrantyDate}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">
-                                            <span style="vertical-align: middle">#{wxAssetInfoController.assetInfo.warrantyDate}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="weui-cell weui-cell_access">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.status}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">
-                                            <span style="vertical-align: middle">#{fieldMsg.fieldValue('assetStatus',wxAssetInfoController.assetInfo.status)}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <h:panelGroup rendered="#{not empty wxAssetInfoController.currentUser}">
-                                    <div class="weui-msg__opr-area">
-                                        <p class="weui-btn-area">
-                                            <a href="create.xhtml?action=Edit&amp;assetid=#{wxAssetInfoController.assetInfo.id}" class="weui-btn weui-btn_plain-primary">#{msg.Edit}</a>
-                                        </p>
-                                    </div>
+                                  
                                 </h:panelGroup>
                             </div>
                         </div>
