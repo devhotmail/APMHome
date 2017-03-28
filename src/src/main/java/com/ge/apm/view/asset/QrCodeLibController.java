@@ -18,6 +18,7 @@ import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.QrCodeLibRepository;
 import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.service.asset.AssetCreateService;
+import com.ge.apm.view.sysutil.UserContextService;
 import webapp.framework.web.WebUtil;
 
 @ManagedBean
@@ -45,7 +46,21 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         qrCodeLibDao = WebUtil.getBean(QrCodeLibRepository.class);
         acService = WebUtil.getBean(AssetCreateService.class);
 
-        this.filterBySite = false;
+        
+        UserContextService userContextService = WebUtil.getBean(UserContextService.class);
+
+        if (!userContextService.hasRole("SuperAdmin")) {
+            this.filterByHospital = false;
+            this.filterBySite = false;
+        } else {
+            this.filterBySite = true;
+            if (!userContextService.hasRole("MultiHospital")) {
+                this.filterByHospital = false;
+            } else {
+                this.filterByHospital = true;
+            }
+        }
+
     }
 
     @Override
@@ -205,5 +220,5 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
     @Override
     public void onAfterDataChanged(){
     };
-*/
+     */
 }
