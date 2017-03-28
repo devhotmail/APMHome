@@ -85,9 +85,9 @@ public class DmApi {
 
   private List<Map<String, String>> calculateTotalSuggestion(Seq<ImmutableMap<String, Object>> items, String groupBy) {
     Seq<String> suggestions = items.map(v -> ((List<ImmutableMap<String, String>>) v.get("suggestions")).get(0).get("title"));
-    int numBuy = suggestions.count(v -> v.equals(SUGGESTION_BUY));
-    int numAjst = suggestions.count(v -> v.equals(SUGGESTION_ADJUST));
-    int numRse = suggestions.count(v -> v.equals(SUGGESTION_RAISE));
+    int numBuy = suggestions.count(v -> SUGGESTION_BUY.equals(v));
+    int numAjst = suggestions.count(v -> SUGGESTION_ADJUST.equals(v));
+    int numRse = suggestions.count(v -> SUGGESTION_RAISE.equals(v));
     ImmutableList.Builder<Map<String, String>> totalSuggestions = new ImmutableList.Builder<Map<String, String>>();
     if (numBuy > 0) {
       totalSuggestions.add(ImmutableMap.of("title", SUGGESTION_BUY, "addition", Option.when(groupBy.equals("dept"), String.format("%s个科室", numBuy)).getOrElse(String.format("%s种类型", numBuy))));
