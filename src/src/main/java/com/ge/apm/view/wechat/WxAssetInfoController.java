@@ -6,11 +6,16 @@ import javax.faces.bean.ViewScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.ge.apm.dao.AssetInfoRepository;
+import com.ge.apm.dao.OrgInfoRepository;
+import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.MessageSubscriber;
+import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.service.asset.MessageSubscriberService;
+import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +32,18 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
     private static final long serialVersionUID = -1L;
     private Logger logger = LoggerFactory.getLogger(getClass());
     private AssetInfoRepository assetDao;
+    private OrgInfoRepository orgDao;
     private MessageSubscriberService msService;
     private AssetFileAttachmentRepository attachDao = null;
     private UserContextService userContextService;
-    UserAccount currentUser;
+    private UaaService uaaService;
+    private UserAccount currentUser;
     private AssetInfo assetInfo;
     private String qrCode;
 
     private String searchStr;
     private String searchGroup;
+    private Integer searchDept;
     private Boolean searchStatRun = true;
     private Boolean searchStatStop = true;
     private Boolean searchStatPartial = true;
@@ -43,15 +51,19 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
     private StreamedContent picture;
 
     private Boolean bindResult = false;
-    
+
     private MessageSubscriber messageSubscriber;
+
+    private List<WorkOrder> woList;
 
     @Override
     protected void init() {
         assetDao = WebUtil.getBean(AssetInfoRepository.class);
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
+        orgDao = WebUtil.getBean(OrgInfoRepository.class);
         userContextService = WebUtil.getBean(UserContextService.class);
         msService = WebUtil.getBean(MessageSubscriberService.class);
+        uaaService = WebUtil.getBean(UaaService.class);
         currentUser = userContextService.getLoginUser();
         qrCode = WebUtil.getRequestParameter("qrCode");
         String assetId = WebUtil.getRequestParameter("assetId");
@@ -63,25 +75,53 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
             }
             assetInfo = findAsset(qrCode);
         }
-        if(null!= assetInfo){
-            if(assetInfo.getSiteId()!=currentUser.getSiteId() ){
+        if (null != assetInfo) {
+            if (assetInfo.getSiteId() != currentUser.getSiteId()) {
                 assetInfo = null;
             }
-            if(!assetInfo.getHospitalId().equals(currentUser.getHospitalId()) && !userContextService.hasRole("MultiHospital")){
-                 assetInfo = null;
+            if (!assetInfo.getHospitalId().equals(currentUser.getHospitalId()) && !userContextService.hasRole("MultiHospital")) {
+                assetInfo = null;
             }
         }
-        if(null!= assetInfo){
-            messageSubscriber = msService.getMessageSubscriber(assetInfo.getId(),currentUser.getId());
-            if(null == messageSubscriber){
+        if (null != assetInfo) {
+            messageSubscriber = msService.getMessageSubscriber(assetInfo.getId(), currentUser.getId());
+            if (null == messageSubscriber) {
                 messageSubscriber = new MessageSubscriber();
                 messageSubscriber.setAssetId(assetInfo.getId());
                 messageSubscriber.setSiteId(assetInfo.getSiteId());
                 messageSubscriber.setHospitalId(assetInfo.getHospitalId());
                 messageSubscriber.setSubscribeUserId(currentUser.getId());
             }
+            woList = findWoList();
         }
 
+    }
+
+    public List<Object[]> getSearchDeptList() {
+        List<Object[]> res = new ArrayList();
+        if (userContextService.hasRole("MultiHospital")) {
+            List<OrgInfo> hospitals = uaaService.getHospitalListBySiteId(UserContextService.getCurrentUserAccount().getSiteId());
+
+            for (OrgInfo item : hospitals) {
+                List<OrgInfo> oneHospital = orgDao.getByHospitalId(item.getHospitalId());
+                for (OrgInfo dept : oneHospital) {
+                    Object[] o = {item.getName().concat("-").concat(dept.getName()), dept.getId()};
+                    res.add(o);
+                }
+            }
+        } else {
+            List<OrgInfo> depts = orgDao.getByHospitalId(currentUser.getHospitalId());
+            for (OrgInfo item : depts) {
+                Object[] o = {item.getName(), item.getId()};
+                res.add(o);
+            }
+        }
+        return res;
+    }
+
+    private List<WorkOrder> findWoList() {
+        WorkOrderRepository wodao = WebUtil.getBean(WorkOrderRepository.class);
+        return wodao.findByAssetIdOrderByIdDesc(assetInfo.getId());
     }
 
     public List<AssetFileAttachment> getPictureList(Integer assetid) {
@@ -129,6 +169,9 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         if (!userContextService.hasRole("MultiHospital")) {
             sfs.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, UserContextService.getCurrentUserAccount().getHospitalId()));
         }
+        if (null != searchDept) {
+            sfs.add(new SearchFilter("clinicalDeptId", SearchFilter.Operator.EQ, searchDept));
+        }
         if (null != searchStr) {
             sfs.add(new SearchFilter("name", SearchFilter.Operator.LIKE, searchStr));
         }
@@ -147,16 +190,16 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         return assetDao.findBySearchFilter(sfs);
     }
 
-    public void settingMsgSubscriber(){
+    public void settingMsgSubscriber() {
         int receibeMode = Integer.parseInt(WebUtil.getRequestParameter("subscribrSetting:subsMsgRadio"));
         messageSubscriber.setReceiveMsgMode(receibeMode);
-        if(msService.saveOrUpdate(messageSubscriber)){
+        if (msService.saveOrUpdate(messageSubscriber)) {
             WebUtil.addSuccessMessage("保存成功");
-        }else{
+        } else {
             WebUtil.addErrorMessage("保存失败");
         }
     }
-    
+
     @Override
     protected GenericRepository<AssetInfo> getDAO() {
         return assetDao;
@@ -233,6 +276,17 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
     public void setMessageSubscriber(MessageSubscriber messageSubscriber) {
         this.messageSubscriber = messageSubscriber;
     }
-    
+
+    public List<WorkOrder> getWoList() {
+        return woList;
+    }
+
+    public Integer getSearchDept() {
+        return searchDept;
+    }
+
+    public void setSearchDept(Integer searchDept) {
+        this.searchDept = searchDept;
+    }
 
 }
