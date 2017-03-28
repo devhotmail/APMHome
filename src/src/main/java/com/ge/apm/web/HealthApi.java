@@ -48,7 +48,8 @@ import java.util.concurrent.TimeUnit;
 @Validated
 public class HealthApi {
 	private static final Logger log = LoggerFactory.getLogger(HealthApi.class);
-
+	private static final Map<String, String> env = System.getenv();
+			
 	@Autowired
 	private HealthService healthService;
 
@@ -112,7 +113,8 @@ public class HealthApi {
 
 	private String getHref(Integer category, String url) {
 
-		url = url.replace("http", "https");
+		if (env.containsKey("VCAP_APPLICATION"))
+			url = url.replace("http", "https");
 		
 		switch(category) {
 			case 0:
@@ -158,7 +160,8 @@ public class HealthApi {
 
 	private String getHref(Integer category, String url, Integer count) {
 
-		url = url.replace("http", "https");
+		if (env.containsKey("VCAP_APPLICATION"))
+			url = url.replace("http", "https");
 		
 		if (count==0)
 			return "";

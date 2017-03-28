@@ -36,6 +36,8 @@ import java.util.concurrent.TimeUnit;
 @Validated
 public class ProfitApi {
   private static final Logger log = LoggerFactory.getLogger(ProfitApi.class);
+  private static final Map<String, String> env = System.getenv();
+  
   @Autowired
   private CommonService commonService;
   @Autowired
@@ -102,11 +104,19 @@ public class ProfitApi {
       .put("profit_label_unit", CNY.desc(child._4)._2)
       .put("link", new ImmutableMap.Builder<String, Object>()
         .put("ref", "child")
-        .put("href", Option.of(groupBy).map(v -> String.format("%s?year=%s&%s=%s", request.getRequestURL().toString().replace("http", "https"), year, groupBy, child._1)).getOrElse(""))
+        .put("href", Option.of(groupBy).map(v -> String.format("%s?year=%s&%s=%s", getHref(request.getRequestURL().toString()), year, groupBy, child._1)).getOrElse(""))
         .build())
       .build()).cache().toBlocking().toIterable();
   }
 
+	private String getHref(String url) {
+
+		if (env.containsKey("VCAP_APPLICATION"))
+			return url.replace("http", "https");
+		else 
+			return url;
+	}
+		
   private ResponseEntity<Map<String, Object>> serialize(HttpServletRequest request, Map<Integer, String> groups, Map<Integer, String> depts, Map<Integer, String> months, Observable<Tuple4<Integer, String, Money, Money>> children, int year, String groupBy, Integer type, Integer dept, Integer month, Integer limit, Integer start) {
     Map<String, Object> body = new ImmutableMap.Builder<String, Object>()
       .put("pages", new ImmutableMap.Builder<String, Object>()
@@ -131,10 +141,10 @@ public class ProfitApi {
         .put("profit_text", "总利润")
         .put("link", new ImmutableMap.Builder<String, Object>()
           .put("ref", "self")
-          .put("href", Option.of(groupBy).map(v -> String.format("%s?year=%s&groupby=%s", request.getRequestURL().toString().replace("http", "https"), year, v))
-            .orElse(Option.of(type).map(v -> String.format("%s?year=%s&type=%s", request.getRequestURL().toString().replace("http", "https"), year, v)))
-            .orElse(Option.of(dept).map(v -> String.format("%s?year=%s&dept=%s", request.getRequestURL().toString().replace("http", "https"), year, v)))
-            .orElse(Option.of(dept).map(v -> String.format("%s?year=%s&month=%s", request.getRequestURL().toString().replace("http", "https"), year, v)))
+          .put("href", Option.of(groupBy).map(v -> String.format("%s?year=%s&groupby=%s", getHref(request.getRequestURL().toString()), year, v))
+            .orElse(Option.of(type).map(v -> String.format("%s?year=%s&type=%s", getHref(request.getRequestURL().toString()), year, v)))
+            .orElse(Option.of(dept).map(v -> String.format("%s?year=%s&dept=%s", getHref(request.getRequestURL().toString()), year, v)))
+            .orElse(Option.of(dept).map(v -> String.format("%s?year=%s&month=%s", getHref(request.getRequestURL().toString()), year, v)))
             .getOrElse(String.format("%s?year=%s", request.getRequestURL(), year)))
           .build())
         .build())

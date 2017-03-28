@@ -44,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 @Validated
 public class ListApi {
 	private static final Logger log = LoggerFactory.getLogger(ListApi.class);
+	private static final Map<String, String> env = System.getenv();
 
 	@Autowired
 	private ListService ListService;
@@ -82,9 +83,12 @@ public class ListApi {
 			return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Bad Request"));
 	}
 
-	private String getHref(String requestUrl, Date from, Date to, Integer dept, Integer type, String orderby, Integer limit, Integer start ) {
+	private String getHref(String url, Date from, Date to, Integer dept, Integer type, String orderby, Integer limit, Integer start ) {
 
-		return String.format("%s?from=%s&to=%s&dept=%s&type=%s&orderby=%s&limit=%s&start=%s", requestUrl.replace("http", "https"), from, to, dept, type, orderby, limit, start);
+		if (env.containsKey("VCAP_APPLICATION"))
+			url = url.replace("http", "https");
+		
+		return String.format("%s?from=%s&to=%s&dept=%s&type=%s&orderby=%s&limit=%s&start=%s", url, from, to, dept, type, orderby, limit, start);
 	}
 
 	private ResponseEntity<Map<String, Object>> createResponseBody(
