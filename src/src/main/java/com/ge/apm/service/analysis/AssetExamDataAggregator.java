@@ -95,29 +95,39 @@ public class AssetExamDataAggregator {
         }*/
 
         AssetSummit assetSummit=null;
+        List<AssetSummit> asmNewList= new ArrayList<AssetSummit>();
         List<AssetSummit> asmUpdateList= new ArrayList<AssetSummit>();
         for(AssetClinicalRecordPojo accrp:acrpList){
-            AssetSummit asm = new AssetSummit();
-
-
-            if(assetSummitRepository.getAssetSummitByAssetIdAndCreated(accrp.getAssetIds(),date)!=null){
-                //update that record
+            AssetSummit asm1 =assetSummitRepository.getAssetSummitByAssetIdAndCreated(accrp.getAssetIds(),date);
+            if(asm1!=null){
                 System.out.println("-------"+accrp.getAssetIds()+"---"+date);
-                continue; //gl: no need insert this record
+                asm1.setCreated(date);
+                asm1.setAssetId(accrp.getAssetIds());
+                asm1.setHospitalId(accrp.getHospitalIds());
+                asm1.setExposeCount(accrp.getExposeCounts());
+                asm1.setFilmCount(accrp.getFilmCounts());
+                asm1.setInjectCount(accrp.getInjectCounts());
+                asm1.setExamCount(accrp.getExamCount().intValue());
+                asmUpdateList.add(asm1);
+            }else {
+                AssetSummit asm = new AssetSummit();
+                asm.setAssetId(accrp.getAssetIds());
+                asm.setHospitalId(accrp.getHospitalIds());
+                asm.setExposeCount(accrp.getExposeCounts());
+                asm.setFilmCount(accrp.getFilmCounts());
+                asm.setInjectCount(accrp.getInjectCounts());
+                asm.setExamCount(accrp.getExamCount().intValue());
+                asmNewList.add(asm);
             }
-            asm.setCreated(date);
-            asm.setAssetId(accrp.getAssetIds());
-
-            asm.setHospitalId(accrp.getHospitalIds());
-
-            asm.setExposeCount(accrp.getExposeCounts());
-            asm.setFilmCount(accrp.getFilmCounts());
-            asm.setInjectCount(accrp.getInjectCounts());
-            asm.setExamCount(accrp.getExamCount().intValue());
-            asmUpdateList.add(asm);
         }
-        assetSummitRepository.save(asmUpdateList);
-
+        if(asmNewList.size()>0)
+        assetSummitRepository.save(asmNewList);
+if(asmUpdateList.size()>0){
+    System.out.println("asmUpdateList.size()>0--------------"+asmUpdateList.size());
+    for(AssetSummit asm :asmUpdateList){
+        assetSummitRepository.updateAssetSummit(asm.getExposeCount(),asm.getInjectCount(),asm.getFilmCount(),asm.getId());
+    }
+}
         return "success";
 
     }
