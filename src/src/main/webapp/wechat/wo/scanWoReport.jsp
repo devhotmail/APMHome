@@ -38,8 +38,12 @@
                 $.get(WEB_ROOT+"web/findassetinfo", {'qrCode': qrCode}, function(ret){
                     if (ret && ret.assetId) {
                         if (ret.view) {
+                            pageManager.entryType = 'myreport1';
                             pageManager.woId = ret.woId;
                             pageManager.showTime = true;
+                            pageManager.showComment = false;
+                            pageManager.showCancel = true;
+                            pageManager.showBtn = true;
                             pageManager.init('ts_wodetail');
                         } else {
                             pageManager.assetId = ret.assetId;

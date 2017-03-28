@@ -7,6 +7,7 @@ $(function () {
     app.initUserSelect = initUserSelect;
     app.setFormJsonValue = setFormJsonValue;
     app.initWechatTime = initWechatTime;
+    app.intCasePriority = intCasePriority;
     
     /////////////////////////
     /**
@@ -33,6 +34,20 @@ $(function () {
                 }
             }
         );
+    }
+    
+    function intCasePriority() {
+        $.ajax({
+            url: WEB_ROOT+"web/getmsg",
+            data: {'msgType': 'casePriority'},
+            async: false,
+            success: function(ret) {
+                pageManager.msgTypes['casePriority'] = {};
+                $.each(ret, function(idx, val){
+                    pageManager.msgTypes['casePriority'][val.msgKey] = val.valueZh;
+                });
+            }
+        });
     }
     
     function toggleJsdialog(showOrHide) {

@@ -216,10 +216,19 @@ public class WorkOrderWeChatService {
         return photoDao.findByWorkOrderId(woId);
     }
     
-    public boolean chooseTab(HttpServletRequest request) {
+    public int chooseTab(HttpServletRequest request) {
         UserAccount currentUsr= UserContext.getCurrentLoginUser(request);
         WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(currentUsr.getSiteId(), currentUsr.getHospitalId());
-        return !(woc == null || woc.getDispatchUserId() != currentUsr.getId());
+        if (woc != null && woc.getDispatchUserId() == currentUsr.getId()){//assigner
+            return 1;
+        } else {//not assigner
+            List<String> rnames = getLoginUserRoleName(request);
+            if (rnames.contains("AssetStaff")){//assinger
+                return 2;
+            } else {
+                return 3;
+            }
+        }
     }
     
 }

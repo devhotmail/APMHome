@@ -211,6 +211,7 @@
                     <a class="weui-btn weui-btn_primary" href="javascript:" id="otherSubmit"></a>
                     <a class="weui-btn weui-btn_primary" href="javascript:" id="returnSubmit">回退</a>
                     <a class="weui-btn weui-btn_primary" href="javascript:" id="takeOtherWo"></a>
+                    <a class="weui-btn weui-btn_primary" href="javascript:" id="cancelWo"></a>
                 </div>
             </div>
             <div style="height:20px;"></div>
@@ -232,10 +233,15 @@
                         pageManager.workOrder = ret;
                         
                         pageManager.showReView = ret.currentStepId === 6;
-                        pageManager.showAssign = ret.currentStepId === 2 && pageManager.showBtn;
+                        pageManager.showAssign = ret.currentStepId === 2 && pageManager.showBtn && !pageManager.showCancel;
                         pageManager.showTime = ret.currentStepId >= 3 && pageManager.showBtn && ret.currentStepId <5;
-                        pageManager.showComment = ret.currentStepId > 2 && pageManager.showBtn;
+                        pageManager.showComment = (ret.currentStepId > 2 && pageManager.showBtn) || pageManager.showCancel;
                         pageManager.showPat = ret.currentStepId === 5 && pageManager.showBtn;
+                        pageManager.showCancel = pageManager.showCancel && ret.currentStepId < 3;
+                        if (pageManager.entryType === 'myreport1') {
+                            pageManager.showBtn = pageManager.showCancel || ret.CurrentStepId === 6;
+                            pageManager.showComment = pageManager.showCancel;
+                        }
                         
                         if (pageManager.voice) {
                             mediaShow();
@@ -276,16 +282,20 @@
                     if ($('#estimatedCloseTime').val() === "") {
                         $('#estimatedCloseTime').val(app.initWechatTime());
                     }
-                    if (pageManager.entryType !== 'scanreport') {
+                    if (pageManager.entryType !== 'myreport1') {
                         $('#estimatedCloseTime').removeAttr('readonly');
                     }
+                } else {
+                    $('#showTime').hide();
                 }
             
                 if (pageManager.showBtn) {
                     $('#submitType').show();
                     if (pageManager.takeOtherWo){
-                        $('#takeOtherWo').html('获取工单');$('#returnSubmit').hide();
-                    } else{
+                        $('#takeOtherWo').html('获取工单');$('#takeOtherWo').siblings().hide();
+                    } else if(pageManager.showCancel){
+                        $('#cancelWo').html('取消');$('#cancelWo').siblings().hide();
+                    } else {
                         switch(pageManager.step) {
                             case 2: $('#submit').html('派单');$('#returnSubmit').hide();break;
                             case 3: $('#submit').html('领单');break;
@@ -355,15 +365,27 @@
                     pageManager.actionType = 'fatchwo';
                     post({woId: pageManager.woId, actionType: 'fatchwo', estimatedCloseTime: $('#estimatedCloseTime').val().replace('T', ' '), desc: $('#description').val()});
                 });
+                $('#cancelWo').click(function(){
+                    pageManager.actionType = 'cancel';
+                    if(!$('#description').val()){
+                        $('#errorMsg').html('请填写取消备注');
+                        return;
+                    } 
+                    post({woId: pageManager.woId, actionType: 'cancel', desc: $('#description').val()});
+                });
             }
             
             function post(data){
+                var $loadingToast = $('#loadingToast');
+                if ($loadingToast.css('display') !== 'none') return;
+                $loadingToast.fadeIn(100);
                 $.ajax({
                     url: WEB_ROOT+'web/workorderaction',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     success: function(ret) {
+                        $loadingToast.fadeOut(100);
                         if (ret === 'success') {
                             if (pageManager.entryType === 'scan') {
                                 if (pageManager.actionType === 'repair') {
@@ -379,7 +401,11 @@
                                     history.back();
                                 }
                             }else {
-                                pageManager.myreportList(2);
+                                if (pageManager.showCancel){
+                                    pageManager.myreportList(1);
+                                } else {
+                                    pageManager.myreportList(2);
+                                }
                                 history.back();
                             }
                         } else {

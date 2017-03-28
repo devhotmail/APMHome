@@ -38,12 +38,13 @@
             $(function(){
                 //show the tabs by the role of the user
                 $.get(WEB_ROOT+'web/choosetab', function(ret){
-                    if (ret) {
+                    if (ret && ret !== 3) {
                         if (ret === 1) { // assigner
                             pageManager.assetHead = true;
                         } else { // worker
                             pageManager.assetHead = false;
                         }
+                        app.intCasePriority();
                         pageManager.init('ts_mywoList');
                     } else {
                         pageManager.init('ts_role_not_found');
@@ -85,7 +86,9 @@
                     pageManager.mywolist = function(){
                         //data search function
                         function loadData(step) {
-                            app.initSelectData('none','casePriority');
+                            var $loadingToast1 = $('#loadingToast1');
+                            if ($loadingToast1.css('display') !== 'none') return;
+                            $loadingToast1.fadeIn(100);
                             //fetch data from server    wolistdata is the restful url
                             $.get(WEB_ROOT+'web/wolistdata', {stepId: step}, function(ret) {
                                 pageManager.workOrders = [];
@@ -104,6 +107,7 @@
                                 } 
                                 //show the data list
                                 app.fullListItem('wolist', data);
+                                $loadingToast1.fadeOut(100);
                             });
                         }
 

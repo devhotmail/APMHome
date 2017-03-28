@@ -64,11 +64,8 @@ public class WorkOrderService {
         return byStatus;
     }
     public  List<WorkOrder>  findWorkOrderByCon(HttpServletRequest request){
-        List<SearchFilter> searchFilters = new ArrayList<>();
         UserAccount ua = UserContext.getCurrentLoginUser(request);
-        searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, request.getParameter("status")));
-        searchFilters.add(new SearchFilter("requestorId", SearchFilter.Operator.EQ, ua.getId()));
-        return workOrderRepository.findBySearchFilter(searchFilters);
+        return workOrderRepository.findByRequestorIdAndStatusOrderById(ua.getId(), Integer.parseInt(request.getParameter("status")));
     }
     //public List<WorkOrder>
 
@@ -275,6 +272,18 @@ public class WorkOrderService {
         wo.setCurrentStepName(wds.getStepName());
         workOrderRepository.save(wo);
         workOrderStepRepository.save(wds);
+        sendWoMsgs(wo);
+    }
+    
+    
+    @Transactional
+    public void cancelWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
+        Integer woId= Integer.valueOf(wopo.getWoId());
+        WorkOrder wo = workOrderRepository.getById(woId);
+        updateEndTime(wo, wopo.getDesc());
+        wo.setStatus(3);
+        wo.setCloseTime(new Date());
+        workOrderRepository.save(wo);
         sendWoMsgs(wo);
     }
     

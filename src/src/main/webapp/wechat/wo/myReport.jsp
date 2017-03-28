@@ -30,6 +30,7 @@
         <script>
             $(function(){
                 pageManager.init('ts_myReports');
+                app.intCasePriority();
             });
         </script>
         <script type="text/html" id="ts_myReports">
@@ -53,20 +54,24 @@
             </div>
             <script type="text/javascript">
                 $(function(){
-                    
                     //data search function
                     pageManager.myreportList = function(close) {
-                        app.initSelectData('none','casePriority');
+                        var $loadingToast1 = $('#loadingToast1');
+                        if ($loadingToast1.css('display') !== 'none') return;
+                        $loadingToast1.fadeIn(100);
                         //fetch data from server    wolistdata is the restful url
                         if (close === 1) {
-                            pageManager.entryType = 'scanreport';
+                            pageManager.entryType = 'myreport1';
                             pageManager.showTime = true;
                             pageManager.showReView = false;
                             pageManager.showComment = false;
+                            pageManager.showCancel = true;
                         } else {
                             pageManager.showTime = false;
                             pageManager.showReView = true;
                             pageManager.showComment = true;
+                            pageManager.showCancel = false;
+                            pageManager.entryType = 'myreport2';
                         }
                         $.get(WEB_ROOT+'web/workorder', {status: close}, function(ret) {
                             var data = [];
@@ -83,6 +88,7 @@
                             } 
                             //show the data list
                             app.fullListItem('myReports', data);
+                            $loadingToast1.fadeOut(100);
                         });
                     }
                     
@@ -93,7 +99,7 @@
                         if($(this).find('.reportview').html()) {
                             pageManager.showBtn = true;
                         } else {
-                            pageManager.showBtn = false;
+                            pageManager.showBtn = false || pageManager.showCancel;
                         }
                         pageManager.go('#ts_wodetail');
                     });

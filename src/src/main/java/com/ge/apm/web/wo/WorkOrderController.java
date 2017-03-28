@@ -14,6 +14,7 @@ import com.ge.apm.service.wechat.WorkOrderWeChatService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,7 +171,7 @@ public class WorkOrderController {
     
     @RequestMapping(value="choosetab")
     public @ResponseBody Object chooseTab(HttpServletRequest request) {
-        return woWcService.chooseTab(request)?1:2;
+        return woWcService.chooseTab(request);
     }
     
     @RequestMapping(value="saveworkorder")
@@ -239,7 +240,9 @@ public class WorkOrderController {
         map.put("requestReasonVoice", wo.getRequestReasonVoice());
         map.put("currentStepId", wo.getCurrentStepId());
         map.put("requestReason", wo.getRequestReason());
-        map.put("estimatedCloseTime", wo.getEstimatedCloseTime());
+        map.put("estimatedCloseTime", wo.getEstimatedCloseTime()==null?null:new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getEstimatedCloseTime()));
+        map.put("feedbackRating", wo.getFeedbackRating());
+        map.put("feedbackComment", wo.getFeedbackComment());
         AssetInfo ai = assetDao.getById(wo.getAssetId());
         if (ai == null)
             return map;
