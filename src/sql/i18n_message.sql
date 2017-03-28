@@ -497,6 +497,11 @@ INSERT INTO "i18n_message" VALUES (1631, 'label', 'DefaultHospitalName', '总部
 INSERT INTO "i18n_message" VALUES (1632, 'label', 'ForeighKeyErrorWithSiteId', '该租户不可删除: 请先删除其下面的组织机构信息', NULL, NULL, -1);
 INSERT INTO "i18n_message" VALUES (1633, 'label', 'ForeighKeyErrorWithOrgId', '该组织机构不可删除: 请先删除其下面的组织机构或用户信息', NULL, NULL, -1);
 
+--qr_code_lib status ( id from 1700)
+INSERT INTO "i18n_message" VALUES (1700,'qrCodeLibStatus','1', '已发行','issued',null,-1);
+INSERT INTO "i18n_message" VALUES (1701,'qrCodeLibStatus','2', '已上传','uploaded',null,-1);
+INSERT INTO "i18n_message" VALUES (1702,'qrCodeLibStatus','3', '已建档','Documented ',null,-1);
+
 -- module's messages  (id from 3000)
 INSERT INTO "i18n_message" VALUES (3000,'message','DeleteConformation', '删除确认','Delete Confirmation',null,-1);
 INSERT INTO "i18n_message" VALUES (3001,'message','DeleteConformationMsg', '您确定要删除选定的记录么?','Are you sure to delete selected record?',null,-1);

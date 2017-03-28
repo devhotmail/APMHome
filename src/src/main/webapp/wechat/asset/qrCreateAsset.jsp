@@ -68,7 +68,7 @@
             <input type="hidden" id="uploaderFileBase64" name="uploaderFileBase64" value="" />
             <input type="hidden" id="currentShowImageId" name="uploaderFileIds" value="" />
 
-            <div class="weui-cells__title">&nbsp;资产图片<div id="imageNumDiv" class="weui-uploader__info" style="float: right;">0/5</div></div>
+            <div class="weui-cells__title">&nbsp;资产图片(需要有设备名牌照片)<div id="imageNumDiv" class="weui-uploader__info" style="float: right;">0/5</div></div>
             <div class="weui-cells">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">
@@ -139,16 +139,6 @@
         <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
     </div>
 
-
-    <div class="page__ft">
-        <div class="weui-footer">
-            <p class="weui-footer__links">
-                <a href="javascript:void(0);" class="weui-footer__link"></a>
-            </p>
-            <p class="weui-footer__text">Copyright © 2016-2017 GE Healthcare</p>
-        </div>
-    </div>
-
 </div>
 </body>
 <script type="text/javascript">
@@ -194,6 +184,8 @@
                             $("#assetShowMsgDiv").hide();
                         }
                     }else{
+                        $("#qrssetQrMsgDiv").show();
+                        $("#assetShowMsgDiv").hide();
                         gotoAssetMsgDiv("failed", "无效的二维码");
                     }
                 },

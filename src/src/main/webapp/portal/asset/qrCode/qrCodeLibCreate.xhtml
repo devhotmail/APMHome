@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+    <p:dialog id="qrCodeLibCreateDlg" widgetVar="qrCodeLibCreateDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="">
+    <h:form id="qrCodeLibCreateForm">
+        <h:panelGroup id="display">
+            <h:outputLabel for="siteIdSelect" value="租户 ： " />
+            <p:selectOneMenu id="siteIdSelect" value="#{qrCodeLibController.siteId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}">
+                <p:ajax  listener="#{qrCodeLibController.onSiteChange}" update="hospitalIdSelect" />
+                <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                <f:selectItems value="#{qrCodeLibController.siteList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+            </p:selectOneMenu>
+            <br/>
+            <br/>
+            <h:outputLabel for="hospitalIdSelect" value="医院 ： " />
+            <p:selectOneMenu id="hospitalIdSelect" value="#{qrCodeLibController.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}">
+                <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                <f:selectItems value="#{qrCodeLibController.hospitalList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+            </p:selectOneMenu>
+            <br/>
+            <br/>
+            <h:outputLabel for="hospitalIdSelect" value="二维码数量 ： " />
+            <p:inputNumber id="qrCodeNum" decimalPlaces="0" minValue="1" maxValue="9999" value="#{qrCodeLibController.qrCodeNum}"/>
+            <br/>
+            <br/>
+            <p:commandButton value="确定生成" icon="ui-icon-extlink" validateClient="true" actionListener="#{qrCodeLibController.createQrCode}" update=":qrCodeLibListForm:datalist :growl" oncomplete="handleSubmit(args, 'qrCodeLibCreateDialog');"/>
+            <br/>
+        </h:panelGroup>
+    </h:form>
+    </p:dialog>
+
+</ui:composition>
+
+</html>

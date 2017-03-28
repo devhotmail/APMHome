@@ -47,10 +47,16 @@ public class QrCreateAssetService {
         QrCodeLib qrCodeLib = qrCodeLibRepository.findByQrCode(qrCode);
 
         qrCodeLib.setSubmitDate(new Date());
-        //qrCodeLib.setSubmitWechatId(openId);
-        qrCodeLib.setComment(comment);
+        qrCodeLib.setSubmitWechatId(openId);
+        qrCodeLib.setStatus(2);
+        qrCodeLib.setComment(qrCodeLib.getComment() == null ? comment : qrCodeLib.getComment() + comment);
 
-        qrCodeLibRepository.save(qrCodeLib);
+        qrCodeLib = null;
+        qrCodeLib = qrCodeLibRepository.save(qrCodeLib);
+
+        if(qrCodeLib == null){
+            return false;
+        }
 
         /* 处理图片 */
         if(imageServerIds != null && !imageServerIds.isEmpty()){

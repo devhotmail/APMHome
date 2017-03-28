@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.QRCodeMgmt}"/>
+            </div>
+
+            <div class="ui-g-12 card">
+                <h:form>
+                    <p:commandButton id="qrCodeLibCreateButton" icon="ui-icon-extlink" value="生成二维码" title="生成二维码" actionListener="#{qrCodeLibController.viewQrCodeLibCreate}" update=":qrCodeLibCreateDlg" oncomplete="PF('qrCodeLibCreateDialog').show()"/>
+                </h:form>
+                <h:form id="qrCodeLibListForm">
+                    <p:dataTable id="datalist" value="#{qrCodeLibController.lazyModel}" var="item" widgetVar="varDataList"
+                                 selectionMode="single" selection="#{qrCodeLibController.selected}"
+                                 lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                 rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                                 rows="20" emptyMessage="#{msg.noRecordFound}"
+                                 rowsPerPageTemplate="20,40,60,90">
+
+                        <p:ajax event="filter" listener="#{qrCodeLibController.onFilter}" />
+
+                        <p:column headerText="租户" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="LIKE">
+                            <h:outputText value="#{qrCodeLibController.getSiteName(item.siteId)}"/>
+                        </p:column>
+                        <p:column headerText="医院" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="LIKE">
+                            <h:outputText value="#{qrCodeLibController.getHospitalName(item.hospitalId)}"/>
+                        </p:column>
+                        <p:column headerText="二维码" sortBy="#{item.qrCode}" filterBy="#{item.qrCode}" filterMatchMode="EQ">
+                            <h:outputText value="#{item.qrCode}"/>
+                        </p:column>
+                        <p:column headerText="微信号" sortBy="#{item.submitWechatId}" filterBy="#{item.submitWechatId}" filterMatchMode="EQ">
+                            <h:outputText value="#{item.submitWechatId}"/>
+                        </p:column>
+                        <p:column headerText="当前状态" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{qrCodeLibController.qrCodeLibStatusList}" var="entry" itemLabel="#{entry.value}" itemValue="#{entry.msgKey}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{fieldMsg.fieldValue('qrCodeLibStatus', item.status)}"/>
+                        </p:column>
+
+                    </p:dataTable>
+
+                </h:form>
+
+                <ui:include src="qrCodeLibCreate.xhtml"/>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
