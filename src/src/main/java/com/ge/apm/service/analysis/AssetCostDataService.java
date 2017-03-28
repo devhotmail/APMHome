@@ -181,6 +181,9 @@ public class AssetCostDataService {
 	
 	@Transactional
 	public String calByFromTo(BatchAssetCost bac){
+		
+		logger.info("begin to cal by from&to .......");
+		Long start = System.currentTimeMillis();
 		if(bac == null){
 			return "illegal param";
 		}
@@ -196,6 +199,7 @@ public class AssetCostDataService {
 				aggregateCostDataByDay(from.toDate());
 				from = from.plusDays(DAY);
 			}
+			logger.info("end cal by from&to .......耗时：{}秒",(System.currentTimeMillis()-start)/1000);
 			return "success";
 		}catch(Exception e){
 			logger.error("calByFromTo error,param is {}",bac);
