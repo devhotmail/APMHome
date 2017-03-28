@@ -4,7 +4,6 @@ const path = require('path');
 const symlink = require('gulp-symlink');
 const sequence = require('gulp-sequence');
 const postcss = require('gulp-postcss');
-const autoprefixer = require('gulp-autoprefixer');
 const stylemod = require('gulp-style-modules');
 const del = require('del')
 const sass = require('gulp-sass');
