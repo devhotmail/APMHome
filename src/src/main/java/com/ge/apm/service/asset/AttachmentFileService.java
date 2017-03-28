@@ -7,6 +7,7 @@ package com.ge.apm.service.asset;
 
 import com.ge.apm.dao.FileUploadDao;
 import com.ge.apm.service.wechat.CoreService;
+import com.ge.apm.view.asset.PictureService;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -160,5 +161,19 @@ public class AttachmentFileService {
         return returnId;
     }
     
-
+    
+   public String getBase64File(Integer fileId){
+        Base64 encoder = new Base64();
+        StreamedContent stream = getFile(fileId);
+        String res="";
+        try {
+            byte[] bytes = new byte[stream.getStream().available()];
+            stream.getStream().read(bytes);
+            res = encoder.encodeToString(bytes);
+        } catch (IOException ex) {
+            Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+    
 }

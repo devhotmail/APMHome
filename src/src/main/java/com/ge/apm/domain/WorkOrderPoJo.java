@@ -12,6 +12,15 @@ public class WorkOrderPoJo {
     String assigneeId;
     String reason;
     String  priority;
+    String voiceId;
+    String imgIds;
+    String actionType;
+    String feedbackRating;
+    String patProblems;
+    String patActions;
+    String patTests;
+    String caseType;
+    String caseSubType;
     boolean reOpen;
 
     public boolean isReOpen() {
@@ -85,4 +94,77 @@ public class WorkOrderPoJo {
     public void setEstimatedCloseTime(String estimatedCloseTime) {
         this.estimatedCloseTime = estimatedCloseTime;
     }
+
+    public String getVoiceId() {
+        return voiceId;
+    }
+
+    public void setVoiceId(String voiceId) {
+        this.voiceId = voiceId;
+    }
+
+    public String getImgIds() {
+        return imgIds;
+    }
+
+    public void setImgIds(String imgIds) {
+        this.imgIds = imgIds;
+    }
+
+    public String getActionType() {
+        return actionType;
+    }
+
+    public void setActionType(String actionType) {
+        this.actionType = actionType;
+    }
+
+    public String getFeedbackRating() {
+        return feedbackRating;
+    }
+
+    public void setFeedbackRating(String feedbackRating) {
+        this.feedbackRating = feedbackRating;
+    }
+
+    public String getPatProblems() {
+        return patProblems;
+    }
+
+    public void setPatProblems(String patProblems) {
+        this.patProblems = patProblems;
+    }
+
+    public String getPatActions() {
+        return patActions;
+    }
+
+    public void setPatActions(String patActions) {
+        this.patActions = patActions;
+    }
+
+    public String getPatTests() {
+        return patTests;
+    }
+
+    public void setPatTests(String patTests) {
+        this.patTests = patTests;
+    }
+
+    public String getCaseType() {
+        return caseType;
+    }
+
+    public void setCaseType(String caseType) {
+        this.caseType = caseType;
+    }
+
+    public String getCaseSubType() {
+        return caseSubType;
+    }
+
+    public void setCaseSubType(String caseSubType) {
+        this.caseSubType = caseSubType;
+    }
+    
 }

@@ -47,9 +47,10 @@ public class WeChatMenuDispatcher {
     static {
         URL_MAP = new HashMap<>();
         URL_MAP.put("11", "/wechat/asset/List.xhtml");
-        URL_MAP.put("12", "/wechat/asset/QRCreate.xhtml");
+        //URL_MAP.put("12", "/wechat/asset/QRCreate.xhtml");
+        URL_MAP.put("12", "/web/qrCreateAsset");
         
-        URL_MAP.put("21", "/web/scanworeport");
+        URL_MAP.put("21", "/wechat/wo/scanAssetList.xhtml");
         URL_MAP.put("22", "/web/myreport");
 //        URL_MAP.put("23", "/web/repairprocess");
         
@@ -69,7 +70,8 @@ public class WeChatMenuDispatcher {
     
     @RequestMapping(value = "menu/{index}")
     public String wechatMenuItem(@PathVariable String index,HttpServletRequest request, HttpServletResponse response,Model model) throws Exception {
-        
+
+        String openId = "";
         String code = request.getParameter("code");
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken;
         Boolean isBinded = false;
@@ -78,14 +80,20 @@ public class WeChatMenuDispatcher {
             wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
             //获得用户基本信息
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
-            model.addAttribute("openId", wxMpUser.getOpenId());
+            openId = wxMpUser.getOpenId();
+            model.addAttribute("openId", openId);
             ExternalLoginHandler loginHandler = WebUtil.getServiceBean(ExternalLoginHandler.class);
-            isBinded =  loginHandler.doLoginByWeChatOpenId(wxMpUser.getOpenId(), request, response);
+            isBinded =  loginHandler.doLoginByWeChatOpenId(openId, request, response);
         } catch (WxErrorException ex) {
             Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        if(index.equals("12")){
+            return  "redirect:" +  URL_MAP.get(index) + "/" + openId;
+        }
+
         if (isBinded) {
-                return  "redirect:" +  URL_MAP.get(index);
+                return  "redirect:" +  URL_MAP.get(index)+"?"+request.getQueryString();
             }else{
                 return "userInfo";
             }

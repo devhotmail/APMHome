@@ -55,14 +55,25 @@
                 $(function(){
                     
                     //data search function
-                    function loadData(close) {
+                    pageManager.myreportList = function(close) {
                         //fetch data from server    wolistdata is the restful url
+                        if (close === 1) {
+                            pageManager.entryType = 'scanreport';
+                            pageManager.showTime = true;
+                            pageManager.showReView = false;
+                            pageManager.showComment = false;
+                        } else {
+                            pageManager.showTime = false;
+                            pageManager.showReView = true;
+                            pageManager.showComment = true;
+                        }
                         $.get(WEB_ROOT+'web/workorder', {status: close}, function(ret) {
                             var data = [];
                             if (ret && ret.length !== 0) {
                                 $.each(ret, function(i, v){
                                     data.push({title:'工单编号: '+ v['id'], 
                                                ftitle: v['requestTime'], 
+                                               rater: (close === 2 ? v['feedbackRating']: -1),
                                                data : ['资产名称：'+v['assetName'],
                                                        '工单状态：'+v['currentStepName'],
                                                        '紧急程序：'+v['casePriority']]});
@@ -76,15 +87,20 @@
                     //bind click event
                     $('#myReports').on('click', '.weui-cell_access', function(){
                         pageManager.woId = $(this).parent().find('h4').html().split(': ')[1];
-                        pageManager.showMsgs = true;
+                        pageManager.showMsgs = false;
+                        if($(this).find('.reportview').html()) {
+                            pageManager.showBtn = true;
+                        } else {
+                            pageManager.showBtn = false;
+                        }
                         pageManager.go('#ts_wodetail');
                     });
                     $('.weui-navbar__item').on('click', function () {
                         $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
                         //do the search action     1-在修 / 2-完成 / 3-取消
-                        loadData($(this).data('close'));
+                        pageManager.myreportList($(this).data('close'));
                     });
-                    loadData(1);
+                    pageManager.myreportList(1);
                 });
         </script>
            
