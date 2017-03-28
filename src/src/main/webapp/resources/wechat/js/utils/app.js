@@ -21,7 +21,9 @@ $(function () {
             {'msgType': msgType},
             function(ret) {
                 if (ret) {
+                    pageManager.msgTypes[msgType] = {};
                     $.each(ret, function(idx, val){
+                        pageManager.msgTypes[msgType][val.msgKey] = val.valueZh;
                         if (defaultSelected && val.msgKey === defaultSelected) {
                             $('#'+keyId).append($('<option value="'+val.msgKey+'" selected="selected">'+val.valueZh+'</option>'));
                         } else {
@@ -51,7 +53,7 @@ $(function () {
         $.each(datas, function(idx, value){
             var $tmpl = $(tmpl);
             $tmpl.find('h4').html(value.title);
-            $tmpl.find('.ftitle').html(value.ftitle);
+            $tmpl.find('.ftitle').html(value.ftitle).css('color',value.ftitleColor);
             var parentEl = $tmpl.find('.show-data');
             $.each(value.data, function(i, v){
                 parentEl.append('<p>'+v+'</p>');

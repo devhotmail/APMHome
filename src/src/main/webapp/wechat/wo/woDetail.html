@@ -9,17 +9,25 @@
             <div class="weui-form-preview">
                 <div class="weui-form-preview__bd">
                     <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">供应商</label>
+                        <span class="weui-form-preview__value" id="supplier"></span>
+                    </div>
+                    <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">资产名称</label>
                         <span class="weui-form-preview__value" id="assetName"></span>
                         <input id="assetId" type="hidden"/>
                     </div>
                     <div class="weui-form-preview__item">
-                        <label class="weui-form-preview__label">供应商</label>
-                        <span class="weui-form-preview__value" id="supplier"></span>
+                        <label class="weui-form-preview__label">所属科室</label>
+                        <span class="weui-form-preview__value" id="clinicalDeptName"></span>
                     </div>
                     <div class="weui-form-preview__item">
-                        <label class="weui-form-preview__label">紧急程度</label>
+                        <label class="weui-form-preview__label">型号</label>
                         <span class="weui-form-preview__value" id="assetGroup"></span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">安放地址</label>
+                        <span class="weui-form-preview__value" id="locationName"></span>
                     </div>
                 </div>
             </div>
@@ -105,15 +113,21 @@
                     </div>
                 </div>
                 <!--物料明细-->
-                <div class="weui-cells__title">物料明细</div>
-                <div class="weui-cells">
-                    <a class="weui-cell weui-cell_access" href="javascript:;">
-                        <div class="show-data weui-cell__bd">
-                            <span style="color: #999">没有数据</span>
+                <div id="stepCost" >
+                    <div class="weui-cells__title">物料明细</div>
+                    <div class="weui-cells">
+                        <a class="weui-cell weui-cell_access" href="javascript:;">
+                            <div class="show-data weui-cell__bd">
+                                <span style="color: #999">增加</span>
+                            </div>
+                            <div class="weui-cell__ft">
+                            </div>
+                        </a>
+                        <div class="weui-cell" style="padding-top:0; padding-bottom: 0">
+                            <div class="weui-cells costList" style="margin-top: 0;">
+                            </div>
                         </div>
-                        <div class="weui-cell__ft">
-                        </div>
-                    </a>
+                    </div>
                 </div>
             </div>
     
@@ -295,6 +309,14 @@
                     $('#showComment').hide();
                     app.initSelectData('caseType', 'caseType');
                     app.initSelectData('caseSubType', 'caseSubType');
+                    $('#stepCost').on('click', '.weui-cell_access', function(){
+                        pageManager.go('#ts_step_cost');
+                    });
+                    $('.costList').on('click', '.weui-icon-cancel', function(){
+                        var $costList = $(this).parent().parent();
+                        pageManager.stepCost.splice($costList.data('id'), 1);
+                        $costList.remove();
+                    });
                 }
             
                 $(".weui-rater a").click(function(){
@@ -375,7 +397,7 @@
                     case 4: return {woId: pageManager.woId, actionType: 'sign', desc: $('#description').val()};
                     case 5: return {woId: pageManager.woId, actionType: 'close', desc: $('#description').val(),
                                     patProblems: $('#patProblems').val(), patActions: $('#patActions').val(), patTests: $('#patTests').val(),
-                                    caseType: $('#caseType').val(), caseSubType: $('#caseSubType').val()};
+                                    caseType: $('#caseType').val(), caseSubType: $('#caseSubType').val(), stepDetail: pageManager.stepCost};
                     case 6: return {woId: pageManager.woId, actionType: 'feedback', feedbackRating: pageManager.feedbackRating, desc: $('#description').val() };
                 }
             }

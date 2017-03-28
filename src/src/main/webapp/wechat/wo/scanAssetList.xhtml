@@ -15,7 +15,7 @@ and open the template in the editor.
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <meta name="apple-mobile-web-app-capable" content="yes" />
         </f:facet>
-        <title>报修</title>
+        <title>#{msg.AssetInfo}</title>
         <h:outputStylesheet name="wechat/css/weui.min.css" />
         <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jquery-3.1.1.min.js"/>
         <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jweixin-1.0.0.js"/>
@@ -75,9 +75,7 @@ and open the template in the editor.
                 总计： #{wxAssetInfoController.getAssetList().size()}
                     </div>
             </f:facet>
-            <h:link  outcome="#{wechatUtilService.getContextPath()}/wechat/asset/Detail.xhtml" class="weui-media-box weui-media-box_appmsg">
-                <f:param name="assetId" value="#{asset.id}"/>
-                <f:param name="action" value="view"/>
+            <a  href="../asset/Detail.xhtml?assetId=#{asset.id}" class="weui-media-box weui-media-box_appmsg">
                 <div class="weui-media-box__hd">
                     <img id="icoassetGroup" class="weui-media-box__thumb icoassetGroup" src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{asset.assetGroup}.ico" />
                 </div>
@@ -89,10 +87,18 @@ and open the template in the editor.
                 <div class="weui-media-box__ft">
                     <p  style="height: 60px">#{asset.status==1?"运行":""}#{asset.status==2?"停机":""}#{asset.status==3?"异常":""}</p>
                 </div>
-            </h:link>
+            </a>
             <p:separator ></p:separator>
         </p:dataScroller>
 
+<!--        <div class="weui-msg__extra-area">
+            <div class="weui-footer">
+                <p class="weui-footer__links">
+                    <a href="javascript:void(0);" class="weui-footer__link"></a>
+                </p>
+                <p class="weui-footer__text">Copyright © 2016-2017 GE Healthcare</p>
+            </div>
+        </div>-->
     </body>
     <script type="text/javascript">
         $("#assetList\\:searchInput").attr('placeholder', '搜索...');

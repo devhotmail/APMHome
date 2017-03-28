@@ -5,6 +5,7 @@ window.pageManager = {
     woId: null,
     siteId: null,
     stepCost: [],
+    msgTypes: {},
     init: function(pageId){
         var self = this;
         $(window).on('popstate', function() {

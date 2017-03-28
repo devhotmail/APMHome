@@ -231,7 +231,26 @@ public class WorkOrderController {
      */
     @RequestMapping(value = "wodetail")
     public @ResponseBody Object woDetail(Integer id){
-        return woWcService.woDetail(id);
+        WorkOrder wo = woWcService.woDetail(id);
+        if (wo == null)
+            return null;
+        Map map = new HashMap();
+        map.put("woId", wo.getId());
+        map.put("requestReasonVoice", wo.getRequestReasonVoice());
+        map.put("currentStepId", wo.getCurrentStepId());
+        map.put("requestReason", wo.getRequestReason());
+        map.put("estimatedCloseTime", wo.getEstimatedCloseTime());
+        AssetInfo ai = assetDao.getById(wo.getAssetId());
+        if (ai == null)
+            return map;
+        map.put("assetId", ai.getId());
+        map.put("assetName", ai.getName());
+        map.put("supplier", ai.getSupplierId()==null?"":service.getSupplierName(ai.getSupplierId()));
+        map.put("assetGroup", service.getMsgValue("assetGroup", ai.getAssetGroup().toString()));
+        map.put("assetStatus", service.getMsgValue("assetStatus", ai.getStatus()+""));
+        map.put("clinicalDeptName", ai.getClinicalDeptName());
+        map.put("locationName", ai.getLocationName());
+        return map;
     }
 
     /**

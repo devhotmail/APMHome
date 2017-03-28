@@ -44,7 +44,7 @@
                             pageManager.entryType = 'scan';
                             pageManager.signUp = ret.currentStepId === 4 && pageManager.showBtn && ret.pointStepNumber === 1;
                             pageManager.showBtn = ret.currentStepId === 6?
-                                ret.requestorId ==ret.currentPersonId && ret.currentPersonId == '${userId}':
+                                ret.requestorId ==ret.currentPersonId && ret.currentPersonId == '${userId}'&& ret.feedbackRating === 0:
                                         ret.currentPersonId == '${userId}';
                             if (ret.currentStepId === 6 && ret.requestorId != '${userId}') {
                                 pageManager.init('ts_msg_notfound');
@@ -74,5 +74,6 @@
         <jsp:include page="imgshow.html"/>
         <jsp:include page="woDetail.html"/>
         <jsp:include page="tipsTemplate.html"/>
+        <jsp:include page="workorderCost.html"/>
     </body>
 </html>

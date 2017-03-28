@@ -43,14 +43,9 @@
                             pageManager.init('ts_wodetail');
                         } else {
                             pageManager.assetId = ret.assetId;
+                            pageManager.workOrder = ret;
                             pageManager.init('ts_scanAsset');
                         }
-
-//                                $('#assetId').val(ret.assetId);
-//                                $('#assetName').html(ret.assetName);
-//                                $('#supplier').html(ret.supplier);
-//                                $('#assetGroup').html(ret.assetGroup);
-//                                $('#assetStatus').html(ret.assetStatus);
                     } else {
                         pageManager.init('ts_asset_notfound');
                     }
@@ -163,6 +158,12 @@
                     //init casePriority
                     app.initSelectData('casePriority', 'casePriority', '${casePriority}');
                     pageManager.serverIds = [];
+                    
+                    $('#assetId').val(pageManager.workOrder.assetId);
+                    $('#assetName').html(pageManager.workOrder.assetName);
+                    $('#supplier').html(pageManager.workOrder.supplier);
+                    $('#assetGroup').html(pageManager.workOrder.assetGroup);
+                    $('#assetStatus').html(pageManager.workOrder.assetStatus);
                     
                     //图片功能开始
                     var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',

@@ -85,6 +85,7 @@
                     pageManager.mywolist = function(){
                         //data search function
                         function loadData(step) {
+                            app.initSelectData('none','casePriority');
                             //fetch data from server    wolistdata is the restful url
                             $.get(WEB_ROOT+'web/wolistdata', {stepId: step}, function(ret) {
                                 pageManager.workOrders = [];
@@ -93,10 +94,12 @@
                                     $.each(ret, function(i, v){
                                         pageManager.workOrders[v['id']] = v;
                                         data.push({title:'工单编号: '+ v['id'], 
-                                                   ftitle: v['requestTime'], 
-                                                   data : ['资产名称：'+v['assetName'],
-                                                           '工单状态：'+v['currentStepName'],
-                                                           '紧急程序：'+v['casePriority']]});
+                                               ftitle: pageManager.msgTypes['casePriority'][v['casePriority']], 
+                                               ftitleColor : v['casePriority']===1?'#F76260':v['casePriority']===2?'#FFBE00':'#09BB07',
+                                               rater: (close === 2 ? v['feedbackRating']: -1),
+                                               data : ['资产编号：'+v['assetId'],
+                                                        '资产名称：'+v['assetName'],
+                                                       '工单状态：'+v['currentStepName']]});
                                     });
                                 } 
                                 //show the data list
@@ -136,5 +139,6 @@
         <jsp:include page="msgTemplate.html"/>
         <jsp:include page="listTemplate.html"/>
         <jsp:include page="tipsTemplate.html"/>
+        <jsp:include page="workorderCost.html"/>
     </body>
 </html>

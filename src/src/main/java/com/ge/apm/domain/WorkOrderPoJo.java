@@ -21,6 +21,7 @@ public class WorkOrderPoJo {
     String patTests;
     String caseType;
     String caseSubType;
+    Object stepDetail;
     boolean reOpen;
 
     public boolean isReOpen() {
@@ -165,6 +166,14 @@ public class WorkOrderPoJo {
 
     public void setCaseSubType(String caseSubType) {
         this.caseSubType = caseSubType;
+    }
+
+    public Object getStepDetail() {
+        return stepDetail;
+    }
+
+    public void setStepDetail(Object stepDetail) {
+        this.stepDetail = stepDetail;
     }
     
 }

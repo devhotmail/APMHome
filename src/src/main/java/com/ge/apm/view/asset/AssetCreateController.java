@@ -54,8 +54,8 @@ public class AssetCreateController {
         assetInfo.setStatus(1);
 //        pictureList = getPicturesList();
         
-        pictureList = acServie.getQrCodePictureList(qrCode);
-        audioList = acServie.getQrCodeAudioList(qrCode);
+        pictureList = acServie.getQrCodePictureList(createRequest.getId());
+        audioList = acServie.getQrCodeAudioList(createRequest.getId());
 
     }
 
