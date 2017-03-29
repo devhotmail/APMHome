@@ -41,8 +41,8 @@ public class AssetCostStatisticsProvider {
 			sb.append(" work_order_count =#{workOrderCount}");
 		}
 		sb.append(" where asset_id = #{assetId} and created = date(now())");
-		if(logger.isInfoEnabled()){
-			logger.info("updateAssetCostStatistics sql is {}",sb.toString());
+		if(logger.isDebugEnabled()){
+			logger.debug("updateAssetCostStatistics sql is {}",sb.toString());
 		}
 		return sb.toString();
 	}

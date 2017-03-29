@@ -13,8 +13,8 @@ public class AssetInfoProvider {
 	public String fetchAssetInfo(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("select asset_id from asset_summit where created = date(now())");
-		if(logger.isInfoEnabled()){
-			logger.info("fetchAssetInfo sql is {}",sb.toString());
+		if(logger.isDebugEnabled()){
+			logger.debug("fetchAssetInfo sql is {}",sb.toString());
 		}
 		return sb.toString();
 	}
@@ -24,7 +24,7 @@ public class AssetInfoProvider {
 		Date day = (Date) param.get("day");
 		StringBuilder sb = new StringBuilder();
 		sb.append("select ai. id asset_id,ai.site_id,ai.hospital_id,ai.asset_group,ai.clinical_dept_id dept_id,ai.status,ai.supplier_id, ");
-		sb.append("wo.request_time,wo.confirmed_down_time,wo.status wo_status,wo.id wo_id ");
+		sb.append("wo.request_time,wo.confirmed_down_time,wo.is_closed wo_status,wo.id wo_id ");
 		sb.append("from asset_info ai left join work_order wo ");
 		sb.append("on ai. id = wo.asset_id and ai. id = "+assetId );
 		if(day == null){
@@ -33,8 +33,8 @@ public class AssetInfoProvider {
 			sb.append(" and date(wo.request_time) = '"+TimeUtils.getStrDate(day,null)+"' ");
 		}
 		sb.append("order by wo.confirmed_down_time asc,wo.request_time asc limit 1");
-		if(logger.isInfoEnabled()){
-			logger.info("fetchAssetCostStatisticsByAssetId sql is {}",sb.toString());
+		if(logger.isDebugEnabled()){
+			logger.debug("fetchAssetCostStatisticsByAssetId sql is {}",sb.toString());
 		}
 		return sb.toString();
 	}
@@ -42,8 +42,8 @@ public class AssetInfoProvider {
 	public String fetchAssetInfoByDay(Date day){
 		StringBuilder sb = new StringBuilder();
 		sb.append("select asset_id from asset_summit where created = '"+TimeUtils.getStrDate(day,null)+"' ");
-		if(logger.isInfoEnabled()){
-			logger.info("fetchAssetInfoByDay sql is {}",sb.toString());
+		if(logger.isDebugEnabled()){
+			logger.debug("fetchAssetInfoByDay sql is {}",sb.toString());
 		}
 		return sb.toString();
 	}
