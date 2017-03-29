@@ -16,7 +16,7 @@
                     <p:commandButton id="qrCodeLibCreateButton" icon="ui-icon-extlink" value="生成二维码" title="生成二维码" actionListener="#{qrCodeLibController.viewQrCodeLibCreate}" update=":qrCodeLibCreateDlg" oncomplete="PF('qrCodeLibCreateDialog').show()"/>
                 </h:form>
                 <h:form id="qrCodeLibListForm">
-                    <p:dataTable id="datalist" value="#{qrCodeLibController.lazyModel}" var="item" widgetVar="varDataList"
+                    <p:dataTable id="datalist" value="#{qrCodeLibController.itemList}" var="item" widgetVar="varDataList"
                                  selectionMode="single" selection="#{qrCodeLibController.selected}"
                                  lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
                                  rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
