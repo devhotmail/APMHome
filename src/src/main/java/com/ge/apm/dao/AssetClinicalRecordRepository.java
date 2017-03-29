@@ -51,7 +51,7 @@ public interface AssetClinicalRecordRepository extends GenericRepository<AssetCl
             "sum(filmCount) as filmCounts  ) " +
             "from AssetClinicalRecord  acr " +
             "GROUP BY acr.examDate,acr.siteId,acr.hospitalId,acr.assetId "+
-            "having exam_date = :date "
+            "having examDate = :date "
     )
     public List<AssetClinicalRecordPojo> getAssetExamDataAggregatorByDate(@Param("date") Date date);
 

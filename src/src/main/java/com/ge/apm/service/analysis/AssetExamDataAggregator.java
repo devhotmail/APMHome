@@ -97,37 +97,47 @@ public class AssetExamDataAggregator {
         AssetSummit assetSummit=null;
         List<AssetSummit> asmNewList= new ArrayList<AssetSummit>();
         List<AssetSummit> asmUpdateList= new ArrayList<AssetSummit>();
+
+        ////
         for(AssetClinicalRecordPojo accrp:acrpList){
             AssetSummit asm1 =assetSummitRepository.getAssetSummitByAssetIdAndCreated(accrp.getAssetIds(),date);
             if(asm1!=null){
-                System.out.println("-------"+accrp.getAssetIds()+"---"+date);
+               // System.out.println("-------"+accrp.getAssetIds()+"---"+date);
                 asm1.setCreated(date);
                 asm1.setAssetId(accrp.getAssetIds());
+                asm1.setSiteId(accrp.getSiteIds());
                 asm1.setHospitalId(accrp.getHospitalIds());
                 asm1.setExposeCount(accrp.getExposeCounts());
                 asm1.setFilmCount(accrp.getFilmCounts());
                 asm1.setInjectCount(accrp.getInjectCounts());
                 asm1.setExamCount(accrp.getExamCount().intValue());
+                asm1.setRevenue(accrp.getPriceAmounts());
                 asmUpdateList.add(asm1);
             }else {
                 AssetSummit asm = new AssetSummit();
                 asm.setAssetId(accrp.getAssetIds());
                 asm.setHospitalId(accrp.getHospitalIds());
+                asm.setSiteId(accrp.getSiteIds());
+               // System.out.println("---insert----"+accrp.getAssetIds()+"---"+date);
                 asm.setExposeCount(accrp.getExposeCounts());
                 asm.setFilmCount(accrp.getFilmCounts());
                 asm.setInjectCount(accrp.getInjectCounts());
                 asm.setExamCount(accrp.getExamCount().intValue());
+                asm.setCreated(date);
+                asm.setRevenue(accrp.getPriceAmounts());
                 asmNewList.add(asm);
             }
         }
-        if(asmNewList.size()>0)
-        assetSummitRepository.save(asmNewList);
-if(asmUpdateList.size()>0){
-    System.out.println("asmUpdateList.size()>0--------------"+asmUpdateList.size());
-    for(AssetSummit asm :asmUpdateList){
-        assetSummitRepository.updateAssetSummit(asm.getExposeCount(),asm.getInjectCount(),asm.getFilmCount(),asm.getId());
-    }
-}
+        if(asmNewList.size()>0) {
+            System.out.println("new records are inserted into");
+            assetSummitRepository.save(asmNewList);
+        }
+        if(asmUpdateList.size()>0){
+            System.out.println("there are records to be updated");
+            for(AssetSummit asm :asmUpdateList){
+                assetSummitRepository.updateAssetSummit(asm.getExposeCount(),asm.getInjectCount(),asm.getFilmCount(),asm.getId());
+            }
+        }
         return "success";
 
     }
