@@ -464,8 +464,9 @@ public class CoreService {
 				}else if(key.startsWith("_")){
 					templateMessage.addWxMpTemplateData(new WxMpTemplateData(key, (String) map.get(key), textColor));
 					if (key.equals("_linkUrl")) {
-						templateMessage.setUrl(wxMpService.oauth2buildAuthorizationUrl(webContextUrl + map.get(key).toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
-						//templateMessage.setUrl((String)map.get(key));
+						String _linkUrl = wxMpService.oauth2buildAuthorizationUrl(webContextUrl + map.get(key).toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, "");
+						System.out.println("_linkUrl is "+_linkUrl);
+						templateMessage.setUrl(_linkUrl);
 					}
 				}
 				

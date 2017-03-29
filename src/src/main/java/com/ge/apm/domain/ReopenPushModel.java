@@ -11,6 +11,14 @@ public class ReopenPushModel extends PushModel{
 	private String _parentRequestPerson;
 	private String _requestTime;
 	private String _requestPerson;
+	private String _linkUrl;
+	
+	public String get_linkUrl() {
+		return _linkUrl;
+	}
+	public void set_linkUrl(String _linkUrl) {
+		this._linkUrl = _linkUrl;
+	}
 	public String get_parentRequestTime() {
 		return _parentRequestTime;
 	}
