@@ -106,7 +106,7 @@ gulp.task('iconfont', function() {
     fontName,
     prependUnicode: true,
     formats: ['ttf', 'eot', 'woff', 'woff2', 'svg'],
-    timestamp: Math.round(Date.now() / 1000)
+    // timestamp: Math.round(Date.now() / 1000)
   }))
   .pipe(gulp.dest('public/fonts/'));
 });
@@ -119,7 +119,7 @@ gulp.task('sass:watch', function() {
   gulp.watch(src, ['sass:compile:css']);
   gulp.watch(src_comp, ['sass:compile:module']);
 });
-gulp.task('css', ['sass:compile:css', 'sass:compile:module', 'iconfont']);
+gulp.task('css', ['sass:compile:css', 'sass:compile:module']);
 gulp.task('clean', function clean() {
   return del(dest);
 });
