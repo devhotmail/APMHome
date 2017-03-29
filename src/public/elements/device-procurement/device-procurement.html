@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../behavior/context.html">
 <link rel="import" href="../behavior/fetch-cached.html">
+<link rel="import" href="../modernizr/modernizr.html">
 <link rel="import" href="device-procurement-styles.html">
 <link rel="import" href="../d3/d3.html">
 <link rel="import" href="../../uri.html">
@@ -348,23 +349,26 @@
           })
           .each(function(d) {
             var element = d3.select(this);
-            element.on('mouseover', function() {
-              if (d === root) return;
-              var textEl = d3.select('#text-' + d.data.id + ' .text-center');
-              if (!canShowText(d) && d.parent === focus) {
-                textEl.style('display', 'inline')
-                .style('fill-opacity', 1);
-              }
-            });
 
-            element.on('mouseleave', function() {
-              if (d === root) return;
-              var textEl = d3.select('#text-' + d.data.id + ' .text-center');
-              if (!canShowText(d) && d.parent === focus) {
-                textEl.style('display', 'none')
-                .style('fill-opacity', 0);
-              }
-            });
+            if (!Modernizr.touchevents) {
+              element.on('mouseover', function() {
+                if (d === root) return;
+                var textEl = d3.select('#text-' + d.data.id + ' .text-center');
+                if (!canShowText(d) && d.parent === focus) {
+                  textEl.style('display', 'inline')
+                  .style('fill-opacity', 1);
+                }
+              });
+
+              element.on('mouseleave', function() {
+                if (d === root) return;
+                var textEl = d3.select('#text-' + d.data.id + ' .text-center');
+                if (!canShowText(d) && d.parent === focus) {
+                  textEl.style('display', 'none')
+                  .style('fill-opacity', 0);
+                }
+              });
+            }
           });
 
           var waveGroup = assetGroup.append('g')
