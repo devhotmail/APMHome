@@ -12,7 +12,11 @@
   <template>
     <style include="device-procurement-styles"></style>
     <div class="chart-wrapper">
-      <zoom-pack-chart chart-data="[[data]]" focus="{{focus}}"></zoom-pack-chart>
+      <zoom-pack-chart
+        child-key="items"
+        size-key="revenue_predict_raw"
+        chart-data="[[data]]"
+        focus="{{focus}}"></zoom-pack-chart>
     </div>
     <div class="sidebar">
       <div class="type-select btn-group">
@@ -108,6 +112,10 @@
     </div>
   </template>
   <script>
+    function uniqueId() {
+      return Math.random().toString(36).substr(2, 9);
+    }
+
     var sectionalizer = [
       {
         key: 'orange',
@@ -252,30 +260,18 @@
           this.set('selectedOpt', e.model.item.val);
         },
         dataConverter: function(data) {
-          // get conclusion in 1st layer
-          data.items = data.items.map(function(m) {
-            m.conclusion = sectionalizer.reduce(function(prev,next) {
-              prev[next.loadStatus] = {};
-              prev[next.loadStatus] = m.items.filter(function(i) {
-                return next.filter(i.usage);
-              }).length;
-              return prev;
-            }, {});
+          function patchUid(obj) {
+            obj.uid = uniqueId();
+            if (obj.items && Array.isArray(obj.items)) {
+              obj.items = obj.items.map(n => {
+                patchUid(n)
+                return n
+              })
+            }
+            return obj;
+          }
 
-            return m;
-          });
-
-          // get conclusion for root
-          data.conclusion = sectionalizer.reduce(function(prev, next) {
-            prev[next.loadStatus] = {};
-            var result = data.items.reduce(function(pr, ne) {
-              pr = pr + ne.conclusion[next.loadStatus];
-              return pr;
-            }, 0);
-            prev[next.loadStatus] = result;
-            
-            return prev;
-          }, {});
+          data = patchUid(data);
 
           return data;
         },

@@ -113,7 +113,6 @@
           if (n.parent && n.parent.children.length === 1) {
             n.r = n.r * 0.8;
           }
-          n.data.id = n.depth + '-' + n.data.id
           return n;
         })
       },
@@ -176,7 +175,7 @@
             var element = d3.select(this);
             element.on('mouseover', function() {
               if (d === root) return;
-              var textEl = d3.select('#text-' + d.data.id + ' .text-center');
+              var textEl = d3.select('#text-' + d.data.uid + ' .text-center');
               if (!canShowText(d) && d.parent === focus) {
                 textEl.style('display', 'inline')
                 .style('fill-opacity', 1);
@@ -185,7 +184,7 @@
 
             element.on('mouseleave', function() {
               if (d === root) return;
-              var textEl = d3.select('#text-' + d.data.id + ' .text-center');
+              var textEl = d3.select('#text-' + d.data.uid + ' .text-center');
               if (!canShowText(d) && d.parent === focus) {
                 textEl.style('display', 'none')
                 .style('fill-opacity', 0);
@@ -220,7 +219,7 @@
           return d.parent ? d.children ? 'text' : 'text text-leaf' : 'text text-root';
         })
         .attr('id', function(d) {
-          return 'text-' + d.data.id;
+          return 'text-' + d.data.uid;
         })
         .each(function(d) {
           var element = d3.select(this);
