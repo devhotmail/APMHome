@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
-<link rel="import" href="../../bower_components/px-rangepicker/px-rangepicker.html">
-<link rel="import" href="../../moment.html">
+<link rel="import" href="../../elements/date-time-picker/date-time-picker.html">
 <link rel="import" href="../../uri.html">
 <link rel="import" href="../behavior/context.html">
 <link rel="import" href="../behavior/fetch-cached.html">
@@ -19,6 +18,7 @@
           hide-time="true"
           date-format="YYYY/MM/DD"
           time-format="hh:mm:ss A"
+          preset-ranges="[[rangePresets]]"
           show-buttons="true">
         </px-rangepicker>
       </div>
@@ -38,8 +38,9 @@
   <script>
     define('device-data-filter-bar', [
       'behavior/context',
-      'behavior/fetch-cached'
-    ], function(ContextBehavior, FetchCachedBehavior) {
+      'behavior/fetch-cached',
+      'behavior/date-time-behavior'
+    ], function(ContextBehavior, FetchCachedBehavior, DateTimeBehavior) {
 
       var DATE_FORMAT = 'YYYY-MM-DD';
 
@@ -77,7 +78,8 @@
         ],
         behaviors: [
           ContextBehavior,
-          FetchCachedBehavior
+          FetchCachedBehavior,
+          DateTimeBehavior,
         ],
         ready: function() {
           var _this = this;
