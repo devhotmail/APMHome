@@ -15,7 +15,7 @@
     <title>二维码扫描</title>
     <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
     <script src="${ctx}/resources/wechat/js/utils/jquery-3.1.1.min.js"></script>
-    <script src="${ctx}/resources/wechat/js/utils/jweixin-1.0.0.js"></script>
+    <script src="${ctx}/resources/wechat/js/utils/jweixin-1.2.0.js"></script>
     <script src="${ctx}/resources/wechat/js/utils/wechatsdk.js"></script>
     <script src="${ctx}/resources/wechat/js/MegaPixImage.js"></script>
     <script src="${ctx}/resources/wechat/js/exif.js"></script>
@@ -448,10 +448,17 @@
                 isShowProgressTips: 1,
                 success: function (res) {
                     var serverId = res.serverId; // 返回图片的服务器端ID
-                    tmpl = tmpl.replace('#id#', serverId);
-                    $uploaderFiles.append($(tmpl.replace('#url#', localId)));
 
-                    countImage();
+                    wx.getLocalImgData({
+                        localId: localId,
+                        success: function(ress){
+                            var localData = ress.localData.replace('jgp', 'jpeg');
+                            tmpl = tmpl.replace('#id#', serverId);
+                            $uploaderFiles.append($(tmpl.replace('#url#', localData)));
+
+                            countImage();
+                        }
+                    });
 
                     //其他对serverId做处理的代码
                     if(localIds.length > 0){
