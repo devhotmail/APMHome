@@ -1,0 +1,43 @@
+<link rel="import" href="../../bower_components/px-datetime-common/px-datetime-imports-deep.html">
+<script src="../../bower_components/pxmoment/locale/zh-cn.js"></script>
+<link rel="import" href="../../bower_components/px-rangepicker/px-rangepicker.html">
+<script>
+  /**
+   * @polymerBehavior DateTimeBehavior
+   */
+  Polymer.FetchCachedBehavior = {};
+  define('behavior/date-time-behavior', function() {
+    return {
+      properties: {
+        rangePresets: {
+          type: Array,
+          value: function() {
+            var now = Px.moment();
+            return [
+              {
+                "displayText": "一周内",
+                "startDateTime": now.clone().subtract(7, 'days'),
+                "endDateTime": now
+              },
+              {
+                "displayText": "一月内",
+                "startDateTime": now.clone().subtract(1, 'month'),
+                "endDateTime": now
+              },
+              {
+                "displayText": "一年内",
+                "startDateTime": now.clone().subtract(1, 'year'),
+                "endDateTime": now
+              },
+              {
+                "displayText": "当前月",
+                "startDateTime": now.clone().startOf('month'),
+                "endDateTime": now.clone().endOf('month')
+              }
+            ]
+          }
+        },
+      }
+    };
+  });
+</script>
