@@ -49,7 +49,7 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         
         UserContextService userContextService = WebUtil.getBean(UserContextService.class);
 
-        if (!userContextService.hasRole("SuperAdmin")) {
+        if (userContextService.hasRole("SuperAdmin")) {
             this.filterByHospital = false;
             this.filterBySite = false;
         } else {
@@ -70,7 +70,7 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
 
     @Override
     protected Page<QrCodeLib> loadData(PageRequest pageRequest) {
-        if (this.searchFilters == null) {
+        if (this.searchFilters == null || this.searchFilters.size() == 0) {
             return dao.findAll(pageRequest);
         } else {
             return dao.findBySearchFilter(this.searchFilters, pageRequest);
@@ -125,6 +125,8 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         options.put("contentHeight", "100%");
         options.put("headerElement", "customheader");
         RequestContext.getCurrentInstance().openDialog("qrCodeLibCreate", options, null);*/
+        siteId = null;
+        hospitalId = null;
     }
 
     public void createQrCode() {
@@ -154,14 +156,19 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
             }
 
             if (i > qrCodeNum){
+                siteId = null;
+                hospitalId = null;
+
                 return;
             }
         }
+
     }
 
-
     public void onSiteChange(){
-
+        if(siteId == null){
+            hospitalId = null;
+        }
     }
 
     public Integer getSiteId() {
