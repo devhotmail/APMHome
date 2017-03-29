@@ -6,6 +6,7 @@
 <link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
 <link rel="import" href="../device-pagination/device-pagination.html">
 <link rel="import" href="../placeholder/placeholder-empty.html">
+<link rel="import" href="../pointer-events-polyfill/pointer-events-polyfill.html">
 <link rel="import" href="device-parallel-coordinates-styles.html">
 <script src="../../bower_components/d3/d3.min.js"></script>
 <script src="../../bower_components/d3-transform/src/d3-transform.js"></script>
@@ -328,6 +329,8 @@
           this.scopeSubtree(this.$.svg);
 
           function showHighlight(d) {
+            console.log(111)
+
             root.classed("active", true);
             projection.classed("active", function(p) { return p === d; });
             // make the value of target item active
