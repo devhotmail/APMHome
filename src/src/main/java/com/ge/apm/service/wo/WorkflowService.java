@@ -80,7 +80,6 @@ public class WorkflowService {
 			ReopenPushModel model = new ReopenPushModel();
 			model.set_assetName(workOrder.getAssetName());
 			model.set_parentRequestPerson(parent.getRequestorName());
-			TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm");
 			model.set_parentRequestTime(TimeUtils.getStrDate(parent.getRequestTime(), "yyyy-MM-dd hh:mm"));
 			model.set_requestPerson(workOrder.getRequestorName());
 			model.set_requestTime(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm"));

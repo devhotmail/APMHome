@@ -390,7 +390,7 @@ public class CoreService {
         return s == null ? null : s.getName();
     }
 
-    @Value("#{wxProperties.webContextUrl}")
+    //@Value("#{wxProperties.webContextUrl}")
     private String webContextUrl;
     
     public String getWoDetailUrl(Integer woId) {
@@ -437,10 +437,16 @@ public class CoreService {
         wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
     } */   
     
-    public void sendWxTemplateMessage(String openId, String templateId, Map<String,Object> map){
+    /***
+     *  map中放模板中的参数，包括跳转的连接(_linkUrl),可以参考TestController.pushWX()
+     * @param _openId
+     * @param _templateId
+     * @param map
+     */
+    public void sendWxTemplateMessage(String _openId, String _templateId, Map<String,Object> map){
         HashMap<String, Object> params = new HashMap<>();
-        params.put("openId", openId);
-        params.put("templateId", templateId);
+        params.put("_openId", _openId);
+        params.put("_templateId", _templateId);
         if(map != null){
         	params.putAll(map);
         }
@@ -448,7 +454,7 @@ public class CoreService {
     }
     
 	public void doSendWxTemplateMessage(@Headers Map<String, Object> map) throws WxErrorException {
-		WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder().toUser((String)map.get("openId")).templateId((String)map.get("templateId")).build();
+		WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder().toUser((String)map.get("_openId")).templateId((String)map.get("_templateId")).build();
 		String textColor = "#000000";
 		Set<String> keys = map.keySet();
 		if (!CollectionUtils.isEmpty(keys)) {
