@@ -329,8 +329,6 @@
           this.scopeSubtree(this.$.svg);
 
           function showHighlight(d) {
-            console.log(111)
-
             root.classed("active", true);
             projection.classed("active", function(p) { return p === d; });
             // make the value of target item active
