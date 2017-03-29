@@ -67,7 +67,7 @@ public class AssetExamDataService {
             try{
                 DateTime from = new DateTime(bac.getFrom());
                 DateTime to = new DateTime(bac.getTo());
-                assetExamDataAggregator.initAssetAggregationDataByDateRange(from.toDate(), to.toDate());
+              //  assetExamDataAggregator.initAssetAggregationDataByDateRange(from.toDate(), to.toDate());
                 while(from.isBefore(to)||from.isEqual(to)){
                     logger.info("calByFromTo begin ,current day is {}",from.toString());
                     assetExamDataAggregator.aggregateExamDataByDay(from.toDate());

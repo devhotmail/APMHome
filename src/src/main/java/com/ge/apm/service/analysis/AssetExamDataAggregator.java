@@ -78,8 +78,8 @@ public class AssetExamDataAggregator {
 */
 
     public String aggregateExamData(){
-            List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregator();
-            logger.info("Asset Clinical Record size {}",acrpList.size());
+        List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregator();
+        logger.info("Asset Clinical Record size {}",acrpList.size());
 
         return "success";
     }
@@ -93,19 +93,31 @@ public class AssetExamDataAggregator {
             logger.error("acrpList is empty,today is {}",new DateTime());
             return "failure";
         }*/
+
+        AssetSummit assetSummit=null;
         List<AssetSummit> asmUpdateList= new ArrayList<AssetSummit>();
         for(AssetClinicalRecordPojo accrp:acrpList){
             AssetSummit asm = new AssetSummit();
+
+
+            if(assetSummitRepository.getAssetSummitByAssetIdAndCreated(accrp.getAssetIds(),date)!=null){
+                //update that record
+                System.out.println("-------"+accrp.getAssetIds()+"---"+date);
+                continue; //gl: no need insert this record
+            }
             asm.setCreated(date);
-            asm.setHospitalId(accrp.getHospitalIds());
             asm.setAssetId(accrp.getAssetIds());
+
+            asm.setHospitalId(accrp.getHospitalIds());
+
             asm.setExposeCount(accrp.getExposeCounts());
             asm.setFilmCount(accrp.getFilmCounts());
             asm.setInjectCount(accrp.getInjectCounts());
             asm.setExamCount(accrp.getExamCount().intValue());
             asmUpdateList.add(asm);
         }
-       // assetSummitRepository.save(asmUpdateList);
+        assetSummitRepository.save(asmUpdateList);
+
         return "success";
 
     }

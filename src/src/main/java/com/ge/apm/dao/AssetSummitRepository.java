@@ -31,6 +31,9 @@ public interface AssetSummitRepository extends GenericRepository<AssetSummit> {
     @Query("select asm from AssetSummit as asm where asm.rating is null")
     public List<AssetSummit> findAssetSummitByRating();
 
+    @Query("select asm from AssetSummit asm where asm.assetId = :assetId and asm.created = :created ")
+    public AssetSummit getAssetSummitByAssetIdAndCreated(@Param("assetId") int assetId, @Param("created") Date date);
+
    /* @Query("select new com.ge.apm.domain.AssetSummitMaxMinPojo(max(sub.np) as npMax,min(sub.np) as npMin , max(sub.ic) as icMax,min(sub.ic) as icMin, max(sub.ec) as ecMax, min(sub.ec) as ecMin,max(sub.fm) as fmMax, min(sub.fm) as fmMin ) from " +
             "(select sum(revenue-maintenanceCost-deprecationCost) as np, sum(injectCount) as ic,sum(exposeCount) as ec ,sum(filmCount) as fm from assetSummit group by assetId,created) as sub ")
     public AssetSummitMaxMinPojo getAssetSummitMaxMin();*/
