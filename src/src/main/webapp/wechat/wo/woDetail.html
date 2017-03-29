@@ -233,26 +233,26 @@
                         pageManager.workOrder = ret;
                         
                         pageManager.showReView = ret.currentStepId === 6;
+                        pageManager.showCancel = pageManager.showCancel && ret.currentStepId < 4;
                         pageManager.showAssign = ret.currentStepId === 2 && pageManager.showBtn && !pageManager.showCancel;
-                        pageManager.showTime = ret.currentStepId >= 3 && pageManager.showBtn && ret.currentStepId <5;
+                        pageManager.showTime = ret.currentStepId >= 3 && ret.currentStepId <5;
                         pageManager.showComment = (ret.currentStepId > 2 && pageManager.showBtn) || pageManager.showCancel;
-                        pageManager.showPat = ret.currentStepId === 5 && pageManager.showBtn;
-                        pageManager.showCancel = pageManager.showCancel && ret.currentStepId <= 3;
                         if (pageManager.entryType === 'myreport1' || pageManager.entryType === 'scanreport') {
                             pageManager.showBtn = pageManager.showCancel || ret.CurrentStepId === 6;
                             pageManager.showComment = pageManager.showCancel;
                         }
+                        pageManager.showPat = ret.currentStepId === 5 && pageManager.showBtn;
                         
                         if (pageManager.voice) {
                             mediaShow();
-                        }
-                        if (!pageManager.showBtn && pageManager.showReView) {
-                            raterShow();
                         }
                         if (!pageManager.showPat) {
                             renderImgs();
                         }
                         initdetail();
+                        if (!pageManager.showBtn && pageManager.showReView) {
+                            raterShow();
+                        }
                     } 
                 });
             }
@@ -285,7 +285,7 @@
                     if ($('#estimatedCloseTime').val() === "") {
                         $('#estimatedCloseTime').val(app.initWechatTime());
                     }
-                    if (pageManager.entryType !== 'myreport1' && pageManager.entryType !== 'scanreport') {
+                    if (pageManager.entryType !== 'myreport1' && pageManager.entryType !== 'scanreport' && !pageManager.showCancel && pageManager.showBtn) {
                         $('#estimatedCloseTime').removeAttr('readonly');
                     }
                 } else {
@@ -394,7 +394,8 @@
                                 if (pageManager.actionType === 'repair') {
                                     reloadDetail();
                                 } else {
-                                    pageManager.init('ts_msg_success');
+                                    $('#container').empty();
+                                    $('#container').append($('#ts_msg_success').html());
                                 }
                             } else if (pageManager.entryType === 'wolist'){
                                 if (pageManager.actionType === 'repair') {
