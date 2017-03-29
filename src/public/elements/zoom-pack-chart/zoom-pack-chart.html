@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../modernizr/modernizr.html">
 <link rel="import" href="zoom-pack-chart-styles.html">
 <link rel="stylesheet" href="../../css/dewIcons.css">
 <link rel="import" href="../d3/d3.html">
@@ -67,13 +68,23 @@
     Polymer({
       is: 'zoom-pack-chart',
       properties: {
+        // properties which passed from parent element
         chartData: Object,
-        width: Number,
-        height: Number,
         focus: {
           type: Object,
           notify: true
         },
+        childKey: {
+          type: String,
+          value: 'children'
+        },
+        sizeKey: {
+          type: String,
+          value: 'size'
+        },
+        // private properties
+        width: Number,
+        height: Number,
         scaleK: {
           type: Number,
           value: 1
@@ -120,10 +131,12 @@
         .padding(2);
         
         var root = d3.hierarchy(this.chartData, function(d) {
-          // field `items` from api
-          return d.items;
-        }).sum(function(d) { return d.size; })
-        .sort(function(a, b) { return b.value - a.value; })
+          return d[_this.childKey];
+        }).sum(function(d) {
+          return d[_this.sizeKey];
+        }).sort(function(a, b) {
+          return b.value - a.value;
+        });
 
         var nodes = pack(root).descendants();
         var focus = root;
@@ -159,24 +172,26 @@
           }
         })
         .each(function(d) {
-          var element = d3.select(this);
-          element.on('mouseover', function() {
-            if (d === root) return;
-            var textEl = d3.select('#text-' + d.data.id + ' .text-center');
-            if (!canShowText(d) && d.parent === focus) {
-              textEl.style('display', 'inline')
-              .style('fill-opacity', 1);
-            }
-          });
+          if (!Modernizr.touchevents) {
+            var element = d3.select(this);
+            element.on('mouseover', function() {
+              if (d === root) return;
+              var textEl = d3.select('#text-' + d.data.id + ' .text-center');
+              if (!canShowText(d) && d.parent === focus) {
+                textEl.style('display', 'inline')
+                .style('fill-opacity', 1);
+              }
+            });
 
-          element.on('mouseleave', function() {
-            if (d === root) return;
-            var textEl = d3.select('#text-' + d.data.id + ' .text-center');
-            if (!canShowText(d) && d.parent === focus) {
-              textEl.style('display', 'none')
-              .style('fill-opacity', 0);
-            }
-          });
+            element.on('mouseleave', function() {
+              if (d === root) return;
+              var textEl = d3.select('#text-' + d.data.id + ' .text-center');
+              if (!canShowText(d) && d.parent === focus) {
+                textEl.style('display', 'none')
+                .style('fill-opacity', 0);
+              }
+            });
+          }
         });
 
         var waveGroup = assetGroup.append('g')
