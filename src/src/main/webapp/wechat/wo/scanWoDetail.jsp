@@ -42,7 +42,7 @@
                         if (ret) {
                             pageManager.woId = ret.id;
                             pageManager.entryType = 'scan';
-                            pageManager.signUp = ret.currentStepId === 4 && pageManager.showBtn && ret.pointStepNumber === 1;
+                            pageManager.signUp = ret.currentStepId === 4 && ret.pointStepNumber === 1;
                             pageManager.showCancel = ret.requestorId == '${userId}';
                             pageManager.showBtn = ret.currentStepId === 6?
                                 ret.requestorId == '${userId}'&& ret.feedbackRating === 0:

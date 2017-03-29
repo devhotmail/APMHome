@@ -288,6 +288,17 @@
                     }
                     if (pageManager.entryType !== 'myreport1' && pageManager.entryType !== 'scanreport' && !pageManager.showCancel && pageManager.showBtn) {
                         $('#estimatedCloseTime').removeAttr('readonly');
+                        if (pageManager.step === 4) {
+                            $('#estimatedCloseTime').change(function(){
+                                $.ajax({
+                                    url: WEB_ROOT+'web/estimatedtime',
+                                    type: 'post',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({woId: pageManager.woId, estimatedCloseTime: $('#estimatedCloseTime').val().replace('T', ' ')}),
+                                    success: function() {}
+                                });
+                            });
+                        }
                     }
                 } else {
                     $('#showTime').hide();

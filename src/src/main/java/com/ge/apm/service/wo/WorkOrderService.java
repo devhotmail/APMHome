@@ -616,5 +616,14 @@ public class WorkOrderService {
             cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
         }
     }
+    
+    @Transactional
+    public void estimatedTime(WorkOrderPoJo wopo)throws Exception{
+        Integer woId= Integer.valueOf(wopo.getWoId());
+        WorkOrder wo = workOrderRepository.getById(woId);
+        Date estimatedCloseTime =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getEstimatedCloseTime());
+        wo.setEstimatedCloseTime(estimatedCloseTime);
+        workOrderRepository.save(wo);
+    }
 
 }
