@@ -148,7 +148,7 @@
                 <prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
                 <prop key="hibernate.jdbc.use_scrollable_resultset">false</prop>
                 <prop key="hibernate.jdbc.use_streams_for_binary">true</prop>
-                <prop key="hibernate.jdbc.fetch_size">300</prop>
+                <prop key="hibernate.jdbc.fetch_size">100</prop>
 
                 <!--# logging debug information-->
                 <prop key="hibernate.show_sql">false</prop>

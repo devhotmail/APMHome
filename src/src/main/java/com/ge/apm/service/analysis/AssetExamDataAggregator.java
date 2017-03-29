@@ -15,7 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.broker.SiBroker;
 import webapp.framework.util.TimeUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -29,8 +32,6 @@ public class AssetExamDataAggregator {
     AssetClinicalRecordRepository assetClinicalRecordRepository;
     @Autowired
     AssetSummitRepository assetSummitRepository;
-
-
 
     public String aggregateExamData(){
         List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregator();
@@ -48,12 +49,10 @@ public class AssetExamDataAggregator {
             logger.error("acrpList is empty,today is {}",new DateTime());
             return "failure";
         }*/
-
+        logger.info("gl: records from assetclincialRecords --->"+acrpList.size());
         AssetSummit assetSummit=null;
         List<AssetSummit> asmNewList= new ArrayList<AssetSummit>();
         List<AssetSummit> asmUpdateList= new ArrayList<AssetSummit>();
-
-        ////
         for(AssetClinicalRecordPojo accrp:acrpList){
             AssetSummit asm1 =assetSummitRepository.getAssetSummitByAssetIdAndCreated(accrp.getAssetIds(),date);
             if(asm1!=null){
