@@ -79,10 +79,11 @@ public class AssetCreateController {
     }
 
     public void applyChange() {
-        
-        assetInfo.setAssetOwnerId(owner.getId());
-        assetInfo.setAssetOwnerName(owner.getName());
-        assetInfo.setAssetOwnerTel(owner.getTelephone());
+        if(owner!=null){
+            assetInfo.setAssetOwnerId(owner.getId());
+            assetInfo.setAssetOwnerName(owner.getName());
+            assetInfo.setAssetOwnerTel(owner.getTelephone());
+        }
         
         Boolean res = acServie.CreateAeest(assetInfo);
         if (res) {

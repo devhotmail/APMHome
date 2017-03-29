@@ -94,16 +94,10 @@ public class AssetInfo implements Serializable {
     private String clinicalDeptName;
     @Column(name = "asset_group")
     private Integer assetGroup;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "asset_dept_id")
     private int assetDeptId;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "asset_owner_id")
     private int assetOwnerId;
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 16)
     @Column(name = "asset_owner_name")
     private String assetOwnerName;
