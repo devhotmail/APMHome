@@ -24,7 +24,9 @@ import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkFlow;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkflowConfig;
+import com.ge.apm.service.utils.ConfigUtils;
 import com.ge.apm.service.utils.TimeUtils;
+import com.ge.apm.service.utils.WeiXinUtils;
 import com.ge.apm.service.wechat.CoreService;
 
 @Service
@@ -43,7 +45,10 @@ public class WorkflowService {
 	@Autowired
 	CoreService coreService;
 	
-	private Map<String,WorkflowConfig> configs = new ConcurrentHashMap<String,WorkflowConfig>();
+	@Autowired
+	ConfigUtils configUtils;
+	
+	//private Map<String,WorkflowConfig> configs = new ConcurrentHashMap<String,WorkflowConfig>();
 
 	public void execute() {
 		logger.info("begin check timeout and reopen……");
@@ -70,19 +75,21 @@ public class WorkflowService {
 		String key = builder.append(workOrder.getSiteId()).append(":").append(workOrder.getHospitalId()).toString();
 		DateTime parentStartTime = new DateTime(parent.getRequestTime());
 		DateTime childStartTime = new DateTime(workOrder.getRequestTime());
-		WorkflowConfig woc = configs.get(key);
+/*		WorkflowConfig woc = configs.get(key);
 		if(woc == null){
 			woc = workOrderMapper.fetchWorkflowConfig(workOrder.getSiteId(),workOrder.getHospitalId());
 			configs.put(key, woc);
-		}
+		}*/
+		WorkflowConfig woc = workOrderMapper.fetchWorkflowConfig(workOrder.getSiteId(),workOrder.getHospitalId());
 		List<Integer> users = null;
 		if(Minutes.minutesBetween(childStartTime, parentStartTime).getMinutes() > woc.getOrderReopenTimeframe()){
 			ReopenPushModel model = new ReopenPushModel();
 			model.set_assetName(workOrder.getAssetName());
 			model.set_parentRequestPerson(parent.getRequestorName());
-			model.set_parentRequestTime(TimeUtils.getStrDate(parent.getRequestTime(), "yyyy-MM-dd hh:mm"));
+			model.set_parentRequestTime(TimeUtils.getStrDate(parent.getRequestTime(), "yyyy-MM-dd hh:mm:ss"));
 			model.set_requestPerson(workOrder.getRequestorName());
-			model.set_requestTime(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm"));
+			model.set_requestTime(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm:ss"));
+			model.set_linkUrl(coreService.getWoDetailUrl(workOrder.getId()));
 			users = new ArrayList<Integer>(5);
 			users.add(workOrder.getRequestorId());
 			users.add(workOrder.getCurrentPersonId());
@@ -94,19 +101,20 @@ public class WorkflowService {
 	private void buildReopenTemplateMsg(ReopenPushModel model, List<Integer> users) {
 		List<UserAccount> accounts = userAccountMapper.getUserWechatId(users);
 		for(UserAccount ua:accounts){
-			coreService.sendWxTemplateMessage(ua.getWeChatId(), REOPEN_TEMPLATED_ID,model.toMap());
+			coreService.sendWxTemplateMessage(ua.getWeChatId(),configUtils.fetchProperties("reopen_template_id"),WeiXinUtils.object2Map(model));
 		}
 		
 	}
 
 	private void isTimeout(WorkOrder workOrder) {
-		StringBuilder builder = new StringBuilder();
+		/*		StringBuilder builder = new StringBuilder();
 		String key = builder.append(workOrder.getSiteId()).append(":").append(workOrder.getHospitalId()).toString();
 		WorkflowConfig woc = configs.get(key);
 		if(woc == null){
 			woc = workOrderMapper.fetchWorkflowConfig(workOrder.getSiteId(),workOrder.getHospitalId());
 			configs.put(key, woc);
-		}
+		}*/
+		WorkflowConfig woc = workOrderMapper.fetchWorkflowConfig(workOrder.getSiteId(),workOrder.getHospitalId());
 		List<WorkFlow> workFlows = workOrderMapper.fetchWorkFlowList(workOrder);
 		if(CollectionUtils.isEmpty(workFlows)){
 			logger.error("cannot find work steps , workOrder id is ",workOrder.getId());
@@ -124,10 +132,12 @@ public class WorkflowService {
 				users.add(workFlow.getCurrentPersonId());
 				TimeoutPushModel model = new TimeoutPushModel();
 				model.set_assetName(workOrder.getAssetName());
-				model.set_requestTime(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm"));
+				model.set_requestTime(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm:ss"));
 				model.set_currentPerson(workOrder.getCurrentPersonName());
-				model.set_currentStepId(Constans.getName(workFlow.getCurrentStepId()));
+				model.set_status(Constans.getName(workOrder.getCurrentStepId()));
+				//model.set_currentStepId(Constans.getName(workOrder.getCurrentStepId()));
 				model.set_urgency(CasePriorityNum.getName(workOrder.getCasePriority()));
+				model.set_linkUrl(coreService.getWoDetailUrl(workOrder.getId()));
 				model.setCurrentPersonId(workFlow.getCurrentPersonId());
 				models.add(model);
 			}
@@ -135,7 +145,6 @@ public class WorkflowService {
 		if(CollectionUtils.isEmpty(models)){
 			return;
 		}
-		//push2WX(models,"timeout");
 		buildTimeoutTemplateMsg(models,users);
 	}
 	
@@ -148,10 +157,11 @@ public class WorkflowService {
 			uas.put(ua.getId(), ua);
 		}
 		for (TimeoutPushModel timeoutPushModel : models) {
-			String openId = uas.get(timeoutPushModel.getCurrentPersonId()).getWeChatId();
-			coreService.sendWxTemplateMessage(openId, TIMEOUT_TEMPLATE_ID,timeoutPushModel.toMap());
+			if(uas.get(timeoutPushModel.getCurrentPersonId()) != null){
+				String openId = uas.get(timeoutPushModel.getCurrentPersonId()).getWeChatId();
+				coreService.sendWxTemplateMessage(openId, configUtils.fetchProperties("timeout_template_id"),WeiXinUtils.object2Map(timeoutPushModel));
+			}
 		}
-		//coreService.sendWxTemplateMessage(account.getWeChatId(), TIMEOUT_TEMPLATE_ID, TIMEOUT_TITLE, TIMEOUT_BRIEF, TIMEOUT_DETAILS, "time", "url");
 	}
 	
 
@@ -159,7 +169,7 @@ public class WorkflowService {
 		DateTime now = new DateTime(new Date());
 		DateTime startTime = new DateTime(workFlow.getStartTime());
 		Integer timeout = 0;
-		if(workFlow.getCurrentStepId() ==Constans.CREATE.getIndex()){
+		if(workFlow.getCurrentStepId() ==Constans.DISPATCH.getIndex()){
 			timeout =woc.getTimeoutDispatch();
 		}else if(workFlow.getCurrentStepId() == Constans.ACCEPT.getIndex()){
 			timeout =woc.getTimeoutAccept();
@@ -168,7 +178,7 @@ public class WorkflowService {
 		}else if(workFlow.getCurrentStepId() == Constans.CLOSED.getIndex()){
 			timeout =woc.getTimeoutClose();
 		}
-		return startTime.plusMinutes(timeout).isAfter(now);
+		return Minutes.minutesBetween(startTime, now).getMinutes() > timeout;
 	}
 	
 }

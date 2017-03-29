@@ -43,9 +43,10 @@
                             pageManager.woId = ret.id;
                             pageManager.entryType = 'scan';
                             pageManager.signUp = ret.currentStepId === 4 && pageManager.showBtn && ret.pointStepNumber === 1;
+                            pageManager.showCancel = ret.requestorId == '${userId}';
                             pageManager.showBtn = ret.currentStepId === 6?
-                                ret.requestorId ==ret.currentPersonId && ret.currentPersonId == '${userId}'&& ret.feedbackRating === 0:
-                                        ret.currentPersonId == '${userId}';
+                                ret.requestorId == '${userId}'&& ret.feedbackRating === 0:
+                                        ret.currentPersonId == '${userId}'|| (ret.currentStepId < 4&&pageManager.showCancel);
                             if (ret.currentStepId === 6 && ret.requestorId != '${userId}') {
                                 pageManager.init('ts_msg_notfound');
                             }

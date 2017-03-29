@@ -78,7 +78,7 @@ public class AssetCreateController {
         return acServie.getHospitalName(assetInfo.getHospitalId());
     }
 
-    public void applyChange() {
+    public String applyChange() {
         if(owner!=null){
             assetInfo.setAssetOwnerId(owner.getId());
             assetInfo.setAssetOwnerName(owner.getName());
@@ -90,8 +90,10 @@ public class AssetCreateController {
             acServie.createAttachments(assetInfo,selectedPictures);
             acServie.updateQrLib(assetInfo.getQrCode(),3);
             WebUtil.addSuccessMessage("创建成功");
+            return "RequestsList?faces-redirect=true";
         } else {
             WebUtil.addErrorMessage("创建失败");
+            return "";
         }
     }
     

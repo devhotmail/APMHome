@@ -27,7 +27,7 @@ public enum CasePriorityNum {
 		this.index = index;
 	}
     public static String getName(int index) { 
-    	if(index <= 0 || index > CasePriorityNum.values().length-1){
+    	if(index < 0 || index > CasePriorityNum.values().length){
     		return null;
     	}
         for (CasePriorityNum c : CasePriorityNum.values()) {  

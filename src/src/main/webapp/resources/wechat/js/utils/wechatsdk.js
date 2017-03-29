@@ -57,7 +57,9 @@
                     scanType: ["qrCode", "barCode"],
                     success: function (res) {
                         if (callback !== undefined) {
-                            callback(res.resultStr);
+                            setTimeout(function() {
+                                callback(res.resultStr);
+                            }, 100);
                         }
                     }
                 });

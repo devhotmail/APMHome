@@ -42,8 +42,8 @@
                             pageManager.woId = ret.woId;
                             pageManager.showTime = true;
                             pageManager.showComment = false;
-                            pageManager.showCancel = ret.requestorId == '${userId}';
-                            pageManager.showBtn = ret.requestorId == '${userId}';
+                            pageManager.showCancel = ret.requestorId == '${userId}' && ret.currentStepId < 4;
+                            pageManager.showBtn = ret.requestorId == '${userId}' && ret.currentStepId !== 4 && ret.currentStepId !== 5;
                             pageManager.init('ts_wodetail');
                         } else {
                             pageManager.assetId = ret.assetId;

@@ -155,6 +155,7 @@ public class WorkOrderController {
             map.put("woId", wo.getId());
             map.put("view", true);
             map.put("requestorId", wo.getRequestorId());
+            map.put("currentStepId", wo.getCurrentStepId());
         }
         return map;
     }

@@ -355,7 +355,7 @@ public class WorkOrderService {
         neWorkOrder.setRequestorId(usr.getId());
         neWorkOrder.setRequestorName(usr.getName());
         neWorkOrder.setRequestTime(new Date());
-        neWorkOrder.setRequestReason(wop.getReason());
+        neWorkOrder.setRequestReason("".equals(wop.getReason())?"参见语音":wop.getReason());
         neWorkOrder.setCasePriority(Integer.parseInt(wop.getPriority()));
         
         if(reopenWorkOrder.size()>0){
