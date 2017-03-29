@@ -1,0 +1,21 @@
+$brand-color: #5b84d7;
+@mixin rm-outline {
+  outline: 0px solid transparent;
+}
+
+.editable-block {
+  padding: 3px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  @include rm-outline();
+
+  &[contenteditable] {
+    cursor: default;
+  }
+
+  &:focus {
+    @include rm-outline();
+    border-color: $brand-color;
+    border-radius: 5px;
+  }
+}

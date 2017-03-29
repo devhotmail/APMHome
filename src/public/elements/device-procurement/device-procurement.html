@@ -3,6 +3,7 @@
 <link rel="import" href="../behavior/context.html">
 <link rel="import" href="../behavior/fetch-cached.html">
 <link rel="import" href="../zoom-pack-chart/zoom-pack-chart.html">
+<link rel="import" href="../editable-block/editable-block.html">
 <link rel="import" href="device-procurement-styles.html">
 <link rel="stylesheet" href="../../css/dewIcons.css">
 <link rel="import" href="../../uri.html">
@@ -11,7 +12,7 @@
   <template>
     <style include="device-procurement-styles"></style>
     <div class="chart-wrapper">
-      <zoom-pack-chart chart-data="[[data]]"></zoom-pack-chart>
+      <zoom-pack-chart chart-data="[[data]]" focus="{{focus}}"></zoom-pack-chart>
     </div>
     <div class="sidebar">
       <div class="type-select btn-group">
@@ -90,7 +91,17 @@
             </div>
           </template>
           <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
-            222
+            <div class="config-list">
+              <template is="dom-repeat" items="[[focus.children]]">
+                <div class="config-item">
+                  <div class="item-name">[[item.data.name]]</div>
+                  <editable-block value="{{item.data.revenue_increase}}"></editable-block>
+                </div>
+              </template>
+            </div>
+            <template is="dom-if" if="false">
+              111
+            </template>
           </template>
         </div>
       </div>
@@ -184,7 +195,9 @@
         observers: [
           'loadData(selectedOpt)',
           'changeQuery(selectedOpt)',
+          'watcher(focus)'
         ],
+        watcher: console.log,
         isArray: Array.isArray,
         isEqual: function(a, b) {
           return a === b;

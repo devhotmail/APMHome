@@ -1,0 +1,35 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="editable-block-styles.html">
+
+<dom-module id="editable-block">
+  <template>
+    <style include="editable-block-styles"></style>
+    <div
+      class="editable-block"
+      contenteditable$="[[contenteditable]]"
+      on-tap="handleTap"
+      on-keydown="handleKeyDown">[[value]]</div>
+  </template>
+  <script>
+    Polymer({
+      is: 'editable-block',
+      properties: {
+        value: {
+          type: Number,
+          notify: true
+        },
+        contenteditable: {
+          type: Boolean,
+          value: false
+        }
+      },
+      handleTap: function(e) {
+        this.set('contenteditable', true);
+      },
+      handleKeyDown: function(e) {
+        var keycode = event.which || event.keyCode;
+        if (keycode === 13) this.set('contenteditable', false);
+      }
+    })
+  </script>
+</dom-module>
