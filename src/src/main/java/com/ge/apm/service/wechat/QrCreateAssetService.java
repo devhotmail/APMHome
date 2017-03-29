@@ -51,10 +51,9 @@ public class QrCreateAssetService {
         qrCodeLib.setStatus(2);
         qrCodeLib.setComment(qrCodeLib.getComment() == null ? comment : qrCodeLib.getComment() + comment);
 
-        qrCodeLib = null;
-        qrCodeLib = qrCodeLibRepository.save(qrCodeLib);
+        QrCodeLib tempQrCodeLib = qrCodeLibRepository.save(qrCodeLib);
 
-        if(qrCodeLib == null){
+        if(tempQrCodeLib == null){
             return false;
         }
 
