@@ -27,6 +27,9 @@ alter table user_account add COLUMN leader_user_id int;
 alter table asset_info alter COLUMN qr_code type varchar(16);
 ALTER TABLE asset_info ADD CONSTRAINT uk_asset_info_qr_code UNIQUE (qr_code);
 
+alter table asset_info alter column asset_dept_id DROP NOT NULL;
+alter table asset_info alter column asset_owner_id DROP NOT NULL;
+alter table asset_info alter column asset_owner_name DROP NOT NULL;
 alter table asset_info add COLUMN asset_owner_id2 int;		--责任人B
 alter table asset_info add COLUMN asset_owner_name2 varchar(16);	--责任人B姓名
 alter table asset_info add COLUMN asset_owner_tel2 varchar(16);	--责任人B电话

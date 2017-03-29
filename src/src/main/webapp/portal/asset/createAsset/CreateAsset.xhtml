@@ -71,7 +71,7 @@
                                     </h:panelGroup>
                                     <h:panelGroup>
                                         <label class="label">#{msg.assetGroup}*</label>
-                                        <p:selectOneMenu id="assetGroup" value="#{assetCreateController.assetInfo.assetGroup}" required="false" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
+                                        <p:selectOneMenu id="assetGroup" value="#{assetCreateController.assetInfo.assetGroup}" required="true" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
                                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                             <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                         </p:selectOneMenu>
@@ -83,8 +83,8 @@
                                     </h:panelGroup>
                                     <!--<p:spacer/>-->
                                     <h:panelGroup >
-                                        <label class="label">#{msg.assetOwnerName}*</label>
-                                        <p:selectOneMenu id="assetOwnerName" value="#{assetCreateController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="true" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}" >
+                                        <label class="label">#{msg.assetOwnerName}</label>
+                                        <p:selectOneMenu id="assetOwnerName" value="#{assetCreateController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="false" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}" >
                                             <f:selectItem itemLabel="" />
                                             <f:selectItems value="#{assetCreateController.getOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
                                             <p:column>
@@ -96,7 +96,7 @@
                                         </p:selectOneMenu>
                                     </h:panelGroup>
                                     <h:panelGroup>
-                                        <label class="label">#{msg.clinicalDeptName}*</label>
+                                        <label class="label">#{msg.clinicalDeptName}</label>
                                         <p:selectOneMenu id="clinicalDeptName" value="#{assetCreateController.assetInfo.clinicalDeptId}" required="false" requiredMessage="#{msg.clinicalDeptName} #{msg.ValidationRequire}">
                                             <!--<p:ajax  listener="#{assetInfoController.onClinicalDeptChange()}" update="clinicalOwnerName clinicalOwnerTel" />-->
                                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>

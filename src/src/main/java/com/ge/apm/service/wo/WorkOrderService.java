@@ -3,6 +3,7 @@ package com.ge.apm.service.wo;
 import com.ge.apm.dao.*;
 import com.ge.apm.domain.*;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.service.utils.ConfigUtils;
 import com.ge.apm.service.wechat.CoreService;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -22,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
@@ -58,6 +60,8 @@ public class WorkOrderService {
     private CoreService cService;
     @Autowired
     private MessageSubscriberRepository subscribDao;
+    @Autowired
+    private ConfigUtils configUtils;
 
     public List<WorkOrder> findWorkOrderByStatus(int status)throws Exception{
         List<WorkOrder> byStatus = workOrderRepository.findByStatus(status);
@@ -571,12 +575,22 @@ public class WorkOrderService {
     }
     
     public void sendWoMsgs(WorkOrder wo) {
-        String wxTemplateId = "4N0nfZ0fXstReD-FcBu-d6tUsTcwBEIND-0wmOh0cO8";
+        //String wxTemplateId = "4N0nfZ0fXstReD-FcBu-d6tUsTcwBEIND-0wmOh0cO8";
+        String wxTemplateId = configUtils.fetchProperties("workorder_change_template_id");
         String msgTitle = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",wo.getCurrentStepId()-1+"").getValueZh();
         String msgBrief = msgTitle + "已完成";
-        String msgDetails = "";
-        String msgDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         String linkUrl = cService.getWoDetailUrl(wo.getId());
+        
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("first", msgTitle);
+        params.put("_assetName", wo.getAssetName());
+        params.put("_requestTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getRequestTime()));
+        params.put("_requestPerson", wo.getRequestorName());
+        params.put("_urgency", i18nMessageRepository.getByMsgTypeAndMsgKey("casePriority",wo.getCasePriority()+"").getValueZh());
+        params.put("_currentPerson", wo.getCurrentPersonName());
+        params.put("remark", msgBrief);
+        params.put("_linkUrl", linkUrl);
+        
         // subscriber
         List<MessageSubscriber> sber = null;
         switch(wo.getCurrentStepId()-1) {
@@ -588,18 +602,18 @@ public class WorkOrderService {
             for (MessageSubscriber sb :sber) {
                 int userId = sb.getSubscribeUserId();
                 UserAccount ua = userDao.getById(userId);
-                cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, msgTitle, msgBrief, msgDetails, msgDateTime, linkUrl);
+                cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
             }
         }
         //find requestor, currentPerson
         msgTitle = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",wo.getCurrentStepId()+"").getValueZh();
         if (wo.getCurrentStepId() == 2 || wo.getCurrentStepId() == 3) {
             UserAccount ua = userDao.getById(wo.getCurrentPersonId());
-            cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, msgTitle, msgBrief, msgDetails, msgDateTime, linkUrl);
+            cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
         }
         if (wo.getCurrentStepId() != 2) {
             UserAccount ua = userDao.getById(wo.getRequestorId());
-            cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, msgTitle, msgBrief, msgDetails, msgDateTime, linkUrl);
+            cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
         }
     }
 

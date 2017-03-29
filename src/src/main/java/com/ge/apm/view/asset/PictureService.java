@@ -6,7 +6,10 @@
 package com.ge.apm.view.asset;
 
 import com.ge.apm.service.asset.AttachmentFileService;
-import java.io.FileNotFoundException;
+import com.ge.apm.service.utils.QRCodeUtil;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import javax.faces.application.Application;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -24,6 +27,8 @@ import webapp.framework.web.WebUtil;
 public class PictureService {
 
     AttachmentFileService attachService = WebUtil.getBean(AttachmentFileService.class);
+    
+    private static final String LOGO_PATH = PictureService.class.getResource("/").toString().concat("logo.png").replace("file:/", "");
 
     public StreamedContent getImage() {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -37,8 +42,17 @@ public class PictureService {
             return stream;
         }
     }
-    
-    public StreamedContent getBQImage(){
+
+    public StreamedContent getBQImage() {
         return null;
+    }
+
+    public StreamedContent getQrCodeImage(String code) throws Exception {
+
+        ByteArrayOutputStream byteout = new ByteArrayOutputStream();
+        QRCodeUtil.encode(code, LOGO_PATH, byteout, true);
+        ByteArrayInputStream bytein = new ByteArrayInputStream(byteout.toByteArray());
+        StreamedContent result = new DefaultStreamedContent(bytein);
+        return result;
     }
 }

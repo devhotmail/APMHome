@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/wo/woprogress.css"/>
         <script src="${ctx}/resources/wechat/js/utils/jquery-3.1.1.min.js"></script>
-        <script src="${ctx}/resources/wechat/js/utils/jweixin-1.0.0.js"></script>
+        <script src="${ctx}/resources/wechat/js/utils/jweixin-1.2.0.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/wechatsdk.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/pagemanager.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/app.js"></script>
@@ -38,12 +38,12 @@
                 $.get(WEB_ROOT+"web/findassetinfo", {'qrCode': qrCode}, function(ret){
                     if (ret && ret.assetId) {
                         if (ret.view) {
-                            pageManager.entryType = 'myreport1';
+                            pageManager.entryType = 'scanreport';
                             pageManager.woId = ret.woId;
                             pageManager.showTime = true;
                             pageManager.showComment = false;
-                            pageManager.showCancel = true;
-                            pageManager.showBtn = true;
+                            pageManager.showCancel = ret.requestorId == '${userId}';
+                            pageManager.showBtn = ret.requestorId == '${userId}';
                             pageManager.init('ts_wodetail');
                         } else {
                             pageManager.assetId = ret.assetId;
@@ -208,8 +208,14 @@
                                     isShowProgressTips: 1,
                                     success: function (rest) {
                                         pageManager.serverIds.push(rest.serverId);
-                                        $uploaderFiles.append($(tmpl.replace('#url#', res[j])).attr('data-serid', rest.serverId));
-                                        $('#countnum').html($uploaderFiles.children().length);
+                                        wx.getLocalImgData({
+                                            localId: res[j],
+                                            success: function(ress){
+                                                var localData = ress.localData.replace('jgp', 'jpeg');
+                                                $uploaderFiles.append($(tmpl.replace('#url#', localData)).attr('data-serid', rest.serverId));
+                                                $('#countnum').html($uploaderFiles.children().length);
+                                            }
+                                        });
                                         j++;
                                         uploadImg(res, j);
                                     }
@@ -307,6 +313,10 @@
                             return;
                         }
                         
+                        var $loadingToast = $('#loadingToast');
+                        if ($loadingToast.css('display') !== 'none') return;
+                        $loadingToast.fadeIn(100);
+                        
                         var data = {
                             assetId: pageManager.assetId,
                             voiceId: pageManager.voiceSerId,
@@ -330,10 +340,6 @@
                                 }
                             }
                         });
-                            
-                        var $loadingToast = $('#loadingToast');
-                        if ($loadingToast.css('display') !== 'none') return;
-                        $loadingToast.fadeIn(100);
                     });
 
                 });

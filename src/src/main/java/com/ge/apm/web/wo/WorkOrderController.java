@@ -51,6 +51,8 @@ public class WorkOrderController {
     
     @RequestMapping(value = "scanworeport")
     public String scanWoReport(HttpServletRequest request,HttpServletResponse response, Model model) {
+        UserAccount ua = service.getLoginUser(request);
+        model.addAttribute("userId", ua.getId());
         WxJsapiSignature s = null;
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
@@ -71,6 +73,8 @@ public class WorkOrderController {
     
     @RequestMapping(value = "myreport")
     public String myReport(HttpServletRequest request,HttpServletResponse response, Model model) {
+        UserAccount ua = service.getLoginUser(request);
+        model.addAttribute("userId", ua.getId());
         WxJsapiSignature s = null;
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
@@ -150,6 +154,7 @@ public class WorkOrderController {
         if (wo != null) {
             map.put("woId", wo.getId());
             map.put("view", true);
+            map.put("requestorId", wo.getRequestorId());
         }
         return map;
     }
