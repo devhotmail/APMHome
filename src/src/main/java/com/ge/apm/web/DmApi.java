@@ -131,7 +131,7 @@ public class DmApi {
     log.info("got final input items: {}", items._1.toJavaList());
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ImmutableMap.Builder<String, Object>()
       .put("id", "100")
-      .put("name", "All Assets")
+      .put("name", "全部设备")
       .put("usage", items._2)
       .put("suggestions", calculateTotalSuggestion(items._1, groupBy))
       .put("items", items._1.toJavaList())
