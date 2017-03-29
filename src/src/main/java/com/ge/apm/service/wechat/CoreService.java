@@ -390,7 +390,7 @@ public class CoreService {
         return s == null ? null : s.getName();
     }
 
-    @Value("#{wxProperties.webContextUrl}")
+    //@Value("#{wxProperties.webContextUrl}")
     private String webContextUrl;
     
     public String getWoDetailUrl(Integer woId) {
@@ -459,13 +459,16 @@ public class CoreService {
 		Set<String> keys = map.keySet();
 		if (!CollectionUtils.isEmpty(keys)) {
 			for (String key : keys) {
-				if(key.startsWith("_")){
+				if(key.equals("first") || key.equals("remark")){
+					templateMessage.addWxMpTemplateData(new WxMpTemplateData(key, (String) map.get(key), textColor));
+				}else if(key.startsWith("_")){
 					templateMessage.addWxMpTemplateData(new WxMpTemplateData(key, (String) map.get(key), textColor));
 					if (key.equals("_linkUrl")) {
-						//templateMessage.setUrl(wxMpService.oauth2buildAuthorizationUrl(webContextUrl + map.get(key).toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
-						templateMessage.setUrl((String)map.get(key));
+						templateMessage.setUrl(wxMpService.oauth2buildAuthorizationUrl(webContextUrl + map.get(key).toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+						//templateMessage.setUrl((String)map.get(key));
 					}
 				}
+				
 			}
 		}
 		wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
