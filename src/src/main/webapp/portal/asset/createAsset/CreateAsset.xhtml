@@ -62,13 +62,15 @@
                                 <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
 
                                     <h:panelGroup>
+                                        <label class="label">#{msg.serialNum}</label>
+                                        <p:inputText id="serialNum" value="#{assetCreateController.assetInfo.serialNum}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
                                         <label class="label">#{msg.name}*</label>
                                         <p:inputText id="name" value="#{assetCreateController.assetInfo.name}"  required="false" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
                                     </h:panelGroup>
-                                    <h:panelGroup>
-                                        <label class="label">#{msg.aliasName}</label>
-                                        <p:inputText id="aliasName" value="#{assetCreateController.assetInfo.aliasName}"/>
-                                    </h:panelGroup>
+
                                     <h:panelGroup>
                                         <label class="label">#{msg.assetGroup}*</label>
                                         <p:selectOneMenu id="assetGroup" value="#{assetCreateController.assetInfo.assetGroup}" required="true" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
@@ -76,12 +78,36 @@
                                             <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                         </p:selectOneMenu>
                                     </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.functionType}</label>
+                                        <p:inputText id="functionType" value="#{assetCreateController.assetInfo.functionType}"/>
+                                    </h:panelGroup>
 
                                     <h:panelGroup>
-                                        <label class="label">#{msg.hospitalId}</label>
-                                        <p:inputText id="hospitalId" value="#{assetCreateController.getHospitalName()}" readonly="true"/>
+                                        <label class="label">#{msg.registrationNo}</label>
+                                        <p:inputText id="registrationNo" value="#{assetCreateController.assetInfo.registrationNo}" />
                                     </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.manufactDate}</label>
+                                        <p:calendar timeZone="GMT+8"  id="manufactDate" pattern="yyyy/MM/dd" value="#{assetCreateController.assetInfo.manufactDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"  />
+                                    </h:panelGroup>
+
                                     <!--<p:spacer/>-->
+
+
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.manufacture}</label>
+                                        <p:inputText id="manufacture" value="#{assetCreateController.assetInfo.manufacture}"/>
+                                    </h:panelGroup>
+
+
+                                </p:panelGrid>
+                            </p:fieldset>
+
+                            <p:fieldset  style="margin-bottom:20px">
+
+                                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                                     <h:panelGroup >
                                         <label class="label">#{msg.assetOwnerName}</label>
                                         <p:selectOneMenu id="assetOwnerName" value="#{assetCreateController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith" required="false" requiredMessage="#{msg.assetOwnerName} #{msg.ValidationRequire}" >
@@ -103,12 +129,24 @@
                                             <f:selectItems value="#{assetCreateController.getClinicalDeptList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                         </p:selectOneMenu>
                                     </h:panelGroup>
-
                                     <h:panelGroup>
-                                        <label class="label">#{msg.manufacture}</label>
-                                        <p:inputText id="manufacture" value="#{assetCreateController.assetInfo.manufacture}"/>
+                                        <label class="label">#{msg.hospitalId}</label>
+                                        <p:inputText id="hospitalId" value="#{assetCreateController.getHospitalName()}" readonly="true"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.departNum}</label>
+                                        <p:inputText id="departNum2" value="#{assetCreateController.assetInfo.departNum}"/>
+
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.financingNum}</label>
+                                        <p:inputText id="financingNum2" value="#{assetCreateController.assetInfo.financingNum}"/>
                                     </h:panelGroup>
 
+                                    <h:panelGroup>
+                                        <label class="label">#{msg.modalityId}</label>
+                                        <p:inputText id="modalityId" value="#{assetCreateController.assetInfo.modalityId}"/>
+                                    </h:panelGroup>
                                     <h:panelGroup>
                                         <label class="label">#{msg.maitanance}</label>
                                         <p:inputText id="maitanance" value="#{assetCreateController.assetInfo.maitanance}"/>
@@ -122,32 +160,7 @@
 
                             <p:fieldset  style="margin-bottom:20px">
                                 <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                                    <h:panelGroup>
-                                        <label class="label">#{msg.departNum}</label>
-                                        <p:inputText id="departNum2" value="#{assetCreateController.assetInfo.departNum}"/>
 
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <label class="label">#{msg.financingNum}</label>
-                                        <p:inputText id="financingNum2" value="#{assetCreateController.assetInfo.financingNum}"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <label class="label">#{msg.registrationNo}</label>
-                                        <p:inputText id="registrationNo" value="#{assetCreateController.assetInfo.registrationNo}" />
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <label class="label">#{msg.modalityId}</label>
-                                        <p:inputText id="modalityId" value="#{assetCreateController.assetInfo.modalityId}"/>
-                                    </h:panelGroup>
-                                </p:panelGrid>
-                            </p:fieldset>
-
-                            <p:fieldset  style="margin-bottom:20px">
-                                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                                    <h:panelGroup>
-                                        <label class="label">#{msg.functionType}</label>
-                                        <p:inputText id="functionType" value="#{assetCreateController.assetInfo.functionType}"/>
-                                    </h:panelGroup>
                                     <h:panelGroup>
                                         <label class="label">#{msg.functionGrade}</label>
                                         <p:selectOneMenu id="functionGrade" value="#{assetCreateController.assetInfo.functionGrade}">
@@ -174,14 +187,6 @@
                                 </p:panelGrid>
                             </p:fieldset>
 
-                            <p:fieldset  style="margin-bottom:20px">
-                                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                                    <h:panelGroup>
-                                        <label class="label">#{msg.manufactDate}</label>
-                                        <p:calendar timeZone="GMT+8"  id="manufactDate" pattern="yyyy/MM/dd" value="#{assetCreateController.assetInfo.manufactDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"  />
-                                    </h:panelGroup>
-                                </p:panelGrid>
-                            </p:fieldset>
 
                             <p:fieldset legend="选择图片作为资产附件保存"  style="margin-bottom:20px">
                                 <p:selectManyCheckbox id="custom" value="#{assetCreateController.selectedPictures}"  layout="custom">
@@ -201,7 +206,7 @@
                             <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                                 <h:panelGroup >
                                     <p:commandButton value="#{msg.Save}" icon="ui-icon-check" action="#{assetCreateController.applyChange()}" validateClient="true" update=":growl" style="float:left"/>
-                                    <!--<p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="#{assetCreateController.getListPageLink()}" immediate="true"  update=":growl" style="float:left"/>-->
+                                    <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="RequestsList?faces-redirect=true" immediate="true"  style="float:left"/>
                                 </h:panelGroup>
                             </p:panelGrid>
 
@@ -262,7 +267,7 @@
                 });
                 RongIMLib.RongIMVoice.stop();
             });
-            
+
 
         </script>
     </ui:define>
