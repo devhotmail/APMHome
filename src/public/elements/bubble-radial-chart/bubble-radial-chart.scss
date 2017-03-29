@@ -101,6 +101,11 @@ $highlight-color: rgba(91, 132, 215, 1);
     .link, .link-label {
       visibility: hidden;
     }
+
+    .pagination {
+      opacity: .5;
+      cursor: default;
+    }
   }
 }
 

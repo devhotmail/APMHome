@@ -822,6 +822,12 @@
 
               nodes = nodes.merge(nodes_enter);
               nodes.on('click', null).on('click', function handlePagerClick() {
+
+                // Prevent this click when paging is still in progress
+                if(_this.isPaging) {
+                  return false;
+                }
+
                 var type = d.type;
                 type === 'next' ? _this.openNextPage(url, level) : _this.openPrevPage(url, level);
               });
@@ -1278,6 +1284,8 @@
             var svg = d3.select(this.$.chartSvg);
             // add/remove `expanded` for root node when orbit two closed
             svg.classed('expanded', !!node);
+            // reset level2 when level1 opened node is changed
+            this.resetPaginationLevel(2);
           },
           _computeLastStartL1: function() {
             var history = this._pageStartHistoryL1;
@@ -1459,11 +1467,11 @@
             })
             .on('end', function() {
               pageEntered.call(this, 'curr');
-              _this.isPaging = false;
               // load next page
               _this.loadData(key, level).then(function() {
                 _this.renderNextPage(key, level);
                 _this.plotPager(key, level);
+                _this.isPaging = false;
               });
             });
 
@@ -1498,7 +1506,6 @@
               _this.isPaging = true;
             })
             .on('end', function() {
-              _this.isPaging = false;
               pageEntered.call(this, 'curr');
               // reconcile dom
               _this.scopeSubtree(this);
@@ -1506,6 +1513,7 @@
               // load prev page
               _this.renderPrevPage(key, level);
               _this.plotPager(key, level);
+              _this.isPaging = false;
             });
 
             d3.select('.orbit' + level + '.curr-page')
