@@ -14,6 +14,7 @@ import org.joda.time.DateTime;
 import org.primefaces.context.RequestContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.QrCodeLibRepository;
 import com.ge.apm.domain.QrCodeLib;
@@ -37,6 +38,9 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
     private Integer hospitalId;
     private Integer qrCodeNum;
 
+    private Integer siteIdFilter;
+    private Integer hospitalIdFilter;
+
     @Override
     protected void init() {
         dao = WebUtil.getBean(QrCodeLibRepository.class);
@@ -46,7 +50,6 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         qrCodeLibDao = WebUtil.getBean(QrCodeLibRepository.class);
         acService = WebUtil.getBean(AssetCreateService.class);
 
-        
         UserContextService userContextService = WebUtil.getBean(UserContextService.class);
 
         if (userContextService.hasRole("SuperAdmin")) {
@@ -70,10 +73,31 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
 
     @Override
     protected Page<QrCodeLib> loadData(PageRequest pageRequest) {
-        if (this.searchFilters == null || this.searchFilters.size() == 0) {
+
+        List<SearchFilter> searchFilters = this.searchFilters;
+        if (searchFilters == null || searchFilters.size() == 0) {
             return dao.findAll(pageRequest);
         } else {
-            return dao.findBySearchFilter(this.searchFilters, pageRequest);
+            Map<String, SearchFilter> tempSearchFilterMap = new HashMap<>(searchFilters.size());
+            for (SearchFilter tempSearchFilter : searchFilters) {
+                tempSearchFilterMap.put(tempSearchFilter.fieldName, tempSearchFilter);
+            }
+
+            if(!tempSearchFilterMap.containsKey("siteId") && tempSearchFilterMap.containsKey("hospitalId")){
+                tempSearchFilterMap.remove("hospitalId");
+            }
+
+            searchFilters = new ArrayList<SearchFilter>();
+            for(Map.Entry<String, SearchFilter> entry : tempSearchFilterMap.entrySet()){
+                searchFilters.add(entry.getValue());
+            }
+
+            if(searchFilters.size() <= 0){
+                return dao.findAll(pageRequest);
+            }else{
+                return dao.findBySearchFilter(searchFilters, pageRequest);
+            }
+
         }
     }
 
@@ -116,6 +140,17 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         return hospitalList;
     }
 
+    public List<OrgInfo> getHospitalListFilter() {
+
+        List<OrgInfo> hospitalList = null;
+        if (siteIdFilter != null) {
+
+            hospitalList = orgInfoDao.getHospitalBySiteId(Integer.valueOf(siteIdFilter));
+        }
+
+        return hospitalList;
+    }
+
     public void viewQrCodeLibCreate() {
         /*Map<String,Object> options = new HashMap<String, Object>();
         options.put("modal", true);
@@ -125,11 +160,16 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         options.put("contentHeight", "100%");
         options.put("headerElement", "customheader");
         RequestContext.getCurrentInstance().openDialog("qrCodeLibCreate", options, null);*/
-        siteId = null;
-        hospitalId = null;
+        /*siteId = null;
+        hospitalId = null;*/
     }
 
     public void createQrCode() {
+
+        if(siteId == null || hospitalId == null){
+            return;
+        }
+
         Set<String> tempSet = new HashSet<String>(qrCodeNum);
 
         DateTime dt = new DateTime();
@@ -171,6 +211,12 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         }
     }
 
+    public void onSiteFilterChange(){
+        if(siteIdFilter == null){
+            hospitalIdFilter = null;
+        }
+    }
+
     public Integer getSiteId() {
         return siteId;
     }
@@ -183,6 +229,14 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         return qrCodeNum;
     }
 
+    public Integer getSiteIdFilter() {
+        return siteIdFilter;
+    }
+
+    public Integer getHospitalIdFilter() {
+        return hospitalIdFilter;
+    }
+
     public void setSiteId(Integer siteId) {
         this.siteId = siteId;
     }
@@ -193,6 +247,14 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
 
     public void setQrCodeNum(Integer qrCodeNum) {
         this.qrCodeNum = qrCodeNum;
+    }
+
+    public void setSiteIdFilter(Integer siteIdFilter) {
+        this.siteIdFilter = siteIdFilter;
+    }
+
+    public void setHospitalIdFilter(Integer hospitalIdFilter) {
+        this.hospitalIdFilter = hospitalIdFilter;
     }
 
     /*

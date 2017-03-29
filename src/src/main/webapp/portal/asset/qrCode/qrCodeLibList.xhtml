@@ -29,8 +29,8 @@
 
                         <p:column headerText="租户" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
                             <f:facet name="filter">
-                                <p:selectOneMenu value="#{qrCodeLibController.siteId}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
-                                    <p:ajax  listener="#{qrCodeLibController.onSiteChange}" update="hospitalIdSelect_list" />
+                                <p:selectOneMenu value="#{qrCodeLibController.siteIdFilter}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
+                                    <p:ajax  listener="#{qrCodeLibController.onSiteFilterChange}" update="hospitalIdSelect_list" />
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue="#{null}" noSelectionOption="true"/>
                                     <f:selectItems value="#{qrCodeLibController.siteList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
@@ -39,9 +39,9 @@
                         </p:column>
                         <p:column headerText="医院" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
                             <f:facet name="filter">
-                                <p:selectOneMenu id="hospitalIdSelect_list" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
+                                <p:selectOneMenu id="hospitalIdSelect_list" value="#{qrCodeLibController.hospitalIdFilter}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue="#{null}" noSelectionOption="true"/>
-                                    <f:selectItems value="#{qrCodeLibController.hospitalList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                    <f:selectItems value="#{qrCodeLibController.hospitalListFilter}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                             </f:facet>
                             <h:outputText value="#{qrCodeLibController.getHospitalName(item.hospitalId)}"/>
