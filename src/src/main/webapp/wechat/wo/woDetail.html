@@ -254,6 +254,7 @@
                             raterShow();
                         }
                     } 
+                    $('#loadingToast1').fadeOut(100);
                 });
             }
             reloadDetail();
@@ -375,6 +376,13 @@
                         return;
                     } 
                     post({woId: pageManager.woId, actionType: 'cancel', desc: $('#description').val()});
+                });
+                
+                $('.wo_container').click(function(){
+                    pageManager.go('#ts_wosteplist');
+                    var $loadingToast = $('#loadingToast1');
+                    if ($loadingToast.css('display') !== 'none') return;
+                    $loadingToast.fadeIn(100);
                 });
             }
             
@@ -510,7 +518,8 @@
                     $(".weui-rater a").eq(i).addClass('checked');
                 }
                 $('.weui-rater a').off('click');
-                $('#description').attr('readonly', 'readonly').val(pageManager.workOrder.feedbackComment);
+                $('#description').attr('readonly', 'readonly').val(pageManager.workOrder.feedbackComment?pageManager.workOrder.feedbackComment:'无评价内容');
+                $('#showComment').show();
             }
             
         });

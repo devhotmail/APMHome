@@ -1,0 +1,45 @@
+<script type="text/html" id="ts_wosteplist">
+    <div class="page">
+        <div id="step_list" class="page__bd page__bd_spacing">
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            var tmpl = $('#ts_wostepdetail').html();
+            var $step_list = $('#step_list');
+            $.get(WEB_ROOT+'web/wostepdetail',
+                {id: pageManager.woId},
+                function(ret) {
+                    if (ret && ret.length !== 0) {
+                        $.each(ret, function(idx, val){
+                            var $tmpl = $(tmpl);
+                            $tmpl.find('h4').html(val.stepName+': '+val.ownerName);
+                            $tmpl.find('p').html(val.endTime);
+                            var $spans = $tmpl.find('.weui-cell__bd span');
+                            $spans.html(val.description?val.description:'无信息');
+                            $step_list.append($tmpl);
+                        });
+                    } else {
+                        $step_list.append($('<span>没有信息</span>'))
+                    }
+                    $('#loadingToast1').fadeOut(100);
+                });
+        });
+</script>
+<script type="text/html" id="ts_wostepdetail">
+    <div class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <h4></h4>
+            </div>
+            <div class="weui-cell__ft">
+                <p></p>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <div><span style="word-break:break-all"></span></div>
+            </div>
+        </div>
+    </div>
+</script>

@@ -347,5 +347,6 @@
         
         <jsp:include page="woDetail.html"/>
         <jsp:include page="tipsTemplate.html"/>
+        <jsp:include page="wosteplist.html"/>
     </body>
 </html>
