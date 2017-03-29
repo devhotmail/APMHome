@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <f:facet name="first">
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>#{msg.AssetInfoDetail}</title>
+        <h:outputStylesheet name="wechat/css/weui.min.css" />
+        <h:outputStylesheet name="wechat/css/photoswipe.css" />
+        <link type="text/css" rel="stylesheet" href="#{wechatUtilService.getContextPath()}/resources/wechat/css/default-skin.css" />
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jquery-3.1.1.min.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/photoswipe.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/photoswipe-ui-default.min.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/detail.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/js/voice.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/js/pcmdata-2.0.0.min.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/js/libamr-2.0.1.min.js"/>
+
+    </h:head>
+    <body>
+        <!-- Root element of PhotoSwipe. Must have class pswp. -->
+        <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+            <!-- Background of PhotoSwipe. 
+                 It's a separate element as animating opacity is faster than rgba(). -->
+            <div class="pswp__bg"></div>
+
+            <!-- Slides wrapper with overflow:hidden. -->
+            <div class="pswp__scroll-wrap">
+
+                <!-- Container that holds slides. 
+                    PhotoSwipe keeps only 3 of them in the DOM to save memory.
+                    Don't modify these 3 pswp__item elements, data is added later on. -->
+                <div class="pswp__container">
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                </div>
+
+                <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+                <div class="pswp__ui pswp__ui--hidden">
+
+                    <div class="pswp__top-bar">
+
+                        <!--  Controls are self-explanatory. Order can be changed. -->
+
+                        <div class="pswp__counter"></div>
+
+                        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                        <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                        <!-- element will get class pswp__preloader- -active when preloader is running -->
+                        <div class="pswp__preloader">
+                            <div class="pswp__preloader__icn">
+                                <div class="pswp__preloader__cut">
+                                    <div class="pswp__preloader__donut"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                        <div class="pswp__share-tooltip"></div> 
+                    </div>
+
+                    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                    </button>
+
+                    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                    </button>
+
+                    <div class="pswp__caption">
+                        <div class="pswp__caption__center"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="page__bd" style="height: 100%;">
+            <div  class="weui-panel">
+                <div class="weui-panel__hd">设备图片</div>
+                <div class="weui-panel__bd">
+                    <div class="weui-cell my-gallery" data-pswp-uid="1">
+                        <c:forEach items="#{createInfoController.pictureList}" var="fileitem">
+                            <figure style="display: inline; padding-right: 8px;">
+                                <a href="" data-size="800x600">
+                                    <p:graphicImage  value="#{pictureService.getImage()}"   height="80px" width="80px" >
+                                        <f:param name="pictureId" value="#{fileitem.fileId}" />
+                                    </p:graphicImage>
+                                </a>
+                            </figure>
+                        </c:forEach>
+                    </div>
+
+                </div>
+            </div>
+
+            <div  class="weui-panel">
+                <div class="weui-panel__hd">语音信息</div>
+                <div class="weui-panel__bd">
+                    <c:forEach items="#{createInfoController.audioList}" var="item" varStatus="status" >
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <a class="weui-btn weui-btn_plain-primary" type="button" id="play#{status.index}">播放</a>
+                                <h:inputHidden id="audio#{status.index}" value="#{createInfoController.getAudioBase64(item.fileId)}"/>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div  class="weui-panel">
+                <div class="weui-panel__hd">文字信息</div>
+                <div class="weui-panel__bd">
+                    <div class="weui-cell"> 
+                        <div class="weui-cell__bd">
+                            <p >#{createInfoController.createdRequest.comment}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--        <div class="weui-msg__opr-area">
+                    <p class="weui-btn-area">
+                        <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增信息</a>
+                    </p>
+                </div>-->
+    </body>
+    <script>
+
+        $playButtons = $("a[id*='play']");
+        $playButtons.on("click", function () {
+            if (this.innerText === "播放") {
+                this.innerText = "停止";
+                RongIMLib.RongIMVoice.init();
+                var base64Str = $(this).parent().find('input').val();
+                RongIMLib.RongIMVoice.play(base64Str);
+            } else {
+                this.innerText = "播放";
+                RongIMLib.RongIMVoice.stop();
+            }
+        });
+
+
+
+    </script>
+
+
+</html>
