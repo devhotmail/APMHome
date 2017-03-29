@@ -285,7 +285,7 @@
                     if ($('#estimatedCloseTime').val() === "") {
                         $('#estimatedCloseTime').val(app.initWechatTime());
                     }
-                    if (pageManager.entryType !== 'myreport1') {
+                    if (pageManager.entryType !== 'myreport1' && pageManager.entryType !== 'scanreport') {
                         $('#estimatedCloseTime').removeAttr('readonly');
                     }
                 } else {
