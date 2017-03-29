@@ -4,7 +4,9 @@
   display: flex;
 }
 
-$related-info-width: 260px;
+$brand-color: #5b84d7;
+
+$sidebar-width: 260px;
 $kpi-legend-circle-r: 25px;
 $gap: 10px;
 
@@ -14,17 +16,60 @@ $yellow: rgb(236, 219, 84);
 $color-set: $orange $yellow $gray;
 
 .chart-wrapper {
-  width: calc(100% - #{$related-info-width});
+  width: calc(100% - #{$sidebar-width});
 }
 
-.related-info {
-  width: $related-info-width;
+.sidebar {
+  width: $sidebar-width;
   height: 100%;
   padding-top: 8vh;
   padding-left: 20px;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+.tabs {
+  margin-top: 10px;
+}
+
+.tabs-header {
+  position: relative;
+  display: inline-block;
+
+  $list-item-width: 90px;
+
+  .sliding {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: $brand-color;
+    width: $list-item-width;
+    height: 2px;
+    transition: .2s ease-in-out;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    width: $list-item-width;
+    padding: 10px 0px;
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover,
+    &.active {
+      color: $brand-color;
+    }
+  }
 }
 
 .type-select {
@@ -37,8 +82,8 @@ $color-set: $orange $yellow $gray;
     margin-left: 0!important;
 
     &.active {
-      background: #5b84d7;
-      border-color: #5b84d7;
+      background: $brand-color;
+      border-color: $brand-color;
       color: #fff!important;
       box-shadow: none;
     }
@@ -51,7 +96,6 @@ px-dropdown {
 }
 
 .kpis {
-  padding-top: 3vh;
 
   .kpi {
     display: flex;

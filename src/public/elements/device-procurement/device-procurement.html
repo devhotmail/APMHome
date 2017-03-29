@@ -13,7 +13,7 @@
     <div class="chart-wrapper">
       <zoom-pack-chart chart-data="[[data]]"></zoom-pack-chart>
     </div>
-    <div class="related-info">
+    <div class="sidebar">
       <div class="type-select btn-group">
         <template is="dom-repeat" items="[[selectOpts]]">
           <div class$="[[computedCls(item.val, selectedOpt)]]"
@@ -22,52 +22,77 @@
           </div>
         </template>
       </div>
-      <div class="kpis">
-        <h3>当前位置: [[focus.data.name]]</h3>
-        当前平均使用率预测:
-        <h2>[[decimal2Percent(focus.data.usage)]]</h2>
-        <template is="dom-if" if="[[isArray(focus.data.suggestions)]]">
-          <template is="dom-repeat" items="[[focus.data.suggestions]]">
-            <template is="dom-if" if="[[item.title]]">
-              <div>[[item.title]]</div>
-            </template>
-            <template is="dom-if" if="[[item.addition]]">
-              <h2>[[item.addition]]</h2>
-            </template>
-          </template>
-          <div class="divider"></div>
-        </template>
-        <template is="dom-if" if="[[currentKPIs.length]]">
-          <template is="dom-repeat" items="[[currentKPIs]]">
-            <template is="dom-if" if="[[item.conclusion]]">
-              <div class$="kpi kpi-[[index]]">
-                [[item.desc]]
-              </div>
-            </template>
-            <div class="kpi-detail">
-              <template is="dom-if" if="[[item.conclusion]]">
-                <h2>[[item.conclusion]]台设备</h2>
+      <div class="tabs">
+        <div style="text-align: center;">
+          <div class="tabs-header">
+            <div class="sliding" style$="left: [[slidingLeft]]"></div>
+            <ul>
+              <template is="dom-repeat" items="[[tabList]]">
+                <li
+                  class$="[[calcTabCls(item.val, activeTab)]]"
+                  on-tap="handleTabTap">
+                  [[item.key]]
+                </li>
               </template>
+            </ul>
+          </div>
+        </div>
+        <div class="tabs-content">
+          <template is="dom-if" if="[[isEqual(activeTab, 0)]]">
+            <div class="related-info">
+              <div class="kpis">
+                <h3>当前位置: [[focus.data.name]]</h3>
+                当前平均使用率预测:
+                <h2>[[decimal2Percent(focus.data.usage)]]</h2>
+                <template is="dom-if" if="[[isArray(focus.data.suggestions)]]">
+                  <template is="dom-repeat" items="[[focus.data.suggestions]]">
+                    <template is="dom-if" if="[[item.title]]">
+                      <div>[[item.title]]</div>
+                    </template>
+                    <template is="dom-if" if="[[item.addition]]">
+                      <h2>[[item.addition]]</h2>
+                    </template>
+                  </template>
+                  <div class="divider"></div>
+                </template>
+                <template is="dom-if" if="[[currentKPIs.length]]">
+                  <template is="dom-repeat" items="[[currentKPIs]]">
+                    <template is="dom-if" if="[[item.conclusion]]">
+                      <div class$="kpi kpi-[[index]]">
+                        [[item.desc]]
+                      </div>
+                    </template>
+                    <div class="kpi-detail">
+                      <template is="dom-if" if="[[item.conclusion]]">
+                        <h2>[[item.conclusion]]台设备</h2>
+                      </template>
+                    </div>
+                  </template>
+                </template>
+              </div>
+              <div class="divider"></div>
+              <div class="legends">
+                <h3>图示说明</h3>
+                <div class="legend">
+                  <i class="dewicon-circle-high" style="color:#b3b3b3"></i>
+                  <span class="legend-tip">平均使用率预测(%)</span>
+                </div>
+                <div class="legend">
+                  <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                  <span class="legend-tip">单台使用率预测&gt;100%</span>
+                </div>
+                <div class="legend">
+                  <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                  <span class="legend-tip">单台使用率预测&lt;30%</span>
+                </div>
+                <div class="legend">球大小与设备利润预测相关</div>
+              </div>
             </div>
           </template>
-        </template>
-      </div>
-      <div class="divider"></div>
-      <div class="legends">
-        <h3>图示说明</h3>
-        <div class="legend">
-          <i class="dewicon-circle-high" style="color:#b3b3b3"></i>
-          <span class="legend-tip">平均使用率预测(%)</span>
+          <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
+            222
+          </template>
         </div>
-        <div class="legend">
-          <i class="dewicon-circle-full" style="color:#e26d26"></i>
-          <span class="legend-tip">单台使用率预测&gt;100%</span>
-        </div>
-        <div class="legend">
-          <i class="dewicon-circle-low" style="color:#ebda51"></i>
-          <span class="legend-tip">单台使用率预测&lt;30%</span>
-        </div>
-        <div class="legend">球大小与设备利润预测相关</div>
       </div>
     </div>
   </template>
@@ -106,6 +131,28 @@
             type: Array,
             computed: 'getCurrentKPIs(focus)'
           },
+          tabList: {
+            type: Array,
+            readOnly: true,
+            value: [
+              {
+                key: '系统自动',
+                val: 0
+              },
+              {
+                key: '手动调节',
+                val: 1
+              }
+            ]
+          },
+          activeTab: {
+            type: Number,
+            value: 0
+          },
+          slidingLeft: {
+            type: String,
+            computed: 'calcSlidingLeft(activeTab)'
+          },
           selectOpts: {
             type: Array,
             readOnly: true,
@@ -136,9 +183,21 @@
         ],
         observers: [
           'loadData(selectedOpt)',
-          'changeQuery(selectedOpt)'
+          'changeQuery(selectedOpt)',
         ],
         isArray: Array.isArray,
+        isEqual: function(a, b) {
+          return a === b;
+        },
+        handleTabTap: function(e) {
+          this.set('activeTab', e.model.item.val);
+        },
+        calcTabCls: function(val, activeTab){
+          return val === activeTab ? 'active' : ''
+        },
+        calcSlidingLeft: function(activeTab) {
+          return activeTab * 90 + 'px';
+        },
         computedCls: function(val, selectedOpt) {
           return val === selectedOpt ? 'active btn' : 'btn';
         },
@@ -212,9 +271,9 @@
             groupby: groupby
           }).toString();
 
-          localStorage.clear()
-
-          return this.fetchPage(url)
+          return fetch('mock/asset-procurement.json' + '?groupby=' + groupby)
+          .then(res => res.json())
+          // return this.fetchPage(url)
           .then((function(data) {
             this.data = this.dataConverter(data);
           }).bind(this));

@@ -13,6 +13,7 @@
   </template>
   <script>
     var constants = {
+      circleColor: 'rgb(234, 234, 234)',
       waveColor: { // Color of the fill wave
         gray: 'rgb(178, 178, 178)',
         orange: 'rgb(277, 110, 21)',
@@ -149,9 +150,7 @@
         .attr('stroke', function(d) {
           return getColorByPercent(d.data.usage);
         })
-        .attr('fill', function(d) {
-          return (d !== focus && d.parent !== focus) ? 'none' : 'transparent';
-        })
+        .attr('fill', constants.circleColor)
         .on('click', function(d) {
           if (focus !== d) {
             zoom(d);
@@ -266,10 +265,10 @@
             }
           });
 
-          transition.selectAll('circle.node-leaf')
-          .attr('fill', function(d) {
-            return (d !== focus && d.parent !== focus) ? 'none' : 'transparent';
-          });
+          // transition.selectAll('circle.node-leaf')
+          // .attr('fill', function(d) {
+          //   return (d !== focus && d.parent !== focus) ? '#fff' : '#fff';
+          // });
 
           transition.selectAll('g.text-top')
           .filter(function(d) {
@@ -346,9 +345,17 @@
               if (d.parent === focus) return 1;
               return 0.6;
             }
-          })
-          .selectAll('circle, g.wave')
-          .attr('transform', 'scale(' + k + ')')
+          });
+
+          assetGroup
+          .selectAll('circle')
+          .attr('r', function(d) {
+            return d.r * k;
+          });
+
+          assetGroup
+          .selectAll('g.wave')
+          .attr('transform', 'scale(' + k + ')');
 
           // move text-top when scale changes
           textGroup.selectAll('g.text-top')

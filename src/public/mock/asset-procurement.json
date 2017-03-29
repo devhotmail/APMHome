@@ -1,0 +1,316 @@
+{
+  "name": "All Assets",
+  "usage": 0.57,
+  "revenue_label": "12.3",
+  "revenue_unit": "万",
+  "revenue_increase": 0.05,
+  "suggestions": [
+    {
+      "title": "建议提高使用率"
+    },
+    {
+      "title": "建议购买",
+      "addition": "2种类型"
+    },
+    {
+      "title": "建议合理使用设备"
+    }
+  ],
+  "items": [
+    {
+      "name": "科室01",
+      "items": [
+        {
+          "name": "CT",
+          "items": [
+            {
+              "name": "CT-1",
+              "size": 120,
+              "usage": 0.24,
+              "id": 111
+            },
+            {
+              "name": "CT-2",
+              "size": 1300,
+              "usage": 0.98,
+              "id": 112
+            },
+            {
+              "name": "CT-3",
+              "size": 7074,
+              "usage": 0.1,
+              "id": 113
+            }
+          ],
+          "usage": 0.44,
+          "revenue_label": "12.3",
+          "revenue_unit": "万",
+          "revenue_increase": 0.05,
+          "id": 110
+        },
+        {
+          "name": "MR",
+          "items": [
+            {
+              "name": "MR-1",
+              "size": 17010,
+              "usage": 0.81,
+              "id": 121
+            },
+            {
+              "name": "MR-2",
+              "size": 5842,
+              "usage": 0.23,
+              "id": 122
+            },
+            {
+              "name": "MR-3",
+              "size": 1041,
+              "usage": 0.45,
+              "id": 123
+            },
+            {
+              "name": "MR-4",
+              "size": 5176,
+              "usage": 0.79,
+              "id": 124
+            },
+            {
+              "name": "MR-5",
+              "size": 449,
+              "usage": 0.97,
+              "id": 125
+            },
+            {
+              "name": "MR-6",
+              "size": 5593,
+              "usage": 0.81,
+              "id": 126
+            },
+            {
+              "name": "MR-7",
+              "size": 5534,
+              "usage": 0.52,
+              "id": 127
+            },
+            {
+              "name": "MR-8",
+              "size": 9201,
+              "usage": 0.12,
+              "id": 128
+            },
+            {
+              "name": "MR-9",
+              "size": 19975,
+              "usage": 0.81,
+              "id": 129
+            },
+            {
+              "name": "MR-10",
+              "size": 1116,
+              "usage": 0.54,
+              "id": 130
+            },
+            {
+              "name": "MR-11",
+              "size": 6006,
+              "usage": 0.46,
+              "id": 131
+            }
+          ],
+          "usage": 0.59,
+          "revenue_label": "12.3",
+          "revenue_unit": "万",
+          "revenue_increase": 0.05,
+          "id": 120
+        }
+      ],
+      "usage": 0.44,
+      "revenue_label": "12.3",
+      "revenue_unit": "万",
+      "revenue_increase": 0.05,
+      "id": 110
+    },
+    {
+      "name": "科室02",
+      "items": [
+        {
+          "name": "CT",
+          "items": [
+            {
+              "name": "CT-11",
+              "size": 120,
+              "usage": 0.24,
+              "id": 111
+            },
+            {
+              "name": "CT-21",
+              "size": 1300,
+              "usage": 0.98,
+              "id": 112
+            },
+            {
+              "name": "CT-31",
+              "size": 7074,
+              "usage": 0.1,
+              "id": 113
+            }
+          ],
+          "usage": 0.44,
+          "revenue_label": "12.3",
+          "revenue_unit": "万",
+          "revenue_increase": 0.05,
+          "id": 110
+        },
+        {
+          "name": "MR",
+          "items": [
+            {
+              "name": "MR-11",
+              "size": 17010,
+              "usage": 0.81,
+              "id": 121
+            },
+            {
+              "name": "MR-21",
+              "size": 5842,
+              "usage": 0.23,
+              "id": 122
+            },
+            {
+              "name": "MR-31",
+              "size": 1041,
+              "usage": 0.45,
+              "id": 123
+            },
+            {
+              "name": "MR-41",
+              "size": 5176,
+              "usage": 0.79,
+              "id": 124
+            },
+            {
+              "name": "MR-51",
+              "size": 449,
+              "usage": 0.97,
+              "id": 125
+            },
+            {
+              "name": "MR-61",
+              "size": 5593,
+              "usage": 0.81,
+              "id": 126
+            },
+            {
+              "name": "MR-71",
+              "size": 5534,
+              "usage": 0.52,
+              "id": 127
+            }
+          ],
+          "usage": 0.59,
+          "revenue_label": "12.3",
+          "revenue_unit": "万",
+          "revenue_increase": 0.05,
+          "id": 120
+        }
+      ],
+      "usage": 0.44,
+      "revenue_label": "12.3",
+      "revenue_unit": "万",
+      "revenue_increase": 0.05,
+      "id": 110
+    },
+    {
+      "name": "科室03",
+      "items": [
+        {
+          "name": "ABC",
+          "items": [
+            {
+              "name": "ABC-11",
+              "size": 120,
+              "usage": 0.24,
+              "id": 111
+            },
+            {
+              "name": "ABC-21",
+              "size": 1300,
+              "usage": 0.98,
+              "id": 112
+            },
+            {
+              "name": "ABC-31",
+              "size": 7074,
+              "usage": 0.1,
+              "id": 113
+            }
+          ],
+          "usage": 0.44,
+          "revenue_label": "12.3",
+          "revenue_unit": "万",
+          "revenue_increase": 0.05,
+          "id": 110
+        },
+        {
+          "name": "XMR",
+          "items": [
+            {
+              "name": "XMR-11",
+              "size": 17010,
+              "usage": 0.81,
+              "id": 121
+            },
+            {
+              "name": "XMR-21",
+              "size": 5842,
+              "usage": 0.23,
+              "id": 122
+            },
+            {
+              "name": "XMR-31",
+              "size": 1041,
+              "usage": 0.45,
+              "id": 123
+            },
+            {
+              "name": "XMR-41",
+              "size": 5176,
+              "usage": 0.79,
+              "id": 124
+            },
+            {
+              "name": "XMR-51",
+              "size": 449,
+              "usage": 0.97,
+              "id": 125
+            },
+            {
+              "name": "XMR-61",
+              "size": 5593,
+              "usage": 0.81,
+              "id": 126
+            },
+            {
+              "name": "XMR-71",
+              "size": 5534,
+              "usage": 0.52,
+              "id": 127
+            }
+          ],
+          "usage": 0.59,
+          "revenue_label": "12.3",
+          "revenue_unit": "万",
+          "revenue_increase": 0.05,
+          "id": 120
+        }
+      ],
+      "usage": 0.44,
+      "revenue_label": "12.3",
+      "revenue_unit": "万",
+      "revenue_increase": 0.05,
+      "id": 110
+    }
+  ],
+  "id": 100
+}

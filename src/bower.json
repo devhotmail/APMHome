@@ -44,7 +44,8 @@
     "fastclick": "^1.0.6",
     "viewport-units-buggyfill": "^0.6.0",
     "pepjs": "^0.4.2",
-    "numbro": "https://github.build.ge.com/foundry-sh/numbro.git#develop"
+    "numbro": "https://github.build.ge.com/foundry-sh/numbro.git#develop",
+    "px-tabs": "^0.7.0"
   },
   "resolutions": {
     "px-defaults-design": "^1.0.2",
