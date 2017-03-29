@@ -13,7 +13,7 @@
   </template>
   <script>
     var constants = {
-      circleColor: 'rgb(234, 234, 234)',
+      circleColor: 'rgba(255, 255, 255, 0)',
       waveColor: { // Color of the fill wave
         gray: 'rgb(178, 178, 178)',
         orange: 'rgb(277, 110, 21)',
@@ -163,7 +163,7 @@
           element.on('mouseover', function() {
             if (d === root) return;
             var textEl = d3.select('#text-' + d.data.id + ' .text-center');
-            if (!canShowText(d)) {
+            if (!canShowText(d) && d.parent === focus) {
               textEl.style('display', 'inline')
               .style('fill-opacity', 1);
             }
@@ -172,7 +172,7 @@
           element.on('mouseleave', function() {
             if (d === root) return;
             var textEl = d3.select('#text-' + d.data.id + ' .text-center');
-            if (!canShowText(d)) {
+            if (!canShowText(d) && d.parent === focus) {
               textEl.style('display', 'none')
               .style('fill-opacity', 0);
             }
