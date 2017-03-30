@@ -56,7 +56,7 @@
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>
-                    <p:commandButton validateClient="true" actionListener="#{workflowConfigController.save}" value="#{msg.Save}" icon="ui-icon-check" />
+                    <p:commandButton validateClient="true" actionListener="#{workflowConfigController.save}" value="#{msg.Save}" icon="ui-icon-check" rendered="#{workflowConfigController.selected != null}"/>
                 </h:panelGroup>
             </h:form>
 
