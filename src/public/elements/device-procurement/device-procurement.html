@@ -60,22 +60,22 @@
                   </template>
                   <div class="divider"></div>
                 </template>
-                <template is="dom-if" if="[[currentKPIs.length]]">
+                <template is="dom-if" if="[[isOr(currentKPIs.0.num, currentKPIs.1.num)]]">
                   <template is="dom-repeat" items="[[currentKPIs]]">
-                    <template is="dom-if" if="[[item.conclusion]]">
+                    <template is="dom-if" if="[[item.num]]">
                       <div class$="kpi kpi-[[index]]">
                         [[item.desc]]
                       </div>
                     </template>
                     <div class="kpi-detail">
-                      <template is="dom-if" if="[[item.conclusion]]">
-                        <h2>[[item.conclusion]]台设备</h2>
+                      <template is="dom-if" if="[[item.num]]">
+                        <h2>[[item.num]]台设备</h2>
                       </template>
                     </div>
                   </template>
+                  <div class="divider"></div>
                 </template>
               </div>
-              <div class="divider"></div>
               <div class="legends">
                 <h3>图示说明</h3>
                 <div class="legend">
@@ -96,16 +96,28 @@
           </template>
           <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
             <div class="config-list">
-              <template is="dom-repeat" items="[[focus.children]]">
+              <template is="dom-repeat" items="[[configList]]">
                 <div class="config-item">
-                  <div class="item-name">[[item.data.name]]</div>
-                  <editable-block value="{{item.data.revenue_increase}}"></editable-block>
+                  <div class="item-name" on-tap="handleConfigItemTap">[[item.name]]</div>
+                  <editable-block value="{{item.revenue_increase}}"></editable-block>
                 </div>
               </template>
             </div>
-            <template is="dom-if" if="false">
-              111
+            <template is="dom-if" if="[[isArray(selectedConfigItem.items)]]">
+              <div class="config-list">
+                <template is="dom-repeat" items="[[selectedConfigItem.items]]">
+                  <div class="config-item">
+                    <div class="item-name">[[item.name]]</div>
+                    <editable-block value="{{item.revenue_increase}}"></editable-block>
+                  </div>
+                </template>
+              </div>
             </template>
+            <div class="btn-group">
+              <div class="btn active" on-tap="handleSubmit">
+                确认建议
+              </div>
+            </div>
           </template>
         </div>
       </div>
@@ -119,7 +131,7 @@
     var sectionalizer = [
       {
         key: 'orange',
-        loadStatus: 'high',
+        status: 'high',
         desc: '使用率预测>100%',
         filter: function(n) {
           return n >= 1;
@@ -127,7 +139,7 @@
       },
       {
         key: 'yellow',
-        loadStatus: 'low',
+        status: 'low',
         desc: '使用率预测<30%',
         filter: function(n) {
           return n <= 0.3;
@@ -143,9 +155,9 @@
         is: 'device-procurement',
         properties: {
           data: Object,
-          focus: {
-            type: Object
-          },
+          focus: Object,
+          selectedConfigItem: Object,
+          configList: Array,
           currentKPIs: {
             type: Array,
             computed: 'getCurrentKPIs(focus)'
@@ -203,15 +215,34 @@
         observers: [
           'loadData(selectedOpt)',
           'changeQuery(selectedOpt)',
-          'watcher(focus)'
+          'getInitSelectItem(configList)',
+          'watcher4Focus(focus)'
         ],
-        watcher: console.log,
         isArray: Array.isArray,
         isEqual: function(a, b) {
           return a === b;
         },
+        isOr: function(a, b) {
+          return a || b;
+        },
+        watcher4Focus: function(focus) {
+          // this.setter4SelectedConfigItem((focus.children && focus.children.length) ? focus.children[0] : {});
+        },
+        getInitSelectItem: function(configList) {
+          console.log(configList)
+          this.setter4SelectedConfigItem(configList[0]);
+        },
+        handleConfigItemTap: function(e) {
+          this.setter4SelectedConfigItem(e.model.item);
+        },
+        setter4SelectedConfigItem: function(val) {
+          this.set('selectedConfigItem', val);
+        },
         handleTabTap: function(e) {
           this.set('activeTab', e.model.item.val);
+        },
+        handleSubmit: function(e) {
+          console.log(this.configList)
         },
         calcTabCls: function(val, activeTab){
           return val === activeTab ? 'active' : ''
@@ -231,27 +262,20 @@
           location.hash = '#' + new_hash;
         },
         getCurrentKPIs: function(focus) {
-          var conclusion = focus.data.conclusion;
-          if (!conclusion) return [];
+          var descList = [
+            '使用率预测<30%',
+            '使用率预测>100%',
+          ];
 
-          function findDesc(status) {
-            var k = 0;
-            while(k < sectionalizer.length) {
-              if (sectionalizer[k].loadStatus === status) {
-                return sectionalizer[k].desc;
+          var usageSum = focus.data.usage_sum;
+          if (usageSum && usageSum.length) {
+            return usageSum.map(function(n, i) {
+              return {
+                desc: descList[i],
+                num: n
               }
-              k++;
-            }
-            return '';
-          }
-
-          return Object.keys(conclusion).map(function(n) {
-            return {
-              loadStatus: n,
-              desc: findDesc(n),
-              conclusion: conclusion[n]
-            }
-          });
+            });
+          } else return [];
         },
         _isChecked: function(n) {
           return n.val == this.selectedOpt;
@@ -275,6 +299,13 @@
 
           return data;
         },
+        plainClone: function(plainObj) {
+          return JSON.parse(JSON.stringify(plainObj));
+        },
+        getInitConfig: function(obj) {
+          var data = this.plainClone(obj);
+          return data.items;
+        },
         loadData: function(groupby) {
           var url = URI(this.resolveApiUrl('/api/dm')).query({
             groupby: groupby
@@ -284,7 +315,8 @@
           .then(res => res.json())
           // return this.fetchPage(url)
           .then((function(data) {
-            this.data = this.dataConverter(data);
+            this.set('data', this.dataConverter(data));
+            this.set('configList', this.getInitConfig(data));
           }).bind(this));
         },
         getFragObj: function(url) {

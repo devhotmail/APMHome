@@ -4,7 +4,7 @@ $brand-color: #5b84d7;
 }
 
 .editable-block {
-  padding: 3px;
+  padding: 3px 5px;
   border: 1px solid transparent;
   cursor: pointer;
   @include rm-outline();
@@ -16,6 +16,6 @@ $brand-color: #5b84d7;
   &:focus {
     @include rm-outline();
     border-color: $brand-color;
-    border-radius: 5px;
+    border-radius: 6px;
   }
 }

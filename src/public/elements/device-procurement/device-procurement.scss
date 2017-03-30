@@ -23,7 +23,7 @@ $border-color: rgb(186, 186, 186);
 .sidebar {
   width: $sidebar-width;
   height: 100%;
-  padding-top: 8vh;
+  padding-top: 40px;
   padding-left: 20px;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -90,12 +90,16 @@ $border-color: rgb(186, 186, 186);
   align-items: center;
   justify-content: space-between;
 
+  &:hover {
+    color: $brand-color;
+  }
+
   .item-name {
     // flex: 1;
   }
 }
 
-.type-select {
+.btn-group {
   display: flex;
   justify-content: space-around;
   align-items: center;
