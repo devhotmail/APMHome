@@ -47,6 +47,10 @@
                             <label class="label">#{msg.timeoutClose}</label>
                             <p:inputText id="timeoutClose" value="#{workflowConfigController.selected.timeoutClose}" />
                         </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.maxMessageCount}</label>
+                            <p:inputText id="maxMessageCount" value="#{workflowConfigController.selected.maxMessageCount}" />
+                        </h:panelGroup>
                     </p:panelGrid>
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{workflowConfigController.save}" value="#{msg.Save}" update="display,:WorkflowConfigEditDlg, :WorkflowConfigListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'WorkflowConfigEditDialog');"/>

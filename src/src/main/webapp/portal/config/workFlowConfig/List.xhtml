@@ -49,6 +49,9 @@
                     <p:column headerText="#{msg.timeoutClose}" sortBy="#{item.timeoutClose}" filterBy="#{item.timeoutClose}" filterMatchMode="EQ">
                         <h:outputText value="#{item.timeoutClose}"/>
                     </p:column>
+                    <p:column headerText="#{msg.maxMessageCount}" sortBy="#{item.maxMessageCount}" filterBy="#{item.maxMessageCount}" filterMatchMode="EQ">
+                        <h:outputText value="#{item.maxMessageCount}"/>
+                    </p:column>
                     <f:facet name="{Toolbar}">
                         <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
                             <p:dataExporter type="xls" target="datalist" fileName="WorkflowConfig_export"/>

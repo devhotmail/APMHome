@@ -139,3 +139,14 @@ order_reopen_timeframe int --二次开单的最大时间间隔
 );
 alter table workflow_config add primary key (id);
 
+alter table workflow_config add COLUMN max_message_count int;
+
+create table wechat_messge_log(
+id serial not null,
+wechatId varchar(64),
+wo_id int,
+wo_step_id int,
+message_count not null,
+message_type int not null -- 推送类型 1:报修流程超时提醒,  2:二次开单提醒
+)
+alter table wechat_messge_log add primary key (id);
