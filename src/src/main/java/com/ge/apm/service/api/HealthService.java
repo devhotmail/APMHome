@@ -50,7 +50,7 @@ public class HealthService {
     	= " SELECT asset_info.id, asset_info.name, to_char(inner_2.create_time, 'YYYY-MM-DD'), inner_2.case_type "
     	+ " FROM "
     		+ " asset_info "
-    		+ " INNER JOIN "
+    		+ " LEFT JOIN "
     		+ " (SELECT inner_1.asset_id, inner_1.create_time, work_order.case_type "
     		+ " FROM "
     			+ " ( SELECT asset_id, MAX(create_time) AS create_time FROM work_order GROUP BY asset_id) AS inner_1 "
