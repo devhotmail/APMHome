@@ -24,6 +24,11 @@
         <script>
             var WEB_ROOT = '${ctx}/';
         </script>
+        <style>
+            .weui-navbar__item.weui-bar__item_on {
+                background-color: #09BB07;
+            }
+        </style>
     </head>
     <body style="background-color:#f8f8f8">
         <div id="container" class="container"></div>
