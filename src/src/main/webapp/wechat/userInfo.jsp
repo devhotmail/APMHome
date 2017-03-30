@@ -28,6 +28,37 @@
 	<script type="text/html" id="create">
             <div class="page">
                 <div class="page__bd"> 
+					<div class="weui-cells__title">已绑定信息</div>
+					<form id= "originUserForm" >
+						<div class="weui-cells weui-cells_form">
+                            <div class="weui-cell">
+                                <div class="weui-cell__hd"><label class="weui-label">医院</label></div>
+                                <div class="weui-cell__bd">
+                                    <input id="hospitalName" class="weui-input" name="hospitalName" value="${user.hospitalName}" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="weui-cell">
+                                <div class="weui-cell__hd"><label class="weui-label">名字</label></div>
+                                <div class="weui-cell__bd">
+                                    <input id="name" class="weui-input" name="name" value="${user.userName}" readonly="readonly" />
+                                </div>
+                            </div>
+							<div class="weui-cell">
+                                <div class="weui-cell__hd"><label class="weui-label">角色</label></div>
+                                <div class="weui-cell__bd">
+                                    <input id="userRole" class="weui-input"  name="userRole" value="${user.userRole}" readonly="readonly" />
+                                </div>
+                            </div>
+							<div class="weui-cell">
+                                <div class="weui-cell__hd"><label class="weui-label">手机号</label></div>
+                                <div class="weui-cell__bd">
+                                    <input id="loginName" class="weui-input" name="loginName" value="${user.loginName}" readonly="readonly" />
+                                </div>
+                            </div>
+                        </div>
+					</form>
+
+					<div class="weui-cells__title">绑定账号</div>
                     <form id="userForm">
                         <div class="weui-cells weui-cells_form">
                             <div class="weui-cell">
@@ -74,9 +105,9 @@
             <script type="text/javascript">
                 var WEB_ROOT = '${ctx}/';
                 $(function(){
-                    $('#submit').click(function(){
-			var flag = true;			
-            var Inputs = $('#userForm').find('input');
+        		$('#submit').click(function(){
+				var flag = true;			
+            	var Inputs = $('#userForm').find('input');
             $.each(Inputs, function (idx, value) {
                 if (value.type === "password") {
                     if (value.value === "") {
@@ -85,7 +116,22 @@
                     } else {
                         $(value).parent().parent().removeClass('weui-cell_warn');
                     }
-                }
+                }else if(value.type === "text"){
+					if(value.value === ""){
+						flag = false;
+                        $(value).parent().parent().addClass('weui-cell_warn');
+					}else{
+						$(value).parent().parent().removeClass('weui-cell_warn');
+					}
+					
+					var reg = /^1[34578]\d{9}$/; //^1[3|4|5|7|8][0-9]\d{4,8}$/; 
+					if(!reg.test(value.value)){
+						flag = false;
+						$(value).parent().parent().addClass('weui-cell_warn');
+					}else{
+						$(value).parent().parent().removeClass('weui-cell_warn');
+					}
+				}
             });
             if (flag) {
                 var confirmPwd = $("#confirmPwd")[0];

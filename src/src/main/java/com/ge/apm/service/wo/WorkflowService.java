@@ -60,27 +60,31 @@ public class WorkflowService {
 			return;
 		}
 		for (WorkOrder workOrder : orders) {
-			isTimeout(workOrder);
-			isReopen(workOrder);
+			WorkflowConfig woc = workOrderMapper.fetchWorkflowConfig(workOrder.getSiteId(),workOrder.getHospitalId());
+			if(woc == null){
+				logger.error("fetch WorkflowConfig error,siteId is {},hospitalId is {}",workOrder.getSiteId(),workOrder.getHospitalId());
+				continue;
+			}
+			isTimeout(workOrder,woc);
+			isReopen(workOrder,woc);
 		}
 		logger.info("end timeout and reopen……");
 	}
 	
-	private void isReopen(WorkOrder workOrder) {
+	private void isReopen(WorkOrder workOrder, WorkflowConfig woc) {
 		WorkOrder parent = workOrderMapper.fetchParentWorkOrder(workOrder.getParentWoId());
 		if(parent == null){
 			return;
 		}
-		StringBuilder builder = new StringBuilder();
-		String key = builder.append(workOrder.getSiteId()).append(":").append(workOrder.getHospitalId()).toString();
 		DateTime parentStartTime = new DateTime(parent.getRequestTime());
 		DateTime childStartTime = new DateTime(workOrder.getRequestTime());
-/*		WorkflowConfig woc = configs.get(key);
+		/*			StringBuilder builder = new StringBuilder();
+		String key = builder.append(workOrder.getSiteId()).append(":").append(workOrder.getHospitalId()).toString();
+		WorkflowConfig woc = configs.get(key);
 		if(woc == null){
 			woc = workOrderMapper.fetchWorkflowConfig(workOrder.getSiteId(),workOrder.getHospitalId());
 			configs.put(key, woc);
 		}*/
-		WorkflowConfig woc = workOrderMapper.fetchWorkflowConfig(workOrder.getSiteId(),workOrder.getHospitalId());
 		List<Integer> users = null;
 		if(Minutes.minutesBetween(childStartTime, parentStartTime).getMinutes() > woc.getOrderReopenTimeframe()){
 			ReopenPushModel model = new ReopenPushModel();
@@ -106,7 +110,7 @@ public class WorkflowService {
 		
 	}
 
-	private void isTimeout(WorkOrder workOrder) {
+	private void isTimeout(WorkOrder workOrder, WorkflowConfig woc) {
 		/*		StringBuilder builder = new StringBuilder();
 		String key = builder.append(workOrder.getSiteId()).append(":").append(workOrder.getHospitalId()).toString();
 		WorkflowConfig woc = configs.get(key);
@@ -114,7 +118,6 @@ public class WorkflowService {
 			woc = workOrderMapper.fetchWorkflowConfig(workOrder.getSiteId(),workOrder.getHospitalId());
 			configs.put(key, woc);
 		}*/
-		WorkflowConfig woc = workOrderMapper.fetchWorkflowConfig(workOrder.getSiteId(),workOrder.getHospitalId());
 		List<WorkFlow> workFlows = workOrderMapper.fetchWorkFlowList(workOrder);
 		if(CollectionUtils.isEmpty(workFlows)){
 			logger.error("cannot find work steps , workOrder id is ",workOrder.getId());
@@ -124,6 +127,7 @@ public class WorkflowService {
 		List<TimeoutPushModel> models = new ArrayList<TimeoutPushModel>(workFlows.size() * 10);
 		//如果第一个超时，则给当前步骤之前的所有人发送通知
 		WorkFlow lastOne = workFlows.get(0);
+		String stepName = lastOne.getStepName();
 		if(need2Notice(lastOne,woc)){
 			for(WorkFlow workFlow : workFlows){
 				if(users.contains(workFlow.getCurrentPersonId())){
@@ -134,8 +138,8 @@ public class WorkflowService {
 				model.set_assetName(workOrder.getAssetName());
 				model.set_requestTime(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm:ss"));
 				model.set_currentPerson(workOrder.getCurrentPersonName());
-				model.set_status(Constans.getName(workOrder.getCurrentStepId()));
-				//model.set_currentStepId(Constans.getName(workOrder.getCurrentStepId()));
+				model.set_status(stepName);//Constans.getName(workOrder.getCurrentStepId())
+				model.setFirst(stepName+"超时");
 				model.set_urgency(CasePriorityNum.getName(workOrder.getCasePriority()));
 				model.set_linkUrl(coreService.getWoDetailUrl(workOrder.getId()));
 				model.setCurrentPersonId(workFlow.getCurrentPersonId());
@@ -148,7 +152,6 @@ public class WorkflowService {
 		buildTimeoutTemplateMsg(models,users);
 	}
 	
-
 	private void buildTimeoutTemplateMsg(List<TimeoutPushModel> models, List<Integer> users) {
 		logger.info("begin to push timeout msg");
 		List<UserAccount> accounts = userAccountMapper.getUserWechatId(users);
@@ -164,7 +167,6 @@ public class WorkflowService {
 		}
 	}
 	
-
 	public boolean need2Notice(WorkFlow workFlow,WorkflowConfig woc){
 		DateTime now = new DateTime(new Date());
 		DateTime startTime = new DateTime(workFlow.getStartTime());
@@ -173,12 +175,16 @@ public class WorkflowService {
 			timeout =woc.getTimeoutDispatch();
 		}else if(workFlow.getCurrentStepId() == Constans.ACCEPT.getIndex()){
 			timeout =woc.getTimeoutAccept();
-		}else if(workFlow.getCurrentStepId() == Constans.REPAIR.getIndex()){
-			timeout =woc.getTimeoutRepair();
 		}else if(workFlow.getCurrentStepId() == Constans.CLOSED.getIndex()){
 			timeout =woc.getTimeoutClose();
 		}
-		return Minutes.minutesBetween(startTime, now).getMinutes() > timeout;
+		if(timeout > 0){
+			return Minutes.minutesBetween(startTime, now).getMinutes() > timeout;
+		}
+//		else if(workFlow.getCurrentStepId() == Constans.REPAIR.getIndex()){ //repair need not to notice
+//			timeout =woc.getTimeoutRepair();
+//		}
+		return false;
 	}
 	
 }

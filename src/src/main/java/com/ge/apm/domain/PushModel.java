@@ -4,6 +4,21 @@ public class PushModel {
 	private String _openId;
 	private String _templateId;
 	private String _assetName;//资产名称
+	private String first;
+	private String remark;
+	
+	public String getFirst() {
+		return first;
+	}
+	public void setFirst(String first) {
+		this.first = first;
+	}
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 	public String get_openId() {
 		return _openId;
 	}
