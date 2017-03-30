@@ -9,30 +9,31 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
-	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
-	<!-- Enables the Spring MVC @Controller programming model -->
-	<mvc:annotation-driven/>
-	<!-- Scan for Spring beans declared via annotations. -->
-	<context:component-scan base-package="com.ge.webris.web, com.ge.apm.web"/>
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" p:defaultEncoding="utf-8" p:maxUploadSize="100000"/>
+  <!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+  <!-- Enables the Spring MVC @Controller programming model -->
+  <mvc:annotation-driven/>
+  <!-- Scan for Spring beans declared via annotations. -->
+  <context:component-scan base-package="com.ge.webris.web, com.ge.apm.web"/>
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" p:defaultEncoding="utf-8" p:maxUploadSize="100000"/>
 
-	<!-- Resolves views selected for rendering by @Controllers to .xhtml resources in the /WEB-INF/views directory -->
-	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-		<property name="viewClass" value="org.springframework.faces.mvc.JsfView"/>
-		<property name="suffix" value=".xhtml"/>
-	</bean>
+  <!-- Resolves views selected for rendering by @Controllers to .xhtml resources in the /WEB-INF/views directory -->
+  <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+    <property name="viewClass" value="org.springframework.faces.mvc.JsfView"/>
+    <property name="suffix" value=".xhtml"/>
+  </bean>
 
-	<bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
-	<bean class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
-	<!-- Imports user-defined @Controller beans that process client requests -->
-	<import resource="controllers.xml"/>
+  <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
+  <!-- Imports user-defined @Controller beans that process client requests -->
+  <import resource="controllers.xml"/>
 
-	<bean id="aopAdvices" class="com.ge.apm.service.utils.AopAdvices"/>
+  <bean id="aopAdvices" class="com.ge.apm.service.utils.AopAdvices"/>
 
-	<aop:config proxy-target-class="true">
-		<aop:aspect ref="aopAdvices" order="999">
-			<aop:around method="logTag" pointcut="@annotation(com.ge.apm.service.utils.Log)"/>
-			<aop:around method="logRequest" pointcut="@annotation(org.springframework.web.bind.annotation.RequestMapping)"/>
-		</aop:aspect>
-	</aop:config>
+  <aop:config proxy-target-class="true">
+    <aop:aspect ref="aopAdvices" order="999">
+      <aop:around method="logTag" pointcut="@annotation(com.ge.apm.service.utils.Log)"/>
+      <aop:around method="fixUrl" pointcut="@annotation(org.springframework.web.bind.annotation.RequestMapping)"/>
+      <aop:around method="logRequest" pointcut="@annotation(org.springframework.web.bind.annotation.RequestMapping)"/>
+    </aop:aspect>
+  </aop:config>
 </beans>

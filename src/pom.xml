@@ -528,17 +528,6 @@
       <version>2.2</version>
     </dependency>
     <dependency>
-      <groupId>org.springframework.webflow</groupId>
-      <artifactId>spring-faces</artifactId>
-      <version>2.4.2.RELEASE</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>spring-js</artifactId>
-          <groupId>org.springframework.webflow</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-taglibs</artifactId>
       <version>3.1.0.RELEASE</version>
@@ -626,11 +615,6 @@
       <version>2.0.5</version>
     </dependency>
     <dependency>
-      <groupId>org.javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <version>3.21.0-GA</version>
-    </dependency>
-    <dependency>
       <groupId>org.simpleflatmapper</groupId>
       <artifactId>sfm-tuples</artifactId>
       <version>3.0</version>
@@ -707,6 +691,11 @@
       <groupId>com.squareup.retrofit2</groupId>
       <artifactId>converter-jackson</artifactId>
       <version>2.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+      <version>1.6.2</version>
     </dependency>
   </dependencies>
 
