@@ -20,8 +20,8 @@
     </div>
     <div class="sidebar">
       <div class="type-select btn-group">
-        <template is="dom-repeat" items="[[selectOpts]]">
-          <div class$="[[computedCls(item.val, selectedOpt)]]"
+        <template is="dom-repeat" items="[[typeOpts]]">
+          <div class$="[[computedCls(item.val, selectedType)]]"
             on-click="handleSelect">
             [[item.key]]
           </div>
@@ -96,24 +96,49 @@
           </template>
           <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
             <div class="config-list">
-              <template is="dom-repeat" items="[[configList]]">
-                <div class="config-item">
-                  <div class="item-name" on-tap="handleConfigItemTap">[[item.name]]</div>
-                  <editable-block value="{{item.revenue_increase}}"></editable-block>
+              <template is="dom-repeat" id="configList" items="[[configList]]">
+                <div
+                  class$="[[calcConfigItemCls(selectedConfigIndex, index)]]"
+                  on-tap="handleConfigTap">
+                  <div class="item-name">[[item.name]]</div>
+                  <template is="dom-if" if="[[item.isUnknown]]">
+                    <div>待计算</div>
+                  </template>
+                  <template is="dom-if" if="[[!item.isUnknown]]">
+                    <editable-block
+                      value="{{item.revenue_increase}}"
+                      data-index$="[[index]]"
+                      on-value-changed="handleConfigChange"></editable-block>
+                    <span>%</span>
+                  </template>
                 </div>
               </template>
+              <array-selector
+                id="configSelector"
+                items="{{configList}}"
+                selected="{{selectedConfigIndex}}"></array-selector>
             </div>
             <template is="dom-if" if="[[isArray(selectedConfigItem.items)]]">
               <div class="config-list">
-                <template is="dom-repeat" items="[[selectedConfigItem.items]]">
-                  <div class="config-item">
+                <template is="dom-repeat" id="subConfigList" items="[[selectedConfigItem.items]]">
+                  <div
+                    class="config-item"
+                    class$="[[calcConfigItemCls(selectedSubConfigIndex, index)]]"
+                    on-tap="handleSubConfigTap">
                     <div class="item-name">[[item.name]]</div>
-                    <editable-block value="{{item.revenue_increase}}"></editable-block>
+                    <editable-block
+                      value="{{item.revenue_increase}}"
+                      on-value-changed="handleSubConfigChange"></editable-block>
+                    <span>%</span>
                   </div>
                 </template>
+                <array-selector
+                  id="subConfigSelector"
+                  items="{{selectedConfigItem.items}}"
+                  selected="{{selectedSubConfigIndex}}"></array-selector>
               </div>
             </template>
-            <div class="btn-group">
+            <div class="btn-group" id="btn">
               <div class="btn active" on-tap="handleSubmit">
                 确认建议
               </div>
@@ -156,7 +181,18 @@
         properties: {
           data: Object,
           focus: Object,
-          selectedConfigItem: Object,
+          selectedConfigIndex: {
+            type: Number,
+            value: 0
+          },
+          selectedSubConfigIndex: {
+            type: Number,
+            value: 0
+          },
+          selectedConfigItem: {
+            type: Object,
+            computed: 'getSelectedConfigItem(configList, selectedConfigIndex)'
+          },
           configList: Array,
           currentKPIs: {
             type: Array,
@@ -178,13 +214,13 @@
           },
           activeTab: {
             type: Number,
-            value: 0
+            value: 1
           },
           slidingLeft: {
             type: String,
             computed: 'calcSlidingLeft(activeTab)'
           },
-          selectOpts: {
+          typeOpts: {
             type: Array,
             readOnly: true,
             value: [
@@ -200,12 +236,8 @@
               }
             ]
           },
-          selectedOpt: {
+          selectedType: {
             type: String
-          },
-          scaleK: {
-            type: Number,
-            value: 1
           }
         },
         behaviors: [
@@ -213,9 +245,9 @@
           FetchCachedBehavior
         ],
         observers: [
-          'loadData(selectedOpt)',
-          'changeQuery(selectedOpt)',
-          'getInitSelectItem(configList)',
+          'loadData(selectedType)',
+          'changeQuery(selectedType)',
+          'resetSubSelectedConfigIndex(selectedConfigIndex)',
           'watcher4Focus(focus)'
         ],
         isArray: Array.isArray,
@@ -225,15 +257,32 @@
         isOr: function(a, b) {
           return a || b;
         },
+        resetSubSelectedConfigIndex: function(selectedConfigIndex) {
+          // reset subSelectedConfig index when selectedConfigIndex changes
+          this.selectedSubConfigIndex = 0;
+        },
+        handleConfigTap: function(e) {
+          var root = Polymer.dom(this.root);
+          var item = root.querySelector('#configList').indexForElement(e.target);
+          root.querySelector('#configSelector').select(item);
+          // set child config index as zero
+          this.set('selectedSubConfigIndex', 0);
+        },
+        handleSubConfigTap: function(e) {
+          var root = Polymer.dom(this.root);
+          var item = root.querySelector('#subConfigList').indexForElement(e.target);
+          root.querySelector('#subConfigSelector').select(item);
+        },
+        getSelectedConfigItem: function(array, index) {
+          if (Array.isArray(array) && Number.isFinite(index)) {
+            return array[index];
+          }
+        },
+        watcher: function(a) {
+          console.log(a)
+        },
         watcher4Focus: function(focus) {
           // this.setter4SelectedConfigItem((focus.children && focus.children.length) ? focus.children[0] : {});
-        },
-        getInitSelectItem: function(configList) {
-          console.log(configList)
-          this.setter4SelectedConfigItem(configList[0]);
-        },
-        handleConfigItemTap: function(e) {
-          this.setter4SelectedConfigItem(e.model.item);
         },
         setter4SelectedConfigItem: function(val) {
           this.set('selectedConfigItem', val);
@@ -241,8 +290,36 @@
         handleTabTap: function(e) {
           this.set('activeTab', e.model.item.val);
         },
+        handleConfigChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index');
+
+          var configList = this.configList;
+          var modifiedItem = configList[index];
+          if (modifiedItem.items && modifiedItem.items.length) {
+            // update items for current selected config
+            modifiedItem.items.forEach(function(n) {
+              n.revenue_increase = value;
+            });
+            // update configList and remain selectedConfigIndex
+            var _tmp = this.selectedConfigIndex;
+            this.configList = this.plainClone(configList);
+            this.selectedConfigIndex = _tmp;
+          }
+        },
+        handleSubConfigChange: function(e) {
+          var configList = this.configList;
+          var modifiedItem = configList[this.selectedConfigIndex];
+          modifiedItem.isUnknown = true;
+          // override dirty check
+          this.splice('configList', this.selectedConfigIndex, 1, this.plainClone(modifiedItem));
+        },
         handleSubmit: function(e) {
           console.log(this.configList)
+        },
+        calcConfigItemCls: function(a, b) {
+          return a === b ? 'config-item active' : 'config-item';
         },
         calcTabCls: function(val, activeTab){
           return val === activeTab ? 'active' : ''
@@ -250,14 +327,14 @@
         calcSlidingLeft: function(activeTab) {
           return activeTab * 90 + 'px';
         },
-        computedCls: function(val, selectedOpt) {
-          return val === selectedOpt ? 'active btn' : 'btn';
+        computedCls: function(val, selectedType) {
+          return val === selectedType ? 'active btn' : 'btn';
         },
         decimal2Percent: function(decimal) {
           return parseInt(decimal * 100) + '%';
         },
-        changeQuery: function(selectedOpt) {
-          var uri = URI('').addQuery('groupby', selectedOpt);
+        changeQuery: function(selectedType) {
+          var uri = URI('').addQuery('groupby', selectedType);
           var new_hash = uri.query();
           location.hash = '#' + new_hash;
         },
@@ -278,10 +355,10 @@
           } else return [];
         },
         _isChecked: function(n) {
-          return n.val == this.selectedOpt;
+          return n.val == this.selectedType;
         },
         handleSelect: function(e) {
-          this.set('selectedOpt', e.model.item.val);
+          this.set('selectedType', e.model.item.val);
         },
         dataConverter: function(data) {
           function patchUid(obj) {
@@ -316,7 +393,9 @@
           // return this.fetchPage(url)
           .then((function(data) {
             this.set('data', this.dataConverter(data));
-            this.set('configList', this.getInitConfig(data));
+            this.configList = this.getInitConfig(data);
+            // set initial selected config index after configList
+            this.selectedConfigIndex = 0;
           }).bind(this));
         },
         getFragObj: function(url) {
@@ -330,8 +409,8 @@
         },
         ready: function() {
           var hashObj = this.getFragObj(window.location.href);
-          var groupby = hashObj.groupby ? hashObj.groupby : this.selectOpts[0].val;
-          this.set('selectedOpt', groupby);
+          var groupby = hashObj.groupby ? hashObj.groupby : this.typeOpts[0].val;
+          this.set('selectedType', groupby);
         }
       })
     })

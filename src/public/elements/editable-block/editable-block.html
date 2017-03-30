@@ -1,35 +1,73 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html"/>
+
 <link rel="import" href="editable-block-styles.html">
 
 <dom-module id="editable-block">
   <template>
     <style include="editable-block-styles"></style>
-    <div
-      class="editable-block"
-      contenteditable$="[[contenteditable]]"
-      on-tap="handleTap"
-      on-keydown="handleKeyDown">{{value}}</div>
+    <div class="block" id="counter">
+      <template is="dom-if" if="{{showInput}}">
+        <input id="userInput"
+          type="text"
+          value="{{inputVal::input}}"
+          on-keydown="handleInputKeydown">
+      </template>
+      <template is="dom-if" if="{{!showInput}}">
+        <span class="current"
+          on-click="handleShowInput">{{value}}</span>
+      </template>
+    </div>
   </template>
-  <script>
-    Polymer({
-      is: 'editable-block',
-      properties: {
-        value: {
-          type: Number,
-          notify: true
-        },
-        contenteditable: {
-          type: Boolean,
-          value: false
-        }
-      },
-      handleTap: function(e) {
-        this.set('contenteditable', true);
-      },
-      handleKeyDown: function(e) {
-        var keycode = event.which || event.keyCode;
-        if (keycode === 13) this.set('contenteditable', false);
-      }
-    })
-  </script>
 </dom-module>
+
+<script>
+  Polymer({
+    is: 'editable-block',
+    properties: {
+      value: {
+        type: Number,
+        notify: true
+      },
+      inputVal: {
+        type: Number 
+      },
+      showInput: {
+        type: Boolean,
+        value: false
+      }
+    },
+    handleShowInput: function () {
+      this.inputVal = this.value;
+      this.showInput = true;
+      this.async((function() {
+        this.$.counter.querySelector('#userInput').focus();
+      }).bind(this));
+    },
+    isNumeric: function(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    },
+    updateValue: function () {
+      const regex = /^-{0,1}\d*\.?\d+$/;
+      if (regex.test(this.inputVal)) {
+        this.value = parseFloat(this.inputVal);
+      }
+      this.showInput = false;
+    },
+    handleInputKeydown: function (e) {
+      var keycode = event.which || event.keyCode;
+      if (keycode === 13) this.updateValue();
+    },
+    handleBlur: function (e) {
+      var inputEl = this.$.counter.querySelector('#userInput');
+      if (inputEl && inputEl.contains(e.target)) return;
+      // when blur
+      if (this.showInput) this.updateValue();
+    },
+    ready: function () {
+      window.addEventListener('mousedown', this.handleBlur.bind(this));
+    },
+    detached: function () {
+      window.removeEventListener('mousedown', this.handleBlur.bind(this));
+    }
+  });
+</script>

@@ -80,22 +80,37 @@ $border-color: rgb(186, 186, 186);
 }
 
 .config-list {
-  padding: 5px;
   border: 1px solid $border-color;
   border-radius: 6px;
 }
 
 .config-item {
+  padding: 5px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  // justify-content: space-between;
 
-  &:hover {
+  &:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+
+  &:last-of-type {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  &.active {
+    background-color: lighten($brand-color, 30%);
     color: $brand-color;
   }
 
+  &:hover {
+    background-color: lighten($brand-color, 30%);
+  }
+
   .item-name {
-    // flex: 1;
+    flex: 1;
   }
 }
 
