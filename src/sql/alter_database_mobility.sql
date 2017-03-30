@@ -1,4 +1,16 @@
 --- begin of drop unused columns
+alter table work_order alter column name drop not null;
+alter table work_order alter column creator_id drop not null;
+alter table work_order alter column creator_name drop not null;
+alter table work_order alter column create_time drop not null;
+alter table work_order alter column comments drop not null;
+alter table work_order alter column close_reason drop not null;
+alter table work_order alter column is_closed drop not null;
+alter table work_order alter column case_owner_id drop not null;
+alter table work_order alter column case_owner_name drop not null;
+alter table work_order alter column is_internal drop not null;
+alter table work_order alter column name drop not null;
+
 /*
 alter table asset_info drop COLUMN clinical_owner_id;
 alter table asset_info drop COLUMN clinical_owner_name;
@@ -141,12 +153,14 @@ alter table workflow_config add primary key (id);
 
 alter table workflow_config add COLUMN max_message_count int;
 
-create table wechat_messge_log(
+create table wechat_message_log(
 id serial not null,
 wechatId varchar(64),
 wo_id int,
 wo_step_id int,
-message_count not null,
+message_count int not null,
 message_type int not null -- 推送类型 1:报修流程超时提醒,  2:二次开单提醒
-)
-alter table wechat_messge_log add primary key (id);
+);
+
+alter table wechat_message_log add primary key (id);
+
