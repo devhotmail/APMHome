@@ -65,7 +65,8 @@ public class AssetExamDataAggregator {
                 asm1.setFilmCount(accrp.getFilmCounts());
                 asm1.setInjectCount(accrp.getInjectCounts());
                 asm1.setExamCount(accrp.getExamCount().intValue());
-                asm1.setRevenue(accrp.getPriceAmounts());
+
+                asm1.setRevenue(Math.round(accrp.getPriceAmounts()*100.0)/100.0);
                 asmUpdateList.add(asm1);
             }else {
                 AssetSummit asm = new AssetSummit();
@@ -78,7 +79,7 @@ public class AssetExamDataAggregator {
                 asm.setInjectCount(accrp.getInjectCounts());
                 asm.setExamCount(accrp.getExamCount().intValue());
                 asm.setCreated(date);
-                asm.setRevenue(accrp.getPriceAmounts());
+                asm.setRevenue(Math.round(accrp.getPriceAmounts()*100.0)/100.0);
                 asmNewList.add(asm);
             }
         }
