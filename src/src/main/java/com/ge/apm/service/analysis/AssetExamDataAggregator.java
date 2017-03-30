@@ -56,7 +56,7 @@ public class AssetExamDataAggregator {
         for(AssetClinicalRecordPojo accrp:acrpList){
             AssetSummit asm1 =assetSummitRepository.getAssetSummitByAssetIdAndCreated(accrp.getAssetIds(),date);
             if(asm1!=null){
-               // System.out.println("-------"+accrp.getAssetIds()+"---"+date);
+               //logger.info("-------"+accrp.getAssetIds()+"---"+date);
                 asm1.setCreated(date);
                 asm1.setAssetId(accrp.getAssetIds());
                 asm1.setSiteId(accrp.getSiteIds());
@@ -72,7 +72,7 @@ public class AssetExamDataAggregator {
                 asm.setAssetId(accrp.getAssetIds());
                 asm.setHospitalId(accrp.getHospitalIds());
                 asm.setSiteId(accrp.getSiteIds());
-               // System.out.println("---insert----"+accrp.getAssetIds()+"---"+date);
+               //logger.info("---insert----"+accrp.getAssetIds()+"---"+date);
                 asm.setExposeCount(accrp.getExposeCounts());
                 asm.setFilmCount(accrp.getFilmCounts());
                 asm.setInjectCount(accrp.getInjectCounts());
@@ -83,11 +83,11 @@ public class AssetExamDataAggregator {
             }
         }
         if(asmNewList.size()>0) {
-            System.out.println("new records are inserted into");
+           logger.info("gl: new records are inserted into, how many ?--> "+asmNewList.size());
             assetSummitRepository.save(asmNewList);
         }
         if(asmUpdateList.size()>0){
-            System.out.println("there are records to be updated");
+           logger.info("there are records to be updated, how many? --->"+asmUpdateList.size());
             for(AssetSummit asm :asmUpdateList){
                 assetSummitRepository.updateAssetSummit(asm.getExposeCount(),asm.getInjectCount(),asm.getFilmCount(),asm.getId());
             }
