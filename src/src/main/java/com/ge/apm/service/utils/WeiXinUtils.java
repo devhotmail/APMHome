@@ -1,15 +1,11 @@
 package com.ge.apm.service.utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class WeiXinUtils {
 	public static List<Integer> removeDuplicateId(List<Integer> users) {
