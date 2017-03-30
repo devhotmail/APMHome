@@ -150,9 +150,10 @@
         wechatSDK.init();
 
         wechatSDK.scanQRCode(1, function (qrCode) {
-            /*if (qrCode.length > 16) {
+
+            if (qrCode.length > 16) {
              qrCode = qrCode.substr(qrCode.length-16);
-             }*/
+             }
 
             $("#qrCode").val(qrCode);
 
@@ -315,21 +316,16 @@
         });
 
         function processImage(){
-            var num = $("#uploaderFiles").children().length;
-            if(num > 0 ){
-                $("#imageServerIds").val("");
 
-                var imageServerIds = new Array();
-                var upload = {imageServerIds : imageServerIds};
-                var list = $("#uploaderFiles");
+            var list = $("#uploaderFiles");
+            var qrAssetImageJson = {imageServerIds : []};
 
-                $.each(list.children(), function () {
-                    upload.imageServerIds.push({
-                        imageServerId: this.id
-                    });
+            $.each(list.children(), function () {
+                qrAssetImageJson.imageServerIds.push({
+                    imageServerId: this.id
                 });
-                $("#imageServerIds").val(JSON.stringify(upload));
-            }
+            });
+            $("#imageServerIds").val(JSON.stringify(qrAssetImageJson));
         }
 
         function validateAssetInfo(){
@@ -379,7 +375,7 @@
             $("#assetMsgBody").show();
         }
 
-        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)" id="#id#"></li>',
+        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
             $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
             $uploaderInput = $("#uploaderInput"),
             $uploaderFiles = $("#uploaderFiles");
@@ -449,16 +445,24 @@
                 success: function (res) {
                     var serverId = res.serverId; // 返回图片的服务器端ID
 
-                    wx.getLocalImgData({
-                        localId: localId,
-                        success: function(ress){
-                            var localData = ress.localData.replace('jgp', 'jpeg');
-                            tmpl = tmpl.replace('#id#', serverId);
-                            $uploaderFiles.append($(tmpl.replace('#url#', localData)));
+                    if(window.__wxjs_is_wkwebview){
+                        wx.getLocalImgData({
+                            localId: localId,
+                            success: function(ress){
+                                var localData = ress.localData.replace('jgp', 'jpeg');
+                                //var tmpl = tmpl.replace('#id#', serverId);
+                                $uploaderFiles.append($(tmpl.replace('#url#', localData)).attr('id', serverId));
 
-                            countImage();
-                        }
-                    });
+                                countImage();
+                            }
+                        });
+
+                    }else{
+                        //var tmpl = tmpl.replace('#id#', serverId);
+                        $uploaderFiles.append($(tmpl.replace('#url#', localId)).attr('id', serverId));
+
+                        countImage();
+                    }
 
                     //其他对serverId做处理的代码
                     if(localIds.length > 0){

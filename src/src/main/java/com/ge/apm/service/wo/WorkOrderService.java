@@ -358,7 +358,7 @@ public class WorkOrderService {
         neWorkOrder.setRequestReason("".equals(wop.getReason())?"参见语音":wop.getReason());
         neWorkOrder.setCasePriority(Integer.parseInt(wop.getPriority()));
         
-        if(reopenWorkOrder.size()>0){
+        if(reopenWorkOrder != null && reopenWorkOrder.size()>0){
             neWorkOrder.setParentWoId(reopenWorkOrder.get(0).getId());
         }
         neWorkOrder.setCurrentStepId(2);// gl: 表示步骤是开单

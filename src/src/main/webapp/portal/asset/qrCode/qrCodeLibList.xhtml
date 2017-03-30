@@ -25,6 +25,7 @@
                                  rows="20" emptyMessage="#{msg.noRecordFound}"
                                  rowsPerPageTemplate="20,40,60,90">
 
+                        <p:ajax event="rowSelect" update="viewButton"/>
                         <p:ajax event="filter" listener="#{qrCodeLibController.onFilter}" />
 
                         <p:column headerText="租户" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
@@ -66,6 +67,7 @@
                             <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="qrCodeInfo_export"/>
                             </p:commandButton>
+                            <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{qrCodeLibController.showQrCode}" update=":qrCodeLibShowDlg" oncomplete="PF('qrCodeLibShowDialog').show()" disabled="#{empty qrCodeLibController.selected}"/>
                         </f:facet>
 
                     </p:dataTable>
@@ -73,6 +75,7 @@
                 </h:form>
 
                 <ui:include src="qrCodeLibCreate.xhtml"/>
+                <ui:include src="qrCodeLibShow.xhtml"/>
             </div>
         </div>
     </ui:define>

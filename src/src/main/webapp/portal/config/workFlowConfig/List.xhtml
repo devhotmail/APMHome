@@ -25,9 +25,9 @@
                     <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
                     <p:ajax event="filter" listener="#{workflowConfigController.onFilter}" update="createButton editButton viewButton deleteButton"/>
 
-                    <p:column headerText="#{msg.dispatchMode}" sortBy="#{item.dispatchMode}" filterBy="#{item.dispatchMode}" filterMatchMode="EQ">
+<!--                    <p:column headerText="#{msg.dispatchMode}" sortBy="#{item.dispatchMode}" filterBy="#{item.dispatchMode}" filterMatchMode="EQ">
                         <h:outputText value="#{item.dispatchMode}"/>
-                    </p:column>
+                    </p:column>-->
                     <p:column headerText="#{msg.dispatchUserName}" sortBy="#{item.dispatchUserName}" filterBy="#{item.dispatchUserName}" filterMatchMode="LIKE">
                         <h:outputText value="#{item.dispatchUserName}"/>
                         <f:facet name="filter">
