@@ -7,11 +7,11 @@
       xmlns:p="http://primefaces.org/ui">
 
 <ui:composition>
-    <p:dialog id="qrCodeLibCreateDlg" widgetVar="qrCodeLibCreateDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="">
+    <p:dialog id="qrCodeLibCreateDlg" widgetVar="qrCodeLibCreateDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="二维码生成">
     <h:form id="qrCodeLibCreateForm">
         <h:panelGroup id="display">
             <h:outputLabel for="siteIdSelect" value="租户 ： " />
-            <p:selectOneMenu id="siteIdSelect" value="#{qrCodeLibController.siteId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}">
+            <p:selectOneMenu id="siteIdSelect" value="#{qrCodeLibController.siteId}" required="true" requiredMessage="租户园区不能为空">
                 <p:ajax  listener="#{qrCodeLibController.onSiteChange}" update="hospitalIdSelect" />
                 <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                 <f:selectItems value="#{qrCodeLibController.siteList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
@@ -19,14 +19,14 @@
             <br/>
             <br/>
             <h:outputLabel for="hospitalIdSelect" value="医院 ： " />
-            <p:selectOneMenu id="hospitalIdSelect" value="#{qrCodeLibController.hospitalId}" required="true" requiredMessage="#{msg.hospitalId} #{msg.ValidationRequire}">
+            <p:selectOneMenu id="hospitalIdSelect" value="#{qrCodeLibController.hospitalId}" required="true" requiredMessage="医院不能为空">
                 <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                 <f:selectItems value="#{qrCodeLibController.hospitalList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
             </p:selectOneMenu>
             <br/>
             <br/>
             <h:outputLabel for="hospitalIdSelect" value="二维码数量 ： " />
-            <p:inputNumber id="qrCodeNum" decimalPlaces="0" minValue="1" maxValue="9999" value="#{qrCodeLibController.qrCodeNum}"/>
+            <p:inputNumber id="qrCodeNum" decimalPlaces="0" minValue="1" maxValue="9999" value="#{qrCodeLibController.qrCodeNum}" required="true" requiredMessage="数量不能为空"/>
             <br/>
             <br/>
             <p:commandButton value="确定生成" icon="ui-icon-extlink" validateClient="true" actionListener="#{qrCodeLibController.createQrCode}" update=":qrCodeLibListForm:datalist :growl" oncomplete="handleSubmit(args, 'qrCodeLibCreateDialog');"/>

@@ -449,16 +449,24 @@
                 success: function (res) {
                     var serverId = res.serverId; // 返回图片的服务器端ID
 
-                    wx.getLocalImgData({
-                        localId: localId,
-                        success: function(ress){
-                            var localData = ress.localData.replace('jgp', 'jpeg');
-                            tmpl = tmpl.replace('#id#', serverId);
-                            $uploaderFiles.append($(tmpl.replace('#url#', localData)));
+                    if(window.__wxjs_is_wkwebview){
+                        wx.getLocalImgData({
+                            localId: localId,
+                            success: function(ress){
+                                var localData = ress.localData.replace('jgp', 'jpeg');
+                                tmpl = tmpl.replace('#id#', serverId);
+                                $uploaderFiles.append($(tmpl.replace('#url#', localData)));
 
-                            countImage();
-                        }
-                    });
+                                countImage();
+                            }
+                        });
+
+                    }else{
+                        tmpl = tmpl.replace('#id#', serverId);
+                        $uploaderFiles.append($(tmpl.replace('#url#', localId)));
+
+                        countImage();
+                    }
 
                     //其他对serverId做处理的代码
                     if(localIds.length > 0){

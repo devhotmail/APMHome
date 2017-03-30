@@ -3,6 +3,7 @@ package com.ge.apm.service.wo;
 import com.ge.apm.dao.*;
 import com.ge.apm.domain.*;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.service.utils.ConfigUtils;
 import com.ge.apm.service.wechat.CoreService;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -59,6 +60,8 @@ public class WorkOrderService {
     private CoreService cService;
     @Autowired
     private MessageSubscriberRepository subscribDao;
+    @Autowired
+    private ConfigUtils configUtils;
 
     public List<WorkOrder> findWorkOrderByStatus(int status)throws Exception{
         List<WorkOrder> byStatus = workOrderRepository.findByStatus(status);
@@ -352,7 +355,7 @@ public class WorkOrderService {
         neWorkOrder.setRequestorId(usr.getId());
         neWorkOrder.setRequestorName(usr.getName());
         neWorkOrder.setRequestTime(new Date());
-        neWorkOrder.setRequestReason(wop.getReason());
+        neWorkOrder.setRequestReason("".equals(wop.getReason())?"参见语音":wop.getReason());
         neWorkOrder.setCasePriority(Integer.parseInt(wop.getPriority()));
         
         if(reopenWorkOrder.size()>0){
@@ -573,18 +576,19 @@ public class WorkOrderService {
     
     public void sendWoMsgs(WorkOrder wo) {
         //String wxTemplateId = "4N0nfZ0fXstReD-FcBu-d6tUsTcwBEIND-0wmOh0cO8";
-        String wxTemplateId = "LNIvwPKBpR4zE8V2fXEMx7-aYyXUx-Hwd6MAHaklloo";
+        String wxTemplateId = configUtils.fetchProperties("workorder_change_template_id");
         String msgTitle = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",wo.getCurrentStepId()-1+"").getValueZh();
         String msgBrief = msgTitle + "已完成";
-        String msgDetails = "";
-        String msgDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         String linkUrl = cService.getWoDetailUrl(wo.getId());
         
         HashMap<String, Object> params = new HashMap<>();
-        params.put("_msgTitle", msgTitle);
-        params.put("_msgBrief", msgBrief);
-        params.put("_msgDetails", msgDetails);
-        params.put("_msgDateTime", msgDateTime);
+        params.put("first", msgTitle);
+        params.put("_assetName", wo.getAssetName());
+        params.put("_requestTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getRequestTime()));
+        params.put("_requestPerson", wo.getRequestorName());
+        params.put("_urgency", i18nMessageRepository.getByMsgTypeAndMsgKey("casePriority",wo.getCasePriority()+"").getValueZh());
+        params.put("_currentPerson", wo.getCurrentPersonName());
+        params.put("remark", msgBrief);
         params.put("_linkUrl", linkUrl);
         
         // subscriber
@@ -611,6 +615,15 @@ public class WorkOrderService {
             UserAccount ua = userDao.getById(wo.getRequestorId());
             cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
         }
+    }
+    
+    @Transactional
+    public void estimatedTime(WorkOrderPoJo wopo)throws Exception{
+        Integer woId= Integer.valueOf(wopo.getWoId());
+        WorkOrder wo = workOrderRepository.getById(woId);
+        Date estimatedCloseTime =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getEstimatedCloseTime());
+        wo.setEstimatedCloseTime(estimatedCloseTime);
+        workOrderRepository.save(wo);
     }
 
 }

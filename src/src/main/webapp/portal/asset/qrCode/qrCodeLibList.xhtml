@@ -16,29 +16,43 @@
                     <p:commandButton id="qrCodeLibCreateButton" icon="ui-icon-extlink" value="生成二维码" title="生成二维码" actionListener="#{qrCodeLibController.viewQrCodeLibCreate}" update=":qrCodeLibCreateDlg" oncomplete="PF('qrCodeLibCreateDialog').show()"/>
                 </h:form>
                 <h:form id="qrCodeLibListForm">
-                    <p:dataTable id="datalist" value="#{qrCodeLibController.itemList}" var="item" widgetVar="varDataList"
+                    <p:dataTable id="datalist" value="#{qrCodeLibController.lazyModel}" var="item" widgetVar="varDataList"
                                  selectionMode="single" selection="#{qrCodeLibController.selected}"
                                  lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
                                  rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
-                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                 paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
                                  currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
                                  rows="20" emptyMessage="#{msg.noRecordFound}"
                                  rowsPerPageTemplate="20,40,60,90">
 
+                        <p:ajax event="rowSelect" update="viewButton"/>
                         <p:ajax event="filter" listener="#{qrCodeLibController.onFilter}" />
 
-                        <p:column headerText="租户" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="LIKE">
+                        <p:column headerText="租户" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
+                            <f:facet name="filter">
+                                <p:selectOneMenu value="#{qrCodeLibController.siteIdFilter}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
+                                    <p:ajax  listener="#{qrCodeLibController.onSiteFilterChange}" update="hospitalIdSelect_list" />
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue="#{null}" noSelectionOption="true"/>
+                                    <f:selectItems value="#{qrCodeLibController.siteList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                             <h:outputText value="#{qrCodeLibController.getSiteName(item.siteId)}"/>
                         </p:column>
-                        <p:column headerText="医院" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="LIKE">
+                        <p:column headerText="医院" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
+                            <f:facet name="filter">
+                                <p:selectOneMenu id="hospitalIdSelect_list" value="#{qrCodeLibController.hospitalIdFilter}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue="#{null}" noSelectionOption="true"/>
+                                    <f:selectItems value="#{qrCodeLibController.hospitalListFilter}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                             <h:outputText value="#{qrCodeLibController.getHospitalName(item.hospitalId)}"/>
                         </p:column>
                         <p:column headerText="二维码" sortBy="#{item.qrCode}" filterBy="#{item.qrCode}" filterMatchMode="EQ">
                             <h:outputText value="#{item.qrCode}"/>
                         </p:column>
-                        <p:column headerText="微信号" sortBy="#{item.submitWechatId}" filterBy="#{item.submitWechatId}" filterMatchMode="EQ">
+                        <!--<p:column headerText="微信号" sortBy="#{item.submitWechatId}" filterBy="#{item.submitWechatId}" filterMatchMode="EQ">
                             <h:outputText value="#{item.submitWechatId}"/>
-                        </p:column>
+                        </p:column>-->
                         <p:column headerText="当前状态" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
@@ -49,11 +63,19 @@
                             <h:outputText value="#{fieldMsg.fieldValue('qrCodeLibStatus', item.status)}"/>
                         </p:column>
 
+                        <f:facet name="{Toolbar}">
+                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
+                                <p:dataExporter type="xls" target="datalist" fileName="qrCodeInfo_export"/>
+                            </p:commandButton>
+                            <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{qrCodeLibController.showQrCode}" update=":qrCodeLibShowDlg" oncomplete="PF('qrCodeLibShowDialog').show()" disabled="#{empty qrCodeLibController.selected}"/>
+                        </f:facet>
+
                     </p:dataTable>
 
                 </h:form>
 
                 <ui:include src="qrCodeLibCreate.xhtml"/>
+                <ui:include src="qrCodeLibShow.xhtml"/>
             </div>
         </div>
     </ui:define>

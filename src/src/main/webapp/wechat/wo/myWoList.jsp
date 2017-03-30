@@ -114,6 +114,11 @@
 
                         //bind click event
                         $('#wolist').on('click', '.weui-cell_access', function(){
+                            var $loadingToast = $('#loadingToast1');
+                            if ($loadingToast.css('display') === 'none') {
+                                $loadingToast.fadeIn(100);
+                            }
+                            
                             pageManager.woId = $(this).parent().find('h4').html().split(': ')[1];
 
                             var wo = pageManager.workOrders[pageManager.woId];
@@ -145,5 +150,6 @@
         <jsp:include page="listTemplate.html"/>
         <jsp:include page="tipsTemplate.html"/>
         <jsp:include page="workorderCost.html"/>
+        <jsp:include page="wosteplist.html"/>
     </body>
 </html>

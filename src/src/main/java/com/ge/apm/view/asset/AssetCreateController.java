@@ -12,7 +12,12 @@ import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AssetCreateService;
 import com.ge.apm.service.asset.AttachmentFileService;
+import com.ge.apm.service.utils.ConfigUtils;
+import com.ge.apm.service.utils.TimeUtils;
+import com.ge.apm.service.wechat.CoreService;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -25,26 +30,27 @@ import webapp.framework.web.WebUtil;
 @ManagedBean
 @ViewScoped
 public class AssetCreateController {
-
+    
     private AssetInfo assetInfo;
     private QrCodeLib createRequest;
     private AssetCreateService acServie;
     private AttachmentFileService attachFileService;
-
+    
     private Integer[] selectedPictures;
-
+    
     private UserAccount owner;
+    
+    private String rejectText;
     
     List<QrCodeAttachment> pictureList;
     List<QrCodeAttachment> audioList;
-
+    
     @PostConstruct
     protected void init() {
         String qrCode = WebUtil.getRequestParameter("qrCode");
         acServie = WebUtil.getBean(AssetCreateService.class);
         attachFileService = WebUtil.getBean(AttachmentFileService.class);
         createRequest = acServie.getCreateRequest(qrCode);
-        
         
         assetInfo = new AssetInfo();
         assetInfo.setSiteId(createRequest.getSiteId());
@@ -56,30 +62,19 @@ public class AssetCreateController {
         
         pictureList = acServie.getQrCodePictureList(createRequest.getId());
         audioList = acServie.getQrCodeAudioList(createRequest.getId());
-
+        
     }
-
-//    private List<Integer> getPicturesList() {
-//
-//        
-//        List<Integer> pictureList = acServie.getQrCodeArrachList(qrCode);
-////        List<Integer> pictureList = new ArrayList();
-//        pictureList.add(2);
-//        pictureList.add(5);
-//        pictureList.add(24);
-//        return pictureList;
-//    }
 
     public List<OrgInfo> getClinicalDeptList() {
         return acServie.getClinicalDeptList(assetInfo.getHospitalId());
     }
-
+    
     public String getHospitalName() {
         return acServie.getHospitalName(assetInfo.getHospitalId());
     }
-
-    public void applyChange() {
-        if(owner!=null){
+    
+    public String applyChange() {
+        if (owner != null) {
             assetInfo.setAssetOwnerId(owner.getId());
             assetInfo.setAssetOwnerName(owner.getName());
             assetInfo.setAssetOwnerTel(owner.getTelephone());
@@ -87,23 +82,36 @@ public class AssetCreateController {
         
         Boolean res = acServie.CreateAeest(assetInfo);
         if (res) {
-            acServie.createAttachments(assetInfo,selectedPictures);
-            acServie.updateQrLib(assetInfo.getQrCode(),3);
+            acServie.createAttachments(assetInfo, selectedPictures);
+            acServie.updateQrLib(assetInfo.getQrCode(), 3);
             WebUtil.addSuccessMessage("创建成功");
+            return "RequestsList?faces-redirect=true";
         } else {
             WebUtil.addErrorMessage("创建失败");
+            return "";
         }
     }
     
-    public String getAudioBase64(Integer fileId){
+    public String getAudioBase64(Integer fileId) {
         String audio = attachFileService.getBase64File(fileId);
         return audio;
     }
     
-    public void returnBack(){
-        
+    public void returnBack() {
+        CoreService coreService = WebUtil.getBean(CoreService.class);
+        ConfigUtils configUtils = WebUtil.getBean(ConfigUtils.class);
+        String _openId = createRequest.getSubmitWechatId();
+        String _templateId = configUtils.fetchProperties("asset_build_template_id");        
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("first", "建档失败");
+        map.put("_qrCode", createRequest.getQrCode());
+        map.put("_requestTime", TimeUtils.getStrDate(createRequest.getSubmitDate(),"yyyy-MM-dd"));
+        map.put("_detail", rejectText);
+        map.put("_linkUrl", "wechat/asset/createInfoDetail.xhtml?qrCode=".concat(createRequest.getQrCode()));
+        coreService.sendWxTemplateMessage(_openId, _templateId, map);
+        WebUtil.addSuccessMessage("消息已发送");
     }
-
+    
     public List<UserAccount> getOwnerList() {
         List<UserAccount> res = acServie.getAssetOnwers(assetInfo.getSiteId(), assetInfo.getHospitalId());
         return res;
@@ -113,38 +121,45 @@ public class AssetCreateController {
     public QrCodeLib getCreateRequest() {
         return createRequest;
     }
-
+    
     public AssetInfo getAssetInfo() {
         return assetInfo;
     }
-
+    
     public void setAssetInfo(AssetInfo assetInfo) {
         this.assetInfo = assetInfo;
     }
-
+    
     public Integer[] getSelectedPictures() {
         return selectedPictures;
     }
-
+    
     public void setSelectedPictures(Integer[] selectedPictures) {
         this.selectedPictures = selectedPictures;
     }
-
+    
     public UserAccount getOwner() {
         return owner;
     }
-
+    
     public void setOwner(UserAccount owner) {
         this.owner = owner;
     }
-
+    
     public List<QrCodeAttachment> getPictureList() {
         return pictureList;
     }
-
+    
     public List<QrCodeAttachment> getAudioList() {
         return audioList;
     }
     
-
+    public String getRejectText() {
+        return rejectText;
+    }
+    
+    public void setRejectText(String rejectText) {
+        this.rejectText = rejectText;
+    }
+    
 }

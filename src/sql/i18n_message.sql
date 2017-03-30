@@ -69,7 +69,7 @@ INSERT INTO "i18n_message" VALUES (65, 'label','All', '全部','All',null,-1);
 INSERT INTO "i18n_message" VALUES (66, 'label','From', '从','From',null,-1);
 INSERT INTO "i18n_message" VALUES (67, 'label','To', '到','To',null,-1);
 INSERT INTO "i18n_message" VALUES (68, 'label','Execute', '执行','Execute',null,-1);
-INSERT INTO "i18n_message" VALUES (69, 'label','DuplicateSiteName', '租户名称 "%s" 已有人使用，请更换租户名称.','Site name already used by others, please change to another site name.',null,-1);
+INSERT INTO "i18n_message" VALUES (69, 'label','DuplicateSiteName', 'SiteAdmin名称 "%s" 已有人使用，请更换租户名称.','Site name already used by others, please change to another site name.',null,-1);
 INSERT INTO "i18n_message" VALUES (70, 'label','invalidEmail', 'Email: 不是有效的Email地址.','Invalid Email Address.',null,-1);
 INSERT INTO "i18n_message" VALUES (71, 'label','DuplicateMsgKey', '编码 "%s" 已存在,请更换其他名称','the code you seted has been used,please change to another one',null,-1);
 INSERT INTO "i18n_message" VALUES (72, 'message','PasswordNotMatch', '输入的密码不匹配','Password not match',null,-1);
@@ -93,6 +93,10 @@ INSERT INTO "i18n_message" VALUES (89, 'label', 'OldPassword', '旧密码', 'Old
 INSERT INTO "i18n_message" VALUES (90, 'label', 'PleaseInput', '请输入', 'Please Input', NULL, -1);
 INSERT INTO "i18n_message" VALUES (91, 'label', 'NewPass', '新密码', 'New Password', NULL, -1);
 INSERT INTO "i18n_message" VALUES (92, 'label', 'ConfirmPass', '确认密码', 'Confirm Password', NULL, -1);
+INSERT INTO "i18n_message" VALUES (93, 'label', 'QrCodeLib', '二维码创建资产', 'QRCode Create Asset', NULL, -1);
+INSERT INTO "i18n_message" VALUES (94, 'label', 'issueDate', '发行日期', 'Issue Date', NULL, -1);
+INSERT INTO "i18n_message" VALUES (95, 'label', 'submitDate', '提交日期', 'Submit Date', NULL, -1);
+INSERT INTO "i18n_message" VALUES (96, 'label', 'submitWechatId', '提交人', 'Submit People', NULL, -1);
 
 
 -- menu item names  ( id from 200 to  399)
@@ -387,11 +391,11 @@ INSERT INTO "i18n_message" VALUES (1494,'contractType','5','保养合同','保�
 
 
 INSERT INTO "i18n_message" VALUES (1510,'woSteps','1', '报修','Create',null,-1);
-INSERT INTO "i18n_message" VALUES (1511,'woSteps','2', '审核','Approve',null,-1);
-INSERT INTO "i18n_message" VALUES (1512,'woSteps','3', '派工','Assign',null,-1);
-INSERT INTO "i18n_message" VALUES (1513,'woSteps','4', '领工','Accept',null,-1);
-INSERT INTO "i18n_message" VALUES (1514,'woSteps','5', '维修','Repair',null,-1);
-INSERT INTO "i18n_message" VALUES (1515,'woSteps','6', '关单','Closed',null,-1);
+INSERT INTO "i18n_message" VALUES (1511,'woSteps','2', '派单','Assign',null,-1);
+INSERT INTO "i18n_message" VALUES (1512,'woSteps','3', '领单','Accept',null,-1);
+INSERT INTO "i18n_message" VALUES (1513,'woSteps','4', '维修','Repair',null,-1);
+INSERT INTO "i18n_message" VALUES (1514,'woSteps','5', '关单','Closed',null,-1);
+INSERT INTO "i18n_message" VALUES (1515,'woSteps','6', '反馈','Feedback',null,-1);
 
 INSERT INTO "i18n_message" VALUES (1517,'assetStatus','1', '正常','Up',null,-1);
 INSERT INTO "i18n_message" VALUES (1518,'assetStatus','2', '停机','Down',null,-1);

@@ -121,6 +121,16 @@ public class RepairProcessController {
         obj[2]=casePriority;
         return obj;
     }
+    
+    @RequestMapping(value="estimatedtime")
+    public @ResponseBody Object estimatedTime(@RequestBody WorkOrderPoJo wopo) {
+        try {
+            workOrderService.estimatedTime(wopo);
+        } catch (Exception ex) {
+            Logger.getLogger(RepairProcessController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "success";
+    }
 
 }
 
