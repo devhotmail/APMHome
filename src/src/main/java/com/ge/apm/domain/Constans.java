@@ -1,7 +1,7 @@
 package com.ge.apm.domain;
 
 public enum Constans {	
-	CREATE("报修",1),APPROVE("审核",2),DISPATCH("派工",3),ACCEPT("领工",4),REPAIR("维修",5),CLOSED("关单",6),
+	CREATE("报修",1),APPROVE("派单",2),DISPATCH("领单",3),ACCEPT("维修",4),REPAIR("关单",5),CLOSED("反馈",6),
 	TIMEOUT("超时微信推送","templateId1"),REOPEN("二次开单微信推送","templateId2");
 	private Constans(String value, int index) {  
         this.value = value;  
