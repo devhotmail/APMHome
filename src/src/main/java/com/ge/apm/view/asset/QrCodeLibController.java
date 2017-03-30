@@ -37,9 +37,12 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
     private Integer siteId;
     private Integer hospitalId;
     private Integer qrCodeNum;
+    private String qrCode;
 
     private Integer siteIdFilter;
     private Integer hospitalIdFilter;
+
+    private Integer tempSiteId = -1;
 
     @Override
     protected void init() {
@@ -205,6 +208,12 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
 
     }
 
+    public void showQrCode(){
+
+        qrCode = this.selected.getQrCode();
+
+    }
+
     public void onSiteChange(){
         if(siteId == null){
             hospitalId = null;
@@ -237,6 +246,10 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         return hospitalIdFilter;
     }
 
+    public String getQrCode() {
+        return qrCode;
+    }
+
     public void setSiteId(Integer siteId) {
         this.siteId = siteId;
     }
@@ -255,6 +268,10 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
 
     public void setHospitalIdFilter(Integer hospitalIdFilter) {
         this.hospitalIdFilter = hospitalIdFilter;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
 
     /*
