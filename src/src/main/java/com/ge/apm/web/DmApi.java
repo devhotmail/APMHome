@@ -124,7 +124,7 @@ public class DmApi {
           .put("usage", sub._4)
           .build()).toJavaList())
         .build())).values(),
-      Stats.of(Option.of(items.values().map(t -> t._1).toJavaList()).getOrElse(javaslang.collection.List.of(0D).toJavaList())).mean());
+      Stats.of(Option.of(items.values().map(t -> t._1).toJavaList()).filter(sub -> !sub.isEmpty()).getOrElse(javaslang.collection.List.of(0D).toJavaList())).mean());
   }
 
   private ResponseEntity<Map<String, Object>> serialize(HttpServletRequest request, String groupBy, Tuple2<Seq<ImmutableMap<String, Object>>, Double> items) {
