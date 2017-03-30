@@ -16,11 +16,6 @@
     <link rel="stylesheet" type="text/css" href="css/dewIcons.css" />
 
 
-    <!-- Async HTML Imports do not block rending. Benefit of keeping it declarative
-(instead of dynamically loading it later in JS) is that the parser can go to
-town pre-fetching resources, etc. -->
-    <link id="main-element-import" rel="import" href="loader.html"/>
-
     <!-- PF UI scripts -->
     <h:outputScript name="js/layout.js" library="ultima-layout"/>
     <h:outputScript name="js/ripple.js" library="ultima-layout"/>
@@ -40,10 +35,13 @@ town pre-fetching resources, etc. -->
         <h:inputHidden id="hospitalId" value="#{userContextService.loginUserHospitalId}"/>
         <h:inputHidden id="orgId" value="#{userContextService.loginUserOrgInfoId}"/>
     </form>
+
     <p:growl id="growl" autoUpdate="true" showDetail="false" showSummary="true"/>
     <div class="layout-wrapper #{guestPreferences.menuLayout}">
         <ui:include src="./menu.xhtml"/>
         <div class="layout-main">
+            <link id="main-element-import" rel="import" href="loader.html" />
+            <ui:insert name="elements"/>
             <ui:insert name="content"/>
         </div>
         <div class="layout-profile">
