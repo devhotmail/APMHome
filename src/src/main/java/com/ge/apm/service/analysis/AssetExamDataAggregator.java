@@ -15,7 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.broker.SiBroker;
 import webapp.framework.util.TimeUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -45,13 +48,15 @@ public class AssetExamDataAggregator {
             logger.error("acrpList is empty,today is {}",new DateTime());
             return "failure";
         }*/
-
+        logger.info("gl: records from assetclincialRecords --->"+acrpList.size());
+        AssetSummit assetSummit=null;
         List<AssetSummit> asmNewList= new ArrayList<AssetSummit>();
         List<AssetSummit> asmUpdateList= new ArrayList<AssetSummit>();
         for(AssetClinicalRecordPojo accrp:acrpList){
             AssetSummit asm1 =assetSummitRepository.getAssetSummitByAssetIdAndCreated(accrp.getAssetIds(),date);
             if(asm1!=null){
-               // System.out.println("-------"+accrp.getAssetIds()+"---"+date);
+                //logger.info("-------"+accrp.getAssetIds()+"---"+date);
+                logger.info(accrp.getAssetIds() +"---"+date + "need to be updated");
                 asm1.setCreated(date);
                 asm1.setAssetId(accrp.getAssetIds());
                 asm1.setSiteId(accrp.getSiteIds());
@@ -60,34 +65,49 @@ public class AssetExamDataAggregator {
                 asm1.setFilmCount(accrp.getFilmCounts());
                 asm1.setInjectCount(accrp.getInjectCounts());
                 asm1.setExamCount(accrp.getExamCount().intValue());
-                asm1.setRevenue(accrp.getPriceAmounts());
+
+                asm1.setRevenue(Math.round(accrp.getPriceAmounts()*100.0)/100.0);
                 asmUpdateList.add(asm1);
             }else {
                 AssetSummit asm = new AssetSummit();
                 asm.setAssetId(accrp.getAssetIds());
                 asm.setHospitalId(accrp.getHospitalIds());
                 asm.setSiteId(accrp.getSiteIds());
+                //logger.info("---insert----"+accrp.getAssetIds()+"---"+date);
                 asm.setExposeCount(accrp.getExposeCounts());
                 asm.setFilmCount(accrp.getFilmCounts());
                 asm.setInjectCount(accrp.getInjectCounts());
                 asm.setExamCount(accrp.getExamCount().intValue());
                 asm.setCreated(date);
-                asm.setRevenue(accrp.getPriceAmounts());
+                asm.setRevenue(Math.round(accrp.getPriceAmounts()*100.0)/100.0);
                 asmNewList.add(asm);
             }
         }
         if(asmNewList.size()>0) {
-            logger.info("new records are inserted into");
-            assetSummitRepository.save(asmNewList);
+            logger.info("gl: new records are inserted into, how many ?--> "+asmNewList.size());
+            // assetSummitRepository.save(asmNewList);
+            for(AssetSummit asml :asmNewList) {
+                assetSummitRepository.save(asml);
+            }
         }
         if(asmUpdateList.size()>0){
-            logger.info("there are records to be updated-");
+            logger.info("gl: there are records to be updated, how many? --->"+asmUpdateList.size());
             for(AssetSummit asm :asmUpdateList){
+
                 assetSummitRepository.updateAssetSummit(asm.getExposeCount(),asm.getInjectCount(),asm.getFilmCount(),asm.getId());
             }
         }
+
         return "success";
 
+    }
+
+
+    public void test(){
+        DateTime dtFrom = TimeUtil.timeNow().minusDays(100);
+        DateTime dtTo = dtFrom.plusDays(5);
+
+        initAssetAggregationDataByDateRange(dtFrom.toDate(), dtTo.toDate());
     }
 
     public void initAssetAggregationDataByDateRange(Date fromDate, Date toDate){

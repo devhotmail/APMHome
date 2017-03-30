@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.List;
 /**
  * Created by lsg on 7s/3/2017.
  */
+
 @Service
 public class AssetExamDataService {
     @Autowired
@@ -28,7 +30,14 @@ public class AssetExamDataService {
     private static final int DAY = 1;
     @Autowired
     AssetExamDataAggregator assetExamDataAggregator;
-
+    @Value("#{ratingProperties.netprofit}")
+    private String netprofit;
+    @Value("#{ratingProperties.injectCount}")
+    private String injectCount;
+    @Value("#{ratingProperties.exposeCount}")
+    private String exposeCount;
+    @Value("#{ratingProperties.filmCount}")
+    private String filmCount;
 
 
     /***
@@ -55,7 +64,6 @@ public class AssetExamDataService {
     /***
      * 	按选定的日期聚合
      */
-    @Transactional
     public String aggrateExambyRange(BatchAssetExam bac){
         {
             if(bac == null){
@@ -83,32 +91,40 @@ public class AssetExamDataService {
         }
     }
 
+    /***
+     * 	计算rating的值
+     */
     @Transactional
     public String calRating() {
-        double npw=2/5f,icw=1/5f,ecw=1/5f,fcw=1/5f;
         double nprofit=0.0f,ic=0.0f,ec=0.0f,fc=0.0f,weightedSum=0.0f,np=0.0f;
         //min max based on 1 year
-        //nprofit: select (revenue-maintenance_cost-deprecation_cost) as nprofit
         //gl: nest sql are not support in HQL ,take mybatis here to look for max and min
         try{
+            /*按assetid和created聚合，获取assetSummit中最大最小的inject film expose——count的值*/
             AssetSummitMaxMinPojo asmm = assetSummitMapper.fetchAssetSummit();
 
             //update records with rating is null
             List<AssetSummit> assetSummit = assetSummitRepository.findAssetSummitByRating();
             for (AssetSummit asm : assetSummit) {
+                if(asm.getRevenue()!=null && asm.getMaintenanceCost() !=null && asm.getDeprecationCost() !=null){
                 nprofit=asm.getRevenue()-asm.getMaintenanceCost()-asm.getDeprecationCost();
                 np=(nprofit-asmm.getNpMin())/(asmm.getNpMax()-asmm.getNpMin());
                 ic=(asm.getInjectCount()-asmm.getIcMin())/(asmm.getIcMax()-asmm.getIcMin());
                 ec=(asm.getExposeCount()-asmm.getEcMin())/(asmm.getEcMax()-asmm.getEcMin());
                 fc=(asm.getFilmCount()-asmm.getFmMin())/(asmm.getFmMax()-asmm.getFmMin());
-                weightedSum=np*npw+ic*icw+ec*ecw+fc*fcw;
+                weightedSum=np*Double.valueOf(netprofit)+ic*Double.valueOf(injectCount)+ec*Double.valueOf(exposeCount)+fc*Double.valueOf(filmCount);
                 asm.setRating(weightedSum);
                 assetSummitRepository.save(asm);
+                } else {
+                    throw new Exception("gl_error: revenue or maintenanceCost or deprecationCost is null");
+                }
+
             }
+
             return "success";
 
         }catch(Exception ex){
-            logger.error("aggregateCostData error,msg is {}");
+            logger.error(ex.toString());
             return "failure";
         }
 

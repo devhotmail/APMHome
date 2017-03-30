@@ -148,7 +148,7 @@
                 <prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
                 <prop key="hibernate.jdbc.use_scrollable_resultset">false</prop>
                 <prop key="hibernate.jdbc.use_streams_for_binary">true</prop>
-                <prop key="hibernate.jdbc.fetch_size">300</prop>
+                <prop key="hibernate.jdbc.fetch_size">100</prop>
 
                 <!--# logging debug information-->
                 <prop key="hibernate.show_sql">false</prop>
@@ -165,6 +165,7 @@
           p:validationMessageSource-ref="messageSource">
         <description>NA</description>
     </bean>
+
 
     <!-- localization -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
@@ -189,9 +190,21 @@
             </list>
         </property>
     </bean>
-    
+<!--gl -->
+    <!--<bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        　　<property name="locations">
+        　　　　<list>
+        　　　　　　<value>rating.properties</value>
+        　　　　</list>
+        　　</property>
+    </bean>
+    <bean name="rating" class="com.ge.apm.domain.Rating">
+        <property name="netprofit" value="${netprofit}"/>
+    </bean>-->
+
     <util:properties id="wxProperties" location="classpath:/wx.properties" />
-    
+    <util:properties id="ratingProperties" location="classpath:/rating.properties" />
+
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
         <property name="dataSource" ref="risDataSource" />  
         <property name="configLocation" value="classpath:config/mybatis-config.xml"></property>  

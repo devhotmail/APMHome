@@ -603,7 +603,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "          AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
             "          AND step.start_time IS NOT NULL " +
             "          AND step.end_time IS NOT NULL " +
-//            "          AND work.status = 2 " +
+//            "          AND work.is_closed = true " +
             "          AND work.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
@@ -693,7 +693,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "          AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
             "          AND step.start_time IS NOT NULL " +
             "          AND step.end_time IS NOT NULL " +
- //           "          AND work.status = 2 " +
+ //           "          AND work.is_closed = true " +
             "          AND work.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
@@ -717,7 +717,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "          AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
             "          AND step.start_time IS NOT NULL " +
             "          AND step.end_time IS NOT NULL " +
- //           "          AND work.status = 2 " +
+ //           "          AND work.is_closed = true " +
             "          AND work.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId

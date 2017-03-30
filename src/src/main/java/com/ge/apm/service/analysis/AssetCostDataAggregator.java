@@ -118,6 +118,7 @@ public class AssetCostDataAggregator {
 				acs.setStatus(rs.getInt("status"));
 //				acs.setRequestTime(rs.getDate("request_time") == null ?null:new DateTime(rs.getDate("request_time").getTime()));
 //				acs.setConfirmedDownTime(rs.getDate("confirmed_down_time")== null ?null:new DateTime(rs.getDate("confirmed_down_time").getTime()));
+				acs.setWoStatus(rs.getBoolean("is_closed"));
 				return acs;
 			}
     	});
