@@ -105,6 +105,7 @@ public class AssetExamDataService {
             //update records with rating is null
             List<AssetSummit> assetSummit = assetSummitRepository.findAssetSummitByRating();
             for (AssetSummit asm : assetSummit) {
+                if(asm.getRevenue()!=null && asm.getMaintenanceCost() !=null && asm.getDeprecationCost() !=null){
                 nprofit=asm.getRevenue()-asm.getMaintenanceCost()-asm.getDeprecationCost();
                 np=(nprofit-asmm.getNpMin())/(asmm.getNpMax()-asmm.getNpMin());
                 ic=(asm.getInjectCount()-asmm.getIcMin())/(asmm.getIcMax()-asmm.getIcMin());
@@ -113,11 +114,16 @@ public class AssetExamDataService {
                 weightedSum=np*Double.valueOf(netprofit)+ic*Double.valueOf(injectCount)+ec*Double.valueOf(exposeCount)+fc*Double.valueOf(filmCount);
                 asm.setRating(weightedSum);
                 assetSummitRepository.save(asm);
+                } else {
+                    throw new Exception("gl: revenue or maintenanceCost or deprecationCost is null");
+                }
+
             }
+
             return "success";
 
         }catch(Exception ex){
-            logger.error("aggregateCostData error,msg is {}");
+            logger.error(ex.toString());
             return "failure";
         }
 
