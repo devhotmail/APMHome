@@ -5,7 +5,7 @@
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label class="weui-label">工时(小时)</label></div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" id="manHours" name="manHours" type="number"/>
+                        <input class="weui-input" id="manHours" name="manHours" type="text" />
                     </div>
                     <div class="weui-cell__ft">
                         <i class="weui-icon-warn"></i>
@@ -20,7 +20,7 @@
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label class="weui-label">数量</label></div>
                     <div class="weui-cell__bd">
-                        <input id="accessoryQuantity" name="accessoryQuantity" class="weui-input" type="number" />
+                        <input id="accessoryQuantity" name="accessoryQuantity" class="weui-input" type="text" />
                     </div>
                     <div class="weui-cell__ft">
                         <i class="weui-icon-warn"></i>
@@ -29,7 +29,7 @@
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label for="requestorName" class="weui-label">单价(元)</label></div>
                     <div class="weui-cell__bd">
-                        <input id="accessoryPrice" name="accessoryPrice" class="weui-input" type="number" />
+                        <input id="accessoryPrice" name="accessoryPrice" class="weui-input" type="text" />
                     </div>
                     <div class="weui-cell__ft">
                         <i class="weui-icon-warn"></i>
@@ -38,7 +38,7 @@
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label for="requestorName" class="weui-label">其他费用(元)</label></div>
                     <div class="weui-cell__bd">
-                        <input id="otherExpense" name="otherExpense" class="weui-input" type="number" />
+                        <input id="otherExpense" name="otherExpense" class="weui-input" type="text" />
                     </div>
                     <div class="weui-cell__ft">
                         <i class="weui-icon-warn"></i>
@@ -58,6 +58,7 @@
                 </div>
             </div>
         </form>
+        <div id="costErrorMsg" style="color:red;text-align: center;"></div>
         <div class="weui-btn-area">
             <a class="weui-btn weui-btn_primary" href="javascript:" id="costSubmit">提交</a>
             <div style="height:10px"></div>
@@ -72,11 +73,18 @@
             });
             
             $('#costSubmit').click(function(){
+                $('#costErrorMsg').html('');
                 var array = $('#costForm').serializeArray();
                 var costData = pageManager.formdata(array);
                 if (costData.manHours===''&&costData.accessory===''&&costData.accessoryQuantity===''
                         &&costData.accessoryPrice===''&&costData.otherExpense===''&&costData.cowokerUserId === ''){
                     history.back();
+                    return;
+                }
+                if ((!isNumber(costData.manHours)&&costData.manHours!=='') || (!isNumber(costData.accessoryQuantity)&&costData.accessoryQuantity!=='') 
+                        || (!isNumber(costData.accessoryPrice)&&costData.accessoryPrice!=='') 
+                        || (!isNumber(costData.otherExpense)&&costData.otherExpense!=='')) {
+                    $('#costErrorMsg').html('工时、数量、单价和其他费用必须为数字');
                     return;
                 }
                 pageManager.stepCost.push(costData);
@@ -98,6 +106,15 @@
                         '</p></div>'+
                         '<div class="weui-cell__ft"><i class="weui-icon-cancel"></i></div></div>';
                 $costList.append($(tempui).attr('data-id', index));
+            }
+            
+            function isNumber(value) {
+                var patrn = /^(-)?\d+(\.\d+)?$/;
+                if (patrn.exec(value) === null || value === "") {
+                    return false;
+                } else {
+                    return true;
+                }
             }
         });
 </script>

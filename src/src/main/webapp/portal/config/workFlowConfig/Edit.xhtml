@@ -47,6 +47,10 @@
                             <p:inputText id="timeoutClose" value="#{workflowConfigController.selected.timeoutClose}" />
                         </h:panelGroup>
                         <h:panelGroup>
+                            <label class="label">#{msg.maxMessageCount}</label>
+                            <p:inputText id="maxMessageCount" value="#{workflowConfigController.selected.maxMessageCount}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
                             <label class="label">#{msg.orderReopenTimeframe}</label>
                             <p:inputText id="orderReopenTimeframe" value="#{workflowConfigController.selected.orderReopenTimeframe}" required="true"/>
                         </h:panelGroup>
