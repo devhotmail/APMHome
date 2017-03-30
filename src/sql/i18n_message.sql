@@ -391,11 +391,11 @@ INSERT INTO "i18n_message" VALUES (1494,'contractType','5','保养合同','保�
 
 
 INSERT INTO "i18n_message" VALUES (1510,'woSteps','1', '报修','Create',null,-1);
-INSERT INTO "i18n_message" VALUES (1511,'woSteps','2', '审核','Approve',null,-1);
-INSERT INTO "i18n_message" VALUES (1512,'woSteps','3', '派工','Assign',null,-1);
-INSERT INTO "i18n_message" VALUES (1513,'woSteps','4', '领工','Accept',null,-1);
-INSERT INTO "i18n_message" VALUES (1514,'woSteps','5', '维修','Repair',null,-1);
-INSERT INTO "i18n_message" VALUES (1515,'woSteps','6', '关单','Closed',null,-1);
+INSERT INTO "i18n_message" VALUES (1511,'woSteps','2', '派单','Assign',null,-1);
+INSERT INTO "i18n_message" VALUES (1512,'woSteps','3', '领单','Accept',null,-1);
+INSERT INTO "i18n_message" VALUES (1513,'woSteps','4', '维修','Repair',null,-1);
+INSERT INTO "i18n_message" VALUES (1514,'woSteps','5', '关单','Closed',null,-1);
+INSERT INTO "i18n_message" VALUES (1515,'woSteps','6', '反馈','Feedback',null,-1);
 
 INSERT INTO "i18n_message" VALUES (1517,'assetStatus','1', '正常','Up',null,-1);
 INSERT INTO "i18n_message" VALUES (1518,'assetStatus','2', '停机','Down',null,-1);
