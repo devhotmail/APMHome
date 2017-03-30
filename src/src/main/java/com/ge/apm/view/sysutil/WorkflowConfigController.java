@@ -6,10 +6,7 @@ import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import com.ge.apm.dao.OrgInfoRepository;
-import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.dao.WorkflowConfigRepository;
-import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkflowConfig;
 import com.ge.apm.service.uaa.UaaService;
@@ -26,17 +23,17 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
 	private static final long serialVersionUID = 1L;
 	WorkflowConfigRepository dao = null;
 	private UserAccount user;
-	private UserAccountRepository userAccountRepository;
 	private List<UserAccount> dispatchUserList;
 	private UaaService uuaService;
-    private UserAccount owner;
+        private UserAccount owner;
 
 	@Override
 	protected void init() {
-		user = UserContextService.getCurrentUserAccount();
-		dao = WebUtil.getBean(WorkflowConfigRepository.class);
-		uuaService =  (UaaService) WebUtil.getBean(UaaService.class);
-		dispatchUserList = uuaService.getUsersWithAssetHeadOrStaffRole(user.getHospitalId());
+            user = UserContextService.getCurrentUserAccount();
+            dao = WebUtil.getBean(WorkflowConfigRepository.class);
+            uuaService =  (UaaService) WebUtil.getBean(UaaService.class);
+            dispatchUserList = uuaService.getUsersWithAssetHeadOrStaffRole(user.getHospitalId());
+            this.selected = dao.getBySiteIdAndHospitalId(user.getSiteId(), user.getHospitalId());
 	}
 
 	@Override
@@ -53,12 +50,12 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
 		}
 	}
 
-    public void onOwnerChange() {
-        if (null != owner) {
-            selected.setDispatchUserId(owner.getId());
-            selected.setDispatchUserName(owner.getName());
+        public void onOwnerChange() {
+            if (null != owner) {
+                selected.setDispatchUserId(owner.getId());
+                selected.setDispatchUserName(owner.getName());
+            }
         }
-    }
 	
 	@Override
 	public List<WorkflowConfig> getItemList() {
@@ -81,16 +78,16 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
 		this.dispatchUserList = dispatchUserList;
 	}
 
-	@Override
-	public void onBeforeSave(WorkflowConfig config) {
-		config.setSiteId(user.getSiteId());
-		config.setHospitalId(user.getHospitalId());
-		//config.setDispatchUserName(userAccountRepository.getById(config.getDispatchUserId()).getName());
-		config.setDispatchUserId(owner.getId());
-		System.out.println("owner.id = "+owner.getId()+",owner.name :"+owner.getName());
-		config.setDispatchUserName(owner.getName());
-		System.out.println(config);
-	}
+//	@Override
+//	public void onBeforeSave(WorkflowConfig config) {
+//		config.setSiteId(user.getSiteId());
+//		config.setHospitalId(user.getHospitalId());
+//		//config.setDispatchUserName(userAccountRepository.getById(config.getDispatchUserId()).getName());
+////		config.setDispatchUserId(owner.getId());
+//		System.out.println("owner.id = "+owner.getId()+",owner.name :"+owner.getName());
+//		config.setDispatchUserName(owner.getName());
+//		System.out.println(config);
+//	}
 
 	public UserAccount getOwner() {
 		return owner;
