@@ -316,16 +316,18 @@
         });
 
         function processImage(){
+            var num = $("#uploaderFiles").children().length;
+            if(num > 0 ) {
+                var list = $("#uploaderFiles");
+                var qrAssetImageJson = {imageServerIds: []};
 
-            var list = $("#uploaderFiles");
-            var qrAssetImageJson = {imageServerIds : []};
-
-            $.each(list.children(), function () {
-                qrAssetImageJson.imageServerIds.push({
-                    imageServerId: this.id
+                $.each(list.children(), function () {
+                    qrAssetImageJson.imageServerIds.push({
+                        imageServerId: this.id
+                    });
                 });
-            });
-            $("#imageServerIds").val(JSON.stringify(qrAssetImageJson));
+                $("#imageServerIds").val(JSON.stringify(qrAssetImageJson));
+            }
         }
 
         function validateAssetInfo(){
