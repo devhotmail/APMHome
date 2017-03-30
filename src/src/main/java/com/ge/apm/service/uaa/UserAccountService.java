@@ -24,6 +24,10 @@ public class UserAccountService {
 		return userAccountMapper.getAllUser();
 	};
 	
+	public UserAccount getUserById(Integer id){
+		return userAccountMapper.getUserById(id);
+	}
+	
 	public UserModel getUserAccoutByUserId(Integer userId){
 		UserModel user = userAccountMapper.getUserAccoutByUserId(userId);
 		if(user == null){
@@ -45,4 +49,6 @@ public class UserAccountService {
 		user.setUserRole(role);
 		return user;
 	}
+	
+	
 }

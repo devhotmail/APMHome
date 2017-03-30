@@ -367,6 +367,7 @@ INSERT INTO "i18n_message" VALUES (765,'field_name','factoryWarrantyDate', '质�
 INSERT INTO "i18n_message" VALUES (766,'field_name','contractType', '合同类型','Contract Type',null,-1);
 
 
+
 -- field value code types  ( id from 1400)
 
 INSERT INTO "i18n_message" VALUES (1400,'assetGroup','1','CT','CT',null,-1);
@@ -616,6 +617,8 @@ INSERT INTO "i18n_message" VALUES (5067,'label','timeoutAccept','接单超时时
 INSERT INTO "i18n_message" VALUES (5068,'label','timeoutRepair','维修超时时间(分钟)','repair timeout',null,-1);
 INSERT INTO "i18n_message" VALUES (5069,'label','timeoutClose','关单超时时间(分钟)','close timeout',null,-1);
 INSERT INTO "i18n_message" VALUES (5070,'label','orderReopenTimeframe','二次开单间隔(天)','order reopen timeframe',null,-1);
+INSERT INTO "i18n_message" VALUES (5071,'label','unbundWX','是否解除微信绑定？','unbundWX?',null,-1);
+
 
 
 -- asset head

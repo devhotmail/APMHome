@@ -1,13 +1,17 @@
 package com.ge.apm.view.uaa;
 
-import com.ge.apm.dao.UserAccountRepository;
-import com.ge.apm.domain.UserAccount;
-import com.ge.apm.view.sysutil.UserContextService;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+
+import com.ge.apm.dao.UserAccountRepository;
+import com.ge.apm.domain.UserAccount;
+import com.ge.apm.service.uaa.UserAccountService;
+import com.ge.apm.view.sysutil.UserContextService;
+
 import webapp.framework.web.WebUtil;
 
 /**
@@ -23,10 +27,14 @@ public class ProfileController implements Serializable {
     
     private String newPassword;
     private String newPassword2;
-
+    UserAccountService userAccountService;
+    
     @PostConstruct
     public void init(){
         myAccount = UserContextService.getCurrentUserAccount();
+        if(myAccount != null && myAccount.getWeChatId() != null){
+        	myAccount.setIsUnbunding(true);
+        }
     }
     
     public UserAccount getMyAccount() {
@@ -55,6 +63,9 @@ public class ProfileController implements Serializable {
     
     public void saveProfile(){
         UserAccountRepository userAccountDao = WebUtil.getBean(UserAccountRepository.class);
+        if(!myAccount.getIsUnbunding()){
+        	myAccount.setWeChatId(null);
+        }
         userAccountDao.save(myAccount);
         WebUtil.addSuccessMessage(WebUtil.getMessage("UserAccount")+WebUtil.getMessage("Updated"));
     }
