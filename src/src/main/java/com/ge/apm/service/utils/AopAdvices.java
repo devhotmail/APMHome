@@ -35,7 +35,7 @@ public class AopAdvices {
 
     public StringBuffer getRequestURL() {
       return API.Match(Tuple.of(System.getenv(), request)).of(
-        Case($(t -> t._1.containsKey("VCAP_APPLICATION")), Option.of(request).map(req -> new StringBuffer(req.getRequestURL().toString().replace("http", "https"))).getOrElse(new StringBuffer())),
+        Case($(t -> t._1.containsKey("VCAP_APPLICATION")), Option.of(request).map(req -> new StringBuffer(req.getRequestURL().toString().replace("http://", "https://"))).getOrElse(new StringBuffer())),
         Case($(), Option.of(request).map(HttpServletRequest::getRequestURL).getOrElse(new StringBuffer()))
       );
     }
