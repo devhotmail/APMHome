@@ -100,6 +100,7 @@ public class AssetExamDataService {
         //min max based on 1 year
         //gl: nest sql are not support in HQL ,take mybatis here to look for max and min
         try{
+            /*按assetid和created聚合，获取assetSummit中最大最小的inject film expose——count的值*/
             AssetSummitMaxMinPojo asmm = assetSummitMapper.fetchAssetSummit();
 
             //update records with rating is null
