@@ -208,14 +208,19 @@
                                     isShowProgressTips: 1,
                                     success: function (rest) {
                                         pageManager.serverIds.push(rest.serverId);
-                                        wx.getLocalImgData({
-                                            localId: res[j],
-                                            success: function(ress){
-                                                var localData = ress.localData.replace('jgp', 'jpeg');
-                                                $uploaderFiles.append($(tmpl.replace('#url#', localData)).attr('data-serid', rest.serverId));
-                                                $('#countnum').html($uploaderFiles.children().length);
-                                            }
-                                        });
+                                        if (window.__wxjs_is_wkwebview){
+                                            wx.getLocalImgData({
+                                                localId: res[j],
+                                                success: function(ress){
+                                                    var localData = ress.localData.replace('jgp', 'jpeg');
+                                                    $uploaderFiles.append($(tmpl.replace('#url#', localData)).attr('data-serid', rest.serverId));
+                                                    $('#countnum').html($uploaderFiles.children().length);
+                                                }
+                                            });
+                                        } else {
+                                            $uploaderFiles.append($(tmpl.replace('#url#', res[j])).attr('data-serid', rest.serverId));
+                                            $('#countnum').html($uploaderFiles.children().length);
+                                        }
                                         j++;
                                         uploadImg(res, j);
                                     }
@@ -347,5 +352,6 @@
         
         <jsp:include page="woDetail.html"/>
         <jsp:include page="tipsTemplate.html"/>
+        <jsp:include page="wosteplist.html"/>
     </body>
 </html>

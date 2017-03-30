@@ -95,6 +95,11 @@
                     
                     //bind click event
                     $('#myReports').on('click', '.weui-cell_access', function(){
+                        var $loadingToast = $('#loadingToast1');
+                        if ($loadingToast.css('display') === 'none') {
+                            $loadingToast.fadeIn(100);
+                        }
+                        
                         pageManager.woId = $(this).parent().find('h4').html().split(': ')[1];
                         pageManager.showMsgs = false;
                         if($(this).find('.reportview').html()) {
@@ -117,5 +122,6 @@
         <jsp:include page="msgTemplate.html"/>
         <jsp:include page="listTemplate.html"/>
         <jsp:include page="tipsTemplate.html"/>
+        <jsp:include page="wosteplist.html"/>
     </body>
 </html>

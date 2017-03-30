@@ -45,6 +45,17 @@ and open the template in the editor.
                         </h:selectOneMenu>
                     </div>
                 </div>
+                <div class="weui-cell weui-cell_select weui-s">
+                    <div class="weui-cell__hd">
+                        #{msg.clinicalDeptId}
+                    </div>
+                    <div class="weui-cell__bd">
+                        <h:selectOneMenu id="clinicalDeptId" class="weui-select" value="#{wxAssetInfoController.searchDept}" onchange="search()">
+                            <f:selectItem itemLabel="全部"/>
+                            <f:selectItems value="#{wxAssetInfoController.getSearchDeptList()}" var="item" itemLabel="#{item[0]}" itemValue="#{item[1]}"/>
+                        </h:selectOneMenu>
+                    </div>
+                </div>
                 <div class="weui-cell weui-cells_checkbox">
                     <div class="weui-cell__hd">
                         状态
