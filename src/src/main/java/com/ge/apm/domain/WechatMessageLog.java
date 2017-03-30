@@ -57,6 +57,8 @@ public class WechatMessageLog implements Serializable {
 
     public WechatMessageLog() {
     }
+    
+    
 
     public WechatMessageLog(Integer id) {
         this.id = id;

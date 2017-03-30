@@ -24,6 +24,6 @@ public interface UserAccountMapper {
 	@Select("select id,role_desc from sys_role where id in(select role_id from user_role where user_id = #{userId})")
 	public List<SysRole> getUserRoles(Integer userId);
 
-	@Select("select * from user_account where id =#{id}")
+	@Select("select id,name,wechat_id from user_account where id =#{id}")
 	public UserAccount getUserById(Integer id);
 }
