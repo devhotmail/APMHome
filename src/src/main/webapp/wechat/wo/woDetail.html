@@ -312,8 +312,8 @@
                         $('#cancelWo').html('取消');$('#cancelWo').siblings().hide();
                     } else {
                         switch(pageManager.step) {
-                            case 2: $('#submit').html('派单');$('#returnSubmit').hide();break;
-                            case 3: $('#submit').html('领单');break;
+                            case 2: $('#submit').html('派工');$('#returnSubmit').hide();break;
+                            case 3: $('#submit').html('接单');break;
                             case 4: pageManager.signUp?$('#submit').html('签到'):$('#submit').hide();
                                     $('#otherSubmit').html('关单');break;
                             case 5: $('#submit').html('确认关单').show();$('#returnSubmit').hide();$('#otherSubmit').hide();break;
@@ -365,10 +365,12 @@
                     post(data);
                 });
                 $('#otherSubmit').click(function(){
+                    $('#errorMsg').html('');
                     pageManager.actionType = 'repair';
                     post({woId: pageManager.woId, actionType: 'repair', desc: $('#description').val()});
                 });
                 $('#returnSubmit').click(function(){
+                    $('#errorMsg').html('');
                     var data = colletionReturnData();
                     if(!data.desc){
                         $('#errorMsg').html('请填写回退备注');
@@ -377,10 +379,12 @@
                     post(data);
                 });
                 $('#takeOtherWo').click(function(){
+                    $('#errorMsg').html('');
                     pageManager.actionType = 'fatchwo';
                     post({woId: pageManager.woId, actionType: 'fatchwo', estimatedCloseTime: $('#estimatedCloseTime').val().replace('T', ' '), desc: $('#description').val()});
                 });
                 $('#cancelWo').click(function(){
+                    $('#errorMsg').html('');
                     pageManager.actionType = 'cancel';
                     if(!$('#description').val()){
                         $('#errorMsg').html('请填写取消备注');
