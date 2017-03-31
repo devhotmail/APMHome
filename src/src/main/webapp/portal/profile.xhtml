@@ -32,6 +32,9 @@
                                 <label class="label">#{msg.telephone}</label>
                                 <p:inputText id="telephone" value="#{profileController.myAccount.telephone}" />
                             </h:panelGroup>
+                           <h:panelGroup>
+                            	<p:selectBooleanCheckbox itemLabel="#{msg.unbundWX}" value="#{profileController.myAccount.isUnbunding}"  rendered="#{profileController.myAccount.isUnbunding}"/>
+                        	</h:panelGroup>
                         </p:panelGrid>
                         <br/>
 

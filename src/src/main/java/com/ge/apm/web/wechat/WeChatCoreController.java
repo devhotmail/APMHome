@@ -5,6 +5,9 @@
  */
 package com.ge.apm.web.wechat;
 
+import com.ge.apm.domain.UserAccount;
+import com.ge.apm.domain.UserModel;
+import com.ge.apm.service.uaa.UserAccountService;
 import com.ge.apm.service.wechat.CoreService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,9 +19,11 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import webapp.framework.context.ExternalLoginHandler;
+import webapp.framework.web.service.UserContext;
 
 /**
  *
@@ -33,6 +38,9 @@ public class WeChatCoreController {
     protected WxMpService wxMpService;
     @Autowired
     protected CoreService coreService;
+    
+    @Autowired
+    UserAccountService userAccountService;
 
     @Autowired
     protected ExternalLoginHandler loginHandler;
@@ -102,7 +110,16 @@ public class WeChatCoreController {
      * @param response 
      */
     @RequestMapping(value = "authurl")
-    public String authUrl() {
+    public String authUrl(HttpServletRequest request,Model model) {
+    	UserModel user = null;
+    	UserAccount userAccount = UserContext.getCurrentLoginUser(request);
+    	if(userAccount != null){
+    		user = userAccountService.getUserAccoutByUserId(userAccount.getId());
+    	}
+    	if(user == null){
+    		user = new UserModel();
+    	}
+    	model.addAttribute("user",user);
         return "userInfo";
     }
     

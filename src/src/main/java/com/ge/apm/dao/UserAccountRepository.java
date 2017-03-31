@@ -23,7 +23,7 @@ public interface UserAccountRepository extends GenericRepository<UserAccount> {
     @Query("select u from UserAccount u, UserRole r where u.hospitalId=?1 and u.id=r.userId and r.roleId=3")
     List<UserAccount> getUsersWithAssetStaffRole(int hospitalId);
 
-    @Query("select u from UserAccount u, UserRole r where u.hospitalId=?1 and u.id=r.userId and r.roleId in (2,3)")
+    @Query("select distinct u from UserAccount u, UserRole r where u.hospitalId=?1 and u.id=r.userId and r.roleId in (2,3)")
     List<UserAccount> getUsersWithAssetHeadOrStaffRole(int hospitalId);
 
     @Query("SELECT distinct u FROM UserAccount u,UserRole ur where u.id=ur.userId and ((ur.roleId='6' and u.siteId=?1 ) or (u.hospitalId=?2 and ur.roleId=3 ))")

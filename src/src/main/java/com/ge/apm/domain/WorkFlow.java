@@ -13,13 +13,19 @@ public class WorkFlow {
 	private Integer timeoutClose;
 	
     private Integer currentStepId;
+    private String stepName;
     private Integer currentPersonId;
     
     private Integer ownerId;//work_order_step owner_id
     private String ownerName;//work_order_step ownerName
     private Date startTime;//work_order_step start_time
     
-    
+	public String getStepName() {
+		return stepName;
+	}
+	public void setStepName(String stepName) {
+		this.stepName = stepName;
+	}
 	public String getOwnerName() {
 		return ownerName;
 	}

@@ -342,8 +342,8 @@ INSERT INTO "i18n_message" VALUES (741,'field_name','lastMeteringDate','上次�
 INSERT INTO "i18n_message" VALUES (742,'field_name','assetName','资产名称','Asset Name',null,-1);
 INSERT INTO "i18n_message" VALUES (743,'field_name','period','循环周期','Period',null,-1);
 INSERT INTO "i18n_message" VALUES (744,'field_name','wfAutoStep2', '自动审核','Auto Approve',null,-1);
-INSERT INTO "i18n_message" VALUES (745,'field_name','wfAutoStep3', '自动派工','Auto Assign',null,-1);
-INSERT INTO "i18n_message" VALUES (746,'field_name','wfAutoStep4', '自动领工','Auto Accept',null,-1);
+INSERT INTO "i18n_message" VALUES (745,'field_name','wfAutoStep3', '自动派单','Auto Assign',null,-1);
+INSERT INTO "i18n_message" VALUES (746,'field_name','wfAutoStep4', '自动领单','Auto Accept',null,-1);
 INSERT INTO "i18n_message" VALUES (747,'field_name','wfAutoStep5', '自动维修','Auto Repair',null,-1);
 INSERT INTO "i18n_message" VALUES (748,'field_name','wfAutoStep6', '自动关单','Auto Close',null,-1);
 INSERT INTO "i18n_message" VALUES (749,'field_name','PmOrder', '保养记录','preventive order',null,-1);
@@ -365,6 +365,7 @@ INSERT INTO "i18n_message" VALUES (763,'field_name','clinicalOwnerTel', '科室�
 INSERT INTO "i18n_message" VALUES (764,'field_name','registrationNo', '注册证号','Registration No',null,-1);
 INSERT INTO "i18n_message" VALUES (765,'field_name','factoryWarrantyDate', '质保日期','Manhour Price(RMB)',null,-1);
 INSERT INTO "i18n_message" VALUES (766,'field_name','contractType', '合同类型','Contract Type',null,-1);
+
 
 
 -- field value code types  ( id from 1400)
@@ -611,10 +612,13 @@ INSERT INTO "i18n_message" VALUES (5062,'dispatchMode','3','自动派工','autom
 INSERT INTO "i18n_message" VALUES (5063,'label','WorkFlowConfig','工作流配置','workflow config',null,-1);
 INSERT INTO "i18n_message" VALUES (5064,'label','dispatchMode','派工模式','dispatch mode',null,-1);
 INSERT INTO "i18n_message" VALUES (5065,'label','dispatchUserName','派工人','dispatch username',null,-1);
-INSERT INTO "i18n_message" VALUES (5066,'label','timeoutDispatch','派工超时时间','dispatch timeout',null,-1);
-INSERT INTO "i18n_message" VALUES (5067,'label','timeoutAccept','接单超时时间','accept timeout',null,-1);
-INSERT INTO "i18n_message" VALUES (5068,'label','timeoutRepair','维修超时时间','repair timeout',null,-1);
-INSERT INTO "i18n_message" VALUES (5069,'label','timeoutClose','关单超时时间','close timeout',null,-1);
+INSERT INTO "i18n_message" VALUES (5066,'label','timeoutDispatch','派工超时时间(分钟)','dispatch timeout',null,-1);
+INSERT INTO "i18n_message" VALUES (5067,'label','timeoutAccept','接单超时时间(分钟)','accept timeout',null,-1);
+INSERT INTO "i18n_message" VALUES (5068,'label','timeoutRepair','维修超时时间(分钟)','repair timeout',null,-1);
+INSERT INTO "i18n_message" VALUES (5069,'label','timeoutClose','关单超时时间(分钟)','close timeout',null,-1);
+INSERT INTO "i18n_message" VALUES (5070,'label','orderReopenTimeframe','二次开单间隔(天)','order reopen timeframe',null,-1);
+INSERT INTO "i18n_message" VALUES (5071,'label','unbundWX','是否解除微信绑定？','unbundWX?',null,-1);
+
 
 
 -- asset head

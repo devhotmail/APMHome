@@ -17,7 +17,7 @@ and open the template in the editor.
         </f:facet>
         <title>#{msg.AssetInfo}</title>
         <h:outputStylesheet name="wechat/css/weui.min.css" />
-        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jquery-2.0.0.min.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jquery-3.1.1.min.js"/>
         <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jweixin-1.0.0.js"/>
     </h:head>
     <body>
@@ -34,46 +34,46 @@ and open the template in the editor.
                     </div>
 
                 </div>
-                <div class="weui-cell weui-cell_select weui-s">
-                    <div class="weui-cell__hd">
-                        #{msg.assetGroup}
+                    <div class="weui-cell weui-cell_select weui-cell_select-after">
+                            <div class="weui-cell__hd">
+                                <label for="assetGroup" class="weui-label">#{msg.assetGroup}</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <h:selectOneMenu id="assetGroup" class="weui-select" value="#{wxAssetInfoController.searchGroup}" onchange="search()">
+                                    <f:selectItem itemLabel="全部"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </h:selectOneMenu>
+                            </div>
                     </div>
-                    <div class="weui-cell__bd">
-                        <h:selectOneMenu id="assetGroup" class="weui-select" value="#{wxAssetInfoController.searchGroup}" onchange="search()">
-                            <f:selectItem itemLabel="全部"/>
-                            <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                        </h:selectOneMenu>
+                    <div class="weui-cell weui-cell_select weui-cell_select-after">
+                        <div class="weui-cell__hd">
+                            <label for="clinicalDeptId" class="weui-label">#{msg.clinicalDeptId}</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <h:selectOneMenu id="clinicalDeptId" class="weui-select" value="#{wxAssetInfoController.searchDept}" onchange="search()">
+                                <f:selectItem itemLabel="全部"/>
+                                <f:selectItems value="#{wxAssetInfoController.getSearchDeptList()}" var="item" itemLabel="#{item[0]}" itemValue="#{item[1]}"/>
+                            </h:selectOneMenu>
+                        </div>
                     </div>
-                </div>
-                <div class="weui-cell weui-cell_select weui-s">
-                    <div class="weui-cell__hd">
-                        #{msg.clinicalDeptId}
-                    </div>
-                    <div class="weui-cell__bd">
-                        <h:selectOneMenu id="clinicalDeptId" class="weui-select" value="#{wxAssetInfoController.searchDept}" onchange="search()">
-                            <f:selectItem itemLabel="全部"/>
-                            <f:selectItems value="#{wxAssetInfoController.getSearchDeptList()}" var="item" itemLabel="#{item[0]}" itemValue="#{item[1]}"/>
-                        </h:selectOneMenu>
-                    </div>
-                </div>
                 <div class="weui-cell weui-cells_checkbox">
-                    <div class="weui-cell__hd">
+                    <div class="weui-cell__bd">
                         状态
                     </div>
-                    <label class="weui-cell weui-check__label" for="assetList:running"></label>
                     <div class="weui-cell__bd">
-                        <h:selectBooleanCheckbox id="running" class="weui-check" value="#{wxAssetInfoController.searchStatRun}" onchange="search()"/>
-                        <i class="weui-icon-checked"></i>正常
+                        <h:selectBooleanCheckbox id="running"  class="weui-check" value="#{wxAssetInfoController.searchStatRun}" onchange="search()"/>
+                        <i class="weui-icon-checked"></i>
+                        <label class="weui-check__label" for="assetList:running" style="">正常</label>
                     </div>
-                    <label class="weui-cell weui-check__label" for="assetList:stoped"></label>
                     <div class="weui-cell__bd">
-                        <h:selectBooleanCheckbox id="stoped" class="weui-check" value="#{wxAssetInfoController.searchStatStop}" />
-                        <i class="weui-icon-checked"></i>停机
+                        <h:selectBooleanCheckbox id="stoped" class="weui-check" value="#{wxAssetInfoController.searchStatStop}" onchange="search()"/>
+                        <i class="weui-icon-checked"></i>
+                        <label class="weui-check__label" for="assetList:stoped">停机</label>
                     </div>
-                    <label class="weui-cell weui-check__label" for="assetList:partial"></label>
                     <div class="weui-cell__bd">
-                        <h:selectBooleanCheckbox id="partial" class="weui-check" value="#{wxAssetInfoController.searchStatPartial}" />
-                        <i class="weui-icon-checked"></i>异常
+                        <h:selectBooleanCheckbox id="partial" class="weui-check" value="#{wxAssetInfoController.searchStatPartial}" onchange="search()"/>
+                        <i class="weui-icon-checked"></i>
+                        <label class="weui-check__label" for="assetList:partial">异常</label>
                     </div>
                 </div>
                 <p:remoteCommand name="search" actionListener="#{wxAssetInfoController.onSearch}" update="dataList" />
@@ -83,8 +83,8 @@ and open the template in the editor.
         <p:dataScroller id="dataList" value="#{wxAssetInfoController.getAssetList()}" var="asset" chunkSize="10"  rowIndexVar="row"  >
             <f:facet name="header">
                 <div >
-                总计： #{wxAssetInfoController.getAssetList().size()}
-                    </div>
+                    总计： #{wxAssetInfoController.getAssetList().size()}
+                </div>
             </f:facet>
             <h:link  outcome="Detail.xhtml" class="weui-media-box weui-media-box_appmsg">
                 <f:param name="assetId" value="#{asset.id}"/>
@@ -105,14 +105,6 @@ and open the template in the editor.
             <p:separator ></p:separator>
         </p:dataScroller>
 
-<!--        <div class="weui-msg__extra-area">
-            <div class="weui-footer">
-                <p class="weui-footer__links">
-                    <a href="javascript:void(0);" class="weui-footer__link"></a>
-                </p>
-                <p class="weui-footer__text">Copyright © 2016-2017 GE Healthcare</p>
-            </div>
-        </div>-->
     </body>
     <script type="text/javascript">
         $("#assetList\\:searchInput").attr('placeholder', '搜索...');
@@ -122,29 +114,6 @@ and open the template in the editor.
             $("#assetList\\:searchInput").val('');
             search();
         }
-        
-         var jsSignature = #{wechatUtilService.getJsSignature()};
-
-	     wx.config({
-	           debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-	           appId: jsSignature.appid, // 必填，公众号的唯一标识
-	           timestamp: jsSignature.timestamp, // 必填，生成签名的时间戳
-	           nonceStr: jsSignature.noncestr, // 必填，生成签名的随机串
-	           signature: jsSignature.signature,// 必填，签名，见附录1
-	           jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-	       });
-	     
-          wx.ready(function(){
-              wx.scanQRCode({
-                  needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                  scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                  success: function (res) {
-                      var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                      window.location.href="Detail.xhtml?qrCode="+result;
-             	     debugger;
-                  }
-              });
-          });
 
     </script>
 </html>

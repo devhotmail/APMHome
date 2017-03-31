@@ -48,9 +48,10 @@ public class WorkflowConfig implements Serializable {
     private Integer timeoutClose;
     
     @Column(name="order_reopen_timeframe")
-    
     private Integer orderReopenTimeframe;//二次开单的最大时间间隔
-    
+    @Column(name="max_message_count")
+    private Integer maxMessageCount;//推送消息的次数上限
+
 	public WorkflowConfig() {
     }
 
@@ -151,6 +152,14 @@ public class WorkflowConfig implements Serializable {
 
     public void setOrderReopenTimeframe(Integer orderReopenTimeframe) {
         this.orderReopenTimeframe = orderReopenTimeframe;
+    }
+
+    public Integer getMaxMessageCount() {
+        return maxMessageCount;
+    }
+
+    public void setMaxMessageCount(Integer maxMessageCount) {
+        this.maxMessageCount = maxMessageCount;
     }
 
     @Override

@@ -150,9 +150,10 @@
         wechatSDK.init();
 
         wechatSDK.scanQRCode(1, function (qrCode) {
-            /*if (qrCode.length > 16) {
+
+            if (qrCode.length > 16) {
              qrCode = qrCode.substr(qrCode.length-16);
-             }*/
+             }
 
             $("#qrCode").val(qrCode);
 
@@ -316,19 +317,16 @@
 
         function processImage(){
             var num = $("#uploaderFiles").children().length;
-            if(num > 0 ){
-                $("#imageServerIds").val("");
-
-                var imageServerIds = new Array();
-                var upload = {imageServerIds : imageServerIds};
+            if(num > 0 ) {
                 var list = $("#uploaderFiles");
+                var qrAssetImageJson = {imageServerIds: []};
 
                 $.each(list.children(), function () {
-                    upload.imageServerIds.push({
+                    qrAssetImageJson.imageServerIds.push({
                         imageServerId: this.id
                     });
                 });
-                $("#imageServerIds").val(JSON.stringify(upload));
+                $("#imageServerIds").val(JSON.stringify(qrAssetImageJson));
             }
         }
 
@@ -379,7 +377,7 @@
             $("#assetMsgBody").show();
         }
 
-        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)" id="#id#"></li>',
+        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
             $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
             $uploaderInput = $("#uploaderInput"),
             $uploaderFiles = $("#uploaderFiles");
@@ -454,16 +452,16 @@
                             localId: localId,
                             success: function(ress){
                                 var localData = ress.localData.replace('jgp', 'jpeg');
-                                tmpl = tmpl.replace('#id#', serverId);
-                                $uploaderFiles.append($(tmpl.replace('#url#', localData)));
+                                //var tmpl = tmpl.replace('#id#', serverId);
+                                $uploaderFiles.append($(tmpl.replace('#url#', localData)).attr('id', serverId));
 
                                 countImage();
                             }
                         });
 
                     }else{
-                        tmpl = tmpl.replace('#id#', serverId);
-                        $uploaderFiles.append($(tmpl.replace('#url#', localId)));
+                        //var tmpl = tmpl.replace('#id#', serverId);
+                        $uploaderFiles.append($(tmpl.replace('#url#', localId)).attr('id', serverId));
 
                         countImage();
                     }

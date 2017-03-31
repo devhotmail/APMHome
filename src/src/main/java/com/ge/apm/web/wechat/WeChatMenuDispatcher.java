@@ -46,9 +46,9 @@ public class WeChatMenuDispatcher {
     
     static {
         URL_MAP = new HashMap<>();
-        URL_MAP.put("12", "/wechat/asset/List.xhtml");
-        //URL_MAP.put("12", "/wechat/asset/QRCreate.xhtml");
         URL_MAP.put("11", "/web/qrCreateAsset");
+        URL_MAP.put("12", "/wechat/asset/QRQuery.xhtml");
+        URL_MAP.put("13", "/wechat/asset/List.xhtml");
         
         URL_MAP.put("21", "/wechat/wo/scanAssetList.xhtml");
         URL_MAP.put("22", "/web/myreport");
