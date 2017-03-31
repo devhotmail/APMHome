@@ -219,12 +219,12 @@
                         <h:form id="returnback">
                             <p:fieldset id="returnBackHistory" legend="退回原因历史" rendered="#{not empty assetCreateController.rejectTextHistory}">
                                 <p:dataList  id="historylist" value="#{assetCreateController.rejectTextHistory}"  var="item">
-                                     <p>#{item}</p>
+                                    <p>#{item}</p>
                                 </p:dataList>
                             </p:fieldset>
                             <p:fieldset legend="退回原因">
-
-                                <p:inputTextarea id ="rejectTextarea" value="#{assetCreateController.rejectText}" rows="6" cols="50" required="true" requiredMessage="原因必须填写"/>
+                                <p:inputTextarea id ="rejectTextarea" value="#{assetCreateController.rejectText}" counter="comentsCounts" counterTemplate="#{msg.remainingCharacters}" maxlength="100"  rows="6" cols="50" required="true" requiredMessage="原因必须填写"/>
+                                <p><h:outputText id="comentsCounts" /></p>
                             </p:fieldset>
                             <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                                 <h:panelGroup >
@@ -243,9 +243,9 @@
 
         </div>
         <p:dialog id="shwoPicDialog" widgetVar="shwoPicDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)"  maximizable="true" header="图片">
-            
+
             <image id="shwoPicDialogImg"  src="123"/>
-            
+
         </p:dialog>
         <script>
 
