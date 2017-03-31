@@ -19,12 +19,19 @@ import com.ge.apm.domain.QrCodeAttachment;
 import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.domain.SiteInfo;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.service.utils.ConfigUtils;
+import com.ge.apm.service.utils.TimeUtils;
+import com.ge.apm.service.wechat.CoreService;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.dao.SearchFilter;
+import webapp.framework.web.WebUtil;
 
 /**
  *
@@ -37,7 +44,7 @@ public class AssetCreateService {
     private SiteInfoRepository siteDao;
     @Autowired
     private OrgInfoRepository orgDao;
-    
+
     @Autowired
     private QrCodeLibRepository qrLibDao;
     @Autowired
@@ -48,9 +55,12 @@ public class AssetCreateService {
     AssetFileAttachmentRepository attachDao;
     @Autowired
     QrCodeAttachmentRepository qrCodeAttachDao;
+    @Autowired
+    CoreService coreService;
+    @Autowired
+    ConfigUtils configUtils;
     
-    
-    
+
     public String getSiteName(Integer siteId) {
         SiteInfo si = siteDao.findById(siteId);
         return si.getName();
@@ -64,8 +74,8 @@ public class AssetCreateService {
     public QrCodeLib getCreateRequest(String qrCode) {
         return qrLibDao.findByQrCode(qrCode);
     }
-    
-     public List<OrgInfo> getClinicalDeptList(Integer hospitalId) {
+
+    public List<OrgInfo> getClinicalDeptList(Integer hospitalId) {
         List<SearchFilter> OrgInfoFilters = new ArrayList<>();
         OrgInfoFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, hospitalId));
         return orgDao.findBySearchFilter(OrgInfoFilters);
@@ -73,19 +83,19 @@ public class AssetCreateService {
 
     @Transactional
     public Boolean CreateAeest(AssetInfo assetInfo) {
-        return (null!=assetDao.save(assetInfo));
+        return (null != assetDao.save(assetInfo));
     }
 
     public List<UserAccount> getAssetOnwers(int siteId, Integer hospitalId) {
         //get all users in this hospital and has 'MultiHospital' users in this site 
-        List<UserAccount> users =userDao.getAssetOnwers(siteId,hospitalId);
+        List<UserAccount> users = userDao.getAssetOnwers(siteId, hospitalId);
         return users;
     }
 
     @Transactional
     public void createAttachments(AssetInfo assetInfo, Integer[] selectedPictures) {
         List<AssetFileAttachment> attachList = new ArrayList();
-        for(Integer item : selectedPictures){
+        for (Integer item : selectedPictures) {
             AssetFileAttachment attach = new AssetFileAttachment();
             attach.setAssetId(assetInfo.getId());
             attach.setFileId(item);
@@ -114,11 +124,29 @@ public class AssetCreateService {
     }
 
     public List<QrCodeAttachment> getQrCodeAudioList(Integer qrCodeLibId) {
-         List<SearchFilter> qrCodeFilters = new ArrayList<>();
+        List<SearchFilter> qrCodeFilters = new ArrayList<>();
         qrCodeFilters.add(new SearchFilter("qrCodeId", SearchFilter.Operator.EQ, qrCodeLibId));
         qrCodeFilters.add(new SearchFilter("fileType", SearchFilter.Operator.EQ, 2));
         List<QrCodeAttachment> picsList = qrCodeAttachDao.findBySearchFilter(qrCodeFilters);
         return picsList;
+    }
+
+    public boolean rejectReturn(QrCodeLib request,String rejectText) {
+        String _openId = request.getSubmitWechatId();
+        String _templateId = configUtils.fetchProperties("asset_build_template_id");
+        Map<String, Object> map = new HashMap();
+        map.put("first", "建档失败");
+        map.put("_qrCode", request.getQrCode());
+        map.put("_requestTime", TimeUtils.getStrDate(request.getSubmitDate(), "yyyy-MM-dd HH:mm:ss"));
+        map.put("_detail", rejectText);
+        map.put("_linkUrl", "wechat/asset/createInfoDetail.xhtml?qrCode=".concat(request.getQrCode()));
+        coreService.sendWxTemplateMessage(_openId, _templateId, map);
+        
+        rejectText = TimeUtils.getStrDate(new Date(),"[yyyy-MM-dd HH:mm:ss]").concat(rejectText) ;
+        
+        request.setFeedback(request.getFeedback()==null?rejectText:request.getFeedback().concat("//").concat(rejectText));
+        qrLibDao.save(request);
+        return true;
     }
 
 }

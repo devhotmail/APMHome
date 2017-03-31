@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,10 +47,18 @@ public class QrCreateAssetService {
 
         QrCodeLib qrCodeLib = qrCodeLibRepository.findByQrCode(qrCode);
 
+        DateTime dt = new DateTime();
+        String dtStr = dt.toString("yyyyMMdd HH:mm:ss");
+
+        String tempComment = null;
+        if(comment != null && !comment.trim().equals("")){
+            tempComment = dtStr + " " + comment;
+        }
+
         qrCodeLib.setSubmitDate(new Date());
         qrCodeLib.setSubmitWechatId(openId);
         qrCodeLib.setStatus(2);
-        qrCodeLib.setComment(qrCodeLib.getComment() == null ? comment : qrCodeLib.getComment() + comment);
+        qrCodeLib.setComment(qrCodeLib.getComment() == null ? tempComment : qrCodeLib.getComment() + "|" + tempComment);
 
         QrCodeLib tempQrCodeLib = qrCodeLibRepository.save(qrCodeLib);
 

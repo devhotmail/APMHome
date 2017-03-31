@@ -61,6 +61,9 @@ status int not null -- 1:已发行(未上传) / 2: 已上传(待建档) / 3: 已
 );
 alter table qr_code_lib add primary key (id);
 
+alter table qr_code_lib alter column submit_date type timestamp;  --扫码建档时间
+alter table qr_code_lib add COLUMN feedback varchar(512);		--反馈信息
+
 create table qr_code_attachment(
 id serial not null,
 qr_code_id int not null,
