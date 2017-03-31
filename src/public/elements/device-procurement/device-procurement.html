@@ -7,6 +7,7 @@
 <link rel="import" href="device-procurement-styles.html">
 <link rel="stylesheet" href="../../css/dewIcons.css">
 <link rel="import" href="../../uri.html">
+<link rel="import" href="../d3/d3.html">
 
 <dom-module id="device-procurement">
   <template>
@@ -21,7 +22,7 @@
     <div class="sidebar">
       <div class="type-select btn-group">
         <template is="dom-repeat" items="[[typeOpts]]">
-          <div class$="[[computedCls(item.val, selectedType)]]"
+          <div class$="[[calcTabCls(item.val, selectedType)]]"
             on-click="handleSelect">
             [[item.key]]
           </div>
@@ -34,7 +35,7 @@
             <ul>
               <template is="dom-repeat" items="[[tabList]]">
                 <li
-                  class$="[[calcTabCls(item.val, activeTab)]]"
+                  class$="[[calcTypeCls(item.val, activeTab)]]"
                   on-tap="handleTabTap">
                   [[item.key]]
                 </li>
@@ -96,7 +97,10 @@
           </template>
           <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
             <div class="config-list">
-              <template is="dom-repeat" id="configList" items="[[configList]]">
+              <template
+                id="configList"
+                is="dom-repeat"
+                items="[[configListOne]]">
                 <div
                   class$="[[calcConfigItemCls(selectedConfigIndex, index)]]"
                   on-tap="handleConfigTap">
@@ -106,35 +110,39 @@
                   </template>
                   <template is="dom-if" if="[[!item.isUnknown]]">
                     <editable-block
-                      value="{{item.revenue_increase}}"
                       data-index$="[[index]]"
-                      on-value-changed="handleConfigChange"></editable-block>
+                      value="[[item.increase]]"
+                      on-changed="handleConfigChange"></editable-block>
                     <span>%</span>
                   </template>
                 </div>
               </template>
               <array-selector
                 id="configSelector"
-                items="{{configList}}"
+                items="[[configListOne]]"
                 selected="{{selectedConfigIndex}}"></array-selector>
             </div>
-            <template is="dom-if" if="[[isArray(selectedConfigItem.items)]]">
+            <template is="dom-if" if="[[configListTwo.length]]">
               <div class="config-list">
-                <template is="dom-repeat" id="subConfigList" items="[[selectedConfigItem.items]]">
+                <template
+                  id="subConfigList"
+                  is="dom-repeat"
+                  items="[[configListTwo]]">
                   <div
                     class="config-item"
                     class$="[[calcConfigItemCls(selectedSubConfigIndex, index)]]"
                     on-tap="handleSubConfigTap">
                     <div class="item-name">[[item.name]]</div>
                     <editable-block
-                      value="{{item.revenue_increase}}"
-                      on-value-changed="handleSubConfigChange"></editable-block>
+                      data-index$="[[index]]"
+                      value="[[item.increase]]"
+                      on-changed="handleSubConfigChange"></editable-block>
                     <span>%</span>
                   </div>
                 </template>
                 <array-selector
                   id="subConfigSelector"
-                  items="{{selectedConfigItem.items}}"
+                  items="[[configListTwo]]"
                   selected="{{selectedSubConfigIndex}}"></array-selector>
               </div>
             </template>
@@ -191,9 +199,17 @@
           },
           selectedConfigItem: {
             type: Object,
-            computed: 'getSelectedConfigItem(configList, selectedConfigIndex)'
+            computed: 'getSelectedConfigItem(configListOne, selectedConfigIndex)'
           },
           configList: Array,
+          configListOne: {
+            type: Array,
+            computed: 'getConfigListOne(configList)'
+          },
+          configListTwo: {
+            type: Array,
+            computed: 'getConfigListTwo(configList, selectedConfigItem)'
+          },
           currentKPIs: {
             type: Array,
             computed: 'getCurrentKPIs(focus)'
@@ -247,9 +263,154 @@
         observers: [
           'loadData(selectedType)',
           'changeQuery(selectedType)',
-          'resetSubSelectedConfigIndex(selectedConfigIndex)',
-          'watcher4Focus(focus)'
+          'resetSubSelectedConfigIndex(selectedConfigIndex)'
         ],
+        getConfigListOne: function(configList) {
+          return configList.filter(function(n) {
+            return n.depth === 1;
+          });
+        },
+        getConfigListTwo: function(configList, selectedConfigItem) {
+          return configList.filter(function(n) {
+            return n.depth === 2 && n.parent.uid === selectedConfigItem.uid;
+          });
+        },
+        resetSubSelectedConfigIndex: function(selectedConfigIndex) {
+          // reset subSelectedConfig index when selectedConfigIndex changes
+          this.selectedSubConfigIndex = 0;
+        },
+        getSelectedConfigItem: function(array, index) {
+          if (Array.isArray(array) && Number.isFinite(index)) {
+            return array[index];
+          }
+        },
+        /**
+         * callback for dom interactive events
+        */
+        handleTabTap: function(e) {
+          this.set('activeTab', e.model.item.val);
+        },
+        handleSelect: function(e) {
+          this.set('selectedType', e.model.item.val);
+        },
+        // trigger `selected` in array-selector
+        handleConfigTap: function(e) {
+          var root = Polymer.dom(this.root);
+          var index = root.querySelector('#configList').indexForElement(e.target);
+          root.querySelector('#configSelector').select(index);
+          // set child config index as zero
+          this.selectedSubConfigIndex = 0;
+        },
+        handleSubConfigTap: function(e) {
+          var root = Polymer.dom(this.root);
+          var index = root.querySelector('#subConfigList').indexForElement(e.target);
+          root.querySelector('#subConfigSelector').select(index);
+        },
+        handleConfigChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          if (index > -1) {
+            // update value for current target
+            var cursor = this.configListOne[index].uid;
+            var target = this.configList.filter(function(n) {
+              return n.uid === cursor;
+            })[0];
+            target.increase = value;
+
+            // update children
+            var children = target.children;
+            if (children && children.length) {
+              var childUidList = children.map(function(n) {
+                return n.uid;
+              });
+              var configList = this.configList.map(function(config) {
+                if (~childUidList.indexOf(config.uid)) config.increase = value;
+                return config;
+              });
+            }
+            // force dirty check and keep selected index
+            var _tmp = this.selectedConfigIndex;
+            this.configList = this.deepClone(configList);
+            this.selectedConfigIndex = _tmp;
+          }
+        },
+        handleSubConfigChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          if (index > -1) {
+            // update value for current target
+            var cursor = this.configListTwo[index].uid;
+            var target = this.configList.filter(function(n) {
+              return n.uid === cursor;
+            })[0];
+            target.increase = value;
+
+            // update parent
+            var parentUid = target.parent.uid;
+            var parent = this.configList.filter(function(n) {
+              return n.uid === parentUid;
+            })[0];
+            if (parent) parent.isUnknown = true;
+
+            // force dirty check and keep selected index
+            var _tmp1 = this.selectedConfigIndex;
+            var _tmp2 = this.selectedSubConfigIndex;
+            this.configList = this.deepClone(this.configList);
+            this.selectedConfigIndex = _tmp1;
+            this.selectedSubConfigIndex = _tmp2;
+          }
+        },
+        handleSubmit: function(e) {
+          var root = this.configList[0];
+          if (root.depth === 0) {
+            var tmp = this.configList.filter(function(n) {
+              return n.depth === root.height - 1;
+            }).map(function(n) {
+              return (n.children && n.children.length) 
+                ? n.children.map(function(child) {
+                  return {
+                    id: child.id,
+                    increase: n.increase
+                  }
+                })
+                : [];
+            });
+
+            var payload = [].concat.apply([], tmp);
+            console.log(payload)
+          }
+        },
+        /**
+         * deep clone for plain object
+        */
+        deepClone: function(plainObj) {
+          return JSON.parse(JSON.stringify(plainObj));
+        },
+        /**
+         * functions which calculate className for dom styles usage
+        */
+        calcConfigItemCls: function(a, b) {
+          return a === b ? 'config-item active' : 'config-item';
+        },
+        calcTypeCls: function(val, activeTab){
+          return val === activeTab ? 'active' : ''
+        },
+        calcSlidingLeft: function(activeTab) {
+          return activeTab * 90 + 'px';
+        },
+        calcTabCls: function(val, selectedType) {
+          return val === selectedType ? 'active btn' : 'btn';
+        },
+        /**
+         * functions which convert string for dom text display
+        */
+        decimal2Percent: function(decimal) {
+          return parseInt(decimal * 100) + '%';
+        },
         isArray: Array.isArray,
         isEqual: function(a, b) {
           return a === b;
@@ -257,87 +418,9 @@
         isOr: function(a, b) {
           return a || b;
         },
-        resetSubSelectedConfigIndex: function(selectedConfigIndex) {
-          // reset subSelectedConfig index when selectedConfigIndex changes
-          this.selectedSubConfigIndex = 0;
-        },
-        handleConfigTap: function(e) {
-          var root = Polymer.dom(this.root);
-          var item = root.querySelector('#configList').indexForElement(e.target);
-          root.querySelector('#configSelector').select(item);
-          // set child config index as zero
-          this.set('selectedSubConfigIndex', 0);
-        },
-        handleSubConfigTap: function(e) {
-          var root = Polymer.dom(this.root);
-          var item = root.querySelector('#subConfigList').indexForElement(e.target);
-          root.querySelector('#subConfigSelector').select(item);
-        },
-        getSelectedConfigItem: function(array, index) {
-          if (Array.isArray(array) && Number.isFinite(index)) {
-            return array[index];
-          }
-        },
-        watcher: function(a) {
-          console.log(a)
-        },
-        watcher4Focus: function(focus) {
-          // this.setter4SelectedConfigItem((focus.children && focus.children.length) ? focus.children[0] : {});
-        },
-        setter4SelectedConfigItem: function(val) {
-          this.set('selectedConfigItem', val);
-        },
-        handleTabTap: function(e) {
-          this.set('activeTab', e.model.item.val);
-        },
-        handleConfigChange: function(e) {
-          // get value and index
-          var value = e.detail.value;
-          var index = e.target.getAttribute('data-index');
-
-          var configList = this.configList;
-          var modifiedItem = configList[index];
-          if (modifiedItem.items && modifiedItem.items.length) {
-            // update items for current selected config
-            modifiedItem.items.forEach(function(n) {
-              n.revenue_increase = value;
-            });
-            // update configList and remain selectedConfigIndex
-            var _tmp = this.selectedConfigIndex;
-            this.configList = this.plainClone(configList);
-            this.selectedConfigIndex = _tmp;
-          }
-        },
-        handleSubConfigChange: function(e) {
-          var configList = this.configList;
-          var modifiedItem = configList[this.selectedConfigIndex];
-          modifiedItem.isUnknown = true;
-          // override dirty check
-          this.splice('configList', this.selectedConfigIndex, 1, this.plainClone(modifiedItem));
-        },
-        handleSubmit: function(e) {
-          console.log(this.configList)
-        },
-        calcConfigItemCls: function(a, b) {
-          return a === b ? 'config-item active' : 'config-item';
-        },
-        calcTabCls: function(val, activeTab){
-          return val === activeTab ? 'active' : ''
-        },
-        calcSlidingLeft: function(activeTab) {
-          return activeTab * 90 + 'px';
-        },
-        computedCls: function(val, selectedType) {
-          return val === selectedType ? 'active btn' : 'btn';
-        },
-        decimal2Percent: function(decimal) {
-          return parseInt(decimal * 100) + '%';
-        },
-        changeQuery: function(selectedType) {
-          var uri = URI('').addQuery('groupby', selectedType);
-          var new_hash = uri.query();
-          location.hash = '#' + new_hash;
-        },
+        /**
+         * functions which do data convert jobs
+        */
         getCurrentKPIs: function(focus) {
           var descList = [
             '使用率预测<30%',
@@ -353,12 +436,6 @@
               }
             });
           } else return [];
-        },
-        _isChecked: function(n) {
-          return n.val == this.selectedType;
-        },
-        handleSelect: function(e) {
-          this.set('selectedType', e.model.item.val);
         },
         dataConverter: function(data) {
           function patchUid(obj) {
@@ -376,27 +453,42 @@
 
           return data;
         },
-        plainClone: function(plainObj) {
-          return JSON.parse(JSON.stringify(plainObj));
-        },
-        getInitConfig: function(obj) {
-          var data = this.plainClone(obj);
-          return data.items;
-        },
-        loadData: function(groupby) {
-          var url = URI(this.resolveApiUrl('/api/dm')).query({
-            groupby: groupby
-          }).toString();
+        getInitConfig: function(data) {
+          var root = d3.hierarchy(data, function(d) {
+            return d.items
+          });
 
-          return fetch('mock/asset-procurement.json' + '?groupby=' + groupby)
-          .then(res => res.json())
-          // return this.fetchPage(url)
-          .then((function(data) {
-            this.set('data', this.dataConverter(data));
-            this.configList = this.getInitConfig(data);
-            // set initial selected config index after configList
-            this.selectedConfigIndex = 0;
-          }).bind(this));
+          var tree = d3.tree();
+
+          var nodes = tree(root).descendants();
+          return nodes.map(function(n) {
+            return {
+              parent: n.parent ? {
+                id: n.parent.data.id,
+                uid: n.parent.data.uid
+              }: null,
+              children: n.children ? n.children.map(function(child) {
+                return {
+                  uid: child.data.uid,
+                  id: child.data.id
+                };
+              }) : null,
+              depth: n.depth,
+              height: n.height,
+              id: n.data.id,
+              uid: n.data.uid,
+              name: n.data.name,
+              increase: n.data.revenue_increase
+            }
+          });
+        },
+        /**
+         * functions which deal with url hash
+        */
+        changeQuery: function(selectedType) {
+          var uri = URI('').addQuery('groupby', selectedType);
+          var new_hash = uri.query();
+          location.hash = '#' + new_hash;
         },
         getFragObj: function(url) {
           var fragment = new URI(window.location.href).fragment();
@@ -406,6 +498,24 @@
             prev[result[0]] = result[1];
             return prev;
           }, {});
+        },
+        /**
+         * load data from restful api
+        */
+        loadData: function(groupby) {
+          var url = URI(this.resolveApiUrl('/api/dm')).query({
+            groupby: groupby
+          }).toString();
+
+          return fetch('mock/asset-procurement-' + groupby + '.json')
+          .then(res => res.json())
+          // return this.fetchPage(url)
+          .then((function(data) {
+            this.data = this.dataConverter(data);
+            this.configList = this.getInitConfig(data);
+            // set initial selected config index after configList
+            this.selectedConfigIndex = 0;
+          }).bind(this));
         },
         ready: function() {
           var hashObj = this.getFragObj(window.location.href);

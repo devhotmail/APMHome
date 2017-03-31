@@ -28,9 +28,7 @@
         type: Number,
         notify: true
       },
-      inputVal: {
-        type: Number 
-      },
+      inputVal: Number,
       showInput: {
         type: Boolean,
         value: false
@@ -49,7 +47,12 @@
     updateValue: function () {
       const regex = /^-{0,1}\d*\.?\d+$/;
       if (regex.test(this.inputVal)) {
-        this.value = parseFloat(this.inputVal);
+        var newValue = parseFloat(this.inputVal);
+        this.fire('changed', {
+          value: newValue,
+          oldValue: this.value
+        });
+        this.value = newValue;
       }
       this.showInput = false;
     },
