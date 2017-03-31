@@ -22,7 +22,6 @@ public class WeiXinUtils {
         		map.put("_"+entry.getKey(),  entry.getValue().toString());
         	}
         }
-        System.out.println(map);
         return map;
     }
 }
