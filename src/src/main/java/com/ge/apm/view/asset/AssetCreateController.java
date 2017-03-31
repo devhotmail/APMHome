@@ -60,6 +60,12 @@ public class AssetCreateController {
         assetInfo.setStatus(1);
         pictureList = acServie.getQrCodePictureList(createRequest.getId());
         audioList = acServie.getQrCodeAudioList(createRequest.getId());
+        
+        //默认图片全选
+        selectedPictures = new Integer[pictureList.size()];
+        for(int i=0;i<pictureList.size();i++ ){
+            selectedPictures[i] = pictureList.get(i).getFileId();
+        }
 
         rejectTextHistory = new ArrayList();
         if (null != createRequest.getFeedback()) {
