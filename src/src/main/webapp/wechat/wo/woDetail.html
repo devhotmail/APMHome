@@ -93,19 +93,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="weui-cell">
+                    <div class="weui-cell" id="patProblemslabel">
                         <div class="weui-cell__hd"><label class="weui-label">问题描述</label></div>
                         <div class="weui-cell__bd">
                             <textarea name="patProblems" id="patProblems" class="weui-textarea" rows="2" placeholder="请输入..."></textarea>
                         </div>
                     </div>
-                    <div class="weui-cell">
+                    <div class="weui-cell" id="patActionslabel">
                         <div class="weui-cell__hd"><label class="weui-label">解决方案</label></div>
                         <div class="weui-cell__bd">
                             <textarea name="patActions" id="patActions" class="weui-textarea" rows="2" placeholder="请输入..."></textarea>
                         </div>
                     </div>
-                    <div class="weui-cell">
+                    <div class="weui-cell" id="patTestslabel">
                         <div class="weui-cell__hd"><label class="weui-label">测试方法</label></div>
                         <div class="weui-cell__bd">
                             <textarea name="patTests" id="patTests" class="weui-textarea" placeholder="请输入..." rows="2" ></textarea>
@@ -245,6 +245,8 @@
                         
                         if (pageManager.voice) {
                             mediaShow();
+                        }else{
+                            $('#replay').addClass('weui-btn_plain-disabled');
                         }
                         if (!pageManager.showPat) {
                             renderImgs();
@@ -342,6 +344,18 @@
                         pageManager.stepCost.splice($costList.data('id'), 1);
                         $costList.remove();
                     });
+                }
+                
+                if (pageManager.workOrder.currentStepId === 6 && pageManager.workOrder.status === 2){
+                    $('#pat').show();
+                    app.initSelectData('caseType', 'caseType', pageManager.workOrder.caseType);
+                    app.initSelectData('caseSubType', 'caseSubType', pageManager.workOrder.caseSubType);
+                    $('#caseType').attr('disabled', 'disabled');
+                    $('#caseSubType').attr('disabled', 'disabled');
+                    $('#stepCost').hide();
+                    $('#patProblemslabel').hide();
+                    $('#patActionslabel').hide();
+                    $('#patTestslabel').hide();
                 }
             
                 $(".weui-rater a").click(function(){
