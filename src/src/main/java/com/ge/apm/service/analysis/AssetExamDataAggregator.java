@@ -56,7 +56,8 @@ public class AssetExamDataAggregator {
         for(AssetClinicalRecordPojo accrp:acrpList){
             AssetSummit asm1 =assetSummitRepository.getAssetSummitByAssetIdAndCreated(accrp.getAssetIds(),date);
             if(asm1!=null){
-               //logger.info("-------"+accrp.getAssetIds()+"---"+date);
+                //logger.info("-------"+accrp.getAssetIds()+"---"+date);
+                logger.info(accrp.getAssetIds() +"---"+date + "need to be updated");
                 asm1.setCreated(date);
                 asm1.setAssetId(accrp.getAssetIds());
                 asm1.setSiteId(accrp.getSiteIds());
@@ -73,7 +74,7 @@ public class AssetExamDataAggregator {
                 asm.setAssetId(accrp.getAssetIds());
                 asm.setHospitalId(accrp.getHospitalIds());
                 asm.setSiteId(accrp.getSiteIds());
-               //logger.info("---insert----"+accrp.getAssetIds()+"---"+date);
+                //logger.info("---insert----"+accrp.getAssetIds()+"---"+date);
                 asm.setExposeCount(accrp.getExposeCounts());
                 asm.setFilmCount(accrp.getFilmCounts());
                 asm.setInjectCount(accrp.getInjectCounts());
@@ -84,15 +85,20 @@ public class AssetExamDataAggregator {
             }
         }
         if(asmNewList.size()>0) {
-           logger.info("gl: new records are inserted into, how many ?--> "+asmNewList.size());
-            assetSummitRepository.save(asmNewList);
+            logger.info("gl: new records are inserted into, how many ?--> "+asmNewList.size());
+            // assetSummitRepository.save(asmNewList);
+            for(AssetSummit asml :asmNewList) {
+                assetSummitRepository.save(asml);
+            }
         }
         if(asmUpdateList.size()>0){
-           logger.info("there are records to be updated, how many? --->"+asmUpdateList.size());
+            logger.info("gl: there are records to be updated, how many? --->"+asmUpdateList.size());
             for(AssetSummit asm :asmUpdateList){
+
                 assetSummitRepository.updateAssetSummit(asm.getExposeCount(),asm.getInjectCount(),asm.getFilmCount(),asm.getId());
             }
         }
+
         return "success";
 
     }

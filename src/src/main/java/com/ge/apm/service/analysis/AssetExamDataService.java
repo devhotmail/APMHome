@@ -116,7 +116,7 @@ public class AssetExamDataService {
                 asm.setRating(weightedSum);
                 assetSummitRepository.save(asm);
                 } else {
-                    throw new Exception("gl: revenue or maintenanceCost or deprecationCost is null");
+                    throw new Exception("gl_error: revenue or maintenanceCost or deprecationCost is null");
                 }
 
             }

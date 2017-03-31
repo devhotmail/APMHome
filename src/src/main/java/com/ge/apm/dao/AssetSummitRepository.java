@@ -37,6 +37,7 @@ public interface AssetSummitRepository extends GenericRepository<AssetSummit> {
     @Modifying
     @Query("update AssetSummit asm set asm.exposeCount =?1,asm.injectCount=?2, filmCount=?3 where id =?4")
     public void updateAssetSummit(Double exposeCount,Double injectCount,Long filmCount,Integer id);
+
 /*    @Modifying
     @Query("update AssetInfo ai set ai.lastPmDate = now() where id = ?1 and siteId = ?2")
     public void updateAssetInfoPmOrderDate(int id,int siteId);*/
