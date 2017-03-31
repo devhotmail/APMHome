@@ -46,7 +46,8 @@
         <intercept-url pattern="/portal/uaa/**" access="hasRole('ITAdmin')"/>
         <intercept-url pattern="/portal/insp/checkListList**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead','AssetStaff')"/> <!-- 巡检条目配置 -->
         <intercept-url pattern="/portal/i18n/FieldCodeType.xhtml**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead')"/> <!-- 系统编码配置 -->
-                
+        <intercept-url pattern="/portal/asset/qrCode/qrCodeLibList.xhtml**" access="hasAnyRole('SuperAdmin')"/> <!-- 二维码生成 -->
+
         <!-- 设备档案 -->
        
         <intercept-url pattern="/portal/asset/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/> 
