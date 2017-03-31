@@ -29,6 +29,11 @@
         <script>
             var WEB_ROOT = '${ctx}/';
         </script>
+        <style>
+            .weui-navbar__item.weui-bar__item_on {
+                background-color: #09BB07;
+            }
+        </style>
     </head>
     <body style="background-color:#f8f8f8">
         <jsp:include page="imgshow.html"/>
@@ -59,10 +64,10 @@
                     <div class="weui-tab">
                         <div class="weui-navbar">
                             <div class="weui-navbar__item weui-bar__item_on headRole" data-step="1">
-                                待派单
+                                待派工
                             </div>
                             <div class="weui-navbar__item headRole" data-step="2">
-                                已派单
+                                已派工
                             </div>
                             <div class="weui-navbar__item weui-bar__item_on staffRole" data-step="3">
                                 未接工单

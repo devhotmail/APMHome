@@ -252,7 +252,7 @@ INSERT INTO "i18n_message" VALUES (651,'field_name','injectCount','注射量','I
 INSERT INTO "i18n_message" VALUES (652,'field_name','installDate','安装日期','Install Date',null,-1);
 INSERT INTO "i18n_message" VALUES (653,'field_name','isClosed','已关单？','Is Closed',null,-1);
 INSERT INTO "i18n_message" VALUES (654,'field_name','isFinished','完成？','Is Finished',null,-1);
-INSERT INTO "i18n_message" VALUES (655,'field_name','isInternal','内部工单？','Is Internal',null,-1);
+INSERT INTO "i18n_message" VALUES (655,'field_name','intExtType','工单类型','Int Ext Type',null,-1);
 INSERT INTO "i18n_message" VALUES (656,'field_name','isPassed','通过?','Is Passed',null,-1);
 INSERT INTO "i18n_message" VALUES (657,'field_name','isValid','在用？','Is Valid',null,-1);
 INSERT INTO "i18n_message" VALUES (658,'field_name','item','巡检项目','Item',null,-1);
@@ -342,8 +342,8 @@ INSERT INTO "i18n_message" VALUES (741,'field_name','lastMeteringDate','上次�
 INSERT INTO "i18n_message" VALUES (742,'field_name','assetName','资产名称','Asset Name',null,-1);
 INSERT INTO "i18n_message" VALUES (743,'field_name','period','循环周期','Period',null,-1);
 INSERT INTO "i18n_message" VALUES (744,'field_name','wfAutoStep2', '自动审核','Auto Approve',null,-1);
-INSERT INTO "i18n_message" VALUES (745,'field_name','wfAutoStep3', '自动派单','Auto Assign',null,-1);
-INSERT INTO "i18n_message" VALUES (746,'field_name','wfAutoStep4', '自动领单','Auto Accept',null,-1);
+INSERT INTO "i18n_message" VALUES (745,'field_name','wfAutoStep3', '自动派工','Auto Assign',null,-1);
+INSERT INTO "i18n_message" VALUES (746,'field_name','wfAutoStep4', '自动接单','Auto Accept',null,-1);
 INSERT INTO "i18n_message" VALUES (747,'field_name','wfAutoStep5', '自动维修','Auto Repair',null,-1);
 INSERT INTO "i18n_message" VALUES (748,'field_name','wfAutoStep6', '自动关单','Auto Close',null,-1);
 INSERT INTO "i18n_message" VALUES (749,'field_name','PmOrder', '保养记录','preventive order',null,-1);
@@ -365,6 +365,7 @@ INSERT INTO "i18n_message" VALUES (763,'field_name','clinicalOwnerTel', '科室�
 INSERT INTO "i18n_message" VALUES (764,'field_name','registrationNo', '注册证号','Registration No',null,-1);
 INSERT INTO "i18n_message" VALUES (765,'field_name','factoryWarrantyDate', '质保日期','Manhour Price(RMB)',null,-1);
 INSERT INTO "i18n_message" VALUES (766,'field_name','contractType', '合同类型','Contract Type',null,-1);
+
 
 
 -- field value code types  ( id from 1400)
@@ -391,8 +392,8 @@ INSERT INTO "i18n_message" VALUES (1494,'contractType','5','保养合同','保�
 
 
 INSERT INTO "i18n_message" VALUES (1510,'woSteps','1', '报修','Create',null,-1);
-INSERT INTO "i18n_message" VALUES (1511,'woSteps','2', '派单','Assign',null,-1);
-INSERT INTO "i18n_message" VALUES (1512,'woSteps','3', '领单','Accept',null,-1);
+INSERT INTO "i18n_message" VALUES (1511,'woSteps','2', '派工','Assign',null,-1);
+INSERT INTO "i18n_message" VALUES (1512,'woSteps','3', '接单','Accept',null,-1);
 INSERT INTO "i18n_message" VALUES (1513,'woSteps','4', '维修','Repair',null,-1);
 INSERT INTO "i18n_message" VALUES (1514,'woSteps','5', '关单','Closed',null,-1);
 INSERT INTO "i18n_message" VALUES (1515,'woSteps','6', '反馈','Feedback',null,-1);
@@ -506,6 +507,16 @@ INSERT INTO "i18n_message" VALUES (1700,'qrCodeLibStatus','1', '已发行','issu
 INSERT INTO "i18n_message" VALUES (1701,'qrCodeLibStatus','2', '已上传','uploaded',null,-1);
 INSERT INTO "i18n_message" VALUES (1702,'qrCodeLibStatus','3', '已建档','Documented ',null,-1);
 
+--work_order status 
+INSERT INTO "i18n_message" VALUES (1703,'status','1', '在修','Fixing',null,-1);
+INSERT INTO "i18n_message" VALUES (1704,'status','2', '完成','Closed',null,-1);
+INSERT INTO "i18n_message" VALUES (1705,'status','3', '取消','Cancel',null,-1);
+
+--work_order intExtType 
+INSERT INTO "i18n_message" VALUES (1706,'intExtType','1', '内部','Internal',null,-1);
+INSERT INTO "i18n_message" VALUES (1707,'intExtType','2', '外部','External',null,-1);
+INSERT INTO "i18n_message" VALUES (1708,'intExtType','3', '混合','Mixed',null,-1);
+
 -- module's messages  (id from 3000)
 INSERT INTO "i18n_message" VALUES (3000,'message','DeleteConformation', '删除确认','Delete Confirmation',null,-1);
 INSERT INTO "i18n_message" VALUES (3001,'message','DeleteConformationMsg', '您确定要删除选定的记录么?','Are you sure to delete selected record?',null,-1);
@@ -616,6 +627,8 @@ INSERT INTO "i18n_message" VALUES (5067,'label','timeoutAccept','接单超时时
 INSERT INTO "i18n_message" VALUES (5068,'label','timeoutRepair','维修超时时间(分钟)','repair timeout',null,-1);
 INSERT INTO "i18n_message" VALUES (5069,'label','timeoutClose','关单超时时间(分钟)','close timeout',null,-1);
 INSERT INTO "i18n_message" VALUES (5070,'label','orderReopenTimeframe','二次开单间隔(天)','order reopen timeframe',null,-1);
+INSERT INTO "i18n_message" VALUES (5071,'label','unbundWX','是否解除微信绑定？','unbundWX?',null,-1);
+INSERT INTO "i18n_message" VALUES (5072,'label','maxMessageCount','最大消息次数','max message count',null,-1);
 
 
 -- asset head

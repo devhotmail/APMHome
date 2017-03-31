@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
@@ -14,13 +14,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.druid.util.StringUtils;
 import com.ge.apm.dao.mapper.UserAccountMapper;
+import com.ge.apm.dao.mapper.WechatMessageLogMapper;
 import com.ge.apm.dao.mapper.WorkOrderMapper;
 import com.ge.apm.domain.CasePriorityNum;
 import com.ge.apm.domain.Constans;
 import com.ge.apm.domain.ReopenPushModel;
 import com.ge.apm.domain.TimeoutPushModel;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.domain.WechatMessageLog;
 import com.ge.apm.domain.WorkFlow;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkflowConfig;
@@ -43,6 +48,9 @@ public class WorkflowService {
 	UserAccountMapper userAccountMapper;
 	
 	@Autowired
+	WechatMessageLogMapper wechatMessageLogMapper;
+	
+	@Autowired
 	CoreService coreService;
 	
 	@Autowired
@@ -50,6 +58,7 @@ public class WorkflowService {
 	
 	//private Map<String,WorkflowConfig> configs = new ConcurrentHashMap<String,WorkflowConfig>();
 
+	@Transactional
 	public void execute() {
 		logger.info("begin check timeout and reopen……");
 		List<WorkOrder> orders = workOrderMapper.fetchUnFinishedWorkList();
@@ -66,11 +75,12 @@ public class WorkflowService {
 				continue;
 			}
 			isTimeout(workOrder,woc);
-			isReopen(workOrder,woc);
+			//isReopen(workOrder,woc); // 暂不开放 2017.3.30
 		}
 		logger.info("end timeout and reopen……");
 	}
 	
+	@SuppressWarnings("unused")
 	private void isReopen(WorkOrder workOrder, WorkflowConfig woc) {
 		WorkOrder parent = workOrderMapper.fetchParentWorkOrder(workOrder.getParentWoId());
 		if(parent == null){
@@ -109,7 +119,8 @@ public class WorkflowService {
 		}
 		
 	}
-
+	
+	
 	private void isTimeout(WorkOrder workOrder, WorkflowConfig woc) {
 		/*		StringBuilder builder = new StringBuilder();
 		String key = builder.append(workOrder.getSiteId()).append(":").append(workOrder.getHospitalId()).toString();
@@ -128,9 +139,12 @@ public class WorkflowService {
 		//如果第一个超时，则给当前步骤之前的所有人发送通知
 		WorkFlow lastOne = workFlows.get(0);
 		String stepName = lastOne.getStepName();
-		if(need2Notice(lastOne,woc)){
-			for(WorkFlow workFlow : workFlows){
-				if(users.contains(workFlow.getCurrentPersonId())){
+		if (isTimeout(lastOne, woc)) {
+			for (WorkFlow workFlow : workFlows) {
+				if(!matchRule(workFlow,woc)){
+					continue;
+				}
+				if (users.contains(workFlow.getCurrentPersonId())) {
 					continue;
 				}
 				users.add(workFlow.getCurrentPersonId());
@@ -138,8 +152,8 @@ public class WorkflowService {
 				model.set_assetName(workOrder.getAssetName());
 				model.set_requestTime(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm:ss"));
 				model.set_currentPerson(workOrder.getCurrentPersonName());
-				model.set_status(stepName);//Constans.getName(workOrder.getCurrentStepId())
-				model.setFirst(stepName+"超时");
+				model.set_status(stepName);// Constans.getName(workOrder.getCurrentStepId())
+				model.setFirst(stepName + "超时");
 				model.set_urgency(CasePriorityNum.getName(workOrder.getCasePriority()));
 				model.set_linkUrl(coreService.getWoDetailUrl(workOrder.getId()));
 				model.setCurrentPersonId(workFlow.getCurrentPersonId());
@@ -149,9 +163,35 @@ public class WorkflowService {
 		if(CollectionUtils.isEmpty(models)){
 			return;
 		}
+		if(!users.contains(workOrder.getRequestorId())){
+			users.add(workOrder.getRequestorId());
+		}
 		buildTimeoutTemplateMsg(models,users);
 	}
 	
+	private boolean matchRule(WorkFlow workFlow, WorkflowConfig woc) {
+		WechatMessageLog wml = new WechatMessageLog();
+		UserAccount user = userAccountMapper.getUserById(workFlow.getCurrentPersonId());
+		String weChatId =user.getWeChatId();
+		if(StringUtils.isEmpty(weChatId)){
+			logger.error("user {} does not bind wx!",user.getName());
+			return false;
+		}
+		wml.setWechatid(weChatId);
+		wml.setWoId(workFlow.getWorkOrderId());
+		wml.setWoStepId(workFlow.getCurrentStepId());
+		WechatMessageLog wmlFromDB = wechatMessageLogMapper.fetchByProperties(wml);
+		if(wmlFromDB == null){
+			wechatMessageLogMapper.insertMessageLogMapper(wml);
+			return true;
+		}
+		if(wmlFromDB.getMessageCount() >= woc.getMaxMessageCount()){
+			return false;
+		}
+		wechatMessageLogMapper.updateMessageLogMapper(wmlFromDB);
+		return true;
+	}
+
 	private void buildTimeoutTemplateMsg(List<TimeoutPushModel> models, List<Integer> users) {
 		logger.info("begin to push timeout msg");
 		List<UserAccount> accounts = userAccountMapper.getUserWechatId(users);
@@ -167,7 +207,7 @@ public class WorkflowService {
 		}
 	}
 	
-	public boolean need2Notice(WorkFlow workFlow,WorkflowConfig woc){
+	public boolean isTimeout(WorkFlow workFlow,WorkflowConfig woc){
 		DateTime now = new DateTime(new Date());
 		DateTime startTime = new DateTime(workFlow.getStartTime());
 		Integer timeout = 0;

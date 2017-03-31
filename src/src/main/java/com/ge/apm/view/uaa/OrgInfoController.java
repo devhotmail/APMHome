@@ -163,7 +163,8 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
             wfConfig.setTimeoutAccept(30);
             wfConfig.setTimeoutRepair(300);  //5 hours
             wfConfig.setTimeoutClose(30);
-            wfConfig.setOrderReopenTimeframe(7);
+            wfConfig.setOrderReopenTimeframe(7); //day
+            wfConfig.setMaxMessageCount(2); 
             
             wfConfigDao.save(wfConfig);
         }

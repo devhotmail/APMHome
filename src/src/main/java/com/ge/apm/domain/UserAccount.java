@@ -119,6 +119,9 @@ public class UserAccount implements Serializable {
     @Transient
     private String plainPassword;
     
+    @Transient
+    private boolean isUnbunding;
+    
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount", fetch = FetchType.LAZY)
     private List<UserRole> userRoleList;
@@ -346,5 +349,15 @@ public class UserAccount implements Serializable {
     public String toString() {
         return "com.ge.apm.domain.UserAccount[ id=" + id + " ]";
     }
+
+	public boolean getIsUnbunding() {
+		return isUnbunding;
+	}
+
+	public void setIsUnbunding(boolean isUnbunding) {
+		this.isUnbunding = isUnbunding;
+	}
+    
+    
 
 }

@@ -144,7 +144,7 @@ public class WorkOrderService {
         wds.setOwnerName(woc.getDispatchUserName());
         workOrderStepRepository.save(wds);
         //msg
-        sendWoMsgs(neWorkOrder);
+        sendWoMsgs(neWorkOrder, null, "requestor");
         return "success";
     }
     @Transactional
@@ -171,7 +171,7 @@ public class WorkOrderService {
         wds.setOwnerId(user.getId());
         wds.setOwnerName(user.getName());
         workOrderStepRepository.save(wds);
-        sendWoMsgs(wo);
+        sendWoMsgs(wo, null, null);
     }
 
 
@@ -189,7 +189,7 @@ public class WorkOrderService {
         //2 create new work-order-step
         WorkOrderStep wds = initWorkOrderStep(request, wo);
         workOrderStepRepository.save(wds);
-        sendWoMsgs(wo);
+        sendWoMsgs(wo, null, null);
     }
 
     @Transactional
@@ -199,7 +199,7 @@ public class WorkOrderService {
         updateEndTime(wo, "签到");
         WorkOrderStep wds = initWorkOrderStep(request, wo);
         workOrderStepRepository.save(wds);
-        sendWoMsgs(wo);
+//        sendWoMsgs(wo, );
     }
     @Transactional
     public void repairWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
@@ -209,7 +209,7 @@ public class WorkOrderService {
         workOrderUpdate(request, wo);
         WorkOrderStep wds = initWorkOrderStep(request, wo);
         workOrderStepRepository.save(wds);
-        sendWoMsgs(wo);
+        sendWoMsgs(wo, null, null);
     }
     @Transactional
     public void closeWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
@@ -234,7 +234,7 @@ public class WorkOrderService {
             woDetailDao.save(list);
         }
         
-        sendWoMsgs(wo);
+        sendWoMsgs(wo, null, null);
     }
     @Transactional
     public void returnWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
@@ -255,7 +255,7 @@ public class WorkOrderService {
         workOrderStepRepository.save(wds);
         wo.setCurrentStepName(wds.getStepName());
         workOrderRepository.save(wo);
-        sendWoMsgs(wo);
+        sendWoMsgs(wo, "工单回退", null);
     }
     
     @Transactional
@@ -276,7 +276,7 @@ public class WorkOrderService {
         wo.setCurrentStepName(wds.getStepName());
         workOrderRepository.save(wo);
         workOrderStepRepository.save(wds);
-        sendWoMsgs(wo);
+        sendWoMsgs(wo, null, null);
     }
     
     
@@ -288,7 +288,7 @@ public class WorkOrderService {
         wo.setStatus(3);
         wo.setCloseTime(new Date());
         workOrderRepository.save(wo);
-        sendWoMsgs(wo);
+        sendWoMsgs(wo, "工单取消", "requestor");
     }
     
     @Transactional
@@ -574,20 +574,26 @@ public class WorkOrderService {
         }
     }
     
-    public void sendWoMsgs(WorkOrder wo) {
+    public void sendWoMsgs(WorkOrder wo, String msgTitle, String msgType) {
         //String wxTemplateId = "4N0nfZ0fXstReD-FcBu-d6tUsTcwBEIND-0wmOh0cO8";
         String wxTemplateId = configUtils.fetchProperties("workorder_change_template_id");
-        String msgTitle = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",wo.getCurrentStepId()-1+"").getValueZh();
-        String msgBrief = msgTitle + "已完成";
+        msgTitle = msgTitle==null?i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",wo.getCurrentStepId()-1+"").getValueZh():msgTitle;
         String linkUrl = cService.getWoDetailUrl(wo.getId());
         
         HashMap<String, Object> params = new HashMap<>();
         params.put("first", msgTitle);
+        
         params.put("_assetName", wo.getAssetName());
         params.put("_requestTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getRequestTime()));
         params.put("_requestPerson", wo.getRequestorName());
         params.put("_urgency", i18nMessageRepository.getByMsgTypeAndMsgKey("casePriority",wo.getCasePriority()+"").getValueZh());
         params.put("_currentPerson", wo.getCurrentPersonName());
+        
+        String msgBrief = "资产名称："+wo.getAssetName() +"\n"
+                + "报修时间："+ (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getRequestTime())) +"\n"
+                + "报修人："+ wo.getRequestorName() +"\n"
+                + "紧急程度："+ i18nMessageRepository.getByMsgTypeAndMsgKey("casePriority",wo.getCasePriority()+"").getValueZh() +"\n"
+                + "当前责任人："+ wo.getCurrentPersonName();
         params.put("remark", msgBrief);
         params.put("_linkUrl", linkUrl);
         
@@ -605,15 +611,23 @@ public class WorkOrderService {
                 cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
             }
         }
-        //find requestor, currentPerson
-        msgTitle = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",wo.getCurrentStepId()+"").getValueZh();
+        //currentPerson
         if (wo.getCurrentStepId() == 2 || wo.getCurrentStepId() == 3) {
             UserAccount ua = userDao.getById(wo.getCurrentPersonId());
             cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
         }
-        if (wo.getCurrentStepId() != 2) {
+        //requestor
+        if (!"requestor".equals(msgType)) {
             UserAccount ua = userDao.getById(wo.getRequestorId());
             cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
+        }
+        //assigner
+        if (wo.getCurrentStepId() == 4) {
+            List<WorkOrderStep> list = stepDao.findByWorkOrderIdAndStepId(wo.getId(), 2);
+            if (list != null && !list.isEmpty()){
+                UserAccount ua = userDao.getById(list.get(0).getOwnerId());
+                cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
+            }
         }
     }
     

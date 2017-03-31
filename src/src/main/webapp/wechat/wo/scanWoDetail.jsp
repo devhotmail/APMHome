@@ -46,7 +46,7 @@
                             pageManager.showCancel = ret.requestorId == '${userId}';
                             pageManager.showBtn = ret.currentStepId === 6?
                                 ret.requestorId == '${userId}'&& ret.feedbackRating === 0:
-                                        ret.currentPersonId == '${userId}'|| (ret.currentStepId < 4&&pageManager.showCancel);
+                                        (ret.currentPersonId == '${userId}'|| (ret.currentStepId < 4&&pageManager.showCancel))&&ret.status !== 3;
                             if (ret.currentStepId === 6 && ret.requestorId != '${userId}') {
                                 pageManager.init('ts_msg_notfound');
                             }

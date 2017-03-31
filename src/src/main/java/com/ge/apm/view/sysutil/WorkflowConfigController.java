@@ -1,5 +1,6 @@
 package com.ge.apm.view.sysutil;
 
+import com.ge.apm.dao.UserAccountRepository;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -34,7 +35,25 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
             uuaService =  (UaaService) WebUtil.getBean(UaaService.class);
             dispatchUserList = uuaService.getUsersWithAssetHeadOrStaffRole(user.getHospitalId());
             this.selected = dao.getBySiteIdAndHospitalId(user.getSiteId(), user.getHospitalId());
+            if (selected == null) {
+                initWorkflowConfig(user);
+            }
 	}
+        
+        public void initWorkflowConfig(UserAccount user){
+            WorkflowConfig wfConfig = new WorkflowConfig();
+            wfConfig.setHospitalId(user.getHospitalId());
+            wfConfig.setSiteId(user.getSiteId());
+
+            wfConfig.setDispatchMode(1);
+            wfConfig.setTimeoutDispatch(30);
+            wfConfig.setTimeoutAccept(30);
+            wfConfig.setTimeoutRepair(300);  //5 hours
+            wfConfig.setTimeoutClose(30);
+            wfConfig.setOrderReopenTimeframe(7);
+
+            this.selected = dao.save(wfConfig);
+        }
 
 	@Override
 	protected WorkflowConfigRepository getDAO() {
@@ -78,16 +97,11 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
 		this.dispatchUserList = dispatchUserList;
 	}
 
-//	@Override
-//	public void onBeforeSave(WorkflowConfig config) {
-//		config.setSiteId(user.getSiteId());
-//		config.setHospitalId(user.getHospitalId());
-//		//config.setDispatchUserName(userAccountRepository.getById(config.getDispatchUserId()).getName());
-////		config.setDispatchUserId(owner.getId());
-//		System.out.println("owner.id = "+owner.getId()+",owner.name :"+owner.getName());
-//		config.setDispatchUserName(owner.getName());
-//		System.out.println(config);
-//	}
+	@Override
+	public void onBeforeSave(WorkflowConfig config) {
+            UserAccountRepository uaDao = WebUtil.getBean(UserAccountRepository.class);
+            config.setDispatchUserName(uaDao.getById(selected.getDispatchUserId()).getName());
+	}
 
 	public UserAccount getOwner() {
 		return owner;

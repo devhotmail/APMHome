@@ -7,6 +7,7 @@ import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.dao.WorkOrderPhotoRepository;
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.dao.WorkOrderStepRepository;
+import com.ge.apm.dao.mapper.UserAccountMapper;
 import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.Supplier;
 import com.ge.apm.domain.UserAccount;
@@ -104,6 +105,9 @@ public class CoreService {
     @Autowired
     protected WorkOrderPhotoRepository photoDao;
     
+    @Autowired
+    UserAccountMapper userAccountMapper;
+    
     @PostConstruct
     public void init() {
         this.refreshRouter();
@@ -162,10 +166,18 @@ public class CoreService {
     	if (ua == null ){
     		return 1;//绑定失败
     	}
-        WxMpUser user = getUserInfo(openId, null);
-        if(user == null){//微信校验
-        	return 1;
+    	System.out.println("openId is "+openId);
+        UserAccount otherAccount =userDao.getByWeChatId(openId);
+        if(otherAccount != null){
+//        	otherAccount.setWeChatId(null);
+//        	userDao.save(otherAccount);
+        	userAccountMapper.updateUserWechatIdNull(openId);
         }
+//        WxMpUser user = getUserInfo(openId, null);
+//        if(user == null){//微信校验
+//        	return 1;
+//        }
+
         try {
         	ua.setPlainPassword(newPwd);
             ua.entryptPassword();
