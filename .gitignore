@@ -1,7 +1,6 @@
 database.properties
 web.xml
 Test*.java
-src/src/main/resources/database.properties
 *.class
 *.bak
 src/bower_components/
