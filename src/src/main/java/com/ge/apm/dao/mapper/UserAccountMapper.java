@@ -5,6 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.Update;
+
 import com.ge.apm.dao.mapper.provider.UserAccountProvider;
 import com.ge.apm.domain.SysRole;
 import com.ge.apm.domain.UserAccount;
@@ -26,4 +28,7 @@ public interface UserAccountMapper {
 
 	@Select("select id,name,wechat_id from user_account where id =#{id}")
 	public UserAccount getUserById(Integer id);
+	
+	@Update("update user_account set wechat_id = null where wechat_id=#{openId}")
+	public void UpdateUserWechatIdNull(String openId);
 }
