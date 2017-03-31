@@ -12,15 +12,11 @@ import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AssetCreateService;
 import com.ge.apm.service.asset.AttachmentFileService;
-import com.ge.apm.service.utils.ConfigUtils;
 import com.ge.apm.service.utils.TimeUtils;
-import com.ge.apm.service.wechat.CoreService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -86,6 +82,8 @@ public class AssetCreateController {
             assetInfo.setAssetOwnerName(owner.getName());
             assetInfo.setAssetOwnerTel(owner.getTelephone());
         }
+        OrgInfo clinicalDept = acServie.getOrgInfo(assetInfo.getClinicalDeptId());
+        assetInfo.setClinicalDeptName(clinicalDept.getName());
 
         Boolean res = acServie.CreateAeest(assetInfo);
         if (res) {
@@ -106,7 +104,7 @@ public class AssetCreateController {
 
     public void returnBack() {
         acServie.rejectReturn(createRequest, rejectText);
-        this.rejectTextHistory.add(TimeUtils.getStrDate(new Date(),"[yyyy-MM-dd HH:mm:ss]").concat(rejectText));
+        this.rejectTextHistory.add(TimeUtils.getStrDate(new Date(), "[yyyy-MM-dd HH:mm:ss]").concat(rejectText));
         rejectText = "";
         WebUtil.addSuccessMessage("消息已发送");
     }
