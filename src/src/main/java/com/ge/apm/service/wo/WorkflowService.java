@@ -163,6 +163,9 @@ public class WorkflowService {
 		if(CollectionUtils.isEmpty(models)){
 			return;
 		}
+		if(!users.contains(workOrder.getRequestorId())){
+			users.add(workOrder.getRequestorId());
+		}
 		buildTimeoutTemplateMsg(models,users);
 	}
 	

@@ -30,5 +30,5 @@ public interface UserAccountMapper {
 	public UserAccount getUserById(Integer id);
 	
 	@Update("update user_account set wechat_id = null where wechat_id=#{openId}")
-	public void UpdateUserWechatIdNull(String openId);
+	public void updateUserWechatIdNull(String openId);
 }

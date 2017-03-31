@@ -166,15 +166,18 @@ public class CoreService {
     	if (ua == null ){
     		return 1;//绑定失败
     	}
-        WxMpUser user = getUserInfo(openId, null);
-        if(user == null){//微信校验
-        	return 1;
-        }
+    	System.out.println("openId is "+openId);
         UserAccount otherAccount =userDao.getByWeChatId(openId);
         if(otherAccount != null){
-        	otherAccount.setWeChatId(null);
-        	userDao.save(otherAccount);
+//        	otherAccount.setWeChatId(null);
+//        	userDao.save(otherAccount);
+        	userAccountMapper.updateUserWechatIdNull(openId);
         }
+//        WxMpUser user = getUserInfo(openId, null);
+//        if(user == null){//微信校验
+//        	return 1;
+//        }
+
         try {
         	ua.setPlainPassword(newPwd);
             ua.entryptPassword();
