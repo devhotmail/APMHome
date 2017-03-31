@@ -1,5 +1,6 @@
 package com.ge.apm.view.sysutil;
 
+import com.ge.apm.dao.UserAccountRepository;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -96,16 +97,11 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
 		this.dispatchUserList = dispatchUserList;
 	}
 
-//	@Override
-//	public void onBeforeSave(WorkflowConfig config) {
-//		config.setSiteId(user.getSiteId());
-//		config.setHospitalId(user.getHospitalId());
-//		//config.setDispatchUserName(userAccountRepository.getById(config.getDispatchUserId()).getName());
-////		config.setDispatchUserId(owner.getId());
-//		System.out.println("owner.id = "+owner.getId()+",owner.name :"+owner.getName());
-//		config.setDispatchUserName(owner.getName());
-//		System.out.println(config);
-//	}
+	@Override
+	public void onBeforeSave(WorkflowConfig config) {
+            UserAccountRepository uaDao = WebUtil.getBean(UserAccountRepository.class);
+            config.setDispatchUserName(uaDao.getById(selected.getDispatchUserId()).getName());
+	}
 
 	public UserAccount getOwner() {
 		return owner;
