@@ -138,8 +138,9 @@ public class WorkOrderController {
     }
     
     @RequestMapping(value="findassetinfo")
-    public @ResponseBody Object findAssetInfo(String qrCode) {
-        List<AssetInfo> list = assetDao.getByQrCode(qrCode);
+    public @ResponseBody Object findAssetInfo(HttpServletRequest request, String qrCode) {
+        UserAccount ua = service.getLoginUser(request);
+        List<AssetInfo> list = assetDao.getByQrCodeAndHospitalId(qrCode, ua.getHospitalId());
         if (list.isEmpty())
             return null;
         AssetInfo info = list.get(0);
@@ -249,6 +250,12 @@ public class WorkOrderController {
         map.put("estimatedCloseTime", wo.getEstimatedCloseTime()==null?null:new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getEstimatedCloseTime()));
         map.put("feedbackRating", wo.getFeedbackRating());
         map.put("feedbackComment", wo.getFeedbackComment());
+        map.put("status", wo.getStatus());
+        map.put("caseType", wo.getCaseType());
+        map.put("caseSubType", wo.getCaseSubType());
+        map.put("patProblems", wo.getPatProblems());
+        map.put("patActions", wo.getPatActions());
+        map.put("patTests", wo.getPatTests());
         AssetInfo ai = assetDao.getById(wo.getAssetId());
         if (ai == null)
             return map;
