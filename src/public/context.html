@@ -21,6 +21,11 @@
             context[element.id] = element.value;
           }
         }
+
+        if(!('id' in context)) {
+          throw new Error('Failed to initialize user context on this page!');
+        }
+
         return context;
       }
     };
