@@ -1,10 +1,8 @@
-<ui:composition 
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:pu="http://primefaces.org/ultima">
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:pu="http://primefaces.org/ultima">
 
     <div class="menu-content">
         <pu:menu widgetVar="me">
@@ -105,7 +103,7 @@
 
             <p:menuitem id="um53" value="#{msg.profile}" icon="person" outcome="/portal/profile.xhtml"/>
             <p:menuitem id="logout" value="#{msg.Logout}" icon="&#xe8ac;"
-                        url="#{facesContext.externalContext.requestContextPath}/logout.xhtml"/>
+                        url="#{facesContext.externalContext.requestContextPath}/logout.xhtml?uid=#{userContextService.loginUserId}"/>
 
         </pu:menu>
 
