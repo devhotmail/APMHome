@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.dao.SearchFilter;
-import webapp.framework.web.WebUtil;
 
 /**
  *
@@ -59,7 +58,6 @@ public class AssetCreateService {
     CoreService coreService;
     @Autowired
     ConfigUtils configUtils;
-    
 
     public String getSiteName(Integer siteId) {
         SiteInfo si = siteDao.findById(siteId);
@@ -131,7 +129,7 @@ public class AssetCreateService {
         return picsList;
     }
 
-    public boolean rejectReturn(QrCodeLib request,String rejectText) {
+    public boolean rejectReturn(QrCodeLib request, String rejectText) {
         String _openId = request.getSubmitWechatId();
         String _templateId = configUtils.fetchProperties("asset_build_template_id");
         Map<String, Object> map = new HashMap();
@@ -141,12 +139,16 @@ public class AssetCreateService {
         map.put("_detail", rejectText);
         map.put("_linkUrl", "wechat/asset/createInfoDetail.xhtml?qrCode=".concat(request.getQrCode()));
         coreService.sendWxTemplateMessage(_openId, _templateId, map);
-        
-        rejectText = TimeUtils.getStrDate(new Date(),"[yyyy-MM-dd HH:mm:ss]").concat(rejectText) ;
-        
-        request.setFeedback(request.getFeedback()==null?rejectText:request.getFeedback().concat("//").concat(rejectText));
+
+        rejectText = TimeUtils.getStrDate(new Date(), "[yyyy-MM-dd HH:mm:ss]").concat(rejectText);
+
+        request.setFeedback(request.getFeedback() == null ? rejectText : request.getFeedback().concat("//").concat(rejectText));
         qrLibDao.save(request);
         return true;
+    }
+
+    public OrgInfo getOrgInfo(Integer clinicalDeptId) {
+        return orgDao.findById(clinicalDeptId);
     }
 
 }

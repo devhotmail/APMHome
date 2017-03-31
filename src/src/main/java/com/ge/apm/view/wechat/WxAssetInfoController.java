@@ -79,7 +79,7 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
             if (assetInfo.getSiteId() != currentUser.getSiteId()) {
                 assetInfo = null;
             }
-            if (!assetInfo.getHospitalId().equals(currentUser.getHospitalId()) && !userContextService.hasRole("MultiHospital")) {
+            else if (!assetInfo.getHospitalId().equals(currentUser.getHospitalId()) && !userContextService.hasRole("MultiHospital")) {
                 assetInfo = null;
             }
         }
