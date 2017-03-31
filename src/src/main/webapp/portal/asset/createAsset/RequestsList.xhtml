@@ -48,7 +48,7 @@
                         </p:column>
                         <p:column headerText="#{msg.submitDate}" sortBy="#{item.submitDate}" >
                             <h:outputText value="#{item.submitDate}">
-                                <f:convertDateTime pattern="yyyy/MM/dd" />
+                                <f:convertDateTime pattern="MM/dd HH:mm:ss" />
                             </h:outputText>
                         </p:column>
 <!--                        <p:column headerText="#{msg.submitWechatId}" sortBy="#{item.submitWechatId}">
