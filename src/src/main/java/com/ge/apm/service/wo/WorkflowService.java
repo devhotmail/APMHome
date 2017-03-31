@@ -166,6 +166,9 @@ public class WorkflowService {
 		if(!users.contains(workOrder.getRequestorId())){
 			users.add(workOrder.getRequestorId());
 		}
+		if(!users.contains(woc.getDispatchUserId())){
+			users.add(woc.getDispatchUserId());
+		}
 		buildTimeoutTemplateMsg(models,users);
 	}
 	
@@ -174,7 +177,7 @@ public class WorkflowService {
 		UserAccount user = userAccountMapper.getUserById(workFlow.getCurrentPersonId());
 		String weChatId =user.getWeChatId();
 		if(StringUtils.isEmpty(weChatId)){
-			logger.error("user {} does not bind wx!",user.getName());
+			logger.error("user {} does not bind wx!",user.getLoginName());
 			return false;
 		}
 		wml.setWechatid(weChatId);

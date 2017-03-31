@@ -42,12 +42,14 @@ public class QrCodeLib implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date issueDate;
     @Column(name = "submit_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date submitDate;
     @Column(name = "submit_wechat_id")
     private String submitWechatId;
     @Column(name = "comment")
     private String comment;
+    @Column(name = "feedback")
+    private String feedback;
     @Basic(optional = false)
     @Column(name = "status")
     private int status;
@@ -139,6 +141,15 @@ public class QrCodeLib implements Serializable {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
+    
 
     @Override
     public int hashCode() {
