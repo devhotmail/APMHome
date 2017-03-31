@@ -45,6 +45,14 @@
     }
   }
 
+  px-datetime-entry-cell:first-of-type .text-input--bare {
+    min-width: 30px !important;
+  }
+
+  px-datetime-entry-cell .text-input--bare {
+    min-width: 20px !important;
+  }
+
   px-datetime-entry {
     .dtIcon {
       color: $text-color-default;

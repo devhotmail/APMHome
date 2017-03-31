@@ -704,7 +704,7 @@
         },
         _replot: function(width, height) {
           var key = this.queryUrl;
-          this.$.chartBody.innerHTML = '';
+          $(this.$.chartBody).selectAll('*').remove();
           this.debounce('replot', this.render, 500);
         },
         ready: function() {
