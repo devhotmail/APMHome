@@ -65,8 +65,8 @@ public class AssetCreateController {
         pictureList = acServie.getQrCodePictureList(createRequest.getId());
         audioList = acServie.getQrCodeAudioList(createRequest.getId());
 
+        rejectTextHistory = new ArrayList();
         if (null != createRequest.getFeedback()) {
-            rejectTextHistory = new ArrayList();
             Collections.addAll(rejectTextHistory, createRequest.getFeedback().split("//"));
         }
 
