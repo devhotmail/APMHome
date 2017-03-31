@@ -54,7 +54,7 @@ site_id int not null,
 hospital_id int not null,
 qr_code varchar(16) not null,
 issue_date date not null,	-- 发行日期
-submit_date date,	--扫码建档日期
+submit_date timestamp,	--扫码建档日期
 submit_wechat_id varchar(64),	--扫码建档者 openId
 comment varchar(512),	--备注
 status int not null -- 1:已发行(未上传) / 2: 已上传(待建档) / 3: 已建档(待删除)
