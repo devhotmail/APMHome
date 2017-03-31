@@ -41,7 +41,7 @@
                             <h:panelGroup>
                                 <label class="label">#{msg.assetName}*</label>
                                 <p:inputText id="assetName" readonly="true" placeholder="#{msg.noAssetSelected}" value="#{workOrderController.selected.assetName}" required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
-                                <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.prepareDialogCallback(workOrderController, ':WorkOrderEditForm:assetName :WorkOrderEditForm:caseOwnerName')}" process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg" oncomplete="PF('varSelectAssetDlg').show()"/>
+                                <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.prepareDialogCallback(workOrderController, ':WorkOrderEditForm:assetName')}" process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg" oncomplete="PF('varSelectAssetDlg').show()"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.casePriority}*</label>
@@ -62,14 +62,6 @@
                             <h:panelGroup>
                                 <label class="label">#{msg.requestTime}*</label>
                                 <p:calendar timeZone="GMT+8"  locale="zh"  id="requestTime" pattern="yyyy/MM/dd HH:mm" maxdate="#{appContextService.curentDate}" value="#{workOrderController.selected.requestTime}" required="true" requiredMessage="#{msg.requestTime} #{msg.ValidationRequire}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.caseOwnerName}</label>
-                                <p:inputText readonly="true" id="caseOwnerName" value="#{workOrderController.selected.caseOwnerName}" />
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.creatorName}*</label>
-                                <p:inputText readonly="true" id="creatorName" value="#{workOrderController.selected.creatorName}" required="true" requiredMessage="#{msg.creatorName} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.currentPersonName}*</label>
@@ -99,8 +91,12 @@
                                 </p:selectOneMenu>
                             </h:panelGroup>
                             <h:panelGroup>
-                                <label class="label">#{msg.isInternal}*</label>
-                                <p:selectBooleanCheckbox id="isInternal" itemLabel="#{msg.isInternal}" value="#{workOrderController.selected.isInternal}" required="true" requiredMessage="#{msg.isInternal} #{msg.ValidationRequire}"/>
+                                <label class="label">#{msg.intExtType}*</label>
+                                <p:selectOneMenu value="#{workOrderController.selected.intExtType}">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('intExtType')}" var="item"
+                                                   itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
                             </h:panelGroup>
 
                             <h:panelGroup rendered="false">
@@ -117,10 +113,6 @@
                             <h:panelGroup>
                                 <label class="label">#{msg.requestReason}*</label>
                                 <p:inputTextarea cols="100" value="#{workOrderController.selected.requestReason}" required="true" requiredMessage="#{msg.requestReason} #{msg.ValidationRequire}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.comments}</label>
-                                <p:inputTextarea cols="100" value="#{workOrderController.selected.comments}" />
                             </h:panelGroup>
                         </p:panelGrid>
 

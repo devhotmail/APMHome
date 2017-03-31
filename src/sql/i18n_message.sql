@@ -252,7 +252,7 @@ INSERT INTO "i18n_message" VALUES (651,'field_name','injectCount','注射量','I
 INSERT INTO "i18n_message" VALUES (652,'field_name','installDate','安装日期','Install Date',null,-1);
 INSERT INTO "i18n_message" VALUES (653,'field_name','isClosed','已关单？','Is Closed',null,-1);
 INSERT INTO "i18n_message" VALUES (654,'field_name','isFinished','完成？','Is Finished',null,-1);
-INSERT INTO "i18n_message" VALUES (655,'field_name','isInternal','内部工单？','Is Internal',null,-1);
+INSERT INTO "i18n_message" VALUES (655,'field_name','intExtType','工单类型','Int Ext Type',null,-1);
 INSERT INTO "i18n_message" VALUES (656,'field_name','isPassed','通过?','Is Passed',null,-1);
 INSERT INTO "i18n_message" VALUES (657,'field_name','isValid','在用？','Is Valid',null,-1);
 INSERT INTO "i18n_message" VALUES (658,'field_name','item','巡检项目','Item',null,-1);
@@ -506,6 +506,16 @@ INSERT INTO "i18n_message" VALUES (1633, 'label', 'ForeighKeyErrorWithOrgId', '�
 INSERT INTO "i18n_message" VALUES (1700,'qrCodeLibStatus','1', '已发行','issued',null,-1);
 INSERT INTO "i18n_message" VALUES (1701,'qrCodeLibStatus','2', '已上传','uploaded',null,-1);
 INSERT INTO "i18n_message" VALUES (1702,'qrCodeLibStatus','3', '已建档','Documented ',null,-1);
+
+--work_order status 
+INSERT INTO "i18n_message" VALUES (1703,'status','1', '在修','Fixing',null,-1);
+INSERT INTO "i18n_message" VALUES (1704,'status','2', '完成','Closed',null,-1);
+INSERT INTO "i18n_message" VALUES (1705,'status','3', '取消','Cancel',null,-1);
+
+--work_order intExtType 
+INSERT INTO "i18n_message" VALUES (1706,'intExtType','1', '内部','Internal',null,-1);
+INSERT INTO "i18n_message" VALUES (1707,'intExtType','2', '外部','External',null,-1);
+INSERT INTO "i18n_message" VALUES (1708,'intExtType','3', '混合','Mixed',null,-1);
 
 -- module's messages  (id from 3000)
 INSERT INTO "i18n_message" VALUES (3000,'message','DeleteConformation', '删除确认','Delete Confirmation',null,-1);
