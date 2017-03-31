@@ -3,7 +3,6 @@ Test*.java
 src/src/main/resources/database.properties
 *.class
 *.bak
-database.properties
 src/bower_components/
 src/logs
 src/node_modules/
