@@ -42,7 +42,7 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
     private Integer siteIdFilter;
     private Integer hospitalIdFilter;
 
-    private Integer tempSiteId = -1;
+    private String tempSiteId = "";
 
     @Override
     protected void init() {
@@ -84,6 +84,14 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
             Map<String, SearchFilter> tempSearchFilterMap = new HashMap<>(searchFilters.size());
             for (SearchFilter tempSearchFilter : searchFilters) {
                 tempSearchFilterMap.put(tempSearchFilter.fieldName, tempSearchFilter);
+            }
+
+            if(tempSearchFilterMap.containsKey("siteId")){
+                if(!tempSearchFilterMap.get("siteId").value.toString().equals(tempSiteId)){
+                    tempSearchFilterMap.remove("hospitalId");
+                }
+
+                this.tempSiteId = tempSearchFilterMap.get("siteId").value.toString();
             }
 
             if(!tempSearchFilterMap.containsKey("siteId") && tempSearchFilterMap.containsKey("hospitalId")){

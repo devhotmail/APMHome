@@ -25,7 +25,7 @@ $(function () {
                     pageManager.msgTypes[msgType] = {};
                     $.each(ret, function(idx, val){
                         pageManager.msgTypes[msgType][val.msgKey] = val.valueZh;
-                        if (defaultSelected && val.msgKey === defaultSelected) {
+                        if (defaultSelected && val.msgKey == defaultSelected) {
                             $('#'+keyId).append($('<option value="'+val.msgKey+'" selected="selected">'+val.valueZh+'</option>'));
                         } else {
                             $('#'+keyId).append($('<option value="'+val.msgKey+'">'+val.valueZh+'</option>'));

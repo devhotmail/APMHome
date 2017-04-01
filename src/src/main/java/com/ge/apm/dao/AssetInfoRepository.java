@@ -26,4 +26,6 @@ public interface AssetInfoRepository extends GenericRepository<AssetInfo> {
     
     public AssetInfo getById(Integer id);
     
+    public List<AssetInfo> getByQrCodeAndHospitalId(String qrCode, Integer hospitalId);
+    
 }
