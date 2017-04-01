@@ -60,7 +60,9 @@ public class WorkflowService {
 
 	@Transactional
 	public void execute() {
-		logger.info("begin check timeout and reopen……");
+		if(logger.isDebugEnabled()){
+			logger.debug("begin check timeout and reopen……");
+		}
 		List<WorkOrder> orders = workOrderMapper.fetchUnFinishedWorkList();
 		if(CollectionUtils.isEmpty(orders)){
 			if(logger.isInfoEnabled()){
@@ -77,7 +79,9 @@ public class WorkflowService {
 			isTimeout(workOrder,woc);
 			//isReopen(workOrder,woc); // 暂不开放 2017.3.30
 		}
-		logger.info("end timeout and reopen……");
+		if(logger.isDebugEnabled()){
+			logger.debug("end timeout and reopen……");
+		}
 	}
 	
 	@SuppressWarnings("unused")
@@ -208,6 +212,7 @@ public class WorkflowService {
 				coreService.sendWxTemplateMessage(openId, configUtils.fetchProperties("timeout_template_id"),WeiXinUtils.object2Map(timeoutPushModel));
 			}
 		}
+		logger.info("push timeout over,to users size is {}",users.size());
 	}
 	
 	public boolean isTimeout(WorkFlow workFlow,WorkflowConfig woc){

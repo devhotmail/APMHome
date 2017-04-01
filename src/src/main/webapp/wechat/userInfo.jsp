@@ -123,14 +123,6 @@
 					}else{
 						$(value).parent().parent().removeClass('weui-cell_warn');
 					}
-					
-					var reg = /^1[34578]\d{9}$/; //^1[3|4|5|7|8][0-9]\d{4,8}$/; 
-					if(!reg.test(value.value)){
-						flag = false;
-						$(value).parent().parent().addClass('weui-cell_warn');
-					}else{
-						$(value).parent().parent().removeClass('weui-cell_warn');
-					}
 				}
             });
             if (flag) {
