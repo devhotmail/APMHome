@@ -38,6 +38,9 @@
         <div id="container" class="container"></div>
         <script>
             $(function(){
+                wechatSDK.setAppId('${appId}');
+                wechatSDK.setSignature('${timestamp}', '${nonceStr}', '${signature}');
+                wechatSDK.init();
                 pageManager.init('ts_myReports');
                 app.intCasePriority();
             });
@@ -92,6 +95,7 @@
                                                rater: (close === 2 ? v['feedbackRating']: -1),
                                                data : ['资产编号：'+v['assetId'],
                                                         '资产名称：'+v['assetName'],
+                                                        '报修时间：'+v['requestTime'],
                                                        '工单状态：'+v['currentStepName'],
                                                        '当前人员：'+v['currentPersonName']]});
                                 });
