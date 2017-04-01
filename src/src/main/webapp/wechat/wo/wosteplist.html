@@ -16,14 +16,25 @@
                             $tmpl.find('h4').html(val.stepName+': '+val.ownerName);
                             $tmpl.find('p').html(val.endTime);
                             var $spans = $tmpl.find('.weui-cell__bd span');
-                            $spans.html(val.description?val.description:'无信息');
+                            if (val.stepId === 5) {
+                                $spans.html(val.description?val.description:'查看详情').parent().parent().attr('data-id', val.id).addClass('cost_access');
+                            } else {
+                                $spans.html(val.description?val.description:'无信息').parent().parent().siblings().remove();
+                            }
                             $step_list.append($tmpl);
                         });
+                        bindClick();
                     } else {
                         $step_list.append($('<span>没有信息</span>'))
                     }
                     $('#loadingToast1').fadeOut(100);
                 });
+            function bindClick() {
+                $('.cost_access').click(function(){
+                    pageManager.costId = $(this).data('id');
+                    pageManager.go('#ts_closedetail');
+                });
+            }
         });
 </script>
 <script type="text/html" id="ts_wostepdetail">
@@ -36,10 +47,80 @@
                 <p></p>
             </div>
         </div>
-        <div class="weui-cell">
+        <a class="weui-cell weui-cell_access" href="javascript:;">
             <div class="weui-cell__bd">
                 <div><span style="word-break:break-all"></span></div>
             </div>
+            <div class="weui-cell__ft">
+            </div>
+        </a>
+    </div>
+</script>
+<script type="text/html" id="ts_closedetail">
+    <div class="page">
+        <div class="page__bd">
+            <div class="weui-cells__title">问题描述</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <span id="patProblems1">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">解决方案</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <span id="patActions1">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">测试方法</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <span id="patTests1">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">物料明细</div>
+            <div class="weui-cells">
+                <div class="weui-cell" style="padding-top:0; padding-bottom: 0">
+                    <div class="weui-cells costList1" style="margin-top: 0;">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <script>
+        $(function(){
+            $('#patProblems1').html(pageManager.workOrder.patProblems?pageManager.workOrder.patProblems:'无');
+            $('#patActions1').html(pageManager.workOrder.patActions?pageManager.workOrder.patActions:'无');
+            $('#patTests1').html(pageManager.workOrder.patTests?pageManager.workOrder.patTests:'无');
+            function loadCostList(){
+                var $costList = $('.costList1');
+                $.get(WEB_ROOT+'web/detailcost', {id: pageManager.costId}, function(ret){
+                    if (ret && ret.length > 0) {
+                        $.each(ret, function(idx, val){
+                            var tempui = '<div class="weui-cell">'+
+                                '<div class="weui-cell__bd"><p>' +
+                                '内部工时(小时)：'+(val.manHours?val.manHours:'0')
+                                + ',  备件：'+(val.accessory?val.accessory:'无')
+                                +',  数量：'+(val.accessoryQuantity?val.accessoryQuantity:'0')
+                                +',  单价(元)：'+(val.accessoryPrice?val.accessoryPrice:'0')
+                                +',  其他费用(元)：'+(val.otherExpense?val.otherExpense:'0')
+                                +',  协作人：'+(val.cowokerUserName?val.cowokerUserName:'无') +
+                                '</p></div></div>';
+                            $costList.append($(tempui));
+                        });
+                    } else {
+                        $costList.append($('<div class="weui-cell__bd" style="margin-top:10px; margin-bottom:10px"><span>没有数据</span></div>'));
+                    }
+                });
+            }
+            loadCostList();
+        });
 </script>
