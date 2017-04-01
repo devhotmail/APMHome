@@ -285,13 +285,14 @@
             
                 if (pageManager.showTime && pageManager.step >= 3 ) {
                     $('#showTime').show();
-                    if ($('#estimatedCloseTime').val() === "") {
-                        $('#estimatedCloseTime').val(app.initWechatTime());
-                    }
+//                    if ($('#estimatedCloseTime').val() === "") {
+//                        $('#estimatedCloseTime').val(app.initWechatTime());
+//                    }
                     if (pageManager.entryType !== 'myreport1' && pageManager.entryType !== 'scanreport' && !pageManager.showCancel && pageManager.showBtn) {
                         $('#estimatedCloseTime').removeAttr('readonly');
                         if (pageManager.step === 4) {
                             $('#estimatedCloseTime').change(function(){
+                                if (!$('#estimatedCloseTime').val()){return;}
                                 $.ajax({
                                     url: WEB_ROOT+'web/estimatedtime',
                                     type: 'post',
@@ -394,6 +395,7 @@
                 });
                 $('#takeOtherWo').click(function(){
                     $('#errorMsg').html('');
+                    if (!$('#estimatedCloseTime').val()){$('#errorMsg').html('预估解决时间 必填'); return;}
                     pageManager.actionType = 'fatchwo';
                     post({woId: pageManager.woId, actionType: 'fatchwo', estimatedCloseTime: $('#estimatedCloseTime').val().replace('T', ' '), desc: $('#description').val()});
                 });

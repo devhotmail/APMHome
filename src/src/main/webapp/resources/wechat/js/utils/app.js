@@ -115,14 +115,14 @@ $(function () {
             if ($idx.length == 0) return;
             if ('datetime-local' == $idx.attr('type')) {
                 if (!val) {
-                    var datetime = new Date();
-                    var month = datetime.getMonth()+1;
-                    var date = datetime.getDate();
-                    var hours = datetime.getHours();
-                    var mins = datetime.getMinutes();
-                    var secs = datetime.getSeconds();
-                    val = datetime.getFullYear()+'-'+(month>9?month:'0'+month)+'-'+(date>9?date:'0'+date)
-                            +'T'+(hours>9?hours:'0'+hours)+':'+(mins>9?mins:'0'+mins) + ':'+(secs>9?secs:'0'+secs);
+//                    var datetime = new Date();
+//                    var month = datetime.getMonth()+1;
+//                    var date = datetime.getDate();
+//                    var hours = datetime.getHours();
+//                    var mins = datetime.getMinutes();
+//                    var secs = datetime.getSeconds();
+//                    val = datetime.getFullYear()+'-'+(month>9?month:'0'+month)+'-'+(date>9?date:'0'+date)
+//                            +'T'+(hours>9?hours:'0'+hours)+':'+(mins>9?mins:'0'+mins) + ':'+(secs>9?secs:'0'+secs);
                 } else {
                     val = val.replace(' ', 'T');
                 }

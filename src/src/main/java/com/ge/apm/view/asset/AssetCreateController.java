@@ -61,6 +61,12 @@ public class AssetCreateController {
         pictureList = acServie.getQrCodePictureList(createRequest.getId());
         audioList = acServie.getQrCodeAudioList(createRequest.getId());
 
+        //默认图片全选
+        selectedPictures = new Integer[pictureList.size()];
+        for (int i = 0; i < pictureList.size(); i++) {
+            selectedPictures[i] = pictureList.get(i).getFileId();
+        }
+
         rejectTextHistory = new ArrayList();
         if (null != createRequest.getFeedback()) {
             Collections.addAll(rejectTextHistory, createRequest.getFeedback().split("//"));
@@ -83,8 +89,9 @@ public class AssetCreateController {
             assetInfo.setAssetOwnerTel(owner.getTelephone());
         }
         OrgInfo clinicalDept = acServie.getOrgInfo(assetInfo.getClinicalDeptId());
-        assetInfo.setClinicalDeptName(clinicalDept.getName());
-
+        if (null != assetInfo.getClinicalDeptId()) {
+            assetInfo.setClinicalDeptName(clinicalDept.getName());
+        }
         Boolean res = acServie.CreateAeest(assetInfo);
         if (res) {
             acServie.createAttachments(assetInfo, selectedPictures);

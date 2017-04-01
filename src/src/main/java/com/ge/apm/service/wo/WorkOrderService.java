@@ -179,7 +179,12 @@ public class WorkOrderService {
     public void takeWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
         WorkOrder wo = workOrderRepository.getById(woId);
-        Date estimatedCloseTime =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getEstimatedCloseTime());
+        Date estimatedCloseTime = null;
+        try{
+            estimatedCloseTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getEstimatedCloseTime());
+        }catch(Exception e) {
+            estimatedCloseTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getEstimatedCloseTime()+":00");
+        }
         wo.setEstimatedCloseTime(estimatedCloseTime);
 
         // update end time for last work step
@@ -243,6 +248,7 @@ public class WorkOrderService {
         updateEndTime(wo, wopo.getDesc());
         UserAccount currentUsr = UserContext.getCurrentLoginUser(request);
         wo.setCurrentStepId(2);
+        wo.setEstimatedCloseTime(null);
         //step
         WorkOrderStep wds = initWorkOrderStep(request, wo);
         WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(currentUsr.getSiteId(), currentUsr.getHospitalId());
@@ -262,7 +268,12 @@ public class WorkOrderService {
     public void fatchWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
         WorkOrder wo = workOrderRepository.getById(woId);
-        Date estimatedCloseTime =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getEstimatedCloseTime());
+        Date estimatedCloseTime = null;
+        try{
+            estimatedCloseTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getEstimatedCloseTime());
+        }catch(Exception e) {
+            estimatedCloseTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getEstimatedCloseTime()+":00");
+        }
         wo.setEstimatedCloseTime(estimatedCloseTime);
 
         // update end time for last work step
@@ -635,7 +646,12 @@ public class WorkOrderService {
     public void estimatedTime(WorkOrderPoJo wopo)throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
         WorkOrder wo = workOrderRepository.getById(woId);
-        Date estimatedCloseTime =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getEstimatedCloseTime());
+        Date estimatedCloseTime = null;
+        try{
+            estimatedCloseTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getEstimatedCloseTime());
+        }catch(Exception e) {
+            estimatedCloseTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getEstimatedCloseTime()+":00");
+        }
         wo.setEstimatedCloseTime(estimatedCloseTime);
         workOrderRepository.save(wo);
     }
