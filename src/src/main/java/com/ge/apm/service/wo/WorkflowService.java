@@ -121,11 +121,60 @@ public class WorkflowService {
 		for(UserAccount ua:accounts){
 			coreService.sendWxTemplateMessage(ua.getWeChatId(),configUtils.fetchProperties("reopen_template_id"),WeiXinUtils.object2Map(model));
 		}
-		
 	}
 	
+	private void isTimeout(WorkOrder workOrder, WorkflowConfig woc){
+		List<WorkFlow> workFlows = workOrderMapper.fetchWorkFlowList(workOrder);
+		if(CollectionUtils.isEmpty(workFlows)){
+			logger.error("cannot find work steps , workOrder id is ",workOrder.getId());
+			return;
+		}
+		List<Integer> users = new ArrayList<Integer>(workFlows.size() * 10);
+		TimeoutPushModel model = new TimeoutPushModel();
+		//List<TimeoutPushModel> models = new ArrayList<TimeoutPushModel>(workFlows.size() * 10);
+		//如果第一个超时，则给当前步骤之前的所有人发送通知
+		WorkFlow lastOne = workFlows.get(0);
+		String stepName = lastOne.getStepName();
+		if (isTimeout(lastOne, woc)) {
+			for (WorkFlow workFlow : workFlows) {
+				if(!matchRule(workFlow,woc)){
+					continue;
+				}
+				users.add(workFlow.getCurrentPersonId());
+				model.setFirst(stepName + "超时");
+				model.setKeyword1(workOrder.getAssetName());
+				model.setKeyword2(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm:ss"));
+				model.setKeyword3(CasePriorityNum.getName(workOrder.getCasePriority()));
+				model.setKeyword4(stepName);// Constans.getName(workOrder.getCurrentStepId())
+				model.setKeyword5(workOrder.getCurrentPersonName());
+				model.setLinkUrl(coreService.getWoDetailUrl(workOrder.getId()));
+			}
+			if(!users.contains(workOrder.getRequestorId())){
+				users.add(workOrder.getRequestorId());
+			}
+			if(!users.contains(woc.getDispatchUserId())){
+				users.add(woc.getDispatchUserId());
+			}
+			List<Integer> subscribers = userAccountMapper.getAssetSubscriber(workOrder.getAssetId());
+			if(!CollectionUtils.isEmpty(subscribers)){
+				users.addAll(subscribers);
+			}
+			WeiXinUtils.removeDuplicateId(users);
+			buildTimeoutTemplateMsg(model,users);
+		}
+	}
 	
-	private void isTimeout(WorkOrder workOrder, WorkflowConfig woc) {
+	private void buildTimeoutTemplateMsg(TimeoutPushModel model, List<Integer> users) {
+		logger.info("begin to push timeout msg");
+		List<UserAccount> accounts = userAccountMapper.getUserWechatId(users);
+		for(UserAccount ua:accounts){
+			coreService.sendWxTemplateMessage(ua.getWeChatId(), configUtils.fetchProperties("timeout_template_id"),WeiXinUtils.object2Map(model));
+		}
+		logger.info("push timeout over,to users is {}",users);
+	}
+
+	@SuppressWarnings("unused")
+	private void isTimeoutBak(WorkOrder workOrder, WorkflowConfig woc) {
 		/*		StringBuilder builder = new StringBuilder();
 		String key = builder.append(workOrder.getSiteId()).append(":").append(workOrder.getHospitalId()).toString();
 		WorkflowConfig woc = configs.get(key);
