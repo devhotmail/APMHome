@@ -243,6 +243,7 @@ public class WorkOrderService {
         updateEndTime(wo, wopo.getDesc());
         UserAccount currentUsr = UserContext.getCurrentLoginUser(request);
         wo.setCurrentStepId(2);
+        wo.setEstimatedCloseTime(null);
         //step
         WorkOrderStep wds = initWorkOrderStep(request, wo);
         WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(currentUsr.getSiteId(), currentUsr.getHospitalId());
