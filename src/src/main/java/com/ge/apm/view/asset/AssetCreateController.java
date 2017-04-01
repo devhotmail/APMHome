@@ -88,8 +88,8 @@ public class AssetCreateController {
             assetInfo.setAssetOwnerName(owner.getName());
             assetInfo.setAssetOwnerTel(owner.getTelephone());
         }
-        OrgInfo clinicalDept = acServie.getOrgInfo(assetInfo.getClinicalDeptId());
         if (null != assetInfo.getClinicalDeptId()) {
+            OrgInfo clinicalDept = acServie.getOrgInfo(assetInfo.getClinicalDeptId());
             assetInfo.setClinicalDeptName(clinicalDept.getName());
         }
         Boolean res = acServie.CreateAeest(assetInfo);
