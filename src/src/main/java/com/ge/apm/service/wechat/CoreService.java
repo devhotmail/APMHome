@@ -474,6 +474,7 @@ public class CoreService {
 				if(!(map.get(key) instanceof String)){
 					continue;
 				}
+				 Logger.getLogger(CoreService.class.getName()).log(Level.INFO, null, "key is "+key+",value is "+map.get(key));
 				templateMessage.addWxMpTemplateData(new WxMpTemplateData(key, (String) map.get(key), textColor));
 				if (key.equals("linkUrl")) {
 					String _linkUrl = wxMpService.oauth2buildAuthorizationUrl(webContextUrl + map.get(key).toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, "");

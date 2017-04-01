@@ -31,4 +31,7 @@ public interface UserAccountMapper {
 	
 	@Update("update user_account set wechat_id = null where wechat_id=#{openId}")
 	public void updateUserWechatIdNull(String openId);
-}
+
+	@Select("select subscribe_user_id from message_subscriber where asset_id = #{asset_id} and is_receive_timeout_msg= true ")
+	public List<Integer> getAssetSubscriber(Integer assetId);
+} 

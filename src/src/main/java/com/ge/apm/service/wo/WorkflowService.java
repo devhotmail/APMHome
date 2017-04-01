@@ -148,11 +148,7 @@ public class WorkflowService {
 				if(!matchRule(workFlow,woc)){
 					continue;
 				}
-				if (users.contains(workFlow.getCurrentPersonId())) {
-					continue;
-				}
 				users.add(workFlow.getCurrentPersonId());
-				
 				TimeoutPushModel model = new TimeoutPushModel();
 				model.setFirst(stepName + "超时");
 				model.setKeyword1(workOrder.getAssetName());
@@ -164,17 +160,23 @@ public class WorkflowService {
 				model.setCurrentPersonId(workFlow.getCurrentPersonId());
 				models.add(model);
 			}
+			if(CollectionUtils.isEmpty(models)){
+				return;
+			}
+			if(!users.contains(workOrder.getRequestorId())){
+				users.add(workOrder.getRequestorId());
+			}
+			if(!users.contains(woc.getDispatchUserId())){
+				users.add(woc.getDispatchUserId());
+			}
+			List<Integer> subscribers = userAccountMapper.getAssetSubscriber(workOrder.getAssetId());
+			if(!CollectionUtils.isEmpty(subscribers)){
+				users.addAll(subscribers);
+			}
+			WeiXinUtils.removeDuplicateId(users);
+			buildTimeoutTemplateMsg(models,users);
 		}
-		if(CollectionUtils.isEmpty(models)){
-			return;
-		}
-		if(!users.contains(workOrder.getRequestorId())){
-			users.add(workOrder.getRequestorId());
-		}
-		if(!users.contains(woc.getDispatchUserId())){
-			users.add(woc.getDispatchUserId());
-		}
-		buildTimeoutTemplateMsg(models,users);
+
 	}
 	
 	private boolean matchRule(WorkFlow workFlow, WorkflowConfig woc) {
@@ -203,16 +205,20 @@ public class WorkflowService {
 	private void buildTimeoutTemplateMsg(List<TimeoutPushModel> models, List<Integer> users) {
 		logger.info("begin to push timeout msg");
 		List<UserAccount> accounts = userAccountMapper.getUserWechatId(users);
-		Map<Integer,UserAccount> uas = new HashMap<Integer,UserAccount>();
+		TimeoutPushModel model = models.get(0);
 		for(UserAccount ua:accounts){
-			uas.put(ua.getId(), ua);
+			coreService.sendWxTemplateMessage(ua.getWeChatId(), configUtils.fetchProperties("timeout_template_id"),WeiXinUtils.object2Map(model));
 		}
-		for (TimeoutPushModel timeoutPushModel : models) {
-			if(uas.get(timeoutPushModel.getCurrentPersonId()) != null){
-				String openId = uas.get(timeoutPushModel.getCurrentPersonId()).getWeChatId();
-				coreService.sendWxTemplateMessage(openId, configUtils.fetchProperties("timeout_template_id"),WeiXinUtils.object2Map(timeoutPushModel));
-			}
-		}
+//		Map<Integer,UserAccount> uas = new HashMap<Integer,UserAccount>();
+//		for(UserAccount ua:accounts){
+//			uas.put(ua.getId(), ua);
+//		}
+//		for (TimeoutPushModel timeoutPushModel : models) {
+//			if(uas.get(timeoutPushModel.getCurrentPersonId()) != null){
+//				String openId = uas.get(timeoutPushModel.getCurrentPersonId()).getWeChatId();
+//				coreService.sendWxTemplateMessage(openId, configUtils.fetchProperties("timeout_template_id"),WeiXinUtils.object2Map(timeoutPushModel));
+//			}
+//		}
 		logger.info("push timeout over,to users is {}",users);
 	}
 	
