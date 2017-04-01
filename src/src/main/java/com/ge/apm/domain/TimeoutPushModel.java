@@ -1,83 +1,71 @@
 package com.ge.apm.domain;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.beanutils.BeanUtils;
-
-public class TimeoutPushModel extends PushModel{
-
-	private String _requestTime;
-	private String _urgency;
-	private String _status;
-	private String _currentPerson;
+public class TimeoutPushModel{
+	private String first;
+	private String keyword1;
+	private String keyword2;
+	private String keyword3;
+	private String keyword4;
+	private String keyword5;
+	private String remark;
+	private String linkUrl;
 	private Integer currentPersonId;
-	private String _linkUrl;
 	
-	public String get_linkUrl() {
-		return _linkUrl;
-	}
-	public void set_linkUrl(String _linkUrl) {
-		this._linkUrl = _linkUrl;
-	}
 	public Integer getCurrentPersonId() {
 		return currentPersonId;
 	}
 	public void setCurrentPersonId(Integer currentPersonId) {
 		this.currentPersonId = currentPersonId;
 	}
-	public String get_requestTime() {
-		return _requestTime;
+	public String getLinkUrl() {
+		return linkUrl;
 	}
-	public void set_requestTime(String _requestTime) {
-		this._requestTime = _requestTime;
+	public void setLinkUrl(String linkUrl) {
+		this.linkUrl = linkUrl;
 	}
-	public String get_urgency() {
-		return _urgency;
+	public String getKeyword5() {
+		return keyword5;
 	}
-	public void set_urgency(String _urgency) {
-		this._urgency = _urgency;
+	public void setKeyword5(String keyword5) {
+		this.keyword5 = keyword5;
 	}
-
-	public String get_status() {
-		return _status;
+	public String getFirst() {
+		return first;
 	}
-	public void set_status(String _status) {
-		this._status = _status;
+	public void setFirst(String first) {
+		this.first = first;
 	}
-	public String get_currentPerson() {
-		return _currentPerson;
+	public String getKeyword1() {
+		return keyword1;
 	}
-	public void set_currentPerson(String _currentPerson) {
-		this._currentPerson = _currentPerson;
+	public void setKeyword1(String keyword1) {
+		this.keyword1 = keyword1;
 	}
-
+	public String getKeyword2() {
+		return keyword2;
+	}
+	public void setKeyword2(String keyword2) {
+		this.keyword2 = keyword2;
+	}
+	public String getKeyword3() {
+		return keyword3;
+	}
+	public void setKeyword3(String keyword3) {
+		this.keyword3 = keyword3;
+	}
+	public String getKeyword4() {
+		return keyword4;
+	}
+	public void setKeyword4(String keyword4) {
+		this.keyword4 = keyword4;
+	}
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 	
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("TimeoutPushModel [_requestTime=");
-		builder.append(_requestTime);
-		builder.append(", _urgency=");
-		builder.append(_urgency);
-		builder.append(", _status=");
-		builder.append(_status);
-		builder.append(", _currentPerson=");
-		builder.append(_currentPerson);
-		builder.append(", currentPersonId=");
-		builder.append(currentPersonId);
-		builder.append("]");
-		return builder.toString();
-	}
-	public Map<String,Object> toMap(){
-		Map<String,Object> map = new HashMap<String,Object>();
-		 try {
-			BeanUtils.populate(this, map);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		return map;
-	}
+	
 
 }

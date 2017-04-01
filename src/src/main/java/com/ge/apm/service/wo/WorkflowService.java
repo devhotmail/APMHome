@@ -152,14 +152,15 @@ public class WorkflowService {
 					continue;
 				}
 				users.add(workFlow.getCurrentPersonId());
+				
 				TimeoutPushModel model = new TimeoutPushModel();
-				model.set_assetName(workOrder.getAssetName());
-				model.set_requestTime(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm:ss"));
-				model.set_currentPerson(workOrder.getCurrentPersonName());
-				model.set_status(stepName);// Constans.getName(workOrder.getCurrentStepId())
 				model.setFirst(stepName + "超时");
-				model.set_urgency(CasePriorityNum.getName(workOrder.getCasePriority()));
-				model.set_linkUrl(coreService.getWoDetailUrl(workOrder.getId()));
+				model.setKeyword1(workOrder.getAssetName());
+				model.setKeyword2(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm:ss"));
+				model.setKeyword3(CasePriorityNum.getName(workOrder.getCasePriority()));
+				model.setKeyword4(stepName);// Constans.getName(workOrder.getCurrentStepId())
+				model.setKeyword5(workOrder.getCurrentPersonName());
+				model.setLinkUrl(coreService.getWoDetailUrl(workOrder.getId()));
 				model.setCurrentPersonId(workFlow.getCurrentPersonId());
 				models.add(model);
 			}
@@ -212,7 +213,7 @@ public class WorkflowService {
 				coreService.sendWxTemplateMessage(openId, configUtils.fetchProperties("timeout_template_id"),WeiXinUtils.object2Map(timeoutPushModel));
 			}
 		}
-		logger.info("push timeout over,to users size is {}",users.size());
+		logger.info("push timeout over,to users is {}",users);
 	}
 	
 	public boolean isTimeout(WorkFlow workFlow,WorkflowConfig woc){

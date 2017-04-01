@@ -471,17 +471,26 @@ public class CoreService {
 		Set<String> keys = map.keySet();
 		if (!CollectionUtils.isEmpty(keys)) {
 			for (String key : keys) {
-				if(key.equals("first") || key.equals("remark")){
-					templateMessage.addWxMpTemplateData(new WxMpTemplateData(key, (String) map.get(key), textColor));
-				}else if(key.startsWith("_")){
-					templateMessage.addWxMpTemplateData(new WxMpTemplateData(key, (String) map.get(key), textColor));
-					if (key.equals("_linkUrl")) {
-						String _linkUrl = wxMpService.oauth2buildAuthorizationUrl(webContextUrl + map.get(key).toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, "");
-						System.out.println("_linkUrl is "+_linkUrl);
-						templateMessage.setUrl(_linkUrl);
-					}
+				if(!(map.get(key) instanceof String)){
+					continue;
 				}
-				
+				templateMessage.addWxMpTemplateData(new WxMpTemplateData(key, (String) map.get(key), textColor));
+				if (key.equals("linkUrl")) {
+					String _linkUrl = wxMpService.oauth2buildAuthorizationUrl(webContextUrl + map.get(key).toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, "");
+					System.out.println("linkUrl is "+_linkUrl);
+					templateMessage.setUrl(_linkUrl);
+				}
+//				if(key.equals("first") || key.equals("remark")){
+//					templateMessage.addWxMpTemplateData(new WxMpTemplateData(key, (String) map.get(key), textColor));
+//				}else if(key.startsWith("_")){
+//					templateMessage.addWxMpTemplateData(new WxMpTemplateData(key, (String) map.get(key), textColor));
+//					if (key.equals("_linkUrl")) {
+//						String _linkUrl = wxMpService.oauth2buildAuthorizationUrl(webContextUrl + map.get(key).toString(), WxConsts.OAUTH2_SCOPE_USER_INFO, "");
+//						System.out.println("_linkUrl is "+_linkUrl);
+//						templateMessage.setUrl(_linkUrl);
+//					}
+//				}
+//				
 			}
 		}
 		wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);

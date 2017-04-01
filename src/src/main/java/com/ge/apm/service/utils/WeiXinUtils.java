@@ -21,15 +21,18 @@ public class WeiXinUtils {
         Set<Entry<String,Object>> entrySet = jsonObject.entrySet();
         Map<String, Object> map=new HashMap<String,Object>();
         for (Entry<String, Object> entry : entrySet) {
-        	if(entry.getKey().equals("first") || entry.getKey().equals("remark")){
-        		map.put(entry.getKey(), entry.getValue());
-        		continue;
-        	}
-        	if((!entry.getKey().startsWith("_")) && entry.getValue() != null){
-        		map.put("_"+entry.getKey(),  entry.getValue().toString());
-        	}
+        	map.put(entry.getKey(), entry.getValue());
+//        	if(entry.getKey().equals("first") || entry.getKey().equals("remark")){
+//        		map.put(entry.getKey(), entry.getValue());
+//        		continue;
+//        	}
+//        	if((!entry.getKey().startsWith("_")) && entry.getValue() != null){
+//        		map.put("_"+entry.getKey(),  entry.getValue().toString());
+//        	}
         }
         System.out.println(map);
         return map;
     }
+	
+	
 }

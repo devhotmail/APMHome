@@ -21,7 +21,7 @@ public interface WorkOrderMapper {
 	public List<WorkOrder> fetchUnFinishedWorkList();
 	
 	@Select("select  owner_id current_person_id,owner_name ,start_time,work_order_id,step_id current_step_id,step_name from work_order_step"+
-				" where step_id <= #{currentStepId} and work_order_id = #{id} order by start_time desc limit 1")
+				" where step_id <= #{currentStepId} and work_order_id = #{id} order by start_time desc ")
 	public List<WorkFlow> fetchWorkFlowList(WorkOrder workOrder);
 
 	@Select("select * from workflow_config where site_id =#{siteId} and hospital_id =#{hospitalId}")
