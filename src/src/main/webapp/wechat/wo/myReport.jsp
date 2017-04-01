@@ -38,6 +38,9 @@
         <div id="container" class="container"></div>
         <script>
             $(function(){
+                wechatSDK.setAppId('${appId}');
+                wechatSDK.setSignature('${timestamp}', '${nonceStr}', '${signature}');
+                wechatSDK.init();
                 pageManager.init('ts_myReports');
                 app.intCasePriority();
             });

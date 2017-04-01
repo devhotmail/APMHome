@@ -41,6 +41,9 @@
         <div id="container" class="container"></div>
         <script>
             $(function(){
+                wechatSDK.setAppId('${appId}');
+                wechatSDK.setSignature('${timestamp}', '${nonceStr}', '${signature}');
+                wechatSDK.init();
                 //show the tabs by the role of the user
                 $.get(WEB_ROOT+'web/choosetab', function(ret){
                     if (ret && ret !== 3) {
