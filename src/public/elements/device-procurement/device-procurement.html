@@ -271,6 +271,9 @@
           });
         },
         getConfigListTwo: function(configList, selectedConfigItem) {
+          // dont show items which in the last layer
+          var root = this.configList[0];
+          if (root.depth !== 0 || root.height === 2) return;
           return configList.filter(function(n) {
             return n.depth === 2 && n.parent.uid === selectedConfigItem.uid;
           });
