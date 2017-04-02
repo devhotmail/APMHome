@@ -130,7 +130,7 @@ public class WorkflowService {
 			return;
 		}
 		List<Integer> users = new ArrayList<Integer>(workFlows.size() * 10);
-		TimeoutPushModel model = new TimeoutPushModel();
+		TimeoutPushModel model = null;//new TimeoutPushModel();
 		//List<TimeoutPushModel> models = new ArrayList<TimeoutPushModel>(workFlows.size() * 10);
 		//如果第一个超时，则给当前步骤之前的所有人发送通知
 		WorkFlow lastOne = workFlows.get(0);
@@ -141,6 +141,7 @@ public class WorkflowService {
 					continue;
 				}
 				users.add(workFlow.getCurrentPersonId());
+				model = new TimeoutPushModel(); 
 				model.setFirst(stepName + "超时");
 				model.setKeyword1(workOrder.getAssetName());
 				model.setKeyword2(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm:ss"));
@@ -149,18 +150,20 @@ public class WorkflowService {
 				model.setKeyword5(workOrder.getCurrentPersonName());
 				model.setLinkUrl(coreService.getWoDetailUrl(workOrder.getId()));
 			}
-			if(!users.contains(workOrder.getRequestorId())){
-				users.add(workOrder.getRequestorId());
+			if(model != null){
+				if(!users.contains(workOrder.getRequestorId())){
+					users.add(workOrder.getRequestorId());
+				}
+				if(!users.contains(woc.getDispatchUserId())){
+					users.add(woc.getDispatchUserId());
+				}
+				List<Integer> subscribers = userAccountMapper.getAssetSubscriber(workOrder.getAssetId());
+				if(!CollectionUtils.isEmpty(subscribers)){
+					users.addAll(subscribers);
+				}
+				WeiXinUtils.removeDuplicateId(users);
+				buildTimeoutTemplateMsg(model,users);
 			}
-			if(!users.contains(woc.getDispatchUserId())){
-				users.add(woc.getDispatchUserId());
-			}
-			List<Integer> subscribers = userAccountMapper.getAssetSubscriber(workOrder.getAssetId());
-			if(!CollectionUtils.isEmpty(subscribers)){
-				users.addAll(subscribers);
-			}
-			WeiXinUtils.removeDuplicateId(users);
-			buildTimeoutTemplateMsg(model,users);
 		}
 	}
 	
