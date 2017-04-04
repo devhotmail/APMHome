@@ -116,6 +116,11 @@
           return n;
         })
       },
+      orderScheduler: function(nodes) {
+        var root = nodes[0];
+        var results = [root].concat(nodes.slice(1, nodes.length).reverse());
+        return results;
+      },
       render: function() {
         var _this = this;
         var svg = d3.select(this.$.svg);
@@ -138,12 +143,15 @@
         });
 
         var nodes = pack(root).descendants();
+
         var focus = root;
         var view;
 
         this.set('focus', focus);
         // adaptor for those nodes which has a single child
         nodes = this.nodeAdaptor(nodes);
+        // scheduler for node order
+        nodes = this.orderScheduler(nodes);
 
         var assetGroup = wrapperGroup
         .selectAll('g')
