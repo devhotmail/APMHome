@@ -47,16 +47,52 @@
           <template is="dom-if" if="[[isEqual(activeTab, 0)]]">
             <div class="related-info">
               <div class="kpis">
-                <h3>当前位置: [[focus.data.name]]</h3>
+                <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
+                <div class="u-mb--">未来12个月收益预测([[focus.data.revenue_unit]]元)</div>
+                <div class="text-muted u-mb--">过去两年的历史数据</div>
+                <div class="flex flex--middle revenue-tip muted">
+                  <div class="revenue-label">2014.4</div>
+                  <div class="flex__item u-ml-- u-mr--">
+                    <div class="progress-bar" style="width: 90%"></div>
+                  </div>
+                  <div class="revenue-num">[[parseInt(focus.data.revenue_year_before_last)]]</div>
+                </div>
+                <div class="flex flex--middle revenue-tip muted">
+                  <div class="revenue-label">2015.4</div>
+                  <div class="flex__item u-ml-- u-mr--">
+                    <div class="progress-bar" style="width: 90%"></div>
+                  </div>
+                  <div class="revenue-num">[[parseInt(focus.data.revenue_last_year)]]</div>
+                </div>
+                <div class="text-muted u-mt-- u-mb--">未来12个月</div>
+                <div class="flex flex--middle revenue-tip">
+                  <div class="revenue-label">预测</div>
+                  <div class="flex__item u-ml-- u-mr--">
+                    <div class="progress-bar" style="width: 90%"></div>
+                  </div>
+                  <div class="revenue-num">
+                    [[parseInt(focus.data.revenue_predict)]] +[[decimal2Percent(focus.data.revenue_increase)]]
+                  </div>
+                </div>
+                <div class="flex flex--middle revenue-tip">
+                  <div class="revenue-label">采取建议</div>
+                  <div class="flex__item u-ml-- u-mr--">
+                    <div class="progress-bar" style="width: 90%"></div>
+                  </div>
+                  <div class="revenue-num">
+                    [[parseInt(focus.data.revenue_predict_sug)]] +[[decimal2Percent(focus.data.revenue_increase_sug)]]
+                  </div>
+                </div>
+                <div class="divider"></div>
                 当前平均使用率预测:
-                <h2>[[decimal2Percent(focus.data.usage)]]</h2>
+                <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
                 <template is="dom-if" if="[[isArray(focus.data.suggestions)]]">
                   <template is="dom-repeat" items="[[focus.data.suggestions]]">
                     <template is="dom-if" if="[[item.title]]">
                       <div>[[item.title]]</div>
                     </template>
                     <template is="dom-if" if="[[item.addition]]">
-                      <h2>[[item.addition]]</h2>
+                      <div class="title u-mt- u-mb-">[[item.addition]]</div>
                     </template>
                   </template>
                   <div class="divider"></div>
@@ -70,7 +106,7 @@
                     </template>
                     <div class="kpi-detail">
                       <template is="dom-if" if="[[item.num]]">
-                        <h2>[[item.num]]台设备</h2>
+                        <div class="title u-mt- u-mb-">[[item.num]]台设备</div>
                       </template>
                     </div>
                   </template>
@@ -78,7 +114,7 @@
                 </template>
               </div>
               <div class="legends">
-                <h3>图示说明</h3>
+                <div class="title u-mt- u-mb-">图示说明</div>
                 <div class="legend">
                   <i class="dewicon-circle-high" style="color:#b3b3b3"></i>
                   <span class="legend-tip">平均使用率预测(%)</span>
@@ -96,60 +132,92 @@
             </div>
           </template>
           <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
-            <div class="config-list">
-              <template
-                id="configList"
-                is="dom-repeat"
-                items="[[configListOne]]">
-                <div
-                  class$="[[calcConfigItemCls(selectedConfigIndex, index)]]"
-                  on-tap="handleConfigTap">
-                  <div class="item-name">[[item.name]]</div>
-                  <template is="dom-if" if="[[item.isUnknown]]">
-                    <div>待计算</div>
-                  </template>
-                  <template is="dom-if" if="[[!item.isUnknown]]">
-                    <editable-block
-                      data-index$="[[index]]"
-                      value="[[item.increase]]"
-                      on-changed="handleConfigChange"></editable-block>
-                    <span>%</span>
-                  </template>
-                </div>
-              </template>
-              <array-selector
-                id="configSelector"
-                items="[[configListOne]]"
-                selected="{{selectedConfigIndex}}"></array-selector>
-            </div>
-            <template is="dom-if" if="[[configListTwo.length]]">
-              <div class="config-list">
+            <div class="title u-mt u-mb">未来12个月收益预测</div>
+            <div class="text-muted u-mb-">基于系统自动建议值进行手工调节</div>
+            <div class="config-list-wrapper">
+              <div
+                class$="[[calcConfiglistCls(configListTwo.length)]]"
+                style$="[[calcConfigHeight(configListOne.length)]]">
                 <template
-                  id="subConfigList"
+                  id="configList"
                   is="dom-repeat"
-                  items="[[configListTwo]]">
+                  items="[[configListOne]]">
                   <div
-                    class="config-item"
-                    class$="[[calcConfigItemCls(selectedSubConfigIndex, index)]]"
-                    on-tap="handleSubConfigTap">
+                    class$="[[calcConfigItemCls(selectedConfigIndex, index)]]"
+                    on-tap="handleConfigTap">
                     <div class="item-name">[[item.name]]</div>
-                    <editable-block
-                      data-index$="[[index]]"
-                      value="[[item.increase]]"
-                      on-changed="handleSubConfigChange"></editable-block>
-                    <span>%</span>
+                    <template is="dom-if" if="[[item.isUnknown]]">
+                      <div>待计算</div>
+                    </template>
+                    <template is="dom-if" if="[[!item.isUnknown]]">
+                      <editable-block
+                        data-index$="[[index]]"
+                        value="[[item.increase]]"
+                        on-changed="handleConfigChange"></editable-block>
+                      <span>%</span>
+                    </template>
                   </div>
                 </template>
                 <array-selector
-                  id="subConfigSelector"
-                  items="[[configListTwo]]"
-                  selected="{{selectedSubConfigIndex}}"></array-selector>
+                  id="configSelector"
+                  items="[[configListOne]]"
+                  selected="{{selectedConfigIndex}}"></array-selector>
               </div>
-            </template>
-            <div class="btn-group" id="btn">
+              <template is="dom-if" if="[[configListTwo.length]]">
+                <div class="config-list" style$="[[calcConfigHeight(configListTwo.length)]]">
+                  <template
+                    id="subConfigList"
+                    is="dom-repeat"
+                    items="[[configListTwo]]">
+                    <div
+                      class$="[[calcConfigItemCls(selectedSubConfigIndex, index)]]"
+                      on-tap="handleSubConfigTap">
+                      <div class="item-name">[[item.name]]</div>
+                      <editable-block
+                        data-index$="[[index]]"
+                        value="[[item.increase]]"
+                        on-changed="handleSubConfigChange"></editable-block>
+                      <span>%</span>
+                    </div>
+                  </template>
+                  <array-selector
+                    id="subConfigSelector"
+                    items="[[configListTwo]]"
+                    selected="{{selectedSubConfigIndex}}"></array-selector>
+                </div>
+              </template>
+            </div>
+            <div class="btn-group u-mt" id="btn">
               <div class="btn active" on-tap="handleSubmit">
                 确认建议
               </div>
+            </div>
+            <div class="divider"></div>
+            <div class="text-muted u-mb--">新建议产生的全部设备收益预测([[focus.data.revenue_unit]])</div>
+            <div class="flex flex--middle revenue-tip">
+              <div class="revenue-label">采取建议</div>
+              <div class="flex__item u-ml-- u-mr--">
+                <div class="progress-bar" style="width: 90%"></div>
+              </div>
+              <div class="revenue-num">
+                [[parseInt(focus.data.revenue_predict_sug)]] +[[decimal2Percent(focus.data.revenue_increase_sug)]]
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div>
+              <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
+              当前平均使用率预测:
+              <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
+              <template is="dom-if" if="[[isArray(focus.data.suggestions)]]">
+                <template is="dom-repeat" items="[[focus.data.suggestions]]">
+                  <template is="dom-if" if="[[item.title]]">
+                    <div>[[item.title]]</div>
+                  </template>
+                  <template is="dom-if" if="[[item.addition]]">
+                    <div class="title u-mt- u-mb-">[[item.addition]]</div>
+                  </template>
+                </template>
+              </template>
             </div>
           </template>
         </div>
@@ -273,7 +341,7 @@
         getConfigListTwo: function(configList, selectedConfigItem) {
           // dont show items which in the last layer
           var root = this.configList[0];
-          if (root.depth !== 0 || root.height === 2) return;
+          if (root.depth !== 0 || root.height === 2) return [];
           return configList.filter(function(n) {
             return n.depth === 2 && n.parent.uid === selectedConfigItem.uid;
           });
@@ -377,7 +445,7 @@
                 ? n.children.map(function(child) {
                   return {
                     id: child.id,
-                    increase: n.increase
+                    increase: n.increase / 100 // for the display usage # 1
                   }
                 })
                 : [];
@@ -396,8 +464,15 @@
         /**
          * functions which calculate className for dom styles usage
         */
+        calcConfiglistCls: function(length) {
+          return length > 0 ? 'config-list with-arrow' : 'config-list';
+        },
+        calcConfigHeight: function(length) {
+          return length < 10 ? 'height: auto' : '';
+        },
         calcConfigItemCls: function(a, b) {
-          return a === b ? 'config-item active' : 'config-item';
+          var clsBase = 'config-item';
+          return a === b ? clsBase + ' ' + 'active' : clsBase;
         },
         calcTypeCls: function(val, activeTab){
           return val === activeTab ? 'active' : ''
@@ -414,6 +489,7 @@
         decimal2Percent: function(decimal) {
           return parseInt(decimal * 100) + '%';
         },
+        parseInt: parseInt,
         isArray: Array.isArray,
         isEqual: function(a, b) {
           return a === b;
@@ -481,7 +557,7 @@
               id: n.data.id,
               uid: n.data.uid,
               name: n.data.name,
-              increase: n.data.revenue_increase
+              increase: parseInt(n.data.revenue_increase * 100) // for the display usage # 1
             }
           });
         },

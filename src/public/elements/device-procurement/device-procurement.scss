@@ -4,17 +4,21 @@
   display: flex;
 }
 
-$brand-color: #5b84d7;
-
-$sidebar-width: 260px;
+$sidebar-width: 280px;
 $kpi-legend-circle-r: 25px;
 $gap: 10px;
+
+$brand: #5b84d7;
+$green: rgb(70, 175, 155);
 
 $gray: rgb(148, 147, 146);
 $orange: rgb(232, 136, 56);
 $yellow: rgb(236, 219, 84);
+
 $color-set: $orange $yellow $gray;
 $border-color: rgb(186, 186, 186);
+
+$tab-active-color: rgb(31, 105, 266);
 
 .chart-wrapper {
   width: calc(100% - #{$sidebar-width});
@@ -44,7 +48,7 @@ $border-color: rgb(186, 186, 186);
     position: absolute;
     bottom: 0;
     left: 0;
-    background: $brand-color;
+    background: $tab-active-color;
     width: $list-item-width;
     height: 2px;
     transition: .2s ease-in-out;
@@ -68,24 +72,81 @@ $border-color: rgb(186, 186, 186);
 
     &:hover,
     &.active {
-      color: $brand-color;
+      color: $brand;
     }
   }
 }
 
 .tabs-content {
-  padding: 10px;
+  height: calc(100vh - 150px);
+  padding: 0 10px 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
   border: 1px solid $border-color;
   border-radius: 10px;
 }
 
+.title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.progress-bar {
+  height: 14px;
+  background-color: $green;
+}
+
+.revenue-tip {
+  color: $green;
+
+  .revenue-label {
+    width: 60px;
+  }
+
+  .revenue-num {
+    width: 75px;
+  }
+
+  &.muted {
+    color: $gray;
+
+    .progress-bar {
+      background-color: rgb(155, 155, 154);
+    }
+  }
+}
+
+.config-list-wrapper {
+  display: flex;
+}
+
 .config-list {
+  flex: 1;
+  height: 30 * 10 + 2px;
   border: 1px solid $border-color;
   border-radius: 6px;
+  box-sizing: border-box;
+
+  + .config-list {
+    margin-left: 10px;
+  }
+
+  &.with-arrow .config-item.active::after {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translate(0, -50%);
+    content: '';
+    border-left: 10px solid $gray;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+  }
 }
 
 .config-item {
-  padding: 5px;
+  height: 30px;
+  padding: 0 5px;
+  line-height: 30px;
   display: flex;
   align-items: center;
   // justify-content: space-between;
@@ -101,12 +162,13 @@ $border-color: rgb(186, 186, 186);
   }
 
   &.active {
-    background-color: lighten($brand-color, 30%);
-    color: $brand-color;
+    background-color: lighten($brand, 30%);
+    color: $brand;
+    position: relative;
   }
 
   &:hover {
-    background-color: lighten($brand-color, 30%);
+    background-color: lighten($brand, 30%);
   }
 
   .item-name {
@@ -124,8 +186,8 @@ $border-color: rgb(186, 186, 186);
     margin-left: 0!important;
 
     &.active {
-      background: $brand-color;
-      border-color: $brand-color;
+      background: $brand;
+      border-color: $brand;
       color: #fff!important;
       box-shadow: none;
     }
@@ -184,4 +246,8 @@ px-dropdown {
 .divider {
   border-top: 1px solid $border-color;
   margin: 10px 0;
+}
+
+.text-muted {
+  color: $gray;
 }
