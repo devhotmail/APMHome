@@ -252,6 +252,7 @@ public class WorkOrderController {
         map.put("feedbackRating", wo.getFeedbackRating());
         map.put("feedbackComment", wo.getFeedbackComment());
         map.put("status", wo.getStatus());
+        map.put("requestor", wo.getRequestorName());
         map.put("requestTime", wo.getRequestTime()==null?null:new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getRequestTime()));
         map.put("caseType", wo.getCaseType());
         map.put("caseSubType", wo.getCaseSubType());

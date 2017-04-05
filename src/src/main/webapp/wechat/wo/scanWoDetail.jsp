@@ -50,16 +50,16 @@
                             if (ret.currentStepId === 6 && ret.requestorId != '${userId}') {
                                 pageManager.init('ts_msg_notfound');
                             }
-                            if (pageManager.from) {
-                                var html = $('#ts_wodetail').html()+'<\/script>';
-                                var $html = $(html);
-                                $html.addClass('slideIn').on('animationend webkitAnimationEnd', function () {
-                                    $html.removeClass('slideIn');
-                                });
-                                $('#container').append($html);
-                            } else {
+//                            if (pageManager.from) {
+//                                var html = $('#ts_wodetail').html()+'<\/script>';
+//                                var $html = $(html);
+//                                $html.addClass('slideIn').on('animationend webkitAnimationEnd', function () {
+//                                    $html.removeClass('slideIn');
+//                                });
+//                                $('#container').append($html);
+//                            } else {
                                 pageManager.init('ts_wodetail');
-                            }
+//                            }
                         } else {
                             pageManager.init('ts_msg_notfound');
                         }
