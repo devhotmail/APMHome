@@ -68,7 +68,7 @@ public class AbstractApiTest {
 
 
   public void login(String username, String password) {
-    String loginInfo = "javax.faces.partial.ajax=true&javax.faces.source=j_idt20&javax.faces.partial.execute=%40all&javax.faces.partial.render=growl&j_idt20=j_idt20&j_idt14=j_idt14&j_username=" + Option.of(username).getOrElse(System.getProperty("j_username", "admin")) + "&j_password=" + Option.of(password).getOrElse(System.getProperty("j_password", "111")) + "&javax.faces.ViewState=stateless";
+    final String loginInfo = "javax.faces.partial.ajax=true&javax.faces.source=j_idt22&javax.faces.partial.execute=%40all&javax.faces.partial.render=growl&j_idt22=j_idt22&j_idt16=j_idt16&j_username=" + Option.of(username).getOrElse(System.getProperty("j_username", "admin")) + "&j_password=" + Option.of(password).getOrElse(System.getProperty("j_password", "111")) + "&javax.faces.ViewState=stateless";
     Try.of(() -> this.getRetrofit().create(LoginInterface.class).testLogin(RequestBody.create(MediaType.parse("text/plain"), loginInfo)).execute())
       .filter(response -> Try.of(() -> response.body().string()).getOrElse("").contains("redirect"))
       .onSuccess(response -> this.setCookie(response.headers().get("Set-Cookie")))
