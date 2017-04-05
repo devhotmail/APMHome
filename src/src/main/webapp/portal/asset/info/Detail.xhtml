@@ -431,7 +431,8 @@
                     </p:dataList>
                 </p:tab>
                 <p:tab title="#{msg.QRCode}" rendered="#{not empty assetInfoController.selected.qrCode}">
-                    <p:barcode value="#{assetInfoController.selected.qrCode}" type="qr" height="200" format="png"/>
+                    <!--<p:barcode value="#{assetInfoController.selected.qrCode}" type="qr" height="200" format="png"/>-->
+                    <img src="#{assetInfoController.getQrCodeImageBase64()}" height="200px" width="200px"/>
                 </p:tab>
             </p:tabView>
         </h:form>
