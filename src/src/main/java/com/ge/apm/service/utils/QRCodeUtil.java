@@ -107,9 +107,9 @@ public class QRCodeUtil {
         int x = (QRCODE_SIZE - width) / 2;
         int y = (QRCODE_SIZE - height) / 2;
         graph.drawImage(src, x, y, width, height, null);
-        Shape shape = new RoundRectangle2D.Float(x, y, width, width, 6, 6);
+//        Shape shape = new RoundRectangle2D.Float(x, y, width, width, 6, 6);
         graph.setStroke(new BasicStroke(3f));
-        graph.draw(shape);
+//        graph.draw(shape);
         graph.dispose();
     }
 
