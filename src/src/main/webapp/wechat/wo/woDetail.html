@@ -232,7 +232,7 @@
             function reloadDetail() {
                 $.get(WEB_ROOT+'web/wodetail', {id: pageManager.woId}, function(ret) {
                     if (ret) {
-                        app.activeProgressBar(ret.currentStepId);
+                        app.activeProgressBar(ret.currentStepId, ret.feedbackRating);
                         //set value
                         app.setFormJsonValue(ret);
 
