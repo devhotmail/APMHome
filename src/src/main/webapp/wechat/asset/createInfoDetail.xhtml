@@ -100,17 +100,19 @@ and open the template in the editor.
         <div class="page__bd" style="height: 100%;">
             <div  class="weui-panel">
                 <div class="weui-panel__hd">设备图片</div>
-                <div class="weui-panel__bd">
+                <div class="weui-panel__bd" >
                     <div class="weui-cell my-gallery" data-pswp-uid="1">
-                        <c:forEach items="#{createInfoController.pictureList}" var="fileitem">
-                            <figure style="display: inline; padding-right: 8px;">
-                                <a href="" data-size="800x600">
-                                    <p:graphicImage  value="#{pictureService.getImage()}"   height="80px" width="80px" >
-                                        <f:param name="pictureId" value="#{fileitem.fileId}" />
-                                    </p:graphicImage>
-                                </a>
-                            </figure>
-                        </c:forEach>
+                        <div class="weui-cell__bd">
+                            <c:forEach items="#{createInfoController.pictureList}" var="fileitem">
+                                <figure style="display: inline; padding-right: 5px;">
+                                    <a href="" data-size="800x600">
+                                        <p:graphicImage  value="#{pictureService.getImage()}"   height="78px" width="78px" >
+                                            <f:param name="pictureId" value="#{fileitem.fileId}" />
+                                        </p:graphicImage>
+                                    </a>
+                                </figure>
+                            </c:forEach>
+                        </div>
                     </div>
 
                 </div>
