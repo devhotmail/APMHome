@@ -107,6 +107,7 @@ public class WorkOrderController {
         model.addAttribute("signature",s.getSignature());
         
         model.addAttribute("woId", request.getParameter("woId"));
+        model.addAttribute("from", request.getParameter("from"));
         
         return "wo/scanWoDetail";
     }

@@ -31,7 +31,18 @@
         </script>
         <style>
             .weui-navbar__item.weui-bar__item_on {
-                background-color: #09BB07;
+                background-color: #f8f8f8;
+                border-bottom: 1px solid #f8f8f8;
+            }
+            .weui-navbar:after {
+                border-bottom: 0;
+            }
+            .weui-navbar__item:after {
+                border-bottom: 0;
+            }
+            .weui-navbar__item {
+                background-color: #eaeaea;
+                border-bottom: 1px solid #ccc;
             }
         </style>
     </head>
