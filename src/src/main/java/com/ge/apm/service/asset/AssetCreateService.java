@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.primefaces.model.StreamedContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +59,8 @@ public class AssetCreateService {
     CoreService coreService;
     @Autowired
     ConfigUtils configUtils;
+    @Autowired
+    AttachmentFileService fileService;
 
     public String getSiteName(Integer siteId) {
         SiteInfo si = siteDao.findById(siteId);
@@ -152,6 +155,11 @@ public class AssetCreateService {
 
     public OrgInfo getOrgInfo(Integer clinicalDeptId) {
         return orgDao.findById(clinicalDeptId);
+    }
+    
+    public String pushVoiceToWechat(Integer fileId) throws Exception{
+        StreamedContent sc = fileService.getFile(fileId);
+        return coreService.uploadMediaToWechat(sc.getStream());
     }
 
 }

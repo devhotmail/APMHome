@@ -167,6 +167,10 @@ public class AssetCreateController {
         return rejectText;
     }
 
+    public void setRejectText(String rejectText) {
+        this.rejectText = rejectText;
+    }
+
     public List<String> getRejectTextHistory() {
         return rejectTextHistory;
     }
