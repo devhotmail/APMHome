@@ -67,6 +67,16 @@
                 margin-right: 0px!important;
             }
         </style>
+        <script type="text/javascript" src="resources/bower_components/lscache/lscache.js"></script>
+        <h:outputScript>
+            // clear local storage when logged out
+            var match = location.search.match(/uid=(\d+)/);
+            if(match) {
+                lscache.setBucket(+match[1]);
+                // only removes cache entries for this logged out user
+                lscache.flush();
+            }
+        </h:outputScript>
     </h:head>
 
     <h:body styleClass="login-body">
