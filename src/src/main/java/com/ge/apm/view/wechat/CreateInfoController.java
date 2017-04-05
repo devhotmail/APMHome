@@ -48,13 +48,13 @@ public class CreateInfoController {
             pictureList = acServie.getQrCodePictureList(createdRequest.getId());
             audioList = acServie.getQrCodeAudioList(createdRequest.getId());
             wxAudioList = new ArrayList();
-            for(QrCodeAttachment item : audioList){
-                try {
-                    wxAudioList.add(acServie.pushVoiceToWechat(item.getFileId()));
-                } catch (Exception ex) {
-                    WebUtil.addErrorMessage("声音加载失败");
-                }
-            }
+//            for(QrCodeAttachment item : audioList){
+//                try {
+//                    wxAudioList.add(acServie.pushVoiceToWechat(item.getFileId()));
+//                } catch (Exception ex) {
+//                    WebUtil.addErrorMessage("声音加载失败");
+//                }
+//            }
             rejectHistoryList = new ArrayList();
             if (null != createdRequest.getFeedback()) {
                 Collections.addAll(rejectHistoryList, createdRequest.getFeedback().split("//"));

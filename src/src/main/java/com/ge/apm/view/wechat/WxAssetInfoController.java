@@ -55,6 +55,9 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
     private MessageSubscriber messageSubscriber;
 
     private List<WorkOrder> woList;
+    
+    //设备查询 0:无效编码;1:未创建档案;2:建档中;3:无权限查看
+    private Integer assetFlag =0;
 
     @Override
     protected void init() {
@@ -78,9 +81,11 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         if (null != assetInfo) {
             if (assetInfo.getSiteId() != currentUser.getSiteId()) {
                 assetInfo = null;
+                assetFlag = 3;
             }
             else if (!assetInfo.getHospitalId().equals(currentUser.getHospitalId()) && !userContextService.hasRole("MultiHospital")) {
                 assetInfo = null;
+                assetFlag = 3;
             }
         }
         if (null != assetInfo) {
@@ -139,6 +144,7 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
 
     private AssetInfo findAsset(String qrCode) {
         if (null == qrCode || qrCode.length() == 0) {
+            assetFlag = 0;
             return null;
         }
         List<AssetInfo> resList = assetDao.getByQrCode(qrCode);

@@ -161,7 +161,7 @@ and open the template in the editor.
 
                 <div class="weui-msg__opr-area">
                     <p class="weui-btn-area">
-                        <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">继续添加</a>
+                        <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{createInfoController.createdRequest.qrCode}" class="weui-btn weui-btn_primary">继续添加</a>
                     </p>
                 </div>
     </body>
@@ -180,43 +180,43 @@ and open the template in the editor.
             }
         });
         
-        function mediaShow() {
-                if (!pageManager.showPat) {
-                    var relocalId = null;
-                    var replaying = false;
-                    $.get(WEB_ROOT+'web/media',{serverId : pageManager.voice}, function(ret) {
-                            wx.downloadVoice({
-                                serverId: ret, // 需要下载的音频的服务器端ID，由uploadVoice接口获得
-                                isShowProgressTips: 1, // 默认为1，显示进度提示
-                                success: function (res) {
-                                    relocalId = res.localId; // 返回音频的本地ID
-                                }
-                            });
-                        });
-                    $('#replay').click(function(){
-                        if (replaying) {
-                            replaying = false;
-                            $(this).html('播放');
-                            wx.stopVoice({
-                                localId: relocalId
-                            });
-                        } else {
-                            replaying = true;
-                            $(this).html('停止');
-                            wx.playVoice({
-                                localId: relocalId
-                            });
-                            var self = this;
-                            wx.onVoicePlayEnd({
-                                success: function (res) {
-                                    replaying = false;
-                                    $(self).html('播放');
-                                }
-                            });
-                        }
-                    });
-                }
-            }
+//        function mediaShow() {
+//                if (!pageManager.showPat) {
+//                    var relocalId = null;
+//                    var replaying = false;
+//                    $.get(WEB_ROOT+'web/media',{serverId : pageManager.voice}, function(ret) {
+//                            wx.downloadVoice({
+//                                serverId: ret, // 需要下载的音频的服务器端ID，由uploadVoice接口获得
+//                                isShowProgressTips: 1, // 默认为1，显示进度提示
+//                                success: function (res) {
+//                                    relocalId = res.localId; // 返回音频的本地ID
+//                                }
+//                            });
+//                        });
+//                    $('#replay').click(function(){
+//                        if (replaying) {
+//                            replaying = false;
+//                            $(this).html('播放');
+//                            wx.stopVoice({
+//                                localId: relocalId
+//                            });
+//                        } else {
+//                            replaying = true;
+//                            $(this).html('停止');
+//                            wx.playVoice({
+//                                localId: relocalId
+//                            });
+//                            var self = this;
+//                            wx.onVoicePlayEnd({
+//                                success: function (res) {
+//                                    replaying = false;
+//                                    $(self).html('播放');
+//                                }
+//                            });
+//                        }
+//                    });
+//                }
+//            }
 
 
 
