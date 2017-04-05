@@ -1,0 +1,39 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="responsive-container-styles.html">
+
+<dom-module id="responsive-container">
+  <template>
+    <style include="responsive-container-styles"></style>
+    <div id="container" class="container">
+      <content width$="[[width]]" height$="[[height]]"></content>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'responsive-container',
+      properties: {
+        // private properties
+        width: {
+          type: Number,
+          notify: true
+        },
+        height: {
+          type: Number,
+          notify: true
+        }
+      },
+      behaviors: [
+        Polymer.IronResizableBehavior
+      ],
+      listeners: {
+        'iron-resize': 'handleResize'
+      },
+      handleResize: function() {
+        var rect = this.$.container.getBoundingClientRect();
+        this.width = rect.width;
+        this.height = rect.height;        
+      }
+    })
+  </script>
+</dom-module>

@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../behavior/context.html">
 <link rel="import" href="../behavior/fetch-cached.html">
+<link rel="import" href="../responsive-container/responsive-container.html">
 <link rel="import" href="../zoom-pack-chart/zoom-pack-chart.html">
 <link rel="import" href="../editable-block/editable-block.html">
 <link rel="import" href="device-procurement-styles.html">
@@ -13,11 +14,26 @@
   <template>
     <style include="device-procurement-styles"></style>
     <div class="chart-wrapper">
-      <zoom-pack-chart
-        child-key="items"
-        size-key="revenue_predict_raw"
-        chart-data="[[data]]"
-        focus="{{focus}}"></zoom-pack-chart>
+      <responsive-container width="{{width}}" height="{{height}}">
+        <template is="dom-if" if="[[isEqual(activeTab, 0)]]">
+          <!--system recommended result-->
+          <zoom-pack-chart
+            width="{{width}}"
+            height="{{height}}"
+            child-key="items"
+            size-key="revenue_predict_raw"
+            chart-data="[[systemData]]"></zoom-pack-chart>
+        </template>
+        <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
+          <!--user manually configed result-->
+          <zoom-pack-chart
+            width="{{width}}"
+            height="{{height}}"          
+            child-key="items"
+            size-key="revenue_predict_raw"
+            chart-data="[[manualData]]"></zoom-pack-chart>
+        </template>
+      </responsive-container>
     </div>
     <div class="sidebar">
       <div class="type-select btn-group">
@@ -100,9 +116,7 @@
                 <template is="dom-if" if="[[isOr(currentKPIs.0.num, currentKPIs.1.num)]]">
                   <template is="dom-repeat" items="[[currentKPIs]]">
                     <template is="dom-if" if="[[item.num]]">
-                      <div class$="kpi kpi-[[index]]">
-                        [[item.desc]]
-                      </div>
+                      <div class$="kpi kpi-[[index]]">[[item.desc]]</div>
                     </template>
                     <div class="kpi-detail">
                       <template is="dom-if" if="[[item.num]]">
@@ -255,7 +269,8 @@
       Polymer({
         is: 'device-procurement',
         properties: {
-          data: Object,
+          systemData: Object,
+          manualData: Object,
           focus: Object,
           selectedConfigIndex: {
             type: Number,
@@ -590,7 +605,14 @@
           .then(res => res.json())
           // return this.fetchPage(url)
           .then((function(data) {
-            this.data = this.dataConverter(data);
+            var data = this.dataConverter(data);
+            // set system data
+            this.systemData = this.deepClone(data);
+            this.systemData.isSystem = true;
+            // set manual data
+            this.manualData = this.deepClone(data);
+            this.manualData.isManual = true;
+            // set config list
             this.configList = this.getInitConfig(data);
             // set initial selected config index after configList
             this.selectedConfigIndex = 0;
