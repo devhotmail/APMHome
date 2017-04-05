@@ -295,4 +295,8 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         this.searchDept = searchDept;
     }
 
+    public Integer getAssetFlag() {
+        return assetFlag;
+    }
+
 }
