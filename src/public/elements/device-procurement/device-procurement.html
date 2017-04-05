@@ -512,6 +512,10 @@
         isOr: function(a, b) {
           return a || b;
         },
+        round: function(value, precision) {
+          var multiplier = Math.pow(10, precision || 0);
+          return Math.round(value * multiplier) / multiplier;
+        },
         /**
          * functions which do data convert jobs
         */
@@ -555,7 +559,8 @@
           var tree = d3.tree();
 
           var nodes = tree(root).descendants();
-          return nodes.map(function(n) {
+
+          return nodes.map((function(n) {
             return {
               parent: n.parent ? {
                 id: n.parent.data.id,
@@ -572,9 +577,10 @@
               id: n.data.id,
               uid: n.data.uid,
               name: n.data.name,
-              increase: parseInt(n.data.revenue_increase * 100) // for the display usage # 1
+              // for the display usage # 1
+              increase: this.round(n.data.revenue_increase_sug * 100, 1)
             }
-          });
+          }).bind(this));
         },
         /**
          * functions which deal with url hash
