@@ -16,7 +16,7 @@ and open the template in the editor.
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <meta name="apple-mobile-web-app-capable" content="yes" />
         </f:facet>
-        <title>#{msg.AssetInfoDetail}</title>
+        <title>设备建档信息</title>
         <h:outputStylesheet name="wechat/css/weui.min.css" />
         <h:outputStylesheet name="wechat/css/photoswipe.css" />
         <link type="text/css" rel="stylesheet" href="#{wechatUtilService.getContextPath()}/resources/wechat/css/default-skin.css" />
@@ -137,18 +137,33 @@ and open the template in the editor.
                 <div class="weui-panel__bd">
                     <div class="weui-cell"> 
                         <div class="weui-cell__bd">
-                            <p >#{createInfoController.createdRequest.comment}</p>
+                            <c:forEach items="#{createInfoController.commentsList}" var="item">
+                                <p >#{item}</p>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div  class="weui-panel">
+                <div class="weui-panel__hd">退回原因</div>
+                <div class="weui-panel__bd">
+                    <div class="weui-cell"> 
+                        <div class="weui-cell__bd">
+                            <c:forEach items="#{createInfoController.rejectHistoryList}" var="item">
+                                <p >#{item}</p>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!--        <div class="weui-msg__opr-area">
+                <div class="weui-msg__opr-area">
                     <p class="weui-btn-area">
-                        <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增信息</a>
+                        <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">继续添加</a>
                     </p>
-                </div>-->
+                </div>
     </body>
     <script>
 
@@ -164,6 +179,44 @@ and open the template in the editor.
                 RongIMLib.RongIMVoice.stop();
             }
         });
+        
+        function mediaShow() {
+                if (!pageManager.showPat) {
+                    var relocalId = null;
+                    var replaying = false;
+                    $.get(WEB_ROOT+'web/media',{serverId : pageManager.voice}, function(ret) {
+                            wx.downloadVoice({
+                                serverId: ret, // 需要下载的音频的服务器端ID，由uploadVoice接口获得
+                                isShowProgressTips: 1, // 默认为1，显示进度提示
+                                success: function (res) {
+                                    relocalId = res.localId; // 返回音频的本地ID
+                                }
+                            });
+                        });
+                    $('#replay').click(function(){
+                        if (replaying) {
+                            replaying = false;
+                            $(this).html('播放');
+                            wx.stopVoice({
+                                localId: relocalId
+                            });
+                        } else {
+                            replaying = true;
+                            $(this).html('停止');
+                            wx.playVoice({
+                                localId: relocalId
+                            });
+                            var self = this;
+                            wx.onVoicePlayEnd({
+                                success: function (res) {
+                                    replaying = false;
+                                    $(self).html('播放');
+                                }
+                            });
+                        }
+                    });
+                }
+            }
 
 
 
