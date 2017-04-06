@@ -1,8 +1,6 @@
 package com.ge.apm.web;
 
-import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.wechat.QrCreateAssetService;
-import com.ge.apm.view.wechat.WechatUtilService;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -40,7 +38,7 @@ public class QrCreateAssetController {
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString() + "?" + request.getQueryString());
         } catch (WxErrorException ex) {
-            Logger.getLogger(WechatUtilService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(QrCreateAssetController.class.getName()).log(Level.SEVERE, null, ex);
             return "asset/qrCreateAsset";
         }
 
@@ -79,7 +77,7 @@ public class QrCreateAssetController {
         try {
             result = qrCreateAssetService.createAsset(openId, qrCode, voiceServerId, imageServerIds, uploaderFileBase64, comment);
         } catch (WxErrorException ex) {
-            Logger.getLogger(WechatUtilService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(QrCreateAssetController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return result;

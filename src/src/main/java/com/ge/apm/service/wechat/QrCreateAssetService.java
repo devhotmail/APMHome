@@ -16,10 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by 212605082 on 2017/3/21.
@@ -47,6 +48,11 @@ public class QrCreateAssetService {
 
         QrCodeLib qrCodeLib = qrCodeLibRepository.findByQrCode(qrCode);
 
+        if(qrCodeLib == null || qrCodeLib.getStatus() == 3){
+            Logger.getLogger(QrCreateAssetService.class.getName()).log(Level.SEVERE, "error qrcode or error qrCode status", "");
+            return Boolean.FALSE;
+        }
+
         DateTime dt = new DateTime();
         String dtStr = dt.toString("yyyyMMdd HH:mm:ss");
 
@@ -63,7 +69,7 @@ public class QrCreateAssetService {
         QrCodeLib tempQrCodeLib = qrCodeLibRepository.save(qrCodeLib);
 
         if(tempQrCodeLib == null){
-            return false;
+            return Boolean.FALSE;
         }
 
         /* 处理图片 */
