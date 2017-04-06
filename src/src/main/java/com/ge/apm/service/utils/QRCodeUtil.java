@@ -54,7 +54,7 @@ public class QRCodeUtil {
     // LOGO高度
     private static final int HEIGHT = 78;
     // LOGO路径
-    private static final String LOGO_PATH = QRCodeUtil.class.getResource("/").toString().concat("logo.jpg").replace("file:/", "");
+    private static final String LOGO_PATH = QRCodeUtil.class.getResource("/").toString().concat("logo.jpg").replace("file:", "");
 
     private static BufferedImage createImage(String content, String imgPath, boolean needCompress) throws Exception {
         Map<EncodeHintType, Object> hints = new HashMap<EncodeHintType, Object>();

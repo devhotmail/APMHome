@@ -12,7 +12,7 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0"/>
-        <title>扫码操作</title>
+        <title>工单详情</title>
         <!-- 引入 WeUI -->
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/wo/woprogress.css"/>

@@ -370,13 +370,24 @@ public class WorkOrderController {
     }
     @RequestMapping(value = "/media")
     public @ResponseBody String uploadMediaToWeChat(String serverId) {
+        InputStream is = null;
+        String ret = "";
         try{
-            InputStream is = woWcService.getFile(Integer.parseInt(serverId));
-            return service.uploadMediaToWechat(is);
+            is = woWcService.getFile(Integer.parseInt(serverId));
+            if (is != null)
+                ret = service.uploadMediaToWechat(is);
         }catch(Exception ex){
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
-            return "";
+        }finally{
+            if (is != null) {
+                try{
+                    is.close();
+                }catch(Exception ex){
+                    Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
+        return ret;
     }
     
     @RequestMapping(value = "/wo_img_list")
