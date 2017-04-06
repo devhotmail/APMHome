@@ -24,9 +24,10 @@ and open the template in the editor.
         <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/photoswipe.js"/>
         <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/photoswipe-ui-default.min.js"/>
         <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/detail.js"/>
-        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/js/voice.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jweixin-1.0.0.js"/>
+<!--        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/js/voice.js"/>
         <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/js/pcmdata-2.0.0.min.js"/>
-        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/js/libamr-2.0.1.min.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/js/libamr-2.0.1.min.js"/>-->
 
     </h:head>
     <body>
@@ -121,11 +122,13 @@ and open the template in the editor.
             <div  class="weui-panel">
                 <div class="weui-panel__hd">语音信息</div>
                 <div class="weui-panel__bd">
-                    <c:forEach items="#{createInfoController.audioList}" var="item" varStatus="status" >
+                    <c:forEach items="#{createInfoController.wxAudioList}" var="item" varStatus="status" >
                         <div class="weui-cell">
                             <div class="weui-cell__bd">
                                 <a class="weui-btn weui-btn_plain-primary" type="button" id="play#{status.index}">播放</a>
-                                <h:inputHidden id="audio#{status.index}" value="#{createInfoController.getAudioBase64(item.fileId)}"/>
+                                <h:inputHidden id="audio#{status.index}" value="#{item}"/>
+<!--                                <a class="weui-btn weui-btn_plain-primary" type="button" id="play#{status.index}">播放</a>
+                                <h:inputHidden id="audio#{status.index}" value="#{createInfoController.getAudioBase64(item.fileId)}"/>-->
                             </div>
                         </div>
                     </c:forEach>
@@ -144,7 +147,7 @@ and open the template in the editor.
                     </div>
                 </div>
             </div>
-            
+
             <div  class="weui-panel">
                 <div class="weui-panel__hd">退回原因</div>
                 <div class="weui-panel__bd">
@@ -159,66 +162,78 @@ and open the template in the editor.
             </div>
         </div>
 
-                <div class="weui-msg__opr-area">
-                    <p class="weui-btn-area">
-                        <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">继续添加</a>
-                    </p>
-                </div>
+        <div class="weui-msg__opr-area">
+            <p class="weui-btn-area">
+                <a href="#{wechatUtilService.getContextPath()}/web/qrCreateAsset/#{createInfoController.openId}?qrCode=#{createInfoController.createdRequest.qrCode}" class="weui-btn weui-btn_primary">继续添加</a>
+            </p>
+        </div>
     </body>
     <script>
 
+        var jsSignature = #{wechatUtilService.getJsSignature()};
         $playButtons = $("a[id*='play']");
-        $playButtons.on("click", function () {
-            if (this.innerText === "播放") {
-                this.innerText = "停止";
-                RongIMLib.RongIMVoice.init();
-                var base64Str = $(this).parent().find('input').val();
-                RongIMLib.RongIMVoice.play(base64Str);
-            } else {
-                this.innerText = "播放";
-                RongIMLib.RongIMVoice.stop();
-            }
+
+        wx.config({
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: jsSignature.appid, // 必填，公众号的唯一标识
+            timestamp: jsSignature.timestamp, // 必填，生成签名的时间戳
+            nonceStr: jsSignature.noncestr, // 必填，生成签名的随机串
+            signature: jsSignature.signature, // 必填，签名，见附录1
+            jsApiList: ['downloadVoice', 'playVoice', 'onVoicePlayEnd', 'stopVoice'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
         });
-        
-        function mediaShow() {
-                if (!pageManager.showPat) {
-                    var relocalId = null;
-                    var replaying = false;
-                    $.get(WEB_ROOT+'web/media',{serverId : pageManager.voice}, function(ret) {
-                            wx.downloadVoice({
-                                serverId: ret, // 需要下载的音频的服务器端ID，由uploadVoice接口获得
-                                isShowProgressTips: 1, // 默认为1，显示进度提示
-                                success: function (res) {
-                                    relocalId = res.localId; // 返回音频的本地ID
-                                }
-                            });
+
+        wx.ready(function () {
+            $.each($playButtons, function () {
+
+                $(this).click(function () {
+                    var localId = this["relocalId"];
+                    if (localId == null) {
+                        var voiceId = $(this).parent().find('input').val();
+                        var button = this;
+                        wx.downloadVoice({
+                            serverId: voiceId, // 需要下载的音频的服务器端ID，由uploadVoice接口获得
+                            isShowProgressTips: 1, // 默认为1，显示进度提示
+                            success: function (res) {
+                                relocalId = res.localId; // 返回音频的本地ID
+                                button["relocalId"] = relocalId;
+                                $(button).html('停止');
+                                wx.playVoice({
+                                    localId: relocalId.toString()
+                                });
+                                wx.onVoicePlayEnd({
+                                    success: function (res) {
+                                        replaying = false;
+                                        $(button).html('播放');
+                                    }
+                                });
+                            }
                         });
-                    $('#replay').click(function(){
-                        if (replaying) {
-                            replaying = false;
-                            $(this).html('播放');
-                            wx.stopVoice({
-                                localId: relocalId
-                            });
-                        } else {
-                            replaying = true;
-                            $(this).html('停止');
-                            wx.playVoice({
-                                localId: relocalId
-                            });
-                            var self = this;
-                            wx.onVoicePlayEnd({
-                                success: function (res) {
-                                    replaying = false;
-                                    $(self).html('播放');
-                                }
-                            });
-                        }
-                    });
-                }
-            }
+                        return;
+                    }
 
+                    var self = this;
+                    if (this.innerText === "播放") {
+                        $(self).html('停止');
+                        wx.playVoice({
+                            localId: localId.toString()
+                        });
+                        wx.onVoicePlayEnd({
+                            success: function (res) {
+                                replaying = false;
+                                $(self).html('播放');
+                            }
+                        });
+                    } else {
+                        $(self).html('播放');
+                        wx.stopVoice({
+                            localId: localId.toString()
+                        });
+                    }
 
+                });
+            });
+
+        });
 
     </script>
 

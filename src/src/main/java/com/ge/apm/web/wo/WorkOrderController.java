@@ -393,4 +393,9 @@ public class WorkOrderController {
         }
     }
     
+    @RequestMapping(value = "coding")
+    public String scanWoReport() {
+        return "wo/coding";
+    }
+    
 }

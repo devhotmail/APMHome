@@ -27,7 +27,18 @@ and open the template in the editor.
 
         <style>
             .weui-navbar__item.weui-bar__item_on {
-                background-color: #09BB07;
+                background-color: #f8f8f8;
+                border-bottom: 1px solid #f8f8f8;
+            }
+            .weui-navbar:after {
+                border-bottom: 0;
+            }
+            .weui-navbar__item:after {
+                border-bottom: 0;
+            }
+            .weui-navbar__item {
+                background-color: #eaeaea;
+                border-bottom: 1px solid #ccc;
             }
         </style>
 
@@ -237,6 +248,7 @@ and open the template in the editor.
                                             <div class="show-data weui-cell__bd">
                                                 <p>资产编号：#{item.id}</p>
                                                 <p>资产名称：#{item.assetName}</p>
+                                                <p>报修人：#{item.requestorName}</p>
                                                 <p>报修时间：
                                                     <h:outputText value="#{item.requestTime}" >
                                                         <f:convertDateTime pattern="yyyy-MM-dd HH:mm" timeZone="GMT+8"/>
@@ -272,7 +284,9 @@ and open the template in the editor.
             <div class="page">
                 <div class="weui-msg">
                     <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
-                    <p>#{msg.NotFoundAsset}</p>
+                    <p><h:outputText value="设备未找到" rendered="#{wxAssetInfoController.assetFlag==0}"/> 
+                        <h:outputText value="没有权限查看" rendered="#{wxAssetInfoController.assetFlag==3}"/> 
+                    </p>
                     <p>#{wxAssetInfoController.qrCode}</p>
                     <div class="weui-msg__opr-area">
                         <p class="weui-btn-area">

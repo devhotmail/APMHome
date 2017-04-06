@@ -94,6 +94,15 @@ and open the template in the editor.
 .progressbar li.active + li:after {
     background-color: #1AAD19;
 }
+.progressbar li.activeone {
+    color: #F76260;
+}
+.progressbar li.activeone:before {
+    border-color: #F76260;
+}
+.progressbar li.activeone + li:after {
+    background-color: #F76260;
+}
 
 .weui-rater {
   text-align: left;

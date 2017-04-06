@@ -64,7 +64,8 @@ public class WorkOrderWeChatService {
             case "2": wos = woDao.getAssignedWorkOrder(ua.getId());break;
             case "3": wos = woDao.getUnAcceptedWorkOrder(ua.getId());break;
             case "4": wos = woDao.getAcceptedWorkOrder(ua.getId());break;
-            default: wos = woDao.getOtherPersonWorkOrder(ua.getId(), ua.getSiteId());
+            case "5": wos = woDao.getOtherPersonWorkOrder(ua.getId(), ua.getSiteId());break;
+            default: wos = woDao.getClosedWorkOrder(ua.getId());
         }
         return wos;
     }

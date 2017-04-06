@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.dao.SearchFilter;
+import webapp.framework.web.WebUtil;
 
 /**
  *
@@ -59,8 +60,8 @@ public class AssetCreateService {
     CoreService coreService;
     @Autowired
     ConfigUtils configUtils;
-    @Autowired
-    AttachmentFileService fileService;
+
+    AttachmentFileService fileService = WebUtil.getBean(AttachmentFileService.class);
 
     public String getSiteName(Integer siteId) {
         SiteInfo si = siteDao.findById(siteId);

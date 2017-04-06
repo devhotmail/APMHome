@@ -85,10 +85,14 @@ $(function () {
      * @param {type} step 进行到的步骤
      * @returns {undefined}
      */
-    function activeProgressBar(step) {
+    function activeProgressBar(step, feedbackRating) {
+        $('.progressbar').children().removeClass('active activeone');
         $.each($('.progressbar').children(), function(idx, val){
             if (idx < step) {
                 $(val).addClass('active');
+            } 
+            if (idx === step-1 && feedbackRating === 0){
+                $(val).addClass('activeone');
             }
         });
     }

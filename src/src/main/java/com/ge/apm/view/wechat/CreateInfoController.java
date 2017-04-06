@@ -34,8 +34,10 @@ public class CreateInfoController {
     List<QrCodeAttachment> audioList;
     List<String> commentsList;
     List<String> rejectHistoryList;
-    
+
     List<String> wxAudioList;
+
+    private String openId;
 
     @PostConstruct
     protected void init() {
@@ -43,12 +45,14 @@ public class CreateInfoController {
         acServie = WebUtil.getBean(AssetCreateService.class);
         attachFileService = WebUtil.getBean(AttachmentFileService.class);
         String qrCode = WebUtil.getRequestParameter("qrCode");
+        openId = WebUtil.getRequestParameter("openId");
+
         if (null != qrCode) {
             createdRequest = acServie.getCreateRequest(qrCode);
             pictureList = acServie.getQrCodePictureList(createdRequest.getId());
             audioList = acServie.getQrCodeAudioList(createdRequest.getId());
             wxAudioList = new ArrayList();
-            for(QrCodeAttachment item : audioList){
+            for (QrCodeAttachment item : audioList) {
                 try {
                     wxAudioList.add(acServie.pushVoiceToWechat(item.getFileId()));
                 } catch (Exception ex) {
@@ -63,11 +67,11 @@ public class CreateInfoController {
             if (null != createdRequest.getComment()) {
                 Collections.addAll(commentsList, createdRequest.getComment().split("\\|"));
             }
+            if (null == openId) {
+                openId = createdRequest.getSubmitWechatId();
+            }
         }
     }
-    
-    
-    
 
     public String getAudioBase64(Integer fileId) {
         return attachFileService.getBase64File(fileId);
@@ -96,5 +100,9 @@ public class CreateInfoController {
     public List<String> getWxAudioList() {
         return wxAudioList;
     }
-    
+
+    public String getOpenId() {
+        return openId;
+    }
+
 }

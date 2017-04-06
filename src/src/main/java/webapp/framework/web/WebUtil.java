@@ -20,8 +20,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.web.jsf.FacesContextUtils;
+
+import com.ge.apm.domain.UserAccount;
+
 import webapp.framework.util.StringUtil;
 import webapp.framework.web.service.DbResourcesUtil;
+import webapp.framework.web.service.UserContext;
 
 @Component
 public class WebUtil implements ApplicationContextAware {
@@ -257,5 +261,11 @@ public class WebUtil implements ApplicationContextAware {
 
         return new JSONObject(StringUtil.desDecrypt(queryString));
     }
+    
+    public static UserAccount getUserAccountFromRequest(){
+    	 HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    	return UserContext.getCurrentLoginUser(request);
+    }
+    
     
 }
