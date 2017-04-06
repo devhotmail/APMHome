@@ -32,6 +32,7 @@ import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AssetDepreciationService;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.service.utils.QRCodeUtil;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
 import org.joda.time.DateTime;
@@ -431,6 +432,10 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         } else {
             return new ArrayList<UserAccount>();
         }
+    }
+    
+    public String getQrCodeImageBase64(){
+        return QRCodeUtil.getQRCodeImageBase64(selected.getQrCode());
     }
 
     public boolean isTimeValidate() {

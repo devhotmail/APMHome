@@ -13,14 +13,12 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import webapp.framework.dao.SearchFilter;
 import webapp.framework.util.TimeUtil;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.service.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -593,20 +591,23 @@ public class WorkOrderService {
         
         HashMap<String, Object> params = new HashMap<>();
         params.put("first", msgTitle);
+        params.put("performance", wo.getRequestReason());
+        params.put("time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getRequestTime()));
         
         params.put("_assetName", wo.getAssetName());
         params.put("_requestTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getRequestTime()));
         params.put("_requestPerson", wo.getRequestorName());
         params.put("_urgency", i18nMessageRepository.getByMsgTypeAndMsgKey("casePriority",wo.getCasePriority()+"").getValueZh());
         params.put("_currentPerson", wo.getCurrentPersonName());
-        
+        WorkflowConfig wfc = woConDao.getByHospitalId(wo.getHospitalId());
         String msgBrief = "资产名称："+wo.getAssetName() +"\n"
-                + "报修时间："+ (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getRequestTime())) +"\n"
+//                + "报修时间："+ (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getRequestTime())) +"\n"
                 + "报修人："+ wo.getRequestorName() +"\n"
                 + "紧急程度："+ i18nMessageRepository.getByMsgTypeAndMsgKey("casePriority",wo.getCasePriority()+"").getValueZh() +"\n"
+                + "派工人："+ wfc.getDispatchUserName() +"\n"
                 + "当前责任人："+ wo.getCurrentPersonName();
         params.put("remark", msgBrief);
-        params.put("_linkUrl", linkUrl);
+        params.put("linkUrl", linkUrl);
         
         // subscriber
         List<MessageSubscriber> sber = null;

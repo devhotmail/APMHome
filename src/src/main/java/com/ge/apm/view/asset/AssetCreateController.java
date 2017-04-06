@@ -41,6 +41,7 @@ public class AssetCreateController {
 
     private String rejectText;
     private List<String> rejectTextHistory;
+    private List<String> commentsList;
 
     List<QrCodeAttachment> pictureList;
     List<QrCodeAttachment> audioList;
@@ -71,6 +72,10 @@ public class AssetCreateController {
         if (null != createRequest.getFeedback()) {
             Collections.addAll(rejectTextHistory, createRequest.getFeedback().split("//"));
         }
+        commentsList = new ArrayList();
+        if (null != createRequest.getComment()) {
+            Collections.addAll(commentsList, createRequest.getComment().split("\\|"));
+        }
 
     }
 
@@ -88,8 +93,8 @@ public class AssetCreateController {
             assetInfo.setAssetOwnerName(owner.getName());
             assetInfo.setAssetOwnerTel(owner.getTelephone());
         }
-        OrgInfo clinicalDept = acServie.getOrgInfo(assetInfo.getClinicalDeptId());
         if (null != assetInfo.getClinicalDeptId()) {
+            OrgInfo clinicalDept = acServie.getOrgInfo(assetInfo.getClinicalDeptId());
             assetInfo.setClinicalDeptName(clinicalDept.getName());
         }
         Boolean res = acServie.CreateAeest(assetInfo);
@@ -168,6 +173,10 @@ public class AssetCreateController {
 
     public List<String> getRejectTextHistory() {
         return rejectTextHistory;
+    }
+
+    public List<String> getCommentsList() {
+        return commentsList;
     }
 
 }

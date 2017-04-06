@@ -233,9 +233,16 @@ and open the template in the editor.
                                             </div>
                                             <div class="ftitle weui-cell__ft" style="#{item.casePriority==1?'color:red':''}#{item.casePriority==2?'color:orange':'color:green'};">#{fieldMsg.fieldValue("casePriority",item.casePriority)}</div>
                                         </div>
-                                        <a class="weui-cell weui-cell_access" href="#{wechatUtilService.getContextPath()}/web/scanwodetail?woId=#{item.id}">
+                                        <a class="weui-cell weui-cell_access" href="#{wechatUtilService.getContextPath()}/web/scanwodetail?from=detail&amp;woId=#{item.id}">
                                             <div class="show-data weui-cell__bd">
-                                                <p>资产编号：#{item.id}</p><p>资产名称：#{item.assetName}</p><p>工单状态：#{item.currentStepName}</p></div>
+                                                <p>资产编号：#{item.id}</p>
+                                                <p>资产名称：#{item.assetName}</p>
+                                                <p>报修时间：
+                                                    <h:outputText value="#{item.requestTime}" >
+                                                        <f:convertDateTime pattern="yyyy-MM-dd HH:mm" timeZone="GMT+8"/>
+                                                    </h:outputText>
+                                                </p>
+                                                <p>工单状态：#{item.currentStepName}</p></div>
                                             <div class="weui-cell__ft reportview"></div>
                                         </a>
                                     </div>
@@ -248,7 +255,7 @@ and open the template in the editor.
                                             </div>
                                         </div>
                                     </div>
-                                  
+
                                 </h:panelGroup>
                             </div>
                         </div>

@@ -61,11 +61,11 @@ public class WorkOrderStep implements Serializable {
     private String ownerName;
     @Column(name = "start_time")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "GMT+8")
     private Date startTime;
     @Column(name = "end_time")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "GMT+8")
     private Date endTime;
     @Size(max = 128)
     @Column(name = "description")

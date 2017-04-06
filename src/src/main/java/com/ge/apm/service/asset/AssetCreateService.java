@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.primefaces.model.StreamedContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +59,8 @@ public class AssetCreateService {
     CoreService coreService;
     @Autowired
     ConfigUtils configUtils;
+    @Autowired
+    AttachmentFileService fileService;
 
     public String getSiteName(Integer siteId) {
         SiteInfo si = siteDao.findById(siteId);
@@ -134,10 +137,13 @@ public class AssetCreateService {
         String _templateId = configUtils.fetchProperties("asset_build_template_id");
         Map<String, Object> map = new HashMap();
         map.put("first", "建档失败");
-        map.put("_qrCode", request.getQrCode());
-        map.put("_requestTime", TimeUtils.getStrDate(request.getSubmitDate(), "yyyy-MM-dd HH:mm:ss"));
-        map.put("_detail", rejectText);
-        map.put("_linkUrl", "wechat/asset/createInfoDetail.xhtml?qrCode=".concat(request.getQrCode()));
+//        map.put("_qrCode", request.getQrCode());
+//        map.put("_requestTime", TimeUtils.getStrDate(request.getSubmitDate(), "yyyy-MM-dd HH:mm:ss"));
+//        map.put("_detail", rejectText);
+        map.put("keyword1", rejectText);
+        map.put("keyword2", TimeUtils.getStrDate(request.getSubmitDate(), "yyyy-MM-dd HH:mm:ss"));
+        map.put("linkUrl", "wechat/asset/createInfoDetail.xhtml?qrCode=".concat(request.getQrCode()));
+        
         coreService.sendWxTemplateMessage(_openId, _templateId, map);
 
         rejectText = TimeUtils.getStrDate(new Date(), "[yyyy-MM-dd HH:mm:ss]").concat(rejectText);
@@ -149,6 +155,11 @@ public class AssetCreateService {
 
     public OrgInfo getOrgInfo(Integer clinicalDeptId) {
         return orgDao.findById(clinicalDeptId);
+    }
+    
+    public String pushVoiceToWechat(Integer fileId) throws Exception{
+        StreamedContent sc = fileService.getFile(fileId);
+        return coreService.uploadMediaToWechat(sc.getStream());
     }
 
 }

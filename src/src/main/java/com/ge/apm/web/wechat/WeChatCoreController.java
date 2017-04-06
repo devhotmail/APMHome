@@ -116,6 +116,7 @@ public class WeChatCoreController {
     	if(userAccount != null){
     		user = userAccountService.getUserAccoutByUserId(userAccount.getId());
     		model.addAttribute("openId",userAccount.getWeChatId());
+    		System.out.println("当前用户是:"+userAccount.getLoginName());
     	}
     	if(user == null){
     		user = new UserModel();
