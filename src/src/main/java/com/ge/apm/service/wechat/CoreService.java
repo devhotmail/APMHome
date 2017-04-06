@@ -108,6 +108,9 @@ public class CoreService {
     @Autowired
     UserAccountMapper userAccountMapper;
     
+    @Autowired
+    ExternalLoginHandler loginHandler;
+    
     @PostConstruct
     public void init() {
         this.refreshRouter();
@@ -167,16 +170,10 @@ public class CoreService {
     		return 1;//绑定失败
     	}
     	System.out.println("openId is "+openId);
-        UserAccount otherAccount =userDao.getByWeChatId(openId);
-        if(otherAccount != null){
-//        	otherAccount.setWeChatId(null);
-//        	userDao.save(otherAccount);
+        UserAccount originAccount =userDao.getByWeChatId(openId);
+        if(originAccount != null){
         	userAccountMapper.updateUserWechatIdNull(openId);
         }
-//        WxMpUser user = getUserInfo(openId, null);
-//        if(user == null){//微信校验
-//        	return 1;
-//        }
 
         try {
         	ua.setPlainPassword(newPwd);
@@ -186,8 +183,15 @@ public class CoreService {
         }
         ua.setWeChatId(openId);
         userDao.save(ua);
+        
+        if(originAccount != null && originAccount.getLoginName() != username){//绑定了新账号
+        	loginHandler.doLoginWithPlainPassword(username, password, request, response);
+        }else{
+        	loginByWeChatOpenId(openId, request, response);
+        }
+       
         //主动登录
-        loginByWeChatOpenId(openId, request, response);
+        //loginByWeChatOpenId(openId, request, response);
         return 0;//绑定成功
     }
     

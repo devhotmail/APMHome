@@ -62,10 +62,10 @@
                     <div class="weui-tab">
                         <div class="weui-navbar">
                             <div class="weui-navbar__item weui-bar__item_on" data-close="1">
-                                未关闭工单
+                                未完成报修
                             </div>
                             <div class="weui-navbar__item" data-close="2">
-                                已关闭工单
+                                已完成报修
                             </div>
                         </div>
                         <div class="weui-tab__panel">
@@ -106,6 +106,7 @@
                                                rater: (close === 2 ? v['feedbackRating']: -1),
                                                data : ['资产编号：'+v['assetId'],
                                                         '资产名称：'+v['assetName'],
+                                                        '报修人：'+v['requestorName'],
                                                         '报修时间：'+v['requestTime'],
                                                        '工单状态：'+v['currentStepName'],
                                                        '当前人员：'+v['currentPersonName']]});

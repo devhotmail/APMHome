@@ -47,7 +47,9 @@
                         <!--</c:forEach>-->
 
                         <p:fieldset legend="文字描述" id="textComment" >
-                            #{assetCreateController.createRequest.comment}
+                            <c:forEach items="#{assetCreateController.getCommentsList()}" var="item">
+                                <p>#{item}</p>
+                            </c:forEach>
                         </p:fieldset>
 
                     </div>
@@ -218,9 +220,9 @@
                     <p:tab title="拒绝退回">
                         <h:form id="returnback">
                             <p:fieldset id="returnBackHistory" legend="退回原因历史" rendered="#{not empty assetCreateController.rejectTextHistory}">
-                                <p:dataList  id="historylist" value="#{assetCreateController.rejectTextHistory}"  var="item">
+                                <c:forEach items="#{assetCreateController.rejectTextHistory}" var="item">
                                     <p>#{item}</p>
-                                </p:dataList>
+                                </c:forEach>
                             </p:fieldset>
                             <p:fieldset legend="退回原因">
                                 <p:inputTextarea id ="rejectTextarea" value="#{assetCreateController.rejectText}" counter="comentsCounts" counterTemplate="#{msg.remainingCharacters}" maxlength="100"  rows="6" cols="50" required="true" requiredMessage="原因必须填写"/>

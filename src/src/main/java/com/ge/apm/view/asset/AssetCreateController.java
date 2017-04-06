@@ -41,6 +41,7 @@ public class AssetCreateController {
 
     private String rejectText;
     private List<String> rejectTextHistory;
+    private List<String> commentsList;
 
     List<QrCodeAttachment> pictureList;
     List<QrCodeAttachment> audioList;
@@ -70,6 +71,10 @@ public class AssetCreateController {
         rejectTextHistory = new ArrayList();
         if (null != createRequest.getFeedback()) {
             Collections.addAll(rejectTextHistory, createRequest.getFeedback().split("//"));
+        }
+        commentsList = new ArrayList();
+        if (null != createRequest.getComment()) {
+            Collections.addAll(commentsList, createRequest.getComment().split("\\|"));
         }
 
     }
@@ -168,6 +173,10 @@ public class AssetCreateController {
 
     public List<String> getRejectTextHistory() {
         return rejectTextHistory;
+    }
+
+    public List<String> getCommentsList() {
+        return commentsList;
     }
 
 }
