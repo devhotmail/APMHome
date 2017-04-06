@@ -46,5 +46,8 @@ public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
 
     @Query("select wo from WorkOrder wo where wo.currentPersonId<>?1 and wo.status = 1 and wo.siteId = ?2 and wo.currentStepId in (3,4) order by wo.id desc")
     public List<WorkOrder> getOtherPersonWorkOrder(int currentPersonId, int siteId);
+    
+    @Query(value="select wo.* from work_order wo where exists (select wos.work_order_id from work_order_step wos where wos.owner_id = ?1 and wo.id = wos.work_order_id ) and wo.status = 2 order by wo.id", nativeQuery = true)
+    public List<WorkOrder> getClosedWorkOrder(int currentPersonId);
 
 }

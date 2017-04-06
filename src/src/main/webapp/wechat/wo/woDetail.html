@@ -89,7 +89,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="weui-cell">
+<!--                    <div class="weui-cell">
                         <div class="weui-cell__hd"><label class="weui-label">故障子类别</label></div>
                         <div class="weui-cell__bd">
                             <div class="weui-cell weui-cell_select">
@@ -100,7 +100,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="weui-cell" id="patProblemslabel">
                         <div class="weui-cell__hd"><label class="weui-label">问题描述</label></div>
                         <div class="weui-cell__bd">
@@ -232,7 +232,7 @@
             function reloadDetail() {
                 $.get(WEB_ROOT+'web/wodetail', {id: pageManager.woId}, function(ret) {
                     if (ret) {
-                        app.activeProgressBar(ret.currentStepId);
+                        app.activeProgressBar(ret.currentStepId, ret.feedbackRating);
                         //set value
                         app.setFormJsonValue(ret);
 
@@ -344,7 +344,7 @@
                     $('#issueDescribe').hide();
                     $('#showComment').hide();
                     app.initSelectData('caseType', 'caseType');
-                    app.initSelectData('caseSubType', 'caseSubType');
+//                    app.initSelectData('caseSubType', 'caseSubType');
                     $('#stepCost').on('click', '.weui-cell_access', function(){
                         pageManager.go('#ts_step_cost');
                     });
@@ -358,9 +358,9 @@
                 if (pageManager.workOrder.currentStepId === 6 && pageManager.workOrder.status === 2){
                     $('#pat').show();
                     app.initSelectData('caseType', 'caseType', pageManager.workOrder.caseType);
-                    app.initSelectData('caseSubType', 'caseSubType', pageManager.workOrder.caseSubType);
+//                    app.initSelectData('caseSubType', 'caseSubType', pageManager.workOrder.caseSubType);
                     $('#caseType').attr('disabled', 'disabled');
-                    $('#caseSubType').attr('disabled', 'disabled');
+//                    $('#caseSubType').attr('disabled', 'disabled');
                     $('#stepCost').hide();
                     $('#patProblemslabel').hide();
                     $('#patActionslabel').hide();
@@ -484,7 +484,7 @@
                     case 4: return {woId: pageManager.woId, actionType: 'sign', desc: $('#description').val()};
                     case 5: return {woId: pageManager.woId, actionType: 'close', desc: $('#description').val(),
                                     patProblems: $('#patProblems').val(), patActions: $('#patActions').val(), patTests: $('#patTests').val(),
-                                    caseType: $('#caseType').val(), caseSubType: $('#caseSubType').val(), stepDetail: pageManager.stepCost};
+                                    caseType: $('#caseType').val(), stepDetail: pageManager.stepCost};
                     case 6: return {woId: pageManager.woId, actionType: 'feedback', feedbackRating: pageManager.feedbackRating, desc: $('#description').val() };
                 }
             }

@@ -12,7 +12,11 @@ window.pageManager = {
             if (location.hash === self._hash)return;
             var hashLocation = location.hash;
             if (hashLocation == '') {
-                WeixinJSBridge.call('closeWindow');
+                if (pageManager.from){
+                    history.back();
+                } else {
+                    WeixinJSBridge.call('closeWindow');
+                }
             } else {
                 self._hash = location.hash;
                 var state = history.state || {};

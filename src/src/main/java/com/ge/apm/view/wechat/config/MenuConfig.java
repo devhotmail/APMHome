@@ -41,8 +41,28 @@ public class MenuConfig {
         button21.setType(WxConsts.BUTTON_VIEW);
         button21.setName("报修工单");
         button21.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/35", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        WxMenuButton button22 = new WxMenuButton();
+        button22.setType(WxConsts.BUTTON_VIEW);
+        button22.setName("巡检工单");
+        button22.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/25", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        WxMenuButton button23 = new WxMenuButton();
+        button23.setType(WxConsts.BUTTON_VIEW);
+        button23.setName("质控工单");
+        button23.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/26", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        WxMenuButton button24 = new WxMenuButton();
+        button24.setType(WxConsts.BUTTON_VIEW);
+        button24.setName("计量工单");
+        button24.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/27", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        WxMenuButton button25 = new WxMenuButton();
+        button25.setType(WxConsts.BUTTON_VIEW);
+        button25.setName("保养工单");
+        button25.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/28", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         
         button2.getSubButtons().add(button21);
+        button2.getSubButtons().add(button22);
+        button2.getSubButtons().add(button23);
+        button2.getSubButtons().add(button24);
+        button2.getSubButtons().add(button25);
         
         WxMenuButton button3 = new WxMenuButton();
         button3.setName("其他");

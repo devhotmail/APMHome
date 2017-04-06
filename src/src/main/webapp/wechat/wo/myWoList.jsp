@@ -92,6 +92,9 @@
                             <div class="weui-navbar__item staffRole" data-step="5">
                                 他人工单
                             </div>
+                            <div class="weui-navbar__item" data-step="6">
+                                已关闭工单
+                            </div>
                         </div>
                         <div class="weui-tab__panel">
                             <div id="wolist" class="page__bd page__bd_spacing">
@@ -121,6 +124,7 @@
                                                rater: (close === 2 ? v['feedbackRating']: -1),
                                                data : ['资产编号：'+v['assetId'],
                                                         '资产名称：'+v['assetName'],
+                                                        '报修人：'+v['requestorName'],
                                                         '报修时间：'+v['requestTime'],
                                                        '工单状态：'+v['currentStepName'] ,
                                                        '当前人员：'+v['currentPersonName']]});
@@ -143,21 +147,24 @@
 
                             var wo = pageManager.workOrders[pageManager.woId];
                             pageManager.entryType = 'wolist';
-                            pageManager.showBtn = wo.currentPersonId == '${userId}' || !pageManager.assetHead;
+                            pageManager.showBtn = (wo.currentPersonId == '${userId}' || !pageManager.assetHead) && pageManager.tab !== 6;
                             pageManager.takeOtherWo = !pageManager.assetHead && wo.currentPersonId != '${userId}';
                             pageManager.go('#ts_wodetail');
                         });
                         $('.weui-navbar__item').on('click', function () {
                             $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
                             //do the search action     1-在修 / 2-完成 / 3-取消
+                            pageManager.tab = $(this).data('step');
                             loadData($(this).data('step'));
                         });
 
                         if (pageManager.assetHead) {
                             $('.staffRole').hide();
+                            pageManager.tab = 1;
                             loadData(1);
                         } else {
                             $('.headRole').hide();
+                            pageManager.tab = 3;
                             loadData(3);
                         }
                     }

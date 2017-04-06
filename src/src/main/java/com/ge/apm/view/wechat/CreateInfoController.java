@@ -9,7 +9,11 @@ import com.ge.apm.domain.QrCodeAttachment;
 import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.service.asset.AssetCreateService;
 import com.ge.apm.service.asset.AttachmentFileService;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -28,6 +32,10 @@ public class CreateInfoController {
     private QrCodeLib createdRequest;
     List<QrCodeAttachment> pictureList;
     List<QrCodeAttachment> audioList;
+    List<String> commentsList;
+    List<String> rejectHistoryList;
+    
+    List<String> wxAudioList;
 
     @PostConstruct
     protected void init() {
@@ -39,10 +47,29 @@ public class CreateInfoController {
             createdRequest = acServie.getCreateRequest(qrCode);
             pictureList = acServie.getQrCodePictureList(createdRequest.getId());
             audioList = acServie.getQrCodeAudioList(createdRequest.getId());
+            wxAudioList = new ArrayList();
+//            for(QrCodeAttachment item : audioList){
+//                try {
+//                    wxAudioList.add(acServie.pushVoiceToWechat(item.getFileId()));
+//                } catch (Exception ex) {
+//                    WebUtil.addErrorMessage("声音加载失败");
+//                }
+//            }
+            rejectHistoryList = new ArrayList();
+            if (null != createdRequest.getFeedback()) {
+                Collections.addAll(rejectHistoryList, createdRequest.getFeedback().split("//"));
+            }
+            commentsList = new ArrayList();
+            if (null != createdRequest.getComment()) {
+                Collections.addAll(commentsList, createdRequest.getComment().split("\\|"));
+            }
         }
     }
     
-    public String getAudioBase64(Integer fileId){
+    
+    
+
+    public String getAudioBase64(Integer fileId) {
         return attachFileService.getBase64File(fileId);
     }
 
@@ -58,4 +85,16 @@ public class CreateInfoController {
         return audioList;
     }
 
+    public List<String> getCommentsList() {
+        return commentsList;
+    }
+
+    public List<String> getRejectHistoryList() {
+        return rejectHistoryList;
+    }
+
+    public List<String> getWxAudioList() {
+        return wxAudioList;
+    }
+    
 }
