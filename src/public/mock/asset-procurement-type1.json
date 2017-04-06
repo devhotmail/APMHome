@@ -1,27 +1,32 @@
 {
-  "id": "58e49b3c6fc076f92e71fa36",
-  "name": "全部设备调节后",
-  "usage": 0.89472,
+  "id": "58e6118e24ba2220e7ebcf44",
+  "name": "全部设备已调节",
+  "usage": 0.85022,
   "usage_sum": [
-    1,
+    5,
     1
   ],
-  "revenue_year_before_last": 113.05683,
-  "revenue_last_year": 666.95092,
-  "revenue_predict": 659.7835,
-  "revenue_predict_raw": 6597835,
-  "revenue_increase": 0.1335,
-  "revenue_predict_sug": 436.79985,
-  "revenue_increase_sug": 0.0012,
+  "revenue_year_before_last": 987.90494,
+  "revenue_last_year": 149.03751,
+  "revenue_predict": 346.63824,
+  "revenue_year_before_last_raw": 9879049.4,
+  "revenue_last_year_raw": 1490375.0999999999,
+  "revenue_predict_raw": 3466382.4,
+  "revenue_predict_sug_raw": null,
+  "last_year_date": "2016-04-06",
+  "year_before_last_date": "2015-04-06",
+  "revenue_increase": 0.351,
+  "revenue_predict_sug": 164.6636,
+  "revenue_increase_sug": 0.0948,
   "revenue_unit": "百万",
   "suggestions": [
     {
       "title": "建议提高使用率",
-      "addition": "1个科室"
+      "addition": "2种类型"
     },
     {
       "title": "建议购买",
-      "addition": "2种类型"
+      "addition": "1个科室"
     },
     {
       "title": "建议合理使用设备",
@@ -30,365 +35,425 @@
   ],
   "items": [
     {
-      "id": "58e49b3cfcdc63171c89056d",
-      "name": "类别0调节后",
-      "usage": 0.14018,
+      "id": "58e6118e71268b3e0c10af4f",
+      "name": "类别0已调节",
+      "usage": 0.26369,
+      "usage_sum": [
+        2,
+        3
+      ],
+      "revenue_year_before_last": 166.75835,
+      "revenue_last_year": 1024.36085,
+      "revenue_predict": 445.17121,
+      "revenue_year_before_last_raw": 1667583.5,
+      "revenue_last_year_raw": 10243608.5,
+      "revenue_predict_raw": 4451712.1,
+      "revenue_predict_sug_raw": null,
+      "last_year_date": "2016-04-06",
+      "year_before_last_date": "2015-04-06",
+      "revenue_increase": 0.0209,
+      "revenue_predict_sug": 309.10867,
+      "revenue_increase_sug": 0.1579,
+      "revenue_unit": "百万",
+      "suggestions": [
+        {
+          "title": "建议提高使用率",
+          "addition": "1个科室"
+        },
+        {
+          "title": "建议购买",
+          "addition": "2种类型"
+        },
+        {
+          "title": "建议合理使用设备",
+          "addition": "2种类型"
+        }
+      ],
+      "items": [
+        {
+          "id": "58e6118e47685d76d6a1b6ff",
+          "name": "设备0已调节",
+          "usage": 0.9968,
+          "usage_sum": [
+            3,
+            4
+          ],
+          "revenue_year_before_last": 777.94588,
+          "revenue_last_year": 1088.59256,
+          "revenue_predict": 679.00873,
+          "revenue_year_before_last_raw": 7779458.8,
+          "revenue_last_year_raw": 10885925.6,
+          "revenue_predict_raw": 6790087.3,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.4845,
+          "revenue_predict_sug": 437.32117,
+          "revenue_increase_sug": 0.3761,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118e03beadf457b49893",
+          "name": "设备1已调节",
+          "usage": 0.27001,
+          "usage_sum": [
+            5,
+            5
+          ],
+          "revenue_year_before_last": 779.0702,
+          "revenue_last_year": 85.19316,
+          "revenue_predict": 484.71165,
+          "revenue_year_before_last_raw": 7790702,
+          "revenue_last_year_raw": 851931.6000000001,
+          "revenue_predict_raw": 4847116.5,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.4813,
+          "revenue_predict_sug": 369.18569,
+          "revenue_increase_sug": 0.0319,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
+            }
+          ]
+        },
+        {
+          "id": "58e6118e92fafde459067ee1",
+          "name": "设备2已调节",
+          "usage": 0.09876,
+          "usage_sum": [
+            1,
+            5
+          ],
+          "revenue_year_before_last": 301.97967,
+          "revenue_last_year": 248.39911,
+          "revenue_predict": 370.24005,
+          "revenue_year_before_last_raw": 3019796.7,
+          "revenue_last_year_raw": 2483991.1,
+          "revenue_predict_raw": 3702400.5,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.0216,
+          "revenue_predict_sug": 519.48329,
+          "revenue_increase_sug": 0.2245,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118ee5e58b484f237a3b",
+          "name": "设备3已调节",
+          "usage": 0.77087,
+          "usage_sum": [
+            2,
+            1
+          ],
+          "revenue_year_before_last": 111.0957,
+          "revenue_last_year": 839.21277,
+          "revenue_predict": 725.12077,
+          "revenue_year_before_last_raw": 1110957,
+          "revenue_last_year_raw": 8392127.7,
+          "revenue_predict_raw": 7251207.7,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.4456,
+          "revenue_predict_sug": 944.3251,
+          "revenue_increase_sug": 0.043,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
+            }
+          ]
+        },
+        {
+          "id": "58e6118e34f7db9360f08728",
+          "name": "设备4已调节",
+          "usage": 0.53173,
+          "usage_sum": [
+            1,
+            5
+          ],
+          "revenue_year_before_last": 464.80301,
+          "revenue_last_year": 851.18685,
+          "revenue_predict": 818.64724,
+          "revenue_year_before_last_raw": 4648030.1,
+          "revenue_last_year_raw": 8511868.5,
+          "revenue_predict_raw": 8186472.4,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.2853,
+          "revenue_predict_sug": 558.26948,
+          "revenue_increase_sug": 0.1888,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "58e6118e4b019bf2f8993e97",
+      "name": "类别1已调节",
+      "usage": 0.83253,
+      "usage_sum": [
+        2,
+        3
+      ],
+      "revenue_year_before_last": 714.0688,
+      "revenue_last_year": 860.59074,
+      "revenue_predict": 603.95281,
+      "revenue_year_before_last_raw": 7140688,
+      "revenue_last_year_raw": 8605907.4,
+      "revenue_predict_raw": 6039528.1,
+      "revenue_predict_sug_raw": null,
+      "last_year_date": "2016-04-06",
+      "year_before_last_date": "2015-04-06",
+      "revenue_increase": 0.1771,
+      "revenue_predict_sug": 563.50709,
+      "revenue_increase_sug": 0.4906,
+      "revenue_unit": "百万",
+      "suggestions": [
+        {
+          "title": "建议提高使用率",
+          "addition": "1个科室"
+        },
+        {
+          "title": "建议购买",
+          "addition": "1个科室"
+        },
+        {
+          "title": "建议合理使用设备",
+          "addition": "2种类型"
+        }
+      ],
+      "items": [
+        {
+          "id": "58e6118e341bd08f9e8a3a53",
+          "name": "设备0已调节",
+          "usage": 0.65605,
+          "usage_sum": [
+            2,
+            2
+          ],
+          "revenue_year_before_last": 311.56419,
+          "revenue_last_year": 976.64504,
+          "revenue_predict": 269.41327,
+          "revenue_year_before_last_raw": 3115641.9,
+          "revenue_last_year_raw": 9766450.4,
+          "revenue_predict_raw": 2694132.7,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.3018,
+          "revenue_predict_sug": 990.13048,
+          "revenue_increase_sug": 0.0983,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118e15c5ee723a9ab000",
+          "name": "设备1已调节",
+          "usage": 0.00114,
+          "usage_sum": [
+            4,
+            2
+          ],
+          "revenue_year_before_last": 836.30652,
+          "revenue_last_year": 645.49697,
+          "revenue_predict": 387.44348,
+          "revenue_year_before_last_raw": 8363065.2,
+          "revenue_last_year_raw": 6454969.7,
+          "revenue_predict_raw": 3874434.8000000003,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.0442,
+          "revenue_predict_sug": 909.02363,
+          "revenue_increase_sug": 0.145,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118eb7244afd8ef2b401",
+          "name": "设备2已调节",
+          "usage": 0.15123,
+          "usage_sum": [
+            2,
+            4
+          ],
+          "revenue_year_before_last": 295.46903,
+          "revenue_last_year": 509.39293,
+          "revenue_predict": 600.99367,
+          "revenue_year_before_last_raw": 2954690.3,
+          "revenue_last_year_raw": 5093929.3,
+          "revenue_predict_raw": 6009936.699999999,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.275,
+          "revenue_predict_sug": 605.84598,
+          "revenue_increase_sug": 0.2441,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118e50912b242ec1c7ba",
+          "name": "设备3已调节",
+          "usage": 0.27097,
+          "usage_sum": [
+            2,
+            2
+          ],
+          "revenue_year_before_last": 922.3067,
+          "revenue_last_year": 77.11766,
+          "revenue_predict": 574.68288,
+          "revenue_year_before_last_raw": 9223067,
+          "revenue_last_year_raw": 771176.6,
+          "revenue_predict_raw": 5746828.8,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.1244,
+          "revenue_predict_sug": 856.76596,
+          "revenue_increase_sug": 0.2406,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "58e6118e6d85b7fb0e58346b",
+      "name": "类别2已调节",
+      "usage": 0.78423,
       "usage_sum": [
         5,
-        5
-      ],
-      "revenue_year_before_last": 432.05799,
-      "revenue_last_year": 100.48229,
-      "revenue_predict": 403.22437,
-      "revenue_predict_raw": 4032243.7,
-      "revenue_increase": 0.2625,
-      "revenue_predict_sug": 248.2953,
-      "revenue_increase_sug": 0.0713,
-      "revenue_unit": "百万",
-      "suggestions": [
-        {
-          "title": "建议提高使用率",
-          "addition": "1个科室"
-        },
-        {
-          "title": "建议购买",
-          "addition": "2种类型"
-        },
-        {
-          "title": "建议合理使用设备",
-          "addition": "1个科室"
-        }
-      ],
-      "items": [
-        {
-          "id": "58e49b3cebb3b22d8a8b234f",
-          "name": "设备0调节后",
-          "usage": 0.98596,
-          "usage_sum": [
-            2,
-            4
-          ],
-          "revenue_year_before_last": 740.40303,
-          "revenue_last_year": 852.4649,
-          "revenue_predict": 985.16083,
-          "revenue_predict_raw": 9851608.3,
-          "revenue_increase": 0.4751,
-          "revenue_predict_sug": 1134.08381,
-          "revenue_increase_sug": 0.3111,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e49b3ce3915e3a41c81ca6",
-          "name": "设备1调节后",
-          "usage": 0.55818,
-          "usage_sum": [
-            4,
-            5
-          ],
-          "revenue_year_before_last": 514.89868,
-          "revenue_last_year": 460.47012,
-          "revenue_predict": 226.99203,
-          "revenue_predict_raw": 2269920.3,
-          "revenue_increase": 0.1783,
-          "revenue_predict_sug": 1167.19298,
-          "revenue_increase_sug": 0.1989,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e49b3cd7a15f544138b19f",
-          "name": "设备2调节后",
-          "usage": 0.13651,
-          "usage_sum": [
-            1,
-            5
-          ],
-          "revenue_year_before_last": 943.52563,
-          "revenue_last_year": 606.4435,
-          "revenue_predict": 495.33886,
-          "revenue_predict_raw": 4953388.600000001,
-          "revenue_increase": 0.013,
-          "revenue_predict_sug": 1068.03574,
-          "revenue_increase_sug": 0.3883,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e49b3cf8f0dd074ff2f87c",
-          "name": "设备3调节后",
-          "usage": 0.97346,
-          "usage_sum": [
-            2,
-            3
-          ],
-          "revenue_year_before_last": 287.26711,
-          "revenue_last_year": 1029.86796,
-          "revenue_predict": 554.40382,
-          "revenue_predict_raw": 5544038.2,
-          "revenue_increase": 0.3195,
-          "revenue_predict_sug": 405.86541,
-          "revenue_increase_sug": 0.4259,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "58e49b3c0b9540319eea057a",
-      "name": "类别1调节后",
-      "usage": 0.20614,
-      "usage_sum": [
-        1,
-        5
-      ],
-      "revenue_year_before_last": 629.65151,
-      "revenue_last_year": 374.38296,
-      "revenue_predict": 530.7764,
-      "revenue_predict_raw": 5307764,
-      "revenue_increase": 0.2568,
-      "revenue_predict_sug": 456.84197,
-      "revenue_increase_sug": 0.0798,
-      "revenue_unit": "百万",
-      "suggestions": [
-        {
-          "title": "建议提高使用率",
-          "addition": "2种类型"
-        },
-        {
-          "title": "建议购买",
-          "addition": "2种类型"
-        },
-        {
-          "title": "建议合理使用设备",
-          "addition": "2种类型"
-        }
-      ],
-      "items": [
-        {
-          "id": "58e49b3c0bf105f550ca1a5c",
-          "name": "设备0调节后",
-          "usage": 0.47908,
-          "usage_sum": [
-            5,
-            2
-          ],
-          "revenue_year_before_last": 821.9378,
-          "revenue_last_year": 470.38695,
-          "revenue_predict": 300.80558,
-          "revenue_predict_raw": 3008055.8000000003,
-          "revenue_increase": 0.2103,
-          "revenue_predict_sug": 372.1639,
-          "revenue_increase_sug": 0.1321,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e49b3c6ff387a381b47007",
-          "name": "设备1调节后",
-          "usage": 0.92422,
-          "usage_sum": [
-            5,
-            3
-          ],
-          "revenue_year_before_last": 233.24067,
-          "revenue_last_year": 1014.58919,
-          "revenue_predict": 338.68216,
-          "revenue_predict_raw": 3386821.6,
-          "revenue_increase": 0.0624,
-          "revenue_predict_sug": 91.88342,
-          "revenue_increase_sug": 0.0505,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e49b3c28afc296849a20ad",
-          "name": "设备2调节后",
-          "usage": 0.36267,
-          "usage_sum": [
-            1,
-            5
-          ],
-          "revenue_year_before_last": 663.64348,
-          "revenue_last_year": 430.43139,
-          "revenue_predict": 879.86701,
-          "revenue_predict_raw": 8798670.1,
-          "revenue_increase": 0.2441,
-          "revenue_predict_sug": 583.83154,
-          "revenue_increase_sug": 0.0617,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e49b3ceceb49cbbad49b84",
-          "name": "设备3调节后",
-          "usage": 0.76536,
-          "usage_sum": [
-            1,
-            2
-          ],
-          "revenue_year_before_last": 468.14661,
-          "revenue_last_year": 1059.14912,
-          "revenue_predict": 206.73387,
-          "revenue_predict_raw": 2067338.7,
-          "revenue_increase": 0.1161,
-          "revenue_predict_sug": 362.3154,
-          "revenue_increase_sug": 0.24,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e49b3c89b7b925376a95d8",
-          "name": "设备4调节后",
-          "usage": 0.62158,
-          "usage_sum": [
-            5,
-            3
-          ],
-          "revenue_year_before_last": 882.38724,
-          "revenue_last_year": 1053.04469,
-          "revenue_predict": 567.35293,
-          "revenue_predict_raw": 5673529.3,
-          "revenue_increase": 0.2573,
-          "revenue_predict_sug": 528.69418,
-          "revenue_increase_sug": 0.1723,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "58e49b3cef3c85ecbfed65be",
-      "name": "类别2调节后",
-      "usage": 0.54055,
-      "usage_sum": [
-        1,
         4
       ],
-      "revenue_year_before_last": 213.44989,
-      "revenue_last_year": 111.21881,
-      "revenue_predict": 608.0388,
-      "revenue_predict_raw": 6080388,
-      "revenue_increase": 0.0364,
-      "revenue_predict_sug": 135.82365,
-      "revenue_increase_sug": 0.361,
+      "revenue_year_before_last": 591.00832,
+      "revenue_last_year": 562.96489,
+      "revenue_predict": 242.76482,
+      "revenue_year_before_last_raw": 5910083.2,
+      "revenue_last_year_raw": 5629648.899999999,
+      "revenue_predict_raw": 2427648.1999999997,
+      "revenue_predict_sug_raw": null,
+      "last_year_date": "2016-04-06",
+      "year_before_last_date": "2015-04-06",
+      "revenue_increase": 0.3913,
+      "revenue_predict_sug": 653.42648,
+      "revenue_increase_sug": 0.2863,
       "revenue_unit": "百万",
       "suggestions": [
         {
@@ -406,56 +471,66 @@
       ],
       "items": [
         {
-          "id": "58e49b3c896d9b21ebef8584",
-          "name": "设备0调节后",
-          "usage": 0.56521,
+          "id": "58e6118e2f835a1a40541a06",
+          "name": "设备0已调节",
+          "usage": 0.82542,
           "usage_sum": [
-            5,
-            4
+            2,
+            3
           ],
-          "revenue_year_before_last": 855.563,
-          "revenue_last_year": 594.10742,
-          "revenue_predict": 699.43844,
-          "revenue_predict_raw": 6994384.4,
-          "revenue_increase": 0.4349,
-          "revenue_predict_sug": 876.48189,
-          "revenue_increase_sug": 0.19,
+          "revenue_year_before_last": 727.08777,
+          "revenue_last_year": 715.01433,
+          "revenue_predict": 592.60468,
+          "revenue_year_before_last_raw": 7270877.7,
+          "revenue_last_year_raw": 7150143.3,
+          "revenue_predict_raw": 5926046.800000001,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.2318,
+          "revenue_predict_sug": 1046.09464,
+          "revenue_increase_sug": 0.3124,
           "revenue_unit": "百万",
           "suggestions": [
             {
               "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
               "addition": "2种类型"
             },
             {
-              "title": "建议合理使用设备",
+              "title": "建议购买",
               "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
             }
           ]
         },
         {
-          "id": "58e49b3c042fcd38eaf61c39",
-          "name": "设备1调节后",
-          "usage": 0.03706,
+          "id": "58e6118e7e6cdbcf8ff60c16",
+          "name": "设备1已调节",
+          "usage": 0.01681,
           "usage_sum": [
-            1,
-            2
+            2,
+            3
           ],
-          "revenue_year_before_last": 121.74338,
-          "revenue_last_year": 402.5164,
-          "revenue_predict": 172.40849,
-          "revenue_predict_raw": 1724084.9,
-          "revenue_increase": 0.2025,
-          "revenue_predict_sug": 803.45508,
-          "revenue_increase_sug": 0.2363,
+          "revenue_year_before_last": 259.91579,
+          "revenue_last_year": 990.64261,
+          "revenue_predict": 968.61492,
+          "revenue_year_before_last_raw": 2599157.9000000004,
+          "revenue_last_year_raw": 9906426.1,
+          "revenue_predict_raw": 9686149.2,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.35,
+          "revenue_predict_sug": 398.5656,
+          "revenue_increase_sug": 0.3915,
           "revenue_unit": "百万",
           "suggestions": [
             {
               "title": "建议提高使用率",
-              "addition": "1个科室"
+              "addition": "2种类型"
             },
             {
               "title": "建议购买",
@@ -468,60 +543,70 @@
           ]
         },
         {
-          "id": "58e49b3c7e14d2a72216c4f8",
-          "name": "设备2调节后",
-          "usage": 0.49065,
+          "id": "58e6118edb002b31d4caef98",
+          "name": "设备2已调节",
+          "usage": 0.79109,
           "usage_sum": [
             1,
             5
           ],
-          "revenue_year_before_last": 544.98583,
-          "revenue_last_year": 564.48803,
-          "revenue_predict": 841.28036,
-          "revenue_predict_raw": 8412803.6,
-          "revenue_increase": 0.4007,
-          "revenue_predict_sug": 61.05909,
-          "revenue_increase_sug": 0.4024,
+          "revenue_year_before_last": 824.91171,
+          "revenue_last_year": 863.72725,
+          "revenue_predict": 875.19766,
+          "revenue_year_before_last_raw": 8249117.1,
+          "revenue_last_year_raw": 8637272.5,
+          "revenue_predict_raw": 8751976.6,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.183,
+          "revenue_predict_sug": 768.91679,
+          "revenue_increase_sug": 0.4258,
           "revenue_unit": "百万",
           "suggestions": [
             {
               "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
               "addition": "1个科室"
             },
             {
-              "title": "建议合理使用设备",
+              "title": "建议购买",
               "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
             }
           ]
         },
         {
-          "id": "58e49b3c81d5d3c388316415",
-          "name": "设备3调节后",
-          "usage": 0.6602,
+          "id": "58e6118e1cc002f280094c60",
+          "name": "设备3已调节",
+          "usage": 0.00175,
           "usage_sum": [
-            4,
-            4
+            1,
+            1
           ],
-          "revenue_year_before_last": 418.52921,
-          "revenue_last_year": 1015.99175,
-          "revenue_predict": 818.91593,
-          "revenue_predict_raw": 8189159.3,
-          "revenue_increase": 0.313,
-          "revenue_predict_sug": 221.87843,
-          "revenue_increase_sug": 0.4474,
+          "revenue_year_before_last": 214.28061,
+          "revenue_last_year": 503.76295,
+          "revenue_predict": 410.16732,
+          "revenue_year_before_last_raw": 2142806.1,
+          "revenue_last_year_raw": 5037629.5,
+          "revenue_predict_raw": 4101673.2,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.0968,
+          "revenue_predict_sug": 261.89889,
+          "revenue_increase_sug": 0.0278,
           "revenue_unit": "百万",
           "suggestions": [
             {
               "title": "建议提高使用率",
-              "addition": "2种类型"
+              "addition": "1个科室"
             },
             {
               "title": "建议购买",
-              "addition": "2种类型"
+              "addition": "1个科室"
             },
             {
               "title": "建议合理使用设备",
@@ -530,20 +615,135 @@
           ]
         },
         {
-          "id": "58e49b3cf61e65c4ac8381a7",
-          "name": "设备4调节后",
-          "usage": 0.17599,
+          "id": "58e6118ec2961ba94e443ab1",
+          "name": "设备4已调节",
+          "usage": 0.80336,
           "usage_sum": [
-            4,
+            2,
             2
           ],
-          "revenue_year_before_last": 697.44275,
-          "revenue_last_year": 897.6582,
-          "revenue_predict": 578.81017,
-          "revenue_predict_raw": 5788101.699999999,
-          "revenue_increase": 0.0167,
-          "revenue_predict_sug": 1169.06064,
-          "revenue_increase_sug": 0.2589,
+          "revenue_year_before_last": 122.93021,
+          "revenue_last_year": 119.53287,
+          "revenue_predict": 124.19313,
+          "revenue_year_before_last_raw": 1229302.1,
+          "revenue_last_year_raw": 1195328.7,
+          "revenue_predict_raw": 1241931.3,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.0194,
+          "revenue_predict_sug": 887.84677,
+          "revenue_increase_sug": 0.2755,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "58e6118e977469c9a72fb7ac",
+      "name": "类别3已调节",
+      "usage": 0.55436,
+      "usage_sum": [
+        1,
+        5
+      ],
+      "revenue_year_before_last": 820.61659,
+      "revenue_last_year": 232.04957,
+      "revenue_predict": 340.2882,
+      "revenue_year_before_last_raw": 8206165.899999999,
+      "revenue_last_year_raw": 2320495.6999999997,
+      "revenue_predict_raw": 3402882,
+      "revenue_predict_sug_raw": null,
+      "last_year_date": "2016-04-06",
+      "year_before_last_date": "2015-04-06",
+      "revenue_increase": 0.428,
+      "revenue_predict_sug": 532.23887,
+      "revenue_increase_sug": 0.0439,
+      "revenue_unit": "百万",
+      "suggestions": [
+        {
+          "title": "建议提高使用率",
+          "addition": "1个科室"
+        },
+        {
+          "title": "建议购买",
+          "addition": "2种类型"
+        },
+        {
+          "title": "建议合理使用设备",
+          "addition": "2种类型"
+        }
+      ],
+      "items": [
+        {
+          "id": "58e6118eecdf1c198dc1b7f2",
+          "name": "设备0已调节",
+          "usage": 0.43229,
+          "usage_sum": [
+            2,
+            5
+          ],
+          "revenue_year_before_last": 808.51296,
+          "revenue_last_year": 732.40233,
+          "revenue_predict": 655.5007,
+          "revenue_year_before_last_raw": 8085129.600000001,
+          "revenue_last_year_raw": 7324023.3,
+          "revenue_predict_raw": 6555007.000000001,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.0584,
+          "revenue_predict_sug": 399.09005,
+          "revenue_increase_sug": 0.2991,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
+            }
+          ]
+        },
+        {
+          "id": "58e6118e719e8d1efbea1566",
+          "name": "设备1已调节",
+          "usage": 0.94779,
+          "usage_sum": [
+            5,
+            5
+          ],
+          "revenue_year_before_last": 587.30627,
+          "revenue_last_year": 715.15404,
+          "revenue_predict": 357.06206,
+          "revenue_year_before_last_raw": 5873062.7,
+          "revenue_last_year_raw": 7151540.4,
+          "revenue_predict_raw": 3570620.5999999996,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.0615,
+          "revenue_predict_sug": 1056.44375,
+          "revenue_increase_sug": 0.478,
           "revenue_unit": "百万",
           "suggestions": [
             {
@@ -553,6 +753,660 @@
             {
               "title": "建议购买",
               "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
+            }
+          ]
+        },
+        {
+          "id": "58e6118eeb5696abed76e102",
+          "name": "设备2已调节",
+          "usage": 0.19432,
+          "usage_sum": [
+            3,
+            1
+          ],
+          "revenue_year_before_last": 817.38203,
+          "revenue_last_year": 712.54693,
+          "revenue_predict": 625.45322,
+          "revenue_year_before_last_raw": 8173820.3,
+          "revenue_last_year_raw": 7125469.3,
+          "revenue_predict_raw": 6254532.2,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.2567,
+          "revenue_predict_sug": 96.30079,
+          "revenue_increase_sug": 0.3388,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
+            }
+          ]
+        },
+        {
+          "id": "58e6118e1235ddccecc1ce6b",
+          "name": "设备3已调节",
+          "usage": 0.5197,
+          "usage_sum": [
+            2,
+            4
+          ],
+          "revenue_year_before_last": 655.88065,
+          "revenue_last_year": 518.82791,
+          "revenue_predict": 425.87282,
+          "revenue_year_before_last_raw": 6558806.499999999,
+          "revenue_last_year_raw": 5188279.1,
+          "revenue_predict_raw": 4258728.2,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.0388,
+          "revenue_predict_sug": 899.53154,
+          "revenue_increase_sug": 0.4976,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
+            }
+          ]
+        },
+        {
+          "id": "58e6118ee0b257c805b8979e",
+          "name": "设备4已调节",
+          "usage": 0.84403,
+          "usage_sum": [
+            2,
+            5
+          ],
+          "revenue_year_before_last": 636.01125,
+          "revenue_last_year": 160.97121,
+          "revenue_predict": 262.2313,
+          "revenue_year_before_last_raw": 6360112.5,
+          "revenue_last_year_raw": 1609712.1,
+          "revenue_predict_raw": 2622312.9999999995,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.0557,
+          "revenue_predict_sug": 1100.78724,
+          "revenue_increase_sug": 0.1748,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "58e6118e6b16d14244cd1d64",
+      "name": "类别4已调节",
+      "usage": 0.90242,
+      "usage_sum": [
+        5,
+        2
+      ],
+      "revenue_year_before_last": 437.47197,
+      "revenue_last_year": 273.66635,
+      "revenue_predict": 910.18656,
+      "revenue_year_before_last_raw": 4374719.7,
+      "revenue_last_year_raw": 2736663.5,
+      "revenue_predict_raw": 9101865.6,
+      "revenue_predict_sug_raw": null,
+      "last_year_date": "2016-04-06",
+      "year_before_last_date": "2015-04-06",
+      "revenue_increase": 0.0739,
+      "revenue_predict_sug": 792.23622,
+      "revenue_increase_sug": 0.2651,
+      "revenue_unit": "百万",
+      "suggestions": [
+        {
+          "title": "建议提高使用率",
+          "addition": "1个科室"
+        },
+        {
+          "title": "建议购买",
+          "addition": "2种类型"
+        },
+        {
+          "title": "建议合理使用设备",
+          "addition": "1个科室"
+        }
+      ],
+      "items": [
+        {
+          "id": "58e6118ee0cf9859df00a858",
+          "name": "设备0已调节",
+          "usage": 0.44538,
+          "usage_sum": [
+            2,
+            5
+          ],
+          "revenue_year_before_last": 436.25083,
+          "revenue_last_year": 402.63514,
+          "revenue_predict": 736.29168,
+          "revenue_year_before_last_raw": 4362508.3,
+          "revenue_last_year_raw": 4026351.4,
+          "revenue_predict_raw": 7362916.800000001,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.2394,
+          "revenue_predict_sug": 80.37682,
+          "revenue_increase_sug": 0.2483,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
+            }
+          ]
+        },
+        {
+          "id": "58e6118ed31416aa03585019",
+          "name": "设备1已调节",
+          "usage": 0.53682,
+          "usage_sum": [
+            2,
+            3
+          ],
+          "revenue_year_before_last": 279.0694,
+          "revenue_last_year": 245.9858,
+          "revenue_predict": 984.70835,
+          "revenue_year_before_last_raw": 2790693.9999999995,
+          "revenue_last_year_raw": 2459858,
+          "revenue_predict_raw": 9847083.5,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.4612,
+          "revenue_predict_sug": 794.20317,
+          "revenue_increase_sug": 0.0161,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118e8c39d470c55751eb",
+          "name": "设备2已调节",
+          "usage": 0.12155,
+          "usage_sum": [
+            3,
+            5
+          ],
+          "revenue_year_before_last": 786.52475,
+          "revenue_last_year": 40.56611,
+          "revenue_predict": 782.23212,
+          "revenue_year_before_last_raw": 7865247.5,
+          "revenue_last_year_raw": 405661.10000000003,
+          "revenue_predict_raw": 7822321.2,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.0636,
+          "revenue_predict_sug": 32.7468,
+          "revenue_increase_sug": 0.1342,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "2种类型"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "58e6118ec525f89d5dc6cb3a",
+      "name": "类别5已调节",
+      "usage": 0.27772,
+      "usage_sum": [
+        1,
+        5
+      ],
+      "revenue_year_before_last": 505.75634,
+      "revenue_last_year": 690.80819,
+      "revenue_predict": 367.39384,
+      "revenue_year_before_last_raw": 5057563.4,
+      "revenue_last_year_raw": 6908081.899999999,
+      "revenue_predict_raw": 3673938.4,
+      "revenue_predict_sug_raw": null,
+      "last_year_date": "2016-04-06",
+      "year_before_last_date": "2015-04-06",
+      "revenue_increase": 0.3465,
+      "revenue_predict_sug": 242.41035,
+      "revenue_increase_sug": 0.4533,
+      "revenue_unit": "百万",
+      "suggestions": [
+        {
+          "title": "建议提高使用率",
+          "addition": "1个科室"
+        },
+        {
+          "title": "建议购买",
+          "addition": "2种类型"
+        },
+        {
+          "title": "建议合理使用设备",
+          "addition": "1个科室"
+        }
+      ],
+      "items": [
+        {
+          "id": "58e6118ed3888b0ef883cfd6",
+          "name": "设备0已调节",
+          "usage": 0.83882,
+          "usage_sum": [
+            3,
+            5
+          ],
+          "revenue_year_before_last": 701.05228,
+          "revenue_last_year": 821.80172,
+          "revenue_predict": 938.40412,
+          "revenue_year_before_last_raw": 7010522.8,
+          "revenue_last_year_raw": 8218017.2,
+          "revenue_predict_raw": 9384041.200000001,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.4415,
+          "revenue_predict_sug": 203.6284,
+          "revenue_increase_sug": 0.294,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118ec4ec0de71ac921a7",
+          "name": "设备1已调节",
+          "usage": 0.22561,
+          "usage_sum": [
+            1,
+            1
+          ],
+          "revenue_year_before_last": 898.47251,
+          "revenue_last_year": 298.12356,
+          "revenue_predict": 545.51056,
+          "revenue_year_before_last_raw": 8984725.100000001,
+          "revenue_last_year_raw": 2981235.6,
+          "revenue_predict_raw": 5455105.600000001,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.3003,
+          "revenue_predict_sug": 676.10669,
+          "revenue_increase_sug": 0.2483,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118e950fab0962513406",
+          "name": "设备2已调节",
+          "usage": 0.94369,
+          "usage_sum": [
+            5,
+            4
+          ],
+          "revenue_year_before_last": 663.74259,
+          "revenue_last_year": 179.15357,
+          "revenue_predict": 949.91842,
+          "revenue_year_before_last_raw": 6637425.899999999,
+          "revenue_last_year_raw": 1791535.7,
+          "revenue_predict_raw": 9499184.2,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.1114,
+          "revenue_predict_sug": 1076.87593,
+          "revenue_increase_sug": 0.2641,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118e0978e22620b69528",
+          "name": "设备3已调节",
+          "usage": 0.739,
+          "usage_sum": [
+            3,
+            4
+          ],
+          "revenue_year_before_last": 75.55972,
+          "revenue_last_year": 392.41538,
+          "revenue_predict": 229.71619,
+          "revenue_year_before_last_raw": 755597.2,
+          "revenue_last_year_raw": 3924153.8000000003,
+          "revenue_predict_raw": 2297161.9,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.0877,
+          "revenue_predict_sug": 658.58825,
+          "revenue_increase_sug": 0.1563,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "58e6118eb71dcce9a740e0f6",
+      "name": "类别6已调节",
+      "usage": 0.00525,
+      "usage_sum": [
+        4,
+        4
+      ],
+      "revenue_year_before_last": 678.52772,
+      "revenue_last_year": 391.17657,
+      "revenue_predict": 606.49182,
+      "revenue_year_before_last_raw": 6785277.2,
+      "revenue_last_year_raw": 3911765.7,
+      "revenue_predict_raw": 6064918.199999999,
+      "revenue_predict_sug_raw": null,
+      "last_year_date": "2016-04-06",
+      "year_before_last_date": "2015-04-06",
+      "revenue_increase": 0.4271,
+      "revenue_predict_sug": 551.78098,
+      "revenue_increase_sug": 0.1476,
+      "revenue_unit": "百万",
+      "suggestions": [
+        {
+          "title": "建议提高使用率",
+          "addition": "2种类型"
+        },
+        {
+          "title": "建议购买",
+          "addition": "1个科室"
+        },
+        {
+          "title": "建议合理使用设备",
+          "addition": "2种类型"
+        }
+      ],
+      "items": [
+        {
+          "id": "58e6118ef46c56a63f4b3108",
+          "name": "设备0已调节",
+          "usage": 0.06902,
+          "usage_sum": [
+            5,
+            1
+          ],
+          "revenue_year_before_last": 731.00203,
+          "revenue_last_year": 767.93632,
+          "revenue_predict": 806.82511,
+          "revenue_year_before_last_raw": 7310020.3,
+          "revenue_last_year_raw": 7679363.2,
+          "revenue_predict_raw": 8068251.1,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.3046,
+          "revenue_predict_sug": 624.83962,
+          "revenue_increase_sug": 0.1837,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118ef076bf4adc3b4f16",
+          "name": "设备1已调节",
+          "usage": 0.5188,
+          "usage_sum": [
+            2,
+            3
+          ],
+          "revenue_year_before_last": 679.4341,
+          "revenue_last_year": 340.49426,
+          "revenue_predict": 416.65716,
+          "revenue_year_before_last_raw": 6794340.999999999,
+          "revenue_last_year_raw": 3404942.6,
+          "revenue_predict_raw": 4166571.5999999996,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.0935,
+          "revenue_predict_sug": 302.03095,
+          "revenue_increase_sug": 0.4528,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118ea799723277c00169",
+          "name": "设备2已调节",
+          "usage": 0.0458,
+          "usage_sum": [
+            2,
+            5
+          ],
+          "revenue_year_before_last": 805.90258,
+          "revenue_last_year": 509.98699,
+          "revenue_predict": 711.02728,
+          "revenue_year_before_last_raw": 8059025.8,
+          "revenue_last_year_raw": 5099869.9,
+          "revenue_predict_raw": 7110272.8,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.1178,
+          "revenue_predict_sug": 928.61341,
+          "revenue_increase_sug": 0.3437,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118eda42548fd579f854",
+          "name": "设备3已调节",
+          "usage": 0.50263,
+          "usage_sum": [
+            2,
+            4
+          ],
+          "revenue_year_before_last": 374.74559,
+          "revenue_last_year": 1025.17382,
+          "revenue_predict": 868.73229,
+          "revenue_year_before_last_raw": 3747455.9,
+          "revenue_last_year_raw": 10251738.2,
+          "revenue_predict_raw": 8687322.9,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.4878,
+          "revenue_predict_sug": 748.32541,
+          "revenue_increase_sug": 0.2858,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
+            },
+            {
+              "title": "建议合理使用设备",
+              "addition": "1个科室"
+            }
+          ]
+        },
+        {
+          "id": "58e6118e50bc981b5b24fc19",
+          "name": "设备4已调节",
+          "usage": 0.60182,
+          "usage_sum": [
+            2,
+            3
+          ],
+          "revenue_year_before_last": 144.49688,
+          "revenue_last_year": 1071.68006,
+          "revenue_predict": 700.86519,
+          "revenue_year_before_last_raw": 1444968.8,
+          "revenue_last_year_raw": 10716800.6,
+          "revenue_predict_raw": 7008651.899999999,
+          "revenue_predict_sug_raw": null,
+          "last_year_date": "2016-04-06",
+          "year_before_last_date": "2015-04-06",
+          "revenue_increase": 0.259,
+          "revenue_predict_sug": 1053.65602,
+          "revenue_increase_sug": 0.3043,
+          "revenue_unit": "百万",
+          "suggestions": [
+            {
+              "title": "建议提高使用率",
+              "addition": "2种类型"
+            },
+            {
+              "title": "建议购买",
+              "addition": "1个科室"
             },
             {
               "title": "建议合理使用设备",
