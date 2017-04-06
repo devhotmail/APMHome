@@ -62,7 +62,7 @@
 
         <form id="qrAssetForm" enctype="multipart/form-data" method="post" action="${ctx}/web/submitQrAssetInfo">
             <input type="hidden" id="openId" name="openId" value="${openId}" />
-            <input type="hidden" id="qrCode" name="qrCode" value="" />
+            <input type="hidden" id="qrCode" name="qrCode" value="${qrCode}" />
             <input type="hidden" id="voiceServerId" name="voiceServerId" value="" />
             <input type="hidden" id="imageServerIds" name="imageServerIds" value="" />
             <input type="hidden" id="uploaderFileBase64" name="uploaderFileBase64" value="" />
@@ -125,14 +125,24 @@
         <div class="weui-msg">
             <div class="weui-msg__icon-area"><i id="assetMsgIcon" class="weui-icon-success weui-icon_msg"></i></div>
             <span id="assetMsgInfoSpan">设备没有找到</span>
-            <div id="qrssetQrMsgDiv" class="weui-msg__opr-area" style="display: none;">
+            <div id="assetQrMsgDiv" class="weui-msg__opr-area" style="display: none;">
                 <p class="weui-btn-area">
-                    <a  href="javascript:location.reload();" class="weui-btn weui-btn_primary">继续扫码添加</a>
+                    <a  href="javascript:void(0);" class="weui-btn weui-btn_primary">继续扫码添加</a>
                 </p>
             </div>
             <div id="assetShowMsgDiv" class="weui-msg__opr-area" style="display: none;">
                 <p class="weui-btn-area">
-                    <a href="javascript:void(0);" class="weui-btn weui-btn_primary">查看设备</a>
+                    <a href="javascript:void(0);" class="weui-btn weui-btn_primary">查看此设备</a>
+                </p>
+            </div>
+            <div id="assetExistMsgDiv" class="weui-msg__opr-area" style="display: none;">
+                <p class="weui-btn-area">
+                    <a href="javascript:void(0);" class="weui-btn weui-btn_primary">查看此设备已上传信息</a>
+                </p>
+            </div>
+            <div id="assetAgainMsgDiv" class="weui-msg__opr-area" style="display: none;">
+                <p class="weui-btn-area">
+                    <a  href="javascript:void(0);" class="weui-btn weui-btn_primary">继续上传此设备信息</a>
                 </p>
             </div>
         </div>
@@ -149,14 +159,25 @@
         wechatSDK.setSignature('${timestamp}', '${nonceStr}', '${signature}');
         wechatSDK.init();
 
-        wechatSDK.scanQRCode(1, function (qrCode) {
+        var tempQrcode = "${qrCode}";
+        if(tempQrcode == null || tempQrcode == ""){
 
-            if (qrCode.length > 16) {
-             qrCode = qrCode.substr(qrCode.length-16);
-             }
+            wechatSDK.scanQRCode(1, function (qrCode) {
 
-            $("#qrCode").val(qrCode);
+                if (qrCode.length > 16) {
+                    qrCode = qrCode.substr(qrCode.length-16);
+                }
 
+                $("#qrCode").val(qrCode);
+
+                validateQrCode(qrCode);
+
+            });
+        }else{
+            init();
+        }
+
+        function validateQrCode(qrCode){
             $.ajax({
                 type: "GET",
                 url: WEB_ROOT + "web/validateQrCode",
@@ -172,21 +193,36 @@
                     if("9" != data){
                         if("3" == data){
                             gotoAssetMsgDiv("failed", "该二维码已存在关联设备！");
-                            $("#qrssetQrMsgDiv").show();
                             $("#assetShowMsgDiv").hide();
+                            $("#assetExistMsgDiv").hide();
+                            $("#assetAgainMsgDiv").hide();
+                            $("#assetQrMsgDiv").show();
                         }else if("2"== data){
                             gotoAssetMsgDiv("success", "该二维码已存在关联设备！");
-                            $("#qrssetQrMsgDiv").hide();
+                            $("#assetExistMsgDiv").hide();
+                            $("#assetAgainMsgDiv").hide();
+                            $("#assetQrMsgDiv").hide();
                             $("#assetShowMsgDiv").show();
-                        }else{
-                            $("#assetInfoBody").show();
-                            $("#assetMsgBody").hide();
-                            $("#qrssetQrMsgDiv").show();
+                        }else if("4"== data){
+                            gotoAssetMsgDiv("failed", "该二维码已存在上传数据！");
                             $("#assetShowMsgDiv").hide();
+                            $("#assetQrMsgDiv").hide();
+                            $("#assetExistMsgDiv").show();
+                            $("#assetAgainMsgDiv").show();
+                        }else{
+                            $("#assetShowMsgDiv").hide();
+                            $("#assetExistMsgDiv").hide();
+                            $("#assetQrMsgDiv").hide();
+
+                            $("#assetMsgBody").hide();
+                            $("#assetInfoBody").show();
                         }
                     }else{
-                        $("#qrssetQrMsgDiv").show();
+                        $("#assetAgainMsgDiv").hide();
                         $("#assetShowMsgDiv").hide();
+                        $("#assetExistMsgDiv").hide();
+                        $("#assetQrMsgDiv").show();
+
                         gotoAssetMsgDiv("failed", "无效的二维码");
                     }
                 },
@@ -195,7 +231,7 @@
                     //alert("请求失败！"+ errorThrown);
                 }
             });
-        });
+        }
 
         var localId = null;
         var recording = false;
@@ -300,9 +336,23 @@
                 success: function(data ,textStatus, jqXHR){
                     $('#loadingToast').fadeOut(100);
                     if(data){
+                        $("#assetAgainMsgDiv").hide();
+                        $("#assetShowMsgDiv").hide();
+                        $("#assetExistMsgDiv").hide();
+                        $("#assetQrMsgDiv").show();
+
+                        $("#qrCode").val("");
+
                         gotoAssetMsgDiv("success", "创建成功");
                         init();
                     }else{
+                        $("#assetAgainMsgDiv").hide();
+                        $("#assetShowMsgDiv").hide();
+                        $("#assetExistMsgDiv").hide();
+                        $("#assetQrMsgDiv").show();
+
+                        $("#qrCode").val("");
+
                         gotoAssetMsgDiv("failed", "创建失败");
                     }
                 },
@@ -418,11 +468,27 @@
             $(this).fadeOut(200);
         });
 
+        $('#assetQrMsgDiv').on("click", function(){
+            var openId = $("#openId").val();
+            var qrCode = "";
+            //alert(WEB_ROOT + "web/qrCreateAsset/" + openId + "?qrCode=&a=" + Math.random());
+            window.location.href = WEB_ROOT + "web/qrCreateAsset/" + openId + "?qrCode=" + qrCode;
+        });
         $('#assetShowMsgDiv').on("click", function(){
             var qrCode = $("#qrCode").val();
-            //window.location.href = WEB_ROOT + "web/qrCreateAsset/" + qrCode;
             window.location.href = WEB_ROOT + "wechat/asset/Detail.xhtml?qrCode=" + qrCode;
         });
+        $('#assetExistMsgDiv').on("click", function(){
+            var openId = $("#openId").val();
+            var qrCode = $("#qrCode").val();
+            window.location.href = WEB_ROOT + "wechat/asset/createInfoDetail.xhtml?qrCode=" + qrCode + "&openId=" + openId;
+        });
+        $('#assetAgainMsgDiv').on("click", function(){
+            var openId = $("#openId").val();
+            var qrCode = $("#qrCode").val();
+            window.location.href = WEB_ROOT + "web/qrCreateAsset/" + openId + "?qrCode=" + qrCode;
+        });
+
 
         function chooseImage(count) {
             if(count >= 1){

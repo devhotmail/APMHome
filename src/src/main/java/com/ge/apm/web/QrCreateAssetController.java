@@ -44,11 +44,14 @@ public class QrCreateAssetController {
             return "asset/qrCreateAsset";
         }
 
+        String qrCode = request.getParameter("qrCode");
+
         model.addAttribute("openId", openId);
         model.addAttribute("appId", s.getAppid());
         model.addAttribute("timestamp", s.getTimestamp());
         model.addAttribute("nonceStr", s.getNoncestr());
         model.addAttribute("signature", s.getSignature());
+        model.addAttribute("qrCode", qrCode);
 
         return "asset/qrCreateAsset";
     }

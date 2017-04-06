@@ -10,6 +10,7 @@ import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.SiteInfo;
+import com.ge.apm.service.utils.QRCodeUtil;
 import org.joda.time.DateTime;
 import org.primefaces.context.RequestContext;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,7 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
     private Integer hospitalId;
     private Integer qrCodeNum;
     private String qrCode;
+    private String qrCodeImageBase64;
 
     private Integer siteIdFilter;
     private Integer hospitalIdFilter;
@@ -217,9 +219,8 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
     }
 
     public void showQrCode(){
-
         qrCode = this.selected.getQrCode();
-
+        qrCodeImageBase64 = QRCodeUtil.getQRCodeImageBase64(this.selected.getQrCode());
     }
 
     public void onSiteChange(){
@@ -258,6 +259,10 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         return qrCode;
     }
 
+    public String getQrCodeImageBase64() {
+        return qrCodeImageBase64;
+    }
+
     public void setSiteId(Integer siteId) {
         this.siteId = siteId;
     }
@@ -282,6 +287,9 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         this.qrCode = qrCode;
     }
 
+    public void setQrCodeImageBase64(String qrCodeImageBase64) {
+        this.qrCodeImageBase64 = qrCodeImageBase64;
+    }
     /*
     @Override
     public void onBeforeNewObject(QrCodeLib object) {
