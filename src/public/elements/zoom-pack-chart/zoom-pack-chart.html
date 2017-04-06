@@ -102,7 +102,7 @@
         }        
       },
       observers: [
-        'redraw(width, height, chartData)'
+        'redraw(chartData, width, height)'
       ],
       redraw: function() {
         d3.select(this.$.assetList).selectAll('*').remove();
@@ -151,12 +151,12 @@
         })[0];
         return focus ? focus : root;
       },
-      getNodes: function(size) {
+      getNodes: function() {
         var pack = d3.pack()
         .size([this.diameter - constants.margin, this.diameter - constants.margin])
         .padding(2);
 
-        var root = this.rootNode || this.getRootNode(this.chartData);
+        var root = this.getRootNode(this.chartData);
         this.rootNode = root;
  
         var nodes = pack(root).descendants();
@@ -166,7 +166,7 @@
       getDiameter: function(w, h) {
         return Math.min.call(null, w, h);
       },
-      render: function() {
+      render: function(chartData) {
         var margin = constants.margin;
         var nodes = this.getNodes();
  
@@ -385,9 +385,9 @@
           .style('opacity', function(d) {
             if (d === focus) {
               if (d.children) return 0.6;
-              return 1;
+              return 0.9;
             } else {
-              if (d.parent === focus) return 1;
+              if (d.parent === focus) return 0.9;
               return 0.6;
             }
           });

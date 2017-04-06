@@ -15,22 +15,26 @@
     <style include="device-procurement-styles"></style>
     <div class="chart-wrapper">
       <responsive-container width="{{width}}" height="{{height}}">
-        <template is="dom-if" if="[[isEqual(activeTab, 0)]]">
+        <template is="dom-if" if="[[isEqual(activeTab, 0)]]" restamp>
           <!--system recommended result-->
           <zoom-pack-chart
             width="{{width}}"
             height="{{height}}"
             child-key="items"
             size-key="revenue_predict_raw"
+            focus-info="[[focusInfo]]"
+            on-focus-changed="handleFocusChange"
             chart-data="[[systemData]]"></zoom-pack-chart>
         </template>
-        <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
+        <template is="dom-if" if="[[isEqual(activeTab, 1)]]" restamp>
           <!--user manually configed result-->
           <zoom-pack-chart
             width="{{width}}"
             height="{{height}}"          
             child-key="items"
             size-key="revenue_predict_raw"
+            focus-info="[[focusInfo]]"
+            on-focus-changed="handleFocusChange"
             chart-data="[[manualData]]"></zoom-pack-chart>
         </template>
       </responsive-container>
@@ -159,7 +163,9 @@
                   <div
                     class$="[[calcConfigItemCls(selectedConfigIndex, index)]]"
                     on-tap="handleConfigTap">
-                    <div class="item-name">[[item.name]]</div>
+                    <div class="item-name">
+                      <div class="ellipsis">[[item.name]]</div>
+                    </div>
                     <template is="dom-if" if="[[item.isUnknown]]">
                       <div>待计算</div>
                     </template>
@@ -186,7 +192,9 @@
                     <div
                       class$="[[calcConfigItemCls(selectedSubConfigIndex, index)]]"
                       on-tap="handleSubConfigTap">
-                      <div class="item-name">[[item.name]]</div>
+                      <div class="item-name">
+                        <div class="ellipsis">[[item.name]]</div>
+                      </div>
                       <editable-block
                         data-index$="[[index]]"
                         value="[[item.increase]]"
@@ -272,6 +280,7 @@
           systemData: Object,
           manualData: Object,
           focus: Object,
+          focusInfo: Object,
           selectedConfigIndex: {
             type: Number,
             value: 0
@@ -313,7 +322,7 @@
           },
           activeTab: {
             type: Number,
-            value: 1
+            value: 0
           },
           slidingLeft: {
             type: String,
@@ -346,6 +355,7 @@
         observers: [
           'loadData(selectedType)',
           'changeQuery(selectedType)',
+          'changeSelectedConfig(focusInfo, configList)',
           'resetSubSelectedConfigIndex(selectedConfigIndex)'
         ],
         getConfigListOne: function(configList) {
@@ -370,9 +380,63 @@
             return array[index];
           }
         },
+        changeSelectedConfig: function(focusInfo, configList) {
+          var target = configList.filter(function(n) {
+            return n.depth === focusInfo.depth && n.id === focusInfo.id;
+          })[0];
+
+          if (target) {
+            var id = target.id;
+            var depth = target.depth;
+
+            var find = this.find;
+            var findIndex = this.findIndex;
+
+            function getCursors(node) {
+              var cursors = [];
+              getParent(node);
+              return cursors.reverse();
+
+              function getParent(node) {
+                var parent = node.parent;
+                if (!parent) return;
+                var parentNode = find(configList, function(n) {
+                  return n.id === parent.id;
+                });
+                if (parentNode && parentNode.children && parentNode.children.length) {
+                  var index = findIndex(parentNode.children, function(n) {
+                    return n.id === node.id;
+                  });
+
+                  cursors.push(index);
+                  getParent(parentNode);
+                }
+              };
+            }
+
+            var cursors = getCursors(target);
+
+            this.selectedConfigIndex = cursors[0] > -1 ? cursors[0] : 0;
+            this.selectedSubConfigIndex = cursors[1] > -1 ? cursors[1] : 0;
+          } else {
+            this.selectedConfigIndex = 0;
+            this.selectedSubConfigIndex = 0; 
+          }
+        },
         /**
          * callback for dom interactive events
         */
+        handleFocusChange: function(e) {
+          var focus = e.detail.value;
+          var oldFocus = e.detail.oldValue;
+          if (focus !== oldFocus) {
+            this.focus = focus;
+            this.focusInfo = {
+              id: focus.data.id,
+              depth: focus.depth
+            };
+          }
+        },
         handleTabTap: function(e) {
           this.set('activeTab', e.model.item.val);
         },
@@ -467,14 +531,42 @@
             });
 
             var payload = [].concat.apply([], tmp);
-            console.log(payload)
+
+            return fetch('mock/asset-procurement-' + this.selectedType + '1.json')
+            .then(res => res.json())
+            // return this.fetchPage(url)
+            .then((function(data) {
+              var data = this.dataConverter(data);
+              // set manual data
+              this.manualData = this.deepClone(data);
+              this.manualData.isManual = true;
+              // set config list
+              this.configList = this.getInitConfig(data);
+            }).bind(this));
           }
         },
-        /**
-         * deep clone for plain object
-        */
+        // helpers
+        //  deep clone for plain object
         deepClone: function(plainObj) {
           return JSON.parse(JSON.stringify(plainObj));
+        },
+        findIndex: function(array, callback) {
+          var k = 0;
+          while(k < array.length) {
+            var value = array[k];
+            if (callback(value)) return k;
+            k++;
+          }
+          return -1;
+        },
+        find: function(array, callback) {
+          var k = 0;
+          while(k < array.length) {
+            var value = array[k];
+            if (callback(value)) return value;
+            k++;
+          }
+          return undefined;
         },
         /**
          * functions which calculate className for dom styles usage
@@ -618,10 +710,22 @@
             // set manual data
             this.manualData = this.deepClone(data);
             this.manualData.isManual = true;
+
+            var configList = this.getInitConfig(data);
             // set config list
-            this.configList = this.getInitConfig(data);
+            this.configList = configList;
+            /**
+             * set focusInfo
+             * @param {Object} focusInfo
+             * - {String} id
+             * - {Number} depth
+            */
+            this.focusInfo = {
+              id: configList[0].id,
+              depth: configList[0].depth
+            };
             // set initial selected config index after configList
-            this.selectedConfigIndex = 0;
+            // this.selectedConfigIndex = 0;
           }).bind(this));
         },
         ready: function() {
