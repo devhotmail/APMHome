@@ -45,7 +45,7 @@ public class CreateInfoController {
         acServie = WebUtil.getBean(AssetCreateService.class);
         attachFileService = WebUtil.getBean(AttachmentFileService.class);
         String qrCode = WebUtil.getRequestParameter("qrCode");
-        String openId = WebUtil.getRequestParameter("openId");
+        openId = WebUtil.getRequestParameter("openId");
 
         if (null != qrCode) {
             createdRequest = acServie.getCreateRequest(qrCode);
