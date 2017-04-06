@@ -64,7 +64,9 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         userContextService = WebUtil.getBean(UserContextService.class);
         msService = WebUtil.getBean(MessageSubscriberService.class);
         uaaService = WebUtil.getBean(UaaService.class);
-        currentUser = userContextService.getLoginUser();
+        currentUser = WebUtil.getUserAccountFromRequest(); 
+//        userContextService.getLoginUser();
+//        System.out.println("========================current user is "+currentUser.getLoginName());
         qrCode = WebUtil.getRequestParameter("qrCode");
         String assetId = WebUtil.getRequestParameter("assetId");
         if (null != assetId && assetId.length() > 0) {
