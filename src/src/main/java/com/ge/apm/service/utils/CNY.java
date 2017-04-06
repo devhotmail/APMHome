@@ -39,10 +39,27 @@ public interface CNY {
 
   // @formatter:off
   public static Tuple2<String,String> desc(MonetaryAmount amount) {
-    if(amount.abs().isGreaterThan(W)) return Tuple.of(format(amount.divide(10_000d)),"万"); else return Tuple.of(format(amount),"元");
+    if(amount.abs().isGreaterThan(Y)) {
+      return Tuple.of(format(amount.divide(100_000_000D)),"亿");
+    }else if (amount.abs().isGreaterThan(W)){
+      return Tuple.of(format(amount.divide(10_000D)),"万");
+    } else {
+      return Tuple.of(format(amount),"元");
+    }
   }
   // @formatter:on
 
+  public static Tuple2<String, String> desc(MonetaryAmount amount, String label) {
+    if ("亿".equals(label)) {
+      return Tuple.of(format(amount.divide(100_000_000D)), "亿");
+    } else if ("万".equals(label)) {
+      return Tuple.of(format(amount.divide(100_000_000D)), "万");
+    } else if ("元".equals(label)) {
+      return Tuple.of(format(amount), "元");
+    } else {
+      throw new IllegalArgumentException(String.format("Input data not supported:amount %s, label %s", amount, label));
+    }
+  }
 
   public static MonetaryAmount parse(CharSequence text) {
     return fmt.parse(text);
