@@ -1,16 +1,19 @@
 package com.ge.apm.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.api.CommonService;
 import com.ge.apm.service.api.DmService;
 import com.ge.apm.service.utils.CNY;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.math.Stats;
 import com.google.common.primitives.Ints;
-import javaslang.*;
+import javaslang.Tuple;
+import javaslang.Tuple2;
+import javaslang.Tuple6;
+import javaslang.Tuple8;
 import javaslang.collection.HashMap;
 import javaslang.collection.List;
 import javaslang.collection.Map;
@@ -29,11 +32,11 @@ import rx.Observable;
 import webapp.framework.web.service.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
-
-import static javaslang.API.*;
 
 
 @RestController
@@ -52,17 +55,38 @@ public class DmApi {
 
   @RequestMapping(method = RequestMethod.GET)
   @ResponseBody
-  public ResponseEntity<byte[]> desicionMaking (HttpServletRequest request,
-                                                                      @Pattern(regexp = "dept|type") @RequestParam(value = "groupby", required = true) String groupBy) throws JsonProcessingException {
+  public ResponseEntity<byte[]> desicionMaking(HttpServletRequest request,
+                                               @Pattern(regexp = "dept|type") @RequestParam(value = "groupby", required = false) String groupBy,
+                                               @Min(1) @RequestParam(value = "dept", required = false) Integer dept) throws JsonProcessingException {
     log.info("groupby:{}", groupBy);
     UserAccount user = UserContext.getCurrentLoginUser();
-//    java.util.Map<Integer, String> groupsOld = "type".equals(groupBy) ? Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), java.util.Map.Entry::getValue).toBlocking().single()
-//      : commonService.findDepts(user.getSiteId(), user.getHospitalId());
     java.util.Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), java.util.Map.Entry::getValue).toBlocking().single();
     java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
-    //return serialize(request, groupBy, mapItems(groups, averageUsage(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now())))));
-    Map<String,Object>body=recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(),user.getHospitalId(),groupBy,LocalDate.now().minusYears(1)),dmService.findAssets(user.getSiteId(),user.getHospitalId(),groupBy,LocalDate.now()),HashMap.empty())),groupBy,groups,depts));
-    return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1,TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+    if (Option.of(groupBy).isDefined()&&Option.of(dept).isEmpty()) {
+      Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), HashMap.empty())), groupBy, groups, depts));
+      return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+    }else if(Option.of(groupBy).isEmpty()&&Option.of(dept).isDefined()){
+      Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now()), HashMap.empty())), "type", groups, depts));
+      return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+    }else {
+      return ResponseEntity.badRequest().body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
+    }
+  }
+
+  @RequestMapping(method = RequestMethod.PUT)
+  @ResponseBody
+  public ResponseEntity<byte[]> desicionMakingUserPredict(HttpServletRequest request,
+                                               @Pattern(regexp = "dept|type") @RequestParam(value = "groupby", required = true) String groupBy) throws IOException {
+    log.info("groupby:{}; intput stream", groupBy);
+    UserAccount user = UserContext.getCurrentLoginUser();
+    java.util.Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), java.util.Map.Entry::getValue).toBlocking().single();
+    java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
+    Map<Integer,Double>userPredict=Try.of(()->{
+      Map<String,List<Map<String,Object>>>inputs=(Map<String,List<Map<String,Object>>>)(new ObjectMapper().registerModule(new JavaslangModule()).readValue(request.getInputStream(),new TypeReference<Map<String,List<Map<String,Object>>>>(){}));
+      return HashMap.ofEntries(inputs.values().get(0).map(v->Tuple.of((Integer)v.get("id").get(),(Double)v.get("change").get())));
+    }).getOrElseThrow(()->new IllegalArgumentException("Input data not supported:{}"));
+    Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), userPredict)), groupBy, groups, depts));
+    return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
   }
 
 
@@ -94,22 +118,22 @@ public class DmApi {
     ));
   }
 
-  private Map<String, Object>groupCalculations(List<Map<String, Object>>items,String groupBy,java.util.Map<Integer,String>groups,java.util.Map<Integer,String>depts){
-    if ("dept".equals(groupBy)){
-      return calculateHigherLevelValues(items,100,"全部设备")
-        .put("groupby","dept")
-        .put("items",items.groupBy(v->(Integer)v.get("clinical_dept_id").get())
-          .map(tuple2->calculateHigherLevelValues(tuple2._2,tuple2._1,depts.get(tuple2._1))
-            .put("groupby","type")
-            .put("items",tuple2._2.groupBy(sub->(Integer)sub.get("asset_group").get())
-              .map(subTuple2->calculateHigherLevelValues(subTuple2._2,subTuple2._1,groups.get(subTuple2._1))
-                .put("items",subTuple2._2)))));
-    }else {
-      return calculateHigherLevelValues(items,100,"全部设备")
-        .put("groupby","type")
-        .put("items",items.groupBy(v->(Integer)v.get("asset_group").get())
-          .map(tuple2->calculateHigherLevelValues(tuple2._2,tuple2._1,groups.get(tuple2._1))
-            .put("items",tuple2._2)));
+  private Map<String, Object> groupCalculations(List<Map<String, Object>> items, String groupBy, java.util.Map<Integer, String> groups, java.util.Map<Integer, String> depts) {
+    if ("dept".equals(groupBy)) {
+      return calculateHigherLevelValues(items, 100, "全部设备")
+        .put("groupby", "dept")
+        .put("items", items.groupBy(v -> (Integer) v.get("clinical_dept_id").get())
+          .map(tuple2 -> calculateHigherLevelValues(tuple2._2, tuple2._1, depts.get(tuple2._1))
+            .put("groupby", "type")
+            .put("items", tuple2._2.groupBy(sub -> (Integer) sub.get("asset_group").get())
+              .map(subTuple2 -> calculateHigherLevelValues(subTuple2._2, subTuple2._1, groups.get(subTuple2._1))
+                .put("items", subTuple2._2)))));
+    } else {
+      return calculateHigherLevelValues(items, 100, "全部设备")
+        .put("groupby", "type")
+        .put("items", items.groupBy(v -> (Integer) v.get("asset_group").get())
+          .map(tuple2 -> calculateHigherLevelValues(tuple2._2, tuple2._1, groups.get(tuple2._1))
+            .put("items", tuple2._2)));
     }
   }
 
@@ -154,10 +178,10 @@ public class DmApi {
   }
 
   private List<Map<String, String>> calculateHigherLevelSuggestions(Seq<Seq<Map<String, String>>> lowerLevelSuggestions, String groupBy) {
-    Seq<Seq<String>>suggestionLists=lowerLevelSuggestions.map(v->v.map(sub->sub.get("title").getOrElse("")));
-    int numBuy=suggestionLists.count(v->v.contains(SUGGESTION_BUY));
-    int numAjst=suggestionLists.count(v->v.contains(SUGGESTION_ADJUST));
-    int numRse=suggestionLists.count(v->v.contains(SUGGESTION_RAISE));
+    Seq<Seq<String>> suggestionLists = lowerLevelSuggestions.map(v -> v.map(sub -> sub.get("title").getOrElse("")));
+    int numBuy = suggestionLists.count(v -> v.contains(SUGGESTION_BUY));
+    int numAjst = suggestionLists.count(v -> v.contains(SUGGESTION_ADJUST));
+    int numRse = suggestionLists.count(v -> v.contains(SUGGESTION_RAISE));
     ImmutableList.Builder<Map<String, String>> totalSuggestions = new ImmutableList.Builder<Map<String, String>>();
     if (numBuy > 0) {
       totalSuggestions.add(HashMap.of("title", SUGGESTION_BUY, "addition", Option.when(groupBy.equals("dept"), String.format("%s个科室", numBuy)).getOrElse(String.format("%s种类型", numBuy))));
@@ -172,86 +196,17 @@ public class DmApi {
   }
 
   private Map<String, Object> recursivelyCalculateSuggestions(Map<String, Object> currentMap) {
-    Seq<Map<String,Object>>currentItems=(Seq<Map<String ,Object>>)currentMap.get("items").get();
-    if(currentItems.get(0).containsKey("items")){
-      Map<String, Object>newMap=currentMap.put("items",currentItems.map(this::recursivelyCalculateSuggestions));
-      return newMap.put("suggestions",calculateHigherLevelSuggestions(((Seq<Map<String ,Object>>)newMap.get("items").get()).map(v->(Seq<Map<String, String>>)v.get("suggestions").get()),(String) newMap.get("groupby").get()));
-    }else {
-      return currentMap.put("suggestions",calculateBottomLevelSuggestions(
-        ((Tuple2<Integer,Integer>)currentMap.get("usage_sum").get())._2,
-        (Double)currentMap.get("usage").get(),
-        currentItems.count(v->true)
+    Seq<Map<String, Object>> currentItems = (Seq<Map<String, Object>>) currentMap.get("items").get();
+    if (currentItems.get(0).containsKey("items")) {
+      Map<String, Object> newMap = currentMap.put("items", currentItems.map(this::recursivelyCalculateSuggestions));
+      return newMap.put("suggestions", calculateHigherLevelSuggestions(((Seq<Map<String, Object>>) newMap.get("items").get()).map(v -> (Seq<Map<String, String>>) v.get("suggestions").get()), (String) newMap.get("groupby").get()));
+    } else {
+      return currentMap.put("suggestions", calculateBottomLevelSuggestions(
+        ((Tuple2<Integer, Integer>) currentMap.get("usage_sum").get())._2,
+        (Double) currentMap.get("usage").get(),
+        currentItems.count(v -> true)
       ));
     }
-  }
-
-  private javaslang.collection.Map<Integer, Tuple4<Double, Integer, Integer, javaslang.collection.List<Tuple4<Integer, Double, String, Double>>>> averageUsage(Observable<Tuple5<Integer, Double, String, Integer, Double>> p) {
-    return
-      javaslang.collection.List.ofAll(p.toBlocking().toIterable()).groupBy(t -> t._4).mapValues(lst -> Tuple.of(
-        Stats.of(lst.map(t -> t._5).toJavaList()).mean(),
-        lst.map(t -> t._5).count(v -> v > 1D),
-        lst.map(t -> t._5).count(v -> true),
-        lst.map(t -> Tuple.of(t._1, t._2, t._3, t._5))));
-  }
-
-
-  private java.util.List<ImmutableMap<String, String>> calculateSuggestion(Integer NumGreaterThan1, Double averageUsage, Integer numOfAssets) {
-    return Match(Tuple.of(NumGreaterThan1, averageUsage)).of(
-      Case($(t -> t._2 > 1D), javaslang.collection.List.of(ImmutableMap.of("title", SUGGESTION_BUY, "addition", String.format("%s台设备", (int) Math.ceil((averageUsage - 1) * numOfAssets)))).toJavaList()),
-      Case($(t -> t._1 > 0), javaslang.collection.List.of(ImmutableMap.of("title", SUGGESTION_ADJUST)).toJavaList()),
-      Case($(t -> t._2 <= 0.3D), javaslang.collection.List.of(ImmutableMap.of("title", SUGGESTION_RAISE)).toJavaList()),
-      Case($(), javaslang.collection.List.of(new ImmutableMap.Builder<String, String>().build()).toJavaList()));
-  }
-
-  private java.util.List<java.util.Map<String, String>> calculateTotalSuggestion(Seq<ImmutableMap<String, Object>> items, String groupBy) {
-    Seq<String> suggestions = items.map(v -> ((java.util.List<ImmutableMap<String, String>>) v.get("suggestions")).get(0).get("title"));
-    int numBuy = suggestions.count(v -> SUGGESTION_BUY.equals(v));
-    int numAjst = suggestions.count(v -> SUGGESTION_ADJUST.equals(v));
-    int numRse = suggestions.count(v -> SUGGESTION_RAISE.equals(v));
-    ImmutableList.Builder<java.util.Map<String, String>> totalSuggestions = new ImmutableList.Builder<java.util.Map<String, String>>();
-    if (numBuy > 0) {
-      totalSuggestions.add(ImmutableMap.of("title", SUGGESTION_BUY, "addition", Option.when(groupBy.equals("dept"), String.format("%s个科室", numBuy)).getOrElse(String.format("%s种类型", numBuy))));
-    }
-    if (numAjst > 0) {
-      totalSuggestions.add(ImmutableMap.of("title", SUGGESTION_ADJUST, "addition", Option.when(groupBy.equals("dept"), String.format("%s个科室", numAjst)).getOrElse(String.format("%s种类型", numAjst))));
-    }
-    if (numRse > 0) {
-      totalSuggestions.add(ImmutableMap.of("title", SUGGESTION_RAISE, "addition", Option.when(groupBy.equals("dept"), String.format("%s个科室", numRse)).getOrElse(String.format("%s种类型", numRse))));
-    }
-    return totalSuggestions.build();
-  }
-
-
-  private Tuple2<Seq<ImmutableMap<String, Object>>, Double> mapItems(java.util.Map<Integer, String> groups, javaslang.collection.Map<Integer, Tuple4<Double, Integer, Integer, javaslang.collection.List<Tuple4<Integer, Double, String, Double>>>> items) {
-    return Tuple.of(
-      items.map((k, v) -> Tuple.of(k, new ImmutableMap.Builder<String, Object>()
-        .put("id", Option.of(k).getOrElseThrow(() -> new IllegalArgumentException(String.format("group Id should not be %s", k))))
-        .put("name", Option.of(groups.get(k)).getOrElseThrow(() -> new IllegalArgumentException(String.format("group name should not be %s", groups.get(k)))))
-        .put("usage", v._1)
-        .put("suggestions", calculateSuggestion(v._2, v._1, v._3))
-        .put("items", v._4.map(sub -> new ImmutableMap.Builder<String, Object>()
-          .put("id", sub._1)
-          .put("name", Option.of(sub._3).getOrElseThrow(() -> new IllegalArgumentException(String.format("Asset name should not be %s", sub._3))))
-          .put("size", Option.of(sub._2).getOrElseThrow(() -> new IllegalArgumentException(String.format("Purchase price should not be %s", sub._2))))
-          .put("usage", sub._4)
-          .build()).toJavaList())
-        .build())).values(),
-      Stats.of(Option.of(items.values().map(t -> t._1).toJavaList()).filter(sub -> !sub.isEmpty()).getOrElse(javaslang.collection.List.of(0D).toJavaList())).mean());
-  }
-
-  private ResponseEntity<java.util.Map<String, Object>> serialize(HttpServletRequest request, String groupBy, Tuple2<Seq<ImmutableMap<String, Object>>, Double> items) {
-    log.info("got final input items: {}", items._1.toJavaList());
-    return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ImmutableMap.Builder<String, Object>()
-      .put("id", "100")
-      .put("name", "全部设备")
-      .put("usage", items._2)
-      .put("suggestions", calculateTotalSuggestion(items._1, groupBy))
-      .put("items", items._1.toJavaList())
-      .put("link", new ImmutableMap.Builder<String, Object>()
-        .put("ref", "self")
-        .put("href", String.format("%s?groupby=%s", request.getRequestURL(), groupBy))
-        .build())
-      .build());
   }
 }
 
