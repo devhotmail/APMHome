@@ -86,6 +86,7 @@ $(function () {
      * @returns {undefined}
      */
     function activeProgressBar(step, feedbackRating) {
+        $('.progressbar').children().removeClass('active activeone');
         $.each($('.progressbar').children(), function(idx, val){
             if (idx < step) {
                 $(val).addClass('active');
