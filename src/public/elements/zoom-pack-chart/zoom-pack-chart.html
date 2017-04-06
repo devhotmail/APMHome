@@ -175,12 +175,11 @@
         this.fire('focus-changed', { value: focus});
  
         var _this = this;
-         var view;
+        var view;
  
         var svg = d3.select(this.$.svg);
         var assetList = d3.select(this.$.assetList);
         var textList = d3.select(this.$.textList);
-
 
         var assetGroup = assetList
         .selectAll('g.asset')
@@ -205,28 +204,6 @@
           if (focus !== d) {
             zoom(d);
             d3.event.stopPropagation();
-          }
-        })
-        .each(function(d) {
-          if (!Modernizr.touchevents) {
-            var element = d3.select(this);
-            element.on('mouseover', function() {
-              if (d.depth === 0) return;
-              var textEl = svg.select('#text-' + d.data.uid + ' .text-center');
-              if (!canShowText(d) && d.parent === focus) {
-                textEl.style('display', 'inline')
-                .style('fill-opacity', 1);
-              }
-            });
-
-            element.on('mouseleave', function() {
-              if (d.depth === 0) return;
-              var textEl = svg.select('#text-' + d.data.uid + ' .text-center');
-              if (!canShowText(d) && d.parent === focus) {
-                textEl.style('display', 'none')
-                .style('fill-opacity', 0);
-              }
-            });
           }
         });
 
@@ -259,13 +236,19 @@
         .each(function(d) {
           var element = d3.select(this);
 
-          var showText = canShowText(d);
           // Center text
           var textCenter = element.append('g')
           .attr('class', 'text-center')
           .attr('pointer-events', 'none')
+          .style('display', function(d) {
+            if (d.parent === focus) return 'inline';
+            if (d === focus && !d.children) return 'inline';
+            return 'none';        
+          })        
           .style('fill-opacity', function() {
-            return d.parent === focus ? (showText ? 1 : 0) : 0;
+            if (d.parent === focus) return 1;
+            if (d === focus && !d.children) return 1;
+            return 0;
           })
           .call(renderText(false));
 
@@ -277,11 +260,13 @@
             .attr('transform', function() {
               return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition + ')';
             })
-            .style('display', function(d) {
-              return d === focus ? 'inline' : 'none';
-            })
+            .style('display', function() {
+              if (d === focus) return 'inline';
+              return 'none';        
+            })        
             .style('fill-opacity', function() {
-              return d === focus ? 1 : 0;
+              if (d === focus) return 1;
+              return 0;
             })
             .call(renderText(true));
           }
@@ -340,32 +325,17 @@
 
           transition.selectAll('g.text-center')
           .filter(function(d) {
-            return d.parent === focus || d === focus  || this.style.display === 'inline';
+            return d.parent === focus || (d === focus && !d.children) || this.style.display === 'inline';
           })
           .style('fill-opacity', function(d) {
-            // when circle isn't big enough just hide all texts insides
-            if (d.parent === focus || (d === focus && !d.children)) {
-              return canShowText(d) ? 1 : 0;
-            } else {
-              return 0;
-            }
+            if (d.parent === focus || (d === focus && !d.children)) return 1;
+            return 0;
           })
           .on('start', function(d) {
-            if (d.parent === focus || (d === focus && !d.children)) {
-              if (canShowText(d)) {
-                this.style.display = 'inline';
-              } else {
-                this.style.display = 'none';
-              }
-            }
+            if (d.parent === focus || (d === focus && !d.children)) this.style.display = 'inline';
           })
           .on('end', function(d) {
-            if (d.parent !== focus && (d !== focus || d.children)) {
-              this.style.display = 'none';
-            }
-            if (!canShowText(d)) {
-              this.style.display = 'none';
-            }
+            if (d.parent !== focus && (d !== focus || d.children)) this.style.display = 'none';
           });
         }
 
@@ -407,15 +377,6 @@
           .attr('transform', function(d) {
             return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k + ')'
           });
-        }
-
-        function canShowText(d) {
-          var maxX = (d.data.name.length > 5 ? d.data.name.length : 5) * 16;
-          var maxY = 16 + 14;
-          if (d.data.conclusion && d.data.conclusion.high) maxY += 14;
-          var maxLength = Math.max.call(Math, maxX, maxY);
-          // console.log(d.data.name.length, maxX, maxY, maxLength, _this.scaleK * d.r * 2)
-          return _this.scaleK * d.r * 2 > maxLength;
         }
 
         function renderText(adviceIncluded) {

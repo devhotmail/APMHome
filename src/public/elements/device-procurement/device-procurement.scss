@@ -80,7 +80,7 @@ $tab-active-color: rgb(31, 105, 266);
 }
 
 .tabs-content {
-  height: calc(100vh - 150px);
+  max-height: calc(100vh - 150px);
   padding: 0 10px 10px;
   overflow-x: hidden;
   overflow-y: auto;
