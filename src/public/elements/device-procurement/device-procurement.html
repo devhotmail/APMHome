@@ -30,7 +30,7 @@
           <!--user manually configed result-->
           <zoom-pack-chart
             width="{{width}}"
-            height="{{height}}"          
+            height="{{height}}"
             child-key="items"
             size-key="revenue_predict_raw"
             focus-info="[[focusInfo]]"
@@ -73,14 +73,20 @@
                 <div class="flex flex--middle revenue-tip muted">
                   <div class="revenue-label">2014.4</div>
                   <div class="flex__item u-ml-- u-mr--">
-                    <div class="progress-bar" style="width: 90%"></div>
+                    <div
+                      class="progress-bar"
+                      style$="[[calcProgress(focus.data.revenue_year_before_last, systemData.revenue_year_before_last)]]">
+                    </div>
                   </div>
                   <div class="revenue-num">[[parseInt(focus.data.revenue_year_before_last)]]</div>
                 </div>
                 <div class="flex flex--middle revenue-tip muted">
                   <div class="revenue-label">2015.4</div>
                   <div class="flex__item u-ml-- u-mr--">
-                    <div class="progress-bar" style="width: 90%"></div>
+                    <div
+                      class="progress-bar"
+                      style$="[[calcProgress(focus.data.revenue_last_year, systemData.revenue_last_year)]]">
+                    </div>                    
                   </div>
                   <div class="revenue-num">[[parseInt(focus.data.revenue_last_year)]]</div>
                 </div>
@@ -88,7 +94,10 @@
                 <div class="flex flex--middle revenue-tip">
                   <div class="revenue-label">预测</div>
                   <div class="flex__item u-ml-- u-mr--">
-                    <div class="progress-bar" style="width: 90%"></div>
+                    <div
+                      class="progress-bar"
+                      style$="[[calcProgress(focus.data.revenue_predict_raw, systemData.revenue_predict_raw)]]">
+                    </div>
                   </div>
                   <div class="revenue-num">
                     [[parseInt(focus.data.revenue_predict)]] +[[decimal2Percent(focus.data.revenue_increase)]]
@@ -97,7 +106,10 @@
                 <div class="flex flex--middle revenue-tip">
                   <div class="revenue-label">采取建议</div>
                   <div class="flex__item u-ml-- u-mr--">
-                    <div class="progress-bar" style="width: 90%"></div>
+                    <div
+                      class="progress-bar"
+                      style$="[[calcProgress(focus.data.revenue_predict_sug_raw, systemData.revenue_predict_sug_raw)]]">
+                    </div>                     
                   </div>
                   <div class="revenue-num">
                     [[parseInt(focus.data.revenue_predict_sug)]] +[[decimal2Percent(focus.data.revenue_increase_sug)]]
@@ -214,19 +226,22 @@
                 确认建议
               </div>
             </div>
-            <div class="divider"></div>
-            <div class="text-muted u-mb--">新建议产生的全部设备收益预测([[focus.data.revenue_unit]])</div>
-            <div class="flex flex--middle revenue-tip">
-              <div class="revenue-label">采取建议</div>
-              <div class="flex__item u-ml-- u-mr--">
-                <div class="progress-bar" style="width: 90%"></div>
+            <template is="dom-if" if="[[showMaunalAdvice]]">
+              <div class="divider"></div>
+              <div class="text-muted u-mb--">新建议产生的全部设备收益预测([[focus.data.revenue_unit]])</div>
+              <div class="flex flex--middle revenue-tip">
+                <div class="revenue-label">采取建议</div>
+                <div class="flex__item u-ml-- u-mr--">
+                  <div
+                    class="progress-bar"
+                    style$="[[calcProgress(manualData.revenue_predict_raw, manualData.revenue_predict_raw)]]">
+                  </div>                
+                </div>
+                <div class="revenue-num">
+                  [[parseInt(manualData.revenue_predict)]] +[[decimal2Percent(manualData.revenue_increase)]]
+                </div>
               </div>
-              <div class="revenue-num">
-                [[parseInt(focus.data.revenue_predict_sug)]] +[[decimal2Percent(focus.data.revenue_increase_sug)]]
-              </div>
-            </div>
-            <div class="divider"></div>
-            <div>
+              <div class="divider"></div>       
               <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
               当前平均使用率预测:
               <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
@@ -240,7 +255,7 @@
                   </template>
                 </template>
               </template>
-            </div>
+            </template>
           </template>
         </div>
       </div>
@@ -346,6 +361,10 @@
           },
           selectedType: {
             type: String
+          },
+          showMaunalAdvice: {
+            type: Boolean,
+            value: false
           }
         },
         behaviors: [
@@ -438,10 +457,12 @@
           }
         },
         handleTabTap: function(e) {
-          this.set('activeTab', e.model.item.val);
+          this.activeTab = e.model.item.val;
         },
         handleSelect: function(e) {
-          this.set('selectedType', e.model.item.val);
+          this.selectedType = e.model.item.val;
+          // hide advice after selectedType changed
+          this.showMaunalAdvice = false;
         },
         // trigger `selected` in array-selector
         handleConfigTap: function(e) {
@@ -542,6 +563,8 @@
               this.manualData.isManual = true;
               // set config list
               this.configList = this.getInitConfig(data);
+              // show advice after manually configed
+              this.showMaunalAdvice = true;
             }).bind(this));
           }
         },
@@ -589,6 +612,10 @@
         },
         calcTabCls: function(val, selectedType) {
           return val === selectedType ? 'active btn' : 'btn';
+        },
+        calcProgress: function(a, b) {
+          var tmp = a / b;
+          return 'width:' + (tmp > 1 ? 1 : tmp) * 100 + '%';
         },
         /**
          * functions which convert string for dom text display

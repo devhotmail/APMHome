@@ -110,22 +110,21 @@ $tab-active-color: rgb(31, 105, 266);
   }
 
   &.muted {
-    color: $gray;
+    color: rgb(107, 107, 107);
 
     .progress-bar {
-      background-color: rgb(155, 155, 154);
+      background-color: rgb(107, 107, 107);
     }
   }
 }
 
 .config-list-wrapper {
   display: flex;
-  justify-content: space-between;
 }
 
 .config-list {
-  width: 48%;
   flex: 1 1 auto;
+  overflow: hidden;
   height: 30 * 10 + 2px;
   border: 1px solid $border-color;
   border-radius: 6px;
@@ -177,7 +176,7 @@ $tab-active-color: rgb(31, 105, 266);
 
   .item-name {
     flex: 1 1 auto;
-    min-width: 0;
+    overflow: hidden;
   }
 }
 
