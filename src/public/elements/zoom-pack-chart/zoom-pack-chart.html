@@ -8,11 +8,17 @@
   <template>
     <style include="zoom-pack-chart-styles"></style>
     <div id="chart" class="chart-container">
-      <svg id="svg" width$="[[width]]" height$="[[height]]"></svg>
+      <svg id="svg" width$="[[width]]" height$="[[height]]">
+        <g id="content" transform$="[[getCenter(width, height)]]">
+          <g id="assetList"></g>
+          <g id="textList"></g>
+        </g>
+      </svg>
     </div>
   </template>
   <script>
     var constants = {
+      margin: 20,
       circleColor: 'rgba(255, 255, 255, 0)',
       waveColor: { // Color of the fill wave
         gray: 'rgb(178, 178, 178)',
@@ -71,6 +77,7 @@
         width: Number,
         height: Number,
         chartData: Object,
+        focusInfo: Object,
         focus: {
           type: Object,
           notify: true
@@ -87,14 +94,23 @@
         scaleK: {
           type: Number,
           value: 1
-        }
+        },
+        rootNode: Object,
+        diameter: {
+          type: Number,
+          computed: 'getDiameter(width, height)'
+        }        
       },
       observers: [
         'redraw(width, height, chartData)'
       ],
       redraw: function() {
-        d3.select(this.$.svg).selectAll('*').remove();
+        d3.select(this.$.assetList).selectAll('*').remove();
+        d3.select(this.$.textList).selectAll('*').remove();
         this.debounce('redraw', this.render, 500);
+      },
+      getCenter: function(width, height) {
+        return 'translate(' + width / 2 + ',' + height / 2 + ')';
       },
       nodeAdaptor: function(nodes) {
         return nodes.map(function(n) {
@@ -109,20 +125,9 @@
         var results = [root].concat(nodes.slice(1, nodes.length).reverse());
         return results;
       },
-      render: function() {
+      getRootNode: function(chartData) {
         var _this = this;
-        var svg = d3.select(this.$.svg);
-        var margin = 20;
-        var diameter = Math.min.call(null, this.width, this.height);
-
-        var wrapperGroup = svg.append('g')
-        .attr('transform', d3Transform().translate(this.width / 2, this.height / 2));
-
-        var pack = d3.pack()
-        .size([diameter - margin, diameter - margin])
-        .padding(2);
-        
-        var root = d3.hierarchy(this.chartData, function(d) {
+        var rootNode = d3.hierarchy(chartData, function(d) {
           return d[_this.childKey];
         }).sum(function(d) {
           return d[_this.sizeKey];
@@ -130,22 +135,58 @@
           return b.value - a.value;
         });
 
+        return rootNode;
+      },
+      getFocus: function(nodes, focusInfo) {
+        var root = nodes[0];
+        if (!focusInfo) return root;
+
+        var depth = focusInfo.depth;
+        if (!focusInfo.id) return root;
+        if (!Number.isInteger(depth)) return root;
+        if (depth > root.height) return root;
+
+        var focus = nodes.filter(function(n) {
+          return n.depth === depth && n.data.id === focusInfo.id;
+        })[0];
+        return focus ? focus : root;
+      },
+      getNodes: function(size) {
+        var pack = d3.pack()
+        .size([this.diameter - constants.margin, this.diameter - constants.margin])
+        .padding(2);
+
+        var root = this.rootNode || this.getRootNode(this.chartData);
+        this.rootNode = root;
+ 
         var nodes = pack(root).descendants();
 
-        var focus = root;
-        var view;
+        return this.nodeAdaptor(nodes);
+      },
+      getDiameter: function(w, h) {
+        return Math.min.call(null, w, h);
+      },
+      render: function() {
+        var margin = constants.margin;
+        var nodes = this.getNodes();
+ 
+         var focus = this.getFocus(nodes, this.focusInfo);
+        // fire `focus-changed` event
+        this.fire('focus-changed', { value: focus});
+ 
+        var _this = this;
+         var view;
+ 
+        var svg = d3.select(this.$.svg);
+        var assetList = d3.select(this.$.assetList);
+        var textList = d3.select(this.$.textList);
 
-        this.set('focus', focus);
-        // adaptor for those nodes which has a single child
-        nodes = this.nodeAdaptor(nodes);
-        // scheduler for node order
-        // nodes = this.orderScheduler(nodes);
 
-        var assetGroup = wrapperGroup
-        .selectAll('g')
+        var assetGroup = assetList
+        .selectAll('g.asset')
         .data(nodes)
         .enter().append('g')
-        .attr('class', 'asset')
+        .attr('class', 'asset');
 
         assetGroup        
         .append('circle')
@@ -170,7 +211,7 @@
           if (!Modernizr.touchevents) {
             var element = d3.select(this);
             element.on('mouseover', function() {
-              if (d === root) return;
+              if (d.depth === 0) return;
               var textEl = svg.select('#text-' + d.data.uid + ' .text-center');
               if (!canShowText(d) && d.parent === focus) {
                 textEl.style('display', 'inline')
@@ -179,7 +220,7 @@
             });
 
             element.on('mouseleave', function() {
-              if (d === root) return;
+              if (d.depth === 0) return;
               var textEl = svg.select('#text-' + d.data.uid + ' .text-center');
               if (!canShowText(d) && d.parent === focus) {
                 textEl.style('display', 'none')
@@ -205,10 +246,8 @@
           return getColorByPercent(d.data.usage);
         });
 
-        var textGroup = wrapperGroup
-        .append('g')
-        .attr('class', 'asset-texts')
-        .selectAll('g')
+        var textGroup = textList
+        .selectAll('g.text')
         .data(nodes)
         .enter().append('g')
         .attr('class', function(d) {
@@ -226,7 +265,7 @@
           .attr('class', 'text-center')
           .attr('pointer-events', 'none')
           .style('fill-opacity', function() {
-            return d.parent === root ? (showText ? 1 : 0) : 0;
+            return d.parent === focus ? (showText ? 1 : 0) : 0;
           })
           .call(renderText(false));
 
@@ -239,32 +278,36 @@
               return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition + ')';
             })
             .style('display', function(d) {
-              return d === root ? 'inline' : 'none';
+              return d === focus ? 'inline' : 'none';
             })
             .style('fill-opacity', function() {
-              return d === root ? 1 : 0;
+              return d === focus ? 1 : 0;
             })
             .call(renderText(true));
           }
         });
 
         svg.on('click', function() {
-          zoom(root);
+          zoom(_this.rootNode);
         });
 
-        zoomTo([root.x, root.y, root.r * 2 + margin]);
+        zoomTo([focus.x, focus.y, focus.r * 2 + margin]);
 
         this.scopeSubtree(this.$.chart, true);
 
         function zoom(d) {
           var focus0 = focus;
           focus = d;
-          _this.set('focus', focus);
+
+          _this.fire('focus-changed', {
+            value: focus,
+            oldValue: focus0
+          });
 
           var target = [focus.x, focus.y, focus.r * 2 + margin];
 
           // final scale after transition
-          var finalScale = diameter / target[2];
+          var finalScale = _this.diameter / target[2];
           _this.set('scaleK', finalScale);
 
           var transition = d3.transition()
@@ -326,17 +369,8 @@
           });
         }
 
-        function canShowText(d) {
-          var maxX = (d.data.name.length > 5 ? d.data.name.length : 5) * 16;
-          var maxY = 16 + 14;
-          if (d.data.conclusion && d.data.conclusion.high) maxY += 14;
-          var maxLength = Math.max.call(Math, maxX, maxY);
-          // console.log(d.data.name.length, maxX, maxY, maxLength, _this.scaleK * d.r * 2)
-          return _this.scaleK * d.r * 2 > maxLength;
-        }
-
         function zoomTo(v) {
-          var k = diameter / v[2];
+          var k = _this.diameter / v[2];
           view = v;
 
           textGroup.attr('transform', function (d) {
@@ -373,6 +407,15 @@
           .attr('transform', function(d) {
             return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k + ')'
           });
+        }
+
+        function canShowText(d) {
+          var maxX = (d.data.name.length > 5 ? d.data.name.length : 5) * 16;
+          var maxY = 16 + 14;
+          if (d.data.conclusion && d.data.conclusion.high) maxY += 14;
+          var maxLength = Math.max.call(Math, maxX, maxY);
+          // console.log(d.data.name.length, maxX, maxY, maxLength, _this.scaleK * d.r * 2)
+          return _this.scaleK * d.r * 2 > maxLength;
         }
 
         function renderText(adviceIncluded) {
