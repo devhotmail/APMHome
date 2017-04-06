@@ -118,10 +118,12 @@ public class QrCreateAssetService {
                     //qrcode已经关联设备，但扫码用户未绑定
                     return "3";
                 }else{
-
                     //qrcode已经关联设备，但扫码用户已绑定
                     return "2";
                 }
+            }else if(qrCodeLib.getStatus() == 2){
+                //qrcode已经有上传资料但还没建档关联设备
+                return "4";
             }else{
                 //qrcode还未关联设备
                 return "1";
