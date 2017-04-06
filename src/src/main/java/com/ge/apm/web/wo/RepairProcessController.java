@@ -35,6 +35,13 @@ public class RepairProcessController {
     @Autowired
     protected WorkOrderService workOrderService;
     WorkOrderRepository workOrderDao = WebUtil.getBean(WorkOrderRepository.class);
+
+
+    @RequestMapping(value="myclosedworkorder")
+    public String myclosedworkorder(HttpServletRequest request,HttpServletResponse response, Model model){
+      return  workOrderService.findClosedWorkOrder();
+        //workOrderDao.findClosedWorkOrder(5);
+    }
     /*开单 */
     @RequestMapping(value = "/workorderCreate",method = RequestMethod.POST)
     @ResponseBody

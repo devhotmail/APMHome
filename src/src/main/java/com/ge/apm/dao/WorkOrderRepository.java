@@ -21,10 +21,13 @@ public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
     public List<WorkOrder> findByAssetIdOrderByIdDesc(Integer assetId);
 
 
+    @Query(value="select wos from  WorkOrderStep wos,WorkOrder wo where wos.ownerId =?1 and wos.workOrderId=wo.id and wo.status=2")
+    public List<WorkOrder> findClosedWorkOrder(Integer ownerId);
+
 
     @Modifying
     @Query("update WorkOrder wo set wo.currentPersonId=?2 ,wo.currentPersonName=?3 ,wo.currentStepId=?4 where wo.id=?1")
-    public void updateWorkderOrder(Integer woId, Integer userId, String userName,Integer stepId);
+    public void updateWorkderOrder(Integer woId, Integer userId, String userName, Integer stepId);
 
     //gl:todo 7 是应该可配的
     @Query(value ="select * from Work_Order wo where wo.asset_Id=?1 and wo.hospital_Id=?2 and wo.site_Id=?3 and (wo.close_Time + cast(?4 as interval)) > now() order by wo.id desc", nativeQuery = true)

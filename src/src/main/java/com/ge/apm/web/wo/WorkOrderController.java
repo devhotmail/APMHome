@@ -11,17 +11,6 @@ import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.service.wechat.CoreService;
 import com.ge.apm.service.wechat.WorkOrderWeChatService;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -32,6 +21,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -48,6 +49,9 @@ public class WorkOrderController {
     private CoreService service;
     @Autowired
     private WorkOrderWeChatService woWcService;
+
+
+
     
     @RequestMapping(value = "scanworeport")
     public String scanWoReport(HttpServletRequest request,HttpServletResponse response, Model model) {
