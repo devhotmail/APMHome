@@ -42,7 +42,7 @@ public class ListApi {
 	public ResponseEntity<Map<String, Object>> getList(HttpServletRequest request,
 			@RequestParam(value = "from", required = true) Date from,
 			@RequestParam(value = "to", required = true) Date to,
-			@Pattern(regexp = "rating|scan|exposure|usage|fix|stop") @RequestParam(value = "orderby", required = false, defaultValue = "rating") String orderby,
+			@Pattern(regexp = "rating|scan|exposure|usage|fix|stop|profit") @RequestParam(value = "orderby", required = false, defaultValue = "rating") String orderby,
 			@Min(0) @RequestParam(value = "dept", required = false) Integer dept,
 			@Min(0) @RequestParam(value = "type", required = false) Integer type,
 			@Min(1) @RequestParam(value = "limit", required = false ) Integer limit,
@@ -159,8 +159,8 @@ public class ListApi {
 							.put("text", "扫描量")
 							.put("ticks",
 								new ImmutableList.Builder<Double>()
-									.add( Option.of(Math.min(OperatorMinMax.min(asset_info.map(asset -> asset.getElement7())).toBlocking().single(), OperatorMinMax.min(asset_info.map(asset -> asset.getElement15())).toBlocking().single() ) ).getOrElse(0.0)  )
-									.add( Option.of(Math.max(OperatorMinMax.max(asset_info.map(asset -> asset.getElement7())).toBlocking().single(), OperatorMinMax.max(asset_info.map(asset -> asset.getElement15())).toBlocking().single() ) ).getOrElse(0.0) )
+									.add( Math.min(OperatorMinMax.min(asset_info.map(asset -> asset.getElement7())).toBlocking().single(), OperatorMinMax.min(asset_info.map(asset -> asset.getElement15())).toBlocking().single() ) )
+									.add( Math.max(OperatorMinMax.max(asset_info.map(asset -> asset.getElement7())).toBlocking().single(), OperatorMinMax.max(asset_info.map(asset -> asset.getElement15())).toBlocking().single() ) )
 									.build())
 							.build())
 
@@ -170,8 +170,8 @@ public class ListApi {
 							.put("text", "曝光量")
 							.put("ticks",
 								new ImmutableList.Builder<Double>()
-									.add( Option.of(Math.min(OperatorMinMax.min(asset_info.map(asset -> asset.getElement6())).toBlocking().single(), OperatorMinMax.min(asset_info.map(asset -> asset.getElement14())).toBlocking().single() ) ).getOrElse(0.0) )
-									.add( Option.of(Math.max(OperatorMinMax.max(asset_info.map(asset -> asset.getElement6())).toBlocking().single(), OperatorMinMax.max(asset_info.map(asset -> asset.getElement14())).toBlocking().single() ) ).getOrElse(0.0) )
+									.add( Math.min(OperatorMinMax.min(asset_info.map(asset -> asset.getElement6())).toBlocking().single(), OperatorMinMax.min(asset_info.map(asset -> asset.getElement14())).toBlocking().single() ) )
+									.add( Math.max(OperatorMinMax.max(asset_info.map(asset -> asset.getElement6())).toBlocking().single(), OperatorMinMax.max(asset_info.map(asset -> asset.getElement14())).toBlocking().single() ) )
 									.build())
 							.build())
 
@@ -181,8 +181,8 @@ public class ListApi {
 							.put("text", "使用时间")
 							.put("ticks",
 								new ImmutableList.Builder<Double>()
-									.add( Option.of(Math.min(OperatorMinMax.min(asset_info.map(asset -> asset.getElement8())).toBlocking().single(), OperatorMinMax.min(asset_info.map(asset -> asset.getElement16())).toBlocking().single() ) ).getOrElse(0.0) )
-									.add( Option.of(Math.max(OperatorMinMax.max(asset_info.map(asset -> asset.getElement8())).toBlocking().single(), OperatorMinMax.max(asset_info.map(asset -> asset.getElement16())).toBlocking().single() ) ).getOrElse(0.0) )
+									.add( Math.min(OperatorMinMax.min(asset_info.map(asset -> asset.getElement8())).toBlocking().single(), OperatorMinMax.min(asset_info.map(asset -> asset.getElement16())).toBlocking().single() ) )
+									.add( Math.max(OperatorMinMax.max(asset_info.map(asset -> asset.getElement8())).toBlocking().single(), OperatorMinMax.max(asset_info.map(asset -> asset.getElement16())).toBlocking().single() ) )
 									.build())
 							.build())
 
@@ -192,8 +192,8 @@ public class ListApi {
 							.put("text", "维修次数")
 							.put("ticks",
 								new ImmutableList.Builder<Double>()
-									.add( Option.of(Math.min(OperatorMinMax.min(asset_info.map(asset -> asset.getElement10())).toBlocking().single(), OperatorMinMax.min(asset_info.map(asset -> asset.getElement18())).toBlocking().single() ) ).getOrElse(0.0) )
-									.add( Option.of(Math.max(OperatorMinMax.max(asset_info.map(asset -> asset.getElement10())).toBlocking().single(), OperatorMinMax.max(asset_info.map(asset -> asset.getElement18())).toBlocking().single() ) ).getOrElse(0.0) )
+									.add( Math.min(OperatorMinMax.min(asset_info.map(asset -> asset.getElement10())).toBlocking().single(), OperatorMinMax.min(asset_info.map(asset -> asset.getElement18())).toBlocking().single() ) )
+									.add( Math.max(OperatorMinMax.max(asset_info.map(asset -> asset.getElement10())).toBlocking().single(), OperatorMinMax.max(asset_info.map(asset -> asset.getElement18())).toBlocking().single() ) )
 									.build())
 							.build())
 
@@ -203,22 +203,21 @@ public class ListApi {
 							.put("text", "停机率")
 							.put("ticks",
 									new ImmutableList.Builder<Double>()
-									.add( Option.of(Math.min(OperatorMinMax.min(asset_info.map(asset -> asset.getElement9())).toBlocking().single(), OperatorMinMax.min(asset_info.map(asset -> asset.getElement17())).toBlocking().single() ) ).getOrElse(0.0) )
-									.add( Option.of(Math.max(OperatorMinMax.max(asset_info.map(asset -> asset.getElement9())).toBlocking().single(), OperatorMinMax.max(asset_info.map(asset -> asset.getElement17())).toBlocking().single() ) ).getOrElse(0.0) )
+									.add( Math.min(OperatorMinMax.min(asset_info.map(asset -> asset.getElement9())).toBlocking().single(), OperatorMinMax.min(asset_info.map(asset -> asset.getElement17())).toBlocking().single() ) )
+									.add( Math.max(OperatorMinMax.max(asset_info.map(asset -> asset.getElement9())).toBlocking().single(), OperatorMinMax.max(asset_info.map(asset -> asset.getElement17())).toBlocking().single() ) )
 									.build())
 							.build())
 
-			/*
 			.put("profit",
 					new ImmutableMap.Builder<String, Object>()
 							.put("unit", "元" )
 							.put("text", "利润")
 							.put("ticks",
 									new ImmutableList.Builder<Double>()
-									.add( Option.of(Math.min(OperatorMinMax.min(asset_info.map(asset -> asset.getElement12())).toBlocking().single(), OperatorMinMax.min(asset_info.map(asset -> asset.getElement19())).toBlocking().single() ) ).getOrElse(0.0) )
-									.add( Option.of(Math.max(OperatorMinMax.max(asset_info.map(asset -> asset.getElement12())).toBlocking().single(), OperatorMinMax.max(asset_info.map(asset -> asset.getElement19())).toBlocking().single() ) ).getOrElse(0.0) )
+									.add( Math.min(OperatorMinMax.min(asset_info.map(asset -> asset.getElement12())).toBlocking().single(), OperatorMinMax.min(asset_info.map(asset -> asset.getElement19())).toBlocking().single() ) )
+									.add( Math.max(OperatorMinMax.max(asset_info.map(asset -> asset.getElement12())).toBlocking().single(), OperatorMinMax.max(asset_info.map(asset -> asset.getElement19())).toBlocking().single() ) )
 									.build())
-							.build())*/
+							.build())
 
 			.build();
 	}
@@ -239,8 +238,7 @@ public class ListApi {
 
 				.put("stop", calculateTotal(asset_info, 5) )
 
-				/*
-				.put("profit", calculateTotal(asset_info, 6) )*/
+				.put("profit", calculateTotal(asset_info, 6) )
 
 				.build();
 	}
@@ -252,17 +250,17 @@ public class ListApi {
 		switch(key) {
 
 		case 1:
-			return Option.of(1.0*OperatorSum.sumIntegers(asset_info.map(asset -> asset.getElement7()) ).toBlocking().single() ).getOrElse(0.0);
+			return 1.0*OperatorSum.sumIntegers(asset_info.map(asset -> asset.getElement7()) ).toBlocking().single();
 		case 2:
-			return Option.of(OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement6()) ).toBlocking().single() ).getOrElse(0.0);
+			return OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement6()) ).toBlocking().single();
 		case 3:
-			return Option.of(OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement8()) ).toBlocking().single() ).getOrElse(0.0);
+			return OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement8()) ).toBlocking().single();
 		case 4:
-			return Option.of(1.0*OperatorSum.sumIntegers(asset_info.map(asset -> asset.getElement10()) ).toBlocking().single() ).getOrElse(0.0);
+			return 1.0*OperatorSum.sumIntegers(asset_info.map(asset -> asset.getElement10()) ).toBlocking().single();
 		case 5:
-			return Option.of(OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement9()) ).toBlocking().single()/asset_info.count().toBlocking().single() ).getOrElse(0.0);
+			return OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement9()) ).toBlocking().single()/asset_info.count().toBlocking().single();
 		default:
-			return Option.of(OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement12()) ).toBlocking().single() ).getOrElse(0.0);
+			return OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement12()) ).toBlocking().single();
 
 		}
 
@@ -296,11 +294,10 @@ public class ListApi {
 								Option.of(asset.getElement9()).getOrElse(0.0) )
 						.put("fix",
 								Option.of(asset.getElement10()).getOrElse(0) )
-						/*
 						.put("revenue",
 								Option.of(asset.getElement11()).getOrElse(0.0) )
 						.put("profit",
-								Option.of(asset.getElement12()).getOrElse(0.0) )*/
+								Option.of(asset.getElement12()).getOrElse(0.0) )
 						.put("exposure_bm",
 								Option.of(asset.getElement14()).getOrElse(0.0) )
 						.put("scan_bm",
@@ -311,9 +308,8 @@ public class ListApi {
 								Option.of(asset.getElement17()).getOrElse(0.0) )
 						.put("fix_bm",
 								Option.of(asset.getElement18()).getOrElse(0.0) )
-						/*
 						.put("profit_bm",
-								Option.of(asset.getElement19()).getOrElse(0.0) )*/
+								Option.of(asset.getElement19()).getOrElse(0.0) )
 						.build() )
 						.toBlocking()
 						.toIterable();
