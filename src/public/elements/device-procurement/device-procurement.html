@@ -558,7 +558,8 @@
 
             var payload = [].concat.apply([], tmp);
 
-            return fetch('mock/asset-procurement-' + this.selectedType + '1.json')
+            // return fetch('mock/asset-procurement-' + this.selectedType + '1.json')
+            return fetch('/geapm/api/dm?groupby=dept')
             .then(res => res.json())
             // return this.fetchPage(url)
             .then((function(data) {
@@ -731,7 +732,8 @@
             groupby: groupby
           }).toString();
 
-          return fetch('mock/asset-procurement-' + groupby + '.json')
+          // return fetch('mock/asset-procurement-' + groupby + '.json')
+          return fetch('/geapm/api/dm?groupby=dept')
           .then(res => res.json())
           // return this.fetchPage(url)
           .then((function(data) {
