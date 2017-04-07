@@ -67,7 +67,6 @@ import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.apache.camel.Headers;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.broker.SiBroker;
@@ -97,8 +96,10 @@ public class CoreService {
     protected I18nMessageRepository msgDao;
     @Autowired
     protected UaaService uaaService;
-    @Autowired 
-    protected WxMpMessageHandler textHandler;
+//    @Autowired 
+//    protected TextMsgHandler textHandler;
+    @Autowired
+    protected WxMpMessageHandler subscribeMsgHandler;
     private WxMpMessageRouter router;
     @Autowired
     protected SupplierRepository supplierDao;
@@ -377,7 +378,8 @@ public class CoreService {
         final WxMpMessageRouter newRouter = new WxMpMessageRouter(
             this.wxMpService);
         // 关注事件
-        newRouter.rule().async(false).msgType(WxConsts.XML_MSG_TEXT).handler(this.textHandler).end();
+//        newRouter.rule().async(false).msgType(WxConsts.XML_MSG_TEXT).handler(this.textHandler).end();
+        newRouter.rule().async(false).msgType(WxConsts.XML_MSG_EVENT).event(WxConsts.EVT_SUBSCRIBE).handler(this.subscribeMsgHandler).end();
         this.router = newRouter;
     }
 

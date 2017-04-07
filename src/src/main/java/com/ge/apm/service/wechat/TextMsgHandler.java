@@ -13,13 +13,13 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutTextMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * 转发客户消息给客服Handler
  *
  */
-@Service
+@Component
 public class TextMsgHandler implements WxMpMessageHandler {
     @Autowired
     private  HttpServletRequest request;
