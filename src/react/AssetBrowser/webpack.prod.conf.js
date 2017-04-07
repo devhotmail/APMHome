@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.conf')
 
 const webpackConfig = merge(baseWebpackConfig, {
@@ -10,7 +11,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     filename: '[name].[hash].js',
     path: path.resolve(__dirname, './dist'),
-    publicPath: './',
+    publicPath: '/geapm/react/AssetBrowser',
     sourceMapFilename: '[name].[hash].map'
   },
   module: {
@@ -79,8 +80,8 @@ const webpackConfig = merge(baseWebpackConfig, {
       comments: false
     }),
     // Put all css code in this file
-    new ExtractTextPlugin('[name].[hash].css'),
-  ] 
+    new ExtractTextPlugin('[name].[hash].css')
+  ]
 })
 
 const bundleAnalyzerReport = false
