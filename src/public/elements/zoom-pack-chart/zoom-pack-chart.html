@@ -1,5 +1,4 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../modernizr/modernizr.html">
 <link rel="import" href="zoom-pack-chart-styles.html">
 <link rel="stylesheet" href="../../css/dewIcons.css">
 <link rel="import" href="../d3/d3.html">
@@ -248,6 +247,10 @@
         .attr('id', function(d) {
           return 'text-' + d.data.uid;
         })
+        .attr('font-size', function(d) {
+          if (d.r / 5 > 20) return 20;
+          return d.r / 5;
+        })
         .each(function(d) {
           var element = d3.select(this);
 
@@ -360,7 +363,9 @@
           view = v;
 
           textGroup.attr('transform', function (d) {
-            return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
+            var transform = 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
+            if (d.parent === focus) transform += 'scale(' + k + ')';
+            return  transform;
           });
 
           assetGroup
@@ -390,8 +395,13 @@
 
           // move text-top when scale changes
           textGroup.selectAll('g.text-top')
-          .attr('transform', function(d) {
-            return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k + ')'
+          .each(function(d) {
+            if (d === focus) {
+              var element = d3.select(this);
+              element.attr('transform', function(d) {
+                return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k + ')'
+              });
+            }
           });
         }
 
@@ -401,7 +411,7 @@
             selection.append('text')
             // .attr('dy', '-0.35em')
             .attr('class', 'asset-name')
-            .attr('font-size', 20)
+            .attr('font-size', '1em')
             .text(function(d) {
               return d.data.name;
             })
@@ -409,15 +419,15 @@
 
             // Text for usage display
             var usageTxt = selection.append('text')
-            .attr('y', 20)
-            .attr('font-size', 16)
+            .attr('dy', '1em')
+            .attr('font-size', '0.8em')
             .call(commonTextAttr);
 
             // icon: fa-adjust
             usageTxt
             .append('tspan')
             .attr('font-family','DewIcon')
-            .attr('font-size', 14)
+            .attr('font-size', '0.7em')
             .text('\uE002' + ' ');
 
             usageTxt
@@ -439,15 +449,15 @@
               if (overload > 0) {
                 var overloadTxt = d3.select(this)
                 .append('text')
-                .attr('y', 36)
-                .attr('font-size', 16)
+                .attr('dy', '1em')
+                .attr('font-size', '0.8em')                
                 .call(commonTextAttr);
 
                 // icon: fa-clock-o
                 overloadTxt
                 .append('tspan')
                 .attr('font-family','DewIcon')
-                .attr('font-size', 14)
+                .attr('font-size', '0.7em')
                 .style('fill', '#e26d26')
                 .text('\uE001' + ' ');
 
@@ -458,15 +468,14 @@
               }
 
               // Advice text render here
-              if (adviceIncluded ||  (!adviceIncluded && d.r > 100)) {
-                if (d.data.suggestions && d.data.suggestions.length) {
-                  var overloadTxt = d3.select(this)
-                  .append('text')
-                  .attr('y', overload ? 60 : 50)
-                  .attr('font-size', 20)
-                  .text(d.data.suggestions[0].title)
-                  .call(commonTextAttr);
-                }
+              if (adviceIncluded && d.data.suggestions && d.data.suggestions.length) {
+                var overloadTxt = d3.select(this)
+                .append('text')
+                // 1em + 0.8em + 0.8em
+                .attr('dy', overload ? '2.6em' : '1.8em')
+                .attr('font-size', '1em')
+                .text(d.data.suggestions[0].title)
+                .call(commonTextAttr);
               }
             })
           }
