@@ -58,7 +58,6 @@ public class DmApi {
   public ResponseEntity<byte[]> desicionMaking(HttpServletRequest request,
                                                @Pattern(regexp = "dept|type") @RequestParam(value = "groupby", required = false) String groupBy,
                                                @Min(1) @RequestParam(value = "dept", required = false) Integer dept) throws JsonProcessingException {
-    log.info("groupby:{}", groupBy);
     UserAccount user = UserContext.getCurrentLoginUser();
     java.util.Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), java.util.Map.Entry::getValue).toBlocking().single();
     java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
@@ -79,7 +78,6 @@ public class DmApi {
                                                           @Pattern(regexp = "dept|type") @RequestParam(value = "groupby", required = false) String groupBy,
                                                           @Min(1) @RequestParam(value = "dept", required = false) Integer dept,
                                                           @RequestBody(required = true) String inputBody) throws IOException {
-    log.info("groupby:{}; intput stream", groupBy);
     UserAccount user = UserContext.getCurrentLoginUser();
     java.util.Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), java.util.Map.Entry::getValue).toBlocking().single();
     java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());

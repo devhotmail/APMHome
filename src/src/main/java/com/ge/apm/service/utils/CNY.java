@@ -53,7 +53,7 @@ public interface CNY {
     if ("亿".equals(label)) {
       return Tuple.of(format(amount.divide(100_000_000D)), "亿");
     } else if ("万".equals(label)) {
-      return Tuple.of(format(amount.divide(100_000_000D)), "万");
+      return Tuple.of(format(amount.divide(10_000D)), "万");
     } else if ("元".equals(label)) {
       return Tuple.of(format(amount), "元");
     } else {
