@@ -1,6 +1,6 @@
 const express = require('express')
 
-const PORT = process.env.VCAP_APP_PORT || process.env.PORT || 8118
+const PORT = process.env.VCAP_APP_PORT || process.env.PORT || 8128
 
 const app = express()
 

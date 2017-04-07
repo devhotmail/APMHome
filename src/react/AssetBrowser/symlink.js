@@ -1,8 +1,16 @@
 const path = require('path')
+const fs = require('fs')
+const ensureDir = require('ensure-dir') 
 const vfs = require('vinyl-fs')
 
-const pwd = process.cwd()
+const pwd = __dirname
 const dirName = path.basename(pwd, path.extname(pwd))
 
-vfs.src(['./dist/**'])
-.pipe(vfs.dest(`../../src/main/webapp/react/${dirName}/`))
+const distDir = path.resolve(pwd, './dist')
+const targetDir = path.resolve(pwd, `../../src/main/webapp/react/${dirName}/`)
+
+ensureDir(targetDir).then(() => {
+  fs.symlink(distDir, targetDir, () => {
+    console.log(`🚀 Symlinked: ${distDir} -> ${targetDir} 🚀`)
+  })
+})

@@ -4,4 +4,4 @@ applications:
     host: asset-browser
     memory: 128M
     buildpack: https://github.com/cloudfoundry/nodejs-buildpack
-    command: NODE_ENV=production node --harmony-async-await app.js
+    command: NODE_ENV=production node --harmony-async-await prod-server.js

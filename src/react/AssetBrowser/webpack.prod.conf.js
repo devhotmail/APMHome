@@ -3,15 +3,19 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.conf')
+
+const pwd = __dirname
+const dirName = path.basename(pwd, path.extname(pwd))
+
+const publicPath = `/geapm/react/${dirName}`
 
 const webpackConfig = merge(baseWebpackConfig, {
   devtool: false,
   output: {
     filename: '[name].[hash].js',
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/geapm/react/AssetBrowser',
+    publicPath: publicPath,
     sourceMapFilename: '[name].[hash].map'
   },
   module: {

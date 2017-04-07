@@ -1,2 +1,1 @@
-### PredixUI Webpack Starter
-wait a minute
+### Dew React Integration
