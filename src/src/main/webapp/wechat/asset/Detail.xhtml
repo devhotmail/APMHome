@@ -284,7 +284,10 @@ and open the template in the editor.
             <div class="page">
                 <div class="weui-msg">
                     <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
-                    <p><h:outputText value="设备未找到" rendered="#{wxAssetInfoController.assetFlag==0}"/> 
+                    <p>
+                        <h:outputText value="设备未找到" rendered="#{wxAssetInfoController.assetFlag==0}"/> 
+                        <h:outputText value="设备未建档" rendered="#{wxAssetInfoController.assetFlag==1}"/> 
+                        <h:outputText value="设备建档中" rendered="#{wxAssetInfoController.assetFlag==2}"/> 
                         <h:outputText value="没有权限查看" rendered="#{wxAssetInfoController.assetFlag==3}"/> 
                     </p>
                     <p>#{wxAssetInfoController.qrCode}</p>
@@ -292,6 +295,9 @@ and open the template in the editor.
                         <p class="weui-btn-area">
                             <!--<a href="assetList.xhtml?action=list&amp;qrCode=#{wxAssetInfoController.qrCode}" class="weui-btn weui-btn_primary">#{msg.BindAsset}</a>-->
                             <a href="List.xhtml" class="weui-btn weui-btn_primary">返回设备列表</a>
+                            <h:panelGroup rendered="#{wxAssetInfoController.assetFlag==2}">
+                                <a href="createInfoDetail.xhtml?openId=#{wxAssetInfoController.currentUser.weChatId}&amp;qrCode=#{wxAssetInfoController.qrCode}" class="weui-btn weui-btn_primary" >查看建档信息</a>
+                            </h:panelGroup>
                         </p>
                     </div>
                 </div>
