@@ -3,8 +3,7 @@ package com.ge.apm.service.api;
 import com.github.davidmoten.rx.jdbc.ConnectionProvider;
 import com.github.davidmoten.rx.jdbc.Database;
 import javaslang.Tuple;
-import javaslang.Tuple5;
-import javaslang.control.Option;
+import javaslang.Tuple6;
 import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,30 +33,50 @@ public class DmService {
 
 
   @Cacheable(cacheNames = "springCache", key = "'dmService.findAssets.'+#siteId+'.'+#hospitalId+'.groupBy'+#groupBy+'.endDay'+#endDay")
-  public Observable<Tuple5<Integer, Double, String, Integer, Double>> findAssets(int siteId, int hospitalId, String groupBy, LocalDate endDay) {
+  public Observable<Tuple6<Integer, String, Integer, Integer, Double, Double>> findAssets(int siteId, int hospitalId, String groupBy, LocalDate endDay) {
     log.info("siteId: {}; hospitalId: {} groupBy: {} endDay:{}", siteId, hospitalId, groupBy, endDay.toString());
-    Observable<Tuple5<Integer, Double, String, Integer, Double>> result =
-      db.select(new SQL()
-        .SELECT("ai.id", "ai.purchase_price as size", "ai.name", "ai." + Option.when(groupBy.equals("dept"), "clinical_dept_id").getOrElse("asset_group") + " as group_id", "ai.install_date", "COALESCE(sum(asu.exam_duration),0) as use_time")
-        .FROM("asset_info ai")
-        .LEFT_OUTER_JOIN("asset_summit asu on ai.id = asu.asset_id")
-        .WHERE("ai.is_valid = true")
-        .WHERE("ai.site_id = :site_id")
-        .WHERE("ai.hospital_id = :hospital_id")
-        .WHERE("asu.created > :start_day")
-        .WHERE("asu.created <= :end_day")
-        .WHERE("ai.install_date IS NOT NULL")
-        .WHERE("ai.purchase_price IS NOT NULL")
-        .GROUP_BY("ai.id")
-        .ORDER_BY("group_id").toString())
-        .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
-        .parameter("start_day", Date.valueOf(endDay.minusYears(1))).parameter("end_day", Date.valueOf(endDay))
-        .getAs(Integer.class, Double.class, String.class, Integer.class, Date.class, Integer.class)
-        .map(tuple6 -> Tuple.of(tuple6._1(), tuple6._2(), tuple6._3(), tuple6._4(),
-          tuple6._6() / ((tuple6._5().toLocalDate().compareTo(endDay.minusYears(1)) > 0 ? tuple6._5().toLocalDate() : endDay.minusYears(1)).until(endDay, ChronoUnit.DAYS) * SECONDS_IN_ONEDAY)))
-        .cache();
-    log.info("sql success! result count: {}", result.count().toBlocking().single());
-    return result;
+    return db.select(new SQL()
+      .SELECT("ai.id", "ai.name", "ai.clinical_dept_id", "ai.asset_group", "ai.install_date", "COALESCE(sum(asu.exam_duration),0) as use_time", "COALESCE(sum(asu.revenue),0) as revenue")
+      .FROM("asset_info ai")
+      .LEFT_OUTER_JOIN("asset_summit asu on ai.id = asu.asset_id")
+      .WHERE("ai.is_valid = true")
+      .WHERE("ai.site_id = :site_id")
+      .WHERE("ai.hospital_id = :hospital_id")
+      .WHERE("asu.created > :start_day")
+      .WHERE("asu.created <= :end_day")
+      .WHERE("ai.install_date IS NOT NULL")
+      .GROUP_BY("ai.id")
+      .toString())
+      .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
+      .parameter("start_day", Date.valueOf(endDay.minusYears(1))).parameter("end_day", Date.valueOf(endDay))
+      .getAs(Integer.class, String.class, Integer.class, Integer.class, Date.class, Integer.class, Double.class)
+      .map(tuple7 -> Tuple.of(tuple7._1(), tuple7._2(), tuple7._3(), tuple7._4(),
+        tuple7._6() / ((tuple7._5().toLocalDate().compareTo(endDay.minusYears(1)) > 0 ? tuple7._5().toLocalDate() : endDay.minusYears(1)).until(endDay, ChronoUnit.DAYS) * SECONDS_IN_ONEDAY), tuple7._7()))
+      .cache();
+  }
+
+  @Cacheable(cacheNames = "springCache", key = "'dmService.findAssets.'+#siteId+'.'+#hospitalId+'.dept'+#dept+'.endDay'+#endDay")
+  public Observable<Tuple6<Integer, String, Integer, Integer, Double, Double>> findAssets(int siteId, int hospitalId, int dept, LocalDate endDay) {
+    log.info("siteId: {}; hospitalId: {} dept: {} endDay:{}", siteId, hospitalId, dept, endDay.toString());
+    return db.select(new SQL()
+      .SELECT("ai.id", "ai.name", "ai.clinical_dept_id", "ai.asset_group", "ai.install_date", "COALESCE(sum(asu.exam_duration),0) as use_time", "COALESCE(sum(asu.revenue),0) as revenue")
+      .FROM("asset_info ai")
+      .LEFT_OUTER_JOIN("asset_summit asu on ai.id = asu.asset_id")
+      .WHERE("ai.is_valid = true")
+      .WHERE("ai.site_id = :site_id")
+      .WHERE("ai.hospital_id = :hospital_id")
+      .WHERE("ai.clinical_dept_id = :dept")
+      .WHERE("asu.created > :start_day")
+      .WHERE("asu.created <= :end_day")
+      .WHERE("ai.install_date IS NOT NULL")
+      .GROUP_BY("ai.id")
+      .toString())
+      .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
+      .parameter("start_day", Date.valueOf(endDay.minusYears(1))).parameter("end_day", Date.valueOf(endDay)).parameter("dept", dept)
+      .getAs(Integer.class, String.class, Integer.class, Integer.class, Date.class, Integer.class, Double.class)
+      .map(tuple7 -> Tuple.of(tuple7._1(), tuple7._2(), tuple7._3(), tuple7._4(),
+        tuple7._6() / ((tuple7._5().toLocalDate().compareTo(endDay.minusYears(1)) > 0 ? tuple7._5().toLocalDate() : endDay.minusYears(1)).until(endDay, ChronoUnit.DAYS) * SECONDS_IN_ONEDAY), tuple7._7()))
+      .cache();
   }
 
 }
