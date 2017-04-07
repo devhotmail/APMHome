@@ -126,6 +126,7 @@
         return Math.min.call(null, w, h);
       },
       canShowGoBack: function(focus) {
+        return false;
         return focus && focus.depth;
       },
       nodeAdaptor: function(nodes) {
@@ -364,7 +365,7 @@
 
           textGroup.attr('transform', function (d) {
             var transform = 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
-            if (d.parent === focus) transform += 'scale(' + k + ')';
+            if (d.parent === focus || (d === focus && !d.children)) transform += 'scale(' + k + ')';
             return  transform;
           });
 
@@ -400,7 +401,8 @@
               var element = d3.select(this);
               element.attr('transform', function(d) {
                 return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k + ')'
-              });
+              })
+              .attr('font-size', 20)
             }
           });
         }
@@ -419,7 +421,7 @@
 
             // Text for usage display
             var usageTxt = selection.append('text')
-            .attr('dy', '1em')
+            .attr('dy', '1.1em')
             .attr('font-size', '0.8em')
             .call(commonTextAttr);
 
@@ -428,7 +430,7 @@
             .append('tspan')
             .attr('font-family','DewIcon')
             .attr('font-size', '0.7em')
-            .text('\uE002' + ' ');
+            .text('\uE003' + ' ');
 
             usageTxt
             .append('tspan')
@@ -449,7 +451,7 @@
               if (overload > 0) {
                 var overloadTxt = d3.select(this)
                 .append('text')
-                .attr('dy', '1em')
+                .attr('dy', '2em')
                 .attr('font-size', '0.8em')                
                 .call(commonTextAttr);
 
@@ -459,7 +461,7 @@
                 .attr('font-family','DewIcon')
                 .attr('font-size', '0.7em')
                 .style('fill', '#e26d26')
-                .text('\uE001' + ' ');
+                .text('\uE002' + ' ');
 
                 overloadTxt
                 .append('tspan')

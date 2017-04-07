@@ -179,7 +179,7 @@
                       <div class="ellipsis">[[item.name]]</div>
                     </div>
                     <template is="dom-if" if="[[item.isUnknown]]">
-                      <div>待计算</div>
+                      <div style="white-space:nowrap;">待计算</div>
                     </template>
                     <template is="dom-if" if="[[!item.isUnknown]]">
                       <editable-block
@@ -374,6 +374,7 @@
         observers: [
           'loadData(selectedType)',
           'changeQuery(selectedType)',
+          'resetActiveTab(selectedType)',
           'changeSelectedConfig(focusInfo, configList)',
           'resetSubSelectedConfigIndex(selectedConfigIndex)'
         ],
@@ -389,6 +390,10 @@
           return configList.filter(function(n) {
             return n.depth === 2 && n.parent.uid === selectedConfigItem.uid;
           });
+        },
+        resetActiveTab: function(selectedType) {
+          // reset activeTab when selectedType changed
+          this.activeTab = 0;
         },
         resetSubSelectedConfigIndex: function(selectedConfigIndex) {
           // reset subSelectedConfig index when selectedConfigIndex changes
