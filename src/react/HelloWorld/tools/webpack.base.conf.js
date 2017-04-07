@@ -2,6 +2,8 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+const config = require('../config')
+
 module.exports = {
   devtool: 'source-map',
   entry: {
@@ -9,7 +11,7 @@ module.exports = {
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, './dist'),
+    path: config.distDir,
     publicPath: '/',
     sourceMapFilename: '[name].map'
   },
@@ -19,7 +21,7 @@ module.exports = {
       'node_modules'
     ],
     alias: {
-      '#': path.resolve(__dirname, './src')
+      '#': path.resolve(__dirname, '../src')
     }
   }
 }

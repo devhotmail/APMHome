@@ -3,20 +3,19 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.conf')
+const utils = require('./utils')
 
-const pwd = __dirname
-const dirName = path.basename(pwd, path.extname(pwd))
-
-const publicPath = `/geapm/react/${dirName}`
+const publicPath = utils.getProdPublicPath()
 
 const webpackConfig = merge(baseWebpackConfig, {
   devtool: false,
   output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, './dist'),
-    publicPath: publicPath,
-    sourceMapFilename: '[name].map'
+    filename: '[name].[hash].js',
+    publicPath,
+    sourceMapFilename: '[name].[hash].map'
   },
   module: {
     rules: [
@@ -42,7 +41,7 @@ const webpackConfig = merge(baseWebpackConfig, {
             loader:'url-loader',
             options: {
               limit: 10000,
-              name: 'assets/[name].[ext]'
+              name: 'assets/[name].[hash].[ext]'
             }
           }
         ]
@@ -51,13 +50,15 @@ const webpackConfig = merge(baseWebpackConfig, {
   },  
   plugins: [
     new webpack.NamedModulesPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production'),
+      },
+    }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false
     }),
-    new webpack.DefinePlugin({
-      'process.env': {'NODE_ENV': '"development"'}
-    }),    
     new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       template: './public/index.xhtml',
@@ -65,8 +66,36 @@ const webpackConfig = merge(baseWebpackConfig, {
       appMountId: 'root',
       inject: false
     }),
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+      filename: 'index.html',
+      inject: true
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      beautify: false,
+      mangle: {
+        screw_ie8: true,
+        keep_fnames: true
+      },
+      compress: {
+        screw_ie8: true,
+        warnings: false
+      },
+      comments: false
+    }),
     // Put all css code in this file
-    new ExtractTextPlugin('[name].css')
+    // extract css into its own file
+    new ExtractTextPlugin({
+      filename: '[name].[contenthash].css'
+    }),
+    // Compress extracted CSS. We are using this plugin so that possible
+    // duplicated CSS from different components can be deduped.
+    new OptimizeCSSPlugin({
+      cssProcessorOptions: {
+        safe: true
+      }
+    }),
+    new FriendlyErrorsPlugin()
   ]
 })
 
