@@ -62,13 +62,13 @@ public class DmApi {
     UserAccount user = UserContext.getCurrentLoginUser();
     java.util.Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), java.util.Map.Entry::getValue).toBlocking().single();
     java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
-    if (Option.of(groupBy).isDefined()&&Option.of(dept).isEmpty()) {
+    if (Option.of(groupBy).isDefined() && Option.of(dept).isEmpty()) {
       Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), HashMap.empty())), groupBy, groups, depts));
       return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
-    }else if(Option.of(groupBy).isEmpty()&&Option.of(dept).isDefined()){
+    } else if (Option.of(groupBy).isEmpty() && Option.of(dept).isDefined()) {
       Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now()), HashMap.empty())), "type", groups, depts));
       return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
-    }else {
+    } else {
       return ResponseEntity.badRequest().body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
     }
   }
@@ -76,17 +76,26 @@ public class DmApi {
   @RequestMapping(method = RequestMethod.PUT)
   @ResponseBody
   public ResponseEntity<byte[]> desicionMakingUserPredict(HttpServletRequest request,
-                                               @Pattern(regexp = "dept|type") @RequestParam(value = "groupby", required = true) String groupBy) throws IOException {
+                                                          @Pattern(regexp = "dept|type") @RequestParam(value = "groupby", required = false) String groupBy,
+                                                          @Min(1) @RequestParam(value = "dept", required = false) Integer dept,
+                                                          @RequestBody(required = true) String inputBody) throws IOException {
     log.info("groupby:{}; intput stream", groupBy);
     UserAccount user = UserContext.getCurrentLoginUser();
     java.util.Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), java.util.Map.Entry::getValue).toBlocking().single();
     java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
-    Map<Integer,Double>userPredict=Try.of(()->{
-      Map<String,List<Map<String,Object>>>inputs=(Map<String,List<Map<String,Object>>>)(new ObjectMapper().registerModule(new JavaslangModule()).readValue(request.getInputStream(),new TypeReference<Map<String,List<Map<String,Object>>>>(){}));
-      return HashMap.ofEntries(inputs.values().get(0).map(v->Tuple.of((Integer)v.get("id").get(),(Double)v.get("change").get())));
-    }).getOrElseThrow(()->new IllegalArgumentException("Input data not supported:{}"));
-    Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), userPredict)), groupBy, groups, depts));
-    return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+    Map<Integer, Double> userPredict = Try.of(() -> {
+      Map<String, List<Map<String, Object>>> inputs = (Map<String, List<Map<String, Object>>>) (new ObjectMapper().registerModule(new JavaslangModule()).readValue(inputBody, new TypeReference<Map<String, List<Map<String, Object>>>>() {}));
+      return HashMap.ofEntries(inputs.values().get(0).map(v -> Tuple.of((Integer) v.get("id").get(), (Double) v.get("change").get())));
+    }).getOrElseThrow(() -> new IllegalArgumentException("Input data not supported:{}"));
+    if (Option.of(groupBy).isDefined() && Option.of(dept).isEmpty()) {
+      Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), userPredict)), groupBy, groups, depts));
+      return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+    } else if (Option.of(groupBy).isEmpty() && Option.of(dept).isDefined()) {
+      Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now()), userPredict)), "type", groups, depts));
+      return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+    } else {
+      return ResponseEntity.badRequest().body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
+    }
   }
 
 
