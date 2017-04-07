@@ -67,7 +67,7 @@ public class WorkOrderService {
     }
     public  List<WorkOrder>  findWorkOrderByCon(HttpServletRequest request){
         UserAccount ua = UserContext.getCurrentLoginUser(request);
-        return workOrderRepository.findByRequestorIdAndStatusOrderById(ua.getId(), Integer.parseInt(request.getParameter("status")));
+        return workOrderRepository.findByRequestorIdAndStatusOrderByIdDesc(ua.getId(), Integer.parseInt(request.getParameter("status")));
     }
     //public List<WorkOrder>
 
@@ -127,6 +127,12 @@ public class WorkOrderService {
             cService.uploadVoice(neWorkOrder, wop.getVoiceId());
         } 
         workOrderRepository.save(neWorkOrder);
+        //assetInfo status
+        AssetInfo asi = assetInfoRepository.findById(neWorkOrder.getAssetId());
+        if (asi != null) {
+            asi.setStatus(Integer.parseInt(wop.getAssetStatus()));
+            assetInfoRepository.save(asi);
+        }
         //images
         if (wop.getImgIds() != null) {
             String[] imgIds = wop.getImgIds().split(",");
@@ -159,6 +165,7 @@ public class WorkOrderService {
         wo.setCurrentStepId(currentStepId+1);
         String stepName = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps", String.valueOf(currentStepId+1)).getValueZh();
         wo.setCurrentStepName(stepName);
+        wo.setIntExtType(Integer.parseInt(wopo.getIntExtType()));
         workOrderRepository.save(wo);
         //2  update endtime in wos for last step workorder
         WorkOrderStep currentStep = workOrderStepRepository.getByWorkOrderIdAndStepId(woId,currentStepId).get(0);
@@ -209,7 +216,22 @@ public class WorkOrderService {
         Integer woId= Integer.valueOf(wopo.getWoId());
         WorkOrder wo = workOrderRepository.getById(woId);
         updateEndTime(wo, wopo.getDesc());
+        if (wopo.getConfirmedUpTime() != null && !"".equals(wopo.getConfirmedUpTime())){
+            Date confirmedUpTime = null;
+            try{
+                confirmedUpTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getConfirmedUpTime());
+            }catch(Exception e) {
+                confirmedUpTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wopo.getConfirmedUpTime()+":00");
+            }
+            wo.setConfirmedUpTime(confirmedUpTime);
+        }
         workOrderUpdate(request, wo);
+        //assetInfo status
+        AssetInfo asi = assetInfoRepository.findById(wo.getAssetId());
+        if (asi != null) {
+            asi.setStatus(Integer.parseInt(wopo.getAssetStatus()));
+            assetInfoRepository.save(asi);
+        }
         WorkOrderStep wds = initWorkOrderStep(request, wo);
         workOrderStepRepository.save(wds);
         sendWoMsgs(wo, null, null);
@@ -366,6 +388,15 @@ public class WorkOrderService {
         neWorkOrder.setRequestTime(new Date());
         neWorkOrder.setRequestReason("".equals(wop.getReason())?"参见语音":wop.getReason());
         neWorkOrder.setCasePriority(Integer.parseInt(wop.getPriority()));
+        if (wop.getConfirmedDownTime() != null && !"".equals(wop.getConfirmedDownTime())){
+            Date confirmedDownTime = null;
+            try{
+                confirmedDownTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wop.getConfirmedDownTime());
+            }catch(Exception e) {
+                confirmedDownTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(wop.getConfirmedDownTime()+":00");
+            }
+            neWorkOrder.setConfirmedDownTime(confirmedDownTime);
+        }
         
         if(reopenWorkOrder != null && reopenWorkOrder.size()>0){
             neWorkOrder.setParentWoId(reopenWorkOrder.get(0).getId());

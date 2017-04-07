@@ -88,7 +88,7 @@
                             pageManager.showTime = true;
                             pageManager.showReView = false;
                             pageManager.showComment = false;
-                            pageManager.showCancel = true;
+                            pageManager.showCancel = false;//true;
                         } else {
                             pageManager.showTime = false;
                             pageManager.showReView = true;

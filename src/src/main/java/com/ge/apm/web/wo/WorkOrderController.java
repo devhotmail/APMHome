@@ -150,7 +150,8 @@ public class WorkOrderController {
         map.put("assetName", info.getName());
         map.put("supplier", info.getSupplierId()==null?"":service.getSupplierName(info.getSupplierId()));
         map.put("assetGroup", service.getMsgValue("assetGroup", info.getAssetGroup().toString()));
-        map.put("assetStatus", service.getMsgValue("assetStatus", info.getStatus()+""));
+//        map.put("assetStatus", service.getMsgValue("assetStatus", info.getStatus()+""));
+        map.put("assetStatus", info.getStatus());
         
         WorkOrder wo = woWcService.scanAction(info);
         if (wo != null) {
@@ -266,7 +267,8 @@ public class WorkOrderController {
         map.put("assetName", ai.getName());
         map.put("supplier", ai.getSupplierId()==null?"":service.getSupplierName(ai.getSupplierId()));
         map.put("assetGroup", service.getMsgValue("assetGroup", ai.getAssetGroup().toString()));
-        map.put("assetStatus", service.getMsgValue("assetStatus", ai.getStatus()+""));
+//        map.put("assetStatus", service.getMsgValue("assetStatus", ai.getStatus()+""));
+        map.put("assetStatus", ai.getStatus());
         map.put("clinicalDeptName", ai.getClinicalDeptName());
         map.put("locationName", ai.getLocationName());
         return map;

@@ -21,6 +21,10 @@ public class WorkOrderPoJo {
     String patTests;
     String caseType;
     String caseSubType;
+    String confirmedDownTime;
+    String confirmedUpTime;
+    String assetStatus;
+    String intExtType;
     Object stepDetail;
     boolean reOpen;
 
@@ -174,6 +178,38 @@ public class WorkOrderPoJo {
 
     public void setStepDetail(Object stepDetail) {
         this.stepDetail = stepDetail;
+    }
+
+    public String getConfirmedDownTime() {
+        return confirmedDownTime;
+    }
+
+    public void setConfirmedDownTime(String confirmedDownTime) {
+        this.confirmedDownTime = confirmedDownTime;
+    }
+
+    public String getAssetStatus() {
+        return assetStatus;
+    }
+
+    public void setAssetStatus(String assetStatus) {
+        this.assetStatus = assetStatus;
+    }
+
+    public String getConfirmedUpTime() {
+        return confirmedUpTime;
+    }
+
+    public void setConfirmedUpTime(String confirmedUpTime) {
+        this.confirmedUpTime = confirmedUpTime;
+    }
+
+    public String getIntExtType() {
+        return intExtType;
+    }
+
+    public void setIntExtType(String intExtType) {
+        this.intExtType = intExtType;
     }
     
 }
