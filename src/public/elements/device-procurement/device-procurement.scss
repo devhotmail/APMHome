@@ -124,7 +124,8 @@ $tab-active-color: rgb(31, 105, 266);
 
 .config-list {
   flex: 1 1 auto;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   height: 30 * 10 + 2px;
   border: 1px solid $border-color;
   border-radius: 6px;

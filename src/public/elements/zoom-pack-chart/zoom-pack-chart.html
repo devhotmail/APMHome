@@ -8,6 +8,12 @@
   <template>
     <style include="zoom-pack-chart-styles"></style>
     <div id="chart" class="chart-container">
+      <template is="dom-if" if="[[showGoback]]">
+        <div class="go-back btn-group">
+          <div class="btn">返回上一层</div>
+          <div class="btn">返回顶层</div>
+        </div>
+      </template>      
       <svg id="svg" width$="[[width]]" height$="[[height]]">
         <g id="content" transform$="[[getCenter(width, height)]]">
           <g id="assetList"></g>
@@ -80,7 +86,7 @@
         focusInfo: Object,
         focus: {
           type: Object,
-          notify: true
+          // notify: true
         },
         childKey: {
           type: String,
@@ -94,6 +100,11 @@
         scaleK: {
           type: Number,
           value: 1
+        },
+        showGoback: {
+          type: Boolean,
+          // value: true,
+          computed: 'canShowGoBack(focus)'
         },
         rootNode: Object,
         diameter: {
@@ -111,6 +122,12 @@
       },
       getCenter: function(width, height) {
         return 'translate(' + width / 2 + ',' + height / 2 + ')';
+      },
+      getDiameter: function(w, h) {
+        return Math.min.call(null, w, h);
+      },
+      canShowGoBack: function(focus) {
+        return focus && focus.depth;
       },
       nodeAdaptor: function(nodes) {
         return nodes.map(function(n) {
@@ -158,19 +175,17 @@
 
         var root = this.getRootNode(this.chartData);
         this.rootNode = root;
- 
+
         var nodes = pack(root).descendants();
 
         return this.nodeAdaptor(nodes);
-      },
-      getDiameter: function(w, h) {
-        return Math.min.call(null, w, h);
       },
       render: function(chartData) {
         var margin = constants.margin;
         var nodes = this.getNodes();
  
-         var focus = this.getFocus(nodes, this.focusInfo);
+        var focus = this.getFocus(nodes, this.focusInfo);
+        this.focus = focus;
         // fire `focus-changed` event
         this.fire('focus-changed', { value: focus});
  
@@ -283,6 +298,7 @@
         function zoom(d) {
           var focus0 = focus;
           focus = d;
+          _this.focus = focus;
 
           _this.fire('focus-changed', {
             value: focus,
