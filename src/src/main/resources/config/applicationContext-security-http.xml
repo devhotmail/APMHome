@@ -1,86 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans:beans xmlns="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
-            xmlns:p="http://www.springframework.org/schema/p"
+             xmlns:p="http://www.springframework.org/schema/p"
              xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-    <!-- public pages -->
-    <http pattern="/login.xhtml" security="none" />
-    <http pattern="/restful/*" security="none" />
-    <http pattern="/ws/*" security="none" />
-    <http pattern="/soap/*" security="none" />
-    <http pattern="/favicon.ico" security="none" />
-    <http pattern="/resources/*" security="none" />
-    <http pattern="/javax.*/**" security="none" />
-    <http pattern="/login.faces*" security="none" />
-    <http pattern="/error/*" security="none" />
-    <http pattern="/about.html" security="none" />
-	
-    <beans:bean name="logoutHandler" class="com.ge.apm.view.sysutil.LogoutHandler" 
-                p:logoutSuccessUrl="/login.xhtml"/>
-    
-    <!-- secure pages -->
-    <http auto-config="true" use-expressions="true">
-        <form-login login-page="/login.xhtml" default-target-url="/home.xhtml" login-processing-url="/logincheck" always-use-default-target="true" authentication-failure-url="/login?login_error=1"/>
-        <logout logout-url="/logout.xhtml" success-handler-ref="logoutHandler"/>
+  <!-- public pages -->
+  <http pattern="/login.xhtml" security="none"/>
+  <http pattern="/restful/*" security="none"/>
+  <http pattern="/ws/*" security="none"/>
+  <http pattern="/soap/*" security="none"/>
+  <http pattern="/favicon.ico" security="none"/>
+  <http pattern="/resources/*" security="none"/>
+  <http pattern="/javax.*/**" security="none"/>
+  <http pattern="/login.faces*" security="none"/>
+  <http pattern="/error/*" security="none"/>
+  <http pattern="/about.html" security="none"/>
 
-        <intercept-url pattern="/web/**" access="permitAll"/>
-        
-        <intercept-url pattern="/**/wechat/asset/Detail.xhtml" access="permitAll"/>
-        <intercept-url pattern="/**/wechat/asset/**" access="isAuthenticated()"/>
-        <intercept-url pattern="/**/wechat/**" access="permitAll"/>
+  <beans:bean name="logoutHandler" class="com.ge.apm.view.sysutil.LogoutHandler"
+              p:logoutSuccessUrl="/login.xhtml"/>
 
-        <intercept-url pattern="/home.xhtml" access="isAuthenticated()"/>
-        <intercept-url pattern="/api/**" access="isAuthenticated()"/>
-        <intercept-url pattern="/sysadmin/**" access="hasRole('SuperAdmin')"/>
-        <intercept-url pattern="/admin/**" access="hasRole('SuperAdmin')" />	
+  <!-- secure pages -->
+  <http auto-config="true" use-expressions="true" create-session="never">
+    <form-login login-page="/login.xhtml" default-target-url="/home.xhtml" login-processing-url="/logincheck" always-use-default-target="true" authentication-failure-url="/login?login_error=1"/>
+    <logout logout-url="/logout.xhtml" success-handler-ref="logoutHandler"/>
+    <intercept-url pattern="/web/**" access="permitAll"/>
 
-        <!-- 首页 -->
-        <intercept-url pattern="/homeHead**" access="hasAnyRole('SuperAdmin','HospitalHead')"/>
-        <intercept-url pattern="/homeAssetHead**" access="hasAnyRole('SuperAdmin','AssetHead')"/>
-        <intercept-url pattern="/homeDeptHead**" access="hasAnyRole('SuperAdmin','DeptHead')"/>
-        
-        <!-- 系统管理 -->
-        <intercept-url pattern="/portal/uaa/**" access="hasRole('ITAdmin')"/>
-        <intercept-url pattern="/portal/insp/checkListList**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead','AssetStaff')"/> <!-- 巡检条目配置 -->
-        <intercept-url pattern="/portal/i18n/FieldCodeType.xhtml**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead')"/> <!-- 系统编码配置 -->
-                
-        <!-- 设备档案 -->
-        <intercept-url pattern="/portal/asset/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/> 
-        
-        <!-- 维修管理 -->
-        <intercept-url pattern="/portal/wo/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 维修管理 -->
+    <intercept-url pattern="/**/wechat/asset/Detail.xhtml" access="permitAll"/>
+    <intercept-url pattern="/**/wechat/asset/**" access="isAuthenticated()"/>
+    <intercept-url pattern="/**/wechat/**" access="permitAll"/>
 
-        <!-- 设备监控 -->
-        <intercept-url pattern="/portal/analysis/assetStatus**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/> <!-- 状态监控 -->
-        <intercept-url pattern="/portal/analysis/assetMaintenance**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','AssetStaff')"/>   <!-- 维修事件统计 -->
-        <intercept-url pattern="/portal/analysis/assetUsage**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','AssetStaff','DeptHead')"/> <!-- 使用情况统计 -->
-        <intercept-url pattern="/portal/analysis/assetScan**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead')"/> <!-- 扫描详情统计 -->
+    <intercept-url pattern="/home.xhtml" access="isAuthenticated()"/>
+    <intercept-url pattern="/api/**" access="isAuthenticated()"/>
+    <intercept-url pattern="/sysadmin/**" access="hasRole('SuperAdmin')"/>
+    <intercept-url pattern="/admin/**" access="hasRole('SuperAdmin')"/>
 
-        <!-- 预防维护 -->
-        <intercept-url pattern="/portal/insp/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 巡检管理 -->
-        <intercept-url pattern="/portal/pm/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 保养管理 -->
-        <intercept-url pattern="/portal/metering/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 计量管理 -->
-        <intercept-url pattern="/portal/qc/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 质控管理 -->
-        <intercept-url pattern="/portal/adverseEvent/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 不良事件上报 -->
+    <!-- 首页 -->
+    <intercept-url pattern="/homeHead**" access="hasAnyRole('SuperAdmin','HospitalHead')"/>
+    <intercept-url pattern="/homeAssetHead**" access="hasAnyRole('SuperAdmin','AssetHead')"/>
+    <intercept-url pattern="/homeDeptHead**" access="hasAnyRole('SuperAdmin','DeptHead')"/>
 
-        <!-- 知识文档 -->
-        <intercept-url pattern="/portal/asset/fileAttachment/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/> <!-- 文档管理 -->
-        
-        <!-- 绩效分析 -->
-        <intercept-url pattern="/portal/analysis/assetPerf**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 绩效分析 -->
-        <intercept-url pattern="/portal/analysis/assetForecast**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 绩效预测 -->
-        <intercept-url pattern="/portal/analysis/assetDecision**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 辅助决策 -->
+    <!-- 系统管理 -->
+    <intercept-url pattern="/portal/uaa/**" access="hasRole('ITAdmin')"/>
+    <intercept-url pattern="/portal/insp/checkListList**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead','AssetStaff')"/> <!-- 巡检条目配置 -->
+    <intercept-url pattern="/portal/i18n/FieldCodeType.xhtml**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead')"/> <!-- 系统编码配置 -->
 
-        <intercept-url pattern="/**/*.xhtml*" access="isAuthenticated()"/>
-        <access-denied-handler error-page="/accessdeniedzh.xhtml" />
-        <!--
-        <port-mappings>
-            <port-mapping http="80" https="443"/>
-            <port-mapping http="8080" https="443"/>
-        </port-mappings>
-        -->
-    </http>
+    <!-- 设备档案 -->
+    <intercept-url pattern="/portal/asset/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/>
+
+    <!-- 维修管理 -->
+    <intercept-url pattern="/portal/wo/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 维修管理 -->
+
+    <!-- 设备监控 -->
+    <intercept-url pattern="/portal/analysis/assetStatus**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/> <!-- 状态监控 -->
+    <intercept-url pattern="/portal/analysis/assetMaintenance**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','AssetStaff')"/>   <!-- 维修事件统计 -->
+    <intercept-url pattern="/portal/analysis/assetUsage**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','AssetStaff','DeptHead')"/> <!-- 使用情况统计 -->
+    <intercept-url pattern="/portal/analysis/assetScan**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead')"/> <!-- 扫描详情统计 -->
+
+    <!-- 预防维护 -->
+    <intercept-url pattern="/portal/insp/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 巡检管理 -->
+    <intercept-url pattern="/portal/pm/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 保养管理 -->
+    <intercept-url pattern="/portal/metering/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 计量管理 -->
+    <intercept-url pattern="/portal/qc/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 质控管理 -->
+    <intercept-url pattern="/portal/adverseEvent/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 不良事件上报 -->
+
+    <!-- 知识文档 -->
+    <intercept-url pattern="/portal/asset/fileAttachment/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/> <!-- 文档管理 -->
+
+    <!-- 绩效分析 -->
+    <intercept-url pattern="/portal/analysis/assetPerf**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 绩效分析 -->
+    <intercept-url pattern="/portal/analysis/assetForecast**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 绩效预测 -->
+    <intercept-url pattern="/portal/analysis/assetDecision**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 辅助决策 -->
+
+    <intercept-url pattern="/**/*.xhtml*" access="isAuthenticated()"/>
+    <access-denied-handler error-page="/accessdeniedzh.xhtml"/>
+  </http>
 </beans:beans>
