@@ -25,10 +25,10 @@
                         <label class="weui-form-preview__label">型号</label>
                         <span class="weui-form-preview__value" id="assetGroup"></span>
                     </div>
-                    <div class="weui-form-preview__item">
+<!--                    <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">安放地址</label>
                         <span class="weui-form-preview__value" id="locationName"></span>
-                    </div>
+                    </div>-->
                     <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">报修人</label>
                         <span class="weui-form-preview__value" id="requestor"></span>
@@ -58,6 +58,9 @@
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
                             <a class="weui-btn weui-btn_plain-primary" type="button" id="replay">播放</a>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <a style="margin-left:10px;text-decoration:underline" href="javascript:;" id="voiceBackUp">没声音?</a>
                         </div>
                     </div>
                 </div>
@@ -167,6 +170,20 @@
                         </div>
                     </div>
                 </div>
+                <!--工单类型-->
+                <div class="weui-cells__title">工单类型*</div>
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <div class="weui-cell weui-cell_select">
+                                <div class="weui-cell__bd">
+                                    <select class="weui-select" name="intExtType" id="intExtType" >
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div id="showTime" style="display: none">
@@ -176,6 +193,29 @@
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
                             <input id="estimatedCloseTime" name="estimatedCloseTime" class="weui-input" type="datetime-local" readonly="readonly"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="showAssetStatus" style="display: none">
+                <div class="weui-cells__title">选择</div>
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label for="assetStatus" class="weui-label">资产状态</label></div>
+                        <div class="weui-cell__bd">
+                            <div class="weui-cell weui-cell_select">
+                                <div class="weui-cell__bd">
+                                    <select class="weui-select" name="assetStatus" id="assetStatus" >
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label for="confirmedUpTime" class="weui-label">恢复时间*</label></div>
+                        <div class="weui-cell__bd">
+                            <input id="confirmedUpTime" name="confirmedUpTime" class="weui-input" type="datetime-local"/>
                         </div>
                     </div>
                 </div>
@@ -241,7 +281,7 @@
                         pageManager.workOrder = ret;
                         
                         pageManager.showReView = ret.currentStepId === 6;
-                        pageManager.showCancel = pageManager.showCancel && ret.currentStepId < 4;
+                        pageManager.showCancel = false;//pageManager.showCancel && ret.currentStepId < 4;
                         pageManager.showAssign = ret.currentStepId === 2 && pageManager.showBtn && !pageManager.showCancel;
                         pageManager.showTime = ret.currentStepId >= 3 && ret.currentStepId <5;
                         pageManager.showComment = (ret.currentStepId > 2 && pageManager.showBtn) || pageManager.showCancel;
@@ -255,6 +295,7 @@
                             mediaShow();
                         }else{
                             $('#replay').addClass('weui-btn_plain-disabled');
+                            $('#voiceBackUp').addClass('weui-btn_plain-disabled');
                         }
                         if (!pageManager.showPat) {
                             renderImgs();
@@ -289,6 +330,7 @@
                 if (pageManager.showAssign) {
                     $('#showAssign').show();
                     app.initUserSelect('currentPersonId', 'getcurrentperson');
+                    app.initSelectData('intExtType', 'intExtType', 1);
                 }
             
                 if (pageManager.showTime && pageManager.step >= 3 ) {
@@ -331,6 +373,13 @@
                             default: $('#submit').html('反馈');$('#returnSubmit').hide();
                         }
                     }
+                }
+                
+                if (pageManager.step === 4 && pageManager.showBtn && !pageManager.takeOtherWo) {
+                    $('#showAssetStatus').show();
+                    app.initSelectData('assetStatus', 'assetStatus', pageManager.workOrder.assetStatus);
+                } else {
+                    $('#showAssetStatus').hide();
                 }
             
                 if (pageManager.showComment){
@@ -376,7 +425,7 @@
                         $(".weui-rater a").eq(i).addClass('checked');
                     }
                 });
-            
+                
                 $('#submit').click(function(){
                     $('#errorMsg').html('');
                     var data = colletionData();
@@ -389,8 +438,13 @@
                 });
                 $('#otherSubmit').click(function(){
                     $('#errorMsg').html('');
+                    if(!$('#confirmedUpTime').val()){
+                        $('#errorMsg').html('请选择恢复时间');
+                        return;
+                    } 
                     pageManager.actionType = 'repair';
-                    post({woId: pageManager.woId, actionType: 'repair', desc: $('#description').val()});
+                    post({woId: pageManager.woId, actionType: 'repair', desc: $('#description').val(), 
+                        assetStatus: $('#assetStatus').val(), confirmedUpTime : $('#confirmedUpTime').val().replace('T', ' ')});
                 });
                 $('#returnSubmit').click(function(){
                     $('#errorMsg').html('');
@@ -479,7 +533,7 @@
             }
             function colletionData() {
                 switch(pageManager.step) {
-                    case 2: return {woId: pageManager.woId, actionType: 'assign', assigneeId: $('#currentPersonId').val()};
+                    case 2: return {woId: pageManager.woId, actionType: 'assign', assigneeId: $('#currentPersonId').val(), intExtType: $('#intExtType').val()};
                     case 3: return {woId: pageManager.woId, actionType: 'take', estimatedCloseTime: $('#estimatedCloseTime').val().replace('T', ' '), desc: $('#description').val()};
                     case 4: return {woId: pageManager.woId, actionType: 'sign', desc: $('#description').val()};
                     case 5: return {woId: pageManager.woId, actionType: 'close', desc: $('#description').val(),
@@ -514,6 +568,12 @@
             
             function mediaShow() {
                 if (!pageManager.showPat) {
+                    
+                    $('#voiceBackUp').click(function(){
+                        pageManager.go('ts_voice_backup');
+                        $('audio').attr('src', WEB_ROOT+'web/audio/'+pageManager.voice);
+                    });
+                    
                     var relocalId = null;
                     var replaying = false;
                     $.get(WEB_ROOT+'web/media',{serverId : pageManager.voice}, function(ret) {

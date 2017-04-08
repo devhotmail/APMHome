@@ -8,9 +8,39 @@
 
 
     <ui:define name="head">
-        <h:outputScript name="js/voice.js"/>
-        <h:outputScript name="js/pcmdata-2.0.0.min.js"/>
-        <h:outputScript name="js/libamr-2.0.1.min.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/js/jquery.jplayer.min.js"/>
+        <style>
+            .demo-container {
+                border: 1px solid #009BE3;
+                padding:0 20px;
+                font-family: "Myriad Pro Regular","Trebuchet MS";
+            }
+
+            .demo-container a, .demo-container a:link, .demo-container a:visited, .demo-container a:hover, .demo-container a:focus, .demo-container a:active {
+                color: #009BE3;
+            }
+
+            .demo-container ul {
+                list-style-type:none;
+                padding:0;
+                margin:1em 0;
+                width:100%;
+                overflow:hidden;
+            }
+
+            .demo-container ul span {
+                color: #A0A600;
+            }
+
+            .demo-container li {
+                float:left;
+                margin-right:1em;
+            }
+
+            .demo-container p span.track-name {
+                color: #CC0090;
+            }
+        </style>
     </ui:define>
     <ui:define name="content">
         <div class="ui-g">
@@ -29,22 +59,30 @@
                     <div class="ui-g-5">
                         <p:fieldset legend="语音描述" id="audioComment" >
                             <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" >
-                                <c:forEach  items="#{assetCreateController.audioList}" var="item" varStatus="status">
-                                    <h:panelGroup>
-                                        <h:inputHidden id="audio#{status.index}" value="#{assetCreateController.getAudioBase64(item.fileId)}"/>
-                                        <button id="playAudio#{status.index}" >play</button>
-                                        <button id="stopAudio#{status.index}" >stop</button>
-                                    </h:panelGroup>
+
+                                <div id="jquery_jplayer"></div>
+                                <div id="jp_container" class="demo-container">
+                                    <ul id="audioUl">
+                                        <li><span>语音列表 : </span></li>
+                                    </ul>
+                                    <p>
+                                        <span class="play-state"></span> :
+                                        <span class="track-name">无</span>
+                                        <span class="extra-play-info"></span>
+                                        共 <span class="jp-duration"></span>, 播放至
+                                        <span class="jp-current-time"></span>
+                                    </p>
+                                    <ul>
+                                        <li><a class="jp-play" href="#">Play</a></li>
+                                        <li><a class="jp-pause" href="#">Pause</a></li>
+                                        <li><a class="jp-stop" href="#">Stop</a></li>
+                                    </ul>
+                                </div>
+                                <c:forEach items="#{assetCreateController.audioList}" var="item" varStatus="status">
+                                    <h:inputHidden class="mp3Link" value="#{wechatUtilService.getContextPath()}/web/audio/#{item.fileId}" id="audio#{status.index}"/>
                                 </c:forEach>
                             </p:panelGrid>
                         </p:fieldset>
-
-                        <!--<c:forEach items="#{assetCreateController.audioList}" var="item">-->
-<!--                            <p:media value="#{pictureService.getImage()}" width="300" height="100" player="quicktime" >
-                                <f:param name="pictureId" value="73" />
-                                <f:param name="autoPlay" value="false"  />
-                            </p:media>-->
-                        <!--</c:forEach>-->
 
                         <p:fieldset legend="文字描述" id="textComment" >
                             <c:forEach items="#{assetCreateController.getCommentsList()}" var="item">
@@ -95,14 +133,10 @@
                                         <p:calendar timeZone="GMT+8"  id="manufactDate" pattern="yyyy/MM/dd" value="#{assetCreateController.assetInfo.manufactDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"  />
                                     </h:panelGroup>
 
-                                    <!--<p:spacer/>-->
-
-
                                     <h:panelGroup>
                                         <label class="label">#{msg.manufacture}</label>
                                         <p:inputText id="manufacture" value="#{assetCreateController.assetInfo.manufacture}"/>
                                     </h:panelGroup>
-
 
                                 </p:panelGrid>
                             </p:fieldset>
@@ -204,15 +238,12 @@
                                 </c:forEach>
                             </p:fieldset>
 
-
                             <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                                 <h:panelGroup >
                                     <p:commandButton value="#{msg.Save}" icon="ui-icon-check" action="#{assetCreateController.applyChange()}" validateClient="true" update=":growl" style="float:left"/>
                                     <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="RequestsList?faces-redirect=true" immediate="true"  style="float:left"/>
                                 </h:panelGroup>
                             </p:panelGrid>
-
-
 
                         </h:form>
 
@@ -234,7 +265,6 @@
                                 </h:panelGroup>
                             </p:panelGrid>
 
-
                         </h:form>
                     </p:tab>
 
@@ -242,51 +272,112 @@
 
             </div>
 
+        </div>
+
+        <div >
 
         </div>
-        <p:dialog id="shwoPicDialog" widgetVar="shwoPicDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)"  maximizable="true" header="图片">
+        <div id="shwoPicDialog" class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-shadow ui-hidden-container">
+            <div class="ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-corner-top">
+                <span id="shwoPicDialog_title" class="ui-dialog-title">图片</span><a href="#" class="ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all" aria-label="Close">
+                    <span class="ui-icon ui-icon-closethick"></span></a>
+                <a href="#" class="ui-dialog-titlebar-icon ui-dialog-titlebar-maximize ui-corner-all"><span class="ui-icon ui-icon-extlink"></span></a>
+            </div>
+            <div class="ui-dialog-content ui-widget-content">
 
-            <image id="shwoPicDialogImg"  src="123"/>
+                <image id="shwoPicDialogImg" src=""></image>
+            </div>
+        </div>
+        <script id="shwoPicDialog_s" type="text/javascript">$(function () {
+                PrimeFaces.cw("Dialog", "shwoPicDialog", {id: "shwoPicDialog", modal: true, appendTo: "@(body)"});
+            });
+        </script>
 
-        </p:dialog>
         <script>
-
-            $playButtons = $("button[id*='playAudio']");
-            $stopButtons = $("button[id*='stopAudio']");
-            $.each($stopButtons, function (idx, value) {
-                value.disabled = true;
-            });
-
-            $playButtons.on("click", function () {
-                $.each($playButtons, function (idx, value) {
-                    value.disabled = true;
-                });
-                var stopid = this.id.replace("play", "stop");
-                $.each($stopButtons, function (idx, value) {
-                    value.disabled = (value.id !== stopid);
-                });
-                RongIMLib.RongIMVoice.init();
-                var base64Str = $(this).parent().find('input').val();
-                RongIMLib.RongIMVoice.play(base64Str);
-            });
-
-            $stopButtons.on("click", function () {
-                $.each($playButtons, function (idx, value) {
-                    value.disabled = false;
-                });
-                $.each($stopButtons, function (idx, value) {
-                    value.disabled = true;
-                });
-                RongIMLib.RongIMVoice.stop();
-            });
-
+//<![CDATA[
             function showthis(pic) {
                 var s = $('#shwoPicDialogImg')[0]
                 s.src = pic.src;
                 PF('shwoPicDialog').show();
             }
 
+            $(document).ready(function () {
 
+
+                var $audioUlEle = $("#audioUl");
+                var audioList = $("input[id*='audio']");
+                $.each(audioList, function (index) {
+                    var audioClass = (index == 0 ? "track-default" : "");
+                    var templ = "<li><a href=" + this.value + " class='track " + audioClass + "'>语音" + (index + 1) + "</a></li>";
+                    $audioUlEle.append(templ);
+                });
+
+
+
+                // Local copy of jQuery selectors, for performance.
+                var my_jPlayer = $("#jquery_jplayer"),
+                        my_trackName = $("#jp_container .track-name"),
+                        my_playState = $("#jp_container .play-state"),
+                        my_extraPlayInfo = $("#jp_container .extra-play-info");
+
+                // Some options
+                var opt_play_first = false, // If true, will attempt to auto-play the default track on page loads. No effect on mobile devices, like iOS.
+                        opt_auto_play = true, // If true, when a track is selected, it will auto-play.
+                        opt_text_playing = "播放", // Text when playing
+                        opt_text_selected = "选择"; // Text when not playing
+
+                // A flag to capture the first track
+                var first_track = true;
+
+                // Change the time format
+                $.jPlayer.timeFormat.padMin = false;
+                $.jPlayer.timeFormat.padSec = false;
+                $.jPlayer.timeFormat.sepMin = " 分 ";
+                $.jPlayer.timeFormat.sepSec = " 秒";
+
+                // Initialize the play state text
+                my_playState.text(opt_text_selected);
+
+                // Instance jPlayer
+                my_jPlayer.jPlayer({
+                    ready: function () {
+                        $("#jp_container .track-default").click();
+                    },
+                    timeupdate: function (event) {
+                        my_extraPlayInfo.text(parseInt(event.jPlayer.status.currentPercentAbsolute, 10) + "%");
+                    },
+                    play: function (event) {
+                        my_playState.text(opt_text_playing);
+                    },
+                    pause: function (event) {
+                        my_playState.text(opt_text_selected);
+                    },
+                    ended: function (event) {
+                        my_playState.text(opt_text_selected);
+                    },
+                    swfPath: "../../dist/jplayer",
+                    cssSelectorAncestor: "#jp_container",
+                    supplied: "mp3",
+                    wmode: "window"
+                });
+
+                // Create click handlers for the different tracks
+                var temp = $("#jp_container .track");
+                $("#jp_container .track").click(function (e) {
+                    my_trackName.text($(this).text());
+                    my_jPlayer.jPlayer("setMedia", {
+                        mp3: $(this).attr("href")
+                    });
+                    if ((opt_play_first && first_track) || (opt_auto_play && !first_track)) {
+                        my_jPlayer.jPlayer("play");
+                    }
+                    first_track = false;
+                    $(this).blur();
+                    return false;
+                });
+
+            });
+            //]]>
         </script>
     </ui:define>
 

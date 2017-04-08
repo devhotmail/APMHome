@@ -12,7 +12,6 @@ import com.ge.apm.service.utils.audio.EncodingAttributes;
 import com.ge.apm.service.utils.audio.InputFormatException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +23,9 @@ import org.apache.commons.codec.binary.Base64;
  * @author 212579464
  */
 public class AmrAudioUtil {
-    public static String changeAmrToMp3Base64(InputStream ins) throws FileNotFoundException, IOException {
+    
+    
+    public static String changeAmrToMp3Base64(InputStream ins) throws IOException {
         File temp = new File(System.getProperty("java.io.tmpdir"), "apm");
         if (!temp.exists()) {
             temp.mkdirs();

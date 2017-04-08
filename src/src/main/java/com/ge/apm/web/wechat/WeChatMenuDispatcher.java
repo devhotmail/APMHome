@@ -57,6 +57,7 @@ public class WeChatMenuDispatcher {
         URL_MAP.put("26", "/web/coding");
         URL_MAP.put("27", "/web/coding");
         URL_MAP.put("28", "/web/coding");
+        URL_MAP.put("29", "/web/coding");
         
         URL_MAP.put("31", "/wechat/uaa/viewUserAccount.xhtml");
         URL_MAP.put("32", "/wechat/uaa/resetAccountPassword.xhtml");
