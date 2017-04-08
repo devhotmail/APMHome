@@ -413,21 +413,38 @@ and open the template in the editor.
                                         </div>
                                         <div class="weui-cell__bd">#{fieldMsg.fieldValue('depreciationMethodList', wxAssetInfoController.assetInfo.depreciationMethod)}</div>
                                     </div>
-                                    
-                                    
+
+
                                 </div>
-                                
-                                
+
+
                             </div>
 
                             <p class="weui-btn-area">
                                 <a id="viewMore" href="javascript:showDetails();" class="weui-btn weui-btn_primary">查看更多信息</a>
                             </p>
-                            
+
                         </div>
                         <div id="tab2Panel" class="weui-tab__content">
 
                             <div class="page__bd">
+
+                            <h:panelGroup rendered="#{empty wxAssetInfoController.woList}">
+                                <div class="weui-cells">
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__bd">
+                                            <h4> #{msg.noRecordFound}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+
+                            <div class="weui-msg__opr-area">
+                                <p class="weui-btn-area">
+                                    <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增报修</a>
+                                </p>
+                            </div>
+
                                 <c:forEach  items="#{wxAssetInfoController.woList}" var="item" >
                                     <div class="weui-cells">
                                         <div class="weui-cell">
@@ -452,22 +469,6 @@ and open the template in the editor.
                                     </div>
                                 </c:forEach>
 
-                                <h:panelGroup rendered="#{empty wxAssetInfoController.woList}">
-                                    <div class="weui-cells">
-                                        <div class="weui-cell">
-                                            <div class="weui-cell__bd">
-                                                <h4> #{msg.noRecordFound}</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </h:panelGroup>
-
-                                <div class="weui-msg__opr-area">
-                                    <p class="weui-btn-area">
-                                        <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增报修</a>
-                                    </p>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -598,14 +599,14 @@ and open the template in the editor.
             var $iosDialog1 = $('#settingDialog');
             $iosDialog1.fadeIn(200);
         }
-        
-        function showDetails(){
-            
-            if($("#detailPanel").css('display')=='none'){
-                $("#detailPanel").css('display','block'); 
+
+        function showDetails() {
+
+            if ($("#detailPanel").css('display') == 'none') {
+                $("#detailPanel").css('display', 'block');
                 $("#viewMore").html("收起");
-            }else{
-                $("#detailPanel").css('display','none'); 
+            } else {
+                $("#detailPanel").css('display', 'none');
                 $("#viewMore").html("查看更多信息");
             }
         }
