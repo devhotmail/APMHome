@@ -7,15 +7,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.OrgInfoRepository;
+import com.ge.apm.dao.QrCodeLibRepository;
 import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.MessageSubscriber;
 import com.ge.apm.domain.OrgInfo;
+import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.service.asset.MessageSubscriberService;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.service.utils.QRCodeUtil;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,7 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private AssetInfoRepository assetDao;
     private OrgInfoRepository orgDao;
+    private QrCodeLibRepository qrLibDao;
     private MessageSubscriberService msService;
     private AssetFileAttachmentRepository attachDao = null;
     private UserContextService userContextService;
@@ -64,6 +68,7 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         assetDao = WebUtil.getBean(AssetInfoRepository.class);
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         orgDao = WebUtil.getBean(OrgInfoRepository.class);
+        qrLibDao = WebUtil.getBean(QrCodeLibRepository.class);
         userContextService = WebUtil.getBean(UserContextService.class);
         msService = WebUtil.getBean(MessageSubscriberService.class);
         uaaService = WebUtil.getBean(UaaService.class);
@@ -151,7 +156,14 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         }
         List<AssetInfo> resList = assetDao.getByQrCode(qrCode);
         if (resList.isEmpty()) {
-            return null;
+            QrCodeLib qrLib= qrLibDao.findByQrCode(qrCode);
+            if(null == qrLib){
+                assetFlag = 0;
+                return null;
+            }else{
+                assetFlag = qrLib.getStatus();
+                return null;
+            }
         } else if (resList.size() == 1) {
             return resList.get(0);
         } else {
@@ -206,6 +218,10 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         } else {
             WebUtil.addErrorMessage("保存失败");
         }
+    }
+    
+     public String getQrCodeImageBase64(){
+        return QRCodeUtil.getQRCodeImageBase64(assetInfo.getQrCode());
     }
 
     @Override

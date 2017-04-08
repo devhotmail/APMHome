@@ -25,6 +25,8 @@ INSERT INTO sys_role(id,name,role_desc,home_page) values ('3', 'AssetStaff', '�
 INSERT INTO sys_role(id,name,role_desc,home_page) values ('4', 'DeptHead', '科室主任', '/homeDeptHead.xhtml');
 INSERT INTO sys_role(id,name,role_desc,home_page) values ('5', 'ITAdmin', 'IT管理员', '/portal/uaa/userAccount/List.xhtml');
 INSERT INTO sys_role(id,name,role_desc,home_page) values ('6', 'MultiHospital', '多院区管理', '');
+INSERT INTO sys_role(id,name,role_desc,home_page) values ('7', 'ClinicalStaff', '临床科室人员', '/homeAssetStaff.xhtml');
+
 
 INSERT INTO user_account(id,site_id,hospital_id,org_id,login_name,name,pwd_salt,password,email,telephone,is_super_admin,is_site_admin,is_local_admin,is_active,is_online,last_login_time) values ('1', '1', '1', '1', 'admin', 'administrator', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'apm.admin@ge.com', '', 't', 't', 't', 't', 't', '2016-10-17 10:57:00');
 INSERT INTO user_account(id,site_id,hospital_id,org_id,login_name,name,pwd_salt,password,email,telephone,is_super_admin,is_site_admin,is_local_admin,is_active,is_online,last_login_time) values ('2', '2', '2', '2', 'head', '院长', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'head@a.com', null, 'f', 'f', 'f', 't', 'f', null);

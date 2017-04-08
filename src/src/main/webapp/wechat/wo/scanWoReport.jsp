@@ -46,8 +46,8 @@
                             pageManager.woId = ret.woId;
                             pageManager.showTime = true;
                             pageManager.showComment = false;
-                            pageManager.showCancel = ret.requestorId == '${userId}' && ret.currentStepId < 4;
-                            pageManager.showBtn = ret.requestorId == '${userId}' && ret.currentStepId !== 4 && ret.currentStepId !== 5;
+                            pageManager.showCancel = false;//ret.requestorId == '${userId}' && ret.currentStepId < 4;
+                            pageManager.showBtn = ret.requestorId == '${userId}' && ret.currentStepId === 6;
                             pageManager.init('ts_wodetail');
                         } else {
                             pageManager.assetId = ret.assetId;
@@ -81,10 +81,10 @@
                                 <label class="weui-form-preview__label">类型</label>
                                 <span class="weui-form-preview__value" id="assetGroup"></span>
                             </div>
-                            <div class="weui-form-preview__item">
+<!--                            <div class="weui-form-preview__item">
                                 <label class="weui-form-preview__label">状态</label>
                                 <span class="weui-form-preview__value" id="assetStatus"></span>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                     
@@ -98,9 +98,10 @@
                     </div>
 
                     <form id="woForm">
-                        <div class="weui-cells__title">故障紧急程度</div>
+                        <div class="weui-cells__title">选择</div>
                         <div class="weui-cells">
                             <div class="weui-cell">
+                                <div class="weui-cell__hd"><label for="casePriority" class="weui-label">紧急程度</label></div>
                                 <div class="weui-cell__bd">
                                     <div class="weui-cell weui-cell_select">
                                         <div class="weui-cell__bd">
@@ -108,6 +109,23 @@
                                             </select>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="weui-cell">
+                                <div class="weui-cell__hd"><label for="assetStatus" class="weui-label">资产状态</label></div>
+                                <div class="weui-cell__bd">
+                                    <div class="weui-cell weui-cell_select">
+                                        <div class="weui-cell__bd">
+                                            <select class="weui-select" name="assetStatus" id="assetStatus" >
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="weui-cell">
+                                <div class="weui-cell__hd"><label for="confirmedDownTime" class="weui-label">停机时间</label></div>
+                                <div class="weui-cell__bd">
+                                    <input id="confirmedDownTime" name="confirmedDownTime" class="weui-input" type="datetime-local"/>
                                 </div>
                             </div>
                         </div>
@@ -165,13 +183,14 @@
                 $(function(){
                     //init casePriority
                     app.initSelectData('casePriority', 'casePriority', '${casePriority}');
+                    app.initSelectData('assetStatus', 'assetStatus', pageManager.workOrder.assetStatus);
                     pageManager.serverIds = [];
                     
                     $('#assetId').val(pageManager.workOrder.assetId);
                     $('#assetName').html(pageManager.workOrder.assetName);
                     $('#supplier').html(pageManager.workOrder.supplier);
                     $('#assetGroup').html(pageManager.workOrder.assetGroup);
-                    $('#assetStatus').html(pageManager.workOrder.assetStatus);
+//                    $('#assetStatus').html(pageManager.workOrder.assetStatus);
                     
                     //图片功能开始
                     var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
@@ -331,7 +350,9 @@
                             voiceId: pageManager.voiceSerId,
                             imgIds: pageManager.serverIds.toString(),
                             priority: $('#casePriority').val(),
-                            reason: rReason
+                            reason: rReason,
+                            assetStatus: $('#assetStatus').val(),
+                            confirmedDownTime : $('#confirmedDownTime').val()?$('#confirmedDownTime').val().replace('T', ' '):''
                         };
                         $.ajax({
                             url: WEB_ROOT+'web/workorderCreate',

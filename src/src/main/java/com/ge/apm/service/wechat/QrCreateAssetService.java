@@ -1,11 +1,10 @@
 package com.ge.apm.service.wechat;
 
+import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.QrCodeAttachmentRepository;
 import com.ge.apm.dao.QrCodeLibRepository;
 import com.ge.apm.dao.UserAccountRepository;
-import com.ge.apm.domain.QrCodeAttachment;
-import com.ge.apm.domain.QrCodeLib;
-import com.ge.apm.domain.UserAccount;
+import com.ge.apm.domain.*;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.joda.time.DateTime;
@@ -16,10 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by 212605082 on 2017/3/21.
@@ -42,10 +43,36 @@ public class QrCreateAssetService {
     @Autowired
     UserAccountRepository userAccountRepository;
 
+    @Autowired
+    OrgInfoRepository orgInfoRepository;
+
     @Transactional
-    public Boolean createAsset(String openId, String qrCode, String voiceServerId, String imageServerIds, String uploaderFileBase64, String comment) throws WxErrorException {
+    public Boolean createAsset(String openId, String qrCode, String voiceServerId, String imageServerIds, String uploaderFileBase64, String comment, String assetName, String assetGroupSelect, String orgSelect, String userSelect) throws WxErrorException {
 
         QrCodeLib qrCodeLib = qrCodeLibRepository.findByQrCode(qrCode);
+
+        if(qrCodeLib == null || qrCodeLib.getStatus() == 3){
+            Logger.getLogger(QrCreateAssetService.class.getName()).log(Level.SEVERE, "error qrcode or error qrCode status", "");
+            return Boolean.FALSE;
+        }
+
+        qrCodeLib.setAssetName(assetName);
+        if(assetGroupSelect != null && !assetGroupSelect.equals("")){
+            qrCodeLib.setAssetGroup(Integer.valueOf(assetGroupSelect));
+        }
+        if(orgSelect != null && !orgSelect.equals("")){
+            qrCodeLib.setOrgId(Integer.valueOf(orgSelect));
+        }else{
+            qrCodeLib.setOrgId(null);
+        }
+        if(userSelect != null && !userSelect.equals("")){
+            qrCodeLib.setUserId(Integer.valueOf(userSelect));
+        }else{
+            qrCodeLib.setUserId(null);
+        }
+        qrCodeLib.setSubmitDate(new Date());
+        qrCodeLib.setSubmitWechatId(openId);
+        qrCodeLib.setStatus(2);
 
         DateTime dt = new DateTime();
         String dtStr = dt.toString("yyyyMMdd HH:mm:ss");
@@ -54,16 +81,12 @@ public class QrCreateAssetService {
         if(comment != null && !comment.trim().equals("")){
             tempComment = dtStr + " " + comment;
         }
-
-        qrCodeLib.setSubmitDate(new Date());
-        qrCodeLib.setSubmitWechatId(openId);
-        qrCodeLib.setStatus(2);
         qrCodeLib.setComment(qrCodeLib.getComment() == null ? tempComment : qrCodeLib.getComment() + "|" + tempComment);
 
         QrCodeLib tempQrCodeLib = qrCodeLibRepository.save(qrCodeLib);
 
         if(tempQrCodeLib == null){
-            return false;
+            return Boolean.FALSE;
         }
 
         /* 处理图片 */
@@ -172,6 +195,25 @@ public class QrCreateAssetService {
                 return Boolean.TRUE;
             }
         }
+    }
+
+    public List<I18nMessage> getMsg(String msgType){
+        return coreService.getMsg(msgType);
+    }
+
+    public List<OrgInfo> getOrgList(String qrCode){
+        QrCodeLib qrCodeLib = qrCodeLibRepository.findByQrCode(qrCode);
+
+        if(qrCodeLib != null){
+            return orgInfoRepository.getByHospitalId(qrCodeLib.getHospitalId());
+        }else{
+            return null;
+        }
+
+    }
+
+    public List<UserAccount> getUserList(int orgInfoId){
+        return userAccountRepository.getByOrgInfoId(orgInfoId);
     }
 
     public static void main(String args[]) {

@@ -9,6 +9,7 @@ import com.ge.apm.domain.QrCodeAttachment;
 import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.service.asset.AssetCreateService;
 import com.ge.apm.service.asset.AttachmentFileService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -75,6 +76,15 @@ public class CreateInfoController {
 
     public String getAudioBase64(Integer fileId) {
         return attachFileService.getBase64File(fileId);
+    }
+    public String getAudioBase64Mp3(Integer fileId) {
+        try {
+            return attachFileService.getMp3Base64String(fileId);
+        } catch (IOException ex) {
+            WebUtil.addErrorMessage("声音加载失败");
+            Logger.getLogger(CreateInfoController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public QrCodeLib getCreatedRequest() {

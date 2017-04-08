@@ -85,6 +85,58 @@
                 </div>
             </div>
 
+            <div class="weui-cells__title">&nbsp;设备信息(需要有设备名称和设备类型)</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">设备名称</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="assetName" name="assetName" value="${assetName}" class="weui-input" placeholder="请输入设备名称">
+                    </div>
+                </div>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">设备类型</label></div>
+                    <div class="weui-cell__bd">
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__bd">
+                                <select class="weui-select" name="assetGroupSelect" id="assetGroupSelect">
+                                    <option value="">请选择...</option>
+                                    <c:forEach var="item" items="${assetGroupList}">
+                                        <option value="${item.msgKey}" <c:if test="${item.msgKey == assetGroupSelect}">selected="selected"</c:if>>${item.valueZh}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">所属科室</label></div>
+                    <div class="weui-cell__bd">
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__bd">
+                                <select class="weui-select" name="orgSelect" id="orgSelect" onchange="initUserSelect(this.value);">
+                                    <option value="">请选择...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="userSelectDiv" class="weui-cell" style="display: none;">
+                    <div class="weui-cell__hd"><label class="weui-label">责任人</label></div>
+                    <div class="weui-cell__bd">
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__bd">
+                                <select class="weui-select" name="userSelect" id="userSelect">
+                                    <option value="">请选择...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="weui-cells__title">&nbsp;语音描述</div>
             <div class="weui-cells">
                 <div class="weui-cell">
@@ -172,10 +224,15 @@
 
                 validateQrCode(qrCode);
 
+                initOrgSelect(qrCode);
             });
         }else{
             init();
+            initOrgSelect(tempQrcode);
+            initUserSelect("${orgSelect}");
         }
+
+
 
         function validateQrCode(qrCode){
             $.ajax({
@@ -386,6 +443,8 @@
             var voice = $("#voiceServerId").val();
             var image = $("#imageServerIds").val();
             var comment = $("#comment").val();
+            var assetName = $("#assetName").val();
+            var assetGroupSelect = $("#assetGroupSelect").val();
 
             if(qrcode == ""){
                 showDialog("二维码不能为空！");
@@ -394,6 +453,16 @@
 
             if(image == ""){
                 showDialog("图片不能为空！");
+                return false;
+            }
+
+            if(assetName == ""){
+                showDialog("设备名称不能为空！");
+                return false;
+            }
+
+            if(assetGroupSelect == ""){
+                showDialog("必须选择设备类型！");
                 return false;
             }
 
@@ -414,6 +483,7 @@
             $("#comment").val("");
 
             $("#qrCreateAssetBody").show();
+
         }
 
         function gotoAssetMsgDiv (status, msgInfo){
@@ -548,7 +618,44 @@
             return num;
         }
 
-    })
+        function initOrgSelect(qrCode){
+            $.get(WEB_ROOT+"web/getOrgList",
+                {"qrCode": qrCode},
+                function(ret) {
+                    if (ret) {
+                        $.each(ret, function(idx, val){
+                            if (val.id == "${orgSelect}") {
+                                $('#orgSelect').append($('<option value="'+val.id+'" selected="selected">'+val.name+'</option>'));
+                            }else{
+                                $('#orgSelect').append($('<option value="'+val.id+'">'+val.name+'</option>'));
+                            }
+                        });
+                    }
+                }
+            );
+        }
+
+    });
+
+    function initUserSelect(orgId){
+        if(orgId != ""){
+            $.get(WEB_ROOT+"web/getUserList",
+                {"orgId": orgId},
+                function(ret) {
+                    $("#userSelectDiv").show();
+                    if (ret) {
+                        $.each(ret, function(idx, val){
+                            if (val.id == "${userSelect}") {
+                                $('#userSelect').append($('<option value="'+val.id+'" selected="selected">'+val.name+'</option>'));
+                            }else{
+                                $('#userSelect').append($('<option value="'+val.id+'">'+val.name+'</option>'));
+                            }
+                        });
+                    }
+                }
+            );
+        }
+    }
 
 </script>
 </html>

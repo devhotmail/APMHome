@@ -40,16 +40,16 @@ public class I18nMessage implements Serializable, Comparable {
     private String msgType;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 30)
+    @Size(min = 1, max = 60)
     @Column(name = "msg_key")
     private String msgKey;
-    @Size(max = 50)
+    @Size(max = 128)
     @Column(name = "value_zh")
     private String valueZh;
-    @Size(max = 50)
+    @Size(max = 128)
     @Column(name = "value_en")
     private String valueEn;
-    @Size(max = 50)
+    @Size(max = 128)
     @Column(name = "value_tw")
     private String valueTw;
     @Column(name = "site_id")

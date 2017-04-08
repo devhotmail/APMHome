@@ -77,7 +77,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (74, 'label', 'continue', '继续', 'Continue', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (75, 'label', 'QRCode', '二维码', 'QRCode', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (76, 'label', 'TerminatedAsset', '报废资产', 'Terminated Asset', NULL, -1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (77, 'label', 'QRCodeMgmt', '设备编码', 'Asset Code', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (77, 'label', 'QRCodeMgmt', '二维码管理', 'Asset Code', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (78, 'label', 'GenerateQRCodes', '生成二维码', 'Generate Code', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (79, 'label', 'QRCodeRefresh', '换一批', 'Refresh QRCode', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (80, 'label', 'GetQRCode', '扫码成功', 'Got QRCode', NULL, -1);

@@ -25,7 +25,7 @@ public class MenuConfig {
         button11.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/21", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button12 = new WxMenuButton();
         button12.setType(WxConsts.BUTTON_VIEW);
-        button12.setName("我的报修");
+        button12.setName("报修状态");
         button12.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/22", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));        
         button1.getSubButtons().add(button11);
         button1.getSubButtons().add(button12);
@@ -72,20 +72,25 @@ public class MenuConfig {
         button31.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/11", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button32 = new WxMenuButton();
         button32.setType(WxConsts.BUTTON_VIEW);
-        button32.setName("扫码查看");
+        button32.setName("扫码查档");
         button32.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/12", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button33 = new WxMenuButton();
         button33.setType(WxConsts.BUTTON_VIEW);
-        button33.setName("设备查询");
+        button33.setName("检索档案");
         button33.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/13", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         WxMenuButton button34 = new WxMenuButton();
         button34.setType(WxConsts.BUTTON_VIEW);
         button34.setName("用户绑定");
         button34.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName+"/web/menu/33", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        WxMenuButton button35 = new WxMenuButton();
+        button35.setType(WxConsts.BUTTON_VIEW);
+        button35.setName("设备盘点");
+        button35.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/29", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
         
         button3.getSubButtons().add(button31);
         button3.getSubButtons().add(button32);
         button3.getSubButtons().add(button33);
+        button3.getSubButtons().add(button35);
         button3.getSubButtons().add(button34);
         
         menu.getButtons().add(button1);

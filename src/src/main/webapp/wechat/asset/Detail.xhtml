@@ -188,7 +188,8 @@ and open the template in the editor.
                                             <label class="weui-label">#{msg.qrCode}</label>
                                         </div>
                                         <div class="weui-cell__ft">
-                                            <p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />
+                                            <!--<p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />-->
+                                            <img id='qrcode' src="#{wxAssetInfoController.getQrCodeImageBase64()}" height="20px" width="20px"/>
                                         </div>
                                     </div>
                                     <div class="weui-cell">
@@ -196,6 +197,13 @@ and open the template in the editor.
                                             <label class="weui-label">#{msg.clinicalDeptName}</label>
                                         </div>
                                         <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.clinicalDeptName}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.clinicalOwnerName}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.clinicalOwnerName}</div>
+                                        <div class="weui-cell__ft">#{wxAssetInfoController.assetInfo.clinicalOwnerTel}</div>
                                     </div>
                                     <div class="weui-cell">
                                         <div class="weui-cell__hd">
@@ -226,12 +234,196 @@ and open the template in the editor.
 
                                 </div>
                             </div>
-                            <div class="weui-msg__opr-area">
-                                <p class="weui-btn-area">
-                                    <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增报修</a>
-                                </p>
+
+                            <div class="weui-panel" id="detailPanel" style="display:none">
+                                <div class="weui-panel__hd">设备详细信息</div>
+                                <div class="weui-panel__bd">
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.aliasName}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.aliasName}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.serialNum}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.serialNum}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.vendor}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.vendor}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.departNum}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.departNum}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.assetGroup}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('assetGroup', wxAssetInfoController.assetInfo.assetGroup)}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.functionGrade}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('assetFunctionGrade', wxAssetInfoController.assetInfo.functionGrade)}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.functionGroup}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('assetFunctionType', wxAssetInfoController.assetInfo.functionGroup)}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.maitanance}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.maitanance}</div>
+                                        <div class="weui-cell__ft">#{wxAssetInfoController.assetInfo.maitananceTel}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.financingNum}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.financingNum}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.barcode}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.barcode}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.registrationNo}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.registrationNo}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.modalityId}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.modalityId}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.locationCode}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.locationCode}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.locationName}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.locationName}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.hospitalId}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.hospital.name}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.functionType}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.functionType}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.manufactDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.manufactDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.arriveDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.arriveDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.installDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.installDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.factoryWarrantyDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.factoryWarrantyDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.terminateDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.terminateDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.lastPmDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lastPmDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.lastQaDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lastQaDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.lastMeteringDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lastMeteringDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.salvageValue}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.salvageValue}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.purchasePrice}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.purchasePrice}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.lifecycle}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lifecycle}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.lifecycle}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lifecycleInYear}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.depreciationMethod}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('depreciationMethodList', wxAssetInfoController.assetInfo.depreciationMethod)}</div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                
+                                
                             </div>
 
+                            <p class="weui-btn-area">
+                                <a id="viewMore" href="javascript:showDetails();" class="weui-btn weui-btn_primary">查看更多信息</a>
+                            </p>
+                            
                         </div>
                         <div id="tab2Panel" class="weui-tab__content">
 
@@ -259,6 +451,7 @@ and open the template in the editor.
                                         </a>
                                     </div>
                                 </c:forEach>
+
                                 <h:panelGroup rendered="#{empty wxAssetInfoController.woList}">
                                     <div class="weui-cells">
                                         <div class="weui-cell">
@@ -269,6 +462,12 @@ and open the template in the editor.
                                     </div>
 
                                 </h:panelGroup>
+
+                                <div class="weui-msg__opr-area">
+                                    <p class="weui-btn-area">
+                                        <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增报修</a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -284,7 +483,10 @@ and open the template in the editor.
             <div class="page">
                 <div class="weui-msg">
                     <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
-                    <p><h:outputText value="设备未找到" rendered="#{wxAssetInfoController.assetFlag==0}"/> 
+                    <p>
+                        <h:outputText value="设备未找到" rendered="#{wxAssetInfoController.assetFlag==0}"/> 
+                        <h:outputText value="设备未建档" rendered="#{wxAssetInfoController.assetFlag==1}"/> 
+                        <h:outputText value="设备建档中" rendered="#{wxAssetInfoController.assetFlag==2}"/> 
                         <h:outputText value="没有权限查看" rendered="#{wxAssetInfoController.assetFlag==3}"/> 
                     </p>
                     <p>#{wxAssetInfoController.qrCode}</p>
@@ -292,6 +494,9 @@ and open the template in the editor.
                         <p class="weui-btn-area">
                             <!--<a href="assetList.xhtml?action=list&amp;qrCode=#{wxAssetInfoController.qrCode}" class="weui-btn weui-btn_primary">#{msg.BindAsset}</a>-->
                             <a href="List.xhtml" class="weui-btn weui-btn_primary">返回设备列表</a>
+                            <h:panelGroup rendered="#{wxAssetInfoController.assetFlag==2}">
+                                <a href="createInfoDetail.xhtml?openId=#{wxAssetInfoController.currentUser.weChatId}&amp;qrCode=#{wxAssetInfoController.qrCode}" class="weui-btn weui-btn_primary" >查看建档信息</a>
+                            </h:panelGroup>
                         </p>
                     </div>
                 </div>
@@ -392,6 +597,17 @@ and open the template in the editor.
         function settingSubscribe() {
             var $iosDialog1 = $('#settingDialog');
             $iosDialog1.fadeIn(200);
+        }
+        
+        function showDetails(){
+            
+            if($("#detailPanel").css('display')=='none'){
+                $("#detailPanel").css('display','block'); 
+                $("#viewMore").html("收起");
+            }else{
+                $("#detailPanel").css('display','none'); 
+                $("#viewMore").html("查看更多信息");
+            }
         }
 
 

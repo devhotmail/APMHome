@@ -63,6 +63,11 @@ alter table qr_code_lib add primary key (id);
 
 alter table qr_code_lib alter column submit_date type timestamp;  --扫码建档时间
 alter table qr_code_lib add COLUMN feedback varchar(512);		--反馈信息
+alter table qr_code_lib add COLUMN asset_name varchar(16);		--设备名称
+alter table qr_code_lib add COLUMN asset_group int;		--设备类型
+alter table qr_code_lib add COLUMN org_id int;		--科室
+alter table qr_code_lib add COLUMN user_id int;		--科室负责人
+ALTER TABLE qr_code_lib ADD CONSTRAINT uk_qr_code_lib_qrcode UNIQUE (qr_code);
 
 create table qr_code_attachment(
 id serial not null,

@@ -82,9 +82,9 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         
         owner = userDao.findById(selected.getAssetOwnerId());
         
-//        if (null != selected.getClinicalOwnerId()) {
-//            clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
-//        }
+        if (null != selected.getClinicalOwnerId()) {
+            clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
+        }
 
         if (null != selected.getSupplierId()) {
             SupplierRepository supplierDao = WebUtil.getBean(SupplierRepository.class);
@@ -310,16 +310,16 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     public void onClinicalDeptChange() {
         this.clinicalOwner = null;
-//        selected.setClinicalOwnerId(null);
-//        selected.setClinicalOwnerName(null);
-//        selected.setClinicalOwnerTel(null);
+        selected.setClinicalOwnerId(null);
+        selected.setClinicalOwnerName(null);
+        selected.setClinicalOwnerTel(null);
     }
 
     public void onClinicalOwnerChange() {
         if (null != clinicalOwner) {
-//            selected.setClinicalOwnerId(clinicalOwner.getId());
-//            selected.setClinicalOwnerName(clinicalOwner.getName());
-//            selected.setClinicalOwnerTel(clinicalOwner.getTelephone());
+            selected.setClinicalOwnerId(clinicalOwner.getId());
+            selected.setClinicalOwnerName(clinicalOwner.getName());
+            selected.setClinicalOwnerTel(clinicalOwner.getTelephone());
         }
     }
 

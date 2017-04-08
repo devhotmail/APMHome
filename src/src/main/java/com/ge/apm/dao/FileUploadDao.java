@@ -72,7 +72,8 @@ public class FileUploadDao {
         try{
             ps.setInt(1, id);
             rs = ps.executeQuery();
-            rs.next();
+            if (!rs.next())
+                return null;
             InputStream is = rs.getBinaryStream(2);
             return new Object[]{rs.getString(1), is};
         }

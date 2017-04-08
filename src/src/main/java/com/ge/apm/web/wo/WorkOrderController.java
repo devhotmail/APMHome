@@ -154,7 +154,8 @@ public class WorkOrderController {
         map.put("assetName", info.getName());
         map.put("supplier", info.getSupplierId()==null?"":service.getSupplierName(info.getSupplierId()));
         map.put("assetGroup", service.getMsgValue("assetGroup", info.getAssetGroup().toString()));
-        map.put("assetStatus", service.getMsgValue("assetStatus", info.getStatus()+""));
+//        map.put("assetStatus", service.getMsgValue("assetStatus", info.getStatus()+""));
+        map.put("assetStatus", info.getStatus());
         
         WorkOrder wo = woWcService.scanAction(info);
         if (wo != null) {
@@ -270,7 +271,8 @@ public class WorkOrderController {
         map.put("assetName", ai.getName());
         map.put("supplier", ai.getSupplierId()==null?"":service.getSupplierName(ai.getSupplierId()));
         map.put("assetGroup", service.getMsgValue("assetGroup", ai.getAssetGroup().toString()));
-        map.put("assetStatus", service.getMsgValue("assetStatus", ai.getStatus()+""));
+//        map.put("assetStatus", service.getMsgValue("assetStatus", ai.getStatus()+""));
+        map.put("assetStatus", ai.getStatus());
         map.put("clinicalDeptName", ai.getClinicalDeptName());
         map.put("locationName", ai.getLocationName());
         return map;
@@ -374,13 +376,24 @@ public class WorkOrderController {
     }
     @RequestMapping(value = "/media")
     public @ResponseBody String uploadMediaToWeChat(String serverId) {
+        InputStream is = null;
+        String ret = "";
         try{
-            InputStream is = woWcService.getFile(Integer.parseInt(serverId));
-            return service.uploadMediaToWechat(is);
+            is = woWcService.getFile(Integer.parseInt(serverId));
+            if (is != null)
+                ret = service.uploadMediaToWechat(is);
         }catch(Exception ex){
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
-            return "";
+        }finally{
+            if (is != null) {
+                try{
+                    is.close();
+                }catch(Exception ex){
+                    Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
+        return ret;
     }
     
     @RequestMapping(value = "/wo_img_list")

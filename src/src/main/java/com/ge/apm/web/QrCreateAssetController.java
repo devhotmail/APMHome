@@ -1,8 +1,8 @@
 package com.ge.apm.web;
 
-import com.ge.apm.domain.UserAccount;
+import com.ge.apm.dao.QrCodeLibRepository;
+import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.service.wechat.QrCreateAssetService;
-import com.ge.apm.view.wechat.WechatUtilService;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -32,6 +32,9 @@ public class QrCreateAssetController {
     @Autowired
     QrCreateAssetService qrCreateAssetService;
 
+    @Autowired
+    QrCodeLibRepository qrCodeLibRepository;
+
     @RequestMapping(value = "/qrCreateAsset/{openId}", method = RequestMethod.GET )
     public String qrCreateAsset(@PathVariable String openId, HttpServletRequest request, Model model){
 
@@ -40,7 +43,7 @@ public class QrCreateAssetController {
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString() + "?" + request.getQueryString());
         } catch (WxErrorException ex) {
-            Logger.getLogger(WechatUtilService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(QrCreateAssetController.class.getName()).log(Level.SEVERE, null, ex);
             return "asset/qrCreateAsset";
         }
 
@@ -52,6 +55,17 @@ public class QrCreateAssetController {
         model.addAttribute("nonceStr", s.getNoncestr());
         model.addAttribute("signature", s.getSignature());
         model.addAttribute("qrCode", qrCode);
+        model.addAttribute("assetGroupList", qrCreateAssetService.getMsg("assetGroup"));
+
+        if(qrCode != null && !qrCode.equals("")){
+            QrCodeLib qrCodeLib = qrCodeLibRepository.findByQrCode(qrCode);
+            if(qrCodeLib != null){
+                model.addAttribute("assetName", qrCodeLib.getAssetName());
+                model.addAttribute("assetGroupSelect", qrCodeLib.getAssetGroup());
+                model.addAttribute("orgSelect", qrCodeLib.getOrgId());
+                model.addAttribute("userSelect", qrCodeLib.getUserId());
+            }
+        }
 
         return "asset/qrCreateAsset";
     }
@@ -74,16 +88,46 @@ public class QrCreateAssetController {
         String imageServerIds = request.getParameter("imageServerIds");
         String uploaderFileBase64 = request.getParameter("uploaderFileBase64");
         String comment = request.getParameter("comment");
+        String assetName = request.getParameter("assetName");
+        String assetGroupSelect = request.getParameter("assetGroupSelect");
+        String orgSelect = request.getParameter("orgSelect");
+        String userSelect = request.getParameter("userSelect");
 
         Boolean result = Boolean.FALSE;
         try {
-            result = qrCreateAssetService.createAsset(openId, qrCode, voiceServerId, imageServerIds, uploaderFileBase64, comment);
+            result = qrCreateAssetService.createAsset(openId, qrCode, voiceServerId, imageServerIds, uploaderFileBase64, comment, assetName, assetGroupSelect, orgSelect, userSelect);
         } catch (WxErrorException ex) {
-            Logger.getLogger(WechatUtilService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(QrCreateAssetController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return result;
         //return "asset/qrResultInfo";
+    }
+
+    @RequestMapping(value = "/getOrgList")
+    @ResponseBody
+    public Object getOrgList(HttpServletRequest request){
+
+        String qrCode = request.getParameter("qrCode");
+        return qrCreateAssetService.getOrgList(qrCode);
+
+    }
+
+    @RequestMapping(value = "/getUserList")
+    @ResponseBody
+    public Object getUserList(HttpServletRequest request){
+
+        String orgIdStr = request.getParameter("orgId");
+
+        try {
+            if(orgIdStr != null && !orgIdStr.equals("")){
+                return qrCreateAssetService.getUserList(Integer.valueOf(orgIdStr));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(QrCreateAssetController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+
     }
 
 }
