@@ -50,6 +50,7 @@ public class QrCreateAssetController {
         model.addAttribute("nonceStr", s.getNoncestr());
         model.addAttribute("signature", s.getSignature());
         model.addAttribute("qrCode", qrCode);
+        model.addAttribute("assetGroupList", qrCreateAssetService.getMsg("assetGroup"));
 
         return "asset/qrCreateAsset";
     }
@@ -72,16 +73,46 @@ public class QrCreateAssetController {
         String imageServerIds = request.getParameter("imageServerIds");
         String uploaderFileBase64 = request.getParameter("uploaderFileBase64");
         String comment = request.getParameter("comment");
+        String assetName = request.getParameter("assetName");
+        String assetGroupSelect = request.getParameter("assetGroupSelect");
+        String orgSelect = request.getParameter("orgSelect");
+        String userSelect = request.getParameter("userSelect");
 
         Boolean result = Boolean.FALSE;
         try {
-            result = qrCreateAssetService.createAsset(openId, qrCode, voiceServerId, imageServerIds, uploaderFileBase64, comment);
+            result = qrCreateAssetService.createAsset(openId, qrCode, voiceServerId, imageServerIds, uploaderFileBase64, comment, assetName, assetGroupSelect, orgSelect, userSelect);
         } catch (WxErrorException ex) {
             Logger.getLogger(QrCreateAssetController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return result;
         //return "asset/qrResultInfo";
+    }
+
+    @RequestMapping(value = "/getOrgList")
+    @ResponseBody
+    public Object getOrgList(HttpServletRequest request){
+
+        String qrCode = request.getParameter("qrCode");
+        return qrCreateAssetService.getOrgList(qrCode);
+
+    }
+
+    @RequestMapping(value = "/getUserList")
+    @ResponseBody
+    public Object getUserList(HttpServletRequest request){
+
+        String orgIdStr = request.getParameter("orgId");
+
+        try {
+            if(orgIdStr != null && !orgIdStr.equals("")){
+                return qrCreateAssetService.getUserList(Integer.valueOf(orgIdStr));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(QrCreateAssetController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+
     }
 
 }

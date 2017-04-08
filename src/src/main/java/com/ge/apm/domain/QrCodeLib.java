@@ -53,6 +53,14 @@ public class QrCodeLib implements Serializable {
     @Basic(optional = false)
     @Column(name = "status")
     private int status;
+    @Column(name = "asset_name")
+    private String assetName;
+    @Column(name = "asset_group")
+    private Integer assetGroup;
+    @Column(name = "org_id")
+    private Integer orgId;
+    @Column(name = "user_id")
+    private Integer userId;
 
     public QrCodeLib() {
     }
@@ -149,7 +157,38 @@ public class QrCodeLib implements Serializable {
     public void setFeedback(String feedback) {
         this.feedback = feedback;
     }
-    
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+    public void setAssetGroup(Integer assetGroup) {
+        this.assetGroup = assetGroup;
+    }
+
+    public Integer getAssetGroup() {
+        return assetGroup;
+    }
+
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
+    }
+
+    public Integer getOrgId() {
+        return orgId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
 
     @Override
     public int hashCode() {
