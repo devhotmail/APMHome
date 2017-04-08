@@ -5,6 +5,7 @@ const webpack = require('webpack')
 const rimraf = require('rimraf')
 const utils = require('./utils')
 const config = require('../config')
+const pkg = require('../package.json')
 
 const isWatchMode = process.env.NODE_ENV === 'watch'
 if (!isWatchMode) process.env.NODE_ENV = 'production'
@@ -24,15 +25,9 @@ rimraf(config.distDir, err => {
   compiler.run((err, stats) => {
     spinner.stop()
     if (err) throw err
-    process.stdout.write(stats.toString({
-        colors: true,
-        modules: false,
-        children: false,
-        chunks: false,
-        chunkModules: false
-      }) + '\n\n')
+    process.stdout.write(statsOutput(stats) + '\n\n')
 
-    console.log(chalk.cyan('  Build complete.\n'))
+    console.log(chalk.cyan(`  Build complete for Project ${pkg.name}.\n`))
     utils.symlink()
   })
 
@@ -41,7 +36,17 @@ rimraf(config.distDir, err => {
       aggregateTimeout: 300,
       poll: 1000  
     }, (err, stats) => {
-      // console.log(stats)
+      process.stdout.write(statsOutput(stats) + '\n\n')
     })
   }
 })
+
+function statsOutput(stats) {
+  return stats.toString({
+    colors: true,
+    modules: false,
+    children: false,
+    chunks: false,
+    chunkModules: false
+  })
+}
