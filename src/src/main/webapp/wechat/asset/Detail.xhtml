@@ -188,7 +188,8 @@ and open the template in the editor.
                                             <label class="weui-label">#{msg.qrCode}</label>
                                         </div>
                                         <div class="weui-cell__ft">
-                                            <p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />
+                                            <!--<p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />-->
+                                            <img id='qrcode' src="#{wxAssetInfoController.getQrCodeImageBase64()}" height="20px" width="20px"/>
                                         </div>
                                     </div>
                                     <div class="weui-cell">
@@ -226,11 +227,182 @@ and open the template in the editor.
 
                                 </div>
                             </div>
-                            <div class="weui-msg__opr-area">
-                                <p class="weui-btn-area">
-                                    <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增报修</a>
-                                </p>
+
+                            <div class="weui-panel" id="detailPanel" style="display:none">
+                                <div class="weui-panel__hd">设备详细信息</div>
+                                <div class="weui-panel__bd">
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.clinicalDeptName}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.clinicalDeptName}</div>
+                                    </div>
+                                </div>
+                                
+                                
                             </div>
+
+                            <p class="weui-btn-area">
+                                <a href="javascript:showDetails();" class="weui-btn weui-btn_primary">查看更多信息</a>
+                            </p>
+                            
+<!--                            <h:panelGroup>
+                                <label class="label">#{msg.vendor}</label>
+                                <p:inputText value="#{assetInfoController.selected.vendor}" readonly="true"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.departNum}</label>
+                                <p:inputText value="#{assetInfoController.selected.departNum}" readonly="true"/>
+                            </h:panelGroup>
+                          
+                           
+                            
+                            <h:panelGroup >
+                                <label class="label">#{msg.purchasePrice}</label>
+                                <p:inputNumber minValue="0" decimalPlaces="2" id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" readonly="true"/>
+                            </h:panelGroup>
+                            
+							<h:panelGroup>
+                        <label class="label">#{msg.serialNum}</label>
+                        <p:inputText id="serialNum" value="#{assetInfoController.selected.serialNum}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.aliasName}</label>
+                        <p:inputText id="aliasName" value="#{assetInfoController.selected.aliasName}" readonly="true"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <label class="label">#{msg.assetGroup}</label>
+                        <p:inputText id="assetGroup" value="#{fieldMsg.fieldValue('assetGroup', assetInfoController.selected.assetGroup)}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.functionGrade}</label>
+                        <p:inputText id="functionGrade" value="#{fieldMsg.fieldValue('assetFunctionGrade', assetInfoController.selected.functionGrade)}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.functionGroup}</label>
+                        <p:inputText id="functionGroup" value="#{fieldMsg.fieldValue('assetFunctionType', assetInfoController.selected.functionGroup)}" readonly="true"/>
+                    </h:panelGroup>
+
+                    
+                    <h:panelGroup>
+                        <label class="label">#{msg.maitanance}</label>
+                        <p:inputText id="maitanance" value="#{assetInfoController.selected.maitanance}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.maitananceTel}</label>
+                        <p:inputText id="maitananceTel" value="#{assetInfoController.selected.maitananceTel}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.financingNum}</label>
+                        <p:inputText id="financingNum2" value="#{assetInfoController.selected.financingNum}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.barcode}</label>
+                        <p:inputText id="barcode" value="#{assetInfoController.selected.barcode}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.registrationNo}</label>
+                        <p:inputText id="registrationNo" value="#{assetInfoController.selected.registrationNo}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.modalityId}</label>
+                        <p:inputText id="modalityId" value="#{assetInfoController.selected.modalityId}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.locationCode}</label>
+                        <p:inputText id="locationCode" value="#{assetInfoController.selected.locationCode}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.locationName}</label>
+                        <p:inputText id="locationName" value="#{assetInfoController.selected.locationName}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.hospitalId}</label>
+                        <p:inputText id="hospitalId" value="#{assetInfoController.getHospital(0).name}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.functionType}</label>
+                        <p:inputText id="functionType" value="#{assetInfoController.selected.functionType}" readonly="true"/>
+                    </h:panelGroup>
+                    
+                    <h:panelGroup>
+                        <label class="label">#{msg.assetOwnerTel}</label>
+                        <p:inputText id="assetOwnerTel" value="#{assetInfoController.selected.assetOwnerTel}" readonly="true"/>
+                    </h:panelGroup>
+                    
+                    <h:panelGroup>
+                        <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isValid}" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <label class="label">#{msg.manufactDate}</label>
+                        <p:inputText id="manufactDate" value="#{assetInfoController.selected.manufactDate}" readonly="true">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <p:calendar timeZone="GMT+8"  id="manufactDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.manufactDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.arriveDate}</label>
+                        <p:inputText id="arriveDate" value="#{assetInfoController.selected.arriveDate}" readonly="true">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <p:calendar timeZone="GMT+8"  id="arriveDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.installDate}</label>
+                        <p:inputText id="installDate" value="#{assetInfoController.selected.installDate}" readonly="true">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <p:calendar timeZone="GMT+8"  id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.factoryWarrantyDate}*</label>
+                        <p:inputText id="factoryWarrantyDate" value="#{assetInfoController.selected.factoryWarrantyDate}" readonly="true">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <p:calendar timeZone="GMT+8"  id="factoryWarrantyDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.factoryWarrantyDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.terminateDate}</label>
+                        <p:inputText id="terminateDate" value="#{assetInfoController.selected.terminateDate}" readonly="true">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <p:calendar timeZone="GMT+8"  id="terminateDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.lastPmDate}</label>
+                        <p:inputText id="lastPmDate" value="#{assetInfoController.selected.lastPmDate}" readonly="true">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <p:calendar timeZone="GMT+8"  id="lastPmDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastPmDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.lastQaDate}</label>
+                        <p:inputText id="lastQaDate" value="#{assetInfoController.selected.lastQaDate}" readonly="true">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                        <p:calendar timeZone="GMT+8"  pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastQaDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.lastMeteringDate}</label>
+                        <p:inputText id="lastMeteringDate" value="#{assetInfoController.selected.lastMeteringDate}" readonly="true">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
+                        </p:inputText>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <label class="label">#{msg.salvageValue}</label>
+                        <p:inputText id="salvageValue" value="#{assetInfoController.selected.salvageValue}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.lifecycle}</label>
+                        <p:inputNumber decimalPlaces="1" id="lifecycle" value="#{assetInfoController.selected.lifecycleInYear}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.depreciationMethod}</label>
+                        <p:inputText id="depreciationMethod" value="#{fieldMsg.fieldValue('depreciationMethodList', assetInfoController.selected.depreciationMethod)}" readonly="true"/>
+                    </h:panelGroup>-->
 
                         </div>
                         <div id="tab2Panel" class="weui-tab__content">
@@ -259,6 +431,7 @@ and open the template in the editor.
                                         </a>
                                     </div>
                                 </c:forEach>
+
                                 <h:panelGroup rendered="#{empty wxAssetInfoController.woList}">
                                     <div class="weui-cells">
                                         <div class="weui-cell">
@@ -269,6 +442,12 @@ and open the template in the editor.
                                     </div>
 
                                 </h:panelGroup>
+
+                                <div class="weui-msg__opr-area">
+                                    <p class="weui-btn-area">
+                                        <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增报修</a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -398,6 +577,10 @@ and open the template in the editor.
         function settingSubscribe() {
             var $iosDialog1 = $('#settingDialog');
             $iosDialog1.fadeIn(200);
+        }
+        
+        function showDetails(){
+            $("#detailPanel").css('display','block'); 
         }
 
 

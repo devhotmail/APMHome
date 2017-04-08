@@ -158,17 +158,32 @@
                                         </p:selectOneMenu>
                                     </h:panelGroup>
                                     <h:panelGroup>
+                                        <label class="label">#{msg.hospitalId}</label>
+                                        <p:inputText id="hospitalId" value="#{assetCreateController.getHospitalName()}" readonly="true"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
                                         <label class="label">#{msg.clinicalDeptName}</label>
                                         <p:selectOneMenu id="clinicalDeptName" value="#{assetCreateController.assetInfo.clinicalDeptId}" required="false" requiredMessage="#{msg.clinicalDeptName} #{msg.ValidationRequire}">
-                                            <!--<p:ajax  listener="#{assetInfoController.onClinicalDeptChange()}" update="clinicalOwnerName clinicalOwnerTel" />-->
+                                            <p:ajax  listener="#{assetCreateController.onClinicalDeptChange()}" update="clinicalOwnerName clinicalOwnerTel" />
                                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                             <f:selectItems value="#{assetCreateController.getClinicalDeptList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                         </p:selectOneMenu>
                                     </h:panelGroup>
                                     <h:panelGroup>
-                                        <label class="label">#{msg.hospitalId}</label>
-                                        <p:inputText id="hospitalId" value="#{assetCreateController.getHospitalName()}" readonly="true"/>
-                                    </h:panelGroup>
+                                <label class="label">#{msg.clinicalOwnerName}*</label>
+                                <p:selectOneMenu id="clinicalOwnerName" value="#{assetCreateController.clinicalOwner}" converter="userAccountConverter" var="t" required="false" requiredMessage="#{msg.clinicalOwnerId} #{msg.ValidationRequire}">
+                                    <p:ajax  listener="#{assetCreateController.onClinicalOwnerChange()}" update="clinicalOwnerTel" />
+                                    <f:selectItem itemLabel=""/>
+                                    <f:selectItems value="#{assetCreateController.getClinicalOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                    <p:column>
+                                        <h:outputText value="#{t.name}"/>
+                                    </p:column>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.clinicalOwnerTel}</label>
+                                <p:inputText id="clinicalOwnerTel" value="#{assetCreateController.assetInfo.clinicalOwnerTel}" readonly="true"/>
+                            </h:panelGroup>
                                     <h:panelGroup>
                                         <label class="label">#{msg.departNum}</label>
                                         <p:inputText id="departNum2" value="#{assetCreateController.assetInfo.departNum}"/>
