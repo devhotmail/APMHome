@@ -200,6 +200,13 @@ and open the template in the editor.
                                     </div>
                                     <div class="weui-cell">
                                         <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.clinicalOwnerName}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.clinicalOwnerName}</div>
+                                        <div class="weui-cell__ft">#{wxAssetInfoController.assetInfo.clinicalOwnerTel}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
                                             <label class="weui-label">负责人1</label>
                                         </div>
                                         <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.assetOwnerName}</div>
@@ -233,177 +240,190 @@ and open the template in the editor.
                                 <div class="weui-panel__bd">
                                     <div class="weui-cell">
                                         <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.aliasName}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.aliasName}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.serialNum}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.serialNum}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
                                             <label class="weui-label">#{msg.vendor}</label>
                                         </div>
                                         <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.vendor}</div>
                                     </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.departNum}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.departNum}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.assetGroup}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('assetGroup', wxAssetInfoController.assetInfo.assetGroup)}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.functionGrade}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('assetFunctionGrade', wxAssetInfoController.assetInfo.functionGrade)}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.functionGroup}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('assetFunctionType', wxAssetInfoController.assetInfo.functionGroup)}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.maitanance}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.maitanance}</div>
+                                        <div class="weui-cell__ft">#{wxAssetInfoController.assetInfo.maitananceTel}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.financingNum}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.financingNum}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.barcode}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.barcode}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.registrationNo}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.registrationNo}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.modalityId}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.modalityId}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.locationCode}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.locationCode}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.locationName}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.locationName}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.hospitalId}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.hospital.name}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.functionType}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.functionType}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.manufactDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.manufactDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.arriveDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.arriveDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.installDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.installDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.factoryWarrantyDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.factoryWarrantyDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.terminateDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.terminateDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.lastPmDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lastPmDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.lastQaDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lastQaDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.lastMeteringDate}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lastMeteringDate}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.salvageValue}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.salvageValue}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.purchasePrice}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.purchasePrice}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.lifecycle}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lifecycle}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.lifecycle}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lifecycleInYear}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd">
+                                            <label class="weui-label">#{msg.depreciationMethod}</label>
+                                        </div>
+                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('depreciationMethodList', wxAssetInfoController.assetInfo.depreciationMethod)}</div>
+                                    </div>
+                                    
+                                    
                                 </div>
                                 
                                 
                             </div>
 
                             <p class="weui-btn-area">
-                                <a href="javascript:showDetails();" class="weui-btn weui-btn_primary">查看更多信息</a>
+                                <a id="viewMore" href="javascript:showDetails();" class="weui-btn weui-btn_primary">查看更多信息</a>
                             </p>
                             
-<!--                            <h:panelGroup>
-                                <label class="label">#{msg.vendor}</label>
-                                <p:inputText value="#{assetInfoController.selected.vendor}" readonly="true"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.departNum}</label>
-                                <p:inputText value="#{assetInfoController.selected.departNum}" readonly="true"/>
-                            </h:panelGroup>
-                          
-                           
-                            
-                            <h:panelGroup >
-                                <label class="label">#{msg.purchasePrice}</label>
-                                <p:inputNumber minValue="0" decimalPlaces="2" id="purchasePrice" value="#{assetInfoController.selected.purchasePrice}" readonly="true"/>
-                            </h:panelGroup>
-                            
-							<h:panelGroup>
-                        <label class="label">#{msg.serialNum}</label>
-                        <p:inputText id="serialNum" value="#{assetInfoController.selected.serialNum}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.aliasName}</label>
-                        <p:inputText id="aliasName" value="#{assetInfoController.selected.aliasName}" readonly="true"/>
-                    </h:panelGroup>
-
-                    <h:panelGroup>
-                        <label class="label">#{msg.assetGroup}</label>
-                        <p:inputText id="assetGroup" value="#{fieldMsg.fieldValue('assetGroup', assetInfoController.selected.assetGroup)}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.functionGrade}</label>
-                        <p:inputText id="functionGrade" value="#{fieldMsg.fieldValue('assetFunctionGrade', assetInfoController.selected.functionGrade)}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.functionGroup}</label>
-                        <p:inputText id="functionGroup" value="#{fieldMsg.fieldValue('assetFunctionType', assetInfoController.selected.functionGroup)}" readonly="true"/>
-                    </h:panelGroup>
-
-                    
-                    <h:panelGroup>
-                        <label class="label">#{msg.maitanance}</label>
-                        <p:inputText id="maitanance" value="#{assetInfoController.selected.maitanance}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.maitananceTel}</label>
-                        <p:inputText id="maitananceTel" value="#{assetInfoController.selected.maitananceTel}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.financingNum}</label>
-                        <p:inputText id="financingNum2" value="#{assetInfoController.selected.financingNum}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.barcode}</label>
-                        <p:inputText id="barcode" value="#{assetInfoController.selected.barcode}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.registrationNo}</label>
-                        <p:inputText id="registrationNo" value="#{assetInfoController.selected.registrationNo}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.modalityId}</label>
-                        <p:inputText id="modalityId" value="#{assetInfoController.selected.modalityId}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.locationCode}</label>
-                        <p:inputText id="locationCode" value="#{assetInfoController.selected.locationCode}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.locationName}</label>
-                        <p:inputText id="locationName" value="#{assetInfoController.selected.locationName}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.hospitalId}</label>
-                        <p:inputText id="hospitalId" value="#{assetInfoController.getHospital(0).name}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.functionType}</label>
-                        <p:inputText id="functionType" value="#{assetInfoController.selected.functionType}" readonly="true"/>
-                    </h:panelGroup>
-                    
-                    <h:panelGroup>
-                        <label class="label">#{msg.assetOwnerTel}</label>
-                        <p:inputText id="assetOwnerTel" value="#{assetInfoController.selected.assetOwnerTel}" readonly="true"/>
-                    </h:panelGroup>
-                    
-                    <h:panelGroup>
-                        <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isValid}" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
-                    </h:panelGroup>
-
-                    <h:panelGroup>
-                        <label class="label">#{msg.manufactDate}</label>
-                        <p:inputText id="manufactDate" value="#{assetInfoController.selected.manufactDate}" readonly="true">
-                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
-                        </p:inputText>
-                        <p:calendar timeZone="GMT+8"  id="manufactDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.manufactDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.arriveDate}</label>
-                        <p:inputText id="arriveDate" value="#{assetInfoController.selected.arriveDate}" readonly="true">
-                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
-                        </p:inputText>
-                        <p:calendar timeZone="GMT+8"  id="arriveDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.installDate}</label>
-                        <p:inputText id="installDate" value="#{assetInfoController.selected.installDate}" readonly="true">
-                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
-                        </p:inputText>
-                        <p:calendar timeZone="GMT+8"  id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.factoryWarrantyDate}*</label>
-                        <p:inputText id="factoryWarrantyDate" value="#{assetInfoController.selected.factoryWarrantyDate}" readonly="true">
-                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
-                        </p:inputText>
-                        <p:calendar timeZone="GMT+8"  id="factoryWarrantyDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.factoryWarrantyDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" />
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.terminateDate}</label>
-                        <p:inputText id="terminateDate" value="#{assetInfoController.selected.terminateDate}" readonly="true">
-                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
-                        </p:inputText>
-                        <p:calendar timeZone="GMT+8"  id="terminateDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" />
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.lastPmDate}</label>
-                        <p:inputText id="lastPmDate" value="#{assetInfoController.selected.lastPmDate}" readonly="true">
-                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
-                        </p:inputText>
-                        <p:calendar timeZone="GMT+8"  id="lastPmDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastPmDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.lastQaDate}</label>
-                        <p:inputText id="lastQaDate" value="#{assetInfoController.selected.lastQaDate}" readonly="true">
-                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
-                        </p:inputText>
-                        <p:calendar timeZone="GMT+8"  pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastQaDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.lastMeteringDate}</label>
-                        <p:inputText id="lastMeteringDate" value="#{assetInfoController.selected.lastMeteringDate}" readonly="true">
-                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
-                        </p:inputText>
-                    </h:panelGroup>
-
-                    <h:panelGroup>
-                        <label class="label">#{msg.salvageValue}</label>
-                        <p:inputText id="salvageValue" value="#{assetInfoController.selected.salvageValue}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.lifecycle}</label>
-                        <p:inputNumber decimalPlaces="1" id="lifecycle" value="#{assetInfoController.selected.lifecycleInYear}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.depreciationMethod}</label>
-                        <p:inputText id="depreciationMethod" value="#{fieldMsg.fieldValue('depreciationMethodList', assetInfoController.selected.depreciationMethod)}" readonly="true"/>
-                    </h:panelGroup>-->
-
                         </div>
                         <div id="tab2Panel" class="weui-tab__content">
 
@@ -580,7 +600,14 @@ and open the template in the editor.
         }
         
         function showDetails(){
-            $("#detailPanel").css('display','block'); 
+            
+            if($("#detailPanel").css('display')=='none'){
+                $("#detailPanel").css('display','block'); 
+                $("#viewMore").html("收起");
+            }else{
+                $("#detailPanel").css('display','none'); 
+                $("#viewMore").html("查看更多信息");
+            }
         }
 
 
