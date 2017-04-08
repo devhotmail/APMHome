@@ -1,6 +1,8 @@
 package com.ge.apm.web.wo;
 
+import com.ge.apm.dao.I18nMessageRepository;
 import com.ge.apm.dao.WorkOrderRepository;
+import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderPoJo;
 import com.ge.apm.service.wechat.CoreService;
@@ -34,12 +36,14 @@ public class RepairProcessController {
     protected CoreService coreService;
     @Autowired
     protected WorkOrderService workOrderService;
+    @Autowired
+            protected I18nMessageRepository i18nMessageRepository;
     WorkOrderRepository workOrderDao = WebUtil.getBean(WorkOrderRepository.class);
 
 
     @RequestMapping(value="myclosedworkorder")
     public String myclosedworkorder(HttpServletRequest request,HttpServletResponse response, Model model){
-      return  workOrderService.findClosedWorkOrder();
+        return  workOrderService.findClosedWorkOrder();
         //workOrderDao.findClosedWorkOrder(5);
     }
     /*开单 */
@@ -53,6 +57,14 @@ public class RepairProcessController {
             Logger.getLogger(RepairProcessController.class.getName()).log(Level.SEVERE, null, e);
             return "error";
         }
+    }
+
+    @RequestMapping(value = "/im18faulttype/{astypeId}",method = RequestMethod.GET)
+    @ResponseBody
+    public List<I18nMessage> im18faulttype(HttpServletRequest request,  @PathVariable Integer astypeId) throws Exception
+    {
+        List<I18nMessage> faultTypeByAssetType = i18nMessageRepository.getFaultTypeByAssetType(astypeId);
+return faultTypeByAssetType;
     }
 
     @RequestMapping(value = "/workorderaction")
@@ -128,7 +140,7 @@ public class RepairProcessController {
         obj[2]=casePriority;
         return obj;
     }
-    
+
     @RequestMapping(value="estimatedtime")
     public @ResponseBody Object estimatedTime(@RequestBody WorkOrderPoJo wopo) {
         try {
