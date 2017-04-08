@@ -90,7 +90,7 @@
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label class="weui-label">设备名称</label></div>
                     <div class="weui-cell__bd">
-                        <input id="assetName" name="assetName" class="weui-input" placeholder="请输入设备名称">
+                        <input id="assetName" name="assetName" value="${assetName}" class="weui-input" placeholder="请输入设备名称">
                     </div>
                 </div>
 
@@ -102,7 +102,7 @@
                                 <select class="weui-select" name="assetGroupSelect" id="assetGroupSelect">
                                     <option value="">请选择...</option>
                                     <c:forEach var="item" items="${assetGroupList}">
-                                        <option value="${item.msgKey}">${item.valueZh}</option>
+                                        <option value="${item.msgKey}" <c:if test="${item.msgKey == assetGroupSelect}">selected="selected"</c:if>>${item.valueZh}</option>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -229,6 +229,7 @@
         }else{
             init();
             initOrgSelect(tempQrcode);
+            initUserSelect("${orgSelect}");
         }
 
 
@@ -623,7 +624,11 @@
                 function(ret) {
                     if (ret) {
                         $.each(ret, function(idx, val){
-                            $('#orgSelect').append($('<option value="'+val.id+'">'+val.name+'</option>'));
+                            if (val.id == "${orgSelect}") {
+                                $('#orgSelect').append($('<option value="'+val.id+'" selected="selected">'+val.name+'</option>'));
+                            }else{
+                                $('#orgSelect').append($('<option value="'+val.id+'">'+val.name+'</option>'));
+                            }
                         });
                     }
                 }
@@ -637,10 +642,14 @@
             $.get(WEB_ROOT+"web/getUserList",
                 {"orgId": orgId},
                 function(ret) {
-                    $("#userSelectDiv").fadeIn(100);
+                    $("#userSelectDiv").show();
                     if (ret) {
                         $.each(ret, function(idx, val){
-                            $('#userSelect').append($('<option value="'+val.id+'">'+val.name+'</option>'));
+                            if (val.id == "${userSelect}") {
+                                $('#userSelect').append($('<option value="'+val.id+'" selected="selected">'+val.name+'</option>'));
+                            }else{
+                                $('#userSelect').append($('<option value="'+val.id+'">'+val.name+'</option>'));
+                            }
                         });
                     }
                 }

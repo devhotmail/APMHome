@@ -1,5 +1,7 @@
 package com.ge.apm.web;
 
+import com.ge.apm.dao.QrCodeLibRepository;
+import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.service.wechat.QrCreateAssetService;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -30,6 +32,9 @@ public class QrCreateAssetController {
     @Autowired
     QrCreateAssetService qrCreateAssetService;
 
+    @Autowired
+    QrCodeLibRepository qrCodeLibRepository;
+
     @RequestMapping(value = "/qrCreateAsset/{openId}", method = RequestMethod.GET )
     public String qrCreateAsset(@PathVariable String openId, HttpServletRequest request, Model model){
 
@@ -51,6 +56,16 @@ public class QrCreateAssetController {
         model.addAttribute("signature", s.getSignature());
         model.addAttribute("qrCode", qrCode);
         model.addAttribute("assetGroupList", qrCreateAssetService.getMsg("assetGroup"));
+
+        if(qrCode != null && !qrCode.equals("")){
+            QrCodeLib qrCodeLib = qrCodeLibRepository.findByQrCode(qrCode);
+            if(qrCodeLib != null){
+                model.addAttribute("assetName", qrCodeLib.getAssetName());
+                model.addAttribute("assetGroupSelect", qrCodeLib.getAssetGroup());
+                model.addAttribute("orgSelect", qrCodeLib.getOrgId());
+                model.addAttribute("userSelect", qrCodeLib.getUserId());
+            }
+        }
 
         return "asset/qrCreateAsset";
     }
