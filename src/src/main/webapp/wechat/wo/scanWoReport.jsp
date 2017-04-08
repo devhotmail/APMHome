@@ -183,7 +183,7 @@
                 $(function(){
                     //init casePriority
                     app.initSelectData('casePriority', 'casePriority', '${casePriority}');
-                    app.initSelectData('assetStatus', 'assetStatus', pageManager.workOrder.assetStatus);
+                    app.initSelectData('assetStatus', 'assetStatus', 3);
                     pageManager.serverIds = [];
                     
                     $('#assetId').val(pageManager.workOrder.assetId);
