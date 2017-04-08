@@ -60,10 +60,13 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
         return WebUtil.getMessage("name")+"="+site.getName();
     }
 
+    @Override
     public void onAfterNewObject(SiteInfo site, boolean isOK) {
+        if(!isOK) return;
+
         // import field code type data for this site
         try{
-            String sql = "insert into i18n_message(msg_type, msg_key, value_zh, value_en, value_tw, site_id) select msg_type, msg_key, value_zh, value_en, value_tw, %d as site_id from i18n_message where msg_type in (select msg_type from field_code_type)";
+            String sql = "insert into i18n_message(msg_type, msg_key, value_zh, value_en, value_tw, site_id) select distinct msg_type, msg_key, value_zh, value_en, value_tw, %d as site_id from i18n_message where msg_type in (select msg_type from field_code_type)";
             NativeSqlUtil.execute(String.format(sql, site.getId()), null);
         }
         catch(Exception ex){
@@ -94,17 +97,4 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
         return false;
     }
     
-    @Override
-    public void save() {
-        List<SiteInfo> list = dao.getByName(this.selected.getName());
-        if (list != null && list.size() > 0) {
-            SiteInfo site = list.get(0);
-            if (site.getId() != this.selected.getId()) {
-                WebUtil.addErrorMessage("名称重复。");
-                FacesContext.getCurrentInstance().validationFailed();
-                return;
-            }
-        }
-        super.save();
-    }
 }
