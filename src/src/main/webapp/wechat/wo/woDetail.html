@@ -59,6 +59,9 @@
                         <div class="weui-cell__bd">
                             <a class="weui-btn weui-btn_plain-primary" type="button" id="replay">播放</a>
                         </div>
+                        <div class="weui-cell__ft">
+                            <a style="margin-left:10px;text-decoration:underline" href="javascript:;" id="voiceBackUp">没声音?</a>
+                        </div>
                     </div>
                 </div>
                 <!--故障现象-->
@@ -292,6 +295,7 @@
                             mediaShow();
                         }else{
                             $('#replay').addClass('weui-btn_plain-disabled');
+                            $('#voiceBackUp').addClass('weui-btn_plain-disabled');
                         }
                         if (!pageManager.showPat) {
                             renderImgs();
@@ -421,7 +425,7 @@
                         $(".weui-rater a").eq(i).addClass('checked');
                     }
                 });
-            
+                
                 $('#submit').click(function(){
                     $('#errorMsg').html('');
                     var data = colletionData();
@@ -564,6 +568,12 @@
             
             function mediaShow() {
                 if (!pageManager.showPat) {
+                    
+                    $('#voiceBackUp').click(function(){
+                        pageManager.go('ts_voice_backup');
+                        $('audio').attr('src', WEB_ROOT+'web/audio/'+pageManager.voice);
+                    });
+                    
                     var relocalId = null;
                     var replaying = false;
                     $.get(WEB_ROOT+'web/media',{serverId : pageManager.voice}, function(ret) {
