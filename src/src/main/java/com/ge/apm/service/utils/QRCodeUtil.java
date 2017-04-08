@@ -5,14 +5,10 @@
  */
 package com.ge.apm.service.utils;
 
-import com.ge.apm.service.asset.AttachmentFileService;
-import com.ge.apm.view.asset.PictureService;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Shape;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,7 +33,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.codec.binary.Base64;
-import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -54,11 +49,11 @@ public class QRCodeUtil {
     // LOGO高度
     private static final int HEIGHT = 78;
     // LOGO路径
-    private static final String LOGO_PATH = QRCodeUtil.class.getResource("/").toString().concat("logo.jpg").replace("file:", "");
-    private static final String BACKGROUND_PATH = QRCodeUtil.class.getResource("/").toString().concat("background.png").replace("file:", "");
+    private static final String LOGO_PATH = QRCodeUtil.class.getResource("/").getFile().concat("logo.jpg");
+    private static final String BACKGROUND_PATH = QRCodeUtil.class.getResource("/").getFile().concat("background.png");
 
     private static BufferedImage createImage(String content, String imgPath, boolean needCompress) throws Exception {
-        Map<EncodeHintType, Object> hints = new HashMap<EncodeHintType, Object>();
+        Map<EncodeHintType, Object> hints = new HashMap();
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
         hints.put(EncodeHintType.CHARACTER_SET, CHARSET);
         hints.put(EncodeHintType.MARGIN, 1);
