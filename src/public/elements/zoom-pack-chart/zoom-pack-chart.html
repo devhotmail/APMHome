@@ -24,6 +24,7 @@
   <script>
     var constants = {
       margin: 20,
+      fontSize: 20,
       circleColor: 'rgba(255, 255, 255, 0)',
       waveColor: { // Color of the fill wave
         gray: 'rgb(178, 178, 178)',
@@ -249,8 +250,9 @@
           return 'text-' + d.data.uid;
         })
         .attr('font-size', function(d) {
-          if (d.r / 5 > 20) return 20;
-          return d.r / 5;
+          var max = constants.fontSize;
+          var val = d.r / 5;
+          return val> max ? max :  val;
         })
         .each(function(d) {
           var element = d3.select(this);
@@ -363,10 +365,15 @@
           var k = _this.diameter / v[2];
           view = v;
 
-          textGroup.attr('transform', function (d) {
+          textGroup
+          .attr('transform', function (d) {
             var transform = 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
-            if (d.parent === focus || (d === focus && !d.children)) transform += 'scale(' + k + ')';
-            return  transform;
+
+            var fontSize = this.attributes['font-size'].value;
+            var max = constants.fontSize;
+            if (fontSize < max) transform += 'scale(' + max / fontSize + ')';
+
+            return transform;
           });
 
           assetGroup
@@ -396,14 +403,8 @@
 
           // move text-top when scale changes
           textGroup.selectAll('g.text-top')
-          .each(function(d) {
-            if (d === focus) {
-              var element = d3.select(this);
-              element.attr('transform', function(d) {
-                return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k + ')'
-              })
-              .attr('font-size', 20)
-            }
+          .attr('transform', function(d) {
+            return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k + ')'
           });
         }
 
@@ -421,7 +422,7 @@
 
             // Text for usage display
             var usageTxt = selection.append('text')
-            .attr('dy', '1.1em')
+            .attr('y', '1.1em')
             .attr('font-size', '0.8em')
             .call(commonTextAttr);
 
@@ -451,7 +452,7 @@
               if (overload > 0) {
                 var overloadTxt = d3.select(this)
                 .append('text')
-                .attr('dy', '2em')
+                .attr('y', '2em')
                 .attr('font-size', '0.8em')                
                 .call(commonTextAttr);
 
@@ -474,7 +475,7 @@
                 var overloadTxt = d3.select(this)
                 .append('text')
                 // 1em + 0.8em + 0.8em
-                .attr('dy', overload ? '2.6em' : '1.8em')
+                .attr('y', overload ? '2.6em' : '1.8em')
                 .attr('font-size', '1em')
                 .text(d.data.suggestions[0].title)
                 .call(commonTextAttr);

@@ -7,7 +7,7 @@
 <link rel="import" href="../editable-block/editable-block.html">
 <link rel="import" href="device-procurement-styles.html">
 <link rel="stylesheet" href="../../css/dewIcons.css">
-<link rel="import" href="../../uri.html">
+<link rel="import" href="../uri/uri.html">
 <link rel="import" href="../d3/d3.html">
 
 <dom-module id="device-procurement">
@@ -558,8 +558,8 @@
 
             var payload = [].concat.apply([], tmp);
 
-            // return fetch('mock/asset-procurement-' + this.selectedType + '1.json')
-            return fetch('/geapm/api/dm?groupby=dept')
+            // return fetch('/geapm/api/dm?groupby=dept')
+            return fetch('mock/asset-procurement-' + this.selectedType + '1.json')
             .then(res => res.json())
             // return this.fetchPage(url)
             .then((function(data) {
@@ -732,8 +732,8 @@
             groupby: groupby
           }).toString();
 
-          // return fetch('mock/asset-procurement-' + groupby + '.json')
-          return fetch('/geapm/api/dm?groupby=dept')
+          // return fetch('/geapm/api/dm?groupby=dept')
+          return fetch('mock/asset-procurement-' + groupby + '.json')
           .then(res => res.json())
           // return this.fetchPage(url)
           .then((function(data) {
