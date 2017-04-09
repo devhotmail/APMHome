@@ -216,7 +216,7 @@
         })
       },
       handleBackUpper: function(e) {
-        e.preventDefault();
+        // e.preventDefault();
         if (this.focus.parent) this.zoom(this.focus.parent);
       },
       handleBackRoot: function(e) {
@@ -295,8 +295,9 @@
         });
 
         // toggle circle fill for quick switch in the same layer
-        transition.selectAll('circle.node-leaf')
+        transition.selectAll('circle.node')
         .attr('fill', function(d) {
+          // var focus = _this.focus;
           // focus self
           if (d === focus) return constants.circleColor;
           // focus children
@@ -432,7 +433,7 @@
           return (d !== focus && d.parent !== focus) ? 'none' : constants.circleColor;   
         })
         .on('click', function(d) {
-          if (focus !== d) {
+          if (_this.focus !== d) {
             _this.zoom(d);
             d3.event.stopPropagation();
           }
@@ -506,9 +507,7 @@
           }
         });
 
-        svg.on('click', function() {
-          _this.zoom(_this.rootNode);
-        });
+        svg.on('click', this.handleBackUpper.bind(this));
 
         var initalView = this.formatView(focus);
         this.zoomTo(initalView);
