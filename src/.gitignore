@@ -9,3 +9,4 @@ src/main/webapp/resources/css
 *.iml
 sql/
 about.html
+.log*

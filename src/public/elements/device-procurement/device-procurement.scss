@@ -23,6 +23,7 @@ $border-color: rgb(186, 186, 186);
 $tab-active-color: rgb(31, 105, 266);
 
 .chart-wrapper {
+  position: relative;
   width: calc(100% - #{$sidebar-width});
 }
 
@@ -120,6 +121,14 @@ $tab-active-color: rgb(31, 105, 266);
 
 .config-list-wrapper {
   display: flex;
+
+  &.disabled {
+    pointer-events: none;
+
+    .config-item {
+      color: $gray;
+    }
+  }
 }
 
 .config-list {
@@ -201,6 +210,26 @@ $tab-active-color: rgb(31, 105, 266);
       color: #fff!important;
       box-shadow: none;
     }
+  }
+}
+
+.config-btn {
+  width: 120px;
+  height: 30px;
+  padding: 0 8px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 36px;
+  background-color: $brand;
+  color: #fff;
+  cursor: pointer;
+
+  &.loading {
+    background-color: $gray;
+    cursor: not-allowed;
   }
 }
 

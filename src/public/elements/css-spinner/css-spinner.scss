@@ -1,0 +1,40 @@
+:host {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.spinner {
+	z-index: 1;
+	position: relative;
+	top: 50%;
+	left: 50%;
+	width: 6px;
+	height: 2px;
+	animation-name: spin;
+	animation-delay: 0;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+	animation-duration: 2s;
+}
+
+.spinner-dash {
+	position: relative;
+	z-index: 2;
+	top: 0;
+	left: 0;
+	width: 6px;
+	height: 2px;
+	background-color: #fff;
+}
+
+@for $i from 0 through 7 {
+	.spinner-dash:nth-child(#{$i + 1}n+0) {
+		top: $i * -2px;
+		transform: rotate(#{360/8*$i}deg) translate(-8px, 0);
+	}
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
