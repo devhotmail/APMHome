@@ -294,10 +294,20 @@
           }
         });
 
-        // transition.selectAll('circle.node-leaf')
-        // .attr('fill', function(d) {
-        //   return (d !== focus && d.parent !== focus) ? '#fff' : '#fff';
-        // });
+        // toggle circle fill for quick switch in the same layer
+        transition.selectAll('circle.node-leaf')
+        .attr('fill', function(d) {
+          // focus self
+          if (d === focus) return constants.circleColor;
+          // focus children
+          if (d.parent && d.parent === focus) return constants.circleColor;
+          // focus siblings
+          if (d.children && ~d.children.indexOf(focus)) return constants.circleColor;
+          // focus parent
+          if (d.parent && d.parent.children && ~d.parent.children.indexOf(focus)) return constants.circleColor;
+          return 'none';
+        });
+
         transition.selectAll('g.text-top')
         .filter(function(d) {
           return d === focus || this.style.display === 'inline';
@@ -334,16 +344,27 @@
         var assetGroup = d3.select(this.$.assetList).selectAll('g.asset');
         var textGroup = d3.select(this.$.textList).selectAll('g.text');
 
+        function getScaleCoefficient(fontSize) {
+          var max = constants.fontSize;
+          return fontSize < max ? max / fontSize : 1;
+        }
+
         // change text's position so it can be in the center of each asset circle
         textGroup
         .attr('transform', function (d) {
-          var transform = 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
-
           var fontSize = this.attributes['font-size'].value;
-          var max = constants.fontSize;
-          if (fontSize < max) transform += 'scale(' + max / fontSize + ')';
+          var coefficient = getScaleCoefficient(fontSize);
 
-          return transform;
+          return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')' + 'scale(' + coefficient + ')';
+        });
+
+        // move text-top when scale changes
+        textGroup.selectAll('g.text-top')
+        .attr('transform', function(d) {
+          var fontSize = this.parentNode.attributes['font-size'].value;
+          var coefficient = getScaleCoefficient(fontSize);
+
+          return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k / coefficient  + ')';  
         });
 
         var _this = this;
@@ -373,12 +394,6 @@
         assetGroup
         .selectAll('g.wave')
         .attr('transform', 'scale(' + k + ')');
-
-        // move text-top when scale changes
-        textGroup.selectAll('g.text-top')
-        .attr('transform', function(d) {
-          return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k + ')'
-        });
       },  
       render: function(chartData) {
         var margin = constants.margin;
@@ -407,13 +422,15 @@
           return d.r;
         })
         .attr('class', function(d) {
-          return d.parent ? d.children ? 'node' : 'node node-leaf' : 'node node-root';
+          return d.parent ? 'node node-leaf' : 'node node-root';
         })
         .attr('stroke-width', 1)
         .attr('stroke', function(d) {
           return getColorByPercent(d.data.usage);
         })
-        .attr('fill', constants.circleColor)
+        .attr('fill', function(d) {
+          return (d !== focus && d.parent !== focus) ? 'none' : constants.circleColor;   
+        })
         .on('click', function(d) {
           if (focus !== d) {
             _this.zoom(d);
@@ -476,9 +493,7 @@
             var textTop = element
             .append('g')
             .attr('class', 'text-top')
-            .attr('transform', function() {
-              return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition + ')';
-            })
+            .attr('transform', 'translate(0, 0)')
             .style('display', function() {
               if (d === focus) return 'inline';
               return 'none';        

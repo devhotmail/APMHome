@@ -44,7 +44,7 @@
     "fastclick": "^1.0.6",
     "viewport-units-buggyfill": "^0.6.0",
     "pepjs": "^0.4.2",
-    "numbro": "https://github.build.ge.com/foundry-sh/numbro.git#develop",
+    "numbro": "https://github.build.ge.com/foundry-sh/numbro.git#develop",    
     "px-tabs": "^0.7.0"
   },
   "resolutions": {
@@ -52,6 +52,11 @@
     "px-colors-design": "^0.3.0",
     "px-spacing-design": "^0.4.0",
     "px-buttons-design": "^1.1.0",
-    "px-mixins-design": "^0.3.0"
+    "px-mixins-design": "^0.3.0",
+    "px-headings-design": "^0.3.0",
+    "px-list-inline-design": "^0.3.0",
+    "px-list-bare-design": "^0.3.0",
+    "px-tables-design": "^1.1.0",
+    "px-dropdown": "^3.1.0"
   }
 }
