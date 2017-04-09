@@ -195,7 +195,7 @@
                   items="[[configListOne]]"
                   selected="{{selectedConfigIndex}}"></array-selector>
               </div>
-              <template is="dom-if" if="[[configListTwo.length]]">
+              <template is="dom-if" if="[[configListTwo.length]]" restamp>
                 <div class="config-list" style$="[[calcConfigHeight(configListTwo.length)]]">
                   <template
                     id="subConfigList"
