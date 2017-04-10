@@ -175,7 +175,7 @@
             <div class="text-muted u-mb-">基于系统自动建议值进行手工调节</div>
             <div class$="[[calcConfigListWrapperCls(configLoading)]]">
               <div
-                class$="[[calcConfiglistCls(configListTwo.length)]]"
+                class="config-list"
                 style$="[[calcConfigHeight(configListOne.length)]]">
                 <template
                   id="configList"
@@ -229,8 +229,11 @@
                     selected="{{selectedSubConfigIndex}}"></array-selector>
                 </div>
               </template>
+              <template is="dom-if" if="[[configListTwo.length]]" restamp>
+                <div class="active-arrow" style$="[[calcActiveArrowTop(selectedConfigIndex)]]"></div>
+              </template>              
             </div>
-            <div class="u-mt--">
+            <div class="u-mt-">
               <div class$="[[calcConfigBtnCls(configLoading)]]" on-tap="handleSubmit">
                 <template is="dom-if" if="[[!configLoading]]">
                   <span>确认建议</span>
@@ -635,8 +638,8 @@
         calcConfigBtnCls: function(configLoading) {
           return configLoading ? 'config-btn loading' : 'config-btn';
         },
-        calcConfiglistCls: function(length) {
-          return length > 0 ? 'config-list with-arrow' : 'config-list';
+        calcActiveArrowTop: function(selectedConfigIndex) {
+          return 'top:' + selectedConfigIndex * 30 + 'px';
         },
         calcConfigHeight: function(length) {
           return length < 10 ? 'height: auto' : '';

@@ -120,6 +120,7 @@ $tab-active-color: rgb(31, 105, 266);
 }
 
 .config-list-wrapper {
+  position: relative;
   display: flex;
 
   &.disabled {
@@ -131,30 +132,33 @@ $tab-active-color: rgb(31, 105, 266);
   }
 }
 
+$configListMargin: 10px;
+
 .config-list {
   flex: 1 1 auto;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
   height: 30 * 10 + 2px;
   border: 1px solid $border-color;
   border-radius: 6px;
   box-sizing: border-box;
   width: 50%;
+  min-width: 0;
 
   + .config-list {
-    margin-left: 10px;
+    margin-left: $configListMargin;
   }
+}
 
-  &.with-arrow .config-item.active::after {
-    position: absolute;
-    left: 100%;
-    top: 50%;
-    transform: translate(0, -50%);
-    content: '';
-    border-left: 10px solid $gray;
-    border-top: 6px solid transparent;
-    border-bottom: 6px solid transparent;
-  }
+.active-arrow {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(- $configListMargin / 2, 10px);
+  content: '';
+  border-left: 10px solid $gray;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  transition: all .15s;
 }
 
 .config-item {
