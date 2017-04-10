@@ -24,7 +24,7 @@
 	left: 0;
 	width: 6px;
 	height: 2px;
-	background-color: #fff;
+	background-color: var(--spinner-color, #fff);
 }
 
 @for $i from 0 through 7 {
