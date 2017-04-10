@@ -63,12 +63,12 @@ public class DmApi {
     java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     if (Option.of(groupBy).isDefined() && Option.of(dept).isEmpty()) {
       Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), HashMap.empty())), groupBy, groups, depts));
-      return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+      return ResponseEntity.ok().header("Content-Type","application/json").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
     } else if (Option.of(groupBy).isEmpty() && Option.of(dept).isDefined()) {
       Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now()), HashMap.empty())), "type", groups, depts));
-      return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+      return ResponseEntity.ok().header("Content-Type","application/json").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
     } else {
-      return ResponseEntity.badRequest().body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
+      return ResponseEntity.badRequest().header("Content-Type","application/json").body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
     }
   }
 
@@ -84,15 +84,15 @@ public class DmApi {
     Map<Integer, Double> userPredict = Try.of(() -> {
       Map<String, List<Map<String, Object>>> inputs = (Map<String, List<Map<String, Object>>>) (new ObjectMapper().registerModule(new JavaslangModule()).readValue(inputBody, new TypeReference<Map<String, List<Map<String, Object>>>>() {}));
       return HashMap.ofEntries(inputs.values().get(0).map(v -> Tuple.of((Integer) v.get("id").get(), (Double) v.get("change").get())));
-    }).getOrElseThrow(() -> new IllegalArgumentException("Input data not supported:{}"));
+    }).getOrElseThrow(() -> new IllegalArgumentException("Input data not supported"));
     if (Option.of(groupBy).isDefined() && Option.of(dept).isEmpty()) {
       Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), userPredict)), groupBy, groups, depts));
-      return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+      return ResponseEntity.ok().header("Content-Type","application/json").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
     } else if (Option.of(groupBy).isEmpty() && Option.of(dept).isDefined()) {
       Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now()), userPredict)), "type", groups, depts));
-      return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+      return ResponseEntity.ok().header("Content-Type","application/json").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
     } else {
-      return ResponseEntity.badRequest().body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
+      return ResponseEntity.badRequest().header("Content-Type","application/json").body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
     }
   }
 

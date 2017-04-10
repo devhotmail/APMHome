@@ -37,6 +37,8 @@ public interface CNY {
     return format(amount.divide(W.getNumber())).concat("万");
   }
 
+  public static String formatInY(MonetaryAmount amount){return format(amount.divide(Y.getNumber())).concat("亿");}
+
   // @formatter:off
   public static Tuple2<String,String> desc(MonetaryAmount amount) {
     if(amount.abs().isGreaterThan(Y)) {
