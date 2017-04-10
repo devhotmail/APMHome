@@ -11,6 +11,8 @@ import javax.money.format.MonetaryAmountFormat;
 import java.math.BigDecimal;
 import java.util.Locale;
 
+import static javaslang.API.*;
+
 public interface CNY {
   MonetaryAmountFormat fmt = MonetaryAmountDecimalFormatBuilder.of("###.#", Locale.CHINA).build();
   Money O = Money.zero(Monetary.getCurrency(Locale.CHINA));
@@ -41,17 +43,13 @@ public interface CNY {
     return format(amount.divide(Y.getNumber())).concat("亿");
   }
 
-  // @formatter:off
-  static Tuple2<String,String> desc(MonetaryAmount amount) {
-    if(amount.abs().isGreaterThan(Y)) {
-      return Tuple.of(format(amount.divide(100_000_000D)),"亿");
-    }else if (amount.abs().isGreaterThan(W)){
-      return Tuple.of(format(amount.divide(10_000D)),"万");
-    } else {
-      return Tuple.of(format(amount),"元");
-    }
+  static Tuple2<String, String> desc(MonetaryAmount amount) {
+    return Match(amount).of(
+      Case($(t -> t.abs().isGreaterThan(Y)), t -> Tuple.of(format(t.divide(100_000_000D)), "亿")),
+      Case($(t -> t.abs().isGreaterThan(W)), t -> Tuple.of(format(t.divide(10_000D)), "万")),
+      Case($(), Tuple.of(format(amount), "元"))
+    );
   }
-  // @formatter:on
 
   static MonetaryAmount parse(CharSequence text) {
     return fmt.parse(text);
