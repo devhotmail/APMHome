@@ -54,18 +54,16 @@ public class AssetsServiceUnitTest extends AbstractDbTest {
     Date yoi();
   }
 
-
   @Test
   public void testFindMoreAssets() {
-    db
-      .select(new SQL()
-        .SELECT("id", "name", "function_group as group", "asset_group as type", "clinical_dept_id as dept", "supplier_id as supplier", "purchase_price as price", "install_date as yoi")
-        .FROM("asset_info")
-        .WHERE("site_id = :site_id").WHERE("hospital_id = :hospital_id").ORDER_BY(Option.of("type").getOrElse("id")).toString())
+    db.select(new SQL()
+      .SELECT("id", "name", "function_group as group", "asset_group as type", "clinical_dept_id as dept", "supplier_id as supplier", "purchase_price as price", "install_date as yoi")
+      .FROM("asset_info")
+      .WHERE("site_id = :site_id").WHERE("hospital_id = :hospital_id").ORDER_BY(Option.of("type").getOrElse("id")).toString())
       .parameter("site_id", 1).parameter("hospital_id", 1)
       .autoMap(Asset.class)
       .map(a -> Tuple.of(a.id(), a.name(), Try.of(a::group).getOrElse(0), a.type(), a.dept(), a.supplier(), CNY.money(Option.of(a.price()).getOrElse(0D)), Option.of(a.yoi()).map(d -> d.toLocalDate().getYear()).getOrElse(-1)))
       .cache()
-      .subscribe(t -> System.out.println(t));
+      .subscribe(t -> Assertions.assertThat(t._1).isGreaterThan(0));
   }
 }
