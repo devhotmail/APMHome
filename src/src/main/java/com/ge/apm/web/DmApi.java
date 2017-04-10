@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import rx.Observable;
 import webapp.framework.web.service.UserContext;
 
+import javax.money.MonetaryAmount;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
@@ -82,7 +83,8 @@ public class DmApi {
     java.util.Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), java.util.Map.Entry::getValue).toBlocking().single();
     java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, Double> userPredict = Try.of(() -> {
-      Map<String, List<Map<String, Object>>> inputs = (Map<String, List<Map<String, Object>>>) (new ObjectMapper().registerModule(new JavaslangModule()).readValue(inputBody, new TypeReference<Map<String, List<Map<String, Object>>>>() {}));
+      Map<String, List<Map<String, Object>>> inputs = new ObjectMapper().registerModule(new JavaslangModule()).readValue(inputBody, new TypeReference<Map<String, List<Map<String, Object>>>>() {
+      });
       return HashMap.ofEntries(inputs.values().get(0).map(v -> Tuple.of((Integer) v.get("id").get(), (Double) v.get("change").get())));
     }).getOrElseThrow(() -> new IllegalArgumentException("Input data not supported"));
     if (Option.of(groupBy).isDefined() && Option.of(dept).isEmpty()) {
@@ -156,16 +158,16 @@ public class DmApi {
       "name", name,
       "usage", Try.of(() -> Stats.of(usages.toJavaList()).mean()).getOrElse(0D),
       "usage_sum", Tuple.of(usages.count(v -> v <= 0.3D), usages.count(v -> v > 1D)),
-      "revenue_year_before_last", CNY.desc(CNY.money(revenueYearBeforeLastRaw), label)._1,
-      "revenue_last_year", CNY.desc(CNY.money(revenueLastYearRaw), label)._1,
+      "revenue_year_before_last", formatMoney(CNY.money(revenueYearBeforeLastRaw), label)._1,
+      "revenue_last_year", formatMoney(CNY.money(revenueLastYearRaw), label)._1,
       "revenue_year_before_last_raw", revenueYearBeforeLastRaw,
       "revenue_last_year_raw", revenueLastYearRaw,
       "last_year_date", LocalDate.now().minusYears(1).toString(),
       "year_before_last_date", LocalDate.now().minusYears(2).toString(),
-      "revenue_predict", CNY.desc(CNY.money(revenuePredictedRaw), label)._1,
+      "revenue_predict", formatMoney(CNY.money(revenuePredictedRaw), label)._1,
       "revenue_predict_raw", revenuePredictedRaw,
       "revenue_increase", Option.when(revenueLastYearRaw.equals(0D), 0D).getOrElse(revenuePredictedRaw / revenueLastYearRaw - 1),
-      "revenue_predict_sug", CNY.desc(CNY.money(revenuePredictedSugRaw), label)._1,
+      "revenue_predict_sug", formatMoney(CNY.money(revenuePredictedSugRaw), label)._1,
       "revenue_predict_sug_raw", revenuePredictedSugRaw,
       "revenue_increase_sug", Option.when(revenueLastYearRaw.equals(0D), 0D).getOrElse(revenuePredictedSugRaw / revenueLastYearRaw - 1),
       "revenue_unit", label
@@ -215,5 +217,18 @@ public class DmApi {
       ));
     }
   }
+
+  private Tuple2<String, String> formatMoney(MonetaryAmount amount, String label) {
+    if ("亿".equals(label)) {
+      return Tuple.of(CNY.format(amount.divide(100_000_000D)), "亿");
+    } else if ("万".equals(label)) {
+      return Tuple.of(CNY.format(amount.divide(10_000D)), "万");
+    } else if ("元".equals(label)) {
+      return Tuple.of(CNY.format(amount), "元");
+    } else {
+      throw new IllegalArgumentException(String.format("Input data not supported:amount %s, label %s", amount, label));
+    }
+  }
 }
+
 
