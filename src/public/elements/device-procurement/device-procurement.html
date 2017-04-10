@@ -580,18 +580,28 @@
                 ? n.children.map(function(child) {
                   return {
                     id: child.id,
-                    increase: n.increase / 100 // for the display usage # 1
+                    change: n.increase / 100 // for the display usage # 1
                   }
                 })
                 : [];
             });
 
-            var payload = [].concat.apply([], tmp);
+            var payload = {
+              config: [].concat.apply([], tmp).sort(function(a, b) {
+                return a.id - b.id;
+              })
+            }
 
             var url = this.getApiUrl(this.isHead, this.selectedType, this.orgId);
 
             this.configLoading = true;
-            // return fetch(url, { method: 'PUT' })
+
+            // return fetch(url, {
+            //   method: 'PUT',
+            //   accept: 'application/json',
+            //   credentials: 'same-origin',
+            //   body: JSON.stringify(payload)
+            // })
             return fetch('mock/asset-procurement-' + this.selectedType + '1.json')
             .then(res => res.json())
             // return this.fetchPage(url)
@@ -714,10 +724,10 @@
           function patchUid(obj) {
             obj.uid = uniqueId();
             if (obj.items && Array.isArray(obj.items)) {
-              obj.items = obj.items.map(n => {
-                patchUid(n)
-                return n
-              })
+              obj.items = obj.items.map(function(n) {
+                patchUid(n);
+                return n;
+              });
             }
             return obj;
           }
@@ -789,7 +799,10 @@
         loadData: function(isHead, groupby, orgId) {
           var url = this.getApiUrl(isHead, groupby, orgId);
 
-          // return fetch(url)
+          // return fetch(url, {
+          //   accept: 'application/json',
+          //   credentials: 'same-origin'
+          // })
           return fetch('mock/asset-procurement-' + groupby + '.json')
           .then(res => res.json())
           // return this.fetchPage(url)

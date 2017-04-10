@@ -25,6 +25,7 @@
     var constants = {
       margin: 20,
       fontSize: 20,
+      textLength: 5,
       circleColor: 'rgba(255, 255, 255, 0)',
       waveColor: { // Color of the fill wave
         gray: 'rgb(178, 178, 178)',
@@ -84,7 +85,13 @@
         .attr('class', 'asset-name')
         .attr('font-size', '1em')
         .text(function(d) {
-          return d.data.name;
+          var maxLen = constants.textLength;
+          var name = d.data.name;
+          if (name && name.length < maxLen) {
+            return name;
+          } else {
+            return name.slice(0, maxLen - 1) + '...';
+          }
         })
         .call(commonTextAttr);
 
@@ -466,9 +473,10 @@
           return 'text-' + d.data.uid;
         })
         .attr('font-size', function(d) {
-          var max = constants.fontSize;
-          var val = d.r / 5;
-          return val > max ? max :  val;
+          var maxSize = constants.fontSize;
+          var maxLen = constants.textLength;
+          var val = d.r / maxLen;
+          return val > maxSize ? maxSize :  val;
         })
         .each(function(d) {
           var element = d3.select(this);
