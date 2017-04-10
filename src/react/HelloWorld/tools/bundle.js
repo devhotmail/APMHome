@@ -9,7 +9,6 @@ const config = require('../config')
 const pkg = require('../package.json')
 
 const isWatchMode = process.env.NODE_ENV === 'watch'
-if (!isWatchMode) process.env.NODE_ENV = 'production'
 
 const mode = isWatchMode ? 'watch' : 'prod'
 
