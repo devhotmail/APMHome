@@ -11,57 +11,47 @@ import javax.money.format.MonetaryAmountFormat;
 import java.math.BigDecimal;
 import java.util.Locale;
 
+import static javaslang.API.*;
+
 public interface CNY {
-  final static MonetaryAmountFormat fmt = MonetaryAmountDecimalFormatBuilder.of("###.#", Locale.CHINA).build();
-  final static Money O = Money.zero(Monetary.getCurrency(Locale.CHINA));
-  final static Money K = Money.of(1_000, Monetary.getCurrency(Locale.CHINA));
-  final static Money W = Money.of(10_000, Monetary.getCurrency(Locale.CHINA));
-  final static Money M = Money.of(1_000_000, Monetary.getCurrency(Locale.CHINA));
-  final static Money Y = Money.of(100_000_000, Monetary.getCurrency(Locale.CHINA));
-  final static Money B = Money.of(1_000_000_000, Monetary.getCurrency(Locale.CHINA));
+  MonetaryAmountFormat fmt = MonetaryAmountDecimalFormatBuilder.of("###.#", Locale.CHINA).build();
+  Money O = Money.zero(Monetary.getCurrency(Locale.CHINA));
+  Money K = Money.of(1_000, Monetary.getCurrency(Locale.CHINA));
+  Money W = Money.of(10_000, Monetary.getCurrency(Locale.CHINA));
+  Money M = Money.of(1_000_000, Monetary.getCurrency(Locale.CHINA));
+  Money Y = Money.of(100_000_000, Monetary.getCurrency(Locale.CHINA));
+  Money B = Money.of(1_000_000_000, Monetary.getCurrency(Locale.CHINA));
 
-  public static Money money(Number number) {
+  static Money money(Number number) {
     return Money.of(number, Monetary.getCurrency(Locale.CHINA));
   }
 
-  public static Money money(BigDecimal number) {
+  static Money money(BigDecimal number) {
     return Money.of(number, Monetary.getCurrency(Locale.CHINA));
   }
 
 
-  public static String format(MonetaryAmount amount) {
+  static String format(MonetaryAmount amount) {
     return fmt.format(amount);
   }
 
-  public static String formatInW(MonetaryAmount amount) {
+  static String formatInW(MonetaryAmount amount) {
     return format(amount.divide(W.getNumber())).concat("万");
   }
 
-  // @formatter:off
-  public static Tuple2<String,String> desc(MonetaryAmount amount) {
-    if(amount.abs().isGreaterThan(Y)) {
-      return Tuple.of(format(amount.divide(100_000_000D)),"亿");
-    }else if (amount.abs().isGreaterThan(W)){
-      return Tuple.of(format(amount.divide(10_000D)),"万");
-    } else {
-      return Tuple.of(format(amount),"元");
-    }
-  }
-  // @formatter:on
-
-  public static Tuple2<String, String> desc(MonetaryAmount amount, String label) {
-    if ("亿".equals(label)) {
-      return Tuple.of(format(amount.divide(100_000_000D)), "亿");
-    } else if ("万".equals(label)) {
-      return Tuple.of(format(amount.divide(10_000D)), "万");
-    } else if ("元".equals(label)) {
-      return Tuple.of(format(amount), "元");
-    } else {
-      throw new IllegalArgumentException(String.format("Input data not supported:amount %s, label %s", amount, label));
-    }
+  static String formatInY(MonetaryAmount amount) {
+    return format(amount.divide(Y.getNumber())).concat("亿");
   }
 
-  public static MonetaryAmount parse(CharSequence text) {
+  static Tuple2<String, String> desc(MonetaryAmount amount) {
+    return Match(amount).of(
+      Case($(t -> t.abs().isGreaterThan(Y)), t -> Tuple.of(format(t.divide(100_000_000D)), "亿")),
+      Case($(t -> t.abs().isGreaterThan(W)), t -> Tuple.of(format(t.divide(10_000D)), "万")),
+      Case($(), Tuple.of(format(amount), "元"))
+    );
+  }
+
+  static MonetaryAmount parse(CharSequence text) {
     return fmt.parse(text);
   }
 }
