@@ -6,6 +6,9 @@
 <link rel="import" href="../zoom-pack-chart/zoom-pack-chart.html">
 <link rel="import" href="../editable-block/editable-block.html">
 <link rel="import" href="../placeholder/placeholder-empty.html">
+<link rel="import" href="../placeholder/placeholder-error.html">
+<link rel="import" href="../placeholder/placeholder-loading.html">
+<link rel="import" href="../placeholder/placeholder-retry.html">
 <link rel="import" href="../css-spinner/css-spinner.html">
 <link rel="import" href="device-procurement-styles.html">
 <link rel="stylesheet" href="../../css/dewIcons.css">
@@ -19,8 +22,17 @@
       <template is="dom-if" if="[[showEmpty]]">
         <placeholder-empty></placeholder-empty>
       </template>
-      <template is="dom-if" if="[[!showEmpty]]">
-        <responsive-container width="{{width}}" height="{{height}}">
+      <template is="dom-if" if="[[showError]]">
+        <placeholder-error></placeholder-error>
+      </template>
+      <template is="dom-if" if="[[showLoading]]">
+        <placeholder-loading></placeholder-loading>
+      </template>
+      <template is="dom-if" if="[[showRetry]]">
+        <placeholder-retry></placeholder-retry>
+      </template>
+      <responsive-container width="{{width}}" height="{{height}}">
+        <template is="dom-if" if="[[!isOr(showEmpty, showError, showLoading, showRetry)]]">
           <template is="dom-if" if="[[isEqual(activeTab, 0)]]" restamp>
             <!--system recommended result-->
             <zoom-pack-chart
@@ -43,8 +55,8 @@
               on-focus-changed="handleFocusChange"
               chart-data="[[manualData]]"></zoom-pack-chart>
           </template>
-        </responsive-container>
-      </template>
+        </template>
+      </responsive-container>
     </div>
     <div class="sidebar">
       <template is="dom-if" if="[[isHead]]">
@@ -57,13 +69,7 @@
           </template>
         </div>
       </template>
-      <template is="dom-if" if="[[dataLoading]]">
-        <div class="data-loading u-mt">
-          <css-spinner></css-spinner>
-          <div class="u-mt">加载中...</div>
-        </div>
-      </template>
-      <template is="dom-if" if="[[!dataLoading]]">
+      <template is="dom-if" if="[[!showLoading]]">
         <div class="tabs">
           <div style="text-align: center;">
             <div class="tabs-header">
@@ -82,91 +88,95 @@
           <div class="tabs-content">
             <template is="dom-if" if="[[isEqual(activeTab, 0)]]">
               <div class="related-info">
-                <div class="kpis">
-                  <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
-                  <div class="u-mb--">未来12个月收益预测([[focus.data.revenue_unit]]元)</div>
-                  <div class="text-muted u-mb--">过去两年的历史数据</div>
-                  <template is="dom-if" if="[[focus.data.revenue_year_before_last]]">
-                    <div class="flex flex--middle revenue-tip muted">
-                      <div class="revenue-label">[[getYM(focus.data.year_before_last_date)]]</div>
-                      <div class="flex__item u-ml-- u-mr--">
-                        <div
-                          class="progress-bar"
-                          style$="[[calcProgress(focus.data.revenue_year_before_last, systemData.revenue_year_before_last)]]">
+                <template is="dom-if" if="[[focus.data.usage]]">
+                  <div class="kpis">
+                    <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
+                    <div class="u-mb--">未来12个月收益预测([[focus.data.revenue_unit]]元)</div>
+                    <div class="text-muted u-mb--">过去两年的历史数据</div>
+                    <template is="dom-if" if="[[focus.data.revenue_year_before_last]]">
+                      <div class="flex flex--middle revenue-tip muted">
+                        <div class="revenue-label">[[getYM(focus.data.year_before_last_date)]]</div>
+                        <div class="flex__item u-ml-- u-mr--">
+                          <div
+                            class="progress-bar"
+                            style$="[[calcProgress(focus.data.revenue_year_before_last, systemData.revenue_year_before_last)]]">
+                          </div>
                         </div>
+                        <div class="revenue-num">[[parseInt(focus.data.revenue_year_before_last)]]</div>
                       </div>
-                      <div class="revenue-num">[[parseInt(focus.data.revenue_year_before_last)]]</div>
-                    </div>
-                  </template>
-                  <template is="dom-if" if="[[focus.data.revenue_last_year]]">
-                    <div class="flex flex--middle revenue-tip muted">
-                      <div class="revenue-label">[[getYM(focus.data.last_year_date)]]</div>
-                      <div class="flex__item u-ml-- u-mr--">
-                        <div
-                          class="progress-bar"
-                          style$="[[calcProgress(focus.data.revenue_last_year, systemData.revenue_last_year)]]">
-                        </div>                    
-                      </div>
-                      <div class="revenue-num">[[parseInt(focus.data.revenue_last_year)]]</div>
-                    </div>
-                  </template>
-                  <template is="dom-if" if="[[focus.data.revenue_predict]]">
-                    <div class="text-muted u-mt-- u-mb--">未来12个月</div>
-                    <div class="flex flex--middle revenue-tip">
-                      <div class="revenue-label">预测</div>
-                      <div class="flex__item u-ml-- u-mr--">
-                        <div
-                          class="progress-bar"
-                          style$="[[calcProgress(focus.data.revenue_predict_raw, systemData.revenue_predict_raw)]]">
-                        </div>
-                      </div>
-                      <div class="revenue-num">
-                        [[parseInt(focus.data.revenue_predict)]] [[decimal2Percent(focus.data.revenue_increase, 1)]]
-                      </div>
-                    </div>
-                  </template>
-                  <template is="dom-if" if="[[focus.data.revenue_predict_sug]]">
-                    <div class="flex flex--middle revenue-tip">
-                      <div class="revenue-label">采取建议</div>
-                      <div class="flex__item u-ml-- u-mr--">
-                        <div
-                          class="progress-bar"
-                          style$="[[calcProgress(focus.data.revenue_predict_sug_raw, systemData.revenue_predict_sug_raw)]]">
-                        </div>                     
-                      </div>
-                      <div class="revenue-num">
-                        [[parseInt(focus.data.revenue_predict_sug)]] [[decimal2Percent(focus.data.revenue_increase_sug, 1)]]
-                      </div>
-                    </div>
-                  </template>
-                  <div class="divider"></div>
-                  当前平均使用率预测:
-                  <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
-                  <template is="dom-if" if="[[isArray(focus.data.suggestions)]]">
-                    <template is="dom-repeat" items="[[focus.data.suggestions]]">
-                      <template is="dom-if" if="[[item.title]]">
-                        <div>[[item.title]]</div>
-                      </template>
-                      <template is="dom-if" if="[[item.addition]]">
-                        <div class="title u-mt- u-mb-">[[item.addition]]</div>
-                      </template>
                     </template>
-                    <div class="divider"></div>
-                  </template>
-                  <template is="dom-if" if="[[isOr(currentKPIs.0.num, currentKPIs.1.num)]]">
-                    <template is="dom-repeat" items="[[currentKPIs]]">
-                      <template is="dom-if" if="[[item.num]]">
-                        <div class$="kpi kpi-[[index]]">[[item.desc]]</div>
-                      </template>
-                      <div class="kpi-detail">
-                        <template is="dom-if" if="[[item.num]]">
-                          <div class="title u-mt- u-mb-">[[item.num]]台设备</div>
+                    <template is="dom-if" if="[[focus.data.revenue_last_year]]">
+                      <div class="flex flex--middle revenue-tip muted">
+                        <div class="revenue-label">[[getYM(focus.data.last_year_date)]]</div>
+                        <div class="flex__item u-ml-- u-mr--">
+                          <div
+                            class="progress-bar"
+                            style$="[[calcProgress(focus.data.revenue_last_year, systemData.revenue_last_year)]]">
+                          </div>                    
+                        </div>
+                        <div class="revenue-num">[[parseInt(focus.data.revenue_last_year)]]</div>
+                      </div>
+                    </template>
+                    <template is="dom-if" if="[[focus.data.revenue_predict]]">
+                      <div class="text-muted u-mt-- u-mb--">未来12个月</div>
+                      <div class="flex flex--middle revenue-tip">
+                        <div class="revenue-label">预测</div>
+                        <div class="flex__item u-ml-- u-mr--">
+                          <div
+                            class="progress-bar"
+                            style$="[[calcProgress(focus.data.revenue_predict_raw, systemData.revenue_predict_raw)]]">
+                          </div>
+                        </div>
+                        <div class="revenue-num">
+                          [[parseInt(focus.data.revenue_predict)]] [[decimal2Percent(focus.data.revenue_increase, 1)]]
+                        </div>
+                      </div>
+                    </template>
+                    <template is="dom-if" if="[[focus.data.revenue_predict_sug]]">
+                      <div class="flex flex--middle revenue-tip">
+                        <div class="revenue-label">采取建议</div>
+                        <div class="flex__item u-ml-- u-mr--">
+                          <div
+                            class="progress-bar"
+                            style$="[[calcProgress(focus.data.revenue_predict_sug_raw, systemData.revenue_predict_sug_raw)]]">
+                          </div>                     
+                        </div>
+                        <div class="revenue-num">
+                          [[parseInt(focus.data.revenue_predict_sug)]] [[decimal2Percent(focus.data.revenue_increase_sug, 1)]]
+                        </div>
+                      </div>
+                    </template>
+                    <template is="dom-if" if="[[focus.data.usage]]">
+                      <div class="divider"></div>
+                      当前平均使用率预测:
+                      <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
+                    </template>
+                    <template is="dom-if" if="[[isArray(focus.data.suggestions)]]">
+                      <template is="dom-repeat" items="[[focus.data.suggestions]]">
+                        <template is="dom-if" if="[[item.title]]">
+                          <div>[[item.title]]</div>
                         </template>
-                      </div>
+                        <template is="dom-if" if="[[item.addition]]">
+                          <div class="title u-mt- u-mb-">[[item.addition]]</div>
+                        </template>
+                      </template>
+                      <div class="divider"></div>
                     </template>
-                    <div class="divider"></div>
-                  </template>
-                </div>
+                    <template is="dom-if" if="[[isOr(currentKPIs.0.num, currentKPIs.1.num)]]">
+                      <template is="dom-repeat" items="[[currentKPIs]]">
+                        <template is="dom-if" if="[[item.num]]">
+                          <div class$="kpi kpi-[[index]]">[[item.desc]]</div>
+                        </template>
+                        <div class="kpi-detail">
+                          <template is="dom-if" if="[[item.num]]">
+                            <div class="title u-mt- u-mb-">[[item.num]]台设备</div>
+                          </template>
+                        </div>
+                      </template>
+                      <div class="divider"></div>
+                    </template>
+                  </div>
+                </template>
                 <div class="legends">
                   <div class="title u-mt- u-mb-">图示说明</div>
                   <div class="legend">
@@ -355,9 +365,17 @@
           },
           showEmpty: {
             type: Boolean,
-            value: true
+            value: false
           },
-          dataLoading: {
+          showError: {
+            type: Boolean,
+            value: false
+          },
+          showLoading: {
+            type: Boolean,
+            value: false
+          },
+          showRetry: {
             type: Boolean,
             value: false
           },
@@ -512,6 +530,8 @@
           }
         },
         handleTabTap: function(e) {
+          // disable tab click when empty/error/loading
+          if (this.showEmpty || this.showError || this.showLoading) return;
           this.activeTab = e.model.item.val;
         },
         handleSelect: function(e) {
@@ -616,17 +636,29 @@
 
             this.configLoading = true;
 
+            this.showLoading = true;
+            this.showEmpty = false;
+            this.showError = false;
+
             // return fetch(url, {
             //   method: 'PUT',
             //   accept: 'application/json',
             //   credentials: 'same-origin',
             //   body: JSON.stringify(payload)
             // })
-            return fetch('mock/asset-procurement-' + this.selectedType + '1.json')
+            return fetch('mock/asset-procurement-' + this.selectedType + '-error.json')
             .then(res => res.json())
             // return this.fetchPage(url)
-            .then((function(data) {
-              var data = this.dataConverter(data);
+            .then((function(response) {
+              this.showLoading = false;
+              this.configLoading = false;
+              if (!response) return this.showRetry = true;
+              if (!response.items) return this.showRetry = true;
+              if (!response.items.length) return this.showRetry = true;
+              if (response.items[0].items && !response.items[0].items.length) return this.showRetry = true;
+              if (this.selectedType === 'dept' && !response.items[0].items[0].items.length) return this.showRetry = true;
+
+              var data = this.dataConverter(response);
               // set manual data
               this.manualData = this.deepClone(data);
               this.manualData.isManual = true;
@@ -634,9 +666,11 @@
               this.configList = this.getInitConfig(data);
               // show advice after manually configed
               this.showMaunalAdvice = true;
-              // hide loading
-              this.configLoading = false;
-            }).bind(this));
+
+            }).bind(this), function(err) {
+              this.showLoading = false;
+              this.showError = true;
+            });
           }
         },
         // helpers
@@ -715,8 +749,11 @@
         isEqual: function(a, b) {
           return a === b;
         },
-        isOr: function(a, b) {
-          return a || b;
+        isOr: function() {
+          var args = Array.prototype.slice.call(arguments);
+          return args.filter(function(n) {
+            return Boolean(n);
+          }).length;
         },
         round: function(value, precision) {
           var multiplier = Math.pow(10, precision || 0);
@@ -818,19 +855,30 @@
           return URI(this.resolveApiUrl('/api/dm')).query(query).toString();
         },
         loadData: function(isHead, groupby, orgId) {
-          this.dataLoading = true;
+          this.showLoading = true;
+          this.showEmpty = false;
+          this.showError = false;
 
           var url = this.getApiUrl(isHead, groupby, orgId);
+
+          var apiHost = 'mock/asset-procurement-' + groupby + '.json'
 
           // return fetch(url, {
           //   accept: 'application/json',
           //   credentials: 'same-origin'
           // })
-          return fetch('mock/asset-procurement-' + groupby + '.json')
+          return fetch(apiHost)
           .then(res => res.json())
           // return this.fetchPage(url)
-          .then((function(data) {
-            var data = this.dataConverter(data);
+          .then((function(response) {
+            this.showLoading = false;
+            if (!response) return this.showEmpty = true;
+            if (!response.items) return this.showEmpty = true;
+            if (!response.items.length) return this.showEmpty = true;
+            if (response.items[0].items && !response.items[0].items.length) return this.showEmpty = true;
+            if (groupby === 'dept' && !response.items[0].items[0].items.length) return this.showEmpty = true;
+
+            var data = this.dataConverter(response);
             // set system data
             this.systemData = this.deepClone(data);
             this.systemData.isSystem = true;
@@ -851,11 +899,10 @@
               id: configList[0].id,
               depth: configList[0].depth
             };
-
-            this.showEmpty = false;
-            this.dataLoading = false;
+          
           }).bind(this), function(err) {
-            this.showEmpty = true;
+            this.showLoading = false;
+            this.showError = true;
           });
         },
         ready: function() {

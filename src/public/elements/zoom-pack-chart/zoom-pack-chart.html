@@ -187,12 +187,12 @@
         showGoback: {
           type: Boolean,
           // value: true,
-          computed: 'canShowGoBack(focus)'
+          computed: 'canGoBack(focus)'
         },
         rootNode: Object,
         diameter: {
           type: Number,
-          computed: 'getDiameter(width, height)'
+          computed: 'calcDiameter(width, height)'
         },
         // Each view is defined as an array of three numbers: cx, cy and width
         view: Array    
@@ -200,35 +200,70 @@
       observers: [
         'redraw(chartData, width, height)'
       ],
-      redraw: function() {
+      // readraw when data changed or responsive need
+      redraw: function(chartData) {
         d3.select(this.$.assetList).selectAll('*').remove();
         d3.select(this.$.textList).selectAll('*').remove();
         this.debounce('redraw', this.render, 500);
       },
+      // chart central need
       getCenter: function(width, height) {
         return 'translate(' + width / 2 + ',' + height / 2 + ')';
       },
-      getDiameter: function(w, h) {
+      // calc diameter
+      calcDiameter: function(w, h) {
         return Math.min.call(null, w, h);
       },
-      canShowGoBack: function(focus) {
+      // show go back btns
+      canGoBack: function(focus) {
         return focus && focus.depth;
       },
-      nodeAdaptor: function(nodes) {
-        return nodes.map(function(n) {
-          if (n.parent && n.parent.children.length === 1) {
-            n.r = n.r * 0.8;
-          }
-          return n;
-        })
-      },
+      // handle go back
       handleBackUpper: function(e) {
-        // e.preventDefault();
+        e && e.preventDefault();
         if (this.focus.parent) this.zoom(this.focus.parent);
       },
       handleBackRoot: function(e) {
-        e.preventDefault();
+        e && e.preventDefault();
         if (this.rootNode) this.zoom(this.rootNode);
+      },
+      /*
+       * data converter
+      */      
+      dataBeautify: function(chartData) {
+        // set placeholder for those single-child parent
+        var sizeKey = this.sizeKey;
+        var childKey = this.childKey;
+
+        function setPlaceHolder(children) {
+          if (children.length === 1) {
+            var child = children[0];
+            var placeholder = {
+              [sizeKey]: child[sizeKey] / 100,
+              placeholder: true
+            };
+            return [ child, placeholder ];
+          } else {
+            return children;
+          }
+        }
+
+        function insertDatum(obj) {
+          var children = obj[childKey];
+          if (children && Array.isArray(children)) {
+            obj[childKey] = setPlaceHolder(children);
+            
+            obj[childKey].map(function(n) {
+              insertDatum(n);
+              return n;
+            });
+          }
+          
+          return obj;
+        }
+
+        data = insertDatum(chartData);
+        return data;
       },
       orderScheduler: function(nodes) {
         var root = nodes[0];
@@ -270,12 +305,14 @@
         .size([this.diameter - constants.margin, this.diameter - constants.margin])
         .padding(2);
 
-        var root = this.getRootNode(this.chartData);
+        var data = this.dataBeautify(this.chartData);
+        var data = this.chartData;
+
+        var root = this.getRootNode(data);
         this.rootNode = root;
 
         var nodes = pack(root).descendants();
-
-        return this.nodeAdaptor(nodes);
+        return nodes;
       },
       zoom: function(d) {
         var focus = d;
@@ -403,9 +440,12 @@
         .selectAll('g.wave')
         .attr('transform', 'scale(' + k + ')');
       },  
-      render: function(chartData) {
+      render: function() {
         var margin = constants.margin;
-        var nodes = this.getNodes();
+        var nodes = this.getNodes().filter(function(n) {
+          // filter for placeholder
+          return !n.data.placeholder;
+        });
  
         var focus = this.getFocus(nodes, this.focusInfo);
         this.focus = focus;

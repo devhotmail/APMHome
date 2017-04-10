@@ -1,0 +1,17 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="placeholder-styles.html">
+
+<dom-module id="placeholder-error">
+  <template>
+    <style include="placeholder-styles"></style>
+    <div class="error placeholder flex flex--row flex--middle">
+      <i class="icon fa fa-exclamation-circle"></i>
+      <span class="label flex__item u-p+">数据加载出错，请联系管理员</span>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'placeholder-error'
+    });
+  </script>
+</dom-module>
