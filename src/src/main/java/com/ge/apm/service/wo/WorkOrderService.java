@@ -617,7 +617,7 @@ public class WorkOrderService {
     public void sendWoMsgs(WorkOrder wo, String msgTitle, String msgType) {
         //String wxTemplateId = "4N0nfZ0fXstReD-FcBu-d6tUsTcwBEIND-0wmOh0cO8";
         String wxTemplateId = configUtils.fetchProperties("workorder_change_template_id");
-        msgTitle = msgTitle==null?i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",wo.getCurrentStepId()-1+"").getValueZh():msgTitle;
+        msgTitle = msgTitle==null?i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",wo.getCurrentStepId()-1+"").getValueZh()+"完成":msgTitle;
         String linkUrl = cService.getWoDetailUrl(wo.getId());
         
         HashMap<String, Object> params = new HashMap<>();

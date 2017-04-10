@@ -20,6 +20,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
 
 /**
@@ -46,6 +47,8 @@ public class AssetCreateController {
     List<QrCodeAttachment> pictureList;
     List<QrCodeAttachment> audioList;
 
+    private UserAccount clinicalOwner;
+
     @PostConstruct
     protected void init() {
         String qrCode = WebUtil.getRequestParameter("qrCode");
@@ -53,12 +56,8 @@ public class AssetCreateController {
         attachFileService = WebUtil.getBean(AttachmentFileService.class);
         createRequest = acServie.getCreateRequest(qrCode);
 
-        assetInfo = new AssetInfo();
-        assetInfo.setSiteId(createRequest.getSiteId());
-        assetInfo.setHospitalId(createRequest.getHospitalId());
-        assetInfo.setQrCode(qrCode);
-        assetInfo.setIsValid(true);
-        assetInfo.setStatus(1);
+        assetInfo = createAssetInfo();
+
         pictureList = acServie.getQrCodePictureList(createRequest.getId());
         audioList = acServie.getQrCodeAudioList(createRequest.getId());
 
@@ -77,6 +76,25 @@ public class AssetCreateController {
             Collections.addAll(commentsList, createRequest.getComment().split("\\|"));
         }
 
+    }
+
+    private AssetInfo createAssetInfo() {
+        AssetInfo newAsset = new AssetInfo();
+        newAsset.setSiteId(createRequest.getSiteId());
+        newAsset.setHospitalId(createRequest.getHospitalId());
+        newAsset.setQrCode(createRequest.getQrCode());
+        newAsset.setIsValid(true);
+        newAsset.setStatus(1);
+        newAsset.setName(createRequest.getAssetName());
+        newAsset.setAssetGroup(createRequest.getAssetGroup());
+        newAsset.setClinicalDeptId(createRequest.getOrgId());
+        newAsset.setClinicalOwnerId(createRequest.getUserId());
+        if (null != createRequest.getUserId()) {
+            clinicalOwner = acServie.getUserInfo(createRequest.getUserId());
+            newAsset.setClinicalOwnerName(clinicalOwner.getName());
+            newAsset.setClinicalOwnerTel(clinicalOwner.getTelephone());
+        }
+        return newAsset;
     }
 
     public List<OrgInfo> getClinicalDeptList() {
@@ -124,6 +142,28 @@ public class AssetCreateController {
     public List<UserAccount> getOwnerList() {
         List<UserAccount> res = acServie.getAssetOnwers(assetInfo.getSiteId(), assetInfo.getHospitalId());
         return res;
+    }
+    
+    public void onClinicalDeptChange() {
+        this.clinicalOwner = null;
+        assetInfo.setClinicalOwnerId(null);
+        assetInfo.setClinicalOwnerName(null);
+        assetInfo.setClinicalOwnerTel(null);
+    }
+    
+    public void onClinicalOwnerChange() {
+        if (null != clinicalOwner) {
+            assetInfo.setClinicalOwnerId(clinicalOwner.getId());
+            assetInfo.setClinicalOwnerName(clinicalOwner.getName());
+            assetInfo.setClinicalOwnerTel(clinicalOwner.getTelephone());
+        }
+    }
+    
+    
+    public List<UserAccount> getClinicalOwnerList() {
+        
+        return acServie.getClinicalOwnerList(assetInfo.getClinicalDeptId());
+       
     }
 
     //getter and setter
@@ -177,6 +217,14 @@ public class AssetCreateController {
 
     public List<String> getCommentsList() {
         return commentsList;
+    }
+
+    public UserAccount getClinicalOwner() {
+        return clinicalOwner;
+    }
+
+    public void setClinicalOwner(UserAccount clinicalOwner) {
+        this.clinicalOwner = clinicalOwner;
     }
 
 }

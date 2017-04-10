@@ -142,6 +142,14 @@ public class AssetInfo implements Serializable {
     @Column(name = "last_stocktake_date")
     @Temporal(TemporalType.DATE)
     private Date lastStockTakeDate;
+    @Column(name = "clinical_owner_id")
+    private Integer clinicalOwnerId;
+    @Size(max = 16)
+    @Column(name = "clinical_owner_name")
+    private String clinicalOwnerName;
+    @Size(max = 16)
+    @Column(name = "clinical_owner_tel")
+    private String clinicalOwnerTel;
     @Size(max = 64)
     @Column(name = "registration_no")
     private String registrationNo;
@@ -630,7 +638,30 @@ public class AssetInfo implements Serializable {
     public void setDispatchMode(Integer dispatchMode) {
         this.dispatchMode = dispatchMode;
     }
-    
+
+    public Integer getClinicalOwnerId() {
+        return clinicalOwnerId;
+    }
+
+    public void setClinicalOwnerId(Integer clinicalOwnerId) {
+        this.clinicalOwnerId = clinicalOwnerId;
+    }
+
+    public String getClinicalOwnerName() {
+        return clinicalOwnerName;
+    }
+
+    public void setClinicalOwnerName(String clinicalOwnerName) {
+        this.clinicalOwnerName = clinicalOwnerName;
+    }
+
+    public String getClinicalOwnerTel() {
+        return clinicalOwnerTel;
+    }
+
+    public void setClinicalOwnerTel(String clinicalOwnerTel) {
+        this.clinicalOwnerTel = clinicalOwnerTel;
+    }
     
     
     @Override

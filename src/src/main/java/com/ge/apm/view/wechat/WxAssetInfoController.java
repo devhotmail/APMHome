@@ -18,6 +18,7 @@ import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.service.asset.MessageSubscriberService;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.service.utils.QRCodeUtil;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.List;
@@ -217,6 +218,10 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         } else {
             WebUtil.addErrorMessage("保存失败");
         }
+    }
+    
+     public String getQrCodeImageBase64(){
+        return QRCodeUtil.getQRCodeImageBase64(assetInfo.getQrCode());
     }
 
     @Override

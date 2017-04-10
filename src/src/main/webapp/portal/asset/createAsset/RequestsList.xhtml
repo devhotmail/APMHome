@@ -38,6 +38,9 @@
                         <p:column headerText="#{msg.hospitalId}" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
                             <h:outputText value="#{qrCodeLibCreateController.getHospitalName(item.hospitalId)}"/>
                         </p:column>
+                        <p:column headerText="#{msg.name}" sortBy="#{item}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.assetName}"/>
+                        </p:column>
                         <p:column headerText="#{msg.qrCode}" filterBy="#{item.qrCode}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.qrCode}"/>
                         </p:column>
@@ -51,6 +54,10 @@
                                 <f:convertDateTime pattern="MM/dd HH:mm:ss" />
                             </h:outputText>
                         </p:column>
+                        
+                        
+                        
+                        
 <!--                        <p:column headerText="#{msg.submitWechatId}" sortBy="#{item.submitWechatId}">
                             <h:outputText value="#{item.submitWechatId}"/>
                         </p:column>-->

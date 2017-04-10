@@ -163,4 +163,18 @@ public class AssetCreateService {
         return coreService.uploadMediaToWechat(sc.getStream());
     }
 
+    public UserAccount getUserInfo(Integer userId) {
+        return userDao.getById(userId);
+    }
+
+    public List<UserAccount> getClinicalOwnerList(Integer clinicalDeptId) {
+         List<SearchFilter> usersFilters = new ArrayList<>();
+        if (null != clinicalDeptId) {
+            usersFilters.add(new SearchFilter("orgInfoId", SearchFilter.Operator.EQ, clinicalDeptId));
+            return userDao.findBySearchFilter(usersFilters);
+        } else {
+            return new ArrayList<UserAccount>();
+        }
+    }
+
 }
