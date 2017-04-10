@@ -27,8 +27,11 @@ $(function () {
                     continue;
                 }
                 linkEl = figureEl.children[0]; // <a> element
+                var img =  linkEl.children[0]; // <img> element
+                
+                size=[img.naturalWidth,img.naturalHeight];
 
-                size = linkEl.getAttribute('data-size').split('x');
+//                size = linkEl.getAttribute('data-size').split('x');
 
                 // 创建幻灯片对象
                 item = {
