@@ -121,7 +121,7 @@ public class DmApi {
       "clinical_dept_id", v._3,
       "asset_group", v._4,
       "usage", v._6,
-      "revenue_predicted_raw", v._8 * (1 + v._6 - v._5),
+      "revenue_predict_raw", v._8 * (1 + v._6 - v._5),
       "revenue_last_year_raw", v._8,
       "revenue_year_before_last_raw", v._7
     ));
