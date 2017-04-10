@@ -1,5 +1,6 @@
 const path = require('path')
 const ora = require('ora')
+const cliSpinners = require('cli-spinners')
 const chalk = require('chalk')
 const webpack = require('webpack')
 const rimraf = require('rimraf')
@@ -16,18 +17,24 @@ const webpackConfig = require(`./webpack.${mode}.conf`)
 
 const compiler = webpack(webpackConfig)
 
-const spinner = ora(`building for ${mode} mode...`)
+const spinner = ora({
+  color: 'green',
+  text: ` Building for ${mode} mode...`,
+  spinner: cliSpinners.bouncingBar
+})
+
 spinner.start()
 
 rimraf(config.distDir, err => {
   if (err) throw err
 
   compiler.run((err, stats) => {
-    spinner.stop()
-    if (err) throw err
+    if (err) {
+      throw err
+      spinner.fail(chalk.red(`Build failed for Project ${pkg.name}.\n`))
+    }
+    spinner.succeed(chalk.green(`Build complete for Project ${pkg.name}.\n`))
     process.stdout.write(statsOutput(stats) + '\n\n')
-
-    console.log(chalk.cyan(`  Build complete for Project ${pkg.name}.\n`))
     utils.symlink()
   })
 
@@ -36,6 +43,8 @@ rimraf(config.distDir, err => {
       aggregateTimeout: 300,
       poll: 1000  
     }, (err, stats) => {
+      if (err) throw err
+      console.log(chalk.bgGreen(chalk.black(` Files updated and you can reload it manually.\n`)))
       process.stdout.write(statsOutput(stats) + '\n\n')
     })
   }
