@@ -8,7 +8,7 @@ const baseWebpackConfig = require('./webpack.base.conf')
 
 const utils = require('./utils')
 
-const publicPath = utils.getProdPublicPath()
+const publicPath = '/geapm' + utils.getProdPublicPath()
 
 module.exports = merge(baseWebpackConfig, {
   devtool: '#inline-cheap-module-source-map',
