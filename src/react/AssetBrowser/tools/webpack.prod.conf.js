@@ -35,6 +35,22 @@ const webpackConfig = merge(baseWebpackConfig, {
         }),
       },
       {
+        test: /\.s[ca]ss$/,
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                module: true,
+                localIdentName: '[local]__[hash:base64:5]'
+              }
+            },
+            'sass-loader'
+          ]
+        })
+      },
+      {
         test: /\.(jpg|jpeg|png|gif|ico|svg)$/,
         use: [
           {
@@ -47,7 +63,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         ]
       }
     ]
-  },  
+  },
   plugins: [
     new webpack.NamedModulesPlugin(),
     new webpack.DefinePlugin({
@@ -99,7 +115,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   ]
 })
 
-const bundleAnalyzerReport = false
+const bundleAnalyzerReport = process.env.NODE_ENV === 'analysis'
 
 if (bundleAnalyzerReport) {
   var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin

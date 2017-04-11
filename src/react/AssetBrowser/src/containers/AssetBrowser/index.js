@@ -1,7 +1,6 @@
 import React from 'react'
 import { is } from 'immutable'
-import { connect } from 'dva'
-import uuid from 'uuid/v4'
+import { connect } from 'dva/mobile'
 import Chart from '#/containers/Chart'
 import { formatKey } from '#/models/assetBrowser'
 import styles from './index.scss'

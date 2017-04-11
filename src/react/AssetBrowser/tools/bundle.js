@@ -9,7 +9,6 @@ const config = require('../config')
 const pkg = require('../package.json')
 
 const isWatchMode = process.env.NODE_ENV === 'watch'
-if (!isWatchMode) process.env.NODE_ENV = 'production'
 
 const mode = isWatchMode ? 'watch' : 'prod'
 
@@ -41,7 +40,7 @@ rimraf(config.distDir, err => {
   if (isWatchMode) {
     compiler.watch({
       aggregateTimeout: 300,
-      poll: 1000  
+      poll: 1000
     }, (err, stats) => {
       if (err) throw err
       console.log(chalk.bgGreen(chalk.black(` Files updated and you can reload it manually.\n`)))

@@ -11,7 +11,7 @@ const utils = require('./utils')
 const publicPath = utils.getProdPublicPath()
 
 module.exports = merge(baseWebpackConfig, {
-  devtool: false,
+  devtool: '#inline-cheap-module-source-map',
   output: {
     filename: '[name].js',
     publicPath,

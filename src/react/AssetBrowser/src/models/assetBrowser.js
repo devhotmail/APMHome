@@ -1,7 +1,6 @@
 import Immutable from 'immutable'
-import uuid from 'uuid/v4'
-import { rnorm } from 'randgen'
-import groupBy from 'lodash.groupby'
+// import uuid from 'uuid/v4'
+// import { rnorm } from 'randgen'
 import clamp from 'lodash.clamp'
 import axios from 'axios'
 import isNumber from 'lodash.isNumber'
@@ -14,109 +13,109 @@ export const ASSET_WIDTH = 25
 export const COLORS = ['#6e83a7', '#6e9aa9', '#8888a2', '#76aa9f', '#ba82bb', '#58bbb2']
 export const INACTIVE_COLORS = ['#c4cbd6', '#c4d2d7', '#ccccd5', '#c6d7d3', '#dccadc', '#bddcd9']
 
-const funcs = [
-  '6281医用电子仪器设备',
-  '6815穿刺注射设备',
-  '6823医用超声波仪器及还有很多字需要隐藏',
-  '6808胸部外科手术器械',
-  '6806口腔科手术设备',
-  ''
-]
+// const funcs = [
+//   '6281医用电子仪器设备',
+//   '6815穿刺注射设备',
+//   '6823医用超声波仪器及还有很多字需要隐藏',
+//   '6808胸部外科手术器械',
+//   '6806口腔科手术设备',
+//   ''
+// ]
+//
+// const types = [
+//   'MR',
+//   'CT',
+//   'DR',
+//   'CR',
+//   'LCS-Monitor',
+//   'LCS-Ventilator',
+//   'LCS-Anesthedia',
+//   ''
+// ]
+//
+// const priceRangeForType = [
+//   [8e6, 2e7],
+//   [2e6, 9e6],
+//   [1e5, 9e5],
+//   [1e5, 9e5],
+//   [1e4, 9e4],
+//   [1e4, 9e4],
+//   [1e4, 9e4],
+//   [1e4, 9e4],
+//   [1e4, 2e7]
+// ]
+//
+// const depts = [
+//   '放射科',
+//   'XXXXX',
+//   'XXX',
+//   'BLA',
+//   'BLABLA',
+//   'WHATEVER',
+//   ''
+// ]
+//
+// const suppliers = [
+//   '通用电气',
+//   '西门子',
+//   '飞利浦',
+//   'XXXXX',
+//   'BLA',
+//   'BLABLA',
+//   ''
+// ]
+//
+// const assets = []
+//
+// function randInt(range) {
+//   return Math.floor(range * Math.random())
+// }
+//
+// function randRange(min, max) {
+//   return (max - min) * Math.random() + min
+// }
+//
+// function rnormRange(min, max) {
+//   const mean = (max + min) / 2
+//   const std = (max - min) / 2 / 3
+//   const r = rnorm(mean, std)
+//   if (r > max) return max
+//   if (r < min) return min
+//   return r
+// }
+//
+// for (let i = 0; i < randRange(2000, 4000); i++) {
+//   const randI = randInt(types.length)
+//   assets.push({
+//     id: uuid(),
+//     func: funcs[randInt(funcs.length)],
+//     type: types[randI],
+//     dept: depts[randInt(depts.length)],
+//     supplier: suppliers[randInt(suppliers.length)],
+//     price: rnormRange(...priceRangeForType[randI]),
+//     yoi: randRange(+new Date('2005-1-1'), +new Date())
+//   })
+// }
+//
+// const rulers = [{
+//   dimension: 'price',
+//   ticks: [
+//     1e4,
+//     1e5,
+//     5e5,
+//     1e6,
+//     5e6,
+//     1e7
+//   ]
+// }]
+//
+// const dimensions = ['func', 'type', 'dept', 'supplier', 'price', 'yoi']
 
-const types = [
-  'MR',
-  'CT',
-  'DR',
-  'CR',
-  'LCS-Monitor',
-  'LCS-Ventilator',
-  'LCS-Anesthedia',
-  ''
-]
 
-const priceRangeForType = [
-  [8e6, 2e7],
-  [2e6, 9e6],
-  [1e5, 9e5],
-  [1e5, 9e5],
-  [1e4, 9e4],
-  [1e4, 9e4],
-  [1e4, 9e4],
-  [1e4, 9e4],
-  [1e4, 2e7]
-]
-
-const depts = [
-  '放射科',
-  'XXXXX',
-  'XXX',
-  'BLA',
-  'BLABLA',
-  'WHATEVER',
-  ''
-]
-
-const suppliers = [
-  '通用电气',
-  '西门子',
-  '飞利浦',
-  'XXXXX',
-  'BLA',
-  'BLABLA',
-  ''
-]
-
-const assets = []
-
-function randInt(range) {
-  return Math.floor(range * Math.random())
-}
-
-function randRange(min, max) {
-  return (max - min) * Math.random() + min
-}
-
-function rnormRange(min, max) {
-  const mean = (max + min) / 2
-  const std = (max - min) / 2 / 3
-  const r = rnorm(mean, std)
-  if (r > max) return max
-  if (r < min) return min
-  return r
-}
-
-for (let i = 0; i < randRange(2000, 4000); i++) {
-  const randI = randInt(types.length)
-  assets.push({
-    id: uuid(),
-    func: funcs[randInt(funcs.length)],
-    type: types[randI],
-    dept: depts[randInt(depts.length)],
-    supplier: suppliers[randInt(suppliers.length)],
-    price: rnormRange(...priceRangeForType[randI]),
-    yoi: randRange(+new Date('2005-1-1'), +new Date())
-  })
-}
-
-const rulers = [{
-  dimension: 'price',
-  ticks: [
-    1e4,
-    1e5,
-    5e5,
-    1e6,
-    5e6,
-    1e7
-  ]
-}]
-
-const dimensions = ['func', 'type', 'dept', 'supplier', 'price', 'yoi']
-
-
-const filters = [
-  // {dimension: 'type', displayName: 'LCS-Monitor', key: 'LCS-Monitor'},
-  // {dimension: 'type', displayName: '放射科', key: '放射科'}
-]
+// const filters = [
+//   // {dimension: 'type', displayName: 'LCS-Monitor', key: 'LCS-Monitor'},
+//   // {dimension: 'type', displayName: '放射科', key: '放射科'}
+// ]
 
 
 function distributeColumns(width, num) {
