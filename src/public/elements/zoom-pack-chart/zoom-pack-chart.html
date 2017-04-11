@@ -442,9 +442,10 @@
       },  
       render: function() {
         var margin = constants.margin;
+        var sizeKey = this.sizeKey;
         var nodes = this.getNodes().filter(function(n) {
-          // filter for placeholder
-          return !n.data.placeholder;
+          // filter for placeholder and zero radius
+          return !n.data.placeholder && n.r;
         });
  
         var focus = this.getFocus(nodes, this.focusInfo);
