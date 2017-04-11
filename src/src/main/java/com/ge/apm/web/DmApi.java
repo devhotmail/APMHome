@@ -121,9 +121,16 @@ public class DmApi {
       "clinical_dept_id", v._3,
       "asset_group", v._4,
       "usage", v._6,
-      "revenue_predicted_raw", v._8 * (1 + v._6 - v._5),
+      "revenue_predict_raw", v._8 * (1 + v._6 - v._5),
+      "revenue_predict", formatMoney(CNY.money(v._8 * (1 + v._6 - v._5)), CNY.desc(CNY.money(v._7))._2)._1,
       "revenue_last_year_raw", v._8,
-      "revenue_year_before_last_raw", v._7
+      "revenue_last_year", formatMoney(CNY.money(v._8), CNY.desc(CNY.money(v._7))._2)._1,
+      "revenue_year_before_last_raw", v._7,
+      "revenue_year_before_last", formatMoney(CNY.money(v._7), CNY.desc(CNY.money(v._7))._2)._1,
+      "last_year_date", LocalDate.now().minusYears(1).toString(),
+      "year_before_last_date", LocalDate.now().minusYears(2).toString(),
+      "revenue_increase", Option.when(v._8.equals(0D), 0D).getOrElse((v._8 * (1 + v._6 - v._5)) / v._8 - 1D),
+      "revenue_unit", CNY.desc(CNY.money(v._7))._2
     ));
   }
 
@@ -148,8 +155,8 @@ public class DmApi {
 
   private Map<String, Object> calculateHigherLevelValues(List<Map<String, Object>> items, Integer id, String name) {
     List<Double> usages = items.map(v -> (Double) v.get("usage").get());
-    Double revenuePredictedSugRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_predicted_raw").get())).sum()).getOrElse(0D);
-    Double revenuePredictedRaw = Try.of(() -> Stats.of(items.map(v -> Option.when((Double) v.get("usage").get() > 1D, (Double) v.get("revenue_predicted_raw").get() / (Double) v.get("usage").get()).getOrElse((Double) v.get("revenue_predicted_raw").get())).toJavaList()).sum()).getOrElse(0D);
+    Double revenuePredictedSugRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_predict_raw").get())).sum()).getOrElse(0D);
+    Double revenuePredictedRaw = Try.of(() -> Stats.of(items.map(v -> Option.when((Double) v.get("usage").get() > 1D, (Double) v.get("revenue_predict_raw").get() / (Double) v.get("usage").get()).getOrElse((Double) v.get("revenue_predict_raw").get())).toJavaList()).sum()).getOrElse(0D);
     Double revenueLastYearRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_last_year_raw").get()).toJavaList()).sum()).getOrElse(0D);
     Double revenueYearBeforeLastRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_year_before_last_raw").get()).toJavaList()).sum()).getOrElse(0D);
     String label = CNY.desc(CNY.money(revenueYearBeforeLastRaw))._2;
@@ -166,17 +173,17 @@ public class DmApi {
       "year_before_last_date", LocalDate.now().minusYears(2).toString(),
       "revenue_predict", formatMoney(CNY.money(revenuePredictedRaw), label)._1,
       "revenue_predict_raw", revenuePredictedRaw,
-      "revenue_increase", Option.when(revenueLastYearRaw.equals(0D), 0D).getOrElse(revenuePredictedRaw / revenueLastYearRaw - 1),
+      "revenue_increase", Option.when(revenueLastYearRaw.equals(0D), 0D).getOrElse(revenuePredictedRaw / revenueLastYearRaw - 1D),
       "revenue_predict_sug", formatMoney(CNY.money(revenuePredictedSugRaw), label)._1,
       "revenue_predict_sug_raw", revenuePredictedSugRaw,
-      "revenue_increase_sug", Option.when(revenueLastYearRaw.equals(0D), 0D).getOrElse(revenuePredictedSugRaw / revenueLastYearRaw - 1),
+      "revenue_increase_sug", Option.when(revenueLastYearRaw.equals(0D), 0D).getOrElse(revenuePredictedSugRaw / revenueLastYearRaw - 1D),
       "revenue_unit", label
     );
   }
 
   private List<Map<String, String>> calculateBottomLevelSuggestions(Integer NumGreaterThan1, Double averageUsage, Integer numOfAssets) {
     if (averageUsage > 1D) {
-      return List.of(HashMap.of("title", SUGGESTION_BUY, "addition", String.format("%s台设备", (int) Math.ceil((averageUsage - 1) * numOfAssets))));
+      return List.of(HashMap.of("title", SUGGESTION_BUY, "addition", String.format("%s台设备", (int) Math.ceil((averageUsage - 1D) * numOfAssets))));
     } else if (NumGreaterThan1 > 0) {
       return List.of(HashMap.of("title", SUGGESTION_ADJUST));
     } else if (averageUsage <= 0.3D) {
@@ -230,5 +237,4 @@ public class DmApi {
     }
   }
 }
-
 
