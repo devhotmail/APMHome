@@ -439,7 +439,7 @@
         observers: [
           'changeQuery(isHead, selectedType)',
           'loadData(isHead, selectedType, orgId)',
-          'resetActiveTab(selectedType)',
+          'resetStatus(selectedType)',
           'changeSelectedConfig(focusInfo, configList)',
           'resetSubSelectedConfigIndex(selectedConfigIndex)'
         ],
@@ -456,9 +456,11 @@
             return n.depth === 2 && n.parent.uid === selectedConfigItem.uid;
           });
         },
-        resetActiveTab: function(selectedType) {
+        resetStatus: function(selectedType) {
           // reset activeTab when selectedType changed
           this.activeTab = 0;
+          // reset config loading when selectedType changed 
+          this.configLoading = false;
         },
         resetSubSelectedConfigIndex: function(selectedConfigIndex) {
           // reset subSelectedConfig index when selectedConfigIndex changes
