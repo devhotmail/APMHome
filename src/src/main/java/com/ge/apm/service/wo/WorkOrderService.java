@@ -60,6 +60,8 @@ public class WorkOrderService {
     private MessageSubscriberRepository subscribDao;
     @Autowired
     private ConfigUtils configUtils;
+    @Autowired
+    private OrgInfoRepository orgDao;
 
     public List<WorkOrder> findWorkOrderByStatus(int status)throws Exception{
         List<WorkOrder> byStatus = workOrderRepository.findByStatus(status);
@@ -266,11 +268,12 @@ public class WorkOrderService {
         Integer woId= Integer.valueOf(wopo.getWoId());
         WorkOrder wo = workOrderRepository.getById(woId);
         updateEndTime(wo, wopo.getDesc());
-        UserAccount currentUsr = UserContext.getCurrentLoginUser(request);
         wo.setCurrentStepId(2);
         wo.setEstimatedCloseTime(null);
         //step
         WorkOrderStep wds = initWorkOrderStep(request, wo);
+        //find requestor hospitalId
+        UserAccount currentUsr = userDao.findById(wo.getRequestorId());
         WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(currentUsr.getSiteId(), currentUsr.getHospitalId());
         if (woc != null) {
             wo.setCurrentPersonId(woc.getDispatchUserId());
@@ -375,11 +378,15 @@ public class WorkOrderService {
     private WorkOrder initWorkOrder(WorkOrderPoJo wop,UserAccount usr,List<WorkOrder> reopenWorkOrder) throws Exception{
 
         WorkOrder neWorkOrder = new WorkOrder();
-        neWorkOrder.setSiteId(usr.getSiteId());
-        neWorkOrder.setHospitalId(usr.getHospitalId());
         AssetInfo ai = assetInfoRepository.getById(wop.getAssetId());
         if(ai == null){
-            throw new Exception("该资产在数据中找不到");
+            throw new Exception("该资产暂时还没有档案");
+        }
+        neWorkOrder.setSiteId(ai.getSiteId());
+        neWorkOrder.setHospitalId(ai.getHospitalId());
+        OrgInfo org = orgDao.findById(ai.getHospitalId());
+        if (org != null) {
+            neWorkOrder.setHospitalName(org.getName());
         }
         neWorkOrder.setAssetId(wop.getAssetId());
         neWorkOrder.setAssetName(ai.getName());

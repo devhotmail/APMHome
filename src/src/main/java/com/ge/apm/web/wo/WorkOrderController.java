@@ -123,6 +123,7 @@ public class WorkOrderController {
     public String woListPage(HttpServletRequest request,HttpServletResponse response, Model model) {
         UserAccount ua = service.getLoginUser(request);
         model.addAttribute("userId", ua.getId());
+        model.addAttribute("hospitalId", ua.getHospitalId());
         WxJsapiSignature s = null;
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());

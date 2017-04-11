@@ -55,6 +55,7 @@
                 wechatSDK.setAppId('${appId}');
                 wechatSDK.setSignature('${timestamp}', '${nonceStr}', '${signature}');
                 wechatSDK.init();
+                pageManager.hospitalId = '${hospitalId}';
                 //show the tabs by the role of the user
                 $.get(WEB_ROOT+'web/choosetab', function(ret){
                     if (ret && ret !== 3) {
@@ -118,7 +119,7 @@
                                 if (ret && ret.length !== 0) {
                                     $.each(ret, function(i, v){
                                         pageManager.workOrders[v['id']] = v;
-                                        data.push({title:'工单编号: '+ v['id'], 
+                                        data.push({title:'工单编号'+(step===5?(pageManager.hospitalId==v['hospitalId']?'':'/'+v['hospitalName']):'')+': '+ v['id'],
                                                ftitle: pageManager.msgTypes['casePriority'][v['casePriority']], 
                                                ftitleColor : v['casePriority']===1?'#F76260':v['casePriority']===2?'#FFBE00':'#09BB07',
                                                rater: (close === 2 ? v['feedbackRating']: -1),
