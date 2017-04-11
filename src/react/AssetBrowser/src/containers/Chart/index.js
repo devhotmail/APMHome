@@ -110,12 +110,13 @@ class Asset extends ImmutableComponent {
   }
 
   onMouseEnter = (e) => {
-    const keys = ['func', 'type', 'dept', 'supplier', 'price', 'yoi']
+    const keys = ['name', 'func', 'type', 'dept', 'supplier', 'price', 'yoi']
     const reference = ReactDOM.findDOMNode(this)
     const clientRect = reference.getBoundingClientRect()
     const style = {
       pointerEvents: 'none',
       position: 'fixed',
+      minWidth: 100,
       // top: clientRect.top,
       // left: clientRect.left,
       background: '#d8d8d8',
@@ -139,7 +140,7 @@ class Asset extends ImmutableComponent {
     this.el = this.el || ReactDOM.render((
       <div style={style}>
         {keys.map((key, index) => (
-          <p style={{color: COLORS[index]}} key={key}>
+          <p style={{color: ['#848484'].concat(COLORS)[index]}} key={key}>
             {
               key === 'price' ? formatPrice(this.props.asset.get(key)) : this.props.asset.get(key)
             }
@@ -324,6 +325,8 @@ class Lines extends ImmutableComponent {
     const { viewBoxOffsetY, viewBoxHeight, hoveredAssetId, activeAssetId, columns } = this.props
     const viewBoxTop = viewBoxOffsetY
     const viewBoxBottom = viewBoxOffsetY + viewBoxHeight
+    if (viewBoxHeight === 0) return null
+    if (columns.size === 0) return null
 
     const columnsWithClustersInViewBox = columns.map(column => column.update('clusters', clusters => {
       const columnOffset = column.get('offset')
@@ -378,7 +381,7 @@ class Lines extends ImmutableComponent {
           }, Immutable.List([])).map((pair, index) => (
             <Motion
               // key={pair.getIn([0, 'id']) + index}
-              key={pair.getIn([0, 'id']) + index}
+              key={pair.getIn([0, 'id']) + '-' + index}
               defaultStyle={{
                 x0: columns.getIn([index, 'left']) + ASSET_WIDTH / 2,
                 y0: pair.getIn([0, 'top']) + ASSET_HEIGHT / 2,

@@ -80,8 +80,26 @@ class Header extends ImmutableComponent {
 }
 
 export default
+@connect(({assetBrowser}) => ({
+  loading: assetBrowser.get('loading'),
+  failed: assetBrowser.get('failed')
+}))
 class AssetBrowser extends ImmutableComponent {
   render() {
+    if (this.props.loading) return (
+      <div className={styles['asset-browser']}>
+        <div className={styles['loading']}>
+          加载中...
+        </div>
+      </div>
+    )
+    if (this.props.failed) return (
+      <div className={styles['asset-browser']}>
+        <div className={styles['failure']}>
+          加载数据失败，请刷新重试
+        </div>
+      </div>
+    )
     return (
       <div className={styles['asset-browser']}>
         <Header />

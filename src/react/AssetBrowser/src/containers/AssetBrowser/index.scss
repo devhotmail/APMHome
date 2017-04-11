@@ -3,6 +3,13 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+  .loading, .failure {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
   .header {
     height: 100px;
     display: flex;

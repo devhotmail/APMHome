@@ -3,6 +3,8 @@ import uuid from 'uuid/v4'
 import { rnorm } from 'randgen'
 import groupBy from 'lodash.groupby'
 import clamp from 'lodash.clamp'
+import axios from 'axios'
+import isNumber from 'lodash.isNumber'
 import { trimString } from '#/utils'
 
 export const CLUSTER_SPACING = 20
@@ -137,6 +139,7 @@ export function formatPrice(price) {
 function getDisplayName(key) {
   if (key === '') return '其他'
   if (key === -1) return '其他'
+  if (isNumber(key)) return '' + key
   if (key.includes('~')) {
     const range = key.split('~').map(num => Number(num))
     if (range.every(num => !isNaN(num))) {
@@ -149,7 +152,7 @@ function getDisplayName(key) {
 }
 
 export function formatKey(asset, dimension, ruler) {
-  if (dimension === 'yoi') return '' + new Date(asset.get(dimension)).getFullYear()
+  // if (dimension === 'yoi') return '' + new Date(asset.get(dimension)).getFullYear()
   if (ruler) {
     const range = ruler.get('ticks').reduce((prev, cur) => {
       if (cur > asset.get(dimension) && cur < prev[1]) prev[1] = cur
@@ -227,6 +230,7 @@ function updateColumnOffset(column, assetId, viewBoxYRange) {
 export default {
   namespace: 'assetBrowser',
   state: Immutable.fromJS({
+    loading: true,
     filters: [],
     hoveredAssetId: null,
     activeAssetId: null,
@@ -247,16 +251,36 @@ export default {
   subscriptions: {
     setup({ dispatch }) {
       dispatch({
-        type: 'hydrate',
-        payload: {
-          assets,
-          rulers,
-          dimensions
-        }
+        type: 'data/get'
       })
     }
   },
   effects: {
+    *['data/get'](_, { put, call, select }) {
+      const promise = yield call(axios, '/geapm/api/assets')
+      try {
+        const { data } = yield promise
+        yield put({
+          type: 'hydrate',
+          payload: {
+            assets: data.items.map(item => {
+              item.func = item.group
+              return item
+            }),
+            rulers: [{
+              dimension: 'price',
+              ticks: [ 1e4, 1e5, 5e5, 1e6, 5e6, 1e7]
+            }],
+            dimensions: ['func', 'type', 'dept', 'supplier', 'price', 'yoi']
+          }
+        })
+      } catch(err) {
+        yield put({
+          type: 'data/get/failed',
+          payload: err
+        })
+      }
+    },
     addWatcher: [ function* ({ takeLatest, put, call, select }) {
       const paload = yield takeLatest(
         [
@@ -325,14 +349,25 @@ export default {
     }, { type: 'watcher'}]
   },
   reducers: {
+    ['data/get'](state) {
+      return state.set('loading', true)
+    },
+    ['data/get/failed'](state) {
+      return state.withMutations(state => {
+        state
+        .set('loading', false)
+        .set('failed', true)
+      })
+    },
     ['hydrate'](state, { payload }) {
       const { assets, rulers, dimensions } = payload
       return state.withMutations(state => {
         state
+        .set('loading', false)
         .set('assets', Immutable.fromJS(assets))
         .set('rulers', Immutable.fromJS(rulers))
         .set('dimensions', Immutable.fromJS(dimensions))
-        .set('filters', Immutable.fromJS(filters))
+        .set('filters', Immutable.fromJS([]))
         .set('hoveredAssetId', null)
         .set('activeAssetId', null)
         .set('pageIndex', 0)
