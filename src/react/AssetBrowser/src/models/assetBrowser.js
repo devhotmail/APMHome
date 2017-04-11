@@ -256,7 +256,7 @@ export default {
   },
   effects: {
     *['data/get'](_, { put, call, select }) {
-      const promise = yield call(axios, '/geapm/api/assets')
+      const promise = yield call(axios, process.env.NODE_ENV === 'production' ? '/api/assets' : '/geapm/api/assets')
       try {
         const { data } = yield promise
         yield put({
