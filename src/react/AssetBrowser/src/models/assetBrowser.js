@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 // import { rnorm } from 'randgen'
 import clamp from 'lodash.clamp'
 import axios from 'axios'
-import isNumber from 'lodash.isNumber'
+import isNumber from 'lodash.isnumber'
 import { trimString } from '#/utils'
 
 export const CLUSTER_SPACING = 20
