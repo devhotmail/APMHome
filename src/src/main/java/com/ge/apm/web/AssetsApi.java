@@ -40,10 +40,10 @@ public class AssetsApi {
   @RequestMapping(method = RequestMethod.GET)
   @ResponseBody
   public ResponseEntity<Map<String, Object>> handleRequest(HttpServletRequest request,
-                                                           @Pattern(regexp = "type|dept|supplier|price|yoi") @RequestParam(value = "orderby", required = false, defaultValue = "type") String orderBy,
-                                                           @Min(1) @RequestParam(value = "dept", required = false, defaultValue = "0") Integer dept,
-                                                           @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(value = "limit", required = false) Integer limit,
-                                                           @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
+                                                           @Pattern(regexp = "type|dept|supplier|price|yoi") @RequestParam(name = "orderby", required = false, defaultValue = "type") String orderBy,
+                                                           @Min(1) @RequestParam(name = "dept", required = false) Integer dept,
+                                                           @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(name = "limit", required = false) Integer limit,
+                                                           @Min(0) @RequestParam(name = "start", required = false, defaultValue = "0") Integer start) {
     log.info("orderBy:{}, limit:{}, start:{}", orderBy, limit, start);
     UserAccount user = UserContext.getCurrentLoginUser();
     Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetFunctionType").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
