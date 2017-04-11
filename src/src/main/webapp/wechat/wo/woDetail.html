@@ -332,7 +332,6 @@
                     $('#showAssign').show();
                     app.initUserSelect('currentPersonId', 'getcurrentperson');
                     app.initSelectData('intExtType', 'intExtType', 1);
-                  //  app.initFaultType('caseType','caseType',1);//glnote
                 }
             
                 if (pageManager.showTime && pageManager.step >= 3 ) {
@@ -395,8 +394,7 @@
                     $('#issueDescribe').hide();
                     $('#showComment').hide();
                  //   app.initSelectData('caseType', 'caseType');
-                    debugger;
-                    app.initFaultType('caseType',pageManager.workOrder.assetGroupValue,1);//glnote
+                    app.initFaultType('caseType',pageManager.workOrder.assetGroupValue);//glnote
 //                    app.initSelectData('caseSubType', 'caseSubType');
                     $('#stepCost').on('click', '.weui-cell_access', function(){
                         pageManager.go('#ts_step_cost');
@@ -410,8 +408,8 @@
                 
                 if (pageManager.workOrder.currentStepId === 6 && pageManager.workOrder.status === 2){
                     $('#pat').show();
-                    app.initSelectData('caseType', 'caseType', 1);
-                    app.initFaultType('caseType',pageManager.workOrder.assetGroupValue,1);//glnote
+                  //  app.initSelectData('caseType', 'caseType', 1);
+                    app.initFaultType('caseType',pageManager.workOrder.assetGroupValue,pageManager.workOrder.caseType);//glnote
                     $('#caseType').attr('disabled', 'disabled');
 //                    $('#caseSubType').attr('disabled', 'disabled');
                     $('#stepCost').hide();
