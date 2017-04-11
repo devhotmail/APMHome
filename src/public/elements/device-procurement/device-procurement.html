@@ -5,10 +5,7 @@
 <link rel="import" href="../responsive-container/responsive-container.html">
 <link rel="import" href="../zoom-pack-chart/zoom-pack-chart.html">
 <link rel="import" href="../editable-block/editable-block.html">
-<link rel="import" href="../placeholder/placeholder-empty.html">
-<link rel="import" href="../placeholder/placeholder-error.html">
-<link rel="import" href="../placeholder/placeholder-loading.html">
-<link rel="import" href="../placeholder/placeholder-retry.html">
+<link rel="import" href="../data-statusbar/data-statusbar.html">
 <link rel="import" href="../css-spinner/css-spinner.html">
 <link rel="import" href="device-procurement-styles.html">
 <link rel="stylesheet" href="../../css/dewIcons.css">
@@ -20,16 +17,16 @@
     <style include="device-procurement-styles"></style>
     <div class="chart-wrapper">
       <template is="dom-if" if="[[showEmpty]]">
-        <placeholder-empty></placeholder-empty>
+        <data-statusbar type="empty"></data-statusbar>
       </template>
       <template is="dom-if" if="[[showError]]">
-        <placeholder-error></placeholder-error>
+        <data-statusbar type="error"></data-statusbar>
       </template>
       <template is="dom-if" if="[[showLoading]]">
-        <placeholder-loading></placeholder-loading>
+        <data-statusbar type="loading"></data-statusbar>
       </template>
       <template is="dom-if" if="[[showRetry]]">
-        <placeholder-retry></placeholder-retry>
+        <data-statusbar type="empty" desc="暂无可用数据，请稍微再试"></data-statusbar>
       </template>
       <responsive-container width="{{width}}" height="{{height}}">
         <template is="dom-if" if="[[!isOr(showEmpty, showError, showLoading, showRetry)]]">
@@ -640,15 +637,13 @@
             this.showEmpty = false;
             this.showError = false;
 
-            // return fetch(url, {
-            //   method: 'PUT',
-            //   accept: 'application/json',
-            //   credentials: 'same-origin',
-            //   body: JSON.stringify(payload)
-            // })
-            return fetch('mock/asset-procurement-' + this.selectedType + '-error.json')
+            return fetch(url, {
+              method: 'PUT',
+              accept: 'application/json',
+              credentials: 'same-origin',
+              body: JSON.stringify(payload)
+            })
             .then(res => res.json())
-            // return this.fetchPage(url)
             .then((function(response) {
               this.showLoading = false;
               this.configLoading = false;
@@ -667,10 +662,10 @@
               // show advice after manually configed
               this.showMaunalAdvice = true;
 
-            }).bind(this), function(err) {
+            }).bind(this)).catch((function(err) {
               this.showLoading = false;
               this.showError = true;
-            });
+            }).bind(this));
           }
         },
         // helpers
@@ -861,15 +856,11 @@
 
           var url = this.getApiUrl(isHead, groupby, orgId);
 
-          var apiHost = 'mock/asset-procurement-' + groupby + '.json'
-
-          // return fetch(url, {
-          //   accept: 'application/json',
-          //   credentials: 'same-origin'
-          // })
-          return fetch(apiHost)
+          return fetch(url, {
+            accept: 'application/json',
+            credentials: 'same-origin'
+          })
           .then(res => res.json())
-          // return this.fetchPage(url)
           .then((function(response) {
             this.showLoading = false;
             if (!response) return this.showEmpty = true;
@@ -900,10 +891,10 @@
               depth: configList[0].depth
             };
           
-          }).bind(this), function(err) {
+          }).bind(this)).catch((function(err) {
             this.showLoading = false;
             this.showError = true;
-          });
+          }).bind(this));
         },
         ready: function() {
           var isHead = document.querySelector('input#isHead').value;

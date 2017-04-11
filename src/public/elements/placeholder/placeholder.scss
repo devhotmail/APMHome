@@ -16,23 +16,7 @@ $brand: #5b84d7;
 
   .icon {
     font-size: 40px;
-  }
-
-  .error {
-    .icon {
-      color: $orange;
-    }
-  }
-
-  .empty {
-    .icon {
-      color: $brand;
-    }
-  }
-
-  .loading {
-    css-spinner {
-      --spinner-color: $brand;
-    }
+    fill: $gray7;
+    color: $brand;
   }
 }
