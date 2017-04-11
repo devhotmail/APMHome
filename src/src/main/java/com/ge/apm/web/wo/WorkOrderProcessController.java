@@ -52,6 +52,12 @@ public class WorkOrderProcessController {
     public List<WorkOrder> workOrderByCon2(@PathVariable  Integer requestorId)throws Exception {
         return   workOrderService.findWorkOrderByContest(requestorId);
     }
+    
+    @RequestMapping(value="/scanreportlist" ,method = RequestMethod.GET)
+    @ResponseBody
+    public List<WorkOrder> scanReportList(String assetId)throws Exception {
+        return   workOrderService.findWorkOrderByAssetIdAndStatus(Integer.parseInt(assetId));
+    }
 
 }
 

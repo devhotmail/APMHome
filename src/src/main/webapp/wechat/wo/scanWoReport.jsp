@@ -41,17 +41,16 @@
                 var qrCode = '${qrCode}';
                 $.get(WEB_ROOT+"web/findassetinfo", {'qrCode': qrCode}, function(ret){
                     if (ret && ret.assetId) {
+                        pageManager.assetId = ret.assetId;
+                        pageManager.workOrder = ret;
                         if (ret.view) {
-                            pageManager.entryType = 'scanreport';
-                            pageManager.woId = ret.woId;
-                            pageManager.showTime = true;
-                            pageManager.showComment = false;
-                            pageManager.showCancel = false;//ret.requestorId == '${userId}' && ret.currentStepId < 4;
-                            pageManager.showBtn = ret.requestorId == '${userId}' && ret.currentStepId === 6;
-                            pageManager.init('ts_wodetail');
+                            if (ret.woId) {
+                                pageManager.woId = ret.woId;
+                                pageManager.init('ts_recreate');
+                            } else {
+                                pageManager.init('ts_scanreportlist');
+                            }
                         } else {
-                            pageManager.assetId = ret.assetId;
-                            pageManager.workOrder = ret;
                             pageManager.init('ts_scanAsset');
                         }
                     } else {
@@ -70,16 +69,16 @@
                         <div class="weui-form-preview__bd">
                             <div class="weui-form-preview__item">
                                 <label class="weui-form-preview__label">资产名称</label>
-                                <span class="weui-form-preview__value" id="assetName"></span>
-                                <input id="assetId" type="hidden"/>
+                                <span class="weui-form-preview__value" id="assetNameInfo"></span>
+                                <input id="assetIdInfo" type="hidden"/>
                             </div>
                             <div class="weui-form-preview__item">
                                 <label class="weui-form-preview__label">供应商</label>
-                                <span class="weui-form-preview__value" id="supplier"></span>
+                                <span class="weui-form-preview__value" id="supplierInfo"></span>
                             </div>
                             <div class="weui-form-preview__item">
                                 <label class="weui-form-preview__label">类型</label>
-                                <span class="weui-form-preview__value" id="assetGroup"></span>
+                                <span class="weui-form-preview__value" id="assetGroupInfo"></span>
                             </div>
 <!--                            <div class="weui-form-preview__item">
                                 <label class="weui-form-preview__label">状态</label>
@@ -166,7 +165,7 @@
                         <div class="weui-cells">
                             <div class="weui-cell">
                                 <div class="weui-cell__bd">
-                                    <textarea name="requestReason" id="requestReason" class="weui-textarea" placeholder="语音和文字至少一项有内容" rows="3"></textarea>
+                                    <textarea name="requestReasonInfo" id="requestReasonInfo" class="weui-textarea" placeholder="语音和文字至少一项有内容" rows="3"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -186,10 +185,10 @@
                     app.initSelectData('assetStatus', 'assetStatus', 3);
                     pageManager.serverIds = [];
                     
-                    $('#assetId').val(pageManager.workOrder.assetId);
-                    $('#assetName').html(pageManager.workOrder.assetName);
-                    $('#supplier').html(pageManager.workOrder.supplier);
-                    $('#assetGroup').html(pageManager.workOrder.assetGroup);
+                    $('#assetIdInfo').val(pageManager.workOrder.assetId);
+                    $('#assetNameInfo').html(pageManager.workOrder.assetName);
+                    $('#supplierInfo').html(pageManager.workOrder.supplier);
+                    $('#assetGroupInfo').html(pageManager.workOrder.assetGroup);
 //                    $('#assetStatus').html(pageManager.workOrder.assetStatus);
                     
                     //图片功能开始
@@ -335,7 +334,7 @@
                     //提交工单
                     $('#submit').click(function(){
                         $('#errorMsg').html('');
-                        var rReason = $('#requestReason').val();
+                        var rReason = $('#requestReasonInfo').val();
                         if (!voiceId && !rReason){
                             $('#errorMsg').html('语音和文字至少一项有内容');
                             return;
@@ -376,7 +375,9 @@
         </script>
         
         <jsp:include page="imgshow.html"/>
-        <jsp:include page="woDetail.html"/>
+        <jsp:include page="scanreportlist.html"/>
+        <jsp:include page="wosteps/recreate.html"/>
+        <jsp:include page="listTemplate.html"/>
         <jsp:include page="tipsTemplate.html"/>
         <jsp:include page="wosteplist.html"/>
     </body>
