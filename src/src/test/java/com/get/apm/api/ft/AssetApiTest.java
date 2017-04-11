@@ -2,6 +2,7 @@ package com.get.apm.api.ft;
 
 
 import com.google.common.collect.ImmutableMap;
+import javaslang.control.Try;
 import okhttp3.ResponseBody;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -24,18 +25,18 @@ public class AssetApiTest extends AbstractApiTest {
 
   private void doOkTest(AssetApiTestInterface tests, Map<String, String> queryMap) throws IOException {
     Response<ResponseBody> response = tests.assets(this.getCookie(), queryMap).execute();
-    Assertions.assertThat(response.body().contentType().toString()).isEqualTo("application/json;charset=UTF-8");
-    Assertions.assertThat(response.body().string()).contains("assets");
+    Assertions.assertThat(Try.of(() -> response.body().contentType().toString()).getOrElse("")).isEqualTo("application/json;charset=UTF-8");
+    Assertions.assertThat(Try.of(() -> response.body().string()).getOrElse("")).contains("assets");
   }
 
   private void doNegativeTest(AssetApiTestInterface tests, Map<String, String> queryMap) throws IOException {
-    Assertions.assertThat(tests.assets(this.getCookie(), queryMap).execute().code()).isGreaterThanOrEqualTo(400);
+    Assertions.assertThat(Try.of(() -> tests.assets(this.getCookie(), queryMap).execute().code()).getOrElse(0)).isGreaterThanOrEqualTo(400);
   }
 
   private void doWrongPathTest(AssetApiTestInterface tests, String wrongPath) throws IOException {
     Call<ResponseBody> call = tests.wrongPath(this.getCookie(), wrongPath);
     Response response = call.execute();
-    Assertions.assertThat(response.code()).isEqualTo(404);
+    Assertions.assertThat(Try.of(response::code).getOrElse(0)).isEqualTo(404);
   }
 
   @Before
@@ -51,7 +52,7 @@ public class AssetApiTest extends AbstractApiTest {
     doOkTest(tests, ImmutableMap.of("orderby", "dept"));
     doOkTest(tests, ImmutableMap.of("orderby", "supplier"));
     doOkTest(tests, ImmutableMap.of("orderby", "price"));
-    doOkTest(tests, ImmutableMap.of("orderby", "yoa"));
+    doOkTest(tests, ImmutableMap.of("orderby", "yoi"));
   }
 
   @Test
