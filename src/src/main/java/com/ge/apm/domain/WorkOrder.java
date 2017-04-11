@@ -182,6 +182,8 @@ public class WorkOrder implements Serializable {
     private String patActions;
     @Column(name = "pat_tests")
     private String patTests;
+    @Column(name = "hospital_name")
+    private String hospitalName;
 
     public WorkOrder() {
     }
@@ -482,6 +484,15 @@ public class WorkOrder implements Serializable {
     public void setCloseTime(Date closeTime) {
         this.closeTime = closeTime;
     }
+
+    public String getHospitalName() {
+        return hospitalName;
+    }
+
+    public void setHospitalName(String hospitalName) {
+        this.hospitalName = hospitalName;
+    }
+    
     @Transient
     private int pointStepNumber;
     public void setPointStepNumber(int pointStepNumber) {
