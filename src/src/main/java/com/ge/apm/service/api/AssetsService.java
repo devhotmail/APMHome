@@ -68,7 +68,7 @@ public class AssetsService {
       FROM("asset_info");
       WHERE("site_id = :site_id");
       WHERE("hospital_id = :hospital_id");
-      if (Option.of(dept).isDefined()) {
+      if (Option.of(dept).filter(d -> d > 0).isDefined()) {
         WHERE("clinical_dept_id = :dept");
       }
       ORDER_BY(Option.of(orderBy).getOrElse("id"));
