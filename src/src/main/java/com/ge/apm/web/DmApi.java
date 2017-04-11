@@ -79,13 +79,13 @@ public class DmApi {
   public ResponseEntity<byte[]> desicionMakingUserPredict(HttpServletRequest request,
                                                           @Pattern(regexp = "dept|type") @RequestParam(value = "groupby", required = false) String groupBy,
                                                           @Min(1) @RequestParam(value = "dept", required = false) Integer dept,
-                                                          @RequestBody(required = true) String inputBody) throws IOException{
+                                                          @RequestBody(required = true) String inputBody) throws IOException {
     UserAccount user = UserContext.getCurrentLoginUser();
     java.util.Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), java.util.Map.Entry::getValue).toBlocking().single();
     java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<String, List<Map<String, String>>> inputs = Try.of(() -> (Map<String, List<Map<String, String>>>) new ObjectMapper().registerModule(new JavaslangModule()).readValue(inputBody, new TypeReference<Map<String, List<Map<String, String>>>>() {
     })).getOrElseThrow(t -> new IllegalStateException("Format incorrect", t));
-    Map<Integer, Double> userPredict = HashMap.ofEntries(inputs.values().get(0).map(v -> Tuple.of(Ints.tryParse(v.get("id").get()), Doubles.tryParse(v.get("id").get()))));
+    Map<Integer, Double> userPredict = HashMap.ofEntries(inputs.values().get(0).map(v -> Tuple.of(Ints.tryParse(v.get("id").get()), Doubles.tryParse(v.get("change").get()))));
     if (Option.of(groupBy).isDefined() && Option.of(dept).isEmpty()) {
       Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), userPredict)), groupBy, groups, depts));
       return ResponseEntity.ok().header("Content-Type", "application/json;charset=UTF-8").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
@@ -120,16 +120,19 @@ public class DmApi {
       "clinical_dept_id", v._3,
       "asset_group", v._4,
       "usage", v._6,
-      "revenue_predict_raw", v._8 * (1 + v._6 - v._5),
-      "revenue_predict", formatMoney(CNY.money(v._8 * (1 + v._6 - v._5)), CNY.desc(CNY.money(v._7))._2)._1,
+      "revenue_predict_sug_raw", v._8 * (1 + v._6 - v._5),
+      "revenue_predict_sug", formatMoney(CNY.money(v._8 * (1 + v._6 - v._5)), CNY.desc(CNY.money(v._7))._2)._1,
       "revenue_last_year_raw", v._8,
       "revenue_last_year", formatMoney(CNY.money(v._8), CNY.desc(CNY.money(v._7))._2)._1,
       "revenue_year_before_last_raw", v._7,
       "revenue_year_before_last", formatMoney(CNY.money(v._7), CNY.desc(CNY.money(v._7))._2)._1,
       "last_year_date", LocalDate.now().minusYears(1).toString(),
       "year_before_last_date", LocalDate.now().minusYears(2).toString(),
-      "revenue_increase", Option.when(v._8.equals(0D), 0D).getOrElse((v._8 * (1 + v._6 - v._5)) / v._8 - 1D),
-      "revenue_unit", CNY.desc(CNY.money(v._7))._2
+      "revenue_increase_sug", Option.when(v._8.equals(0D), 0D).getOrElse((v._8 * (1 + v._6 - v._5)) / v._8 - 1D),
+      "revenue_unit", CNY.desc(CNY.money(v._7))._2,
+      "revenue_predict_raw", Option.when(v._6 > 1D, (v._8 * (1 + v._6 - v._5)) / v._6).getOrElse(v._8 * (1 + v._6 - v._5)),
+      "revenue_predict", formatMoney(CNY.money(Option.when(v._6 > 1D, (v._8 * (1 + v._6 - v._5)) / v._6).getOrElse(v._8 * (1 + v._6 - v._5))), CNY.desc(CNY.money(v._7))._2)._1,
+      "revenue_increase", Option.when(v._8.equals(0D), 0D).getOrElse(Option.when(v._6 > 1D, (v._8 * (1 + v._6 - v._5)) / v._6).getOrElse(v._8 * (1 + v._6 - v._5)) / v._8 - 1D)
     ));
   }
 
@@ -154,8 +157,8 @@ public class DmApi {
 
   private Map<String, Object> calculateHigherLevelValues(List<Map<String, Object>> items, Integer id, String name) {
     List<Double> usages = items.map(v -> (Double) v.get("usage").get());
-    Double revenuePredictedSugRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_predict_raw").get())).sum()).getOrElse(0D);
-    Double revenuePredictedRaw = Try.of(() -> Stats.of(items.map(v -> Option.when((Double) v.get("usage").get() > 1D, (Double) v.get("revenue_predict_raw").get() / (Double) v.get("usage").get()).getOrElse((Double) v.get("revenue_predict_raw").get())).toJavaList()).sum()).getOrElse(0D);
+    Double revenuePredictedSugRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_predict_sug_raw").get())).sum()).getOrElse(0D);
+    Double revenuePredictedRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_predict_raw").get())).sum()).getOrElse(0D);
     Double revenueLastYearRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_last_year_raw").get()).toJavaList()).sum()).getOrElse(0D);
     Double revenueYearBeforeLastRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_year_before_last_raw").get()).toJavaList()).sum()).getOrElse(0D);
     String label = CNY.desc(CNY.money(revenueYearBeforeLastRaw))._2;
