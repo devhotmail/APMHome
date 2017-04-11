@@ -151,7 +151,7 @@ class Asset extends ImmutableComponent {
         style={{
           fill: asset.get('active') ? COLORS[columnIndex] : null,
           cursor: 'pointer',
-          stroke: 'white',
+          stroke: '#eaeaea',
           strokeWidth: 1,
           strokeDasharray: `${ASSET_WIDTH}, ${ASSET_HEIGHT}`,
         }}
