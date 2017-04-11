@@ -272,6 +272,7 @@ public class WorkOrderController {
         map.put("supplier", ai.getSupplierId()==null?"":service.getSupplierName(ai.getSupplierId()));
         map.put("assetGroup", service.getMsgValue("assetGroup", ai.getAssetGroup().toString()));
 //        map.put("assetStatus", service.getMsgValue("assetStatus", ai.getStatus()+""));
+        map.put("assetGroupValue", ai.getAssetGroup());
         map.put("assetStatus", ai.getStatus());
         map.put("clinicalDeptName", ai.getClinicalDeptName());
         map.put("locationName", ai.getLocationName());

@@ -8,10 +8,30 @@ $(function () {
     app.setFormJsonValue = setFormJsonValue;
     app.initWechatTime = initWechatTime;
     app.intCasePriority = intCasePriority;
-    
+    app.initFaultType = initFaultType;
+    /*glnote*/
+    function initFaultType(keyId,astypeId,defaultSelected){
+        $.get(WEB_ROOT+"web/im18faulttype/"+astypeId,
+            function(ret) {
+                if (ret) {
+                    pageManager.msgTypes[astypeId] = {};
+                    $.each(ret, function(idx, val){
+
+                        if (defaultSelected && val.msgKey == defaultSelected) {
+                            $('#'+keyId).append($('<option value="'+val.msgKey+'" selected="selected">'+val.valueZh+'</option>'));
+                        } else {
+                            $('#'+keyId).append($('<option value="'+val.msgKey+'">'+val.valueZh+'</option>'));
+                        }
+                    });
+                }
+            }
+        );
+    }
+
+
     /////////////////////////
     /**
-     * 
+     *
      * @param {type} keyId   select id
      * @param {type} msgType   the type stored in db
      * @param {type} defaultSelected    defalut value
@@ -35,7 +55,8 @@ $(function () {
             }
         );
     }
-    
+
+
     function intCasePriority() {
         $.ajax({
             url: WEB_ROOT+"web/getmsg",
@@ -49,14 +70,14 @@ $(function () {
             }
         });
     }
-    
+
     function toggleJsdialog(showOrHide) {
         if (showOrHide) {
             $('#jsdialog');
         }
     }
     /**
-     * 
+     *
      * @param {type} elId  element's id
      * @param {type} datas [{title:'工单编号: 1111', ftitle: '2017-03-17 12:30:34', data : ['资产编号：222','资产名称：...','']}, {...}]
      * @returns {undefined}
@@ -79,9 +100,9 @@ $(function () {
             $ui_list.append($tmpl);
         });
     }
-    
+
     /**
-     * 
+     *
      * @param {type} step 进行到的步骤
      * @returns {undefined}
      */
@@ -90,13 +111,13 @@ $(function () {
         $.each($('.progressbar').children(), function(idx, val){
             if (idx < step) {
                 $(val).addClass('active');
-            } 
+            }
             if (idx === step-1 && feedbackRating === 0){
                 $(val).addClass('activeone');
             }
         });
     }
-    
+
     function initUserSelect(keyId, msgType) {
         $.ajax({
             type: "GET",
@@ -111,7 +132,7 @@ $(function () {
             }
         });
     }
-    
+
     function setFormJsonValue(obj) {
         if (!obj) return;
         $.each(obj, function(idx, val){
@@ -144,7 +165,7 @@ $(function () {
             }
         });
     }
-    
+
     function initWechatTime() {
         var datetime = new Date();
         var month = datetime.getMonth()+1;
@@ -155,5 +176,5 @@ $(function () {
         return datetime.getFullYear()+'-'+(month>9?month:'0'+month)+'-'+(date>9?date:'0'+date)
                 +'T'+(hours>9?hours:'0'+hours)+':'+(mins>9?mins:'0'+mins) + ':'+(secs>9?secs:'0'+secs);
     }
-    
+
 });
