@@ -1,0 +1,48 @@
+// Settings
+@import "_theme.scss";
+
+$orange: rgb(232, 136, 56);
+$brand: #5b84d7;
+
+:host {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%);
+
+  .label {
+    font-size: 1.4rem;
+  }
+
+  .icon {
+    font-size: 40px;
+  }
+
+  .error {
+    .icon {
+      color: $orange;
+    }
+  }
+
+  .empty {
+    .icon {
+      color: $brand;
+    }
+  }
+
+  .loading {
+    .icon {
+      color: $brand;
+      animation: spin 1s infinite linear;
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg)
+  }
+  100% {
+    transform: rotate(360deg)
+  }
+}

@@ -1,0 +1,567 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="zoom-pack-chart-styles.html">
+<link rel="stylesheet" href="../../css/dewIcons.css">
+<link rel="import" href="../d3/d3.html">
+
+<dom-module id="zoom-pack-chart">
+  <template>
+    <style include="zoom-pack-chart-styles"></style>
+    <div id="chart" class="chart-container">
+      <template is="dom-if" if="[[showGoback]]">
+        <div class="u-mt- u-mr- go-back btn-group">
+          <div class="btn" on-tap="handleBackUpper">返回上一层</div>
+          <div class="btn" on-tap="handleBackRoot">返回顶层</div>
+        </div>
+      </template>      
+      <svg id="svg" width$="[[width]]" height$="[[height]]">
+        <g id="content" transform$="[[getCenter(width, height)]]">
+          <g id="assetList"></g>
+          <g id="textList"></g>
+        </g>
+      </svg>
+    </div>
+  </template>
+  <script>
+    var constants = {
+      margin: 20,
+      fontSize: 20,
+      textLength: 10,
+      circleColor: 'rgba(255, 255, 255, 0)',
+      waveColor: { // Color of the fill wave
+        gray: 'rgb(178, 178, 178)',
+        orange: 'rgb(277, 110, 21)',
+        yellow: 'rgb(235, 220, 81)'
+      },
+      textColor: 'rgb(111, 111, 111)', // Text color
+      fontScale: 0.1, // Text size relatived to circle's radius
+      textTopPosition: 0.85 // Percentage of height to show text top in the asset circle
+    };
+
+    function commonTextAttr(selection) {
+      selection.attr('text-anchor', 'middle')
+      .attr('fill', constants.textColor)
+      .style('user-select', 'none');
+    }
+
+    function getColorByPercent(percent) {
+      var waveColor = constants.waveColor;
+      if (percent >= 1) {
+        return waveColor.orange;
+      } else if (percent <= 0.3) {
+        return waveColor.yellow;
+      } else {
+        return waveColor.gray;
+      }
+    }
+
+    function wavePath(percent, radius) {
+      if (percent > 1) {
+        return 'M' + radius + ' 0'
+          + 'm'+ (-radius) + ', 0'
+          + 'a' + radius + ',' + radius + ' 0 1,0 ' + (radius * 2) + ',0'
+          + 'a' + radius + ',' + radius + ' 0 1,0 ' + (radius * -2) + ',0'
+      } else {
+        var part = 1 - percent * 2
+        var h = part * radius
+        var w = Math.sqrt(Math.pow(radius, 2) - Math.pow(h, 2))
+
+        var defaultWaveHeight = 0.1 // The wave height as a percentage of wave circle's radius
+        var waveScaleY = d3.scaleLinear().range([0.035, 0.03]).domain([1 - defaultWaveHeight, 1])
+        var waveHeight = (percent + defaultWaveHeight > 1) ? waveScaleY(percent) : defaultWaveHeight
+
+        return 'M' + (radius - w) + ' ' + h
+        + 'A' + radius + ',' + radius + ' 1' + (percent > 0.5 ? ' 1,0 ' : ' 0,0 ') + (radius + w) + ',' + h
+        + 'q' + -w / 2 + ' ' + radius * waveHeight + ' ' + -w + ' 0'
+        + 't' + -w + ' ' +  0
+        + 'z'
+      }
+    }
+
+    function renderText(adviceIncluded) {
+      return function (selection) {
+        // Text for asset name display
+        selection.append('text')
+        // .attr('dy', '-0.35em')
+        .attr('class', 'asset-name')
+        .attr('font-size', '1em')
+        .text(function(d) {
+          var maxLen = constants.textLength;
+          var name = d.data.name;
+          if (name && name.length < maxLen) {
+            return name;
+          } else {
+            return name.slice(0, maxLen - 1) + '...';
+          }
+        })
+        .call(commonTextAttr);
+
+        // Text for usage display
+        var usageTxt = selection.append('text')
+        .attr('y', '1.1em')
+        .attr('font-size', '0.8em')
+        .call(commonTextAttr);
+
+        // icon: fa-adjust
+        usageTxt
+        .append('tspan')
+        .attr('font-family','DewIcon')
+        .attr('font-size', '0.7em')
+        .text('\uE003' + ' ');
+
+        usageTxt
+        .append('tspan')
+        .attr('dy', '-0.05em')
+        .text(function(d) {
+          return parseInt(d.data.usage * 100) + '%';
+        });
+        
+        // Text for overload assets
+        selection.each(function(d) {
+          var overload = 0;
+          if (Array.isArray(d.children)) {
+            overload = d.children.filter(function(n) {
+              return n.data.usage > 1
+            }).length;
+          }
+
+          if (overload > 0) {
+            var overloadTxt = d3.select(this)
+            .append('text')
+            .attr('y', '2em')
+            .attr('font-size', '0.8em')                
+            .call(commonTextAttr);
+
+            // icon: fa-clock-o
+            overloadTxt
+            .append('tspan')
+            .attr('font-family','DewIcon')
+            .attr('font-size', '0.7em')
+            .style('fill', '#e26d26')
+            .text('\uE002' + ' ');
+
+            overloadTxt
+            .append('tspan')
+            .attr('dy', '-0.05em')
+            .text(overload + '台');
+          }
+
+          // Advice text render here
+          if (adviceIncluded && d.data.suggestions && d.data.suggestions.length) {
+            var overloadTxt = d3.select(this)
+            .append('text')
+            // 1em + 0.8em + 0.8em
+            .attr('y', overload ? '2.6em' : '1.8em')
+            .attr('font-size', '1em')
+            .text(d.data.suggestions[0].title)
+            .call(commonTextAttr);
+          }
+        })
+      }
+    }
+
+    Polymer({
+      is: 'zoom-pack-chart',
+      properties: {
+        // properties which passed from parent element
+        width: Number,
+        height: Number,
+        chartData: Object,
+        focusInfo: Object,
+        focus: {
+          type: Object,
+          // notify: true
+        },
+        childKey: {
+          type: String,
+          value: 'children'
+        },
+        sizeKey: {
+          type: String,
+          value: 'size'
+        },
+        // private properties
+        scaleK: {
+          type: Number,
+          value: 1
+        },
+        showGoback: {
+          type: Boolean,
+          // value: true,
+          computed: 'canGoBack(focus)'
+        },
+        rootNode: Object,
+        diameter: {
+          type: Number,
+          computed: 'calcDiameter(width, height)'
+        },
+        // Each view is defined as an array of three numbers: cx, cy and width
+        view: Array    
+      },
+      observers: [
+        'redraw(chartData, width, height)'
+      ],
+      // readraw when data changed or responsive need
+      redraw: function(chartData) {
+        d3.select(this.$.assetList).selectAll('*').remove();
+        d3.select(this.$.textList).selectAll('*').remove();
+        this.debounce('redraw', this.render, 500);
+      },
+      // chart central need
+      getCenter: function(width, height) {
+        return 'translate(' + width / 2 + ',' + height / 2 + ')';
+      },
+      // calc diameter
+      calcDiameter: function(w, h) {
+        return Math.min.call(null, w, h);
+      },
+      // show go back btns
+      canGoBack: function(focus) {
+        return focus && focus.depth;
+      },
+      // handle go back
+      handleBackUpper: function(e) {
+        e && e.preventDefault();
+        if (this.focus.parent) this.zoom(this.focus.parent);
+      },
+      handleBackRoot: function(e) {
+        e && e.preventDefault();
+        if (this.rootNode) this.zoom(this.rootNode);
+      },
+      /*
+       * data converter
+      */      
+      dataBeautify: function(chartData) {
+        // set placeholder for those single-child parent
+        var sizeKey = this.sizeKey;
+        var childKey = this.childKey;
+
+        function setPlaceHolder(children) {
+          if (children.length === 1) {
+            var child = children[0];
+            var placeholder = {
+              [sizeKey]: child[sizeKey] / 100,
+              placeholder: true
+            };
+            return [ child, placeholder ];
+          } else {
+            return children;
+          }
+        }
+
+        function insertDatum(obj) {
+          var children = obj[childKey];
+          if (children && Array.isArray(children)) {
+            obj[childKey] = setPlaceHolder(children);
+            
+            obj[childKey].map(function(n) {
+              insertDatum(n);
+              return n;
+            });
+          }
+          
+          return obj;
+        }
+
+        data = insertDatum(chartData);
+        return data;
+      },
+      orderScheduler: function(nodes) {
+        var root = nodes[0];
+        var results = [root].concat(nodes.slice(1, nodes.length).reverse());
+        return results;
+      },
+      formatView: function(d) {
+        // Each view is defined as an array of three numbers: cx, cy and width
+        return [d.x, d.y, d.r * 2 + constants.margin];
+      },      
+      getRootNode: function(chartData) {
+        var _this = this;
+        var rootNode = d3.hierarchy(chartData, function(d) {
+          return d[_this.childKey];
+        }).sum(function(d) {
+          return d[_this.sizeKey];
+        }).sort(function(a, b) {
+          return b.value - a.value;
+        });
+
+        return rootNode;
+      },
+      getFocus: function(nodes, focusInfo) {
+        var root = nodes[0];
+        if (!focusInfo) return root;
+
+        var depth = focusInfo.depth;
+        if (!focusInfo.id) return root;
+        if (!Number.isInteger(depth)) return root;
+        if (depth > root.height) return root;
+
+        var focus = nodes.filter(function(n) {
+          return n.depth === depth && n.data.id === focusInfo.id;
+        })[0];
+        return focus ? focus : root;
+      },
+      getNodes: function() {
+        var pack = d3.pack()
+        .size([this.diameter - constants.margin, this.diameter - constants.margin])
+        .padding(2);
+
+        var data = this.dataBeautify(this.chartData);
+        var data = this.chartData;
+
+        var root = this.getRootNode(data);
+        this.rootNode = root;
+
+        var nodes = pack(root).descendants();
+        return nodes;
+      },
+      zoom: function(d) {
+        var focus = d;
+        this.fire('focus-changed', {
+          value: focus,
+          oldValue: this.focus
+        });
+
+        this.focus = focus;
+        var targetView = this.formatView(focus);
+
+        // final scale after transition
+        var finalScale = this.diameter / targetView[2];
+        this.scaleK = finalScale;
+
+        var _this = this;
+        var transition = d3.transition()
+        .duration(750)
+        .tween('zoom', function () {
+          var i = d3.interpolateZoom(_this.view, targetView);
+          return function (t) {
+            _this.zoomTo(i(t));
+          }
+        });
+
+        // toggle circle fill for quick switch in the same layer
+        transition.selectAll('circle.node')
+        .attr('fill', function(d) {
+          // var focus = _this.focus;
+          // focus self
+          if (d === focus) return constants.circleColor;
+          // focus children
+          if (d.parent && d.parent === focus) return constants.circleColor;
+          // focus siblings
+          if (d.children && ~d.children.indexOf(focus)) return constants.circleColor;
+          // focus parent
+          if (d.parent && d.parent.children && ~d.parent.children.indexOf(focus)) return constants.circleColor;
+          return 'none';
+        });
+
+        transition.selectAll('g.text-top')
+        .filter(function(d) {
+          return d === focus || this.style.display === 'inline';
+        })
+        .style('fill-opacity', function(d) {
+          return (d === focus) ? 1 : 0;
+        })
+        .on('start', function(d) {
+          if (d === focus) this.style.display = 'inline';
+        })
+        .on('end', function(d) {
+          if (d !== focus) this.style.display = 'none';
+        });
+
+        transition.selectAll('g.text-center')
+        .filter(function(d) {
+          return d.parent === focus || (d === focus && !d.children) || this.style.display === 'inline';
+        })
+        .style('fill-opacity', function(d) {
+          if (d.parent === focus || (d === focus && !d.children)) return 1;
+          return 0;
+        })
+        .on('start', function(d) {
+          if (d.parent === focus || (d === focus && !d.children)) this.style.display = 'inline';
+        })
+        .on('end', function(d) {
+          if (d.parent !== focus && (d !== focus || d.children)) this.style.display = 'none';
+        });
+      },
+      zoomTo: function(v) {
+        var k = this.diameter / v[2];
+        this.view = v;
+
+        var assetGroup = d3.select(this.$.assetList).selectAll('g.asset');
+        var textGroup = d3.select(this.$.textList).selectAll('g.text');
+
+        function getScaleCoefficient(fontSize) {
+          var max = constants.fontSize;
+          return fontSize < max ? max / fontSize : 1;
+        }
+
+        // change text's position so it can be in the center of each asset circle
+        textGroup
+        .attr('transform', function (d) {
+          var fontSize = this.attributes['font-size'].value;
+          var coefficient = getScaleCoefficient(fontSize);
+
+          return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')' + 'scale(' + coefficient + ')';
+        });
+
+        // move text-top when scale changes
+        textGroup.selectAll('g.text-top')
+        .attr('transform', function(d) {
+          var fontSize = this.parentNode.attributes['font-size'].value;
+          var coefficient = getScaleCoefficient(fontSize);
+
+          return 'translate(' + 0 + ',' + -d.r * constants.textTopPosition * k / coefficient  + ')';  
+        });
+
+        var _this = this;
+        // change asset group's position and opacity
+        assetGroup
+        .attr('transform-origin', '50% 50%')
+        .attr('transform', function (d) {
+          return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
+        })
+        .style('opacity', function(d) {
+          if (d === _this.focus) {
+            if (d.children) return 0.6;
+            return 0.9;
+          } else {
+            if (d.parent === _this.focus) return 0.9;
+            return 0.1;
+          }
+        });
+
+        // change asset circle's radius
+        assetGroup
+        .selectAll('circle')
+        .attr('r', function(d) {
+          return d.r * k;
+        });
+        // change asset wave's scale
+        assetGroup
+        .selectAll('g.wave')
+        .attr('transform', 'scale(' + k + ')');
+      },  
+      render: function() {
+        var margin = constants.margin;
+        var nodes = this.getNodes().filter(function(n) {
+          // filter for placeholder
+          return !n.data.placeholder;
+        });
+ 
+        var focus = this.getFocus(nodes, this.focusInfo);
+        this.focus = focus;
+        // fire `focus-changed` event
+        this.fire('focus-changed', { value: focus});
+ 
+        var _this = this;
+ 
+        var svg = d3.select(this.$.svg);
+        var assetList = d3.select(this.$.assetList);
+        var textList = d3.select(this.$.textList);
+
+        var assetGroup = assetList
+        .selectAll('g.asset')
+        .data(nodes)
+        .enter().append('g')
+        .attr('class', 'asset');
+
+        assetGroup        
+        .append('circle')
+        .attr('r', function(d) {
+          return d.r;
+        })
+        .attr('class', function(d) {
+          return d.parent ? 'node node-leaf' : 'node node-root';
+        })
+        .attr('stroke-width', 1)
+        .attr('stroke', function(d) {
+          return getColorByPercent(d.data.usage);
+        })
+        .attr('fill', function(d) {
+          return (d !== focus && d.parent !== focus) ? 'none' : constants.circleColor;   
+        })
+        .on('click', function(d) {
+          if (_this.focus !== d) {
+            _this.zoom(d);
+            d3.event.stopPropagation();
+          }
+        });
+
+        var waveGroup = assetGroup.append('g')
+        .attr('class', 'wave');
+
+        waveGroup
+        .append('path')
+        .attr('pointer-events', 'none')
+        .attr('d', function(d) {
+          return wavePath(d.data.usage, d.r);
+        })
+        .attr('transform', function(d) {
+          return 'translate(' + (-d.r) + ',' + 0 + ')';
+        })
+        .attr('fill', function(d) {
+          return getColorByPercent(d.data.usage);
+        });
+
+        var textGroup = textList
+        .selectAll('g.text')
+        .data(nodes)
+        .enter().append('g')
+        .attr('class', function(d) {
+          return d.parent ? d.children ? 'text' : 'text text-leaf' : 'text text-root';
+        })
+        .attr('id', function(d) {
+          return 'text-' + d.data.uid;
+        })
+        .attr('font-size', function(d) {
+          var maxSize = constants.fontSize;
+          var maxLen = constants.textLength;
+          var val = d.r / maxLen;
+          return val > maxSize ? maxSize :  val;
+        })
+        .each(function(d) {
+          var element = d3.select(this);
+
+          // Center text
+          var textCenter = element.append('g')
+          .attr('class', 'text-center')
+          .attr('pointer-events', 'none')
+          .style('display', function(d) {
+            if (d.parent === focus) return 'inline';
+            if (d === focus && !d.children) return 'inline';
+            return 'none';        
+          })        
+          .style('fill-opacity', function() {
+            if (d.parent === focus) return 1;
+            if (d === focus && !d.children) return 1;
+            return 0;
+          })
+          .call(renderText(false));
+
+          if (d.children) {
+            // Top text
+            var textTop = element
+            .append('g')
+            .attr('class', 'text-top')
+            .attr('transform', 'translate(0, 0)')
+            .style('display', function() {
+              if (d === focus) return 'inline';
+              return 'none';        
+            })        
+            .style('fill-opacity', function() {
+              if (d === focus) return 1;
+              return 0;
+            })
+            .call(renderText(true));
+          }
+        });
+
+        svg.on('click', this.handleBackUpper.bind(this));
+
+        var initalView = this.formatView(focus);
+        this.zoomTo(initalView);
+
+        this.scopeSubtree(this.$.chart, true);
+      }
+    })
+  </script>
+</dom-module>
