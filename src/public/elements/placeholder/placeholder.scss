@@ -1,6 +1,9 @@
 // Settings
 @import "_theme.scss";
 
+$orange: rgb(232, 136, 56);
+$brand: #5b84d7;
+
 :host {
   position: absolute;
   left: 50%;
@@ -13,7 +16,7 @@
 
   .icon {
     font-size: 40px;
-    transform: translateY(-20px);
     fill: $gray7;
+    color: $brand;
   }
 }

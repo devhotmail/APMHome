@@ -1,0 +1,59 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../css-spinner/css-spinner.html">
+<link rel="import" href="data-statusbar-styles.html">
+
+<dom-module id="data-statusbar">
+  <template>
+    <style include="data-statusbar-styles"></style>
+    <div class$="[[wrapperCls]]">
+      <i class$="[[iconCls]]"></i>
+      <span class="label flex__item u-p+">[[isOr(desc, defaultDesc)]]</span>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'data-statusbar',
+      properties: {
+        type: String,
+        desc: {
+          type: String,
+          value: ''
+        },
+        // private properties
+        defaultDesc: String,
+        iconCls: String,
+        wrapperCls: String,
+        suitSet: {
+          type: Object,
+          readOnly: true,
+          value: {
+            empty: {
+              icon: 'fa-inbox',
+              desc: '暂无可用设备数据'
+            },
+            error: {
+              icon: 'fa-exclamation-circle',
+              desc: '数据加载出错，请联系管理员'
+            },
+            loading: {
+              icon: 'fa-spinner',
+              desc: '数据加载中...'
+            }
+          }
+        }
+      },
+      observers: [
+        'getData(type, suitSet)'
+      ],
+      isOr: function(a, b) {
+        return a || b;
+      },
+      getData: function(type, suitSet) {
+        var suit = suitSet[type];
+        this.iconCls = suit.icon + ' icon fa';
+        this.wrapperCls = type + ' data-statusbar flex flex--row flex--middle';
+        this.defaultDesc = suit.desc;
+      },     
+    });
+  </script>
+</dom-module>
