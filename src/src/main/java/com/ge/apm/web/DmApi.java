@@ -9,6 +9,7 @@ import com.ge.apm.service.api.DmService;
 import com.ge.apm.service.utils.CNY;
 import com.google.common.collect.ImmutableList;
 import com.google.common.math.Stats;
+import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
 import javaslang.Tuple;
 import javaslang.Tuple2;
@@ -64,12 +65,12 @@ public class DmApi {
     java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     if (Option.of(groupBy).isDefined() && Option.of(dept).isEmpty()) {
       Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), HashMap.empty())), groupBy, groups, depts));
-      return ResponseEntity.ok().header("Content-Type", "application/json").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+      return ResponseEntity.ok().header("Content-Type", "application/json;charset=UTF-8").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
     } else if (Option.of(groupBy).isEmpty() && Option.of(dept).isDefined()) {
       Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now()), HashMap.empty())), "type", groups, depts));
-      return ResponseEntity.ok().header("Content-Type", "application/json").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+      return ResponseEntity.ok().header("Content-Type", "application/json;charset=UTF-8").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
     } else {
-      return ResponseEntity.badRequest().header("Content-Type", "application/json").body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
+      return ResponseEntity.badRequest().header("Content-Type", "application/json;charset=UTF-8").body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
     }
   }
 
@@ -82,25 +83,24 @@ public class DmApi {
     UserAccount user = UserContext.getCurrentLoginUser();
     java.util.Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), java.util.Map.Entry::getValue).toBlocking().single();
     java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
-    Map<Integer, Double> userPredict = Try.of(() -> {
-      Map<String, List<Map<String, Object>>> inputs = new ObjectMapper().registerModule(new JavaslangModule()).readValue(inputBody, new TypeReference<Map<String, List<Map<String, Object>>>>() {
-      });
-      return HashMap.ofEntries(inputs.values().get(0).map(v -> Tuple.of((Integer) v.get("id").get(), (Double) v.get("change").get())));
-    }).getOrElseThrow(() -> new IllegalArgumentException("Input data not supported"));
+    Map<String, List<Map<String, String>>> inputs = Try.of(() -> (Map<String, List<Map<String, String>>>) new ObjectMapper().registerModule(new JavaslangModule()).readValue(inputBody, new TypeReference<Map<String, List<Map<String, String>>>>() {
+    })).getOrElseThrow(t -> new IllegalStateException("Format incorrect", t));
+    Map<Integer, Double> userPredict = HashMap.ofEntries(inputs.values().get(0).map(v -> Tuple.of(Option.of(Ints.tryParse(v.get("id").get())).getOrElseThrow(() -> new IllegalArgumentException("Id should be Integer")), Option.of(Doubles.tryParse(v.get("id").get())).getOrElseThrow(() -> new IllegalArgumentException("change should be Double")))));
     if (Option.of(groupBy).isDefined() && Option.of(dept).isEmpty()) {
       Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), userPredict)), groupBy, groups, depts));
-      return ResponseEntity.ok().header("Content-Type", "application/json").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+      return ResponseEntity.ok().header("Content-Type", "application/json;charset=UTF-8").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
     } else if (Option.of(groupBy).isEmpty() && Option.of(dept).isDefined()) {
       Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now()), userPredict)), "type", groups, depts));
-      return ResponseEntity.ok().header("Content-Type", "application/json").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
+      return ResponseEntity.ok().header("Content-Type", "application/json;charset=UTF-8").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
     } else {
-      return ResponseEntity.badRequest().header("Content-Type", "application/json").body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
+      return ResponseEntity.badRequest().header("Content-Type", "application/json;charset=UTF-8").body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
     }
   }
 
 
   /**
-   * <p>If usage is null the year before last year and not null last year, the forecast is the value of last year.
+   * <p>If the user put in a predict value, use user's predicts.
+   * If usage is null the year before last year and not null last year, the forecast is the value of last year.
    * If the usage is not null in both last year and the year before, the forecast is last year usage + standard deviation</p>
    *
    * @param theYearBeforeLast sql result the year before last year
