@@ -113,18 +113,31 @@ class Asset extends ImmutableComponent {
     const keys = ['func', 'type', 'dept', 'supplier', 'price', 'yoi']
     const reference = ReactDOM.findDOMNode(this)
     const clientRect = reference.getBoundingClientRect()
+    const style = {
+      pointerEvents: 'none',
+      position: 'fixed',
+      // top: clientRect.top,
+      // left: clientRect.left,
+      background: '#d8d8d8',
+      border: '1px solid #5d87d4',
+      borderRadius: 3,
+      padding: '12px 7px',
+      // transform: `translate(${clientRect.width + 10}px, ${clientRect.height / 2}px)`
+    }
+
+    if (clientRect.top > window.innerHeight * 0.6) {
+      style.bottom = window.innerHeight - clientRect.bottom + clientRect.height / 2 + 'px'
+    } else {
+      style.top = clientRect.top + clientRect.height / 2 + 'px'
+    }
+
+    if (clientRect.left > window.innerWidth * 0.6) {
+      style.right = window.innerWidth - clientRect.right + clientRect.width + 10 + 'px'
+    } else {
+      style.left = clientRect.left + clientRect.width + 10 + 'px'
+    }
     this.el = this.el || ReactDOM.render((
-      <div style={{
-        pointerEvents: 'none',
-        position: 'fixed',
-        top: clientRect.top,
-        left: clientRect.left,
-        background: '#d8d8d8',
-        border: '1px solid #5d87d4',
-        borderRadius: 3,
-        padding: '12px 7px',
-        transform: `translate(${clientRect.width + 10}px, ${clientRect.height / 2}px)`
-      }}>
+      <div style={style}>
         {keys.map((key, index) => (
           <p style={{color: COLORS[index]}} key={key}>
             {
