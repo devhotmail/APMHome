@@ -79,13 +79,13 @@ public class DmApi {
   public ResponseEntity<byte[]> desicionMakingUserPredict(HttpServletRequest request,
                                                           @Pattern(regexp = "dept|type") @RequestParam(value = "groupby", required = false) String groupBy,
                                                           @Min(1) @RequestParam(value = "dept", required = false) Integer dept,
-                                                          @RequestBody(required = true) String inputBody) throws IOException {
+                                                          @RequestBody(required = true) String inputBody) throws IOException{
     UserAccount user = UserContext.getCurrentLoginUser();
     java.util.Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), java.util.Map.Entry::getValue).toBlocking().single();
     java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<String, List<Map<String, String>>> inputs = Try.of(() -> (Map<String, List<Map<String, String>>>) new ObjectMapper().registerModule(new JavaslangModule()).readValue(inputBody, new TypeReference<Map<String, List<Map<String, String>>>>() {
     })).getOrElseThrow(t -> new IllegalStateException("Format incorrect", t));
-    Map<Integer, Double> userPredict = HashMap.ofEntries(inputs.values().get(0).map(v -> Tuple.of(Option.of(Ints.tryParse(v.get("id").get())).getOrElseThrow(() -> new IllegalArgumentException("Id should be Integer")), Option.of(Doubles.tryParse(v.get("id").get())).getOrElseThrow(() -> new IllegalArgumentException("change should be Double")))));
+    Map<Integer, Double> userPredict = HashMap.ofEntries(inputs.values().get(0).map(v -> Tuple.of(Ints.tryParse(v.get("id").get()), Doubles.tryParse(v.get("id").get()))));
     if (Option.of(groupBy).isDefined() && Option.of(dept).isEmpty()) {
       Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), userPredict)), groupBy, groups, depts));
       return ResponseEntity.ok().header("Content-Type", "application/json;charset=UTF-8").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
@@ -96,7 +96,6 @@ public class DmApi {
       return ResponseEntity.badRequest().header("Content-Type", "application/json;charset=UTF-8").body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
     }
   }
-
 
   /**
    * <p>If the user put in a predict value, use user's predicts.
