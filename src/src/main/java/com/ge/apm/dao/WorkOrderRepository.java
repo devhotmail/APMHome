@@ -32,6 +32,7 @@ public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
 
     public WorkOrder getById(Integer id);
     public WorkOrder findByAssetIdAndStatus(Integer assetId, int status);
+    public List<WorkOrder> findByAssetIdAndStatusOrderByIdDesc(Integer assetId, int status);
     @Query("select wo from WorkOrder wo where wo.currentPersonId=?1 and wo.status = 1 and wo.currentStepId =2 order by wo.id desc")
     public List<WorkOrder> getNeedAssignWorkOrder(int currentPersonId);
 

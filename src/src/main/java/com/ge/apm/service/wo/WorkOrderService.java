@@ -76,6 +76,10 @@ public class WorkOrderService {
     public  List<WorkOrder>  findWorkOrderByContest(Integer requestorId){
         return workOrderRepository.findByRequestorId(requestorId);
     }
+    
+    public List<WorkOrder> findWorkOrderByAssetIdAndStatus(Integer assetId){
+        return workOrderRepository.findByAssetIdAndStatusOrderByIdDesc(assetId, 1);
+    }
 
     public WorkOrderStep initWorkOrderCurrentStep(WorkOrder wo){
         WorkOrderStep woStep = new WorkOrderStep();
