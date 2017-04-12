@@ -120,19 +120,19 @@ public class DmApi {
       "clinical_dept_id", v._3,
       "asset_group", v._4,
       "usage", v._6,
-      "revenue_predict_sug_raw", v._8 * (1 + v._6 - v._5),
-      "revenue_predict_sug", formatMoney(CNY.money(v._8 * (1 + v._6 - v._5)), CNY.desc(CNY.money(v._7))._2)._1,
+      "revenue_predict_sug_raw", Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5),
+      "revenue_predict_sug", formatMoney(CNY.money(Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5)), CNY.desc(CNY.money(v._7))._2)._1,
       "revenue_last_year_raw", v._8,
       "revenue_last_year", formatMoney(CNY.money(v._8), CNY.desc(CNY.money(v._7))._2)._1,
       "revenue_year_before_last_raw", v._7,
       "revenue_year_before_last", formatMoney(CNY.money(v._7), CNY.desc(CNY.money(v._7))._2)._1,
       "last_year_date", LocalDate.now().minusYears(1).toString(),
       "year_before_last_date", LocalDate.now().minusYears(2).toString(),
-      "revenue_increase_sug", Option.when(v._8.equals(0D), 0D).getOrElse((v._8 * (1 + v._6 - v._5)) / v._8 - 1D),
+      "revenue_increase_sug", Option.when(v._8.equals(0D), 0D).getOrElse(Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5) / v._8 - 1D),
       "revenue_unit", CNY.desc(CNY.money(v._7))._2,
-      "revenue_predict_raw", Option.when(v._6 > 1D, (v._8 * (1 + v._6 - v._5)) / v._6).getOrElse(v._8 * (1 + v._6 - v._5)),
-      "revenue_predict", formatMoney(CNY.money(Option.when(v._6 > 1D, (v._8 * (1 + v._6 - v._5)) / v._6).getOrElse(v._8 * (1 + v._6 - v._5))), CNY.desc(CNY.money(v._7))._2)._1,
-      "revenue_increase", Option.when(v._8.equals(0D), 0D).getOrElse(Option.when(v._6 > 1D, (v._8 * (1 + v._6 - v._5)) / v._6).getOrElse(v._8 * (1 + v._6 - v._5)) / v._8 - 1D)
+      "revenue_predict_raw", Option.when(v._6 > 1D, Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5) / v._6).getOrElse(Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5)),
+      "revenue_predict", formatMoney(CNY.money(Option.when(v._6 > 1D, Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5) / v._6).getOrElse(Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5))), CNY.desc(CNY.money(v._7))._2)._1,
+      "revenue_increase", Option.when(v._8.equals(0D), 0D).getOrElse(Option.when(v._6 > 1D, Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5) / v._6).getOrElse(Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5)) / v._8 - 1D)
     ));
   }
 
