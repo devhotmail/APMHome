@@ -215,7 +215,7 @@ public class DmApi {
 
   private Map<String, Object> recursivelyCalculateSuggestions(Map<String, Object> currentMap) {
     Seq<Map<String, Object>> currentItems = (Seq<Map<String, Object>>) currentMap.get("items").get();
-    if (currentItems.get(0).containsKey("items")) {
+    if (currentItems.headOption().filter(m -> m.containsKey("items")).isDefined()) {
       Map<String, Object> newMap = currentMap.put("items", currentItems.map(this::recursivelyCalculateSuggestions));
       return newMap.put("suggestions", calculateHigherLevelSuggestions(((Seq<Map<String, Object>>) newMap.get("items").get()).map(v -> (Seq<Map<String, String>>) v.get("suggestions").get()), (String) newMap.get("groupby").get()));
     } else {
