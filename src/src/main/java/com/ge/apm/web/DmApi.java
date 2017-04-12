@@ -109,7 +109,7 @@ public class DmApi {
   private Observable<Tuple8<Integer, String, Integer, Integer, Double, Double, Double, Double>> usagePredict(Observable<Tuple6<Integer, String, Integer, Integer, Double, Double>> theYearBeforeLast, Observable<Tuple6<Integer, String, Integer, Integer, Double, Double>> lastYear, Map<Integer, Double> userPredict) {
     return Observable.zip(theYearBeforeLast, lastYear, (lstSnd, lstFst) ->
       Tuple.of(lstSnd._1, lstSnd._2, lstSnd._3, lstSnd._4, lstFst._5,
-        userPredict.get(lstFst._1).getOrElse(Option.when(lstSnd._5.equals(0D), 0D).getOrElse(Stats.of(lstSnd._5, lstFst._5).sampleStandardDeviation())) + lstFst._5,
+        (userPredict.get(lstFst._1).getOrElse(Option.when(lstSnd._5.equals(0D), 0D).getOrElse(Stats.of(lstSnd._5, lstFst._5).sampleStandardDeviation())) + 1D) * lstFst._5,
         lstSnd._6, lstFst._6)).cache();
   }
 
