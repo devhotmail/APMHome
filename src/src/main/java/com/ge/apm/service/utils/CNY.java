@@ -14,7 +14,7 @@ import java.util.Locale;
 import static javaslang.API.*;
 
 public interface CNY {
-  MonetaryAmountFormat fmt = MonetaryAmountDecimalFormatBuilder.of("###.#", Locale.CHINA).build();
+  MonetaryAmountFormat fmt = MonetaryAmountDecimalFormatBuilder.of("###.##", Locale.CHINA).build();
   Money O = Money.zero(Monetary.getCurrency(Locale.CHINA));
   Money K = Money.of(1_000, Monetary.getCurrency(Locale.CHINA));
   Money W = Money.of(10_000, Monetary.getCurrency(Locale.CHINA));
