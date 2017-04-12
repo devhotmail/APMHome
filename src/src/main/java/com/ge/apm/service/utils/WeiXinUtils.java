@@ -1,5 +1,6 @@
 package com.ge.apm.service.utils;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,7 +23,7 @@ public class WeiXinUtils {
         Map<String, Object> map=new HashMap<String,Object>();
         for (Entry<String, Object> entry : entrySet) {
         	map.put(entry.getKey(), entry.getValue());
-//        	if(entry.getKey().equals("first") || entry.getKey().equals("remark")){
+//        	if(entry.getKey().equals("first") || entry.getKey().equalsß("remark")){
 //        		map.put(entry.getKey(), entry.getValue());
 //        		continue;
 //        	}
@@ -30,7 +31,6 @@ public class WeiXinUtils {
 //        		map.put("_"+entry.getKey(),  entry.getValue().toString());
 //        	}
         }
-        System.out.println(map);
         return map;
     }
 	

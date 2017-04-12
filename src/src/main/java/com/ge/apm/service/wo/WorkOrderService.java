@@ -9,6 +9,8 @@ import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
+import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +25,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import net.sf.json.JSONArray;
-import net.sf.json.JsonConfig;
 
 /**
  *
@@ -76,6 +76,10 @@ public class WorkOrderService {
     public  List<WorkOrder>  findWorkOrderByContest(Integer requestorId){
         return workOrderRepository.findByRequestorId(requestorId);
     }
+    
+    public List<WorkOrder> findWorkOrderByAssetIdAndStatus(Integer assetId){
+        return workOrderRepository.findByAssetIdAndStatusOrderByIdDesc(assetId, 1);
+    }
 
     public WorkOrderStep initWorkOrderCurrentStep(WorkOrder wo){
         WorkOrderStep woStep = new WorkOrderStep();
@@ -94,6 +98,9 @@ public class WorkOrderService {
         return woStep;
     }
 
+    public String findClosedWorkOrder(){
+        return "success";
+    }
 
     @Transactional
     public String workWorderCreate(HttpServletRequest request, WorkOrderPoJo wop)throws Exception{

@@ -184,6 +184,10 @@ public class WorkOrderWeChatService {
         return wo;
     }
     
+    public List<WorkOrder> unclosedWorkOrder(AssetInfo info) {
+        return woDao.findByAssetIdAndStatusOrderByIdDesc(info.getId(), 1);
+    }
+    
     /**
      * 从消息找到工单
      * @param info

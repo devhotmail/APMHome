@@ -75,7 +75,8 @@
                     </div>
                 </div>
             </div>
-            
+
+<!--glnote-->
             <div id="pat" style="display:none">
                 <!--故障明细-->
                 <div class="weui-cells__title">故障明细</div>
@@ -86,7 +87,7 @@
                             <div class="weui-cell weui-cell_select">
                                 <div class="weui-cell__bd">
                                     <select class="weui-select" name="caseType" id="caseType">
-                                        <option value="0">请选择...</option>
+
                                     </select>
                                 </div>
                             </div>
@@ -392,7 +393,8 @@
                     $('#pat').show();
                     $('#issueDescribe').hide();
                     $('#showComment').hide();
-                    app.initSelectData('caseType', 'caseType');
+                 //   app.initSelectData('caseType', 'caseType');
+                    app.initFaultType('caseType',pageManager.workOrder.assetGroupValue);//glnote
 //                    app.initSelectData('caseSubType', 'caseSubType');
                     $('#stepCost').on('click', '.weui-cell_access', function(){
                         pageManager.go('#ts_step_cost');
@@ -406,8 +408,8 @@
                 
                 if (pageManager.workOrder.currentStepId === 6 && pageManager.workOrder.status === 2){
                     $('#pat').show();
-                    app.initSelectData('caseType', 'caseType', pageManager.workOrder.caseType);
-//                    app.initSelectData('caseSubType', 'caseSubType', pageManager.workOrder.caseSubType);
+                  //  app.initSelectData('caseType', 'caseType', 1);
+                    app.initFaultType('caseType',pageManager.workOrder.assetGroupValue,pageManager.workOrder.caseType);//glnote
                     $('#caseType').attr('disabled', 'disabled');
 //                    $('#caseSubType').attr('disabled', 'disabled');
                     $('#stepCost').hide();
@@ -549,7 +551,7 @@
                     case 6: if(!data.feedbackRating){$('#errorMsg').html('请先评分');} return !data.feedbackRating;
                 }
             }
-            function colletionReturnData() {
+            function  colletionReturnData() {
                 return {woId: pageManager.woId, actionType: 'return', desc: $('#description').val()};
             }
             
@@ -609,7 +611,7 @@
                     });
                 }
             }
-            
+
             function raterShow() {
                 var num = pageManager.workOrder.feedbackRating;
                 $("#fen").html(num+'分');

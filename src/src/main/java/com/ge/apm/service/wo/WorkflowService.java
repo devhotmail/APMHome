@@ -1,11 +1,14 @@
 package com.ge.apm.service.wo;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.druid.util.StringUtils;
+import com.ge.apm.dao.mapper.UserAccountMapper;
+import com.ge.apm.dao.mapper.WechatMessageLogMapper;
+import com.ge.apm.dao.mapper.WorkOrderMapper;
+import com.ge.apm.domain.*;
+import com.ge.apm.service.utils.ConfigUtils;
+import com.ge.apm.service.utils.TimeUtils;
+import com.ge.apm.service.utils.WeiXinUtils;
+import com.ge.apm.service.wechat.CoreService;
 import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
@@ -16,23 +19,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.druid.util.StringUtils;
-import com.ge.apm.dao.mapper.UserAccountMapper;
-import com.ge.apm.dao.mapper.WechatMessageLogMapper;
-import com.ge.apm.dao.mapper.WorkOrderMapper;
-import com.ge.apm.domain.CasePriorityNum;
-import com.ge.apm.domain.Constans;
-import com.ge.apm.domain.ReopenPushModel;
-import com.ge.apm.domain.TimeoutPushModel;
-import com.ge.apm.domain.UserAccount;
-import com.ge.apm.domain.WechatMessageLog;
-import com.ge.apm.domain.WorkFlow;
-import com.ge.apm.domain.WorkOrder;
-import com.ge.apm.domain.WorkflowConfig;
-import com.ge.apm.service.utils.ConfigUtils;
-import com.ge.apm.service.utils.TimeUtils;
-import com.ge.apm.service.utils.WeiXinUtils;
-import com.ge.apm.service.wechat.CoreService;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Scope("prototype")
@@ -275,6 +264,7 @@ public class WorkflowService {
 	}
 	
 	public boolean isTimeout(WorkFlow workFlow,WorkflowConfig woc){
+		System.out.println("--------->"+woc);
 		DateTime now = new DateTime(new Date());
 		DateTime startTime = new DateTime(workFlow.getStartTime());
 		Integer timeout = 0;
@@ -284,6 +274,7 @@ public class WorkflowService {
 			timeout =woc.getTimeoutAccept();
 		}else if(workFlow.getCurrentStepId() == Constans.CLOSED.getIndex()){
 			timeout =woc.getTimeoutClose();
+
 		}
 		if(timeout > 0){
 			return Minutes.minutesBetween(startTime, now).getMinutes() > timeout;

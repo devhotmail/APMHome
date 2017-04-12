@@ -1,0 +1,194 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
+<script type="text/html" id="ts_recreate">
+    <div class="page">
+        <jsp:include page="../progressbar.html"/>
+        <script src="${ctx}/resources/wechat/js/detail.js"/>
+
+        <div class="page__bd">
+            <jsp:include page="woassetinfo.html"/>
+            
+            <!--图片 -->
+            <div class="weui-cells__title">故障图片</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="my-gallery" data-pswp-uid="1">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--语音-->
+            <div class="weui-cells__title">故障语音描述</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <a class="weui-btn weui-btn_plain-primary" type="button" id="replay">播放</a>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <a style="margin-left:10px;text-decoration:underline" href="javascript:;" id="voiceBackUp">没声音?</a>
+                    </div>
+                </div>
+            </div>
+            <!--故障现象-->
+            <div class="weui-cells__title">故障文字描述</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <span name="requestReason" id="requestReason">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="showMsgs" style="display: none">
+                <div class="weui-cells__title">交互详情</div>
+                <div class="weui-cells">
+                    <a class="weui-cell weui-cell_access" href="javascript:;">
+                        <div class="show-data weui-cell__bd">
+                            <span style="color: #999"></span>
+                        </div>
+                        <div class="weui-cell__ft">
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="weui-cells__title">当前负责人</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <input id="currentPersonName" name="currentPersonName" class="weui-input" type="text" readonly="readonly"/>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">预估解决时间</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <input id="estimatedCloseTime" name="estimatedCloseTime" class="weui-input" type="datetime-local" readonly="readonly"/>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" href="javascript:" id="resubmit">增加报修</a>
+            </div>
+            <div style="height:20px;"></div>
+
+        </div>
+        
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            function reloadDetail() {
+                $.get(WEB_ROOT+'web/wodetail', {id: pageManager.woId}, function(ret) {
+                    if (ret) {
+                        app.activeProgressBar(ret.currentStepId, ret.feedbackRating);
+                        //set value
+                        app.setFormJsonValue(ret);
+
+                        pageManager.voice = ret.requestReasonVoice;
+                        //voice
+                        if (pageManager.voice) {
+                            mediaShow();
+                        }else{
+                            $('#replay').addClass('weui-btn_plain-disabled');
+                            $('#voiceBackUp').addClass('weui-btn_plain-disabled');
+                        }
+                        //images
+                        renderImgs();
+                        //other properties
+                        initdetail();
+                    } 
+                    $('#loadingToast1').fadeOut(100);
+                });
+            }
+            reloadDetail();
+            
+            function initdetail() {
+                //communication
+                if (pageManager.showMsgs) {
+                    $('#showMsgs').show();
+                    $.get(WEB_ROOT+'web/msg/'+ pageManager.woId, function(ret) {
+                        if (ret && ret.length !== 0) {
+                            var msg = ret[0];
+                            $('#showMsgs').find('span').html(msg.message);
+                        } else {
+                            $('#showMsgs').find('span').html('暂时还没有交互信息');
+                        }
+                    });
+                    $('#showMsgs').on('click', '.weui-cell_access', function(){
+                        pageManager.go('#ts_msglist');
+                    });
+                }
+                //go create page
+                $('#resubmit').click(function(){
+                    pageManager.go('ts_scanAsset');
+                });
+                //step list
+                $('.wo_container').click(function(){
+                    pageManager.go('#ts_wosteplist');
+                    var $loadingToast = $('#loadingToast1');
+                    if ($loadingToast.css('display') !== 'none') return;
+                    $loadingToast.fadeIn(100);
+                });
+            }
+            
+            function renderImgs() {
+                var $gallery = $('.my-gallery');
+                $.get(WEB_ROOT+'web/wo_img_list', {woId: pageManager.woId}, function(ret){
+                    if (ret && ret.length > 0){
+                        $.each(ret, function(idx, val){
+                            var $img = $('<figure style="display: inline; padding-right: 8px;"><a href="" data-size="800x600"><img  height="80px" width="80px" /></a></figure>');
+                            $img.find('img').attr('src', WEB_ROOT+'web/image/'+val.photoId);
+                            $gallery.append($img);
+                        });
+                    }
+                });
+            }
+            
+            function mediaShow() {
+                $('#voiceBackUp').click(function(){
+                    pageManager.go('ts_voice_backup');
+                    $('audio').attr('src', WEB_ROOT+'web/audio/'+pageManager.voice);
+                });
+
+                var relocalId = null;
+                var replaying = false;
+                $.get(WEB_ROOT+'web/media',{serverId : pageManager.voice}, function(ret) {
+                        wx.downloadVoice({
+                            serverId: ret, // 需要下载的音频的服务器端ID，由uploadVoice接口获得
+                            isShowProgressTips: 1, // 默认为1，显示进度提示
+                            success: function (res) {
+                                relocalId = res.localId; // 返回音频的本地ID
+                            }
+                        });
+                    });
+                $('#replay').click(function(){
+                    if (replaying) {
+                        replaying = false;
+                        $(this).html('播放');
+                        wx.stopVoice({
+                            localId: relocalId
+                        });
+                    } else {
+                        replaying = true;
+                        $(this).html('停止');
+                        wx.playVoice({
+                            localId: relocalId
+                        });
+                        var self = this;
+                        wx.onVoicePlayEnd({
+                            success: function (res) {
+                                replaying = false;
+                                $(self).html('播放');
+                            }
+                        });
+                    }
+                });
+            }
+            
+        });
+</script>

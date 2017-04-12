@@ -11,17 +11,6 @@ import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.service.wechat.CoreService;
 import com.ge.apm.service.wechat.WorkOrderWeChatService;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -32,6 +21,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -48,6 +49,9 @@ public class WorkOrderController {
     private CoreService service;
     @Autowired
     private WorkOrderWeChatService woWcService;
+
+
+
     
     @RequestMapping(value = "scanworeport")
     public String scanWoReport(HttpServletRequest request,HttpServletResponse response, Model model) {
@@ -154,12 +158,15 @@ public class WorkOrderController {
 //        map.put("assetStatus", service.getMsgValue("assetStatus", info.getStatus()+""));
         map.put("assetStatus", info.getStatus());
         
-        WorkOrder wo = woWcService.scanAction(info);
-        if (wo != null) {
-            map.put("woId", wo.getId());
+        List<WorkOrder> wos = woWcService.unclosedWorkOrder(info);
+        if (wos != null && !wos.isEmpty()) {
+            if (wos.size() == 1) {
+                WorkOrder wo = wos.get(0);
+                map.put("woId", wo.getId());
+                map.put("requestorId", wo.getRequestorId());
+                map.put("currentStepId", wo.getCurrentStepId());
+            }
             map.put("view", true);
-            map.put("requestorId", wo.getRequestorId());
-            map.put("currentStepId", wo.getCurrentStepId());
         }
         return map;
     }
@@ -261,6 +268,7 @@ public class WorkOrderController {
         map.put("patProblems", wo.getPatProblems());
         map.put("patActions", wo.getPatActions());
         map.put("patTests", wo.getPatTests());
+        map.put("currentPersonName", wo.getCurrentPersonName());
         AssetInfo ai = assetDao.getById(wo.getAssetId());
         if (ai == null)
             return map;
@@ -268,7 +276,9 @@ public class WorkOrderController {
         map.put("assetName", ai.getName());
         map.put("supplier", ai.getSupplierId()==null?"":service.getSupplierName(ai.getSupplierId()));
         map.put("assetGroup", service.getMsgValue("assetGroup", ai.getAssetGroup().toString()));
+        map.put("assetGroupValue", ai.getAssetGroup());
 //        map.put("assetStatus", service.getMsgValue("assetStatus", ai.getStatus()+""));
+        map.put("assetGroupValue", ai.getAssetGroup());
         map.put("assetStatus", ai.getStatus());
         map.put("clinicalDeptName", ai.getClinicalDeptName());
         map.put("locationName", ai.getLocationName());
