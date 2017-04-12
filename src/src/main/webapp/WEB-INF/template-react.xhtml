@@ -34,6 +34,7 @@
         <h:inputHidden id="siteName" value="#{userContextService.loginUserSiteName}"/>
         <h:inputHidden id="hospitalId" value="#{userContextService.loginUserHospitalId}"/>
         <h:inputHidden id="orgId" value="#{userContextService.loginUserOrgInfoId}"/>
+        <h:inputHidden id="isHead" value="#{userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead')}"/>
     </form>
 
     <p:growl id="growl" autoUpdate="true" showDetail="false" showSummary="true"/>
