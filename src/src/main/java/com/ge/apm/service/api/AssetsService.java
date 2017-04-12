@@ -42,7 +42,7 @@ public class AssetsService {
     String name();
 
     @Column
-    int group();
+    int func();
 
     @Column
     int type();
@@ -64,7 +64,7 @@ public class AssetsService {
   @Cacheable(cacheNames = "springCache", key = "'assetsService.findAssets.'+#siteId+'.'+#hospitalId+'.'+#dept+'.orderBy'+#orderBy")
   public Observable<Tuple8<Integer, String, Integer, Integer, Integer, Integer, Money, Integer>> findAssets(Integer siteId, Integer hospitalId, Integer dept, String orderBy) {
     final String sql = new SQL() {{
-      SELECT("id", "name", "function_group as group", "asset_group as type", "clinical_dept_id as dept", "supplier_id as supplier", "purchase_price as price", "install_date as yoi");
+      SELECT("id", "name", "function_group as func", "asset_group as type", "clinical_dept_id as dept", "supplier_id as supplier", "purchase_price as price", "install_date as yoi");
       FROM("asset_info");
       WHERE("site_id = :site_id");
       WHERE("hospital_id = :hospital_id");
@@ -75,7 +75,7 @@ public class AssetsService {
     }}.toString();
     QuerySelect.Builder builder = db.select(sql).parameter("site_id", siteId).parameter("hospital_id", hospitalId);
     return Option.of(builder).filter(s -> Option.of(dept).filter(d -> d > 0).isDefined()).map(b -> b.parameter("dept", dept)).orElse(Option.of(builder)).get().autoMap(Asset.class)
-      .map(a -> Tuple.of(a.id(), a.name(), Try.of(a::group).getOrElse(0), Try.of(a::type).getOrElse(0), Try.of(a::dept).getOrElse(0), Try.of(a::supplier).getOrElse(0), CNY.money(Option.of(a.price()).getOrElse(-1D)), Option.of(a.yoi()).map(d -> d.toLocalDate().getYear()).getOrElse(-1)))
+      .map(a -> Tuple.of(a.id(), a.name(), Try.of(a::func).getOrElse(0), Try.of(a::type).getOrElse(0), Try.of(a::dept).getOrElse(0), Try.of(a::supplier).getOrElse(0), CNY.money(Option.of(a.price()).getOrElse(-1D)), Option.of(a.yoi()).map(d -> d.toLocalDate().getYear()).getOrElse(-1)))
       .cache();
   }
 }
