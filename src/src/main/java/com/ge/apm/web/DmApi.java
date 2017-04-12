@@ -191,7 +191,7 @@ public class DmApi {
     } else if (averageUsage <= 0.3D) {
       return List.of(HashMap.of("title", SUGGESTION_RAISE));
     } else {
-      return List.of(HashMap.empty());
+      return List.empty();
     }
   }
 
