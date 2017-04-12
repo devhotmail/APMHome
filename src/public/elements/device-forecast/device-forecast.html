@@ -1,21 +1,77 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../parallel-coordinates-chart/parallel-coordinates-chart.html"/>
+<link rel="import" href="../data-filter-bar/data-filter-bar.html"/>
+
+<link rel="import" href="../behavior/context.html">
+<link rel="import" href="../behavior/fetch-cached.html">
 <link rel="import" href="../uri/uri.html">
 <link rel="import" href="../modernizr/modernizr.html"/>
 <link rel="import" href="../fastclick/fastclick.html"/>
-<link rel="import" href="../device-parallel-coordinates/device-parallel-coordinates.html"/>
-<link rel="import" href="../device-data-filter-bar/device-data-filter-bar.html"/>
 <link rel="import" href="../vh-buggyfill/vh-buggyfill.html"/>
 <link rel="import" href="device-forecast-styles.html">
 
 <dom-module id="device-forecast">
   <template>
     <style include="device-forecast-styles"></style>
-    <device-data-filter-bar from="{{from}}" to="{{to}}" filter-by="{{filterBy}}"></device-data-filter-bar>
-    <device-parallel-coordinates from="{{from}}" to="{{to}}" filter-by="{{filterBy}}"></device-parallel-coordinates>
+    <data-filter-bar
+      from="{{from}}"
+      to="{{to}}"
+      dept="{{dept}}"
+      filter-by="{{filterBy}}"
+      type="{{type}}"></data-filter-bar>
+    <parallel-coordinates-chart
+      from="{{from}}"
+      to="{{to}}"
+      filter-by="{{filterBy}}"
+      sort-by="{{sortBy}}"
+      dept="{{dept}}"
+      type="{{type}}"></parallel-coordinates-chart>
   </template>>
   <script>
-    Polymer({
-      is: 'device-forecast'
-    })
+    define('device-forecast', [
+      'behavior/context',
+      'behavior/fetch-cached'
+    ], function(ContextBehavior, FetchCachedBehavior) {
+      Polymer({
+        is: 'device-forecast',
+        behaviors: [
+          ContextBehavior,
+          FetchCachedBehavior
+        ],        
+        properties: {
+          from: String,
+          to: String,
+          dept: String,
+          type: String,
+          sortBy: String,
+          query: {
+            type: String,
+            computed: 'getQuery(user, from, to, dept, type, sortBy)'
+          }
+        },
+        getQuery: function(user, from, to, dept, type, sortBy) {
+          console.log(
+            URI(this.resolveApiUrl('/api/list')).query({
+              'from': this.from,
+              'to': this.to,
+              'orderby': this.sortBy,
+              'type': this.filterBy || undefined,
+              'dept': user.orgId
+            }).toString()
+          )
+          
+          // return URI(this.resolveApiUrl('/api/list')).query({
+          //   'from': this.from,
+          //   'to': this.to,
+          //   'orderby': this.sortBy,
+          //   'type': this.filterBy || undefined,
+          //   'dept': this.user.orgId
+          // }).toString();
+        },
+        ready: function() {
+          // console.log(this.user)
+        }
+      })
+    })    
   </script>
 </dom-module>
