@@ -159,13 +159,13 @@ public class DmApi {
     List<Double> usages = items.map(v -> (Double) v.get("usage").get());
     Double revenuePredictedSugRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_predict_sug_raw").get())).sum()).getOrElse(0D);
     Double revenuePredictedRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_predict_raw").get())).sum()).getOrElse(0D);
-    Double revenueLastYearRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_last_year_raw").get()).toJavaList()).sum()).getOrElse(0D);
-    Double revenueYearBeforeLastRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_year_before_last_raw").get()).toJavaList()).sum()).getOrElse(0D);
+    Double revenueLastYearRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_last_year_raw").get())).sum()).getOrElse(0D);
+    Double revenueYearBeforeLastRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_year_before_last_raw").get())).sum()).getOrElse(0D);
     String label = CNY.desc(CNY.money(revenueYearBeforeLastRaw))._2;
     return HashMap.of(
       "id", id,
       "name", name,
-      "usage", Try.of(() -> Stats.of(usages.toJavaList()).mean()).getOrElse(0D),
+      "usage", Try.of(() -> Stats.of(usages).mean()).getOrElse(0D),
       "usage_sum", Tuple.of(usages.count(v -> v <= 0.3D), usages.count(v -> v > 1D)),
       "revenue_year_before_last", formatMoney(CNY.money(revenueYearBeforeLastRaw), label)._1,
       "revenue_last_year", formatMoney(CNY.money(revenueLastYearRaw), label)._1,
