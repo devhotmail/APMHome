@@ -96,10 +96,10 @@
                         <div class="flex__item u-ml-- u-mr--">
                           <div
                             class="progress-bar"
-                            style$="[[calcProgress(focus.data.revenue_year_before_last, systemData.revenue_year_before_last)]]">
+                            style$="[[calcProgress(focus.data.revenue_year_before_last_raw, systemData.revenue_year_before_last_raw)]]">
                           </div>
                         </div>
-                        <div class="revenue-num">[[keepOneDecimal(focus.data.revenue_year_before_last)]]</div>
+                        <div class="revenue-num">[[focus.data.revenue_year_before_last]]</div>
                       </div>
                     </template>
                     <template is="dom-if" if="[[focus.data.revenue_last_year]]">
@@ -108,10 +108,10 @@
                         <div class="flex__item u-ml-- u-mr--">
                           <div
                             class="progress-bar"
-                            style$="[[calcProgress(focus.data.revenue_last_year, systemData.revenue_last_year)]]">
+                            style$="[[calcProgress(focus.data.revenue_last_year_raw, systemData.revenue_last_year_raw)]]">
                           </div>                    
                         </div>
-                        <div class="revenue-num">[[keepOneDecimal(focus.data.revenue_last_year)]]</div>
+                        <div class="revenue-num">[[focus.data.revenue_last_year]]</div>
                       </div>
                     </template>
                     <template is="dom-if" if="[[focus.data.revenue_predict]]">
@@ -125,7 +125,7 @@
                           </div>
                         </div>
                         <div class="revenue-num">
-                          [[keepOneDecimal(focus.data.revenue_predict)]] [[decimal2Percent(focus.data.revenue_increase, 1)]]
+                          [[focus.data.revenue_predict]] [[decimal2Percent(focus.data.revenue_increase, 1)]]
                         </div>
                       </div>
                     </template>
@@ -139,7 +139,7 @@
                           </div>                     
                         </div>
                         <div class="revenue-num">
-                          [[keepOneDecimal(focus.data.revenue_predict_sug)]] [[decimal2Percent(focus.data.revenue_increase_sug, 1)]]
+                          [[focus.data.revenue_predict_sug]] [[decimal2Percent(focus.data.revenue_increase_sug, 1)]]
                         </div>
                       </div>
                     </template>
@@ -743,7 +743,8 @@
         },
         decimal2Percent: function(val, withSign) {
           var sign = (withSign && val > 0) ? '+' : '';
-          return sign + parseInt(val * 100) + '%';
+          // keep one decimal
+          return sign + parseFloat(val * 100).toFixed(1) + '%';
         },
         parseInt: parseInt,
         keepOneDecimal: function(val) {
