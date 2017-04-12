@@ -22,8 +22,8 @@ public class AssetTypeFaulty implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "astype_id")
-    private Integer astypeId;
+    @Column(name = "asset_type_id")
+    private Integer assetTypeId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "fault_id")
@@ -37,12 +37,16 @@ public class AssetTypeFaulty implements Serializable {
         this.id = id;
     }
 
-    public Integer getAstypeId() {
-        return astypeId;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    public void setAstypeId(Integer astypeId) {
-        this.astypeId = astypeId;
+    public Integer getAssetTypeId() {
+        return assetTypeId;
+    }
+
+    public void setAssetTypeId(Integer assetTypeId) {
+        this.assetTypeId = assetTypeId;
     }
 
     public Integer getFaultId() {
