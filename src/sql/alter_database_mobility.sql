@@ -119,6 +119,7 @@ alter table work_order add column pat_actions varchar(128);  --PAT 的 Actions(�
 alter table work_order add column pat_tests varchar(128);	 --PAT 的 Tests(测试方法)
 alter table work_order add column close_time timestamp;	 --关单时间
 alter table work_order add column estimated_close_time timestamp;	 --预估修复时间
+alter table work_order add column hospital_name varchar(64);	 --所属医院/院区
 
 alter table work_order_step_detail add column cowoker_user_id int; --协作者
 alter table work_order_step_detail add column cowoker_user_name varchar(16); --协作者姓名
