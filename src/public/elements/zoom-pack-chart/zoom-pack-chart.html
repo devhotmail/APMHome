@@ -381,6 +381,17 @@
         .on('end', function(d) {
           if (d.parent !== focus && (d !== focus || d.children)) this.style.display = 'none';
         });
+
+        transition.selectAll('g.asset')
+        .on('end', function(d) {
+          if (d === _this.focus) {
+            if (d.children) this.style.opacity = 0.6;
+            this.style.opacity = 0.9;
+          } else {
+            if (d.parent === _this.focus) this.style.opacity = 0.9;
+            this.style.opacity = 0.1;
+          }
+        });
       },
       zoomTo: function(v) {
         var k = this.diameter / v[2];
@@ -418,15 +429,6 @@
         .attr('transform-origin', '50% 50%')
         .attr('transform', function (d) {
           return 'translate(' + (d.x - v[0]) * k + ',' + (d.y - v[1]) * k + ')';
-        })
-        .style('opacity', function(d) {
-          if (d === _this.focus) {
-            if (d.children) return 0.6;
-            return 0.9;
-          } else {
-            if (d.parent === _this.focus) return 0.9;
-            return 0.1;
-          }
         });
 
         // change asset circle's radius
