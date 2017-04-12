@@ -50,19 +50,21 @@ public class ListApi {
     if (Option.of(limit).isEmpty()) limit = Integer.MAX_VALUE;
 
     if (Option.of(from).isDefined() && Option.of(to).isDefined())
-      return createResponseBody(
-        request, limit, start,
-        getHref(request.getRequestURL().toString(), from, to, dept, type, orderby, limit, start),
-        filterQueryData(
-          dept, type, orderby,
-          mergeQueryData(
-            ListService.queryForBasic(site_id, hospital_id, from, to),
-            ListService.queryForOp(site_id, hospital_id, from, to),
-            ListService.queryForBm(site_id, hospital_id, from, to))),
-        queryForTick(
-          ListService.queryForMinMax(site_id, hospital_id, dept, type, from, to),
-          ListService.queryForBmTick(site_id, hospital_id, dept, type, from, to),
-          to.compareTo(from)));
+    	if ((to.getTime()-from.getTime())/1000 <= 94694400 )
+    		return createResponseBody(
+    				request, limit, start,
+    				getHref(request.getRequestURL().toString(), from, to, dept, type, orderby, limit, start),
+    				filterQueryData(
+    						dept, type, orderby,
+    						mergeQueryData(
+    								ListService.queryForBasic(site_id, hospital_id, from, to),
+    								ListService.queryForOp(site_id, hospital_id, from, to),
+    								ListService.queryForBm(site_id, hospital_id, from, to))),
+    				queryForTick(
+    						ListService.queryForMinMax(site_id, hospital_id, dept, type, from, to),
+    						ListService.queryForBmTick(site_id, hospital_id, dept, type, from, to),
+    						to.compareTo(from)));
+    	else return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Invalid search interval"));
     else
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Bad Request"));
   }
