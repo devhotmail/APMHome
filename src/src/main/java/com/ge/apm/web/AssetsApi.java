@@ -71,11 +71,11 @@ public class AssetsApi {
         ImmutableMap.of("type", ImmutableMap.of("text", "按类型")),
         ImmutableMap.of("dept", ImmutableMap.of("text", "按科室")),
         ImmutableMap.of("supplier", ImmutableMap.of("text", "按品牌")),
-        ImmutableMap.of("price", ImmutableMap.of("text", "按价值", "ticks", ImmutableList.of(items.map(t -> t._7).sorted().first().toBlocking().single(), items.map(t -> t._7).sorted().last().toBlocking().single()))),
+        ImmutableMap.of("price", ImmutableMap.of("text", "按价值", "ticks", Option.of(items).filter(p -> !p.isEmpty().toBlocking().single()).map(l -> ImmutableList.of(l.map(t -> t._7).sorted().first().toBlocking().single(), l.map(t -> t._7).sorted().last().toBlocking().single())).getOrElse(ImmutableList.of()))),
         ImmutableMap.of("yoi", ImmutableMap.of("text", "按时间"))))
       .put("link", new ImmutableMap.Builder<String, Object>()
         .put("ref", "self")
-        .put("href", String.format("%s?orderby=%s&limit=%s&start=%s", request.getRequestURL(), orderBy, limit, start)).build())
+        .put("href", String.format("%s?orderby=%s&limit=%s&start=%s", request.getRequestURL(), orderBy, Option.of(limit).getOrElse(Integer.MAX_VALUE), start)).build())
       .build();
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(body);
   }
