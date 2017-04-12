@@ -99,7 +99,7 @@
                             style$="[[calcProgress(focus.data.revenue_year_before_last, systemData.revenue_year_before_last)]]">
                           </div>
                         </div>
-                        <div class="revenue-num">[[parseInt(focus.data.revenue_year_before_last)]]</div>
+                        <div class="revenue-num">[[keepOneDecimal(focus.data.revenue_year_before_last)]]</div>
                       </div>
                     </template>
                     <template is="dom-if" if="[[focus.data.revenue_last_year]]">
@@ -111,7 +111,7 @@
                             style$="[[calcProgress(focus.data.revenue_last_year, systemData.revenue_last_year)]]">
                           </div>                    
                         </div>
-                        <div class="revenue-num">[[parseInt(focus.data.revenue_last_year)]]</div>
+                        <div class="revenue-num">[[keepOneDecimal(focus.data.revenue_last_year)]]</div>
                       </div>
                     </template>
                     <template is="dom-if" if="[[focus.data.revenue_predict]]">
@@ -125,11 +125,11 @@
                           </div>
                         </div>
                         <div class="revenue-num">
-                          [[parseInt(focus.data.revenue_predict)]] [[decimal2Percent(focus.data.revenue_increase, 1)]]
+                          [[keepOneDecimal(focus.data.revenue_predict)]] [[decimal2Percent(focus.data.revenue_increase, 1)]]
                         </div>
                       </div>
                     </template>
-                    <template is="dom-if" if="[[focus.data.revenue_predict_sug]]">
+                    <template is="dom-if" if="[[hasSugs(focus.data.suggestions)]]">
                       <div class="flex flex--middle revenue-tip">
                         <div class="revenue-label">采取建议</div>
                         <div class="flex__item u-ml-- u-mr--">
@@ -139,7 +139,7 @@
                           </div>                     
                         </div>
                         <div class="revenue-num">
-                          [[parseInt(focus.data.revenue_predict_sug)]] [[decimal2Percent(focus.data.revenue_increase_sug, 1)]]
+                          [[keepOneDecimal(focus.data.revenue_predict_sug)]] [[decimal2Percent(focus.data.revenue_increase_sug, 1)]]
                         </div>
                       </div>
                     </template>
@@ -728,6 +728,10 @@
         /**
          * functions which convert string for dom text display
         */
+        hasSugs: function(array) {
+          if (!Array.isArray(array)) return false;
+          return Boolean(array.length);
+        },        
         getYM: function(timestamp) {
           if (!timestamp) return;
           var date = new Date(timestamp);
@@ -742,6 +746,9 @@
           return sign + parseInt(val * 100) + '%';
         },
         parseInt: parseInt,
+        keepOneDecimal: function(val) {
+          return parseFloat(val).toFixed(1);
+        },
         isArray: Array.isArray,
         isEqual: function(a, b) {
           return a === b;
