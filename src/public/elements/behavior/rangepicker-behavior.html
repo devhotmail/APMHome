@@ -1,0 +1,128 @@
+<link rel="import" href="../../bower_components/px-datetime-common/px-datetime-imports-deep.html">
+<script src="../../bower_components/pxmoment/locale/zh-cn.js"></script>
+<link rel="import" href="../../bower_components/px-rangepicker/px-rangepicker.html">
+
+<script>
+  /**
+   * @polymerBehavior DateTimeBehavior
+   */
+  Polymer.FetchCachedBehavior = {};
+  define('behavior/rangepicker', function() {
+    /**
+    * @param {Array} configs
+    * when configs is undefined or emtpy array @return defaultPresets(converted to an array)
+    * for config items it will be a string or object
+    * samples
+    * ['oneWeek', 'oneYear']
+    * [
+    *  {
+    *    key: '112',
+    *    displayText: 'hahaha',
+    *     startDateTime: Px.moment().clone().startOf('year').add(2, 'year'),
+    *     endDateTime: Px.moment().clone().endOf('year').add(2, 'year')
+    *   },
+    *   'oneWeek',
+    *   ...
+    * ]
+    */
+    return function(configs) {
+      var now = Px.moment();
+      
+      var defaultPresets = {
+        oneWeek: {
+          displayText: '一周内',
+          startDateTime: now.clone().subtract(7, 'days'),
+          endDateTime: now
+        },
+        oneMonth: {
+          displayText: '一月内',
+          startDateTime: now.clone().subtract(1, 'month'),
+          endDateTime: now
+        },
+        oneYear: {
+          displayText: '一年内',
+          startDateTime: now.clone().subtract(1, 'year'),
+          endDateTime: now
+        },
+        currentMonth: {
+          displayText: '本月',
+          startDateTime: now.clone().startOf('month'),
+          endDateTime: now.clone().endOf('month')
+        },
+        yearBeforeLast: {
+          displayText: '前年',
+          startDateTime: now.clone().startOf('year').subtract(2, 'year'),
+          endDateTime: now.clone().endOf('year').subtract(2, 'year')
+        },
+        lastYear: {
+          displayText: '去年',
+          startDateTime: now.clone().startOf('year').subtract(1, 'year'),
+          endDateTime: now.clone().endOf('year').subtract(1, 'year')
+        },
+        currentYear: {
+          displayText: '今年',
+          startDateTime: now.clone().startOf('year'),
+          endDateTime: now.clone().endOf('year')
+        },
+        nextYear: {
+          displayText: '明年',
+          startDateTime: now.clone().startOf('year').add(1, 'year'),
+          endDateTime: now.clone().endOf('year').add(1, 'year')
+        },
+        yearAfterNext: {
+          displayText: '后年',
+          startDateTime: now.clone().startOf('year').add(2, 'year'),
+          endDateTime: now.clone().endOf('year').add(2, 'year')
+        }
+      };
+
+      var rangePresets = [];
+      if (!Array.isArray(configs) || (Array.isArray(configs) && !configs.length)) {
+        rangePresets = Object.keys(defaultPresets).map(function(key) {
+          return defaultPresets[key];
+        });
+      } else {
+        // configs filter duplicated items
+        rangePresets = configs.filter(function(config, i, array) {
+          return i === array.indexOf(config)
+        }).map(function(config) {
+          if (typeof config === 'string' && defaultPresets[config]) {
+            return defaultPresets[config];
+          }
+
+          var key = config.key;
+          if (!key) return;
+
+          var displayText = config.displayText;
+          var startDateTime = config.startDateTime;
+          var endDateTime = config.endDateTime;
+
+          //startDateTime < endDateTime
+          if (
+            displayText
+            && moment.isMoment(startDateTime)
+            && moment.isMoment(endDateTime)
+            && startDateTime < endDateTime
+          ) {
+            return config;
+          }
+
+          if (defaultPresets[key]) return defaultPresets[key];
+        }).filter(function(n) {
+          return n;
+        });
+      }
+
+      return {
+        properties: {
+          rangePresets: {
+            type: Array,
+            value: function () {
+              return rangePresets;
+            }
+          }
+        }
+      };
+    }
+  });
+</script>
