@@ -1,7 +1,9 @@
 package com.ge.apm.view.sysutil;
 
+import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.dao.UserAccountRepository;
+import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.uaa.UaaService;
 import javaslang.control.Option;
@@ -120,6 +122,9 @@ public class UserContextService implements Serializable {
     return Option.of(getLoginUser()).map(UserAccount::getOrgInfoId).getOrElse(-1);
   }
 
+  public OrgInfo getLoginUserOrgInfo() {
+    return Option.of(getLoginUser()).map(u -> WebUtil.getBean(OrgInfoRepository.class).findById(u.getOrgInfoId())).getOrElseThrow(() -> new IllegalStateException(String.format("unable to get orgInfo for user.orgInfoId = %s", userAccount.getOrgInfoId())));
+  }
 
   public boolean getIsSuperAdmin() {
     return UserContextService.isSuperAdmin();

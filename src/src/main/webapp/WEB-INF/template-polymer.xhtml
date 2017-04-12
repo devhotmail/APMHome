@@ -34,6 +34,7 @@
         <h:inputHidden id="siteName" value="#{userContextService.loginUserSiteName}"/>
         <h:inputHidden id="hospitalId" value="#{userContextService.loginUserHospitalId}"/>
         <h:inputHidden id="orgId" value="#{userContextService.loginUserOrgInfoId}"/>
+        <h:inputHidden id="orgName" value="#{userContextService.loginUserOrgInfo.name}"/>
         <h:inputHidden id="isHead" value="#{userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead')}"/>
     </form>
 
