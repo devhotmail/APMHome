@@ -1,11 +1,10 @@
 package com.ge.apm.dao;
 
 
-import java.util.List;
-
 import com.ge.apm.domain.AssetContract;
-
 import webapp.framework.dao.GenericRepository;
+
+import java.util.List;
 
 public interface AssetContractRepository extends GenericRepository<AssetContract> {
     
