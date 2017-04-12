@@ -1,0 +1,17 @@
+@import "_theme.scss";
+:host {
+  display: flex;
+  flex-direction: row;
+}
+.groupby-radio {
+  margin-left: 0!important;
+  display: inline-block;
+  border: 1px solid rgb(89, 89, 89);
+  box-sizing: border-box;
+  &[data-active] {
+    background: #5b84d7!important;
+    border-color: #5b84d7!important;
+    color: #fff!important;
+    box-shadow: none!important;
+  }
+}
