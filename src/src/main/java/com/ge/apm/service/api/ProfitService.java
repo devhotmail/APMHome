@@ -20,6 +20,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class ProfitService {
@@ -48,6 +49,10 @@ public class ProfitService {
 
   public static Tuple2<String, String> descProfits(Observable<Tuple4<Integer, String, Money, Money>> items) {
     return items.reduce(CNY.O, (initial, tuple) -> initial.add(tuple._4)).map(CNY::desc).toBlocking().single();
+  }
+
+  public static Money predictRevenue() {
+    return Option.of(LocalDate.now()).map(y -> CNY.money(15284.13D * ChronoUnit.DAYS.between(LocalDate.of(2000, 1, 1), y.plusYears(1)) - 70223735.95D)).getOrElse(CNY.O);
   }
 
   @Cacheable(cacheNames = "springCache", key = "'profitService.findRvnCstByYear.'+#siteId+'.'+#hospitalId + '.year'+#year")
@@ -119,13 +124,13 @@ public class ProfitService {
       WHERE("asu.created >= :start_day");
       WHERE("asu.created <= :end_day");
       if (Option.of(dept).filter(v -> v >= 1).isDefined()) {
-        WHERE("ai.clinical_dept_id = "+ String.format("%s", dept));
+        WHERE("ai.clinical_dept_id = " + String.format("%s", dept));
       }
       if (Option.of(month).filter(v -> v >= 1 && v <= 12).isDefined()) {
-        WHERE("extract(month from asu.created) = "+ String.format("%s", month));
+        WHERE("extract(month from asu.created) = " + String.format("%s", month));
       }
       if (Option.of(type).filter(v -> v >= 1).isDefined()) {
-        WHERE("ai.asset_group = "+ String.format("%s", type));
+        WHERE("ai.asset_group = " + String.format("%s", type));
       }
       GROUP_BY("ai.id");
       ORDER_BY("ai.id");
@@ -151,13 +156,13 @@ public class ProfitService {
       WHERE("asu.created >= :start_day");
       WHERE("asu.created <= :end_day");
       if (Option.of(dept).filter(v -> v >= 1).isDefined()) {
-        WHERE("ai.clinical_dept_id = "+ String.format("%s", dept));
+        WHERE("ai.clinical_dept_id = " + String.format("%s", dept));
       }
       if (Option.of(month).filter(v -> v >= 1 && v <= 12).isDefined()) {
-        WHERE("extract(month from asu.created) = "+ String.format("%s", month));
+        WHERE("extract(month from asu.created) = " + String.format("%s", month));
       }
       if (Option.of(type).filter(v -> v >= 1).isDefined()) {
-        WHERE("ai.asset_group = "+ String.format("%s", type));
+        WHERE("ai.asset_group = " + String.format("%s", type));
       }
       GROUP_BY("group_id");
       ORDER_BY("group_id");

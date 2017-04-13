@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public class TimeUnitTest {
-
   @Test
   public void testDaysBetween() {
     Assertions.assertThat(ChronoUnit.DAYS.between(LocalDate.of(2017, 1, 1), LocalDate.ofYearDay(2017, 365))).isEqualTo(364L);
