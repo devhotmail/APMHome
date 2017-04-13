@@ -120,6 +120,7 @@ public class DmApi {
       "clinical_dept_id", v._3,
       "asset_group", v._4,
       "usage", v._6,
+      "usage_sug", Option.when(v._6 >= 1D, 1D).getOrElse(v._6),
       "revenue_predict_sug_raw", Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5),
       "revenue_predict_sug", formatMoney(CNY.money(Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5)), CNY.desc(CNY.money(v._7))._2)._1,
       "revenue_last_year_raw", v._8,
@@ -179,7 +180,8 @@ public class DmApi {
       "revenue_predict_sug", formatMoney(CNY.money(revenuePredictedSugRaw), label)._1,
       "revenue_predict_sug_raw", revenuePredictedSugRaw,
       "revenue_increase_sug", Option.when(revenueLastYearRaw.equals(0D), 0D).getOrElse(revenuePredictedSugRaw / revenueLastYearRaw - 1D),
-      "revenue_unit", label
+      "revenue_unit", label,
+      "total", items.count(t -> true)
     );
   }
 
@@ -197,18 +199,23 @@ public class DmApi {
 
   private List<Map<String, String>> calculateHigherLevelSuggestions(Seq<Seq<Map<String, String>>> lowerLevelSuggestions, String groupBy) {
     Seq<Seq<String>> suggestionLists = lowerLevelSuggestions.map(v -> v.map(sub -> sub.get("title").getOrElse("")));
-    int numBuy = suggestionLists.count(v -> v.contains(SUGGESTION_BUY));
-    int numAjst = suggestionLists.count(v -> v.contains(SUGGESTION_ADJUST));
-    int numRse = suggestionLists.count(v -> v.contains(SUGGESTION_RAISE));
+    int numBuy = suggestionLists.count(v -> v.exists(v2 -> v2.contains(SUGGESTION_BUY)));
+    Integer numBuyAssets = lowerLevelSuggestions
+      .filter(v -> v.map(sub -> sub.get("title").getOrElse("")).exists(v2 -> v2.contains(SUGGESTION_BUY)))
+      .map(v -> v.filter(sub -> sub.get("addition").isDefined()).headOption().map(v2 -> v2.get("addition").get()).get())
+      .map(v -> Ints.tryParse(Option.when(v.contains("（"), v.substring(v.indexOf("（") + 1, v.indexOf("台设备"))).getOrElse(v.substring(0, v.indexOf("台设备")))))
+      .sum().intValue();
+    int numAjst = suggestionLists.count(v -> v.exists(v2 -> v2.contains(SUGGESTION_ADJUST)));
+    int numRse = suggestionLists.count(v -> v.exists(v2 -> v2.contains(SUGGESTION_RAISE)));
     ImmutableList.Builder<Map<String, String>> totalSuggestions = new ImmutableList.Builder<Map<String, String>>();
     if (numBuy > 0) {
-      totalSuggestions.add(HashMap.of("title", SUGGESTION_BUY, "addition", Option.when(groupBy.equals("dept"), String.format("%s个科室", numBuy)).getOrElse(String.format("%s种类型", numBuy))));
+      totalSuggestions.add(HashMap.of("title", SUGGESTION_BUY.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", Option.when(groupBy.equals("dept"), String.format("%s个（%s台设备）", numBuy, numBuyAssets)).getOrElse(String.format("%s种（%s台设备）", numBuy, numBuyAssets))));
     }
     if (numAjst > 0) {
-      totalSuggestions.add(HashMap.of("title", SUGGESTION_ADJUST, "addition", Option.when(groupBy.equals("dept"), String.format("%s个科室", numAjst)).getOrElse(String.format("%s种类型", numAjst))));
+      totalSuggestions.add(HashMap.of("title", SUGGESTION_ADJUST.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", Option.when(groupBy.equals("dept"), String.format("%s个", numAjst)).getOrElse(String.format("%s种", numAjst))));
     }
     if (numRse > 0) {
-      totalSuggestions.add(HashMap.of("title", SUGGESTION_RAISE, "addition", Option.when(groupBy.equals("dept"), String.format("%s个科室", numRse)).getOrElse(String.format("%s种类型", numRse))));
+      totalSuggestions.add(HashMap.of("title", SUGGESTION_RAISE.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", Option.when(groupBy.equals("dept"), String.format("%s个", numRse)).getOrElse(String.format("%s种", numRse))));
     }
     return List.ofAll(totalSuggestions.build());
   }
@@ -217,14 +224,22 @@ public class DmApi {
     Seq<Map<String, Object>> currentItems = (Seq<Map<String, Object>>) currentMap.get("items").get();
     if (currentItems.headOption().filter(m -> m.containsKey("items")).isDefined()) {
       Map<String, Object> newMap = currentMap.put("items", currentItems.map(this::recursivelyCalculateSuggestions));
-      return newMap.put("suggestions", calculateHigherLevelSuggestions(((Seq<Map<String, Object>>) newMap.get("items").get()).map(v -> (Seq<Map<String, String>>) v.get("suggestions").get()), (String) newMap.get("groupby").get()));
+      return calculateUsageAfterSuggestion(newMap.put("suggestions", calculateHigherLevelSuggestions(((Seq<Map<String, Object>>) newMap.get("items").get()).map(v -> (Seq<Map<String, String>>) v.get("suggestions").get()), (String) newMap.get("groupby").get())));
     } else {
-      return currentMap.put("suggestions", calculateBottomLevelSuggestions(
+      return calculateUsageAfterSuggestion(currentMap.put("suggestions", calculateBottomLevelSuggestions(
         ((Tuple2<Integer, Integer>) currentMap.get("usage_sum").get())._2,
         (Double) currentMap.get("usage").get(),
         currentItems.count(v -> true)
-      ));
+      )));
     }
+  }
+
+  private Map<String, Object> calculateUsageAfterSuggestion(Map<String, Object> currentMap) {
+    String suggestion = ((List<Map<String, String>>) currentMap.get("suggestions").get())
+      .filter(v -> v.get("title").isDefined() && v.get("title").get().contains(SUGGESTION_BUY))
+      .headOption().getOrElse(HashMap.of("addition", "0台设备")).get("addition").get();
+    int numBuyAssets = Option.of(Ints.tryParse(Option.when(suggestion.contains("（"), suggestion.substring(suggestion.indexOf("（") + 1, suggestion.indexOf("台设备"))).getOrElse(suggestion.substring(0, suggestion.indexOf("台设备"))))).getOrElse(0);
+    return currentMap.put("usage_sug", Option.when((int) currentMap.get("total").get() + numBuyAssets == 0, 0D).getOrElse((double) currentMap.get("usage").get() * (int) currentMap.get("total").get() / ((int) currentMap.get("total").get() + numBuyAssets)));
   }
 
   private Tuple2<String, String> formatMoney(MonetaryAmount amount, String label) {
