@@ -1,3 +1,5 @@
+@import "../../sass/_mixins.scss";
+
 $brand-color: #5b84d7;
 @mixin rm-outline {
   outline: 0px solid transparent;
@@ -11,6 +13,7 @@ $brand-color: #5b84d7;
   cursor: pointer;
   line-height: 21px;
   text-align: right;
+  @include text-truncate();
 
   input {
     position: absolute;
