@@ -163,12 +163,10 @@
                       <template is="dom-repeat" items="[[currentKPIs]]">
                         <template is="dom-if" if="[[item.num]]">
                           <div class$="kpi kpi-[[index]]">[[item.desc]]</div>
-                        </template>
-                        <div class="kpi-detail">
-                          <template is="dom-if" if="[[item.num]]">
+                          <div class="kpi-detail">
                             <div class="title u-mt- u-mb-">[[item.num]]台设备</div>
-                          </template>
-                        </div>
+                          </div>
+                        </template>
                       </template>
                     </template>
                   </div>
@@ -830,7 +828,7 @@
               uid: n.data.uid,
               name: n.data.name,
               // for the display usage # 1
-              increase: this.round(n.data.revenue_increase * 100, 1)
+              increase: this.round(n.data.revenue_increase_sug * 100, 1)
             }
           }).bind(this));
         },
@@ -869,6 +867,8 @@
           this.showError = false;
 
           var url = this.getApiUrl(isHead, groupby, orgId);
+
+          url = 'mock/asset-procurement-' + groupby  +'.json'
 
           return fetch(url, {
             accept: 'application/json',
