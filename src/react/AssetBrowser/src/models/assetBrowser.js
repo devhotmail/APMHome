@@ -151,7 +151,7 @@ function getDisplayName(key) {
 }
 
 export function formatKey(asset, dimension, ruler) {
-  // if (dimension === 'yoi') return '' + new Date(asset.get(dimension)).getFullYear()
+  if (dimension === 'yoi') return asset.get(dimension) + '年'
   if (ruler) {
     const range = ruler.get('ticks').reduce((prev, cur) => {
       if (cur > asset.get(dimension) && cur < prev[1]) prev[1] = cur
