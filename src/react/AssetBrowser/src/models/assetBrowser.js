@@ -127,12 +127,12 @@ function distributeColumns(width, num) {
   return res
 }
 
-export function formatPrice(price) {
+export function formatPrice(price, digits = 0) {
   // if (price >= 10000000) return `${Math.floor(price / 10000000)}千万`
   // if (price >= 1000000) return `${Math.floor(price / 1000000)}百万`
-  if (price >= 10000) return `${Math.floor(price / 10000)}万`
-  if (price >= 1000) return `${Math.floor(price / 1000)}千`
-  if (price >= 100) return `${Math.floor(price / 100)}百`
+  if (price >= 10000) return `${(price / 10000).toFixed(digits)}万`
+  if (price >= 1000) return `${(price / 1000).toFixed(digits)}千`
+  if (price >= 100) return `${(price / 100).toFixed(digits)}百`
 }
 
 function getDisplayName(key) {
