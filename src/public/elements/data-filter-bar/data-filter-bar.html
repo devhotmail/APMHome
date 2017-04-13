@@ -1,0 +1,206 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="import" href="../../bower_components/px-rangepicker/px-rangepicker.html">
+<link rel="import" href="../behavior/context.html">
+<link rel="import" href="../behavior/fetch-cached.html">
+<link rel="import" href="../web-utils/web-utils.html">
+<link rel="import" href="../web-services/web-services.html">
+<link rel="import" href="data-filter-bar-styles.html">
+
+<dom-module id="data-filter-bar">
+  <template>
+    <style include="data-filter-bar-styles"></style>
+    <div class="toolbar flex flex--row flex--left">
+      <div class="flex--item text--center">
+        <px-rangepicker
+          id="rangepicker"
+          range="{{range}}"
+          hide-time="true"
+          date-format="YYYY/MM/DD"
+          time-format="hh:mm:ss A"
+          preset-ranges="[[rangePresets]]"
+          show-buttons="true">
+        </px-rangepicker>
+      </div>
+      <template is="dom-if" if="[[isHead]]">
+        <div class="u-mh+ u-mb flex--item flex flex--row flex--middle">
+          <label class="flex--item" for="device-filter">科室</label>
+          <px-dropdown
+            id="dept-filter"
+            class="flex--item u-mh+"
+            display-value="{{deptName}}"
+            selected-key="{{dept}}">
+            <px-dropdown-content
+              class="px-dropdown-content"
+              max-cont-character-width="10"
+              extend-dropdown="true"
+              extend-dropdown-by="15"
+              items="[[deptOpts]]">
+            </px-dropdown-content>
+          </px-dropdown>
+        </div>
+      </template>
+      <div class="u-mh+ u-mb flex--item flex flex--row flex--middle">
+        <label class="flex--item" for="device-filter">设备类型</label>
+        <px-dropdown
+          id="type-filter"
+          class="flex--item u-mh+"
+          display-value="{{typeName}}"
+          selected-key="{{type}}">
+          <px-dropdown-content
+            class="px-dropdown-content"
+            max-cont-character-width="10"
+            extend-dropdown="true"
+            extend-dropdown-by="15"
+            items="[[typeOpts]]">
+          </px-dropdown-content>
+        </px-dropdown>
+      </div>
+    </div>
+  </template>
+  <script>
+    define('data-filter-bar', [
+      'behavior/context',
+      'behavior/fetch-cached',
+      'web-utils',
+      'web-services'
+    ], function(ContextBehavior, FetchCachedBehavior, WebUtils, WebServices) {
+      var DATE_FORMAT = 'YYYY-MM-DD';
+
+      Polymer({
+        is: 'data-filter-bar',
+        properties: {
+          from: {
+            type: String,
+            notify: true
+          },
+          to: {
+            type: String,
+            notify: true
+          },
+          dept: {
+            type: String,
+            notify: true
+          },
+          type: {
+            type: String,
+            notify: true
+          },          
+          user: Object,
+          // private properties
+          isHead: {
+            type: Boolean,
+            computed: '_chargeIsHead(user)'
+          },
+          typeOpts: Array,
+          deptOpts: Array,         
+          deptName: String,
+          typeName: String,
+          _queryUrl: {
+            type: String,
+            computed: '_getQueryUrl()'
+          },
+          rangePresets: {
+            type: Array,
+            value: function() {
+              return WebServices.getRangePresets()
+            }
+          }
+        },
+        observers: [
+          'setToSimpleDate(range)',
+          'fromSimpleDate(from, to)',
+          'saveOptsInURI("type", type)',
+          'saveOptsInURI("dept", dept)',
+          'saveOptsInURI("from", from)',
+          'saveOptsInURI("to", to)'
+        ],
+        behaviors: [
+          ContextBehavior,
+          FetchCachedBehavior
+        ],
+        _chargeIsHead: function(user) {
+          return user.isHead === 'true';
+        },
+        ready: function() {
+          var _this = this;
+
+          var defaultVal = { key: 0, val: '全部'};
+          // setup data from location hash
+          this.restoreOptsFromURI([
+            'dept', 'type', 'from', 'to'
+          ]);
+
+          // init default time range
+          if (!this.from) {
+            this.set('from', moment().subtract(1, 'y').format(DATE_FORMAT));
+            this.set('to', moment().format(DATE_FORMAT));
+          }
+
+          fetch('mock/dept-filter-options.json')
+          .then(res => res.json())
+          .then(function(list) {
+            list = [defaultVal].concat(list);
+            _this.deptOpts = list;
+            if (!_this.dept) {
+              _this.dept = defaultVal.key;
+              _this.deptName = defaultVal.val;
+            } else {
+              _this.deptName = _this.getName(_this.dept, list);
+            }
+          });
+
+          this.fetchPage(this._getQueryUrl()).then(function(res) {
+            var list = Object.keys(res).map(function(i) { return {val: res[+i], key: i}; });
+            list = [defaultVal].concat(list);
+            _this.typeOpts = list;
+            if (!_this.type) {
+              _this.type = defaultVal.key;
+              _this.typeName = defaultVal.val;
+            } else {
+              _this.typeName = _this.getName(_this.type, list);
+            }
+          });
+        },
+        getName: function(key, options) {
+          var result = WebUtils.find(options, function(item) {
+            return item.key == key;
+          });
+          return result ? result.val : options[0].val;
+        },
+        _getQueryUrl: function() {
+          return URI(this.resolveApiUrl('/api/msg')).query({
+            'type': 'assetGroup',
+          }).toString();
+        },
+        setToSimpleDate: function(range) {
+          if (!this.from) {
+            return;
+          }
+          this.set('from', moment(range.from).format(DATE_FORMAT));
+          this.set('to', moment(range.to).format(DATE_FORMAT));
+        },
+        fromSimpleDate: function(from, to) {
+          this.set('range', {
+            from: moment(from).toISOString(),
+            to: moment(to).toISOString(),
+          });
+        },
+        restoreOptsFromURI: function(propList) {
+          var options = URI().query(URI().fragment()).query(true);
+          if (!this.isHead) options.dept = this.user.orgId;
+          var _this = this;
+          propList.forEach(function(prop) {
+            if (prop in options) _this.set(prop, options[prop]);
+          });
+        },
+        saveOptsInURI: function(name, val) {
+          if (!val) return;
+          var options = URI().query(URI().fragment()).query(true);
+          options[name] = val;
+          location.hash = '#' + URI().query(options).query();
+        }      
+      });
+    });
+  </script>
+</dom-module>

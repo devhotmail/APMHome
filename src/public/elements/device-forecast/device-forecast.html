@@ -1,0 +1,46 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../parallel-coordinates-chart/parallel-coordinates-chart.html"/>
+<link rel="import" href="../data-filter-bar/data-filter-bar.html"/>
+<link rel="import" href="../device-pagination/device-pagination.html"/>
+
+<link rel="import" href="../behavior/context.html">
+<link rel="import" href="../behavior/fetch-cached.html">
+<link rel="import" href="../uri/uri.html">
+<link rel="import" href="../modernizr/modernizr.html"/>
+<link rel="import" href="../fastclick/fastclick.html"/>
+<link rel="import" href="../vh-buggyfill/vh-buggyfill.html"/>
+<link rel="import" href="device-forecast-styles.html">
+
+<dom-module id="device-forecast">
+  <template>
+    <style include="device-forecast-styles"></style>
+    <data-filter-bar
+      from="{{from}}"
+      to="{{to}}"
+      dept="{{dept}}"
+      user="{{user}}"
+      filter-by="{{filterBy}}"
+      type="{{type}}"></data-filter-bar>
+    <parallel-coordinates-chart
+      from="{{from}}"
+      to="{{to}}"
+      filter-by="{{filterBy}}"
+      sort-by="{{sortBy}}"
+      dept="{{dept}}"
+      type="{{type}}"></parallel-coordinates-chart>
+  </template>
+  <script>
+    define('device-forecast', [
+      'behavior/context',
+      'behavior/fetch-cached'
+    ], function(ContextBehavior, FetchCachedBehavior) {
+      Polymer({
+        is: 'device-forecast',
+        behaviors: [
+          ContextBehavior,
+          FetchCachedBehavior
+        ]
+      })
+    })    
+  </script>
+</dom-module>

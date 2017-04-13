@@ -1,0 +1,24 @@
+<script>
+  define('web-utils', function() {
+    return {
+      findIndex: function(array, callback) {
+        var k = 0;
+        while(k < array.length) {
+          var value = array[k];
+          if (callback(value)) return k;
+          k++;
+        }
+        return -1;
+      },
+      find: function(array, callback) {
+        var k = 0;
+        while(k < array.length) {
+          var value = array[k];
+          if (callback(value)) return value;
+          k++;
+        }
+        return undefined;
+      }      
+    }
+  });
+</script>
