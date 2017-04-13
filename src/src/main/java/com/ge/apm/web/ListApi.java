@@ -154,56 +154,59 @@ public class ListApi {
   private Double calculateTicks(Observable<Tuple20<Integer, String, Integer, Integer, String, Double, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>> asset_info,
       Integer key){
 
+    if (asset_info.isEmpty().toBlocking().single())
+      return 0.0;
+
     switch(key) {
 
     case 10:
       return Math.min(
-          Option.of(OperatorMinMax.min( ( Observable<Integer>) asset_info.map(asset -> asset.getElement7())).toBlocking().single()).getOrElse(0) * 1.0,
-          Option.of(OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement15())).toBlocking().single()).getOrElse(0.0) );
+          OperatorMinMax.min( ( Observable<Integer>) asset_info.map(asset -> asset.getElement7())).toBlocking().single() * 1.0,
+          OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement15())).toBlocking().single() );
     case 11:
       return Math.max(
-          Option.of(OperatorMinMax.max( ( Observable<Integer>) asset_info.map(asset -> asset.getElement7())).toBlocking().single()).getOrElse(0) * 1.0,
-          Option.of(OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement15())).toBlocking().single()).getOrElse(0.0) );
+          OperatorMinMax.max( ( Observable<Integer>) asset_info.map(asset -> asset.getElement7())).toBlocking().single() * 1.0,
+          OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement15())).toBlocking().single() );
     case 20:
       return Math.min(
-          Option.of(OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement6())).toBlocking().single()).getOrElse(0.0),
-          Option.of(OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement14())).toBlocking().single()).getOrElse(0.0) );
+          OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement6())).toBlocking().single(),
+          OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement14())).toBlocking().single() );
     case 21:
       return Math.max(
-          Option.of(OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement6())).toBlocking().single()).getOrElse(0.0),
-          Option.of(OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement14())).toBlocking().single()).getOrElse(0.0) );
+          OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement6())).toBlocking().single(),
+          OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement14())).toBlocking().single() );
     case 30:
       return Math.min(
-          Option.of(OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement8())).toBlocking().single()).getOrElse(0.0),
-          Option.of(OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement16())).toBlocking().single()).getOrElse(0.0) );
+          OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement8())).toBlocking().single(),
+          OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement16())).toBlocking().single() );
     case 31:
       return Math.max(
-          Option.of(OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement8())).toBlocking().single()).getOrElse(0.0),
-          Option.of(OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement16())).toBlocking().single()).getOrElse(0.0) );
+          OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement8())).toBlocking().single(),
+          OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement16())).toBlocking().single() );
     case 40:
       return Math.min(
-          Option.of(OperatorMinMax.min( ( Observable<Integer>) asset_info.map(asset -> asset.getElement10())).toBlocking().single()).getOrElse(0) * 1.0,
-          Option.of(OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement18())).toBlocking().single()).getOrElse(0.0) );
+          OperatorMinMax.min( ( Observable<Integer>) asset_info.map(asset -> asset.getElement10())).toBlocking().single() * 1.0,
+          OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement18())).toBlocking().single() );
     case 41:
       return Math.max(
-          Option.of(OperatorMinMax.max( ( Observable<Integer>) asset_info.map(asset -> asset.getElement10())).toBlocking().single()).getOrElse(0) * 1.0,
-          Option.of(OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement18())).toBlocking().single()).getOrElse(0.0) );
+          OperatorMinMax.max( ( Observable<Integer>) asset_info.map(asset -> asset.getElement10())).toBlocking().single() * 1.0,
+          OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement18())).toBlocking().single() );
     case 50:
       return Math.min(
-          Option.of(OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement9())).toBlocking().single()).getOrElse(0.0),
-          Option.of(OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement17())).toBlocking().single()).getOrElse(0.0) );
+          OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement9())).toBlocking().single(),
+          OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement17())).toBlocking().single() );
     case 51:
       return Math.max(
-          Option.of(OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement9())).toBlocking().single()).getOrElse(0.0),
-          Option.of(OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement17())).toBlocking().single()).getOrElse(0.0) );
+          OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement9())).toBlocking().single(),
+          OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement17())).toBlocking().single() );
     case 60:
       return Math.min(
-          Option.of(OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement12())).toBlocking().single()).getOrElse(0.0),
-          Option.of(OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement19())).toBlocking().single()).getOrElse(0.0) );
+          OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement12())).toBlocking().single(),
+          OperatorMinMax.min( ( Observable<Double>) asset_info.map(asset -> asset.getElement19())).toBlocking().single() );
     case 61:
       return Math.max(
-          Option.of(OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement12())).toBlocking().single()).getOrElse(0.0),
-          Option.of(OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement19())).toBlocking().single()).getOrElse(0.0) );
+          OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement12())).toBlocking().single(),
+          OperatorMinMax.max( ( Observable<Double>) asset_info.map(asset -> asset.getElement19())).toBlocking().single() );
     default:
       return 0.0;
     }
@@ -315,20 +318,23 @@ public class ListApi {
         Observable<Tuple20<Integer, String, Integer, Integer, String, Double, Double, Integer, Double, Double, Integer, Double, Double, Integer, Double, Double, Double, Double, Double, Double>> asset_info,
         Integer key) {
 
+	if (asset_info.isEmpty().toBlocking().single())
+		return 0.0;
+	    
     switch(key) {
 
     case 1:
-      return Option.of(OperatorSum.sumIntegers(asset_info.map(asset -> asset.getElement7()) ).toBlocking().single()*1.0 ).getOrElse(0.0);
+      return OperatorSum.sumIntegers(asset_info.map(asset -> asset.getElement7()) ).toBlocking().single()*1.0;
     case 2:
-      return Option.of(OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement6()) ).toBlocking().single() ).getOrElse(0.0);
+      return OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement6()) ).toBlocking().single();
     case 3:
-      return Option.of(OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement8()) ).toBlocking().single() ).getOrElse(0.0);
+      return OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement8()) ).toBlocking().single();
     case 4:
-      return Option.of(OperatorSum.sumIntegers(asset_info.map(asset -> asset.getElement10()) ).toBlocking().single()*1.0 ).getOrElse(0.0);
+      return OperatorSum.sumIntegers(asset_info.map(asset -> asset.getElement10()) ).toBlocking().single()*1.0;
     case 5:
-      return Option.of(OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement9()) ).toBlocking().single()/asset_info.count().toBlocking().single() ).getOrElse(0.0);
+      return OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement9()) ).toBlocking().single()/asset_info.count().toBlocking().single();
     default:
-      return Option.of(OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement12()) ).toBlocking().single() ).getOrElse(0.0);
+      return OperatorSum.sumDoubles(asset_info.map(asset -> asset.getElement12()) ).toBlocking().single();
 
     }
 
