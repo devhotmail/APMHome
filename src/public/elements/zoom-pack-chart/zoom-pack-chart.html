@@ -116,11 +116,10 @@
       
       // Text for overload assets
       selection.each(function(d) {
+        var usage_sum = d.data.usage_sum;
         var overload = 0;
-        if (Array.isArray(d.children)) {
-          overload = d.children.filter(function(n) {
-            return n.data.usage > 1
-          }).length;
+        if (Array.isArray(usage_sum) && usage_sum[1]) {
+          overload = usage_sum[1];
         }
 
         if (overload > 0) {
