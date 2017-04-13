@@ -103,7 +103,10 @@
           rangePresets: {
             type: Array,
             value: function() {
-              return WebServices.getRangePresets()
+              return WebServices.getRangePresets([
+                 'oneWeek', 'oneMonth', 'oneYear', 'currentMonth',
+                 'yearBeforeLast', 'lastYear', 'currentYear'
+              ])
             }
           }
         },
