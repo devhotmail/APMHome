@@ -1,9 +1,12 @@
 import React from 'react'
+import { Select } from 'antd'
 import { is } from 'immutable'
 import { connect } from 'dva/mobile'
 import Chart from '#/containers/Chart'
 import { formatKey } from '#/models/assetBrowser'
 import styles from './index.scss'
+
+const { Option } = Select
 
 
 class ImmutableComponent extends React.Component {
@@ -37,6 +40,12 @@ class ImmutableComponent extends React.Component {
   rulers: assetBrowser.get('rulers')
 }))
 class Header extends ImmutableComponent {
+  onOrderByChange = e => {
+    this.props.dispatch({
+      type: 'assetBrowser/orderBy/set',
+      payload: e
+    })
+  }
   removeLastFilter = () => {
     this.props.dispatch({
       type: 'assetBrowser/filters/removeLast'
@@ -68,10 +77,20 @@ class Header extends ImmutableComponent {
           }
         </div>
 
-        <div className={styles['stats']}>
-          <span className={styles['current']}>当前设备：</span>
-          <span className={styles['number']}>{assets.size}</span>
-          <span className={styles['unit']}>台</span>
+        <div className={styles['right']}>
+          <div className={styles['stats']}>
+            <span className={styles['current']}>当前设备：</span>
+            <span className={styles['number']}>{assets.size}</span>
+            <span className={styles['unit']}>台</span>
+          </div>
+          <Select
+            className={styles['select']}
+            dropdownClassName={styles['dropdown']}
+            defaultValue="price"
+            onChange={this.onOrderByChange}>
+            <Option value="price">按分类平均价值排序</Option>
+            <Option value="devices">按分类设备数量排序</Option>
+          </Select>
         </div>
       </div>
     )

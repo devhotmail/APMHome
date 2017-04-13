@@ -163,10 +163,10 @@ export function formatKey(asset, dimension, ruler) {
   return asset.get(dimension)
 }
 
-function getClusters(dimension, ruler, assets, activeAssetId, hoveredAssetId) {
+function getClusters(dimension, ruler, assets, activeAssetId, hoveredAssetId, orderBy) {
   const map = assets.groupBy(asset => formatKey(asset, dimension, ruler))
 
-  const list = map.entrySeq().map(([key, value]) => Immutable.fromJS({
+  let list = map.entrySeq().map(([key, value]) => Immutable.fromJS({
     key,
     displayName: getDisplayName(key),
     assetActive: !!activeAssetId,
@@ -175,10 +175,25 @@ function getClusters(dimension, ruler, assets, activeAssetId, hoveredAssetId) {
       return asset.withMutations(asset => {
         asset
         .set('active', id === activeAssetId)
-        .set('hovered', id === hoveredAssetId)
+        // .set('hovered', id === hoveredAssetId)
       })
-    })
-  })).sort((a, b) => b.get('children').size - a.get('children').size)
+    }).sort((a, b) => b.get('price') - a.get('price'))
+  }))
+
+  // debugger
+  if (orderBy === 'devices') {
+    list = list.sort((a, b) => b.get('children').size - a.get('children').size)
+  } else if (orderBy === 'price') {
+    function getAveragePrice(children) {
+      return children.reduce((prev, cur) => {
+        let price = cur.get('price', 0)
+        if (price === -1) price = 0
+        return prev + price
+      }, 0) / children.size
+    }
+
+    list = list.sort((a, b) => getAveragePrice(b.get('children')) - getAveragePrice(a.get('children')))
+  }
 
   const res = list.reduce((prev, cur) => {
     const prevCluster = prev.get(-1)
@@ -230,6 +245,7 @@ export default {
   namespace: 'assetBrowser',
   state: Immutable.fromJS({
     loading: true,
+    orderBy: 'price',
     filters: [],
     hoveredAssetId: null,
     activeAssetId: null,
@@ -297,7 +313,8 @@ export default {
           'assetBrowser/viewBox/update',
           'assetBrowser/filters/removeLast',
           'assetBrowser/filters/toggle',
-          'assetBrowser/filters/remove'
+          'assetBrowser/filters/remove',
+          'assetBrowser/orderBy/set'
         ],
         function* (action) {
           const assetBrowser = yield select(state => state.assetBrowser)
@@ -315,6 +332,7 @@ export default {
           const activeAssetId = assetBrowser.get('activeAssetId')
           const hoveredAssetId = assetBrowser.get('hoveredAssetId')
           const width = assetBrowser.getIn(['viewBox', 'width'])
+          const orderBy = assetBrowser.get('orderBy')
           let columns = assetBrowser.get('columns')
 
           const columnXs = distributeColumns(width, dimensions.size)
@@ -328,7 +346,8 @@ export default {
                 rulers.find(ruler => ruler.get('dimension') === dimension),
                 assets,
                 activeAssetId,
-                hoveredAssetId
+                hoveredAssetId,
+                orderBy
               )
             }))
           })
@@ -356,6 +375,10 @@ export default {
     }, { type: 'watcher'}]
   },
   reducers: {
+    ['orderBy/set'](state, { payload }) {
+      if (state.get('orderBy') === payload) return state
+      else return state.set('orderBy', payload)
+    },
     ['data/get'](state) {
       return state.set('loading', true)
     },
@@ -388,6 +411,10 @@ export default {
     },
     ['maxPage/update'](state, { payload }) {
       return state.set('maxPage', payload)
+    },
+    ['asset/hover/set'](state, { payload }) {
+      if (state.get('hoveredAssetId') === payload) return state
+      return state.set('hoveredAssetId', payload)
     },
     ['asset/clicked'](state, { payload }) {
       return state.update('activeAssetId', val => val === payload ? null : payload)

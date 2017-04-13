@@ -1,4 +1,4 @@
-function getBlength(str) {
+export function getBlength(str) {
   for (var i = str.length, n = 0; i--;) {
     n += str.charCodeAt(i) > 255 ? 2 : 1;
   }
