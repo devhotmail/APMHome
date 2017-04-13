@@ -256,7 +256,15 @@ export default {
   },
   effects: {
     *['data/get'](_, { put, call, select }) {
-      const promise = yield call(axios, process.env.NODE_ENV === 'production' ? '/api/assets' : '/geapm/api/assets')
+      const params = {}
+      const isHead = JSON.parse(document.querySelector('#user-context #isHead').value)
+      if (!isHead) params.dept = document.querySelector('#user-context #orgId').value
+
+      const promise = yield call(
+        axios.get,
+        process.env.NODE_ENV === 'production' ? '/api/assets' : '/geapm/api/assets',
+        { params }
+      )
       try {
         const { data } = yield promise
         yield put({
