@@ -18,6 +18,8 @@ import rx.Observable;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class ProfitService {
@@ -46,6 +48,10 @@ public class ProfitService {
 
   public static Tuple2<String, String> descProfits(Observable<Tuple4<Integer, String, Money, Money>> items) {
     return items.reduce(CNY.O, (initial, tuple) -> initial.add(tuple._4)).map(CNY::desc).toBlocking().single();
+  }
+
+  public static Money predictRevenue() {
+    return Option.of(LocalDate.now()).map(y -> CNY.money(15284.13D * ChronoUnit.DAYS.between(LocalDate.of(2000, 1, 1), y.plusYears(1)) - 70223735.95D)).getOrElse(CNY.O);
   }
 
   @Cacheable(cacheNames = "springCache", key = "'profitService.findRvnCstByYear.'+#siteId+'.'+#hospitalId + '.year'+#year")
