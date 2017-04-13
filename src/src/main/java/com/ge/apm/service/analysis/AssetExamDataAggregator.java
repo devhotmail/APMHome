@@ -93,7 +93,7 @@ public class AssetExamDataAggregator {
         if(asmUpdateList.size()>0){
             logger.info("gl: there are records to be updated, how many? --->"+asmUpdateList.size());
             for(AssetSummit asm :asmUpdateList){
-
+                System.out.println("gl: assetId:  "+asm.getAssetId()+" on created date: "+asm.getCreated()+"---to be updated with expose ,inject film on "+asm.getRevenue()+","+asm.getExposeCount()+","+ asm.getInjectCount() +","+ asm.getFilmCount());
                 assetSummitRepository.updateAssetSummit(asm.getExposeCount(),asm.getInjectCount(),asm.getFilmCount(),asm.getId());
             }
         }
