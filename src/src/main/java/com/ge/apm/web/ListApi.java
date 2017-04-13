@@ -63,11 +63,7 @@ public class ListApi {
     						mergeQueryData(
     								ListService.queryForBasic(site_id, hospital_id, from, to),
     								ListService.queryForOp(site_id, hospital_id, from, to),
-    								ListService.queryForBm(site_id, hospital_id, from, to))),
-    				queryForTick(
-    						ListService.queryForMinMax(site_id, hospital_id, dept, type, from, to),
-    						ListService.queryForBmTick(site_id, hospital_id, dept, type, from, to),
-    						to.compareTo(from)));
+    								ListService.queryForBm(site_id, hospital_id, from, to))));
     	else return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Invalid search interval"));
     else
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Bad Request"));
@@ -320,7 +316,7 @@ public class ListApi {
 
 	if (asset_info.isEmpty().toBlocking().single())
 		return 0.0;
-	    
+
     switch(key) {
 
     case 1:
