@@ -148,7 +148,7 @@
                       当前平均使用率预测:
                       <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
                     </template>
-                    <template is="dom-if" if="[[isArray(focus.data.suggestions)]]">
+                    <template is="dom-if" if="[[hasSugs(focus.data.suggestions)]]">
                       <template is="dom-repeat" items="[[focus.data.suggestions]]">
                         <template is="dom-if" if="[[item.title]]">
                           <div>[[item.title]]</div>
@@ -170,26 +170,9 @@
                           </template>
                         </div>
                       </template>
-                      <div class="divider"></div>
                     </template>
                   </div>
                 </template>
-                <div class="legends">
-                  <div class="title u-mt- u-mb-">图示说明</div>
-                  <div class="legend">
-                    <i class="dewicon-circle-high" style="color:#b3b3b3"></i>
-                    <span class="legend-tip">平均使用率预测(%)</span>
-                  </div>
-                  <div class="legend">
-                    <i class="dewicon-circle-full" style="color:#e26d26"></i>
-                    <span class="legend-tip">单台使用率预测&gt;100%</span>
-                  </div>
-                  <div class="legend">
-                    <i class="dewicon-circle-low" style="color:#ebda51"></i>
-                    <span class="legend-tip">单台使用率预测&lt;30%</span>
-                  </div>
-                  <div class="legend">球大小与设备利润预测相关</div>
-                </div>
               </div>
             </template>
             <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
@@ -296,6 +279,23 @@
                 </template>
               </template>
             </template>
+            <div class="divider"></div>
+            <div class="legends">
+              <div class="title u-mt- u-mb-">图示说明</div>
+              <div class="legend">
+                <i class="dewicon-circle-high" style="color:#b3b3b3"></i>
+                <span class="legend-tip">平均使用率预测(%)</span>
+              </div>
+              <div class="legend">
+                <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                <span class="legend-tip">单台使用率预测&gt;100%</span>
+              </div>
+              <div class="legend">
+                <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                <span class="legend-tip">单台使用率预测&lt;30%</span>
+              </div>
+              <div class="legend">球大小与设备利润预测相关</div>
+            </div>
           </div>
         </div>
       </template>
