@@ -100,7 +100,7 @@
       .text(function(d) {
         var maxLen = constants.textLength;
         var name = d.data.name;
-        if (name && name.length < maxLen) {
+        if (!name || (name && name.length < maxLen)) {
           return name;
         } else {
           return name.slice(0, maxLen - 1) + '...';
