@@ -328,8 +328,10 @@ class Cluster extends ImmutableComponent {
         </text>
         <text
           style={{
+            cursor: 'pointer',
             fill: COLORS[columnIndex]
           }}
+          onClick={this.toggleFilter}
           textAnchor="end"
           x="0"
           y={textY}
