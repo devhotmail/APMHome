@@ -44,27 +44,27 @@
             endDateTime: now.clone().endOf('month')
           },
           yearBeforeLast: {
-            displayText: '前年',
+            displayText: now.clone().startOf('year').subtract(2, 'year').year(),
             startDateTime: now.clone().startOf('year').subtract(2, 'year'),
             endDateTime: now.clone().endOf('year').subtract(2, 'year')
           },
           lastYear: {
-            displayText: '去年',
+            displayText: now.clone().startOf('year').subtract(1, 'year').year(),
             startDateTime: now.clone().startOf('year').subtract(1, 'year'),
             endDateTime: now.clone().endOf('year').subtract(1, 'year')
           },
           currentYear: {
-            displayText: '今年',
+            displayText: now.clone().startOf('year').year(),
             startDateTime: now.clone().startOf('year'),
             endDateTime: now.clone().endOf('year')
           },
           nextYear: {
-            displayText: '明年',
+            displayText: now.clone().startOf('year').add(1, 'year').year(),
             startDateTime: now.clone().startOf('year').add(1, 'year'),
             endDateTime: now.clone().endOf('year').add(1, 'year')
           },
           yearAfterNext: {
-            displayText: '后年',
+            displayText: now.clone().startOf('year').add(2, 'year').year(),
             startDateTime: now.clone().startOf('year').add(2, 'year'),
             endDateTime: now.clone().endOf('year').add(2, 'year')
           }
