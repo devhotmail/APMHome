@@ -77,86 +77,73 @@
       }
     }
 
-    function renderText(adviceIncluded) {
-      return function (selection) {
-        // Text for asset name display
-        selection.append('text')
-        // .attr('dy', '-0.35em')
-        .attr('class', 'asset-name')
-        .attr('font-size', '1em')
-        .text(function(d) {
-          var maxLen = constants.textLength;
-          var name = d.data.name;
-          if (name && name.length < maxLen) {
-            return name;
-          } else {
-            return name.slice(0, maxLen - 1) + '...';
-          }
-        })
-        .call(commonTextAttr);
+    function renderText(selection) {
+      // Text for asset name display
+      selection.append('text')
+      // .attr('dy', '-0.35em')
+      .attr('class', 'asset-name')
+      .attr('font-size', '1em')
+      .text(function(d) {
+        var maxLen = constants.textLength;
+        var name = d.data.name;
+        if (name && name.length < maxLen) {
+          return name;
+        } else {
+          return name.slice(0, maxLen - 1) + '...';
+        }
+      })
+      .call(commonTextAttr);
 
-        // Text for usage display
-        var usageTxt = selection.append('text')
-        .attr('y', '1.1em')
-        .attr('font-size', '0.8em')
-        .call(commonTextAttr);
+      // Text for usage display
+      var usageTxt = selection.append('text')
+      .attr('y', '1.1em')
+      .attr('font-size', '0.8em')
+      .call(commonTextAttr);
 
-        // icon: fa-adjust
-        usageTxt
-        .append('tspan')
-        .attr('font-family','DewIcon')
-        .attr('font-size', '0.7em')
-        .text('\uE003' + ' ');
+      // icon: fa-adjust
+      usageTxt
+      .append('tspan')
+      .attr('font-family','DewIcon')
+      .attr('font-size', '0.7em')
+      .text('\uE003' + ' ');
 
-        usageTxt
-        .append('tspan')
-        .attr('dy', '-0.05em')
-        .text(function(d) {
-          return parseInt(d.data.usage * 100) + '%';
-        });
-        
-        // Text for overload assets
-        selection.each(function(d) {
-          var overload = 0;
-          if (Array.isArray(d.children)) {
-            overload = d.children.filter(function(n) {
-              return n.data.usage > 1
-            }).length;
-          }
+      usageTxt
+      .append('tspan')
+      .attr('dy', '-0.05em')
+      .text(function(d) {
+        return parseInt(d.data.usage * 100) + '%';
+      });
+      
+      // Text for overload assets
+      selection.each(function(d) {
+        var overload = 0;
+        if (Array.isArray(d.children)) {
+          overload = d.children.filter(function(n) {
+            return n.data.usage > 1
+          }).length;
+        }
 
-          if (overload > 0) {
-            var overloadTxt = d3.select(this)
-            .append('text')
-            .attr('y', '2em')
-            .attr('font-size', '0.8em')                
-            .call(commonTextAttr);
+        if (overload > 0) {
+          var overloadTxt = d3.select(this)
+          .append('text')
+          .attr('y', '2em')
+          .attr('font-size', '0.8em')                
+          .call(commonTextAttr);
 
-            // icon: fa-clock-o
-            overloadTxt
-            .append('tspan')
-            .attr('font-family','DewIcon')
-            .attr('font-size', '0.7em')
-            .style('fill', '#e26d26')
-            .text('\uE002' + ' ');
+          // icon: fa-clock-o
+          overloadTxt
+          .append('tspan')
+          .attr('font-family','DewIcon')
+          .attr('font-size', '0.7em')
+          .style('fill', '#e26d26')
+          .text('\uE002' + ' ');
 
-            overloadTxt
-            .append('tspan')
-            .attr('dy', '-0.05em')
-            .text(overload + '台');
-          }
-
-          // Advice text render here
-          if (adviceIncluded && d.data.suggestions && d.data.suggestions.length) {
-            var overloadTxt = d3.select(this)
-            .append('text')
-            // 1em + 0.8em + 0.8em
-            .attr('y', overload ? '2.6em' : '1.8em')
-            .attr('font-size', '1em')
-            .text(d.data.suggestions[0].title)
-            .call(commonTextAttr);
-          }
-        })
-      }
+          overloadTxt
+          .append('tspan')
+          .attr('dy', '-0.05em')
+          .text(overload + '台');
+        }
+      });
     }
 
     Polymer({
@@ -536,7 +523,7 @@
             if (d === focus && !d.children) return 1;
             return 0;
           })
-          .call(renderText(false));
+          .call(renderText);
 
           if (d.children) {
             // Top text
@@ -552,7 +539,7 @@
               if (d === focus) return 1;
               return 0;
             })
-            .call(renderText(true));
+            .call(renderText);
           }
         });
 
