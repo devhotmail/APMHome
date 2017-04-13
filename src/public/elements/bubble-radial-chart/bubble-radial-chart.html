@@ -77,7 +77,7 @@
           var radius = node.circle.r;
           var locationX = -parseInt(config.width) / 2;
           var locationY = -parseInt(config.height) / 2;
-          var fillPercent = Math.max(config.minValue, Math.min(config.maxValue, +node.data.profit_label)) / config.maxValue;
+          var fillPercent = data.profit / data.revenue;
           var waveHeightScale;
           if (config.waveHeightScaling) {
             waveHeightScale = d3.scaleLinear()
