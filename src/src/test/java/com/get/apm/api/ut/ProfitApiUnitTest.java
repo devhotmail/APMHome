@@ -1,6 +1,8 @@
 package com.get.apm.api.ut;
 
 
+import com.ge.apm.service.api.ProfitService;
+import com.ge.apm.service.utils.CNY;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.net.UrlEscapers;
 import javaslang.Tuple;
@@ -10,6 +12,9 @@ import org.assertj.core.util.Strings;
 import org.junit.Test;
 import rx.Observable;
 import rx.observables.JoinObservable;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class ProfitApiUnitTest {
 
@@ -34,6 +39,12 @@ public class ProfitApiUnitTest {
   @Test
   public void testSmallerString() {
     Assertions.assertThat(Option.of(Tuple.of("abc", "a")).map(t -> !Strings.isNullOrEmpty(t._2) && t._2.length() > t._1.length() ? t._2 : t._1).getOrElse("")).isEqualToIgnoringCase("abc");
+  }
+
+  @Test
+  public void testPredictRevenue() {
+    Assertions.assertThat(Option.of(LocalDate.parse("2017-12-31")).map(y -> CNY.money(15284.13D * ChronoUnit.DAYS.between(LocalDate.of(2000, 1, 1), y) - 70223735.95D)).getOrElse(CNY.O).getNumber().longValue()).isEqualTo(Double.valueOf(30254134.67D).longValue());
+    Assertions.assertThat(ProfitService.predictRevenue()).isGreaterThan(CNY.money(30254134.67D));
   }
 
 }
