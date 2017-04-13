@@ -35,25 +35,62 @@
         cursor: pointer;
       }
     }
-    .stats  {
-      .current {
-        font-size: 15px;
-        vertical-align: top;
-        position: relative;
-        top: 0.2em;
+    .right {
+      display: flex;
+      align-items: center;
+      .stats  {
+        .current {
+          font-size: 15px;
+          vertical-align: top;
+          position: relative;
+          top: 0.2em;
+        }
+        .number {
+          font-size: 50px;
+          vertical-align: middle;
+          line-height: 1;
+        }
+        .unit {
+          font-size: 20px;
+          vertical-align: bottom;
+          position: relative;
+          margin-left: 0.5em;
+          bottom: 0.2em;
+        }
       }
-      .number {
-        font-size: 50px;
-        vertical-align: middle;
-        line-height: 1;
-      }
-      .unit {
-        font-size: 20px;
-        vertical-align: bottom;
-        position: relative;
-        margin-left: 0.5em;
-        bottom: 0.2em;
+      .select {
+        margin-left: 2em;
+        min-width: 12em;
+        font-size: 14px;
+        :global .ant-select-selection {
+          height: 34px;
+          border-radius: 17px;
+          background-color: transparent;
+          border: 1px solid #848484;
+          box-shadow: none!important;
+          .ant-select-selection__rendered {
+            line-height: 32px;
+            .ant-select-selection-selected-value {
+              padding-left: 0.5em;
+            }
+          }
+        }
       }
     }
+  }
+}
+
+.dropdown {
+  background: #eaeaea;
+  border-radius: 17px;
+  box-shadow: none;
+  border: 1px solid #848484;
+  font-size: 14px;
+  :global .ant-select-dropdown-menu-item-selected,
+  :global .ant-select-dropdown-menu-item-selected:hover,
+  :global .ant-select-dropdown-menu-item-active,
+  :global .ant-select-dropdown-menu-item:hover {
+    background: transparent;
+    color: #5b84d7;
   }
 }

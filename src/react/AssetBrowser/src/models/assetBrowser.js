@@ -127,12 +127,12 @@ function distributeColumns(width, num) {
   return res
 }
 
-export function formatPrice(price) {
+export function formatPrice(price, digits = 0) {
   // if (price >= 10000000) return `${Math.floor(price / 10000000)}千万`
   // if (price >= 1000000) return `${Math.floor(price / 1000000)}百万`
-  if (price >= 10000) return `${Math.floor(price / 10000)}万`
-  if (price >= 1000) return `${Math.floor(price / 1000)}千`
-  if (price >= 100) return `${Math.floor(price / 100)}百`
+  if (price >= 10000) return `${(price / 10000).toFixed(digits)}万`
+  if (price >= 1000) return `${(price / 1000).toFixed(digits)}千`
+  if (price >= 100) return `${(price / 100).toFixed(digits)}百`
 }
 
 function getDisplayName(key) {
@@ -151,7 +151,7 @@ function getDisplayName(key) {
 }
 
 export function formatKey(asset, dimension, ruler) {
-  // if (dimension === 'yoi') return '' + new Date(asset.get(dimension)).getFullYear()
+  if (dimension === 'yoi') return asset.get(dimension) + '年'
   if (ruler) {
     const range = ruler.get('ticks').reduce((prev, cur) => {
       if (cur > asset.get(dimension) && cur < prev[1]) prev[1] = cur
@@ -163,10 +163,10 @@ export function formatKey(asset, dimension, ruler) {
   return asset.get(dimension)
 }
 
-function getClusters(dimension, ruler, assets, activeAssetId, hoveredAssetId) {
+function getClusters(dimension, ruler, assets, activeAssetId, hoveredAssetId, orderBy) {
   const map = assets.groupBy(asset => formatKey(asset, dimension, ruler))
 
-  const list = map.entrySeq().map(([key, value]) => Immutable.fromJS({
+  let list = map.entrySeq().map(([key, value]) => Immutable.fromJS({
     key,
     displayName: getDisplayName(key),
     assetActive: !!activeAssetId,
@@ -175,10 +175,25 @@ function getClusters(dimension, ruler, assets, activeAssetId, hoveredAssetId) {
       return asset.withMutations(asset => {
         asset
         .set('active', id === activeAssetId)
-        .set('hovered', id === hoveredAssetId)
+        // .set('hovered', id === hoveredAssetId)
       })
-    })
-  })).sort((a, b) => b.get('children').size - a.get('children').size)
+    }).sort((a, b) => b.get('price') - a.get('price'))
+  }))
+
+  // debugger
+  if (orderBy === 'devices') {
+    list = list.sort((a, b) => b.get('children').size - a.get('children').size)
+  } else if (orderBy === 'price') {
+    function getAveragePrice(children) {
+      return children.reduce((prev, cur) => {
+        let price = cur.get('price', 0)
+        if (price === -1) price = 0
+        return prev + price
+      }, 0) / children.size
+    }
+
+    list = list.sort((a, b) => getAveragePrice(b.get('children')) - getAveragePrice(a.get('children')))
+  }
 
   const res = list.reduce((prev, cur) => {
     const prevCluster = prev.get(-1)
@@ -230,6 +245,7 @@ export default {
   namespace: 'assetBrowser',
   state: Immutable.fromJS({
     loading: true,
+    orderBy: 'price',
     filters: [],
     hoveredAssetId: null,
     activeAssetId: null,
@@ -256,7 +272,15 @@ export default {
   },
   effects: {
     *['data/get'](_, { put, call, select }) {
-      const promise = yield call(axios, process.env.NODE_ENV === 'production' ? '/api/assets' : '/geapm/api/assets')
+      const params = {}
+      const isHead = JSON.parse(document.querySelector('#user-context #isHead').value)
+      if (!isHead) params.dept = document.querySelector('#user-context #orgId').value
+
+      const promise = yield call(
+        axios.get,
+        process.env.NODE_ENV === 'production' ? '/api/assets' : '/geapm/api/assets',
+        { params }
+      )
       try {
         const { data } = yield promise
         yield put({
@@ -289,7 +313,8 @@ export default {
           'assetBrowser/viewBox/update',
           'assetBrowser/filters/removeLast',
           'assetBrowser/filters/toggle',
-          'assetBrowser/filters/remove'
+          'assetBrowser/filters/remove',
+          'assetBrowser/orderBy/set'
         ],
         function* (action) {
           const assetBrowser = yield select(state => state.assetBrowser)
@@ -307,6 +332,7 @@ export default {
           const activeAssetId = assetBrowser.get('activeAssetId')
           const hoveredAssetId = assetBrowser.get('hoveredAssetId')
           const width = assetBrowser.getIn(['viewBox', 'width'])
+          const orderBy = assetBrowser.get('orderBy')
           let columns = assetBrowser.get('columns')
 
           const columnXs = distributeColumns(width, dimensions.size)
@@ -320,7 +346,8 @@ export default {
                 rulers.find(ruler => ruler.get('dimension') === dimension),
                 assets,
                 activeAssetId,
-                hoveredAssetId
+                hoveredAssetId,
+                orderBy
               )
             }))
           })
@@ -348,6 +375,10 @@ export default {
     }, { type: 'watcher'}]
   },
   reducers: {
+    ['orderBy/set'](state, { payload }) {
+      if (state.get('orderBy') === payload) return state
+      else return state.set('orderBy', payload)
+    },
     ['data/get'](state) {
       return state.set('loading', true)
     },
@@ -380,6 +411,10 @@ export default {
     },
     ['maxPage/update'](state, { payload }) {
       return state.set('maxPage', payload)
+    },
+    ['asset/hover/set'](state, { payload }) {
+      if (state.get('hoveredAssetId') === payload) return state
+      return state.set('hoveredAssetId', payload)
     },
     ['asset/clicked'](state, { payload }) {
       return state.update('activeAssetId', val => val === payload ? null : payload)

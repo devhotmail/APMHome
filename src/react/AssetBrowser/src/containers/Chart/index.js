@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom'
 import Immutable, { is } from 'immutable'
 import { connect } from 'dva/mobile'
 import { spring, Motion } from 'react-motion'
+import { Select } from 'antd'
 import WheelIndicator from 'wheel-indicator'
 import withClientRect from '#/HOC/withClientRect'
 import { trimString } from '#/utils'
 import { formatPrice, CLUSTER_SPACING, ASSET_HEIGHT, ASSET_WIDTH, COLORS, INACTIVE_COLORS } from '#/models/assetBrowser'
 import styles from './index.scss'
 
+const { Option } = Select
 
 class ImmutableComponent extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -41,27 +43,100 @@ class ImmutableComponent extends React.Component {
   filters: assetBrowser.get('filters')
 }))
 class ChartHeader extends ImmutableComponent {
-  removeFilter = dimension => () => {
+  static translation = {
+    'func': '按功能分组',
+    'type': '按类型',
+    'dept': '按科室',
+    'supplier': '按品牌',
+    'price': '按价值',
+    'yoi': '按时间'
+  }
+
+  toggleFilter = dimension => e => {
+    if (e === undefined) {
+      return this.props.dispatch({
+        type: 'assetBrowser/filters/remove',
+        payload: {
+          dimension
+        }
+      })
+    }
+    const [ value, displayName ] = JSON.parse(e)
     this.props.dispatch({
-      type: 'assetBrowser/filters/remove',
+      type: 'assetBrowser/filters/toggle',
       payload: {
-        dimension
+        dimension,
+        key: value,
+        displayName: displayName
       }
     })
   }
-  render() {
-    const translation = {
-      'func': '按功能分组',
-      'type': '按类型',
-      'dept': '按科室',
-      'supplier': '按品牌',
-      'price': '按价值',
-      'yoi': '按时间'
+
+  getCurrentFilter(column) {
+    const dimension = column.get('dimension')
+    return this.props.filters.find(filter => filter.get('dimension') === dimension)
+  }
+
+  // getCurrentFilterKey(column) {
+  //   const filter = this.getCurrentFilter(column)
+  //   if (filter) return filter.get('key')
+  //   else return undefined
+  // }
+
+  getActiveFilterValue(column) {
+    const filter = this.getCurrentFilter(column)
+    if (filter) return JSON.stringify([filter.get('key'), filter.get('displayName')])
+    return undefined
+  }
+
+  calcCurrentWidth(column) {
+    function getBlength(str) {
+      for (var i = str.length, n = 0; i--;) {
+        n += str.charCodeAt(i) > 255 ? 2 : 1.5;
+      }
+      return n;
     }
+    const currentFilter = this.getCurrentFilter(column)
+    const text = currentFilter ? currentFilter.get('displayName') : ChartHeader.translation[column.get('dimension')]
+    return getBlength(text) / 2 * 15 + 28
+  }
+
+  render() {
     const { columns, filters } = this.props
     return (
       <div className={styles['chart-header']}>
         {
+          columns.map((column, index) => (
+            <Select
+              className={styles['select']}
+              key={column.get('dimension')}
+              dropdownMatchSelectWidth={false}
+              style={{
+                transform: `translate(-50%, -50%)`,
+                position: 'absolute',
+                left: column.get('left'),
+                bottom: 0,
+                color: COLORS[index],
+                cursor: 'pointer',
+                width: this.calcCurrentWidth(column)
+              }}
+              showSearch
+              allowClear
+              placeholder={ChartHeader.translation[column.get('dimension')]}
+              optionFilterProp="children"
+              onChange={this.toggleFilter(column.get('dimension'))}
+              value={this.getActiveFilterValue(column)}
+              filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            >
+              {
+                column.get('clusters').map(cluster => (
+                  <Option key={cluster.get('key')} value={JSON.stringify([cluster.get('key'), cluster.get('displayName')])}>{cluster.get('displayName')}</Option>
+                ))
+              }
+            </Select>
+          ))
+        }
+        {/* {
           columns.map((column, index) => (
             <Motion
               key={column.get('dimension')}
@@ -90,7 +165,7 @@ class ChartHeader extends ImmutableComponent {
               }
             </Motion>
           ))
-        }
+        } */}
       </div>
     )
   }
@@ -106,6 +181,10 @@ class Asset extends ImmutableComponent {
   }
 
   onMouseEnter = (e) => {
+    this.props.dispatch({
+      type: 'assetBrowser/asset/hover/set',
+      payload: this.props.asset.get('id')
+    })
     const keys = ['name', 'func', 'type', 'dept', 'supplier', 'price', 'yoi']
     const reference = ReactDOM.findDOMNode(this)
     const clientRect = reference.getBoundingClientRect()
@@ -138,7 +217,7 @@ class Asset extends ImmutableComponent {
         {keys.map((key, index) => (
           <p style={{color: ['#848484'].concat(COLORS)[index]}} key={key}>
             {
-              key === 'price' ? formatPrice(this.props.asset.get(key)) : this.props.asset.get(key)
+              key === 'price' ? formatPrice(this.props.asset.get(key), 1) : this.props.asset.get(key)
             }
           </p>
         ))}
@@ -148,6 +227,10 @@ class Asset extends ImmutableComponent {
   }
 
   onMouseLeave = () => {
+    this.props.dispatch({
+      type: 'assetBrowser/asset/hover/set',
+      payload: null
+    })
     document.body.removeChild(this.el)
   }
 
@@ -198,6 +281,9 @@ class Assets extends ImmutableComponent {
 class Cluster extends ImmutableComponent {
   calcTextY(columnOffset, clusterTop, clusterHeight, viewBoxYRange) {
     if (clusterTop + clusterHeight + columnOffset - 20 < viewBoxYRange[0]) {
+      if (Math.abs(columnOffset) < 10 && clusterTop < 10) {
+        return 0
+      }
       return clusterHeight - 40
     } else if (clusterTop + columnOffset > viewBoxYRange[0]) {
       return 0
@@ -304,6 +390,15 @@ class Column extends ImmutableComponent {
   viewBoxHeight: assetBrowser.getIn(['viewBox', 'height'])
 }))
 class Lines extends ImmutableComponent {
+  onHover = id => e => this.props.dispatch({
+    type: 'assetBrowser/asset/hover/set',
+    payload: id
+  })
+
+  onLeave = e => this.props.dispatch({
+    type: 'assetBrowser/asset/hover/set',
+    payload: null
+  })
   // lineToD(line) {
   //   const { columns } = this.props
   //   return line.reduce((prev, cur, index, line) => {
@@ -390,15 +485,17 @@ class Lines extends ImmutableComponent {
                 y0: spring(pair.getIn([0, 'top']) + ASSET_HEIGHT / 2),
                 x1: columns.getIn([index + 1, 'left']) - ASSET_WIDTH / 2,
                 y1: spring(pair.getIn([1, 'top']) + ASSET_HEIGHT / 2),
-                opacity: spring(0.6)
+                opacity: spring(0.4)
               }}
               >
               {
                 style => (
                   <path
+                    onMouseEnter={this.onHover(pair.getIn([0, 'id']))}
+                    onMouseLeave={this.onLeave}
                     opacity={style.opacity}
-                    stroke={(pair.getIn([0, 'hovered']) || pair.getIn([0, 'active'])) ? '#5d87d4' : '#bcbcbc'}
-                    strokeWidth={pair.getIn[0, 'active'] ? 3 : 1.5}
+                    stroke={(hoveredAssetId === pair.getIn([0, 'id']) || pair.getIn([0, 'active'])) ? '#5d87d4' : '#bcbcbc'}
+                    strokeWidth={pair.getIn[0, 'active'] ? 4 : 2}
                     fill="none"
                     d={`M ${style.x0}, ${style.y0} C ${(style.x0 + style.x1) / 2}, ${style.y0} ${(style.x0 + style.x1) / 2}, ${style.y1} ${style.x1} ${style.y1}`}
                   />
@@ -448,7 +545,7 @@ class ChartBody extends ImmutableComponent {
     // const assets = assetBrowser.get('assets')
     const filters = assetBrowser.get('filters')
     const activeAssetId = assetBrowser.get('activeAssetId')
-    const hoveredAssetId = assetBrowser.get('hoveredAssetId')
+    // const hoveredAssetId = assetBrowser.get('hoveredAssetId')
     const columns = assetBrowser.get('columns')
 
     return (
