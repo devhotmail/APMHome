@@ -145,7 +145,7 @@
                     </template>
                     <template is="dom-if" if="[[focus.data.usage]]">
                       <div class="divider"></div>
-                      当前平均使用率预测:
+                      未来12个月平均使用率预测:
                       <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
                     </template>
                     <template is="dom-if" if="[[hasSugs(focus.data.suggestions)]]">
@@ -250,7 +250,7 @@
               </div>
               <template is="dom-if" if="[[showMaunalAdvice]]">
                 <div class="divider"></div>
-                <div class="text-muted u-mb--">新建议产生的全部设备收益预测([[focus.data.revenue_unit]])</div>
+                <div class="text-muted u-mb--">新建议产生的全部设备收益预测([[manualData.revenue_unit]])</div>
                 <div class="flex flex--middle revenue-tip">
                   <div class="revenue-label">采取建议</div>
                   <div class="flex__item u-ml-- u-mr--">
@@ -265,7 +265,7 @@
                 </div>
                 <div class="divider"></div>       
                 <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
-                当前平均使用率预测:
+                未来12个月平均使用率预测:
                 <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
                 <template is="dom-if" if="[[isArray(focus.data.suggestions)]]">
                   <template is="dom-repeat" items="[[focus.data.suggestions]]">
@@ -276,6 +276,10 @@
                       <div class="title u-mt- u-mb-">[[item.addition]]</div>
                     </template>
                   </template>
+                </template>
+                <template is="dom-if" if="[[focus.data.usage_sug]]">
+                  采取建议后未来12个月平均使用率预测:
+                  <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage_sug)]]</div>                  
                 </template>
               </template>
             </template>
