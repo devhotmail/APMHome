@@ -129,15 +129,16 @@
             type: Array,
             computed: '_getDimensions(scales, margin, height)'
           },
-          filterBy: String,
           from: String,
           to: String,
+          dept: String,
+          type: String,
           data: Array,
           total: Object,
           scales: Object,
           _queryUrl: {
             type: String,
-            computed: '_getQueryUrl(from, to, sortBy, filterBy)'
+            computed: '_getQueryUrl(from, to, sortBy, dept, type)'
           },
           benchmarkSuffix: {
             value: '_bm',
@@ -147,7 +148,7 @@
         observers: [
           '_replot(width, height, data)',
           'saveOptionsInHistory(sortBy)',
-          '_loadData(from, to, filterBy, sortBy, pageStart, pageSize)'
+          '_loadData(from, to, dept, type, sortBy, pageStart, pageSize)'
         ],
         listeners: {
           'iron-resize': '_onResize'
@@ -767,14 +768,15 @@
             'from': this.from,
             'to': this.to,
             'orderby': this.sortBy,
-            'type': this.filterBy || undefined,
-            'dept': this.user.orgId
+            'type': this.type || undefined,
+            'dept': this.dept || undefined
           }).toString();
         },
         _loadData: function() {
           var _this = this;
           var size = this.pageSize;
           var start = (this.pageStart - 1) * size;
+
           return this.fetchPage(
             this._queryUrl, start, size
           ).then(function(data) {

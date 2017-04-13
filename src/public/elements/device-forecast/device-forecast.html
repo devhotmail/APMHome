@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../parallel-coordinates-chart/parallel-coordinates-chart.html"/>
 <link rel="import" href="../data-filter-bar/data-filter-bar.html"/>
+<link rel="import" href="../device-pagination/device-pagination.html"/>
 
 <link rel="import" href="../behavior/context.html">
 <link rel="import" href="../behavior/fetch-cached.html">
@@ -17,6 +18,7 @@
       from="{{from}}"
       to="{{to}}"
       dept="{{dept}}"
+      user="{{user}}"
       filter-by="{{filterBy}}"
       type="{{type}}"></data-filter-bar>
     <parallel-coordinates-chart
@@ -26,7 +28,7 @@
       sort-by="{{sortBy}}"
       dept="{{dept}}"
       type="{{type}}"></parallel-coordinates-chart>
-  </template>>
+  </template>
   <script>
     define('device-forecast', [
       'behavior/context',
@@ -37,40 +39,7 @@
         behaviors: [
           ContextBehavior,
           FetchCachedBehavior
-        ],        
-        properties: {
-          from: String,
-          to: String,
-          dept: String,
-          type: String,
-          sortBy: String,
-          query: {
-            type: String,
-            computed: 'getQuery(user, from, to, dept, type, sortBy)'
-          }
-        },
-        getQuery: function(user, from, to, dept, type, sortBy) {
-          console.log(
-            URI(this.resolveApiUrl('/api/list')).query({
-              'from': this.from,
-              'to': this.to,
-              'orderby': this.sortBy,
-              'type': this.filterBy || undefined,
-              'dept': user.orgId
-            }).toString()
-          )
-          
-          // return URI(this.resolveApiUrl('/api/list')).query({
-          //   'from': this.from,
-          //   'to': this.to,
-          //   'orderby': this.sortBy,
-          //   'type': this.filterBy || undefined,
-          //   'dept': this.user.orgId
-          // }).toString();
-        },
-        ready: function() {
-          // console.log(this.user)
-        }
+        ]
       })
     })    
   </script>
