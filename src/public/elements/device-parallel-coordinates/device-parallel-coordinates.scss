@@ -16,10 +16,6 @@ $series-line-color: rgba($dv-light-gray, .1);
   --device-pagination-color: $text-color-default;
 }
 
-#chart {
-  position: relative;
-}
-
 .chart-bg {
   fill: transparent;
 }
@@ -45,6 +41,7 @@ device-pagination {
 }
 
 .canvas {
+  position: relative;
   width: 100%;
   height: 100%;
 }
@@ -75,6 +72,7 @@ device-pagination {
   text-anchor: middle;
 
   &.label {
+    cursor: default;
     font-size: 1rem;
     text-transform: uppercase;
   }
@@ -132,6 +130,10 @@ device-pagination {
 }
 
 .chart-body.active {
+  .total-value {
+    opacity: 0;
+  }
+
   .sector {
     &:not(.active) {
       rect {

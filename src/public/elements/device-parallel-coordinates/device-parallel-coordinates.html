@@ -12,15 +12,17 @@
 <dom-module id="device-parallel-coordinates">
   <template>
     <style include="device-parallel-coordinates-styles"></style>
-    <div id="chart" class="canvas">
-      <div class="flex flex--col">
+    <div class="canvas">
+      <div class="flex flex--col" style="height:100%;">
         <template is="dom-if" if="[[!data.length]]">
          <placeholder-empty></placeholder-empty>
         </template>
-        <svg id="svg" width$="[[width]]" height$="[[height]]" touch-action="none">
-          <rect id="chartBg" class="chart-bg" width$="[[width]]" height$="[[height]]"></rect>
-          <g id="chartBody" class="chart-body"></g>
-        </svg>
+        <div id="chart" class="flex__item">
+          <svg id="svg" width$="[[width]]" height$="[[height]]" touch-action="none">
+            <rect id="chartBg" class="chart-bg" width$="[[width]]" height$="[[height]]"></rect>
+            <g id="chartBody" class="chart-body"></g>
+          </svg>
+        </div>
         <!-- sort selector -->
         <px-dropdown id="sortBy" class="sorting-dropdown" display-value="[[_getSortDisplayValue(sortBy, _sortOptions)]]" selected-key="{{sortBy}}">
           <px-dropdown-content class="px-dropdown-content"
@@ -44,6 +46,7 @@
     ], function(ContextBehavior, FetchCachedBehavior) {
       var SECTOR_MIN_STEP_FACTOR = .1;
       var SECTOR_NUM = 6;
+      var DEFAULT_ORDERBY = 'rating';
 
       var $ = d3.select;
       var $$ = d3.selectAll;
@@ -115,9 +118,9 @@
             value: function() {
               return {
                 top: 40,
-                right: 40,
-                bottom: 32,
-                left: 40
+                right: 10,
+                bottom: 42,
+                left: 10
               };
             },
           },
@@ -129,6 +132,7 @@
           from: String,
           to: String,
           data: Array,
+          total: Object,
           scales: Object,
           _queryUrl: {
             type: String,
@@ -235,7 +239,17 @@
           .attr('class', 'value')
           .attr('id', function(d) {
             return 'value-' + d.id;
-          })
+          });
+
+          var totalValueGroup;
+          if(this.total) {
+            totalValueGroup = root.append('g')
+            .attr('class', 'value-group')
+            .selectAll('g')
+            .data([this.total])
+            .enter().append('g')
+            .attr('class', 'total-value');
+          }
 
           dimensions.forEach(function(dimension) {
             var _name = dimension.name;
@@ -249,12 +263,28 @@
               return [x(_name), 0];
             }));
 
+            if(totalValueGroup) {
+              totalValueGroup.append('text')
+              .attr('text-anchor', 'middle')
+              .attr('font-size', 'small')
+              .attr('transform', d3Transform().translate(function(d) {
+                return [x(_name), 0];
+              }))
+              .append('tspan')
+              .attr('x', '0')
+              .attr('class', 'actual-val')
+              .text(function(d) {
+                var val = d[_name];
+                return _type === String ? '设备汇总' : _format ? _format(val) : val;
+              });
+            }
+
             _textWrapper.append('tspan')
             .attr('x', '0')
             .attr('class', 'actual-val')
             .text(function(d) {
               var val = d[_name];
-              return _type === String ? '实际值' : _format ? _format(val) : val;
+              return _type === String ? '选中设备' : _format ? _format(val) : val;
             });
 
             _textWrapper.append('tspan')
@@ -263,7 +293,7 @@
             .attr('dy', '1em')
             .text(function(d) {
               var val = d[_name + _this.benchmarkSuffix];
-              return _type === String ? '基准值' : _format ? _format(val) : val;
+              return _type === String ? '基准线' : _format ? _format(val) : val;
             });
           });
 
@@ -637,58 +667,46 @@
         },
         _getDimensions: function(scales, margin, height) {
           height = height - this.margin.top - this.margin.bottom;
-          var dims = [
+          var dimensions = [
             {
               name: "name",
               scale: d3.scaleBand().range([0, height]).padding(.1),
-              type: String,
+              type: String
             },
             {
               name: "scan",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
-              format: digit_short,
-              sortable: true
+              format: digit_short
             },
             {
               name: "exposure",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
-              format: digit_short,
-              sortable: true
+              format: digit_short
             },
             {
               name: "usage",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
-              format: digit_short,
-              sortable: true
+              format: digit_short
             },
             {
               name: "fix",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
-              format: digit_short,
-              sortable: true
+              format: digit_short
             },
             {
               name: "stop",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
               format: percentage,
-              segmentFormat: integer,
-              sortable: true
-            },
-            {
-              name: "profit",
-              sortable: true,
-              scale: d3.scaleLinear().range([height, 0]),
-              type: Number,
-              format: currency_short
+              segmentFormat: integer
             }
           ];
-          var _this = this;
-          return dims.map(function(dimension) {
+
+          return dimensions.map(function(dimension) {
             var name = dimension.name;
             var defs = scales[name];
 
@@ -711,19 +729,20 @@
           this.restoreOptionsFromHistory();
         },
         _getSortOptions: function(scales, dimensions) {
-          var _this = this;
-          var list = dimensions.map(function(dimension) {
-            if(!dimension.sortable)
+          return dimensions.map(function(dimension) {
+
+            // non-sortable dimension
+            if (dimension.sortable === false) {
               return null;
-            var sortBy = dimension.name;
-            var definition = scales[sortBy];
+            }
+
+            var name = dimension.name;
+            var definition = scales[name];
             return {
-              key: sortBy,
-              val: sortBy === 'profit' ? '设备综合排名' : definition.text
+              key: name === 'name'? 'rating' : name,
+              val: name === 'name' ? '设备综合排名' : definition.text
             };
           }).filter(notNull);
-
-          return list;
         },
         _getSortDisplayValue: function(key, options) {
           return options.find(function(opt) {
@@ -732,7 +751,7 @@
         },
         restoreOptionsFromHistory: function() {
           var options = URI().query(URI().fragment()).query(true);
-          this.set('sortBy', options.sort || 'profit');
+          this.set('sortBy', options.sort || DEFAULT_ORDERBY);
         },
         saveOptionsInHistory: function(value) {
           if (!value) {
@@ -758,6 +777,7 @@
           return this.fetchPage(
             this._queryUrl, start, size
           ).then(function(data) {
+            _this.set('total', data.total);
             _this.set('data', data.items);
             _this.set('pageTotal', Math.ceil(data.pages.total / _this.pageSize));
             _this.set('scales', data.ruler);
