@@ -7,6 +7,7 @@
 <link rel="import" href="../device-pagination/device-pagination.html">
 <link rel="import" href="../placeholder/placeholder-empty.html">
 <link rel="import" href="../pointer-events-polyfill/pointer-events-polyfill.html">
+<link rel="import" href="../web-utils/web-utils.html">
 <link rel="import" href="parallel-coordinates-chart-styles.html">
 
 <dom-module id="parallel-coordinates-chart">
@@ -42,8 +43,9 @@
   <script>
     define('parallel-coordinates-chart', [
       'behavior/context',
-      'behavior/fetch-cached'
-    ], function(ContextBehavior, FetchCachedBehavior) {
+      'behavior/fetch-cached',
+      'web-utils'
+    ], function(ContextBehavior, FetchCachedBehavior, WebUtils) {
       var SECTOR_MIN_STEP_FACTOR = .1;
       var SECTOR_NUM = 6;
       var DEFAULT_ORDERBY = 'rating';
@@ -131,6 +133,7 @@
           },
           from: String,
           to: String,
+          range: Object,
           dept: String,
           type: String,
           data: Array,
@@ -138,7 +141,7 @@
           scales: Object,
           _queryUrl: {
             type: String,
-            computed: '_getQueryUrl(from, to, sortBy, dept, type)'
+            computed: '_getQueryUrl(range, sortBy, dept, type)'
           },
           benchmarkSuffix: {
             value: '_bm',
@@ -148,7 +151,7 @@
         observers: [
           '_replot(width, height, data)',
           'saveOptionsInHistory(sortBy)',
-          '_loadData(from, to, dept, type, sortBy, pageStart, pageSize)'
+          '_loadData(range, dept, type, sortBy, pageStart, pageSize)'
         ],
         listeners: {
           'iron-resize': '_onResize'
@@ -763,13 +766,18 @@
           options['sort'] = value;
           location.hash = '#' + URI().query(options).query();
         },
-        _getQueryUrl: function() {
+        _getQueryUrl: function(range, sortBy, dept, type) {
+          var DATE_FORMAT = WebUtils.constants.DATE_FORMAT;
+
+          var from = moment(range.from).format(DATE_FORMAT);
+          var to = moment(range.to).format(DATE_FORMAT);
+
           return URI(this.resolveApiUrl('/api/list')).query({
-            'from': this.from,
-            'to': this.to,
-            'orderby': this.sortBy,
-            'type': this.type || undefined,
-            'dept': this.dept || undefined
+            'from': from,
+            'to': to,
+            'orderby': sortBy,
+            'type': type || undefined,
+            'dept': dept || undefined
           }).toString();
         },
         _loadData: function() {

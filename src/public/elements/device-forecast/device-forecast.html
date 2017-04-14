@@ -15,14 +15,12 @@
   <template>
     <style include="device-forecast-styles"></style>
     <data-filter-bar
-      from="{{from}}"
-      to="{{to}}"
+      range="{{range}}"
       dept="{{dept}}"
       user="{{user}}"
       type="{{type}}"></data-filter-bar>
     <parallel-coordinates-chart
-      from="{{from}}"
-      to="{{to}}"
+      range="{{range}}"
       sort-by="{{sortBy}}"
       dept="{{dept}}"
       type="{{type}}"></parallel-coordinates-chart>
