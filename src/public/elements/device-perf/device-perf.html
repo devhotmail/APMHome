@@ -5,7 +5,7 @@
 <link rel="import" href="../vh-buggyfill/vh-buggyfill.html"/>
 <link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
 <link rel="import" href="../../bower_components/px-rangepicker/px-rangepicker.html">
-<link rel="import" href="../bubble-radial-chart/bubble-radial-chart.html">
+<link rel="import" href="../new-bubble-radial-chart/new-bubble-radial-chart.html">
 <link rel="import" href="../groupby-radios/groupby-radios.html">
 <link rel="import" href="../device-perf-type-toggle/device-perf-type-toggle.html">
 <link rel="import" href="../behavior/context.html">
@@ -47,8 +47,8 @@
       </div>
       <groupby-radios active-key="{{groupBy}}" list="[[groupByList]]"></groupby-radios>
     </div>
-    <bubble-radial-chart id="chart" query-url="[[queryUrl]]"
-      on-opening-node-l1-changed="handleOpenNode" bubble-config="[[_bubbleConfig]]"></bubble-radial-chart>
+    <new-bubble-radial-chart id="chart" query-url="[[queryUrl]]"
+      on-opening-node-l1-changed="handleOpenNode" bubble-config="[[_bubbleConfig]]"></new-bubble-radial-chart>
   </template>
   <script>
     define('device-perf', [
