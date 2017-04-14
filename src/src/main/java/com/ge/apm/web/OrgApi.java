@@ -69,27 +69,4 @@ public class OrgApi {
       .getOrElse(ResponseEntity.badRequest().body(ImmutableMap.of("error", "on getting login user profile")));
   }
 
-  @RequestMapping(path = "/all", method = RequestMethod.GET)
-  @ResponseBody
-  public ResponseEntity<? extends Map<String, Object>> request(HttpServletRequest request,
-                                                               @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(value = "limit", required = false) Integer site,
-                                                               @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(value = "limit", required = false) Integer hospital,
-                                                               @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(value = "limit", required = false, defaultValue = "30") Integer limit,
-                                                               @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
-    return Try.of(UserContext::getCurrentLoginUser).map(u ->
-      ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
-        .body(new ImmutableMap.Builder<String, Object>()
-          .put("orgInfos", StreamSupport.stream(orgService.find(u.getSiteId(), u.getHospitalId(), start, limit).spliterator(), false)
-            .map(t -> new ImmutableMap.Builder<String, Object>().
-              put("id", t._1)
-              .put("parent_id", t._2)
-              .put("site_id", t._3)
-              .put("hospital_id", t._4)
-              .put("name", t._5)
-              .put("name_en", t._6).build())
-            .collect(Collectors.toList())).build()))
-      .getOrElse(ResponseEntity.badRequest().body(ImmutableMap.of("error", "on getting login user profile")));
-  }
-
-
 }
