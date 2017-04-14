@@ -78,8 +78,8 @@
             <p:submenu id="um38" label="#{msg.DeviceOperationKPIAnalysis}" icon="fa fa-bar-chart"
                        rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead')}">
                 <p:menuitem id="um39" value="#{msg.DeviceROIAnalysis}" rendered="false" outcome="/empty"/>
-                <p:menuitem id="um40" value="#{msg.UsageAndClinicalPerformance}" outcome="/portal/analysis/assetPerfAll"/>
-                <p:menuitem id="um41" value="#{msg.FinancialPerformanceAndForcast}" outcome="/portal/analysis/assetForecastAll"/>
+                <p:menuitem id="um40" value="#{msg.FinancialPerformanceAndForecast}" outcome="/portal/analysis/assetPerfAll"/>
+                <p:menuitem id="um41" value="#{msg.UsageAndClinicalPerformance}" outcome="/portal/analysis/assetForecastAll"/>
                 <p:menuitem id="um42" value="#{msg.DeviceCostAnalysis}" rendered="false" outcome="/empty"/>
                 <p:menuitem id="um43" value="#{msg.DevicePurchaseDecisionSupport}"
                             outcome="/portal/analysis/assetProcurement"/>
