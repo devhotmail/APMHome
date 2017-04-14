@@ -66,8 +66,6 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
 
     private Boolean[] isModifying = {false, false, false};
 
-    private List<String[]> wechatPicList;
-
     private String removedPicStr;
 
     private String addedPicStr;
@@ -113,7 +111,6 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
                 messageSubscriber.setSubscribeUserId(currentUser.getId());
             }
             woList = findWoList();
-            wechatPicList = findPicList();
         }
 
     }
@@ -153,30 +150,6 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         List<AssetFileAttachment> pictures = attachDao.findBySearchFilter(sfs);
 
         return pictures;
-    }
-
-    private List<String[]> findPicList() {
-        List<SearchFilter> sfs = new ArrayList();
-        sfs.add(new SearchFilter("assetId", SearchFilter.Operator.EQ, assetInfo.getId()));
-        sfs.add(new SearchFilter("fileType", SearchFilter.Operator.EQ, "1"));
-        List<AssetFileAttachment> pictures = attachDao.findBySearchFilter(sfs);
-
-        List<String[]> picList = new ArrayList();
-        pictures.forEach((item) -> {
-            try {
-                picList.add(new String[]{acService.pushImageToWechat(item.getFileId()), item.getFileId().toString()});
-            } catch (Exception ex) {
-                WebUtil.addErrorMessage("加载失败");
-            }
-        });
-
-        return picList;
-
-    }
-
-    public String getPicturesJSON() {
-        String res = JSONObject.valueToString(wechatPicList);
-        return res;
     }
 
     private AssetInfo findAsset(String qrCode) {
@@ -418,14 +391,6 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
 
     public void setIsModifying(Boolean[] isModifying) {
         this.isModifying = isModifying;
-    }
-
-    public List<String[]> getWechatPicList() {
-        return wechatPicList;
-    }
-
-    public void setWechatPicList(List<String[]> wechatPicList) {
-        this.wechatPicList = wechatPicList;
     }
 
     public String getRemovedPicStr() {
