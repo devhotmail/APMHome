@@ -3,16 +3,25 @@
 <link rel="import" href="../d3/d3.html">
 <link rel="import" href="../lodash/lodash.html">
 <link rel="import" href="../../lscache.html"/>
+<link rel="import" href="../data-statusbar/data-statusbar.html"/>
 <link rel="import" href="bubble-radial-chart-styles.html">
 
 <dom-module id="bubble-radial-chart">
   <template>
     <style include="bubble-radial-chart-styles"></style>
     <div id="chart" class="chart-container">
-      <div id="layers"></div>
-      <svg id="chartSvg" class$="[[_svgEnvClass]]" width$="[[width]]" height$="[[height]]">
-        <g id="canvas" class="canvas" transform$="[[_canvasTransform]]"></g>
-      </svg>
+      <template is="dom-if" if="[[showEmpty]]">
+        <data-statusbar type="empty"></data-statusbar>
+      </template>
+      <template is="dom-if" if="[[showError]]">
+        <data-statusbar type="error"></data-statusbar>
+      </template>
+      <div class="chart-wrapper" data-show$="[[!isOr(showEmpty, showError)]]">
+        <div id="layers"></div>
+        <svg id="chartSvg" class$="[[_svgEnvClass]]" width$="[[width]]" height$="[[height]]">
+          <g id="canvas" class="canvas" transform$="[[_canvasTransform]]"></g>
+        </svg>
+      </div>
     </div>
   </template>
   <script>
@@ -540,6 +549,14 @@
             Polymer.IronResizableBehavior,
           ],
           properties: {
+            showEmpty: {
+              type: Boolean,
+              value: false
+            },
+            showError: {
+              type: Boolean,
+              value: false
+            },
             /**
              * The default bubble config.
              */
@@ -694,10 +711,17 @@
           observers: [
             '_computeLastStartL1(_pageStartHistoryL1.*)',
             '_computeLastStartL2(_pageStartHistoryL2.*)',
-            '_replot(width, height)'
+            '_replot(width, height)',
+            'load(queryUrl)'
           ],
           listeners: {
             'iron-resize': '_onResize'
+          },
+          isOr: function() {
+            var args = Array.prototype.slice.call(arguments);
+            return args.filter(function(n) {
+              return Boolean(n);
+            }).length;
           },
           plotRoot: function(root) {
             var _this = this;
@@ -1313,7 +1337,7 @@
           attached: function() {
             this.set('isAttached', true);
           },
-          load: function() {
+          load: function(queryUrl) {
             this.resetChart();
             var url = this.queryUrl;
             var _this = this;
@@ -1328,6 +1352,9 @@
             var list = lscache.get(cacheKey) || [];
             var pages = lscache.get(cacheKey + '/pages');
             var length = list.length || 0;
+            if (length) {
+              _this.showEmpty = false
+            }
             var offset = this.get('pageOffsetL'+ level);
 
             // read the furthest offset
@@ -1357,6 +1384,11 @@
                   };
                 });
               }).then(function(res) {
+                if (res.data.items.length === 0) {
+                  _this.showEmpty = true
+                  return
+                }
+                _this.showEmpty = false
                 var data = _this.transformData(res.data);
                 var cache_age = res.maxAge;
                 list = list.concat(data.items);
@@ -1364,7 +1396,9 @@
                 lscache.set(cacheKey, list, cache_age);
                 lscache.set(cacheKey + '/root', data.root, cache_age);
                 lscache.set(cacheKey + '/pages', data.pages, cache_age);
-              }).then(setMaxData);
+              }).then(setMaxData).catch(function(err) {
+                _this.showError = true
+              });
             } {
               return Promise.resolve().then(setMaxData);
             }
@@ -1391,6 +1425,10 @@
             // plot root on level1
             if (level === 1) {
               parent = lscache.get(key + '/root');
+              if (!parent || (parent.profit === 0 && parent.revenue === 0)) {
+                this.showEmpty = true
+                return
+              }
               this.plotRoot(parent);
             } else {
               parent = this.openingNodeL1;
