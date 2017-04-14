@@ -52,7 +52,7 @@ public class ProfitService {
   }
 
   public static Money predictRevenue() {
-    return Option.of(LocalDate.now()).map(y -> CNY.money(15284.13D * ChronoUnit.DAYS.between(LocalDate.of(2000, 1, 1), y.plusYears(1)) - 70223735.95D)).getOrElse(CNY.O);
+    return Option.of(LocalDate.now()).map(y -> CNY.money(2165.29491254D * ChronoUnit.DAYS.between(LocalDate.of(2000, 1, 1), y.plusYears(1)) + 1859154525.8260288D)).getOrElse(CNY.O);
   }
 
   @Cacheable(cacheNames = "springCache", key = "'profitService.findRvnCstByYear.'+#siteId+'.'+#hospitalId + '.year'+#year")
