@@ -19,14 +19,20 @@ import com.ge.apm.domain.QrCodeAttachment;
 import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.domain.SiteInfo;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.domain.WorkOrderPhoto;
 import com.ge.apm.service.utils.ConfigUtils;
 import com.ge.apm.service.utils.TimeUtils;
 import com.ge.apm.service.wechat.CoreService;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
 import org.primefaces.model.StreamedContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,6 +47,8 @@ import webapp.framework.web.WebUtil;
 @Component
 public class AssetCreateService {
 
+    @Autowired
+    protected WxMpService wxMpService;
     @Autowired
     private SiteInfoRepository siteDao;
     @Autowired
@@ -144,7 +152,7 @@ public class AssetCreateService {
         map.put("keyword1", rejectText);
         map.put("keyword2", TimeUtils.getStrDate(request.getSubmitDate(), "yyyy-MM-dd HH:mm:ss"));
         map.put("linkUrl", "wechat/asset/createInfoDetail.xhtml?qrCode=".concat(request.getQrCode()));
-        
+
         coreService.sendWxTemplateMessage(_openId, _templateId, map);
 
         rejectText = TimeUtils.getStrDate(new Date(), "[yyyy-MM-dd HH:mm:ss]").concat(rejectText);
@@ -157,10 +165,19 @@ public class AssetCreateService {
     public OrgInfo getOrgInfo(Integer clinicalDeptId) {
         return orgDao.findById(clinicalDeptId);
     }
-    
-    public String pushVoiceToWechat(Integer fileId) throws Exception{
+
+    public List<OrgInfo> getOrgListByHospital(Integer hospitalId) {
+        return orgDao.getByHospitalId(hospitalId);
+    }
+
+    public String pushVoiceToWechat(Integer fileId) throws Exception {
         StreamedContent sc = fileService.getFile(fileId);
         return coreService.uploadMediaToWechat(sc.getStream());
+    }
+
+    public String pushImageToWechat(Integer fileId) throws Exception {
+        StreamedContent sc = fileService.getFile(fileId);
+        return coreService.uploadImageToWechat(sc.getStream());
     }
 
     public UserAccount getUserInfo(Integer userId) {
@@ -168,13 +185,50 @@ public class AssetCreateService {
     }
 
     public List<UserAccount> getClinicalOwnerList(Integer clinicalDeptId) {
-         List<SearchFilter> usersFilters = new ArrayList<>();
+        List<SearchFilter> usersFilters = new ArrayList<>();
         if (null != clinicalDeptId) {
             usersFilters.add(new SearchFilter("orgInfoId", SearchFilter.Operator.EQ, clinicalDeptId));
             return userDao.findBySearchFilter(usersFilters);
         } else {
             return new ArrayList<UserAccount>();
         }
+    }
+
+    @Transactional
+    public void removeAttachment(Integer id, int fileid) {
+        List<SearchFilter> attachFilters = new ArrayList<>();
+        attachFilters.add(new SearchFilter("assetId", SearchFilter.Operator.EQ, id));
+        attachFilters.add(new SearchFilter("fileId", SearchFilter.Operator.EQ, fileid));
+        List<AssetFileAttachment> attList = attachDao.findBySearchFilter(attachFilters);
+        attList.forEach((item) -> {
+            fileService.deleteAttachment(item.getFileId());
+            attachDao.delete(item);
+        });
+    }
+
+    public void addWechatPicAttachment(AssetInfo assetInfo, String serverId) {
+        File file = null;
+        try {
+            file = wxMpService.getMaterialService().mediaDownload(serverId);
+        } catch (WxErrorException ex) {
+            Logger.getLogger(AssetCreateService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (file == null) {
+            return;
+        }
+        Integer uploadFileId = fileService.uploadFile(file);
+
+        if (uploadFileId > 0) {
+            AssetFileAttachment attach = new AssetFileAttachment();
+            attach.setAssetId(assetInfo.getId());
+            attach.setFileId(uploadFileId);
+            attach.setFileType("1");
+            attach.setHospitalId(assetInfo.getHospitalId());
+            attach.setSiteId(assetInfo.getSiteId());
+            attach.setName("image".concat(uploadFileId.toString()));
+            attachDao.save(attach);
+        }
+        file.delete();
     }
 
 }

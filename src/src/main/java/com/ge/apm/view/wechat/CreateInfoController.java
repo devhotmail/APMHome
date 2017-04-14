@@ -28,7 +28,7 @@ import webapp.framework.web.WebUtil;
 @ViewScoped
 public class CreateInfoController {
 
-    private AssetCreateService acServie;
+    private AssetCreateService acService;
     private AttachmentFileService attachFileService;
     private QrCodeLib createdRequest;
     List<QrCodeAttachment> pictureList;
@@ -43,19 +43,19 @@ public class CreateInfoController {
     @PostConstruct
     protected void init() {
 
-        acServie = WebUtil.getBean(AssetCreateService.class);
+        acService = WebUtil.getBean(AssetCreateService.class);
         attachFileService = WebUtil.getBean(AttachmentFileService.class);
         String qrCode = WebUtil.getRequestParameter("qrCode");
         openId = WebUtil.getRequestParameter("openId");
 
         if (null != qrCode) {
-            createdRequest = acServie.getCreateRequest(qrCode);
-            pictureList = acServie.getQrCodePictureList(createdRequest.getId());
-            audioList = acServie.getQrCodeAudioList(createdRequest.getId());
+            createdRequest = acService.getCreateRequest(qrCode);
+            pictureList = acService.getQrCodePictureList(createdRequest.getId());
+            audioList = acService.getQrCodeAudioList(createdRequest.getId());
             wxAudioList = new ArrayList();
             for (QrCodeAttachment item : audioList) {
                 try {
-                    wxAudioList.add(acServie.pushVoiceToWechat(item.getFileId()));
+                    wxAudioList.add(acService.pushVoiceToWechat(item.getFileId()));
                 } catch (Exception ex) {
                     WebUtil.addErrorMessage("声音加载失败");
                 }

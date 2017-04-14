@@ -24,6 +24,7 @@ and open the template in the editor.
         <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/photoswipe.js"/>
         <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/photoswipe-ui-default.min.js"/>
         <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/detail.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jweixin-1.2.0.js"/>
 
         <style>
             .weui-navbar__item.weui-bar__item_on {
@@ -113,7 +114,7 @@ and open the template in the editor.
             <span class="weui-gallery__img" id="galleryImg"></span>
             <div class="weui-gallery__opr">
                 <a href="javascript:" class="weui-gallery__del">
-                    <!--<i class="weui-icon-delete weui-icon_gallery-delete"></i>-->
+                    <i class="weui-icon-delete weui-icon_gallery-delete"></i>
                 </a>
             </div>
         </div>
@@ -132,318 +133,505 @@ and open the template in the editor.
                     </div>
                     <div class="weui-tab__panel">
                         <div id="tab1Panel" class="">
-                            <div  class="weui-panel">
-                                <div class="weui-panel__hd">设备图片</div>
-                                <div class="weui-panel__bd">
-                                    <div class="weui-cell my-gallery" data-pswp-uid="1">
-                                        <c:forEach items="#{wxAssetInfoController.getPictureList(wxAssetInfoController.assetInfo.id)}" var="fileitem">
-                                            <figure style="display: inline; padding-right: 8px;">
-                                                <a href="" data-size="800x600">
-                                                    <p:graphicImage  value="#{pictureService.getImage()}"   height="80px" width="80px" >
-                                                        <f:param name="pictureId" value="#{fileitem.fileId}" />
-                                                    </p:graphicImage>
-                                                </a>
-                                            </figure>
-                                        </c:forEach>
+                            <h:form id="updatePictureForm">
+                                <p:remoteCommand name="updatePForm" actionListener="#{wxAssetInfoController.updateAttachmentPics()}" update="removedPicList addedPicList photoPanel" />
+                                <h:inputHidden id="removedPicList" value="#{wxAssetInfoController.removedPicStr}"/>
+                                <h:inputHidden id="addedPicList" value="#{wxAssetInfoController.addedPicStr}"/>
+                                <div  class="weui-panel">
+                                    <div class="weui-panel__hd">
+                                        设备图片<h:panelGroup rendered="#{userContextService.hasRole('AssetStaff')}"><span id="modifyPicture" style="float: right">修改</span></h:panelGroup>
                                     </div>
+                                    <h:panelGroup id="photoPanel">
 
+                                        <div class="weui-panel__bd">
+                                            <div class="weui-cell ">
+                                                <div class="weui-cell__bd my-gallery" style="display: inline;" data-pswp-uid="1">
+                                                    <c:forEach items="#{wxAssetInfoController.getPictureList(wxAssetInfoController.assetInfo.id)}" var="fileitem" varStatus="status">
+                                                        <div style="display: inline-block;width: 78px">
+                                                            <figure style="display: block; padding-right: 3px;" id="#{fileitem.fileId}">
+                                                                <a href="" data-size="800x600">
+                                                                    <p:graphicImage  value="#{pictureService.getImage()}"   height="78px" width="78px" >
+                                                                        <f:param name="pictureId" value="#{fileitem.fileId}" />
+                                                                    </p:graphicImage>
+                                                                </a>
+                                                            </figure>
+                                                            <p class="removePicButton" align="center" onclick="showConfirmDialog(this);" style="display:none;width: 78px">
+                                                                <i class="weui-icon-cancel"></i>
+                                                            </p>
+                                                        </div>
+                                                    </c:forEach>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+                                    <div class="weui-cells" id="wxUploader" style="display:none">
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__bd">
+                                                <div class="weui-uploader">
+                                                    <div class="weui-uploader__bd">
+                                                        <ul class="weui-uploader__files" id="uploaderFiles">
+                                                        </ul>
+                                                        <div class="weui-uploader__input-box">
+                                                            <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            </h:form>
 
-                            <div class="weui-panel">
-                                <div class="weui-panel__hd">设备基本属性</div>
-                                <div class="weui-panel__bd">
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
-                                            <img style="width: 50px;display: block"  src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{wxAssetInfoController.assetInfo.assetGroup}.ico"/>
+                            <h:form id="updateMasterFieldForm">
+                                <p:remoteCommand name="updateMForm" actionListener="#{wxAssetInfoController.updateFields(1)}" update=":updateMasterFieldForm" />
+                                <div class="weui-panel">
+                                    <div class="weui-panel__hd">设备基本属性<h:panelGroup rendered="#{userContextService.hasRole('AssetStaff')}"><span id="modifyFields" style="float: right" onclick="updateMForm();">#{wxAssetInfoController.isModifying[1]?"完成修改":"修改"}</span></h:panelGroup></div>
+                                    <div class="weui-panel__bd ">
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
+                                                <img style="width: 50px;display: block"  src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{wxAssetInfoController.assetInfo.assetGroup}.ico"/>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <p>#{wxAssetInfoController.assetInfo.name}</p>
+                                                <p style="font-size: 13px;color: #888888;">#{wxAssetInfoController.assetInfo.aliasName}</p>
+                                            </div>
+                                            <div class="weui-cell__ft" >
+                                                <h:outputText id="subscriberStat" value="#{wxAssetInfoController.messageSubscriber.receiveMsgMode=='0'?'未关注':''}#{wxAssetInfoController.messageSubscriber.receiveMsgMode=='1'?'已关注':''}#{wxAssetInfoController.messageSubscriber.receiveMsgMode=='2'?'部分关注':''}" >
+                                                </h:outputText>
+                                                <p><a href="javascript:settingSubscribe();"> 订阅设置</a></p>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">
-                                            <p>#{wxAssetInfoController.assetInfo.name}</p>
-                                            <p style="font-size: 13px;color: #888888;">#{wxAssetInfoController.assetInfo.aliasName}</p>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.status}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{fieldMsg.fieldValue('assetStatus',wxAssetInfoController.assetInfo.status)}" rendered="#{!wxAssetInfoController.isModifying[1]}" />
+                                                <h:selectOneMenu class="weui-select" value="#{wxAssetInfoController.assetInfo.status}" rendered="#{wxAssetInfoController.isModifying[1]}">
+                                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetStatus')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                                </h:selectOneMenu>
+                                                
+                                            </div>
+                                            <div class="weui-cell__ft">
+                                                <i class="#{wxAssetInfoController.assetInfo.status==1?'weui-icon-success':(wxAssetInfoController.assetInfo.status==2?'weui-icon-warn':'weui-icon-info-circle')}" />
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__ft" id="subscriberStat">
-                                            <h:form id="subscriberStatus">
-                                                <p>#{wxAssetInfoController.messageSubscriber.receiveMsgMode=='0'?'未关注':''}#{wxAssetInfoController.messageSubscriber.receiveMsgMode=='1'?'已关注':''}#{wxAssetInfoController.messageSubscriber.receiveMsgMode=='2'?'部分关注':''}</p>
-                                            </h:form>
-                                            <p><a href="javascript:settingSubscribe();"> 订阅设置</a></p>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">生产厂家</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.manufacture}" rendered="#{!wxAssetInfoController.isModifying[1]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.manufacture}"  rendered="#{wxAssetInfoController.isModifying[1]}"/>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.status}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('assetStatus',wxAssetInfoController.assetInfo.status)}</div>
-                                        <div class="weui-cell__ft">
-                                            <i class="#{wxAssetInfoController.assetInfo.status==1?'weui-icon-success':(wxAssetInfoController.assetInfo.status==2?'weui-icon-warn':'weui-icon-info-circle')}" />
-                                        </div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">供应商</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.manufacture}</div>
-                                    </div>
-                                    <div class="weui-cell" onclick="javascript:showBRCode();">
-                                        <div class="weui-cell__bd">
-                                            <label class="weui-label">#{msg.qrCode}</label>
-                                        </div>
-                                        <div class="weui-cell__ft">
-                                            <!--<p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />-->
-                                            <img id='qrcode' src="#{wxAssetInfoController.getQrCodeImageBase64()}" height="20px" width="20px"/>
-                                        </div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.clinicalDeptName}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.clinicalDeptName}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.clinicalOwnerName}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.clinicalOwnerName}</div>
-                                        <div class="weui-cell__ft">#{wxAssetInfoController.assetInfo.clinicalOwnerTel}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">负责人1</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.assetOwnerName}</div>
-                                        <div class="weui-cell__ft">#{wxAssetInfoController.assetInfo.assetOwnerTel}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">负责人2</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.assetOwnerName2}</div>
-                                        <div class="weui-cell__ft">#{wxAssetInfoController.assetInfo.assetOwnerTel2}</div>
-                                    </div>
-                                    <div class="weui-cell weui-cell_access">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.purchaseDate}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.purchaseDate}</div>
-                                    </div>
-                                    <div class="weui-cell weui-cell_access">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.warrantyDate}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.warrantyDate}</div>
-                                    </div>
 
+                                        <div class="weui-cell" onclick="javascript:showBRCode();">
+                                            <div class="weui-cell__bd">
+                                                <label class="weui-label">#{msg.qrCode}</label>
+                                            </div>
+                                            <div class="weui-cell__ft">
+                                                <!--<p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />-->
+                                                <img id='qrcode' src="#{wxAssetInfoController.getQrCodeImageBase64()}" height="20px" width="20px"/>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.clinicalDeptName}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.clinicalDeptName}" rendered="#{!wxAssetInfoController.isModifying[1]}" />
+                                                <h:selectOneMenu id="clinicalDeptName" class="weui-select" value="#{wxAssetInfoController.assetInfo.clinicalDeptId}" rendered="#{wxAssetInfoController.isModifying[1]}" >
+                                                    <p:ajax  listener="#{wxAssetInfoController.onClinicalDeptChange()}"  update="clinicalOwnerName clinicalOwnerTel"/>
+                                                    <f:selectItems value="#{wxAssetInfoController.getClinicalDeptList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.clinicalOwnerName}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.clinicalOwnerName}" rendered="#{!wxAssetInfoController.isModifying[1]}" />
+                                                <h:selectOneMenu class="weui-select" id="clinicalOwnerName" value="#{wxAssetInfoController.assetInfo.clinicalOwnerId}" rendered="#{wxAssetInfoController.isModifying[1]}">
+                                                    <p:ajax  listener="#{wxAssetInfoController.onClinicalOwnerChange()}" update="clinicalOwnerTel" />
+                                                    <f:selectItems value="#{wxAssetInfoController.getClinicalOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="weui-cell__ft">
+                                                <h:outputText id="clinicalOwnerTel" value="#{wxAssetInfoController.assetInfo.clinicalOwnerTel}"/>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">负责人1</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.assetOwnerName}" rendered="#{!wxAssetInfoController.isModifying[1]}" />
+                                                <h:selectOneMenu class="weui-select" id="assetOwnerId" value="#{wxAssetInfoController.assetInfo.assetOwnerId}" rendered="#{wxAssetInfoController.isModifying[1]}">
+                                                    <p:ajax  listener="#{wxAssetInfoController.onAssetOwnerChange()}" update="assetOwnerTel" />
+                                                    <f:selectItems value="#{wxAssetInfoController.getAssetOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="weui-cell__ft"><h:outputText id="assetOwnerTel" value="#{wxAssetInfoController.assetInfo.assetOwnerTel}"/></div>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">负责人2</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.assetOwnerName2}" rendered="#{!wxAssetInfoController.isModifying[1]}" />
+                                                <h:selectOneMenu class="weui-select" id="assetOwnerId2" value="#{wxAssetInfoController.assetInfo.assetOwnerId2}" rendered="#{wxAssetInfoController.isModifying[1]}">
+                                                    <p:ajax  listener="#{wxAssetInfoController.onAssetOwner2Change()}" update="assetOwnerTel2" />
+                                                    <f:selectItems value="#{wxAssetInfoController.getAssetOwnerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="weui-cell__ft"><h:outputText id="assetOwnerTel2" value="#{wxAssetInfoController.assetInfo.assetOwnerTel2}"/></div>
+                                        </div>
+                                        <div class="weui-cell weui-cell_access">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.purchaseDate}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.purchaseDate}" rendered="#{!wxAssetInfoController.isModifying[1]}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                                <p:calendar id="purchaseDate" class="weui-input"  value="#{wxAssetInfoController.assetInfo.purchaseDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[1]}"/>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell weui-cell_access">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.warrantyDate}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.warrantyDate}" rendered="#{!wxAssetInfoController.isModifying[1]}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                                <p:calendar id="warrantyDate" class="weui-input"  value="#{wxAssetInfoController.assetInfo.warrantyDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[1]}"/>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
                                 </div>
-                            </div>
 
+                            </h:form>
                             <div class="weui-panel" id="detailPanel" style="display:none">
-                                <div class="weui-panel__hd">设备详细信息</div>
-                                <div class="weui-panel__bd">
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.aliasName}</label>
+                                <h:form id="updateDetailFieldForm">
+                                    <p:remoteCommand name="updateDForm" actionListener="#{wxAssetInfoController.updateFields(2)}" update=":updateDetailFieldForm" />
+                                    <div class="weui-panel__hd">设备详细信息<h:panelGroup rendered="#{userContextService.hasRole('AssetStaff')}"><span  style="float: right" onclick="updateDForm();">#{wxAssetInfoController.isModifying[2]?"完成修改":"修改"}</span></h:panelGroup></div>
+                                    <div class="weui-panel__bd">
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.aliasName}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.aliasName}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.aliasName}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.aliasName}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.serialNum}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.serialNum}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.serialNum}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.serialNum}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.serialNum}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.vendor}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.vendor}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.vendor}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.vendor}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.vendor}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.departNum}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.departNum}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.departNum}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.departNum}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.departNum}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.assetGroup}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.assetGroup}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{fieldMsg.fieldValue('assetGroup',wxAssetInfoController.assetInfo.assetGroup)}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:selectOneMenu class="weui-select" value="#{wxAssetInfoController.assetInfo.assetGroup}" rendered="#{wxAssetInfoController.isModifying[2]}">
+                                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                                </h:selectOneMenu>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('assetGroup', wxAssetInfoController.assetInfo.assetGroup)}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.functionGrade}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.functionGrade}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{fieldMsg.fieldValue('assetFunctionGrade',wxAssetInfoController.assetInfo.functionGrade)}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:selectOneMenu class="weui-select" value="#{wxAssetInfoController.assetInfo.functionGrade}" rendered="#{wxAssetInfoController.isModifying[2]}">
+                                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionGrade')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                                </h:selectOneMenu>    
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('assetFunctionGrade', wxAssetInfoController.assetInfo.functionGrade)}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.functionGroup}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.functionGroup}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{fieldMsg.fieldValue('assetFunctionType',wxAssetInfoController.assetInfo.functionGroup)}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:selectOneMenu class="weui-select" value="#{wxAssetInfoController.assetInfo.functionGroup}" rendered="#{wxAssetInfoController.isModifying[2]}">
+                                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                                </h:selectOneMenu> 
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('assetFunctionType', wxAssetInfoController.assetInfo.functionGroup)}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.maitanance}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.maitanance}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.maitanance}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.maitanance}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.maitanance}</div>
-                                        <div class="weui-cell__ft">#{wxAssetInfoController.assetInfo.maitananceTel}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.financingNum}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.maitananceTel}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.maitananceTel}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.maitananceTel}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.financingNum}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.barcode}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.financingNum}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.financingNum}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.financingNum}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.barcode}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.registrationNo}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.barcode}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.barcode}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.barcode}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.registrationNo}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.modalityId}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.registrationNo}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.registrationNo}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.registrationNo}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.modalityId}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.locationCode}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.modalityId}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.modalityId}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.modalityId}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.locationCode}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.locationName}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.locationCode}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.locationCode}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.locationCode}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.locationName}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.hospitalId}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.locationName}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.locationName}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.locationName}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.hospital.name}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.functionType}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.hospitalId}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.hospital.name}</div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.functionType}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.manufactDate}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.functionType}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.functionType}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.functionType}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.manufactDate}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.arriveDate}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.manufactDate}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.manufactDate}" rendered="#{!wxAssetInfoController.isModifying[2]}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                                <p:calendar  class="weui-input"  value="#{wxAssetInfoController.assetInfo.manufactDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.arriveDate}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.installDate}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.arriveDate}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.arriveDate}" rendered="#{!wxAssetInfoController.isModifying[2]}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                                <p:calendar  class="weui-input"  value="#{wxAssetInfoController.assetInfo.arriveDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.installDate}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.factoryWarrantyDate}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.installDate}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.installDate}" rendered="#{!wxAssetInfoController.isModifying[2]}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                                <p:calendar  class="weui-input"  value="#{wxAssetInfoController.assetInfo.installDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.factoryWarrantyDate}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.terminateDate}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.factoryWarrantyDate}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.factoryWarrantyDate}" rendered="#{!wxAssetInfoController.isModifying[2]}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                                <p:calendar  class="weui-input"  value="#{wxAssetInfoController.assetInfo.factoryWarrantyDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.terminateDate}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.lastPmDate}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.terminateDate}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.terminateDate}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                            </div>
                                         </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lastPmDate}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.lastQaDate}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lastQaDate}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.lastMeteringDate}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lastMeteringDate}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.salvageValue}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.salvageValue}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.purchasePrice}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.purchasePrice}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.lifecycle}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lifecycle}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.lifecycle}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{wxAssetInfoController.assetInfo.lifecycleInYear}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__hd">
-                                            <label class="weui-label">#{msg.depreciationMethod}</label>
-                                        </div>
-                                        <div class="weui-cell__bd">#{fieldMsg.fieldValue('depreciationMethodList', wxAssetInfoController.assetInfo.depreciationMethod)}</div>
-                                    </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.lastPmDate}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.lastPmDate}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                            </div>
 
 
-                                </div>
-
-
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.lastQaDate}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.lastQaDate}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.lastMeteringDate}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.lastMeteringDate}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.salvageValue}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.salvageValue}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.purchasePrice}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.purchasePrice}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input"  value="#{wxAssetInfoController.assetInfo.purchasePrice}" rendered="#{wxAssetInfoController.isModifying[2]}">
+                                                    <f:convertNumber minIntegerDigits="0"  minFractionDigits="0" />
+                                                </h:inputText>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.lifecycle}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.lifecycleInYear}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input"  value="#{wxAssetInfoController.assetInfo.lifecycleInYear}" rendered="#{wxAssetInfoController.isModifying[2]}">
+                                                    <f:convertNumber minIntegerDigits="0"  minFractionDigits="0" />
+                                                </h:inputText>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.depreciationMethod}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{fieldMsg.fieldValue('depreciationMethodList',wxAssetInfoController.assetInfo.depreciationMethod)}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:selectOneMenu class="weui-select" id="depreciationMethod" value="#{wxAssetInfoController.assetInfo.depreciationMethod}" rendered="#{wxAssetInfoController.isModifying[2]}">
+                                                    <f:selectItems value="#{fieldMsg.getFieldValueList('depreciationMethodList')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </h:form>
                             </div>
-
                             <p class="weui-btn-area">
                                 <a id="viewMore" href="javascript:showDetails();" class="weui-btn weui-btn_primary">查看更多信息</a>
                             </p>
-
                         </div>
                         <div id="tab2Panel" class="weui-tab__content">
 
                             <div class="page__bd">
 
-                            <h:panelGroup rendered="#{empty wxAssetInfoController.woList}">
-                                <div class="weui-cells">
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__bd">
-                                            <h4> #{msg.noRecordFound}</h4>
+                                <h:panelGroup rendered="#{empty wxAssetInfoController.woList}">
+                                    <div class="weui-cells">
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__bd">
+                                                <h4> #{msg.noRecordFound}</h4>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </h:panelGroup>
+                                </h:panelGroup>
 
-                            <div class="weui-msg__opr-area">
-                                <p class="weui-btn-area">
-                                    <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增报修</a>
-                                </p>
-                            </div>
+                                <div class="weui-msg__opr-area">
+                                    <p class="weui-btn-area">
+                                        <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增报修</a>
+                                    </p>
+                                </div>
 
                                 <c:forEach  items="#{wxAssetInfoController.woList}" var="item" >
                                     <div class="weui-cells">
@@ -474,9 +662,6 @@ and open the template in the editor.
                     </div>
                 </div>
             </div>
-
-
-
 
 
         </h:panelGroup>
@@ -564,7 +749,7 @@ and open the template in the editor.
                                 </div>
                             </div>
                         </div>
-                        <p:remoteCommand actionListener="#{wxAssetInfoController.settingMsgSubscriber()}" name="settingSubmit"  update=":subscriberStatus" />
+                        <p:remoteCommand actionListener="#{wxAssetInfoController.settingMsgSubscriber()}" name="settingSubmit"  update=":updateMasterFieldForm:subscriberStat"  oncomplete="hiddenInput();"/>
                         <div class="weui-dialog__ft">
                             <a href="javascript:closeDialog();" class="weui-dialog__btn weui-dialog__btn_default">取消</a>
                             <a href="javascript:settingSubmit();closeDialog();" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
@@ -573,20 +758,51 @@ and open the template in the editor.
                 </div>
             </h:form>
         </div>
+
+        <!--BEGIN dialog1-->
+        <div class="js_dialog" id="confirmDialog" style="display: none;">
+            <div class="weui-mask"></div>
+            <div class="weui-dialog">
+                <div class="weui-dialog__hd"><strong class="weui-dialog__title">删除确认</strong></div>
+                <div class="weui-dialog__bd">照片删除将无法找回，请确认</div>
+                <div class="weui-dialog__ft">
+                    <a id="cancelConfirmDialog" href="javascript:;" class="weui-dialog__btn weui-dialog__btn_default">取消</a>
+                    <a id="submitConfirmDialog" href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">确定删除</a>
+                </div>
+            </div>
+        </div>
+        <!--END dialog1-->
+        <!--BEGIN dialog2-->
+        <div class="js_dialog" id="messageDialog" style="display: none;">
+            <div class="weui-mask"></div>
+            <div class="weui-dialog">
+                <div id="dialogInfoDiv" class="weui-dialog__bd"></div>
+                <div class="weui-dialog__ft">
+                    <a id="dialogInfoA" href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                </div>
+            </div>
+        </div>
+        <!--END dialog2-->
+
     </body>
     <script>
+        //<![CDATA[
         var closeDialog = function () {
             $('#settingDialog').fadeOut(200);
         };
 
+
+
         function showBRCode() {
             var imgt = "background-image:url(#url#)";
             $("#galleryImg").attr("style", imgt.replace('#url#', $("#qrcode")[0].src));
+            $('.weui-gallery__del').css("display", "none");
             $("#gallery").fadeIn(100);
         }
 
         $("#gallery").on("click", function () {
             $("#gallery").fadeOut(100);
+            $('.weui-gallery__del').css("display", "block");
         });
 
         $('.weui-navbar__item').on('click', function () {
@@ -612,7 +828,148 @@ and open the template in the editor.
         }
 
 
+        function showConfirmDialog(picElement) {
+            $("#confirmDialog").fadeIn(200);
+            $("#cancelConfirmDialog").on("click", function () {
+                $("#confirmDialog").fadeOut(200);
+                $("#submitConfirmDialog").unbind("click");
+            });
+            $("#submitConfirmDialog").on("click", function () {
+                var pic = $(picElement).parent();
+                var listStr = $("#updatePictureForm\\:removedPicList").val();
+                $("#updatePictureForm\\:removedPicList").val(listStr + $(pic).children("figure").attr("id") + ",");
+                $(pic).remove();
+                $("#confirmDialog").fadeOut(200);
+                $("#submitConfirmDialog").unbind("click");
+            });
+        }
 
+        function showDialog(dialogInfo) {
+            $("#dialogInfoDiv").html(dialogInfo);
+            $("#messageDialog").fadeIn(200);
+        }
+
+        $("#dialogInfoA").on("click", function () {
+            $("#dialogInfoDiv").html();
+            $("#messageDialog").fadeOut(200);
+        });
+
+
+        $("#modifyPicture").on('click', function () {
+            if ($("#modifyPicture").text() == "修改") {
+                $("#modifyPicture").text("完成修改");
+                $(".removePicButton").css("display", "block");
+                $("#wxUploader").css("display", "block");
+                $.each($(".weui-uploader__file"), function (index, value) {
+                    $(value).remove();
+                });
+
+            } else {
+                $("#modifyPicture").text("修改");
+                $(".removePicButton").css("display", "none");
+                $("#wxUploader").css("display", "none");
+                var listStr = "";
+                $.each($(".weui-uploader__file"), function (index, value) {
+                    listStr = listStr + value.id + ",";
+                });
+
+                $("#updatePictureForm\\:addedPicList").val(listStr);
+                updatePForm();
+            }
+        });
+
+        var jsSignature = #{wechatUtilService.getJsSignature()};
+        var currentShowImageId = "";
+
+        wx.config({
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: jsSignature.appid, // 必填，公众号的唯一标识
+            timestamp: jsSignature.timestamp, // 必填，生成签名的时间戳
+            nonceStr: jsSignature.noncestr, // 必填，生成签名的随机串
+            signature: jsSignature.signature, // 必填，签名，见附录1
+            jsApiList: ['uploadImage', 'chooseImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+
+        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+                $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+                $uploaderInput = $("#uploaderInput"),
+                $uploaderFiles = $("#uploaderFiles");
+
+        $uploaderInput.on("click", function (e) {
+            var num = $("#uploaderFiles").children().length;
+            if (num >= 5) {
+                showDialog("最多只能添加5张图片");
+            } else {
+                wx.chooseImage({
+                    count: 5 - num, // 默认9
+                    sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有['original'原图, 'compressed'压缩图]
+                    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                    success: function (res) {
+                        var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                        syncUpload(localIds);
+                    }
+                });
+            }
+            return false;
+        });
+
+        $uploaderFiles.on("click", "li", function () {
+            $galleryImg.attr("style", this.getAttribute("style"));
+            $gallery.fadeIn(100);
+            currentShowImageId = $(this).attr("id");
+//            $("#currentShowImageId").val($(this).attr("id"));
+        });
+
+        $('.weui-gallery__del').on('click', function () {
+//            var tempImageId = $("#currentShowImageId").val();
+
+            $("#" + currentShowImageId).remove();
+            currentShowImageId = "";
+
+            countImage();
+        });
+
+        function syncUpload(localIds) {
+            var localId = localIds.pop();
+            wx.uploadImage({
+                localId: localId,
+                isShowProgressTips: 1,
+                success: function (res) {
+                    var serverId = res.serverId; // 返回图片的服务器端ID
+
+                    if (window.__wxjs_is_wkwebview) {
+                        wx.getLocalImgData({
+                            localId: localId,
+                            success: function (ress) {
+                                var localData = ress.localData.replace('jgp', 'jpeg');
+                                $uploaderFiles.append($(tmpl.replace('#url#', localData)).attr('id', serverId));
+                                countImage();
+                            }
+                        });
+
+                    } else {
+                        $uploaderFiles.append($(tmpl.replace('#url#', localId)).attr('id', serverId));
+                        countImage();
+                    }
+
+                    //其他对serverId做处理的代码
+                    if (localIds.length > 0) {
+                        syncUpload(localIds);
+                    }
+                }
+            });
+        }
+
+        function countImage() {
+            var num = $("#uploaderFiles").children().length;
+
+            $("#imageNumDiv").html(num + "/5");
+
+            return num;
+        }
+
+
+//]]>
     </script>
 
 

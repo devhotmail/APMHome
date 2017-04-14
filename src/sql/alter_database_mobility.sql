@@ -48,6 +48,10 @@ alter table asset_info add COLUMN asset_owner_tel2 varchar(16);	--责任人B电�
 alter table asset_info add COLUMN fe_user_id int;	--FE工程师 userId
 alter table asset_info add COLUMN dispatch_mode int; --1:专人派工 / 2:抢单 /3:自动派工
 
+alter table asset_info alter COLUMN asset_owner_name type varchar(32);
+alter table asset_info alter COLUMN asset_owner_name2 type varchar(32);
+alter table asset_info alter COLUMN clinical_owner_name type varchar(32);
+
 create table qr_code_lib(
 id serial not null,
 site_id int not null,

@@ -10,7 +10,7 @@ $(function () {
         // 解析来自DOM元素幻灯片数据（URL，标题，大小...）
         // (children of gallerySelector)
         var parseThumbnailElements = function (el) {
-            var thumbElements = el.childNodes,
+            var thumbElements = $(el).find("figure"), //el.childNodes,
                     numNodes = thumbElements.length,
                     items = [],
                     figureEl,
@@ -82,8 +82,8 @@ $(function () {
 
             // find index of clicked item by looping through all child nodes
             // alternatively, you may define index via data- attribute
-            var clickedGallery = clickedListItem.parentNode,
-                    childNodes = clickedListItem.parentNode.childNodes,
+            var clickedGallery = clickedListItem.parentNode.parentNode,
+                    childNodes = $(clickedGallery).find("figure"),//clickedListItem.parentNode.parentNode.childNodes,
                     numChildNodes = childNodes.length,
                     nodeIndex = 0,
                     index;
@@ -204,7 +204,7 @@ $(function () {
         };
 
         // loop through all gallery elements and bind events
-        var galleryElements = document.querySelectorAll(gallerySelector);
+        var galleryElements = document.querySelectorAll(gallerySelector+ " a");
 
         for (var i = 0, l = galleryElements.length; i < l; i++) {
             galleryElements[i].setAttribute('data-pswp-uid', i + 1);

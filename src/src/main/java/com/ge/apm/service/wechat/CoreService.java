@@ -403,6 +403,11 @@ public class CoreService {
         return res.getMediaId();
     }
     
+     public String uploadImageToWechat(InputStream inputStream) throws Exception{
+        WxMediaUploadResult res = wxMpService.getMaterialService().mediaUpload(WxConsts.MEDIA_IMAGE, WxConsts.FILE_JPG, inputStream);
+        return res.getMediaId();
+    }
+    
     public String getSupplierName(int id) {
         Supplier s = supplierDao.findById(id);
         return s == null ? null : s.getName();

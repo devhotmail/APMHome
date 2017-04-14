@@ -98,7 +98,7 @@ public class AssetInfo implements Serializable {
     private int assetDeptId;
     @Column(name = "asset_owner_id")
     private int assetOwnerId;
-    @Size(min = 1, max = 16)
+    @Size(min = 1, max = 32)
     @Column(name = "asset_owner_name")
     private String assetOwnerName;
     @Size(max = 16)
@@ -144,7 +144,7 @@ public class AssetInfo implements Serializable {
     private Date lastStockTakeDate;
     @Column(name = "clinical_owner_id")
     private Integer clinicalOwnerId;
-    @Size(max = 16)
+    @Size(max = 32)
     @Column(name = "clinical_owner_name")
     private String clinicalOwnerName;
     @Size(max = 16)
