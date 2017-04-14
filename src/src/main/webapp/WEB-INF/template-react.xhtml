@@ -48,7 +48,15 @@
             <ui:insert name="content"/>
         </div>
         <div class="layout-profile">
-            <span class="profile-name">#{userContextService.loginUserSiteName} #{userContextService.userName}</span>
+            <div class="profile-name">
+                #{userContextService.loginUserSiteName}
+            </div>
+            <div class="profile-name">
+                #{userContextService.hasRole('HospitalHead') ? '' : userContextService.loginUserOrgInfo.name}
+            </div>
+            <div class="profile-name">
+                #{userContextService.userName}
+            </div>
         </div>
     </div>
     <p:dialog widgetVar="statusDialog" modal="false" class="ajaxStatusDialog" draggable="false" closable="false" resizable="false" showHeader="false">
