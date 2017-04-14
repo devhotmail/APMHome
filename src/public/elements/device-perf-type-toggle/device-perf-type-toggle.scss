@@ -1,0 +1,27 @@
+:host {
+  .btn-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    .item {
+      margin: 0;
+      border-radius: 0!important;
+      border-right: none;
+      &[data-active] {
+        background: #5b84d7!important;
+        border-color: #5b84d7!important;
+        color: #fff!important;
+      }
+      &:first-child {
+        border-top-left-radius: 1rem!important;
+        border-bottom-left-radius: 1rem!important;
+      }
+      &:last-of-type {
+        border-right-width: 1px;
+        border-right-style: solid;
+        border-top-right-radius: 1rem!important;
+        border-bottom-right-radius: 1rem!important;
+      }
+    }
+  }
+}
