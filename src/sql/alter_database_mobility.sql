@@ -163,6 +163,7 @@ timeout_close int, --关单环节的超时提醒阈值(分钟)
 order_reopen_timeframe int --二次开单的最大时间间隔
 );
 alter table workflow_config add primary key (id);
+ALTER TABLE workflow_config ADD CONSTRAINT uk_workflow_hospital_id UNIQUE (hospital_id);
 
 alter table workflow_config add COLUMN max_message_count int;
 

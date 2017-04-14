@@ -18,7 +18,7 @@ public class MenuConfig {
         }
         WxMenu menu = new WxMenu();
         WxMenuButton button1 = new WxMenuButton();
-        button1.setName("我的报修");
+        button1.setName("微报修");
         WxMenuButton button11 = new WxMenuButton();
         button11.setType(WxConsts.BUTTON_VIEW);
         button11.setName("扫码报修");
@@ -31,7 +31,7 @@ public class MenuConfig {
         button1.getSubButtons().add(button12);
 
         WxMenuButton button2 = new WxMenuButton();
-        button2.setName("我的工单");
+        button2.setName("微工单");
         
 //        WxMenuButton button23 = new WxMenuButton();
 //        button23.setType(WxConsts.BUTTON_VIEW);
