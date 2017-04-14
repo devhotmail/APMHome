@@ -140,9 +140,17 @@
             this.set('to', moment().format(DATE_FORMAT));
           }
 
-          fetch('mock/dept-filter-options.json')
-          .then(res => res.json())
-          .then(function(list) {
+          this.fetchPage(this.resolveApiUrl('/api/org/all'))
+          .then(function(response) {
+            var list = Array.isArray(response.orgInGfos)
+              ? response.orgInGfos.map(function(n, index) {
+                return {
+                  key: index + 1,
+                  val: n.name
+                }
+              })
+              : [];
+            
             list = [defaultVal].concat(list);
             _this.deptOpts = list;
             if (!_this.dept) {
@@ -150,7 +158,7 @@
               _this.deptName = defaultVal.val;
             } else {
               _this.deptName = _this.getName(_this.dept, list);
-            }
+            }              
           });
 
           this.fetchPage(this._getQueryUrl()).then(function(res) {
