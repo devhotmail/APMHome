@@ -175,10 +175,10 @@ public class AssetCreateService {
         return coreService.uploadMediaToWechat(sc.getStream());
     }
 
-    public String pushImageToWechat(Integer fileId) throws Exception {
-        StreamedContent sc = fileService.getFile(fileId);
-        return coreService.uploadImageToWechat(sc.getStream());
-    }
+//    public String pushImageToWechat(Integer fileId) throws Exception {
+//        StreamedContent sc = fileService.getFile(fileId);
+//        return coreService.uploadImageToWechat(sc.getStream());
+//    }
 
     public UserAccount getUserInfo(Integer userId) {
         return userDao.getById(userId);
