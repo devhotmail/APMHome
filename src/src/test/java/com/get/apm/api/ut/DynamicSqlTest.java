@@ -19,6 +19,7 @@ import rx.Observable;
 
 import java.sql.SQLException;
 
+@Ignore
 public class DynamicSqlTest {
   private final Logger log = LoggerFactory.getLogger(DynamicSqlTest.class);
   private Database db;

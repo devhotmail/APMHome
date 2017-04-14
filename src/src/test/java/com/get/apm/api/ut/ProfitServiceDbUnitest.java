@@ -4,14 +4,13 @@ import com.ge.apm.service.utils.CNY;
 import javaslang.Tuple;
 import javaslang.control.Option;
 import org.apache.ibatis.jdbc.SQL;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.Date;
 import java.time.LocalDate;
 
-/**
- * Created by user14 on 4/12/17.
- */
+@Ignore
 public class ProfitServiceDbUnitest extends AbstractDbTest {
   @Test
   public void sqlTest() {
