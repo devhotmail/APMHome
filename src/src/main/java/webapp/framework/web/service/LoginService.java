@@ -1,14 +1,26 @@
 package webapp.framework.web.service;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TreeMap;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -91,6 +103,53 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
         
     }
     
+    protected void setCookieForUser(HttpServletResponse res, String userName, String password) throws Exception {
+        String body = "{\"loginName\": \""+userName+"\",\"password\": \""+password+"\"}";
+        Properties pro = new Properties();
+        pro.load(PropertyUtils.class.getResourceAsStream("/url.properties"));
+        String authenticateBasic = pro.getProperty("authenticateBasic").trim();
+        
+        String jsonStr = requestPost(authenticateBasic, body);
+        JSONObject obj = new JSONObject(jsonStr);  
+        if (obj == null)
+            return;
+        JSONObject data = obj.getJSONObject("data");
+        if (data == null)
+            return;
+        Cookie cookie = new Cookie("Authorization", data.getString("id_token"));
+        res.addCookie(cookie);
+    }
+    
+    public String requestPost(String url, String body) {
+        CloseableHttpClient httpclient = null;
+        HttpPost httppost = null;
+        try {
+            httpclient = HttpClientBuilder.create().build();
+            httppost = new HttpPost(url);
+            httppost.setEntity(new StringEntity(body));
+            httppost.setHeader("Content-Type", "application/json");
+
+            CloseableHttpResponse response = httpclient.execute(httppost);
+
+            HttpEntity entity = response.getEntity();
+            return EntityUtils.toString(entity, "utf-8");
+        } catch(Exception e){
+            messageUtil.error("security_cookie_error");
+        } finally {
+            try {
+                if (httppost!=null){
+                    httppost.releaseConnection();
+                }
+                if (httpclient!=null){
+                    httpclient.close();
+                }
+            } catch(IOException e) {
+                messageUtil.error("security_cookie_error");
+            }
+        }
+        return "";
+    }
+    
     public void doLogin() {
         ExternalContext ctx = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) ctx.getRequest();
@@ -103,6 +162,7 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
             Map<String, String[]> extraParams = new TreeMap<String, String[]>();
             String userName = request.getParameter("j_username");
             String password = request.getParameter("j_password");
+            String originPwd = password;
 
             if("".equals(userName) || userName==null){
                 userName = request.getParameter("input_j_username");
@@ -133,7 +193,11 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
             if (applicationEventPublisher != null) {
                 applicationEventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, getClass()));
             }
-
+            try {
+                setCookieForUser(response, userName, originPwd);
+            } catch (Exception e) {
+                messageUtil.error("security_cookie_error");
+            }
             afterLogin();
             // redirects to the home page
 /*
