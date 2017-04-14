@@ -1,0 +1,40 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="device-perf-type-toggle-styles.html">
+
+<dom-module id="device-perf-type-toggle">
+  <style include="device-perf-type-toggle-styles"></style>
+  <template>
+    <div class="btn-group">
+      <template is="dom-repeat" items="[[list]]">
+        <div
+          class="item btn"
+          data-active$="[[_isEqual(item.key, activeKey)]]"
+          data-key$="[[item.key]]"
+          on-tap="onRadioClicked">
+          [[item.displayName]]
+        </div>
+      </template>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'device-perf-type-toggle',
+      properties: {
+        activeKey: {
+          type: String,
+          notify: true
+        },
+        list: {
+          type: Array,
+          value: []
+        }
+      },
+      onRadioClicked(e) {
+        this.activeKey = e.currentTarget.dataset.key;
+      },
+      _isEqual: function(a, b) {
+        return a === b;
+      }
+    });
+  </script>
+</dom-module>
