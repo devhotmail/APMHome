@@ -1,4 +1,4 @@
-package com.get.apm.api.ut;
+package com.get.apm.api.db;
 
 import com.ge.apm.service.utils.CNY;
 import com.github.davidmoten.rx.jdbc.annotations.Column;
@@ -14,7 +14,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 @Ignore
-public class AssetsServiceUnitTest extends AbstractDbTest {
+public class AssetsDbTest extends AbstractDbTest {
   @Test
   public void testFindAssets() {
     db.select(new SQL().SELECT("id", "name", "asset_group as type", "supplier_id as supplier", "purchase_price as price", "arrive_date as yoa")

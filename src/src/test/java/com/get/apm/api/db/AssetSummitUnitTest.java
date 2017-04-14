@@ -1,4 +1,4 @@
-package com.get.apm.api.ut;
+package com.get.apm.api.db;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.github.davidmoten.rx.jdbc.ConnectionProviderFromDataSource;
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+@Ignore
 public class AssetSummitUnitTest {
   private final Logger log = LoggerFactory.getLogger(DynamicSqlTest.class);
   private final List<LocalDate> dates = Stream.iterate(LocalDate.now().minusYears(3), d -> d.plusDays(1)).takeUntil(date -> date.isAfter(LocalDate.now())).toJavaList();
