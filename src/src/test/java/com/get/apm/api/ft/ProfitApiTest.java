@@ -236,7 +236,7 @@ public class ProfitApiTest extends AbstractApiTest {
   public void testParameterConflicts() throws IOException {
     doNegativeTest(tests, ImmutableMap.of("year", "2016", "groupby", "type", "type", "3"));
 
-    doNegativeTest(tests, ImmutableMap.of("year", "2016", "groupby", "dept", "dept", "5"));
+    doOkTest(tests, ImmutableMap.of("year", "2016", "groupby", "dept", "dept", "5"));
 
     doNegativeTest(tests, ImmutableMap.of("year", "2016", "groupby", "month", "month", "11"));
 
