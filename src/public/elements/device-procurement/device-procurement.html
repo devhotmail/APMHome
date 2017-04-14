@@ -689,11 +689,10 @@
             .then((function(response) {
               this.showLoading = false;
               this.configLoading = false;
+
               if (!response) return this.showRetry = true;
               if (!response.items) return this.showRetry = true;
               if (!response.items.length) return this.showRetry = true;
-              if (response.items[0].items && !response.items[0].items.length) return this.showRetry = true;
-              if (this.selectedType === 'dept' && !response.items[0].items[0].items.length) return this.showRetry = true;
 
               var data = this.dataConverter(response);
               // set manual data
@@ -917,8 +916,6 @@
             if (!response) return this.showEmpty = true;
             if (!response.items) return this.showEmpty = true;
             if (!response.items.length) return this.showEmpty = true;
-            if (response.items[0].items && !response.items[0].items.length) return this.showEmpty = true;
-            if (groupby === 'dept' && !response.items[0].items[0].items.length) return this.showEmpty = true;
 
             var data = this.dataConverter(response);
             // set system data
