@@ -7,6 +7,7 @@
 <link rel="import" href="../editable-block/editable-block.html">
 <link rel="import" href="../data-statusbar/data-statusbar.html">
 <link rel="import" href="../css-spinner/css-spinner.html">
+<link rel="import" href="../web-utils/web-utils.html">
 <link rel="import" href="device-procurement-styles.html">
 <link rel="stylesheet" href="../../css/dewIcons.css">
 <link rel="import" href="../uri/uri.html">
@@ -329,8 +330,9 @@
 
     define('device-procurement', [
       'behavior/context',
-      'behavior/fetch-cached'
-    ], function(ContextBehavior, FetchCachedBehavior) {
+      'behavior/fetch-cached',
+      'web-utils'
+    ], function(ContextBehavior, FetchCachedBehavior, WebUtils) {
       Polymer({
         is: 'device-procurement',
         properties: {
@@ -558,6 +560,7 @@
           var value = e.detail.value;
           var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
 
+          var _this = this;
           if (index > -1) {
             // update value for current target
             var cursor = this.configListOne[index].uid;
@@ -573,7 +576,18 @@
                 return n.uid;
               });
               var configList = this.configList.map(function(config) {
-                if (~childUidList.indexOf(config.uid)) config.increase = value;
+                if (~childUidList.indexOf(config.uid)) {
+                  config.increase = value;
+                  if (Array.isArray(config.children) && config.children.length) {
+                    // update children's increase in configList
+                    config.children.map(function(n) {
+                      var result = WebUtils.find(_this.configList, function(m) {
+                        return m.id === n.id;
+                      });
+                      if (result) result.increase = value;
+                    });
+                  }
+                }
                 return config;
               });
             }
@@ -588,6 +602,7 @@
           var value = e.detail.value;
           var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
 
+          var _this = this;
           if (index > -1) {
             // update value for current target
             var cursor = this.configListTwo[index].uid;
@@ -595,6 +610,16 @@
               return n.uid === cursor;
             })[0];
             target.increase = value;
+
+            if (Array.isArray(target.children) && target.children.length) {
+              // update children's increase in configList
+              target.children.map(function(n) {
+                var result = WebUtils.find(_this.configList, function(m) {
+                  return m.id === n.id;
+                });
+                if (result) result.increase = value;
+              });
+            }
 
             // update parent
             var parentUid = target.parent.uid;
@@ -614,18 +639,31 @@
         handleSubmit: function(e) {
           var root = this.configList[0];
           if (root.depth === 0) {
-            var tmp = this.configList.filter(function(n) {
-              return n.depth === root.height - 1;
-            }).map(function(n) {
-              return (n.children && n.children.length) 
-                ? n.children.map(function(child) {
-                  return {
-                    id: child.id,
-                    change: n.increase / 100 // for the display usage # 1
-                  }
-                })
-                : [];
+            // diff with systemData and get all changed items
+            var defaultConfigList = this.getInitConfig(this.systemData)
+            .filter(function(n) {
+              return n.depth === root.height;
             });
+
+            var tmp = this.configList.filter(function(n) {
+              return n.depth === root.height;
+            })
+            .filter(function(config) {
+              if (!config) return false;
+
+              return WebUtils.find(defaultConfigList, function(defaultConfig) {
+                return defaultConfig.id === config.id && defaultConfig.increase !== config.increase;
+              });
+            })
+            .map(function(n) {
+              return {
+                id: n.id,
+                change: n.increase / 100 // for the display usage # 1
+              }
+            })
+            .filter(function(n) {
+              return n;
+            });              
 
             var payload = {
               config: [].concat.apply([], tmp).sort(function(a, b) {
