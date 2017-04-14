@@ -7,6 +7,7 @@
 <link rel="import" href="../../bower_components/px-rangepicker/px-rangepicker.html">
 <link rel="import" href="../bubble-radial-chart/bubble-radial-chart.html">
 <link rel="import" href="../groupby-radios/groupby-radios.html">
+<link rel="import" href="../device-perf-type-toggle/device-perf-type-toggle.html">
 <link rel="import" href="../behavior/context.html">
 <link rel="import" href="./device-perf-styles.html">
 
@@ -19,17 +20,31 @@
 <dom-module id="device-perf">
   <template>
     <style include="device-perf-styles"></style>
-    <div class="tool">
-      <px-rangepicker
-        hide-time="true"
-        show-bottons="true"
-        block-future-dates="[[_isHistory(reportType)]]"
-        block-past-dates="[[!_isHistory(reportType)]]"
-        data-format="YYYY/MM/DD"
-        show-time-zone="none"
-        range={{range}}
-        preset-ranges=[[presetRanges]]
-      ></px-rangepicker>
+    <div class="tool flex flex--row flex--justify flex--middle">
+      <div class="flex flex--row flex--middle">
+        <device-perf-type-toggle
+          class="u-mr+"
+          active-key="{{reportType}}"
+          list='[{"key": "history", "displayName": "历史"},{ "key": "future", "displayName": "预测"}]'
+        ></device-perf-type-toggle>
+        <template is="dom-if" if="[[_isHistory(reportType)]]">
+          <px-rangepicker
+            hide-time="true"
+            show-bottons="true"
+            block-future-dates="[[_isHistory(reportType)]]"
+            block-past-dates="[[!_isHistory(reportType)]]"
+            date-format="YYYY/MM/DD"
+            show-time-zone="none"
+            range={{range}}
+            preset-ranges=[[presetRanges]]
+          ></px-rangepicker>
+        </template>
+        <template is="dom-if" if="[[!_isHistory(reportType)]]">
+          <div class="date-range">
+            [[tomorrow]] 到 [[oneYearAfterTomorrow]]
+          </div>
+        </template>
+      </div>
       <groupby-radios active-key="{{groupBy}}" list="[[groupByList]]"></groupby-radios>
     </div>
     <bubble-radial-chart id="chart" query-url="[[queryUrl]]"
@@ -68,39 +83,66 @@
       Polymer({
         is: 'device-perf',
         properties: {
+          tomorrow: {
+            type: String,
+            value: moment().add(1, 'd').format('YYYY年M月D日')
+          },
+          oneYearAfterTomorrow: {
+            type: String,
+            value: moment().add(366, 'd').format('YYYY年M月D日')
+          },
           reportType: {
             type: String,
             value: 'history'
           },
           groupByList: {
             type: Array,
-            value: [
-              {
-                key: 'dept',
-                displayName: '按科室'
-              },
-              {
-                key: 'type',
-                displayName: '按设备类型'
-              },
-              {
-                key: 'month',
-                displayName: '按月份'
-              },
-              {
-                key: 'device',
-                displayName: '按单台设备'
+            value: function() {
+              if (JSON.parse(document.querySelector('#user-context #isHead').value)) {
+                return [
+                  {
+                    key: 'dept',
+                    displayName: '按科室'
+                  },
+                  {
+                    key: 'type',
+                    displayName: '按设备类型'
+                  },
+                  {
+                    key: 'month',
+                    displayName: '按月份'
+                  },
+                  {
+                    key: 'device',
+                    displayName: '按单台设备'
+                  }
+                ]
+              } else {
+                return [
+                  {
+                    key: 'type',
+                    displayName: '按设备类型'
+                  },
+                  {
+                    key: 'month',
+                    displayName: '按月份'
+                  },
+                  {
+                    key: 'device',
+                    displayName: '按单台设备'
+                  }
+                ]
               }
-            ]
+            }
           },
-          year: Number,
+          // year: Number,
           groupBy: {
             type: String,
             value: 'device'
           },
           queryUrl: {
             type: String,
-            computed: '_computeQueryUrl(year, groupBy)'
+            computed: '_computeQueryUrl(range, groupBy, reportType)'
           },
           range: {
             type: Object,
@@ -128,18 +170,18 @@
           var res = [
             {
               displayText: '一周内',
-              startDateTime: moment().add(diff, diff ? 'd' : 'w'),
-              endDateTime: moment().add(diff, diff ? 'w' : 'd')
+              startDateTime: moment().add(diff, diff > 0 ? 'd' : 'w'),
+              endDateTime: moment().add(diff, diff > 0 ? 'w' : 'd')
             },
             {
               displayText: '一月内',
-              startDateTime: moment().add(diff, diff ? 'd' : 'M'),
-              endDateTime: moment().add(diff, diff ? 'M' : 'd')
+              startDateTime: moment().add(diff, diff > 0 ? 'd' : 'M'),
+              endDateTime: moment().add(diff, diff > 0 ? 'M' : 'd')
             },
             {
               displayText: '一年内',
-              startDateTime: moment().add(diff, diff ? 'd' : 'y'),
-              endDateTime: moment().add(diff, diff ? 'y' : 'd')
+              startDateTime: moment().add(diff, diff > 0 ? 'd' : 'y'),
+              endDateTime: moment().add(diff, diff > 0 ? 'y' : 'd')
             }
           ]
           for (var i = 0; i < 3; i++) {
@@ -159,13 +201,22 @@
           }
           return res;
         },
-        _computeQueryUrl: function(year, groupBy) {
-          var uri = URI(this.resolveApiUrl('/api/profit'))
-          .addQuery('year', year)
-          .addQuery('groupby', groupBy);
-
+        _computeQueryUrl: function(range, groupBy, reportType) {
+          var uri = URI(this.resolveApiUrl(reportType === 'history' ? '/api/profit' : '/api/profit/forecast'))
+          uri.addQuery('groupby', groupBy)
           if (groupBy === 'device') {
             uri.removeQuery('groupby');
+          }
+
+          if (reportType === 'history') {
+            uri
+            .addQuery('from', moment(range.from).format('YYYY-MM-DD'))
+            .addQuery('to', moment(range.to).format('YYYY-MM-DD'))
+
+          }
+
+          if (!JSON.parse(document.querySelector('#user-context #isHead').value)) {
+            uri.addQuery('dept', JSON.parse(document.querySelector('#user-context #orgId').value))
           }
           return uri.toString();
         },
