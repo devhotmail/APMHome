@@ -82,7 +82,9 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeUrl, paramName)));
 
         owner = userDao.findById(selected.getAssetOwnerId());
-        owner2 = userDao.findById(selected.getAssetOwnerId2());
+        if(null != selected.getAssetOwnerId2()){
+            owner2 = userDao.findById(selected.getAssetOwnerId2());
+        }
 
         if (null != selected.getClinicalOwnerId()) {
             clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
