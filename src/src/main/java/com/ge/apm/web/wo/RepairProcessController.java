@@ -59,11 +59,12 @@ public class RepairProcessController {
         }
     }
 
-    @RequestMapping(value = "/im18faulttype/{astypeId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/im18faulttype/{astypeId}/{hostpitalId}/{siteId}",method = RequestMethod.GET)
     @ResponseBody
-    public List<I18nMessage> im18faulttype(HttpServletRequest request,  @PathVariable Integer astypeId) throws Exception
+    public List<I18nMessage> im18faulttype(HttpServletRequest request,  @PathVariable Integer astypeId,@PathVariable Integer hostpitalId,@PathVariable Integer siteId) throws Exception
     {
-        List<I18nMessage> faultTypeByAssetType = i18nMessageRepository.getFaultTypeByAssetType(astypeId);
+        System.out.println("hospital id and siteId "+hostpitalId +"   "+siteId);
+        List<I18nMessage> faultTypeByAssetType = i18nMessageRepository.getFaultTypeByAssetType(astypeId,hostpitalId,siteId);
 return faultTypeByAssetType;
     }
 

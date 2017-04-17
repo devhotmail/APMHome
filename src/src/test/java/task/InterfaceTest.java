@@ -30,13 +30,8 @@ I18nMessageRepository i18nMessageRepository;
     @Rollback(false)
     public void testWorkOrder()throws Exception{
         System.out.println(
-              "------" +i18nMessageRepository.getFaultTypeByAssetType(1400)
-        );
+              "------" +i18nMessageRepository.getFaultTypeByAssetType(1400,2,1));
 
-       /* List<WorkOrder> closedWorkOrder = workOrderRepository.findClosedWorkOrder(5);
-        for (int i = 0; i < closedWorkOrder.size(); i++) {
-            System.out.println(closedWorkOrder);
-        }*/
 
     }
 
