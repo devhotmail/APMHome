@@ -57,8 +57,9 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     private UserAccount clinicalOwner;
     private Supplier supplier;
-    
+
     private UserAccount owner;
+    private UserAccount owner2;
 //    private List<UserAccount> ownerList;
     private List<OrgInfo> ownerOrgList;
 
@@ -77,11 +78,14 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     Boolean terminate;
 
-    protected void setSelectedByUrlParam(String encodeUrl, String paramName){
+    protected void setSelectedByUrlParam(String encodeUrl, String paramName) {
         setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeUrl, paramName)));
-        
+
         owner = userDao.findById(selected.getAssetOwnerId());
-        
+        if(null != selected.getAssetOwnerId2()){
+            owner2 = userDao.findById(selected.getAssetOwnerId2());
+        }
+
         if (null != selected.getClinicalOwnerId()) {
             clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
         }
@@ -91,7 +95,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             supplier = supplierDao.findById(selected.getSupplierId());
         }
     }
-    
+
     @Override
     protected void init() {
         dao = WebUtil.getBean(AssetInfoRepository.class);
@@ -219,8 +223,10 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     @Override
     public void onBeforeSave(AssetInfo object) {
-        OrgInfo org = orgDao.findById(object.getClinicalDeptId());
-        object.setClinicalDeptName(org.getName());
+        if (null != object.getClinicalDeptId()) {
+            OrgInfo org = orgDao.findById(object.getClinicalDeptId());
+            object.setClinicalDeptName(org.getName());
+        }
         DateTime temp;
         if (null != object.getManufactDate()) {
             temp = new DateTime(object.getManufactDate());
@@ -306,6 +312,11 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             selected.setAssetOwnerName(owner.getName());
             selected.setAssetOwnerTel(owner.getTelephone());
         }
+        if (null != owner2) {
+            selected.setAssetOwnerId2(owner2.getId());
+            selected.setAssetOwnerName2(owner2.getName());
+            selected.setAssetOwnerTel2(owner2.getTelephone());
+        }
     }
 
     public void onClinicalDeptChange() {
@@ -329,7 +340,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             selected.setVendor(supplier.getName());
         }
     }
-    
+
     public void handleFileUpload(FileUploadEvent event) {
 
         String type = event.getComponent().getId();
@@ -433,8 +444,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             return new ArrayList<UserAccount>();
         }
     }
-    
-    public String getQrCodeImageBase64(){
+
+    public String getQrCodeImageBase64() {
         return QRCodeUtil.getQRCodeImageBase64(selected.getQrCode());
     }
 
@@ -590,5 +601,14 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
     }
+
+    public UserAccount getOwner2() {
+        return owner2;
+    }
+
+    public void setOwner2(UserAccount owner2) {
+        this.owner2 = owner2;
+    }
     
+
 }

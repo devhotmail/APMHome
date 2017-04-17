@@ -366,10 +366,36 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (765,'field_name','factoryWarrantyDate', '质保日期','Manhour Price(RMB)',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (766,'field_name','contractType', '合同类型','Contract Type',null,-1);
 
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (767,'field_name','assetOwnerId2','责任人2','2nd Asset Owner Id',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (768,'field_name','assetOwnerName2','责任人2','2nd Asset Owner Name',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (769,'field_name','assetOwnerTel2','责任人2电话','2nd Asset Owner Tel',null,-1);
 
 
 -- field value code types  ( id from 1400)
 
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1400,'assetGroup','1','CT类','CT类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1401,'assetGroup','2','磁共振MRI类','磁共振MRI类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1402,'assetGroup','3','血管造影机(DSA)','血管造影机(DSA)',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1403,'assetGroup','4','普放类(XR)','普放类(XR)',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1404,'assetGroup','5','超声影像类(US)','超声影像类(US)',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1405,'assetGroup','6','核医学类(NW/PET)','核医学类(NW/PET)',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1406,'assetGroup','7','放疗类','放疗类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1407,'assetGroup','8','监护类','监护类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1408,'assetGroup','9','呼吸类','呼吸类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1409,'assetGroup','10','麻醉类','麻醉类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1410,'assetGroup','11','软式内窥镜类','软式内窥镜类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1411,'assetGroup','12','硬式内窥镜类','硬式内窥镜类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1412,'assetGroup','13','血液净化类','血液净化类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1413,'assetGroup','14','电刀、超声刀','电刀、超声刀',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1414,'assetGroup','15','医用激光类','医用激光类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1415,'assetGroup','16','输注泵类','输注泵类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1416,'assetGroup','17','灯床塔等手术','灯床塔等手术',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1417,'assetGroup','18','消毒设备类','消毒设备类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1418,'assetGroup','19','检验室设备类','检验室设备类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1419,'assetGroup','20','病理类','病理类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1420,'assetGroup','21','手术显微镜类','手术显微镜类',null,-1);
+
+/*
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1400,'assetGroup','1','CT','CT',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1401,'assetGroup','2','MR','MR',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1402,'assetGroup','3','DR','DR',null,-1);
@@ -389,7 +415,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1492,'contractType','3','延保合同','延保合同',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1493,'contractType','4','移机合同','移机合同',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1494,'contractType','5','保养合同','保养合同',null,-1);
-
+*/
 
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1510,'woSteps','1', '报修','Create',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1511,'woSteps','2', '派工','Assign',null,-1);

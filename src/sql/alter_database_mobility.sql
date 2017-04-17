@@ -181,6 +181,6 @@ alter table wechat_message_log add primary key (id);
 create table  asset_type_faulty(
 "id" serial NOT NULL,
 "asset_type_id" int4,
-"fault_id" int4
+fault_name varchar(64)
 );
 alter table asset_type_faulty add primary key (id);
