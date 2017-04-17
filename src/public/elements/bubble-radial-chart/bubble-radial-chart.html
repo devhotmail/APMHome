@@ -752,7 +752,13 @@
               offsetX = this.layout.offsetX,
               offsetY = this.layout.offsetY;
 
-            var list = lscache.get(url) || [];
+            var list = lscache.get(url);
+            if (!list) {
+              this.loadData(url).then(function() {
+                _this.plotPager();
+              });
+              return;
+            }
             var pages = lscache.get(url + '/pages');
             var total = pages? pages.total : list.length;
             var hasNext = total > this.get('pageOffsetL'+level);
