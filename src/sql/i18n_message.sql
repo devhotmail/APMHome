@@ -165,7 +165,9 @@ INSERT INTO "i18n_message" VALUES (265, 'label', 'AssetContractAttachment', '合
 INSERT INTO "i18n_message" VALUES (266, 'label', 'AssetContractName', '合同名称', 'Asset Contract Name', NULL, -1);
 INSERT INTO "i18n_message" VALUES (267, 'label', 'SysCodeConfig', '系统编码配置', 'Sys Code Config', NULL, -1);
 INSERT INTO "i18n_message" VALUES (268, 'label', 'ItemConfig', '配置', 'Config', NULL, -1);
-
+INSERT INTO "i18n_message" VALUES (269, 'label', 'AssetBrowser', '设备分布分析', 'Asset Browser', NULL, -1);
+INSERT INTO "i18n_message" VALUES (270, 'label', 'UsageAndClinicalPerformance', '运用与临床绩效', 'Usage And Clinical Performance', NULL, -1);
+INSERT INTO "i18n_message" VALUES (271, 'label', 'FinancialPerformanceAndForcast', '财务绩效与预测', 'Financial Performance And Forcast', NULL, -1);
 
 -- Entity Object Names  ( id from 400 to  599)
 
