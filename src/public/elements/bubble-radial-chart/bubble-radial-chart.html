@@ -478,7 +478,12 @@
             delta = parent.x + arcDeg / 2 + START_ANGEL - 180;
             // compensate if the arc exceeds horizon
             if (delta > 0) {
-              startDeg -= delta;
+              if (startDeg > delta) {
+                startDeg -= delta;
+              } else {
+                startDeg += (delta - startDeg) / 2;
+                max--;
+              }
             }
           } else if (arcDeg / 2 > parentDeg) {
             startDeg = 0;
@@ -747,7 +752,13 @@
               offsetX = this.layout.offsetX,
               offsetY = this.layout.offsetY;
 
-            var list = lscache.get(url) || [];
+            var list = lscache.get(url);
+            if (!list) {
+              this.loadData(url).then(function() {
+                _this.plotPager();
+              });
+              return;
+            }
             var pages = lscache.get(url + '/pages');
             var total = pages? pages.total : list.length;
             var hasNext = total > this.get('pageOffsetL'+level);
@@ -1155,6 +1166,9 @@
             });
 
             var nodeEnter = groups.enter().append("g")
+            .attr('id', function(d) {
+              return 'node-leaf' + d.data.id;
+            })
             .attr('class', 'node node--leaf')
             .attr("transform", function(d) {
               // original position (parent `node` circle center)

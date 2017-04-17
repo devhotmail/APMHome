@@ -65,17 +65,19 @@
       'web-utils',
       'web-services'
     ], function(ContextBehavior, FetchCachedBehavior, WebUtils, WebServices) {
-      var DATE_FORMAT = 'YYYY-MM-DD';
+      var DATE_FORMAT = WebUtils.constants.DATE_FORMAT;
 
       Polymer({
         is: 'data-filter-bar',
         properties: {
           from: {
-            type: String,
-            notify: true
+            type: String
           },
           to: {
-            type: String,
+            type: String
+          },
+          range: {
+            type: Object,
             notify: true
           },
           dept: {
@@ -111,12 +113,8 @@
           }
         },
         observers: [
-          'setToSimpleDate(range)',
-          'fromSimpleDate(from, to)',
           'saveOptsInURI("type", type)',
-          'saveOptsInURI("dept", dept)',
-          'saveOptsInURI("from", from)',
-          'saveOptsInURI("to", to)'
+          'saveOptsInURI("dept", dept)'
         ],
         behaviors: [
           ContextBehavior,
@@ -125,20 +123,23 @@
         _chargeIsHead: function(user) {
           return user.isHead === 'true';
         },
+        setDefaultProps: function(queries) {
+          // init default time range
+          this.range = {
+            from: moment().subtract(1, 'y').format(DATE_FORMAT),
+            to: moment().format(DATE_FORMAT)
+          }
+          if (queries.dept) this.dept = queries.dept;
+          if (queries.type) this.type = queries.type;
+        },
         ready: function() {
           var _this = this;
 
           var defaultVal = { key: 0, val: '全部'};
           // setup data from location hash
-          this.restoreOptsFromURI([
-            'dept', 'type', 'from', 'to'
-          ]);
+          var queries = this.restoreOptsFromURI();
 
-          // init default time range
-          if (!this.from) {
-            this.set('from', moment().subtract(1, 'y').format(DATE_FORMAT));
-            this.set('to', moment().format(DATE_FORMAT));
-          }
+          this.setDefaultProps(queries);
 
           this.fetchPage(this.resolveApiUrl('/api/org/all'))
           .then(function(response) {
@@ -184,33 +185,17 @@
             'type': 'assetGroup',
           }).toString();
         },
-        setToSimpleDate: function(range) {
-          if (!this.from) {
-            return;
-          }
-          this.set('from', moment(range.from).format(DATE_FORMAT));
-          this.set('to', moment(range.to).format(DATE_FORMAT));
-        },
-        fromSimpleDate: function(from, to) {
-          this.set('range', {
-            from: moment(from).toISOString(),
-            to: moment(to).toISOString(),
-          });
-        },
         restoreOptsFromURI: function(propList) {
           var options = URI().query(URI().fragment()).query(true);
           if (!this.isHead) options.dept = this.user.orgId;
-          var _this = this;
-          propList.forEach(function(prop) {
-            if (prop in options) _this.set(prop, options[prop]);
-          });
+          return options;
         },
         saveOptsInURI: function(name, val) {
           if (!val) return;
           var options = URI().query(URI().fragment()).query(true);
           options[name] = val;
           location.hash = '#' + URI().query(options).query();
-        }      
+        }
       });
     });
   </script>
