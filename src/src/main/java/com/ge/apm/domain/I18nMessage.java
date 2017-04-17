@@ -205,7 +205,15 @@ public class I18nMessage implements Serializable, Comparable {
 	@Override
     public int compareTo(Object t) {
         I18nMessage otherMsg = (I18nMessage)t;
-        return this.getMsgKey().compareTo(otherMsg.getMsgKey());
+        try{
+            Integer key1 = Integer.valueOf(this.getMsgKey());
+            Integer key2 = Integer.valueOf(otherMsg.getMsgKey());
+            
+            return key1.compareTo(key2);
+        }
+        catch(Exception ex){
+            return this.getMsgKey().compareTo(otherMsg.getMsgKey());
+        }
     }
     
 }
