@@ -7,7 +7,7 @@ import isNumber from 'lodash.isnumber'
 import { trimString } from '#/utils'
 
 export const CLUSTER_SPACING = 20
-export const ASSET_HEIGHT = 15
+export const ASSET_HEIGHT = 10
 export const ASSET_WIDTH = 25
 
 export const COLORS = ['#6e83a7', '#6e9aa9', '#8888a2', '#76aa9f', '#ba82bb', '#58bbb2']
