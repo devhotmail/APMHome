@@ -42,10 +42,6 @@
 
                         <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup>
-                                <label class="label">#{msg.WorkOrder}#{msg.name}</label>
-                                <p:outputLabel value="#{workOrderController.selected.name}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
                                 <label class="label">#{msg.assetName}</label>
                                 <p:outputLabel value="#{workOrderController.selected.assetName}"/>
                             </h:panelGroup>
@@ -65,14 +61,6 @@
                                 </p:outputLabel>
                             </h:panelGroup>
                             <h:panelGroup>
-                                <label class="label">#{msg.caseOwnerName}</label>
-                                <p:outputLabel value="#{workOrderController.selected.caseOwnerName}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.creatorName}</label>
-                                <p:outputLabel value="#{workOrderController.selected.creatorName}"/>
-                            </h:panelGroup>
-                            <h:panelGroup>
                                 <label class="label">#{msg.currentPersonName}</label>
                                 <p:outputLabel value="#{workOrderController.selected.currentPersonName}"/>
                             </h:panelGroup>
@@ -88,8 +76,8 @@
                                 <p:outputLabel value="#{fieldMsg.fieldValue('caseSubType',workOrderController.selected.caseSubType)}"/>
                             </h:panelGroup>
                             <h:panelGroup>
-                                <label class="label">#{msg.isInternal}</label>
-                                <p:outputLabel value="#{item.isInternal? msg.True2Yes : msg.False2No }"/>
+                                <label class="label">#{msg.intExtType}</label>
+                                <p:outputLabel value="#{fieldMsg.fieldValue('intExtType',workOrderController.selected.intExtType)}"/>
                             </h:panelGroup>
                         </p:panelGrid>
 
@@ -166,8 +154,12 @@
                             </h:panelGroup>
 
                             <h:panelGroup>
-                                <label class="label">#{msg.isInternal}*</label>
-                                <p:selectBooleanCheckbox id="isInternal" itemLabel="#{msg.isInternal}" value="#{workOrderController.selected.isInternal}" required="true" requiredMessage="#{msg.isInternal} #{msg.ValidationRequire}"/>
+                                <label class="label">#{msg.intExtType}*</label>
+                                <p:selectOneMenu value="#{workOrderController.selected.intExtType}">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('intExtType')}" var="item"
+                                                   itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
                             </h:panelGroup>
                             
                             <p:spacer  rendered="#{workOrderController.activeTabId eq 2}"/>
