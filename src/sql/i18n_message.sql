@@ -486,12 +486,13 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1576,'assetFunctionType','43', '6870软件',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1577,'assetFunctionType','44', '6877介入器材',null,null,-1);
 
-
+/*
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1580,'caseType','1', '设备老化',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1581,'caseType','2', '设备损坏',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1582,'caseType','3', '耗材损坏',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1583,'caseType','4', '保修过期',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1584,'caseType','5', '其他',null,null,-1);
+*/
 
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1585,'caseSubType','1', '故障子类型1',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1586,'caseSubType','2', '故障子类型2',null,null,-1);
@@ -793,7 +794,3 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 
 -- update id sequence value
 SELECT setval('"public"."i18n_message_id_seq"', 10000, false);
-insert into i18n_message values(1301,'assetFault',2,'设备老化','aging device',null,-1);
-insert into i18n_message values(1302,'assetFault',3,'部件损坏','broken component',null,-1);
-insert into i18n_message values(1303,'assetFault',4,'fault4','fault4',null,-1);
-
