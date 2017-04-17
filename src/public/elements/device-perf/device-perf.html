@@ -80,6 +80,10 @@
         return window.navigator.msPointerEnabled;
       }
 
+      function isHead() {
+        return !!JSON.parse(document.querySelector('#user-context #isHead').value)
+      }
+
       Polymer({
         is: 'device-perf',
         properties: {
@@ -98,7 +102,7 @@
           groupByList: {
             type: Array,
             value: function() {
-              if (JSON.parse(document.querySelector('#user-context #isHead').value)) {
+              if (isHead()) {
                 return [
                   {
                     key: 'dept',
@@ -138,7 +142,10 @@
           // year: Number,
           groupBy: {
             type: String,
-            value: 'device'
+            value: function() {
+              if (isHead()) return 'dept'
+              else return 'type'
+            }
           },
           queryUrl: {
             type: String,
