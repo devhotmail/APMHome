@@ -1,16 +1,18 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:jsf="http://xmlns.jcp.org/jsf"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/template-polymer.xhtml">
+ <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:jsf="http://xmlns.jcp.org/jsf"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:p="http://primefaces.org/ui"
+                 template="/WEB-INF/template-polymer.xhtml">
 
   <ui:define name="elements">
-    <link rel="import" href="pages/asset-forecast.html" />
+    <link rel="import" href="pages/asset-operational-perf.html"/>
   </ui:define>
 
   <ui:define name="content">
-    <device-forecast></device-forecast>
+    <template is="dom-bind">
+      <device-operational-perf></device-operational-perf>
+    </template>
   </ui:define>
 </ui:composition>
