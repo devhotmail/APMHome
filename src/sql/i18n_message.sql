@@ -366,6 +366,9 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (765,'field_name','factoryWarrantyDate', '质保日期','Manhour Price(RMB)',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (766,'field_name','contractType', '合同类型','Contract Type',null,-1);
 
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (767,'field_name','assetOwnerId2','责任人2','2nd Asset Owner Id',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (768,'field_name','assetOwnerName2','责任人2','2nd Asset Owner Name',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (769,'field_name','assetOwnerTel2','责任人2电话','2nd Asset Owner Tel',null,-1);
 
 
 -- field value code types  ( id from 1400)
