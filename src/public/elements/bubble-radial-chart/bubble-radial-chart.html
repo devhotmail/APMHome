@@ -1155,6 +1155,9 @@
             });
 
             var nodeEnter = groups.enter().append("g")
+            .attr('id', function(d) {
+              return 'node-leaf' + d.data.id;
+            })
             .attr('class', 'node node--leaf')
             .attr("transform", function(d) {
               // original position (parent `node` circle center)
