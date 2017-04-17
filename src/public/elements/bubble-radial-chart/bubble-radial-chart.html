@@ -478,7 +478,12 @@
             delta = parent.x + arcDeg / 2 + START_ANGEL - 180;
             // compensate if the arc exceeds horizon
             if (delta > 0) {
-              startDeg -= delta;
+              if (startDeg > delta) {
+                startDeg -= delta;
+              } else {
+                startDeg += (delta - startDeg) / 2;
+                max--;
+              }
             }
           } else if (arcDeg / 2 > parentDeg) {
             startDeg = 0;
