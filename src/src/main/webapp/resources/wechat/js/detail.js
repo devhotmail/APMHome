@@ -204,7 +204,7 @@ $(function () {
         };
 
         // loop through all gallery elements and bind events
-        var galleryElements = document.querySelectorAll(gallerySelector+ " a");
+        var galleryElements = document.querySelectorAll(gallerySelector);
 
         for (var i = 0, l = galleryElements.length; i < l; i++) {
             galleryElements[i].setAttribute('data-pswp-uid', i + 1);
