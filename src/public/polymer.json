@@ -6,7 +6,7 @@
     "public/pages/home-dept-head.html",
     "public/pages/home-asset-head.html",
     "public/pages/asset-procurement.html",
-    "public/pages/asset-forecast.html",
+    "public/pages/asset-operational-perf.html",
     "public/pages/asset-perf-all.html"
   ],
   "source": [
