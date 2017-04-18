@@ -685,7 +685,9 @@
               credentials: 'same-origin',
               body: JSON.stringify(payload)
             })
-            .then(res => res.json())
+            .then(function(res) {
+              return res.json();
+            })
             .then((function(response) {
               this.showLoading = false;
               this.configLoading = false;
