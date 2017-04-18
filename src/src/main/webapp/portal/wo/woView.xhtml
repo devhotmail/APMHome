@@ -42,10 +42,6 @@
                         
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">#{msg.creatorName}</label>
-                        <p:outputLabel value="#{workOrderController.selected.creatorName}"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
                         <label class="label">#{msg.currentPersonName}</label>
                         <p:outputLabel value="#{workOrderController.selected.currentPersonName}"/>
                     </h:panelGroup>
@@ -61,8 +57,8 @@
                         <p:outputLabel value="#{fieldMsg.fieldValue('caseSubType',workOrderController.selected.caseSubType)}"/>
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">#{msg.isInternal}</label>
-                        <p:outputLabel value="#{workOrderController.selected.isInternal? msg.True2Yes : msg.False2No }"/>
+                        <label class="label">#{msg.intExtType}</label>
+                        <p:outputLabel value="#{fieldMsg.fieldValue('intExtType',workOrderController.selected.intExtType)}"/>
                     </h:panelGroup>
 
                     <h:panelGroup>
@@ -88,14 +84,6 @@
                     <h:panelGroup>
                         <label class="label">#{msg.requestReason}</label>
                         <p:inputTextarea style="border-bottom: 0;" readonly="true" cols="100" value="#{workOrderController.selected.requestReason}"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.closeReason}</label>
-                        <p:inputTextarea style="border-bottom: 0;" readonly="true" cols="100" value="#{workOrderController.selected.closeReason}" />
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.comments}</label>
-                        <p:inputTextarea style="border-bottom: 0;" readonly="true" cols="100" value="#{workOrderController.selected.comments}" />
                     </h:panelGroup>
                 </p:panelGrid>
             </p:fieldset>

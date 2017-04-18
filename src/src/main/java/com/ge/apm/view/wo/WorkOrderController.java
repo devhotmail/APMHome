@@ -148,6 +148,8 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
 
         selected.setTotalManHour(0);
         selected.setTotalPrice(0.0);
+        selected.setCurrentPersonId(loginUser.getId());
+        selected.setCurrentPersonName(loginUser.getName());
         
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");

@@ -511,7 +511,7 @@ public class WorkOrderService {
             throw ex;
         }
         //do wechat push
-        sendTemplateMsg(wo, currentWoStep, nextWoStep);
+//        sendTemplateMsg(wo, currentWoStep, nextWoStep);
 
         //judge whether continue, if auto_stepX is true then continue
         int currentStep = wo.getCurrentStepId();
@@ -536,6 +536,7 @@ public class WorkOrderService {
 
     public void closeWorkOrder(WorkOrder wo, WorkOrderStep currentWoStep) throws Exception{
         wo.setCurrentStepId(6);
+        wo.setStatus(2);
         currentWoStep.setEndTime(TimeUtil.now());
 
         WorkOrderRepository woDao = WebUtil.getBean(WorkOrderRepository.class);
@@ -567,7 +568,7 @@ public class WorkOrderService {
             throw ex;
         }
         //do wechat push
-        sendTemplateMsg(wo, currentWoStep, null);
+//        sendTemplateMsg(wo, currentWoStep, null);
     }
 
     private void saveTotalTimeAndPrice(WorkOrderRepository woDao, WorkOrder wo, WorkOrderStep wos) {
