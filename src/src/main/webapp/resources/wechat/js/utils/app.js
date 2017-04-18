@@ -11,16 +11,15 @@ $(function () {
     app.initFaultType = initFaultType;
     /*glnote*/
     function initFaultType(keyId,astypeId,defaultSelected){
-        $.get(WEB_ROOT+"web/im18faulttype/"+astypeId,
+        $.get(WEB_ROOT+"web/assetfaulttype/"+astypeId,
             function(ret) {
                 if (ret) {
                     pageManager.msgTypes[astypeId] = {};
                     $.each(ret, function(idx, val){
-
-                        if (defaultSelected && val.msgKey == defaultSelected) {
-                            $('#'+keyId).append($('<option value="'+val.msgKey+'" selected="selected">'+val.valueZh+'</option>'));
+                        if (defaultSelected && val.id == defaultSelected) {
+                            $('#'+keyId).append($('<option value="'+val.id+'" selected="selected">'+val.faultName+'</option>'));
                         } else {
-                            $('#'+keyId).append($('<option value="'+val.msgKey+'">'+val.valueZh+'</option>'));
+                            $('#'+keyId).append($('<option value="'+val.id+'">'+val.faultName+'</option>'));
                         }
                     });
                 }

@@ -1,8 +1,9 @@
 package com.ge.apm.web.wo;
 
+import com.ge.apm.dao.AssetFaultTypeRepository;
 import com.ge.apm.dao.I18nMessageRepository;
 import com.ge.apm.dao.WorkOrderRepository;
-import com.ge.apm.domain.I18nMessage;
+import com.ge.apm.domain.AssetFaultType;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderPoJo;
 import com.ge.apm.service.wechat.CoreService;
@@ -58,14 +59,14 @@ public class RepairProcessController {
             return "error";
         }
     }
-
-    @RequestMapping(value = "/im18faulttype/{astypeId}/{hostpitalId}/{siteId}",method = RequestMethod.GET)
+    @Autowired
+    AssetFaultTypeRepository assetFaultTypeRepository;
+    @RequestMapping(value = "/assetfaulttype/{astypeId}",method = RequestMethod.GET)
     @ResponseBody
-    public List<I18nMessage> im18faulttype(HttpServletRequest request,  @PathVariable Integer astypeId,@PathVariable Integer hostpitalId,@PathVariable Integer siteId) throws Exception
+    public List<AssetFaultType> assetfaulttype(HttpServletRequest request,  @PathVariable Integer astypeId) throws Exception
     {
-        System.out.println("hospital id and siteId "+hostpitalId +"   "+siteId);
-        List<I18nMessage> faultTypeByAssetType = i18nMessageRepository.getFaultTypeByAssetType(astypeId,hostpitalId,siteId);
-return faultTypeByAssetType;
+        List<AssetFaultType> byAssetGroupId = assetFaultTypeRepository.getByAssetGroupId(astypeId);
+        return byAssetGroupId;
     }
 
     @RequestMapping(value = "/workorderaction")

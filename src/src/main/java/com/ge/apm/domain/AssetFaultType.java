@@ -11,8 +11,8 @@ import java.io.Serializable;
  * @author 212547631
  */
 @Entity
-@Table(name = "assettype_faulty")
-public class AssetTypeFaulty implements Serializable {
+@Table(name = "asset_fault_type")
+public class AssetFaultType implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -22,12 +22,12 @@ public class AssetTypeFaulty implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "asset_type_id")
-    private Integer assetTypeId;
+    @Column(name = "asset_group_id")
+    private Integer assetGroupId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "fault_id")
-    private Integer faultId;
+    @Column(name = "fault_name")
+    private String faultName;
 
     public Integer getId() {
         return id;
@@ -37,29 +37,25 @@ public class AssetTypeFaulty implements Serializable {
         this.id = id;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public Integer getAssetGroupId() {
+        return assetGroupId;
     }
 
-    public Integer getAssetTypeId() {
-        return assetTypeId;
+    public void setAssetGroupId(Integer assetGroupId) {
+        this.assetGroupId = assetGroupId;
     }
 
-    public void setAssetTypeId(Integer assetTypeId) {
-        this.assetTypeId = assetTypeId;
+    public String getFaultName() {
+        return faultName;
     }
 
-    public Integer getFaultId() {
-        return faultId;
-    }
-
-    public void setFaultId(Integer faultId) {
-        this.faultId = faultId;
+    public void setFaultName(String faultName) {
+        this.faultName = faultName;
     }
 
     @Override
     public String toString() {
-        return "AssetTypeFaulty[ id=" + id + " ]";
+        return "AssetFaultType[ id=" + id + "name= "+faultName +" ]";
     }
 
 }

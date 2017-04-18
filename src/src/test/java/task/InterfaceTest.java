@@ -1,15 +1,16 @@
 package task;
 
-import com.ge.apm.dao.AssetTypeFaultyRepository;
-import com.ge.apm.dao.I18nMessageRepository;
+import com.ge.apm.dao.AssetFaultTypeRepository;
 import com.ge.apm.dao.WorkOrderMsgRepository;
 import com.ge.apm.dao.WorkOrderRepository;
+import com.ge.apm.domain.AssetFaultType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * Created by lsg on 7/3/2017.
@@ -21,17 +22,17 @@ public class InterfaceTest extends BaseJunit4Test{
     @Autowired
     WorkOrderMsgRepository workOrderMsgRepository;
     @Autowired
-    AssetTypeFaultyRepository assetTypeFaultyRepository;
-@Autowired
-I18nMessageRepository i18nMessageRepository;
+    AssetFaultTypeRepository assetFaultTypeRepository;
+/*@Autowired
+I18nMessageRepository i18nMessageRepository;*/
 
     @Test
     @Transactional
     @Rollback(false)
     public void testWorkOrder()throws Exception{
-        System.out.println(
-              "------" +i18nMessageRepository.getFaultTypeByAssetType(1400,2,1));
 
+        List<AssetFaultType> byAssetGroupId = assetFaultTypeRepository.getByAssetGroupId(1);
+        System.out.println(byAssetGroupId);
 
     }
 
