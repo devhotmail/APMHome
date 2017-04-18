@@ -8,12 +8,13 @@ $series-line-color: rgba($dv-light-gray, .1);
   height: calc(100vh - 80px);
   content: 'viewport-units-buggyfill; height: calc(100vh - 80px);';
   padding-top: 40px;
+  position: relative;
   min-width: 800px;
   display: block;
   align-items: center;
   justify-content: center;
   --px-btn-disabled-background: transparent;
-  --device-pagination-color: $text-color-default;
+  --device-pagination-color: #848484;
 }
 
 .chart-bg {
@@ -171,4 +172,11 @@ device-pagination {
     stroke: lighten($dv-basic-purple, 15%);
     stroke-width: 3px;
   }
+}
+
+.pager {
+  position: absolute;
+  right: 2%;
+  top: 50%;
+  transform: translateY(-50%);
 }
