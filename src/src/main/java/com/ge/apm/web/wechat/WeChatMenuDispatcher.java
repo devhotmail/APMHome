@@ -8,8 +8,10 @@ package com.ge.apm.web.wechat;
 import com.ge.apm.service.wechat.CoreService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -17,6 +19,7 @@ import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -89,6 +92,19 @@ public class WeChatMenuDispatcher {
             model.addAttribute("openId", openId);
             ExternalLoginHandler loginHandler = WebUtil.getServiceBean(ExternalLoginHandler.class);
             isBinded =  loginHandler.doLoginByWeChatOpenId(openId, request, response);
+            
+            //add url and openId to cookie
+            try {
+                Properties pro = new Properties();
+                pro.load(PropertyUtils.class.getResourceAsStream("/url.properties"));
+                String authenticalteUrl = pro.getProperty("authenticalteUrl").trim();
+                Cookie cookie = new Cookie("authenticalteUrl", authenticalteUrl);
+                response.addCookie(cookie);
+                Cookie c = new Cookie("weChatId", openId);
+                response.addCookie(c);
+            } catch (Exception e){
+                Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, e);
+            }
         } catch (WxErrorException ex) {
             Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, ex);
         }
