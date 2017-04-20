@@ -25,15 +25,13 @@ public class InterfaceTest extends BaseJunit4Test{
     AssetFaultTypeRepository assetFaultTypeRepository;
 /*@Autowired
 I18nMessageRepository i18nMessageRepository;*/
-
+    /*故障分类*/
     @Test
     @Transactional
     @Rollback(false)
     public void testWorkOrder()throws Exception{
-
-        List<AssetFaultType> byAssetGroupId = assetFaultTypeRepository.getByAssetGroupId(1);
+        List<AssetFaultType> byAssetGroupId = assetFaultTypeRepository.getByAssetGroupId(2);
         System.out.println(byAssetGroupId);
-
     }
 
     @Test
