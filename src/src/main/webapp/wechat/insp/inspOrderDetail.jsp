@@ -1,9 +1,3 @@
-<%-- 
-    Document   : myWoList   工单管理(根据不同的人显示不同的工单)
-    Created on : 2017-3-15, 13:10:33
-    Author     : 212595360
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
@@ -15,153 +9,406 @@
         <title>dfdfd</title>
         <!-- 引入 WeUI -->
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
-        <link rel="stylesheet" href="${ctx}/resources/wechat/css/wo/woprogress.css"/>
+        <link rel="stylesheet" href="${ctx}/resources/wechat/css/example.css"/>
         <script src="${ctx}/resources/wechat/js/utils/jquery-3.1.1.min.js"></script>
+        <script src="${ctx}/resources/wechat/js/utils/jquery.cookie.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/jweixin-1.0.0.js"></script>
         <script src="${ctx}/resources/wechat/js/utils/wechatsdk.js"></script>
-        <script src="${ctx}/resources/wechat/js/utils/pagemanager.js"></script>
-        <script src="${ctx}/resources/wechat/js/utils/app.js"></script>
-        <link rel="stylesheet" href="${ctx}/resources/wechat/css/photoswipe.css"/>
-        <link rel="stylesheet" href="${ctx}/resources/wechat/css/default-skin.css"/>
-        <script src="${ctx}/resources/wechat/js/photoswipe.js"></script>
-        <script src="${ctx}/resources/wechat/js/photoswipe-ui-default.min.js"></script>
-    
+        <script src="${ctx}/resources/wechat/js/utils/apmRest.js"></script>
+        <style>
+            .submargin {margin: 0 20px;opacity: .4;}
+            .weui-flex {opacity: 1!important;}
+        </style>
         <script>
             var WEB_ROOT = '${ctx}/';
         </script>
     </head>
     <body style="background-color:#f8f8f8">
-        <jsp:include page="imgshow.html"/>
         
-        <div id="container" class="container"></div>
+        <div id="container" class="container">
+            <div class="page home js_show">
+                <div class="page__hd" style="padding: 10px 0;height: 30px;">
+                    <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_plain-primary" id="chooseAll" style="float: right; margin-right: 40px; border: 0">取消全选</a>
+                </div>
+                <div class="page__bd page__bd_spacing">
+                    <ul id="asestItems">
+                        
+                    </ul>
+                    
+                    <div class="weui-gallery" id="gallery">
+                        <span class="weui-gallery__img" id="galleryImg"></span>
+                        <div class="weui-gallery__opr">
+                            <a href="javascript:" class="weui-gallery__del">
+                                <i class="weui-icon-delete weui-icon_gallery-delete"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="weui-cells__title">图片上传<div class="weui-uploader__info" style="float: right;"><span id="countnum">0</span>/1</div></div>
+                    <div class="weui-cells">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <div class="weui-uploader">
+                                    <div class="weui-uploader__bd">
+                                        <ul class="weui-uploader__files" id="uploaderFiles">
+                                        </ul>
+                                        <div class="weui-uploader__input-box">
+                                            <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" />
+                                            <input type="hidden" id="deleteImg">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="weui-cells__title">文字描述</div>
+                    <div class="weui-cells">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <textarea id="comments" class="weui-textarea" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="weui-btn-area">
+                    <a href="javascript:;" class="weui-btn weui-btn_primary" id="submit">保存</a>
+                </div>
+            </div>
+        </div>
         <script>
             $(function(){
                 wechatSDK.setAppId('${appId}');
                 wechatSDK.setSignature('${timestamp}', '${nonceStr}', '${signature}');
                 wechatSDK.init();
-                pageManager.hospitalId = '${hospitalId}';
-                //show the tabs by the role of the user
-                $.get(WEB_ROOT+'web/choosetab', function(ret){
-                    if (ret && ret !== 3) {
-                        if (ret === 1) { // assigner
-                            pageManager.assetHead = true;
-                        } else { // worker
-                            pageManager.assetHead = false;
-                        }
-                        app.intCasePriority();
-                        pageManager.init('ts_mywoList');
+                
+                function initData() {
+                    apmRest.get('/hcapmassetservice/api/apm/asset/inspection/'+'${inspId}', null, function(ret){
+                        assembleData(ret);
+                    });
+                }
+                initData();
+                
+                function assembleData(ret) {
+                    //var details = [{assetName: 'ddfd', items:[{name:'1111'},{name:'2222'}]},{assetName: 'ggggg', items:[{name:'3333'},{name:'4444'}]}];
+                    if (ret.bizStatusCode === 'OK' && ret.data && ret.data.details && ret.data.details.length > 0)  {
+                        window.inspDetails = ret.data.details;
+                        window.orderId = ret.data.order.id;
+                        setAllDetails(true);
+                        var assets = [];
+                        $.each(ret.data.details, function(idx, val){
+                            if (assets.indexOf(val.assetName) === -1) {
+                                assets.push(val.assetName);
+                            }
+                        });
+                        var details = [];
+                        $.each(assets, function(idx, val){
+                            var asset = {};
+                            asset.assetName = val;
+                            asset.items = [];
+                            $.each(ret.data.details, function(i, v){
+                                if (asset.assetName === v.assetName) {
+                                    var item = {};
+                                    item.id = v.id;
+                                    item.name = v.itemName;
+                                    asset.items.push(item);
+                                }
+                            });
+                            details.push(asset);
+                        });
+                        initAssetList(details);
+                        binds();
+                        imageAction();
                     } else {
-                        pageManager.init('ts_role_not_found');
+                        $('#container').empty().append('<div class="page js_show"><div class="page_hd"><h1>没有数据...</h1></div></div>');
                     }
-                });
+                }
+                
+                function initAssetList(details) {
+                    var html = $('#assetItem').html();
+                    var item = $('#checkItem').html();
+                    var $ul = $('#asestItems');
+                    $.each(details, function(idx, val){
+                        var $html = $(html);
+                        $html.find('.js_category p').html(val.assetName);
+                        var $content = $html.find('.js_categoryInner .weui-cells_checkbox');
+                        $.each(val.items, function(i,v){
+                            var $item = $(item);
+                            $item.find('p').html(v.name);
+                            $item.find('input').attr('data-id', v.id);
+                            $content.append($item);
+                        });
+                        $ul.append($html);
+                    });
+                }
+                
+                //click chooseAll to reset the values
+                function setAllDetails(isPassed) {
+                    if (window.inspDetails) {
+                        $.each(window.inspDetails, function(i, v){
+                            v.isPassed = isPassed;
+                        });
+                    }
+                }
+                
+                //click item_checked to reset the few items
+                function setAssetDetails(items) {
+                    if (window.inspDetails) {
+                        $.each(items, function(idx, val){
+                            $.each(window.inspDetails, function(i, v){
+                                if ($(val).data('id') === v.id){
+                                    if($(val).is(':checked')){
+                                        v.isPassed = true;
+                                    }else {
+                                        v.isPassed = false;
+                                    }
+                                    return false;
+                                }
+                            });
+                        });
+                    }
+                }
+                
+                function imageAction() {
+                    //图片功能开始
+                    var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+                        $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+                        $uploaderInput = $("#uploaderInput"),
+                        $uploaderFiles = $("#uploaderFiles");
+                    $uploaderInput.on("click", function(e){
+                        if($uploaderFiles.children().length >= 1){
+                            $('#iosDialog2').fadeIn(200);
+                            return false;
+                        }
+                        wechatSDK.chooseImages(1-$uploaderFiles.children().length, upload);
+//                        return false;
+                    });
+                    $uploaderFiles.on("click", "li", function(){
+                        $('#deleteImg').val($(this).data('serid'));
+                        $galleryImg.attr("style", this.getAttribute("style"));
+                        $gallery.fadeIn(100);
+                    });
+                    $gallery.on("click", function(){
+                        $gallery.fadeOut(100);
+                    });
+                    $('#dialogs').on('click', '.weui-dialog__btn', function(){
+                        $(this).parents('.js_dialog').fadeOut(200);
+                    });
+                    $('.weui-gallery__del').on('click', function(){
+                        var serid = $('#deleteImg').val();
+                        $uploaderFiles.find('[data-serid='+serid+']').remove();
+                        $('#countnum').html($uploaderFiles.children().length);
+                    });
+                    function upload(res) {
+                        if (window.__wxjs_is_wkwebview){
+                            wx.getLocalImgData({
+                                localId: res[0],
+                                success: function(ress){
+                                    var localData = ress.localData.replace('jgp', 'jpeg');
+                                    $uploaderFiles.append($(tmpl.replace('#url#', localData)).attr('data-serid', rest.serverId));
+                                    $('#countnum').html($uploaderFiles.children().length);
+                                }
+                            });
+                        } else {
+                            $uploaderFiles.append($(tmpl.replace('#url#', res[0])).attr('data-serid', rest.serverId));
+                            $('#countnum').html($uploaderFiles.children().length);
+                        }
+                    }
+                    //图片功能结束
+                }
+                
+                function binds() {
+                    var winH = $(window).height();
+                    var categorySpace = 10;
+
+                    $('.js_category').on('click', function(){
+                        var $this = $(this),
+                            $inner = $this.next('.js_categoryInner'),
+                            $page = $this.parents('.page'),
+                            $parent = $(this).parent('li');
+                        var innerH = $inner.data('height');
+                        if(!innerH){
+                            $inner.css('height', 'auto');
+                            innerH = $inner.height();
+                            $inner.removeAttr('style');
+                            $inner.data('height', innerH);
+                        }
+                        if($parent.hasClass('js_show')){
+                            $parent.removeClass('js_show');
+                        }else{
+                            $parent.siblings().removeClass('js_show');
+                            $parent.addClass('js_show');
+                            if(this.offsetTop + this.offsetHeight + innerH > $page.scrollTop() + winH){
+                                var scrollTop = this.offsetTop + this.offsetHeight + innerH - winH + categorySpace;
+                                if(scrollTop > this.offsetTop){
+                                    scrollTop = this.offsetTop - categorySpace;
+                                }
+                                $page.scrollTop(scrollTop);
+                            }
+                            if ($parent.find('.js_category input').is(':checked') !== $parent.find('.js_categoryInner input').is(':checked')) {
+                                $parent.find('.js_categoryInner input').click();
+                            }
+                        }
+                        if($('li input:checked').length === $('li input').length) {
+                            $('#chooseAll').html('取消全选');
+                        } else {
+                            $('#chooseAll').html('全选');
+                        }
+                    });
+
+                    $('.item_checked').on('click', function(){
+                        var $this = $(this);
+                        var items = $this.parents('li').find('.js_categoryInner input');
+                        items.click();
+                        setAssetDetails(items);
+                        return $this.siblings().click();
+                    });
+
+                    $('#chooseAll').on('click', function(){
+                        var $this = $(this);
+                        if ('全选' === $this.html()) {
+                            $this.html('取消全选');
+                            $.each($('li input'), function(i, v){
+                                if(!$(v).is(':checked')){
+                                    $(v).click();
+                                }
+                            });
+                            setAllDetails(true);
+                        } else {
+                            $this.html('全选');
+                            $('li input:checked').click();
+                            setAllDetails(false);
+                        }
+                        $('li.js_show').removeClass('js_show');
+                    });
+                    
+                    $('#submit').click(function(){
+                        var $loadingToast = $('#loadingToast');
+                        if ($loadingToast.css('display') !== 'none') return;
+                        $loadingToast.fadeIn(100);
+                        
+                        var formData = new FormData();  
+                        formData.append('file', $("#uploaderInput")[0].files[0]);
+                        $.ajax({  
+                             url: 'http://120.132.8.152:8090/hcapmobjecthubservice/api/apm/objectHub/objects/single' ,  
+                             type: 'POST',  
+                             data: formData,  
+                             async: false,  
+                             cache: false,  
+                             contentType: false,  
+                             processData: false,  
+                             headers: {"Authorization":$.cookie('Authorization')},
+                             success: function (ret) {  alert(ret.data.objectId);
+                                if (ret && ret.bizStatusCode === 'OK' && ret.data) {
+                                   send(ret.data.objectId);
+                                }
+                             },  
+                             error: function (returndata) {  
+                             }  
+                        });  
+                        
+                        function send(attachId) {
+                            var data = {
+                                "attachId": attachId,
+                                "detailsList": window.inspDetails,
+                                "comments": $('#comments').val()
+                            };
+
+                            apmRest.put('/hcapmassetservice/api/apm/asset/inspection/'+window.orderId+'/excute', data, function(ret){
+                                $loadingToast.fadeOut(100);
+                                if (ret && ret.bizStatusCode === 'OK') {
+                                    $('#container').empty().append($('#ts_msg_success').html());
+                                } else {
+                                    $('#container').empty().append($('#ts_msg_failed').html());
+                                }
+                            });
+                        }
+                    });
+                }
             });
         </script>
-        
-        <script type="text/html" id="ts_mywoList">
-            <div class="page">
-                <div class="page__bd" style="height: 100%;">
-                    <div class="weui-tab">
-                        <div class="weui-navbar">
-                            <div class="weui-navbar__item weui-bar__item_on headRole" data-step="1">
-                                待派工
+        <script type="text/html" id="assetItem">
+            <li>
+                <div class="weui-flex js_category">
+                    <div class="weui-cells weui-cells_checkbox" style="width:100%">
+                        <div class="weui-cell weui-check__label">
+                            <div class="weui-cell__bd">
+                                <p>设备1</p>
                             </div>
-                            <div class="weui-navbar__item headRole" data-step="2">
-                                已派工
-                            </div>
-                            <div class="weui-navbar__item weui-bar__item_on staffRole" data-step="3">
-                                未接工单
-                            </div>
-                            <div class="weui-navbar__item staffRole" data-step="4">
-                                已接工单
-                            </div>
-                            <div class="weui-navbar__item staffRole" data-step="5">
-                                他人工单
-                            </div>
-                            <div class="weui-navbar__item" data-step="6">
-                                已关闭工单
-                            </div>
-                        </div>
-                        <div class="weui-tab__panel">
-                            <div id="wolist" class="page__bd page__bd_spacing">
+                            <div class="weui-cell__ft">
+                                <input type="checkbox" class="weui-check" name="checkbox1" checked="checked">
+                                <i class="weui-icon-checked item_checked"></i>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <script type="text/javascript">
-                $(function(){
-                    pageManager.mywolist = function(){
-                        //data search function
-                        function loadData(step) {
-                            var $loadingToast1 = $('#loadingToast1');
-                            if ($loadingToast1.css('display') !== 'none') return;
-                            $loadingToast1.fadeIn(100);
-                            //fetch data from server    wolistdata is the restful url
-                            $.get(WEB_ROOT+'web/wolistdata', {stepId: step}, function(ret) {
-                                pageManager.workOrders = [];
-                                var data = [];
-                                if (ret && ret.length !== 0) {
-                                    $.each(ret, function(i, v){
-                                        pageManager.workOrders[v['id']] = v;
-                                        data.push({title:'工单编号'+(step===5?(pageManager.hospitalId==v['hospitalId']?'':'/'+v['hospitalName']):'')+': '+ v['id'],
-                                               ftitle: pageManager.msgTypes['casePriority'][v['casePriority']], 
-                                               ftitleColor : v['casePriority']===1?'#F76260':v['casePriority']===2?'#FFBE00':'#09BB07',
-                                               rater: (close === 2 ? v['feedbackRating']: -1),
-                                               data : ['资产编号：'+v['assetId'],
-                                                        '资产名称：'+v['assetName'],
-                                                        '报修人：'+v['requestorName'],
-                                                        '报修时间：'+v['requestTime'],
-                                                       '工单状态：'+v['currentStepName'] ,
-                                                       '当前人员：'+v['currentPersonName']]});
-                                    });
-                                } 
-                                //show the data list
-                                app.fullListItem('wolist', data);
-                                $loadingToast1.fadeOut(100);
-                            });
-                        }
-
-                        //bind click event
-                        $('#wolist').on('click', '.weui-cell_access', function(){
-                            var $loadingToast = $('#loadingToast1');
-                            if ($loadingToast.css('display') === 'none') {
-                                $loadingToast.fadeIn(100);
-                            }
-                            
-                            pageManager.woId = $(this).parent().find('h4').html().split(': ')[1];
-
-                            var wo = pageManager.workOrders[pageManager.woId];
-                            pageManager.entryType = 'wolist';
-                            pageManager.showBtn = (wo.currentPersonId == '${userId}' || !pageManager.assetHead) && pageManager.tab !== 6;
-                            pageManager.takeOtherWo = !pageManager.assetHead && wo.currentPersonId != '${userId}';
-                            pageManager.go('#ts_wodetail');
-                        });
-                        $('.weui-navbar__item').on('click', function () {
-                            $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
-                            //do the search action     1-在修 / 2-完成 / 3-取消
-                            pageManager.tab = $(this).data('step');
-                            loadData($(this).data('step'));
-                        });
-
-                        if (pageManager.assetHead) {
-                            $('.staffRole').hide();
-                            pageManager.tab = 1;
-                            loadData(1);
-                        } else {
-                            $('.headRole').hide();
-                            pageManager.tab = 3;
-                            loadData(3);
-                        }
-                    }
-                    pageManager.mywolist();
-                });
+                <div class="page__category js_categoryInner">
+                    <div class="weui-cells page__category-content">
+                        <div class="weui-cells weui-cells_checkbox">
+                        
+                        </div>
+                    </div>
+                </div>
+            </li>
         </script>
-        
-        <jsp:include page="woDetail.html"/>
-        <jsp:include page="msgTemplate.html"/>
-        <jsp:include page="listTemplate.html"/>
-        <jsp:include page="tipsTemplate.html"/>
-        <jsp:include page="workorderCost.html"/>
-        <jsp:include page="wosteplist.html"/>
+        <script type="text/html" id="checkItem">
+            <div class="weui-cell weui-check__label submargin">
+                <div class="weui-cell__bd">
+                    <p>检查1</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="checkbox" class="weui-check" checked="checked">
+                    <i class="weui-icon-checked"></i>
+                </div>
+            </div>
+        </script>
+        <script type="text/html" id="ts_msg_success">
+            <div class="page js_show">
+                <div class="weui-msg">
+                    <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+                    <div class="weui-msg__text-area">
+                        <h2 class="weui-msg__title">保存成功</h2>
+                    </div>
+                    <div class="weui-msg__opr-area">
+                        <p class="weui-btn-area">
+                            <a href="javascript:history.back();" class="weui-btn weui-btn_primary">返回</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <script type="text/html" id="ts_msg_failed">
+            <div class="page js_show">
+                <div class="weui-msg">
+                    <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+                    <div class="weui-msg__text-area">
+                        <h2 class="weui-msg__title">保存失败</h2>
+                    </div>
+                    <div class="weui-msg__opr-area">
+                        <p class="weui-btn-area">
+                            <a href="javascript:history.back();" class="weui-btn weui-btn_primary">返回</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <div id="loadingToast" style="display:none;">
+            <div class="weui-mask_transparent"></div>
+            <div class="weui-toast">
+                <i class="weui-loading weui-icon_toast"></i>
+                <p class="weui-toast__content">数据保存中...</p>
+            </div>
+        </div>
+        <div id="dialogs">
+            <div class="js_dialog" id="iosDialog2" style="display: none;">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__bd">最多只能上传1张照片</div>
+                    <div class="weui-dialog__ft">
+                        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
