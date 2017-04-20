@@ -45,10 +45,7 @@ public class MenuConfig {
         button22.setType(WxConsts.BUTTON_VIEW);
         button22.setName("巡检工单");
         button22.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/25", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
-        WxMenuButton button23 = new WxMenuButton();
-        button23.setType(WxConsts.BUTTON_VIEW);
-        button23.setName("质控工单");
-        button23.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/menu/26", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+
         WxMenuButton button24 = new WxMenuButton();
         button24.setType(WxConsts.BUTTON_VIEW);
         button24.setName("计量工单");
@@ -60,7 +57,6 @@ public class MenuConfig {
         
         button2.getSubButtons().add(button21);
         button2.getSubButtons().add(button22);
-        button2.getSubButtons().add(button23);
         button2.getSubButtons().add(button24);
         button2.getSubButtons().add(button25);
         
