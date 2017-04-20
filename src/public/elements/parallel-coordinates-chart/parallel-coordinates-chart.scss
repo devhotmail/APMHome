@@ -1,8 +1,10 @@
 // Settings
 @import "_theme.scss";
 
+$dv-basic-purple: rgba(164, 91, 164, 1);
 $label-text-color: $text-color-default;
 $series-line-color: rgba($dv-light-gray, .1);
+$block-blue: rgba(145, 176, 226, 1);
 
 :host {
   height: calc(100vh - 80px);
@@ -19,6 +21,11 @@ $series-line-color: rgba($dv-light-gray, .1);
 
 .chart-bg {
   fill: transparent;
+}
+
+#svg,
+#chartBg {
+  height: 100%;
 }
 
 #pagination {
@@ -76,6 +83,7 @@ device-pagination {
     cursor: default;
     font-size: 1rem;
     text-transform: uppercase;
+    text-anchor: end;
   }
 
   &.title {
@@ -96,7 +104,7 @@ device-pagination {
 
 .sector {
   rect {
-    fill: $dv-basic-blue;
+    fill: $block-blue;
   }
 
   .label {
@@ -165,11 +173,11 @@ device-pagination {
     }
   }
   .foreground path.active {
-    stroke: lighten($dv-basic-blue, 15%);
+    stroke: $dv-basic-blue;
     stroke-width: 3px;
   }
   .benchmark path.active {
-    stroke: lighten($dv-basic-purple, 15%);
+    stroke: $dv-basic-purple;
     stroke-width: 3px;
   }
 }
