@@ -77,7 +77,7 @@
           var radius = node.circle.r;
           var locationX = -parseInt(config.width) / 2;
           var locationY = -parseInt(config.height) / 2;
-          var fillPercent = data.profit / data.revenue;
+          var fillPercent = data.revenue ? data.profit / data.revenue : 1;
           var waveHeightScale;
           if (config.waveHeightScaling) {
             waveHeightScale = d3.scaleLinear()
@@ -239,7 +239,7 @@
               .attr('text-anchor', 'middle')
               .attr('fill', config.waveColor)
               .attr('transform', 'translate(' + [0, labelFontSize * lineCount] + ')')
-              .text('占总利润' + parseInt(ratioInProfit * 100) + '%');
+              .text('占总成本' + parseInt(ratioInProfit * 100) + '%');
             }
           }
 
@@ -328,7 +328,7 @@
             .attr("font-size", textPixels + "px")
             .attr('transform', 'translate(' + [0, textPixels].join(',') + ')');
             fullTipGroup.append('text')
-            .text('利润')
+            .text('成本')
             .attr('text-anchor', 'middle')
             .attr('font-size', textPixels + 'px')
             .attr('transform', 'translate(' + [0, textPixels].join(',') + ')');
@@ -424,6 +424,11 @@
           } else {
             _config = Object.assign({}, _defaultConfig, _config);
           }
+
+          ['cost', 'cost_label', 'cost_label_unit'].map(function(key) {
+            var newKey = key.replace('cost', 'profit')
+            node.data[newKey] = node.data[key]
+          })
 
           renderGauge.call(component, this, node, i, _config);
         }
