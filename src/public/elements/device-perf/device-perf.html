@@ -4,6 +4,7 @@
 <link rel="import" href="../modernizr/modernizr.html"/>
 <link rel="import" href="../vh-buggyfill/vh-buggyfill.html"/>
 <link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown-content.html">
 <link rel="import" href="../../bower_components/px-rangepicker/px-rangepicker.html">
 <link rel="import" href="../new-bubble-radial-chart/new-bubble-radial-chart.html">
 <link rel="import" href="../groupby-radios/groupby-radios.html">
@@ -41,7 +42,18 @@
         </template>
         <template is="dom-if" if="[[!_isHistory(reportType)]]">
           <div class="date-range">
-            [[tomorrow]] 到 [[oneYearAfterTomorrow]]
+            <px-dropdown
+              class="u-mh+"
+              display-value="[[selectedYear]]  "
+              selected-key="{{selectedYear}}">
+              <px-dropdown-content
+                class="px-dropdown-content"
+                max-cont-character-width="10"
+                extend-dropdown="true"
+                extend-dropdown-by="15"
+                items="[[forecastYearList]]">
+              </px-dropdown-content>
+            </px-dropdown>
           </div>
         </template>
       </div>
@@ -80,17 +92,50 @@
         return window.navigator.msPointerEnabled;
       }
 
+      function isHead() {
+        return !!JSON.parse(document.querySelector('#user-context #isHead').value)
+      }
+
       Polymer({
         is: 'device-perf',
         properties: {
-          tomorrow: {
+          selectedYear: {
             type: String,
-            value: moment().add(1, 'd').format('YYYY年M月D日')
+            value: moment().year()
           },
-          oneYearAfterTomorrow: {
-            type: String,
-            value: moment().add(366, 'd').format('YYYY年M月D日')
+          forecastYearList: {
+            type: Array,
+            value: function() {
+              var thisYear = moment().year()
+              var res = []
+              for (var i = 0; i < 3; i++) {
+                res.push({
+                  key: thisYear + i,
+                  val: thisYear + i
+                })
+              }
+              return res
+            }
           },
+          forecastRange: {
+            type: Object,
+            computed: '_computeForecastRange(selectedYear)'
+          },
+          // forecastFrom: {
+          //   type: String,
+          //
+          // },
+          // forecastTo: {
+          //
+          // }
+          // tomorrow: {
+          //   type: String,
+          //   value: moment().add(1, 'd').format('YYYY年M月D日')
+          // },
+          // oneYearAfterTomorrow: {
+          //   type: String,
+          //   value: moment().add(366, 'd').format('YYYY年M月D日')
+          // },
           reportType: {
             type: String,
             value: 'history'
@@ -98,7 +143,7 @@
           groupByList: {
             type: Array,
             value: function() {
-              if (JSON.parse(document.querySelector('#user-context #isHead').value)) {
+              if (isHead()) {
                 return [
                   {
                     key: 'dept',
@@ -138,11 +183,14 @@
           // year: Number,
           groupBy: {
             type: String,
-            value: 'device'
+            value: function() {
+              if (isHead()) return 'dept'
+              else return 'type'
+            }
           },
           queryUrl: {
             type: String,
-            computed: '_computeQueryUrl(range, groupBy, reportType)'
+            computed: '_computeQueryUrl(range, groupBy, reportType, forecastRange)'
           },
           range: {
             type: Object,
@@ -164,6 +212,12 @@
         ],
         _isHistory: function(reportType) {
           return reportType === 'history'
+        },
+        _computeForecastRange: function(selectedYear) {
+          return {
+            from: moment().year(selectedYear).startOf('year'),
+            to: moment().year(selectedYear).endOf('year')
+          }
         },
         _computePresetRanges: function(reportType) {
           var diff = reportType === 'history' ? -1 : 1
@@ -201,7 +255,7 @@
           }
           return res;
         },
-        _computeQueryUrl: function(range, groupBy, reportType) {
+        _computeQueryUrl: function(range, groupBy, reportType, forecastRange) {
           var uri = URI(this.resolveApiUrl(reportType === 'history' ? '/api/profit' : '/api/profit/forecast'))
           uri.addQuery('groupby', groupBy)
           if (groupBy === 'device') {
@@ -212,7 +266,10 @@
             uri
             .addQuery('from', moment(range.from).format('YYYY-MM-DD'))
             .addQuery('to', moment(range.to).format('YYYY-MM-DD'))
-
+          } else {
+            uri
+            .addQuery('from', moment(forecastRange.from).format('YYYY-MM-DD'))
+            .addQuery('to', moment(forecastRange.to).format('YYYY-MM-DD'))
           }
 
           if (!JSON.parse(document.querySelector('#user-context #isHead').value)) {

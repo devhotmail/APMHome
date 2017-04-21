@@ -1,15 +1,13 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html"/>
-<link rel="import" href="../../bower_components/px-polymer-font-awesome/px-polymer-font-awesome.html">
 
 <link rel="import" href="device-pagination-styles.html">
 <dom-module id="device-pagination">
   <template>
     <style include="device-pagination-styles"></style>
-    <div>
+    <div class="pagination-wrapper">
       <span
         class$="{{_getPrevCls(current)}}"
         on-click="handlePrev">
-        <iron-icon icon="fa:fa-angle-left"></iron-icon>
       </span>
       <span class="counter" id="counter">
         <template is="dom-if" if="{{showInput}}">
@@ -22,14 +20,13 @@
           <span class="current"
             on-click="handleShowInput">{{current}}</span>
         </template>
-        <span> / {{total}}</span>
+        <span>/ {{total}}</span>
       </span>
       <span
         class$="{{_getNextCls(current, total)}}"
         on-click="handleNext">
-        <iron-icon icon="fa:fa-angle-right"></iron-icon>
       </span>
-    </div>
+    </div> 
   </template>
 </dom-module>
 
