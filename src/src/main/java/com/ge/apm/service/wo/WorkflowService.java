@@ -30,6 +30,9 @@ public class WorkflowService {
 	
 	public static final String TIMEOUT_TEMPLATE_ID = "rM1hPuHQDoXccoyUkUdapuxMinKxPqmcKhJdU7E6w1o";
 	public static final String REOPEN_TEMPLATED_ID= "6zKD9kSJq1SEaym7HIfIFO8H136CTUcAfcIGTOtfBtk";
+	public static final int SPECIAL_DISPATCHER = 1;
+	public static final int AUTO_DISPATCHER = 2 ;
+	
 	@Autowired
 	WorkOrderMapper workOrderMapper;
 	
@@ -143,9 +146,20 @@ public class WorkflowService {
 				if(!users.contains(workOrder.getRequestorId())){
 					users.add(workOrder.getRequestorId());
 				}
-				if(!users.contains(woc.getDispatchUserId())){
-					users.add(woc.getDispatchUserId());
+				
+				
+				if(woc.getDispatchMode() == SPECIAL_DISPATCHER){
+					if(!users.contains(woc.getDispatchUserId())){
+						users.add(woc.getDispatchUserId());
+					}
+				}else if(woc.getDispatchMode() == AUTO_DISPATCHER){
+					List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId());
+					users.addAll(dispatchers);
 				}
+				
+//				if(!users.contains(woc.getDispatchUserId())){
+//					users.add(woc.getDispatchUserId());
+//				}
 				List<Integer> subscribers = userAccountMapper.getAssetSubscriber(workOrder.getAssetId());
 				if(!CollectionUtils.isEmpty(subscribers)){
 					users.addAll(subscribers);
@@ -207,9 +221,15 @@ public class WorkflowService {
 			if(!users.contains(workOrder.getRequestorId())){
 				users.add(workOrder.getRequestorId());
 			}
-			if(!users.contains(woc.getDispatchUserId())){
-				users.add(woc.getDispatchUserId());
+			
+			if(woc.getDispatchMode() == SPECIAL_DISPATCHER){
+				if(!users.contains(woc.getDispatchUserId())){
+					users.add(woc.getDispatchUserId());
+				}
+			}else if(woc.getDispatchMode() == AUTO_DISPATCHER){
+				
 			}
+
 			List<Integer> subscribers = userAccountMapper.getAssetSubscriber(workOrder.getAssetId());
 			if(!CollectionUtils.isEmpty(subscribers)){
 				users.addAll(subscribers);

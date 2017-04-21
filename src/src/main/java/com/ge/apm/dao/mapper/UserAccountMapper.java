@@ -34,4 +34,8 @@ public interface UserAccountMapper {
 
 	@Select("select subscribe_user_id from message_subscriber where asset_id = #{asset_id} and is_receive_timeout_msg= true ")
 	public List<Integer> getAssetSubscriber(Integer assetId);
+
+	@Select("select user_id from user_role where role_id=8 and user_id in (select id from user_account where hospital_id = "+
+			"(select hospital_id from user_account where id=#{requestorId}))")
+	public List<Integer> fetchDispaterUser(Integer requestorId);
 } 
