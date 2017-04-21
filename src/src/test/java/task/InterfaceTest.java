@@ -10,6 +10,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -54,6 +55,18 @@ I18nMessageRepository i18nMessageRepository;*/
 
     }
 
+    @Test
+    @Transactional
+    public void t12(){
+        List<String> numbers = Arrays.asList("其它","好的","a到底","其它","dd");
+        numbers.stream()
+                .distinct()
+                .forEach(System.out::println);
 
-
+    }
 }
+
+
+
+
+

@@ -69,12 +69,13 @@
                             <h:outputText value="#{item.assetName}"/>
                         </p:column>
                         <p:column headerText="#{msg.caseType}" sortBy="#{item.caseType}" filterBy="#{item.caseType}" filterMatchMode="EQ">
-                            <!--<f:facet name="filter">
+                            <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('caseType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                    <f:selectItems value="#{workOrderController.getAssetFaultType()}" var="item"
+                                                   itemLabel="#{item.faultName}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
-                            </f:facet>-->
+                            </f:facet>
                             <h:outputText value="#{fieldMsg.fieldValue('caseType', item.caseType)}"/>
                         </p:column>
                         <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">

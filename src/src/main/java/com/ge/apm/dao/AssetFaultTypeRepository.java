@@ -10,4 +10,6 @@ public interface AssetFaultTypeRepository extends GenericRepository<AssetFaultTy
     public List<AssetFaultType> getByAssetGroupId(Integer assetGroupId);
 
 
+   // public List<AssetFaultType> getByAssetGroupId();
+
 }

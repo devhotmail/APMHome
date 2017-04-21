@@ -58,4 +58,24 @@ public class AssetFaultType implements Serializable {
         return "AssetFaultType[ id=" + id + "name= "+faultName +" ]";
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssetFaultType assetFaultType = (AssetFaultType) o;
+
+        if (!faultName.equals(assetFaultType.faultName)) return false;
+        return faultName.equals(assetFaultType.faultName);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + faultName.hashCode();
+        return result;
+    }
+
 }

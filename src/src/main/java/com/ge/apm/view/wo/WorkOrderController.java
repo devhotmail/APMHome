@@ -24,6 +24,12 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+import static java.util.stream.Collectors.toList;
 
 @ManagedBean
 @ViewScoped
@@ -54,14 +60,26 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
         assetFaultTypeRepository= WebUtil.getBean(AssetFaultTypeRepository.class);
 
     }
+    /*根据属性对集合中的对象去重*/
+    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+        Map<Object, Boolean> map = new ConcurrentHashMap<>();
+        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
 
-public List<AssetFaultType>getAssetFaultType(){
+    public List<AssetFaultType>getAssetFaultType(){
+        AssetInfo assetInfo=null;
+        List<AssetFaultType> byAssetGroupId=null;
+        if(this.selected!=null) {
+            assetInfo  = assetInfoRepository.getById(this.selected.getAssetId());
+            byAssetGroupId  = assetFaultTypeRepository.getByAssetGroupId(assetInfo.getAssetGroup());
+        }else{
+            //woList.xhtml加载时候，因为选中任何工单，就列出所有的设备错误类型
+            byAssetGroupId  = assetFaultTypeRepository.find();
+            byAssetGroupId=  byAssetGroupId.stream().filter(distinctByKey(p -> p.getFaultName())).collect(toList());
+        }
+        return byAssetGroupId;
 
-    AssetInfo assetInfo = assetInfoRepository.getById(this.selected.getAssetId());
-    List<AssetFaultType> byAssetGroupId = assetFaultTypeRepository.getByAssetGroupId(assetInfo.getAssetGroup());
-    return byAssetGroupId;
-
-}
+    }
     @Override
     protected WorkOrderRepository getDAO() {
         return dao;
@@ -74,12 +92,12 @@ public List<AssetFaultType>getAssetFaultType(){
     public void setFilterByLoginUser(boolean filterByLoginUser) {
         this.filterByLoginUser = filterByLoginUser;
     }
-    
+
     public void setLoginUserFilter(){
         if(filterByLoginUser){
-            if (this.searchFilters == null) 
+            if (this.searchFilters == null)
                 this.searchFilters = new ArrayList<SearchFilter>();
-        
+
             this.searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, loginUser.getId()));
         }
     }
@@ -99,16 +117,16 @@ public List<AssetFaultType>getAssetFaultType(){
         if (assetIdFromUrl != null){
             searchFilters.add(new SearchFilter("assetId", SearchFilter.Operator.EQ, assetIdFromUrl));
         }
-*/        
+*/
         this.selected = null;
-        
+
         return dao.findBySearchFilter(this.searchFilters, pageRequest);
     }
 
     public String getMyWorkOrderId() {
         return null;
     }
-    
+
     public void setMyWorkOrderId(String selectedWorkOrderId) {
         int workOrder = NumberUtils.toInt(selectedWorkOrderId, -1);
         if(workOrder<0){
@@ -117,11 +135,11 @@ public List<AssetFaultType>getAssetFaultType(){
         else{
             this.selected = dao.getByIdAndCurrentPersonId(workOrder, loginUser.getId());
         }
-        
+
         onSelectWorkOrder();
         prepareEditWorkOrderStep();
     }
-    
+
     public void onSelectWorkOrder(){
         Integer workOrderId = -1;
         if(selected!=null && selected.getId()!=null)
@@ -129,12 +147,12 @@ public List<AssetFaultType>getAssetFaultType(){
 
         WorkOrderHistoryController woHistoryController = WebUtil.getBean(WorkOrderHistoryController.class);
         woHistoryController.loadWorkOrderHistory(workOrderId);
-        
+
         WorkOrderStepController woStepController = WebUtil.getBean(WorkOrderStepController.class);
         woStepController.loadWorkOrderSteps(workOrderId);
         woStepController.setSelectedByWorkOrder(selected);
     }
-    
+
     public List<UserAccount> getUsersInHospital(){
         UaaService uaaService = WebUtil.getBean(UaaService.class);
         return uaaService.getUserList(loginUser.getHospitalId());
@@ -149,24 +167,24 @@ public List<AssetFaultType>getAssetFaultType(){
         UaaService uaaService = WebUtil.getBean(UaaService.class);
         return uaaService.getUsersWithAssetStaffRole(loginUser.getHospitalId());
     }
-    
+
     public void prepareCreateWorkOrder() throws InstantiationException, IllegalAccessException {
         if(!WebUtil.isHttpGetRequest()) return;
 
         this.prepareCreate();
-        
+
         selected.setSiteId(loginUser.getSiteId());
 //        hospitalId改为从设备上面取
 //        selected.setHospitalId(loginUser.getHospitalId());
         selected.setCurrentStepId(1);
-        
+
         selected.setCasePriority(3);
 
         selected.setTotalManHour(0);
         selected.setTotalPrice(0.0);
         selected.setCurrentPersonId(loginUser.getId());
         selected.setCurrentPersonName(loginUser.getName());
-        
+
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");
         String assetId = (String)UrlEncryptController.getValueFromMap(encodeStr,"assetId");
@@ -185,18 +203,18 @@ public List<AssetFaultType>getAssetFaultType(){
         //gl:
         AssetInfo asset = (AssetInfo) eventObject;
         if(asset==null) return;
-        
+
         if(this.selected==null) return;
         this.selected.setAssetId(asset.getId());
         this.selected.setAssetName(asset.getName());
         selected.setHospitalId(asset.getHospitalId());
     }
-    
+
     public void prepareEditWorkOrderStep(){
         WorkOrderStepController woStepController = WebUtil.getBean(WorkOrderStepController.class);
         woStepController.setSelectedByWorkOrder(selected);
     }
-    
+
     private int activeTabId = 0;
     public int getActiveTabId() {
         return activeTabId;
@@ -204,7 +222,7 @@ public List<AssetFaultType>getAssetFaultType(){
     public void setActiveTabId(int activeTabId) {
         this.activeTabId = activeTabId;
     }
-    
+
     public void onTabChanged(TabChangeEvent event) {
         String tabName = event.getTab().getId();
         if("TransferOrder".equals(tabName))
@@ -214,7 +232,7 @@ public List<AssetFaultType>getAssetFaultType(){
         else
             activeTabId = 0;
     }
-    
+
     private String filterIsClosed = null;
 
     public String getFilterIsClosed() {
@@ -234,7 +252,7 @@ public List<AssetFaultType>getAssetFaultType(){
     public void setFilterAssetId(String filterAssetId) {
         this.filterAssetId = filterAssetId;
     }
-    
+
     public void setViewFilter(){
         if(filterIsClosed!=null){
             if (("true".equals(filterIsClosed) || "false".equals(filterIsClosed))){
@@ -242,7 +260,7 @@ public List<AssetFaultType>getAssetFaultType(){
                 searchFilters.add(new SearchFilter("isClosed", SearchFilter.Operator.EQ, Boolean.parseBoolean(filterIsClosed)));
             }
         }
-        
+
         if(filterAssetId!=null){
             if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
             try{
@@ -250,9 +268,9 @@ public List<AssetFaultType>getAssetFaultType(){
             }
             catch(Exception ex){
             }
-        }        
+        }
     }
-    
+
     private int assetStatus;
 
     public int getAssetStatus() {
@@ -270,7 +288,7 @@ public List<AssetFaultType>getAssetFaultType(){
     public void setAssetStatus(int assetStatus) {
         this.assetStatus = assetStatus;
     }
-    
+
     public void assetStatusChange() {
         if(assetStatus == 0) return;
         AssetInfo asset = assetDao.findById(this.selected.getAssetId());
@@ -286,7 +304,7 @@ public List<AssetFaultType>getAssetFaultType(){
                 } else {
                     this.selected.setConfirmedUpTime(null);
                 }
-            } 
+            }
         }
         dao.save(this.selected);
     }
@@ -298,7 +316,7 @@ public List<AssetFaultType>getAssetFaultType(){
     public void setAssetIdFromUrl(Integer assetIdFromUrl) {
         this.assetIdFromUrl = assetIdFromUrl;
     }
-    
+
     private int getHospitalIdFromAsset(Integer id) {
         AssetInfo asset = assetDao.findById(id);
         if (asset == null) return -1;
