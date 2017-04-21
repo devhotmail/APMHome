@@ -12,6 +12,7 @@ import com.ge.apm.view.sysutil.FieldValueMessageController;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,6 +67,10 @@ public class RepairProcessController {
     public List<AssetFaultType> assetfaulttype(HttpServletRequest request,  @PathVariable Integer astypeId) throws Exception
     {
         List<AssetFaultType> byAssetGroupId = assetFaultTypeRepository.getByAssetGroupId(astypeId);
+        if(CollectionUtils.isEmpty(byAssetGroupId)){
+            //如果设备错误类型未定义过，默认取-1
+            byAssetGroupId = assetFaultTypeRepository.getByAssetGroupId(-1);
+        }
         return byAssetGroupId;
     }
 

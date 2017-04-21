@@ -28,10 +28,14 @@ I18nMessageRepository i18nMessageRepository;*/
     /*故障分类*/
     @Test
     @Transactional
-    @Rollback(false)
+    @Rollback(true)
     public void testWorkOrder()throws Exception{
-        List<AssetFaultType> byAssetGroupId = assetFaultTypeRepository.getByAssetGroupId(2);
-        System.out.println(byAssetGroupId);
+        List<AssetFaultType> byAssetGroupId = assetFaultTypeRepository.getByAssetGroupId(-1);
+       // System.out.println(byAssetGroupId);
+       /* List<Integer> groupId = assetFaultTypeRepository.getGroupId();
+        System.out.println( groupId);*/
+
+     //   System.out.println("-------------------"+assetFaultTypeRepository.typeIsReg(2));
     }
 
     @Test

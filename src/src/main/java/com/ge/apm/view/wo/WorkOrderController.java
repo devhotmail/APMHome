@@ -1,7 +1,9 @@
 package com.ge.apm.view.wo;
 
+import com.ge.apm.dao.AssetFaultTypeRepository;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.WorkOrderRepository;
+import com.ge.apm.domain.AssetFaultType;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
@@ -27,6 +29,9 @@ import java.util.List;
 @ViewScoped
 public class WorkOrderController extends JpaCRUDController<WorkOrder> {
 
+    AssetInfoRepository assetInfoRepository;
+
+    AssetFaultTypeRepository  assetFaultTypeRepository;
     WorkOrderRepository dao = null;
     UserAccount loginUser;
     AssetInfoRepository assetDao = null;
@@ -45,8 +50,18 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
 
         dao = WebUtil.getBean(WorkOrderRepository.class);
         assetDao = WebUtil.getBean(AssetInfoRepository.class);
+        assetInfoRepository = WebUtil.getBean(AssetInfoRepository.class);
+        assetFaultTypeRepository= WebUtil.getBean(AssetFaultTypeRepository.class);
+
     }
 
+public List<AssetFaultType>getAssetFaultType(){
+
+    AssetInfo assetInfo = assetInfoRepository.getById(this.selected.getAssetId());
+    List<AssetFaultType> byAssetGroupId = assetFaultTypeRepository.getByAssetGroupId(assetInfo.getAssetGroup());
+    return byAssetGroupId;
+
+}
     @Override
     protected WorkOrderRepository getDAO() {
         return dao;
@@ -68,6 +83,7 @@ public class WorkOrderController extends JpaCRUDController<WorkOrder> {
             this.searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, loginUser.getId()));
         }
     }
+
 
     @Override
     protected Page<WorkOrder> loadData(PageRequest pageRequest) {

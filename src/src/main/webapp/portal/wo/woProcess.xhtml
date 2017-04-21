@@ -163,23 +163,30 @@
                             </h:panelGroup>
                             
                             <p:spacer  rendered="#{workOrderController.activeTabId eq 2}"/>
-                            
                             <h:panelGroup>
+                                <label class="label">#{msg.caseType}</label>
+                                <p:selectOneMenu value="#{workOrderController.selected.caseType}">
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                                    <f:selectItems value="#{workOrderController.getAssetFaultType()}" var="item"
+                                                   itemLabel="#{item.faultName}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                           <!-- <h:panelGroup>
                                 <label class="label">#{msg.caseType}</label>
                                 <p:selectOneMenu value="#{workOrderController.selected.caseType}">
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('caseType')}" var="item"
                                                    itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
-                            </h:panelGroup>
-                            <h:panelGroup>
+                            </h:panelGroup>-->
+                           <!-- <h:panelGroup>
                                 <label class="label">#{msg.caseSubType}</label>
                                 <p:selectOneMenu value="#{workOrderController.selected.caseSubType}">
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('caseSubType')}" var="item"
                                                    itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
-                            </h:panelGroup>
+                            </h:panelGroup>-->
                         </p:panelGrid>
                         <p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup>

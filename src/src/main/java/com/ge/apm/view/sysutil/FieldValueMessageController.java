@@ -1,19 +1,20 @@
 package com.ge.apm.view.sysutil;
 
+import com.ge.apm.dao.AssetFaultTypeRepository;
+import com.ge.apm.domain.AssetFaultType;
 import com.ge.apm.domain.I18nMessage;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ApplicationScoped;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import webapp.framework.web.WebUtil;
-import static webapp.framework.web.WebUtil.getServiceBean;
 import webapp.framework.web.service.DbMessageSource;
 import webapp.framework.web.service.DbResourcesUtil;
+
+import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.ManagedBean;
+import java.io.Serializable;
+import java.util.*;
+
+import static webapp.framework.web.WebUtil.getServiceBean;
 
 @ManagedBean(name="fieldMsg")
 @ApplicationScoped
@@ -50,7 +51,17 @@ public class FieldValueMessageController implements Serializable{
         
         return getFieldValueList(fieldName, instId);
     }
-    
+@Autowired
+    AssetFaultTypeRepository assetFaultTypeRepository;
+    public  List<AssetFaultType> getFieldValueList_bak(String fieldName){
+        Integer instId = -1 ;//glnote_java
+
+            List<AssetFaultType> byAssetGroupId = assetFaultTypeRepository.getByAssetGroupId(1);
+           // instId = UserContextService.getCurrentUserAccount().getSiteId();
+
+        return byAssetGroupId;
+    }
+
     public static List<I18nMessage> getFieldValueList(String fieldName, int institutionId){
         List<I18nMessage> msgList = doGetFieldValueList(fieldName, institutionId);
         if(msgList.isEmpty() && institutionId!=-1){
