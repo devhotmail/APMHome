@@ -1,14 +1,18 @@
 package com.ge.apm.service.uaa;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ge.apm.dao.mapper.AssetInfoMapper;
 import com.ge.apm.dao.mapper.UserAccountMapper;
+import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.SysRole;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.UserModel;
@@ -19,6 +23,9 @@ public class UserAccountService {
 	
 	@Autowired
 	UserAccountMapper userAccountMapper;
+	
+	@Autowired
+	AssetInfoMapper assetInfoMapper;
 	
 	public List<UserAccount> getUserAccount(){
 		return userAccountMapper.getAllUser();
@@ -50,5 +57,36 @@ public class UserAccountService {
 		return user;
 	}
 	
+	public boolean isExists(String openId){
+		return userAccountMapper.getUserByWechatId(openId) != null ? true:false;
+	}
 	
+	public UserAccount createUser(String name,String mobile,Integer assetId,String wechatId){
+		logger.info("create user ,name is {},mobile is {}",name,mobile);
+		if(StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(mobile)){
+			AssetInfo asset = assetInfoMapper.fetchAssetInfoById(assetId);
+			if(asset != null){
+				UserAccount user = new UserAccount();
+				user.setWeChatId(wechatId);
+				user.setName(name);
+				user.setLoginName(mobile);
+				user.setSiteId(asset.getSiteId());
+				user.setHospitalId(asset.getHospitalId());
+				user.setOrgInfoId(asset.getClinicalDeptId());
+				user.setIsActive(true);
+				user.setPlainPassword("123456");
+				try {
+					user.entryptPassword();
+					userAccountMapper.saveUserAccount(user);
+					return user;
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				}
+			}
+			logger.error("cannot find asset by id : {}",assetId);
+		}else{
+			logger.error("name or mobile is null!");
+		}
+		return null;
+	}
 }

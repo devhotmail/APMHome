@@ -1,6 +1,7 @@
 package com.ge.apm.service.wo;
 
 import com.alibaba.druid.util.StringUtils;
+import com.ge.apm.dao.mapper.AssetInfoMapper;
 import com.ge.apm.dao.mapper.UserAccountMapper;
 import com.ge.apm.dao.mapper.WechatMessageLogMapper;
 import com.ge.apm.dao.mapper.WorkOrderMapper;
@@ -31,13 +32,17 @@ public class WorkflowService {
 	public static final String TIMEOUT_TEMPLATE_ID = "rM1hPuHQDoXccoyUkUdapuxMinKxPqmcKhJdU7E6w1o";
 	public static final String REOPEN_TEMPLATED_ID= "6zKD9kSJq1SEaym7HIfIFO8H136CTUcAfcIGTOtfBtk";
 	public static final int SPECIAL_DISPATCHER = 1;
-	public static final int AUTO_DISPATCHER = 2 ;
+	public static final int GRAB_DISPATCHER = 2 ;
+	public static final int AUTO_DISPATCHER = 3 ;
 	
 	@Autowired
 	WorkOrderMapper workOrderMapper;
 	
 	@Autowired
 	UserAccountMapper userAccountMapper;
+	
+	@Autowired
+	AssetInfoMapper assetInfoMapper;
 	
 	@Autowired
 	WechatMessageLogMapper wechatMessageLogMapper;
@@ -147,19 +152,21 @@ public class WorkflowService {
 					users.add(workOrder.getRequestorId());
 				}
 				
-				
 				if(woc.getDispatchMode() == SPECIAL_DISPATCHER){
 					if(!users.contains(woc.getDispatchUserId())){
 						users.add(woc.getDispatchUserId());
 					}
-				}else if(woc.getDispatchMode() == AUTO_DISPATCHER){
+				}else if(woc.getDispatchMode() == GRAB_DISPATCHER){
 					List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId());
 					users.addAll(dispatchers);
+				}else if(woc.getDispatchMode() == AUTO_DISPATCHER){
+					AssetInfo asset = assetInfoMapper.fetchAssetInfoById(workOrder.getAssetId());
+					if(asset != null){
+						users.add(asset.getAssetOwnerId());
+						users.add(asset.getAssetOwnerId2());
+					}
 				}
 				
-//				if(!users.contains(woc.getDispatchUserId())){
-//					users.add(woc.getDispatchUserId());
-//				}
 				List<Integer> subscribers = userAccountMapper.getAssetSubscriber(workOrder.getAssetId());
 				if(!CollectionUtils.isEmpty(subscribers)){
 					users.addAll(subscribers);
