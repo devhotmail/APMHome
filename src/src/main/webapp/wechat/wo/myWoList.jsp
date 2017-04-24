@@ -148,9 +148,16 @@
 
                             var wo = pageManager.workOrders[pageManager.woId];
                             pageManager.entryType = 'wolist';
-                            pageManager.showBtn = (wo.currentPersonId == '${userId}' || !pageManager.assetHead) && pageManager.tab !== 6;
-                            pageManager.takeOtherWo = !pageManager.assetHead && wo.currentPersonId != '${userId}';
-                            pageManager.go('#ts_wodetail');
+//                            pageManager.showBtn = (wo.currentPersonId == '${userId}' || !pageManager.assetHead) && pageManager.tab !== 6;
+//                            pageManager.takeOtherWo = !pageManager.assetHead && wo.currentPersonId != '${userId}';
+//                            pageManager.go('#ts_wodetail');
+                            switch(wo.currentStepId) {
+                                case 2: pageManager.go('#ts_assignWo');break;
+                                case 3: pageManager.tab===5?pageManager.go('#ts_takeOtherWo'):pageManager.go('#ts_takeWo');break;
+                                case 4: pageManager.tab===5?pageManager.go('#ts_takeOtherWo'):pageManager.go('#ts_repairWo');break;
+                                case 5: pageManager.go('#ts_closeWo');break;
+                                default: pageManager.go('#ts_ratingWo');
+                            }
                         });
                         $('.weui-navbar__item').on('click', function () {
                             $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
@@ -173,7 +180,12 @@
                 });
         </script>
         
-        <jsp:include page="woDetail.html"/>
+        <jsp:include page="wosteps/assignWo.html"/>
+        <jsp:include page="wosteps/takeWo.html"/>
+        <jsp:include page="wosteps/repairWo.html"/>
+        <jsp:include page="wosteps/closeWo.html"/>
+        <jsp:include page="wosteps/ratingWo.html"/>
+        <jsp:include page="wosteps/takeOtherWo.html"/>
         <jsp:include page="msgTemplate.html"/>
         <jsp:include page="listTemplate.html"/>
         <jsp:include page="tipsTemplate.html"/>

@@ -18,18 +18,18 @@
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workflowConfigController.selected != null}">
                         <h:panelGroup>
                             <label class = "label">#{msg.dispatchMode}</label>
-                            <p:selectOneMenu value="#{workflowConfigController.selected.dispatchMode}" disabled="true">
+                            <p:selectOneMenu value="#{workflowConfigController.selected.dispatchMode}" >
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('dispatchMode')}" var="item"  itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                              </p:selectOneMenu>
                         </h:panelGroup>
-                        <h:panelGroup >
+<!--                        <h:panelGroup >
                             <label class="label">#{msg.dispatchUserName}*</label>
                             <p:selectOneMenu id="dispatchUserId" value="#{workflowConfigController.selected.dispatchUserId}" 
                             		 required="true" requiredMessage="#{msg.ownerId} #{msg.ValidationRequire}" >
                                 <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
                                 <f:selectItems value="#{workflowConfigController.dispatchUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                             </p:selectOneMenu>
-                        </h:panelGroup>
+                        </h:panelGroup>-->
                         
                         <h:panelGroup>
                             <label class="label">#{msg.timeoutDispatch}</label>

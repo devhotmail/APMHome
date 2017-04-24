@@ -21,6 +21,7 @@ import webapp.framework.web.service.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -108,7 +109,7 @@ public class WorkOrderService {
         * 1（拿siteid和assetid还有hospitalid来作为该设备是否是唯一的）
         * */
         //select * from work_order where  (close_time::timestamp)::date > (select now() - interval '7 day')::date  and  asset_id =68 and hospital_id=2 and site_id=2
-        //gl:requestor 就是申请保修的,curent_person_d: 自动派单时为-1，手动派单时为设备科科长.
+        //gl:requestor 就是申请保修的,curent_person_d: 自动派单时为-1？，手动派单时为设备科科长.     自动:asset_owner 手动：派工人角色  抢单：-1
         //gl: select from user_account ua , sys_role  sr where sr.role_id =2 and ua.user_id = ?
         UserAccount currentUsr= UserContext.getCurrentLoginUser(request);
         WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(currentUsr.getSiteId(), currentUsr.getHospitalId());
@@ -116,32 +117,32 @@ public class WorkOrderService {
             logger.error("没有找到对应机构的流程配置信息......");
             return "error";
         }
-        if (woc.getDispatchUserId() == null) {
-            logger.error("流程派单人未配置......");
-            return "error";
-        }
+//此处理注释因为：派工人改成角色配置，不再是一个字段保存
+//        if (woc.getDispatchUserId() == null) {
+//            logger.error("流程派单人未配置......");
+//            return "error";
+//        }
         List<WorkOrder> reopenWorkOrder = null;
-        if (woc.getOrderReopenTimeframe() == null) {
-            logger.error("流程二次开单信息未配置......");
-        } else {
-            reopenWorkOrder = workOrderRepository.isReopenWorkOrder(wop.getAssetId(),
-                currentUsr.getHospitalId(), currentUsr.getSiteId(), woc.getOrderReopenTimeframe()+ " day");
+//        二次开单需要重新确认，2017-4-21关闭此功能
+//        if (woc.getOrderReopenTimeframe() == null) {
+//            logger.error("流程二次开单信息未配置......");
+//        } else {
+//            reopenWorkOrder = workOrderRepository.isReopenWorkOrder(wop.getAssetId(),
+//                currentUsr.getHospitalId(), currentUsr.getSiteId(), woc.getOrderReopenTimeframe()+ " day");
+//        }
+        //assetInfo status
+        AssetInfo asi = assetInfoRepository.findById(wop.getAssetId());
+        if (asi != null) {
+            asi.setStatus(Integer.parseInt(wop.getAssetStatus()));
+            assetInfoRepository.save(asi);
         }
-        
         WorkOrder neWorkOrder = initWorkOrder(wop, currentUsr, reopenWorkOrder);
-        neWorkOrder.setCurrentPersonId(woc.getDispatchUserId());
-        neWorkOrder.setCurrentPersonName(woc.getDispatchUserName());
+        dispatchMode(woc, neWorkOrder, asi);
         //voice
         if (wop.getVoiceId() != null){
             cService.uploadVoice(neWorkOrder, wop.getVoiceId());
         } 
         workOrderRepository.save(neWorkOrder);
-        //assetInfo status
-        AssetInfo asi = assetInfoRepository.findById(neWorkOrder.getAssetId());
-        if (asi != null) {
-            asi.setStatus(Integer.parseInt(wop.getAssetStatus()));
-            assetInfoRepository.save(asi);
-        }
         //images
         if (wop.getImgIds() != null) {
             String[] imgIds = wop.getImgIds().split(",");
@@ -153,13 +154,35 @@ public class WorkOrderService {
         }
         //step
         WorkOrderStep wds = initWorkOrderStep(request, neWorkOrder);
-        wds.setOwnerId(woc.getDispatchUserId());
-        wds.setOwnerName(woc.getDispatchUserName());
+        wds.setOwnerId(neWorkOrder.getCurrentPersonId());
+        wds.setOwnerName(neWorkOrder.getCurrentPersonName());
         workOrderStepRepository.save(wds);
         //msg
-        sendWoMsgs(neWorkOrder, null, "requestor");
+        createWoMsg(neWorkOrder, woc, "报修完成");
         return "success";
     }
+    
+    /**
+     * depend on dispatch mode to create work_order
+     * @param woc 
+     * 1: 专人派工  via WorkOrderDispatcher role to find the users and the users can see the workOrder, workOrder.currentPersonId will be -1. The all users will get msg
+     * 2: 抢单  via AssetStaff role to find users, and users will get msg, workOrder.currentPersonId will be -1, there will no step for assign
+     * 3: 自动派工  will get the first user by the asset_owner_id of asset_info and there will no step for assign
+     */
+    private void dispatchMode(WorkflowConfig woc, WorkOrder wo, AssetInfo ai) {
+        int dispatchMode = woc.getDispatchMode();
+        int curPerId=-1, curStepId=3;
+        String curPerName="无";
+        switch(dispatchMode) {
+            case 1: curStepId=2;break;
+            case 3: curPerId=ai.getAssetOwnerId(); curPerName=ai.getAssetOwnerName();break;
+        }
+        wo.setCurrentPersonId(curPerId);
+        wo.setCurrentPersonName(curPerName);
+        wo.setCurrentStepId(curStepId);
+        wo.setCurrentStepName(i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",Integer.toString(curStepId)).getValueZh()) ;
+    }
+    
     @Transactional
     public  void assignWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo) throws Exception{
         Integer woId= Integer.valueOf(wopo.getWoId());
@@ -179,6 +202,9 @@ public class WorkOrderService {
         //2  update endtime in wos for last step workorder
         WorkOrderStep currentStep = workOrderStepRepository.getByWorkOrderIdAndStepId(woId,currentStepId).get(0);
         currentStep.setEndTime(new Date());
+        UserAccount currentUsr= UserContext.getCurrentLoginUser(request);
+        currentStep.setOwnerId(currentUsr.getId());
+        currentStep.setOwnerName(currentUsr.getName());
         workOrderStepRepository.save(currentStep);
         //3 create next work order step
         WorkOrderStep wds =  initWorkOrderStep(request, wo);//new WorkOrderStep();
@@ -279,19 +305,14 @@ public class WorkOrderService {
         wo.setEstimatedCloseTime(null);
         //step
         WorkOrderStep wds = initWorkOrderStep(request, wo);
-        //find requestor hospitalId
-        UserAccount currentUsr = userDao.findById(wo.getRequestorId());
-        WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(currentUsr.getSiteId(), currentUsr.getHospitalId());
-        if (woc != null) {
-            wo.setCurrentPersonId(woc.getDispatchUserId());
-            wo.setCurrentPersonName(woc.getDispatchUserName());
-            wds.setOwnerId(woc.getDispatchUserId());
-            wds.setOwnerName(woc.getDispatchUserName());
-        }
+        wo.setCurrentPersonId(-1);
+        wo.setCurrentPersonName("无");
+        wds.setOwnerId(-1);
+        wds.setOwnerName("无");
         workOrderStepRepository.save(wds);
         wo.setCurrentStepName(wds.getStepName());
         workOrderRepository.save(wo);
-        sendWoMsgs(wo, "工单回退", null);
+        returnWoMsg(wo, "工单回退");
     }
     
     @Transactional
@@ -415,8 +436,6 @@ public class WorkOrderService {
         if(reopenWorkOrder != null && reopenWorkOrder.size()>0){
             neWorkOrder.setParentWoId(reopenWorkOrder.get(0).getId());
         }
-        neWorkOrder.setCurrentStepId(2);// gl: 表示步骤是开单
-        neWorkOrder.setCurrentStepName(i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",Integer.toString(2)).getValueZh()) ;
         neWorkOrder.setTotalManHour(0);//gl:----?
         neWorkOrder.setTotalPrice(0.0);//gl:----?
 
@@ -629,9 +648,7 @@ public class WorkOrderService {
         }
     }
     
-    public void sendWoMsgs(WorkOrder wo, String msgTitle, String msgType) {
-        //String wxTemplateId = "4N0nfZ0fXstReD-FcBu-d6tUsTcwBEIND-0wmOh0cO8";
-        String wxTemplateId = configUtils.fetchProperties("workorder_change_template_id");
+    public HashMap<String, Object> combineMsg(WorkOrder wo, String msgTitle) {
         msgTitle = msgTitle==null?i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps",wo.getCurrentStepId()-1+"").getValueZh()+"完成":msgTitle;
         String linkUrl = cService.getWoDetailUrl(wo.getId());
         
@@ -645,16 +662,83 @@ public class WorkOrderService {
         params.put("_requestPerson", wo.getRequestorName());
         params.put("_urgency", i18nMessageRepository.getByMsgTypeAndMsgKey("casePriority",wo.getCasePriority()+"").getValueZh());
         params.put("_currentPerson", wo.getCurrentPersonName());
-        WorkflowConfig wfc = woConDao.getByHospitalId(wo.getHospitalId());
         String msgBrief = "资产名称："+wo.getAssetName() +"\n"
 //                + "报修时间："+ (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getRequestTime())) +"\n"
                 + "报修人："+ wo.getRequestorName() +"\n"
                 + "紧急程度："+ i18nMessageRepository.getByMsgTypeAndMsgKey("casePriority",wo.getCasePriority()+"").getValueZh() +"\n"
-                + "派工人："+ wfc.getDispatchUserName() +"\n"
+//                + "派工人："+ wfc.getDispatchUserName() +"\n"
                 + "当前责任人："+ wo.getCurrentPersonName();
         params.put("remark", msgBrief);
         params.put("linkUrl", linkUrl);
+        return params;
+    }
+    
+    public void sendWoMsgs(WorkOrder wo, String msgTitle, String msgType) {
+        //String wxTemplateId = "4N0nfZ0fXstReD-FcBu-d6tUsTcwBEIND-0wmOh0cO8";
+        String wxTemplateId = configUtils.fetchProperties("workorder_change_template_id");
+        HashMap<String, Object> params = combineMsg(wo, msgTitle);
+        subscriberMsg(wo, params, wxTemplateId);
+        //currentPerson
+        if (wo.getCurrentStepId() == 2 || wo.getCurrentStepId() == 3) {
+            UserAccount ua = userDao.getById(wo.getCurrentPersonId());
+            if (ua != null) {
+                cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
+            }
+        }
+        //requestor
+        UserAccount ua = userDao.getById(wo.getRequestorId());
+        if (ua != null) {
+            cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
+        }
         
+        //assigner takewo
+        if (wo.getCurrentStepId() == 4) {
+            List<UserAccount> uas = userDao.getUsersWithWorkOrderDispatcherRole(wo.getHospitalId());
+            if (!uas.isEmpty()) {
+                for(UserAccount uaa :uas) {
+                    cService.sendWxTemplateMessage(uaa.getWeChatId(), wxTemplateId, params);
+                }
+            }
+        }
+    }
+    
+    public void returnWoMsg(WorkOrder wo, String msgTitle) {
+        HashMap<String, Object> params = combineMsg(wo, msgTitle);
+        String wxTemplateId = configUtils.fetchProperties("workorder_change_template_id");
+        subscriberMsg(wo, params, wxTemplateId);
+        //assigner
+        List<UserAccount> uas = userDao.getUsersWithWorkOrderDispatcherRole(wo.getHospitalId());
+        if (!uas.isEmpty()) {
+            for(UserAccount ua :uas) {
+                cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
+            }
+        }
+        //requestor
+        UserAccount ua = userDao.getById(wo.getRequestorId());
+        if (ua != null) {
+            cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
+        }
+    }
+    
+    public void createWoMsg(WorkOrder wo, WorkflowConfig woc, String msgTitle) {
+        HashMap<String, Object> params = combineMsg(wo, msgTitle);
+        String wxTemplateId = configUtils.fetchProperties("workorder_change_template_id");
+        subscriberMsg(wo, params, wxTemplateId);
+        
+        List<UserAccount> uas = new ArrayList<>();
+        switch(woc.getDispatchMode()) {
+            case 1: uas.addAll(userDao.getUsersWithWorkOrderDispatcherRole(wo.getHospitalId())); break;
+            case 3: uas.add(userDao.getById(wo.getCurrentPersonId())); break;
+            default: uas.addAll(userDao.getUsersWithAssetStaffRole(wo.getHospitalId()));
+        }
+        if (!uas.isEmpty()) {
+            for(UserAccount ua :uas) {
+                cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
+            }
+        }
+    }
+    
+    public void subscriberMsg(WorkOrder wo, HashMap<String, Object> params, String wxTemplateId) {
         // subscriber
         List<MessageSubscriber> sber = null;
         switch(wo.getCurrentStepId()-1) {
@@ -666,24 +750,6 @@ public class WorkOrderService {
             for (MessageSubscriber sb :sber) {
                 int userId = sb.getSubscribeUserId();
                 UserAccount ua = userDao.getById(userId);
-                cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
-            }
-        }
-        //currentPerson
-        if (wo.getCurrentStepId() == 2 || wo.getCurrentStepId() == 3) {
-            UserAccount ua = userDao.getById(wo.getCurrentPersonId());
-            cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
-        }
-        //requestor
-        if (!"requestor".equals(msgType)) {
-            UserAccount ua = userDao.getById(wo.getRequestorId());
-            cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
-        }
-        //assigner
-        if (wo.getCurrentStepId() == 4) {
-            List<WorkOrderStep> list = stepDao.findByWorkOrderIdAndStepId(wo.getId(), 2);
-            if (list != null && !list.isEmpty()){
-                UserAccount ua = userDao.getById(list.get(0).getOwnerId());
                 cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
             }
         }
