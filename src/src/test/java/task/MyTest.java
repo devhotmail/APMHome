@@ -1,7 +1,6 @@
 package task;
 
 import org.junit.Test;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
@@ -10,6 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
 import static java.util.stream.Collectors.toList;
 /**
  * Created by lsg on 7/3/2017.
@@ -65,12 +65,9 @@ class Person{
     }
 }
 public class MyTest extends BaseJunit4Test{
-
-
     @Test
     @Transactional
-    @Rollback(true)
-    public void testWorkOrder()throws Exception{
+    public void removeDuplicationByProperty()throws Exception{
         Person p1 = new Person(1l, "jack");
         Person p2 = new Person(3l, "jack");
         Person p3 = new Person(2l, "tom");
@@ -83,7 +80,7 @@ public class MyTest extends BaseJunit4Test{
        System.out.println("---->"+persons);
     }
 
-    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+    private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
         return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
