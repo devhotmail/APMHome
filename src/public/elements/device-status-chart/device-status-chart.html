@@ -141,6 +141,9 @@
         behaviors: [
           ContextBehavior
         ],
+        registered: function() {
+          this.user = ContextBehavior.getUser();
+        },
         observers: [
           'renderSteps(steps)'
         ],
@@ -148,6 +151,9 @@
           var uri = URI(this.resolveApiUrl('/api/health'));
           if (typeof category === 'number') {
             uri.addQuery('category', category);
+          } 
+          if (this.user.isHead === 'false') { // this is insane...
+            uri.addQuery('dept', this.user.orgId);
           }
           return uri.toString();
         },
@@ -230,7 +236,7 @@
             element = $(element);
             var textPixels = 50;
             var radius = node.circle.r;
-            var size = radius*2;
+            var size = radius * 2;
 
             var label;
             switch(node.orbitIndex) {

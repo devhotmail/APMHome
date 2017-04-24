@@ -4,6 +4,7 @@
 <link rel="import" href="../lodash/lodash.html">
 <link rel="import" href="../../lscache.html"/>
 <link rel="import" href="bubble-radial-chart-styles.html">
+<link rel="import" href="../behavior/context.html">
 
 <dom-module id="bubble-radial-chart">
   <template>
@@ -17,8 +18,9 @@
   </template>
   <script>
     define('bubble-radial-chart', [
-      'lscache'
-    ], function(lscache) {
+      'lscache',
+      'behavior/context'
+    ], function(lscache, ContextBehavior) {
         function project(x, radius) {
           var angle = ( x - 180 ) / 180 * Math.PI;
           return [radius * Math.cos(angle), radius * Math.sin(angle)];
@@ -548,6 +550,7 @@
           is: 'bubble-radial-chart',
           behaviors: [
             Polymer.IronResizableBehavior,
+            ContextBehavior
           ],
           properties: {
             /**
@@ -1349,6 +1352,9 @@
             var length = list.length || 0;
             var offset = this.get('pageOffsetL'+ level);
 
+            if (this.user.isHead === 'false') {
+              url = URI(url).addQuery('dept', this.user.orgId).toString();
+            }
             // read the furthest offset
             if (!pages || (length < pages.total && (length - offset) < PAGE_MAX)) {
               url = URI(url).addQuery({
