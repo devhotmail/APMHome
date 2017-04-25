@@ -35,6 +35,7 @@ alter table work_order drop column name;
 alter table asset_summit alter column rating type float;
 ALTER TABLE user_account ADD CONSTRAINT uk_user_account_wechat_id UNIQUE (wechat_id);
 alter table user_account add COLUMN leader_user_id int;
+alter table user_account alter column login_name type varchar(64);
 
 alter table asset_info alter COLUMN qr_code type varchar(16);
 ALTER TABLE asset_info ADD CONSTRAINT uk_asset_info_qr_code UNIQUE (qr_code);
