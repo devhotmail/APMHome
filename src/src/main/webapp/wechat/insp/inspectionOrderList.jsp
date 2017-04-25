@@ -93,6 +93,7 @@
 
     function getPage(isFinished){
 
+        alert($.cookie('authenticalteUrl'));
         var data = {"orderType": orderType, "isFinished":isFinished, "page": pageCount, "pageSize": pageSize};
         apmRest.get("/hcapmassetservice/api/apm/asset/inspectionorders", data, function(ret){
             $('#moreBtn').remove();
@@ -125,7 +126,7 @@
     }
 
     function gotoDetail(id, orderType){
-        window.location.href = WEB_ROOT + "web/inspOrderDetail?inspId" + id + "&orderType=" + orderType;
+        window.location.href = WEB_ROOT + "web/inspOrderDetail?inspId=" + id + "&orderType=" + orderType;
     }
 
 </script>
