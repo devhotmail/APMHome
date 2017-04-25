@@ -1187,7 +1187,10 @@
             })
             .on('click', function handleClickNode(node) {
               if (hasLink(node)) {
-                window.open(node.data.link.href, '_blank');
+                var uri = URI(node.data.link.href);
+                uri.scheme(''); // use current scheme to avoid DNS issue
+                uri.addQuery('assetId', node.data.id);
+                window.open(uri.toString(), '_blank');
               }
             })
             .each(_.partial(renderNode, _this));
