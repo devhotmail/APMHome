@@ -116,6 +116,18 @@
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
+    <filter>
+        <filter-name>WechatUserLoginFilter</filter-name>
+        <filter-class>com.ge.apm.web.wechat.WechatUserLoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>WechatUserLoginFilter</filter-name>
+        <url-pattern>/wechat/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>WechatUserLoginFilter</filter-name>
+        <url-pattern>/web/*</url-pattern>
+    </filter-mapping>
     <!-- JSF 2 IMPLEMENTATION -->
     <!-- Use JSF view templates saved as *.xhtml, for use with Facelets -->
     <context-param>
