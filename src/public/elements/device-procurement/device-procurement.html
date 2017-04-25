@@ -195,11 +195,11 @@
                         <div style="white-space:nowrap;">待计算</div>
                       </template>
                       <template is="dom-if" if="[[!item.isUnknown]]">
-                        [[item.increase]]
-                        <!--<editable-block
+                        <!--[[item.increase]]-->
+                        <editable-block
                           data-index$="[[index]]"
                           value="[[item.increase]]"
-                          on-changed="handleConfigChange"></editable-block>-->
+                          on-changed="handleConfigChange"></editable-block>
                         <span>%</span>
                       </template>
                     </div>
@@ -460,6 +460,16 @@
           'changeSelectedConfig(focusInfo, configList)',
           'resetSubSelectedConfigIndex(selectedConfigIndex)'
         ],
+        changeFocusInfo: function(index, configList, depth) {
+          if (index && Array.isArray(configList)) {
+            var target = configList[index]
+            this.focusInfo = {
+              id: target.id,
+              depth: depth
+            }
+            console.log(this.focusInfo)
+          }
+        },
         getConfigListOne: function(configList) {
           return configList.filter(function(n) {
             return n.depth === 1;
