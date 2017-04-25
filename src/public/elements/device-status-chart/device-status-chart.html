@@ -389,14 +389,16 @@
                     .attr('fill', '#fff');
 
                     // title
-                    label.append('tspan')
+                    var title = label.append('tspan')
                     .attr('x', 0)
+                    .attr('text-anchor', 'middle')
                     .text(node.data.name);
 
                     // date-time
                     label.append('tspan')
                     .attr('x', 0)
                     .attr('dy', '1.5em')
+                    .attr('text-anchor', 'middle')
                     .text(node.data.date);
 
                     // description label
@@ -404,15 +406,14 @@
                       label.append('tspan')
                       .attr('x', 0)
                       .attr('dy', '1.5em')
+                      .attr('text-anchor', 'middle')
                       .text('原因：')
                       label.append('tspan')
                       .text(node.data.desc);
                     }
-
-                    label.attr('transform', function() {
-                      var rect = label.node().getBBox();
-                      return d3Transform().translate(-rect.width / 2, -rect.height / 3)();
-                    });
+                    title.attr('dy', function() {
+                      return -label.node().getBBox().height / 3; 
+                    })
                     break;
                   }
             }
