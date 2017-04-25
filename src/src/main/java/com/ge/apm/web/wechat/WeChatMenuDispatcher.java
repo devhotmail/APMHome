@@ -61,9 +61,9 @@ public class WeChatMenuDispatcher {
         URL_MAP.put("23", "/web/myOfficereport");
 
 //        URL_MAP.put("23", "/web/repairprocess");
-        URL_MAP.put("25", "/web/coding");
+        URL_MAP.put("25", "/web/inspOrderList/1");
         URL_MAP.put("26", "/web/coding");
-        URL_MAP.put("27", "/web/coding");
+        URL_MAP.put("27", "/web/inspOrderList/2");
         URL_MAP.put("28", "/web/coding");
         URL_MAP.put("29", "/web/coding");
 
