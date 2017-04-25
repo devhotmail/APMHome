@@ -26,6 +26,10 @@ public class WorkOrderPoJo {
     String assetStatus;
     String intExtType;
     Object stepDetail;
+    String userName;
+    String telephone;
+    String wechatId;
+    String nickName;
     boolean reOpen;
 
     public boolean isReOpen() {
@@ -210,6 +214,38 @@ public class WorkOrderPoJo {
 
     public void setIntExtType(String intExtType) {
         this.intExtType = intExtType;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getWechatId() {
+        return wechatId;
+    }
+
+    public void setWechatId(String wechatId) {
+        this.wechatId = wechatId;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
     
 }
