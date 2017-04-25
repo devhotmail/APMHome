@@ -67,10 +67,6 @@ public class TestController {
     @RequestMapping(value = "/push_wx", method = RequestMethod.GET )
     @ResponseBody
     public String pushWX() {
-
-
-
-
     		String _openId = "otf1us5X8vbPlgpSK2C7aXKPxu6Q";
     		System.out.println("env is "+env);
     		String _templateId = configUtils.fetchProperties("timeout_template_id");
@@ -85,10 +81,8 @@ public class TestController {
     		map.put("remark", "备注信息");
     		coreService.sendWxTemplateMessage(_openId, _templateId,map);
          return "success";
-
     }
     public void datecompare() throws Exception{
-
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     Date d1 =df.parse("2016-05-09");//2001-01-09 for var
         Date d2 =df.parse("2016-07-12");
@@ -100,4 +94,21 @@ public class TestController {
             dtFrom = dtFrom.plusDays(1);
         }
      }
+    
+    @RequestMapping(value = "/isExists", method = RequestMethod.GET )
+    public String isExists() {
+    		String _openId = "otf1us5X8vbPlgpSK2C7aXKPxu6Q111";
+    		System.out.println(userAccountService.isExists(_openId));
+    		return "success";
+    }
+    
+    @RequestMapping(value = "/createUser", method = RequestMethod.POST )
+    @ResponseBody
+    public UserAccount createUser() {
+    		String name = "t1";
+    		String mobile = "12311111222";
+    		int assetId = 1;
+    		String wechatId= "tomcat";
+    		return userAccountService.createUser(name, mobile, assetId, wechatId);
+    }
 }

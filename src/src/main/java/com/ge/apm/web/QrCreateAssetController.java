@@ -37,9 +37,15 @@ public class QrCreateAssetController {
 
     @RequestMapping(value = "/qrCreateAsset/{openId}", method = RequestMethod.GET )
     public String qrCreateAsset(@PathVariable String openId, HttpServletRequest request, Model model){
+        request.setAttribute("openId", openId);
+        return qrCreateAsset(request,model);
+    }
+    
+    @RequestMapping(value = "/qrCreateAsset", method = RequestMethod.GET )
+    public String qrCreateAsset(HttpServletRequest request, Model model){
 
         WxJsapiSignature s;
-
+        String openId=request.getAttribute("openId").toString();
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString() + "?" + request.getQueryString());
         } catch (WxErrorException ex) {

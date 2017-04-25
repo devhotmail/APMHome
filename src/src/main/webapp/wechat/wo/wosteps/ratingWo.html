@@ -1,0 +1,180 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
+<script type="text/html" id="ts_ratingWo">
+    <div class="page">
+        <jsp:include page="../progressbar.html"/>
+        <script src="${ctx}/resources/wechat/js/detail.js"/>
+
+        <div class="page__bd">
+            <jsp:include page="woassetinfo.html"/>
+            <jsp:include page="faultDesc.html"/>
+            
+            <!--故障明细-->
+            <div class="weui-cells__title">故障明细</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">故障类别</label></div>
+                    <div class="weui-cell__bd">
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__bd">
+                                <select class="weui-select" name="caseType" id="caseType">
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!--评价-->
+            <div class="weui-cells__title">评分*</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <div class="weui-rater">
+                            <a data-num="1" class="weui-rater-box"> <span class="weui-rater-inner">★</span> </a>
+                            <a data-num="2" class="weui-rater-box"> <span class="weui-rater-inner">★</span> </a>
+                            <a data-num="3" class="weui-rater-box"> <span class="weui-rater-inner">★</span> </a>
+                            <a data-num="4" class="weui-rater-box"> <span class="weui-rater-inner">★</span> </a>
+                            <a data-num="5" class="weui-rater-box"> <span class="weui-rater-inner">★</span> </a>
+                         </div>
+                        <div id="fen" class="weui_cells_title" style="float:right"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!--备注-->
+            <div class="weui-cells__title">备注</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <textarea name="description" id="description" class="weui-textarea" placeholder="请输入..." rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="errorMsg" style="color:red;text-align: center;"></div>
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">反馈</a>
+            </div>
+            <div style="height:20px;"></div>
+
+        </div>
+        
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            function reloadDetail() {
+                $.get(WEB_ROOT+'web/wodetail', {id: pageManager.woId}, function(ret) {
+                    if (ret) {
+                        app.activeProgressBar(ret.currentStepId, ret.feedbackRating);
+                        //set value
+                        app.setFormJsonValue(ret);
+                        pageManager.workOrder = ret;
+
+                        pageManager.voice = ret.requestReasonVoice;
+                        if (pageManager.voice) {
+                            app.mediaShow();
+                        }else{
+                            $('#replay').addClass('weui-btn_plain-disabled');
+                            $('#voiceBackUp').addClass('weui-btn_plain-disabled');
+                        }
+                        app.renderImgs();
+                        initdetail();
+                        if (ret.requestorId != '${userId}' || ret.currentStepId !== 6 || pageManager.entryType !== 'scan' || ret.feedbackRating != 0) {
+                            raterShow();
+                            $('#submit').hide();
+                        }
+                    } 
+                    $('#loadingToast1').fadeOut(100);
+                });
+            }
+            reloadDetail();
+            
+            function initdetail() {
+                app.initFaultType('caseType',pageManager.workOrder.assetGroupValue,pageManager.workOrder.caseType);//glnote
+                $('#caseType').attr('disabled', 'disabled');
+            
+                $(".weui-rater a").click(function(){
+                    var num = $(this).data('num');
+                    pageManager.feedbackRating = num;
+                    $("#fen").html(num+'分');
+                    $(".weui-rater a").removeClass('checked');
+                    for(var i = 0; i < num;i++){
+                        $(".weui-rater a").eq(i).addClass('checked');
+                    }
+                });
+                
+                $('#submit').click(function(){
+                    $('#errorMsg').html('');
+                    var data = colletionData();
+                    var flag = validateData(data);
+                    if (flag){
+                        return;
+                    }
+                    pageManager.actionType = '';
+                    post(data);
+                });
+                
+                $('.wo_container').click(function(){
+                    pageManager.go('#ts_wosteplist');
+                    var $loadingToast = $('#loadingToast1');
+                    if ($loadingToast.css('display') !== 'none') return;
+                    $loadingToast.fadeIn(100);
+                });
+            }
+            
+            function post(data){
+                var $loadingToast = $('#loadingToast');
+                if ($loadingToast.css('display') !== 'none') return;
+                $loadingToast.fadeIn(100);
+                $.ajax({
+                    url: WEB_ROOT+'web/workorderaction',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(ret) {
+                        $loadingToast.fadeOut(100);
+                        if (ret === 'success') {
+                            if (pageManager.entryType === 'scan') {
+                                $('#container').empty();
+                                $('#container').append($('#ts_msg_success').html());
+                            } else if (pageManager.entryType === 'wolist'){
+                                pageManager.mywolist();
+                                history.back();
+                            }
+                        } else {
+                            var $loadingToast2 = $('#loadingToast2');
+                            if ($loadingToast2.css('display') !== 'none') return;
+                            $loadingToast2.fadeIn(100);
+                            setTimeout($loadingToast2.fadeOut(100), 2000);
+                        }
+                    },
+                    error: function(ret){
+                        var $loadingToast2 = $('#loadingToast2');
+                        if ($loadingToast2.css('display') !== 'none') return;
+                        $loadingToast2.fadeIn(100);
+                        setTimeout($loadingToast2.fadeOut(100), 2000);
+                    }
+                });
+            }
+            function colletionData() {
+                return {woId: pageManager.woId, actionType: 'feedback', feedbackRating: pageManager.feedbackRating, desc: $('#description').val() };
+            }
+            function validateData(data) {
+                if(!data.feedbackRating){$('#errorMsg').html('请先评分');} return !data.feedbackRating;
+            }
+            
+            function raterShow() {
+                var num = pageManager.workOrder.feedbackRating;
+                $("#fen").html(num+'分');
+                for(var i = 0; i < num;i++){
+                    $(".weui-rater a").eq(i).addClass('checked');
+                }
+                $('.weui-rater a').off('click');
+                $('#description').attr('disabled', 'disabled').val(pageManager.workOrder.feedbackComment?pageManager.workOrder.feedbackComment:'无评价内容');
+                $('#showComment').show();
+            }
+            
+        });
+</script>

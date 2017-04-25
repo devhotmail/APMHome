@@ -5,12 +5,14 @@
  */
 package com.ge.apm.web.insp;
 
+import com.ge.apm.service.wechat.CoreService;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,18 @@ public class InspOrderController {
     
     @Autowired
     protected WxMpService wxMpService;
+
+    @Autowired
+    private CoreService coreService;
+
+    @RequestMapping(value = "inspOrderList/{orderType}")
+    public String inspOrderList(@PathVariable String orderType, HttpServletRequest request, Model model) {
+
+        model.addAttribute("orderType", orderType);
+        model.addAttribute("orderTypeName", coreService.getMsgValue("checklistType",orderType));
+
+        return "insp/inspectionOrderList";
+    }
     
     @RequestMapping(value = "inspOrderDetail")
     public String scanWoReport(HttpServletRequest request,HttpServletResponse response, Model model) {

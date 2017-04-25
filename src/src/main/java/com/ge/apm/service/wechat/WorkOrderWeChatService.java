@@ -60,9 +60,9 @@ public class WorkOrderWeChatService {
         UserAccount ua = UserContext.getCurrentLoginUser(request);
         List<WorkOrder> wos = null;
         switch(stepId) {
-            case "1": wos = woDao.getNeedAssignWorkOrder(ua.getId());break;
+            case "1": wos = woDao.getByHospitalIdAndStatusAndCurrentStepIdOrderByIdDesc(ua.getHospitalId(), 1, 2);break; //needAssign
             case "2": wos = woDao.getAssignedWorkOrder(ua.getId());break;
-            case "3": wos = woDao.getUnAcceptedWorkOrder(ua.getId());break;
+            case "3": wos = woDao.getUnAcceptedWorkOrder(ua.getId(), ua.getSiteId());break;
             case "4": wos = woDao.getAcceptedWorkOrder(ua.getId());break;
             case "5": wos = woDao.getOtherPersonWorkOrder(ua.getId(), ua.getSiteId());break;
             default: wos = woDao.getClosedWorkOrder(ua.getId());
@@ -222,17 +222,13 @@ public class WorkOrderWeChatService {
     }
     
     public int chooseTab(HttpServletRequest request) {
-        UserAccount currentUsr= UserContext.getCurrentLoginUser(request);
-        WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(currentUsr.getSiteId(), currentUsr.getHospitalId());
-        if (woc != null && woc.getDispatchUserId() == currentUsr.getId()){//assigner
+        List<String> rnames = getLoginUserRoleName(request);
+        if(rnames.contains("WorkOrderDispatcher")){//assinger
             return 1;
-        } else {//not assigner
-            List<String> rnames = getLoginUserRoleName(request);
-            if (rnames.contains("AssetStaff")){//assinger
-                return 2;
-            } else {
-                return 3;
-            }
+        } else if (rnames.contains("AssetStaff")){//worker
+            return 2;
+        } else {//no roles
+            return 3;
         }
     }
     

@@ -5,6 +5,7 @@
  */
 package com.ge.apm.web.wechat;
 
+import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.wechat.CoreService;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import webapp.framework.context.ExternalLoginHandler;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.service.UserContext;
 
 /**
  *
@@ -34,7 +36,7 @@ import webapp.framework.web.WebUtil;
  */
 @Controller
 public class WeChatMenuDispatcher {
-    
+
     @Autowired
     protected WxMpConfigStorage configStorage;
     @Autowired
@@ -44,15 +46,15 @@ public class WeChatMenuDispatcher {
 
     @Autowired
     protected ExternalLoginHandler loginHandler;
-    
-    static final Map<String, String> URL_MAP ;
-    
+
+    static final Map<String, String> URL_MAP;
+
     static {
         URL_MAP = new HashMap<>();
         URL_MAP.put("11", "/web/qrCreateAsset");
         URL_MAP.put("12", "/wechat/asset/QRQuery.xhtml");
         URL_MAP.put("13", "/wechat/asset/List.xhtml");
-        
+
         URL_MAP.put("21", "/wechat/wo/scanAssetList.xhtml");
         URL_MAP.put("22", "/web/myreport");
 //        URL_MAP.put("23", "/web/repairprocess");
@@ -61,11 +63,11 @@ public class WeChatMenuDispatcher {
         URL_MAP.put("27", "/web/coding");
         URL_MAP.put("28", "/web/coding");
         URL_MAP.put("29", "/web/coding");
-        
+
         URL_MAP.put("31", "/wechat/uaa/viewUserAccount.xhtml");
         URL_MAP.put("32", "/wechat/uaa/resetAccountPassword.xhtml");
         URL_MAP.put("33", "/web/authurl");
-        
+
         URL_MAP.put("34", "/web/scanwodetail");
         URL_MAP.put("35", "/web/mywolist");
 //        URL_MAP.put("333", "/web/voicerecord");
@@ -74,14 +76,33 @@ public class WeChatMenuDispatcher {
     public static Map<String, String> getUrlMap() {
         return URL_MAP;
     }
-    
-    
+
     @RequestMapping(value = "menu/{index}")
-    public String wechatMenuItem(@PathVariable String index,HttpServletRequest request, HttpServletResponse response,Model model) throws Exception {
+    public String wechatMenuItem(@PathVariable String index, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 
         String openId = "";
         String code = request.getParameter("code");
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken;
+
+        // create Asset do not need login
+        if (index.equals("11")) {
+            wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
+            WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
+            openId = wxMpUser.getOpenId();
+             return "redirect:" + URL_MAP.get(index) + "/" + openId;
+//            request.getRequestDispatcher(URL_MAP.get(11) + "/" + openId).forward(request, response);
+//            return "qrCreateAsset";
+        }
+
+        // for already logined users
+        UserAccount currentUser = UserContext.getCurrentLoginUser(request);
+        if (null != currentUser) {
+//            return  "redirect:" +  URL_MAP.get(index)+"?"+request.getQueryString();
+            request.getRequestDispatcher(URL_MAP.get(index) + "?" + request.getQueryString()).forward(request, response);
+            return "";
+        }
+
+        //for first login users
         Boolean isBinded = false;
         try {
             //获得token
@@ -89,10 +110,10 @@ public class WeChatMenuDispatcher {
             //获得用户基本信息
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
             openId = wxMpUser.getOpenId();
-            model.addAttribute("openId", openId);
-            ExternalLoginHandler loginHandler = WebUtil.getServiceBean(ExternalLoginHandler.class);
-            isBinded =  loginHandler.doLoginByWeChatOpenId(openId, request, response);
             
+            ExternalLoginHandler loginHandler = WebUtil.getServiceBean(ExternalLoginHandler.class);
+            isBinded = loginHandler.doLoginByWeChatOpenId(openId, request, response);
+
             //add url and openId to cookie
             try {
                 Properties pro = new Properties();
@@ -102,21 +123,23 @@ public class WeChatMenuDispatcher {
                 response.addCookie(cookie);
                 Cookie c = new Cookie("weChatId", openId);
                 response.addCookie(c);
-            } catch (Exception e){
+            } catch (Exception e) {
                 Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, e);
             }
         } catch (WxErrorException ex) {
             Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        if(index.equals("11")){
-            return  "redirect:" +  URL_MAP.get(index) + "/" + openId;
-        }
-
+//        if (index.equals("11")) {
+//            return "redirect:" + URL_MAP.get(index) + "/" + openId;
+//        }
         if (isBinded) {
-                return  "redirect:" +  URL_MAP.get(index)+"?"+request.getQueryString();
-            }else{
-                return "userInfo";
-            }
+            request.getRequestDispatcher(URL_MAP.get(index) + "?" + request.getQueryString()).forward(request, response);
+            return "";
+//                return  "redirect:" +  URL_MAP.get(index)+"?"+request.getQueryString();
+        } else {
+            model.addAttribute("openId", openId);
+            return "userInfo";
+        }
     }
 }

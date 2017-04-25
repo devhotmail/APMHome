@@ -90,13 +90,18 @@ and open the template in the editor.
                 <f:param name="assetId" value="#{asset.id}"/>
                 <f:param name="action" value="view"/>
                 <!--<f:param name="qrCode" value="#{wxAssetInfoController.qrCode}" disable="#{empty wxAssetInfoController.qrCode}"/>-->
-                <div class="weui-media-box__hd">
+                <!--<div class="weui-media-box__hd">
                     <img id="icoassetGroup" class="weui-media-box__thumb icoassetGroup" src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{asset.assetGroup}.ico" />
-                </div>
+                </div>-->
                 <div class="weui-media-box__bd">
                     <h4 class="weui-media-box__title">#{asset.name}</h4>
-                    <p class="weui-media-box__desc"><span> #{asset.clinicalDeptName}</span><span> #{asset.assetOwnerName}</span><span> #{asset.assetOwnerName2}</span></p>
-                    <p class="weui-media-box__desc">#{asset.manufacture}</p>
+                    <p class="weui-media-box__desc">设备类型：#{fieldMsg.fieldValue('assetGroup',asset.assetGroup)}  
+                        <h:outputText value="制造厂商：#{asset.manufacture}" rendered="#{not empty asset.manufacture}" style="margin-left: 5px"/></p>
+                    <p class="weui-media-box__desc">
+                        <h:outputText value="使用科室：#{asset.clinicalDeptName}" rendered="#{not empty asset.clinicalDeptName}"/>
+                        <h:outputText value="负责人：#{asset.assetOwnerName}" rendered="#{not empty asset.assetOwnerName}" style="margin-left: 5px"/>
+                        <h:outputText value="#{asset.assetOwnerName2}" rendered="#{not empty asset.assetOwnerName2}"/>
+                     </p>
                 </div>
                 <div class="weui-media-box__ft">
                     <p  style="height: 60px">#{asset.status==1?"运行":""}#{asset.status==2?"停机":""}#{asset.status==3?"异常":""}</p>

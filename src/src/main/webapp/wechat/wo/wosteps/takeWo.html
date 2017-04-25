@@ -1,0 +1,150 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
+<script type="text/html" id="ts_takeWo">
+    <div class="page">
+        <jsp:include page="../progressbar.html"/>
+        <script src="${ctx}/resources/wechat/js/detail.js"/>
+
+        <div class="page__bd">
+            <jsp:include page="woassetinfo.html"/>
+            <jsp:include page="faultDesc.html"/>
+
+            <!--派工-->
+            <div class="weui-cells__title">预估解决时间*</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <input id="estimatedCloseTime" name="estimatedCloseTime" class="weui-input" type="datetime-local"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!--备注-->
+            <div class="weui-cells__title">备注</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <textarea name="description" id="description" class="weui-textarea" placeholder="请输入..." rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div id="errorMsg" style="color:red;text-align: center;"></div>
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" href="javascript:" id="submit">接单</a>
+                <a class="weui-btn weui-btn_primary" href="javascript:" id="returnSubmit">回退</a>
+            </div>
+            <div style="height:20px;"></div>
+
+        </div>
+        
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            function reloadDetail() {
+                $.get(WEB_ROOT+'web/wodetail', {id: pageManager.woId}, function(ret) {
+                    if (ret) {
+                        app.activeProgressBar(ret.currentStepId, ret.feedbackRating);
+                        //set value
+                        app.setFormJsonValue(ret);
+
+                        pageManager.voice = ret.requestReasonVoice;
+                        if (pageManager.voice) {
+                            app.mediaShow();
+                        }else{
+                            $('#replay').addClass('weui-btn_plain-disabled');
+                            $('#voiceBackUp').addClass('weui-btn_plain-disabled');
+                        }
+                        app.renderImgs();
+                        //controll the buttons
+                        var roleNames = '${roleNames}';
+                        if (!(ret.currentPersonId == '${userId}' || (ret.currentPersonId===-1 && roleNames.includes('AssetStaff')))) {
+                            $('.weui-btn-area').hide();
+                            $('#estimatedCloseTime').attr('disabled', 'disabled');
+                            $('#description').attr('disabled', 'disabled');
+                        }
+                        //end of the controll
+                        initdetail();
+                    } 
+                    $('#loadingToast1').fadeOut(100);
+                });
+            }
+            reloadDetail();
+            
+            function initdetail() {
+                $('#submit').click(function(){
+                    $('#errorMsg').html('');
+                    var data = colletionData();
+                    var flag = validateData(data);
+                    if (flag){
+                        return;
+                    }
+                    pageManager.actionType = '';
+                    post(data);
+                });
+                $('#returnSubmit').click(function(){
+                    $('#errorMsg').html('');
+                    var data = colletionReturnData();
+                    if(!data.desc){
+                        $('#errorMsg').html('请填写回退备注');
+                        return;
+                    } 
+                    post(data);
+                });
+                
+                if ('${DispatchMode}' != 1) {
+                    $('#returnSubmit').hide();
+                }
+                
+                $('.wo_container').click(function(){
+                    pageManager.go('#ts_wosteplist');
+                    var $loadingToast = $('#loadingToast1');
+                    if ($loadingToast.css('display') !== 'none') return;
+                    $loadingToast.fadeIn(100);
+                });
+            }
+            
+            function post(data){
+                var $loadingToast = $('#loadingToast');
+                if ($loadingToast.css('display') !== 'none') return;
+                $loadingToast.fadeIn(100);
+                $.ajax({
+                    url: WEB_ROOT+'web/workorderaction',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(ret) {
+                        $loadingToast.fadeOut(100);
+                        if (ret === 'success') {
+                            if (pageManager.entryType === 'scan') {
+                                $('#container').empty();
+                                $('#container').append($('#ts_msg_success').html());
+                            } else if (pageManager.entryType === 'wolist'){
+                                pageManager.mywolist();
+                                history.back();
+                            }
+                        } else {
+                            var $loadingToast2 = $('#loadingToast2');
+                            if ($loadingToast2.css('display') !== 'none') return;
+                            $loadingToast2.fadeIn(100);
+                            setTimeout($loadingToast2.fadeOut(100), 2000);
+                        }
+                    },
+                    error: function(ret){
+                        var $loadingToast2 = $('#loadingToast2');
+                        if ($loadingToast2.css('display') !== 'none') return;
+                        $loadingToast2.fadeIn(100);
+                        setTimeout($loadingToast2.fadeOut(100), 2000);
+                    }
+                });
+            }
+            function colletionData() {
+                return {woId: pageManager.woId, actionType: 'take', estimatedCloseTime: $('#estimatedCloseTime').val().replace('T', ' '), desc: $('#description').val()};
+            }
+            function validateData(data) {
+                if (!data.estimatedCloseTime){$('#errorMsg').html('预估解决时间 必填');} return !data.estimatedCloseTime;
+            }
+            function  colletionReturnData() {
+                return {woId: pageManager.woId, actionType: 'return', desc: $('#description').val()};
+            }
+        });
+</script>

@@ -9,6 +9,8 @@ $(function () {
     app.initWechatTime = initWechatTime;
     app.intCasePriority = intCasePriority;
     app.initFaultType = initFaultType;
+    app.renderImgs = renderImgs;
+    app.mediaShow = mediaShow;
     /*glnote*/
     function initFaultType(keyId,astypeId,defaultSelected){
         $.get(WEB_ROOT+"web/assetfaulttype/"+astypeId,
@@ -174,6 +176,60 @@ $(function () {
         var secs = datetime.getSeconds();
         return datetime.getFullYear()+'-'+(month>9?month:'0'+month)+'-'+(date>9?date:'0'+date)
                 +'T'+(hours>9?hours:'0'+hours)+':'+(mins>9?mins:'0'+mins) + ':'+(secs>9?secs:'0'+secs);
+    }
+    
+    function renderImgs() {
+        var $gallery = $('.my-gallery');
+        $.get(WEB_ROOT+'web/wo_img_list', {woId: pageManager.woId}, function(ret){
+            if (ret && ret.length > 0){
+                $.each(ret, function(idx, val){
+                    var $img = $('<figure style="display: inline; padding-right: 8px;"><a href="" data-size="800x600"><img  height="80px" width="80px" /></a></figure>');
+                    $img.find('img').attr('src', WEB_ROOT+'web/image/'+val.photoId);
+                    $gallery.append($img);
+                });
+            }
+        });
+    }
+    
+    function mediaShow() {
+        $('#voiceBackUp').click(function(){
+            pageManager.go('ts_voice_backup');
+            $('audio').attr('src', WEB_ROOT+'web/audio/'+pageManager.voice);
+        });
+
+        var relocalId = null;
+        var replaying = false;
+        $.get(WEB_ROOT+'web/media',{serverId : pageManager.voice}, function(ret) {
+                wx.downloadVoice({
+                    serverId: ret, // 需要下载的音频的服务器端ID，由uploadVoice接口获得
+                    isShowProgressTips: 1, // 默认为1，显示进度提示
+                    success: function (res) {
+                        relocalId = res.localId; // 返回音频的本地ID
+                    }
+                });
+            });
+        $('#replay').click(function(){
+            if (replaying) {
+                replaying = false;
+                $(this).html('播放');
+                wx.stopVoice({
+                    localId: relocalId
+                });
+            } else {
+                replaying = true;
+                $(this).html('停止');
+                wx.playVoice({
+                    localId: relocalId
+                });
+                var self = this;
+                wx.onVoicePlayEnd({
+                    success: function (res) {
+                        replaying = false;
+                        $(self).html('播放');
+                    }
+                });
+            }
+        });
     }
 
 });

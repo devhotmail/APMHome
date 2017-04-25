@@ -42,15 +42,23 @@
                         if (ret) {
                             pageManager.woId = ret.id;
                             pageManager.entryType = 'scan';
-                            pageManager.signUp = false;//ret.currentStepId === 4 && ret.pointStepNumber === 1;
-                            pageManager.showCancel = false;//ret.requestorId == '${userId}';
-                            pageManager.showBtn = ret.currentStepId === 6?
-                                ret.requestorId == '${userId}'&& ret.feedbackRating === 0:
-                                        (ret.currentPersonId == '${userId}'|| (ret.currentStepId < 4&&pageManager.showCancel))&&ret.status !== 3;
-                            if (ret.currentStepId === 6 && ret.requestorId != '${userId}') {
-                                pageManager.init('ts_msg_notfound');
-                            }
-                            pageManager.init('ts_wodetail');
+//                            pageManager.signUp = false;//ret.currentStepId === 4 && ret.pointStepNumber === 1;
+//                            pageManager.showCancel = false;//ret.requestorId == '${userId}';
+//                            pageManager.showBtn = ret.currentStepId === 6?
+//                                ret.requestorId == '${userId}'&& ret.feedbackRating === 0:
+//                                        (ret.currentPersonId == '${userId}'|| (ret.currentStepId < 4&&pageManager.showCancel))&&ret.status !== 3;
+//                            if (ret.currentStepId === 6 && ret.requestorId != '${userId}') {
+//                                pageManager.init('ts_msg_notfound');
+//                            } else {
+                                var roleNames = '${roleNames}';
+                                switch(ret.currentStepId) {
+                                    case 2: roleNames.includes('WorkOrderDispatcher')?pageManager.init('ts_assignWo'):pageManager.init('ts_ratingWo');break;
+                                    case 3: roleNames.includes('AssetStaff')?pageManager.init('ts_takeWo'):pageManager.init('ts_ratingWo');break;
+                                    case 4: (ret.currentPersonId == '${userId}')?pageManager.init('ts_repairWo'):pageManager.init('ts_ratingWo');break;
+                                    case 5: (ret.currentPersonId == '${userId}')?pageManager.init('ts_closeWo'):pageManager.init('ts_ratingWo');break;
+                                    default: pageManager.init('ts_ratingWo');
+                                }
+//                            }
                         } else {
                             pageManager.init('ts_msg_notfound');
                         }
@@ -74,7 +82,12 @@
         </script>
         
         <jsp:include page="imgshow.html"/>
-        <jsp:include page="woDetail.html"/>
+        <jsp:include page="wosteps/assignWo.html"/>
+        <jsp:include page="wosteps/takeWo.html"/>
+        <jsp:include page="wosteps/repairWo.html"/>
+        <jsp:include page="wosteps/closeWo.html"/>
+        <jsp:include page="wosteps/ratingWo.html"/>
+        <jsp:include page="wosteps/takeOtherWo.html"/>
         <jsp:include page="tipsTemplate.html"/>
         <jsp:include page="workorderCost.html"/>
         <jsp:include page="wosteplist.html"/>

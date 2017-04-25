@@ -6,9 +6,11 @@
 package com.ge.apm.web.wo;
 
 import com.ge.apm.dao.AssetInfoRepository;
+import com.ge.apm.dao.WorkflowConfigRepository;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
+import com.ge.apm.domain.WorkflowConfig;
 import com.ge.apm.service.wechat.CoreService;
 import com.ge.apm.service.wechat.WorkOrderWeChatService;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
@@ -49,9 +51,8 @@ public class WorkOrderController {
     private CoreService service;
     @Autowired
     private WorkOrderWeChatService woWcService;
-
-
-
+    @Autowired
+    private WorkflowConfigRepository woConDao;
     
     @RequestMapping(value = "scanworeport")
     public String scanWoReport(HttpServletRequest request,HttpServletResponse response, Model model) {
@@ -98,6 +99,10 @@ public class WorkOrderController {
     public String scanWoDetail(HttpServletRequest request,HttpServletResponse response, Model model) {
         UserAccount ua = service.getLoginUser(request);
         model.addAttribute("userId", ua.getId());
+        List<String> rnames = woWcService.getLoginUserRoleName(request);
+        model.addAttribute("roleNames", rnames);
+        WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(ua.getSiteId(), ua.getHospitalId());
+        model.addAttribute("DispatchMode", woc==null?"":woc.getDispatchMode());
         WxJsapiSignature s = null;
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
@@ -128,6 +133,10 @@ public class WorkOrderController {
         UserAccount ua = service.getLoginUser(request);
         model.addAttribute("userId", ua.getId());
         model.addAttribute("hospitalId", ua.getHospitalId());
+        List<String> rnames = woWcService.getLoginUserRoleName(request);
+        model.addAttribute("roleNames", rnames);
+        WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(ua.getSiteId(), ua.getHospitalId());
+        model.addAttribute("DispatchMode", woc==null?"":woc.getDispatchMode());
         WxJsapiSignature s = null;
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
@@ -262,12 +271,14 @@ public class WorkOrderController {
         map.put("feedbackComment", wo.getFeedbackComment());
         map.put("status", wo.getStatus());
         map.put("requestor", wo.getRequestorName());
+        map.put("requestorId", wo.getRequestorId());
         map.put("requestTime", wo.getRequestTime()==null?null:new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(wo.getRequestTime()));
         map.put("caseType", wo.getCaseType());
         map.put("caseSubType", wo.getCaseSubType());
         map.put("patProblems", wo.getPatProblems());
         map.put("patActions", wo.getPatActions());
         map.put("patTests", wo.getPatTests());
+        map.put("currentPersonId", wo.getCurrentPersonId());
         map.put("currentPersonName", wo.getCurrentPersonName());
         AssetInfo ai = assetDao.getById(wo.getAssetId());
         if (ai == null)

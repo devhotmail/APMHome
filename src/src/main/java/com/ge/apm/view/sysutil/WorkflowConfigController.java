@@ -99,8 +99,8 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
 
 	@Override
 	public void onBeforeSave(WorkflowConfig config) {
-            UserAccountRepository uaDao = WebUtil.getBean(UserAccountRepository.class);
-            config.setDispatchUserName(uaDao.getById(selected.getDispatchUserId()).getName());
+//            UserAccountRepository uaDao = WebUtil.getBean(UserAccountRepository.class);
+//            config.setDispatchUserName(uaDao.getById(selected.getDispatchUserId()).getName());
 	}
 
 	public UserAccount getOwner() {
