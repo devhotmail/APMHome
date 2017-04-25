@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Controller
 @RequestMapping("/asset")
@@ -104,11 +105,14 @@ public class TestController {
     
     @RequestMapping(value = "/createUser", method = RequestMethod.POST )
     @ResponseBody
-    public UserAccount createUser() {
-    		String name = "t1";
-    		String mobile = "12311111222";
-    		int assetId = 1;
-    		String wechatId= "tomcat";
-    		return userAccountService.createUser(name, mobile, assetId, wechatId);
-    }
+	public UserAccount createUser() {
+		int i = new Random().nextInt(10000);
+		String name = "name" + i;
+		String mobile = "mobile" + i;
+		int assetId = 1;
+		String wechatId = "wechatId" + i;
+		String telephone = "telephone" + i;
+		String nickName = "nickName" + i;
+		return userAccountService.createUser(name, mobile, assetId, wechatId, telephone, nickName);
+	}
 }

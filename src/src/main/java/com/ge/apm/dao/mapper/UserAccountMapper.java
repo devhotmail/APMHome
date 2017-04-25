@@ -37,16 +37,19 @@ public interface UserAccountMapper {
 	@Select("select subscribe_user_id from message_subscriber where asset_id = #{asset_id} and is_receive_timeout_msg= true ")
 	public List<Integer> getAssetSubscriber(Integer assetId);
 
-	@Select("select user_id from user_role where role_id=8 and user_id in (select id from user_account where hospital_id = "+
+	@Select("select user_id from user_role where role_id=#{sysRole} and user_id in (select id from user_account where hospital_id = "+
 			"(select hospital_id from user_account where id=#{requestorId}))")
-	public List<Integer> fetchDispaterUser(Integer requestorId);
+	public List<Integer> fetchDispaterUser(@Param("requestorId") Integer requestorId,@Param("sysRole") Integer sysRole);
 	
 	@Select("select id from user_account where wechat_id =#{wechatId}")
 	public UserAccount getUserByWechatId(String wechatId);
 
-	@Insert("insert into user_account(site_id,hospital_id,org_id,login_name,name,pwd_salt,password,email,is_super_admin,is_site_admin,is_local_admin,is_active,wechat_id) "+
+	@Insert("insert into user_account(telephone,site_id,hospital_id,org_id,login_name,name,pwd_salt,password,email,is_super_admin,is_site_admin,is_local_admin,is_active,wechat_id) "+
 			 " values "+
-			" (#{siteId},#{hospitalId},#{orgInfoId},#{loginName},#{name},#{pwdSalt},#{password},'temp@ge.com',false,false,false,true,#{weChatId})")
-//	@Options(useGeneratedKeys=true)
+			" (#{telephone},#{siteId},#{hospitalId},#{orgInfoId},#{loginName},#{name},#{pwdSalt},#{password},'temp@ge.com',false,false,false,true,#{weChatId})")
+	@Options(useGeneratedKeys=true)
 	public Integer saveUserAccount(UserAccount user);
+
+	@Insert("insert into user_role(user_id,role_id) values (#{userId},9)")
+	public void saveUserRole(Integer userId);
 } 
