@@ -389,11 +389,12 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1413,'assetGroup','14','电刀、超声刀','电刀、超声刀',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1414,'assetGroup','15','医用激光类','医用激光类',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1415,'assetGroup','16','输注泵类','输注泵类',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1416,'assetGroup','17','灯床塔等手术','灯床塔等手术',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1416,'assetGroup','17','手术室设备类','手术室设备类',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1417,'assetGroup','18','消毒设备类','消毒设备类',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1418,'assetGroup','19','检验室设备类','检验室设备类',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1419,'assetGroup','20','病理类','病理类',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1420,'assetGroup','21','手术显微镜类','手术显微镜类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1420,'assetGroup','21','口腔科设备类','口腔科设备类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1421,'assetGroup','22','其它','其它',null,-1);
 
 /*
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1400,'assetGroup','1','CT','CT',null,-1);

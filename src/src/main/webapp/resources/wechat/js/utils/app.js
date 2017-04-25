@@ -39,9 +39,13 @@ $(function () {
      * @returns {undefined}
      */
     function initSelectData(keyId, msgType, defaultSelected) {
-        $.get(WEB_ROOT+"web/getmsg",
-            {'msgType': msgType},
-            function(ret) {
+        $.ajax({
+            url:WEB_ROOT+"web/getmsg",
+            data: {'msgType': msgType},
+            beforeSend: function( xhr ) { 
+                xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+            },
+            success: function(ret) {
                 if (ret) {
                     pageManager.msgTypes[msgType] = {};
                     $.each(ret, function(idx, val){
@@ -54,7 +58,7 @@ $(function () {
                     });
                 }
             }
-        );
+        });
     }
 
 
