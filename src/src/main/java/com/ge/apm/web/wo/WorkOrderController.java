@@ -152,6 +152,15 @@ public class WorkOrderController {
         return "wo/myWoList";
     }
     
+    @RequestMapping(value = "unloginScan")
+    public String unlogScan(HttpServletRequest request,HttpServletResponse response, Model model) {
+        model.addAttribute("casePriority", 3);
+        model.addAttribute("openId", request.getAttribute("openId"));
+        model.addAttribute("nickName", request.getAttribute("nickName"));
+        
+        return "wo/unloginScan";
+    }
+    
     @RequestMapping(value="findassetinfo")
     public @ResponseBody Object findAssetInfo(HttpServletRequest request, String qrCode) {
         UserAccount ua = service.getLoginUser(request);
@@ -177,6 +186,23 @@ public class WorkOrderController {
             }
             map.put("view", true);
         }
+        return map;
+    }
+    
+    @RequestMapping(value="unloginAssetInfo")
+    public @ResponseBody Object unloginAssetInfo(HttpServletRequest request, String qrCode) {
+        List<AssetInfo> list = assetDao.getByQrCode(qrCode);
+        if (list.isEmpty())
+            return null;
+        AssetInfo info = list.get(0);
+        Map map = new HashMap();
+        map.put("assetId", info.getId());
+        map.put("assetName", info.getName());
+        map.put("supplier", info.getSupplierId()==null?"":service.getSupplierName(info.getSupplierId()));
+        map.put("assetGroup", service.getMsgValue("assetGroup", info.getAssetGroup().toString()));
+//        map.put("assetStatus", service.getMsgValue("assetStatus", info.getStatus()+""));
+        map.put("assetStatus", info.getStatus());
+        
         return map;
     }
     

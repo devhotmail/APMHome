@@ -51,10 +51,10 @@ public class RepairProcessController {
     /*开单 */
     @RequestMapping(value = "/workorderCreate",method = RequestMethod.POST)
     @ResponseBody
-    public String createWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo) throws Exception
+    public String createWorkOrder(HttpServletRequest request,HttpServletResponse response, @RequestBody WorkOrderPoJo wopo) throws Exception
     {
         try{
-            return workOrderService.workWorderCreate(request, wopo);
+            return workOrderService.workWorderCreate(request, response, wopo);
         } catch(Exception e){
             Logger.getLogger(RepairProcessController.class.getName()).log(Level.SEVERE, null, e);
             return "error";

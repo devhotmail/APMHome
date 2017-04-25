@@ -3,8 +3,10 @@ package com.ge.apm.service.wo;
 import com.ge.apm.dao.*;
 import com.ge.apm.domain.*;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.service.uaa.UserAccountService;
 import com.ge.apm.service.utils.ConfigUtils;
 import com.ge.apm.service.wechat.CoreService;
+import com.google.common.base.Strings;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
@@ -26,6 +28,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import webapp.framework.context.ExternalLoginHandler;
 
 /**
  *
@@ -63,6 +67,10 @@ public class WorkOrderService {
     private ConfigUtils configUtils;
     @Autowired
     private OrgInfoRepository orgDao;
+    @Autowired
+    private UserAccountService uaService;
+    @Autowired
+    private ExternalLoginHandler loginHandler;
 
     public List<WorkOrder> findWorkOrderByStatus(int status)throws Exception{
         List<WorkOrder> byStatus = workOrderRepository.findByStatus(status);
@@ -104,7 +112,13 @@ public class WorkOrderService {
     }
 
     @Transactional
-    public String workWorderCreate(HttpServletRequest request, WorkOrderPoJo wop)throws Exception{
+    public String workWorderCreate(HttpServletRequest request, HttpServletResponse response, WorkOrderPoJo wop)throws Exception{
+        //if the user is a new one , add the user
+        if (!Strings.isNullOrEmpty(wop.getWechatId())) {
+            uaService.createUser(wop.getUserName(), null, wop.getAssetId(), wop.getWechatId(), wop.getTelephone(), wop.getNickName());
+            //TODO login
+            loginHandler.doLoginByWeChatOpenId(wop.getWechatId(), request, response);
+        }
         /*  判断是否二次开单  --> 判断派工模式
         * 1（拿siteid和assetid还有hospitalid来作为该设备是否是唯一的）
         * */
@@ -153,7 +167,7 @@ public class WorkOrderService {
             }
         }
         //step
-        WorkOrderStep wds = initWorkOrderStep(request, neWorkOrder);
+        WorkOrderStep wds = initWorkOrderStep(currentUsr, neWorkOrder);
         wds.setOwnerId(neWorkOrder.getCurrentPersonId());
         wds.setOwnerName(neWorkOrder.getCurrentPersonName());
         workOrderStepRepository.save(wds);
@@ -207,7 +221,7 @@ public class WorkOrderService {
         currentStep.setOwnerName(currentUsr.getName());
         workOrderStepRepository.save(currentStep);
         //3 create next work order step
-        WorkOrderStep wds =  initWorkOrderStep(request, wo);//new WorkOrderStep();
+        WorkOrderStep wds =  initWorkOrderStep(currentUsr, wo);//new WorkOrderStep();
         wds.setOwnerId(user.getId());
         wds.setOwnerName(user.getName());
         workOrderStepRepository.save(wds);
@@ -232,7 +246,8 @@ public class WorkOrderService {
         //1 update work order
         workOrderUpdate(request, wo);
         //2 create new work-order-step
-        WorkOrderStep wds = initWorkOrderStep(request, wo);
+        UserAccount currentUser = UserContext.getCurrentLoginUser(request);
+        WorkOrderStep wds = initWorkOrderStep(currentUser, wo);
         workOrderStepRepository.save(wds);
         sendWoMsgs(wo, null, null);
     }
@@ -242,7 +257,8 @@ public class WorkOrderService {
         Integer woId= Integer.valueOf(wopo.getWoId());
         WorkOrder wo = workOrderRepository.getById(woId);
         updateEndTime(wo, "签到");
-        WorkOrderStep wds = initWorkOrderStep(request, wo);
+        UserAccount currentUser = UserContext.getCurrentLoginUser(request);
+        WorkOrderStep wds = initWorkOrderStep(currentUser, wo);
         workOrderStepRepository.save(wds);
 //        sendWoMsgs(wo, );
     }
@@ -267,7 +283,8 @@ public class WorkOrderService {
             asi.setStatus(Integer.parseInt(wopo.getAssetStatus()));
             assetInfoRepository.save(asi);
         }
-        WorkOrderStep wds = initWorkOrderStep(request, wo);
+        UserAccount currentUser = UserContext.getCurrentLoginUser(request);
+        WorkOrderStep wds = initWorkOrderStep(currentUser, wo);
         workOrderStepRepository.save(wds);
         sendWoMsgs(wo, null, null);
     }
@@ -304,7 +321,8 @@ public class WorkOrderService {
         wo.setCurrentStepId(2);
         wo.setEstimatedCloseTime(null);
         //step
-        WorkOrderStep wds = initWorkOrderStep(request, wo);
+        UserAccount currentUser = UserContext.getCurrentLoginUser(request);
+        WorkOrderStep wds = initWorkOrderStep(currentUser, wo);
         wo.setCurrentPersonId(-1);
         wo.setCurrentPersonName("无");
         wds.setOwnerId(-1);
@@ -332,7 +350,8 @@ public class WorkOrderService {
         //1 update work order
         wo.setCurrentStepId(4);
         //2 create new work-order-step
-        WorkOrderStep wds = initWorkOrderStep(request, wo);
+        UserAccount currentUser = UserContext.getCurrentLoginUser(request);
+        WorkOrderStep wds = initWorkOrderStep(currentUser, wo);
         wo.setCurrentPersonId(wds.getOwnerId());
         wo.setCurrentPersonName(wds.getOwnerName());
         wo.setCurrentStepName(wds.getStepName());
@@ -374,8 +393,7 @@ public class WorkOrderService {
         workOrderRepository.save(wo);
     }
 
-    private WorkOrderStep initWorkOrderStep(HttpServletRequest request, WorkOrder wo ) throws Exception{
-        UserAccount currentUserAccount = UserContext.getCurrentLoginUser(request);
+    private WorkOrderStep initWorkOrderStep(UserAccount currentUserAccount, WorkOrder wo ) throws Exception{
         WorkOrderStep wds = new WorkOrderStep();
         wds.setOwnerId(currentUserAccount.getId());
         wds.setOwnerName(currentUserAccount.getName());
