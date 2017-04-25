@@ -19,6 +19,9 @@ $(function () {
             contentType: "application/json",
             url: $.cookie('authenticalteUrl')+"/api/apm/security/userAccounts/authenticateWeChat",
             data: JSON.stringify({"weChatId": $.cookie('weChatId')}),
+            beforeSend: function( xhr ) {
+                xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+            },
             success:function(ret) {
                 if (ret && ret.data && ret.data.id_token){
                     $.cookie('Authorization', ret.data.id_token);
@@ -46,6 +49,9 @@ $(function () {
                 url: $.cookie('authenticalteUrl')+url,
                 data: data,
                 headers: {"Authorization":$.cookie('Authorization')},
+                beforeSend: function( xhr ) {
+                    xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+                },
                 success:function(ret) {
                     if (callback){
                         callback(ret);
@@ -74,6 +80,9 @@ $(function () {
                 url: $.cookie('authenticalteUrl')+url,
                 data: JSON.stringify(data),
                 headers: {"Authorization":$.cookie('Authorization')},
+                beforeSend: function( xhr ) {
+                    xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+                },
                 success:function(ret) {
                     if (callback){
                         callback(ret);
@@ -102,6 +111,9 @@ $(function () {
                 url: $.cookie('authenticalteUrl')+url,
                 data: JSON.stringify(data),
                 headers: {"Authorization":$.cookie('Authorization')},
+                beforeSend: function( xhr ) {
+                    xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+                },
                 success:function(ret) {
                     if (callback){
                         callback(ret);
@@ -131,6 +143,9 @@ $(function () {
                 url: $.cookie('authenticalteUrl')+url,
                 data: JSON.stringify(data),
                 headers: {"Authorization":$.cookie('Authorization')},
+                beforeSend: function( xhr ) {
+                    xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+                },
                 success:function(ret) {
                     if (callback){
                         callback(ret);

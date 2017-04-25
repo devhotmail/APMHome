@@ -83,7 +83,7 @@
                 wechatSDK.init();
                 
                 function initData() {
-                    apmRest.get('/hcapmassetservice/api/apm/asset/inspection/'+'${inspId}', null, function(ret){
+                    apmRest.get('/hcapmassetservice/api/apm/asset/inspectionorders/'+'${inspId}', null, function(ret){
                         assembleData(ret);
                     });
                 }
@@ -205,12 +205,12 @@
                                 localId: res[0],
                                 success: function(ress){
                                     var localData = ress.localData.replace('jgp', 'jpeg');
-                                    $uploaderFiles.append($(tmpl.replace('#url#', localData)).attr('data-serid', rest.serverId));
+                                    $uploaderFiles.append($(tmpl.replace('#url#', localData)).attr('data-serid', res.serverId));
                                     $('#countnum').html($uploaderFiles.children().length);
                                 }
                             });
                         } else {
-                            $uploaderFiles.append($(tmpl.replace('#url#', res[0])).attr('data-serid', rest.serverId));
+                            $uploaderFiles.append($(tmpl.replace('#url#', res[0])).attr('data-serid', res.serverId));
                             $('#countnum').html($uploaderFiles.children().length);
                         }
                     }
