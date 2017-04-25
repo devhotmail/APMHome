@@ -5,15 +5,25 @@ $brand-color: #5b84d7;
   outline: 0px solid transparent;
 }
 
+:host {
+  --block-width: 40px;
+}
+
 .block {
-  width: 40px;
+  width: var(--block-width);
   height: 21px;
   position: relative;
-  padding: 0px 5px;
+  // padding: 0px 5px;
   cursor: pointer;
   line-height: 21px;
   text-align: right;
   @include text-truncate();
+
+  .current {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
 
   input {
     position: absolute;

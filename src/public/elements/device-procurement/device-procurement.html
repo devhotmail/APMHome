@@ -195,10 +195,11 @@
                         <div style="white-space:nowrap;">待计算</div>
                       </template>
                       <template is="dom-if" if="[[!item.isUnknown]]">
-                        <editable-block
+                        [[item.increase]]
+                        <!--<editable-block
                           data-index$="[[index]]"
                           value="[[item.increase]]"
-                          on-changed="handleConfigChange"></editable-block>
+                          on-changed="handleConfigChange"></editable-block>-->
                         <span>%</span>
                       </template>
                     </div>
@@ -291,11 +292,15 @@
               </div>
               <div class="legend">
                 <i class="dewicon-circle-full" style="color:#e26d26"></i>
-                <span class="legend-tip">单台使用率预测&gt;100%</span>
+                <span class="legend-tip">单台使用率预测大于</span>
+                <editable-block value="{{max}}"></editable-block>
+                <span>%</span>
               </div>
               <div class="legend">
                 <i class="dewicon-circle-low" style="color:#ebda51"></i>
-                <span class="legend-tip">单台使用率预测&lt;30%</span>
+                <span class="legend-tip">单台使用率预测小于</span>
+                <editable-block value="{{min}}"></editable-block>
+                <span>%</span>
               </div>
               <div class="legend">球大小与设备利润预测相关</div>
             </div>
@@ -336,6 +341,14 @@
       Polymer({
         is: 'device-procurement',
         properties: {
+          max: {
+            type: Number,
+            value: 100
+          },
+          min: {
+            type: Number,
+            value: 30
+          },
           isHead: {
             type: Boolean,
             value: false
@@ -638,6 +651,12 @@
         },
         handleSubmit: function(e) {
           var root = this.configList[0];
+
+          var usage_threshold = {
+            max: this.max / 100,
+            min: this.min / 100
+          }
+
           if (root.depth === 0) {
             // diff with systemData and get all changed items
             var defaultConfigList = this.getInitConfig(this.systemData)
@@ -668,7 +687,8 @@
             var payload = {
               config: [].concat.apply([], tmp).sort(function(a, b) {
                 return a.id - b.id;
-              })
+              }),
+              // usage_threshold: usage_threshold
             }
 
             var url = this.getApiUrl(this.isHead, this.selectedType, this.orgId);

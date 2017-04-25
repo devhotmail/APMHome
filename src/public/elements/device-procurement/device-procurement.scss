@@ -293,6 +293,10 @@ px-dropdown {
   line-height: 1.5;
   text-align: left;
 
+  editable-block {
+    --block-width: 30px;
+  }
+
   i {
     font-size: 24px;
   }
