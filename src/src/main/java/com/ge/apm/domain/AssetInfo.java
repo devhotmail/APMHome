@@ -88,14 +88,14 @@ public class AssetInfo implements Serializable {
     @Column(name = "location_name")
     private String locationName;
     @Column(name = "clinical_dept_id")
-    private Integer clinicalDeptId;
+    private Integer clinicalDeptId;//设备使用科室
     @Size(max = 64)
     @Column(name = "clinical_dept_name")
     private String clinicalDeptName;
     @Column(name = "asset_group")
     private Integer assetGroup;
     @Column(name = "asset_dept_id")
-    private int assetDeptId;
+    private int assetDeptId;//设备所属科室
     @Column(name = "asset_owner_id")
     private int assetOwnerId;
     @Size(min = 1, max = 32)

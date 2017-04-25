@@ -44,9 +44,12 @@ public interface UserAccountMapper {
 	@Select("select id from user_account where wechat_id =#{wechatId}")
 	public UserAccount getUserByWechatId(String wechatId);
 
-	@Insert("insert into user_account(site_id,hospital_id,org_id,login_name,name,pwd_salt,password,email,is_super_admin,is_site_admin,is_local_admin,is_active,wechat_id) "+
+	@Insert("insert into user_account(telephone,site_id,hospital_id,org_id,login_name,name,pwd_salt,password,email,is_super_admin,is_site_admin,is_local_admin,is_active,wechat_id) "+
 			 " values "+
-			" (#{siteId},#{hospitalId},#{orgInfoId},#{loginName},#{name},#{pwdSalt},#{password},'temp@ge.com',false,false,false,true,#{weChatId})")
-//	@Options(useGeneratedKeys=true)
+			" (#{telephone},#{siteId},#{hospitalId},#{orgInfoId},#{loginName},#{name},#{pwdSalt},#{password},'temp@ge.com',false,false,false,true,#{weChatId})")
+	@Options(useGeneratedKeys=true)
 	public Integer saveUserAccount(UserAccount user);
+
+	@Insert("insert into user_role(user_id,role_id) values (#{userId},9)")
+	public void saveUserRole(Integer userId);
 } 
