@@ -117,7 +117,7 @@
                             details.push(asset);
                         });
                         initAssetList(details);
-                        binds();
+                        binds(ret);
                         imageAction();
                     } else {
                         $('#container').empty().append('<div class="page js_show"><div class="page_hd"><h1>没有数据...</h1></div></div>');
@@ -217,7 +217,7 @@
                     //图片功能结束
                 }
                 
-                function binds() {
+                function binds(ret) {
                     var winH = $(window).height();
                     var categorySpace = 10;
 
@@ -324,6 +324,11 @@
                             });
                         }
                     });
+
+                    if (ret.data.order.isFinished == true) {
+                        $('#submit').hide();
+                    }
+
                 }
             });
         </script>
