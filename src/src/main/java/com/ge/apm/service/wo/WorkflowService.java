@@ -31,9 +31,9 @@ public class WorkflowService {
 	
 	public static final String TIMEOUT_TEMPLATE_ID = "rM1hPuHQDoXccoyUkUdapuxMinKxPqmcKhJdU7E6w1o";
 	public static final String REOPEN_TEMPLATED_ID= "6zKD9kSJq1SEaym7HIfIFO8H136CTUcAfcIGTOtfBtk";
-	public static final int SPECIAL_DISPATCHER = 1;
-	public static final int GRAB_DISPATCHER = 2 ;
-	public static final int AUTO_DISPATCHER = 3 ;
+	public static final int SPECIAL_DISPATCHER = 1;//专人派工 work_order_dispather角色
+	public static final int GRAB_DISPATCHER = 2 ;//抢单 asset_staff 角色
+	public static final int AUTO_DISPATCHER = 3 ;//资产owner 1 2
 	
 	@Autowired
 	WorkOrderMapper workOrderMapper;
@@ -152,12 +152,15 @@ public class WorkflowService {
 					users.add(workOrder.getRequestorId());
 				}
 				
+				//sysRole <==>3、AssetStaff 8、WorkOrderDispatcher
 				if(woc.getDispatchMode() == SPECIAL_DISPATCHER){
-					if(!users.contains(woc.getDispatchUserId())){
-						users.add(woc.getDispatchUserId());
-					}
+//					if(!users.contains(woc.getDispatchUserId())){
+//						users.add(woc.getDispatchUserId());
+//					}
+					List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(),3);
+					users.addAll(dispatchers);
 				}else if(woc.getDispatchMode() == GRAB_DISPATCHER){
-					List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId());
+					List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(),8);
 					users.addAll(dispatchers);
 				}else if(woc.getDispatchMode() == AUTO_DISPATCHER){
 					AssetInfo asset = assetInfoMapper.fetchAssetInfoById(workOrder.getAssetId());
