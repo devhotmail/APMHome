@@ -8,17 +8,31 @@ and open the template in the editor.
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
       >
+
+    <h:head>
+        <f:facet name="first">
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>#{msg.AssetInfo}</title>
+        <h:outputStylesheet name="wechat/css/weui.min.css" />
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jquery-3.1.1.min.js"/>
+        <script type="text/javascript" src="#{wechatUtilService.getContextPath()}/resources/wechat/js/utils/jweixin-1.0.0.js"/>
+    </h:head>
     <h:body>
-        <ui:include src="List.xhtml"/>
+        <!--<ui:include src="List.xhtml"/>-->
     </h:body>
 
+    
     <script type="text/javascript">
 
         var jsSignature = #{wechatUtilService.getJsSignature()};
 
         wx.config({
-            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
             appId: jsSignature.appid, // 必填，公众号的唯一标识
             timestamp: jsSignature.timestamp, // 必填，生成签名的时间戳
             nonceStr: jsSignature.noncestr, // 必填，生成签名的随机串
