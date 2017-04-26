@@ -44,7 +44,7 @@
 <body>
     <jsp:include page="/wechat/wo/listTemplate.html"/>
 
-    <div class="page">
+    <div class="page button">
         <div class="page__bd" style="height: 100%;">
             <div class="weui-tab">
                 <div class="weui-navbar">
@@ -57,6 +57,8 @@
                 </div>
                 <div class="weui-tab__panel">
                     <div id="orderList" class="page__bd page__bd_spacing">
+                    </div>
+                    <div class='button-sp-area'>
                     </div>
                 </div>
             </div>
@@ -93,7 +95,6 @@
 
     function getPage(isFinished){
 
-        alert($.cookie('authenticalteUrl'));
         var data = {"orderType": orderType, "isFinished":isFinished, "page": pageCount, "pageSize": pageSize};
         apmRest.get("/hcapmassetservice/api/apm/asset/inspectionorders", data, function(ret){
             $('#moreBtn').remove();
@@ -107,18 +108,22 @@
                 tmpl.find('a').attr("href", "javascript:gotoDetail("+v.id+", "+v.orderType+");");
                 var parentEl = tmpl.find('.show-data');
 
+                var createTime = v.createTime != null ? v.createTime : "";
+                var startTime = v.startTime != null ? v.startTime : "";
+                var endTime = v.endTime != null ? v.endTime : "";
+
                 parentEl.append('<p>工单名称:' + v.name + '</p>');
                 parentEl.append('<p>工单状态:' + v.isFinished + '</p>');
-                parentEl.append('<p>创建时间:' + v.createTime + '</p>');
-                parentEl.append('<p>开始时间:' + v.startTime + '</p>');
-                parentEl.append('<p>结束时间:' + v.endTime + '</p>');
+                parentEl.append('<p>创建时间:' + createTime + '</p>');
+                parentEl.append('<p>开始时间:' + startTime + '</p>');
+                parentEl.append('<p>结束时间:' + endTime + '</p>');
                 $('#orderList').append(tmpl);
 
             });
 
-            var moreBtn = "<a id='moreBtn' href='javascript:getPage("+isFinished+");' class='weui-btn weui-btn_primary'>查看更多。。。</a>";
+            var moreBtn = "<a id='moreBtn' href='javascript:getPage("+isFinished+");' class='weui-btn weui-btn_plain-primary'>查看更多...</a>";
             if(ret.data.pageTotal > pageCount){
-                $('#orderList').append(moreBtn);
+                $('.button-sp-area').append(moreBtn);
             }
 
             pageCount++;
