@@ -43,6 +43,7 @@
                             </a>
                         </div>
                     </div>
+                    <!--
                     <div class="weui-cells__title">图片上传<div class="weui-uploader__info" style="float: right;"><span id="countnum">0</span>/1</div></div>
                     <div class="weui-cells">
                         <div class="weui-cell">
@@ -60,7 +61,7 @@
                             </div>
                         </div>
                     </div>
-                    
+                    -->
                     <div class="weui-cells__title">文字描述</div>
                     <div class="weui-cells">
                         <div class="weui-cell">
