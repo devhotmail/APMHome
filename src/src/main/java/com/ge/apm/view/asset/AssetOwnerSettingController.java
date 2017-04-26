@@ -27,55 +27,77 @@ import webapp.framework.web.WebUtil;
 @ManagedBean
 @ViewScoped
 public class AssetOwnerSettingController {
-    
-    
+
     private DualListModel<AssetInfo> availableAssets;
     private List<AssetInfo> sourceAssets;
     private List<AssetInfo> targetAssets;
     private AssetCreateService acServie;
-    
+
     private AssetOwnerService aoService;
-    
+
     private AssetInfo queryAsset;
-    
-    private UserAccount owner;
-    private UserAccount owner2;
-    
-    
-    
+
+    private Integer ownerId;
+    private Integer ownerId2;
+    private Boolean isChanegeOwner;
+    private Boolean isChanegeOwner2;
+
     @PostConstruct
     protected void init() {
-        
+
         acServie = WebUtil.getBean(AssetCreateService.class);
         aoService = WebUtil.getBean(AssetOwnerService.class);
         UserAccount currentUser = UserContextService.getCurrentUserAccount();
         queryAsset = new AssetInfo();
         queryAsset.setSiteId(currentUser.getSiteId());
         queryAsset.setHospitalId(currentUser.getHospitalId());
-        sourceAssets = aoService.getAssetList(queryAsset);
+
         targetAssets = new ArrayList();
+        getQueryAssetsList();
+
+    }
+
+    public void getQueryAssetsList() {
+        sourceAssets = aoService.getAssetList(queryAsset);
         availableAssets = new DualListModel<>(sourceAssets, targetAssets);
     }
-    
-     public void onAssetsTransfer(TransferEvent event) {
-         
-//        for(Object item : event.getItems()) {
-//            builder.append(((Theme) item).getName()).append("<br />");
-//        }
-         
-    } 
-     
+
+    public void onAssetsTransfer(TransferEvent event) {
+
+        for(Object item : event.getItems()) {
+            if(event.isAdd()){
+                targetAssets.add((AssetInfo)item);
+            }else{
+                targetAssets.remove((AssetInfo)item);
+            }
+        }
+    }
+
     public List<OrgInfo> getClinicalDeptList() {
         return acServie.getClinicalDeptList(queryAsset.getHospitalId());
     }
-    
-    
+
     public List<UserAccount> getOwnerList() {
         List<UserAccount> res = acServie.getAssetOnwers(queryAsset.getSiteId(), queryAsset.getHospitalId());
         return res;
     }
-    
-    
+
+    public void saveChange() {
+
+        if (targetAssets.isEmpty()) {
+            WebUtil.addErrorMessage("请选择设备");
+        } else if (!(isChanegeOwner || isChanegeOwner2)) {
+            WebUtil.addErrorMessage("请选择设备负责人");
+        } else {
+            aoService.updateAssetOwner(targetAssets, isChanegeOwner, ownerId, isChanegeOwner2, ownerId2);
+            targetAssets.clear();
+            getQueryAssetsList();
+        }
+
+        
+        int s=0;
+    }
+
     //getter and setter
     public DualListModel getAvailableAssets() {
         return availableAssets;
@@ -93,22 +115,36 @@ public class AssetOwnerSettingController {
         this.queryAsset = queryAsset;
     }
 
-    public UserAccount getOwner() {
-        return owner;
+    public Integer getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner(UserAccount owner) {
-        this.owner = owner;
+    public void setOwnerId(Integer ownerId) {
+        this.ownerId = ownerId;
     }
 
-    public UserAccount getOwner2() {
-        return owner2;
+    public Integer getOwnerId2() {
+        return ownerId2;
     }
 
-    public void setOwner2(UserAccount owner2) {
-        this.owner2 = owner2;
+    public void setOwnerId2(Integer ownerId2) {
+        this.ownerId2 = ownerId2;
     }
-    
-    
-    
+
+    public Boolean getIsChanegeOwner() {
+        return isChanegeOwner;
+    }
+
+    public void setIsChanegeOwner(Boolean isChanegeOwner) {
+        this.isChanegeOwner = isChanegeOwner;
+    }
+
+    public Boolean getIsChanegeOwner2() {
+        return isChanegeOwner2;
+    }
+
+    public void setIsChanegeOwner2(Boolean isChanegeOwner2) {
+        this.isChanegeOwner2 = isChanegeOwner2;
+    }
+
 }
