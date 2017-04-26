@@ -417,7 +417,7 @@ public class CoreService {
     private String webContextUrl;
     
     public String getWoDetailUrl(Integer woId) {
-        return "/web/menu/34?woId="+ woId;
+        return "/web/scanwodetail?woId="+ woId;
     }
     
     public void sendWxTemplateMessage(String userWeChatId, String wxTemplateId, String msgTitle, String msgBrief, String msgDetails, String msgDateTime, String linkUrl){
