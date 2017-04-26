@@ -97,7 +97,7 @@ public class AssetInfo implements Serializable {
     @Column(name = "asset_dept_id")
     private int assetDeptId;//设备所属科室
     @Column(name = "asset_owner_id")
-    private int assetOwnerId;
+    private Integer assetOwnerId;
     @Size(min = 1, max = 32)
     @Column(name = "asset_owner_name")
     private String assetOwnerName;
@@ -401,11 +401,11 @@ public class AssetInfo implements Serializable {
         this.assetDeptId = assetDeptId;
     }
 
-    public int getAssetOwnerId() {
+    public Integer getAssetOwnerId() {
         return assetOwnerId;
     }
 
-    public void setAssetOwnerId(int assetOwnerId) {
+    public void setAssetOwnerId(Integer assetOwnerId) {
         this.assetOwnerId = assetOwnerId;
     }
 
