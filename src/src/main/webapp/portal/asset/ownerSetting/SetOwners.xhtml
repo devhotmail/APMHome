@@ -58,18 +58,18 @@
                     </p:fieldset>
                     <p:fieldset legend="#{msg.ChoosingAssets}">
                         <p:pickList id="AssetsPickList" value="#{assetOwnerSettingController.availableAssets}" var="item"   
-                                    itemValue="#{item}" itemLabel="#{item.name}" showCheckbox="true" responsive="true"
-                                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="assetInfoConverter">
+                                    itemValue="#{item}" itemLabel="#{item.name}" showCheckbox="false" responsive="true"
+                                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="assetInfoConverter" >
                             <f:facet name="sourceCaption">#{msg.AvailableAssets}</f:facet>
                             <f:facet name="targetCaption">#{msg.ChoseAssets}</f:facet>
                             <p:ajax event="transfer" listener="#{assetOwnerSettingController.onAssetsTransfer}" />
-                            <p:column style="width:10%">
+                            <p:column style="width:40%">
                                 <h:outputText value="#{item.name}" />
                             </p:column>
-                            <p:column style="width:45%;">
+                            <p:column style="width:30%;">
                                 <h:outputText value="#{item.assetOwnerName}" />
                             </p:column>
-                            <p:column style="width:45%;">
+                            <p:column style="width:30%;">
                                 <h:outputText value="#{item.assetOwnerName2}" />
                             </p:column>
                         </p:pickList>

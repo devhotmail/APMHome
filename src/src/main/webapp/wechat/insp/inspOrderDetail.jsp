@@ -6,7 +6,7 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0"/>
-        <title>dfdfd</title>
+        <title>工单明细</title>
         <!-- 引入 WeUI -->
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/weui.min.css"/>
         <link rel="stylesheet" href="${ctx}/resources/wechat/css/example.css"/>
