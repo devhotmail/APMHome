@@ -95,7 +95,7 @@ and open the template in the editor.
             </h:form>
 
         </div>
-        <p:dataScroller id="dataList" value="#{wxAssetInfoController.getAssetList()}" var="asset" chunkSize="10"  rowIndexVar="row"  rendered="#{!userContextService.hasRole('Guest')}>
+        <p:dataScroller id="dataList" value="#{wxAssetInfoController.getAssetList()}" var="asset" chunkSize="10"  rowIndexVar="row"  rendered="#{!userContextService.hasRole('Guest')}">
                         <f:facet name="header">
                         <div >
                 总计： #{wxAssetInfoController.getAssetList().size()}
