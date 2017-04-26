@@ -43,8 +43,8 @@ public class WorkOrderProcessController {
     //findWorkOrderByCon
     @RequestMapping(value="/workorder" ,method = RequestMethod.GET)
     @ResponseBody
-    public List<WorkOrder> workOrderByCon(HttpServletRequest request)throws Exception {
-        return   workOrderService.findWorkOrderByCon(request);
+    public Object workOrderByCon(HttpServletRequest request, Integer pageSize, Integer pageNum)throws Exception {
+        return   workOrderService.findWorkOrderByCon(request, pageSize, pageNum);
     }
     /*gl ok*/
     @RequestMapping(value="/workorder2/{requestorId}" ,method = RequestMethod.GET)
