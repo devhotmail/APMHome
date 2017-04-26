@@ -6,6 +6,8 @@
 package com.ge.apm.service.utils;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -179,24 +181,24 @@ public class QRCodeUtil {
 		
     	
     	String logoFile = "c:/Temp/logo.jpg";
-    	String backGroundPath = "c:/Temp/largeBackground.png";
+    	String backGroundPath = "c:/Temp/background.png";
     	String text = "1703307223655922";
-//		QRCodeUtil.encode(text, "c:/Temp/gelogo.jpg", "c:/Temp", true);
+//		QRCodeUtil.encode(text, logoFile, "c:/Temp", true);
 
 
         
         //    批量生成
-        String srcFolder = "c:/Temp/170408";
-        String[] files = new File(srcFolder).list();
-        for (String item : files) {
-            System.out.println(item);
-            qrCodeBatchJob(srcFolder + File.separator + item, logoFile,backGroundPath);
-        }
+//        String srcFolder = "c:/Temp/170425";
+//        String[] files = new File(srcFolder).list();
+//        for (String item : files) {
+//            System.out.println(item);
+//            qrCodeBatchJob(srcFolder + File.separator + item, logoFile,backGroundPath);
+//        }
 
         
-//        BufferedImage image = QRCodeUtil.createImage(UUID.randomUUID().toString() + "1703307223655922", logoFile, true);
-//        BufferedImage img =addBackground(image,472);
-//        ImageIO.write(img, FORMAT_NAME, new File( "c:/Temp/" + text + ".jpg"));
+        BufferedImage image = QRCodeUtil.createImage(UUID.randomUUID().toString() + "1703307223655922", logoFile, true);
+        BufferedImage img =adddigitalBackground(backGroundPath,image,472,"1703307223655922");
+        ImageIO.write(img, FORMAT_NAME, new File( "c:/Temp/" + text + ".jpg"));
 //        
 //        
         
@@ -225,6 +227,43 @@ public class QRCodeUtil {
     	
     }
     
+private static BufferedImage adddigitalBackground(String bgPath,BufferedImage innerImg,int size,String text) throws IOException{
+		
+		StringBuffer textSB = new StringBuffer(text);
+		textSB.insert(4, "-");
+		textSB.insert(9, "-");
+		textSB.insert(14, "-");
+	
+    	int sizeOfBackGround = size;
+    	int sizeOfCode = 335*size/472;
+    	int margin = sizeOfCode/13;
+    	int textX = 85*size/472;
+    	int textY = 125*size/472;
+    	
+    	BufferedImage src = ImageIO.read(new File(bgPath));
+    	Image background = src.getScaledInstance(sizeOfBackGround, sizeOfBackGround, Image.SCALE_SMOOTH);
+    	Image resizedCode = innerImg.getScaledInstance(sizeOfCode, sizeOfCode, Image.SCALE_SMOOTH);
+        
+        BufferedImage bufImg = new BufferedImage(sizeOfBackGround, sizeOfBackGround,BufferedImage.TYPE_INT_RGB); 
+        Graphics g = bufImg .createGraphics();  
+        g.drawImage(background, 0, 0, null); 
+        
+        int x = (sizeOfBackGround - sizeOfCode ) / 2 + margin;
+        int y = (sizeOfBackGround - sizeOfCode) / 2 + margin + 6*margin/4;
+        
+        int fontSize = 30*size/472;
+        Font font = new Font("TimesRoman", Font.BOLD, fontSize);
+        g.setFont(font);
+        g.setColor(Color.BLACK);
+        g.drawChars(textSB.toString().toCharArray(), 0, textSB.length(), textX, textY);
+        g.drawImage(resizedCode, x, y, x+sizeOfCode-2*margin, y+sizeOfCode-2*margin,margin,margin,sizeOfCode-margin,sizeOfCode-margin, null); 
+        g.dispose();
+        
+    	return bufImg;
+    	
+    }
+    
+    
 
     public static void qrCodeBatchJob(String srcfile, String logoFile,String backGroundPath) throws Exception {
         File src = new File(srcfile);
@@ -236,19 +275,19 @@ public class QRCodeUtil {
             InputStreamReader read = new InputStreamReader(new FileInputStream(src));
             BufferedReader bufferedReader = new BufferedReader(read);
             String lineTxt = null;
-            boolean isBig = false;
+            int smallCount = 50;
             while ((lineTxt = bufferedReader.readLine()) != null) {
                 System.out.println(lineTxt);
                 String prefix = UUID.randomUUID().toString();
                 BufferedImage image = QRCodeUtil.createImage(prefix + lineTxt, logoFile, true);
-                if(isBig){
+                if(smallCount>0){
                 	BufferedImage imageWithbg = addBackground(backGroundPath,image,472);
                 	ImageIO.write(imageWithbg, FORMAT_NAME, new File(outputFolder + "472/" + lineTxt + ".jpg"));
                 }else{
                 	BufferedImage imageWithbg790 = addBackground(backGroundPath,image,709);
                 	ImageIO.write(imageWithbg790, FORMAT_NAME, new File(outputFolder + "709/" + lineTxt + ".jpg"));
                 }
-                isBig = !isBig;
+                smallCount --;
             }
             read.close();
         } else {
