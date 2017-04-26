@@ -62,13 +62,38 @@ function DataProvider(WrappedComponent: Class<Component<*, *, *>>): Class<Compon
     
     render() {
       const { focus, nodeList, view } = this.state
+
       if (!nodeList) return <div>data loading...</div>
-      return <WrappedComponent nodeList={nodeList} view={view} setFocus={this.setFocus} {...this.props} />
+      return <WrappedComponent
+        nodeList={nodeList}
+        view={view}
+        setFocus={this.setFocus}
+        handleBackUpper={this.handleBackUpper}
+        handleBackRoot={this.handleBackRoot}
+        {...this.props} />
+    }
+
+
+    handleBackUpper = (e?: Event) => {
+      e && e.preventDefault()
+      const { focus } = this.state
+      if (focus.parent) this.setFocus(focus.parent)
+    }
+
+    handleBackRoot = (e?: Event) => {
+      e && e.preventDefault()
+      const { nodeList } = this.state
+      if (nodeList[0]) this.setFocus(nodeList[0])
     }
 
     setFocus = (focus: Object) => {
       const nextView = this.getView(focus)
       const i = d3.interpolateZoom(this.state.view, nextView)
+
+      this.setState((state, props) => ({
+        ...state,
+        focus: focus
+      }))
 
       d3.transition()
       .duration(750)

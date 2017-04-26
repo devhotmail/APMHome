@@ -49,7 +49,26 @@ module.exports = merge(baseWebpackConfig, {
           'sass-loader',
           'postcss-loader'
         ]
-      },     
+      },
+      {
+        test: /\.less$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1
+            }
+          },
+          {
+            loader: 'less-loader',
+            options: {
+              modifyVars: JSON.stringify(require('../src/theme.js'))
+            }
+          }
+        ],
+        include: /node_modules/
+      },
       {
         test: /\.(jpg|jpeg|png|gif|ico|svg)$/,
         loader: 'url-loader',

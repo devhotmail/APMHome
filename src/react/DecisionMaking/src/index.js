@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import dva from 'dva/mobile'
 import { AppContainer } from 'react-hot-loader'
 
-import './app.scss'
+import './styles/index.scss'
 
 import router from '#/router'
 import financial from '#/models/financial'

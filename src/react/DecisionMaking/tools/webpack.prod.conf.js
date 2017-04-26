@@ -61,7 +61,28 @@ const webpackConfig = merge(baseWebpackConfig, {
             'postcss-loader'
           ]
         })
-      },      
+      },
+      {
+        test: /\.less$/,
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1
+              }
+            },
+            {
+              loader: 'less-loader',
+              options: {
+                modifyVars: JSON.stringify(require('../src/theme.js'))
+              }
+            }
+          ],
+        }),
+        include: /node_modules/
+      },
       {
         test: /\.(jpg|jpeg|png|gif|ico|svg)$/,
         use: [
