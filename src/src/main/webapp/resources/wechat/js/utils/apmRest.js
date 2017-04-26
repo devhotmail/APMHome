@@ -24,8 +24,8 @@ $(function () {
             },
             success:function(ret) {
                 if (ret && ret.data && ret.data.id_token){
-                    $.cookie('Authorization', ret.data.id_token);
-                    $.cookie('loginId', ret.data.loginId);
+                    $.cookie('Authorization', ret.data.id_token, {path: '/' });
+                    //$.cookie('loginId', ret.data.loginId);
                 }
                 if (callback) {
                     callback(ret);
@@ -58,7 +58,7 @@ $(function () {
                     }
                 },
                 complete: function(ret) {
-                    if(ret.readyState === 0 && i === 1) {
+                    if(ret.status != 200 && i === 1) {
                         //loing again
                         login(function(){
                             doGet(url, data, callback);
@@ -89,7 +89,7 @@ $(function () {
                     }
                 },
                 complete: function(ret) {
-                    if(ret.readyState === 0 && i === 1) {
+                    if(ret.status != 200 && i === 1) {
                         //loing again
                         login(function(){
                             doPost(url, data, callback);
@@ -120,7 +120,7 @@ $(function () {
                     }
                 },
                 complete: function(ret) {
-                    if(ret.readyState === 0 && i === 1) {
+                    if(ret.status != 200 && i === 1) {
                         //loing again
                         login(function(){
                             doPut(url, data, callback);
@@ -152,7 +152,7 @@ $(function () {
                     }
                 },
                 complete: function(ret) {
-                    if(ret.readyState === 0 && i === 1) {
+                    if(ret.status != 200 && i === 1) {
                         //loing again
                         login(function(){
                             doDel(url, data, callback);
