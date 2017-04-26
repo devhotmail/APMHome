@@ -126,7 +126,7 @@ public class QRCodeUtil {
         Base64 encoder = new Base64();
         String res = "data:image/jpeg;base64,";
         try (ByteArrayOutputStream byteout = new ByteArrayOutputStream()) {
-            QRCodeUtil.encodeWithBackground(UUID.randomUUID().toString().concat(code), LOGO_PATH, byteout, true,size);
+            QRCodeUtil.encodeWithBackground(code, LOGO_PATH, byteout, true,size);
             try (ByteArrayInputStream bytein = new ByteArrayInputStream(byteout.toByteArray())) {
                 byte[] bytes = new byte[bytein.available()];
                 bytein.read(bytes);
@@ -168,8 +168,8 @@ public class QRCodeUtil {
     
     public static void encodeWithBackground(String content, String imgPath, OutputStream output, boolean needCompress,int size)
             throws Exception {
-        BufferedImage image = QRCodeUtil.createImage(content, imgPath, needCompress);
-        BufferedImage outimg =addBackground(BACKGROUND_PATH,image,size);
+        BufferedImage image = QRCodeUtil.createImage(UUID.randomUUID().toString().concat(content), imgPath, needCompress);
+        BufferedImage outimg =addBackground(BACKGROUND_PATH,image,size,content);
         ImageIO.write(outimg, FORMAT_NAME, output);
     }
 
