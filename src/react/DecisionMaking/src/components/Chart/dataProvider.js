@@ -131,11 +131,6 @@ function DataProvider(WrappedComponent: Class<Component<*, *, *>>): Class<Compon
       raf(loop)
     }
 
-    updateView = () => {
-
-      raf(this.updateView)
-    }
-
     getView = (node: Object) => {
       return [node.x, node.y, node.r * 2 + margin]
     }

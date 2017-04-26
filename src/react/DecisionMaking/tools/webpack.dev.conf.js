@@ -22,7 +22,12 @@ module.exports = merge(baseWebpackConfig, {
         exclude: /node_modules/,
         use: [
           'react-hot-loader/webpack',
-          'babel-loader'
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true
+            }
+          }
         ]
       },
       {
@@ -63,7 +68,7 @@ module.exports = merge(baseWebpackConfig, {
           {
             loader: 'less-loader',
             options: {
-              modifyVars: JSON.stringify(require('../src/theme.js'))
+              modifyVars: require('../src/theme.js')
             }
           }
         ],

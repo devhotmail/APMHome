@@ -75,7 +75,7 @@ module.exports = merge(baseWebpackConfig, {
             {
               loader: 'less-loader',
               options: {
-                modifyVars: JSON.stringify(require('../src/theme.js'))
+                modifyVars: require('../src/theme.js')
               }
             }
           ],
