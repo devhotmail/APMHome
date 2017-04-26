@@ -84,7 +84,7 @@
                     //data search function
                     pageManager.myreportList = function(close) {
                         pageManager.pageNum = 0;
-                        pageManager.pageSize = 4;
+                        pageManager.pageSize = 10;
                         var $loadingToast1 = $('#loadingToast1');
                         if ($loadingToast1.css('display') !== 'none') return;
                         $loadingToast1.fadeIn(100);
