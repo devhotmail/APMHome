@@ -188,17 +188,17 @@ public class QRCodeUtil {
 
         
         //    批量生成
-//        String srcFolder = "c:/Temp/170425";
-//        String[] files = new File(srcFolder).list();
-//        for (String item : files) {
-//            System.out.println(item);
-//            qrCodeBatchJob(srcFolder + File.separator + item, logoFile,backGroundPath);
-//        }
+        String srcFolder = "c:/Temp/170425";
+        String[] files = new File(srcFolder).list();
+        for (String item : files) {
+            System.out.println(item);
+            qrCodeBatchJob(srcFolder + File.separator + item, logoFile,backGroundPath);
+        }
 
         
-        BufferedImage image = QRCodeUtil.createImage(UUID.randomUUID().toString() + "1703307223655922", logoFile, true);
-        BufferedImage img =adddigitalBackground(backGroundPath,image,472,"1703307223655922");
-        ImageIO.write(img, FORMAT_NAME, new File( "c:/Temp/" + text + ".jpg"));
+//        BufferedImage image = QRCodeUtil.createImage(UUID.randomUUID().toString() + "1703307223655922", logoFile, true);
+//        BufferedImage img =addBackground(backGroundPath,image,472,"1703307223655922");
+//        ImageIO.write(img, FORMAT_NAME, new File( "c:/Temp/" + text + ".jpg"));
 //        
 //        
         
@@ -227,7 +227,7 @@ public class QRCodeUtil {
     	
     }
     
-private static BufferedImage adddigitalBackground(String bgPath,BufferedImage innerImg,int size,String text) throws IOException{
+private static BufferedImage addBackground(String bgPath,BufferedImage innerImg,int size,String text) throws IOException{
 		
 		StringBuffer textSB = new StringBuffer(text);
 		textSB.insert(4, "-");
@@ -281,10 +281,10 @@ private static BufferedImage adddigitalBackground(String bgPath,BufferedImage in
                 String prefix = UUID.randomUUID().toString();
                 BufferedImage image = QRCodeUtil.createImage(prefix + lineTxt, logoFile, true);
                 if(smallCount>0){
-                	BufferedImage imageWithbg = addBackground(backGroundPath,image,472);
+                	BufferedImage imageWithbg = addBackground(backGroundPath,image,472,lineTxt);
                 	ImageIO.write(imageWithbg, FORMAT_NAME, new File(outputFolder + "472/" + lineTxt + ".jpg"));
                 }else{
-                	BufferedImage imageWithbg790 = addBackground(backGroundPath,image,709);
+                	BufferedImage imageWithbg790 = addBackground(backGroundPath,image,709,lineTxt);
                 	ImageIO.write(imageWithbg790, FORMAT_NAME, new File(outputFolder + "709/" + lineTxt + ".jpg"));
                 }
                 smallCount --;
