@@ -59,6 +59,12 @@ public class AssetOwnerSettingController {
 
     public void getQueryAssetsList() {
         sourceAssets = aoService.getAssetList(queryAsset);
+        targetAssets.forEach((item)->{
+            if(sourceAssets.contains(item)){
+                sourceAssets.remove(item);
+            }
+        });
+        
         availableAssets = new DualListModel<>(sourceAssets, targetAssets);
     }
 
@@ -84,9 +90,9 @@ public class AssetOwnerSettingController {
 
     public void saveChange() {
         if (targetAssets.isEmpty()) {
-            WebUtil.addErrorMessage("请选择设备");
+            WebUtil.addErrorMessage(WebUtil.getMessage("ChooseAssets"));
         } else if (!(isChanegeOwner || isChanegeOwner2)) {
-            WebUtil.addErrorMessage("请选择设备负责人");
+            WebUtil.addErrorMessage(WebUtil.getMessage("ChooseAssetsOwner"));
         } else {
             aoService.updateAssetOwner(targetAssets, isChanegeOwner, ownerId, isChanegeOwner2, ownerId2);
             availableAssets.setTarget(targetAssets);
