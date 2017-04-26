@@ -60,7 +60,10 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain fc) throws ServletException, IOException {
 
-        String path = request.getRequestURI().replace(request.getContextPath(), "");
+        String path = request.getRequestURI();
+        if (request.getContextPath().length() > 1) {
+            path = path.substring(request.getContextPath().length());
+        }
         String code = request.getParameter("code");
         String openId = "";
         String nickName = "";
