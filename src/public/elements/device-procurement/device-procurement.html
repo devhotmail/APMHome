@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
 <link rel="import" href="../behavior/context.html">
 <link rel="import" href="../behavior/fetch-cached.html">
 <link rel="import" href="../responsive-container/responsive-container.html">
@@ -12,6 +13,12 @@
 <link rel="stylesheet" href="../../css/dewIcons.css">
 <link rel="import" href="../uri/uri.html">
 <link rel="import" href="../d3/d3.html">
+
+<style>
+.px-dropdown--content {
+  width: 120px !important;
+}
+</style>
 
 <dom-module id="device-procurement">
   <template>
@@ -57,6 +64,22 @@
       </responsive-container>
     </div>
     <div class="sidebar">
+      <div class="year-dropdown u-mb">
+        <label for="device-filter">使用率预测年份:</label>
+        <px-dropdown
+          id="year-filter"
+          class="u-ml+"
+          display-value="{{selectedYear}}"
+          selected-key="{{selectedYear}}">
+          <px-dropdown-content
+            class="px-dropdown-content"
+            max-cont-character-width="10"
+            extend-dropdown="true"
+            extend-dropdown-by="15"
+            items="[[yearOpts]]">
+          </px-dropdown-content>
+        </px-dropdown>
+      </div>
       <template is="dom-if" if="[[isHead]]">
         <div class="type-select btn-group">
           <template is="dom-repeat" items="[[typeOpts]]">
@@ -333,6 +356,9 @@
       }
     ];
 
+    var now = new Date()
+    var currentYear = now.getFullYear()
+
     define('device-procurement', [
       'behavior/context',
       'behavior/fetch-cached',
@@ -341,6 +367,26 @@
       Polymer({
         is: 'device-procurement',
         properties: {
+          yearOpts: {
+            type: Array,
+            value: function() {
+              return [
+                currentYear,
+                currentYear + 1
+              ].map(function(n) {
+                return {
+                  key: n,
+                  val: n
+                }
+              })
+            }
+          },
+          selectedYear: {
+            type: String,
+            value: function() {
+              return currentYear
+            }
+          },
           max: {
             type: Number,
             value: 100
@@ -455,8 +501,8 @@
         ],
         observers: [
           'changeQuery(isHead, selectedType)',
-          'loadData(isHead, selectedType, orgId)',
-          'resetStatus(selectedType)',
+          'loadData(isHead, selectedYear, selectedType, orgId)',
+          'resetStatus(selectedYear, selectedType)',
           'changeSelectedConfig(focusInfo, configList)',
           'resetSubSelectedConfigIndex(selectedConfigIndex)'
         ],
@@ -483,10 +529,10 @@
             return n.depth === 2 && n.parent.uid === selectedConfigItem.uid;
           });
         },
-        resetStatus: function(selectedType) {
-          // reset activeTab when selectedType changed
+        resetStatus: function() {
+          // reset activeTab when selectedYear/selectedType changed
           this.activeTab = 0;
-          // reset config loading when selectedType changed 
+          // reset config loading when selectedYear/selectedType changed 
           this.configLoading = false;
         },
         resetSubSelectedConfigIndex: function(selectedConfigIndex) {
@@ -701,7 +747,7 @@
               // usage_threshold: usage_threshold
             }
 
-            var url = this.getApiUrl(this.isHead, this.selectedType, this.orgId);
+            var url = this.getApiUrl(this.isHead, this.selectedYear, this.selectedType, this.orgId);
 
             this.configLoading = true;
 
@@ -923,19 +969,21 @@
         /**
          * load data from restful api
         */
-        getApiUrl: function(isHead, groupby, orgId) {
-          var query = {};
+        getApiUrl: function(isHead, year, groupby, orgId) {
+          var query = {
+            year: year
+          };
           if (isHead) query.groupby = groupby;
           else query.dept = orgId;
 
           return URI(this.resolveApiUrl('/api/dm')).query(query).toString();
         },
-        loadData: function(isHead, groupby, orgId) {
+        loadData: function(isHead, year, groupby, orgId) {
           this.showLoading = true;
           this.showEmpty = false;
           this.showError = false;
 
-          var url = this.getApiUrl(isHead, groupby, orgId);
+          var url = this.getApiUrl(isHead, year, groupby, orgId);
           // url = 'mock/asset-procurement-' + groupby  +'.json'
 
           return fetch(url, {

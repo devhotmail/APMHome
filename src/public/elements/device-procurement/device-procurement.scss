@@ -215,13 +215,24 @@ $configListMargin: 10px;
   @include text-truncate();
 }
 
+$design-width: 120px;
+
+.year-dropdown {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  px-dropdown {
+    width: $design-width;
+  }
+}
+
 .btn-group {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 
   .btn {
-    width: 100px;
+    width: $design-width;
     margin-left: 0!important;
 
     &.active {
@@ -251,11 +262,6 @@ $configListMargin: 10px;
     background-color: $gray;
     cursor: not-allowed;
   }
-}
-
-px-dropdown {
-  width: 180px;
-  margin-bottom: 30px;
 }
 
 .kpis {
