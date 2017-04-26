@@ -20,9 +20,12 @@ import com.ge.apm.service.asset.MessageSubscriberService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.service.utils.QRCodeUtil;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.primefaces.json.JSONObject;
+import java.util.logging.Level;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletResponse;
 import org.primefaces.model.StreamedContent;
 import webapp.framework.dao.GenericRepository;
 import webapp.framework.dao.SearchFilter;
@@ -82,6 +85,17 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         currentUser = WebUtil.getUserAccountFromRequest();
 //        userContextService.getLoginUser();
 //        System.out.println("========================current user is "+currentUser.getLoginName());
+
+        if (userContextService.hasRole("Guest")) {
+            try {
+                FacesContext face = FacesContext.getCurrentInstance();
+                HttpServletResponse response = (HttpServletResponse) face.getExternalContext().getResponse();
+                response.sendRedirect("../noPremission.jsp");
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(WxAssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
         qrCode = WebUtil.getRequestParameter("qrCode");
         String assetId = WebUtil.getRequestParameter("assetId");
         if (null != assetId && assetId.length() > 0) {
@@ -237,8 +251,8 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
             }
             removedPicStr = "";
         }
-        
-        if(!addedPicStr.isEmpty()){
+
+        if (!addedPicStr.isEmpty()) {
             String[] addedPicList = addedPicStr.split(",");
             for (String item : addedPicList) {
                 acService.addWechatPicAttachment(assetInfo, item);
