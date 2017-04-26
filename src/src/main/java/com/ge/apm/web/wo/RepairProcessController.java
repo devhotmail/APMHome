@@ -79,6 +79,11 @@ public class RepairProcessController {
     public String assignWorkOrder(HttpServletRequest request, @RequestBody WorkOrderPoJo wopo ) throws Exception
     {
         try{
+            Integer woId= Integer.valueOf(wopo.getWoId());
+            WorkOrder wo = workOrderDao.getById(woId);
+            if (wo == null || wo.getCurrentStepId() != wopo.getCurrentStepId()){
+                return "statusDiff";
+            }
             switch (wopo.getActionType()) {
                 case "assign" : workOrderService.assignWorkOrder(request, wopo);break;
                 case "take" : workOrderService.takeWorkOrder(request, wopo);break;
