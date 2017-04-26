@@ -69,6 +69,19 @@ public class WorkOrderWeChatService {
         }
         return wos;
     }
+    public List<WorkOrder> woListOffice(HttpServletRequest request, String stepId) {
+        UserAccount ua = UserContext.getCurrentLoginUser(request);
+        List<WorkOrder> wos = null;
+        switch(stepId) {
+            case "1": wos = woDao.getByHospitalIdAndStatusAndCurrentStepIdOrderByIdDesc(ua.getHospitalId(), 1, 2);break; //needAssign
+            case "2": wos = woDao.getAssignedWorkOrder(ua.getId());break;
+            case "3": wos = woDao.getUnAcceptedWorkOrder(ua.getId(), ua.getSiteId());break;
+            case "4": wos = woDao.getAcceptedWorkOrder(ua.getId());break;
+            case "5": wos = woDao.getOtherPersonWorkOrder(ua.getId(), ua.getSiteId());break;
+            default: wos = woDao.getClosedWorkOrder(ua.getId());
+        }
+        return wos;
+    }
 
     public WorkOrder woDetail(Integer id) {
         return woDao.findById(id);

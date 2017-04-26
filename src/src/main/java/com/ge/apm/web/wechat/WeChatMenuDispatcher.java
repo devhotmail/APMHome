@@ -57,6 +57,9 @@ public class WeChatMenuDispatcher {
 
         URL_MAP.put("21", "/wechat/wo/scanAssetList.xhtml");
         URL_MAP.put("22", "/web/myreport");
+
+        URL_MAP.put("23", "/web/myOfficereport");
+
 //        URL_MAP.put("23", "/web/repairprocess");
         URL_MAP.put("25", "/web/coding");
         URL_MAP.put("26", "/web/coding");

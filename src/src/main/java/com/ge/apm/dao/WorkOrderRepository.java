@@ -21,8 +21,14 @@ public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
     public List<WorkOrder> findByAssetIdOrderByIdDesc(Integer assetId);
 
 
+    /*1104_sql:取出登陆人所在的科室下的所有用户*/
+    /*@Query(value="select wo.* from work_order wo where wo.asset_id in(\n" +
+            "select asinfo.id from asset_info asinfo where clinical_dept_id in ( select org_id from user_account where id = ?1 )) and status =?2 ", nativeQuery = true)*/
+    @Query(value="select wo.* from work_order wo where from_dept_id in (select org_id from user_account where id = ?1) and status =?2 ", nativeQuery = true)
+    public List<WorkOrder> findOfficeWorkOrderList(Integer ownerId,int status);
+
     @Query(value="select wos from  WorkOrderStep wos,WorkOrder wo where wos.ownerId =?1 and wos.workOrderId=wo.id and wo.status=2")
-    public List<WorkOrder> findClosedWorkOrder(Integer ownerId);
+    public List<WorkOrder> findClosedWorkOrder(Integer ownerId,Integer status);
 
 
     @Modifying

@@ -64,6 +64,14 @@ I18nMessageRepository i18nMessageRepository;*/
                 .forEach(System.out::println);
 
     }
+
+
+    @Test
+    @Transactional
+    public void WorkOrderOfficeByStatus(){
+        System.out.println(workOrderRepository.findOfficeWorkOrderList(1,2));
+
+    }
 }
 
 

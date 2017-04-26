@@ -94,6 +94,26 @@ public class WorkOrderController {
         
         return "wo/myReport";
     }
+
+
+    @RequestMapping(value = "myOfficereport")
+    public String myOfficeReport(HttpServletRequest request,HttpServletResponse response, Model model) {
+        UserAccount ua = service.getLoginUser(request);
+        model.addAttribute("userId", ua.getId());
+        WxJsapiSignature s = null;
+        try {
+            s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
+        } catch (WxErrorException ex) {
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+            return "wo/officeReport";
+        }
+        model.addAttribute("appId",s.getAppid());
+        model.addAttribute("timestamp",s.getTimestamp());
+        model.addAttribute("nonceStr",s.getNoncestr());
+        model.addAttribute("signature",s.getSignature());
+
+        return "wo/officeReport";
+    }
     
     @RequestMapping(value = "scanwodetail")
     public String scanWoDetail(HttpServletRequest request,HttpServletResponse response, Model model) {
@@ -250,6 +270,8 @@ public class WorkOrderController {
     public @ResponseBody Object woListData(HttpServletRequest request, String stepId) {
         return woWcService.woList(request, stepId);
     }
+
+
 
     /**
      * work order detail, the data of one work order

@@ -30,6 +30,15 @@ public class MenuConfig {
         button1.getSubButtons().add(button11);
         button1.getSubButtons().add(button12);
 
+
+        WxMenuButton button13 = new WxMenuButton();
+        button13.setType(WxConsts.BUTTON_VIEW);
+        button13.setName("科室报修");
+        System.out.println("--------xxx--------------->"+serverName);
+        button13.setUrl(wxMpService.oauth2buildAuthorizationUrl(serverName + "/web/myOfficereport", WxConsts.OAUTH2_SCOPE_USER_INFO, ""));
+        button1.getSubButtons().add(button13);
+
+
         WxMenuButton button2 = new WxMenuButton();
         button2.setName("微工单");
         

@@ -68,6 +68,14 @@ public class WorkOrderService {
         List<WorkOrder> byStatus = workOrderRepository.findByStatus(status);
         return byStatus;
     }
+
+
+    public List<WorkOrder> findWorkOrderOfficeByStatus(HttpServletRequest request)throws Exception{
+        UserAccount ua = UserContext.getCurrentLoginUser(request);
+        List<WorkOrder> byStatus = workOrderRepository.findOfficeWorkOrderList(ua.getId(),Integer.parseInt(request.getParameter("status")));
+        return byStatus;
+    }
+
     public  List<WorkOrder>  findWorkOrderByCon(HttpServletRequest request){
         UserAccount ua = UserContext.getCurrentLoginUser(request);
         return workOrderRepository.findByRequestorIdAndStatusOrderByIdDesc(ua.getId(), Integer.parseInt(request.getParameter("status")));

@@ -1,5 +1,6 @@
 package com.ge.apm.web.wo;
 
+import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderMsg;
 import com.ge.apm.service.wo.WorkOrderMsgService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import webapp.framework.web.service.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -28,6 +30,15 @@ public class WorkOrderProcessController {
     @ResponseBody
     public List<WorkOrder> WorkOrderByStatus( @PathVariable  int status)throws Exception{
         List<WorkOrder> byStatus = workOrderService.findWorkOrderByStatus(status);
+        return byStatus;
+
+    }
+
+    @RequestMapping(value="/officeworkorder" ,method = RequestMethod.GET)
+    @ResponseBody
+    public List<WorkOrder> WorkOrderOfficeByStatus(HttpServletRequest request)throws Exception{
+
+        List<WorkOrder> byStatus = workOrderService.findWorkOrderOfficeByStatus(request);
         return byStatus;
 
     }
