@@ -1355,9 +1355,6 @@
             var length = list.length || 0;
             var offset = this.get('pageOffsetL'+ level);
 
-            if (this.user.isHead === 'false') {
-              url = URI(url).addQuery('dept', this.user.orgId).toString();
-            }
             // read the furthest offset
             if (!pages || (length < pages.total && (length - offset) < PAGE_MAX)) {
               url = URI(url).addQuery({
