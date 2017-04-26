@@ -57,7 +57,7 @@ public class ListApi {
     	if ((to.getTime()-from.getTime())/1000 <= 94694400 )
     		return createResponseBody(
     				request, limit, start,
-    				getHref(request.getRequestURL().toString(), from, to, dept, type, orderby, limit, start),
+    				getHref(request),
     				filterQueryData(
     						dept, type, orderby,
     						mergeQueryData(
@@ -69,9 +69,12 @@ public class ListApi {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Bad Request"));
   }
 
-  private String getHref(String url, Date from, Date to, Integer dept, Integer type, String orderby, Integer limit, Integer start ) {
-    return String.format("%s?from=%s&to=%s&dept=%s&type=%s&orderby=%s&limit=%s&start=%s", url, from, to, dept, type, orderby, limit, start);
-  }
+  private String getHref(HttpServletRequest request) {
+	  if (request.getQueryString()==null)
+		  return String.format("%s", request.getRequestURL().toString());
+	  else
+		  return String.format("%s?%s", request.getRequestURL().toString(), request.getQueryString());
+	  }
 
   private ResponseEntity<Map<String, Object>> createResponseBody(
         HttpServletRequest request, Integer limit, Integer start, String href,
