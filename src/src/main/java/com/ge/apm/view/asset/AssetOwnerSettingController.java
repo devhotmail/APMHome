@@ -83,21 +83,19 @@ public class AssetOwnerSettingController {
     }
 
     public void saveChange() {
-
         if (targetAssets.isEmpty()) {
             WebUtil.addErrorMessage("请选择设备");
         } else if (!(isChanegeOwner || isChanegeOwner2)) {
             WebUtil.addErrorMessage("请选择设备负责人");
         } else {
             aoService.updateAssetOwner(targetAssets, isChanegeOwner, ownerId, isChanegeOwner2, ownerId2);
-            targetAssets.clear();
-            getQueryAssetsList();
+            availableAssets.setTarget(targetAssets);
         }
-
-        
-        int s=0;
     }
 
+    public void onCheckChange(){
+    }
+    
     //getter and setter
     public DualListModel getAvailableAssets() {
         return availableAssets;
