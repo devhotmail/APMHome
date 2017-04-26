@@ -23,7 +23,22 @@ and open the template in the editor.
     <body>
         <div class="page__bd">
 
-            <h:form id="assetList" >
+            <h:panelGroup rendered="#{userContextService.hasRole('Guest')}">
+                <div class="weui-msg">
+                    <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+                    <div class="weui-msg__text-area">
+                        <h2 class="weui-msg__title">访问受限</h2>
+                        <p class="weui-msg__desc">请联系运营人员获取权限</p>
+                    </div>
+                    <div class="weui-msg__opr-area">
+                        <p class="weui-btn-area">
+                            <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-btn weui-btn_primary">返回菜单</a>
+                        </p>
+                    </div>
+                </div>
+            </h:panelGroup>
+
+            <h:form id="assetList"  rendered="#{!userContextService.hasRole('Guest')}">
                 <div class="weui-search-bar" id="searchBar">
                     <div class="weui-search-bar__form">
                         <div class="weui-search-bar__box ">
@@ -80,11 +95,11 @@ and open the template in the editor.
             </h:form>
 
         </div>
-        <p:dataScroller id="dataList" value="#{wxAssetInfoController.getAssetList()}" var="asset" chunkSize="10"  rowIndexVar="row"  >
-            <f:facet name="header">
-                <div >
+        <p:dataScroller id="dataList" value="#{wxAssetInfoController.getAssetList()}" var="asset" chunkSize="10"  rowIndexVar="row"  rendered="#{!userContextService.hasRole('Guest')}>
+                        <f:facet name="header">
+                        <div >
                 总计： #{wxAssetInfoController.getAssetList().size()}
-                    </div>
+            </div>
             </f:facet>
             <a  href="../asset/Detail.xhtml?assetId=#{asset.id}" class="weui-media-box weui-media-box_appmsg">
                 <div class="weui-media-box__hd">
@@ -102,14 +117,14 @@ and open the template in the editor.
             <p:separator ></p:separator>
         </p:dataScroller>
 
-<!--        <div class="weui-msg__extra-area">
-            <div class="weui-footer">
-                <p class="weui-footer__links">
-                    <a href="javascript:void(0);" class="weui-footer__link"></a>
-                </p>
-                <p class="weui-footer__text">Copyright © 2016-2017 GE Healthcare</p>
-            </div>
-        </div>-->
+        <!--        <div class="weui-msg__extra-area">
+                    <div class="weui-footer">
+                        <p class="weui-footer__links">
+                            <a href="javascript:void(0);" class="weui-footer__link"></a>
+                        </p>
+                        <p class="weui-footer__text">Copyright © 2016-2017 GE Healthcare</p>
+                    </div>
+                </div>-->
     </body>
     <script type="text/javascript">
         $("#assetList\\:searchInput").attr('placeholder', '搜索...');
@@ -119,33 +134,33 @@ and open the template in the editor.
             $("#assetList\\:searchInput").val('');
             search();
         }
-        
-         var jsSignature = #{wechatUtilService.getJsSignature()};
 
-	     wx.config({
-	           debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-	           appId: jsSignature.appid, // 必填，公众号的唯一标识
-	           timestamp: jsSignature.timestamp, // 必填，生成签名的时间戳
-	           nonceStr: jsSignature.noncestr, // 必填，生成签名的随机串
-	           signature: jsSignature.signature,// 必填，签名，见附录1
-	           jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-	       });
-	     
-          wx.ready(function(){
-              wx.scanQRCode({
-                  needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                  scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                  success: function (res) {
-                      var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                      if (result.length > 16) {
-                            result = result.substr(result.length-16);
-                        }
-                      setTimeout(function() {
-                            window.location.href="#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode="+result;
-                        }, 100);
-                  }
-              });
-          });
+        var jsSignature = #{wechatUtilService.getJsSignature()};
+
+        wx.config({
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: jsSignature.appid, // 必填，公众号的唯一标识
+            timestamp: jsSignature.timestamp, // 必填，生成签名的时间戳
+            nonceStr: jsSignature.noncestr, // 必填，生成签名的随机串
+            signature: jsSignature.signature, // 必填，签名，见附录1
+            jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+
+        wx.ready(function () {
+            wx.scanQRCode({
+                needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                success: function (res) {
+                    var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                    if (result.length > 16) {
+                        result = result.substr(result.length - 16);
+                    }
+                    setTimeout(function () {
+                        window.location.href = "#{wechatUtilService.getContextPath()}/web/scanworeport?qrCode=" + result;
+                    }, 100);
+                }
+            });
+        });
 
     </script>
 </html>
