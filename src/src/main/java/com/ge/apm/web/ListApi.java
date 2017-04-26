@@ -42,7 +42,7 @@ public class ListApi {
   public ResponseEntity<Map<String, Object>> getList(HttpServletRequest request,
       @RequestParam(value = "from", required = true) Date from,
       @RequestParam(value = "to", required = true) Date to,
-      @Pattern(regexp = "rating|scan|exposure|usage|fix|stop") @RequestParam(value = "orderby", required = false, defaultValue = "rating") String orderby,
+      @Pattern(regexp = "rating|exam|usage|rate|fix") @RequestParam(value = "orderby", required = false, defaultValue = "rating") String orderby,
       @Min(0) @RequestParam(value = "dept", required = false) Integer dept,
       @Min(0) @RequestParam(value = "type", required = false) Integer type,
       @Min(1) @RequestParam(value = "limit", required = false ) Integer limit,
@@ -57,7 +57,7 @@ public class ListApi {
     	if ((to.getTime()-from.getTime())/1000 <= 94694400 )
     		return createResponseBody(
     				request, limit, start,
-    				getHref(request.getRequestURL().toString(), from, to, dept, type, orderby, limit, start),
+    				getHref(request),
     				filterQueryData(
     						dept, type, orderby,
     						mergeQueryData(
@@ -69,9 +69,12 @@ public class ListApi {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Bad Request"));
   }
 
-  private String getHref(String url, Date from, Date to, Integer dept, Integer type, String orderby, Integer limit, Integer start ) {
-    return String.format("%s?from=%s&to=%s&dept=%s&type=%s&orderby=%s&limit=%s&start=%s", url, from, to, dept, type, orderby, limit, start);
-  }
+  private String getHref(HttpServletRequest request) {
+	  if (request.getQueryString()==null)
+		  return String.format("%s", request.getRequestURL().toString());
+	  else
+		  return String.format("%s?%s", request.getRequestURL().toString(), request.getQueryString());
+	  }
 
   private ResponseEntity<Map<String, Object>> createResponseBody(
         HttpServletRequest request, Integer limit, Integer start, String href,
@@ -131,16 +134,16 @@ public class ListApi {
 
     if (orderby.equals("rating"))
       return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement5() - 100000*r.getElement5()) );
-    else if ( orderby.equals("exposure"))
-      return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement6() - 100000*r.getElement6()) );
-    else if ( orderby.equals("scan"))
+    //else if ( orderby.equals("exposure"))
+      //return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement6() - 100000*r.getElement6()) );
+    else if ( orderby.equals("exam"))
       return asset_info.sorted((r, l) -> l.getElement7() - r.getElement7() );
     else if ( orderby.equals("usage"))
       return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement8() - 100000*r.getElement8()) );
-    else if ( orderby.equals("stop"))
+    else if ( orderby.equals("rate"))
       return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement9() - 100000*r.getElement9()) );
     else if ( orderby.equals("fix"))
-      return asset_info.sorted((r, l) -> l.getElement10() - r.getElement10() );
+      return asset_info.sorted((r, l) ->  r.getElement10() - l.getElement10() );
     else
       return asset_info.sorted((r, l) -> (int) Math.ceil(100000*l.getElement12() - 100000*r.getElement12()) );
 
@@ -218,10 +221,10 @@ public class ListApi {
         .put("text", "设备综合排名")
         .build())
 
-      .put("scan",
+      .put("exam",
           new ImmutableMap.Builder<String, Object>()
               .put("unit", "次")
-              .put("text", "扫描量")
+              .put("text", "检查量")
               .put("ticks",
                 new ImmutableList.Builder<Double>()
                   .add(calculateTicks(asset_info, 10) )
@@ -229,7 +232,7 @@ public class ListApi {
                   .build())
               .build())
 
-      .put("exposure",
+      /*.put("exposure",
           new ImmutableMap.Builder<String, Object>()
               .put("unit", "次")
               .put("text", "曝光量")
@@ -238,7 +241,7 @@ public class ListApi {
                   .add(calculateTicks(asset_info, 20) )
                   .add(calculateTicks(asset_info, 21) )
                   .build())
-              .build())
+              .build())*/
 
       .put("usage",
           new ImmutableMap.Builder<String, Object>()
@@ -262,10 +265,10 @@ public class ListApi {
                   .build())
               .build())
 
-      .put("stop",
+      .put("rate",
           new ImmutableMap.Builder<String, Object>()
               .put("unit", "%")
-              .put("text", "停机率")
+              .put("text", "开机率")
               .put("ticks",
                 new ImmutableList.Builder<Double>()
                   .add(calculateTicks(asset_info, 50) )
@@ -294,15 +297,15 @@ public class ListApi {
 
     return new ImmutableMap.Builder<String, Object>()
 
-        .put("scan", calculateTotal(asset_info, 1) )
+        .put("exam", calculateTotal(asset_info, 1) )
 
-        .put("exposure", calculateTotal(asset_info, 2) )
+        //.put("exposure", calculateTotal(asset_info, 2) )
 
         .put("usage", calculateTotal(asset_info, 3) )
 
         .put("fix", calculateTotal(asset_info, 4) )
 
-        .put("stop", calculateTotal(asset_info, 5) )
+        .put("rate", calculateTotal(asset_info, 5) )
 
         /*
         .put("profit", calculateTotal(asset_info, 6) )*/
@@ -354,13 +357,13 @@ public class ListApi {
                 Option.of(asset.getElement4()).getOrElse("N/A") )
             .put("rating",
                 Option.of(asset.getElement5()).getOrElse(-1.0) )
-            .put("exposure",
-                Option.of(asset.getElement6()).getOrElse(0.0) )
-            .put("scan",
+            /*.put("exposure",
+                Option.of(asset.getElement6()).getOrElse(0.0) )*/
+            .put("exam",
                 Option.of(asset.getElement7()).getOrElse(0) )
             .put("usage",
                 Option.of(asset.getElement8()).getOrElse(0.0) )
-            .put("stop",
+            .put("rate",
                 Option.of(asset.getElement9()).getOrElse(0.0) )
             .put("fix",
                 Option.of(asset.getElement10()).getOrElse(0) )
@@ -368,14 +371,14 @@ public class ListApi {
             .put("revenue",
                 Option.of(asset.getElement11()).getOrElse(0.0) )
             .put("profit",
-                Option.of(asset.getElement12()).getOrElse(0.0) )*/
+                Option.of(asset.getElement12()).getOrElse(0.0) )
             .put("exposure_bm",
-                Option.of(asset.getElement14()).getOrElse(0.0) )
-            .put("scan_bm",
+                Option.of(asset.getElement14()).getOrElse(0.0) )*/
+            .put("exam_bm",
                 Option.of(asset.getElement15()).getOrElse(0.0) )
             .put("usage_bm",
                 Option.of(asset.getElement16()).getOrElse(0.0) )
-            .put("stop_bm",
+            .put("rate_bm",
                 Option.of(asset.getElement17()).getOrElse(0.0) )
             .put("fix_bm",
                 Option.of(asset.getElement18()).getOrElse(0.0) )

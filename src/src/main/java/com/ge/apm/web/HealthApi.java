@@ -9,6 +9,7 @@ import org.simpleflatmapper.tuple.Tuple2;
 import org.simpleflatmapper.tuple.Tuple3;
 import org.simpleflatmapper.tuple.Tuple4;
 import org.simpleflatmapper.tuple.Tuple5;
+import org.simpleflatmapper.tuple.Tuple6;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ public class HealthApi {
   @ResponseBody
   public ResponseEntity<Map<String, Object>> getAssetHealth(HttpServletRequest request,
                                                             @Min(1) @Max(6) @RequestParam(value = "category", required = false) Integer category,
+                                                            @Min(0) @RequestParam(value = "dept", required = false) Integer dept,
                                                             @Min(1) @RequestParam(value = "limit", required = false) Integer limit,
                                                             @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
 
@@ -60,10 +62,13 @@ public class HealthApi {
       category = 0;
     if (Option.of(limit).isEmpty()) limit = Integer.MAX_VALUE;
 
+    if (Option.of(dept).isEmpty())
+
     switch (category) {
 
       case 0:
-        return createResponseBody(category, request, healthService.queryForMaintain(site_id, hospital_id),
+        return createResponseBody(category, request,
+          healthService.queryForMaintain(site_id, hospital_id),
           healthService.queryForOutage(site_id, hospital_id),
           healthService.queryForWarranty(site_id, hospital_id),
           healthService.queryForPm(site_id, hospital_id),
@@ -92,66 +97,62 @@ public class HealthApi {
 
     }
 
-  }
+    else
 
-  private String getHref(Integer category, String url) {
     switch (category) {
+
       case 0:
-        return url;
-
+        return createResponseBody(category, request,
+          healthService.queryForMaintain(site_id, hospital_id, dept),
+          healthService.queryForOutage(site_id, hospital_id, dept),
+          healthService.queryForWarranty(site_id, hospital_id, dept),
+          healthService.queryForPm(site_id, hospital_id, dept),
+          healthService.queryForMeterqa(site_id, hospital_id, 2, dept),
+          healthService.queryForMeterqa(site_id, hospital_id, 3, dept));
       case 1:
+        return createResponseBody(category, request, healthService.queryForMaintain(site_id, hospital_id, dept), start, limit);
+
       case 2:
+        return createResponseBody(category, healthService.queryForOutage(site_id, hospital_id, dept), request, start, limit);
+
       case 3:
+        return createResponseBody(healthService.queryForWarranty(site_id, hospital_id, dept), category, request, start, limit);
+
       case 4:
+        return createResponseBody(healthService.queryForPm(site_id, hospital_id, dept), category, request, start, limit);
+
       case 5:
+        return createResponseBody(healthService.queryForMeterqa(site_id, hospital_id, 2, dept), category, request, start, limit);
+
       case 6:
-        return String.format("%s%s%d", url, categorized, category);
-
-      case 11:
-      case 12:
-      case 13:
-      case 14:
-      case 15:
-      case 16:
-        return String.format("%s%s", url.substring(0, url.indexOf("/api/health")), redirect_1);
-
-      case 20:
-        return String.format("%s%s", url.substring(0, url.indexOf("/api/health")), redirect_2);
-
-      case 30:
-        return String.format("%s%s", url.substring(0, url.indexOf("/api/health")), redirect_3);
-
-      case 40:
-        return String.format("%s%s", url.substring(0, url.indexOf("/api/health")), redirect_4);
-
-      case 50:
-        return String.format("%s%s", url.substring(0, url.indexOf("/api/health")), redirect_5);
-
-      case 60:
-        return String.format("%s%s", url.substring(0, url.indexOf("/api/health")), redirect_6);
+        return createResponseBody(healthService.queryForMeterqa(site_id, hospital_id, 3, dept), category, request, start, limit);
 
       default:
-        return "";
+        return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Bad Request"));
 
     }
 
   }
 
-  private String getHref(Integer category, String url, Integer count) {
-    if (count == 0)
-      return "";
-
-    switch (category) {
+  private String getHref(Integer category, HttpServletRequest request, Integer count) {
+	  
+	  if (count==0)
+		  return "";
+		  
+	  String baseurl = request.getRequestURL().toString().substring(0, request.getRequestURL().toString().indexOf("/api/health"));
+	  
+	  switch (category) {
       case 0:
-        return url;
-
       case 1:
       case 2:
       case 3:
       case 4:
       case 5:
       case 6:
-        return String.format("%s%s%d", url, categorized, category);
+    	  if (request.getQueryString()==null)
+    		  return String.format("%s", request.getRequestURL().toString());
+    	  else
+    		  return String.format("%s?%s", request.getRequestURL().toString(), request.getQueryString());
 
       case 11:
       case 12:
@@ -159,22 +160,22 @@ public class HealthApi {
       case 14:
       case 15:
       case 16:
-        return String.format("%s%s", url.substring(0, url.indexOf("/api/health")), redirect_1);
+        return String.format("%s%s", baseurl, redirect_1);
 
       case 20:
-        return String.format("%s%s", url.substring(0, url.indexOf("/api/health")), redirect_2);
+        return String.format("%s%s", baseurl, redirect_2);
 
       case 30:
-        return String.format("%s%s", url.substring(0, url.indexOf("/api/health")), redirect_3);
+        return String.format("%s%s", baseurl, redirect_3);
 
       case 40:
-        return String.format("%s%s", url.substring(0, url.indexOf("/api/health")), redirect_4);
+        return String.format("%s%s", baseurl, redirect_4);
 
       case 50:
-        return String.format("%s%s", url.substring(0, url.indexOf("/api/health")), redirect_5);
+        return String.format("%s%s", baseurl, redirect_5);
 
       case 60:
-        return String.format("%s%s", url.substring(0, url.indexOf("/api/health")), redirect_6);
+        return String.format("%s%s", baseurl, redirect_6);
 
       default:
         return "";
@@ -259,12 +260,12 @@ public class HealthApi {
   }
 
   private Integer queryForCount(
-    Observable<Tuple5<Integer, String, Integer, String, String>> asset_health_1,
-    Observable<Tuple4<Integer, String, String, Integer>> asset_health_2,
-    Observable<Tuple3<Integer, String, String>> asset_health_3,
-    Observable<Tuple3<Integer, String, String>> asset_health_4,
-    Observable<Tuple3<Integer, String, String>> asset_health_5,
-    Observable<Tuple3<Integer, String, String>> asset_health_6
+    Observable<Tuple6<Integer, String, Integer, String, String, Integer>> asset_health_1,
+    Observable<Tuple5<Integer, String, String, Integer, Integer>> asset_health_2,
+    Observable<Tuple4<Integer, String, String, Integer>> asset_health_3,
+    Observable<Tuple4<Integer, String, String, Integer>> asset_health_4,
+    Observable<Tuple4<Integer, String, String, Integer>> asset_health_5,
+    Observable<Tuple4<Integer, String, String, Integer>> asset_health_6
   ) {
 
     return asset_health_1.count().toBlocking().single()
@@ -280,19 +281,19 @@ public class HealthApi {
     return asset_health.count().toBlocking().single();
   }
 
-  private Integer queryForCount(Integer legend, Observable<Tuple5<Integer, String, Integer, String, String>> asset_health) {
+  private Integer queryForCount(Integer legend, Observable<Tuple6<Integer, String, Integer, String, String, Integer>> asset_health) {
 
     return asset_health.filter(t5 -> t5.getElement2() == legend).count().toBlocking().single();
 
   }
 
   private ResponseEntity<Map<String, Object>> createResponseBody(Integer category, HttpServletRequest request,
-                                                                 Observable<Tuple5<Integer, String, Integer, String, String>> asset_health_1,
-                                                                 Observable<Tuple4<Integer, String, String, Integer>> asset_health_2,
-                                                                 Observable<Tuple3<Integer, String, String>> asset_health_3,
-                                                                 Observable<Tuple3<Integer, String, String>> asset_health_4,
-                                                                 Observable<Tuple3<Integer, String, String>> asset_health_5,
-                                                                 Observable<Tuple3<Integer, String, String>> asset_health_6) {
+                                                                 Observable<Tuple6<Integer, String, Integer, String, String, Integer>> asset_health_1,
+                                                                 Observable<Tuple5<Integer, String, String, Integer, Integer>> asset_health_2,
+                                                                 Observable<Tuple4<Integer, String, String, Integer>> asset_health_3,
+                                                                 Observable<Tuple4<Integer, String, String, Integer>> asset_health_4,
+                                                                 Observable<Tuple4<Integer, String, String, Integer>> asset_health_5,
+                                                                 Observable<Tuple4<Integer, String, String, Integer>> asset_health_6) {
 
     return ResponseEntity.ok()
 
@@ -305,7 +306,7 @@ public class HealthApi {
             .put("total", 6)
             .build())
 
-        .put("items", jsonCategories(request.getRequestURL().toString(), asset_health_1, asset_health_2, asset_health_3, asset_health_4, asset_health_5, asset_health_6))
+        .put("items", jsonCategories(request, asset_health_1, asset_health_2, asset_health_3, asset_health_4, asset_health_5, asset_health_6))
 
         .put("root",
           new ImmutableMap.Builder<String, Object>()
@@ -317,14 +318,14 @@ public class HealthApi {
             .put("link",
               new ImmutableMap.Builder<String, Object>()
                 .put("ref", getRef("root"))
-                .put("href", getHref(category, request.getRequestURL().toString()))
+                .put("href", getHref(category, request, 1))
                 .build())
             .build())
         .build());
   }
 
   private ResponseEntity<Map<String, Object>> createResponseBody(Integer category, HttpServletRequest request,
-                                                                 Observable<Tuple5<Integer, String, Integer, String, String>> asset_health_1, Integer start, Integer limit) {
+                                                                 Observable<Tuple6<Integer, String, Integer, String, String, Integer>> asset_health_1, Integer start, Integer limit) {
 
     return ResponseEntity.ok()
 
@@ -351,14 +352,14 @@ public class HealthApi {
             .put("link",
               new ImmutableMap.Builder<String, Object>()
                 .put("ref", getRef("root"))
-                .put("href", getHref(category, request.getRequestURL().toString()))
+                .put("href", getHref(category, request, 1))
                 .build())
             .build())
         .build());
   }
 
   private ResponseEntity<Map<String, Object>> createResponseBody(Integer category,
-                                                                 Observable<Tuple4<Integer, String, String, Integer>> asset_health_2, HttpServletRequest request, Integer start, Integer limit) {
+                                                                 Observable<Tuple5<Integer, String, String, Integer, Integer>> asset_health_2, HttpServletRequest request, Integer start, Integer limit) {
 
     return ResponseEntity.ok()
 
@@ -383,13 +384,13 @@ public class HealthApi {
             .put("link",
               new ImmutableMap.Builder<String, Object>()
                 .put("ref", getRef("root"))
-                .put("href", getHref(category, request.getRequestURL().toString()))
+                .put("href", getHref(category, request, 1))
                 .build())
             .build())
         .build());
   }
 
-  private ResponseEntity<Map<String, Object>> createResponseBody(Observable<Tuple3<Integer, String, String>> asset_health_3456,
+  private ResponseEntity<Map<String, Object>> createResponseBody(Observable<Tuple4<Integer, String, String, Integer>> asset_health_3456,
                                                                  Integer category, HttpServletRequest request, Integer start, Integer limit) {
 
     return ResponseEntity.ok()
@@ -415,20 +416,20 @@ public class HealthApi {
             .put("link",
               new ImmutableMap.Builder<String, Object>()
                 .put("ref", getRef("branch"))
-                .put("href", getHref(category, request.getRequestURL().toString()))
+                .put("href", getHref(category, request, 1))
                 .build())
             .build())
         .build());
   }
 
   private ImmutableList<ImmutableMap<String, Object>> jsonCategories(
-    String url,
-    Observable<Tuple5<Integer, String, Integer, String, String>> asset_health_1,
-    Observable<Tuple4<Integer, String, String, Integer>> asset_health_2,
-    Observable<Tuple3<Integer, String, String>> asset_health_3,
-    Observable<Tuple3<Integer, String, String>> asset_health_4,
-    Observable<Tuple3<Integer, String, String>> asset_health_5,
-    Observable<Tuple3<Integer, String, String>> asset_health_6) {
+	HttpServletRequest request,
+    Observable<Tuple6<Integer, String, Integer, String, String, Integer>> asset_health_1,
+    Observable<Tuple5<Integer, String, String, Integer, Integer>> asset_health_2,
+    Observable<Tuple4<Integer, String, String, Integer>> asset_health_3,
+    Observable<Tuple4<Integer, String, String, Integer>> asset_health_4,
+    Observable<Tuple4<Integer, String, String, Integer>> asset_health_5,
+    Observable<Tuple4<Integer, String, String, Integer>> asset_health_6) {
 
     return new ImmutableList.Builder<ImmutableMap<String, Object>>()
 
@@ -440,7 +441,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("branch"))
-            .put("href", getHref(1, url, queryForCount(asset_health_1)))
+            .put("href", getHref(1, request, queryForCount(asset_health_1)))
             .build())
         .build())
 
@@ -452,7 +453,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("branch"))
-            .put("href", getHref(2, url, queryForCount(asset_health_2)))
+            .put("href", getHref(2, request, queryForCount(asset_health_2)))
             .build())
         .build())
 
@@ -464,7 +465,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("branch"))
-            .put("href", getHref(3, url, queryForCount(asset_health_3)))
+            .put("href", getHref(3, request, queryForCount(asset_health_3)))
             .build())
         .build())
 
@@ -476,7 +477,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("branch"))
-            .put("href", getHref(4, url, queryForCount(asset_health_4)))
+            .put("href", getHref(4, request, queryForCount(asset_health_4)))
             .build())
         .build())
 
@@ -488,7 +489,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("branch"))
-            .put("href", getHref(5, url, queryForCount(asset_health_5)))
+            .put("href", getHref(5, request, queryForCount(asset_health_5)))
             .build())
         .build())
 
@@ -500,7 +501,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("branch"))
-            .put("href", getHref(6, url, queryForCount(asset_health_6)))
+            .put("href", getHref(6, request, queryForCount(asset_health_6)))
             .build())
         .build())
 
@@ -508,7 +509,7 @@ public class HealthApi {
   }
 
 
-  private ImmutableList<ImmutableMap<String, Object>> jsonLegends(Observable<Tuple5<Integer, String, Integer, String, String>> asset_health) {
+  private ImmutableList<ImmutableMap<String, Object>> jsonLegends(Observable<Tuple6<Integer, String, Integer, String, String, Integer>> asset_health) {
 
     return new ImmutableList.Builder<ImmutableMap<String, Object>>()
 
@@ -557,7 +558,7 @@ public class HealthApi {
       .build();
   }
 
-  private Iterable<ImmutableMap<String, Object>> jsonAssets(Integer category, HttpServletRequest request, Observable<Tuple5<Integer, String, Integer, String, String>> asset_health_1, Integer start, Integer limit) {
+  private Iterable<ImmutableMap<String, Object>> jsonAssets(Integer category, HttpServletRequest request, Observable<Tuple6<Integer, String, Integer, String, String, Integer>> asset_health_1, Integer start, Integer limit) {
 
     return asset_health_1
       .skip(start)
@@ -574,7 +575,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("leaf"))
-            .put("href", getHref(category * 10 + asset.getElement2(), request.getRequestURL().toString()))
+            .put("href", getHref(category * 10 + asset.getElement2(), request, 1))
             .build())
         .build())
       .toBlocking()
@@ -582,7 +583,7 @@ public class HealthApi {
   }
 
 
-  private Iterable<ImmutableMap<String, Object>> jsonAssets(Integer category, Observable<Tuple4<Integer, String, String, Integer>> asset_health_2, HttpServletRequest request, Integer start, Integer limit) {
+  private Iterable<ImmutableMap<String, Object>> jsonAssets(Integer category, Observable<Tuple5<Integer, String, String, Integer, Integer>> asset_health_2, HttpServletRequest request, Integer start, Integer limit) {
 
     return asset_health_2
       .skip(start)
@@ -599,7 +600,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("leaf"))
-            .put("href", getHref(category * 10, request.getRequestURL().toString()))
+            .put("href", getHref(category * 10, request, 1))
             .build())
         .build())
       .toBlocking()
@@ -607,7 +608,7 @@ public class HealthApi {
   }
 
 
-  private Iterable<ImmutableMap<String, Object>> jsonAssets(Observable<Tuple3<Integer, String, String>> asset_health_3, Integer category, HttpServletRequest request, Integer start, Integer limit) {
+  private Iterable<ImmutableMap<String, Object>> jsonAssets(Observable<Tuple4<Integer, String, String, Integer>> asset_health_3, Integer category, HttpServletRequest request, Integer start, Integer limit) {
 
     return asset_health_3
       .skip(start)
@@ -622,7 +623,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("leaf"))
-            .put("href", getHref(category * 10, request.getRequestURL().toString()))
+            .put("href", getHref(category * 10, request, 1))
             .build())
         .build())
       .toBlocking()

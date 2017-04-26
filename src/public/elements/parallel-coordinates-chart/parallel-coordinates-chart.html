@@ -318,6 +318,9 @@
               case 'name':
                 d3.select(this).call(_this._renderDeviceList.bind(_this), d, height);
                 break;
+              case 'fix':
+                d3.select(this).call(_this._renderDimension.bind(_this), d, height, true);
+                break;                
               default:
                 d3.select(this).call(_this._renderDimension.bind(_this), d, height);
             }
@@ -469,7 +472,7 @@
             }
           });
         },
-        _renderDimension: function(selection, dimension, height) {
+        _renderDimension: function(selection, dimension, height, reverse) {
           function tickData(tick) {
             return {
               tick: tick,
@@ -550,10 +553,14 @@
             if (i === 0) {
               return null;
             } else {
-
-              y0 = scale(lastTick) - ( i === 0 ? 0 : padding / 2 );
-              y1 = scale(tick) + ( i === ticks.length - 1 ? 0 : padding / 2 );
-
+              var margin = padding / 2;
+              if (reverse) {
+                y0 = height - scale(tick) - ( i === ticks.length - 1 ? margin : padding);
+                y1 = height - scale(lastTick) - ( i === 0 ? margin : 0 );
+              } else {
+                y0 = scale(lastTick) - ( i === 0 ? 0 : margin );
+                y1 = scale(tick) + ( i === ticks.length - 1 ? 0 : margin );
+              }
               return {
                 name: dimension.name,
                 lastValue: lastTick,
@@ -568,7 +575,7 @@
           dimension.sectors = data;
 
           var sectors = selection.selectAll('.sector').data(data);
-          var sectorsEnter = sectors.enter()
+          var sector = sectors.enter()
           .append('g')
           .attr('class', 'sector')
           .attr('transform', d3Transform().translate(function(d) {
@@ -580,7 +587,7 @@
           }
 
           // sector region
-          sectorsEnter
+          sector
           .append("rect")
           .attr("rx", radius)
           .attr("ry", radius)
@@ -588,12 +595,10 @@
           .attr("x", function(d) {
             return - bar_w / 2;
           })
-          .attr("height", function(d, i, list) {
-            return d.y0 - d.y1;
-          });
+          .attr("height", sector_size);
 
           // sector text label
-          sectorsEnter
+          sector
           .append('text')
           .append('tspan')
           .attr('width', function(d) {
@@ -601,7 +606,11 @@
           })
           .attr('class', 'label')
           .text(function(d) {
-            return [segmentFormat(d.value), segmentFormat(d.lastValue)].join('-')
+            var rangeValue = [segmentFormat(d.value), segmentFormat(d.lastValue)]
+            if (reverse) {
+              rangeValue.reverse();
+            }
+            return rangeValue.join('-')
           })
           .each(function clip(d, i) {
             var text_size = this.getComputedTextLength();
@@ -622,8 +631,7 @@
           .attr('y', function(d) {
             return ( d.y0 - d.y1 ) / 2;
           });
-
-          sectors = sectors.merge(sectorsEnter);
+          sectors = sectors.merge(sector);
         },
         _highlightSeries: function(id) {
 
@@ -685,13 +693,7 @@
               type: String
             },
             {
-              name: "scan",
-              scale: d3.scaleLinear().range([height, 0]),
-              type: Number,
-              format: digit_short
-            },
-            {
-              name: "exposure",
+              name: "exam",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
               format: digit_short
@@ -709,7 +711,7 @@
               format: digit_short
             },
             {
-              name: "stop",
+              name: "rate",
               scale: d3.scaleLinear().range([height, 0]),
               type: Number,
               format: percentage,
@@ -723,11 +725,9 @@
 
             if (name === 'name') {
               dimension.label = '';
-              return dimension;
             } else {
               dimension.label = defs['text'] + '(' + defs['unit'] + ')';
             }
-
             return dimension;
           });
         },
