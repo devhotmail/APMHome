@@ -131,7 +131,7 @@
                         //set value
                         app.setFormJsonValue(ret);
                         pageManager.workOrder = ret;
-
+                        pageManager.currentStepId = ret.currentStepId;
                         pageManager.voice = ret.requestReasonVoice;
                         if (pageManager.voice) {
                             app.mediaShow();
@@ -171,7 +171,7 @@
                         } 
                         pageManager.actionType = 'repair';
                         post({woId: pageManager.woId, actionType: 'repair', desc: $('#description').val(), 
-                            assetStatus: $('#assetStatus').val(), confirmedUpTime : $('#confirmedUpTime').val().replace('T', ' ')});
+                            assetStatus: $('#assetStatus').val(), confirmedUpTime : $('#confirmedUpTime').val().replace('T', ' '), currentStepId: pageManager.currentStepId});
                     });
                     $('#returnSubmit').click(function(){
                         $('#errorMsg').html('');
@@ -203,7 +203,7 @@
                     function colletionData() {
                         return {woId: pageManager.woId, actionType: 'close', desc: $('#description').val(),
                                 patProblems: $('#patProblems').val(), patActions: $('#patActions').val(), patTests: $('#patTests').val(),
-                                caseType: $('#caseType').val(), stepDetail: pageManager.stepCost};
+                                caseType: $('#caseType').val(), stepDetail: pageManager.stepCost, currentStepId: pageManager.currentStepId};
                     }
                 }
                 
@@ -263,14 +263,14 @@
                             var $loadingToast2 = $('#loadingToast2');
                             if ($loadingToast2.css('display') !== 'none') return;
                             $loadingToast2.fadeIn(100);
-                            setTimeout($loadingToast2.fadeOut(100), 2000);
+                            setTimeout(function(){$loadingToast2.fadeOut(100)}, 2000);
                         }
                     },
                     error: function(ret){
                         var $loadingToast2 = $('#loadingToast2');
                         if ($loadingToast2.css('display') !== 'none') return;
                         $loadingToast2.fadeIn(100);
-                        setTimeout($loadingToast2.fadeOut(100), 2000);
+                        setTimeout(function(){$loadingToast2.fadeOut(100)}, 2000);
                     }
                 });
             }

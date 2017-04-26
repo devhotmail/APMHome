@@ -30,6 +30,7 @@ public class WorkOrderPoJo {
     String telephone;
     String wechatId;
     String nickName;
+    Integer currentStepId;
     boolean reOpen;
 
     public boolean isReOpen() {
@@ -246,6 +247,14 @@ public class WorkOrderPoJo {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public Integer getCurrentStepId() {
+        return currentStepId;
+    }
+
+    public void setCurrentStepId(Integer currentStepId) {
+        this.currentStepId = currentStepId;
     }
     
 }

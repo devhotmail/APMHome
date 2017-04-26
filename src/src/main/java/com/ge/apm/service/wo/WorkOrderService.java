@@ -436,6 +436,12 @@ public class WorkOrderService {
         }
         neWorkOrder.setAssetId(wop.getAssetId());
         neWorkOrder.setAssetName(ai.getName());
+        // 科室
+        neWorkOrder.setFromDeptId(usr.getOrgInfoId());
+        OrgInfo dept = orgDao.findById(usr.getOrgInfoId());
+        if (dept != null) {
+            neWorkOrder.setFromDeptName(dept.getName());
+        }
         neWorkOrder.setRequestorId(usr.getId());
         neWorkOrder.setRequestorName(usr.getName());
         neWorkOrder.setRequestTime(new Date());
