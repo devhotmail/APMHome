@@ -58,8 +58,9 @@
                 <div class="weui-tab__panel">
                     <div id="orderList" class="page__bd page__bd_spacing">
                     </div>
-                    <div class='button-sp-area'>
+                    <div class='weui-btn-area'>
                     </div>
+                    <div style="height:20px;"></div>
                 </div>
             </div>
         </div>
@@ -123,7 +124,7 @@
 
             var moreBtn = "<a id='moreBtn' href='javascript:getPage("+isFinished+");' class='weui-btn weui-btn_plain-primary'>查看更多...</a>";
             if(ret.data.pageTotal > pageCount){
-                $('.button-sp-area').append(moreBtn);
+                $('.weui-btn-area').append(moreBtn);
             }
 
             pageCount++;
