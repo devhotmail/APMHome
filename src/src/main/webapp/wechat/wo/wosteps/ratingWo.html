@@ -71,7 +71,7 @@
                         //set value
                         app.setFormJsonValue(ret);
                         pageManager.workOrder = ret;
-
+                        pageManager.currentStepId = ret.currentStepId;
                         pageManager.voice = ret.requestReasonVoice;
                         if (pageManager.voice) {
                             app.mediaShow();
@@ -147,19 +147,19 @@
                             var $loadingToast2 = $('#loadingToast2');
                             if ($loadingToast2.css('display') !== 'none') return;
                             $loadingToast2.fadeIn(100);
-                            setTimeout($loadingToast2.fadeOut(100), 2000);
+                            setTimeout(function(){$loadingToast2.fadeOut(100)}, 2000);
                         }
                     },
                     error: function(ret){
                         var $loadingToast2 = $('#loadingToast2');
                         if ($loadingToast2.css('display') !== 'none') return;
                         $loadingToast2.fadeIn(100);
-                        setTimeout($loadingToast2.fadeOut(100), 2000);
+                        setTimeout(function(){$loadingToast2.fadeOut(100)}, 2000);
                     }
                 });
             }
             function colletionData() {
-                return {woId: pageManager.woId, actionType: 'feedback', feedbackRating: pageManager.feedbackRating, desc: $('#description').val() };
+                return {woId: pageManager.woId, actionType: 'feedback', feedbackRating: pageManager.feedbackRating, desc: $('#description').val(), currentStepId: pageManager.currentStepId };
             }
             function validateData(data) {
                 if(!data.feedbackRating){$('#errorMsg').html('请先评分');} return !data.feedbackRating;

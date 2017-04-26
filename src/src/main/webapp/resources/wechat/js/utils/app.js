@@ -3,6 +3,7 @@ $(function () {
     app.initSelectData = initSelectData;
     app.toggleJsdialog = toggleJsdialog;
     app.fullListItem = fullListItem;
+    app.appendListItem = appendListItem;
     app.activeProgressBar = activeProgressBar;
     app.initUserSelect = initUserSelect;
     app.setFormJsonValue = setFormJsonValue;
@@ -39,9 +40,13 @@ $(function () {
      * @returns {undefined}
      */
     function initSelectData(keyId, msgType, defaultSelected) {
-        $.get(WEB_ROOT+"web/getmsg",
-            {'msgType': msgType},
-            function(ret) {
+        $.ajax({
+            url:WEB_ROOT+"web/getmsg",
+            data: {'msgType': msgType},
+            beforeSend: function( xhr ) { 
+                xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+            },
+            success: function(ret) {
                 if (ret) {
                     pageManager.msgTypes[msgType] = {};
                     $.each(ret, function(idx, val){
@@ -54,7 +59,7 @@ $(function () {
                     });
                 }
             }
-        );
+        });
     }
 
 
@@ -86,6 +91,24 @@ $(function () {
     function fullListItem(elId, datas) {
         var $ui_list = $('#'+elId);
         $ui_list.empty();
+        var tmpl = $('#ts_listItem').html();
+        $.each(datas, function(idx, value){
+            var $tmpl = $(tmpl);
+            $tmpl.find('h4').html(value.title);
+            $tmpl.find('.ftitle').html(value.ftitle).css('color',value.ftitleColor);
+            var parentEl = $tmpl.find('.show-data');
+            $.each(value.data, function(i, v){
+                parentEl.append('<p>'+v+'</p>');
+            });
+            if (value.rater === 0) {
+                $tmpl.find('.reportview').html('未评分');
+            }
+            $ui_list.append($tmpl);
+        });
+    }
+    
+    function appendListItem(elId, datas) {
+        var $ui_list = $('#'+elId);
         var tmpl = $('#ts_listItem').html();
         $.each(datas, function(idx, value){
             var $tmpl = $(tmpl);

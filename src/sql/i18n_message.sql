@@ -169,6 +169,12 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (266, 'label', 'AssetContractName', '合同名称', 'Asset Contract Name', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (267, 'label', 'SysCodeConfig', '系统编码配置', 'Sys Code Config', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (268, 'label', 'ItemConfig', '配置', 'Config', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (269, 'label', 'AssetOwnerSetting', '设备负责人设置', 'Asset owner setting', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (270, 'label', 'SettingOwner', '设置', 'Setting', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (271, 'label', 'AvailableAssets', '备选设备', 'Available Assets', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (272, 'label', 'ChoseAssets', '选中设备', 'Chose Assets', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (273, 'label', 'ChoosingAssets', '选择设备列表', 'Choosing Assets', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (274, 'label', 'FilterCondition', '过滤条件', 'Filter Conditions', NULL, -1);
 
 
 -- Entity Object Names  ( id from 400 to  599)
@@ -389,11 +395,12 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1413,'assetGroup','14','电刀、超声刀','电刀、超声刀',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1414,'assetGroup','15','医用激光类','医用激光类',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1415,'assetGroup','16','输注泵类','输注泵类',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1416,'assetGroup','17','灯床塔等手术','灯床塔等手术',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1416,'assetGroup','17','手术室设备类','手术室设备类',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1417,'assetGroup','18','消毒设备类','消毒设备类',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1418,'assetGroup','19','检验室设备类','检验室设备类',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1419,'assetGroup','20','病理类','病理类',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1420,'assetGroup','21','手术显微镜类','手术显微镜类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1420,'assetGroup','21','口腔科设备类','口腔科设备类',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1421,'assetGroup','22','其它','其它',null,-1);
 
 /*
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1400,'assetGroup','1','CT','CT',null,-1);
@@ -582,6 +589,8 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3034,'message','ViewHistoryWorkOrder', '查看历史报修','View History Work Orders',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3035,'message','WarningForUpdateQRCode', '此设备已绑定二维码，继续此操作会更新编码','This Asset already has had a QRcode,Continue this operation will update the QRCode!',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3036,'message','SuccessForBinding', '绑定设备成功!','Success For Binding!',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3037,'message','ChooseAssets', '请选择设备!','Please choose assets first!',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3038,'message','ChooseAssetsOwner', '请选择设备负责人!','Please choose assets owner first!',null,-1);
 
 -- Chart label/lengend （id from 5000 to 5500）
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan #',null,-1);

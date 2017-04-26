@@ -77,7 +77,7 @@
                         //set value
                         app.setFormJsonValue(ret);
                         pageManager.workOrder = ret;
-                        
+                        pageManager.currentStepId = ret.currentStepId;
                         initdetail();
                     } 
                     $('#loadingToast1').fadeOut(100);
@@ -133,21 +133,21 @@
                             var $loadingToast2 = $('#loadingToast2');
                             if ($loadingToast2.css('display') !== 'none') return;
                             $loadingToast2.fadeIn(100);
-                            setTimeout($loadingToast2.fadeOut(100), 2000);
+                            setTimeout(function(){$loadingToast2.fadeOut(100)}, 2000);
                         }
                     },
                     error: function(ret){
                         var $loadingToast2 = $('#loadingToast2');
                         if ($loadingToast2.css('display') !== 'none') return;
                         $loadingToast2.fadeIn(100);
-                        setTimeout($loadingToast2.fadeOut(100), 2000);
+                        setTimeout(function(){$loadingToast2.fadeOut(100)}, 2000);
                     }
                 });
             }
             function colletionData() {
                 return {woId: pageManager.woId, actionType: 'close', desc: $('#description').val(),
                         patProblems: $('#patProblems').val(), patActions: $('#patActions').val(), patTests: $('#patTests').val(),
-                        caseType: $('#caseType').val(), stepDetail: pageManager.stepCost};
+                        caseType: $('#caseType').val(), stepDetail: pageManager.stepCost, currentStepId: pageManager.currentStepId};
             }
         });
 </script>

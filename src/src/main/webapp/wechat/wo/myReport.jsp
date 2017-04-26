@@ -71,6 +71,10 @@
                         <div class="weui-tab__panel">
                             <div id="myReports" class="page__bd page__bd_spacing">
                             </div>
+                            <div class="weui-btn-area">
+                                <a class="weui-btn weui-btn_plain-primary" href="javascript:" id="loadMore">查看更多...</a>
+                            </div>
+                            <div style="height:20px;"></div>
                         </div>
                     </div>
                 </div>
@@ -79,6 +83,8 @@
                 $(function(){
                     //data search function
                     pageManager.myreportList = function(close) {
+                        pageManager.pageNum = 0;
+                        pageManager.pageSize = 10;
                         var $loadingToast1 = $('#loadingToast1');
                         if ($loadingToast1.css('display') !== 'none') return;
                         $loadingToast1.fadeIn(100);
@@ -96,27 +102,28 @@
                             pageManager.showCancel = false;
                             pageManager.entryType = 'myreport2';
                         }
-                        $.get(WEB_ROOT+'web/workorder', {status: close}, function(ret) {
+                        $.get(WEB_ROOT+'web/workorder', {status: close, pageSize: pageManager.pageSize, pageNum: pageManager.pageNum}, function(ret) {
                             var data = [];
-                            if (ret && ret.length !== 0) {
-                                $.each(ret, function(i, v){
-                                    data.push({title:'工单编号: '+ v['id'], 
-                                               ftitle: pageManager.msgTypes['casePriority'][v['casePriority']], 
-                                               ftitleColor : v['casePriority']===1?'#F76260':v['casePriority']===2?'#FFBE00':'#09BB07',
-                                               rater: (close === 2 ? v['feedbackRating']: -1),
-                                               data : ['资产编号：'+v['assetId'],
-                                                        '资产名称：'+v['assetName'],
-                                                        '报修人：'+v['requestorName'],
-                                                        '报修时间：'+v['requestTime'],
-                                                       '工单状态：'+v['currentStepName'],
-                                                       '当前人员：'+v['currentPersonName']]});
-                                });
-                            } 
+                            assembleData(data, ret, close);
                             //show the data list
                             app.fullListItem('myReports', data);
                             $loadingToast1.fadeOut(100);
                         });
                     }
+                    
+                    $('#loadMore').click(function(){
+                        var $loadingToast1 = $('#loadingToast1');
+                        if ($loadingToast1.css('display') !== 'none') return;
+                        $loadingToast1.fadeIn(100);
+                        //fetch data from server    wolistdata is the restful url
+                        $.get(WEB_ROOT+'web/workorder', {status: pageManager.close, pageSize: pageManager.pageSize, pageNum: pageManager.pageNum}, function(ret) {
+                            var data = [];
+                            assembleData(data, ret, pageManager.close);
+                            //show the data list
+                            app.appendListItem('myReports', data);
+                            $loadingToast1.fadeOut(100);
+                        });
+                    });
                     
                     //bind click event
                     $('#myReports').on('click', '.weui-cell_access', function(){
@@ -137,9 +144,34 @@
                     $('.weui-navbar__item').on('click', function () {
                         $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
                         //do the search action     1-在修 / 2-完成 / 3-取消
-                        pageManager.myreportList($(this).data('close'));
+                        pageManager.close = $(this).data('close');
+                        pageManager.myreportList(pageManager.close);
                     });
+                    pageManager.close = 1;
                     pageManager.myreportList(1);
+                    
+                    function assembleData(data, ret, close) {
+                        if (ret && ret.content && ret.content.length !== 0) {
+                            $.each(ret.content, function(i, v){
+                                data.push({title:'工单编号: '+ v['id'], 
+                                           ftitle: pageManager.msgTypes['casePriority'][v['casePriority']], 
+                                           ftitleColor : v['casePriority']===1?'#F76260':v['casePriority']===2?'#FFBE00':'#09BB07',
+                                           rater: (close === 2 ? v['feedbackRating']: -1),
+                                           data : ['资产编号：'+v['assetId'],
+                                                    '资产名称：'+v['assetName'],
+                                                    '报修人：'+v['requestorName'],
+                                                    '报修时间：'+v['requestTime'],
+                                                   '工单状态：'+v['currentStepName'],
+                                                   '当前人员：'+v['currentPersonName']]});
+                            });
+                            pageManager.pageNum = ret.number +1;
+                        } 
+                        if (!ret.totalPages || pageManager.pageNum >= ret.totalPages) {
+                            $('#loadMore').hide();
+                        } else {
+                            $('#loadMore').show();
+                        }
+                    }
                 });
         </script>
            

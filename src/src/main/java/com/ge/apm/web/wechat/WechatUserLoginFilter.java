@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
@@ -59,9 +60,13 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain fc) throws ServletException, IOException {
 
-        String path = request.getRequestURI().replace(request.getContextPath(), "");
+        String path = request.getRequestURI();
+        if (request.getContextPath().length() > 1) {
+            path = path.substring(request.getContextPath().length());
+        }
         String code = request.getParameter("code");
         String openId = "";
+        String nickName = "";
 
         if (!URLS.contains(path)) {
             fc.doFilter(request, response);
@@ -99,7 +104,9 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
         Boolean isBinded = false;
 
         try {
-            openId = getOpenId(code);
+            WxMpUser wxUser = getWxMpUser(code); 
+            openId = wxUser.getOpenId();
+            nickName = wxUser.getNickname();
             ExternalLoginHandler loginHandler = WebUtil.getServiceBean(ExternalLoginHandler.class);
             isBinded = loginHandler.doLoginByWeChatOpenId(openId, request, response);
             //add url and openId to cookie
@@ -122,17 +129,35 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
             fc.doFilter(request, response);
         } else {
             request.setAttribute("openId", openId);
-            request.getRequestDispatcher("/wechat/userInfo.jsp").forward(request, response);
+            if (path.equals("/wechat/wo/scanAssetList.xhtml")){
+                request.setAttribute("nickName", nickName);
+                WxJsapiSignature s = null;
+                try {
+                    s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
+                } catch (WxErrorException ex) {
+                    Logger.getLogger(WechatUserLoginFilter.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                request.setAttribute("appId",s.getAppid());
+                request.setAttribute("timestamp",s.getTimestamp());
+                request.setAttribute("nonceStr",s.getNoncestr());
+                request.setAttribute("signature",s.getSignature());
+                request.getRequestDispatcher("/web/unloginScan").forward(request, response);
+            } else {
+                request.getRequestDispatcher("/wechat/userInfo.jsp").forward(request, response);
+            }
         }
     }
 
     private String getOpenId(String code) throws WxErrorException {
+        return  getWxMpUser(code).getOpenId();
+    }
+    
+    private WxMpUser getWxMpUser(String code) throws WxErrorException {
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken;
         //获得token
         wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
         //获得用户基本信息
-        WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
-        return  wxMpUser.getOpenId();
+        return wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
     }
 
 }

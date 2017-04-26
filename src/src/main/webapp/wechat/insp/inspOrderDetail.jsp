@@ -43,6 +43,7 @@
                             </a>
                         </div>
                     </div>
+                    <!--
                     <div class="weui-cells__title">图片上传<div class="weui-uploader__info" style="float: right;"><span id="countnum">0</span>/1</div></div>
                     <div class="weui-cells">
                         <div class="weui-cell">
@@ -60,7 +61,7 @@
                             </div>
                         </div>
                     </div>
-                    
+                    -->
                     <div class="weui-cells__title">文字描述</div>
                     <div class="weui-cells">
                         <div class="weui-cell">
@@ -117,7 +118,7 @@
                             details.push(asset);
                         });
                         initAssetList(details);
-                        binds();
+                        binds(ret);
                         imageAction();
                     } else {
                         $('#container').empty().append('<div class="page js_show"><div class="page_hd"><h1>没有数据...</h1></div></div>');
@@ -217,7 +218,7 @@
                     //图片功能结束
                 }
                 
-                function binds() {
+                function binds(ret) {
                     var winH = $(window).height();
                     var categorySpace = 10;
 
@@ -286,9 +287,10 @@
                         var $loadingToast = $('#loadingToast');
                         if ($loadingToast.css('display') !== 'none') return;
                         $loadingToast.fadeIn(100);
-                        
-                        var formData = new FormData();  
+                        /*
+                        var formData = new FormData();
                         formData.append('file', $("#uploaderInput")[0].files[0]);
+
                         $.ajax({  
                              url: 'http://120.132.8.152:8090/hcapmobjecthubservice/api/apm/objectHub/objects/single' ,  
                              type: 'POST',  
@@ -306,7 +308,8 @@
                              error: function (returndata) {  
                              }  
                         });  
-                        
+                        */
+                        send(1);
                         function send(attachId) {
                             var data = {
                                 "attachId": attachId,
@@ -314,7 +317,7 @@
                                 "comments": $('#comments').val()
                             };
 
-                            apmRest.put('/hcapmassetservice/api/apm/asset/inspection/'+window.orderId+'/excute', data, function(ret){
+                            apmRest.put('/hcapmassetservice/api/apm/asset/inspectionorders/'+window.orderId+'/excute', data, function(ret){
                                 $loadingToast.fadeOut(100);
                                 if (ret && ret.bizStatusCode === 'OK') {
                                     $('#container').empty().append($('#ts_msg_success').html());
@@ -324,6 +327,11 @@
                             });
                         }
                     });
+
+                    if (ret.data.order.isFinished == true) {
+                        $('#submit').hide();
+                    }
+
                 }
             });
         </script>
