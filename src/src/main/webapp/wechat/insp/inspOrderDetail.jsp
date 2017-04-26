@@ -287,9 +287,10 @@
                         var $loadingToast = $('#loadingToast');
                         if ($loadingToast.css('display') !== 'none') return;
                         $loadingToast.fadeIn(100);
-                        
-                        var formData = new FormData();  
+                        /*
+                        var formData = new FormData();
                         formData.append('file', $("#uploaderInput")[0].files[0]);
+
                         $.ajax({  
                              url: 'http://120.132.8.152:8090/hcapmobjecthubservice/api/apm/objectHub/objects/single' ,  
                              type: 'POST',  
@@ -307,7 +308,8 @@
                              error: function (returndata) {  
                              }  
                         });  
-                        
+                        */
+                        send(1);
                         function send(attachId) {
                             var data = {
                                 "attachId": attachId,
@@ -315,7 +317,7 @@
                                 "comments": $('#comments').val()
                             };
 
-                            apmRest.put('/hcapmassetservice/api/apm/asset/inspection/'+window.orderId+'/excute', data, function(ret){
+                            apmRest.put('/hcapmassetservice/api/apm/asset/inspectionorders/'+window.orderId+'/excute', data, function(ret){
                                 $loadingToast.fadeOut(100);
                                 if (ret && ret.bizStatusCode === 'OK') {
                                     $('#container').empty().append($('#ts_msg_success').html());
