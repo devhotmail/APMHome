@@ -6,7 +6,7 @@
   display: flex;
 }
 
-$sidebar-width: 280px;
+$sidebar-width: 300px;
 $kpi-legend-circle-r: 25px;
 $gap: 10px;
 
@@ -269,22 +269,15 @@ $design-width: 120px;
   .kpi {
     display: flex;
     align-items: center;
+    text-align: left;
     font-size: 16px;
-    
-    &::before {
-      display: inline-block;
-      content: '';
-      width: $kpi-legend-circle-r;
-      height: $kpi-legend-circle-r;
-      margin-right: $gap;
-      border-radius: 50%;
-      background-color: $yellow;
+
+    i {
+      font-size: 24px;
     }
 
-    @each $num in (1,2,3) {
-      &.kpi-#{$num - 1}::before {
-        background-color: nth($color-set, $num);
-      }
+    .kpi-tip {
+      margin-left: 5px;
     }
   }
 
@@ -298,10 +291,6 @@ $design-width: 120px;
   align-items: center;
   line-height: 1.5;
   text-align: left;
-
-  editable-block {
-    --block-width: 30px;
-  }
 
   i {
     font-size: 24px;

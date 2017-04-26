@@ -44,7 +44,6 @@
               width="{{width}}"
               height="{{height}}"
               child-key="items"
-              size-key="revenue_predict_raw"
               focus-info="[[focusInfo]]"
               on-focus-changed="handleFocusChange"
               chart-data="[[systemData]]"></zoom-pack-chart>
@@ -55,7 +54,6 @@
               width="{{width}}"
               height="{{height}}"
               child-key="items"
-              size-key="revenue_predict_raw"
               focus-info="[[focusInfo]]"
               on-focus-changed="handleFocusChange"
               chart-data="[[manualData]]"></zoom-pack-chart>
@@ -109,81 +107,80 @@
           <div class="tabs-content">
             <template is="dom-if" if="[[isEqual(activeTab, 0)]]">
               <div class="related-info">
-                <template is="dom-if" if="[[focus.data.usage]]">
-                  <div class="kpis">
-                    <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
-                    <div class="u-mb--">未来12个月收益预测([[focus.data.revenue_unit]]元)</div>
-                    <div class="text-muted u-mb--">过去两年的历史数据</div>
-                    <template is="dom-if" if="[[focus.data.revenue_year_before_last]]">
-                      <div class="flex flex--middle revenue-tip muted">
-                        <div class="revenue-label">[[getYM(focus.data.year_before_last_date)]]</div>
-                        <div class="flex__item u-ml-- u-mr--">
-                          <div
-                            class="progress-bar"
-                            style$="[[calcProgress(focus.data.revenue_year_before_last_raw, systemData.revenue_year_before_last_raw)]]">
-                          </div>
-                        </div>
-                        <div class="revenue-num">[[focus.data.revenue_year_before_last]]</div>
-                      </div>
-                    </template>
-                    <template is="dom-if" if="[[focus.data.revenue_last_year]]">
-                      <div class="flex flex--middle revenue-tip muted">
-                        <div class="revenue-label">[[getYM(focus.data.last_year_date)]]</div>
-                        <div class="flex__item u-ml-- u-mr--">
-                          <div
-                            class="progress-bar"
-                            style$="[[calcProgress(focus.data.revenue_last_year_raw, systemData.revenue_last_year_raw)]]">
-                          </div>                    
-                        </div>
-                        <div class="revenue-num">[[focus.data.revenue_last_year]]</div>
-                      </div>
-                    </template>
-                    <template is="dom-if" if="[[focus.data.revenue_predict]]">
-                      <div class="text-muted u-mt-- u-mb--">未来12个月</div>
-                      <div class="flex flex--middle revenue-tip">
-                        <div class="revenue-label">预测</div>
-                        <div class="flex__item u-ml-- u-mr--">
-                          <div
-                            class="progress-bar"
-                            style$="[[calcProgress(focus.data.revenue_predict_raw, systemData.revenue_predict_raw)]]">
-                          </div>
-                        </div>
-                        <div class="revenue-num">
-                          [[focus.data.revenue_predict]] [[decimal2Percent(focus.data.revenue_increase, 1)]]
+                <div class="kpis">
+                  <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
+                  <template is="dom-if" if="[[focus.data.usage_year_before_last]]">
+                    <div class="flex flex--middle revenue-tip muted">
+                      <div class="revenue-label">[[getYM(focus.data.year_before_last_date)]]</div>
+                      <div class="flex__item u-ml-- u-mr--">
+                        <div
+                          class="progress-bar"
+                          style$="[[calcProgress(focus.data.usage_year_before_last)]]">
                         </div>
                       </div>
-                    </template>
-                    <template is="dom-if" if="[[hasSugs(focus.data.suggestions)]]">
-                      <div class="flex flex--middle revenue-tip">
-                        <div class="revenue-label">采取建议</div>
-                        <div class="flex__item u-ml-- u-mr--">
-                          <div
-                            class="progress-bar"
-                            style$="[[calcProgress(focus.data.revenue_predict_sug_raw, systemData.revenue_predict_sug_raw)]]">
-                          </div>                     
-                        </div>
-                        <div class="revenue-num">
-                          [[focus.data.revenue_predict_sug]] [[decimal2Percent(focus.data.revenue_increase_sug, 1)]]
+                      <div class="revenue-num">[[decimal2Percent(focus.data.usage_year_before_last)]]</div>
+                    </div>
+                  </template>
+                  <template is="dom-if" if="[[focus.data.usage_last_year]]">
+                    <div class="flex flex--middle revenue-tip muted">
+                      <div class="revenue-label">[[getYM(focus.data.last_year_date)]]</div>
+                      <div class="flex__item u-ml-- u-mr--">
+                        <div
+                          class="progress-bar"
+                          style$="[[calcProgress(focus.data.usage_last_year)]]">
+                        </div>                    
+                      </div>
+                      <div class="revenue-num">[[decimal2Percent(focus.data.usage_last_year)]]</div>
+                    </div>
+                  </template>
+                  <!--todo after api ready-->
+                  <div class="flex flex--middle revenue-tip muted">
+                    <div class="revenue-label">[[getYM(focus.data.this_year_date)]]</div>
+                    <div class="flex__item u-ml-- u-mr--">
+                      <div
+                        class="progress-bar"
+                        style$="[[calcProgress(focus.data.usage_this_year)]]">
+                      </div>                    
+                    </div>
+                    <div class="revenue-num">[[decimal2Percent(focus.data.usage_this_year)]]</div>
+                  </div>                    
+                  <template is="dom-if" if="[[focus.data.usage_predict]]">
+                    <div class="flex flex--middle revenue-tip">
+                      <div class="revenue-label">[[selectedYear]]预测</div>
+                      <div class="flex__item u-ml-- u-mr--">
+                        <div
+                          class="progress-bar"
+                          style$="[[calcProgress(focus.data.usage_predict)]]">
                         </div>
                       </div>
+                      <div class="revenue-num">
+                        [[decimal2Percent(focus.data.usage_predict)]]
+                        [[decimal2Percent(focus.data.usage_predict_increase, 1)]]
+                      </div>
+                    </div>
+                  </template>
+                  <div class="u-mt-">
+                    <template is="dom-if" if="[[currentKPIs.high]]">
+                      <div class$="kpi kpi-[[index]]">
+                        <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                        <span class="kpi-tip">[[currentKPIs.high.desc]]</span>
+                      </div>
+                      <div class="kpi-detail">
+                        <div class="title u-mv--">[[currentKPIs.high.num]]台设备</div>
+                      </div>
                     </template>
-                    <template is="dom-if" if="[[focus.data.usage]]">
-                      <div class="divider"></div>
-                      未来12个月平均使用率预测:
-                      <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
+                    <template is="dom-if" if="[[currentKPIs.low]]">
+                      <div class$="kpi kpi-[[index]]">
+                        <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                        <span class="kpi-tip">[[currentKPIs.low.desc]]</span>
+                      </div>
+                      <div class="kpi-detail">
+                        <div class="title u-mv--">[[currentKPIs.low.num]]台设备</div>
+                      </div>
                     </template>
-                    <template is="dom-if" if="[[hasSugs(focus.data.suggestions)]]">
-                      <template is="dom-repeat" items="[[focus.data.suggestions]]">
-                        <template is="dom-if" if="[[item.title]]">
-                          <div>[[item.title]]</div>
-                        </template>
-                        <template is="dom-if" if="[[item.addition]]">
-                          <div class="title u-mt- u-mb-">[[item.addition]]</div>
-                        </template>
-                      </template>
-                      <div class="divider"></div>
-                    </template>
-                    <template is="dom-if" if="[[isOr(currentKPIs.0.num, currentKPIs.1.num)]]">
+                  </div>
+                  <template is="dom-if" if="[[isOr(currentKPIs.0.num, currentKPIs.1.num)]]">
+                    <div class="u-mt-">
                       <template is="dom-repeat" items="[[currentKPIs]]">
                         <template is="dom-if" if="[[item.num]]">
                           <div class$="kpi kpi-[[index]]">[[item.desc]]</div>
@@ -192,9 +189,66 @@
                           </div>
                         </template>
                       </template>
+                    </div>
+                  </template>
+                  <div class="divider"></div>                  
+                  <!--<template is="dom-if" if="[[focus.data.usage]]">
+                    <div class="divider"></div>
+                    未来12个月平均使用率预测:
+                    <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
+                  </template>-->
+                  <template is="dom-if" if="[[hasSugs(focus.data.suggestions)]]">
+                    <div class="title u-mb--">建议</div>
+                    <template is="dom-repeat" items="[[focus.data.suggestions]]">
+                      <template is="dom-if" if="[[item.title]]">
+                        <div>[[item.title]]</div>
+                      </template>
+                      <template is="dom-if" if="[[item.addition]]">
+                        <div class="title u-mt- u-mb-">[[item.addition]]</div>
+                      </template>
                     </template>
-                  </div>
-                </template>
+                  </template>
+                  <template is="dom-if" if="[[hasSugs(focus.data.suggestions)]]">
+                    <div class="u-mb--">采纳建议后的使用率预测</div>
+                    <div class="flex flex--middle revenue-tip">
+                      <div class="revenue-label">采取建议</div>
+                      <div class="flex__item u-ml-- u-mr--">
+                        <div
+                          class="progress-bar"
+                          style$="[[calcProgress(focus.data.usage_sug)]]">
+                        </div>                     
+                      </div>
+                      <div class="revenue-num">
+                        [[decimal2Percent(focus.data.usage_sug)]]
+                        [[decimal2Percent(focus.data.usage_sug_increase, 1)]]
+                      </div>
+                    </div>
+                  </template>
+                  <div class="divider"></div>
+                  <div class="legends">
+                    <div class="title u-mt- u-mb-">使用率负荷说明</div>
+                    <div class="legend">
+                      <i class="dewicon-circle-high" style="color:#b3b3b3"></i>
+                      <span class="legend-tip">平均使用率预测</span>
+                    </div>
+                    <template is="dom-if" if="[[focus.data.usage_threshold.1]]">
+                      <div class="legend">
+                        <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                        <span class="legend-tip">满负荷使用率定义: &gt;</span>
+                        [[decimal2Percent(focus.data.usage_threshold.1)]]
+                      </div>
+                    </template>
+                    <template is="dom-if" if="[[focus.data.usage_threshold.0]]">
+                      <div class="legend">
+                        <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                        <span class="legend-tip">低负荷使用率定义: &lt;</span>
+                        [[decimal2Percent(focus.data.usage_threshold.0)]]
+                      </div>
+                    </template>
+                    <div class="legend">球大小与设备利润预测相关</div>
+                    <div class="legend">左侧的图形显示的是您选择的预测年份的数据</div>
+                  </div>                  
+                </div>
               </div>
             </template>
             <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
@@ -306,27 +360,6 @@
                 </template>
               </template>
             </template>
-            <div class="divider"></div>
-            <div class="legends">
-              <div class="title u-mt- u-mb-">图示说明</div>
-              <div class="legend">
-                <i class="dewicon-circle-high" style="color:#b3b3b3"></i>
-                <span class="legend-tip">平均使用率预测(%)</span>
-              </div>
-              <div class="legend">
-                <i class="dewicon-circle-full" style="color:#e26d26"></i>
-                <span class="legend-tip">单台使用率预测大于</span>
-                <editable-block value="{{max}}"></editable-block>
-                <span>%</span>
-              </div>
-              <div class="legend">
-                <i class="dewicon-circle-low" style="color:#ebda51"></i>
-                <span class="legend-tip">单台使用率预测小于</span>
-                <editable-block value="{{min}}"></editable-block>
-                <span>%</span>
-              </div>
-              <div class="legend">球大小与设备利润预测相关</div>
-            </div>
           </div>
         </div>
       </template>
@@ -457,7 +490,7 @@
             computed: 'getConfigListTwo(configList, selectedConfigItem)'
           },
           currentKPIs: {
-            type: Array,
+            type: Object,
             computed: 'getCurrentKPIs(focus)'
           },
           slidingLeft: {
@@ -513,7 +546,6 @@
               id: target.id,
               depth: depth
             }
-            console.log(this.focusInfo)
           }
         },
         getConfigListOne: function(configList) {
@@ -835,9 +867,8 @@
         calcTabCls: function(val, selectedType) {
           return val === selectedType ? 'active btn' : 'btn';
         },
-        calcProgress: function(a, b) {
-          var tmp = a / b;
-          return 'width:' + (tmp > 1 ? 1 : tmp) * 100 + '%';
+        calcProgress: function(percent) {
+          return 'width:' + (percent > 1 ? 1 : percent) * 100 + '%';
         },
         calcConfigListWrapperCls: function(configLoading) {
           return configLoading ? 'config-list-wrapper disabled' : 'config-list-wrapper';
@@ -848,11 +879,15 @@
         hasSugs: function(array) {
           if (!Array.isArray(array)) return false;
           return Boolean(array.length);
-        },        
+        },     
         getYM: function(timestamp) {
           if (!timestamp) return;
           var date = new Date(timestamp);
           var year = date.getFullYear();
+
+          var currentYear = (new Date()).getFullYear()
+          if (currentYear === year) return year + '至今';
+
           var month = date.getMonth() + 1;
           if (year && month) {
             return [date.getFullYear(), (date.getMonth() + 1)].join('.');
@@ -885,20 +920,26 @@
          * functions which do data convert jobs
         */
         getCurrentKPIs: function(focus) {
+          var result = {}
+
           var descList = [
-            '使用率预测<30%',
-            '使用率预测>100%',
+            '使用率预测低负荷台数 (>usage%)',
+            '使用率预测超负荷台数 (<usage%)'
           ];
 
           var usageSum = focus.data.usage_sum;
+          var usageThreshold = focus.data.usage_threshold;
           if (usageSum && usageSum.length) {
-            return usageSum.map(function(n, i) {
-              return {
-                desc: descList[i],
-                num: n
-              }
+            usageSum.map(function(n, i) {
+              ['low', 'high'].forEach(function(key, i) {
+                result[key] = {
+                  desc: descList[i].replace('usage', parseInt(usageThreshold[i] * 100)),
+                  num: usageSum[i]
+                }
+              })
             });
-          } else return [];
+          }
+          return result
         },
         dataConverter: function(data) {
           function patchUid(obj) {
@@ -943,7 +984,9 @@
               uid: n.data.uid,
               name: n.data.name,
               // for the display usage # 1
-              increase: this.round(n.data.revenue_increase_sug * 100, 1)
+              increase: this.round(n.data.usage_predict * 100, 1),
+              usage_min: n.data.usage_threshold[0] * 100,
+              usage_max: n.data.usage_threshold[1] * 100
             }
           }).bind(this));
         },
@@ -984,7 +1027,7 @@
           this.showError = false;
 
           var url = this.getApiUrl(isHead, year, groupby, orgId);
-          // url = 'mock/asset-procurement-' + groupby  +'.json'
+          url = 'mock/asset-procurement-' + groupby  +'.json'
 
           return fetch(url, {
             accept: 'application/json',

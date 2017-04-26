@@ -22,6 +22,8 @@
     </div>
   </template>
   <script>
+    var waveFillKey = 'usage_predict'
+
     var constants = {
       margin: 20,
       fontSize: 20,
@@ -125,7 +127,7 @@
       .append('tspan')
       .attr('dy', '-0.05em')
       .text(function(d) {
-        return parseInt(d.data.usage * 100) + '%';
+        return parseInt(d.data[waveFillKey] * 100) + '%';
       });
       
       // Text for overload assets
@@ -283,7 +285,6 @@
         }).sort(function(a, b) {
           return b.value - a.value;
         });
-
         return rootNode;
       },
       getFocus: function(nodes, focusInfo) {
@@ -304,13 +305,11 @@
         var pack = d3.pack()
         .size([this.diameter - constants.margin, this.diameter - constants.margin])
         .padding(2);
-
+        
         var data = this.dataBeautify(this.chartData);
-        var data = this.chartData;
 
         var root = this.getRootNode(data);
         this.rootNode = root;
-
         var nodes = pack(root).descendants();
         return nodes;
       },
@@ -447,6 +446,8 @@
           // filter for placeholder and zero radius
           return !n.data.placeholder && n.r;
         });
+
+        if (!nodes.length) return;
  
         var focus = this.getFocus(nodes, this.focusInfo);
         this.focus = focus;
@@ -475,7 +476,7 @@
         })
         .attr('stroke-width', 1)
         .attr('stroke', function(d) {
-          return getColorByPercent(d.data.usage);
+          return getColorByPercent(d.data[waveFillKey]);
         })
         .attr('fill', function(d) {
           return (d !== focus && d.parent !== focus) ? 'none' : constants.circleColor;   
@@ -494,13 +495,13 @@
         .append('path')
         .attr('pointer-events', 'none')
         .attr('d', function(d) {
-          return wavePath(d.data.usage, d.r);
+          return wavePath(d.data[waveFillKey], d.r);
         })
         .attr('transform', function(d) {
           return 'translate(' + (-d.r) + ',' + 0 + ')';
         })
         .attr('fill', function(d) {
-          return getColorByPercent(d.data.usage);
+          return getColorByPercent(d.data[waveFillKey]);
         });
 
         var textGroup = textList
