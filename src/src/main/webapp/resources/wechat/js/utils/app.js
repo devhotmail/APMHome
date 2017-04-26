@@ -3,6 +3,7 @@ $(function () {
     app.initSelectData = initSelectData;
     app.toggleJsdialog = toggleJsdialog;
     app.fullListItem = fullListItem;
+    app.appendListItem = appendListItem;
     app.activeProgressBar = activeProgressBar;
     app.initUserSelect = initUserSelect;
     app.setFormJsonValue = setFormJsonValue;
@@ -90,6 +91,24 @@ $(function () {
     function fullListItem(elId, datas) {
         var $ui_list = $('#'+elId);
         $ui_list.empty();
+        var tmpl = $('#ts_listItem').html();
+        $.each(datas, function(idx, value){
+            var $tmpl = $(tmpl);
+            $tmpl.find('h4').html(value.title);
+            $tmpl.find('.ftitle').html(value.ftitle).css('color',value.ftitleColor);
+            var parentEl = $tmpl.find('.show-data');
+            $.each(value.data, function(i, v){
+                parentEl.append('<p>'+v+'</p>');
+            });
+            if (value.rater === 0) {
+                $tmpl.find('.reportview').html('未评分');
+            }
+            $ui_list.append($tmpl);
+        });
+    }
+    
+    function appendListItem(elId, datas) {
+        var $ui_list = $('#'+elId);
         var tmpl = $('#ts_listItem').html();
         $.each(datas, function(idx, value){
             var $tmpl = $(tmpl);

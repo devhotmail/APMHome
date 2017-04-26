@@ -100,6 +100,10 @@
                         <div class="weui-tab__panel">
                             <div id="wolist" class="page__bd page__bd_spacing">
                             </div>
+                            <div class="weui-btn-area">
+                                <a class="weui-btn weui-btn_plain-primary" href="javascript:" id="loadMore">查看更多...</a>
+                            </div>
+                            <div style="height:20px;"></div>
                         </div>
                     </div>
                 </div>
@@ -109,33 +113,35 @@
                     pageManager.mywolist = function(){
                         //data search function
                         function loadData(step) {
+                            pageManager.pageNum = 0;
+                            pageManager.pageSize = 10;
                             var $loadingToast1 = $('#loadingToast1');
                             if ($loadingToast1.css('display') !== 'none') return;
                             $loadingToast1.fadeIn(100);
                             //fetch data from server    wolistdata is the restful url
-                            $.get(WEB_ROOT+'web/wolistdata', {stepId: step}, function(ret) {
+                            $.get(WEB_ROOT+'web/wolistdata', {stepId: step, pageSize: pageManager.pageSize, pageNum: pageManager.pageNum}, function(ret) {
                                 pageManager.workOrders = [];
                                 var data = [];
-                                if (ret && ret.length !== 0) {
-                                    $.each(ret, function(i, v){
-                                        pageManager.workOrders[v['id']] = v;
-                                        data.push({title:'工单编号'+(step===5?(pageManager.hospitalId==v['hospitalId']?'':'/'+v['hospitalName']):'')+': '+ v['id'],
-                                               ftitle: pageManager.msgTypes['casePriority'][v['casePriority']], 
-                                               ftitleColor : v['casePriority']===1?'#F76260':v['casePriority']===2?'#FFBE00':'#09BB07',
-                                               rater: (close === 2 ? v['feedbackRating']: -1),
-                                               data : ['资产编号：'+v['assetId'],
-                                                        '资产名称：'+v['assetName'],
-                                                        '报修人：'+v['requestorName'],
-                                                        '报修时间：'+v['requestTime'],
-                                                       '工单状态：'+v['currentStepName'] ,
-                                                       '当前人员：'+v['currentPersonName']]});
-                                    });
-                                } 
+                                assembleData(data, ret);
                                 //show the data list
                                 app.fullListItem('wolist', data);
                                 $loadingToast1.fadeOut(100);
                             });
                         }
+                        
+                        $('#loadMore').click(function(){
+                            var $loadingToast1 = $('#loadingToast1');
+                            if ($loadingToast1.css('display') !== 'none') return;
+                            $loadingToast1.fadeIn(100);
+                            //fetch data from server    wolistdata is the restful url
+                            $.get(WEB_ROOT+'web/wolistdata', {stepId: pageManager.tab, pageSize: pageManager.pageSize, pageNum: pageManager.pageNum}, function(ret) {
+                                var data = [];
+                                assembleData(data, ret);
+                                //show the data list
+                                app.appendListItem('wolist', data);
+                                $loadingToast1.fadeOut(100);
+                            });
+                        });
 
                         //bind click event
                         $('#wolist').on('click', '.weui-cell_access', function(){
@@ -177,6 +183,30 @@
                         }
                     }
                     pageManager.mywolist();
+                    
+                    function assembleData(data, ret) {
+                        if (ret && ret.content && ret.content.length !== 0) {
+                            $.each(ret.content, function(i, v){
+                                pageManager.workOrders[v['id']] = v;
+                                data.push({title:'工单编号'+(pageManager.tab===5?(pageManager.hospitalId==v['hospitalId']?'':'/'+v['hospitalName']):'')+': '+ v['id'],
+                                       ftitle: pageManager.msgTypes['casePriority'][v['casePriority']], 
+                                       ftitleColor : v['casePriority']===1?'#F76260':v['casePriority']===2?'#FFBE00':'#09BB07',
+                                       rater: (close === 2 ? v['feedbackRating']: -1),
+                                       data : ['资产编号：'+v['assetId'],
+                                                '资产名称：'+v['assetName'],
+                                                '报修人：'+v['requestorName'],
+                                                '报修时间：'+v['requestTime'],
+                                               '工单状态：'+v['currentStepName'] ,
+                                               '当前人员：'+v['currentPersonName']]});
+                            });
+                            pageManager.pageNum = ret.number +1;
+                        } 
+                        if (!ret.totalPages || pageManager.pageNum >= ret.totalPages) {
+                            $('#loadMore').hide();
+                        } else {
+                            $('#loadMore').show();
+                        }
+                    }
                 });
         </script>
         
