@@ -287,7 +287,7 @@
                       </div>
                       <template is="dom-if" if="[[configListTwo.length]]">
                         <template is="dom-if" if="[[!item.isUnknown]]">
-                          <span>[[float2Percent(item.usage_increase, 1)]]</span>
+                          <span>[[float2Percent(item.increase, 1)]]</span>
                         </template>
                         <template is="dom-if" if="[[item.isUnknown]]">
                           <div style="white-space:nowrap;">待计算</div>
@@ -297,22 +297,22 @@
                         <div class="u-mr- flex flex--middle">
                           <editable-block
                             data-index$="[[index]]"
-                            value="[[item.usage_max]]"
-                            on-changed="handleUsageMaxChange"></editable-block>
+                            value="[[item.increase]]"
+                            on-changed="handleConfigChange"></editable-block>
                           <span>%</span>
-                        </div>
-                        <div class="u-mr- flex flex--middle">
+                        </div>                        
+                        <div class="flex flex--middle">
                           <editable-block
                             data-index$="[[index]]"
-                            value="[[item.usage_min]]"
-                            on-changed="handleUsageMinChange"></editable-block>
+                            value="[[item.usage_max]]"
+                            on-changed="handleUsageMaxChange"></editable-block>
                           <span>%</span>
                         </div>
                         <div class="flex flex--middle">
                           <editable-block
                             data-index$="[[index]]"
-                            value="[[item.increase]]"
-                            on-changed="handleConfigChange"></editable-block>
+                            value="[[item.usage_min]]"
+                            on-changed="handleUsageMinChange"></editable-block>
                           <span>%</span>
                         </div>
                       </template>
@@ -363,22 +363,22 @@
                         <div class="u-mr- flex flex--middle">
                           <editable-block
                             data-index$="[[index]]"
-                            value="[[item.usage_max]]"
-                            on-changed="handleSubUsageMaxChange"></editable-block>
+                            value="[[item.increase]]"
+                            on-changed="handleSubConfigChange"></editable-block>
                           <span>%</span>
-                        </div>
+                        </div>                        
                         <div class="u-mr- flex flex--middle">
                           <editable-block
                             data-index$="[[index]]"
-                            value="[[item.usage_min]]"
-                            on-changed="handleSubUsageMinChange"></editable-block>
+                            value="[[item.usage_max]]"
+                            on-changed="handleSubUsageMaxChange"></editable-block>
                           <span>%</span>
                         </div>
                         <div class="flex flex--middle">
                           <editable-block
                             data-index$="[[index]]"
-                            value="[[item.increase]]"
-                            on-changed="handleSubConfigChange"></editable-block>
+                            value="[[item.usage_min]]"
+                            on-changed="handleSubUsageMinChange"></editable-block>
                           <span>%</span>
                         </div>
                       </div>
@@ -1095,9 +1095,8 @@
               id: n.data.id,
               uid: n.data.uid,
               name: n.data.name,
-              usage_increase: this.round(n.data.usage_predict * 100, 1),
               // for the display usage # 1
-              increase: this.round(n.data.usage_predict * 100, 1),
+              increase: this.round(n.data.usage_predict_increase * 100, 1),
               usage_min: n.data.usage_threshold[0] * 100,
               usage_max: n.data.usage_threshold[1] * 100
             }
