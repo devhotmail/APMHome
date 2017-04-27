@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 /**
  *
@@ -53,34 +56,21 @@ public class WorkOrderWeChatService {
     protected UserRoleRepository roleDao;
     @Autowired
     protected WorkOrderPhotoRepository photoDao;
-    @Autowired
-    private WorkflowConfigRepository woConDao;
     
-    public List<WorkOrder> woList(HttpServletRequest request, String stepId) {
+    public Page<WorkOrder> woList(HttpServletRequest request, String stepId, Integer pageSize, Integer pageNum) {
         UserAccount ua = UserContext.getCurrentLoginUser(request);
-        List<WorkOrder> wos = null;
+        Page page = null;
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        PageRequest pageRequest = new PageRequest(pageNum, pageSize, sort);
         switch(stepId) {
-            case "1": wos = woDao.getByHospitalIdAndStatusAndCurrentStepIdOrderByIdDesc(ua.getHospitalId(), 1, 2);break; //needAssign
-            case "2": wos = woDao.getAssignedWorkOrder(ua.getId());break;
-            case "3": wos = woDao.getUnAcceptedWorkOrder(ua.getId(), ua.getSiteId());break;
-            case "4": wos = woDao.getAcceptedWorkOrder(ua.getId());break;
-            case "5": wos = woDao.getOtherPersonWorkOrder(ua.getId(), ua.getSiteId());break;
-            default: wos = woDao.getClosedWorkOrder(ua.getId());
+            case "1": page = woDao.getByHospitalIdAndStatusAndCurrentStepIdOrderByIdDesc(ua.getHospitalId(), 1, 2, pageRequest);break; //needAssign
+            case "2": page = woDao.getAssignedWorkOrder(ua.getId(), pageRequest);break;
+            case "3": page = woDao.getUnAcceptedWorkOrder(ua.getId(), ua.getSiteId(), pageRequest);break;
+            case "4": page = woDao.getAcceptedWorkOrder(ua.getId(), pageRequest);break;
+            case "5": page = woDao.getOtherPersonWorkOrder(ua.getId(), ua.getSiteId(), pageRequest);break;
+            default: page = woDao.getClosedWorkOrder(ua.getId(), pageRequest);
         }
-        return wos;
-    }
-    public List<WorkOrder> woListOffice(HttpServletRequest request, String stepId) {
-        UserAccount ua = UserContext.getCurrentLoginUser(request);
-        List<WorkOrder> wos = null;
-        switch(stepId) {
-            case "1": wos = woDao.getByHospitalIdAndStatusAndCurrentStepIdOrderByIdDesc(ua.getHospitalId(), 1, 2);break; //needAssign
-            case "2": wos = woDao.getAssignedWorkOrder(ua.getId());break;
-            case "3": wos = woDao.getUnAcceptedWorkOrder(ua.getId(), ua.getSiteId());break;
-            case "4": wos = woDao.getAcceptedWorkOrder(ua.getId());break;
-            case "5": wos = woDao.getOtherPersonWorkOrder(ua.getId(), ua.getSiteId());break;
-            default: wos = woDao.getClosedWorkOrder(ua.getId());
-        }
-        return wos;
+        return page;
     }
 
     public WorkOrder woDetail(Integer id) {

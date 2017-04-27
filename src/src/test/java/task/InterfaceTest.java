@@ -69,7 +69,7 @@ I18nMessageRepository i18nMessageRepository;*/
     @Test
     @Transactional
     public void WorkOrderOfficeByStatus(){
-        System.out.println(workOrderRepository.findOfficeWorkOrderList(1,2));
+       // System.out.println(workOrderRepository.findOfficeWorkOrderList(1,2));
 
     }
 }

@@ -6,6 +6,7 @@ import com.ge.apm.domain.WorkOrderMsg;
 import com.ge.apm.service.wo.WorkOrderMsgService;
 import com.ge.apm.service.wo.WorkOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,9 +37,9 @@ public class WorkOrderProcessController {
 
     @RequestMapping(value="/officeworkorder" ,method = RequestMethod.GET)
     @ResponseBody
-    public List<WorkOrder> WorkOrderOfficeByStatus(HttpServletRequest request)throws Exception{
+    public Page<WorkOrder> WorkOrderOfficeByStatus(HttpServletRequest request, Integer pageSize, Integer pageNum)throws Exception{
 
-        List<WorkOrder> byStatus = workOrderService.findWorkOrderOfficeByStatus(request);
+        Page<WorkOrder> byStatus = workOrderService.findWorkOrderOfficeByStatus(request,pageSize, pageNum);
         return byStatus;
 
     }
@@ -54,8 +55,8 @@ public class WorkOrderProcessController {
     //findWorkOrderByCon
     @RequestMapping(value="/workorder" ,method = RequestMethod.GET)
     @ResponseBody
-    public List<WorkOrder> workOrderByCon(HttpServletRequest request)throws Exception {
-        return   workOrderService.findWorkOrderByCon(request);
+    public Object workOrderByCon(HttpServletRequest request, Integer pageSize, Integer pageNum)throws Exception {
+        return   workOrderService.findWorkOrderByCon(request, pageSize, pageNum);
     }
     /*gl ok*/
     @RequestMapping(value="/workorder2/{requestorId}" ,method = RequestMethod.GET)

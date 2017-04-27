@@ -293,8 +293,8 @@ public class WorkOrderController {
      * @return 
      */
     @RequestMapping(value = "wolistdata")
-    public @ResponseBody Object woListData(HttpServletRequest request, String stepId) {
-        return woWcService.woList(request, stepId);
+    public @ResponseBody Object woListData(HttpServletRequest request, String stepId, Integer pageSize, Integer pageNum) {
+        return woWcService.woList(request, stepId, pageSize, pageNum);
     }
 
 

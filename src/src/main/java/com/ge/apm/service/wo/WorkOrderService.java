@@ -29,6 +29,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import webapp.framework.context.ExternalLoginHandler;
 
 /**
@@ -78,15 +81,20 @@ public class WorkOrderService {
     }
 
 
-    public List<WorkOrder> findWorkOrderOfficeByStatus(HttpServletRequest request)throws Exception{
+    public Page<WorkOrder> findWorkOrderOfficeByStatus(HttpServletRequest request,Integer pageSize, Integer pageNum)throws Exception{
         UserAccount ua = UserContext.getCurrentLoginUser(request);
-        List<WorkOrder> byStatus = workOrderRepository.findOfficeWorkOrderList(ua.getId(),Integer.parseInt(request.getParameter("status")));
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        PageRequest pageRequest = new PageRequest(pageNum, pageSize, sort);
+        Page<WorkOrder> byStatus = workOrderRepository.findOfficeWorkOrderList(ua.getId(),Integer.parseInt(request.getParameter("status")),pageRequest);
         return byStatus;
     }
 
-    public  List<WorkOrder>  findWorkOrderByCon(HttpServletRequest request){
+    public  Page<WorkOrder>  findWorkOrderByCon(HttpServletRequest request, Integer pageSize, Integer pageNum){
+
         UserAccount ua = UserContext.getCurrentLoginUser(request);
-        return workOrderRepository.findByRequestorIdAndStatusOrderByIdDesc(ua.getId(), Integer.parseInt(request.getParameter("status")));
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        PageRequest pageRequest = new PageRequest(pageNum, pageSize, sort);
+        return workOrderRepository.findByRequePagestorIdAndStatusOrderByIdDesc(ua.getId(), Integer.parseInt(request.getParameter("status")), pageRequest);
     }
     //public List<WorkOrder>
 
