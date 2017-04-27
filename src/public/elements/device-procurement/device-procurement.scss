@@ -123,7 +123,7 @@ $tab-active-color: rgb(31, 105, 266);
   }
 
   .revenue-num {
-    width: 100px;
+    width: 105px;
   }
 
   &.muted {
@@ -137,7 +137,6 @@ $tab-active-color: rgb(31, 105, 266);
 
 .config-list-wrapper {
   position: relative;
-  display: flex;
 
   &.disabled {
     pointer-events: none;
@@ -148,21 +147,13 @@ $tab-active-color: rgb(31, 105, 266);
   }
 }
 
-$configListMargin: 10px;
-
 .config-list {
-  flex: 1 1 auto;
   overflow-y: scroll;
   height: 30 * 10 + 2px;
   border: 1px solid $border-color;
   border-radius: 6px;
   box-sizing: border-box;
-  width: 50%;
   min-width: 0;
-
-  + .config-list {
-    margin-left: $configListMargin;
-  }
 }
 
 .active-arrow {

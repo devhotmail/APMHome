@@ -241,8 +241,8 @@
               </div>
             </template>
             <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
-              <div class="title u-mt u-mb">未来12个月收益预测</div>
-              <div class="text-muted u-mb-">基于系统自动建议值进行手工调节</div>
+              <div class="title u-mt u-mb">使用率预测</div>
+              <div class="text-muted u-mb-">基于系统自动预测的增长进行手工调节</div>
               <div class$="[[calcConfigListWrapperCls(configLoading)]]">
                 <div
                   class="config-list"
@@ -257,16 +257,39 @@
                       <div class="item-name">
                         <div class="ellipsis">[[item.name]]</div>
                       </div>
-                      <template is="dom-if" if="[[item.isUnknown]]">
-                        <div style="white-space:nowrap;">待计算</div>
-                      </template>
-                      <template is="dom-if" if="[[!item.isUnknown]]">
-                        <!--[[item.increase]]-->
-                        <editable-block
-                          data-index$="[[index]]"
-                          value="[[item.increase]]"
-                          on-changed="handleConfigChange"></editable-block>
+                      <template is="dom-if" if="[[!configListTwo.length]]">
+                        2016使用率
+                        2017预期增长
+                        <span>[[item.increase]]</span>
                         <span>%</span>
+                      </template>
+                      <template is="dom-if" if="[[configListTwo.length]]">
+                        <template is="dom-if" if="[[item.isUnknown]]">
+                          <div style="white-space:nowrap;">待计算</div>
+                        </template>
+                        <template is="dom-if" if="[[!item.isUnknown]]">
+                          <div class="u-mr- flex flex--middle">
+                            <editable-block
+                              data-index$="[[index]]"
+                              value="[[item.usage_max]]"
+                              on-changed="handleUsageMaxChange"></editable-block>
+                            <span>%</span>
+                          </div>
+                          <div class="u-mr- flex flex--middle">
+                            <editable-block
+                              data-index$="[[index]]"
+                              value="[[item.usage_min]]"
+                              on-changed="handleUsageMinChange"></editable-block>
+                            <span>%</span>
+                          </div>
+                          <div class="flex flex--middle">
+                            <editable-block
+                              data-index$="[[index]]"
+                              value="[[item.increase]]"
+                              on-changed="handleConfigChange"></editable-block>
+                            <span>%</span>
+                          </div>
+                        </template>
                       </template>
                     </div>
                   </template>
@@ -287,11 +310,27 @@
                         <div class="item-name">
                           <div class="ellipsis">[[item.name]]</div>
                         </div>
-                        <editable-block
-                          data-index$="[[index]]"
-                          value="[[item.increase]]"
-                          on-changed="handleSubConfigChange"></editable-block>
-                        <span>%</span>
+                        <div class="u-mr- flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.usage_max]]"
+                            on-changed="handleSubUsageMaxChange"></editable-block>
+                          <span>%</span>
+                        </div>
+                        <div class="u-mr- flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.usage_min]]"
+                            on-changed="handleSubUsageMinChange"></editable-block>
+                          <span>%</span>
+                        </div>
+                        <div class="flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.increase]]"
+                            on-changed="handleSubConfigChange"></editable-block>
+                          <span>%</span>
+                        </div>
                       </div>
                     </template>
                     <array-selector
@@ -299,10 +338,7 @@
                       items="[[configListTwo]]"
                       selected="{{selectedSubConfigIndex}}"></array-selector>
                   </div>
-                </template>
-                <template is="dom-if" if="[[configListTwo.length]]" restamp>
-                  <div class="active-arrow" style$="[[calcActiveArrowTop(selectedConfigIndex)]]"></div>
-                </template>              
+                </template>           
               </div>
               <div class="u-mt-">
                 <div class$="[[calcConfigBtnCls(configLoading)]]" on-tap="handleSubmit">
@@ -574,9 +610,6 @@
             var id = target.id;
             var depth = target.depth;
 
-            var find = this.find;
-            var findIndex = this.findIndex;
-
             function getCursors(node) {
               var cursors = [];
               getParent(node);
@@ -585,11 +618,11 @@
               function getParent(node) {
                 var parent = node.parent;
                 if (!parent) return;
-                var parentNode = find(configList, function(n) {
+                var parentNode = WebUtils.find(configList, function(n) {
                   return n.id === parent.id;
                 });
                 if (parentNode && parentNode.children && parentNode.children.length) {
-                  var index = findIndex(parentNode.children, function(n) {
+                  var index = WebUtils.findIndex(parentNode.children, function(n) {
                     return n.id === node.id;
                   });
 
@@ -645,11 +678,7 @@
           var index = root.querySelector('#subConfigList').indexForElement(e.target);
           root.querySelector('#subConfigSelector').select(index);
         },
-        handleConfigChange: function(e) {
-          // get value and index
-          var value = e.detail.value;
-          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
-
+        updateItem: function(field, value, index) {
           var _this = this;
           if (index > -1) {
             // update value for current target
@@ -657,7 +686,7 @@
             var target = this.configList.filter(function(n) {
               return n.uid === cursor;
             })[0];
-            target.increase = value;
+            target[field] = value;
 
             // update children
             var children = target.children;
@@ -667,14 +696,14 @@
               });
               var configList = this.configList.map(function(config) {
                 if (~childUidList.indexOf(config.uid)) {
-                  config.increase = value;
+                  config[field] = value;
                   if (Array.isArray(config.children) && config.children.length) {
                     // update children's increase in configList
                     config.children.map(function(n) {
                       var result = WebUtils.find(_this.configList, function(m) {
                         return m.id === n.id;
                       });
-                      if (result) result.increase = value;
+                      if (result) result[field] = value;
                     });
                   }
                 }
@@ -686,12 +715,29 @@
             this.configList = this.deepClone(configList);
             this.selectedConfigIndex = _tmp;
           }
-        },
-        handleSubConfigChange: function(e) {
+        }, 
+        handleConfigChange: function(e) {
           // get value and index
           var value = e.detail.value;
           var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
 
+          this.updateItem('increase', value, index)
+        },
+        handleUsageMaxChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateItem('usage_max', value, index)
+        },
+        handleUsageMinChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateItem('usage_min', value, index)
+        },        
+        updateSubItem: function(field, value, index) {
           var _this = this;
           if (index > -1) {
             // update value for current target
@@ -699,15 +745,15 @@
             var target = this.configList.filter(function(n) {
               return n.uid === cursor;
             })[0];
-            target.increase = value;
+            target[field] = value;
 
             if (Array.isArray(target.children) && target.children.length) {
-              // update children's increase in configList
+              // update children's `field` in configList
               target.children.map(function(n) {
                 var result = WebUtils.find(_this.configList, function(m) {
                   return m.id === n.id;
                 });
-                if (result) result.increase = value;
+                if (result) result[field] = value;
               });
             }
 
@@ -726,13 +772,29 @@
             this.selectedSubConfigIndex = _tmp2;
           }
         },
+        handleSubUsageMaxChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateSubItem('usage_max', value, index);
+        },
+        handleSubUsageMinChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateSubItem('usage_min', value, index);
+        },        
+        handleSubConfigChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateSubItem('increase', value, index);
+        },
         handleSubmit: function(e) {
           var root = this.configList[0];
-
-          var usage_threshold = {
-            max: this.max / 100,
-            min: this.min / 100
-          }
 
           if (root.depth === 0) {
             // diff with systemData and get all changed items
@@ -746,29 +808,49 @@
             })
             .filter(function(config) {
               if (!config) return false;
-
+              // figure out target config is changed or not
               return WebUtils.find(defaultConfigList, function(defaultConfig) {
-                return defaultConfig.id === config.id && defaultConfig.increase !== config.increase;
+                return defaultConfig.id === config.id
+                  && (
+                    defaultConfig.increase !== config.increase
+                    || defaultConfig.usage_max !== config.usage_max
+                    || defaultConfig.usage_min !== config.usage_min
+                  );
               });
             })
-            .map(function(n) {
-              return {
-                id: n.id,
-                change: n.increase / 100 // for the display usage # 1
+            .map(function(config) {
+              // figure out which fields changed in target config
+              var target = WebUtils.find(defaultConfigList, function(defaultConfig) {
+                return defaultConfig.id === config.id;
+              });
+
+              var result = { id: config.id };
+
+              if (target.increase !== config.increase) {
+                result.change = config.increase / 100; // for the display usage # 1
               }
+
+              if (target.usage_min !== config.usage_min || target.usage_max !== config.usage_max) {
+                result.usage_threshold = [
+                  config.usage_min / 100,
+                  config.usage_max / 100
+                ];
+              }
+
+              return result;
             })
             .filter(function(n) {
               return n;
-            });              
+            });        
 
             var payload = {
               config: [].concat.apply([], tmp).sort(function(a, b) {
                 return a.id - b.id;
-              }),
-              // usage_threshold: usage_threshold
+              })
             }
 
             var url = this.getApiUrl(this.isHead, this.selectedYear, this.selectedType, this.orgId);
+            url = 'mock/asset-procurement-' + this.selectedType  +'.json'
 
             this.configLoading = true;
 
@@ -776,11 +858,13 @@
             this.showEmpty = false;
             this.showError = false;
 
+            console.log(payload)
+
             return fetch(url, {
-              method: 'PUT',
+              // method: 'PUT',
               accept: 'application/json',
               credentials: 'same-origin',
-              body: JSON.stringify(payload)
+              // body: JSON.stringify(payload)
             })
             .then(function(res) {
               return res.json();
@@ -813,32 +897,11 @@
         deepClone: function(plainObj) {
           return JSON.parse(JSON.stringify(plainObj));
         },
-        findIndex: function(array, callback) {
-          var k = 0;
-          while(k < array.length) {
-            var value = array[k];
-            if (callback(value)) return k;
-            k++;
-          }
-          return -1;
-        },
-        find: function(array, callback) {
-          var k = 0;
-          while(k < array.length) {
-            var value = array[k];
-            if (callback(value)) return value;
-            k++;
-          }
-          return undefined;
-        },
         /**
          * functions which calculate className for dom styles usage
         */
         calcConfigBtnCls: function(configLoading) {
           return configLoading ? 'config-btn loading' : 'config-btn';
-        },
-        calcActiveArrowTop: function(selectedConfigIndex) {
-          return 'top:' + selectedConfigIndex * 30 + 'px';
         },
         calcConfigHeight: function(length) {
           return length < 10 ? 'height: auto' : '';
