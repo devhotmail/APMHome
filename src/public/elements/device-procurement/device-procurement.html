@@ -244,6 +244,26 @@
               <div class="title u-mt u-mb">使用率预测</div>
               <div class="text-muted u-mb-">基于系统自动预测的增长进行手工调节</div>
               <div class$="[[calcConfigListWrapperCls(configLoading)]]">
+                <template is="dom-if" if="[[configListTwo.length]]">
+                  <div class="config-head">
+                    <div>科室名称</div>
+                    <div>2017年预期增长</div>
+                  </div>
+                </template>
+                <template is="dom-if" if="[[!configListTwo.length]]">
+                  <div class="config-head">
+                    <div>设备类型</div>
+                    <div>预期增长</div>
+                    <div class="flex flex-middle">
+                      <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                      <span>满负荷</span>
+                    </div>
+                    <div class="flex flex-middle">
+                      <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                      <span>低负荷</span>
+                    </div>
+                  </div>
+                </template>
                 <div
                   class="config-list"
                   style$="[[calcConfigHeight(configListOne.length)]]">
@@ -257,13 +277,10 @@
                       <div class="item-name">
                         <div class="ellipsis">[[item.name]]</div>
                       </div>
-                      <template is="dom-if" if="[[!configListTwo.length]]">
-                        2016使用率
-                        2017预期增长
-                        <span>[[item.increase]]</span>
-                        <span>%</span>
-                      </template>
                       <template is="dom-if" if="[[configListTwo.length]]">
+                        <span>[[float2Percent(item.usage_increase, 1)]]</span>
+                      </template>
+                      <template is="dom-if" if="[[!configListTwo.length]]">
                         <template is="dom-if" if="[[item.isUnknown]]">
                           <div style="white-space:nowrap;">待计算</div>
                         </template>
@@ -298,7 +315,21 @@
                     items="[[configListOne]]"
                     selected="{{selectedConfigIndex}}"></array-selector>
                 </div>
-                <template is="dom-if" if="[[configListTwo.length]]" restamp>
+              </div>
+              <template is="dom-if" if="[[configListTwo.length]]" restamp>
+                <div class$="[[calcConfigListWrapperCls(configLoading)]]">
+                  <div class="config-head">
+                    <div>设备类型</div>
+                    <div>预期增长</div>
+                    <div class="flex flex-middle">
+                      <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                      <span>满负荷</span>
+                    </div>
+                    <div class="flex flex-middle">
+                      <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                      <span>低负荷</span>
+                    </div>
+                  </div>                  
                   <div class="config-list" style$="[[calcConfigHeight(configListTwo.length)]]">
                     <template
                       id="subConfigList"
@@ -338,8 +369,8 @@
                       items="[[configListTwo]]"
                       selected="{{selectedSubConfigIndex}}"></array-selector>
                   </div>
-                </template>           
-              </div>
+                </div>
+              </template>           
               <div class="u-mt-">
                 <div class$="[[calcConfigBtnCls(configLoading)]]" on-tap="handleSubmit">
                   <template is="dom-if" if="[[!configLoading]]">
@@ -938,10 +969,14 @@
           if (currentYear === year) return year + '至今';
           return year + '年';
         },
-        decimal2Percent: function(val, withSign) {
+        float2Percent: function(val, withSign) {
           var sign = (withSign && val > 0) ? '+' : '';
           // keep one decimal
-          return sign + parseFloat(val * 100).toFixed(1) + '%';
+          return sign + val + '%';
+        },
+        decimal2Percent: function(val, withSign) {
+          // keep one decimal
+          return this.float2Percent(parseFloat(val * 100).toFixed(1))
         },
         parseInt: parseInt,
         keepOneDecimal: function(val) {
@@ -1029,6 +1064,7 @@
               id: n.data.id,
               uid: n.data.uid,
               name: n.data.name,
+              usage_increase: this.round(n.data.usage_predict * 100, 1),
               // for the display usage # 1
               increase: this.round(n.data.usage_predict * 100, 1),
               usage_min: n.data.usage_threshold[0] * 100,

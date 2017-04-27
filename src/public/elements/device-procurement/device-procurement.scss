@@ -137,6 +137,8 @@ $tab-active-color: rgb(31, 105, 266);
 
 .config-list-wrapper {
   position: relative;
+  border: 1px solid $border-color;
+  border-radius: 6px;
 
   &.disabled {
     pointer-events: none;
@@ -150,22 +152,19 @@ $tab-active-color: rgb(31, 105, 266);
 .config-list {
   overflow-y: scroll;
   height: 30 * 10 + 2px;
-  border: 1px solid $border-color;
-  border-radius: 6px;
   box-sizing: border-box;
   min-width: 0;
 }
 
-.active-arrow {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  transform: translate(- $configListMargin / 2, 10px);
-  content: '';
-  border-left: 10px solid $gray;
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  transition: all .15s;
+.config-head {
+  height: 30px;
+  padding: 0 5px;
+  line-height: 30px;
+  font-weight: bolder;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid lighten($border-color, 10%);
 }
 
 .config-item {
@@ -175,11 +174,6 @@ $tab-active-color: rgb(31, 105, 266);
   display: flex;
   align-items: center;
   // justify-content: space-between;
-
-  &:first-child {
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-  }
 
   &:last-of-type {
     border-bottom-left-radius: 6px;
