@@ -7,6 +7,7 @@ import styles from './styles.scss'
 
 const margin = 20
 const labelKey = 'name'
+const percentKey = 'usage_predict'
 
 const fontSize = 20
 const textLength = 10
@@ -41,11 +42,11 @@ type NodeT = {
 
 function getStokeColor (n: NodeT): number {
   n.data.usage_threshold = [0.3, 1]
-  const { usage, usage_threshold } = n.data
+  const { usage_predict, usage_threshold } = n.data
 
   let colorIndex = 1
-  if (usage > usage_threshold[1]) colorIndex =  2
-  else if (usage < usage_threshold[0]) colorIndex = 0
+  if (usage_predict > usage_threshold[1]) colorIndex =  2
+  else if (usage_predict < usage_threshold[0]) colorIndex = 0
   
   return waveColor[colorIndex]
 }
@@ -72,7 +73,7 @@ export default class Chart extends Component<*, ChartProps, *> {
   }
 
   renderNodes = (nodeList: Array<NodeT>) => {
-    const { diameter, view } = this.props
+    const { diameter, view, focus } = this.props
     const k = diameter / view[2]
 
     return <g>
@@ -81,26 +82,30 @@ export default class Chart extends Component<*, ChartProps, *> {
           const translate = 'translate(' + (node.x - view[0]) * k + ',' + (node.y - view[1]) * k + ')'
           const scale = `scale(${k})`
 
-          const circleColor = getStokeColor(node)
+          const waveColor = getStokeColor(node)
           const circleProps = {
-            fill: '#fff',
+            fill: this.getCircleFill(node, focus),
             strokeWidth: 1,
-            stroke: circleColor,
+            stroke: waveColor,
             onClick: e => this.props.setFocus(node)
           }
 
+          const groupStyle = {
+            opacity: this.getOpacity(node, focus)
+          }
+
           return (
-            <g transform={translate} key={`${node.data.id}-${index}`}>
+            <g transform={translate} style={groupStyle} key={`${node.data.id}-${index}`}>
               <circle r={node.r * k} {...circleProps} />
               <g transform={scale}>
                 {
-                  node.data.usage >= 1
-                    ? <circle pointerEvents="none" r={node.r} fill={circleColor} />
+                  node.data[percentKey] >= 1
+                    ? <circle pointerEvents="none" r={node.r} fill={waveColor} />
                     : <path
                         pointerEvents="none"
-                        fill={circleColor}
+                        fill={waveColor}
                         transform={`translate(${-node.r}, 0)`}
-                        d={this.getWavePath(node.r, node.data.usage)} />
+                        d={this.getWavePath(node.r, node.data[percentKey])} />
                 }
               </g>
             </g>
@@ -108,6 +113,27 @@ export default class Chart extends Component<*, ChartProps, *> {
         })
       }   
     </g>
+  }
+
+  getCircleFill = (node, focus) => {
+    if (node === focus) return circleColor
+    // focus children
+    if (node.parent && node.parent === focus) return circleColor
+    // focus siblings
+    if (node.children && ~node.children.indexOf(focus)) return circleColor
+    // focus parent
+    if (node.parent && node.parent.children && ~node.parent.children.indexOf(focus)) return circleColor
+    return 'none'
+  }
+
+  getOpacity = (node, focus) => {
+    if (node === focus) {
+      if (node.children) return 0.6
+      return 0.9
+    } else {
+      if (node.parent === focus) return 0.9
+      return 0.1
+    }
   }
 
   getWavePath = (radius: number, percent: number): string => {

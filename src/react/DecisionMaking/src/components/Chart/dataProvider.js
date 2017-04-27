@@ -6,7 +6,7 @@ import raf from 'raf'
 
 import data from '#/mock/data'
 
-const valueKey = 'revenue'
+const sizeKey = 'size'
 const childKey = 'items'
 const margin = 20
 
@@ -67,6 +67,7 @@ function DataProvider(WrappedComponent: Class<Component<*, *, *>>): Class<Compon
       return <WrappedComponent
         nodeList={nodeList}
         view={view}
+        focus={focus}
         setFocus={this.setFocus}
         handleBackUpper={this.handleBackUpper}
         handleBackRoot={this.handleBackRoot}
@@ -141,7 +142,7 @@ function DataProvider(WrappedComponent: Class<Component<*, *, *>>): Class<Compon
       .padding(2)
 
       const root = d3.hierarchy(data, d => d.items)
-      .sum(d => d.size)
+      .sum(d => d[sizeKey])
       .sort((a, b) => b.value - a.value)
 
       const nodes = pack(root).descendants()
