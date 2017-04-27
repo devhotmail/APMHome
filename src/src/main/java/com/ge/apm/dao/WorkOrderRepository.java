@@ -60,7 +60,7 @@ public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
     @Query("select wo from WorkOrder wo where wo.currentPersonId=?1 and wo.status = 1 and (wo.currentStepId = 4 or wo.currentStepId = 5) order by wo.id desc")
     public Page<WorkOrder> getAcceptedWorkOrder(int currentPersonId, Pageable pageable);
 
-    @Query("select wo from WorkOrder wo where wo.currentPersonId<>?1 and wo.status = 1 and wo.siteId = ?2 and wo.currentStepId in (3,4)")
+    @Query("select wo from WorkOrder wo where wo.currentPersonId<>?1 and wo.currentPersonId <> -1 and wo.status = 1 and wo.siteId = ?2 and wo.currentStepId  = 3")
     public Page<WorkOrder> getOtherPersonWorkOrder(int currentPersonId, int siteId, Pageable pageable);
     
     @Query(value="select wo.* from work_order wo where exists (select wos.work_order_id from work_order_step wos where wos.owner_id = ?1 and wo.id = wos.work_order_id ) and wo.status = 2 order by ?#{#pageable}", 

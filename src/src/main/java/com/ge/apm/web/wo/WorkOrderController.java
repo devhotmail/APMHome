@@ -77,6 +77,7 @@ public class WorkOrderController {
         
         model.addAttribute("casePriority", 3);
         model.addAttribute("qrCode", request.getParameter("qrCode"));
+        model.addAttribute("from", request.getParameter("from"));
         
         return "wo/scanWoReport";
     }

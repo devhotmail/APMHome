@@ -43,7 +43,7 @@
                     if (ret && ret.assetId) {
                         pageManager.assetId = ret.assetId;
                         pageManager.workOrder = ret;
-                        if (ret.view) {
+                        if (ret.view && 'detail' != '${from}') {
                             if (ret.woId) {
                                 pageManager.woId = ret.woId;
                                 pageManager.init('ts_recreate');
