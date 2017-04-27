@@ -135,7 +135,7 @@ public class WorkflowService {
 			model = new TimeoutPushModel();
 			model.setFirst(stepName + "超时");
 			model.setKeyword1(workOrder.getAssetName());
-			model.setKeyword2(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd hh:mm:ss"));
+			model.setKeyword2(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd HH:mm:ss"));
 			model.setKeyword3(CasePriorityNum.getName(workOrder.getCasePriority()));
 			model.setKeyword4(stepName);// Constans.getName(workOrder.getCurrentStepId())
 			model.setKeyword5(workOrder.getCurrentPersonName());
@@ -150,16 +150,13 @@ public class WorkflowService {
 				users.add(workFlow.getCurrentPersonId());
 			}
 			users.add(workOrder.getRequestorId());//报修人
-//			if (!users.contains(workOrder.getRequestorId())) {
-//				
-//			}
 
-			// sysRole <==>3、AssetStaff 8、WorkOrderDispatcher
+			// sysRole 
 			if (woc.getDispatchMode() == SPECIAL_DISPATCHER) {
-				List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 3);
+				List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 8);
 				users.addAll(dispatchers);
 			} else if (woc.getDispatchMode() == GRAB_DISPATCHER) {
-				List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 8);
+				List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 3);
 				users.addAll(dispatchers);
 			} else if (woc.getDispatchMode() == AUTO_DISPATCHER) {
 				AssetInfo asset = assetInfoMapper.fetchAssetInfoById(workOrder.getAssetId());
