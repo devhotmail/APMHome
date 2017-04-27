@@ -46,7 +46,7 @@
     "pepjs": "^0.4.2",
     "numbro": "https://github.build.ge.com/foundry-sh/numbro.git#develop",
     "px-tabs": "^0.7.0",
-    "tippyjs": "https://github.com/atomiks/tippyjs.git#^0.10.1"
+    "balloon-css": "^0.4.0"
   },
   "resolutions": {
     "px-defaults-design": "^1.0.2",

@@ -1,6 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="stylesheet" href="../../bower_components/balloon-css/balloon.css">
+
 <link rel="import" href="../behavior/context.html">
 <link rel="import" href="../behavior/fetch-cached.html">
 <link rel="import" href="../responsive-container/responsive-container.html">
@@ -211,14 +213,22 @@
                       <span class="legend-tip">平均使用率预测</span>
                     </div>
                     <template is="dom-if" if="[[focus.data.usage_threshold.1]]">
-                      <div class="legend">
+                      <div
+                        class="legend"
+                        data-balloon-length="medium"
+                        data-balloon="您可以自定义使用率大于多少为满负荷"
+                        data-balloon-pos="up">
                         <i class="dewicon-circle-full" style="color:#e26d26"></i>
                         <span class="legend-tip">满负荷使用率定义: &gt;</span>
                         [[decimal2Percent(focus.data.usage_threshold.1)]]
                       </div>
                     </template>
                     <template is="dom-if" if="[[focus.data.usage_threshold.0]]">
-                      <div class="legend">
+                      <div
+                        class="legend"
+                        data-balloon-length="medium"
+                        data-balloon="您可以自定义使用率大于多少为低负荷"
+                        data-balloon-pos="up">
                         <i class="dewicon-circle-low" style="color:#ebda51"></i>
                         <span class="legend-tip">低负荷使用率定义: &lt;</span>
                         [[decimal2Percent(focus.data.usage_threshold.0)]]
@@ -892,11 +902,12 @@
          * functions which do data convert jobs
         */
         getCurrentKPIs: function(focus) {
+          var decimal2Percent = this.decimal2Percent
           var result = {}
 
           var descList = [
-            '使用率预测低负荷台数 (>usage%)',
-            '使用率预测超负荷台数 (<usage%)'
+            '使用率预测低负荷台数',
+            '使用率预测超负荷台数'
           ];
 
           var usageSum = focus.data.usage_sum;
@@ -905,7 +916,7 @@
             usageSum.map(function(n, i) {
               ['low', 'high'].forEach(function(key, i) {
                 result[key] = {
-                  desc: descList[i].replace('usage', parseInt(usageThreshold[i] * 100)),
+                  desc: descList[i].replace('usage'),
                   num: usageSum[i]
                 }
               })
