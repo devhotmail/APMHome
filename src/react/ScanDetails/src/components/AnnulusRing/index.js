@@ -48,7 +48,6 @@ class AnnulusRing extends ImmutableComponent<*, Props, *> {
     const angles = distribute(startAngle, endAngle, groups.size)
     const id = uuid()
     // console.log(path().arc(0, 0, 10000, startAngle, endAngle));
-    console.log(startAngle, endAngle);
     const sign = endAngle - startAngle > 0 ? 1 : 0
     const d = `M0,0L${500 * Math.sin(startAngle)},${-500 * Math.cos(startAngle)}A500,500,0,${sign},${sign},${500 * Math.sin(endAngle)},${-500 * Math.cos(endAngle)}`
 

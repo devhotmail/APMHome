@@ -135,8 +135,8 @@ function fetchBrief(endpoint?: string): Promise<BriefResponse> {
 function fetchDetail(endpoint: string = '', filters: Array<{key: string, value: string|number}> = [], groupByKey?: 'sequence', start?: number, limit?: number): Promise<*> {
   return new Promise((resolve, reject) => {
     const filteredScans = scans.filter(scan => filters.reduce((prev, cur) => prev && scan[cur.key].id === cur.value, true))
-    const groupedByAsset = groupBy(filteredScans, scan => scan.asset.id)
     if (!groupByKey) {
+      const groupedByAsset = groupBy(filteredScans, scan => scan.asset.id)
       const res = Object.keys(groupedByAsset).map(key => ({
         // $FlowFixMe
         type: groupedByAsset[key][0].type,
@@ -151,6 +151,30 @@ function fetchDetail(endpoint: string = '', filters: Array<{key: string, value: 
             // $FlowFixMe
             count: value.length
           }))
+        }
+      }))
+      resolve({
+        dom: res
+      })
+    } else {
+      const groupedBySequence = groupBy(filteredScans, scan => scan.sequence.id)
+      const res = Object.keys(groupedBySequence).map(sequenceId => ({
+        // $FlowFixMe
+        type: groupedBySequence[sequenceId][0].type,
+        // $FlowFixMe
+        asset: groupedBySequence[sequenceId][0].asset,
+        // $FlowFixMe
+        sequence: groupedBySequence[sequenceId][0].sequence,
+        // $FlowFixMe
+        part: groupedBySequence[sequenceId][0].part,
+        items: {
+          // $FlowFixMe
+          desc: [groupedBySequence[sequenceId][0].part],
+          data: [{
+            // $FlowFixMe
+            id: groupedBySequence[sequenceId][0].part.id,
+            count: groupedBySequence[sequenceId].length
+          }]
         }
       }))
       resolve({
@@ -255,6 +279,7 @@ export default {
   state: Immutable.Map({
     briefs: Immutable.List(),
     details: Immutable.List(),
+    detailsBySquence: Immutable.List(),
     filters: Immutable.List()
   }),
   subscriptions: ({
@@ -264,6 +289,9 @@ export default {
       })
       dispatch({
         type: 'detail/get'
+      })
+      dispatch({
+        type: 'detailBySequence/get'
       })
     }
   }: Subscriptions),
@@ -285,7 +313,6 @@ export default {
     *['detail/get'](_, { put, select, call }){
       try {
         const detailRes = yield call(fetchDetail)
-        console.log(detailRes);
         yield put({
           type: 'detail/get/succeeded',
           payload: detailRes
@@ -293,6 +320,20 @@ export default {
       } catch(err) {
         yield put({
           type: 'detail/get/failed',
+          payload: err
+        })
+      }
+    },
+    *['detailBySequence/get'](_, { put, select, call }){
+      try {
+        const detailRes = yield call(fetchDetail, '', [], 'sequence')
+        yield put({
+          type: 'detailBySequence/get/succeeded',
+          payload: detailRes
+        })
+      } catch(err) {
+        yield put({
+          type: 'detailBySequence/get/failed',
           payload: err
         })
       }
@@ -312,6 +353,11 @@ export default {
     ['detail/get/succeeded'](state, { payload }) {
       return state.withMutations(state => {
         state.set('details', Immutable.fromJS(payload.dom))
+      })
+    },
+    ['detailBySequence/get/succeeded'](state, { payload }) {
+      return state.withMutations(state => {
+        state.set('detailsBySquence', Immutable.fromJS(payload.dom))
       })
     },
     ['filters/toggle'](state, { payload }) {

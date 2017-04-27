@@ -21,6 +21,7 @@ class BodyChart extends ImmutableComponent<*, Props, *> {
     const { width, height } = clientRect
     const briefs = scans.get('briefs')
     const details = scans.get('details')
+    const detailsBySquence = scans.get('detailsBySquence')
     const filters = scans.get('filters')
     return (
       <svg
@@ -28,7 +29,7 @@ class BodyChart extends ImmutableComponent<*, Props, *> {
         viewBox={`0 0 ${width} ${height}`}
         >
         <Brief briefs={briefs} clientRect={clientRect} filters={filters}/>
-        <Detail details={details} clientRect={clientRect} filters={filters}/>
+        <Detail details={details} detailsBySquence={detailsBySquence} clientRect={clientRect} filters={filters}/>
         <g
           transform={`translate(${width / 2}, ${height / 2})`}>
           <image

@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
 import type { IndexedIterable, KeyedIterable, Map, List } from 'immutable'
+import { Motion, spring } from 'react-motion'
 import type { ClientRect } from '#/HOC/withClientRect'
 import * as Immutable from 'immutable'
 import AnnulusRing from '#/components/AnnulusRing'
@@ -56,6 +57,7 @@ import { COLORS } from '#/constants'
 type Props = {
   filters: List<*>,
   details: List<*>,
+  detailsBySquence: List<*>,
   clientRect: ClientRect
 }
 
@@ -72,7 +74,7 @@ class Detail extends ImmutableComponent<void, Props, void> {
   static anglePaddingScale = 0
 
   render() {
-    const { details, clientRect, filters } = this.props
+    const { details, detailsBySquence, clientRect, filters } = this.props
     const { width, height } = clientRect
     const cx = width / 2
     const cy = height / 2
@@ -109,15 +111,62 @@ class Detail extends ImmutableComponent<void, Props, void> {
         })
       })
 
+    const sequenceCountRange = getRange(detailsBySquence.map(detail => detail.getIn(['items', 'data', 0,  'count'])))
+
+    const sequenceGroups = detailsBySquence
+      .filter(detail => {
+        const typeFilter = filters.find(filter => filter.get('key') === 'type')
+        if (!typeFilter) return true
+        return detail.getIn(['type', 'id']) === typeFilter.get('value')
+      })
+      .map((detail, index) => {
+        const data = detail.getIn(['items', 'data'])
+        return Immutable.fromJS({
+          ie: detail.getIn(['sequence', 'id']),
+          text: detail.getIn(['sequence', 'name']),
+          annuluses: data.map(datum => Immutable.fromJS({
+            width: valueToCoordinate(datum.get('count'), sequenceCountRange, [0.8 * maxRadius, maxRadius]),
+            color: COLORS[detail.getIn(['part', 'id'])]
+          }))
+        })
+      })
+
     return (
-      <AnnulusRing
-        cx={cx + 0.1 * width}
-        cy={cy}
-        innerRadius={0.8 * maxRadius}
-        startAngle={0}
-        endAngle={Math.PI}
-        groups={groups}
-      />
+        <Motion
+          defaultStyle={{
+            opacity: filters.size ? 1 : 0
+          }}
+          style={{
+            opacity: spring(filters.size ? 1 : 0)
+          }}
+        >
+          {
+            ({opacity}) => (
+              <g>
+                <g opacity={1 - opacity}>
+                  <AnnulusRing
+                    cx={cx + 0.1 * width}
+                    cy={cy}
+                    innerRadius={0.8 * maxRadius}
+                    startAngle={0}
+                    endAngle={Math.PI}
+                    groups={groups}
+                  />
+                </g>
+                <g opacity={opacity}>
+                  <AnnulusRing
+                    cx={cx + 0.1 * width}
+                    cy={cy}
+                    innerRadius={0.8 * maxRadius}
+                    startAngle={0}
+                    endAngle={Math.PI}
+                    groups={sequenceGroups}
+                  />
+                </g>
+              </g>
+            )
+          }
+        </Motion>
     )
 
     // return (
