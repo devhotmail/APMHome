@@ -89,12 +89,13 @@ public class WorkOrderService {
         return byStatus;
     }
 
-    public  Page<WorkOrder>  findWorkOrderByCon(HttpServletRequest request, Integer pageSize, Integer pageNum){
 
+    public  Page<WorkOrder>  findWorkOrderByCon(HttpServletRequest request, Integer pageSize, Integer pageNum){
         UserAccount ua = UserContext.getCurrentLoginUser(request);
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         PageRequest pageRequest = new PageRequest(pageNum, pageSize, sort);
-        return workOrderRepository.findByRequePagestorIdAndStatusOrderByIdDesc(ua.getId(), Integer.parseInt(request.getParameter("status")), pageRequest);
+        return workOrderRepository.findByRequestorIdAndStatusOrderByIdDesc(ua.getId(), Integer.parseInt(request.getParameter("status")), pageRequest);
+
     }
     //public List<WorkOrder>
 
