@@ -125,7 +125,7 @@ public class WorkflowService {
 			return;
 		}
 		List<Integer> users = new ArrayList<Integer>(workFlows.size() * 10);
-		TimeoutPushModel model = null;// new TimeoutPushModel();
+		TimeoutPushModel model = null;
 		WorkFlow lastOne = workFlows.get(0);
 		String stepName = lastOne.getStepName();
 		Integer woId = workOrder.getId();
@@ -141,12 +141,6 @@ public class WorkflowService {
 			model.setKeyword5(workOrder.getCurrentPersonName());
 			model.setLinkUrl(coreService.getWoDetailUrl(workOrder.getId()));
 			for (WorkFlow workFlow : workFlows) {
-//				woId = workOrder.getId();
-//				times = woc.getMaxMessageCount();
-//				currentStepId = workFlow.getCurrentStepId();
-				// if(!matchRule(workFlow,woc)){
-				// continue;
-				// }
 				users.add(workFlow.getCurrentPersonId());
 			}
 			users.add(workOrder.getRequestorId());//报修人
@@ -165,13 +159,11 @@ public class WorkflowService {
 					users.add(asset.getAssetOwnerId2());
 				}
 			}
-
 			List<Integer> subscribers = userAccountMapper.getAssetSubscriber(workOrder.getAssetId());
 			users.addAll(subscribers);
-//			if (!CollectionUtils.isEmpty(subscribers)) {
-//			}
-			//WeiXinUtils.removeDuplicateId(users);
+			logger.info("before filter ,users is {}",users);
 			List<Integer> filterUser =users.stream().filter(id -> id != null).filter(id -> id >0).distinct().collect(Collectors.toList());
+			logger.info("after filter ,users is {}",users);
 			if(CollectionUtils.isEmpty(filterUser)){
 				logger.error("1workOrder timeout but no users find,orderId is {}",workOrder.getId());
 				return;
@@ -180,11 +172,12 @@ public class WorkflowService {
 			while(it.hasNext()) {
 				Integer needPushUser = it.next();
 				 if(!isMatchRule(needPushUser, woId, currentStepId, times)){
+					 logger.info("userId {} is removed because of rule!",needPushUser);
 					 it.remove();
 				 }
 			}
 			if(CollectionUtils.isEmpty(filterUser)){
-				logger.error("2workOrder timeout but no users find,orderId is {}",workOrder.getId());
+				logger.warn("2workOrder timeout but no users find,orderId is {}",workOrder.getId());
 				return;
 			}
 			buildTimeoutTemplateMsg(model, filterUser);
