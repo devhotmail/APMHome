@@ -119,6 +119,10 @@ and open the template in the editor.
             $("#assetList\\:searchInput").val('');
             search();
         }
+        
+        $(".weui-icon-checked").on("click",function(){
+            $(this).parents().children(".weui-check").click();
+        });
 
     </script>
 </html>
