@@ -109,41 +109,20 @@
               <div class="related-info">
                 <div class="kpis">
                   <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
-                  <template is="dom-if" if="[[focus.data.usage_year_before_last]]">
-                    <div class="flex flex--middle revenue-tip muted">
-                      <div class="revenue-label">[[getYM(focus.data.year_before_last_date)]]</div>
-                      <div class="flex__item u-ml-- u-mr--">
-                        <div
-                          class="progress-bar"
-                          style$="[[calcProgress(focus.data.usage_year_before_last)]]">
+                  <template is="dom-if" if="[[isNotEmptyArr(focus.data.historical_data)]]">
+                    <template is="dom-repeat" items="[[focus.data.historical_data]]">
+                      <div class="flex flex--middle revenue-tip muted">
+                        <div class="revenue-label">[[getYearText(item.year)]]</div>
+                        <div class="flex__item u-ml-- u-mr--">
+                          <div
+                            class="progress-bar"
+                            style$="[[calcProgress(item.usage)]]">
+                          </div>
                         </div>
+                        <div class="revenue-num">[[decimal2Percent(item.usage)]]</div>
                       </div>
-                      <div class="revenue-num">[[decimal2Percent(focus.data.usage_year_before_last)]]</div>
-                    </div>
-                  </template>
-                  <template is="dom-if" if="[[focus.data.usage_last_year]]">
-                    <div class="flex flex--middle revenue-tip muted">
-                      <div class="revenue-label">[[getYM(focus.data.last_year_date)]]</div>
-                      <div class="flex__item u-ml-- u-mr--">
-                        <div
-                          class="progress-bar"
-                          style$="[[calcProgress(focus.data.usage_last_year)]]">
-                        </div>                    
-                      </div>
-                      <div class="revenue-num">[[decimal2Percent(focus.data.usage_last_year)]]</div>
-                    </div>
-                  </template>
-                  <!--todo after api ready-->
-                  <div class="flex flex--middle revenue-tip muted">
-                    <div class="revenue-label">[[getYM(focus.data.this_year_date)]]</div>
-                    <div class="flex__item u-ml-- u-mr--">
-                      <div
-                        class="progress-bar"
-                        style$="[[calcProgress(focus.data.usage_this_year)]]">
-                      </div>                    
-                    </div>
-                    <div class="revenue-num">[[decimal2Percent(focus.data.usage_this_year)]]</div>
-                  </div>                    
+                    </template>
+                  </template>                   
                   <template is="dom-if" if="[[focus.data.usage_predict]]">
                     <div class="flex flex--middle revenue-tip">
                       <div class="revenue-label">[[selectedYear]]预测</div>
@@ -197,7 +176,7 @@
                     未来12个月平均使用率预测:
                     <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
                   </template>-->
-                  <template is="dom-if" if="[[hasSugs(focus.data.suggestions)]]">
+                  <template is="dom-if" if="[[isNotEmptyArr(focus.data.suggestions)]]">
                     <div class="title u-mb--">建议</div>
                     <template is="dom-repeat" items="[[focus.data.suggestions]]">
                       <template is="dom-if" if="[[item.title]]">
@@ -208,7 +187,7 @@
                       </template>
                     </template>
                   </template>
-                  <template is="dom-if" if="[[hasSugs(focus.data.suggestions)]]">
+                  <template is="dom-if" if="[[isNotEmptyArr(focus.data.suggestions)]]">
                     <div class="u-mb--">采纳建议后的使用率预测</div>
                     <div class="flex flex--middle revenue-tip">
                       <div class="revenue-label">采取建议</div>
@@ -876,22 +855,15 @@
         /**
          * functions which convert string for dom text display
         */
-        hasSugs: function(array) {
+        isNotEmptyArr: function(array) {
           if (!Array.isArray(array)) return false;
           return Boolean(array.length);
         },     
-        getYM: function(timestamp) {
-          if (!timestamp) return;
-          var date = new Date(timestamp);
-          var year = date.getFullYear();
-
-          var currentYear = (new Date()).getFullYear()
+        getYearText: function(year) {
+          if (!year) return;
+          var currentYear = (new Date()).getFullYear();
           if (currentYear === year) return year + '至今';
-
-          var month = date.getMonth() + 1;
-          if (year && month) {
-            return [date.getFullYear(), (date.getMonth() + 1)].join('.');
-          } else return;
+          return year + '年';
         },
         decimal2Percent: function(val, withSign) {
           var sign = (withSign && val > 0) ? '+' : '';
