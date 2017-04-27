@@ -110,7 +110,9 @@
             <template is="dom-if" if="[[isEqual(activeTab, 0)]]">
               <div class="related-info">
                 <div class="kpis">
-                  <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
+                  <template is="dom-if" if="[[focus.data.name]]">
+                    <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
+                  </template>
                   <template is="dom-if" if="[[isNotEmptyArr(focus.data.historical_data)]]">
                     <template is="dom-repeat" items="[[focus.data.historical_data]]">
                       <div class="flex flex--middle revenue-tip muted">
@@ -172,12 +174,7 @@
                       </template>
                     </div>
                   </template>
-                  <div class="divider"></div>                  
-                  <!--<template is="dom-if" if="[[focus.data.usage]]">
-                    <div class="divider"></div>
-                    未来12个月平均使用率预测:
-                    <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
-                  </template>-->
+                  <div class="divider"></div>
                   <template is="dom-if" if="[[isNotEmptyArr(focus.data.suggestions)]]">
                     <div class="title u-mb">建议</div>
                     <template is="dom-repeat" items="[[focus.data.suggestions]]">
@@ -227,7 +224,7 @@
                       <div
                         class="legend"
                         data-balloon-length="medium"
-                        data-balloon="您可以自定义使用率大于多少为低负荷"
+                        data-balloon="您可以自定义使用率小于多少为低负荷"
                         data-balloon-pos="up">
                         <i class="dewicon-circle-low" style="color:#ebda51"></i>
                         <span class="legend-tip">低负荷使用率定义: &lt;</span>
@@ -265,7 +262,7 @@
                     <div
                       class="flex flex-middle"
                       data-balloon-length="medium"
-                      data-balloon="您可以自定义使用率大于多少为低负荷"
+                      data-balloon="您可以自定义使用率小于多少为低负荷"
                       data-balloon-pos="left">
                       <i class="dewicon-circle-low" style="color:#ebda51"></i>
                       <span>低负荷</span>
@@ -343,7 +340,7 @@
                     <div
                       class="flex flex-middle"
                       data-balloon-length="medium"
-                      data-balloon="您可以自定义使用率大于多少为低负荷"
+                      data-balloon="您可以自定义使用率小于多少为低负荷"
                       data-balloon-pos="left">
                       <i class="dewicon-circle-low" style="color:#ebda51"></i>
                       <span>低负荷</span>
