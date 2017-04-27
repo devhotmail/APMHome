@@ -50,12 +50,15 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
         URLS.add("/web/mywolist");                  //35
         URLS.add("/web/coding");
         URLS.add("/web/myOfficereport");   //25,26,27,28,29
+        URLS.add("/web/inspOrderList/1");
+        URLS.add("/web/inspOrderList/2");
 
         URLS.add("/web/qrCreateAsset");             //11
         URLS.add("/wechat/asset/QRQuery.xhtml");    //12
         URLS.add("/wechat/asset/List.xhtml");       //13
         URLS.add("/web/authurl");                   //33
 
+        URLS.add("/web/scanwodetail");     //msg entry
     }
 
     @Override
@@ -116,8 +119,10 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
                 pro.load(PropertyUtils.class.getResourceAsStream("/url.properties"));
                 String authenticalteUrl = pro.getProperty("authenticalteUrl").trim();
                 Cookie cookie = new Cookie("authenticalteUrl", authenticalteUrl);
+                cookie.setPath("/");
                 response.addCookie(cookie);
                 Cookie c = new Cookie("weChatId", openId);
+                c.setPath("/");
                 response.addCookie(c);
             } catch (Exception e) {
                 Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, e);
