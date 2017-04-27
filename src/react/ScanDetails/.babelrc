@@ -1,0 +1,24 @@
+{
+  "presets": [
+    ["env", { "modules": false }],
+    "react",
+    "stage-0",
+    "flow"
+  ],
+  "plugins":[
+    "transform-decorators-legacy",
+    "transform-object-assign"
+  ],
+  "comments": false,
+  "env": {
+    "development": {
+      "plugins":[
+        "react-hot-loader/babel"
+      ]
+    },
+    "watch": {
+    },
+    "production": {
+    }
+  }
+}
