@@ -127,11 +127,11 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
                 c.setPath("/");
                 response.addCookie(c);
 
-                String authorizationUrl = authenticalteUrl + pro.getProperty("REST_AUTHENTICATEWECHAT").trim();
+                /*String authorizationUrl = authenticalteUrl + pro.getProperty("REST_AUTHENTICATEWECHAT").trim();
                 String authorization = HttpClientUtil.getAuthorizationByWechatId(authorizationUrl, openId);
                 Cookie authorizationCookie = new Cookie("Authorization", authorization);
                 authorizationCookie.setPath("/");
-                response.addCookie(authorizationCookie);
+                response.addCookie(authorizationCookie);*/
 
             } catch (Exception e) {
                 Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, e);
