@@ -57,7 +57,12 @@ import { COLORS } from '#/constants'
 type Props = {
   filters: List<*>,
   details: List<*>,
-  detailsBySquence: List<*>,
+  detailsCurPage?: number,
+  detailsBySequence: List<*>,
+  detailsBySequenceCurPage?: number,
+  pageSize?: number,
+  onDetailsPageChange?: number => void,
+  onDetailsBySequencePageChange?: number => void,
   clientRect: ClientRect
 }
 
@@ -74,7 +79,17 @@ class Detail extends ImmutableComponent<void, Props, void> {
   static anglePaddingScale = 0
 
   render() {
-    const { details, detailsBySquence, clientRect, filters } = this.props
+    const {
+      details,
+      detailsCurPage,
+      detailsBySequence,
+      detailsBySequenceCurPage,
+      pageSize,
+      clientRect,
+      filters,
+      onDetailsPageChange,
+      onDetailsBySequencePageChange
+    } = this.props
     const { width, height } = clientRect
     const cx = width / 2
     const cy = height / 2
@@ -96,8 +111,12 @@ class Detail extends ImmutableComponent<void, Props, void> {
     const groups = details
       .filter(detail => {
         const typeFilter = filters.find(filter => filter.get('key') === 'type')
-        if (!typeFilter) return true
-        return detail.getIn(['type', 'id']) === typeFilter.get('value')
+        const partFilter = filters.find(filter => filter.get('key') === 'part')
+        let res = true
+        if (typeFilter) res = res && detail.getIn(['type', 'id']) === typeFilter.get('value')
+        if (partFilter) res = res && detail.getIn(['part', 'id']) === partFilter.get('value')
+
+        return res
       })
       .map((detail, index) => {
         const data = detail.getIn(['items', 'data'])
@@ -110,19 +129,24 @@ class Detail extends ImmutableComponent<void, Props, void> {
           })))
         })
       })
+      .slice(detailsCurPage * pageSize, (detailsCurPage + 1) * pageSize)
 
-    const sequenceCountRange = getRange(detailsBySquence.map(detail => detail.getIn(['items', 'data', 0,  'count'])))
+    const sequenceCountRange = getRange(detailsBySequence.map(detail => detail.getIn(['items', 'data', 0,  'count'])))
 
-    const sequenceGroups = detailsBySquence
+    const sequenceGroups = detailsBySequence
       .filter(detail => {
         const typeFilter = filters.find(filter => filter.get('key') === 'type')
-        if (!typeFilter) return true
-        return detail.getIn(['type', 'id']) === typeFilter.get('value')
+        const partFilter = filters.find(filter => filter.get('key') === 'part')
+        let res = true
+        if (typeFilter) res = res && detail.getIn(['type', 'id']) === typeFilter.get('value')
+        if (partFilter) res = res && detail.getIn(['part', 'id']) === partFilter.get('value')
+
+        return res
       })
       .map((detail, index) => {
         const data = detail.getIn(['items', 'data'])
         return Immutable.fromJS({
-          ie: detail.getIn(['sequence', 'id']),
+          id: detail.getIn(['sequence', 'id']),
           text: detail.getIn(['sequence', 'name']),
           annuluses: data.map(datum => Immutable.fromJS({
             width: valueToCoordinate(datum.get('count'), sequenceCountRange, [0.8 * maxRadius, maxRadius]),
@@ -130,6 +154,7 @@ class Detail extends ImmutableComponent<void, Props, void> {
           }))
         })
       })
+      .slice(detailsBySequenceCurPage * pageSize, (detailsBySequenceCurPage + 1) * pageSize)
 
     return (
         <Motion
@@ -143,7 +168,7 @@ class Detail extends ImmutableComponent<void, Props, void> {
           {
             ({opacity}) => (
               <g>
-                <g opacity={1 - opacity}>
+                <g opacity={1 - opacity} display={opacity === 1 ? 'none' : ''}>
                   <AnnulusRing
                     cx={cx + 0.1 * width}
                     cy={cy}
@@ -151,9 +176,16 @@ class Detail extends ImmutableComponent<void, Props, void> {
                     startAngle={0}
                     endAngle={Math.PI}
                     groups={groups}
+                    curPage={detailsCurPage}
+                    pageSize={pageSize}
+                    onPageChange={diff => {
+                      if (groups.size < pageSize && diff === 1) return
+                      if (detailsCurPage === 0 && diff === -1) return
+                      this.props.onDetailsPageChange(diff)
+                    }}
                   />
                 </g>
-                <g opacity={opacity}>
+                <g opacity={opacity} display={opacity === 0 ? 'none' : ''}>
                   <AnnulusRing
                     cx={cx + 0.1 * width}
                     cy={cy}
@@ -161,6 +193,13 @@ class Detail extends ImmutableComponent<void, Props, void> {
                     startAngle={0}
                     endAngle={Math.PI}
                     groups={sequenceGroups}
+                    curPage={detailsBySequenceCurPage}
+                    pageSize={pageSize}
+                    onPageChange={diff => {
+                      if (sequenceGroups.size < pageSize && diff === 1) return
+                      if (detailsCurPage === 0 && diff === -1) return
+                      this.props.onDetailsBySequencePageChange(diff)
+                    }}
                   />
                 </g>
               </g>

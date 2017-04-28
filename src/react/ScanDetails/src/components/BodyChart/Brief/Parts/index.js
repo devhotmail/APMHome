@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import { connect } from 'dva'
 import type { IndexedIterable, KeyedIterable, IndexedSeq, Map, List } from 'immutable'
 import * as Immutable from 'immutable'
 import ImmutableComponent from '#/components/ImmutableComponent'
@@ -68,11 +69,13 @@ type Props = {
   minRadius: number,
   parts: Map<string|number, *>,
   partScans: Map<string|number, number>,
-  partColors: KeyedIterable<string|number, string>
+  partColors: KeyedIterable<string|number, string>,
+  filters: List<*>
 }
 
 
 export default
+@connect()
 class Parts extends ImmutableComponent<void, Props, void> {
   static anglePaddingScale = 0.1
   getStartAndEndAngle(index: number, count: number) {
@@ -84,12 +87,13 @@ class Parts extends ImmutableComponent<void, Props, void> {
   }
 
   render() {
-    const { cx, cy, maxRadius, minRadius, parts, partColors, partScans } = this.props
+    const { cx, cy, maxRadius, minRadius, parts, partColors, partScans, filters } = this.props
     const countSums = partScans.valueSeq()
     const [ minCount, maxCount ] = getRange(countSums)
     const groups = partScans.entrySeq().map(([key, count]) => Immutable.fromJS({
       id: key,
       text: parts.get(key),
+      opacity: filters.find(filter => filter.get('key') === 'part') ? filters.find(filter => filter.get('key') === 'part' && filter.get('value') === key) ? 1 : 0.6 : 1,
       annuluses: [{
         width: valueToCoordinate(count, [minCount, maxCount], [minRadius, maxRadius]),
         color: COLORS[key]
@@ -104,6 +108,13 @@ class Parts extends ImmutableComponent<void, Props, void> {
         startAngle={-10 / 180 * Math.PI}
         endAngle={-170 / 180 * Math.PI}
         groups={groups}
+        onGroupClick={group => this.props.dispatch({
+          type: 'scans/filters/toggle',
+          payload: {
+            key: 'part',
+            value: group.get('id')
+          }
+        })}
       />
     )
 

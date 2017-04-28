@@ -12,13 +12,15 @@ export type Props = {
   innerRadius: number,
   startAngle: number,
   endAngle: number,
-  annuluses: IndexedIterable<Annulus>
+  annuluses: IndexedIterable<Annulus>,
+  opacity: number,
+  onClick?: (any) => void
 }
 
 export default
 class AnnulusSectorGroup extends ImmutableComponent<*, Props, *> {
   render() {
-    const { text, innerRadius, startAngle, endAngle, annuluses } = this.props
+    const { text, innerRadius, startAngle, endAngle, annuluses, onClick, opacity } = this.props
     const accumulated = annuluses.reduce((prev: List<Annulus>, cur: Annulus): List<Annulus> => {
       return prev.push(
         cur.set(
@@ -34,7 +36,7 @@ class AnnulusSectorGroup extends ImmutableComponent<*, Props, *> {
     const textY = -textR * Math.cos(textAngle)
     const textRotate = textAngle * 180 / Math.PI + (textAngle > 0 ? -1 : 1) * 90
     return (
-      <g>
+      <g onClick={onClick} opacity={opacity}>
         {accumulated.map((annulus, index) => (
           <AnnulusSector
             key={annulus.get('id', index)}
@@ -47,7 +49,7 @@ class AnnulusSectorGroup extends ImmutableComponent<*, Props, *> {
         ))}
         <text
           textAnchor={textAngle > 0 ? "start" : "end"}
-          fill="white"
+          fill="#dddddd"
           x={textX}
           y={textY}
           dy="0.35em"

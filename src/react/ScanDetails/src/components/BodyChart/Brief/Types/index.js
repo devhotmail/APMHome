@@ -93,6 +93,7 @@ type Props = {
 }
 
 export default
+@connect()
 class Types extends ImmutableComponent<void, Props, void> {
   // static anglePaddingScale = 0.15
   // getStartAndEndAngle(index: number, count: number) {
@@ -115,6 +116,7 @@ class Types extends ImmutableComponent<void, Props, void> {
     const groups = briefs.map(brief => Immutable.fromJS({
       id: brief.getIn(['type', 'id']),
       text: brief.getIn(['type', 'name']),
+      opacity: filters.find(filter => filter.get('key') === 'type') ? filters.find(filter => filter.get('key') === 'type' && filter.get('value') === brief.getIn(['type', 'id'])) ? 1 : 0.6 : 1,
       annuluses: brief.getIn(['items', 'data']).map(datum => Immutable.fromJS({
         width: valueToCoordinate(datum.get('count'), [minCount, maxCount], [minRadius, maxRadius]),
         color: COLORS[datum.get('id')]
@@ -129,6 +131,13 @@ class Types extends ImmutableComponent<void, Props, void> {
         startAngle={-15 / 180 * Math.PI}
         endAngle={-165 / 180 * Math.PI}
         groups={groups}
+        onGroupClick={group => this.props.dispatch({
+          type: 'scans/filters/toggle',
+          payload: {
+            key: 'type',
+            value: group.get('id')
+          }
+        })}
       />
     )
 

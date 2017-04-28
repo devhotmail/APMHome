@@ -11,7 +11,7 @@ class ScanDetails extends ImmutableComponent<void, {scans: Map<string, any>}, vo
     const { scans } = this.props
     return (
       <div className={styles['scan-details']}>
-        <BodyChart className={styles['body-chart']} scans={scans} />
+        <BodyChart className={styles['body-chart']} scans={scans} dispatch={this.props.dispatch} />
       </div>
     )
   }

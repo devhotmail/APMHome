@@ -279,8 +279,11 @@ export default {
   state: Immutable.Map({
     briefs: Immutable.List(),
     details: Immutable.List(),
-    detailsBySquence: Immutable.List(),
-    filters: Immutable.List()
+    detailsBySequence: Immutable.List(),
+    filters: Immutable.List(),
+    detailsCurPage: 0,
+    detailsBySequenceCurPage: 0,
+    pageSize: 15
   }),
   subscriptions: ({
     setup({ dispatch }) {
@@ -357,8 +360,14 @@ export default {
     },
     ['detailBySequence/get/succeeded'](state, { payload }) {
       return state.withMutations(state => {
-        state.set('detailsBySquence', Immutable.fromJS(payload.dom))
+        state.set('detailsBySequence', Immutable.fromJS(payload.dom))
       })
+    },
+    ['detail/page/change'](state, { payload }) {
+      return state.update('detailsCurPage', v => v + payload)
+    },
+    ['detailBySequence/page/change'](state, { payload }) {
+      return state.update('detailsCurPage', v => v + payload)
     },
     ['filters/toggle'](state, { payload }) {
       return state.update('filters', filters => {
@@ -368,7 +377,7 @@ export default {
         return filters.withMutations(filters => {
           filters.delete(index).push(Immutable.fromJS(payload))
         })
-      })
+      }).set('detailsCurPage', 0).set('detailsBySequenceCurPage', 0)
     }
   }: Reducers)
 }

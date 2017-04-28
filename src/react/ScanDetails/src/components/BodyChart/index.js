@@ -21,7 +21,10 @@ class BodyChart extends ImmutableComponent<*, Props, *> {
     const { width, height } = clientRect
     const briefs = scans.get('briefs')
     const details = scans.get('details')
-    const detailsBySquence = scans.get('detailsBySquence')
+    const detailsCurPage = scans.get('detailsCurPage')
+    const detailsBySequence = scans.get('detailsBySequence')
+    const detailsBySequenceCurPage = scans.get('detailsBySequenceCurPage')
+    const pageSize = scans.get('pageSize')
     const filters = scans.get('filters')
     return (
       <svg
@@ -29,7 +32,23 @@ class BodyChart extends ImmutableComponent<*, Props, *> {
         viewBox={`0 0 ${width} ${height}`}
         >
         <Brief briefs={briefs} clientRect={clientRect} filters={filters}/>
-        <Detail details={details} detailsBySquence={detailsBySquence} clientRect={clientRect} filters={filters}/>
+        <Detail
+          details={details}
+          detailsCurPage={detailsCurPage}
+          detailsBySequence={detailsBySequence}
+          detailsBySequenceCurPage={detailsBySequenceCurPage}
+          onDetailsPageChange={number => this.props.dispatch({
+            type: 'scans/detail/page/change',
+            payload: number
+          })}
+          onDetailsBySequencePageChange={number => this.props.dispatch({
+            type: 'scans/detailBySequence/page/change',
+            payload: number
+          })}
+          pageSize={pageSize}
+          clientRect={clientRect}
+          filters={filters}
+        />
         <g
           transform={`translate(${width / 2}, ${height / 2})`}>
           <image
