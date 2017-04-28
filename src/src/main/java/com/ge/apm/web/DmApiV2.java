@@ -591,7 +591,7 @@ public class DmApiV2 {
                                                                   int year) {
     return Observable.zip(lstsnd, lstfst, (snd, fst) -> Tuple.of(snd._1, fst._2.getDepre(),
       (Option.of(userPredictedUsage.get(snd._1.getId())).getOrElse(
-        Option.when(snd._2.getUsage() == 0, fst._2.getUsage()).getOrElse(Math.abs(snd._2.getUsage() - fst._2.getUsage()) / 2D * (year - LocalDate.now().getYear()))
+        Option.when(snd._2.getUsage() == 0, fst._2.getUsage()).getOrElse(Math.abs(snd._2.getUsage() - fst._2.getUsage()) / 2D * (year - LocalDate.now().minusYears(1).getYear()))
       ) + 1) * fst._2.getUsage(),
       Option.of(userInputThreshold.get(snd._1.getId())).getOrElse(defaultThreshold),
       LocalDate.ofYearDay(year, 1), fst._2.getUsage()
