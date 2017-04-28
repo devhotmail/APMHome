@@ -54,7 +54,7 @@
                                 switch(ret.currentStepId) {
                                     case 2: roleNames.includes('WorkOrderDispatcher')?pageManager.init('ts_assignWo'):pageManager.init('ts_ratingWo');break;
                                     case 3: roleNames.includes('AssetStaff')?pageManager.init('ts_takeWo'):pageManager.init('ts_ratingWo');break;
-                                    case 4: (ret.currentPersonId == '${userId}')?pageManager.init('ts_repairWo'):pageManager.init('ts_ratingWo');break;
+                                    case 4: (ret.requestorId == '${userId}')?pageManager.init('ts_repairWo'):pageManager.init('ts_ratingWo');break;
                                     case 5: (ret.currentPersonId == '${userId}')?pageManager.init('ts_closeWo'):pageManager.init('ts_ratingWo');break;
                                     default: pageManager.init('ts_ratingWo');
                                 }

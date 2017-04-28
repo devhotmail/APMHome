@@ -18,13 +18,21 @@ public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
     public List<WorkOrder> findByAssetIdAndIntExtType(Integer assetId, int intExtType);
     public List<WorkOrder> findByStatus(int status);
     public List<WorkOrder>  findByRequestorId(int requestorId);
+
     public Page<WorkOrder> findByRequestorIdAndStatusOrderByIdDesc(int requestorId, int status, Pageable pageable);
-    
     public List<WorkOrder> findByAssetIdOrderByIdDesc(Integer assetId);
 
 
+    /*1104_sql:取出登陆人所在的科室下的所有用户*/
+    /*@Query(value="select wo.* from work_order wo where wo.asset_id in(\n" +
+            "select asinfo.id from asset_info asinfo where clinical_dept_id in ( select org_id from user_account where id = ?1 )) and status =?2 ", nativeQuery = true)*/
+    @Query(value="select wo.* from work_order wo where from_dept_id in (select org_id from user_account where id = ?1) and status =?2 order by ?#{#pageable}",
+            countQuery="select count(*) from work_order wo where from_dept_id in (select org_id from user_account where id = ?1) and status =?2 "
+            , nativeQuery = true)
+    public Page<WorkOrder> findOfficeWorkOrderList(Integer ownerId,int status, Pageable pageable);
+
     @Query(value="select wos from  WorkOrderStep wos,WorkOrder wo where wos.ownerId =?1 and wos.workOrderId=wo.id and wo.status=2")
-    public List<WorkOrder> findClosedWorkOrder(Integer ownerId);
+    public List<WorkOrder> findClosedWorkOrder(Integer ownerId,Integer status);
 
 
     @Modifying
@@ -52,7 +60,7 @@ public interface WorkOrderRepository extends GenericRepository<WorkOrder> {
     @Query("select wo from WorkOrder wo where wo.currentPersonId=?1 and wo.status = 1 and (wo.currentStepId = 4 or wo.currentStepId = 5) order by wo.id desc")
     public Page<WorkOrder> getAcceptedWorkOrder(int currentPersonId, Pageable pageable);
 
-    @Query("select wo from WorkOrder wo where wo.currentPersonId<>?1 and wo.status = 1 and wo.siteId = ?2 and wo.currentStepId in (3,4)")
+    @Query("select wo from WorkOrder wo where wo.currentPersonId<>?1 and wo.currentPersonId <> -1 and wo.status = 1 and wo.siteId = ?2 and wo.currentStepId  = 3")
     public Page<WorkOrder> getOtherPersonWorkOrder(int currentPersonId, int siteId, Pageable pageable);
     
     @Query(value="select wo.* from work_order wo where exists (select wos.work_order_id from work_order_step wos where wos.owner_id = ?1 and wo.id = wos.work_order_id ) and wo.status = 2 order by ?#{#pageable}", 

@@ -1,26 +1,29 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
-<script type="text/html" id="ts_takeOtherWo">
+<script type="text/html" id="ts_transferWo">
     <div class="page">
         <jsp:include page="../progressbar.html"/>
         <script src="${ctx}/resources/wechat/js/detail.js"/>
 
         <div class="page__bd">
             <jsp:include page="woassetinfo.html"/>
-            <jsp:include page="faultDesc.html"/>
             
+            <jsp:include page="faultDesc.html"/>
+
             <!--派工-->
-            <div class="weui-cells__title">预估解决时间*</div>
+            <div class="weui-cells__title">接单人员*</div>
             <div class="weui-cells">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">
-                        <input id="estimatedCloseTime" name="estimatedCloseTime" class="weui-input" type="datetime-local"/>
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__bd">
+                                <select class="weui-select" name="currentPersonId" id="currentPersonId" >
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            
-            
             <!--备注-->
             <div class="weui-cells__title">备注</div>
             <div class="weui-cells">
@@ -30,14 +33,13 @@
                     </div>
                 </div>
             </div>
-            
             <div id="errorMsg" style="color:red;text-align: center;"></div>
             <div class="weui-btn-area">
-                <a class="weui-btn weui-btn_primary" href="javascript:" id="takeOtherWo">获取工单</a>
+                <a class="weui-btn weui-btn_primary" href="javascript:" id="otherSubmit">转单</a>
             </div>
             <div style="height:20px;"></div>
-
         </div>
+            
         
     </div>
     <script type="text/javascript">
@@ -48,6 +50,7 @@
                         app.activeProgressBar(ret.currentStepId, ret.feedbackRating);
                         //set value
                         app.setFormJsonValue(ret);
+                        pageManager.workOrder = ret;
                         pageManager.currentStepId = ret.currentStepId;
                         pageManager.voice = ret.requestReasonVoice;
                         if (pageManager.voice) {
@@ -57,6 +60,7 @@
                             $('#voiceBackUp').addClass('weui-btn_plain-disabled');
                         }
                         app.renderImgs();
+                        
                         initdetail();
                     } 
                     $('#loadingToast1').fadeOut(100);
@@ -65,12 +69,22 @@
             reloadDetail();
             
             function initdetail() {
-                $('#takeOtherWo').click(function(){
-                    $('#errorMsg').html('');
-                    if (!$('#estimatedCloseTime').val()){$('#errorMsg').html('预估解决时间 必填'); return;}
-                    pageManager.actionType = 'fatchwo';
-                    post({woId: pageManager.woId, actionType: 'fatchwo', estimatedCloseTime: $('#estimatedCloseTime').val().replace('T', ' '), desc: $('#description').val(), currentStepId: pageManager.currentStepId});
-                });
+                function repairWo(){
+
+                    app.initUserSelect('currentPersonId', 'getcurrentperson');
+
+                    $('#otherSubmit').click(function(){
+                        $('#errorMsg').html('');
+                        if(!$('#currentPersonId').val()){
+                            $('#errorMsg').html('接单人员 必填');
+                            return;
+                        } 
+                        post({woId: pageManager.woId, actionType: 'transfer', desc: $('#description').val(), assigneeId: $('#currentPersonId').val(),
+                            currentStepId: pageManager.currentStepId});
+                    });
+                }
+                
+                repairWo();
                 
                 $('.wo_container').click(function(){
                     pageManager.go('#ts_wosteplist');
@@ -92,13 +106,13 @@
                     success: function(ret) {
                         $loadingToast.fadeOut(100);
                         if (ret === 'success') {
-                            pageManager.mywolist();
-                            history.back();
-                        } else if (ret === 'statusDiff') {
-                            var $loadingToast3 = $('#loadingToast3');
-                            if ($loadingToast3.css('display') !== 'none') return;
-                            $loadingToast3.fadeIn(100);
-                            setTimeout(function(){$loadingToast3.fadeOut(100)}, 5000);
+                            if (pageManager.entryType === 'scan') {
+                                $('#container').empty();
+                                $('#container').append($('#ts_msg_success').html());
+                            } else {
+                                pageManager.mywolist();
+                                history.back();
+                            } 
                         } else {
                             var $loadingToast2 = $('#loadingToast2');
                             if ($loadingToast2.css('display') !== 'none') return;

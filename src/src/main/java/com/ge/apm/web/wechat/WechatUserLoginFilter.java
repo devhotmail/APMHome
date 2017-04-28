@@ -50,7 +50,8 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
         URLS.add("/web/myreport");                  //22
 
         URLS.add("/web/mywolist");                  //35
-        URLS.add("/web/coding");                    //25,26,27,28,29
+        URLS.add("/web/coding");
+        URLS.add("/web/myOfficereport");   //25,26,27,28,29
         URLS.add("/web/inspOrderList/1");
         URLS.add("/web/inspOrderList/2");
 
@@ -59,6 +60,7 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
         URLS.add("/wechat/asset/List.xhtml");       //13
         URLS.add("/web/authurl");                   //33
 
+        URLS.add("/web/scanwodetail");     //msg entry
     }
 
     @Override

@@ -1,15 +1,18 @@
 package com.ge.apm.web.wo;
 
+import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkOrderMsg;
 import com.ge.apm.service.wo.WorkOrderMsgService;
 import com.ge.apm.service.wo.WorkOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import webapp.framework.web.service.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -28,6 +31,15 @@ public class WorkOrderProcessController {
     @ResponseBody
     public List<WorkOrder> WorkOrderByStatus( @PathVariable  int status)throws Exception{
         List<WorkOrder> byStatus = workOrderService.findWorkOrderByStatus(status);
+        return byStatus;
+
+    }
+
+    @RequestMapping(value="/officeworkorder" ,method = RequestMethod.GET)
+    @ResponseBody
+    public Page<WorkOrder> WorkOrderOfficeByStatus(HttpServletRequest request, Integer pageSize, Integer pageNum)throws Exception{
+
+        Page<WorkOrder> byStatus = workOrderService.findWorkOrderOfficeByStatus(request,pageSize, pageNum);
         return byStatus;
 
     }

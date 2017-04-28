@@ -1,6 +1,9 @@
 <script type="text/html" id="ts_scanreportlist">
     <div class="page">
         <div class="page__bd" style="height: 100%;">
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" href="javascript:" id="listresubmit">新增报修</a>
+            </div>
             <div id="scanreportlist" class="page__bd page__bd_spacing">
             </div>
         </div>
@@ -35,6 +38,11 @@
                     $loadingToast1.fadeOut(100);
                 });
             }
+            
+            //go create page
+            $('#listresubmit').click(function(){
+                pageManager.go('ts_scanAsset');
+            });
 
             //bind click event
             $('#scanreportlist').on('click', '.weui-cell_access', function(){
@@ -43,6 +51,7 @@
                     $loadingToast.fadeIn(100);
                 }
                 pageManager.woId = $(this).parent().find('h4').html().split(': ')[1];
+                pageManager.createType = 'uncloseList';
                 pageManager.go('#ts_recreate');
             });
             pageManager.scanreportlist();

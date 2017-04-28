@@ -107,8 +107,15 @@ and open the template in the editor.
                 </div>
                 <div class="weui-media-box__bd">
                     <h4 class="weui-media-box__title">#{asset.name}</h4>
-                    <p class="weui-media-box__desc"><span> #{asset.clinicalDeptName}</span><span> #{asset.assetOwnerName}</span><span> #{asset.assetOwnerName2}</span></p>
-                    <p class="weui-media-box__desc">#{asset.manufacture}</p>
+                    <p class="weui-media-box__desc">设备类型：#{fieldMsg.fieldValue('assetGroup',asset.assetGroup)}  
+                        <h:outputText value="制造厂商：#{asset.manufacture}" rendered="#{not empty asset.manufacture}" style="margin-left: 5px"/></p>
+                    <p class="weui-media-box__desc">
+                        <h:outputText value="使用科室：#{asset.clinicalDeptName}" rendered="#{not empty asset.clinicalDeptName}"/>
+                        <h:outputText value="负责人:" rendered="#{not empty asset.assetOwnerName or not empty asset.assetOwnerName2}" style="margin-left: 5px"/>
+                        <h:outputText value="#{asset.assetOwnerName}" rendered="#{not empty asset.assetOwnerName}" style="margin-left: 5px"/>
+                        <h:outputText value="," rendered="#{not empty asset.assetOwnerName and not empty asset.assetOwnerName2}" style="margin-left: 5px"/>
+                        <h:outputText value="#{asset.assetOwnerName2}" rendered="#{not empty asset.assetOwnerName2}"/>
+                     </p>
                 </div>
                 <div class="weui-media-box__ft">
                     <p  style="height: 60px">#{asset.status==1?"运行":""}#{asset.status==2?"停机":""}#{asset.status==3?"异常":""}</p>
@@ -134,6 +141,9 @@ and open the template in the editor.
             $("#assetList\\:searchInput").val('');
             search();
         }
+        $(".weui-icon-checked").on("click",function(){
+            $(this).parents().children(".weui-check").click();
+        });
 
         var jsSignature = #{wechatUtilService.getJsSignature()};
 

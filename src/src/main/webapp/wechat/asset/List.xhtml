@@ -99,7 +99,9 @@ and open the template in the editor.
                         <h:outputText value="制造厂商：#{asset.manufacture}" rendered="#{not empty asset.manufacture}" style="margin-left: 5px"/></p>
                     <p class="weui-media-box__desc">
                         <h:outputText value="使用科室：#{asset.clinicalDeptName}" rendered="#{not empty asset.clinicalDeptName}"/>
-                        <h:outputText value="负责人：#{asset.assetOwnerName}" rendered="#{not empty asset.assetOwnerName}" style="margin-left: 5px"/>
+                        <h:outputText value="负责人:" rendered="#{not empty asset.assetOwnerName or not empty asset.assetOwnerName2}" style="margin-left: 5px"/>
+                        <h:outputText value="#{asset.assetOwnerName}" rendered="#{not empty asset.assetOwnerName}" style="margin-left: 5px"/>
+                        <h:outputText value="," rendered="#{not empty asset.assetOwnerName and not empty asset.assetOwnerName2}" style="margin-left: 5px"/>
                         <h:outputText value="#{asset.assetOwnerName2}" rendered="#{not empty asset.assetOwnerName2}"/>
                      </p>
                 </div>
@@ -119,6 +121,10 @@ and open the template in the editor.
             $("#assetList\\:searchInput").val('');
             search();
         }
+        
+        $(".weui-icon-checked").on("click",function(){
+            $(this).parents().children(".weui-check").click();
+        });
 
     </script>
 </html>

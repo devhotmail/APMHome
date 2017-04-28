@@ -12,14 +12,14 @@
                 <jsp:include page="faultDesc.html"/>
 
                 <!--派工-->
-                <div class="weui-cells__title">预估解决时间*</div>
+<!--                <div class="weui-cells__title">预估解决时间*</div>
                 <div class="weui-cells">
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
                             <input id="estimatedCloseTime" name="estimatedCloseTime" class="weui-input" type="datetime-local"/>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="weui-cells__title">选择</div>
                 <div class="weui-cells">
@@ -54,8 +54,8 @@
                 
                 <div id="errorMsg" style="color:red;text-align: center;"></div>
                 <div class="weui-btn-area">
-                    <a class="weui-btn weui-btn_primary" href="javascript:" id="otherSubmit">关单</a>
-                    <a class="weui-btn weui-btn_primary" href="javascript:" id="returnSubmit">回退</a>
+                    <a class="weui-btn weui-btn_primary" href="javascript:" id="otherSubmit">维修完成</a>
+                    <!--<a class="weui-btn weui-btn_primary" href="javascript:" id="returnSubmit">回退</a>-->
                 </div>
                 <div style="height:20px;"></div>
             </div>
@@ -150,16 +150,6 @@
             
             function initdetail(curPerId, curStepId) {
                 function repairWo(){
-                    $('#estimatedCloseTime').change(function(){
-                        if (!$('#estimatedCloseTime').val()){return;}
-                        $.ajax({
-                            url: WEB_ROOT+'web/estimatedtime',
-                            type: 'post',
-                            contentType: 'application/json',
-                            data: JSON.stringify({woId: pageManager.woId, estimatedCloseTime: $('#estimatedCloseTime').val().replace('T', ' ')}),
-                            success: function() {}
-                        });
-                    });
 
                     app.initSelectData('assetStatus', 'assetStatus', 1);
 
@@ -207,22 +197,9 @@
                     }
                 }
                 
-                if (curStepId === 4) {
-                    $('.repair-wo').show();
-                    $('.close-wo').hide();
-                    if (curPerId != '${userId}') {
-                        $('.weui-btn-area').hide();
-                        $('#estimatedCloseTime').attr('disabled', 'disabled');
-                        $('#assetStatus').attr('disabled', 'disabled');
-                        $('#confirmedUpTime').attr('disabled', 'disabled');
-                        $('#description').attr('disabled', 'disabled');
-                    }
-                    repairWo();
-                } else {
-                    $('.close-wo').show();
-                    $('.repair-wo').hide();
-                    closeWo();
-                }
+                $('.repair-wo').show();
+                $('.close-wo').hide();
+                repairWo();
                 
                 if ('${DispatchMode}' != 1) {
                     $('#returnSubmit').hide();
@@ -248,16 +225,19 @@
                     success: function(ret) {
                         $loadingToast.fadeOut(100);
                         if (ret === 'success') {
-                            if (pageManager.actionType === 'repair') {
-                                    reloadDetail();
+                            if (pageManager.entryType === 'scan') {
+                                $('#container').empty();
+                                $('#container').append($('#ts_msg_success').html());
+                            } else if (pageManager.entryType === 'wolist'){
+                                pageManager.mywolist();
+                                history.back();
                             } else {
-                                if (pageManager.entryType === 'scan') {
-                                    $('#container').empty();
-                                    $('#container').append($('#ts_msg_success').html());
-                                }else if (pageManager.entryType === 'wolist'){
-                                    pageManager.mywolist();
-                                    history.back();
+                                if (pageManager.showCancel){
+                                    pageManager.myreportList(1);
+                                } else {
+                                    pageManager.myreportList(2);
                                 }
+                                history.back();
                             }
                         } else {
                             var $loadingToast2 = $('#loadingToast2');

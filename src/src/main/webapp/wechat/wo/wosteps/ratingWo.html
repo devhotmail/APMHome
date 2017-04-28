@@ -80,8 +80,9 @@
                             $('#voiceBackUp').addClass('weui-btn_plain-disabled');
                         }
                         app.renderImgs();
-                        initdetail();
-                        if (ret.requestorId != '${userId}' || ret.currentStepId !== 6 || pageManager.entryType !== 'scan' || ret.feedbackRating != 0) {
+                        initdetail();debugger;
+                        if (!((ret.currentStepId === 6 || ret.currentStepId === 5) && (ret.requestorId == '${userId}' || ret.fromDeptId == '${sameDept}') && ret.feedbackRating == 0 && pageManager.entryType !== 'wolist'))
+                            {
                             raterShow();
                             $('#submit').hide();
                         }
@@ -142,7 +143,19 @@
                             } else if (pageManager.entryType === 'wolist'){
                                 pageManager.mywolist();
                                 history.back();
+                            } else {
+                                if (pageManager.showCancel){
+                                    pageManager.myreportList(1);
+                                } else {
+                                    pageManager.myreportList(2);
+                                }
+                                history.back();
                             }
+                        } else if (ret === 'statusDiff') {
+                            var $loadingToast3 = $('#loadingToast3');
+                            if ($loadingToast3.css('display') !== 'none') return;
+                            $loadingToast3.fadeIn(100);
+                            setTimeout(function(){$loadingToast3.fadeOut(100)}, 5000);
                         } else {
                             var $loadingToast2 = $('#loadingToast2');
                             if ($loadingToast2.css('display') !== 'none') return;

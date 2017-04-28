@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import webapp.framework.web.service.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,6 +73,7 @@ public class WorkOrderController {
         
         model.addAttribute("casePriority", 3);
         model.addAttribute("qrCode", request.getParameter("qrCode"));
+        model.addAttribute("from", request.getParameter("from"));
         
         return "wo/scanWoReport";
     }
@@ -93,6 +95,31 @@ public class WorkOrderController {
         model.addAttribute("signature",s.getSignature());
         
         return "wo/myReport";
+    }
+
+
+    @RequestMapping(value = "myOfficereport")
+    public String myOfficeReport(HttpServletRequest request,HttpServletResponse response, Model model) {
+        if (UserContext.getRoles().contains("Guest")) {
+                return "noPremission";
+        }
+       UserAccount ua = service.getLoginUser(request);
+        model.addAttribute("userId", ua.getId());
+        WxJsapiSignature s = null;
+        try {
+            s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());
+        } catch (WxErrorException ex) {
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, null, ex);
+            return "wo/officeReport";
+        }
+        model.addAttribute("appId",s.getAppid());
+        model.addAttribute("timestamp",s.getTimestamp());
+        model.addAttribute("nonceStr",s.getNoncestr());
+        model.addAttribute("signature",s.getSignature());
+        
+        model.addAttribute("sameDept", ua.getOrgInfoId());
+
+        return "wo/officeReport";
     }
     
     @RequestMapping(value = "scanwodetail")
@@ -277,6 +304,8 @@ public class WorkOrderController {
         return woWcService.woList(request, stepId, pageSize, pageNum);
     }
 
+
+
     /**
      * work order detail, the data of one work order
      * @param id
@@ -306,6 +335,7 @@ public class WorkOrderController {
         map.put("patTests", wo.getPatTests());
         map.put("currentPersonId", wo.getCurrentPersonId());
         map.put("currentPersonName", wo.getCurrentPersonName());
+        map.put("fromDeptId", wo.getFromDeptId());
         AssetInfo ai = assetDao.getById(wo.getAssetId());
         if (ai == null)
             return map;

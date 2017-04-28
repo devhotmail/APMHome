@@ -134,6 +134,10 @@
                     if ($loadingToast.css('display') !== 'none') return;
                     $loadingToast.fadeIn(100);
                 });
+                
+                if (pageManager.createType === 'uncloseList') {
+                    $('#resubmit').hide();
+                }
             }
             
             function renderImgs() {
