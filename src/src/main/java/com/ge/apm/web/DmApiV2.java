@@ -611,7 +611,7 @@ public class DmApiV2 {
    */
   private PdtData calculatePdtData(Double depre, Double usage, java.util.List<Double> thre, LocalDate date, Double usageHistory) {
     return new PdtData(date, depre,
-      new ImmutableList.Builder<Integer>().add(Option.when(usage <= thre.get(0), 1).getOrElse(0), Option.when(usage > 1D, 1).getOrElse(0)).build(),
+      new ImmutableList.Builder<Integer>().add(Option.when(usage <= thre.get(0), 1).getOrElse(0), Option.when(usage > thre.get(1), 1).getOrElse(0)).build(),
       thre, usage, Option.when(usageHistory.equals(0D), 0D).getOrElse(usage / usageHistory - 1D),
       Option.when(usage > 1D, 1D).getOrElse(usage),
       Option.when(usageHistory.equals(0D), 0D).getOrElse(Option.when(usage > 1D, 1D).getOrElse(usage) / usageHistory - 1D)
