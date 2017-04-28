@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
 import type { Map } from 'immutable'
+import { Motion, spring } from 'react-motion'
 import ImmutableComponent from '#/components/ImmutableComponent'
 import withClientRect from '#/HOC/withClientRect'
 import type { ClientRect } from '#/HOC/withClientRect'
@@ -16,6 +17,87 @@ type Props = {
 }
 
 class BodyChart extends ImmutableComponent<*, Props, *> {
+  getImage() {
+    const { scans, clientRect } = this.props
+    const filters = scans.get('filters')
+    const { width, height } = clientRect
+    const partFilter = filters.find(filter => filter.get('key') === 'part')
+    const partId = partFilter ? partFilter.get('value') : null
+    const mapping = {
+      0: {
+        translate: [-0.03 * width, 1 * width],
+        scale: 6,
+        clipRadius: width * 0.15
+      },
+      1: {
+        translate: [-0.02 * width, 0.38 * width],
+        scale: 3.5,
+        clipRadius: width * 0.15
+      },
+      2: {
+        translate: [-0.02 * width, 0.2 * width],
+        scale: 3.6,
+        clipRadius: width * 0.15
+      },
+      3: {
+        translate: [-0.02 * width, 0.2 * width],
+        scale: 2,
+        clipRadius: width * 0.15
+      },
+      4: {
+        translate: [0, 0],
+        scale: 1,
+        clipRadius: width
+      },
+      5: {
+        translate: [0, 0],
+        scale: 1,
+        clipRadius: width
+      }
+    }
+    return (
+      <Motion
+        defaultStyle={{
+          clipRadius: partId === null ? 0.3 * width : mapping[partId].clipRadius,
+          translateX: partId === null ? 0 : mapping[partId].translate[0],
+          translateY: partId === null ? 0 : mapping[partId].translate[1],
+          scale: partId === null ? 1 : mapping[partId].scale
+        }}
+        style={{
+          clipRadius: spring(partId === null ? 0.3 * width : mapping[partId].clipRadius),
+          translateX: spring(partId === null ? 0 : mapping[partId].translate[0]),
+          translateY: spring(partId === null ? 0 : mapping[partId].translate[1]),
+          scale: spring(partId === null ? 1 : mapping[partId].scale)
+        }}
+      >
+        {
+          style => (
+            <g
+              transform={`translate(${width / 2}, ${height / 2})`}
+            >
+              <defs>
+                <clipPath id="image-clip">
+                  <circle cx="0" cy="0" r={style.clipRadius} />
+                </clipPath>
+              </defs>
+              <g
+                clipPath="url(#image-clip)"
+              >
+                <image
+                  transform={`translate(${style.translateX}, ${style.translateY}) scale(${style.scale})`}
+                  width={0.2 * width}
+                  height={0.4 * width}
+                  x={-0.1 * width}
+                  y={-0.2 * width}
+                  xlinkHref={body}
+                />
+              </g>
+            </g>
+          )
+        }
+      </Motion>
+    )
+  }
   render() {
     const { scans, clientRect, className } = this.props
     const { width, height } = clientRect
@@ -31,6 +113,7 @@ class BodyChart extends ImmutableComponent<*, Props, *> {
         className={`${styles['body-chart']} ${className}`}
         viewBox={`0 0 ${width} ${height}`}
         >
+        {this.getImage()}
         <Brief briefs={briefs} clientRect={clientRect} filters={filters}/>
         <Detail
           details={details}
@@ -49,16 +132,6 @@ class BodyChart extends ImmutableComponent<*, Props, *> {
           clientRect={clientRect}
           filters={filters}
         />
-        <g
-          transform={`translate(${width / 2}, ${height / 2})`}>
-          <image
-            width={0.2 * width}
-            height={0.4 * width}
-            x={-0.1 * width}
-            y={-0.2 * width}
-            xlinkHref={body}
-          />
-        </g>
       </svg>
     )
   }
