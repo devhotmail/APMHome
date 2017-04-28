@@ -85,3 +85,109 @@ alter table asset_summit add constraint uk_asset_summit_asset_n_date unique (ass
 INSERT INTO "i18n_message" VALUES (269, 'label', 'AssetBrowser', '设备分布分析', 'Asset Browser', NULL, -1);
 INSERT INTO "i18n_message" VALUES (270, 'label', 'UsageAndClinicalPerformance', '运用与临床绩效', 'Usage And Clinical Performance', NULL, -1);
 INSERT INTO "i18n_message" VALUES (271, 'label', 'FinancialPerformanceAndForecast', '财务绩效与预测', 'Financial Performance And Forcast', NULL, -1);
+
+create table  proc_part(
+id serial not null primary key,
+name varchar(64) not null
+);
+
+create table proc_subpart(
+id serial not null primary key,
+part_id int not null,
+name varchar(64) not null
+);
+
+create table proc_step(
+id serial not null primary key,
+part_id int not null,
+name varchar(128) not null
+);
+
+create table exam_summit(
+id serial not null primary key,
+site_id  int not null,
+hospital_id int not null,
+asset_id int not null,
+asset_group int not null,
+dept_id int not null,
+part_id int not null,
+subpart_id int not null,
+step_id int not null,
+exam_count int not null default 0,
+created date,
+last_modified timestamp
+);
+
+create index ix_exam_summit_site_id on exam_summit(site_id);
+create index ix_exam_summit_hospital_id on exam_summit(hospital_id);
+create index ix_exam_summit_asset_id on exam_summit(asset_id);
+create index ix_exam_summit_asset_group on exam_summit(asset_group);
+create index ix_exam_summit_dept_id on exam_summit(dept_id);
+create index ix_exam_summit_part_id on exam_summit(part_id);
+create index ix_exam_summit_subpart_id on exam_summit(subpart_id);
+create index ix_exam_summit_step_id on exam_summit(step_id);
+
+insert into proc_part(name) values ('头部');
+insert into proc_part(name) values ('颈部');
+insert into proc_part(name) values ('胸部');
+insert into proc_part(name) values ('腹部');
+insert into proc_part(name) values ('盆部');
+insert into proc_part(name) values ('脊柱');
+insert into proc_part(name) values ('上肢');
+insert into proc_part(name) values ('下肢');
+insert into proc_part(name) values ('其它');
+
+insert into proc_step(part_id, name) values (1,'step1');
+insert into proc_step(part_id, name) values (1,'step2');
+insert into proc_step(part_id, name) values (1,'step3');
+insert into proc_step(part_id, name) values (1,'step4');
+insert into proc_step(part_id, name) values (1,'step5');
+
+insert into proc_step(part_id, name) values (2,'step1');
+insert into proc_step(part_id, name) values (2,'step2');
+insert into proc_step(part_id, name) values (2,'step3');
+insert into proc_step(part_id, name) values (2,'step4');
+insert into proc_step(part_id, name) values (2,'step5');
+
+insert into proc_step(part_id, name) values (3,'step1');
+insert into proc_step(part_id, name) values (3,'step2');
+insert into proc_step(part_id, name) values (3,'step3');
+insert into proc_step(part_id, name) values (3,'step4');
+insert into proc_step(part_id, name) values (3,'step5');
+
+insert into proc_step(part_id, name) values (4,'step1');
+insert into proc_step(part_id, name) values (4,'step2');
+insert into proc_step(part_id, name) values (4,'step3');
+insert into proc_step(part_id, name) values (4,'step4');
+insert into proc_step(part_id, name) values (4,'step5');
+
+insert into proc_step(part_id, name) values (5,'step1');
+insert into proc_step(part_id, name) values (5,'step2');
+insert into proc_step(part_id, name) values (5,'step3');
+insert into proc_step(part_id, name) values (5,'step4');
+insert into proc_step(part_id, name) values (5,'step5');
+
+insert into proc_step(part_id, name) values (6,'step1');
+insert into proc_step(part_id, name) values (6,'step2');
+insert into proc_step(part_id, name) values (6,'step3');
+insert into proc_step(part_id, name) values (6,'step4');
+insert into proc_step(part_id, name) values (6,'step5');
+
+insert into proc_step(part_id, name) values (7,'step1');
+insert into proc_step(part_id, name) values (7,'step2');
+insert into proc_step(part_id, name) values (7,'step3');
+insert into proc_step(part_id, name) values (7,'step4');
+insert into proc_step(part_id, name) values (7,'step5');
+
+insert into proc_step(part_id, name) values (8,'step1');
+insert into proc_step(part_id, name) values (8,'step2');
+insert into proc_step(part_id, name) values (8,'step3');
+insert into proc_step(part_id, name) values (8,'step4');
+insert into proc_step(part_id, name) values (8,'step5');
+
+insert into proc_step(part_id, name) values (9,'step1');
+insert into proc_step(part_id, name) values (9,'step2');
+insert into proc_step(part_id, name) values (9,'step3');
+insert into proc_step(part_id, name) values (9,'step4');
+insert into proc_step(part_id, name) values (9,'step5');
+
