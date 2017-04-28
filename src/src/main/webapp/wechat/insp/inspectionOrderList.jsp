@@ -44,7 +44,7 @@
 <body>
     <jsp:include page="/wechat/wo/listTemplate.html"/>
 
-    <div class="page button">
+    <div id="pageDiv" class="page" style="display: none">
         <div class="page__bd" style="height: 100%;">
             <div class="weui-tab">
                 <div class="weui-navbar">
@@ -99,6 +99,8 @@
         var data = {"orderType": orderType, "isFinished":isFinished, "page": pageCount, "pageSize": pageSize};
         apmRest.get("/hcapmassetservice/api/apm/asset/inspectionorders", data, function(ret){
             $('#moreBtn').remove();
+
+            $('#pageDiv').show();
 
             $.each(ret.data.pageList, function (i, v) {
 

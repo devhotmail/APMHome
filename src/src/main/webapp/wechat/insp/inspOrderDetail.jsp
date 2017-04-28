@@ -25,7 +25,7 @@
     </head>
     <body style="background-color:#f8f8f8">
         
-        <div id="container" class="container">
+        <div id="container" class="container" style="display: none">
             <div class="page home js_show">
                 <div class="page__hd" style="padding: 10px 0;height: 30px;">
                     <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_plain-primary" id="chooseAll" style="float: right; margin-right: 40px; border: 0">取消全选</a>
@@ -86,6 +86,7 @@
                 function initData() {
                     apmRest.get('/hcapmassetservice/api/apm/asset/inspectionorders/'+'${inspId}', null, function(ret){
                         assembleData(ret);
+                        $('#container').show();
                     });
                 }
                 initData();
@@ -379,7 +380,7 @@
                     </div>
                     <div class="weui-msg__opr-area">
                         <p class="weui-btn-area">
-                            <a href="javascript:history.back();" class="weui-btn weui-btn_primary">返回</a>
+                            <a href="javascript:window.location.href = '${ctx}/web/inspOrderList/${orderType}';" class="weui-btn weui-btn_primary">返回</a>
                         </p>
                     </div>
                 </div>
@@ -394,7 +395,7 @@
                     </div>
                     <div class="weui-msg__opr-area">
                         <p class="weui-btn-area">
-                            <a href="javascript:history.back();" class="weui-btn weui-btn_primary">返回</a>
+                            <a href="javascript:javascript:window.location.href = '${ctx}/web/inspOrderList/${orderType}';" class="weui-btn weui-btn_primary">返回</a>
                         </p>
                     </div>
                 </div>

@@ -17,6 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ge.apm.service.utils.HttpClientUtil;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -122,6 +124,13 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
                 Cookie c = new Cookie("weChatId", openId);
                 c.setPath("/");
                 response.addCookie(c);
+
+                String authorizationUrl = authenticalteUrl + pro.getProperty("REST_AUTHENTICATEWECHAT").trim();
+                String authorization = HttpClientUtil.getAuthorizationByWechatId(authorizationUrl, openId);
+                Cookie authorizationCookie = new Cookie("Authorization", authorization);
+                authorizationCookie.setPath("/");
+                response.addCookie(authorizationCookie);
+
             } catch (Exception e) {
                 Logger.getLogger(WeChatCoreController.class.getName()).log(Level.SEVERE, null, e);
             }
