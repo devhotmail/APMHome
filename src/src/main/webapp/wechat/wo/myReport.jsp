@@ -94,7 +94,7 @@
                             pageManager.showTime = true;
                             pageManager.showReView = false;
                             pageManager.showComment = false;
-                            pageManager.showCancel = false;//true;
+                            pageManager.showCancel = true;//true;
                         } else {
                             pageManager.showTime = false;
                             pageManager.showReView = true;
@@ -103,6 +103,7 @@
                             pageManager.entryType = 'myreport2';
                         }
                         $.get(WEB_ROOT+'web/workorder', {status: close, pageSize: pageManager.pageSize, pageNum: pageManager.pageNum}, function(ret) {
+                            pageManager.workOrders = [];
                             var data = [];
                             assembleData(data, ret, close);
                             //show the data list
@@ -133,13 +134,18 @@
                         }
                         
                         pageManager.woId = $(this).parent().find('h4').html().split(': ')[1];
-                        pageManager.showMsgs = false;
-                        if($(this).find('.reportview').html()) {
-                            pageManager.showBtn = true;
-                        } else {
-                            pageManager.showBtn = false || pageManager.showCancel;
+                        var wo = pageManager.workOrders[pageManager.woId];
+//                        pageManager.showMsgs = false;
+//                        if($(this).find('.reportview').html()) {
+//                            pageManager.showBtn = true;
+//                        } else {
+//                            pageManager.showBtn = false || pageManager.showCancel;
+//                        }
+//                        pageManager.go('#ts_wodetail');
+                        switch(wo.currentStepId) {
+                            case 4: (wo.requestorId == '${userId}')?pageManager.go('#ts_repairWo'):pageManager.go('#ts_ratingWo');break;
+                            default: pageManager.go('#ts_ratingWo');
                         }
-                        pageManager.go('#ts_wodetail');
                     });
                     $('.weui-navbar__item').on('click', function () {
                         $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
@@ -153,6 +159,7 @@
                     function assembleData(data, ret, close) {
                         if (ret && ret.content && ret.content.length !== 0) {
                             $.each(ret.content, function(i, v){
+                                pageManager.workOrders[v['id']] = v;
                                 data.push({title:'工单编号: '+ v['id'], 
                                            ftitle: pageManager.msgTypes['casePriority'][v['casePriority']], 
                                            ftitleColor : v['casePriority']===1?'#F76260':v['casePriority']===2?'#FFBE00':'#09BB07',
@@ -176,7 +183,8 @@
         </script>
            
         <jsp:include page="imgshow.html"/>
-        <jsp:include page="woDetail.html"/>
+        <jsp:include page="wosteps/repairWo.html"/>
+        <jsp:include page="wosteps/ratingWo.html"/>
         <jsp:include page="msgTemplate.html"/>
         <jsp:include page="listTemplate.html"/>
         <jsp:include page="tipsTemplate.html"/>

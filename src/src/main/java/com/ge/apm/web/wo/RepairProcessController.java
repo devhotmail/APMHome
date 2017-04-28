@@ -93,6 +93,7 @@ public class RepairProcessController {
                 case "return" : workOrderService.returnWorkOrder(request, wopo);break;
                 case "fatchwo": workOrderService.fatchWorkOrder(request, wopo);break;
                 case "cancel": workOrderService.cancelWorkOrder(request, wopo);break;
+                case "transfer": workOrderService.transferWorkOrder(request, wopo);break;
                 default: workOrderService.feedbackWorkOrder(request, wopo);
             }
             return "success";

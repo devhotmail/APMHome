@@ -111,78 +111,78 @@
             <script type="text/javascript">
                 $(function(){
                     pageManager.mywolist = function(){
-                        //data search function
-                        function loadData(step) {
-                            pageManager.pageNum = 0;
-                            pageManager.pageSize = 10;
-                            var $loadingToast1 = $('#loadingToast1');
-                            if ($loadingToast1.css('display') !== 'none') return;
-                            $loadingToast1.fadeIn(100);
-                            //fetch data from server    wolistdata is the restful url
-                            $.get(WEB_ROOT+'web/wolistdata', {stepId: step, pageSize: pageManager.pageSize, pageNum: pageManager.pageNum}, function(ret) {
-                                pageManager.workOrders = [];
-                                var data = [];
-                                assembleData(data, ret);
-                                //show the data list
-                                app.fullListItem('wolist', data);
-                                $loadingToast1.fadeOut(100);
-                            });
-                        }
-                        
-                        $('#loadMore').click(function(){
-                            var $loadingToast1 = $('#loadingToast1');
-                            if ($loadingToast1.css('display') !== 'none') return;
-                            $loadingToast1.fadeIn(100);
-                            //fetch data from server    wolistdata is the restful url
-                            $.get(WEB_ROOT+'web/wolistdata', {stepId: pageManager.tab, pageSize: pageManager.pageSize, pageNum: pageManager.pageNum}, function(ret) {
-                                var data = [];
-                                assembleData(data, ret);
-                                //show the data list
-                                app.appendListItem('wolist', data);
-                                $loadingToast1.fadeOut(100);
-                            });
+                        loadData(pageManager.tab);
+                    }
+                    //data search function
+                    function loadData(step) {
+                        pageManager.pageNum = 0;
+                        pageManager.pageSize = 10;
+                        var $loadingToast1 = $('#loadingToast1');
+                        if ($loadingToast1.css('display') !== 'none') return;
+                        $loadingToast1.fadeIn(100);
+                        //fetch data from server    wolistdata is the restful url
+                        $.get(WEB_ROOT+'web/wolistdata', {stepId: step, pageSize: pageManager.pageSize, pageNum: pageManager.pageNum}, function(ret) {
+                            pageManager.workOrders = [];
+                            var data = [];
+                            assembleData(data, ret);
+                            //show the data list
+                            app.fullListItem('wolist', data);
+                            $loadingToast1.fadeOut(100);
                         });
+                    }
 
-                        //bind click event
-                        $('#wolist').on('click', '.weui-cell_access', function(){
-                            var $loadingToast = $('#loadingToast1');
-                            if ($loadingToast.css('display') === 'none') {
-                                $loadingToast.fadeIn(100);
-                            }
-                            
-                            pageManager.woId = $(this).parent().find('h4').html().split(': ')[1];
+                    $('#loadMore').click(function(){
+                        var $loadingToast1 = $('#loadingToast1');
+                        if ($loadingToast1.css('display') !== 'none') return;
+                        $loadingToast1.fadeIn(100);
+                        //fetch data from server    wolistdata is the restful url
+                        $.get(WEB_ROOT+'web/wolistdata', {stepId: pageManager.tab, pageSize: pageManager.pageSize, pageNum: pageManager.pageNum}, function(ret) {
+                            var data = [];
+                            assembleData(data, ret);
+                            //show the data list
+                            app.appendListItem('wolist', data);
+                            $loadingToast1.fadeOut(100);
+                        });
+                    });
 
-                            var wo = pageManager.workOrders[pageManager.woId];
-                            pageManager.entryType = 'wolist';
+                    //bind click event
+                    $('#wolist').on('click', '.weui-cell_access', function(){
+                        var $loadingToast = $('#loadingToast1');
+                        if ($loadingToast.css('display') === 'none') {
+                            $loadingToast.fadeIn(100);
+                        }
+
+                        pageManager.woId = $(this).parent().find('h4').html().split(': ')[1];
+
+                        var wo = pageManager.workOrders[pageManager.woId];
+                        pageManager.entryType = 'wolist';
 //                            pageManager.showBtn = (wo.currentPersonId == '${userId}' || !pageManager.assetHead) && pageManager.tab !== 6;
 //                            pageManager.takeOtherWo = !pageManager.assetHead && wo.currentPersonId != '${userId}';
 //                            pageManager.go('#ts_wodetail');
-                            switch(wo.currentStepId) {
-                                case 2: pageManager.go('#ts_assignWo');break;
-                                case 3: pageManager.tab===5?pageManager.go('#ts_takeOtherWo'):pageManager.go('#ts_takeWo');break;
-                                case 4: pageManager.tab===5?pageManager.go('#ts_takeOtherWo'):pageManager.go('#ts_repairWo');break;
-                                case 5: pageManager.go('#ts_closeWo');break;
-                                default: pageManager.go('#ts_ratingWo');
-                            }
-                        });
-                        $('.weui-navbar__item').on('click', function () {
-                            $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
-                            //do the search action     1-在修 / 2-完成 / 3-取消
-                            pageManager.tab = $(this).data('step');
-                            loadData($(this).data('step'));
-                        });
-
-                        if (pageManager.assetHead) {
-                            $('.staffRole').hide();
-                            pageManager.tab = 1;
-                            loadData(1);
-                        } else {
-                            $('.headRole').hide();
-                            pageManager.tab = 3;
-                            loadData(3);
+                        switch(wo.currentStepId) {
+                            case 2: pageManager.go('#ts_assignWo');break;
+                            case 3: pageManager.tab===5?pageManager.go('#ts_takeOtherWo'):pageManager.go('#ts_takeWo');break;
+                            case 4:(wo.requestorId == '${userId}')?pageManager.go('#ts_repairWo'):pageManager.go('#ts_transferWo');break;
+                            case 5: pageManager.go('#ts_closeWo');break;
+                            default: pageManager.go('#ts_ratingWo');
                         }
+                    });
+                    $('.weui-navbar__item').on('click', function () {
+                        $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+                        //do the search action     1-在修 / 2-完成 / 3-取消
+                        pageManager.tab = $(this).data('step');
+                        loadData($(this).data('step'));
+                    });
+
+                    if (pageManager.assetHead) {
+                        $('.staffRole').hide();
+                        pageManager.tab = 1;
+                        loadData(1);
+                    } else {
+                        $('.headRole').hide();
+                        pageManager.tab = 3;
+                        loadData(3);
                     }
-                    pageManager.mywolist();
                     
                     function assembleData(data, ret) {
                         if (ret && ret.content && ret.content.length !== 0) {
@@ -216,6 +216,7 @@
         <jsp:include page="wosteps/closeWo.html"/>
         <jsp:include page="wosteps/ratingWo.html"/>
         <jsp:include page="wosteps/takeOtherWo.html"/>
+        <jsp:include page="wosteps/transferWo.html"/>
         <jsp:include page="msgTemplate.html"/>
         <jsp:include page="listTemplate.html"/>
         <jsp:include page="tipsTemplate.html"/>

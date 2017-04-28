@@ -18,7 +18,7 @@
                     <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workflowConfigController.selected != null}">
                         <h:panelGroup>
                             <label class = "label">#{msg.dispatchMode}</label>
-                            <p:selectOneMenu value="#{workflowConfigController.selected.dispatchMode}" >
+                            <p:selectOneMenu value="#{workflowConfigController.selected.dispatchMode}" disabled="true">
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('dispatchMode')}" var="item"  itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                              </p:selectOneMenu>
                         </h:panelGroup>

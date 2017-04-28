@@ -45,7 +45,7 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
             wfConfig.setHospitalId(user.getHospitalId());
             wfConfig.setSiteId(user.getSiteId());
 
-            wfConfig.setDispatchMode(1);
+            wfConfig.setDispatchMode(3);
             wfConfig.setTimeoutDispatch(30);
             wfConfig.setTimeoutAccept(30);
             wfConfig.setTimeoutRepair(300);  //5 hours

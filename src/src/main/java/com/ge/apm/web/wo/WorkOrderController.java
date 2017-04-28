@@ -13,8 +13,6 @@ import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkflowConfig;
 import com.ge.apm.service.wechat.CoreService;
 import com.ge.apm.service.wechat.WorkOrderWeChatService;
-import com.ge.apm.view.sysutil.UserContextService;
-import com.ge.apm.view.wechat.WxAssetInfoController;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -25,10 +23,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import webapp.framework.web.WebUtil;
 import webapp.framework.web.service.UserContext;
 
-import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -120,6 +116,8 @@ public class WorkOrderController {
         model.addAttribute("timestamp",s.getTimestamp());
         model.addAttribute("nonceStr",s.getNoncestr());
         model.addAttribute("signature",s.getSignature());
+        
+        model.addAttribute("sameDept", ua.getOrgInfoId());
 
         return "wo/officeReport";
     }
@@ -337,6 +335,7 @@ public class WorkOrderController {
         map.put("patTests", wo.getPatTests());
         map.put("currentPersonId", wo.getCurrentPersonId());
         map.put("currentPersonName", wo.getCurrentPersonName());
+        map.put("fromDeptId", wo.getFromDeptId());
         AssetInfo ai = assetDao.getById(wo.getAssetId());
         if (ai == null)
             return map;

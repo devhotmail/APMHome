@@ -206,7 +206,12 @@ public class WorkOrderService {
         String curPerName="无";
         switch(dispatchMode) {
             case 1: curStepId=2;break;
-            case 3: curPerId=ai.getAssetOwnerId(); curPerName=ai.getAssetOwnerName();break;
+            case 3: 
+                if (null != ai.getAssetOwnerId()) {
+                    curPerId=ai.getAssetOwnerId(); curPerName=ai.getAssetOwnerName();
+                } else if (null != ai.getAssetOwnerId2()) {
+                    curPerId=ai.getAssetOwnerId2(); curPerName=ai.getAssetOwnerName2();
+                } 
         }
         wo.setCurrentPersonId(curPerId);
         wo.setCurrentPersonName(curPerName);
@@ -293,7 +298,11 @@ public class WorkOrderService {
             }
             wo.setConfirmedUpTime(confirmedUpTime);
         }
-        workOrderUpdate(request, wo);
+        int currentStepId = wo.getCurrentStepId();
+        wo.setCurrentStepId(currentStepId+1);
+        String stepName = i18nMessageRepository.getByMsgTypeAndMsgKey("woSteps", String.valueOf(currentStepId+1)).getValueZh();
+        wo.setCurrentStepName(stepName);
+        workOrderRepository.save(wo);
         //assetInfo status
         AssetInfo asi = assetInfoRepository.findById(wo.getAssetId());
         if (asi != null) {
@@ -302,6 +311,8 @@ public class WorkOrderService {
         }
         UserAccount currentUser = UserContext.getCurrentLoginUser(request);
         WorkOrderStep wds = initWorkOrderStep(currentUser, wo);
+        wds.setOwnerId(wo.getCurrentPersonId());
+        wds.setOwnerName(wo.getCurrentPersonName());
         workOrderStepRepository.save(wds);
         sendWoMsgs(wo, null, null);
     }
@@ -387,6 +398,26 @@ public class WorkOrderService {
         wo.setCloseTime(new Date());
         workOrderRepository.save(wo);
         sendWoMsgs(wo, "工单取消", "requestor");
+    }
+    
+    @Transactional
+    public void transferWorkOrder(HttpServletRequest request, WorkOrderPoJo wopo)throws Exception{
+        Integer woId= Integer.valueOf(wopo.getWoId());
+        WorkOrder wo = workOrderRepository.getById(woId);
+        // update end time for last work step
+        updateEndTime(wo, wopo.getDesc());
+        //1 update work order
+        wo.setCurrentStepId(4);
+        //2 create new work-order-step
+        int assigneeId = Integer.parseInt(wopo.getAssigneeId());
+        UserAccount user = userDao.getById(assigneeId);
+        WorkOrderStep wds = initWorkOrderStep(user, wo);
+        wo.setCurrentPersonId(wds.getOwnerId());
+        wo.setCurrentPersonName(wds.getOwnerName());
+        wo.setCurrentStepName(wds.getStepName());
+        workOrderRepository.save(wo);
+        workOrderStepRepository.save(wds);
+        sendWoMsgs(wo, "转单", null);
     }
     
     @Transactional
@@ -769,7 +800,13 @@ public class WorkOrderService {
         List<UserAccount> uas = new ArrayList<>();
         switch(woc.getDispatchMode()) {
             case 1: uas.addAll(userDao.getUsersWithWorkOrderDispatcherRole(wo.getHospitalId())); break;
-            case 3: uas.add(userDao.getById(wo.getCurrentPersonId())); break;
+            case 3: 
+                if (-1 != wo.getCurrentPersonId()) {
+                    uas.add(userDao.getById(wo.getCurrentPersonId()));
+                } else {
+                    uas.addAll(userDao.getUsersWithAssetStaffRole(wo.getHospitalId()));
+                }
+                break;
             default: uas.addAll(userDao.getUsersWithAssetStaffRole(wo.getHospitalId()));
         }
         if (!uas.isEmpty()) {
