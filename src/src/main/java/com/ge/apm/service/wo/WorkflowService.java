@@ -39,6 +39,8 @@ public class WorkflowService {
 	public static final int SPECIAL_DISPATCHER = 1;// 专人派工 work_order_dispather角色
 	public static final int GRAB_DISPATCHER = 2;// 抢单 asset_staff 角色
 	public static final int AUTO_DISPATCHER = 3;// 资产owner 1 2
+	public static final int WORK_ORDER_STATUS_ACCEPT = 3;
+	public static final int WORK_ORDER_STATUS_CLOSED = 5;
 
 	@Autowired
 	WorkOrderMapper workOrderMapper;
@@ -133,13 +135,21 @@ public class WorkflowService {
 		Integer ownerId = lastOne.getCurrentPersonId();
 		Integer times = woc.getMaxMessageCount();
 		if (isTimeout(lastOne, woc)) {
-			int dispatherModel = 0;
-			if(ownerId == -1){
-				dispatherModel = 2;
-			}else if(ownerId > 0){
-				dispatherModel = 3;
+			if(currentStepId == WORK_ORDER_STATUS_ACCEPT){
+				if(ownerId == -1){//抢单
+					List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 3);
+					users.addAll(dispatchers);
+				}else if(ownerId > 0){//自动派工
+					AssetInfo asset = assetInfoMapper.fetchAssetInfoById(workOrder.getAssetId());
+					if (asset != null) {
+						users.add(asset.getAssetOwnerId());
+						users.add(asset.getAssetOwnerId2());
+					}
+				}
+			}else if(currentStepId == WORK_ORDER_STATUS_CLOSED){
+				users.add(lastOne.getCurrentPersonId());
 			}else{
-				logger.error("workOrderId({}) cannot match sutable dispather model !");
+				logger.error("current step need not remind,current stepId is {},workOrderId is {}",currentStepId,woId);
 				return;
 			}
 			model = new TimeoutPushModel();
@@ -151,25 +161,6 @@ public class WorkflowService {
 			model.setKeyword5(workOrder.getCurrentPersonName());
 			model.setLinkUrl(coreService.getWoDetailUrl(workOrder.getId()));
 			
-			// sysRole 
-//			if (woc.getDispatchMode() == SPECIAL_DISPATCHER) {
-//				List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 8);
-//				users.addAll(dispatchers);
-//			} else if 
-			if(dispatherModel == GRAB_DISPATCHER) {
-				List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 3);
-				users.addAll(dispatchers);
-			} else if (dispatherModel == AUTO_DISPATCHER) {
-				AssetInfo asset = assetInfoMapper.fetchAssetInfoById(workOrder.getAssetId());
-				if (asset != null) {
-					users.add(asset.getAssetOwnerId());
-					users.add(asset.getAssetOwnerId2());
-				}
-			}
-			
-			for (WorkFlow workFlow : workFlows) {
-				users.add(workFlow.getCurrentPersonId());
-			}
 			users.add(workOrder.getRequestorId());//报修人
 
 			List<Integer> subscribers = userAccountMapper.getAssetSubscriber(workOrder.getAssetId());
@@ -310,9 +301,10 @@ public class WorkflowService {
 		DateTime now = new DateTime(new Date());
 		DateTime startTime = new DateTime(workFlow.getStartTime());
 		Integer timeout = 0;
-		if (workFlow.getCurrentStepId() == Constans.DISPATCH.getIndex()) {
-			timeout = woc.getTimeoutDispatch();
-		} else if (workFlow.getCurrentStepId() == Constans.ACCEPT.getIndex()) {
+//		if (workFlow.getCurrentStepId() == Constans.DISPATCH.getIndex()) {
+//			timeout = woc.getTimeoutDispatch();
+//		} else 
+		if (workFlow.getCurrentStepId() == Constans.ACCEPT.getIndex()) {
 			timeout = woc.getTimeoutAccept();
 		} else if (workFlow.getCurrentStepId() == Constans.CLOSED.getIndex()) {
 			timeout = woc.getTimeoutClose();
