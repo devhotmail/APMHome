@@ -130,6 +130,88 @@ public class WorkflowService {
 		String stepName = lastOne.getStepName();
 		Integer woId = workOrder.getId();
 		Integer currentStepId = lastOne.getCurrentStepId();
+		Integer ownerId = lastOne.getCurrentPersonId();
+		Integer times = woc.getMaxMessageCount();
+		if (isTimeout(lastOne, woc)) {
+			int dispatherModel = 0;
+			if(ownerId == -1){
+				dispatherModel = 2;
+			}else if(ownerId > 0){
+				dispatherModel = 3;
+			}else{
+				logger.error("workOrderId({}) cannot match sutable dispather model !");
+				return;
+			}
+			model = new TimeoutPushModel();
+			model.setFirst(stepName + "超时");
+			model.setKeyword1(workOrder.getAssetName());
+			model.setKeyword2(TimeUtils.getStrDate(workOrder.getRequestTime(), "yyyy-MM-dd HH:mm:ss"));
+			model.setKeyword3(CasePriorityNum.getName(workOrder.getCasePriority()));
+			model.setKeyword4(stepName);// Constans.getName(workOrder.getCurrentStepId())
+			model.setKeyword5(workOrder.getCurrentPersonName());
+			model.setLinkUrl(coreService.getWoDetailUrl(workOrder.getId()));
+			
+			// sysRole 
+//			if (woc.getDispatchMode() == SPECIAL_DISPATCHER) {
+//				List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 8);
+//				users.addAll(dispatchers);
+//			} else if 
+			if(dispatherModel == GRAB_DISPATCHER) {
+				List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 3);
+				users.addAll(dispatchers);
+			} else if (dispatherModel == AUTO_DISPATCHER) {
+				AssetInfo asset = assetInfoMapper.fetchAssetInfoById(workOrder.getAssetId());
+				if (asset != null) {
+					users.add(asset.getAssetOwnerId());
+					users.add(asset.getAssetOwnerId2());
+				}
+			}
+			
+			for (WorkFlow workFlow : workFlows) {
+				users.add(workFlow.getCurrentPersonId());
+			}
+			users.add(workOrder.getRequestorId());//报修人
+
+			List<Integer> subscribers = userAccountMapper.getAssetSubscriber(workOrder.getAssetId());
+			users.addAll(subscribers);
+			logger.info("before filter ,users is {}",users);
+			List<Integer> filterUser =users.stream().filter(id -> id != null).filter(id -> id >0).distinct().collect(Collectors.toList());
+			logger.info("after filter ,users is {}",users);
+			if(CollectionUtils.isEmpty(filterUser)){
+				logger.error("1workOrder timeout but no users find,orderId is {}",workOrder.getId());
+				return;
+			}
+			Iterator<Integer> it = filterUser.iterator();  
+			while(it.hasNext()) {
+				Integer needPushUser = it.next();
+				 if(!isMatchRule(needPushUser, woId, currentStepId, times)){
+					 logger.info("userId {} is removed because of rule!",needPushUser);
+					 it.remove();
+				 }
+			}
+			if(CollectionUtils.isEmpty(filterUser)){
+				logger.warn("2workOrder timeout but no users find,orderId is {}",workOrder.getId());
+				return;
+			}
+			buildTimeoutTemplateMsg(model, filterUser);
+		} else {
+			logger.info(" no workorder is timeout ....");
+		}
+
+	}
+	
+	private void isTimeoutBak(WorkOrder workOrder, WorkflowConfig woc) {
+		List<WorkFlow> workFlows = workOrderMapper.fetchWorkFlowList(workOrder);
+		if (CollectionUtils.isEmpty(workFlows)) {
+			logger.error("cannot find work steps , workOrder id is ", workOrder.getId());
+			return;
+		}
+		List<Integer> users = new ArrayList<Integer>(workFlows.size() * 10);
+		TimeoutPushModel model = null;
+		WorkFlow lastOne = workFlows.get(0);
+		String stepName = lastOne.getStepName();
+		Integer woId = workOrder.getId();
+		Integer currentStepId = lastOne.getCurrentStepId();
 		Integer times = woc.getMaxMessageCount();
 		if (isTimeout(lastOne, woc)) {
 			model = new TimeoutPushModel();
