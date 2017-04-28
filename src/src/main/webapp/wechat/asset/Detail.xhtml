@@ -188,9 +188,9 @@ and open the template in the editor.
                                     <div class="weui-panel__hd">设备基本属性<h:panelGroup rendered="#{userContextService.hasRole('AssetStaff')}"><span id="modifyFields" style="float: right" onclick="updateMForm();">#{wxAssetInfoController.isModifying[1]?"完成修改":"修改"}</span></h:panelGroup></div>
                                     <div class="weui-panel__bd ">
                                         <div class="weui-cell">
-                                            <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
+<!--                                            <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
                                                 <img style="width: 50px;display: block"  src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{wxAssetInfoController.assetInfo.assetGroup}.ico"/>
-                                            </div>
+                                            </div>-->
                                             <div class="weui-cell__bd">
                                                 <p>#{wxAssetInfoController.assetInfo.name}</p>
                                                 <p style="font-size: 13px;color: #888888;">#{wxAssetInfoController.assetInfo.aliasName}</p>
