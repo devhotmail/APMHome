@@ -97,7 +97,8 @@
     function getPage(isFinished){
 
         var data = {"orderType": orderType, "isFinished":isFinished, "page": pageCount, "pageSize": pageSize};
-        apmRest.get("/hcapmassetservice/api/apm/asset/inspectionorders", data, function(ret){
+        //apmRest.get("/hcapmassetservice/api/apm/asset/inspectionorders", data, function(ret){
+        get("/hcapmassetservice/api/apm/asset/inspectionorders", data, function(ret){
             $('#moreBtn').remove();
 
             $('#pageDiv').show();
@@ -135,6 +136,63 @@
 
     function gotoDetail(id, orderType){
         window.location.href = WEB_ROOT + "web/inspOrderDetail?inspId=" + id + "&orderType=" + orderType;
+    }
+    
+    function login(callback, failed) {
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: $.cookie('authenticalteUrl')+"/api/apm/security/userAccounts/authenticateWeChat",
+            data: JSON.stringify({"weChatId": $.cookie('weChatId')}),
+            beforeSend: function( xhr ) {
+                xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+            },
+            success:function(ret) {
+                if (ret && ret.data && ret.data.id_token){
+                    $.cookie('Authorization', ret.data.id_token);
+                    //$.cookie('loginId', ret.data.loginId);
+                }
+                if (callback) {
+                    callback(ret);
+                }
+            },
+            error: function(ret){
+                if(failed) {
+                    failed(ret);
+                }
+            }
+        });
+    }
+    
+    function get(url, data, callback){
+        var i = 0;
+        function doGet() {
+            i++;
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: $.cookie('authenticalteUrl')+url,
+                data: data,
+                headers: {"Authorization":$.cookie('Authorization')},
+                beforeSend: function( xhr ) {
+                    xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+                },
+                success:function(ret) {
+                    if (callback){
+                        callback(ret);
+                    }
+                },
+                complete: function(ret) {
+                    if(ret.status != 200 && i === 1) {
+                        //loing again
+                        login(function(){
+                            doGet(url, data, callback);
+                        });
+                    }
+                }
+            });
+        }
+        doGet();
     }
 
 </script>
