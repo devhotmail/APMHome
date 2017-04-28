@@ -116,7 +116,7 @@ class Types extends ImmutableComponent<void, Props, void> {
     const groups = briefs.map(brief => Immutable.fromJS({
       id: brief.getIn(['type', 'id']),
       text: brief.getIn(['type', 'name']),
-      opacity: filters.find(filter => filter.get('key') === 'type') ? filters.find(filter => filter.get('key') === 'type' && filter.get('value') === brief.getIn(['type', 'id'])) ? 1 : 0.6 : 1,
+      opacity: filters.find(filter => filter.get('key') === 'type') ? filters.find(filter => filter.get('key') === 'type' && filter.get('value') === brief.getIn(['type', 'id'])) ? 1 : 0.4 : 1,
       annuluses: brief.getIn(['items', 'data']).map(datum => Immutable.fromJS({
         width: valueToCoordinate(datum.get('count'), [minCount, maxCount], [minRadius, maxRadius]),
         color: COLORS[datum.get('id')]
