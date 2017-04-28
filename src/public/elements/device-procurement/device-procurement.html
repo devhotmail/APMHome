@@ -908,7 +908,7 @@
             }
 
             var url = this.getApiUrl(this.isHead, this.selectedYear, this.selectedType, this.orgId);
-            url = 'mock/asset-procurement-' + this.selectedType  +'.json'
+            // url = 'mock/asset-procurement-' + this.selectedType  +'.json'
 
             this.configLoading = true;
 
@@ -1094,8 +1094,8 @@
               name: n.data.name,
               // for the display usage # 1
               increase: this.round(n.data.usage_predict_increase * 100, 1),
-              usage_min: n.data.usage_threshold[0] * 100,
-              usage_max: n.data.usage_threshold[1] * 100
+              usage_min: n.data.usage_threshold ? n.data.usage_threshold[0] * 100 : '',
+              usage_max: n.data.usage_threshold ? n.data.usage_threshold[1] * 100 : ''
             }
           }).bind(this));
         },
@@ -1128,7 +1128,7 @@
           if (isHead) query.groupby = groupby;
           else query.dept = orgId;
 
-          return URI(this.resolveApiUrl('/api/dm')).query(query).toString();
+          return URI(this.resolveApiUrl('/api/dmv2')).query(query).toString();
         },
         loadData: function(isHead, year, groupby, orgId) {
           this.showLoading = true;
@@ -1136,7 +1136,7 @@
           this.showError = false;
 
           var url = this.getApiUrl(isHead, year, groupby, orgId);
-          url = 'mock/asset-procurement-' + groupby  +'.json'
+          // url = 'mock/asset-procurement-' + groupby  +'.json'
 
           return fetch(url, {
             accept: 'application/json',
@@ -1172,6 +1172,7 @@
             };
           
           }).bind(this)).catch((function(err) {
+            console.log(err)
             this.showLoading = false;
             this.showError = true;
           }).bind(this));
