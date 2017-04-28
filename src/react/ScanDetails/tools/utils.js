@@ -13,16 +13,16 @@ function getRootDir() {
   return path.basename(pwd, path.extname(pwd))
 }
 
-function symlink(distDir, targetDir) {
+function symlink(distDir, targetDir, cb) {
   const dirName = getRootDir()
 
   vfs.src(distDir, {followSymlinks: false, base: 'dist'})
   .pipe(vfs.symlink(path.join(targetDir, dirName)))
   .on('end', () => {
     console.log(`🚀 Symlinked: ${distDir} -> ${targetDir} 🚀`)
+    cb()
   })
 }
-
 
 module.exports = {
   getRootDir,

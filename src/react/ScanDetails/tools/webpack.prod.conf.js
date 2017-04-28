@@ -75,7 +75,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         ]
       }
     ]
-  },  
+  },
   plugins: [
     new webpack.NamedModulesPlugin(),
     new webpack.DefinePlugin({
