@@ -162,20 +162,8 @@
                       </div>
                     </template>
                   </div>
-                  <template is="dom-if" if="[[isOr(currentKPIs.0.num, currentKPIs.1.num)]]">
-                    <div class="u-mt-">
-                      <template is="dom-repeat" items="[[currentKPIs]]">
-                        <template is="dom-if" if="[[item.num]]">
-                          <div class$="kpi kpi-[[index]]">[[item.desc]]</div>
-                          <div class="kpi-detail">
-                            <div class="title u-mt- u-mb-">[[item.num]]台设备</div>
-                          </div>
-                        </template>
-                      </template>
-                    </div>
-                  </template>
-                  <div class="divider"></div>
                   <template is="dom-if" if="[[isNotEmptyArr(focus.data.suggestions)]]">
+                    <div class="divider"></div>
                     <div class="title u-mb">建议</div>
                     <template is="dom-repeat" items="[[focus.data.suggestions]]">
                       <template is="dom-if" if="[[item.title]]">

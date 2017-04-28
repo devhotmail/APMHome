@@ -45,11 +45,13 @@
       .style('user-select', 'none');
     }
 
-    function getColorByPercent(percent) {
+    function getColorByPercent(percent, threshold) {
       var waveColor = constants.waveColor;
-      if (percent >= 1) {
+      var min = Array.isArray(threshold) ? threshold[0] : 0.3;
+      var max = Array.isArray(threshold) ? threshold[1] : 1;
+      if (percent >= max) {
         return waveColor.orange;
-      } else if (percent <= 0.3) {
+      } else if (percent <= min) {
         return waveColor.yellow;
       } else {
         return waveColor.gray;
@@ -476,7 +478,7 @@
         })
         .attr('stroke-width', 1)
         .attr('stroke', function(d) {
-          return getColorByPercent(d.data[waveFillKey]);
+          return getColorByPercent(d.data[waveFillKey], d.data.usage_threshold);
         })
         .attr('fill', function(d) {
           return (d !== focus && d.parent !== focus) ? 'none' : constants.circleColor;   
@@ -501,7 +503,7 @@
           return 'translate(' + (-d.r) + ',' + 0 + ')';
         })
         .attr('fill', function(d) {
-          return getColorByPercent(d.data[waveFillKey]);
+          return getColorByPercent(d.data[waveFillKey], d.data.usage_threshold);
         });
 
         var textGroup = textList
