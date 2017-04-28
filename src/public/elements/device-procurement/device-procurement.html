@@ -209,28 +209,30 @@
                       <i class="dewicon-circle-high" style="color:#b3b3b3"></i>
                       <span class="legend-tip">平均使用率预测</span>
                     </div>
-                    <template is="dom-if" if="[[focus.data.usage_threshold.1]]">
-                      <div
-                        class="legend"
-                        data-balloon-length="medium"
-                        data-balloon="您可以自定义使用率大于多少为满负荷"
-                        data-balloon-pos="up">
-                        <i class="dewicon-circle-full" style="color:#e26d26"></i>
-                        <span class="legend-tip">满负荷使用率定义: &gt;</span>
-                        [[decimal2Percent(focus.data.usage_threshold.1)]]
-                      </div>
-                    </template>
-                    <template is="dom-if" if="[[focus.data.usage_threshold.0]]">
-                      <div
-                        class="legend"
-                        data-balloon-length="medium"
-                        data-balloon="您可以自定义使用率小于多少为低负荷"
-                        data-balloon-pos="up">
-                        <i class="dewicon-circle-low" style="color:#ebda51"></i>
-                        <span class="legend-tip">低负荷使用率定义: &lt;</span>
-                        [[decimal2Percent(focus.data.usage_threshold.0)]]
-                      </div>
-                    </template>
+                    <div
+                      class="legend"
+                      data-balloon-length="medium"
+                      data-balloon="您可以自定义使用率大于多少为满负荷"
+                      data-balloon-pos="up">
+                      <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                      <span class="legend-tip">满负荷使用率</span>
+                      <template is="dom-if" if="[[focus.data.usage_threshold.1]]">
+                        <span>定义: &gt;</span>
+                        <span>[[decimal2Percent(focus.data.usage_threshold.1)]]</span>
+                      </template>
+                    </div>
+                    <div
+                      class="legend"
+                      data-balloon-length="medium"
+                      data-balloon="您可以自定义使用率小于多少为低负荷"
+                      data-balloon-pos="up">
+                      <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                      <span class="legend-tip">低负荷使用率</span>
+                      <template is="dom-if" if="[[focus.data.usage_threshold.0]]">
+                        <span>定义: &lt;</span>
+                        <span>[[decimal2Percent(focus.data.usage_threshold.0)]]</span>
+                      </template>
+                    </div>
                     <div class="legend">球大小与设备利润预测相关</div>
                     <div class="legend">左侧的图形显示的是您选择的预测年份的数据</div>
                   </div>                  
