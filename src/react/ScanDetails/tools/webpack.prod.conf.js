@@ -69,7 +69,7 @@ const webpackConfig = merge(baseWebpackConfig, {
             loader:'url-loader',
             options: {
               limit: 10000,
-              name: 'assets/[name].[hash].[ext]'
+              name: '/assets/[name].[hash].[ext]'
             }
           }
         ]

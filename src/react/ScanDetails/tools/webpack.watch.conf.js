@@ -68,7 +68,7 @@ module.exports = merge(baseWebpackConfig, {
             loader:'url-loader',
             options: {
               limit: 10000,
-              name: 'assets/[name].[ext]'
+              name: '/assets/[name].[ext]'
             }
           }
         ]
