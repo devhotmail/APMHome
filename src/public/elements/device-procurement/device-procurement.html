@@ -889,7 +889,7 @@
               }
 
               if (target.usage_min !== config.usage_min || target.usage_max !== config.usage_max) {
-                result.usage_threshold = [
+                result.threshold = [ // usage_threshold
                   config.usage_min / 100,
                   config.usage_max / 100
                 ];
@@ -916,13 +916,11 @@
             this.showEmpty = false;
             this.showError = false;
 
-            console.log(payload)
-
             return fetch(url, {
-              // method: 'PUT',
+              method: 'PUT',
               accept: 'application/json',
               credentials: 'same-origin',
-              // body: JSON.stringify(payload)
+              body: JSON.stringify(payload)
             })
             .then(function(res) {
               return res.json();
