@@ -1,24 +1,33 @@
 {
-  "id": "58e718bce9f6017969af2f02",
   "name": "全部设备",
-  "usage": 0.881,
+  "id": "5901545a389ce77faad5f713",
+  "size": 4676,
   "usage_sum": [
-    3,
-    1
+    4,
+    3
   ],
-  "revenue_year_before_last": 734.06102,
-  "revenue_last_year": 752.66476,
-  "revenue_predict": 663.88743,
-  "revenue_year_before_last_raw": 7340610.2,
-  "revenue_last_year_raw": 7526647.6,
-  "revenue_predict_raw": 6638874.3,
-  "revenue_predict_sug_raw": null,
-  "last_year_date": "2016-04-06",
-  "year_before_last_date": "2015-04-06",
-  "revenue_increase": 0.3101,
-  "revenue_predict_sug": 1172.77593,
-  "revenue_increase_sug": 0.153,
-  "revenue_unit": "百万",
+  "usage_threshold": [
+    0.47737,
+    1.01839
+  ],
+  "historical_data": [
+    {
+      "year": 2015,
+      "usage": 1.09631
+    },
+    {
+      "year": 2016,
+      "usage": 0.99321
+    },
+    {
+      "year": 2017,
+      "usage": 0.98742
+    }
+  ],
+  "usage_predict": 1.34507,
+  "usage_predict_increase": 0.83812,
+  "usage_sug": 0.924,
+  "usage_sug_increase": 0.26971,
   "suggestions": [
     {
       "title": "建议提高使用率",
@@ -35,26 +44,392 @@
   ],
   "items": [
     {
-      "id": "58e718bc084e7ef83e294303",
       "name": "类别0",
-      "usage": 0.43432,
+      "id": "5901545a6662748a7452891d",
+      "size": 7370,
+      "usage_sum": [
+        1,
+        4
+      ],
+      "usage_threshold": [
+        0.34796,
+        1.08442
+      ],
+      "historical_data": [
+        {
+          "year": 2015,
+          "usage": 1.1762
+        },
+        {
+          "year": 2016,
+          "usage": 0.87135
+        },
+        {
+          "year": 2017,
+          "usage": 0.82929
+        }
+      ],
+      "usage_predict": 1.40662,
+      "usage_predict_increase": 1.20617,
+      "usage_sug": 1.34879,
+      "usage_sug_increase": 0.12464,
+      "suggestions": [
+        {
+          "title": "建议提高使用率",
+          "addition": "1个科室"
+        },
+        {
+          "title": "建议购买",
+          "addition": "1个科室"
+        },
+        {
+          "title": "建议合理使用设备",
+          "addition": "2种类型"
+        }
+      ],
+      "items": [
+        {
+          "name": "设备0",
+          "id": "5901545a1448ec140b1d7074",
+          "size": 4372,
+          "usage_sum": [
+            4,
+            4
+          ],
+          "usage_threshold": [
+            0.45188,
+            1.02765
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.13208
+            },
+            {
+              "year": 2016,
+              "usage": 1.01306
+            },
+            {
+              "year": 2017,
+              "usage": 1.36946
+            }
+          ],
+          "usage_predict": 1.26167,
+          "usage_predict_increase": 0.83779,
+          "usage_sug": 1.483,
+          "usage_sug_increase": 0.266
+        },
+        {
+          "name": "设备1",
+          "id": "5901545a6d4bc62eb574dfee",
+          "size": 3381,
+          "usage_sum": [
+            2,
+            2
+          ],
+          "usage_threshold": [
+            0.47378,
+            1.08763
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 0.97707
+            },
+            {
+              "year": 2016,
+              "usage": 0.98053
+            },
+            {
+              "year": 2017,
+              "usage": 1.44717
+            }
+          ],
+          "usage_predict": 1.16344,
+          "usage_predict_increase": 0.86217,
+          "usage_sug": 0.91622,
+          "usage_sug_increase": 0.1782
+        },
+        {
+          "name": "设备2",
+          "id": "5901545a9d6b845403c68419",
+          "size": 7679,
+          "usage_sum": [
+            4,
+            1
+          ],
+          "usage_threshold": [
+            0.37755,
+            1.07069
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.19382
+            },
+            {
+              "year": 2016,
+              "usage": 1.27648
+            },
+            {
+              "year": 2017,
+              "usage": 1.23984
+            }
+          ],
+          "usage_predict": 1.25491,
+          "usage_predict_increase": 0.8599,
+          "usage_sug": 1.42536,
+          "usage_sug_increase": 0.27005
+        },
+        {
+          "name": "设备3",
+          "id": "5901545a16293d9834badb7e",
+          "size": 1200,
+          "usage_sum": [
+            1,
+            3
+          ],
+          "usage_threshold": [
+            0.49786,
+            1.017
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 0.84346
+            },
+            {
+              "year": 2016,
+              "usage": 1.16845
+            },
+            {
+              "year": 2017,
+              "usage": 0.96002
+            }
+          ],
+          "usage_predict": 1.31335,
+          "usage_predict_increase": 1.17388,
+          "usage_sug": 1.27476,
+          "usage_sug_increase": 0.03808
+        },
+        {
+          "name": "设备4",
+          "id": "5901545a77210830caac8476",
+          "size": 629,
+          "usage_sum": [
+            2,
+            4
+          ],
+          "usage_threshold": [
+            0.41332,
+            1.00351
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.00593
+            },
+            {
+              "year": 2016,
+              "usage": 1.1248
+            },
+            {
+              "year": 2017,
+              "usage": 1.21449
+            }
+          ],
+          "usage_predict": 1.44427,
+          "usage_predict_increase": 0.93422,
+          "usage_sug": 1.4625,
+          "usage_sug_increase": 0.26441
+        },
+        {
+          "name": "设备5",
+          "id": "5901545a5818316c7e37787d",
+          "size": 9639,
+          "usage_sum": [
+            3,
+            3
+          ],
+          "usage_threshold": [
+            0.37644,
+            1.00134
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.36674
+            },
+            {
+              "year": 2016,
+              "usage": 0.93368
+            },
+            {
+              "year": 2017,
+              "usage": 1.08931
+            }
+          ],
+          "usage_predict": 1.12768,
+          "usage_predict_increase": 1.42755,
+          "usage_sug": 1.31164,
+          "usage_sug_increase": 0.14736
+        },
+        {
+          "name": "设备6",
+          "id": "5901545ad32866ca672822c4",
+          "size": 5013,
+          "usage_sum": [
+            5,
+            1
+          ],
+          "usage_threshold": [
+            0.44604,
+            1.05443
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.07437
+            },
+            {
+              "year": 2016,
+              "usage": 0.90087
+            },
+            {
+              "year": 2017,
+              "usage": 0.96606
+            }
+          ],
+          "usage_predict": 1.22767,
+          "usage_predict_increase": 1.38208,
+          "usage_sug": 0.83163,
+          "usage_sug_increase": 0.20077
+        },
+        {
+          "name": "设备7",
+          "id": "5901545aebbfa050b5d5ba32",
+          "size": 7672,
+          "usage_sum": [
+            1,
+            4
+          ],
+          "usage_threshold": [
+            0.38785,
+            1.07941
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.11616
+            },
+            {
+              "year": 2016,
+              "usage": 1.12222
+            },
+            {
+              "year": 2017,
+              "usage": 1.22655
+            }
+          ],
+          "usage_predict": 0.91821,
+          "usage_predict_increase": 0.88563,
+          "usage_sug": 0.89556,
+          "usage_sug_increase": 0.00821
+        },
+        {
+          "name": "设备8",
+          "id": "5901545a7fa4bf6bd89ea0cc",
+          "size": 5861,
+          "usage_sum": [
+            2,
+            1
+          ],
+          "usage_threshold": [
+            0.31159,
+            1.09311
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 0.94619
+            },
+            {
+              "year": 2016,
+              "usage": 1.36566
+            },
+            {
+              "year": 2017,
+              "usage": 1.3466
+            }
+          ],
+          "usage_predict": 0.86851,
+          "usage_predict_increase": 1.23334,
+          "usage_sug": 1.11373,
+          "usage_sug_increase": 0.00883
+        },
+        {
+          "name": "设备9",
+          "id": "5901545a55c3eb00f2584bc2",
+          "size": 4169,
+          "usage_sum": [
+            4,
+            4
+          ],
+          "usage_threshold": [
+            0.30376,
+            1.03133
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 0.87004
+            },
+            {
+              "year": 2016,
+              "usage": 0.89496
+            },
+            {
+              "year": 2017,
+              "usage": 1.22663
+            }
+          ],
+          "usage_predict": 0.85887,
+          "usage_predict_increase": 0.92998,
+          "usage_sug": 1.30349,
+          "usage_sug_increase": 0.26467
+        }
+      ]
+    },
+    {
+      "name": "类别1",
+      "id": "5901545ac5d78a0157659e0f",
+      "size": 1085,
       "usage_sum": [
         2,
-        3
+        2
       ],
-      "revenue_year_before_last": 685.61227,
-      "revenue_last_year": 499.85101,
-      "revenue_predict": 296.74048,
-      "revenue_year_before_last_raw": 6856122.699999999,
-      "revenue_last_year_raw": 4998510.1,
-      "revenue_predict_raw": 2967404.8,
-      "revenue_predict_sug_raw": null,
-      "last_year_date": "2016-04-06",
-      "year_before_last_date": "2015-04-06",
-      "revenue_increase": 0.2431,
-      "revenue_predict_sug": 368.76312,
-      "revenue_increase_sug": 0.0808,
-      "revenue_unit": "百万",
+      "usage_threshold": [
+        0.41848,
+        1.00737
+      ],
+      "historical_data": [
+        {
+          "year": 2015,
+          "usage": 1.47824
+        },
+        {
+          "year": 2016,
+          "usage": 1.0948
+        },
+        {
+          "year": 2017,
+          "usage": 0.96051
+        }
+      ],
+      "usage_predict": 1.06125,
+      "usage_predict_increase": 1.38872,
+      "usage_sug": 0.90808,
+      "usage_sug_increase": 0.1438,
       "suggestions": [
         {
           "title": "建议提高使用率",
@@ -71,388 +446,192 @@
       ],
       "items": [
         {
-          "id": "58e718bc378efe164e1072f7",
           "name": "设备0",
-          "usage": 0.58178,
-          "usage_sum": [
-            3,
-            3
-          ],
-          "revenue_year_before_last": 123.56287,
-          "revenue_last_year": 903.95946,
-          "revenue_predict": 741.87514,
-          "revenue_year_before_last_raw": 1235628.7,
-          "revenue_last_year_raw": 9039594.6,
-          "revenue_predict_raw": 7418751.399999999,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.2883,
-          "revenue_predict_sug": 97.71683,
-          "revenue_increase_sug": 0.3426,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc70c31b8067e85df7",
-          "name": "设备1",
-          "usage": 0.39588,
-          "usage_sum": [
-            5,
-            1
-          ],
-          "revenue_year_before_last": 151.66307,
-          "revenue_last_year": 249.03001,
-          "revenue_predict": 934.57461,
-          "revenue_year_before_last_raw": 1516630.7,
-          "revenue_last_year_raw": 2490300.1,
-          "revenue_predict_raw": 9345746.1,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.2202,
-          "revenue_predict_sug": 782.04109,
-          "revenue_increase_sug": 0.2518,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc1a0fb2b6a363e924",
-          "name": "设备2",
-          "usage": 0.54736,
+          "id": "5901545a60655aa86719b3b2",
+          "size": 897,
           "usage_sum": [
             4,
             4
           ],
-          "revenue_year_before_last": 654.61272,
-          "revenue_last_year": 39.23952,
-          "revenue_predict": 580.75274,
-          "revenue_year_before_last_raw": 6546127.199999999,
-          "revenue_last_year_raw": 392395.2,
-          "revenue_predict_raw": 5807527.4,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.3001,
-          "revenue_predict_sug": 755.48025,
-          "revenue_increase_sug": 0.4063,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc7198f89deee39fdb",
-          "name": "设备3",
-          "usage": 0.47375,
-          "usage_sum": [
-            5,
-            1
+          "usage_threshold": [
+            0.37254,
+            1.00534
           ],
-          "revenue_year_before_last": 830.53729,
-          "revenue_last_year": 1052.71944,
-          "revenue_predict": 696.90617,
-          "revenue_year_before_last_raw": 8305372.899999999,
-          "revenue_last_year_raw": 10527194.4,
-          "revenue_predict_raw": 6969061.7,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.3738,
-          "revenue_predict_sug": 236.7708,
-          "revenue_increase_sug": 0.3206,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
+              "year": 2015,
+              "usage": 1.16973
             },
             {
-              "title": "建议购买",
-              "addition": "2种类型"
+              "year": 2016,
+              "usage": 0.99561
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
+              "year": 2017,
+              "usage": 1.34954
             }
-          ]
-        },
-        {
-          "id": "58e718bc4215ee1c3f601b8a",
-          "name": "设备4",
-          "usage": 0.37747,
-          "usage_sum": [
-            1,
-            1
           ],
-          "revenue_year_before_last": 169.53223,
-          "revenue_last_year": 821.90645,
-          "revenue_predict": 552.17523,
-          "revenue_year_before_last_raw": 1695322.3,
-          "revenue_last_year_raw": 8219064.499999999,
-          "revenue_predict_raw": 5521752.300000001,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.4391,
-          "revenue_predict_sug": 1093.06664,
-          "revenue_increase_sug": 0.0188,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
+          "usage_predict": 1.23594,
+          "usage_predict_increase": 0.97212,
+          "usage_sug": 1.40318,
+          "usage_sug_increase": 0.05887
         },
         {
-          "id": "58e718bc27e02e4fd4bc3186",
-          "name": "设备5",
-          "usage": 0.62072,
-          "usage_sum": [
-            3,
-            5
-          ],
-          "revenue_year_before_last": 125.10228,
-          "revenue_last_year": 85.93256,
-          "revenue_predict": 784.11396,
-          "revenue_year_before_last_raw": 1251022.8,
-          "revenue_last_year_raw": 859325.6,
-          "revenue_predict_raw": 7841139.600000001,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.0178,
-          "revenue_predict_sug": 328.55345,
-          "revenue_increase_sug": 0.3887,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e718bcedde35951c630a7b",
-          "name": "设备6",
-          "usage": 0.61509,
-          "usage_sum": [
-            4,
-            3
-          ],
-          "revenue_year_before_last": 679.64993,
-          "revenue_last_year": 251.426,
-          "revenue_predict": 117.59569,
-          "revenue_year_before_last_raw": 6796499.300000001,
-          "revenue_last_year_raw": 2514260,
-          "revenue_predict_raw": 1175956.9000000001,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.1671,
-          "revenue_predict_sug": 604.45863,
-          "revenue_increase_sug": 0.0902,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc33836ab4cff131a5",
-          "name": "设备7",
-          "usage": 1.10115,
-          "usage_sum": [
-            3,
-            1
-          ],
-          "revenue_year_before_last": 956.93579,
-          "revenue_last_year": 976.56991,
-          "revenue_predict": 707.14951,
-          "revenue_year_before_last_raw": 9569357.9,
-          "revenue_last_year_raw": 9765699.1,
-          "revenue_predict_raw": 7071495.1,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.0524,
-          "revenue_predict_sug": 1062.63476,
-          "revenue_increase_sug": 0.2066,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc647fef8bddf12cb9",
-          "name": "设备8",
-          "usage": 1.14682,
-          "usage_sum": [
-            3,
-            1
-          ],
-          "revenue_year_before_last": 621.80182,
-          "revenue_last_year": 105.27883,
-          "revenue_predict": 134.34404,
-          "revenue_year_before_last_raw": 6218018.2,
-          "revenue_last_year_raw": 1052788.3,
-          "revenue_predict_raw": 1343440.4000000001,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.1632,
-          "revenue_predict_sug": 601.16929,
-          "revenue_increase_sug": 0.3901,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc6b7b90d061f6af24",
-          "name": "设备9",
-          "usage": 1.04999,
+          "name": "设备1",
+          "id": "5901545aa8ad8447b165d543",
+          "size": 657,
           "usage_sum": [
             3,
             2
           ],
-          "revenue_year_before_last": 396.22646,
-          "revenue_last_year": 129.5823,
-          "revenue_predict": 984.85933,
-          "revenue_year_before_last_raw": 3962264.5999999996,
-          "revenue_last_year_raw": 1295823,
-          "revenue_predict_raw": 9848593.3,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.4616,
-          "revenue_predict_sug": 288.09723,
-          "revenue_increase_sug": 0.0371,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "usage_threshold": [
+            0.40738,
+            1.08662
+          ],
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
+              "year": 2015,
+              "usage": 1.44221
             },
             {
-              "title": "建议购买",
-              "addition": "2种类型"
+              "year": 2016,
+              "usage": 1.05464
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
+              "year": 2017,
+              "usage": 1.01766
             }
-          ]
+          ],
+          "usage_predict": 1.19533,
+          "usage_predict_increase": 0.99076,
+          "usage_sug": 0.94344,
+          "usage_sug_increase": 0.20828
+        },
+        {
+          "name": "设备2",
+          "id": "5901545a4946356233f6aea6",
+          "size": 8560,
+          "usage_sum": [
+            1,
+            2
+          ],
+          "usage_threshold": [
+            0.46868,
+            1.05679
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.41979
+            },
+            {
+              "year": 2016,
+              "usage": 1.19736
+            },
+            {
+              "year": 2017,
+              "usage": 0.80957
+            }
+          ],
+          "usage_predict": 0.98108,
+          "usage_predict_increase": 1.06328,
+          "usage_sug": 1.05092,
+          "usage_sug_increase": 0.05191
+        },
+        {
+          "name": "设备3",
+          "id": "5901545a588ee36860f3aed1",
+          "size": 6899,
+          "usage_sum": [
+            3,
+            2
+          ],
+          "usage_threshold": [
+            0.41007,
+            1.08326
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.3178
+            },
+            {
+              "year": 2016,
+              "usage": 1.42363
+            },
+            {
+              "year": 2017,
+              "usage": 1.29641
+            }
+          ],
+          "usage_predict": 0.98525,
+          "usage_predict_increase": 0.94453,
+          "usage_sug": 0.89442,
+          "usage_sug_increase": 0.16149
+        },
+        {
+          "name": "设备4",
+          "id": "5901545aabacc1025a6342fd",
+          "size": 1338,
+          "usage_sum": [
+            1,
+            5
+          ],
+          "usage_threshold": [
+            0.36882,
+            1.06772
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.43796
+            },
+            {
+              "year": 2016,
+              "usage": 1.12561
+            },
+            {
+              "year": 2017,
+              "usage": 1.09937
+            }
+          ],
+          "usage_predict": 0.94196,
+          "usage_predict_increase": 0.87861,
+          "usage_sug": 1.37826,
+          "usage_sug_increase": 0.29875
         }
       ]
     },
     {
-      "id": "58e718bc78da417563885609",
-      "name": "类别1",
-      "usage": 0.47132,
+      "name": "类别2",
+      "id": "5901545aadd37aec822a1cf8",
+      "size": 5939,
       "usage_sum": [
         4,
         5
       ],
-      "revenue_year_before_last": 714.12381,
-      "revenue_last_year": 463.469,
-      "revenue_predict": 233.245,
-      "revenue_year_before_last_raw": 7141238.100000001,
-      "revenue_last_year_raw": 4634690,
-      "revenue_predict_raw": 2332450,
-      "revenue_predict_sug_raw": null,
-      "last_year_date": "2016-04-06",
-      "year_before_last_date": "2015-04-06",
-      "revenue_increase": 0.2599,
-      "revenue_predict_sug": 544.66267,
-      "revenue_increase_sug": 0.098,
-      "revenue_unit": "百万",
+      "usage_threshold": [
+        0.3197,
+        1.07737
+      ],
+      "historical_data": [
+        {
+          "year": 2015,
+          "usage": 1.4739
+        },
+        {
+          "year": 2016,
+          "usage": 0.82765
+        },
+        {
+          "year": 2017,
+          "usage": 1.46792
+        }
+      ],
+      "usage_predict": 1.45059,
+      "usage_predict_increase": 1.31944,
+      "usage_sug": 1.29712,
+      "usage_sug_increase": 0.12097,
       "suggestions": [
         {
           "title": "建议提高使用率",
@@ -469,792 +648,351 @@
       ],
       "items": [
         {
-          "id": "58e718bc8ae30edc27265cba",
           "name": "设备0",
-          "usage": 0.31167,
+          "id": "5901545a3ab006dca49fedd4",
+          "size": 4082,
           "usage_sum": [
-            2,
-            3
+            1,
+            2
           ],
-          "revenue_year_before_last": 675.37838,
-          "revenue_last_year": 919.40027,
-          "revenue_predict": 281.22814,
-          "revenue_year_before_last_raw": 6753783.8,
-          "revenue_last_year_raw": 9194002.7,
-          "revenue_predict_raw": 2812281.4,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.2073,
-          "revenue_predict_sug": 721.54819,
-          "revenue_increase_sug": 0.0588,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "usage_threshold": [
+            0.33661,
+            1.0296
+          ],
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
+              "year": 2015,
+              "usage": 1.49419
             },
             {
-              "title": "建议购买",
-              "addition": "2种类型"
+              "year": 2016,
+              "usage": 0.84282
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
+              "year": 2017,
+              "usage": 1.15496
             }
-          ]
+          ],
+          "usage_predict": 1.09788,
+          "usage_predict_increase": 1.40633,
+          "usage_sug": 1.01732,
+          "usage_sug_increase": 0.03748
         },
         {
-          "id": "58e718bc9f481929b44aceb7",
           "name": "设备1",
-          "usage": 0.76847,
-          "usage_sum": [
-            5,
-            1
-          ],
-          "revenue_year_before_last": 598.83327,
-          "revenue_last_year": 579.33007,
-          "revenue_predict": 558.79018,
-          "revenue_year_before_last_raw": 5988332.699999999,
-          "revenue_last_year_raw": 5793300.7,
-          "revenue_predict_raw": 5587901.8,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.4778,
-          "revenue_predict_sug": 451.1998,
-          "revenue_increase_sug": 0.2217,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc2344250007a8df9c",
-          "name": "设备2",
-          "usage": 0.71719,
-          "usage_sum": [
-            5,
-            2
-          ],
-          "revenue_year_before_last": 865.41144,
-          "revenue_last_year": 993.06324,
-          "revenue_predict": 947.33559,
-          "revenue_year_before_last_raw": 8654114.4,
-          "revenue_last_year_raw": 9930632.4,
-          "revenue_predict_raw": 9473355.9,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.4524,
-          "revenue_predict_sug": 109.55899,
-          "revenue_increase_sug": 0.4514,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bcae17bc9a5b5d5d16",
-          "name": "设备3",
-          "usage": 1.00944,
-          "usage_sum": [
-            1,
-            2
-          ],
-          "revenue_year_before_last": 695.67724,
-          "revenue_last_year": 400.08293,
-          "revenue_predict": 141.29873,
-          "revenue_year_before_last_raw": 6956772.399999999,
-          "revenue_last_year_raw": 4000829.3,
-          "revenue_predict_raw": 1412987.3,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.0932,
-          "revenue_predict_sug": 292.01272,
-          "revenue_increase_sug": 0.1081,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bcaa810faeb91cf392",
-          "name": "设备4",
-          "usage": 1.00234,
-          "usage_sum": [
-            3,
-            3
-          ],
-          "revenue_year_before_last": 644.45906,
-          "revenue_last_year": 962.15338,
-          "revenue_predict": 529.18819,
-          "revenue_year_before_last_raw": 6444590.600000001,
-          "revenue_last_year_raw": 9621533.799999999,
-          "revenue_predict_raw": 5291881.899999999,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.1762,
-          "revenue_predict_sug": 573.66154,
-          "revenue_increase_sug": 0.3679,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "58e718bc669b90c496f90310",
-      "name": "类别2",
-      "usage": 1.09666,
-      "usage_sum": [
-        3,
-        5
-      ],
-      "revenue_year_before_last": 555.37744,
-      "revenue_last_year": 425.38959,
-      "revenue_predict": 574.32168,
-      "revenue_year_before_last_raw": 5553774.399999999,
-      "revenue_last_year_raw": 4253895.9,
-      "revenue_predict_raw": 5743216.8,
-      "revenue_predict_sug_raw": null,
-      "last_year_date": "2016-04-06",
-      "year_before_last_date": "2015-04-06",
-      "revenue_increase": 0.2189,
-      "revenue_predict_sug": 1039.11579,
-      "revenue_increase_sug": 0.2286,
-      "revenue_unit": "百万",
-      "suggestions": [
-        {
-          "title": "建议提高使用率",
-          "addition": "1个科室"
-        },
-        {
-          "title": "建议购买",
-          "addition": "1个科室"
-        },
-        {
-          "title": "建议合理使用设备",
-          "addition": "1个科室"
-        }
-      ],
-      "items": [
-        {
-          "id": "58e718bc90b7334fc9660e17",
-          "name": "设备0",
-          "usage": 0.80597,
-          "usage_sum": [
-            4,
-            2
-          ],
-          "revenue_year_before_last": 996.00283,
-          "revenue_last_year": 413.08199,
-          "revenue_predict": 837.51496,
-          "revenue_year_before_last_raw": 9960028.3,
-          "revenue_last_year_raw": 4130819.9000000004,
-          "revenue_predict_raw": 8375149.6,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.3557,
-          "revenue_predict_sug": 862.88626,
-          "revenue_increase_sug": 0.2515,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e718bcc2c40231a08376ee",
-          "name": "设备1",
-          "usage": 1.09439,
-          "usage_sum": [
-            1,
-            3
-          ],
-          "revenue_year_before_last": 408.15354,
-          "revenue_last_year": 66.59073,
-          "revenue_predict": 554.98329,
-          "revenue_year_before_last_raw": 4081535.4000000004,
-          "revenue_last_year_raw": 665907.2999999999,
-          "revenue_predict_raw": 5549832.9,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.4605,
-          "revenue_predict_sug": 276.52484,
-          "revenue_increase_sug": 0.2205,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bca1e141e469b4d6b0",
-          "name": "设备2",
-          "usage": 0.54009,
-          "usage_sum": [
-            1,
-            4
-          ],
-          "revenue_year_before_last": 474.09647,
-          "revenue_last_year": 326.34811,
-          "revenue_predict": 283.31048,
-          "revenue_year_before_last_raw": 4740964.7,
-          "revenue_last_year_raw": 3263481.1,
-          "revenue_predict_raw": 2833104.8,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.0663,
-          "revenue_predict_sug": 1059.07426,
-          "revenue_increase_sug": 0.1852,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e718bcb893e366860d1f6b",
-          "name": "设备3",
-          "usage": 1.11039,
-          "usage_sum": [
-            1,
-            3
-          ],
-          "revenue_year_before_last": 956.28508,
-          "revenue_last_year": 1080.43427,
-          "revenue_predict": 510.00247,
-          "revenue_year_before_last_raw": 9562850.8,
-          "revenue_last_year_raw": 10804342.7,
-          "revenue_predict_raw": 5100024.7,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.0179,
-          "revenue_predict_sug": 498.24857,
-          "revenue_increase_sug": 0.3843,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc128cafdd03dad652",
-          "name": "设备4",
-          "usage": 0.61039,
-          "usage_sum": [
-            2,
-            3
-          ],
-          "revenue_year_before_last": 95.03533,
-          "revenue_last_year": 257.56954,
-          "revenue_predict": 742.957,
-          "revenue_year_before_last_raw": 950353.3,
-          "revenue_last_year_raw": 2575695.4000000004,
-          "revenue_predict_raw": 7429570,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.4599,
-          "revenue_predict_sug": 1007.83938,
-          "revenue_increase_sug": 0.4185,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e718bcebc57df3ac29cbdc",
-          "name": "设备5",
-          "usage": 1.18463,
-          "usage_sum": [
-            1,
-            3
-          ],
-          "revenue_year_before_last": 593.61896,
-          "revenue_last_year": 866.27852,
-          "revenue_predict": 192.9,
-          "revenue_year_before_last_raw": 5936189.600000001,
-          "revenue_last_year_raw": 8662785.2,
-          "revenue_predict_raw": 1929000,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.3303,
-          "revenue_predict_sug": 726.16235,
-          "revenue_increase_sug": 0.4796,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc6e44aa151a696f1a",
-          "name": "设备6",
-          "usage": 0.33972,
+          "id": "5901545ae91f05d96bf13e71",
+          "size": 7684,
           "usage_sum": [
             4,
             1
           ],
-          "revenue_year_before_last": 417.09771,
-          "revenue_last_year": 438.79539,
-          "revenue_predict": 124.49139,
-          "revenue_year_before_last_raw": 4170977.1,
-          "revenue_last_year_raw": 4387953.9,
-          "revenue_predict_raw": 1244913.9,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.321,
-          "revenue_predict_sug": 1095.50608,
-          "revenue_increase_sug": 0.0951,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bce3972518eee713d9",
-          "name": "设备7",
-          "usage": 0.33275,
-          "usage_sum": [
-            3,
-            4
+          "usage_threshold": [
+            0.35916,
+            1.013
           ],
-          "revenue_year_before_last": 917.83968,
-          "revenue_last_year": 888.55571,
-          "revenue_predict": 455.82808,
-          "revenue_year_before_last_raw": 9178396.8,
-          "revenue_last_year_raw": 8885557.1,
-          "revenue_predict_raw": 4558280.8,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.0658,
-          "revenue_predict_sug": 554.37066,
-          "revenue_increase_sug": 0.4366,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
+              "year": 2015,
+              "usage": 1.41385
             },
             {
-              "title": "建议购买",
-              "addition": "2种类型"
+              "year": 2016,
+              "usage": 1.32535
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
+              "year": 2017,
+              "usage": 1.44232
             }
-          ]
-        },
-        {
-          "id": "58e718bc74184e0c936c6ca6",
-          "name": "设备8",
-          "usage": 0.45446,
-          "usage_sum": [
-            3,
-            4
           ],
-          "revenue_year_before_last": 441.33796,
-          "revenue_last_year": 524.41055,
-          "revenue_predict": 164.62231,
-          "revenue_year_before_last_raw": 4413379.600000001,
-          "revenue_last_year_raw": 5244105.499999999,
-          "revenue_predict_raw": 1646223.1,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.2085,
-          "revenue_predict_sug": 863.0383,
-          "revenue_increase_sug": 0.316,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "58e718bc0e4d8a3b84a575aa",
-      "name": "类别3",
-      "usage": 0.80189,
-      "usage_sum": [
-        2,
-        5
-      ],
-      "revenue_year_before_last": 931.41639,
-      "revenue_last_year": 274.29118,
-      "revenue_predict": 753.77264,
-      "revenue_year_before_last_raw": 9314163.9,
-      "revenue_last_year_raw": 2742911.8,
-      "revenue_predict_raw": 7537726.4,
-      "revenue_predict_sug_raw": null,
-      "last_year_date": "2016-04-06",
-      "year_before_last_date": "2015-04-06",
-      "revenue_increase": 0.0433,
-      "revenue_predict_sug": 494.57987,
-      "revenue_increase_sug": 0.4895,
-      "revenue_unit": "百万",
-      "suggestions": [
-        {
-          "title": "建议提高使用率",
-          "addition": "2种类型"
+          "usage_predict": 1.08741,
+          "usage_predict_increase": 0.92324,
+          "usage_sug": 1.34224,
+          "usage_sug_increase": 0.15647
         },
         {
-          "title": "建议购买",
-          "addition": "2种类型"
-        },
-        {
-          "title": "建议合理使用设备",
-          "addition": "1个科室"
-        }
-      ],
-      "items": [
-        {
-          "id": "58e718bc0f26b2dbe3f26244",
-          "name": "设备0",
-          "usage": 1.15262,
-          "usage_sum": [
-            3,
-            4
-          ],
-          "revenue_year_before_last": 857.33036,
-          "revenue_last_year": 933.12692,
-          "revenue_predict": 436.97629,
-          "revenue_year_before_last_raw": 8573303.6,
-          "revenue_last_year_raw": 9331269.200000001,
-          "revenue_predict_raw": 4369762.9,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.4471,
-          "revenue_predict_sug": 960.58617,
-          "revenue_increase_sug": 0.1016,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc88a51f62fd1e172e",
-          "name": "设备1",
-          "usage": 1.02919,
-          "usage_sum": [
-            1,
-            1
-          ],
-          "revenue_year_before_last": 404.41943,
-          "revenue_last_year": 804.82188,
-          "revenue_predict": 388.30552,
-          "revenue_year_before_last_raw": 4044194.3,
-          "revenue_last_year_raw": 8048218.8,
-          "revenue_predict_raw": 3883055.2,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.3125,
-          "revenue_predict_sug": 812.2445,
-          "revenue_increase_sug": 0.1457,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bcadd56ecf8aaea181",
           "name": "设备2",
-          "usage": 0.83321,
+          "id": "5901545a91ee164055cb7fc3",
+          "size": 4454,
           "usage_sum": [
-            1,
+            3,
             5
           ],
-          "revenue_year_before_last": 355.39602,
-          "revenue_last_year": 150.08482,
-          "revenue_predict": 241.38314,
-          "revenue_year_before_last_raw": 3553960.2,
-          "revenue_last_year_raw": 1500848.2000000002,
-          "revenue_predict_raw": 2413831.4,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.3321,
-          "revenue_predict_sug": 863.78133,
-          "revenue_increase_sug": 0.0831,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc95eb9a43f8b7680f",
-          "name": "设备3",
-          "usage": 0.59084,
-          "usage_sum": [
-            1,
-            1
+          "usage_threshold": [
+            0.49608,
+            1.04436
           ],
-          "revenue_year_before_last": 23.92989,
-          "revenue_last_year": 194.50062,
-          "revenue_predict": 991.75238,
-          "revenue_year_before_last_raw": 239298.9,
-          "revenue_last_year_raw": 1945006.2,
-          "revenue_predict_raw": 9917523.8,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.298,
-          "revenue_predict_sug": 779.38863,
-          "revenue_increase_sug": 0.2255,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
+              "year": 2015,
+              "usage": 1.48146
             },
             {
-              "title": "建议购买",
-              "addition": "2种类型"
+              "year": 2016,
+              "usage": 0.94581
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
+              "year": 2017,
+              "usage": 1.00898
             }
-          ]
+          ],
+          "usage_predict": 1.48898,
+          "usage_predict_increase": 1.15138,
+          "usage_sug": 0.86838,
+          "usage_sug_increase": 0.15743
         },
         {
-          "id": "58e718bce758c9e25d3ec183",
-          "name": "设备4",
-          "usage": 0.70899,
+          "name": "设备3",
+          "id": "5901545abcf831996a6fadbb",
+          "size": 7613,
           "usage_sum": [
-            4,
+            5,
+            5
+          ],
+          "usage_threshold": [
+            0.4185,
+            1.00025
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.14172
+            },
+            {
+              "year": 2016,
+              "usage": 1.15497
+            },
+            {
+              "year": 2017,
+              "usage": 1.33189
+            }
+          ],
+          "usage_predict": 0.88747,
+          "usage_predict_increase": 1.33953,
+          "usage_sug": 1.18422,
+          "usage_sug_increase": 0.20691
+        },
+        {
+          "name": "设备4",
+          "id": "5901545a8a5d16690a08a88d",
+          "size": 5665,
+          "usage_sum": [
+            3,
+            5
+          ],
+          "usage_threshold": [
+            0.34297,
+            1.0009
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.10012
+            },
+            {
+              "year": 2016,
+              "usage": 0.85659
+            },
+            {
+              "year": 2017,
+              "usage": 1.17994
+            }
+          ],
+          "usage_predict": 0.94557,
+          "usage_predict_increase": 1.04378,
+          "usage_sug": 0.92059,
+          "usage_sug_increase": 0.19286
+        },
+        {
+          "name": "设备5",
+          "id": "5901545afefce6aa3eb15a6f",
+          "size": 6694,
+          "usage_sum": [
+            2,
+            5
+          ],
+          "usage_threshold": [
+            0.46215,
+            1.0364
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 0.87044
+            },
+            {
+              "year": 2016,
+              "usage": 1.20407
+            },
+            {
+              "year": 2017,
+              "usage": 1.41782
+            }
+          ],
+          "usage_predict": 1.11773,
+          "usage_predict_increase": 1.38645,
+          "usage_sug": 1.04241,
+          "usage_sug_increase": 0.23178
+        },
+        {
+          "name": "设备6",
+          "id": "5901545a8c67a8c3c8dc51ea",
+          "size": 8453,
+          "usage_sum": [
+            2,
+            4
+          ],
+          "usage_threshold": [
+            0.32175,
+            1.00416
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.15164
+            },
+            {
+              "year": 2016,
+              "usage": 1.41147
+            },
+            {
+              "year": 2017,
+              "usage": 1.43706
+            }
+          ],
+          "usage_predict": 1.30783,
+          "usage_predict_increase": 1.25607,
+          "usage_sug": 1.11608,
+          "usage_sug_increase": 0.16944
+        },
+        {
+          "name": "设备7",
+          "id": "5901545a8269704e72d6c7db",
+          "size": 664,
+          "usage_sum": [
+            2,
             3
           ],
-          "revenue_year_before_last": 747.10481,
-          "revenue_last_year": 930.82256,
-          "revenue_predict": 686.68684,
-          "revenue_year_before_last_raw": 7471048.100000001,
-          "revenue_last_year_raw": 9308225.6,
-          "revenue_predict_raw": 6866868.399999999,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.2903,
-          "revenue_predict_sug": 330.66795,
-          "revenue_increase_sug": 0.2945,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "usage_threshold": [
+            0.3345,
+            1.00022
+          ],
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
+              "year": 2015,
+              "usage": 1.30805
             },
             {
-              "title": "建议购买",
-              "addition": "1个科室"
+              "year": 2016,
+              "usage": 0.87027
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
+              "year": 2017,
+              "usage": 0.87952
             }
-          ]
+          ],
+          "usage_predict": 1.34185,
+          "usage_predict_increase": 0.94952,
+          "usage_sug": 1.30532,
+          "usage_sug_increase": 0.02953
+        },
+        {
+          "name": "设备8",
+          "id": "5901545af542865987caa14b",
+          "size": 8028,
+          "usage_sum": [
+            5,
+            3
+          ],
+          "usage_threshold": [
+            0.34927,
+            1.02733
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.48273
+            },
+            {
+              "year": 2016,
+              "usage": 0.8699
+            },
+            {
+              "year": 2017,
+              "usage": 0.83742
+            }
+          ],
+          "usage_predict": 1.38381,
+          "usage_predict_increase": 1.31184,
+          "usage_sug": 1.01171,
+          "usage_sug_increase": 0.28619
+        },
+        {
+          "name": "设备9",
+          "id": "5901545a86cb777fce177d83",
+          "size": 6549,
+          "usage_sum": [
+            4,
+            4
+          ],
+          "usage_threshold": [
+            0.30676,
+            1.01675
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.15643
+            },
+            {
+              "year": 2016,
+              "usage": 0.82789
+            },
+            {
+              "year": 2017,
+              "usage": 0.94531
+            }
+          ],
+          "usage_predict": 1.07847,
+          "usage_predict_increase": 1.19306,
+          "usage_sug": 1.47336,
+          "usage_sug_increase": 0.04034
         }
       ]
     },
     {
-      "id": "58e718bc011e320f98607c0c",
-      "name": "类别4",
-      "usage": 1.01459,
+      "name": "类别3",
+      "id": "5901545a9ed88739afc072d7",
+      "size": 9679,
       "usage_sum": [
         5,
         1
       ],
-      "revenue_year_before_last": 558.27485,
-      "revenue_last_year": 522.47163,
-      "revenue_predict": 928.48884,
-      "revenue_year_before_last_raw": 5582748.5,
-      "revenue_last_year_raw": 5224716.3,
-      "revenue_predict_raw": 9284888.4,
-      "revenue_predict_sug_raw": null,
-      "last_year_date": "2016-04-06",
-      "year_before_last_date": "2015-04-06",
-      "revenue_increase": 0.0874,
-      "revenue_predict_sug": 986.17839,
-      "revenue_increase_sug": 0.3147,
-      "revenue_unit": "百万",
+      "usage_threshold": [
+        0.46016,
+        1.05994
+      ],
+      "historical_data": [
+        {
+          "year": 2015,
+          "usage": 1.32162
+        },
+        {
+          "year": 2016,
+          "usage": 1.04906
+        },
+        {
+          "year": 2017,
+          "usage": 1.38477
+        }
+      ],
+      "usage_predict": 1.35654,
+      "usage_predict_increase": 1.32107,
+      "usage_sug": 1.09772,
+      "usage_sug_increase": 0.27506,
       "suggestions": [
         {
           "title": "建议提高使用率",
-          "addition": "1个科室"
+          "addition": "2种类型"
         },
         {
           "title": "建议购买",
@@ -1267,284 +1005,320 @@
       ],
       "items": [
         {
-          "id": "58e718bce9f85144115b500c",
           "name": "设备0",
-          "usage": 0.81391,
+          "id": "5901545ae1368630d291da28",
+          "size": 2236,
           "usage_sum": [
-            3,
-            1
-          ],
-          "revenue_year_before_last": 236.92255,
-          "revenue_last_year": 989.89614,
-          "revenue_predict": 996.79648,
-          "revenue_year_before_last_raw": 2369225.5,
-          "revenue_last_year_raw": 9898961.4,
-          "revenue_predict_raw": 9967964.799999999,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.1635,
-          "revenue_predict_sug": 711.24988,
-          "revenue_increase_sug": 0.4343,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bcd3e352ee6c84143e",
-          "name": "设备1",
-          "usage": 0.4149,
-          "usage_sum": [
-            5,
-            1
-          ],
-          "revenue_year_before_last": 878.2305,
-          "revenue_last_year": 57.01274,
-          "revenue_predict": 640.51579,
-          "revenue_year_before_last_raw": 8782305,
-          "revenue_last_year_raw": 570127.4,
-          "revenue_predict_raw": 6405157.9,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.2999,
-          "revenue_predict_sug": 303.27683,
-          "revenue_increase_sug": 0.3977,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc6e11fe0ee500a617",
-          "name": "设备2",
-          "usage": 0.37089,
-          "usage_sum": [
-            4,
-            2
-          ],
-          "revenue_year_before_last": 125.98823,
-          "revenue_last_year": 316.1283,
-          "revenue_predict": 815.18907,
-          "revenue_year_before_last_raw": 1259882.3,
-          "revenue_last_year_raw": 3161283.0000000005,
-          "revenue_predict_raw": 8151890.7,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.1741,
-          "revenue_predict_sug": 925.55013,
-          "revenue_increase_sug": 0.2279,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bcfaa6ad4003c1b52f",
-          "name": "设备3",
-          "usage": 0.66156,
-          "usage_sum": [
-            3,
+            1,
             3
           ],
-          "revenue_year_before_last": 256.0548,
-          "revenue_last_year": 1000.48755,
-          "revenue_predict": 522.99224,
-          "revenue_year_before_last_raw": 2560548,
-          "revenue_last_year_raw": 10004875.5,
-          "revenue_predict_raw": 5229922.4,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.3605,
-          "revenue_predict_sug": 285.0554,
-          "revenue_increase_sug": 0.3064,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e718bc0c46a7249fc49377",
-          "name": "设备4",
-          "usage": 0.32342,
-          "usage_sum": [
-            4,
-            2
+          "usage_threshold": [
+            0.47421,
+            1.06051
           ],
-          "revenue_year_before_last": 928.15394,
-          "revenue_last_year": 572.89051,
-          "revenue_predict": 794.11911,
-          "revenue_year_before_last_raw": 9281539.4,
-          "revenue_last_year_raw": 5728905.1,
-          "revenue_predict_raw": 7941191.1,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.0044,
-          "revenue_predict_sug": 928.92448,
-          "revenue_increase_sug": 0.4655,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
+              "year": 2015,
+              "usage": 1.36275
             },
             {
-              "title": "建议购买",
-              "addition": "2种类型"
+              "year": 2016,
+              "usage": 1.46189
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
+              "year": 2017,
+              "usage": 0.85504
             }
-          ]
+          ],
+          "usage_predict": 0.92383,
+          "usage_predict_increase": 1.27643,
+          "usage_sug": 0.84503,
+          "usage_sug_increase": 0.28551
         },
         {
-          "id": "58e718bccbe5142feb9b9a07",
-          "name": "设备5",
-          "usage": 1.12812,
+          "name": "设备1",
+          "id": "5901545aaf1f1bfce8dfea89",
+          "size": 6937,
+          "usage_sum": [
+            1,
+            1
+          ],
+          "usage_threshold": [
+            0.32281,
+            1.05674
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 0.93683
+            },
+            {
+              "year": 2016,
+              "usage": 1.26059
+            },
+            {
+              "year": 2017,
+              "usage": 1.05246
+            }
+          ],
+          "usage_predict": 0.93726,
+          "usage_predict_increase": 0.81037,
+          "usage_sug": 1.3787,
+          "usage_sug_increase": 0.05139
+        },
+        {
+          "name": "设备2",
+          "id": "5901545a667874c172c17af1",
+          "size": 3675,
           "usage_sum": [
             2,
-            3
-          ],
-          "revenue_year_before_last": 876.68123,
-          "revenue_last_year": 148.28712,
-          "revenue_predict": 386.92737,
-          "revenue_year_before_last_raw": 8766812.3,
-          "revenue_last_year_raw": 1482871.2,
-          "revenue_predict_raw": 3869273.7,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.3957,
-          "revenue_predict_sug": 1130.60639,
-          "revenue_increase_sug": 0.2024,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e718bce66666c1d8cdcdd5",
-          "name": "设备6",
-          "usage": 1.07017,
-          "usage_sum": [
-            4,
             2
           ],
-          "revenue_year_before_last": 539.11289,
-          "revenue_last_year": 1022.40719,
-          "revenue_predict": 587.55306,
-          "revenue_year_before_last_raw": 5391128.9,
-          "revenue_last_year_raw": 10224071.9,
-          "revenue_predict_raw": 5875530.6,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.4939,
-          "revenue_predict_sug": 808.65271,
-          "revenue_increase_sug": 0.3226,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "usage_threshold": [
+            0.40663,
+            1.02476
+          ],
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
+              "year": 2015,
+              "usage": 1.37635
             },
             {
-              "title": "建议购买",
-              "addition": "2种类型"
+              "year": 2016,
+              "usage": 1.20445
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
+              "year": 2017,
+              "usage": 1.29833
             }
-          ]
+          ],
+          "usage_predict": 1.31583,
+          "usage_predict_increase": 1.08641,
+          "usage_sug": 1.41026,
+          "usage_sug_increase": 0.19519
+        },
+        {
+          "name": "设备3",
+          "id": "5901545a3ef3ba62ec69ba98",
+          "size": 1424,
+          "usage_sum": [
+            3,
+            1
+          ],
+          "usage_threshold": [
+            0.46842,
+            1.0251
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.04782
+            },
+            {
+              "year": 2016,
+              "usage": 1.27932
+            },
+            {
+              "year": 2017,
+              "usage": 1.48025
+            }
+          ],
+          "usage_predict": 1.42386,
+          "usage_predict_increase": 1.23913,
+          "usage_sug": 1.33836,
+          "usage_sug_increase": 0.06057
+        },
+        {
+          "name": "设备4",
+          "id": "5901545a6222aa8834672ad9",
+          "size": 5891,
+          "usage_sum": [
+            1,
+            2
+          ],
+          "usage_threshold": [
+            0.45614,
+            1.08602
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.19346
+            },
+            {
+              "year": 2016,
+              "usage": 1.20591
+            },
+            {
+              "year": 2017,
+              "usage": 1.3347
+            }
+          ],
+          "usage_predict": 1.29181,
+          "usage_predict_increase": 0.80657,
+          "usage_sug": 0.9242,
+          "usage_sug_increase": 0.04721
+        },
+        {
+          "name": "设备5",
+          "id": "5901545a3aad8e59107cd561",
+          "size": 5669,
+          "usage_sum": [
+            3,
+            3
+          ],
+          "usage_threshold": [
+            0.46232,
+            1.07456
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.44351
+            },
+            {
+              "year": 2016,
+              "usage": 0.91221
+            },
+            {
+              "year": 2017,
+              "usage": 1.3116
+            }
+          ],
+          "usage_predict": 1.2587,
+          "usage_predict_increase": 1.03793,
+          "usage_sug": 1.47122,
+          "usage_sug_increase": 0.25756
+        },
+        {
+          "name": "设备6",
+          "id": "5901545a4accf315c3c5002c",
+          "size": 3427,
+          "usage_sum": [
+            4,
+            3
+          ],
+          "usage_threshold": [
+            0.39784,
+            1.0254
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.45591
+            },
+            {
+              "year": 2016,
+              "usage": 1.17395
+            },
+            {
+              "year": 2017,
+              "usage": 0.92335
+            }
+          ],
+          "usage_predict": 1.32413,
+          "usage_predict_increase": 1.47535,
+          "usage_sug": 1.16719,
+          "usage_sug_increase": 0.0662
+        },
+        {
+          "name": "设备7",
+          "id": "5901545ac31f67f2485c2685",
+          "size": 1715,
+          "usage_sum": [
+            1,
+            1
+          ],
+          "usage_threshold": [
+            0.46909,
+            1.09108
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 0.99779
+            },
+            {
+              "year": 2016,
+              "usage": 1.14736
+            },
+            {
+              "year": 2017,
+              "usage": 1.14097
+            }
+          ],
+          "usage_predict": 1.38282,
+          "usage_predict_increase": 0.85833,
+          "usage_sug": 1.44548,
+          "usage_sug_increase": 0.15719
+        },
+        {
+          "name": "设备8",
+          "id": "5901545a3abe3c986851d502",
+          "size": 525,
+          "usage_sum": [
+            1,
+            4
+          ],
+          "usage_threshold": [
+            0.4904,
+            1.02217
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.33564
+            },
+            {
+              "year": 2016,
+              "usage": 1.39413
+            },
+            {
+              "year": 2017,
+              "usage": 0.80047
+            }
+          ],
+          "usage_predict": 1.02508,
+          "usage_predict_increase": 1.21733,
+          "usage_sug": 0.8953,
+          "usage_sug_increase": 0.14146
         }
       ]
     },
     {
-      "id": "58e718bc0a5ddf0dce69ce0c",
-      "name": "类别5",
-      "usage": 0.38671,
+      "name": "类别4",
+      "id": "5901545aa79de7b648a35812",
+      "size": 8042,
       "usage_sum": [
-        3,
-        3
+        4,
+        4
       ],
-      "revenue_year_before_last": 384.22905,
-      "revenue_last_year": 767.39756,
-      "revenue_predict": 829.55484,
-      "revenue_year_before_last_raw": 3842290.4999999995,
-      "revenue_last_year_raw": 7673975.6,
-      "revenue_predict_raw": 8295548.4,
-      "revenue_predict_sug_raw": null,
-      "last_year_date": "2016-04-06",
-      "year_before_last_date": "2015-04-06",
-      "revenue_increase": 0.1151,
-      "revenue_predict_sug": 733.56118,
-      "revenue_increase_sug": 0.0902,
-      "revenue_unit": "百万",
+      "usage_threshold": [
+        0.40839,
+        1.05947
+      ],
+      "historical_data": [
+        {
+          "year": 2015,
+          "usage": 1.35568
+        },
+        {
+          "year": 2016,
+          "usage": 0.85645
+        },
+        {
+          "year": 2017,
+          "usage": 0.90907
+        }
+      ],
+      "usage_predict": 0.89368,
+      "usage_predict_increase": 0.86825,
+      "usage_sug": 1.49969,
+      "usage_sug_increase": 0.02369,
       "suggestions": [
         {
           "title": "建议提高使用率",
-          "addition": "2种类型"
+          "addition": "1个科室"
         },
         {
           "title": "建议购买",
@@ -1557,328 +1331,252 @@
       ],
       "items": [
         {
-          "id": "58e718bc5de6a237918c5ea0",
           "name": "设备0",
-          "usage": 0.2514,
+          "id": "5901545a74aa419dd9c1b6cb",
+          "size": 6827,
+          "usage_sum": [
+            1,
+            3
+          ],
+          "usage_threshold": [
+            0.35787,
+            1.06503
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.47297
+            },
+            {
+              "year": 2016,
+              "usage": 1.0376
+            },
+            {
+              "year": 2017,
+              "usage": 1.10652
+            }
+          ],
+          "usage_predict": 0.82598,
+          "usage_predict_increase": 1.16056,
+          "usage_sug": 1.10649,
+          "usage_sug_increase": 0.00592
+        },
+        {
+          "name": "设备1",
+          "id": "5901545a255426e325bf913e",
+          "size": 9366,
           "usage_sum": [
             2,
             4
           ],
-          "revenue_year_before_last": 506.084,
-          "revenue_last_year": 343.79482,
-          "revenue_predict": 647.44491,
-          "revenue_year_before_last_raw": 5060840,
-          "revenue_last_year_raw": 3437948.2,
-          "revenue_predict_raw": 6474449.100000001,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.2428,
-          "revenue_predict_sug": 860.82037,
-          "revenue_increase_sug": 0.0407,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "usage_threshold": [
+            0.35342,
+            1.09907
+          ],
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
+              "year": 2015,
+              "usage": 0.9818
             },
             {
-              "title": "建议购买",
-              "addition": "1个科室"
+              "year": 2016,
+              "usage": 1.49207
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
+              "year": 2017,
+              "usage": 1.07945
             }
-          ]
+          ],
+          "usage_predict": 1.14176,
+          "usage_predict_increase": 1.15645,
+          "usage_sug": 0.87129,
+          "usage_sug_increase": 0.12831
         },
         {
-          "id": "58e718bc0772f41508b625b4",
-          "name": "设备1",
-          "usage": 1.13695,
+          "name": "设备2",
+          "id": "5901545a3dfddb0e88cdfd6f",
+          "size": 4122,
+          "usage_sum": [
+            2,
+            5
+          ],
+          "usage_threshold": [
+            0.48389,
+            1.02152
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 0.93761
+            },
+            {
+              "year": 2016,
+              "usage": 1.02945
+            },
+            {
+              "year": 2017,
+              "usage": 1.3552
+            }
+          ],
+          "usage_predict": 1.37842,
+          "usage_predict_increase": 1.21459,
+          "usage_sug": 1.4193,
+          "usage_sug_increase": 0.26335
+        },
+        {
+          "name": "设备3",
+          "id": "5901545a3322bed24c7e0dea",
+          "size": 1993,
           "usage_sum": [
             2,
             3
           ],
-          "revenue_year_before_last": 74.20292,
-          "revenue_last_year": 124.02652,
-          "revenue_predict": 823.30951,
-          "revenue_year_before_last_raw": 742029.2000000001,
-          "revenue_last_year_raw": 1240265.2,
-          "revenue_predict_raw": 8233095.100000001,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.1388,
-          "revenue_predict_sug": 775.98754,
-          "revenue_increase_sug": 0.3874,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
-            }
-          ]
-        },
-        {
-          "id": "58e718bca2ac495d9c4ef8e8",
-          "name": "设备2",
-          "usage": 0.47545,
-          "usage_sum": [
-            1,
-            3
+          "usage_threshold": [
+            0.45759,
+            1.08722
           ],
-          "revenue_year_before_last": 861.27707,
-          "revenue_last_year": 313.56447,
-          "revenue_predict": 795.4908,
-          "revenue_year_before_last_raw": 8612770.7,
-          "revenue_last_year_raw": 3135644.6999999997,
-          "revenue_predict_raw": 7954908,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.0094,
-          "revenue_predict_sug": 504.49822,
-          "revenue_increase_sug": 0.366,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
+              "year": 2015,
+              "usage": 1.08284
             },
             {
-              "title": "建议购买",
-              "addition": "1个科室"
+              "year": 2016,
+              "usage": 1.29834
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
+              "year": 2017,
+              "usage": 1.12181
             }
-          ]
-        },
-        {
-          "id": "58e718bcbc5f20f66a1c3399",
-          "name": "设备3",
-          "usage": 0.71456,
-          "usage_sum": [
-            1,
-            2
           ],
-          "revenue_year_before_last": 527.76051,
-          "revenue_last_year": 184.91804,
-          "revenue_predict": 393.62449,
-          "revenue_year_before_last_raw": 5277605.1,
-          "revenue_last_year_raw": 1849180.4,
-          "revenue_predict_raw": 3936244.9,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.1758,
-          "revenue_predict_sug": 1082.37566,
-          "revenue_increase_sug": 0.1165,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
+          "usage_predict": 1.34393,
+          "usage_predict_increase": 1.17081,
+          "usage_sug": 1.12058,
+          "usage_sug_increase": 0.29805
         },
         {
-          "id": "58e718bcf96bc8c2308def18",
           "name": "设备4",
-          "usage": 0.96446,
+          "id": "5901545a00f9a875f25917f3",
+          "size": 3428,
           "usage_sum": [
             1,
-            2
-          ],
-          "revenue_year_before_last": 143.87932,
-          "revenue_last_year": 939.42226,
-          "revenue_predict": 355.05967,
-          "revenue_year_before_last_raw": 1438793.2000000002,
-          "revenue_last_year_raw": 9394222.6,
-          "revenue_predict_raw": 3550596.6999999997,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.4944,
-          "revenue_predict_sug": 1070.04738,
-          "revenue_increase_sug": 0.4188,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bca3fb0efb76d19b5e",
-          "name": "设备5",
-          "usage": 0.42432,
-          "usage_sum": [
-            5,
             1
           ],
-          "revenue_year_before_last": 959.35584,
-          "revenue_last_year": 494.19853,
-          "revenue_predict": 440.59915,
-          "revenue_year_before_last_raw": 9593558.399999999,
-          "revenue_last_year_raw": 4941985.3,
-          "revenue_predict_raw": 4405991.5,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.2472,
-          "revenue_predict_sug": 655.79319,
-          "revenue_increase_sug": 0.416,
-          "revenue_unit": "百万",
-          "suggestions": [
-            {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议购买",
-              "addition": "1个科室"
-            },
-            {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
-            }
-          ]
-        },
-        {
-          "id": "58e718bca9386d77be5a9aa3",
-          "name": "设备6",
-          "usage": 0.73284,
-          "usage_sum": [
-            4,
-            2
+          "usage_threshold": [
+            0.45881,
+            1.06576
           ],
-          "revenue_year_before_last": 197.3053,
-          "revenue_last_year": 1015.4559,
-          "revenue_predict": 162.38492,
-          "revenue_year_before_last_raw": 1973053,
-          "revenue_last_year_raw": 10154559,
-          "revenue_predict_raw": 1623849.2,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.2256,
-          "revenue_predict_sug": 1185.54644,
-          "revenue_increase_sug": 0.2682,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
+              "year": 2015,
+              "usage": 1.14984
             },
             {
-              "title": "建议购买",
-              "addition": "2种类型"
+              "year": 2016,
+              "usage": 1.09334
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
+              "year": 2017,
+              "usage": 0.95621
             }
-          ]
+          ],
+          "usage_predict": 1.00558,
+          "usage_predict_increase": 0.84887,
+          "usage_sug": 1.10281,
+          "usage_sug_increase": 0.07564
         },
         {
-          "id": "58e718bce6a9f5eb02cef6b3",
-          "name": "设备7",
-          "usage": 0.8844,
+          "name": "设备5",
+          "id": "5901545a8767f1e408aad93d",
+          "size": 117,
           "usage_sum": [
             5,
-            4
+            3
           ],
-          "revenue_year_before_last": 314.57076,
-          "revenue_last_year": 359.31642,
-          "revenue_predict": 163.94012,
-          "revenue_year_before_last_raw": 3145707.6,
-          "revenue_last_year_raw": 3593164.1999999997,
-          "revenue_predict_raw": 1639401.2000000002,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.1335,
-          "revenue_predict_sug": 704.6058,
-          "revenue_increase_sug": 0.4912,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "usage_threshold": [
+            0.44914,
+            1.04063
+          ],
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "2种类型"
+              "year": 2015,
+              "usage": 1.12081
             },
             {
-              "title": "建议购买",
-              "addition": "2种类型"
+              "year": 2016,
+              "usage": 1.12714
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "1个科室"
+              "year": 2017,
+              "usage": 0.98152
             }
-          ]
+          ],
+          "usage_predict": 1.14712,
+          "usage_predict_increase": 1.49796,
+          "usage_sug": 1.01894,
+          "usage_sug_increase": 0.24329
         },
         {
-          "id": "58e718bc50b9a9e59875417c",
-          "name": "设备8",
-          "usage": 1.11662,
+          "name": "设备6",
+          "id": "5901545a4292340f7108c7fb",
+          "size": 4249,
           "usage_sum": [
-            1,
+            2,
             4
           ],
-          "revenue_year_before_last": 636.82646,
-          "revenue_last_year": 108.48465,
-          "revenue_predict": 146.9097,
-          "revenue_year_before_last_raw": 6368264.6,
-          "revenue_last_year_raw": 1084846.5,
-          "revenue_predict_raw": 1469096.9999999998,
-          "revenue_predict_sug_raw": null,
-          "last_year_date": "2016-04-06",
-          "year_before_last_date": "2015-04-06",
-          "revenue_increase": 0.4769,
-          "revenue_predict_sug": 424.3292,
-          "revenue_increase_sug": 0.0227,
-          "revenue_unit": "百万",
-          "suggestions": [
+          "usage_threshold": [
+            0.39096,
+            1.08167
+          ],
+          "historical_data": [
             {
-              "title": "建议提高使用率",
-              "addition": "1个科室"
+              "year": 2015,
+              "usage": 1.02834
             },
             {
-              "title": "建议购买",
-              "addition": "1个科室"
+              "year": 2016,
+              "usage": 0.86402
             },
             {
-              "title": "建议合理使用设备",
-              "addition": "2种类型"
+              "year": 2017,
+              "usage": 1.47192
             }
-          ]
+          ],
+          "usage_predict": 1.30735,
+          "usage_predict_increase": 1.26954,
+          "usage_sug": 0.80063,
+          "usage_sug_increase": 0.15497
+        },
+        {
+          "name": "设备7",
+          "id": "5901545add935cda843881c7",
+          "size": 6302,
+          "usage_sum": [
+            5,
+            5
+          ],
+          "usage_threshold": [
+            0.33761,
+            1.09602
+          ],
+          "historical_data": [
+            {
+              "year": 2015,
+              "usage": 1.28219
+            },
+            {
+              "year": 2016,
+              "usage": 0.93043
+            },
+            {
+              "year": 2017,
+              "usage": 1.22866
+            }
+          ],
+          "usage_predict": 0.94147,
+          "usage_predict_increase": 0.84362,
+          "usage_sug": 1.34155,
+          "usage_sug_increase": 0.11443
         }
       ]
     }

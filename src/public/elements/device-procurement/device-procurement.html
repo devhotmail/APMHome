@@ -1,5 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="stylesheet" href="../../bower_components/balloon-css/balloon.css">
+
 <link rel="import" href="../behavior/context.html">
 <link rel="import" href="../behavior/fetch-cached.html">
 <link rel="import" href="../responsive-container/responsive-container.html">
@@ -12,6 +15,12 @@
 <link rel="stylesheet" href="../../css/dewIcons.css">
 <link rel="import" href="../uri/uri.html">
 <link rel="import" href="../d3/d3.html">
+
+<style>
+.px-dropdown--content {
+  width: 120px !important;
+}
+</style>
 
 <dom-module id="device-procurement">
   <template>
@@ -37,7 +46,6 @@
               width="{{width}}"
               height="{{height}}"
               child-key="items"
-              size-key="revenue_predict_raw"
               focus-info="[[focusInfo]]"
               on-focus-changed="handleFocusChange"
               chart-data="[[systemData]]"></zoom-pack-chart>
@@ -48,7 +56,6 @@
               width="{{width}}"
               height="{{height}}"
               child-key="items"
-              size-key="revenue_predict_raw"
               focus-info="[[focusInfo]]"
               on-focus-changed="handleFocusChange"
               chart-data="[[manualData]]"></zoom-pack-chart>
@@ -57,6 +64,22 @@
       </responsive-container>
     </div>
     <div class="sidebar">
+      <div class="year-dropdown u-mb">
+        <label for="device-filter">使用率预测年份:</label>
+        <px-dropdown
+          id="year-filter"
+          class="u-ml+"
+          display-value="{{selectedYear}}"
+          selected-key="{{selectedYear}}">
+          <px-dropdown-content
+            class="px-dropdown-content"
+            max-cont-character-width="10"
+            extend-dropdown="true"
+            extend-dropdown-by="15"
+            items="[[yearOpts]]">
+          </px-dropdown-content>
+        </px-dropdown>
+      </div>
       <template is="dom-if" if="[[isHead]]">
         <div class="type-select btn-group">
           <template is="dom-repeat" items="[[typeOpts]]">
@@ -86,81 +109,61 @@
           <div class="tabs-content">
             <template is="dom-if" if="[[isEqual(activeTab, 0)]]">
               <div class="related-info">
-                <template is="dom-if" if="[[focus.data.usage]]">
-                  <div class="kpis">
+                <div class="kpis">
+                  <template is="dom-if" if="[[focus.data.name]]">
                     <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
-                    <div class="u-mb--">未来12个月收益预测([[focus.data.revenue_unit]]元)</div>
-                    <div class="text-muted u-mb--">过去两年的历史数据</div>
-                    <template is="dom-if" if="[[focus.data.revenue_year_before_last]]">
+                  </template>
+                  <template is="dom-if" if="[[isNotEmptyArr(focus.data.historical_data)]]">
+                    <template is="dom-repeat" items="[[focus.data.historical_data]]">
                       <div class="flex flex--middle revenue-tip muted">
-                        <div class="revenue-label">[[getYM(focus.data.year_before_last_date)]]</div>
+                        <div class="revenue-label">[[getYearText(item.year)]]</div>
                         <div class="flex__item u-ml-- u-mr--">
                           <div
                             class="progress-bar"
-                            style$="[[calcProgress(focus.data.revenue_year_before_last_raw, systemData.revenue_year_before_last_raw)]]">
+                            style$="[[calcProgress(item.usage)]]">
                           </div>
                         </div>
-                        <div class="revenue-num">[[focus.data.revenue_year_before_last]]</div>
+                        <div class="revenue-num">[[decimal2Percent(item.usage)]]</div>
                       </div>
                     </template>
-                    <template is="dom-if" if="[[focus.data.revenue_last_year]]">
-                      <div class="flex flex--middle revenue-tip muted">
-                        <div class="revenue-label">[[getYM(focus.data.last_year_date)]]</div>
-                        <div class="flex__item u-ml-- u-mr--">
-                          <div
-                            class="progress-bar"
-                            style$="[[calcProgress(focus.data.revenue_last_year_raw, systemData.revenue_last_year_raw)]]">
-                          </div>                    
-                        </div>
-                        <div class="revenue-num">[[focus.data.revenue_last_year]]</div>
-                      </div>
-                    </template>
-                    <template is="dom-if" if="[[focus.data.revenue_predict]]">
-                      <div class="text-muted u-mt-- u-mb--">未来12个月</div>
-                      <div class="flex flex--middle revenue-tip">
-                        <div class="revenue-label">预测</div>
-                        <div class="flex__item u-ml-- u-mr--">
-                          <div
-                            class="progress-bar"
-                            style$="[[calcProgress(focus.data.revenue_predict_raw, systemData.revenue_predict_raw)]]">
-                          </div>
-                        </div>
-                        <div class="revenue-num">
-                          [[focus.data.revenue_predict]] [[decimal2Percent(focus.data.revenue_increase, 1)]]
+                  </template>                   
+                  <template is="dom-if" if="[[focus.data.usage_predict]]">
+                    <div class="flex flex--middle revenue-tip">
+                      <div class="revenue-label">[[selectedYear]]预测</div>
+                      <div class="flex__item u-ml-- u-mr--">
+                        <div
+                          class="progress-bar"
+                          style$="[[calcProgress(focus.data.usage_predict)]]">
                         </div>
                       </div>
-                    </template>
-                    <template is="dom-if" if="[[hasSugs(focus.data.suggestions)]]">
-                      <div class="flex flex--middle revenue-tip">
-                        <div class="revenue-label">采取建议</div>
-                        <div class="flex__item u-ml-- u-mr--">
-                          <div
-                            class="progress-bar"
-                            style$="[[calcProgress(focus.data.revenue_predict_sug_raw, systemData.revenue_predict_sug_raw)]]">
-                          </div>                     
-                        </div>
-                        <div class="revenue-num">
-                          [[focus.data.revenue_predict_sug]] [[decimal2Percent(focus.data.revenue_increase_sug, 1)]]
-                        </div>
+                      <div class="revenue-num">
+                        [[decimal2Percent(focus.data.usage_predict)]]
+                        [[decimal2Percent(focus.data.usage_predict_increase, 1)]]
+                      </div>
+                    </div>
+                  </template>
+                  <div class="u-mt-">
+                    <template is="dom-if" if="[[currentKPIs.high]]">
+                      <div class$="kpi kpi-[[index]]">
+                        <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                        <span class="kpi-tip">[[currentKPIs.high.desc]]</span>
+                      </div>
+                      <div class="kpi-detail">
+                        <div class="title u-mv--">[[currentKPIs.high.num]]台设备</div>
                       </div>
                     </template>
-                    <template is="dom-if" if="[[focus.data.usage]]">
-                      <div class="divider"></div>
-                      未来12个月平均使用率预测:
-                      <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
+                    <template is="dom-if" if="[[currentKPIs.low]]">
+                      <div class$="kpi kpi-[[index]]">
+                        <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                        <span class="kpi-tip">[[currentKPIs.low.desc]]</span>
+                      </div>
+                      <div class="kpi-detail">
+                        <div class="title u-mv--">[[currentKPIs.low.num]]台设备</div>
+                      </div>
                     </template>
-                    <template is="dom-if" if="[[hasSugs(focus.data.suggestions)]]">
-                      <template is="dom-repeat" items="[[focus.data.suggestions]]">
-                        <template is="dom-if" if="[[item.title]]">
-                          <div>[[item.title]]</div>
-                        </template>
-                        <template is="dom-if" if="[[item.addition]]">
-                          <div class="title u-mt- u-mb-">[[item.addition]]</div>
-                        </template>
-                      </template>
-                      <div class="divider"></div>
-                    </template>
-                    <template is="dom-if" if="[[isOr(currentKPIs.0.num, currentKPIs.1.num)]]">
+                  </div>
+                  <template is="dom-if" if="[[isOr(currentKPIs.0.num, currentKPIs.1.num)]]">
+                    <div class="u-mt-">
                       <template is="dom-repeat" items="[[currentKPIs]]">
                         <template is="dom-if" if="[[item.num]]">
                           <div class$="kpi kpi-[[index]]">[[item.desc]]</div>
@@ -169,15 +172,103 @@
                           </div>
                         </template>
                       </template>
+                    </div>
+                  </template>
+                  <div class="divider"></div>
+                  <template is="dom-if" if="[[isNotEmptyArr(focus.data.suggestions)]]">
+                    <div class="title u-mb">建议</div>
+                    <template is="dom-repeat" items="[[focus.data.suggestions]]">
+                      <template is="dom-if" if="[[item.title]]">
+                        <div>[[item.title]]</div>
+                      </template>
+                      <template is="dom-if" if="[[item.addition]]">
+                        <div class="title u-mt- u-mb-">[[item.addition]]</div>
+                      </template>
                     </template>
-                  </div>
-                </template>
+                  </template>
+                  <template is="dom-if" if="[[isNotEmptyArr(focus.data.suggestions)]]">
+                    <div class="u-mb--">采纳建议后的使用率预测</div>
+                    <div class="flex flex--middle revenue-tip">
+                      <div class="revenue-label">采取建议</div>
+                      <div class="flex__item u-ml-- u-mr--">
+                        <div
+                          class="progress-bar"
+                          style$="[[calcProgress(focus.data.usage_sug)]]">
+                        </div>                     
+                      </div>
+                      <div class="revenue-num">
+                        [[decimal2Percent(focus.data.usage_sug)]]
+                        [[decimal2Percent(focus.data.usage_sug_increase, 1)]]
+                      </div>
+                    </div>
+                  </template>
+                  <div class="divider"></div>
+                  <div class="legends">
+                    <div class="title u-mt- u-mb-">使用率负荷说明</div>
+                    <div class="legend">
+                      <i class="dewicon-circle-high" style="color:#b3b3b3"></i>
+                      <span class="legend-tip">平均使用率预测</span>
+                    </div>
+                    <template is="dom-if" if="[[focus.data.usage_threshold.1]]">
+                      <div
+                        class="legend"
+                        data-balloon-length="medium"
+                        data-balloon="您可以自定义使用率大于多少为满负荷"
+                        data-balloon-pos="up">
+                        <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                        <span class="legend-tip">满负荷使用率定义: &gt;</span>
+                        [[decimal2Percent(focus.data.usage_threshold.1)]]
+                      </div>
+                    </template>
+                    <template is="dom-if" if="[[focus.data.usage_threshold.0]]">
+                      <div
+                        class="legend"
+                        data-balloon-length="medium"
+                        data-balloon="您可以自定义使用率小于多少为低负荷"
+                        data-balloon-pos="up">
+                        <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                        <span class="legend-tip">低负荷使用率定义: &lt;</span>
+                        [[decimal2Percent(focus.data.usage_threshold.0)]]
+                      </div>
+                    </template>
+                    <div class="legend">球大小与设备利润预测相关</div>
+                    <div class="legend">左侧的图形显示的是您选择的预测年份的数据</div>
+                  </div>                  
+                </div>
               </div>
             </template>
             <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
-              <div class="title u-mt u-mb">未来12个月收益预测</div>
-              <div class="text-muted u-mb-">基于系统自动建议值进行手工调节</div>
+              <div class="title u-mt u-mb">使用率预测</div>
+              <div class="text-muted u-mb-">基于系统自动预测的增长进行手工调节</div>
               <div class$="[[calcConfigListWrapperCls(configLoading)]]">
+                <template is="dom-if" if="[[configListTwo.length]]">
+                  <div class="config-head">
+                    <div>科室名称</div>
+                    <div>2017年预期增长</div>
+                  </div>
+                </template>
+                <template is="dom-if" if="[[!configListTwo.length]]">
+                  <div class="config-head">
+                    <div>设备类型</div>
+                    <div>预期增长</div>
+                    <div
+                      class="flex flex-middle"
+                      data-balloon-length="medium"
+                      data-balloon="您可以自定义使用率大于多少为满负荷"
+                      data-balloon-pos="down">
+                      <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                      <span>满负荷</span>
+                    </div>
+                    <div
+                      class="flex flex-middle"
+                      data-balloon-length="medium"
+                      data-balloon="您可以自定义使用率小于多少为低负荷"
+                      data-balloon-pos="left">
+                      <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                      <span>低负荷</span>
+                    </div>
+                  </div>
+                </template>
                 <div
                   class="config-list"
                   style$="[[calcConfigHeight(configListOne.length)]]">
@@ -191,15 +282,36 @@
                       <div class="item-name">
                         <div class="ellipsis">[[item.name]]</div>
                       </div>
-                      <template is="dom-if" if="[[item.isUnknown]]">
-                        <div style="white-space:nowrap;">待计算</div>
+                      <template is="dom-if" if="[[configListTwo.length]]">
+                        <template is="dom-if" if="[[!item.isUnknown]]">
+                          <span>[[float2Percent(item.increase, 1)]]</span>
+                        </template>
+                        <template is="dom-if" if="[[item.isUnknown]]">
+                          <div style="white-space:nowrap;">待计算</div>
+                        </template>
                       </template>
-                      <template is="dom-if" if="[[!item.isUnknown]]">
-                        <editable-block
-                          data-index$="[[index]]"
-                          value="[[item.increase]]"
-                          on-changed="handleConfigChange"></editable-block>
-                        <span>%</span>
+                      <template is="dom-if" if="[[!configListTwo.length]]">
+                        <div class="u-mr- flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.increase]]"
+                            on-changed="handleConfigChange"></editable-block>
+                          <span>%</span>
+                        </div>                        
+                        <div class="flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.usage_max]]"
+                            on-changed="handleUsageMaxChange"></editable-block>
+                          <span>%</span>
+                        </div>
+                        <div class="flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.usage_min]]"
+                            on-changed="handleUsageMinChange"></editable-block>
+                          <span>%</span>
+                        </div>
                       </template>
                     </div>
                   </template>
@@ -208,7 +320,32 @@
                     items="[[configListOne]]"
                     selected="{{selectedConfigIndex}}"></array-selector>
                 </div>
-                <template is="dom-if" if="[[configListTwo.length]]" restamp>
+              </div>
+              <template is="dom-if" if="[[configListTwo.length]]" restamp>
+                <div style="text-align:center">
+                  <div class="active-arrow"></div>
+                </div>
+                <div class$="[[calcConfigListWrapperCls(configLoading)]]">
+                  <div class="config-head">
+                    <div>设备类型</div>
+                    <div>预期增长</div>
+                    <div
+                      class="flex flex-middle"
+                      data-balloon-length="medium"
+                      data-balloon="您可以自定义使用率大于多少为满负荷"
+                      data-balloon-pos="top">
+                      <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                      <span>满负荷</span>
+                    </div>
+                    <div
+                      class="flex flex-middle"
+                      data-balloon-length="medium"
+                      data-balloon="您可以自定义使用率小于多少为低负荷"
+                      data-balloon-pos="left">
+                      <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                      <span>低负荷</span>
+                    </div>
+                  </div>                 
                   <div class="config-list" style$="[[calcConfigHeight(configListTwo.length)]]">
                     <template
                       id="subConfigList"
@@ -220,11 +357,27 @@
                         <div class="item-name">
                           <div class="ellipsis">[[item.name]]</div>
                         </div>
-                        <editable-block
-                          data-index$="[[index]]"
-                          value="[[item.increase]]"
-                          on-changed="handleSubConfigChange"></editable-block>
-                        <span>%</span>
+                        <div class="u-mr- flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.increase]]"
+                            on-changed="handleSubConfigChange"></editable-block>
+                          <span>%</span>
+                        </div>                        
+                        <div class="u-mr- flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.usage_max]]"
+                            on-changed="handleSubUsageMaxChange"></editable-block>
+                          <span>%</span>
+                        </div>
+                        <div class="flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.usage_min]]"
+                            on-changed="handleSubUsageMinChange"></editable-block>
+                          <span>%</span>
+                        </div>
                       </div>
                     </template>
                     <array-selector
@@ -232,15 +385,12 @@
                       items="[[configListTwo]]"
                       selected="{{selectedSubConfigIndex}}"></array-selector>
                   </div>
-                </template>
-                <template is="dom-if" if="[[configListTwo.length]]" restamp>
-                  <div class="active-arrow" style$="[[calcActiveArrowTop(selectedConfigIndex)]]"></div>
-                </template>              
-              </div>
+                </div>
+              </template>         
               <div class="u-mt-">
                 <div class$="[[calcConfigBtnCls(configLoading)]]" on-tap="handleSubmit">
                   <template is="dom-if" if="[[!configLoading]]">
-                    <span>确认建议</span>
+                    <span>确认预期</span>
                   </template>
                   <template is="dom-if" if="[[configLoading]]">
                     <css-spinner></css-spinner>
@@ -248,25 +398,24 @@
                 </div>
               </div>
               <template is="dom-if" if="[[showMaunalAdvice]]">
-                <div class="divider"></div>
-                <div class="text-muted u-mb--">新建议产生的全部设备收益预测([[manualData.revenue_unit]])</div>
+                <div class="divider"></div>   
+                <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
+                <div class="u-mb--">根据预期增长产生的使用率预测</div>
                 <div class="flex flex--middle revenue-tip">
-                  <div class="revenue-label">采取建议</div>
+                  <div class="revenue-label">预测</div>
                   <div class="flex__item u-ml-- u-mr--">
                     <div
                       class="progress-bar"
-                      style$="[[calcProgress(manualData.revenue_predict_raw, manualData.revenue_predict_raw)]]">
-                    </div>                
+                      style$="[[calcProgress(focus.data.usage_predict)]]">
+                    </div>
                   </div>
                   <div class="revenue-num">
-                    [[parseInt(manualData.revenue_predict)]] [[decimal2Percent(manualData.revenue_increase, 1)]]
+                    [[decimal2Percent(focus.data.usage_predict)]]
+                    [[decimal2Percent(focus.data.usage_predict_increase, 1)]]
                   </div>
                 </div>
-                <div class="divider"></div>       
-                <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
-                未来12个月平均使用率预测:
-                <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage)]]</div>
-                <template is="dom-if" if="[[isArray(focus.data.suggestions)]]">
+                <template is="dom-if" if="[[isNotEmptyArr(focus.data.suggestions)]]">
+                  <div class="title u-mv">建议</div>
                   <template is="dom-repeat" items="[[focus.data.suggestions]]">
                     <template is="dom-if" if="[[item.title]]">
                       <div>[[item.title]]</div>
@@ -277,28 +426,23 @@
                   </template>
                 </template>
                 <template is="dom-if" if="[[focus.data.usage_sug]]">
-                  采取建议后未来12个月平均使用率预测:
-                  <div class="title u-mt- u-mb-">[[decimal2Percent(focus.data.usage_sug)]]</div>                  
+                  <div class="u-mb--">采取建议后的使用率预测</div>
+                  <div class="flex flex--middle revenue-tip">
+                    <div class="revenue-label">采取建议</div>
+                    <div class="flex__item u-ml-- u-mr--">
+                      <div
+                        class="progress-bar"
+                        style$="[[calcProgress(focus.data.usage_sug)]]">
+                      </div>
+                    </div>
+                    <div class="revenue-num">
+                      [[decimal2Percent(focus.data.usage_sug)]]
+                      [[decimal2Percent(focus.data.usage_sug_increase, 1)]]
+                    </div>
+                  </div>
                 </template>
               </template>
             </template>
-            <div class="divider"></div>
-            <div class="legends">
-              <div class="title u-mt- u-mb-">图示说明</div>
-              <div class="legend">
-                <i class="dewicon-circle-high" style="color:#b3b3b3"></i>
-                <span class="legend-tip">平均使用率预测(%)</span>
-              </div>
-              <div class="legend">
-                <i class="dewicon-circle-full" style="color:#e26d26"></i>
-                <span class="legend-tip">单台使用率预测&gt;100%</span>
-              </div>
-              <div class="legend">
-                <i class="dewicon-circle-low" style="color:#ebda51"></i>
-                <span class="legend-tip">单台使用率预测&lt;30%</span>
-              </div>
-              <div class="legend">球大小与设备利润预测相关</div>
-            </div>
           </div>
         </div>
       </template>
@@ -328,6 +472,9 @@
       }
     ];
 
+    var now = new Date()
+    var currentYear = now.getFullYear()
+
     define('device-procurement', [
       'behavior/context',
       'behavior/fetch-cached',
@@ -336,6 +483,34 @@
       Polymer({
         is: 'device-procurement',
         properties: {
+          yearOpts: {
+            type: Array,
+            value: function() {
+              return [
+                currentYear,
+                currentYear + 1
+              ].map(function(n) {
+                return {
+                  key: n,
+                  val: n
+                }
+              })
+            }
+          },
+          selectedYear: {
+            type: String,
+            value: function() {
+              return currentYear
+            }
+          },
+          max: {
+            type: Number,
+            value: 100
+          },
+          min: {
+            type: Number,
+            value: 30
+          },
           isHead: {
             type: Boolean,
             value: false
@@ -398,7 +573,7 @@
             computed: 'getConfigListTwo(configList, selectedConfigItem)'
           },
           currentKPIs: {
-            type: Array,
+            type: Object,
             computed: 'getCurrentKPIs(focus)'
           },
           slidingLeft: {
@@ -442,11 +617,20 @@
         ],
         observers: [
           'changeQuery(isHead, selectedType)',
-          'loadData(isHead, selectedType, orgId)',
-          'resetStatus(selectedType)',
+          'loadData(isHead, selectedYear, selectedType, orgId)',
+          'resetStatus(selectedYear, selectedType)',
           'changeSelectedConfig(focusInfo, configList)',
           'resetSubSelectedConfigIndex(selectedConfigIndex)'
         ],
+        changeFocusInfo: function(index, configList, depth) {
+          if (index && Array.isArray(configList)) {
+            var target = configList[index]
+            this.focusInfo = {
+              id: target.id,
+              depth: depth
+            }
+          }
+        },
         getConfigListOne: function(configList) {
           return configList.filter(function(n) {
             return n.depth === 1;
@@ -460,10 +644,10 @@
             return n.depth === 2 && n.parent.uid === selectedConfigItem.uid;
           });
         },
-        resetStatus: function(selectedType) {
-          // reset activeTab when selectedType changed
+        resetStatus: function() {
+          // reset activeTab when selectedYear/selectedType changed
           this.activeTab = 0;
-          // reset config loading when selectedType changed 
+          // reset config loading when selectedYear/selectedType changed 
           this.configLoading = false;
         },
         resetSubSelectedConfigIndex: function(selectedConfigIndex) {
@@ -484,9 +668,6 @@
             var id = target.id;
             var depth = target.depth;
 
-            var find = this.find;
-            var findIndex = this.findIndex;
-
             function getCursors(node) {
               var cursors = [];
               getParent(node);
@@ -495,11 +676,11 @@
               function getParent(node) {
                 var parent = node.parent;
                 if (!parent) return;
-                var parentNode = find(configList, function(n) {
+                var parentNode = WebUtils.find(configList, function(n) {
                   return n.id === parent.id;
                 });
                 if (parentNode && parentNode.children && parentNode.children.length) {
-                  var index = findIndex(parentNode.children, function(n) {
+                  var index = WebUtils.findIndex(parentNode.children, function(n) {
                     return n.id === node.id;
                   });
 
@@ -555,11 +736,7 @@
           var index = root.querySelector('#subConfigList').indexForElement(e.target);
           root.querySelector('#subConfigSelector').select(index);
         },
-        handleConfigChange: function(e) {
-          // get value and index
-          var value = e.detail.value;
-          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
-
+        updateItem: function(field, value, index) {
           var _this = this;
           if (index > -1) {
             // update value for current target
@@ -567,7 +744,7 @@
             var target = this.configList.filter(function(n) {
               return n.uid === cursor;
             })[0];
-            target.increase = value;
+            target[field] = value;
 
             // update children
             var children = target.children;
@@ -577,14 +754,14 @@
               });
               var configList = this.configList.map(function(config) {
                 if (~childUidList.indexOf(config.uid)) {
-                  config.increase = value;
+                  config[field] = value;
                   if (Array.isArray(config.children) && config.children.length) {
                     // update children's increase in configList
                     config.children.map(function(n) {
                       var result = WebUtils.find(_this.configList, function(m) {
                         return m.id === n.id;
                       });
-                      if (result) result.increase = value;
+                      if (result) result[field] = value;
                     });
                   }
                 }
@@ -596,12 +773,29 @@
             this.configList = this.deepClone(configList);
             this.selectedConfigIndex = _tmp;
           }
-        },
-        handleSubConfigChange: function(e) {
+        }, 
+        handleConfigChange: function(e) {
           // get value and index
           var value = e.detail.value;
           var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
 
+          this.updateItem('increase', value, index)
+        },
+        handleUsageMaxChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateItem('usage_max', value, index)
+        },
+        handleUsageMinChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateItem('usage_min', value, index)
+        },        
+        updateSubItem: function(field, value, index) {
           var _this = this;
           if (index > -1) {
             // update value for current target
@@ -609,15 +803,15 @@
             var target = this.configList.filter(function(n) {
               return n.uid === cursor;
             })[0];
-            target.increase = value;
+            target[field] = value;
 
             if (Array.isArray(target.children) && target.children.length) {
-              // update children's increase in configList
+              // update children's `field` in configList
               target.children.map(function(n) {
                 var result = WebUtils.find(_this.configList, function(m) {
                   return m.id === n.id;
                 });
-                if (result) result.increase = value;
+                if (result) result[field] = value;
               });
             }
 
@@ -636,8 +830,30 @@
             this.selectedSubConfigIndex = _tmp2;
           }
         },
+        handleSubUsageMaxChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateSubItem('usage_max', value, index);
+        },
+        handleSubUsageMinChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateSubItem('usage_min', value, index);
+        },        
+        handleSubConfigChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateSubItem('increase', value, index);
+        },
         handleSubmit: function(e) {
           var root = this.configList[0];
+
           if (root.depth === 0) {
             // diff with systemData and get all changed items
             var defaultConfigList = this.getInitConfig(this.systemData)
@@ -650,20 +866,40 @@
             })
             .filter(function(config) {
               if (!config) return false;
-
+              // figure out target config is changed or not
               return WebUtils.find(defaultConfigList, function(defaultConfig) {
-                return defaultConfig.id === config.id && defaultConfig.increase !== config.increase;
+                return defaultConfig.id === config.id
+                  && (
+                    defaultConfig.increase !== config.increase
+                    || defaultConfig.usage_max !== config.usage_max
+                    || defaultConfig.usage_min !== config.usage_min
+                  );
               });
             })
-            .map(function(n) {
-              return {
-                id: n.id,
-                change: n.increase / 100 // for the display usage # 1
+            .map(function(config) {
+              // figure out which fields changed in target config
+              var target = WebUtils.find(defaultConfigList, function(defaultConfig) {
+                return defaultConfig.id === config.id;
+              });
+
+              var result = { id: config.id };
+
+              if (target.increase !== config.increase) {
+                result.change = config.increase / 100; // for the display usage # 1
               }
+
+              if (target.usage_min !== config.usage_min || target.usage_max !== config.usage_max) {
+                result.threshold = [ // usage_threshold
+                  config.usage_min / 100,
+                  config.usage_max / 100
+                ];
+              }
+
+              return result;
             })
             .filter(function(n) {
               return n;
-            });              
+            });        
 
             var payload = {
               config: [].concat.apply([], tmp).sort(function(a, b) {
@@ -671,7 +907,8 @@
               })
             }
 
-            var url = this.getApiUrl(this.isHead, this.selectedType, this.orgId);
+            var url = this.getApiUrl(this.isHead, this.selectedYear, this.selectedType, this.orgId);
+            // url = 'mock/asset-procurement-' + this.selectedType  +'.json'
 
             this.configLoading = true;
 
@@ -716,32 +953,11 @@
         deepClone: function(plainObj) {
           return JSON.parse(JSON.stringify(plainObj));
         },
-        findIndex: function(array, callback) {
-          var k = 0;
-          while(k < array.length) {
-            var value = array[k];
-            if (callback(value)) return k;
-            k++;
-          }
-          return -1;
-        },
-        find: function(array, callback) {
-          var k = 0;
-          while(k < array.length) {
-            var value = array[k];
-            if (callback(value)) return value;
-            k++;
-          }
-          return undefined;
-        },
         /**
          * functions which calculate className for dom styles usage
         */
         calcConfigBtnCls: function(configLoading) {
           return configLoading ? 'config-btn loading' : 'config-btn';
-        },
-        calcActiveArrowTop: function(selectedConfigIndex) {
-          return 'top:' + selectedConfigIndex * 30 + 'px';
         },
         calcConfigHeight: function(length) {
           return length < 10 ? 'height: auto' : '';
@@ -759,9 +975,8 @@
         calcTabCls: function(val, selectedType) {
           return val === selectedType ? 'active btn' : 'btn';
         },
-        calcProgress: function(a, b) {
-          var tmp = a / b;
-          return 'width:' + (tmp > 1 ? 1 : tmp) * 100 + '%';
+        calcProgress: function(percent) {
+          return 'width:' + (percent > 1 ? 1 : percent) * 100 + '%';
         },
         calcConfigListWrapperCls: function(configLoading) {
           return configLoading ? 'config-list-wrapper disabled' : 'config-list-wrapper';
@@ -769,23 +984,25 @@
         /**
          * functions which convert string for dom text display
         */
-        hasSugs: function(array) {
+        isNotEmptyArr: function(array) {
           if (!Array.isArray(array)) return false;
           return Boolean(array.length);
-        },        
-        getYM: function(timestamp) {
-          if (!timestamp) return;
-          var date = new Date(timestamp);
-          var year = date.getFullYear();
-          var month = date.getMonth() + 1;
-          if (year && month) {
-            return [date.getFullYear(), (date.getMonth() + 1)].join('.');
-          } else return;
+        },     
+        getYearText: function(year) {
+          if (!year) return;
+          var currentYear = (new Date()).getFullYear();
+          if (currentYear === year) return year + '至今';
+          return year + '年';
         },
-        decimal2Percent: function(val, withSign) {
+        float2Percent: function(val, withSign) {
           var sign = (withSign && val > 0) ? '+' : '';
           // keep one decimal
-          return sign + parseFloat(val * 100).toFixed(1) + '%';
+          return sign + val + '%';
+        },
+        decimal2Percent: function(val, withSign) {
+          // keep one decimal
+          var value = parseFloat(val * 100).toFixed(1);
+          return this.float2Percent(value, withSign);
         },
         parseInt: parseInt,
         keepOneDecimal: function(val) {
@@ -809,20 +1026,27 @@
          * functions which do data convert jobs
         */
         getCurrentKPIs: function(focus) {
+          var decimal2Percent = this.decimal2Percent
+          var result = {}
+
           var descList = [
-            '使用率预测<30%',
-            '使用率预测>100%',
+            '使用率预测低负荷台数',
+            '使用率预测超负荷台数'
           ];
 
           var usageSum = focus.data.usage_sum;
+          var usageThreshold = focus.data.usage_threshold;
           if (usageSum && usageSum.length) {
-            return usageSum.map(function(n, i) {
-              return {
-                desc: descList[i],
-                num: n
-              }
+            usageSum.map(function(n, i) {
+              ['low', 'high'].forEach(function(key, i) {
+                result[key] = {
+                  desc: descList[i].replace('usage'),
+                  num: usageSum[i]
+                }
+              })
             });
-          } else return [];
+          }
+          return result
         },
         dataConverter: function(data) {
           function patchUid(obj) {
@@ -867,7 +1091,9 @@
               uid: n.data.uid,
               name: n.data.name,
               // for the display usage # 1
-              increase: this.round(n.data.revenue_increase_sug * 100, 1)
+              increase: this.round(n.data.usage_predict_increase * 100, 1),
+              usage_min: n.data.usage_threshold ? n.data.usage_threshold[0] * 100 : '',
+              usage_max: n.data.usage_threshold ? n.data.usage_threshold[1] * 100 : ''
             }
           }).bind(this));
         },
@@ -893,19 +1119,21 @@
         /**
          * load data from restful api
         */
-        getApiUrl: function(isHead, groupby, orgId) {
-          var query = {};
+        getApiUrl: function(isHead, year, groupby, orgId) {
+          var query = {
+            year: year
+          };
           if (isHead) query.groupby = groupby;
           else query.dept = orgId;
 
-          return URI(this.resolveApiUrl('/api/dm')).query(query).toString();
+          return URI(this.resolveApiUrl('/api/dmv2')).query(query).toString();
         },
-        loadData: function(isHead, groupby, orgId) {
+        loadData: function(isHead, year, groupby, orgId) {
           this.showLoading = true;
           this.showEmpty = false;
           this.showError = false;
 
-          var url = this.getApiUrl(isHead, groupby, orgId);
+          var url = this.getApiUrl(isHead, year, groupby, orgId);
           // url = 'mock/asset-procurement-' + groupby  +'.json'
 
           return fetch(url, {
@@ -942,6 +1170,7 @@
             };
           
           }).bind(this)).catch((function(err) {
+            console.log(err)
             this.showLoading = false;
             this.showError = true;
           }).bind(this));

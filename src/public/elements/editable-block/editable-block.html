@@ -47,7 +47,7 @@
     updateValue: function () {
       const regex = /^-{0,1}\d*\.?\d+$/;
       if (regex.test(this.inputVal)) {
-        var newValue = parseFloat(this.inputVal);
+        var newValue = Number(this.inputVal); // avoid num like 0.30000000000000004
         this.fire('changed', {
           value: newValue,
           oldValue: this.value
