@@ -48,14 +48,16 @@ public class TestController {
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET )
     @ResponseBody
     public List<UserAccount> getData(@PathVariable String id) {
-    	logger.info("id is {}",id);
-        return userAccountService.getUserAccount();
+//    	logger.info("id is {}",id);
+//        return userAccountService.getUserAccount();
+    	return null;
     }
 
     @RequestMapping(value = "/getUsers", method = RequestMethod.GET )
     @ResponseBody
     public List<UserAccount> getUsers() {
-        return userAccountService.getUserAccount();
+    	return null;
+//        return userAccountService.getUserAccount();
     }
 
     @RequestMapping(value = "/timeout", method = RequestMethod.GET )
@@ -106,13 +108,14 @@ public class TestController {
     @RequestMapping(value = "/createUser", method = RequestMethod.POST )
     @ResponseBody
 	public UserAccount createUser() {
-		int i = new Random().nextInt(10000);
-		String name = "name" + i;
-		String mobile = "mobile" + i;
-		int assetId = 1;
-		String wechatId = "wechatId" + i;
-		String telephone = "telephone" + i;
-		String nickName = "nickName" + i;
-		return userAccountService.createUser(name, mobile, assetId, wechatId, telephone, nickName);
+    	return null;
+//		int i = new Random().nextInt(10000);
+//		String name = "name" + i;
+//		String mobile = "mobile" + i;
+//		int assetId = 1;
+//		String wechatId = "wechatId" + i;
+//		String telephone = "telephone" + i;
+//		String nickName = "nickName" + i;
+//		return userAccountService.createUser(name, mobile, assetId, wechatId, telephone, nickName);
 	}
 }
