@@ -105,7 +105,7 @@ export default {
             {  
               "id":83,
               "name":"MR-83",
-              "size":63144.0,
+              "size":1,
               "usage_sum":[  
                 0,
                 0
