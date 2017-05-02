@@ -13,6 +13,8 @@ type ChartProps = {
   setFocus: Function
 }
 
+const margin = 20
+
 export default class Chart extends Component<*, ChartProps, *> {
   render() {
     const { height, width, diameter, nodeList, view, focus } = this.props
@@ -22,22 +24,40 @@ export default class Chart extends Component<*, ChartProps, *> {
     const [ x, y, r ] = view
     // const { x, y, r } = focus
     const viewBox = [
-      x - r,
-      y - r,
-      r * 2,
-      r * 2
+      x - r - margin / 2,
+      y - r - margin / 2,
+      r * 2 + margin,
+      r * 2 + margin
     ]
 
-    console.log(view)
+    // console.log(view)
 
     return (
       <div>
         <svg width={width} height={height} viewBox={viewBox.join(' ')}>
-          {/*{ nodeList ? this.renderNodes(nodeList) : null}*/}
           <TreeNodes {...this.props} />
+          {/*<TextNodes {...this.props} />*/}
+          { nodeList ? this.renderNodes(nodeList) : null }
         </svg>
       </div>
     )
+  }
+
+  renderNodes = (nodeList: Array<NodeT>) => {
+    const { focus } = this.props
+    return <g>
+      {
+        nodeList.map((node, index) => {
+          return (
+            <g
+              key={`text-${index}`}
+              transform={`translate(${node.x}, ${node.y})`}>
+              <text dy="0.3em">{node.data.name.substring(0, 5)}</text>             
+            </g>
+          )
+        })
+      }
+    </g>
   }
 
   changeFocus = node => {

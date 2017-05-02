@@ -23,7 +23,7 @@ type NodeT = {
 
 // todo: hard code field
 function getCircleStrokeCls (n: NodeT): number {
-  const circleStrokeCls = [
+  const waveColorCls = [
     styles.strokeYellow,
     styles.strokeGray,
     styles.strokeOrange
@@ -35,23 +35,7 @@ function getCircleStrokeCls (n: NodeT): number {
   if (usage_predict > usage_threshold[1]) colorIndex =  2
   else if (usage_predict < usage_threshold[0]) colorIndex = 0
   
-  return circleStrokeCls[colorIndex]
-}
-
-function getWaveFillCls (n: NodeT): number {
-  const waveFillCls = [
-    styles.fillYellow,
-    styles.fillGray,
-    styles.fillOrange
-  ]
-
-  const { usage_predict, usage_threshold = [0.3, 1] } = n.data
-
-  let colorIndex = 1
-  if (usage_predict > usage_threshold[1]) colorIndex =  2
-  else if (usage_predict < usage_threshold[0]) colorIndex = 0
-  
-  return waveFillCls[colorIndex]
+  return waveColorCls[colorIndex]
 }
 
 export default class TreeNodes extends Component<*, *, *> {
@@ -74,12 +58,12 @@ export default class TreeNodes extends Component<*, *, *> {
             node.children ? 'node' : 'leaf node'
           ]
 
+          const strokeCls = getCircleStrokeCls(node)
+
           const circleCls = [
             this.getCircleFillCls(node, focus),
-            getCircleStrokeCls(node)
+            strokeCls
           ]
-
-          const waveCls = getWaveFillCls(node)
 
           const onClick = e => this.props.setFocus(node)
 
@@ -92,9 +76,9 @@ export default class TreeNodes extends Component<*, *, *> {
               <g className={styles.noPointerEvent}>
                 {
                   node.data[percentKey] >= 1
-                    ? <circle className={waveCls} r={node.r} />
+                    ? <circle className={strokeCls} r={node.r} />
                     : <path
-                        className={waveCls}
+                        className={strokeCls}
                         transform={`translate(${-node.r}, 0)`} // todo: remove transform here
                         d={this.getWavePath(node.r, node.data[percentKey])} />
                 }

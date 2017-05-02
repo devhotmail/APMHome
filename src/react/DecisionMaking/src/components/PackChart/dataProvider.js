@@ -114,6 +114,13 @@ function DataProvider(WrappedComponent: Class<Component<*, *, *>>): Class<Compon
       const nextView = this.getView(focus)
       const i = d3.interpolateZoom(this.state.view, nextView)
 
+      if (focus === this.state.focus) return
+
+      this.setState((state, props) => ({
+        ...state,
+        focus: focus
+      }))
+
       const start = Date.now()
       const loop = (now = Date.now())  => {
         raf(() => {

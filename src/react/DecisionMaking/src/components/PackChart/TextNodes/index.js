@@ -40,29 +40,32 @@ export default class TextNodes extends Component {
   // <text dy="0.3em">{node.data.name.substring(0, node.r / 3)}</text>
 
   renderTexts = (nodeList: Array<NodeT>) => {
-    const { diameter, view, focus } = this.props
-    const k = diameter / view[2]
+    const { focus } = this.props
 
     return <g className={styles.texts}>
       {
         nodeList.map((node, index) => {
-          const translate = 'translate(' + (node.x - view[0]) * k + ',' + (node.y - view[1]) * k + ')'
-          const scale = `scale(${k})`
-
-          const fontSize = this.getFontSize(node.r * k)
+          const fontSize = this.getFontSize(node.r)
 
           const textProps = {
             label: node.data[labelKey],
             percent: node.data[percentKey],
-            overload: Array.isArray(node.data.usage_sum) && node.data.usage_sum[1] ? node.data.usage_sum[1]: undefined
+            overload: Array.isArray(node.data.usage_sum) && node.data.usage_sum[1]
+              ? node.data.usage_sum[1]
+              : undefined
           }
 
           const Text = <TextDesc {...textProps} />
  
           return (
-            <g transform={translate} fontSize={fontSize} key={`${node.data.id}-${index}`}>
-              {this.renderTopText(Text, node)}
-              {this.renderCenterText(Text, node)}
+            <g
+              key={`text-${index}`}
+              className={styles.noPointerEvent}
+              fontSize={fontSize}
+              transform={`translate(${node.x}, ${node.y})`}>
+              {Text}
+              {/*{this.renderTopText(Text, node)}*/}
+              {/*{this.renderCenterText(Text, node)}*/}
             </g>
           )
         })
@@ -71,31 +74,26 @@ export default class TextNodes extends Component {
   }
 
   renderTopText = (content, node) => {
-    const textTopStyle = {
-      display: this.getDisplayTop(node)
-    }
+    const cls = this.getDisplayTopCls(node)
 
-    return <g style={textTopStyle}>{content}</g>
+    return <g className={cls}>{content}</g>
   }
 
   renderCenterText = (content, node) => {
-    const textCenterStyle = {
-      display: this.getDisplayCenter(node)
-    }
+    const cls = this.getDisplayCenterCls(node)
 
-    return <g style={textCenterStyle}>{content}</g>
+    return <g className={cls}>{content}</g>
   }
 
-
-  getDisplayTop = (node) => {
-    return node === this.props.focus ? 'inline' : 'none'
+  getDisplayTopCls = (node) => {
+    return node === this.props.focus ? styles.inline : styles.none
   }
 
-  getDisplayCenter = (node) => {
+  getDisplayCenterCls = (node) => {
     const { focus } = this.props
-    if (node.parent === focus) return 'inline'
-    if (node === focus && !node.children) return 'inline'
-    return 'none'
+    if (node.parent === focus) return styles.inline
+    if (node === focus && !node.children) return styles.inline
+    return styles.none
   }
 
   getFontSize = (radius: number): number => {
