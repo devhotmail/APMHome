@@ -3272,10 +3272,6 @@ lodash.keys@^3.1.2:
     lodash.isarguments "^3.0.0"
     lodash.isarray "^3.0.0"
 
-lodash.keys@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.npmjs.org/lodash.keys/-/lodash.keys-4.2.0.tgz#a08602ac12e4fb83f91fc1fb7a360a4d9ba35205"
-
 lodash.memoize@^4.1.0:
   version "4.1.2"
   resolved "https://registry.npmjs.org/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
@@ -3292,7 +3288,7 @@ lodash.tail@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npmjs.org/lodash.tail/-/lodash.tail-4.1.1.tgz#d2333a36d9e7717c8ad2f7cacafec7c32b444664"
 
-lodash.throttle@^4.0.0, lodash.throttle@^4.1.1:
+lodash.throttle@^4.0.0:
   version "4.1.1"
   resolved "https://registry.npmjs.org/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
 
@@ -4678,15 +4674,6 @@ react-router@^2.8.1:
     loose-envify "^1.2.0"
     warning "^3.0.0"
 
-react-sizes@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.npmjs.org/react-sizes/-/react-sizes-0.0.4.tgz#0c76f670f75e72ebcc7abacbb03189c67ab22781"
-  dependencies:
-    lodash.keys "^4.2.0"
-    lodash.throttle "^4.1.1"
-    react "^15.5.3"
-    uuid "^3.0.1"
-
 react-slick@~0.14.2:
   version "0.14.11"
   resolved "https://registry.npmjs.org/react-slick/-/react-slick-0.14.11.tgz#c2cbdbe3728c66a2ff4929be96d457e3ea0d80f3"
@@ -4699,7 +4686,7 @@ react-slick@~0.14.2:
     object-assign "^4.1.0"
     slick-carousel "^1.6.0"
 
-react@^15.5.3, react@^15.5.4:
+react@^15.5.4:
   version "15.5.4"
   resolved "https://registry.npmjs.org/react/-/react-15.5.4.tgz#fa83eb01506ab237cdc1c8c3b1cea8de012bf047"
   dependencies:

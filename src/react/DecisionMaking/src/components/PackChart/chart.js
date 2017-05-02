@@ -17,6 +17,7 @@ const margin = 20
 
 export default class Chart extends Component<*, ChartProps, *> {
   render() {
+    console.log(this.props)
     const { height, width, diameter, nodeList, view, focus } = this.props
 
     if (!width || !height) return null
@@ -33,7 +34,11 @@ export default class Chart extends Component<*, ChartProps, *> {
     // console.log(view)
 
     return (
-      <div>
+      <div className={styles.chart}>
+        <div className={styles.btns}>
+          <Button onClick={this.props.handleBackUpper}>返回上一层</Button>
+          <Button onClick={this.props.handleBackRoot}>返回顶层</Button>
+        </div>        
         <svg width={width} height={height} viewBox={viewBox.join(' ')}>
           <TreeNodes {...this.props} />
           {/*<TextNodes {...this.props} />*/}

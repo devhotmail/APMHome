@@ -1,0 +1,23 @@
+$sidepanel-width: 300px;
+
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.main {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(100% - #{$sidepanel-width});
+  height: 100%;
+}
+
+.sidebar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: $sidepanel-width;
+  height: 100%;
+}

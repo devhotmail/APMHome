@@ -1,18 +1,28 @@
 import React, { Component } from 'react'
 import { connect } from 'dva'
 
-import Chart from '#/components/Chart'
+import SizeProvider from '#/components/SizeProvider'
 import PackChart from '#/components/PackChart'
+import SidePanel from '#/components/SidePanel'
 
 // import Wrapper from './wrapper'
 import FakeWrapper from './fakeWrapper'
 
-const BubleChart = FakeWrapper(PackChart)
+import styles from './styles.scss'
+
+const BubleChart = FakeWrapper(SizeProvider(PackChart))
 // const BubleChart = FakeWrapper(Chart)
 
 class Root extends Component {
   render() {
-    return <BubleChart />
+    return <div className={styles.container}>
+      <div className={styles.main}>
+        <BubleChart />
+      </div>
+      <div className={styles.sidebar}>
+        <SidePanel />
+      </div>
+    </div>
   }
 }
 
