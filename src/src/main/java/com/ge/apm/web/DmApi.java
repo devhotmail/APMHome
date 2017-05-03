@@ -11,10 +11,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.math.Stats;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
-import javaslang.Tuple;
-import javaslang.Tuple2;
-import javaslang.Tuple6;
-import javaslang.Tuple8;
+import javaslang.*;
 import javaslang.collection.HashMap;
 import javaslang.collection.List;
 import javaslang.collection.Map;
@@ -64,10 +61,10 @@ public class DmApi {
     java.util.Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), java.util.Map.Entry::getValue).toBlocking().single();
     java.util.Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     if (Option.of(groupBy).isDefined() && Option.of(dept).isEmpty()) {
-      Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), HashMap.empty())), groupBy, groups, depts));
+      Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), null, LocalDate.now().withDayOfYear(1).minusYears(2), LocalDate.now().withDayOfYear(1).minusYears(1).minusDays(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), null, LocalDate.now().withDayOfYear(1).minusYears(1), LocalDate.now().withDayOfYear(1).minusDays(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), null, LocalDate.now().withDayOfYear(1), LocalDate.now()), HashMap.empty())), groupBy, groups, depts));
       return ResponseEntity.ok().header("Content-Type", "application/json;charset=UTF-8").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
     } else if (Option.of(groupBy).isEmpty() && Option.of(dept).isDefined()) {
-      Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now()), HashMap.empty())), "type", groups, depts));
+      Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().withDayOfYear(1).minusYears(2), LocalDate.now().withDayOfYear(1).minusYears(1).minusDays(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().withDayOfYear(1).minusYears(1), LocalDate.now().withDayOfYear(1).minusDays(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().withDayOfYear(1), LocalDate.now()), HashMap.empty())), "type", groups, depts));
       return ResponseEntity.ok().header("Content-Type", "application/json;charset=UTF-8").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
     } else {
       return ResponseEntity.badRequest().header("Content-Type", "application/json;charset=UTF-8").body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
@@ -87,10 +84,10 @@ public class DmApi {
     })).getOrElseThrow(t -> new IllegalStateException("Format incorrect", t));
     Map<Integer, Double> userPredict = HashMap.ofEntries(inputs.values().get(0).map(v -> Tuple.of(Ints.tryParse(v.get("id").get()), Doubles.tryParse(v.get("change").get()))));
     if (Option.of(groupBy).isDefined() && Option.of(dept).isEmpty()) {
-      Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), groupBy, LocalDate.now()), userPredict)), groupBy, groups, depts));
+      Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), null, LocalDate.now().withDayOfYear(1).minusYears(2), LocalDate.now().withDayOfYear(1).minusYears(1).minusDays(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), null, LocalDate.now().withDayOfYear(1).minusYears(1), LocalDate.now().withDayOfYear(1).minusDays(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), null, LocalDate.now().withDayOfYear(1), LocalDate.now()), userPredict)), groupBy, groups, depts));
       return ResponseEntity.ok().header("Content-Type", "application/json;charset=UTF-8").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
     } else if (Option.of(groupBy).isEmpty() && Option.of(dept).isDefined()) {
-      Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().minusYears(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now()), userPredict)), "type", groups, depts));
+      Map<String, Object> body = recursivelyCalculateSuggestions(groupCalculations(calculateValuesEachItem(usagePredict(dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().withDayOfYear(1).minusYears(2), LocalDate.now().withDayOfYear(1).minusYears(1).minusDays(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().withDayOfYear(1).minusYears(1), LocalDate.now().withDayOfYear(1).minusDays(1)), dmService.findAssets(user.getSiteId(), user.getHospitalId(), dept, LocalDate.now().withDayOfYear(1), LocalDate.now()), userPredict)), "type", groups, depts));
       return ResponseEntity.ok().header("Content-Type", "application/json;charset=UTF-8").cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(body));
     } else {
       return ResponseEntity.badRequest().header("Content-Type", "application/json;charset=UTF-8").body(new ObjectMapper().registerModule(new JavaslangModule()).writer().writeValueAsBytes(HashMap.of("msg", "input data is not supported")));
@@ -106,14 +103,14 @@ public class DmApi {
    * @param lastYear          sql result last year
    * @return forecast of next year
    */
-  private Observable<Tuple8<Integer, String, Integer, Integer, Double, Double, Double, Double>> usagePredict(Observable<Tuple6<Integer, String, Integer, Integer, Double, Double>> theYearBeforeLast, Observable<Tuple6<Integer, String, Integer, Integer, Double, Double>> lastYear, Map<Integer, Double> userPredict) {
-    return Observable.zip(theYearBeforeLast, lastYear, (lstSnd, lstFst) ->
+  private Observable<Tuple7<Integer, String, Integer, Integer, Double, Double, Tuple3<Double, Double, Double>>> usagePredict(Observable<Tuple6<Integer, String, Integer, Integer, Double, Double>> theYearBeforeLast, Observable<Tuple6<Integer, String, Integer, Integer, Double, Double>> lastYear, Observable<Tuple6<Integer, String, Integer, Integer, Double, Double>> thisYear, Map<Integer, Double> userPredict) {
+    return Observable.zip(theYearBeforeLast, lastYear, thisYear, (lstSnd, lstFst, thisY) ->
       Tuple.of(lstSnd._1, lstSnd._2, lstSnd._3, lstSnd._4, lstFst._5,
         (userPredict.get(lstFst._1).getOrElse(Option.when(lstSnd._5.equals(0D), 0D).getOrElse(Stats.of(lstSnd._5, lstFst._5).sampleStandardDeviation())) + 1D) * lstFst._5,
-        lstSnd._6, lstFst._6)).cache();
+        Tuple.of(lstSnd._6, lstFst._6, thisY._6))).cache();
   }
 
-  private List<Map<String, Object>> calculateValuesEachItem(Observable<Tuple8<Integer, String, Integer, Integer, Double, Double, Double, Double>> predictedData) {
+  private List<Map<String, Object>> calculateValuesEachItem(Observable<Tuple7<Integer, String, Integer, Integer, Double, Double, Tuple3<Double, Double, Double>>> predictedData) {
     return List.ofAll(predictedData.toBlocking().toIterable()).map(v -> HashMap.of(
       "id", v._1,
       "name", v._2,
@@ -121,19 +118,21 @@ public class DmApi {
       "asset_group", v._4,
       "usage", v._6,
       "usage_sug", Option.when(v._6 >= 1D, 1D).getOrElse(v._6),
-      "revenue_predict_sug_raw", Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5),
-      "revenue_predict_sug", formatMoney(CNY.money(Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5)), CNY.desc(CNY.money(v._7))._2)._1,
-      "revenue_last_year_raw", v._8,
-      "revenue_last_year", formatMoney(CNY.money(v._8), CNY.desc(CNY.money(v._7))._2)._1,
-      "revenue_year_before_last_raw", v._7,
-      "revenue_year_before_last", formatMoney(CNY.money(v._7), CNY.desc(CNY.money(v._7))._2)._1,
+      "revenue_predict_sug_raw", Option.when(v._5.equals(0D), 0D).getOrElse(v._7._2 * v._6 / v._5),
+      "revenue_predict_sug", formatMoney(CNY.money(Option.when(v._5.equals(0D), 0D).getOrElse(v._7._2 * v._6 / v._5)), CNY.desc(CNY.money(v._7._1))._2)._1,
+      "revenue_last_year_raw", v._7._2,
+      "revenue_last_year", formatMoney(CNY.money(v._7._2), CNY.desc(CNY.money(v._7._1))._2)._1,
+      "revenue_year_before_last_raw", v._7._1,
+      "revenue_year_before_last", formatMoney(CNY.money(v._7._1), CNY.desc(CNY.money(v._7._1))._2)._1,
+      "revenue_this_year", formatMoney(CNY.money(v._7._3), CNY.desc(CNY.money(v._7._1))._2)._1,
+      "revenue_this_year_raw", v._7._3,
       "last_year_date", LocalDate.now().minusYears(1).toString(),
       "year_before_last_date", LocalDate.now().minusYears(2).toString(),
-      "revenue_increase_sug", Option.when(v._8.equals(0D), 0D).getOrElse(Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5) / v._8 - 1D),
-      "revenue_unit", CNY.desc(CNY.money(v._7))._2,
-      "revenue_predict_raw", Option.when(v._6 > 1D, Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5) / v._6).getOrElse(Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5)),
-      "revenue_predict", formatMoney(CNY.money(Option.when(v._6 > 1D, Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5) / v._6).getOrElse(Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5))), CNY.desc(CNY.money(v._7))._2)._1,
-      "revenue_increase", Option.when(v._8.equals(0D), 0D).getOrElse(Option.when(v._6 > 1D, Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5) / v._6).getOrElse(Option.when(v._5.equals(0D), 0D).getOrElse(v._8 * v._6 / v._5)) / v._8 - 1D)
+      "revenue_increase_sug", Option.when(v._7._2.equals(0D), 0D).getOrElse(Option.when(v._5.equals(0D), 0D).getOrElse(v._7._2 * v._6 / v._5) / v._7._2 - 1D),
+      "revenue_unit", CNY.desc(CNY.money(v._7._1))._2,
+      "revenue_predict_raw", Option.when(v._6 > 1D, Option.when(v._5.equals(0D), 0D).getOrElse(v._7._2 * v._6 / v._5) / v._6).getOrElse(Option.when(v._5.equals(0D), 0D).getOrElse(v._7._2 * v._6 / v._5)),
+      "revenue_predict", formatMoney(CNY.money(Option.when(v._6 > 1D, Option.when(v._5.equals(0D), 0D).getOrElse(v._7._2 * v._6 / v._5) / v._6).getOrElse(Option.when(v._5.equals(0D), 0D).getOrElse(v._7._2 * v._6 / v._5))), CNY.desc(CNY.money(v._7._1))._2)._1,
+      "revenue_increase", Option.when(v._7._2.equals(0D), 0D).getOrElse(Option.when(v._6 > 1D, Option.when(v._5.equals(0D), 0D).getOrElse(v._7._2 * v._6 / v._5) / v._6).getOrElse(Option.when(v._5.equals(0D), 0D).getOrElse(v._7._2 * v._6 / v._5)) / v._7._2 - 1D)
     ));
   }
 
@@ -162,6 +161,7 @@ public class DmApi {
     Double revenuePredictedRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_predict_raw").get())).sum()).getOrElse(0D);
     Double revenueLastYearRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_last_year_raw").get())).sum()).getOrElse(0D);
     Double revenueYearBeforeLastRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_year_before_last_raw").get())).sum()).getOrElse(0D);
+    Double revenueThisYearRaw = Try.of(() -> Stats.of(items.map(v -> (Double) v.get("revenue_this_year_raw").get())).sum()).getOrElse(0D);
     String label = CNY.desc(CNY.money(revenueYearBeforeLastRaw))._2;
     return HashMap.of(
       "id", id,
@@ -172,6 +172,8 @@ public class DmApi {
       "revenue_last_year", formatMoney(CNY.money(revenueLastYearRaw), label)._1,
       "revenue_year_before_last_raw", revenueYearBeforeLastRaw,
       "revenue_last_year_raw", revenueLastYearRaw,
+      "revenue_this_year_raw", revenueThisYearRaw,
+      "revenue_this_year", formatMoney(CNY.money(revenueThisYearRaw), label)._1,
       "last_year_date", LocalDate.now().minusYears(1).toString(),
       "year_before_last_date", LocalDate.now().minusYears(2).toString(),
       "revenue_predict", formatMoney(CNY.money(revenuePredictedRaw), label)._1,

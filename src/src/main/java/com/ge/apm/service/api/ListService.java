@@ -3,9 +3,6 @@ package com.ge.apm.service.api;
 import com.github.davidmoten.rx.jdbc.ConnectionProvider;
 import com.github.davidmoten.rx.jdbc.Database;
 
-import javaslang.control.Option;
-
-import org.simpleflatmapper.tuple.Tuple12;
 import org.simpleflatmapper.tuple.Tuple5;
 import org.simpleflatmapper.tuple.Tuple6;
 import org.simpleflatmapper.tuple.Tuple9;
@@ -69,10 +66,10 @@ public class ListService {
 			  .parameter("hospital_id", hospital_id)
 			  .parameter("from", from)
 			  .parameter("to", to)
-			  //    |   exposure   |    scan     |    usage     |    stop      |     fix     |   revenue    |   profit    |    day     |
+			  //    |   exposure   |    scan     |    usage     |    rate      |     fix     |   revenue    |   profit    |    day     |
 			  .get(rs ->
 			  		new Tuple9<Double, Double, Integer, Double, Double, Integer, Double, Double, Integer> (
-			  				rs.getDouble("rating"), rs.getDouble("exposure"), rs.getInt("scan"), rs.getDouble("usage"), 100.0*rs.getDouble("stop")/rs.getInt("day"), rs.getInt("fix"), rs.getDouble("revenue"), rs.getDouble("profit"), rs.getInt("day") ) );
+			  				rs.getDouble("rating"), rs.getDouble("exposure"), rs.getInt("scan"), rs.getDouble("usage"), 100.0*(1-rs.getDouble("stop")/rs.getInt("day")), rs.getInt("fix"), rs.getDouble("revenue"), rs.getDouble("profit"), rs.getInt("day") ) );
 
   }
 
@@ -99,7 +96,7 @@ public class ListService {
 			.parameter("to", to)
 			.get(rs ->
 				new Tuple6<Double, Double, Double, Double, Double, Double> (
-				rs.getDouble("exposure"), rs.getDouble("scan"), rs.getDouble("usage"), 100.0*rs.getDouble("stop"), rs.getDouble("fix"), rs.getDouble("profit") ) );
+				rs.getDouble("exposure"), rs.getDouble("scan"), rs.getDouble("usage"), 100.0*(1-rs.getDouble("stop")), rs.getDouble("fix"), rs.getDouble("profit") ) );
 
   }
 

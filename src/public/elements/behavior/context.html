@@ -11,7 +11,15 @@
         /**
          * user context info like session
          */
-        user: Object
+        user: Object,
+      },
+      /**
+      * get user context before behavior's ready
+      * THIS IS QUIRKY: user object is not prepared before 'ready', therefor inaccessable 
+      * in many phases, e.g. computed props, registered hook...
+      */
+      getUser: function() {
+        return context.user()
       },
       resolveApiUrl: function(url) {
         return context.resolveUrl(url);

@@ -69,7 +69,7 @@
     <intercept-url pattern="/portal/asset/fileAttachment/**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead','AssetStaff')"/> <!-- 文档管理 -->
 
     <!-- 绩效分析 -->
-    <intercept-url pattern="/portal/analysis/assetPerf**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 绩效分析 -->
+    <intercept-url pattern="/portal/analysis/assetPerf**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead', 'DeptHead')"/>    <!-- 绩效分析 -->
     <intercept-url pattern="/portal/analysis/assetForecast**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 绩效预测 -->
     <intercept-url pattern="/portal/analysis/assetDecision**" access="hasAnyRole('SuperAdmin','HospitalHead', 'AssetHead')"/>    <!-- 辅助决策 -->
 

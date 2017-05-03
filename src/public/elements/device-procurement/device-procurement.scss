@@ -6,7 +6,7 @@
   display: flex;
 }
 
-$sidebar-width: 280px;
+$sidebar-width: 300px;
 $kpi-legend-circle-r: 25px;
 $gap: 10px;
 
@@ -123,7 +123,7 @@ $tab-active-color: rgb(31, 105, 266);
   }
 
   .revenue-num {
-    width: 100px;
+    width: 105px;
   }
 
   &.muted {
@@ -137,7 +137,8 @@ $tab-active-color: rgb(31, 105, 266);
 
 .config-list-wrapper {
   position: relative;
-  display: flex;
+  border: 1px solid $border-color;
+  border-radius: 6px;
 
   &.disabled {
     pointer-events: none;
@@ -148,33 +149,22 @@ $tab-active-color: rgb(31, 105, 266);
   }
 }
 
-$configListMargin: 10px;
-
 .config-list {
-  flex: 1 1 auto;
   overflow-y: scroll;
   height: 30 * 10 + 2px;
-  border: 1px solid $border-color;
-  border-radius: 6px;
   box-sizing: border-box;
-  width: 50%;
   min-width: 0;
-
-  + .config-list {
-    margin-left: $configListMargin;
-  }
 }
 
-.active-arrow {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  transform: translate(- $configListMargin / 2, 10px);
-  content: '';
-  border-left: 10px solid $gray;
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  transition: all .15s;
+.config-head {
+  height: 30px;
+  padding: 0 5px;
+  line-height: 30px;
+  font-weight: bolder;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid lighten($border-color, 10%);
 }
 
 .config-item {
@@ -184,11 +174,6 @@ $configListMargin: 10px;
   display: flex;
   align-items: center;
   // justify-content: space-between;
-
-  &:first-child {
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-  }
 
   &:last-of-type {
     border-bottom-left-radius: 6px;
@@ -211,17 +196,35 @@ $configListMargin: 10px;
   }
 }
 
+.active-arrow {
+  display: inline-block;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 10px solid $gray;
+}
+
 .ellipsis {
   @include text-truncate();
 }
 
+$design-width: 120px;
+
+.year-dropdown {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  px-dropdown {
+    width: $design-width;
+  }
+}
+
 .btn-group {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 
   .btn {
-    width: 100px;
+    width: $design-width;
     margin-left: 0!important;
 
     &.active {
@@ -253,32 +256,20 @@ $configListMargin: 10px;
   }
 }
 
-px-dropdown {
-  width: 180px;
-  margin-bottom: 30px;
-}
-
 .kpis {
 
   .kpi {
     display: flex;
     align-items: center;
+    text-align: left;
     font-size: 16px;
-    
-    &::before {
-      display: inline-block;
-      content: '';
-      width: $kpi-legend-circle-r;
-      height: $kpi-legend-circle-r;
-      margin-right: $gap;
-      border-radius: 50%;
-      background-color: $yellow;
+
+    i {
+      font-size: 24px;
     }
 
-    @each $num in (1,2,3) {
-      &.kpi-#{$num - 1}::before {
-        background-color: nth($color-set, $num);
-      }
+    .kpi-tip {
+      margin-left: 5px;
     }
   }
 

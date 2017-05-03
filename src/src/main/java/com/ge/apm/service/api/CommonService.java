@@ -71,6 +71,14 @@ public class CommonService {
       .cache().toBlocking().single();
   }
 
+  @Cacheable(cacheNames = "springCache", key = "'commonService.findParts'")
+  public Map<Integer, String> findParts() {
+    return db.select(new SQL().SELECT("id", "name").FROM("proc_part").toString())
+      .getAs(Integer.class, String.class)
+      .toMap(Tuple2::_1, tuple -> Option.of(tuple._2()).getOrElse(""))
+      .cache().toBlocking().single();
+  }
+
   @Cacheable(cacheNames = "springCache", key = "'commonService.findSuppliers.'+#siteId")
   public Map<Integer, String> findSuppliers(int siteId) {
     return db.select(new SQL().SELECT("id", "name").FROM("supplier").WHERE("site_id = :site_id").toString())
