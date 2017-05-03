@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Button } from 'antd'
 
+import { margin } from '#/constants'
+
 import TextNodes from './TextNodes'
 import TreeNodes from './TreeNodes'
 
@@ -13,16 +15,14 @@ type ChartProps = {
   setFocus: Function
 }
 
-const margin = 20
-
 export default class Chart extends Component<*, ChartProps, *> {
   render() {
-    const { height, width, diameter, nodeList, view, focus } = this.props
+    const { height, width, view } = this.props
 
-    if (!width || !height) return null
+    if (!width || !height || !view.length) return null
 
     const [ x, y, r ] = view
-    // const { x, y, r } = focus
+
     const viewBox = [
       x - r - margin / 2,
       y - r - margin / 2,
@@ -30,8 +30,6 @@ export default class Chart extends Component<*, ChartProps, *> {
       r * 2 + margin
     ]
 
-    // console.log(view)
-    console.log(2)
     return (
       <div className={styles.chart}>
         <div className={styles.btns}>
@@ -41,13 +39,13 @@ export default class Chart extends Component<*, ChartProps, *> {
         <svg width={width} height={height} viewBox={viewBox.join(' ')}>
           <TreeNodes {...this.props} />
           {/*<TextNodes {...this.props} />*/}
-          {/*{ nodeList ? this.renderNodes(nodeList) : null }*/}
+          {/*{ nodeList ? this.renderTexts(nodeList) : null }*/}
         </svg>
       </div>
     )
   }
 
-  renderNodes = (nodeList: Array<NodeT>) => {
+  renderTexts = (nodeList: Array<NodeT>) => {
     const { focus } = this.props
     return <g>
       {
@@ -62,11 +60,5 @@ export default class Chart extends Component<*, ChartProps, *> {
         })
       }
     </g>
-  }
-
-  changeFocus = node => {
-    this.setState({
-
-    })
   }
 }

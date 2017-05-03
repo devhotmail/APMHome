@@ -7,11 +7,15 @@ import './styles/index.scss'
 
 import router from '#/router'
 import financial from '#/models/financial'
+import nodeList from '#/models/nodeList'
+import config from '#/models/config'
 import focus from '#/models/focus'
 
 const app = dva()
 
 app.model(financial)
+app.model(nodeList)
+app.model(config)
 app.model(focus)
 
 app.router(router)

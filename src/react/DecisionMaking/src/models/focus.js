@@ -4,58 +4,35 @@ export default {
   namespace: 'focus',
   state: {
     loading: false,
-    data: undefined,
-    info: undefined
+    data: undefined
   },
   subscriptions: {
     setup({ dispatch }) {
-      // dispatch({
-      //   type: 'data/get'
-      // })
     }
   },
   effects: {
-    *['set'] ({ payload }, { put, call, select }) {
+    *['data/set'] ({ payload }, { put, call, select }) {
       yield put({
-        type: 'set/succeed',
+        type: 'data/set/succeed',
         payload
       })
     },
-    *['setByInfo'] ({ payload }, { put, call, select }) {
-      yield put({
-        type: 'setByInfo/succeed',
-        payload
-      })
-    },    
-    *['data/get'] (action, { put, call, select }) {
-      const params = {
-        year: 2016,
-        groupby: 'type',
-        start: 0,
-        limit: 10
-      }
-
+    *['data/setByInfo'] ({ payload }, { put, call, select }) {
+      const { uid } = payload
       try {
-        const { data } = yield call(
-          axios.get,
-          process.env.API_HOST + '/profit',
-          { params }
-        )
+        const nodeList = yield select(state => state.nodeList.data)
+        const target = nodeList.find(n => n.data.uid === uid)
+        yield put({
+          type: 'setByInfo/succeed',
+          payload: target
+        })
+      } catch (err) {
 
-        yield put({
-          type: 'data/get/succeed',
-          payload: data
-        })
-      } catch(err) {
-        yield put({
-          type: 'data/get/failed',
-          payload: err
-        })
       }
-    }
+    },
   },
   reducers: {
-    ['set/succeed'] (state, { payload }) {
+    ['data/set/succeed'] (state, { payload }) {
       return {
         ...state,
         data: payload
@@ -64,7 +41,7 @@ export default {
     ['setByInfo/succeed'] (state, { payload }) {
       return {
         ...state,
-        info: payload
+        data: payload
       }
     }    
   }

@@ -25,7 +25,7 @@ export default class ManualPanel extends Component {
                 ? 'active'
                 : ''
               const onClick = e => this.props.dispatch({
-                type: 'focus/setByInfo',
+                type: 'focus/data/setByInfo',
                 payload: n
               })
               return <li key={index} className={cls} onClick={onClick}>{n.name}</li>

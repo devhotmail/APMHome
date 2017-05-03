@@ -54,11 +54,7 @@ function getWaveFillCls (n: NodeT): number {
   return waveFillCls[colorIndex]
 }
 
-export default class TreeNodes extends Component<*, *, *> {
-  shouldComponentUpdate (nextProps, nextState) {
-    return false
-  }
-  
+export default class TreeNodes extends Component<*, *, *> {  
   render () {
     const { nodeList } = this.props
     return (
@@ -113,7 +109,7 @@ export default class TreeNodes extends Component<*, *, *> {
   getCircleFillCls = (node, focus) => {
     // transparent fill to occupy own place
     const { transparentFill, noFill } = styles
-
+ 
     if (node === focus) return transparentFill
     // focus children
     if (node.parent && node.parent === focus) return transparentFill

@@ -12,7 +12,7 @@ import styles from './styles.scss'
 const Chart = SizeProvider(PackChart)
 const Panel = connect(state => ({
   focus: state.focus.data,
-  config: state.financial.config
+  config: state.config.data
 }))(SidePanel)
 
 class Root extends Component {
