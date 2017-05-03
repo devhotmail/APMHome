@@ -1,7 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import dva from 'dva/mobile'
 import { AppContainer } from 'react-hot-loader'
+import dva from 'dva'
+import { browserHistory, HashHistory, useRouterHistory } from 'dva/router'
+import { createHistory } from 'history'
 
 import './styles/index.scss'
 
@@ -11,7 +13,13 @@ import nodeList from '#/models/nodeList'
 import config from '#/models/config'
 import focus from '#/models/focus'
 
-const app = dva()
+const historyEngine = useRouterHistory(createHistory)({
+  basename: document.location.pathname.split('.xhtml')[0] + '.xhtml'
+})
+
+const app = dva({
+  history: process.env.NODE_ENV === 'development' ? browserHistory : historyEngine
+})
 
 app.model(financial)
 app.model(nodeList)

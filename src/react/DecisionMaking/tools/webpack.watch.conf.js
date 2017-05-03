@@ -93,7 +93,7 @@ module.exports = merge(baseWebpackConfig, {
             {
               loader: 'less-loader',
               options: {
-                modifyVars: require('../src/theme.js')
+                modifyVars: require('./theme.js')
               }
             }
           ],
@@ -121,7 +121,7 @@ module.exports = merge(baseWebpackConfig, {
       debug: false
     }),
     new webpack.DefinePlugin({
-      'process.env': config.development.env
+      'process.env': config.watch.env
     }),
     new HtmlWebpackPlugin({
       template: './public/index.xhtml',

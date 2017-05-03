@@ -32,7 +32,7 @@ class extends Component {
 
     if (diameter) {
       dispatch({
-        type: 'nodeList/get',
+        type: 'nodeList/coefficient/set',
         payload: {
           diameter,
           margin
@@ -55,7 +55,7 @@ class extends Component {
     const { diameter, focus, nodeList, dispatch } = nextProps
     if (diameter && diameter !== this.props.diameter) {
       dispatch({
-        type: 'nodeList/data/get',
+        type: 'nodeList/coefficient/set',
         payload: {
           diameter,
           margin

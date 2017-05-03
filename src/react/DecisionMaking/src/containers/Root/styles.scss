@@ -21,3 +21,22 @@ $sidepanel-width: 300px;
   width: $sidepanel-width;
   height: 100%;
 }
+
+$filterBarHeight: 50px;
+
+.filterBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $filterBarHeight;
+}
+
+.chartWrapper {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - #{$filterBarHeight});
+  margin-top: 50px;  
+}

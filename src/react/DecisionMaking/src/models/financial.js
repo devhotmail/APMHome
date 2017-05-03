@@ -3,15 +3,9 @@ import axios from 'axios'
 import uuid from 'uuid/v4'
 import * as d3 from 'd3'
 
+import { currentYear } from '#/constants'
 import { round } from '#/utils'
 import data from '#/mock/data'
-
-function formatData (data) {
-  return {
-    children: data.items,
-    ...data.root
-  }
-}
 
 const childKey = 'items'
 
@@ -22,21 +16,21 @@ export default {
     data: undefined
   },
   subscriptions: {
-    setup({ dispatch }) {
-      dispatch({
-        type: 'config/set'
-      })
-
-      dispatch({
-        type: 'data/get'
+    setup({ dispatch, history }) {
+      return history.listen(({query}) => {
+        dispatch({
+          type: 'data/get',
+          payload: query || {}
+        })
       })
     }
   },
   effects: {
-    *['data/get'] (action, { put, call, select }) {
+    *['data/get'] ({ payload }, { put, call, select }) {
       const params = {
-        year: 2016,
-        groupby: 'type'
+        year: currentYear,
+        groupby: 'type',
+        ...payload
       }
 
       try {
@@ -46,12 +40,13 @@ export default {
           { params }
         )
 
-        const datum = formatData(data)
-        console.log(datum)
-
         yield put({
           type: 'data/get/succeed',
           payload: data
+        })
+
+        yield put({
+          type: 'nodeList/data/get'
         })
       } catch(err) {
         yield put({

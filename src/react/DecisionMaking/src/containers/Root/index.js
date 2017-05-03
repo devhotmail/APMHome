@@ -4,6 +4,7 @@ import { connect } from 'dva'
 import SizeProvider from '#/components/SizeProvider'
 import PackChart from '#/components/PackChart'
 import SidePanel from '#/components/SidePanel'
+import FilterBar from '#/components/FilterBar'
 
 // import Wrapper from './wrapper'
 
@@ -19,7 +20,12 @@ class Root extends Component {
   render() {
     return <div className={styles.container}>
       <div className={styles.main}>
-        <Chart {...this.props} />
+        <div className={styles.filterBar}>
+          <FilterBar {...this.props} />
+        </div>
+        <div className={styles.chartWrapper}>
+          <Chart {...this.props} />
+        </div>
       </div>
       <div className={styles.sidebar}>
         <Panel />
