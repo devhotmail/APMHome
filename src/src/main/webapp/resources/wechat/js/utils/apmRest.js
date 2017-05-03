@@ -24,7 +24,7 @@ $(function () {
             },
             success:function(ret) {
                 if (ret && ret.data && ret.data.id_token){
-                    $.cookie('Authorization', ret.data.id_token, {path: '/' });
+                    $.cookie('Authorization', ret.data.id_token);
                     //$.cookie('loginId', ret.data.loginId);
                 }
                 if (callback) {
