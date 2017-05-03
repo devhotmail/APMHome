@@ -19,7 +19,7 @@ export default {
   namespace: 'financial',
   state: {
     loading: false,
-    data: data
+    data: undefined
   },
   subscriptions: {
     setup({ dispatch }) {
@@ -27,46 +27,45 @@ export default {
         type: 'config/set'
       })
 
-      // dispatch({
-      //   type: 'data/get'
-      // })
+      dispatch({
+        type: 'data/get'
+      })
     }
   },
   effects: {
     *['data/get'] (action, { put, call, select }) {
-      console.log(data)
+      const params = {
+        year: 2016,
+        groupby: 'type'
+      }
 
-      // const params = {
-      //   year: 2016,
-      //   groupby: 'type',
-      //   start: 0,
-      //   limit: 10
-      // }
+      try {
+        const { data } = yield call(
+          axios.get,
+          process.env.API_HOST + '/dmv2',
+          { params }
+        )
 
-      // try {
-      //   const { data } = yield call(
-      //     axios.get,
-      //     process.env.API_HOST + '/profit',
-      //     { params }
-      //   )
+        const datum = formatData(data)
+        console.log(datum)
 
-      //   yield put({
-      //     type: 'data/get/succeed',
-      //     payload: data
-      //   })
-      // } catch(err) {
-      //   yield put({
-      //     type: 'data/get/failed',
-      //     payload: err
-      //   })
-      // }
+        yield put({
+          type: 'data/get/succeed',
+          payload: data
+        })
+      } catch(err) {
+        yield put({
+          type: 'data/get/failed',
+          payload: err
+        })
+      }
     }
   },
   reducers: {
     ['data/get/succeed'] (state, { payload }) {
       return {
         ...state,
-        data: formatData(payload)
+        data: payload
       }
     }        
   }

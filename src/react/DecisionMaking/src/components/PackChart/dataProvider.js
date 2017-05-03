@@ -20,7 +20,7 @@ type State = {
 export default WrappedComponent => 
 @connect(state => ({
   nodeList: state.nodeList.data,
-  focus: state.focus.data
+  focus: state.focus
 }))
 class extends Component {
   state = {
@@ -28,7 +28,7 @@ class extends Component {
   }
 
   componentDidMount () {
-    const { diameter, focus, dispatch } = this.props
+    const { diameter, focus, nodeList, dispatch } = this.props
 
     if (diameter) {
       dispatch({
@@ -40,14 +40,19 @@ class extends Component {
       })
     }
 
-    if (focus) {
-      const view = this.getView(focus)
-      this.setState({ view })
+    if (focus.cursor) {
+      const { id, depth } = focus.cursor
+      const target = nodeList.find(n => n.data.id === id && n.depth === depth)
+
+      if (target) {
+        const view = this.getView(target)
+        this.setState({ view })
+      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { diameter, focus, dispatch } = nextProps
+    const { diameter, focus, nodeList, dispatch } = nextProps
     if (diameter && diameter !== this.props.diameter) {
       dispatch({
         type: 'nodeList/data/get',
@@ -58,12 +63,17 @@ class extends Component {
       })
     }
 
-    if (focus && focus !== this.props.focus) {
-      if (!this.state.view.length) {
-        const view = this.getView(focus)
-        this.setState({ view })  
-      } else {
-        this.setView(focus)
+    if (focus.cursor) {
+      const { id, depth } = focus.cursor
+      const target = nodeList.find(n => n.data.id === id && n.depth === depth)
+
+      if (target && focus !== this.props.focus) {
+        if (!this.state.view.length) {
+          const view = this.getView(target)
+          this.setState({ view })  
+        } else {
+          this.setView(target)
+        }
       }
     }
   }

@@ -4,7 +4,8 @@ export default {
   namespace: 'focus',
   state: {
     loading: false,
-    data: undefined
+    data: undefined,
+    cursor: undefined
   },
   subscriptions: {
     setup({ dispatch }) {
@@ -12,9 +13,13 @@ export default {
   },
   effects: {
     *['data/set'] ({ payload }, { put, call, select }) {
+      const { depth, data: { id }} = payload
       yield put({
         type: 'data/set/succeed',
-        payload
+        payload: {
+          data: payload,
+          cursor: { id, depth }
+        }
       })
     },
     *['data/setByInfo'] ({ payload }, { put, call, select }) {
@@ -22,10 +27,16 @@ export default {
       try {
         const nodeList = yield select(state => state.nodeList.data)
         const target = nodeList.find(n => n.data.uid === uid)
-        yield put({
-          type: 'setByInfo/succeed',
-          payload: target
-        })
+        if (target) {
+          const { depth, data: { id }} = target
+          yield put({
+            type: 'data/set/succeed',
+            payload: {
+              data: target,
+              cursor: {id, depth }
+            }
+          })
+        }
       } catch (err) {
 
       }
@@ -35,13 +46,7 @@ export default {
     ['data/set/succeed'] (state, { payload }) {
       return {
         ...state,
-        data: payload
-      }
-    },
-    ['setByInfo/succeed'] (state, { payload }) {
-      return {
-        ...state,
-        data: payload
+        ...payload
       }
     }    
   }
