@@ -6,21 +6,23 @@ import PackChart from '#/components/PackChart'
 import SidePanel from '#/components/SidePanel'
 
 // import Wrapper from './wrapper'
-import FakeWrapper from './fakeWrapper'
 
 import styles from './styles.scss'
 
-const BubleChart = FakeWrapper(SizeProvider(PackChart))
-// const BubleChart = FakeWrapper(Chart)
+const Chart = SizeProvider(PackChart)
+const Panel = connect(state => ({
+  focus: state.focus.data,
+  config: state.financial.config
+}))(SidePanel)
 
 class Root extends Component {
   render() {
     return <div className={styles.container}>
       <div className={styles.main}>
-        <BubleChart />
+        <Chart {...this.props} />
       </div>
       <div className={styles.sidebar}>
-        <SidePanel />
+        <Panel />
       </div>
     </div>
   }

@@ -6,7 +6,6 @@ import styles from './styles.scss'
 function debounce(func, wait = 500, immediate) {
   let timeout
   return function() {
-    const context = this
     const args = arguments
     const later = () => {
       timeout = null

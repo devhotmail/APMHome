@@ -55,6 +55,10 @@ function getWaveFillCls (n: NodeT): number {
 }
 
 export default class TreeNodes extends Component<*, *, *> {
+  shouldComponentUpdate (nextProps, nextState) {
+    return false
+  }
+  
   render () {
     const { nodeList } = this.props
     return (

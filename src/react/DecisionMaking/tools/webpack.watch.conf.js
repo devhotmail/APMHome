@@ -45,6 +45,7 @@ module.exports = merge(baseWebpackConfig, {
       },
       {
         test: /\.s[ca]ss$/,
+        exclude: /src\/styles/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
@@ -54,6 +55,23 @@ module.exports = merge(baseWebpackConfig, {
                 module: true,
                 importLoaders: 1,
                 localIdentName: '[local]__[hash:base64:5]'
+              }
+            },
+            'sass-loader',
+            'postcss-loader'
+          ]
+        })
+      },
+      {
+        test: /\.s[ca]ss$/,
+        include: /src\/styles/,
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1
               }
             },
             'sass-loader',

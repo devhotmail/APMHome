@@ -11,4 +11,7 @@ export function rename(person: User):number {
 
 export const add = (a: number, b: number): number => a + b
 
-// export axios from './axios'
+export function round (value, precision = 0) {
+  var multiplier = Math.pow(10, precision)
+  return Math.round(value * multiplier) / multiplier
+}

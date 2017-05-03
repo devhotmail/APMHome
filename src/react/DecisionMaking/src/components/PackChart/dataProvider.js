@@ -1,5 +1,6 @@
 /* @flow */
 import React, { Component } from 'react'
+import { connect } from 'dva'
 import uuid from 'uuid/v4'
 import * as d3 from 'd3'
 import raf from 'raf'
@@ -16,153 +17,172 @@ type State = {
   visibleNodes: Array<Object>
 }
 
-function DataProvider(WrappedComponent: Class<Component<*, *, *>>): Class<Component<*, *, *>> {
-  return class extends Component {
-    state = {
-      focus: undefined,
-      view: undefined,
-      nodeList: []
-    }
+export default WrappedComponent => 
+@connect(state => ({
+  focusInfo: state.focus.info
+}))
+class extends Component {
+  state = {
+    focus: undefined,
+    view: undefined,
+    nodeList: []
+  }
 
-    componentDidMount () {
-      const { diameter } = this.props
-      if (diameter) {
-        this.setState((state, props) => {
-          const nodeList = this.getNodes(data, diameter)
-          const focus = state.focus ? state.focus : nodeList[0]
-          const view = this.getView(focus)
+  componentDidMount () {
+    const { diameter, dispatch } = this.props
+    if (diameter) {
+      this.setState((state, props) => {
+        const nodeList = this.getNodes(data, diameter)
+        const focus = state.focus ? state.focus : nodeList[0]
+        const view = this.getView(focus)
 
-          return {
-            ...state,
-            focus,
-            view,
-            nodeList
-          }
+        return {
+          ...state,
+          focus,
+          view,
+          nodeList
+        }
+      }, () => {
+        dispatch({
+          type: 'focus/set',
+          payload: this.state.focus
         })
-      }
+      })
     }
+  }
 
-    componentWillReceiveProps(nextProps) {
-      const { diameter } = nextProps
-      if (diameter) {
-        this.setState((state, props) => {
-          const nodeList = this.getNodes(data, diameter)
-          const focus = state.focus ? state.focus : nodeList[0]
-          const view = this.getView(focus)
+  componentWillReceiveProps(nextProps) {
+    const { diameter, dispatch } = nextProps
+    if (diameter) {
+      this.setState((state, props) => {
+        const nodeList = this.getNodes(data, diameter)
+        const focus = state.focus ? state.focus : nodeList[0]
+        const view = this.getView(focus)
 
-          return {
-            ...state,
-            focus,
-            view,
-            nodeList
-          }
+        return {
+          ...state,
+          focus,
+          view,
+          nodeList
+        }
+      }, () => {
+        dispatch({
+          type: 'focus/set',
+          payload: this.state.focus
         })
-      }
+      })
     }
-    
-    render() {
-      const { focus, nodeList, view } = this.state
+  }
+  
+  render() {
+    const { focus, nodeList, view } = this.state
 
-      if (!nodeList) return <div>data loading...</div>
-      return <WrappedComponent
-        nodeList={nodeList}
-        view={view}
-        focus={focus}
-        setFocus={this.setFocus}
-        handleBackUpper={this.handleBackUpper}
-        handleBackRoot={this.handleBackRoot}
-        {...this.props} />
-    }
+    if (!nodeList) return <div>data loading...</div>
+    return <WrappedComponent
+      nodeList={nodeList}
+      view={view}
+      focus={focus}
+      setFocus={this.setFocus}
+      handleBackUpper={this.handleBackUpper}
+      handleBackRoot={this.handleBackRoot}
+      {...this.props} />
+  }
 
 
-    handleBackUpper = (e?: Event) => {
-      e && e.preventDefault()
-      const { focus } = this.state
-      if (focus.parent) this.setFocus(focus.parent)
-    }
+  handleBackUpper = (e?: Event) => {
+    e && e.preventDefault()
+    const { focus } = this.state
+    if (focus.parent) this.setFocus(focus.parent)
+  }
 
-    handleBackRoot = (e?: Event) => {
-      e && e.preventDefault()
-      const { nodeList } = this.state
-      if (nodeList[0]) this.setFocus(nodeList[0])
-    }
+  handleBackRoot = (e?: Event) => {
+    e && e.preventDefault()
+    const { nodeList } = this.state
+    if (nodeList[0]) this.setFocus(nodeList[0])
+  }
 
-    setFocus = (focus: Object) => {
-      const nextView = this.getView(focus)
-      const i = d3.interpolateZoom(this.state.view, nextView)
+  setFocus = (focus: Object) => {
+    const nextView = this.getView(focus)
+    const i = d3.interpolateZoom(this.state.view, nextView)
 
-      if (focus === this.state.focus) return
+    if (focus === this.state.focus) return
 
-      this.setState((state, props) => ({
-        ...state,
-        focus: focus
-      }))
+    this.setState((state, props) => ({
+      ...state,
+      focus: focus
+    }), () => {
+      this.props.dispatch({
+        type: 'focus/set',
+        payload: this.state.focus
+      })
+    })
 
-      d3.transition()
-      .duration(750)
-      .tween('zoom', () => t => {
+    d3.transition()
+    .duration(750)
+    .tween('zoom', () => t => {
+      console.log(1)
+      this.setState({
+        view: i(t)
+      })
+      // this.setState((state, props) => {
+      //   return {
+      //     ...state,
+      //     view: i(t)
+      //   }
+      // })
+    })
+  }
+
+  setFocus1 = (focus: Object) => {
+    const nextView = this.getView(focus)
+    const i = d3.interpolateZoom(this.state.view, nextView)
+
+    if (focus === this.state.focus) return
+
+    this.setState((state, props) => ({
+      ...state,
+      focus: focus
+    }))
+
+    const start = Date.now()
+    const loop = (now = Date.now())  => {
+      raf(() => {
+        const now = Date.now()
+        const t = (now - start) / 1000 / 0.75
+        if (t > 1) return
         this.setState((state, props) => {
           return {
             ...state,
             view: i(t)
           }
         })
+
+        loop(now)
       })
     }
 
-    setFocus1 = (focus: Object) => {
-      const nextView = this.getView(focus)
-      const i = d3.interpolateZoom(this.state.view, nextView)
+    raf(loop)
+  }
 
-      if (focus === this.state.focus) return
+  getView = (node: Object) => {
+    return [node.x, node.y, node.r]
+  }
 
-      this.setState((state, props) => ({
-        ...state,
-        focus: focus
-      }))
+  getView1 = (node: Object) => {
+    return [node.x, node.y, node.r * 2]
+  }
 
-      const start = Date.now()
-      const loop = (now = Date.now())  => {
-        raf(() => {
-          const now = Date.now()
-          const t = (now - start) / 1000 / 0.75
-          if (t > 1) return
-          this.setState((state, props) => {
-            return {
-              ...state,
-              view: i(t)
-            }
-          })
+  getNodes = (data, diameter) => {
+    const pack = d3.pack()
+    .size([diameter - margin, diameter - margin])
+    .padding(2)
 
-          loop(now)
-        })
-      }
+    const root = d3.hierarchy(data, d => d.items)
+    .sum(d => d[sizeKey])
+    .sort((a, b) => b.value - a.value)
 
-      raf(loop)
-    }
+    const nodes = pack(root).descendants()
 
-    getView = (node: Object) => {
-      return [node.x, node.y, node.r]
-    }
-
-    getView1 = (node: Object) => {
-      return [node.x, node.y, node.r * 2]
-    }
-
-    getNodes = (data, diameter) => {
-      const pack = d3.pack()
-      .size([diameter - margin, diameter - margin])
-      .padding(2)
-
-      const root = d3.hierarchy(data, d => d.items)
-      .sum(d => d[sizeKey])
-      .sort((a, b) => b.value - a.value)
-
-      const nodes = pack(root).descendants()
-
-      return nodes
-    }
+    return nodes
   }
 }
-
-export default DataProvider

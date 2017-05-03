@@ -41,6 +41,7 @@ module.exports = merge(baseWebpackConfig, {
       },
       {
         test: /\.s[ca]ss$/,
+        exclude: /src\/styles/,
         use: [
           'style-loader',
           {
@@ -55,6 +56,21 @@ module.exports = merge(baseWebpackConfig, {
           'postcss-loader'
         ]
       },
+      {
+        test: /\.s[ca]ss$/,
+        include: /src\/styles/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1
+            }
+          },
+          'sass-loader',
+          'postcss-loader'
+        ]
+      },      
       {
         test: /\.less$/,
         use: [
