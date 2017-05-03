@@ -1,10 +1,10 @@
 package com.get.apm.api.ft;
 
 import com.google.common.collect.ImmutableMap;
+import javaslang.control.Try;
 import okhttp3.ResponseBody;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -26,8 +26,8 @@ public class ListApiTest extends AbstractApiTest {
 
   private void doOkTest(ListApiTestInterface tests, Map<String, String> queryMap) throws IOException {
     Response<ResponseBody> response = tests.listAssets(this.getCookie(), queryMap).execute();
-    Assertions.assertThat(response.body().contentType().toString()).isEqualTo("application/json;charset=UTF-8");
-    Assertions.assertThat(response.body().string()).contains("items");
+    Assertions.assertThat(Try.of(() -> response.body().contentType().toString()).getOrElse("")).isEqualTo("application/json;charset=UTF-8");
+    Assertions.assertThat(Try.of(() -> response.body().string()).getOrElse("")).contains("items");
   }
 
   private void doNegativeTest(ListApiTestInterface tests, Map<String, String> queryMap) throws IOException {
@@ -63,17 +63,13 @@ public class ListApiTest extends AbstractApiTest {
   @Test
   public void testOrderby() throws IOException {
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "rating"));
-    doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "scan"));
-    doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "exposure"));
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "usage"));
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "fix"));
-    doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "stop"));
-    //doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "orderby", "profit"));
   }
 
   @Test
   public void testDeptAndOrderby() throws IOException {
-    doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "dept", "30", "orderby", "exposure"));
+    doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "dept", "30", "orderby", "usage"));
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "dept", "5", "orderby", "fix"));
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(1).toString(), "to", LocalDate.now().toString(), "dept", "23", "orderby", "rating"));
   }
@@ -91,13 +87,13 @@ public class ListApiTest extends AbstractApiTest {
 
   @Test
   public void testAllParameter() throws IOException {
-    doOkTest(tests, new ImmutableMap.Builder<String, String>().put("from", LocalDate.now().minusYears(2).toString()).put("to", LocalDate.now().toString()).put("dept", "30").put("orderby", "exposure").put("limit", "20").put("start", "5").build());
+    doOkTest(tests, new ImmutableMap.Builder<String, String>().put("from", LocalDate.now().minusYears(2).toString()).put("to", LocalDate.now().toString()).put("dept", "30").put("orderby", "rating").put("limit", "20").put("start", "5").build());
   }
 
   @Test
   public void testExtraParameter() throws IOException {
     doOkTest(tests, ImmutableMap.of("from", LocalDate.now().minusYears(2).toString(), "to", LocalDate.now().minusYears(1).toString(), "dji", "fpp"));
-    doOkTest(tests, new ImmutableMap.Builder<String, String>().put("from", LocalDate.now().minusYears(2).toString()).put("to", LocalDate.now().toString()).put("dept", "30").put("dummy", "foo").put("orderby", "exposure").put("limit", "20").put("start", "5").build());
+    doOkTest(tests, new ImmutableMap.Builder<String, String>().put("from", LocalDate.now().minusYears(2).toString()).put("to", LocalDate.now().toString()).put("dept", "30").put("dummy", "foo").put("orderby", "rating").put("limit", "20").put("start", "5").build());
   }
 
   //negative tests
