@@ -10,3 +10,10 @@ export type NodeT = {
   data: Object,
   parent
 }
+
+export type ConfigT = {
+  config: Array<Object>,
+  focus: Object,
+  depths: Array<number>,
+  setFocus: Function
+}

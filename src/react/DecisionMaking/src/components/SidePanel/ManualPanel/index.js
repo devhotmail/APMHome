@@ -12,7 +12,11 @@ export default class ManualPanel extends Component {
     if (!config) return null
     if (!focus) return null
 
-    const depths = config.map(n => n.depth)
+    const root = config[0]
+    const { depth, height } = root
+    const visibleConfig = config.filter(n => !~[depth, height].indexOf(n.depth))
+
+    const depths = visibleConfig.map(n => n.depth)
     .filter((n, index, arr) => arr.indexOf(n) === index)
 
     return (

@@ -1,6 +1,7 @@
 /* @flow */
 import axios from 'axios'
 import uuid from 'uuid/v4'
+import { routerRedux } from 'dva/router'
 import * as d3 from 'd3'
 
 import { currentYear } from '#/constants'
@@ -18,21 +19,33 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(({query}) => {
+        const { groupby, year } = query
+
+        if (!groupby) return dispatch(routerRedux.push({
+          pathname: '/',
+          query: {
+            ...query,
+            groupby: 'type'
+          }
+        }))
+
+        if (!year) return dispatch(routerRedux.push({
+          pathname: '/',
+          query: {
+            ...query,
+            year: currentYear
+          }
+        }))
+
         dispatch({
           type: 'data/get',
-          payload: query || {}
+          payload: query
         })
       })
     }
   },
   effects: {
-    *['data/get'] ({ payload }, { put, call, select }) {
-      const params = {
-        year: currentYear,
-        groupby: 'type',
-        ...payload
-      }
-
+    *['data/get'] ({ payload: params }, { put, call, select }) {
       try {
         const { data } = yield call(
           axios.get,

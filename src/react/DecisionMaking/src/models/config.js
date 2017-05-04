@@ -14,10 +14,9 @@ export default {
   effects: {
     *['data/set'] ({ payload }, { put, call, select }) {
       try {
-        const config = getConfig(payload)
         yield put({
           type: 'data/set/succeed',
-          payload: config
+          payload: payload
         })
       } catch (err) {
 
@@ -39,15 +38,6 @@ function getConfig (nodes) {
   const { depth, height } = root
   return nodes
   .filter(n => !~[depth, height].indexOf(n.depth))
-  // .map(n => {
-  //   return {
-  //     family: {
-  //       parent: n.parent ? pickUpFields(n.parent) : null,
-  //       children: Array.isArray(n.children) ? n.children.map(child => pickUpFields(child)) : null
-  //     },
-  //     ...pickUpFields(n)
-  //   }
-  // })
 }
 
 function pickUpFields (obj) {

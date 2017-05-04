@@ -1,57 +1,86 @@
 /* @flow */
 import React, { Component } from 'react'
 
-import type { ConfigT } from '../interface'
+import { getCursor, isSameCursor, isFocusNode } from '#/utils'
+
+import type { ConfigT, NodeT, cursorT } from '#/types'
 
 class ConfigDept extends Component<*, ConfigT, *> {
-  state = {
-    dept: undefined
-  }
-
   render () {
-    const { config, focus, depths, setFocus } = this.props
-    const { dept } = this.state
+    const { config, focus: { cursor}, depths, setFocus } = this.props
+
     const configListOne = config.filter(n => n.depth === depths[0])
-    const configListTwo = config.filter(n => n.depth === depths[1] )
-    // console.log(configListTwo)
+    if (!configListOne.length) return null
+
+    const activeCursors = this.getParentCursors()
+
+    const configListTwo = config.filter(n => n.depth === depths[1])
+
     return (
       <div>
         <ul>
           {
             configListOne.length ? configListOne.map((n, index) => {
-              const cls = this.isSameNode(n, focus) || (focus.parent ? this.isSameNode(n, focus.parent) : false)
+              const cls = isFocusNode(n, activeCursors[0])
                 ? 'active'
                 : ''
-              const onClick = e => {
-                const { depth, data: { id }} = n
-                setFocus([id, depth])
-                this.setState({ dept: n })
-              }
+              const onClick = e => setFocus(getCursor(n))
               return <li key={index} className={cls} onClick={onClick}>{n.data.name}</li>
             }) : null
           }
         </ul>
-        <ul>
-          {
-            dept && Array.isArray(dept.children) ? dept.children.map((n, index) => {
-              const cls = this.isSameNode(n, focus) || (focus.parent ? this.isSameNode(n, focus.parent) : false)
-                ? 'active'
-                : ''
-              const onClick = e => {
-                const { depth, data: { id }} = n
-                setFocus([id, depth])
-                this.setState({ dept: n })
-              }
-              return <li key={index} className={cls} onClick={onClick}>{n.data.name}</li>
-            }) : null
-          }
-        </ul>
+        { activeCursors[0] ? this.renderConfigTwo(activeCursors) : null}
       </div>
     )
   }
 
-  isSameNode = (node, focus) => {
-    return node.id === focus.data.id && node.depth === focus.depth
+  renderConfigTwo = (activeCursors) => {
+    const { config, focus: { cursor}, depths, setFocus } = this.props
+
+    const configListTwo = config.filter(n => n.depth === depths[1])
+    .filter(n => isFocusNode(n.parent, activeCursors[0]))
+
+    return (
+      <ul>
+        {
+          configListTwo ? configListTwo.map((n, index) => {
+            const cls = isFocusNode(n, activeCursors[1])
+              ? 'active'
+              : ''
+            const onClick = e => setFocus(getCursor(n))
+            return <li key={index} className={cls} onClick={onClick}>{n.data.name}</li>
+          }) : null
+        }
+      </ul>
+    )
+  }
+
+  shouldActive = (node: NodeT, cursors: Array<cursorT>): boolean => {
+    const cursor = getCursor(node)
+    return cursors.find(n => isSameCursor(cursor, n))
+  }
+
+  getParentCursors = (): Array<cursorT>  => {
+    const { config, focus: { cursor }} = this.props
+
+    const target = config.find(n => isFocusNode(n, cursor))
+
+    if (!target) return []
+
+    return getCursors(target)
+
+    function getCursors(node) {
+      const nodes = [getCursor(node)]
+      getParent(node)
+      return nodes.reverse().slice(1) // remove root
+
+      function getParent(node) {
+        const parent = node.parent
+        if (!parent) return
+        nodes.push(getCursor(parent))
+        getParent(parent)
+      }
+    }
   }
 }
 

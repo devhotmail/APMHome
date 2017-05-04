@@ -14,5 +14,10 @@ export const getCursor = (node: NodeT): cursorT => {
 }
 
 export const isSameCursor = (a: cursorT, b: cursorT): boolean => {
-  return a[0] === b[0] && a[1] === b[1]
+  return Array.isArray(a) && Array.isArray(b) && a[0] === b[0] && a[1] === b[1]
+}
+
+
+export const isFocusNode = (node: NodeT, cursor: cursorT): boolean => {
+  return isSameCursor(getCursor(node), cursor)
 }
