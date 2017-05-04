@@ -898,7 +898,7 @@ public class DmApiV2 {
       .putAll(mapAllAssets(initResult._1))
       .put("items", initResult._2.map(v ->
         new ImmutableMap.Builder<String, Object>()
-          .putAll(mapTypeInfo(v._1))
+          .putAll(mapTypeInfo(v._1, null))
           .put("items", v._2.map(sub ->
             new ImmutableMap.Builder<String, Object>()
               .putAll(mapAssetInfo(sub))
@@ -937,7 +937,7 @@ public class DmApiV2 {
           .putAll(mapDeptInfo(v._1))
           .put("items", v._2.map(v2 ->
             new ImmutableMap.Builder<String, Object>()
-              .putAll(mapTypeInfo(v2._1))
+              .putAll(mapTypeInfo(v2._1, v._1.getDeptBsc().getDeptId()))
               .put("items", v2._2.map(v3 ->
                 new ImmutableMap.Builder<String, Object>()
                   .putAll(mapAssetInfo(v3))
@@ -968,9 +968,9 @@ public class DmApiV2 {
       .build();
   }
 
-  private java.util.Map<String, Object> mapTypeInfo(TypeInfo item) {
+  private java.util.Map<String, Object> mapTypeInfo(TypeInfo item, Integer dept) {
     return new ImmutableMap.Builder<String, Object>()
-      .put("id", item.getTypeBsc().getTypeId())
+      .put("id", Option.when(dept == null, String.format("%s", item.getTypeBsc().getTypeId())).getOrElse(String.format("%s-%s", dept, item.getTypeBsc().getTypeId())))
       .put("name", item.getTypeBsc().getTypeName())
       .put("size", item.getHisDatas()._2.getDepre())
       .put("usage_sum", item.getTypePdtDatas()._1.getPdtData().getUsgSum())
