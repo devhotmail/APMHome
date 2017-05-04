@@ -5,6 +5,7 @@ import com.github.davidmoten.rx.jdbc.Database;
 import com.github.davidmoten.rx.jdbc.QuerySelect;
 import com.github.davidmoten.rx.jdbc.annotations.Column;
 import javaslang.Tuple;
+import javaslang.Tuple4;
 import javaslang.Tuple6;
 import javaslang.control.Option;
 import org.apache.ibatis.jdbc.SQL;
@@ -78,7 +79,7 @@ public class DmService {
       WHERE("ai.site_id = :site_id");
       WHERE("ai.hospital_id = :hospital_id");
       if (Option.of(dept).isDefined()) {
-        WHERE("ai.clinical_dept_id = " + dept);
+        WHERE("ai.clinical_dept_id = :dept");
       }
       WHERE("asu.created >= :start_day");
       WHERE("asu.created <= :end_day");
@@ -88,7 +89,8 @@ public class DmService {
     }}.toString())
       .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
       .parameter("start_day", Date.valueOf(startDate)).parameter("end_day", Date.valueOf(endDate));
-//    return Option.when(Option.of(dept).isDefined(), builder.parameter("dept", dept)).getOrElse(builder)
+    //builder = Option.when(Option.of(dept).isDefined(), builder.parameter("dept", dept)).getOrElse(builder);
+    builder = Option.of(builder).filter(s -> Option.of(dept).filter(d -> d > 0).isDefined()).map(b -> b.parameter("dept", dept)).orElse(Option.of(builder)).get();
     return builder
       .autoMap(Properties.class)
       .map(properties -> Tuple.of(properties.id(), properties.name(), properties.dept(), properties.type(),
@@ -96,5 +98,30 @@ public class DmService {
       .cache();
   }
 
-
+  @Cacheable(cacheNames = "springCache", key = "'dmService.findMonthUsage.'+#siteId+'.'+#hospitalId+'.startDate'+#startDate+'.endDate'+#endDate")
+  public Observable<Tuple4<Integer, LocalDate, Integer, Double>> findMonthUsage(Integer siteId, Integer hospitalId, LocalDate startDate, LocalDate endDate) {
+    log.info("siteId: {}; hospitalId: {}; startdate:{}; endDate:{}", siteId, hospitalId, startDate, endDate);
+    return db.select(new SQL() {{
+      SELECT("ai.id", "date_trunc(:time_unit,asu.created) as created_date", "ai.asset_group", "ai.install_date", "COALESCE(sum(asu.exam_duration),0) as use_time");
+      FROM("asset_info ai");
+      LEFT_OUTER_JOIN("asset_summit asu on ai.id = asu.asset_id");
+      WHERE("ai.is_valid = true");
+      WHERE("ai.site_id = :site_id");
+      WHERE("ai.hospital_id = :hospital_id");
+      WHERE("asu.created >= :start_day");
+      WHERE("asu.created <= :end_day");
+      WHERE("ai.install_date IS NOT NULL");
+      GROUP_BY("ai.id");
+      GROUP_BY("created_date");
+      ORDER_BY("ai.id");
+      ORDER_BY("created_date");
+    }}.toString())
+      .parameter("time_unit", "month").parameter("site_id", siteId).parameter("hospital_id", hospitalId).parameter("start_day", Date.valueOf(startDate)).parameter("end_day", Date.valueOf(endDate))
+      .getAs(Integer.class, java.sql.Timestamp.class, Integer.class, Date.class, Long.class)
+      .map(tuple -> Tuple.of(tuple._1(), tuple._2().toLocalDateTime().toLocalDate(), tuple._3(),
+        tuple._5().doubleValue() / ((tuple._2().toLocalDateTime().toLocalDate().compareTo(startDate) > 0 && tuple._2().toLocalDateTime().toLocalDate().compareTo(tuple._4().toLocalDate()) > 0 ?
+          tuple._2().toLocalDateTime().toLocalDate() : (startDate.compareTo(tuple._4().toLocalDate()) > 0 ? startDate : tuple._4().toLocalDate()))
+          .until(tuple._2().toLocalDateTime().toLocalDate().plusMonths(1), ChronoUnit.DAYS) * SECONDS_IN_ONEDAY)))
+      .cache();
+  }
 }
