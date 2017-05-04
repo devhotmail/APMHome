@@ -20,10 +20,21 @@ export default class FilterBar extends Component {
     </Menu>
 
     const { query } = this.props.location
+    // const { isHead } = this.props.userInfo
 
-    const handleTypeClick = this.handleGroupbyClick('type')
-    const handleDeptClick = this.handleGroupbyClick('dept')
+    return (
+      <div className="flex flex--justify-content--space-between p-a-1">
+        <Dropdown overlay={menu} trigger={['click']} placement='bottomCenter'>
+          <Button>
+            { query.year || currentYear } <Icon type="down" />
+          </Button>
+        </Dropdown>
+        {this.renderGroupBy(query)}
+      </div>
+    )
+  }
 
+  renderGroupBy = (query: Object) => {
     const groupbyOpts = [
       {
         key: 'dept',
@@ -37,30 +48,21 @@ export default class FilterBar extends Component {
       }      
     ]
 
-    return (
-      <div className="flex flex--justify-content--space-between p-a-1">
-        <Dropdown overlay={menu} trigger={['click']} placement='bottomCenter'>
-          <Button>
-            { query.year || currentYear } <Icon type="down" />
-          </Button>
-        </Dropdown>
-        <div>
-          {
-            groupbyOpts.map(({key, text, onClick}) => {
-              return (
-                <Button
-                  key={key}
-                  className="m-l-1"
-                  type={query.groupby === key ? 'primary' : ''}
-                  onClick={onClick}>
-                  {text}
-                </Button>
-              )
-            })
-          }
-        </div>
-      </div>
-    )
+    return <div>
+      {
+        groupbyOpts.map(({key, text, onClick}) => {
+          return (
+            <Button
+              key={key}
+              className="m-l-1"
+              type={query.groupby === key ? 'primary' : ''}
+              onClick={onClick}>
+              {text}
+            </Button>
+          )
+        })
+      }
+    </div>
   }
 
   handleGroupbyClick = groupby => (e: Event) => {

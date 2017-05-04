@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 import dva from 'dva'
 import { browserHistory, HashHistory, useRouterHistory } from 'dva/router'
-import { createHistory } from 'history'
+import createHashHistory from 'history/lib/createHashHistory'
 
 import './styles/index.scss'
 
@@ -13,12 +13,13 @@ import nodeList from '#/models/nodeList'
 import config from '#/models/config'
 import focus from '#/models/focus'
 
-const historyEngine = useRouterHistory(createHistory)({
-  basename: document.location.pathname.split('.xhtml')[0] + '.xhtml'
+const historyEngine = useRouterHistory(createHashHistory)({
+  queryKey: false,
+  basename: '/'
 })
 
 const app = dva({
-  history: process.env.NODE_ENV === 'development' ? browserHistory : historyEngine
+  history: historyEngine
 })
 
 app.model(financial)
@@ -36,6 +37,8 @@ function render(router) {
     </AppContainer>
   ), document.getElementById('root'));
 }
+
+console.log(app)
 
 app._plugin.apply('onHmr')(render);
 
