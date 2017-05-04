@@ -88,7 +88,7 @@ public class ScanApi {
     Map<Integer, String> types = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> parts = commonService.findParts();
     if ("asset".equals(groupBy)) {
-      return serializeAsset(request, types, parts, scanService.assetDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part, Option.of(limit).getOrElse(Integer.MAX_VALUE), start));
+      return serializeAsset(request, types, parts, scanService.assetDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part, Option.of(limit * parts.size()).filter(i -> i > 0).getOrElse(Integer.MAX_VALUE), start));
     } else if ("step".equals(groupBy)) {
       return serializeStep(request, types, parts, scanService.stepDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part, step, Option.of(limit).getOrElse(Integer.MAX_VALUE), start));
     } else {
