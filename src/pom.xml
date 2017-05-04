@@ -715,6 +715,11 @@
       <version>2.4</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-math3</artifactId>
+      <version>3.0</version>
+    </dependency>
   </dependencies>
 
   <pluginRepositories>

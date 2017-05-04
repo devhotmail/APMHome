@@ -35,7 +35,7 @@ public class DmService {
     db = Database.from(connectionProvider);
   }
 
-  interface Properties {
+  interface Props {
     @Column
     int id();
 
@@ -92,7 +92,7 @@ public class DmService {
     //builder = Option.when(Option.of(dept).isDefined(), builder.parameter("dept", dept)).getOrElse(builder);
     builder = Option.of(builder).filter(s -> Option.of(dept).filter(d -> d > 0).isDefined()).map(b -> b.parameter("dept", dept)).orElse(Option.of(builder)).get();
     return builder
-      .autoMap(Properties.class)
+      .autoMap(Props.class)
       .map(properties -> Tuple.of(properties.id(), properties.name(), properties.dept(), properties.type(),
         properties.use_time().doubleValue() / ((properties.install_date().toLocalDate().compareTo(startDate) > 0 ? properties.install_date().toLocalDate() : startDate).until(endDate, ChronoUnit.DAYS) * SECONDS_IN_ONEDAY), properties.deprecation()))
       .cache();
