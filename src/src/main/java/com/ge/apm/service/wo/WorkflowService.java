@@ -1,19 +1,7 @@
 package com.ge.apm.service.wo;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.commons.collections.CollectionUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Minutes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.alibaba.druid.util.StringUtils;
 import com.ge.apm.dao.mapper.AssetInfoMapper;
 import com.ge.apm.dao.mapper.UserAccountMapper;
 import com.ge.apm.dao.mapper.WechatMessageLogMapper;
@@ -32,6 +20,19 @@ import com.ge.apm.service.utils.ConfigUtils;
 import com.ge.apm.service.utils.TimeUtils;
 import com.ge.apm.service.utils.WeiXinUtils;
 import com.ge.apm.service.wechat.CoreService;
+import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Minutes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import org.springframework.util.StringUtils;
 
 @Service
 public class WorkflowService {

@@ -103,7 +103,7 @@ public class AttachmentFileService {
         Integer returnId = 0;
         try {
             returnId = fileUploaddao.saveUploadFile(file.getInputStream(), Integer.valueOf(String.valueOf(file.getSize())), file.getSubmittedFileName());
-        } catch (SQLException | IOException ex) {
+        } catch (Exception ex) {
             WebUtil.addErrorMessage(WebUtil.getMessage("fileTransFail"));
             Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
         }

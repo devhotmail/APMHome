@@ -139,7 +139,7 @@
     <filter-mapping>
         <filter-name>WechatUserLoginFilter</filter-name>
         <url-pattern>/web/*</url-pattern>
-    </filter-mapping>
+    </filter-mapping> 
     <!-- JSF 2 IMPLEMENTATION -->
     <!-- Use JSF view templates saved as *.xhtml, for use with Facelets -->
     <context-param>
@@ -348,7 +348,7 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-
+<!--
     <servlet>
         <servlet-name>DruidStatView</servlet-name>
         <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
@@ -379,6 +379,7 @@
         <filter-name>druidWebStatFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+-->
     
     <jsp-config>
         <jsp-property-group>
