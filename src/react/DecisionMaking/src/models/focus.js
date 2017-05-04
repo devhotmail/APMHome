@@ -5,7 +5,7 @@ export default {
   state: {
     loading: false,
     data: undefined,
-    cursor: undefined
+    cursor: []
   },
   subscriptions: {
     setup({ dispatch }) {

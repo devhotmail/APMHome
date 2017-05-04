@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import * as d3 from 'd3'
 
-import type { NodeT } from '../interface'
+import type { cursorT, NodeT } from '#/types'
 
 import styles from './styles.scss'
 
@@ -47,32 +47,34 @@ function getWaveFillCls (n: NodeT): string {
 
 export default class TreeNodes extends Component<*, *, *> {  
   render () {
-    const { nodeList } = this.props
+    const { nodeList, focusCursor } = this.props
     return (
       <g>
-        { nodeList.length ? this.renderNodes(nodeList) : null }
+        { nodeList.length && focusCursor.length ? this.renderNodes(nodeList, focusCursor) : null }
       </g>
     )
   }
 
-  renderNodes = (nodeList: Array<NodeT>) => {
-    const { focus } = this.props
+  renderNodes = (nodeList: Array<NodeT>, cursor: cursorT) => {
+    console.log(nodeList.map(n => this.getCursor(n)).find(n => n === cursor))
     return <g>
       {
         nodeList.map((node, index) => {
           const groupCls = [
-            this.getOpacityCls(node, focus),
+            this.getOpacityCls(node, cursor),
             node.children ? 'node' : 'leaf node'
           ]
 
           const circleCls = [
-            this.getCircleFillCls(node, focus),
+            this.getCircleFillCls(node, cursor),
             getCircleStrokeCls(node)
           ]
 
           const waveCls = getWaveFillCls(node)
 
-          const onClick = e => this.props.setFocus(node)
+          const onClick = e => {
+            this.props.setFocus(node)
+          }
 
           return (
             <g
@@ -97,28 +99,38 @@ export default class TreeNodes extends Component<*, *, *> {
     </g>
   }
 
-  getCircleFillCls = (node: NodeT, focus: NodeT): string => {
+  getCircleFillCls = (node: NodeT, cursor: cursorT): string => {
     // transparent fill to occupy own place
     const { transparentFill, noFill } = styles
  
-    if (node === focus) return transparentFill
+    if (this.getCursor(node) === cursor) return transparentFill
     // focus children
-    if (node.parent && node.parent === focus) return transparentFill
+    if (node.parent && this.getCursor(node.parent) === cursor) return transparentFill
     // focus siblings
-    if (node.children && ~node.children.indexOf(focus)) return transparentFill
+    if (node.children && ~node.children.map(n => this.getCursor(n)).indexOf(cursor)) return transparentFill
     // focus parent
-    if (node.parent && node.parent.children && ~node.parent.children.indexOf(focus)) return transparentFill
+    if (node.parent && node.parent.children && ~node.parent.children.map(n => this.getCursor(n)).indexOf(focus)) return transparentFill
     return noFill
   }
 
-  getOpacityCls =  (node: NodeT, focus: NodeT): string => {
-    if (node === focus) {
+  getOpacityCls = (node: NodeT, cursor: cursorT): string => {
+    if (this.getCursor(node) === cursor) {
       if (node.children) return styles.opacityPointSix
       return styles.opacityPointNine
     } else {
-      if (node.parent === focus) return styles.opacityPointNine
+      if (node.parent && this.getCursor(node.parent) === cursor) return styles.opacityPointNine
       return styles.opacityPointOne
     }
+  }
+  
+  getCursor = (node: NodeT): cursorT => {
+    const { depth, data: { id }} = node
+    return [ id, depth ]
+  }
+
+  findCursorTarget = (nodeList: Array<NodeT>, cursor: cursorT): NodeT => {
+    const [ id, depth ] = cursor
+    return nodeList.find(node => node.data.id === id && node.depth === depth)
   }
 
   getWavePath = (radius: number, percent: number): string => {

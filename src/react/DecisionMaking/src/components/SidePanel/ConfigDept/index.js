@@ -13,7 +13,7 @@ class ConfigDept extends Component<*, ConfigT, *> {
     const { dept } = this.state
     const configListOne = config.filter(n => n.depth === depths[0])
     const configListTwo = config.filter(n => n.depth === depths[1] )
-    console.log(configListTwo)
+    // console.log(configListTwo)
     return (
       <div>
         <ul>

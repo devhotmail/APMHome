@@ -17,6 +17,7 @@ type ChartProps = {
   diameter: number,
   view: Array<number>,
   focus: NodeT,
+  focusCursor: Array<number>,
   setFocus: Function,
   handleBackUpper: Function,
   handleBackRoot: Function

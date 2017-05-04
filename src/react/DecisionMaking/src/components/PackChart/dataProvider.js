@@ -40,8 +40,9 @@ class extends Component {
       })
     }
 
-    if (focus.cursor) {
-      const [ id, depth ] = focus.cursor
+    const { cursor } = focus
+    if (cursor[0]) {
+      const [ id, depth ] = cursor
       const target = nodeList.find(n => n.data.id === id && n.depth === depth)
 
       if (target) {
@@ -63,11 +64,11 @@ class extends Component {
       })
     }
 
-    if (focus.cursor) {
-      const [ id, depth ] = focus.cursor
+    const { cursor } = focus
+    if (cursor[0]) {
+      const [ id, depth ] = cursor
       const target = nodeList.find(n => n.data.id === id && n.depth === depth)
-
-      if (target && focus !== this.props.focus) {
+      if (target && cursor !== this.props.focus.cursor) {
         if (!this.state.view.length) {
           const view = this.getView(target)
           this.setState({ view })  
@@ -88,6 +89,7 @@ class extends Component {
       nodeList={nodeList}
       view={view}
       focus={focus}
+      focusCursor={focus.cursor}
       setFocus={this.setFocus}
       handleBackUpper={this.handleBackUpper}
       handleBackRoot={this.handleBackRoot} />
@@ -129,37 +131,6 @@ class extends Component {
         view: i(t)
       })
     })
-  }
-
-  setFocus1 = (focus: Object) => {
-    const nextView = this.getView(focus)
-    const i = d3.interpolateZoom(this.state.view, nextView)
-
-    if (focus === this.state.focus) return
-
-    this.setState((state, props) => ({
-      ...state,
-      focus: focus
-    }))
-
-    const start = Date.now()
-    const loop = (now = Date.now())  => {
-      raf(() => {
-        const now = Date.now()
-        const t = (now - start) / 1000 / 0.75
-        if (t > 1) return
-        this.setState((state, props) => {
-          return {
-            ...state,
-            view: i(t)
-          }
-        })
-
-        loop(now)
-      })
-    }
-
-    raf(loop)
   }
 
   getView = (node: Object) => {
