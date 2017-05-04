@@ -168,6 +168,9 @@ alter table workflow_config add primary key (id);
 ALTER TABLE workflow_config ADD CONSTRAINT uk_workflow_hospital_id UNIQUE (hospital_id);
 
 alter table workflow_config add COLUMN max_message_count int;
+ALTER TABLE workflow_config ADD COLUMN dispatch_user_id2 int4 NULL ;
+ALTER TABLE workflow_config ADD COLUMN dispatch_user_name2 varchar(16) NULL ;
+
 
 create table wechat_message_log(
 id serial not null,

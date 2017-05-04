@@ -150,7 +150,7 @@
                 if (!data.estimatedCloseTime){$('#errorMsg').html('预估解决时间 必填');} return !data.estimatedCloseTime;
             }
             function  colletionReturnData() {
-                return {woId: pageManager.woId, actionType: 'return', desc: $('#description').val()};
+                return {woId: pageManager.woId, actionType: 'return', desc: $('#description').val(), currentStepId: pageManager.currentStepId};
             }
         });
 </script>

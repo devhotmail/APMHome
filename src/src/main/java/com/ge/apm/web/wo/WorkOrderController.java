@@ -130,6 +130,8 @@ public class WorkOrderController {
         model.addAttribute("roleNames", rnames);
         WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(ua.getSiteId(), ua.getHospitalId());
         model.addAttribute("DispatchMode", woc==null?"":woc.getDispatchMode());
+        model.addAttribute("Dispatcher", woc==null?"":woc.getDispatchUserId());
+        model.addAttribute("Dispatcher2", woc==null?"":woc.getDispatchUserId2());
         WxJsapiSignature s = null;
         try {
             s = wxMpService.createJsapiSignature(request.getRequestURL().toString()+"?"+request.getQueryString());

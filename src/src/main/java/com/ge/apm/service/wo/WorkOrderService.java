@@ -205,7 +205,13 @@ public class WorkOrderService {
         int curPerId=-1, curStepId=3;
         String curPerName="无";
         switch(dispatchMode) {
-            case 1: curStepId=2;break;
+            case 1: curStepId=2;
+                if (null != woc.getDispatchUserId()) {
+                    curPerId=woc.getDispatchUserId(); curPerName=woc.getDispatchUserName();
+                } else if (null != woc.getDispatchUserId2()) {
+                    curPerId=woc.getDispatchUserId2(); curPerName=woc.getDispatchUserName2();
+                } 
+                break;
             case 3: 
                 if (null != ai.getAssetOwnerId()) {
                     curPerId=ai.getAssetOwnerId(); curPerName=ai.getAssetOwnerName();
@@ -355,6 +361,16 @@ public class WorkOrderService {
         wo.setCurrentPersonName("无");
         wds.setOwnerId(-1);
         wds.setOwnerName("无");
+        List<WorkOrderStep> list = stepDao.findByWorkOrderIdAndStepIdOrderByIdDesc(wo.getId(), 2);
+        if (list != null && !list.isEmpty()){
+            UserAccount uaa = userDao.getById(list.get(0).getOwnerId());
+            if (uaa != null) {
+                wo.setCurrentPersonId(uaa.getId());
+                wo.setCurrentPersonName(uaa.getName());
+                wds.setOwnerId(uaa.getId());
+                wds.setOwnerName(uaa.getName());
+            }
+        }
         workOrderStepRepository.save(wds);
         wo.setCurrentStepName(wds.getStepName());
         workOrderRepository.save(wo);
@@ -765,9 +781,10 @@ public class WorkOrderService {
         
         //assigner takewo
         if (wo.getCurrentStepId() == 4) {
-            List<UserAccount> uas = userDao.getUsersWithWorkOrderDispatcherRole(wo.getHospitalId());
-            if (!uas.isEmpty()) {
-                for(UserAccount uaa :uas) {
+            List<WorkOrderStep> list = stepDao.findByWorkOrderIdAndStepIdOrderByIdDesc(wo.getId(), 2);
+            if (list != null && !list.isEmpty()){
+                UserAccount uaa = userDao.getById(list.get(0).getOwnerId());
+                if (uaa != null) {
                     cService.sendWxTemplateMessage(uaa.getWeChatId(), wxTemplateId, params);
                 }
             }
@@ -779,11 +796,9 @@ public class WorkOrderService {
         String wxTemplateId = configUtils.fetchProperties("workorder_change_template_id");
         subscriberMsg(wo, params, wxTemplateId);
         //assigner
-        List<UserAccount> uas = userDao.getUsersWithWorkOrderDispatcherRole(wo.getHospitalId());
-        if (!uas.isEmpty()) {
-            for(UserAccount ua :uas) {
-                cService.sendWxTemplateMessage(ua.getWeChatId(), wxTemplateId, params);
-            }
+        UserAccount uaa = userDao.getById(wo.getCurrentPersonId());
+        if (uaa != null) {
+            cService.sendWxTemplateMessage(uaa.getWeChatId(), wxTemplateId, params);
         }
         //requestor
         UserAccount ua = userDao.getById(wo.getRequestorId());
@@ -799,15 +814,15 @@ public class WorkOrderService {
         
         List<UserAccount> uas = new ArrayList<>();
         switch(woc.getDispatchMode()) {
-            case 1: uas.addAll(userDao.getUsersWithWorkOrderDispatcherRole(wo.getHospitalId())); break;
-            case 3: 
+            case 2: 
+                uas.addAll(userDao.getUsersWithAssetStaffRole(wo.getHospitalId()));
+                break;
+            default: 
                 if (-1 != wo.getCurrentPersonId()) {
                     uas.add(userDao.getById(wo.getCurrentPersonId()));
                 } else {
                     uas.addAll(userDao.getUsersWithAssetStaffRole(wo.getHospitalId()));
                 }
-                break;
-            default: uas.addAll(userDao.getUsersWithAssetStaffRole(wo.getHospitalId()));
         }
         if (!uas.isEmpty()) {
             for(UserAccount ua :uas) {
