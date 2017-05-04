@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'dva'
 
+import RoleProvider from '#/components/RoleProvider'
 import SizeProvider from '#/components/SizeProvider'
 import PackChart from '#/components/PackChart'
 import SidePanel from '#/components/SidePanel'
 import FilterBar from '#/components/FilterBar'
-
-// import Wrapper from './wrapper'
 
 import styles from './styles.scss'
 
@@ -36,4 +35,4 @@ class Root extends Component {
 
 export default connect(state => ({
   data: state.financial.data
-}))(Root)
+}))(RoleProvider(Root))

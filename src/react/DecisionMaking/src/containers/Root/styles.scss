@@ -1,4 +1,4 @@
-$sidepanel-width: 300px;
+$sidepanelWidth: 300px;
 
 .container {
   position: relative;
@@ -10,16 +10,17 @@ $sidepanel-width: 300px;
   position: absolute;
   left: 0;
   top: 0;
-  width: calc(100% - #{$sidepanel-width});
+  width: calc(100% - #{$sidepanelWidth});
   height: 100%;
 }
 
 .sidebar {
   position: absolute;
   right: 0;
-  top: 0;
-  width: $sidepanel-width;
-  height: 100%;
+  top: 60px;
+  width: $sidepanelWidth;
+  height: calc(100% - 60px);
+  padding-right: 10px;
 }
 
 $filterBarHeight: 50px;

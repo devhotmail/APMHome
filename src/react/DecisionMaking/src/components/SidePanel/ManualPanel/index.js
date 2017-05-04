@@ -17,7 +17,7 @@ export default class ManualPanel extends Component {
     const configListOne = config.filter(n => n.depth === 1)
 
     return (
-      <div>
+      <div className={styles.manualPanel}>
         <ul>
           {
             configListOne.length ? configListOne.map((n, index) => {

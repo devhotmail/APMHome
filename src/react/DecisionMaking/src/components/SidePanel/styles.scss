@@ -1,0 +1,21 @@
+$sidebar-width: 300px;
+$kpi-legend-circle-r: 25px;
+$gap: 10px;
+
+$brand: #5b84d7;
+$green: rgb(70, 175, 155);
+
+$gray: rgb(148, 147, 146);
+$orange: rgb(232, 136, 56);
+$yellow: rgb(236, 219, 84);
+
+$color-set: $orange $yellow $gray;
+$border-color: rgb(186, 186, 186);
+
+$tab-active-color: rgb(31, 105, 266);
+
+.panel {
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  padding: 10px;
+}

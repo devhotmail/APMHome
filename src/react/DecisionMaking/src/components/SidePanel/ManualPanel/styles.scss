@@ -1,3 +1,7 @@
 :global li.active {
   color: red;
 }
+
+.manualPanel {
+  composes: panel from "../styles.scss";
+}
