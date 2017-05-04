@@ -1,5 +1,5 @@
 /* @flow */
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import * as d3 from 'd3'
 
 import type { cursorT, NodeT } from '#/types'
@@ -46,7 +46,7 @@ function getWaveFillCls (n: NodeT): string {
   return waveFillCls[colorIndex]
 }
 
-export default class TreeNodes extends Component<*, *, *> {  
+export default class TreeNodes extends PureComponent<*, *, *> {  
   render () {
     const { nodeList, focusCursor } = this.props
     return (

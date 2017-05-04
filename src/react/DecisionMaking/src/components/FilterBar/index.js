@@ -35,6 +35,7 @@ export default class FilterBar extends Component {
   }
 
   renderGroupBy = (query: Object) => {
+    const groupby = query.groupby || 'dept'
     const groupbyOpts = [
       {
         key: 'dept',
@@ -55,7 +56,7 @@ export default class FilterBar extends Component {
             <Button
               key={key}
               className="m-l-1"
-              type={query.groupby === key ? 'primary' : ''}
+              type={groupby === key ? 'primary' : ''}
               onClick={onClick}>
               {text}
             </Button>
