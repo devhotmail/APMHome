@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+/* @flow */
+import React, { PureComponent } from 'react'
 import { Button } from 'antd'
 
 import { margin } from '#/constants'
@@ -6,17 +7,23 @@ import { margin } from '#/constants'
 import TextNodes from './TextNodes'
 import TreeNodes from './TreeNodes'
 
+import type { NodeT } from './interface'
+
 import styles from './styles.scss'
 
 type ChartProps = {
   width: number,
   height: number,
   diameter: number,
-  setFocus: Function
+  view: Array<number>,
+  focus: NodeT,
+  setFocus: Function,
+  handleBackUpper: Function,
+  handleBackRoot: Function
 }
 
-export default class Chart extends Component<*, ChartProps, *> {
-  render() {
+export default class Chart extends PureComponent<*, ChartProps, *> {
+  render () {
     const { height, width, view } = this.props
 
     if (!width || !height || !view.length) return null
@@ -34,7 +41,7 @@ export default class Chart extends Component<*, ChartProps, *> {
       <div className={styles.chart}>
         <div className={styles.btns}>
           <Button onClick={this.props.handleBackUpper}>返回上一层</Button>
-          <Button onClick={this.props.handleBackRoot}>返回顶层</Button>
+          <Button className="m-l-1" onClick={this.props.handleBackRoot}>返回顶层</Button>
         </div>        
         <svg width={width} height={height} viewBox={viewBox.join(' ')}>
           <TreeNodes {...this.props} />

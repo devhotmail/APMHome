@@ -33,7 +33,7 @@ export default class ManualPanel extends Component {
     )
   }
 
-  handleSetFocus = cursor =>  e => {
+  handleSetFocus = cursor => {
     this.props.dispatch({
       type: 'focus/data/set',
       payload: cursor

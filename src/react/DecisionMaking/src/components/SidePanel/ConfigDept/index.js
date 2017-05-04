@@ -23,21 +23,28 @@ class ConfigDept extends Component<*, ConfigT, *> {
                 ? 'active'
                 : ''
               const onClick = e => {
-                console.log(n)
-                setFocus(n)
+                const { depth, data: { id }} = n
+                setFocus([id, depth])
                 this.setState({ dept: n })
               }
-              return <li key={index} className={cls} onClick={onClick}>{n.name}</li>
+              return <li key={index} className={cls} onClick={onClick}>{n.data.name}</li>
             }) : null
           }
         </ul>
         <ul>
           {
-            this.state.dept
-             ? this.state.dept.family.children.map(n => <span>{n.name}</span>)
-             : null
+            dept && Array.isArray(dept.children) ? dept.children.map((n, index) => {
+              const cls = this.isSameNode(n, focus) || (focus.parent ? this.isSameNode(n, focus.parent) : false)
+                ? 'active'
+                : ''
+              const onClick = e => {
+                const { depth, data: { id }} = n
+                setFocus([id, depth])
+                this.setState({ dept: n })
+              }
+              return <li key={index} className={cls} onClick={onClick}>{n.data.name}</li>
+            }) : null
           }
-
         </ul>
       </div>
     )

@@ -1,28 +1,19 @@
+/* @flow */
 import React, { Component } from 'react'
 import * as d3 from 'd3'
 
+import type { NodeT } from '../interface'
+
 import styles from './styles.scss'
 
-const margin = 20
 const percentKey = 'usage_predict'
 
 const constants = {
   circleColor: 'rgba(255, 255, 255, 0)'
 }
 
-type NodeT = {
-  depth: number,
-  height: number,
-  r: number,
-  value: number,
-  x: number,
-  y: number,
-  data: Object,
-  parent?: NodeT
-}
-
 // todo: hard code field
-function getCircleStrokeCls (n: NodeT): number {
+function getCircleStrokeCls (n: NodeT): string {
   const circleStrokeCls = [
     styles.strokeYellow,
     styles.strokeGray,
@@ -38,7 +29,7 @@ function getCircleStrokeCls (n: NodeT): number {
   return circleStrokeCls[colorIndex]
 }
 
-function getWaveFillCls (n: NodeT): number {
+function getWaveFillCls (n: NodeT): string {
   const waveFillCls = [
     styles.fillYellow,
     styles.fillGray,
@@ -106,7 +97,7 @@ export default class TreeNodes extends Component<*, *, *> {
     </g>
   }
 
-  getCircleFillCls = (node, focus) => {
+  getCircleFillCls = (node: NodeT, focus: NodeT): string => {
     // transparent fill to occupy own place
     const { transparentFill, noFill } = styles
  
@@ -120,7 +111,7 @@ export default class TreeNodes extends Component<*, *, *> {
     return noFill
   }
 
-  getOpacityCls = (node, focus) => {
+  getOpacityCls =  (node: NodeT, focus: NodeT): string => {
     if (node === focus) {
       if (node.children) return styles.opacityPointSix
       return styles.opacityPointNine
