@@ -13,34 +13,23 @@ export default {
   },
   effects: {
     *['data/set'] ({ payload }, { put, call, select }) {
-      const { depth, data: { id }} = payload
-      yield put({
-        type: 'data/set/succeed',
-        payload: {
-          data: payload,
-          cursor: { id, depth }
-        }
-      })
-    },
-    *['data/setByInfo'] ({ payload }, { put, call, select }) {
-      const { uid } = payload
+      const [ id, depth ] = payload
       try {
         const nodeList = yield select(state => state.nodeList.data)
-        const target = nodeList.find(n => n.data.uid === uid)
+        const target = nodeList.find(n => n.data.id === id && n.depth === depth)
         if (target) {
-          const { depth, data: { id }} = target
           yield put({
             type: 'data/set/succeed',
             payload: {
               data: target,
-              cursor: {id, depth }
+              cursor: [ id, depth ]
             }
           })
         }
-      } catch (err) {
+      } catch(err) {
 
       }
-    },
+    }
   },
   reducers: {
     ['data/set/succeed'] (state, { payload }) {

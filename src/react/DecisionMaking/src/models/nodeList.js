@@ -59,9 +59,11 @@ export default {
           payload: nodes
         })
 
+        const { depth, data: { id }} = nodes[0]
+
         yield put({
           type: 'focus/data/set',
-          payload: nodes[0]
+          payload: [ id, depth ]
         })
       } catch (err) {
 

@@ -35,21 +35,31 @@ export default {
 }
 
 function getConfig (nodes) {
-  return nodes.map(n => ({
-    parent: n.parent ? {
-      id: n.parent.data.id,
-      uid: n.parent.data.uid
-    }: null,
-    children: n.children ? n.children.map(child => ({
-      uid: child.data.uid,
-      id: child.data.id
-    })) : null,
-    depth: n.depth,
-    height: n.height,
-    id: n.data.id,
-    uid: n.data.uid,
-    name: n.data.name,
-    // for the display usage # 1
-    change: round(n.data.revenue_increase_sug * 100, 1)
-  }))
+  const root = nodes[0]
+  const { depth, height } = root
+  return nodes
+  .filter(n => !~[depth, height].indexOf(n.depth))
+  .map(n => {
+    return {
+      family: {
+        parent: n.parent ? pickUpFields(n.parent) : null,
+        children: Array.isArray(n.children) ? n.children.map(child => pickUpFields(child)) : null
+      },
+      ...pickUpFields(n)
+    }
+  })
+}
+
+function pickUpFields (obj) {
+  return {
+    depth: obj.depth,
+    height: obj.height,
+    id: obj.data.id,
+    uid: obj.data.uid,
+    name: obj.data.name,      
+    // for the display usage # 1 hard code OMG !!!!!
+    change: round(obj.data.usage_predict * 100, 1),
+    usage_min: obj.data.usage_threshold ? obj.data.usage_threshold[0] * 100 : '',
+    usage_max: obj.data.usage_threshold ? obj.data.usage_threshold[1] * 100 : ''  
+  }
 }

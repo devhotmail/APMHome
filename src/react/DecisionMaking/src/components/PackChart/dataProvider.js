@@ -41,7 +41,7 @@ class extends Component {
     }
 
     if (focus.cursor) {
-      const { id, depth } = focus.cursor
+      const [ id, depth ] = focus.cursor
       const target = nodeList.find(n => n.data.id === id && n.depth === depth)
 
       if (target) {
@@ -64,7 +64,7 @@ class extends Component {
     }
 
     if (focus.cursor) {
-      const { id, depth } = focus.cursor
+      const [ id, depth ] = focus.cursor
       const target = nodeList.find(n => n.data.id === id && n.depth === depth)
 
       if (target && focus !== this.props.focus) {
@@ -108,9 +108,11 @@ class extends Component {
   setFocus = (focus: Object) => {
     if (focus === this.props.focus) return
 
+    const { depth, data: { id }} = focus
+
     this.props.dispatch({
       type: 'focus/data/set',
-      payload: focus
+      payload: [ id, depth ]
     })
 
     this.setView(focus)

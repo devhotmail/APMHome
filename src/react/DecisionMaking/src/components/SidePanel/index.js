@@ -1,47 +1,99 @@
 import React, { Component } from 'react'
-import { Tabs } from 'antd'
+import { Transition, Animate } from 'react-move'
 
 import SystemPanel from './SystemPanel'
 import ManualPanel from './ManualPanel'
 
 import styles from './styles.scss'
 
-const TabPane = Tabs.TabPane
+const panelOpts = [
+  {
+    key: 'system',
+    text: '系统自动'
+  },
+  {
+    key: 'manual',
+    text: '手动调节'
+  }
+]
 
-function callback (key) {
-  console.log(key)
-}
+const tabWidth = 90
 
 export default class SidePanel extends Component {
   state = {
-    panel: 'system'
+    activeTab: 1
   }
 
   render () {
     const { focus } = this.props
+    const { activeTab } = this.state
+    
     return (
-      <div className="flex flex--justify-content--center">
-        {/*<div class="type-select btn-group">
-          <template is="dom-repeat" items="[[typeOpts]]">
-            <div class$="[[calcTabCls(item.val, selectedType)]]"
-              on-click="handleSelect">
-              [[item.key]]
-            </div>
-          </template>
-        </div>*/}
-        {
-          focus
-            ? <Tabs defaultActiveKey="2" onChange={callback}>
-              <TabPane tab="系统自动" key="1">
-                <SystemPanel {...this.props} />
-              </TabPane>
-              <TabPane tab="手动调节" key="2">
-                <ManualPanel {...this.props} />
-              </TabPane>
-            </Tabs>
+      <div className={styles.tabs}>
+        <div className={styles.tabHeader}>
+          <div style={{width: tabWidth, left: activeTab * tabWidth}} className={styles.sliding}></div>
+          <ul style={{width: tabWidth * 2}}>
+            {
+              panelOpts.map(({key, text}, index) => {
+                return (
+                  <li
+                    key={key}
+                    className={activeTab === index ? styles.active : ''}
+                    onClick={this.handleTabClick(index)}>
+                    {text}
+                  </li>
+                )
+              })
+            }
+          </ul>
+        </div>
+        <div className={styles.tabContent}>
+          {
+            activeTab === 0
+              ? <Animate
+                default={{translate: 100}}
+                data={{translate: 0}}
+                duration={300}
+                easing='easeCubic'>
+                {data => (
+                  <div
+                    style={{
+                      transform: `translateX(${data.translate}%)`
+                    }}
+                  >
+                    <SystemPanel {...this.props} />
+                  </div>
+                )}
+              </Animate>
             : null
-        }
+          }
+          {
+            activeTab === 1
+              ? <Animate
+                default={{translate: 100}}
+                data={{translate: 0}}
+                duration={300}
+                easing='easeCubic'>
+                {data => (
+                  <div
+                    style={{
+                      transform: `translateX(${data.translate}%)`
+                    }}
+                  >
+                    <ManualPanel {...this.props} />
+                  </div>
+                )}
+              </Animate>
+            : null
+          }
+        </div>
       </div>
     )
+  }
+
+  handleTabClick = (index: number) => (e: Event) => {
+    this.setState({
+      activeTab: index
+    })
   }
 }

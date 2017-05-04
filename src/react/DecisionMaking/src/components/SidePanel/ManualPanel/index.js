@@ -1,38 +1,42 @@
 import React, { Component } from 'react'
 import { Table, Icon } from 'antd'
 
-import styles from './styles.scss'
+import ConfigDept from '../ConfigDept'
+import ConfigType from '../ConfigType'
 
-const columns = [{
-  title: 'Name',
-  dataIndex: 'name',
-  key: 'name',
-}]
+import styles from './styles.scss'
 
 export default class ManualPanel extends Component {
   render () {
     const { config, focus } = this.props
     if (!config) return null
+    if (!focus) return null
 
-    const configListOne = config.filter(n => n.depth === 1)
+    const depths = config.map(n => n.depth)
+    .filter((n, index, arr) => arr.indexOf(n) === index)
 
     return (
       <div className={styles.manualPanel}>
-        <ul>
-          {
-            configListOne.length ? configListOne.map((n, index) => {
-              const cls = n.id === focus.data.id && n.depth === focus.depth
-                ? 'active'
-                : ''
-              const onClick = e => this.props.dispatch({
-                type: 'focus/data/setByInfo',
-                payload: n
-              })
-              return <li key={index} className={cls} onClick={onClick}>{n.name}</li>
-            }) : null
-          }
-        </ul>
+        <div className="lead m-b-1">使用率预测</div>
+        <div className="font-small text-muted">基于系统自动预测的增长进行手工调节</div>
+        {
+          depths.length === 2
+            ? <ConfigDept depths={depths} setFocus={this.handleSetFocus} {...this.props} />
+            : null
+        }
+        {
+          depths.length === 1
+            ? <ConfigType depths={depths} setFocus={this.handleSetFocus} {...this.props} />
+            : null
+        }
       </div>
     )
+  }
+
+  handleSetFocus = cursor =>  e => {
+    this.props.dispatch({
+      type: 'focus/data/set',
+      payload: cursor
+    })
   }
 }
