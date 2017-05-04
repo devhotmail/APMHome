@@ -71,11 +71,11 @@ module.exports = merge(baseWebpackConfig, {
             {
               loader: 'css-loader',
               options: {
-                importLoaders: 1
+                importLoaders: 2
               }
             },
-            'sass-loader',
-            'postcss-loader'
+            'postcss-loader',
+            'sass-loader'
           ]
         })
       },

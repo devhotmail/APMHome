@@ -5,13 +5,15 @@ import dva from 'dva'
 import { browserHistory, HashHistory, useRouterHistory } from 'dva/router'
 import createHashHistory from 'history/lib/createHashHistory'
 
-import './styles/index.scss'
+import './polyfill'
 
 import router from '#/router'
 import financial from '#/models/financial'
 import nodeList from '#/models/nodeList'
 import config from '#/models/config'
 import focus from '#/models/focus'
+
+import './styles/index.scss'
 
 const historyEngine = useRouterHistory(createHashHistory)({
   queryKey: false,
@@ -37,8 +39,6 @@ function render(router) {
     </AppContainer>
   ), document.getElementById('root'));
 }
-
-console.log(app)
 
 app._plugin.apply('onHmr')(render);
 
