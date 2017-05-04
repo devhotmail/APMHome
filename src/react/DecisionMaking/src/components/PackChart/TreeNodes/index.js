@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import * as d3 from 'd3'
 
 import type { cursorT, NodeT } from '#/types'
+import { getCursor, isSameCursor } from '#/utils'
 
 import styles from './styles.scss'
 
@@ -56,7 +57,6 @@ export default class TreeNodes extends Component<*, *, *> {
   }
 
   renderNodes = (nodeList: Array<NodeT>, cursor: cursorT) => {
-    console.log(nodeList.map(n => this.getCursor(n)).find(n => n === cursor))
     return <g>
       {
         nodeList.map((node, index) => {
@@ -72,8 +72,9 @@ export default class TreeNodes extends Component<*, *, *> {
 
           const waveCls = getWaveFillCls(node)
 
-          const onClick = e => {
-            this.props.setFocus(node)
+          const onClick = (e: Event) => {
+            e.stopPropagation()
+            this.props.setFocus(getCursor(node))
           }
 
           return (
@@ -103,29 +104,31 @@ export default class TreeNodes extends Component<*, *, *> {
     // transparent fill to occupy own place
     const { transparentFill, noFill } = styles
  
-    if (this.getCursor(node) === cursor) return transparentFill
-    // focus children
-    if (node.parent && this.getCursor(node.parent) === cursor) return transparentFill
-    // focus siblings
-    if (node.children && ~node.children.map(n => this.getCursor(n)).indexOf(cursor)) return transparentFill
-    // focus parent
-    if (node.parent && node.parent.children && ~node.parent.children.map(n => this.getCursor(n)).indexOf(focus)) return transparentFill
+    // focus self
+    if (this.compareCursor(node, cursor)) return transparentFill
+    // focus's parent
+    if (node.parent && this.compareCursor(node.parent, cursor)) return transparentFill
+    // focus's siblings
+    if (
+      node.parent
+      && Array.isArray(node.parent.children)
+      && node.parent.children.find(n => this.compareCursor(n, cursor))
+    ) return transparentFill
     return noFill
   }
 
   getOpacityCls = (node: NodeT, cursor: cursorT): string => {
-    if (this.getCursor(node) === cursor) {
+    if (this.compareCursor(node, cursor)) {
       if (node.children) return styles.opacityPointSix
       return styles.opacityPointNine
     } else {
-      if (node.parent && this.getCursor(node.parent) === cursor) return styles.opacityPointNine
+      if (node.parent && this.compareCursor(node.parent, cursor)) return styles.opacityPointNine
       return styles.opacityPointOne
     }
   }
   
-  getCursor = (node: NodeT): cursorT => {
-    const { depth, data: { id }} = node
-    return [ id, depth ]
+  compareCursor = (node: NodeT, cursor: cursorT): boolean => {
+    return isSameCursor(getCursor(node), cursor)
   }
 
   findCursorTarget = (nodeList: Array<NodeT>, cursor: cursorT): NodeT => {

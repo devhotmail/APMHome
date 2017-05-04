@@ -25,7 +25,7 @@ type ChartProps = {
 
 export default class Chart extends PureComponent<*, ChartProps, *> {
   render () {
-    const { height, width, view } = this.props
+    const { height, width, view, handleBackUpper } = this.props
 
     if (!width || !height || !view.length) return null
 
@@ -44,7 +44,11 @@ export default class Chart extends PureComponent<*, ChartProps, *> {
           <Button onClick={this.props.handleBackUpper}>返回上一层</Button>
           <Button className="m-l-1" onClick={this.props.handleBackRoot}>返回顶层</Button>
         </div>        
-        <svg width={width} height={height} viewBox={viewBox.join(' ')}>
+        <svg
+          width={width}
+          height={height}
+          viewBox={viewBox.join(' ')}
+          onClick={handleBackUpper}>
           <TreeNodes {...this.props} />
           {/*<TextNodes {...this.props} />*/}
           {/*{ nodeList ? this.renderTexts(nodeList) : null }*/}

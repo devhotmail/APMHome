@@ -1,4 +1,3 @@
-/* @flow */
 import * as d3 from 'd3'
 import uuid from 'uuid/v4'
 
@@ -60,7 +59,6 @@ export default {
         })
 
         const { depth, data: { id }} = nodes[0]
-
         yield put({
           type: 'focus/data/set',
           payload: [ id, depth ]

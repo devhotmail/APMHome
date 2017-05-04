@@ -19,7 +19,10 @@ class ConfigType extends PureComponent<*, ConfigT, *> {
               const cls = n.id === focus.data.id && n.depth === focus.depth
                 ? 'active'
                 : ''
-              const onClick = setFocus(n)
+              const onClick = e => {
+                const { depth, data: { id }} = n
+                setFocus([id, depth])
+              }              
               return <li key={index} className={cls} onClick={onClick}>{n.name}</li>
             }) : null
           }

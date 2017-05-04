@@ -5,6 +5,9 @@ import uuid from 'uuid/v4'
 import * as d3 from 'd3'
 import raf from 'raf'
 
+import type { cursorT } from '#/types'
+
+import { getCursor, isSameCursor } from '#/utils'
 import { margin } from '#/constants'
 import data from '#/mock/data'
 
@@ -41,8 +44,8 @@ class extends Component {
     }
 
     const { cursor } = focus
-    if (cursor[0]) {
-      const [ id, depth ] = cursor
+    if (cursor.length) {
+      const [ id, depth ] = focus.cursor
       const target = nodeList.find(n => n.data.id === id && n.depth === depth)
 
       if (target) {
@@ -65,10 +68,10 @@ class extends Component {
     }
 
     const { cursor } = focus
-    if (cursor[0]) {
-      const [ id, depth ] = cursor
+    if (cursor.length) {
+      const [ id, depth ] = focus.cursor
       const target = nodeList.find(n => n.data.id === id && n.depth === depth)
-      if (target && cursor !== this.props.focus.cursor) {
+      if (target) {
         if (!this.state.view.length) {
           const view = this.getView(target)
           this.setState({ view })  
@@ -97,27 +100,33 @@ class extends Component {
 
   handleBackUpper = (e?: Event) => {
     e && e.preventDefault()
-    const { focus } = this.props
-    if (focus.parent) this.setFocus(focus.parent)
+    const { focus: { cursor }, nodeList } = this.props
+
+    if (cursor.length) {
+      const [ id, depth ] = cursor
+      const target = nodeList.find(n => n.data.id === id && n.depth === depth)
+      if (target.parent) this.setFocus(getCursor(target.parent))
+    }
   }
 
   handleBackRoot = (e?: Event) => {
     e && e.preventDefault()
     const { nodeList } = this.props
-    if (nodeList[0]) this.setFocus(nodeList[0])
+    if (nodeList[0]) this.setFocus(getCursor(nodeList[0]))
   }
 
-  setFocus = (focus: Object) => {
-    if (focus === this.props.focus) return
-
-    const { depth, data: { id }} = focus
+  setFocus = (cursor: cursorT) => {
+    if (cursor === this.props.focus.cursor) return
 
     this.props.dispatch({
       type: 'focus/data/set',
-      payload: [ id, depth ]
+      payload: cursor
     })
 
-    this.setView(focus)
+    // const focus = this.props.nodeList.find(n => n.data.id === cursor[0] && n.depth === cursor[1])
+    // if (focus) {
+    //   this.setView(focus)
+    // }
   }
 
   setView = (focus: Object) => {
