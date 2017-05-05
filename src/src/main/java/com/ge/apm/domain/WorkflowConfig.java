@@ -51,6 +51,11 @@ public class WorkflowConfig implements Serializable {
     private Integer orderReopenTimeframe;//二次开单的最大时间间隔
     @Column(name="max_message_count")
     private Integer maxMessageCount;//推送消息的次数上限
+    
+    @Column(name = "dispatch_user_id2")
+    private Integer dispatchUserId2;
+    @Column(name = "dispatch_user_name2")
+    private String dispatchUserName2;
 
 	public WorkflowConfig() {
     }
@@ -160,6 +165,22 @@ public class WorkflowConfig implements Serializable {
 
     public void setMaxMessageCount(Integer maxMessageCount) {
         this.maxMessageCount = maxMessageCount;
+    }
+
+    public Integer getDispatchUserId2() {
+        return dispatchUserId2;
+    }
+
+    public void setDispatchUserId2(Integer dispatchUserId2) {
+        this.dispatchUserId2 = dispatchUserId2;
+    }
+
+    public String getDispatchUserName2() {
+        return dispatchUserName2;
+    }
+
+    public void setDispatchUserName2(String dispatchUserName2) {
+        this.dispatchUserName2 = dispatchUserName2;
     }
 
     @Override

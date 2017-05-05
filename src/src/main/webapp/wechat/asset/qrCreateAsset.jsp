@@ -619,9 +619,19 @@
         }
 
         function initOrgSelect(qrCode){
-            $.get(WEB_ROOT+"web/getOrgList",
-                {"qrCode": qrCode},
-                function(ret) {
+            $.ajax({
+                type: "GET",
+                url: WEB_ROOT + "web/getOrgList",
+                data: {"qrCode": qrCode},
+                dataType: "json",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-Requested-With', {
+                        toString: function () {
+                            return '';
+                        }
+                    });
+                },
+                success: function (ret, textStatus, jqXHR) {
                     if (ret) {
                         $.each(ret, function(idx, val){
                             if (val.id == "${orgSelect}") {
@@ -632,16 +642,26 @@
                         });
                     }
                 }
-            );
+            });
         }
 
     });
 
     function initUserSelect(orgId){
         if(orgId != ""){
-            $.get(WEB_ROOT+"web/getUserList",
-                {"orgId": orgId},
-                function(ret) {
+            $.ajax({
+                type: "GET",
+                url: WEB_ROOT + "web/getUserList",
+                data: {"orgId": orgId},
+                dataType: "json",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-Requested-With', {
+                        toString: function () {
+                            return '';
+                        }
+                    });
+                },
+                success: function (ret, textStatus, jqXHR) {
                     $("#userSelectDiv").show();
                     if (ret) {
                         $.each(ret, function(idx, val){
@@ -653,7 +673,7 @@
                         });
                     }
                 }
-            );
+            });
         }
     }
 

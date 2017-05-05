@@ -56,6 +56,8 @@ public class WorkOrderWeChatService {
     protected UserRoleRepository roleDao;
     @Autowired
     protected WorkOrderPhotoRepository photoDao;
+    @Autowired
+    private WorkflowConfigRepository woConDao;
     
     public Page<WorkOrder> woList(HttpServletRequest request, String stepId, Integer pageSize, Integer pageNum) {
         UserAccount ua = UserContext.getCurrentLoginUser(request);
@@ -226,7 +228,9 @@ public class WorkOrderWeChatService {
     
     public int chooseTab(HttpServletRequest request) {
         List<String> rnames = getLoginUserRoleName(request);
-        if(rnames.contains("WorkOrderDispatcher")){//assinger
+        UserAccount ua = coreService.getLoginUser(request);
+        WorkflowConfig woc = woConDao.getBySiteIdAndHospitalId(ua.getSiteId(), ua.getHospitalId());
+        if(woc != null && (woc.getDispatchUserId() == ua.getId() || woc.getDispatchUserId2() == ua.getId())){//assinger
             return 1;
         } else if (rnames.contains("AssetStaff")){//worker
             return 2;

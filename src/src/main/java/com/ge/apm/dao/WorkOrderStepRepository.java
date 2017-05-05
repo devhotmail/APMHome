@@ -15,4 +15,6 @@ public interface WorkOrderStepRepository extends GenericRepository<WorkOrderStep
     public List<WorkOrderStep> getByWorkOrderIdAndStepIdAndWithoutEndTime(int workOrderId, int stepId);
     
     public List<WorkOrderStep> findByWorkOrderIdAndStepId(int workOrderId, int stepId);
+    
+    public List<WorkOrderStep> findByWorkOrderIdAndStepIdOrderByIdDesc(int workOrderId, int stepId);
 }
