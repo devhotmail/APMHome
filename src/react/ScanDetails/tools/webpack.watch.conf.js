@@ -17,7 +17,7 @@ module.exports = merge(baseWebpackConfig, {
       'babel-polyfill'
     ],
     app: './src/index.js'
-  },  
+  },
   output: {
     filename: '[name].js',
     publicPath,
@@ -25,6 +25,18 @@ module.exports = merge(baseWebpackConfig, {
   },
   module: {
     rules: [
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: 'html-imports-loader/react',
+            options: {
+              emitFile: true
+            }
+          }
+        ],
+        include: /bower_components/
+      },
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -60,7 +72,25 @@ module.exports = merge(baseWebpackConfig, {
             'postcss-loader'
           ]
         })
-      },     
+      },
+      {
+        test: /\.less$/,
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1
+              }
+            },
+            {
+              loader: 'less-loader'
+            }
+          ],
+        }),
+        include: /node_modules/
+      },
       {
         test: /\.(jpg|jpeg|png|gif|ico|svg)$/,
         use: [
@@ -74,7 +104,7 @@ module.exports = merge(baseWebpackConfig, {
         ]
       }
     ]
-  },  
+  },
   plugins: [
     new webpack.NamedModulesPlugin(),
     new webpack.LoaderOptionsPlugin({

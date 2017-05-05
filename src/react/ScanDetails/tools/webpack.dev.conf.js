@@ -18,6 +18,18 @@ module.exports = merge(baseWebpackConfig, {
   module: {
     rules: [
       {
+        test: /\.html$/,
+        use: [
+          {
+            loader: 'html-imports-loader/react',
+            options: {
+              emitFile: true
+            }
+          }
+        ],
+        include: /bower_components/
+      },
+      {
         test: /\.js$/,
         exclude: /node_modules/,
         use: [
@@ -49,6 +61,22 @@ module.exports = merge(baseWebpackConfig, {
           'sass-loader',
           'postcss-loader'
         ]
+      },
+      {
+        test: /\.less$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1
+            }
+          },
+          {
+            loader: 'less-loader'
+          }
+        ],
+        include: /node_modules/
       },
       {
         test: /\.(jpg|jpeg|png|gif|ico|svg)$/,
