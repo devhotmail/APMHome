@@ -633,9 +633,13 @@ public class DmApiV2 {
   //output: Seq<Tuple2<id,usage>>for one type including future data
   private Double predictOneType(Seq<Tuple2<Integer, Double>> monthlyData, int year) {
     monthlyData = monthlyData.removeLast(v -> true);
+    LocalDate lastHisDay = xToLocaldate(monthlyData.last()._1);
+    for (int i = 0; i < (int) lastHisDay.until(LocalDate.now().withDayOfMonth(1).minusMonths(1), ChronoUnit.MONTHS); i++) {
+      monthlyData = monthlyData.append(Tuple.of(localDateToX(lastHisDay.plusMonths(i + 1)), 0D));
+    }
     SimpleRegression simpleRegression = new SimpleRegression();
     monthlyData.forEach(v -> simpleRegression.addData(v._1, v._2));
-    LocalDate lastHisDay = xToLocaldate(monthlyData.last()._1);
+    lastHisDay = xToLocaldate(monthlyData.last()._1);
     for (int i = 0; i < (int) lastHisDay.until(LocalDate.of(LocalDate.now().getYear() + 1, 12, 1), ChronoUnit.MONTHS); i++) {
       monthlyData = monthlyData.append(Tuple.of(localDateToX(lastHisDay.plusMonths(i + 1)), simpleRegression.predict(localDateToX(lastHisDay.plusMonths(i + 1)))));
     }
@@ -699,8 +703,8 @@ public class DmApiV2 {
     java.util.List<Integer> usageSum = ImmutableList.of(subItems.map(v -> v.getUsgSum().get(0)).sum().intValue(),
       subItems.map(v -> v.getUsgSum().get(1)).sum().intValue());
     double averageUsage = subItems.map(PdtData::getUsgPdt).average().getOrElse(0D);
-    int buyIn = (int) Math.ceil((averageUsage - 1D) * count);
-    return Tuple.of(new TypePdtData(calculateBottomLevelSuggestions(usageSum.get(1), averageUsage, buyIn), buyIn, new PdtData(
+    int buyIn = (int) Math.ceil((averageUsage - subItems.get(0).getUsgThr().get(1)) * count);
+    return Tuple.of(new TypePdtData(calculateBottomLevelSuggestions(usageSum.get(1), averageUsage, buyIn, subItems.get(0).getUsgThr()), buyIn, new PdtData(
       subItems.get(0).getDate(), subItems.map(PdtData::getDepre).sum().doubleValue(), usageSum, subItems.get(0).getUsgThr(), averageUsage,
       Option.when(lastYearUsage.equals(0D), 0D).getOrElse(averageUsage / lastYearUsage - 1D),
       Option.when(buyIn > 0, averageUsage * count / (count + buyIn)).getOrElse(averageUsage),
@@ -740,12 +744,12 @@ public class DmApiV2 {
    * @param buyIn           number of assets that should be bought in
    * @return A list of suggestions
    */
-  private List<Map<String, String>> calculateBottomLevelSuggestions(Integer NumGreaterThan1, Double averageUsage, Integer buyIn) {
-    if (averageUsage > 1D) {
+  private List<Map<String, String>> calculateBottomLevelSuggestions(Integer NumGreaterThan1, Double averageUsage, Integer buyIn, java.util.List<Double> usageThreshold) {
+    if (averageUsage > usageThreshold.get(1)) {
       return List.of(HashMap.of("title", SUGGESTION_BUY, "addition", String.format("%s台设备", buyIn)));
     } else if (NumGreaterThan1 > 0) {
       return List.of(HashMap.of("title", SUGGESTION_ADJUST));
-    } else if (averageUsage <= 0.3D) {
+    } else if (averageUsage <= usageThreshold.get(0)) {
       return List.of(HashMap.of("title", SUGGESTION_RAISE));
     } else {
       return List.empty();
