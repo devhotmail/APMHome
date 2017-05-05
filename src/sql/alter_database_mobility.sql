@@ -53,7 +53,15 @@ alter table asset_info alter COLUMN asset_owner_name type varchar(32);
 alter table asset_info alter COLUMN asset_owner_name2 type varchar(32);
 alter table asset_info alter COLUMN clinical_owner_name type varchar(32);
 
+alter table asset_info alter COLUMN eam_id type varchar(32);
 alter table asset_info alter COLUMN system_id type varchar(32);
+alter table asset_info alter COLUMN system_num1 type varchar(32);
+alter table asset_info alter COLUMN system_num2 type varchar(32);
+alter table asset_info alter COLUMN system_num3 type varchar(32);
+alter table asset_info alter COLUMN system_num4 type varchar(32);
+alter table asset_info alter COLUMN system_num5 type varchar(32);
+
+
 create table qr_code_lib(
 id serial not null,
 site_id int not null,
