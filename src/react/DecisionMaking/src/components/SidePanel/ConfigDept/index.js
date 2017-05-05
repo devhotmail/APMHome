@@ -1,34 +1,60 @@
 /* @flow */
 import React, { Component } from 'react'
+import { Tooltip, Table } from 'antd'
 
-import { getCursor, isSameCursor, isFocusNode } from '#/utils'
+import { getCursor, isSameCursor, isFocusNode, round } from '#/utils'
 
 import type { ConfigT, NodeT, cursorT } from '#/types'
+
+import styles from './styles.scss'
+
+const defaultTableProps = {
+  size: 'small',
+  bordered: true,
+  pagination: false,
+  scroll: { y: 110 },
+  rowKey: n => n.data.id
+}
+
 
 class ConfigDept extends Component<*, ConfigT, *> {
   render () {
     const { config, focus: { cursor}, depths, setFocus } = this.props
 
     const configListOne = config.filter(n => n.depth === depths[0])
+    .map(n => ({
+      ...n,
+      children: null
+    }))
+
     if (!configListOne.length) return null
 
     const activeCursors = this.getParentCursors()
 
-    const configListTwo = config.filter(n => n.depth === depths[1])
+    const tableProps = {
+      ...defaultTableProps,
+      onRowClick: node => setFocus(getCursor(node)),
+      rowClassName: node => `${styles.tr} ${isFocusNode(node, activeCursors[0]) ? 'active': ''}`
+    }
 
     return (
       <div>
-        <ul>
-          {
-            configListOne.length ? configListOne.map((n, index) => {
-              const cls = isFocusNode(n, activeCursors[0])
-                ? 'active'
-                : ''
-              const onClick = e => setFocus(getCursor(n))
-              return <li key={index} className={cls} onClick={onClick}>{n.data.name}</li>
-            }) : null
-          }
-        </ul>
+        <Table dataSource={configListOne} {...tableProps}>
+          <Table.Column
+            title="科室名称"
+            dataIndex="data.name"
+            key="name" />
+          <Table.Column
+            title="预期增长"
+            dataIndex="data.usage_predict_increase"
+            key="increase"
+            width={120}
+            render={(text, node, index) => (
+              <div>
+                {round(text * 100, 1)}%
+              </div>
+            )} />
+        </Table>
         { activeCursors[0] ? this.renderConfigTwo(activeCursors) : null}
       </div>
     )
@@ -39,25 +65,71 @@ class ConfigDept extends Component<*, ConfigT, *> {
 
     const configListTwo = config.filter(n => n.depth === depths[1])
     .filter(n => isFocusNode(n.parent, activeCursors[0]))
+    .map(n => ({
+      ...n,
+      children: null
+    }))
+
+    const tableProps = {
+      ...defaultTableProps,
+      onRowClick: node => setFocus(getCursor(node)),
+      rowClassName: node => `${styles.tr} ${isFocusNode(node, activeCursors[1]) ? 'active': ''}`
+    }
+
+    const thresholdNode = [
+      <div>
+        <i className="dewicon-circle-full" style={{color:'#e26d26'}}></i>
+        <span>满负荷</span>
+      </div>,
+      <div>
+        <i className="dewicon-circle-low" style={{color:'#ebda51'}}></i>
+        <span>低负荷</span>
+      </div>
+    ]
 
     return (
-      <ul>
-        {
-          configListTwo ? configListTwo.map((n, index) => {
-            const cls = isFocusNode(n, activeCursors[1])
-              ? 'active'
-              : ''
-            const onClick = e => setFocus(getCursor(n))
-            return <li key={index} className={cls} onClick={onClick}>{n.data.name}</li>
-          }) : null
-        }
-      </ul>
+      <div>
+        <div className="text-center">
+          <div className={styles.arrow}></div>
+        </div>
+        <Table dataSource={configListTwo} {...tableProps}>
+          <Table.Column
+            title="设备类型"
+            dataIndex="data.name"
+            key="name" />
+          <Table.Column
+            title="预期增长"
+            dataIndex="data.usage_predict_increase"
+            key="increase"
+            width={70}
+            render={(text, node, index) => (
+              <div>
+                {round(text * 100, 1)}%
+              </div>
+            )} />
+          <Table.Column
+            title={thresholdNode[0]}
+            dataIndex="data.usage_threshold[0]"
+            key="max"
+            width={70}
+            render={(text, node, index) => (
+              <div>
+                {text * 100}%
+              </div>
+            )} />
+          <Table.Column
+            title={thresholdNode[1]}
+            dataIndex="data.usage_threshold[1]"
+            key="min"
+            width={70}
+            render={(text, node, index) => (
+              <div>
+                {text * 100}%
+              </div>
+            )} />
+        </Table>
+      </div>
     )
-  }
-
-  shouldActive = (node: NodeT, cursors: Array<cursorT>): boolean => {
-    const cursor = getCursor(node)
-    return cursors.find(n => isSameCursor(cursor, n))
   }
 
   getParentCursors = (): Array<cursorT>  => {

@@ -4,12 +4,12 @@
 $enable-hover-media-query: true !default;
 
 $gray-dark:                 #373a3c !default;
-$gray:                      #55595c !default;
+$gray:                      #bababa !default;
 $gray-light:                #949392 !default;
 $gray-lighter:              #eceeef !default;
 $gray-lightest:             #f7f7f9 !default;
 
-$brand-primary:             #03A9F4 !default;
+$brand-primary:             #5b84d7 !default;
 $brand-success:             #5cb85c !default;
 $brand-info:                #5bc0de !default;
 $brand-warning:             #f0ad4e !default;
@@ -46,7 +46,7 @@ $spacers: (
 
 $border-width: 1px !default;
 $border-radius: 5px !default;
-$border-color: $gray-light !default;
+$border-color: $gray !default;
 
 // Pixel value used to responsively scale all typography. Applied to the `<html>` element.
 $font-size-root: 16px !default;

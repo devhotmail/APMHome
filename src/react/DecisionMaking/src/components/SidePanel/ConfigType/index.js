@@ -9,6 +9,7 @@ type ConfigT = {
 
 class ConfigType extends PureComponent<*, ConfigT, *> {
   render () {
+    return <div>ConfigType</div>
     const { config, focus, depths, setFocus } = this.props
     const configListOne = config.filter(n => n.depth === depths[0])
     return (

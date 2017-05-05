@@ -1,0 +1,69 @@
+@import "../../../styles/variables.scss";
+
+.tr {
+  padding: 5px;
+
+  &:global(.active) {
+    background-color: #ecf6fd;
+  }
+}
+
+.arrow {
+  display: inline-block;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 10px solid $gray;
+}
+
+.configList {
+  position: relative;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+
+  &.disabled {
+    pointer-events: none;
+
+    .configItem {
+      color: $gray;
+    }
+  }  
+}
+
+.configHead {
+  height: 30px;
+  padding: 0 5px;
+  line-height: 30px;
+  font-weight: bolder;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid $border-color;
+}
+
+.configItem {
+  height: 30px;
+  padding: 0 5px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+
+  &:last-of-type {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  &.active {
+    // background-color: lighten($brand, 30%);
+    // color: $brand;
+    position: relative;
+  }
+
+  &:hover {
+    // background-color: lighten($brand, 30%);
+  }
+}
+
+.itemName {
+  flex: 1 1 auto;
+  overflow: hidden;
+}

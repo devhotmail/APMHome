@@ -62,4 +62,12 @@ $tab-active-color: rgb(31, 105, 266);
   border-radius: 10px;
   overflow-x: hidden;
   text-align: left;
+  background-color: white;
+}
+
+:global {
+  .ant-table-fixed-header .ant-table-scroll .ant-table-header {
+    padding-bottom: 0px;
+    margin-bottom: -15px;
+  }
 }

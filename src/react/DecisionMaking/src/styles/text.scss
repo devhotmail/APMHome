@@ -69,3 +69,11 @@
 .text-hide {
   @include text-hide();
 }
+
+$posList: ('center', 'left', 'right') !default;
+
+@each $pos in $posList {
+  .text-#{$pos} {
+    text-align: #{$pos};
+  }
+}
