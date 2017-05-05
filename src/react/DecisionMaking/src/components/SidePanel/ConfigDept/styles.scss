@@ -15,6 +15,50 @@
   border-top: 10px solid $gray;
 }
 
+.block {
+  position: relative;
+}
+
+.block {
+  display: inline-block;
+  text-align: right;
+}
+
+.block {
+  text-align: right;
+}
+
+.editing {
+  width: calc(100% - 16px);
+}
+
+/*
+.editable {
+  text-align: right;
+}
+
+.editing {
+  text-align: right;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 12px;
+  // border: 1px solid $brand-color;
+  border-radius: 6px;
+}
+
+.sign {
+  width: 12px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+}
+*/
+
 .configList {
   position: relative;
   border: 1px solid $border-color;

@@ -1,5 +1,5 @@
 /* @flow */
-import { round } from '#/utils'
+import { round, isFocusNode } from '#/utils'
 
 export default {
   namespace: 'config',
@@ -21,9 +21,35 @@ export default {
       } catch (err) {
 
       }
+    },
+    *['change'] ({ payload }, { put, call, select }) {
+      try {
+        yield put({
+          type: 'change/succeed',
+          payload
+        })
+
+      } catch (err) {
+
+      }
     }
   },
   reducers: {
+    ['change/succeed'] (state, { payload }) {
+      const { cursor, ...changedProps } = payload
+      const index = state.data.findIndex(n => isFocusNode(n, cursor))
+      return state
+      // if (~index) {
+      //   let target = state.data.find(n => isFocusNode(n, cursor))
+      //   target.data = {
+      //     ...target.data,
+      //     ...changedProps
+      //   }
+      //   return state
+      // } else {
+      //   return state
+      // }
+    },
     ['data/set/succeed'] (state, { payload }) {
       return {
         ...state,

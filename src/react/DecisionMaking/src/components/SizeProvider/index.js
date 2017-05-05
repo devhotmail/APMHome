@@ -1,20 +1,8 @@
 /* @flow */
 import React, { Component } from 'react'
+import { debounce } from '#/utils'
 
 import styles from './styles.scss'
-
-function debounce(func, wait = 500, immediate) {
-  let timeout
-  return function() {
-    const args = arguments
-    const later = () => {
-      timeout = null
-      if (!immediate) func.apply(this, args)
-    }
-    clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
-  }
-}
 
 const SizeProvider = WrappedComponent => {
   return class extends Component {

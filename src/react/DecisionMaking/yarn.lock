@@ -3224,7 +3224,7 @@ loader-utils@^1.0.1, loader-utils@^1.0.2, loader-utils@^1.1.0:
     emojis-list "^2.0.0"
     json5 "^0.5.0"
 
-lodash-es@^4.2.0, lodash-es@^4.2.1:
+lodash-es@^4.2.1:
   version "4.17.4"
   resolved "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.4.tgz#dcc1d7552e150a0640073ba9cb31d70f032950e7"
 
@@ -4207,7 +4207,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.0.0, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@~15.5.7:
+prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@~15.5.7:
   version "15.5.8"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.5.8.tgz#6b7b2e141083be38c8595aa51fc55775c7199394"
   dependencies:
@@ -4597,6 +4597,10 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-click-outside@tj/react-click-outside:
+  version "1.1.0"
+  resolved "https://codeload.github.com/tj/react-click-outside/tar.gz/82d51114d841a151e6285ac542d6fd98690910e6"
+
 react-deep-force-update@^2.0.1:
   version "2.0.1"
   resolved "http://registry.npm.taobao.org/react-deep-force-update/download/react-deep-force-update-2.0.1.tgz#4f7f6c12c3e7de42f345992a3c518236fa1ecad3"
@@ -4663,18 +4667,6 @@ react-redux@4.4.x:
     lodash "^4.2.0"
     loose-envify "^1.1.0"
     prop-types "^15.5.4"
-
-react-redux@^5.0.4:
-  version "5.0.4"
-  resolved "https://registry.npmjs.org/react-redux/-/react-redux-5.0.4.tgz#1563babadcfb2672f57f9ceaa439fb16bf85d55b"
-  dependencies:
-    create-react-class "^15.5.1"
-    hoist-non-react-statics "^1.0.3"
-    invariant "^2.0.0"
-    lodash "^4.2.0"
-    lodash-es "^4.2.0"
-    loose-envify "^1.1.0"
-    prop-types "^15.0.0"
 
 react-router-redux@^4.0.5:
   version "4.0.8"
@@ -4941,6 +4933,10 @@ restore-cursor@^2.0.0:
   dependencies:
     onetime "^2.0.0"
     signal-exit "^3.0.2"
+
+riek@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.npmjs.org/riek/-/riek-1.0.7.tgz#48d294ea3eb9e54f2daf5df3e82208727bcc05df"
 
 right-align@^0.1.1:
   version "0.1.3"

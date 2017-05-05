@@ -1,0 +1,39 @@
+.editBlock {
+  :global {
+    .ant-form-item {
+      margin-bottom: 0;
+
+      input[disabled] {
+        background-color: transparent;
+        opacity: 1;
+        cursor: pointer;
+        color: inherit;
+        border-width: 0;
+      }
+    }
+    
+    .ant-form-item-control {
+      line-height: 20px;
+    }
+
+    .ant-input-number {
+      width: 100%;
+    }
+  }
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+
+  &::after {
+    content: '%';
+    display: inline-block;
+    line-height: 21px;
+    margin-left: 3px;
+  }
+
+  input {
+    text-align: right;
+  }
+}
