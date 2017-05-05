@@ -10,7 +10,6 @@ module.exports = merge(baseWebpackConfig, {
   entry: {
     app: [
       'babel-polyfill',
-      'react-hot-loader/patch',
       'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
       './src/index.js'
     ]
@@ -21,7 +20,6 @@ module.exports = merge(baseWebpackConfig, {
         test: /\.js$/,
         exclude: /node_modules/,
         use: [
-          'react-hot-loader/webpack',
           {
             loader: 'babel-loader',
             options: {
