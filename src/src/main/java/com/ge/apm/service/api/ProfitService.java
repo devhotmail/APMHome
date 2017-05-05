@@ -3,10 +3,8 @@ package com.ge.apm.service.api;
 import com.ge.apm.service.utils.CNY;
 import com.github.davidmoten.rx.jdbc.ConnectionProvider;
 import com.github.davidmoten.rx.jdbc.Database;
-import javaslang.Tuple;
-import javaslang.Tuple2;
-import javaslang.Tuple4;
-import javaslang.Tuple5;
+import com.github.davidmoten.rx.jdbc.annotations.Column;
+import javaslang.*;
 import javaslang.control.Option;
 import org.apache.ibatis.jdbc.SQL;
 import org.javamoney.moneta.Money;
@@ -19,6 +17,7 @@ import rx.Observable;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -173,6 +172,52 @@ public class ProfitService {
       .parameter("hospital_id", hospitalId)
       .getAs(Integer.class, Double.class, Double.class, Double.class)
       .map(tuple4 -> Tuple.of(tuple4._1(), CNY.money(tuple4._2()), CNY.money(tuple4._3()), CNY.money(tuple4._4()))).cache();
+  }
+
+  interface Asset {
+    @Column
+    int id();
+
+    @Column
+    Timestamp yearMonth();
+
+    @Column
+    int type();
+
+    @Column
+    int dept();
+
+    @Column
+    double revenue();
+
+    @Column
+    double costs();
+  }
+
+  @Cacheable(cacheNames = "springCache", key = "'profitService.findRvnCstForForecast'+#siteId+'.'+#hospitalId+'.startDate'+#startDate+'.endDate'+#endDate")
+  public Observable<Tuple6<Integer, LocalDate, Integer, Integer, Double, Double>> findRvnCstForForecast(Integer siteId, Integer hospitalId, LocalDate startDate, LocalDate endDate) {
+    log.info("siteId:{}, hospitalId:{}, startDate:{}, endDate:{}", siteId, hospitalId, startDate, endDate);
+    return db.select(new SQL() {{
+      SELECT("ai.id", "date_trunc(:time_unit,asu.created) as created_date", "ai.asset_group", "ai.clinical_dept_id", "COALESCE(sum(asu.revenue), 0)", "COALESCE(sum(asu.maintenance_cost), 0)");
+      FROM("asset_info as ai");
+      LEFT_OUTER_JOIN("asset_summit as asu on ai.id = asu.asset_id");
+      WHERE("ai.site_id = :site_id");
+      WHERE("ai.hospital_id = :hospital_id");
+      WHERE("asu.created >= :start_day");
+      WHERE("asu.created <= :end_day");
+      WHERE("ai.is_valid = true");
+      GROUP_BY("ai.id");
+      GROUP_BY("created_date");
+      ORDER_BY("ai.id");
+      ORDER_BY("created_date");
+    }}.toString())
+      .parameter("start_day", Date.valueOf(startDate))
+      .parameter("end_day", Date.valueOf(endDate))
+      .parameter("site_id", siteId)
+      .parameter("hospital_id", hospitalId)
+      .parameter("time_unit", "month")
+      .autoMap(Asset.class)
+      .map(v -> Tuple.of(v.id(), v.yearMonth().toLocalDateTime().toLocalDate(), v.type(), v.dept(), v.revenue(), v.costs()));
   }
 
 }
