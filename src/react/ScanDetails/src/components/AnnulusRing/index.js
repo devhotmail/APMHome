@@ -9,6 +9,8 @@ import AnnulusSectorGroup from '#/components/AnnulusSectorGroup'
 import ImmutableComponent from '#/components/ImmutableComponent'
 
 type Props = {
+  onMouseEnter?: Function,
+  onMouseLeave?: Function,
   cx: number,
   cy: number,
   innerRadius: number,
@@ -18,7 +20,9 @@ type Props = {
   curPage: number,
   pageSize: number,
   onPageChange?: number => void,
-  onGroupClick?: * => void
+  onGroupClick?: * => void,
+  showPrev?: boolean,
+  showNext?: boolean
 }
 
 type Position = {
@@ -54,26 +58,40 @@ class AnnulusRing extends ImmutableComponent<*, Props, *> {
     const d2 = `M${sign2 * 10},${0}L${sign2 * 30},${10}L${sign2 * 10},${20}`
     return (
       <g>
-        <path
-          onClick={e => this.props.onPageChange(-1)}
-          fill="#cecece"
-          d={d1}
-          transform={`translate(${innerRadius * Math.sin(startAngle)}, ${-innerRadius * Math.cos(startAngle)}) rotate(${startAngle * 180 / Math.PI})`}
-        />
-        <path
-          onClick={e => this.props.onPageChange(1)}
-          fill="#cecece"
-          d={d2}
-          transform={`translate(${innerRadius * Math.sin(endAngle)}, ${-innerRadius * Math.cos(endAngle)}) rotate(${endAngle * 180 / Math.PI + (endAngle > 0 ? 1 : -1) * 180})`}
-        />
+        {
+          this.props.showPrev
+          ?
+          <path
+            onClick={e => this.props.onPageChange(-1)}
+            fill="#cecece"
+            d={d1}
+            transform={`translate(${innerRadius * Math.sin(startAngle)}, ${-innerRadius * Math.cos(startAngle)}) rotate(${startAngle * 180 / Math.PI})`}
+          />
+          : null
+        }
+        {
+          this.props.showNext
+          ?
+          <path
+            onClick={e => this.props.onPageChange(1)}
+            fill="#cecece"
+            d={d2}
+            transform={`translate(${innerRadius * Math.sin(endAngle)}, ${-innerRadius * Math.cos(endAngle)}) rotate(${endAngle * 180 / Math.PI + (endAngle > 0 ? 1 : -1) * 180})`}
+          />
+          : null
+        }
       </g>
     )
   }
   componentWillReceiveProps(nextProps, nextState) {
     this.leaveDirection = nextProps.curPage > this.props.curPage ? 1 : -1
   }
+
+  onMouseEnter = data => rect => this.props.onMouseEnter && this.props.onMouseEnter(rect, data)
+  onMouseLeave = data => e => this.props.onMouseLeave && this.props.onMouseLeave()
+
   render() {
-    const { cx, cy, innerRadius, startAngle, endAngle, groups, curPage, pageSize } = this.props
+    const { cx, cy, innerRadius, startAngle, endAngle, groups, curPage, pageSize, showNext, showPrev } = this.props
     const angles = distribute(startAngle, endAngle, groups.size)
     const id = uuid()
     // console.log(path().arc(0, 0, 10000, startAngle, endAngle));
@@ -94,6 +112,8 @@ class AnnulusRing extends ImmutableComponent<*, Props, *> {
             {groups.map((group, index) => (
               <AnnulusSectorGroup
                 opacity={group.get('opacity')}
+                onMouseEnter={this.onMouseEnter(group)}
+                onMouseLeave={this.onMouseLeave(group)}
                 onClick={e => this.props.onGroupClick(group)}
                 key={group.get('id', index)}
                 innerRadius={innerRadius}
@@ -118,16 +138,19 @@ class AnnulusRing extends ImmutableComponent<*, Props, *> {
               data: group,
               style: {
                 startAngle: spring(angles[index].startAngle),
-                endAngle: spring(angles[index].endAngle)
+                endAngle: spring(angles[index].endAngle),
+                opacity: spring(1)
               }
             })).toJS()}
             willLeave={() => ({
               startAngle: spring(startAngle - (endAngle - startAngle) * this.leaveDirection),
-              endAngle: spring(endAngle - (endAngle - startAngle) * this.leaveDirection)
+              endAngle: spring(endAngle - (endAngle - startAngle) * this.leaveDirection),
+              opacity: spring(0)
             })}
             willEnter={() => ({
               startAngle: startAngle + (endAngle - startAngle) * this.leaveDirection,
-              endAngle: endAngle + (endAngle - startAngle) * this.leaveDirection
+              endAngle: endAngle + (endAngle - startAngle) * this.leaveDirection,
+              opacity: 0
             })}
           >
             {interpolatedStyles => (
@@ -135,11 +158,14 @@ class AnnulusRing extends ImmutableComponent<*, Props, *> {
                 {
                   interpolatedStyles.map((config => (
                     <AnnulusSectorGroup
-                      opacity={config.data.get('opacity')}
+                      opacity={config.style.opacity}
                       key={config.key}
-                      onClick={e => this.props.onGroupClick(config.data)}
+                      onMouseEnter={this.onMouseEnter(config.data)}
+                      onMouseLeave={this.onMouseLeave(config.data)}
+                      onClick={e => this.props.onGroupClick && this.props.onGroupClick(config.data)}
                       innerRadius={innerRadius}
                       text={config.data.get('text')}
+                      extraText={config.data.get('extraText')}
                       startAngle={config.style.startAngle}
                       endAngle={config.style.endAngle}
                       annuluses={config.data.get('annuluses')}
@@ -150,13 +176,14 @@ class AnnulusRing extends ImmutableComponent<*, Props, *> {
             )}
           </TransitionMotion>
         }
-        {
+        {this.generateArrows(startAngle, endAngle, innerRadius)}
+        {/* {
           curPage === undefined || pageSize === undefined
           ?
           null
           :
           this.generateArrows(startAngle, endAngle, innerRadius)
-        }
+        } */}
       </g>
     )
   }

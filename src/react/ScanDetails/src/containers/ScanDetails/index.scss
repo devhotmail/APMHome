@@ -11,4 +11,29 @@ body, html, #root, #root>div {
   .body-chart {
     flex: 1;
   }
+  px-rangepicker {
+    position: absolute;
+  }
+}
+
+.select {
+  :global .ant-select-selection__rendered {
+    height: 100%;
+  }
+  :global .ant-select-selection {
+    background: transparent;
+    border: 1px solid #7c7c84;
+    border-radius: 13px;
+    box-shadow: none;
+  }
+  :global .ant-select-selection__placeholder {
+    color: inherit;
+    font-size: 15px;
+  }
+  :global .ant-select-selection-selected-value {
+    font-size: 15px;
+  }
+  :global .ant-select-selection__clear {
+    background: #eaeaea;
+  }
 }

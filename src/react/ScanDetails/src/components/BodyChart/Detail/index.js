@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import ReactDOM from 'react-dom'
 import type { IndexedIterable, KeyedIterable, Map, List } from 'immutable'
 import { Motion, spring } from 'react-motion'
 import type { ClientRect } from '#/HOC/withClientRect'
@@ -8,82 +9,115 @@ import AnnulusRing from '#/components/AnnulusRing'
 import ImmutableComponent from '#/components/ImmutableComponent'
 import AnnulusSector from '#/components/AnnulusSector'
 import { valueToCoordinate, getRange } from '#/utils'
-import { COLORS } from '#/constants'
+import { COLORS, PAGE_SIZE } from '#/constants'
 
-
-// class Item extends ImmutableComponent<*, *, *> {
-//   countToWidth(count, minCount, maxCount, minRadius, maxRadius) {
-//     return (count) / (maxCount - minCount) * (maxRadius - minRadius)
-//   }
-//
-//   render() {
-//     const { detail, minRadius, maxRadius, minCount, maxCount, startAngle, endAngle, partColors } = this.props
-//     const annulusSectors = detail.getIn(['items', 'data'], []).reduce((prev, cur) => {
-//       const width = this.countToWidth(cur.get('count'), minCount, maxCount, minRadius, maxRadius)
-//       const prevRadius = prev.size ? prev.get(-1).props.outerRadius : minRadius
-//       return prev.concat(
-//         <AnnulusSector
-//           key={cur.get('id')}
-//           innerRadius={prevRadius}
-//           outerRadius={prevRadius + width}
-//           startAngle={startAngle}
-//           endAngle={endAngle}
-//           color={partColors.get(cur.get('id'))}
-//         />
-//       )
-//     }, Immutable.List())
-//     const textR = annulusSectors.get(0).props.innerRadius + 5
-//     const textAngle = (startAngle + endAngle) / 2
-//     const textX = textR * Math.sin(textAngle)
-//     const textY = -textR * Math.cos(textAngle)
-//     const textRotate = textAngle * 180 / Math.PI - 90
-//     return (
-//       <g>
-//         {annulusSectors}
-//         <text
-//           fill="white"
-//           x={textX}
-//           y={textY}
-//           dy="0.35em"
-//           transform={`rotate(${textRotate} ${textX} ${textY})`}
-//         >
-//           {detail.getIn(['asset', 'name'])}
-//         </text>
-//       </g>
-//     )
-//   }
-// }
 
 type Props = {
   filters: List<*>,
   details: List<*>,
   detailsCurPage?: number,
-  detailsBySequence: List<*>,
-  detailsBySequenceCurPage?: number,
+  detailsByStep: List<*>,
+  detailsByStepCurPage?: number,
   pageSize?: number,
   onDetailsPageChange?: number => void,
   onDetailsBySequencePageChange?: number => void,
   clientRect: ClientRect
 }
 
-// function getRange(arr: number[] | IndexedIterable<number>):[number, number] {
-//   return arr.reduce((prev, cur) => {
-//     if (cur > prev[1]) prev[1] = cur
-//     if (cur < prev[0]) prev[0] = cur
-//     return prev
-//   }, [+Infinity, -Infinity])
-// }
 
 export default
 class Detail extends ImmutableComponent<void, Props, void> {
   static anglePaddingScale = 0
 
+  onDetailMouseEnter = (clientRect, data) => {
+    const style = {
+      pointerEvents: 'none',
+      position: 'fixed',
+      minWidth: 100,
+      background: '#d8d8d8',
+      border: '1px solid #5d87d4',
+      borderRadius: 3,
+      padding: '12px 7px',
+      // transform: `translate(${clientRect.width + 10}px, ${clientRect.height / 2}px)`
+    }
+    if (clientRect.top > window.innerHeight * 0.6) {
+      style.bottom = window.innerHeight - clientRect.bottom + clientRect.height / 2 + 'px'
+    } else {
+      style.top = clientRect.top + clientRect.height / 2 + 'px'
+    }
+
+    if (clientRect.left > window.innerWidth * 0.6) {
+      style.right = window.innerWidth - clientRect.right + clientRect.width + 10 + 'px'
+    } else {
+      style.left = clientRect.left + clientRect.width + 10 + 'px'
+    }
+    this.detailEl = ReactDOM.render(
+      <div style={style}>
+        <div>{data.getIn(['data', 'type', 'name'])}</div>
+        {data.getIn(['data', 'items', 'data']).map(datum => (
+          <div key={datum.get('id')}>
+            <span>{this.props.parts.getIn([datum.get('id'), 'name'])}</span>
+            <span>{datum.get('count')}</span>
+          </div>
+        ))}
+      </div>,
+      document.createElement('div')
+    )
+    document.body.appendChild(this.detailEl)
+  }
+
+  onDetailMouseLeave = e => {
+    document.body.removeChild(this.detailEl)
+    this.el = null
+  }
+
+  onStepMouseEnter = (clientRect, data) => {
+    const style = {
+      pointerEvents: 'none',
+      position: 'fixed',
+      minWidth: 100,
+      background: '#d8d8d8',
+      border: '1px solid #5d87d4',
+      borderRadius: 3,
+      padding: '12px 7px',
+      // transform: `translate(${clientRect.width + 10}px, ${clientRect.height / 2}px)`
+    }
+    if (clientRect.top > window.innerHeight * 0.6) {
+      style.bottom = window.innerHeight - clientRect.bottom + clientRect.height / 2 + 'px'
+    } else {
+      style.top = clientRect.top + clientRect.height / 2 + 'px'
+    }
+
+    if (clientRect.left > window.innerWidth * 0.6) {
+      style.right = window.innerWidth - clientRect.right + clientRect.width + 10 + 'px'
+    } else {
+      style.left = clientRect.left + clientRect.width + 10 + 'px'
+    }
+    this.stepEl = ReactDOM.render(
+      <div style={style}>
+        <div>{data.getIn(['data', 'type', 'name'])}</div>
+        <div>{data.getIn(['data', 'asset', 'name'])}</div>
+        <div>{data.getIn(['data', 'part', 'name'])}</div>
+        <div>{data.getIn(['data', 'step', 'name'])}</div>
+        <div>{data.getIn(['data', 'step', 'count'])}</div>
+      </div>,
+      document.createElement('div')
+    )
+    document.body.appendChild(this.stepEl)
+  }
+
+  onStepMouseLeave = e => {
+    document.body.removeChild(this.stepEl)
+    this.el = null
+  }
+
   render() {
     const {
+      parts,
       details,
       detailsCurPage,
-      detailsBySequence,
-      detailsBySequenceCurPage,
+      detailsByStep,
+      detailsByStepCurPage,
       pageSize,
       clientRect,
       filters,
@@ -101,23 +135,7 @@ class Detail extends ImmutableComponent<void, Props, void> {
       )
     const [ minCount, maxCount ] = getRange(countSums)
 
-
-    const parts = details
-      .flatMap(detail => detail.getIn(['items', 'desc']))
-      .reduce((prev, cur) => prev.set(cur.get('id'), cur.get('name')), Immutable.Map())
-
-    const partColors = parts.mapEntries(([key, _], index) => [key, COLORS[index]])
-
     const groups = details
-      .filter(detail => {
-        const typeFilter = filters.find(filter => filter.get('key') === 'type')
-        const partFilter = filters.find(filter => filter.get('key') === 'part')
-        let res = true
-        if (typeFilter) res = res && detail.getIn(['type', 'id']) === typeFilter.get('value')
-        if (partFilter) res = res && detail.getIn(['part', 'id']) === partFilter.get('value')
-
-        return res
-      })
       .map((detail, index) => {
         const data = detail.getIn(['items', 'data'])
         return Immutable.fromJS({
@@ -125,36 +143,50 @@ class Detail extends ImmutableComponent<void, Props, void> {
           text: detail.getIn(['asset', 'name']),
           annuluses: data.map(datum => Immutable.fromJS(({
             width: valueToCoordinate(datum.get('count'), [minCount, maxCount], [0.8 * maxRadius, maxRadius]),
-            color: COLORS[datum.get('id')]
-          })))
+            color: parts.getIn([datum.get('id'), 'color'])
+          }))),
+          data: detail
         })
       })
-      .slice(detailsCurPage * pageSize, (detailsCurPage + 1) * pageSize)
+      // .filter(detail => {
+      //   const typeFilter = filters.find(filter => filter.get('key') === 'type')
+      //   const partFilter = filters.find(filter => filter.get('key') === 'part')
+      //   let res = true
+      //   if (typeFilter) res = res && detail.getIn(['type', 'id']) === typeFilter.get('value')
+      //   if (partFilter) res = res && detail.getIn(['part', 'id']) === partFilter.get('value')
+      //
+      //   return res
+      // })
 
-    const sequenceCountRange = getRange(detailsBySequence.map(detail => detail.getIn(['items', 'data', 0,  'count'])))
+      // .slice(0, PAGE_SIZE)
 
-    const sequenceGroups = detailsBySequence
-      .filter(detail => {
-        const typeFilter = filters.find(filter => filter.get('key') === 'type')
-        const partFilter = filters.find(filter => filter.get('key') === 'part')
-        let res = true
-        if (typeFilter) res = res && detail.getIn(['type', 'id']) === typeFilter.get('value')
-        if (partFilter) res = res && detail.getIn(['part', 'id']) === partFilter.get('value')
+    const sequenceCountRange = getRange(detailsByStep.map(detail => detail.getIn(['step', 'count'])))
 
-        return res
-      })
+    const stepGroups = detailsByStep
       .map((detail, index) => {
-        const data = detail.getIn(['items', 'data'])
+        const count = detail.getIn(['step', 'count'])
         return Immutable.fromJS({
-          id: detail.getIn(['sequence', 'id']),
-          text: detail.getIn(['sequence', 'name']),
-          annuluses: data.map(datum => Immutable.fromJS({
-            width: valueToCoordinate(datum.get('count'), sequenceCountRange, [0.8 * maxRadius, maxRadius]),
-            color: COLORS[detail.getIn(['part', 'id'])]
-          }))
+          id: `${detail.getIn(['step', 'id'])}-${detail.getIn(['asset', 'id'])}-${detail.getIn(['part', 'id'])}-${detail.getIn(['type', 'id'])}`,
+          text: detail.getIn(['step', 'name']),
+          extraText: detail.getIn(['asset', 'name']),
+          annuluses: [{
+            width: valueToCoordinate(count, sequenceCountRange, [0.8 * maxRadius, maxRadius]),
+            color: parts.getIn([detail.getIn(['part', 'id']), 'color'])
+          }],
+          data: detail
         })
       })
-      .slice(detailsBySequenceCurPage * pageSize, (detailsBySequenceCurPage + 1) * pageSize)
+      // .filter(detail => {
+      //   const typeFilter = filters.find(filter => filter.get('key') === 'type')
+      //   const partFilter = filters.find(filter => filter.get('key') === 'part')
+      //   let res = true
+      //   if (typeFilter) res = res && detail.getIn(['type', 'id']) === typeFilter.get('value')
+      //   if (partFilter) res = res && detail.getIn(['part', 'id']) === partFilter.get('value')
+      //
+      //   return res
+      // })
+
+      // .slice(0, PAGE_SIZE)
 
     return (
         <Motion
@@ -175,9 +207,13 @@ class Detail extends ImmutableComponent<void, Props, void> {
                     innerRadius={0.8 * maxRadius}
                     startAngle={0}
                     endAngle={Math.PI}
-                    groups={groups}
+                    groups={groups.slice(0, PAGE_SIZE)}
                     curPage={detailsCurPage}
                     pageSize={pageSize}
+                    showPrev={detailsCurPage > 0}
+                    showNext={groups.size > PAGE_SIZE}
+                    onMouseEnter={this.onDetailMouseEnter}
+                    onMouseLeave={this.onDetailMouseLeave}
                     onPageChange={diff => {
                       if (groups.size < pageSize && diff === 1) return
                       if (detailsCurPage === 0 && diff === -1) return
@@ -192,12 +228,16 @@ class Detail extends ImmutableComponent<void, Props, void> {
                     innerRadius={0.8 * maxRadius}
                     startAngle={0}
                     endAngle={Math.PI}
-                    groups={sequenceGroups}
-                    curPage={detailsBySequenceCurPage}
+                    groups={stepGroups.slice(0, PAGE_SIZE)}
+                    curPage={detailsByStepCurPage}
                     pageSize={pageSize}
+                    showPrev={detailsByStepCurPage > 0}
+                    showNext={stepGroups.size > PAGE_SIZE}
+                    onMouseEnter={this.onStepMouseEnter}
+                    onMouseLeave={this.onStepMouseLeave}
                     onPageChange={diff => {
-                      if (sequenceGroups.size < pageSize && diff === 1) return
-                      if (detailsCurPage === 0 && diff === -1) return
+                      if (stepGroups.size < pageSize && diff === 1) return
+                      if (detailsByStepCurPage === 0 && diff === -1) return
                       this.props.onDetailsBySequencePageChange(diff)
                     }}
                   />
@@ -207,26 +247,5 @@ class Detail extends ImmutableComponent<void, Props, void> {
           }
         </Motion>
     )
-
-    // return (
-    //   <g transform={`translate(${cx + 0.1 * width}, ${cy})`}>
-    //     {details.filter(detail => {
-    //       const typeFilter = filters.find(filter => filter.get('key') === 'type')
-    //       if (!typeFilter) return true
-    //       return detail.getIn(['type', 'id']) === typeFilter.get('value')
-    //     }).map((detail, index) => (
-    //       <Item
-    //         key={detail.getIn(['asset', 'id'])}
-    //         detail={detail}
-    //         maxRadius={maxRadius}
-    //         minRadius={0.8 * maxRadius}
-    //         minCount={minCount}
-    //         maxCount={maxCount}
-    //         {...this.getStartAndEndAngle(index, details.size)}
-    //         partColors={partColors}
-    //       />
-    //     ))}
-    //   </g>
-    // )
   }
 }

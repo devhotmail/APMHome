@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { connect } from 'dva'
 import type { IndexedIterable, KeyedIterable, IndexedSeq, Map, List } from 'immutable'
 import * as Immutable from 'immutable'
@@ -69,7 +70,6 @@ type Props = {
   minRadius: number,
   parts: Map<string|number, *>,
   partScans: Map<string|number, number>,
-  partColors: KeyedIterable<string|number, string>,
   filters: List<*>
 }
 
@@ -86,18 +86,59 @@ class Parts extends ImmutableComponent<void, Props, void> {
     }
   }
 
+  onMouseEnter = (clientRect, data) => {
+    const style = {
+      pointerEvents: 'none',
+      position: 'fixed',
+      minWidth: 100,
+      background: '#d8d8d8',
+      border: '1px solid #5d87d4',
+      borderRadius: 3,
+      padding: '12px 7px',
+      // transform: `translate(${clientRect.width + 10}px, ${clientRect.height / 2}px)`
+    }
+    if (clientRect.top > window.innerHeight * 0.6) {
+      style.bottom = window.innerHeight - clientRect.bottom + clientRect.height / 2 + 'px'
+    } else {
+      style.top = clientRect.top + clientRect.height / 2 + 'px'
+    }
+
+    if (clientRect.left > window.innerWidth * 0.6) {
+      style.right = window.innerWidth - clientRect.right + clientRect.width + 10 + 'px'
+    } else {
+      style.left = clientRect.left + clientRect.width + 10 + 'px'
+    }
+    this.el = this.el || ReactDOM.render(
+      <div style={style}>
+        <span>{data.getIn(['data', 'name'])}</span>
+        <span>{data.getIn(['data', 'count'])}</span>
+      </div>,
+      document.createElement('div')
+    )
+    document.body.appendChild(this.el)
+  }
+
+  onMouseLeave = e => {
+    document.body.removeChild(this.el)
+    this.el = null
+  }
+
   render() {
-    const { cx, cy, maxRadius, minRadius, parts, partColors, partScans, filters } = this.props
+    const { cx, cy, maxRadius, minRadius, parts, partScans, filters } = this.props
     const countSums = partScans.valueSeq()
     const [ minCount, maxCount ] = getRange(countSums)
     const groups = partScans.entrySeq().map(([key, count]) => Immutable.fromJS({
       id: key,
-      text: parts.get(key),
+      text: parts.getIn([key, 'name']),
       opacity: filters.find(filter => filter.get('key') === 'part') ? filters.find(filter => filter.get('key') === 'part' && filter.get('value') === key) ? 1 : 0.4 : 1,
       annuluses: [{
         width: valueToCoordinate(count, [minCount, maxCount], [minRadius, maxRadius]),
-        color: COLORS[key]
-      }]
+        color: parts.getIn([key, 'color'])
+      }],
+      data: {
+        name: parts.getIn([key, 'name']),
+        count
+      }
     }))
 
     return (
@@ -108,6 +149,8 @@ class Parts extends ImmutableComponent<void, Props, void> {
         startAngle={-10 / 180 * Math.PI}
         endAngle={-170 / 180 * Math.PI}
         groups={groups}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
         onGroupClick={group => this.props.dispatch({
           type: 'scans/filters/toggle',
           payload: {
@@ -117,24 +160,5 @@ class Parts extends ImmutableComponent<void, Props, void> {
         })}
       />
     )
-
-    // return (
-    //   <g transform={`translate(${cx}, ${cy})`}>
-    //     {partScans.entrySeq().map(([key, count], index, seq) => (
-    //       <Part
-    //         key={key}
-    //         id={key}
-    //         count={count}
-    //         minRadius={minRadius}
-    //         maxRadius={maxRadius}
-    //         minCount={minCount}
-    //         maxCount={maxCount}
-    //         {...this.getStartAndEndAngle(index, seq.size || 0)}
-    //         partColors={partColors}
-    //         parts={parts}
-    //       />
-    //     ))}
-    //   </g>
-    // )
   }
 }

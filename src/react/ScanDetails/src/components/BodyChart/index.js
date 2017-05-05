@@ -24,32 +24,47 @@ class BodyChart extends ImmutableComponent<*, Props, *> {
     const partFilter = filters.find(filter => filter.get('key') === 'part')
     const partId = partFilter ? partFilter.get('value') : null
     const mapping = {
-      0: {
+      1: {
         translate: [-0.03 * width, 1 * width],
         scale: 6,
         clipRadius: width * 0.15
       },
-      1: {
+      2: {
+        translate: [-0.02 * width, 0.68 * width],
+        scale: 5,
+        clipRadius: width * 0.15
+      },
+      3: {
         translate: [-0.02 * width, 0.38 * width],
         scale: 3.5,
         clipRadius: width * 0.15
       },
-      2: {
+      4: {
         translate: [-0.02 * width, 0.2 * width],
         scale: 3.6,
         clipRadius: width * 0.15
       },
-      3: {
+      5: {
+        translate: [-0.02 * width, 0.12 * width],
+        scale: 4,
+        clipRadius: width * 0.15
+      },
+      6: {
         translate: [-0.02 * width, 0.2 * width],
         scale: 2,
         clipRadius: width * 0.15
       },
-      4: {
-        translate: [0, 0],
-        scale: 1,
-        clipRadius: width
+      7: {
+        translate: [-0.12 * width, 0.1 * width],
+        scale: 2,
+        clipRadius: width * 0.15
       },
-      5: {
+      8: {
+        translate: [-0.02 * width, -0.15 * width],
+        scale: 1.5,
+        clipRadius: width * 0.15
+      },
+      9: {
         translate: [0, 0],
         scale: 1,
         clipRadius: width
@@ -103,9 +118,10 @@ class BodyChart extends ImmutableComponent<*, Props, *> {
     const { width, height } = clientRect
     const briefs = scans.get('briefs')
     const details = scans.get('details')
+    const parts = scans.get('parts')
     const detailsCurPage = scans.get('detailsCurPage')
-    const detailsBySequence = scans.get('detailsBySequence')
-    const detailsBySequenceCurPage = scans.get('detailsBySequenceCurPage')
+    const detailsByStep = scans.get('detailsByStep')
+    const detailsByStepCurPage = scans.get('detailsByStepCurPage')
     const pageSize = scans.get('pageSize')
     const filters = scans.get('filters')
     return (
@@ -114,18 +130,19 @@ class BodyChart extends ImmutableComponent<*, Props, *> {
         viewBox={`0 0 ${width} ${height}`}
         >
         {this.getImage()}
-        <Brief briefs={briefs} clientRect={clientRect} filters={filters}/>
+        <Brief parts={parts} briefs={briefs} clientRect={clientRect} filters={filters}/>
         <Detail
+          parts={parts}
           details={details}
           detailsCurPage={detailsCurPage}
-          detailsBySequence={detailsBySequence}
-          detailsBySequenceCurPage={detailsBySequenceCurPage}
+          detailsByStep={detailsByStep}
+          detailsByStepCurPage={detailsByStepCurPage}
           onDetailsPageChange={number => this.props.dispatch({
             type: 'scans/detail/page/change',
             payload: number
           })}
           onDetailsBySequencePageChange={number => this.props.dispatch({
-            type: 'scans/detailBySequence/page/change',
+            type: 'scans/detailByStep/page/change',
             payload: number
           })}
           pageSize={pageSize}

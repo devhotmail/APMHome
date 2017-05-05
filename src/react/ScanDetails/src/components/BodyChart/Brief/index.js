@@ -27,17 +27,17 @@ export default
 class Brief extends ImmutableComponent<*, Props, *> {
 
   render() {
-    const { briefs, clientRect, limit, filters } = this.props
+    const { parts, briefs, clientRect, limit, filters } = this.props
     const { width, height } = clientRect
     const cx = width / 2
     const cy = height / 2
     const maxRadius = Math.min.call(null, height * 0.7 / 2, width * 0.6 / 2)
 
-    const parts = briefs
-      .flatMap(brief => brief.getIn(['items', 'desc']))
-      .reduce((prev, cur) => prev.set(cur.get('id'), cur.get('name')), Immutable.Map())
+    // const parts = briefs
+    //   .flatMap(brief => brief.getIn(['items', 'desc']))
+    //   .reduce((prev, cur) => prev.set(cur.get('id'), cur.get('name')), Immutable.Map())
 
-    const partColors = parts.mapEntries(([key, _], index) => [key, COLORS[index]])
+    const partColors = parts.mapEntries(([k, v]) => [k, v.get('color')])
 
     const partScans = briefs
       .filter(brief => {
@@ -59,7 +59,7 @@ class Brief extends ImmutableComponent<*, Props, *> {
           maxRadius={maxRadius}
           minRadius={maxRadius * 0.8}
           briefs={briefs}
-          partColors={partColors}
+          parts={parts}
           filters={filters}
         />
         <Parts
@@ -68,7 +68,6 @@ class Brief extends ImmutableComponent<*, Props, *> {
           maxRadius={maxRadius * 0.65}
           minRadius={maxRadius * 0.55}
           parts={parts}
-          partColors={partColors}
           partScans={partScans}
           filters={filters}
         />

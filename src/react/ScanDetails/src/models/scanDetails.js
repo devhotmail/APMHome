@@ -3,8 +3,10 @@ import * as Immutable from 'immutable'
 import type { Map } from 'immutable'
 import * as sagaEffects from 'redux-saga/effects'
 import { rpoisson } from 'randgen'
-import { groupBy } from 'lodash'
+import { groupBy, pickBy } from 'lodash'
+import axios from 'axios'
 import { randRange } from '#/utils'
+import { COLORS, PAGE_SIZE } from '#/constants'
 
 type Type = {
   id: number|string,
@@ -183,68 +185,6 @@ function fetchDetail(endpoint: string = '', filters: Array<{key: string, value: 
     }
   })
 }
-//
-// type Asset = {
-//   id: string|number,
-//   name: string
-// }
-//
-// type DetailItems = {
-//   desc: Part[],
-//   data: Scan[]
-// }
-//
-// type Detail = {
-//   type: Type,
-//   asset: Asset,
-//   items: DetailItems
-// }
-//
-// type DetailResponse = {
-//   dom: Detail[]
-// }
-
-// function fetchDetail(endpoint?: string): Promise<*> {
-//   return new Promise((resolve, reject) => {
-//     const detailRes:DetailResponse = {
-//       dom: []
-//     }
-//
-//     for (let i = 0; i < 20; i++) {
-//       const scans: Scan[] = []
-//       for (let j = 0; j < 6; j++) {
-//         scans.push({
-//           id: j + 1,
-//           count: ~~(rpoisson() * 100)
-//         })
-//       }
-//
-//       detailRes.dom.push({
-//         type: {
-//           id: ~~(Math.random() * 6) + 1,
-//           name: ['MRI', 'CT', '超声', 'DR', '乳腺仪', '胃肠X光机器'][i % 6],
-//         },
-//         asset: {
-//           id: i + 1,
-//           name: 'asset' + i
-//         },
-//         items: {
-//           desc: [
-//             { id: 1, name: '头部'},
-//             { id: 2, name: '胸部'},
-//             { id: 3, name: '腹部'},
-//             { id: 4, name: '脊柱'},
-//             { id: 5, name: '血管照影'},
-//             { id: 6, name: '大部位'}
-//           ],
-//           data: scans
-//         }
-//       })
-//     }
-//
-//     resolve(detailRes)
-//   })
-// }
 
 type Action = {
   type: string,
@@ -274,37 +214,125 @@ type Subscriptions = {
   [string]: Subscription
 }
 
+function* getDetails(actionType, params = {}, { put, call, select }) {
+  try {
+    const scans = yield select(({ scans }) => scans)
+    const from = scans.getIn(['range', 'from'])
+    const to = scans.getIn(['range', 'to'])
+    let type = scans.get('filters').find(filter => filter.get('key') === 'type')
+    if (type) type = type.get('value')
+    let part = scans.get('filters').find(filter => filter.get('key') === 'part')
+    if (part) part = part.get('value')
+    const dept = scans.get('deptSelected')
+    const { groupby, pageNum, pageSize } = params
+    const { data } = yield call(
+      axios.get,
+      process.env.NODE_ENV === 'production' ? '/api/scan/detail' : '/geapm/api/scan/detail',
+      {
+        params: pickBy({
+          from,
+          to,
+          groupby,
+          type,
+          part,
+          dept,
+          limit: pageSize !== undefined ? pageSize + 1 : undefined,
+          start: pageNum !== undefined ? pageSize * pageNum : undefined
+        })
+      }
+    )
+    yield put({
+      type: `${actionType}/succeeded`,
+      payload: data.detail,
+      meta: {
+        pageNum,
+        pageSize
+      }
+    })
+  } catch(err) {
+    yield put({
+      type: `${actionType}/failed`,
+      payload: err
+    })
+  }
+}
+
 export default {
   namespace: 'scans',
   state: Immutable.Map({
+    parts: Immutable.Map(),
     briefs: Immutable.List(),
     details: Immutable.List(),
-    detailsBySequence: Immutable.List(),
+    detailsByStep: Immutable.List(),
     filters: Immutable.List(),
+    range: Immutable.Map({
+      from: '2016-01-01',
+      to: '2017-01-01'
+    }),
     detailsCurPage: 0,
-    detailsBySequenceCurPage: 0,
-    pageSize: 15
+    detailsByStepCurPage: 0,
+    pageSize: 15,
+    depts: Immutable.fromJS([{"id":5,"parent_id":2,"site_id":2,"hospital_id":2,"name":"超声室","name_en":"cariology Dept"},{"id":6,"parent_id":2,"site_id":2,"hospital_id":2,"name":"设备科","name_en":"Asset Dept"},{"id":4,"parent_id":2,"site_id":2,"hospital_id":2,"name":"放射科","name_en":""}])
   }),
   subscriptions: ({
     setup({ dispatch }) {
       dispatch({
-        type: 'brief/get'
+        type: 'brief/get',
+        payload: {
+          from: '2016-01-01',
+          to: '2017-01-01'
+        }
       })
-      dispatch({
-        type: 'detail/get'
-      })
-      dispatch({
-        type: 'detailBySequence/get'
-      })
+      // dispatch({
+      //   type: 'detail/get',
+      //   payload: {
+      //     from: '2016-01-01',
+      //     to: '2017-01-01',
+      //     groupby: 'asset'
+      //   }
+      // })
+      // dispatch({
+      //   type: 'detailByStep/get',
+      //   payload: {
+      //     from: '2016-01-01',
+      //     to: '2017-01-01',
+      //     groupby: 'step',
+      //     type: 2
+      //   }
+      // })
+      // dispatch({
+      //   type: 'depts/get'
+      // })
     }
   }: Subscriptions),
   effects: ({
-    *['brief/get'](_, { put, select, call }){
+    // *['depts/get']({ payload }, { call, put }) {
+    //   try {
+    //     const { data } = yield call(
+    //       axios.get,
+    //       process.env.NODE_ENV === 'production' ? '/api/org/all' : '/geapm/api/org/all'
+    //     )
+    //     yield put({
+    //       type: 'depts/get/succeeded',
+    //       payload: data
+    //     })
+    //   } catch(err) {
+    //     yield put({
+    //       type: 'depts/get/failed',
+    //       payload: err
+    //     })
+    //   }
+    // },
+    *['brief/get']({ payload }, { call, put }) {
       try {
-        const briefRes = yield call(fetchBrief)
+        const { data } = yield call(
+          axios.get,
+          process.env.NODE_ENV === 'production' ? '/api/scan/brief' : '/geapm/api/scan/brief',
+          { params: payload }
+        )
         yield put({
           type: 'brief/get/succeeded',
-          payload: briefRes
+          payload: data.brief
         })
       } catch(err) {
         yield put({
@@ -313,62 +341,195 @@ export default {
         })
       }
     },
-    *['detail/get'](_, { put, select, call }){
-      try {
-        const detailRes = yield call(fetchDetail)
-        yield put({
-          type: 'detail/get/succeeded',
-          payload: detailRes
-        })
-      } catch(err) {
-        yield put({
-          type: 'detail/get/failed',
-          payload: err
-        })
-      }
+    *['detail/get']({ payload }, effects){
+      yield* getDetails(
+        'detail/get',
+        payload,
+        effects
+      )
     },
-    *['detailBySequence/get'](_, { put, select, call }){
-      try {
-        const detailRes = yield call(fetchDetail, '', [], 'sequence')
-        yield put({
-          type: 'detailBySequence/get/succeeded',
-          payload: detailRes
-        })
-      } catch(err) {
-        yield put({
-          type: 'detailBySequence/get/failed',
-          payload: err
-        })
-      }
+    *['detailByStep/get']({ payload }, effects){
+      yield* getDetails(
+        'detailByStep/get',
+        payload,
+        effects
+      )
+    },
+    *['detail/page/change']({ payload }, effects) {
+      const curPage = yield effects.select(({scans}) => scans.get('detailsCurPage'))
+      yield* getDetails(
+        'detail/get',
+        {
+          groupby: 'asset',
+          pageNum: curPage + payload,
+          pageSize: 15
+        },
+        effects
+      )
+    },
+    *['detailByStep/page/change']({ payload }, effects) {
+      const curPage = yield effects.select(({scans}) => scans.get('detailsByStepCurPage'))
+      yield* getDetails(
+        'detailByStep/get',
+        {
+          // from: '2016-01-01',
+          // to: '2017-01-01',
+          groupby: 'step',
+          pageNum: curPage + payload,
+          pageSize: 15
+        },
+        effects
+      )
+    },
+    *['range/change'](_, effects) {
+      yield effects.put({
+        type: 'reset'
+      })
+      yield* getDetails(
+        'detail/get',
+        {
+          groupby: 'asset',
+          pageNum: 0,
+          pageSize: PAGE_SIZE
+        },
+        effects
+      )
+      yield* getDetails(
+        'detailByStep/get',
+        {
+          groupby: 'step',
+          pageNum: 0,
+          pageSize: PAGE_SIZE
+        },
+        effects
+      )
+    },
+    *['dept/set'](_, effects) {
+      yield effects.put({
+        type: 'reset'
+      })
+      yield* getDetails(
+        'detail/get',
+        {
+          groupby: 'asset',
+          pageNum: 0,
+          pageSize: PAGE_SIZE
+        },
+        effects
+      )
+      yield* getDetails(
+        'detailByStep/get',
+        {
+          groupby: 'step',
+          pageNum: 0,
+          pageSize: PAGE_SIZE
+        },
+        effects
+      )
+    },
+    *['filters/toggle'](_, effects) {
+      yield effects.put({
+        type: 'reset'
+      })
+      yield* getDetails(
+        'detail/get',
+        {
+          groupby: 'asset',
+          pageNum: 0,
+          pageSize: PAGE_SIZE
+        },
+        effects
+      )
+      yield* getDetails(
+        'detailByStep/get',
+        {
+          groupby: 'step',
+          pageNum: 0,
+          pageSize: PAGE_SIZE
+        },
+        effects
+      )
     }
+    // addWatcher: [ function* (effects) {
+    //   const payload = yield effects.takeLatest(
+    //     [
+    //       'scans/range/change',
+    //       'scans/filters/toggle'
+    //     ],
+    //     function* (action) {
+    //       yield* getDetails(
+    //         'detail/get',
+    //         {
+    //           groupby: 'asset',
+    //           pageNum: 0,
+    //           pageSize: 15
+    //         },
+    //         effects
+    //       )
+    //       yield* getDetails(
+    //         'detailByStep/get',
+    //         {
+    //           groupby: 'step',
+    //           pageNum: 0,
+    //           pageSize: 15
+    //         },
+    //         effects
+    //       )
+    //     }
+    //   )
+    // }, { type: 'watcher'}]
   }: Effects),
   reducers: ({
+    ['dept/set'](state, { payload }) {
+      return state.withMutations(state => {
+        state
+          .set('deptSelected', payload)
+          .set('detailsCurPage', 0)
+          .set('detailsByStepCurPage', 0)
+      })
+    },
+    ['range/change'](state, { payload }) {
+      return state.withMutations(state => {
+        state
+          .set('range', Immutable.fromJS(payload))
+          .set('detailsCurPage', 0).set('detailsByStepCurPage', 0)
+      })
+    },
     ['brief/get'](state, { payload }) {
       return state.set('loading', true)
     },
     ['brief/get/succeeded'](state, { payload }) {
       return state.withMutations(state => {
+        const briefs = Immutable.fromJS(payload)
+        const parts = briefs
+          .flatMap(brief => brief.getIn(['items', 'desc']))
+          .reduce((prev, cur) => prev.set(cur.get('id'), cur), Immutable.Map())
+          .mapEntries(([k, v], index) => [k, v.set('color', COLORS[index])])
+
         state
-          .set('briefs', Immutable.fromJS(payload.brief))
+          .set('briefs', briefs)
+          .set('parts', parts)
           .set('loading', false)
       })
     },
-    ['detail/get/succeeded'](state, { payload }) {
+    ['detail/get/succeeded'](state, { payload, meta }) {
       return state.withMutations(state => {
-        state.set('details', Immutable.fromJS(payload.dom))
+        state.set('details', Immutable.fromJS(payload))
+        if (meta.pageNum !== undefined) state.set('detailsCurPage', meta.pageNum)
       })
     },
-    ['detailBySequence/get/succeeded'](state, { payload }) {
+    ['detailByStep/get/succeeded'](state, { payload, meta }) {
       return state.withMutations(state => {
-        state.set('detailsBySequence', Immutable.fromJS(payload.dom))
+        state.set('detailsByStep', Immutable.fromJS(payload))
+        if (meta.pageNum !== undefined) state.set('detailsByStepCurPage', meta.pageNum)
       })
     },
-    ['detail/page/change'](state, { payload }) {
-      return state.update('detailsCurPage', v => v + payload)
-    },
-    ['detailBySequence/page/change'](state, { payload }) {
-      return state.update('detailsCurPage', v => v + payload)
-    },
+    // ['detail/page/change'](state, { payload }) {
+    //   return state.update('detailsCurPage', v => v + payload)
+    // },
+    // ['detailByStep/page/change'](state, { payload }) {
+    //   return state.update('detailsCurPage', v => v + payload)
+    // },
     ['filters/toggle'](state, { payload }) {
       return state.update('filters', filters => {
         const index = filters.findIndex(filter => filter.get('key') === payload.key)
@@ -377,7 +538,14 @@ export default {
         return filters.withMutations(filters => {
           filters.delete(index).push(Immutable.fromJS(payload))
         })
-      }).set('detailsCurPage', 0).set('detailsBySequenceCurPage', 0)
+      }).set('detailsCurPage', 0).set('detailsByStepCurPage', 0)
+    },
+    ['reset'](state) {
+      return state.withMutations(state => {
+        state
+          .set('detailsCurPage', 0)
+          .set('detailsByStepCurPage', 0)
+      })
     }
   }: Reducers)
 }
