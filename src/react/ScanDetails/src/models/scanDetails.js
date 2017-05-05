@@ -300,29 +300,29 @@ export default {
       //     type: 2
       //   }
       // })
-      // dispatch({
-      //   type: 'depts/get'
-      // })
+      dispatch({
+        type: 'depts/get'
+      })
     }
   }: Subscriptions),
   effects: ({
-    // *['depts/get']({ payload }, { call, put }) {
-    //   try {
-    //     const { data } = yield call(
-    //       axios.get,
-    //       process.env.NODE_ENV === 'production' ? '/api/org/all' : '/geapm/api/org/all'
-    //     )
-    //     yield put({
-    //       type: 'depts/get/succeeded',
-    //       payload: data
-    //     })
-    //   } catch(err) {
-    //     yield put({
-    //       type: 'depts/get/failed',
-    //       payload: err
-    //     })
-    //   }
-    // },
+    *['depts/get']({ payload }, { call, put }) {
+      try {
+        const { data } = yield call(
+          axios.get,
+          process.env.NODE_ENV === 'production' ? '/api/org/all' : '/geapm/api/org/all'
+        )
+        yield put({
+          type: 'depts/get/succeeded',
+          payload: data
+        })
+      } catch(err) {
+        yield put({
+          type: 'depts/get/failed',
+          payload: err
+        })
+      }
+    },
     *['brief/get']({ payload }, { call, put }) {
       try {
         const { data } = yield call(
