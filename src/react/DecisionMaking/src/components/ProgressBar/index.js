@@ -2,17 +2,27 @@
 import React, { Component } from 'react'
 import { Progress } from 'antd'
 
+import styles from './styles.scss'
+
 type PropsT = {
-  title: string
+  color: string,
+  title: string,
+  percent: number,
+  textDesc: React$Element
 }
 
 export default class ProgressBar extends Component<*, PropsT, *> {
+  static defaultProps = { color: '#6b6b6b' }
+
   render () {
-    const { title = '2016年5月' } = this.props
+    const { color, title, percent, textDesc } = this.props
     return (
-      <div>
-        <div>{title}</div>
-        <Progress percent={50} showInfo={false} />
+      <div style={{color}} className={styles.progressBar}>
+        <div className={styles.title}>{title}</div>
+        <div className={styles.barWrapper}>
+          <div style={{width: `${percent*100}%`}} className={styles.bar}></div>
+        </div>
+        <div className={styles.desc}>{textDesc}</div>
       </div>
     )
   }

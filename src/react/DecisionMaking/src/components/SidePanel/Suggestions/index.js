@@ -1,0 +1,40 @@
+import React, { PureComponent } from 'react'
+
+import ProgressBar from '#/components/ProgressBar'
+
+import { round } from '#/utils'
+
+export default class Suggestions extends PureComponent {
+  render () {
+    const { data } = this.props
+    return (
+      <div>
+        <div className="lead">建议</div>
+        {
+          data.suggestions.map((n, i) => {
+            return <div key={i}>
+              <div>{n.title}</div>
+              <div className="lead m-l-3">{n.addition}</div>
+            </div>
+          })
+        }
+        {
+          (
+            data.usage_predict !== data.usage_sug
+            || data.usage_predict_increase !== data.usage_sug_increase
+          ) && <div>
+            <div>采纳建议后的使用率预测</div>
+            <ProgressBar
+              color="#46af9b"
+              title="采取建议"
+              percent={data.usage_sug}
+              textDesc={`
+                ${round(data.usage_sug * 100, 1)}%
+                ${round(data.usage_sug_increase * 100, 1)}%
+              `} />
+          </div>
+        }
+      </div>
+    )
+  }
+}

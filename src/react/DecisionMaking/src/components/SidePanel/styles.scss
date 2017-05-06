@@ -14,11 +14,11 @@ $border-color: rgb(186, 186, 186);
 
 $tab-active-color: rgb(31, 105, 266);
 
-.tabs {
+.sidepanel {
   text-align: center;
 }
 
-.tabHeader {
+.tabs {
   display: inline-block;
   position: relative;
 
@@ -48,7 +48,6 @@ $tab-active-color: rgb(31, 105, 266);
     cursor: pointer;
     user-select: none;
     text-align: center;
-    font-size: larger;
 
     &:hover,
     &.active {

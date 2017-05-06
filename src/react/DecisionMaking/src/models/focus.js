@@ -21,7 +21,7 @@ export default {
 
       yield put({ type: 'node/set' })
     },
-    *['node/set'] ({ payload }, { take }) {
+    *['node/set'] ({ payload }, { take, select, put }) {
       try {
         let { cursor } = yield select(state => state.focus)
         if (!cursor) {
@@ -29,8 +29,9 @@ export default {
           cursor = action.payload
         }
 
-        const { id, depth } = cursor
+        const [ id, depth ] = cursor
 
+        const nodeList = yield select(state => state.nodeList.data)
         const target = nodeList.find(n => n.data.id === id && n.depth === depth)
         if (target) {
           yield put({
@@ -39,11 +40,11 @@ export default {
           })
         }
       } catch(err) {
-
+        console.log(err)
       }
     }
   },
-  reducers: {
+  reducers: {  
     ['cursor/set/succeed'] (state, { payload }) {
       if (isSameCursor(payload, state.cursor)) return state
       return {
@@ -52,11 +53,23 @@ export default {
       }
     },
     ['node/set/succeed'] (state, { payload }) {
-      if (isFocusNode(payload, state.cursor)) return state
+      if (payload === state.node) return state
       return {
         ...state,
         node: payload
       }
-    }    
+    },
+    ['loading/on'] (state, action) {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    ['loading/off'] (state, action) {
+      return {
+        ...state,
+        loading: false
+      }
+    }      
   }
 }

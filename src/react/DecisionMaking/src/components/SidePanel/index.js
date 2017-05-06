@@ -29,8 +29,8 @@ export default class SidePanel extends Component {
     const { activeTab } = this.state
     
     return (
-      <div className={styles.tabs}>
-        <div className={styles.tabHeader}>
+      <div className={styles.sidepanel}>
+        <div className={styles.tabs}>
           <div style={{width: tabWidth, left: activeTab * tabWidth}} className={styles.sliding}></div>
           <ul style={{width: tabWidth * 2}}>
             {
@@ -61,7 +61,7 @@ export default class SidePanel extends Component {
                       transform: `translateX(${data.translate}%)`
                     }}
                   >
-                    <SystemPanel {...this.props} />
+                    <SystemPanel focus={this.props.focus} />
                   </div>
                 )}
               </Animate>
@@ -70,7 +70,7 @@ export default class SidePanel extends Component {
           {
             activeTab === 1
               ? <Animate
-                default={{translate: 100}}
+                default={{translate: -100}}
                 data={{translate: 0}}
                 duration={300}
                 easing='easeCubic'>

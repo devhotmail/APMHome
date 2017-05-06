@@ -1,3 +1,46 @@
+@import "../../../styles/variables.scss";
+
 .systemPanel {
-  // composes: panel from "../styles.scss";
+  :global {
+    .dewicon {
+      font-size: 24px;
+    }
+
+    .dewicon-circle-high {
+      color: #b3b3b3;
+    }
+
+    .dewicon-circle-low {
+      color: $brand-warning;
+    }
+
+    .dewicon-circle-full {
+      color: $brand-danger;
+    }
+  }
+}
+
+@mixin with-top-border {
+  margin: $gap 0;
+  padding-top: $gap;
+  border-top: 1px solid $border-color;
+}
+
+.statusTips,
+.suggestions,
+.legend {
+  @include with-top-border;
+}
+
+.statusTip {
+  position: relative;
+  padding-left: 30px;
+
+  :global {
+    .dewicon {
+      position: absolute;
+      left: 0;
+      top: -8px;
+    }
+  }
 }

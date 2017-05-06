@@ -16,7 +16,8 @@ export default {
   namespace: 'finance',
   state: {
     loading: false,
-    data: undefined
+    data: undefined,
+    query: {}
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -54,6 +55,11 @@ export default {
         yield put({
           type: 'data/get/succeed',
           payload: mockData
+        })
+
+        yield put({
+          type: 'query/update',
+          payload: params
         })
 
         yield put({
@@ -96,6 +102,12 @@ export default {
         ...state,
         data: payload
       }
-    }        
+    },
+    ['query/update'] (state, { payload }) {
+      return {
+        ...state,
+        query: payload
+      }
+    }
   }
 }
