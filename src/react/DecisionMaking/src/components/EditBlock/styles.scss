@@ -8,12 +8,18 @@
         opacity: 1;
         cursor: pointer;
         color: inherit;
-        border-width: 0;
+        border-color: transparent;
       }
     }
     
     .ant-form-item-control {
+      position: relative;
       line-height: 20px;
+
+      .ant-form-explain {
+        position: absolute;
+        left: 0;
+      }
     }
 
     .ant-input-number {

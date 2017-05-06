@@ -1,36 +1,119 @@
-import React, { PureComponent } from 'react'
+/* @flow */
+import React, { Component } from 'react'
+import { Tooltip, Table } from 'antd'
 
-type ConfigT = {
-  config: Array<Object>,
-  focus: Object,
-  depths: Array<number>,
-  setFocus: Function
+import { getCursor, isSameCursor, isFocusNode, round } from '#/utils'
+
+import type { ConfigT, NodeT, cursorT } from '#/types'
+
+import EditBlock from '#/components/EditBlock'
+
+import styles from './styles.scss'
+
+const defaultTableProps = {
+  size: 'small',
+  bordered: true,
+  pagination: false,
+  scroll: { y: 160 },
+  rowKey: n => n.data.id
 }
 
-class ConfigType extends PureComponent<*, ConfigT, *> {
+export default class ConfigType extends Component<*, ConfigT, *> {
   render () {
-    return <div>ConfigType</div>
-    const { config, focus, depths, setFocus } = this.props
+    const { config, focus: { cursor}, depths, setFocus } = this.props
+
     const configListOne = config.filter(n => n.depth === depths[0])
+    .map(n => ({
+      ...n,
+      children: null
+    }))
+
+    if (!configListOne.length) return null
+
+    const activeCursors = this.getParentCursors()
+
+    const tableProps = {
+      ...defaultTableProps,
+      onRowClick: node => setFocus(getCursor(node)),
+      rowClassName: node => `${styles.tr} ${isFocusNode(node, activeCursors[0]) ? 'active': ''}`
+    }
+
+    const thresholdNode = [
+      <div>
+        <i className="dewicon-circle-full" style={{color:'#e26d26'}}></i>
+        <span>满负荷</span>
+      </div>,
+      <div>
+        <i className="dewicon-circle-low" style={{color:'#ebda51'}}></i>
+        <span>低负荷</span>
+      </div>
+    ]
+
     return (
       <div>
-        <ul>
-          {
-            configListOne.length ? configListOne.map((n, index) => {
-              const cls = n.id === focus.data.id && n.depth === focus.depth
-                ? 'active'
-                : ''
-              const onClick = e => {
-                const { depth, data: { id }} = n
-                setFocus([id, depth])
-              }              
-              return <li key={index} className={cls} onClick={onClick}>{n.name}</li>
-            }) : null
-          }
-        </ul>
+        <Table dataSource={configListOne} {...tableProps}>
+          <Table.Column
+            title="设备类型"
+            dataIndex="data.name"
+            key="name" />
+          <Table.Column
+            title="预期增长"
+            dataIndex="data.usage_predict_increase"
+            key="increase"
+            width={70}
+            render={(text, node, index) =>
+              <EditBlock
+                cursor={getCursor(node)}
+                fieldKey="increase"
+                val={round(text * 100, 1)} />              
+            } />
+          <Table.Column
+            title={thresholdNode[0]}
+            dataIndex="data.usage_threshold[1]"
+            key="max"
+            width={70}
+            render={(text, node, index) =>
+              <EditBlock
+                cursor={getCursor(node)}
+                fieldKey="max"
+                val={text * 100} />             
+            } />
+          <Table.Column
+            title={thresholdNode[1]}
+            dataIndex="data.usage_threshold[0]"
+            key="min"
+            width={70}
+            render={(text, node, index) =>
+              <EditBlock
+                cursor={getCursor(node)}
+                fieldKey="min"
+                val={text * 100} />
+            } />
+        </Table>
       </div>
     )
   }
-}
 
-export default ConfigType
+  getParentCursors = (): Array<cursorT>  => {
+    const { config, focus: { cursor }} = this.props
+
+    const target = config.find(n => isFocusNode(n, cursor))
+
+    if (!target) return []
+
+    return getCursors(target)
+
+    function getCursors(node) {
+      const nodes = [getCursor(node)]
+      getParent(node)
+      return nodes.reverse().slice(1) // remove root
+
+      function getParent(node) {
+        const parent = node.parent
+        if (!parent) return
+        nodes.push(getCursor(parent))
+        getParent(parent)
+      }
+    }
+  }
+}

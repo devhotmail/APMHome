@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Icon } from 'antd'
+import { Table, Icon, Button } from 'antd'
 
 import ConfigDept from '../ConfigDept'
 import ConfigType from '../ConfigType'
@@ -22,7 +22,7 @@ export default class ManualPanel extends Component {
     return (
       <div className={styles.manualPanel}>
         <div className="lead m-b-1">使用率预测</div>
-        <div className="font-small text-muted">基于系统自动预测的增长进行手工调节</div>
+        <div className="m-b-1 font-small text-muted">基于系统自动预测的增长进行手工调节</div>
         {
           depths.length === 2
             ? <ConfigDept depths={depths} setFocus={this.handleSetFocus} {...this.props} />
@@ -33,13 +33,28 @@ export default class ManualPanel extends Component {
             ? <ConfigType depths={depths} setFocus={this.handleSetFocus} {...this.props} />
             : null
         }
+        <div className="m-y-1 text-center">
+          <Button
+            size="large"
+            type="primary"
+            style={{width: 120}}
+            onClick={this.handleSumbit}>
+            确认预期
+          </Button>
+        </div>
       </div>
     )
   }
 
+  handleSumbit = () => {
+    this.props.dispatch({
+      type: 'config/changes/submit'
+    })
+  }
+
   handleSetFocus = cursor => {
     this.props.dispatch({
-      type: 'focus/data/set',
+      type: 'focus/cursor/set',
       payload: cursor
     })
   }

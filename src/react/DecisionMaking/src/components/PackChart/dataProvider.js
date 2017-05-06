@@ -1,7 +1,6 @@
 /* @flow */
 import React, { Component } from 'react'
 import { connect } from 'dva'
-import uuid from 'uuid/v4'
 import * as d3 from 'd3'
 import raf from 'raf'
 
@@ -119,7 +118,7 @@ class extends Component {
     if (cursor === this.props.focus.cursor) return
 
     this.props.dispatch({
-      type: 'focus/data/set',
+      type: 'focus/cursor/set',
       payload: cursor
     })
 

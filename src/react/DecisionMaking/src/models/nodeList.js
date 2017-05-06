@@ -1,5 +1,4 @@
 import * as d3 from 'd3'
-import uuid from 'uuid/v4'
 
 export default {
   namespace: 'nodeList',
@@ -31,9 +30,9 @@ export default {
     },
     *['data/get'] ({ payload }, { put, select, call, take }) {
       try {
-        let { data } = yield select(state => state.financial)
+        let { data } = yield select(state => state.finance)
         if (!data) {
-          const action = yield take('financial/data/get/succeed')
+          const action = yield take('finance/data/get/succeed')
           data = action.payload
         }
 
@@ -60,7 +59,7 @@ export default {
 
         const { depth, data: { id }} = nodes[0]
         yield put({
-          type: 'focus/data/set',
+          type: 'focus/cursor/set',
           payload: [ id, depth ]
         })
       } catch (err) {
@@ -98,11 +97,5 @@ function getNodes (data: Object, diameter: number, margin: number) {
 
   const nodes = pack(root).descendants()
   
-  return nodes.map(n => ({
-    ...n,
-    data: {
-      ...n.data,
-      uid: uuid()
-    }
-  }))
+  return nodes
 }

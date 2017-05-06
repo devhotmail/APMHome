@@ -1,7 +1,6 @@
 /* @flow */
 import React, { Component } from 'react'
-import { Tooltip, Table, Form, Input } from 'antd'
-import { RIEInput } from 'riek'
+import { Tooltip, Table } from 'antd'
 
 import { getCursor, isSameCursor, isFocusNode, round } from '#/utils'
 
@@ -15,11 +14,11 @@ const defaultTableProps = {
   size: 'small',
   bordered: true,
   pagination: false,
-  scroll: { y: 110 },
+  scroll: { y: 160 },
   rowKey: n => n.data.id
 }
 
-class ConfigDept extends Component<*, ConfigT, *> {
+export default class ConfigDept extends Component<*, ConfigT, *> {
   render () {
     const { config, focus: { cursor}, depths, setFocus } = this.props
 
@@ -89,16 +88,6 @@ class ConfigDept extends Component<*, ConfigT, *> {
       </div>
     ]
 
-    const handleChange = node => detail => {
-      this.props.dispatch({
-        type: 'config/change',
-        payload: {
-          cursor: getCursor(node),
-          ...detail
-        }
-      })
-    }
-
     return (
       <div>
         <div className="text-center">
@@ -112,46 +101,36 @@ class ConfigDept extends Component<*, ConfigT, *> {
           <Table.Column
             title="预期增长"
             dataIndex="data.usage_predict_increase"
-            key="usage_predict_increase"
+            key="increase"
             width={70}
-            render={(text, node, index) => (
+            render={(text, node, index) =>
               <EditBlock
                 cursor={getCursor(node)}
-                fieldKey="usage_predict_increase"
+                fieldKey="increase"
                 val={round(text * 100, 1)} />              
-            )} />
+            } />
           <Table.Column
             title={thresholdNode[0]}
             dataIndex="data.usage_threshold[1]"
             key="max"
             width={70}
-            render={(text, node, index) => (
-              <div className={styles.block}>
-                <RIEInput
-                  value={text * 100}
-                  change={handleChange(node)}
-                  propName="increase"
-                  classEditing={styles.editing}
-                  className={styles.editable} />
-                <span className={styles.sign}>%</span>
-              </div>              
-            )} />
+            render={(text, node, index) =>
+              <EditBlock
+                cursor={getCursor(node)}
+                fieldKey="max"
+                val={text * 100} />             
+            } />
           <Table.Column
             title={thresholdNode[1]}
             dataIndex="data.usage_threshold[0]"
             key="min"
             width={70}
-            render={(text, node, index) => (
-              <div className={styles.block}>
-                <RIEInput
-                  value={text * 100}
-                  change={handleChange(node)}
-                  propName="increase"
-                  classEditing={styles.editing}
-                  className={styles.editable} />
-                <span className={styles.sign}>%</span>
-              </div>
-            )} />
+            render={(text, node, index) =>
+              <EditBlock
+                cursor={getCursor(node)}
+                fieldKey="min"
+                val={text * 100} />
+            } />
         </Table>
       </div>
     )
@@ -180,5 +159,3 @@ class ConfigDept extends Component<*, ConfigT, *> {
     }
   }
 }
-
-export default ConfigDept

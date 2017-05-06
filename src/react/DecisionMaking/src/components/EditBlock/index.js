@@ -23,7 +23,9 @@ export default class EditBlock extends Component {
         <Form>
           <Form.Item>
             <div className={styles.wrapper}>
-              {form.getFieldDecorator(fieldKey, { initialValue: val })(
+              {form.getFieldDecorator(fieldKey, {
+                initialValue: val
+              })(
                 <Input
                   onPressEnter={this.handleBlur}
                   onBlur={this.handleBlur}
@@ -47,13 +49,14 @@ export default class EditBlock extends Component {
     this.setState({
       disabled: true
     }, () => {
-      const { dispatch, cursor, fieldKey, form } = this.props
+      const { dispatch, cursor, val, fieldKey, form } = this.props
       const value = form.getFieldValue(fieldKey)
+      if (value === val) return // dont dipatch changes when the val is the same 
       dispatch({
-        type: 'config/change',
+        type: 'config/changes',
         payload: {
           cursor,
-          [fieldKey]: parseInt(value / 100)
+          [fieldKey]: value / 100
         }
       })
     })

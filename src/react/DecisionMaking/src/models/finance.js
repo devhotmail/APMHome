@@ -13,7 +13,7 @@ import typeData from '#/mock/typeData'
 const childKey = 'items'
 
 export default {
-  namespace: 'financial',
+  namespace: 'finance',
   state: {
     loading: false,
     data: undefined

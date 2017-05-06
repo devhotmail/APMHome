@@ -1,10 +1,10 @@
-import axios from 'axios'
+import { isSameCursor, isFocusNode } from '#/utils'
 
 export default {
   namespace: 'focus',
   state: {
     loading: false,
-    data: undefined,
+    node: undefined,
     cursor: []
   },
   subscriptions: {
@@ -12,18 +12,30 @@ export default {
     }
   },
   effects: {
-    *['data/set'] ({ payload }, { put, call, select }) {
-      const [ id, depth ] = payload
+    *['cursor/set'] ({ payload }, { put, call, select }) {
+      // should we validate the cursor is correct ?
+      yield put({
+        type: 'cursor/set/succeed',
+        payload
+      })
+
+      yield put({ type: 'node/set' })
+    },
+    *['node/set'] ({ payload }, { take }) {
       try {
-        const nodeList = yield select(state => state.nodeList.data)
+        let { cursor } = yield select(state => state.focus)
+        if (!cursor) {
+          const action = yield take('cursor/set/succeed')
+          cursor = action.payload
+        }
+
+        const { id, depth } = cursor
+
         const target = nodeList.find(n => n.data.id === id && n.depth === depth)
         if (target) {
           yield put({
-            type: 'data/set/succeed',
-            payload: {
-              data: target,
-              cursor: [ id, depth ]
-            }
+            type: 'node/set/succeed',
+            payload: target
           })
         }
       } catch(err) {
@@ -32,10 +44,18 @@ export default {
     }
   },
   reducers: {
-    ['data/set/succeed'] (state, { payload }) {
+    ['cursor/set/succeed'] (state, { payload }) {
+      if (isSameCursor(payload, state.cursor)) return state
       return {
         ...state,
-        ...payload
+        cursor: payload
+      }
+    },
+    ['node/set/succeed'] (state, { payload }) {
+      if (isFocusNode(payload, state.cursor)) return state
+      return {
+        ...state,
+        node: payload
       }
     }    
   }

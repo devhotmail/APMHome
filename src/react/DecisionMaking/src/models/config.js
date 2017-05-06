@@ -1,4 +1,5 @@
 /* @flow */
+import axios from 'axios'
 import { round, isFocusNode } from '#/utils'
 
 export default {
@@ -23,30 +24,92 @@ export default {
 
       }
     },
-    *['change'] ({ payload }, { put, call, select }) {
+    *['changes'] ({ payload }, { put, call, select }) {
       try {
         yield put({
-          type: 'change/succeed',
+          type: 'changes/succeed',
           payload
         })
 
       } catch (err) {
 
       }
-    }
+    },
+    *['changes/submit'] ({ payload }, { put, call, select }) {
+      try {
+        /**
+         * todo:
+         * Is it possible that API only need the changed part instead of threshold
+         */
+        const { changes, data: configList } = yield select(state => state.config)
+        
+        const datum = Object.keys(changes).reduce((prev, cur) => {
+          const item = changes[cur]
+          const { cursor, increase, max, min } = item
+          const configTarget = configList.find(n => isFocusNode(n, cursor))
+          const { children } = configTarget
+
+          const changedOne = {
+            id: cur,
+            children: Array.isArray(children) ? children.map(n => n.data.id) : []
+          }
+
+          if (increase) changedOne.change = increase
+
+          if (max || min) {
+            changedOne.threshold =  [
+              min || configTarget.data.usage_threshold[0],
+              max || configTarget.data.usage_threshold[1]
+            ]
+          }
+
+          prev.push(changedOne)
+          return prev
+        }, [])
+        .filter(n => Array.isArray(n.children))
+        .map(n => {
+          const { id, children, ...otherProps } = n
+          return children.map(id => ({
+            id,
+            ...otherProps
+          }))
+        })
+
+        const body = [].concat.apply([], datum)
+
+        const { data } = yield call(
+          axios.put,
+          process.env.API_HOST + '/dmv2',
+          { config: body }
+        )
+
+
+      } catch (err) {
+        console.log(err)
+      }
+    }    
   },
   reducers: {
-    ['change/succeed'] (state, { payload }) {
-      const { cursor: [ id ], ...changedProps } = payload
+    ['changes/succeed'] (state, { payload }) {
+      const { cursor: [ id ] } = payload
 
       return {
         ...state,
         changes: {
           ...state.changes,
-          [id]: {...changedProps}
+          [id]: {
+            ...(state.changes[id] || {}),
+            ...payload
+          }
         }
       }
     },
+    ['changes/reset'] (state, { payload }) {
+      return {
+        ...state,
+        changes: {}
+      }
+    },    
     ['data/set/succeed'] (state, { payload }) {
       return {
         ...state,

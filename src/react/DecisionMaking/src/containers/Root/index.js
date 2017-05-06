@@ -35,5 +35,5 @@ class Root extends Component {
 }
 
 export default connect(state => ({
-  data: state.financial.data
+  data: state.finance.data
 }))(RoleProvider(Root))

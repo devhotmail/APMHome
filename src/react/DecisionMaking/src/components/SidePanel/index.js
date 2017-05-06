@@ -21,7 +21,7 @@ const tabWidth = 90
 
 export default class SidePanel extends Component {
   state = {
-    activeTab: 1
+    activeTab: 0
   }
 
   render () {

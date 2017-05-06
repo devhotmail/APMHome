@@ -1,11 +1,11 @@
 import config from './config'
-import financial from './financial'
+import finance from './finance'
 import focus from './focus'
 import nodeList from './nodeList'
 
 export default [
   config,
-  financial,
+  finance,
   focus,
   nodeList
 ]
