@@ -5,7 +5,7 @@ import type { NodeListT } from '#/types'
 
 import { isFocusNode, isSameCursor } from '#/utils'
 
-import TextDesc from './TextDesc'
+import TextDesc from '../TextDesc'
 
 import styles from './styles.scss'
 

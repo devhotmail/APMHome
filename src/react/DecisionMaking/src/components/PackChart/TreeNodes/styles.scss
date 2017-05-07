@@ -1,5 +1,14 @@
-circle {
-  stroke-width: 1px;
+.treeNodes {
+  fill: rgb(111, 111, 111);
+
+  text {
+    text-anchor: middle;
+    // pointer-events: none;
+  }
+
+  circle {
+    stroke-width: 1px;
+  }
 }
 
 .opacityPointOne {

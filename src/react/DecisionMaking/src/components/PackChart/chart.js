@@ -6,7 +6,6 @@ import { margin } from '#/constants'
 
 import type { NodeT } from '#/types'
 
-import TextNodes from './TextNodes'
 import TreeNodes from './TreeNodes'
 
 import styles from './styles.scss'
@@ -22,6 +21,8 @@ type ChartProps = {
   handleBackUpper: Function,
   handleBackRoot: Function
 }
+
+const textTopPercent = 0.85 // Percentage of height to show text top in the asset circle
 
 export default class Chart extends PureComponent<*, ChartProps, *> {
   render () {
@@ -61,10 +62,10 @@ export default class Chart extends PureComponent<*, ChartProps, *> {
             nodeList={nodeList}
             cursor={focus.cursor}
             setFocus={setFocus} />
-          <TextNodes 
+          {/*<TextNodes 
             nodeList={nodeList}
             cursor={focus.cursor}
-            setFocus={setFocus} />
+            setFocus={setFocus} />*/}
           {/*{ nodeList ? this.renderTexts(nodeList) : null }*/}
         </svg>
       </div>

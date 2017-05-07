@@ -3,8 +3,9 @@ import React, { PureComponent } from 'react'
 import * as d3 from 'd3'
 
 import type { cursorT, NodeT } from '#/types'
-import { getCursor, isSameCursor } from '#/utils'
+import { getCursor, isSameCursor, isFocusNode } from '#/utils'
 
+import TextDesc from '../TextDesc'
 import { getCircleStrokeCls, getWaveFillCls } from './helpers'
 
 import styles from './styles.scss'
@@ -15,22 +16,23 @@ type PropsT = {
   setFocus: Function
 }
 
+const labelKey = 'name'
 const percentKey = 'usage_predict'
+const textTopPercent = 0.85 // Percentage of height to show text top in the asset circle
 
 export default class TreeNodes extends PureComponent<*, *, *> {
-  componentDidUpdate (prevProps, prevState) {
-    console.log('TreeNodes componentDidUpdate')
-  }
-
   render () {
     const { nodeList, cursor } = this.props
+    const focusNode = nodeList.find(n => isFocusNode(n, cursor))
+
     return (
-      <g>
+      <g className={styles.treeNodes}>
         {
           nodeList.length && cursor.length
             ? this.renderNodes(nodeList, cursor)
             : null
         }
+        { focusNode ? this.renderFocusNode(focusNode) : null}
       </g>
     )
   }
@@ -71,12 +73,34 @@ export default class TreeNodes extends PureComponent<*, *, *> {
                         transform={`translate(${-node.r}, 0)`} // todo: remove transform here
                         d={this.getWavePath(node.r, node.data[percentKey])} />
                 }
-              </g>              
+                {
+                  (node.parent && isFocusNode(node.parent, cursor)) ? this.renderText(node) : null
+                }
+              </g>      
             </g>
           )
         })
       }
     </g>
+  }
+
+  renderFocusNode = (node: NodeT) => {
+    const topPercent = node.height === 0 ? 0 : textTopPercent
+    return <g transform={`translate(${node.x}, ${node.y - topPercent * node.r})`}>
+      {this.renderText(node)}
+    </g>
+  }
+
+  renderText = (node: NodeT) => {
+    const textProps = {
+      label: node.data[labelKey],
+      percent: node.data[percentKey],
+      overload: Array.isArray(node.data.usage_sum) && node.data.usage_sum[1]
+        ? node.data.usage_sum[1]
+        : undefined
+    }
+
+    return <TextDesc {...textProps} />
   }
 
   getCircleFillCls = (node: NodeT, cursor: cursorT): string => {

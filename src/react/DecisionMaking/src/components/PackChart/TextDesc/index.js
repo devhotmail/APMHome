@@ -18,7 +18,7 @@ export default class TextDesc extends PureComponent {
       </text>
       <text y="1.1em" className={styles.font8}>
         <tspan className={styles.iconWarn} dangerouslySetInnerHTML={createMarkup('&#xE003')}></tspan>
-        <tspan>{round(percent)}%</tspan>
+        <tspan>{round(percent * 100)}%</tspan>
       </text>
       {
         overload

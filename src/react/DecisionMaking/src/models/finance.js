@@ -45,7 +45,7 @@ export default {
     }
   },
   effects: {
-    *['data/get'] ({ payload: params }, { put, call, select }) {
+    *['data/get/1'] ({ payload: params }, { put, call, select }) {
       try {
         const data = params.groupby === 'dept'
           ? require('#/mock/deptData').default
@@ -76,7 +76,7 @@ export default {
         })
       }
     },
-    *['data/get/1'] ({ payload: params }, { put, call, select }) {
+    *['data/get'] ({ payload: params }, { put, call, select }) {
       try {
         const { data } = yield call(
           axios,
