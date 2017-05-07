@@ -3,7 +3,7 @@ import type { NodeT, cursorT } from '#/types'
 
 export const add = (a: number, b: number): number => a + b
 
-export function round (value: number, precision:number = 0): number {
+export function round (value: number, precision:number = 1): number {
   var multiplier = Math.pow(10, precision)
   return Math.round(value * multiplier) / multiplier
 }

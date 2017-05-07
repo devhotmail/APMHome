@@ -25,18 +25,25 @@ type ChartProps = {
 
 export default class Chart extends PureComponent<*, ChartProps, *> {
   render () {
-    const { height, width, view, nodeList, focus, setFocus, handleBackUpper } = this.props
+    const {
+      height, width, diameter,
+      view, nodeList, focus,
+      setFocus, handleBackUpper
+    } = this.props
 
     if (!width || !height || !view.length) return null
 
     const [ x, y, r ] = view
+    const size = r * 2 + margin
 
     const viewBox = [
       x - r - margin / 2,
       y - r - margin / 2,
-      r * 2 + margin,
-      r * 2 + margin
+      size,
+      size
     ]
+
+    const k = diameter / size
 
     return (
       <div className={styles.chart}>
@@ -47,13 +54,17 @@ export default class Chart extends PureComponent<*, ChartProps, *> {
         <svg
           width={width}
           height={height}
+          fontSize={20 / k}
           viewBox={viewBox.join(' ')}
           onClick={handleBackUpper}>
           <TreeNodes
             nodeList={nodeList}
             cursor={focus.cursor}
             setFocus={setFocus} />
-          {/*<TextNodes {...this.props} />*/}
+          <TextNodes 
+            nodeList={nodeList}
+            cursor={focus.cursor}
+            setFocus={setFocus} />
           {/*{ nodeList ? this.renderTexts(nodeList) : null }*/}
         </svg>
       </div>

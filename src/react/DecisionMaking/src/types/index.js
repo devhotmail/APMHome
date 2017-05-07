@@ -11,6 +11,8 @@ export type NodeT = {
   parent
 }
 
+export type NodeListT = Array<NodeT>
+
 export type ConfigT = {
   config: Array<Object>,
   focus: Object,

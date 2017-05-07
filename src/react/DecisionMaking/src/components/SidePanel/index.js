@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Transition, Animate } from 'react-move'
+import { Animate } from 'react-move'
+import { connect } from 'dva'
 
 import SystemPanel from './SystemPanel'
 import ManualPanel from './ManualPanel'
@@ -19,6 +20,10 @@ const panelOpts = [
 
 const tabWidth = 90
 
+@connect(state => ({
+  focus: state.focus,
+  config: state.config.data
+}))
 export default class SidePanel extends Component {
   state = {
     activeTab: 0

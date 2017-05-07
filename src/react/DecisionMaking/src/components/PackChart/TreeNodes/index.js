@@ -18,6 +18,10 @@ type PropsT = {
 const percentKey = 'usage_predict'
 
 export default class TreeNodes extends PureComponent<*, *, *> {
+  componentDidUpdate (prevProps, prevState) {
+    console.log('TreeNodes componentDidUpdate')
+  }
+
   render () {
     const { nodeList, cursor } = this.props
     return (

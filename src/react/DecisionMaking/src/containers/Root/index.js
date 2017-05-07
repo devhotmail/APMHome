@@ -10,10 +10,6 @@ import FilterBar from '#/components/FilterBar'
 import styles from './styles.scss'
 
 const Chart = SizeProvider(PackChart)
-const Panel = connect(state => ({
-  focus: state.focus,
-  config: state.config.data
-}))(SidePanel)
 
 class Root extends Component {
   render () {
@@ -23,11 +19,11 @@ class Root extends Component {
           <FilterBar {...this.props} />
         </div>
         <div className={styles.chartWrapper}>
-          <Chart {...this.props} />
+          <Chart />
         </div>
       </div>
       <div className={styles.sidebar}>
-        <Panel />
+        <SidePanel />
       </div>
     </div>
   }

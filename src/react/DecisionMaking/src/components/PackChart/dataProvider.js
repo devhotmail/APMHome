@@ -82,16 +82,17 @@ class extends Component {
   }
   
   render() {
-    const { nodeList, focus } = this.props
+    const { nodeList, focus, width, height, diameter } = this.props
     const { view } = this.state
 
     if (!nodeList) return <div>data loading...</div>
     return <WrappedComponent
-      {...this.props}
-      nodeList={nodeList}
       view={view}
+      width={width}
+      height={height}
+      diameter={diameter}
       focus={focus}
-      focusCursor={focus.cursor}
+      nodeList={nodeList}
       setFocus={this.setFocus}
       handleBackUpper={this.handleBackUpper}
       handleBackRoot={this.handleBackRoot} />
@@ -121,11 +122,6 @@ class extends Component {
       type: 'focus/cursor/set',
       payload: cursor
     })
-
-    // const focus = this.props.nodeList.find(n => n.data.id === cursor[0] && n.depth === cursor[1])
-    // if (focus) {
-    //   this.setView(focus)
-    // }
   }
 
   setView = (focus: Object) => {
@@ -139,6 +135,30 @@ class extends Component {
         view: i(t)
       })
     })
+  }
+
+  setView1 = (focus: Object) => {
+    const nextView = this.getView(focus)
+    const i = d3.interpolateZoom(this.state.view, nextView)
+
+    const start = Date.now()
+    const loop = (now = Date.now())  => {
+      raf(() => {
+        const now = Date.now()
+        const t = (now - start) / 1000 / 0.75
+        if (t > 1) return
+        this.setState((state, props) => {
+          return {
+            ...state,
+            view: i(t)
+          }
+        })
+
+        loop(now)
+      })
+    }
+
+    raf(loop)
   }
 
   getView = (node: Object) => {
