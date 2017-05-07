@@ -5,6 +5,8 @@ import { connect } from 'dva'
 import SystemPanel from './SystemPanel'
 import ManualPanel from './ManualPanel'
 
+import ReactIcon from '../ReactIcon'
+
 import styles from './styles.scss'
 
 const panelOpts = [

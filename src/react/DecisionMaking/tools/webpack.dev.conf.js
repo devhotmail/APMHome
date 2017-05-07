@@ -87,22 +87,6 @@ module.exports = merge(baseWebpackConfig, {
           }
         ],
         include: /node_modules/
-      },
-      {
-        test: /\.(png|jpe?g|gif|ico|svg)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: 'assets/[name].[hash].[ext]'
-        }
-      },
-      {
-        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: 'assets/[name].[hash].[ext]'
-        }
       }
     ]
   },
