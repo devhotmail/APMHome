@@ -1,7 +1,19 @@
-:global li.active {
-  color: red;
-}
+@import "../../../styles/variables.scss";
 
 .manualPanel {
-  // composes: panel from "../styles.scss";
+  :global {
+    .dewicon {
+      font-size: 16px;
+    }
+  }  
+}
+
+@mixin with-top-border {
+  margin: $gap 0;
+  padding-top: $gap;
+  border-top: 1px solid $border-color;
+}
+
+.focusInfo {
+  @include with-top-border;
 }

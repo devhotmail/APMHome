@@ -1,5 +1,7 @@
 import * as d3 from 'd3'
 
+const childKey = 'items'
+
 export default {
   namespace: 'nodeList',
   state: {
@@ -24,28 +26,21 @@ export default {
         type: 'coefficient/set/succeed',
         payload: payload
       })
-      yield put({
-        type: 'data/get'
-      })
+      // yield put({
+      //   type: 'data/get'
+      // })
     },
     *['data/get'] ({ payload }, { put, select, call, take }) {
       try {
-        let { data } = yield select(state => state.finance)
-        if (!data) {
-          const action = yield take('finance/data/get/succeed')
-          data = action.payload
-        }
-
         let { coefficient } = yield select(state => state.nodeList)
-
         if (!coefficient.diameter) {
-          const action = yield take('coefficient/set/succeed')
+          const action = yield take('nodeList/coefficient/set/succeed')
           coefficient = action.payload
         }
 
         const { diameter, margin } = coefficient
 
-        const nodes = getNodes(data, diameter, margin)
+        const nodes = getNodes(payload, diameter, margin)
 
         yield put({
           type: 'data/get/succeed',
@@ -63,7 +58,7 @@ export default {
           payload: [ id, depth ]
         })
       } catch (err) {
-
+        console.log(err)
       }
     }
   },
@@ -91,7 +86,7 @@ function getNodes (data: Object, diameter: number, margin: number) {
   .size([diameter - margin, diameter - margin])
   .padding(2)
 
-  const root = d3.hierarchy(data, d => d.items)
+  const root = d3.hierarchy(data, d => d[childKey])
   .sum(d => d.size) // sizeKey hard code here
   .sort((a, b) => b.value - a.value)
 

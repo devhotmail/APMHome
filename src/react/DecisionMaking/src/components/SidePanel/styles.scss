@@ -3,6 +3,8 @@ $kpi-legend-circle-r: 25px;
 $gap: 10px;
 
 $brand: #5b84d7;
+@import "../../styles/variables.scss";
+
 $green: rgb(70, 175, 155);
 
 $gray: rgb(148, 147, 146);
@@ -16,6 +18,20 @@ $tab-active-color: rgb(31, 105, 266);
 
 .sidepanel {
   text-align: center;
+
+  :global {
+    .dewicon-circle-high {
+      color: #b3b3b3;
+    }
+
+    .dewicon-circle-low {
+      color: $brand-warning;
+    }
+
+    .dewicon-circle-full {
+      color: $brand-danger;
+    }
+  }
 }
 
 .tabs {

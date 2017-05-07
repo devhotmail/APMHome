@@ -1,22 +1,18 @@
 /* @flow */
 import axios from 'axios'
-import uuid from 'uuid/v4'
 import { routerRedux } from 'dva/router'
-import * as d3 from 'd3'
 
 import { currentYear } from '#/constants'
-import { round } from '#/utils'
 
 import deptData from '#/mock/deptData'
 import typeData from '#/mock/typeData'
-
-const childKey = 'items'
 
 export default {
   namespace: 'finance',
   state: {
     loading: false,
-    data: undefined,
+    systemData: undefined,
+    manualData: undefined,
     query: {}
   },
   subscriptions: {
@@ -48,7 +44,7 @@ export default {
     }
   },
   effects: {
-    *['data/get'] ({ payload: params }, { put, call, select }) {
+    *['data/get/1'] ({ payload: params }, { put, call, select }) {
       try {
         const mockData = params.groupby === 'dept' ? deptData : typeData
 
@@ -63,21 +59,24 @@ export default {
         })
 
         yield put({
-          type: 'nodeList/data/get'
+          type: 'nodeList/data/get',
+          payload: mockData
         })
-      } catch(err) {
+      } catch (err) {
         yield put({
           type: 'data/get/failed',
           payload: err
         })
       }
     },
-    *['data/get1'] ({ payload: params }, { put, call, select }) {
+    *['data/get'] ({ payload: params }, { put, call, select }) {
       try {
         const { data } = yield call(
           axios.get,
-          process.env.API_HOST + '/dmv2',
-          { params }
+          {
+            url: process.env.API_HOST + '/dmv2',
+            params
+          }
         )
 
         yield put({
@@ -86,11 +85,48 @@ export default {
         })
 
         yield put({
-          type: 'nodeList/data/get'
+          type: 'query/update',
+          payload: params
         })
-      } catch(err) {
+
+        yield put({
+          type: 'nodeList/data/get',
+          payload: data
+        })
+
+      } catch (err) {
         yield put({
           type: 'data/get/failed',
+          payload: err
+        })
+      }
+    },
+    *['data/put'] ({ payload }, { put, call, select }) {
+      try {
+        const { query } = yield select(state => state.finance)
+
+        const { data } = yield call(
+          axios,
+          {
+            method: 'put',
+            url: process.env.API_HOST + '/dmv2',
+            params: query,
+            data: { config: payload }
+          }
+        )
+
+        yield put({
+          type: 'data/put/succeed',
+          payload: data
+        })
+
+        yield put({
+          type: 'nodeList/data/get',
+          payload: data
+        })
+      } catch (err) {
+        yield put({
+          type: 'data/put/failed',
           payload: err
         })
       }
@@ -100,7 +136,13 @@ export default {
     ['data/get/succeed'] (state, { payload }) {
       return {
         ...state,
-        data: payload
+        systemData: payload
+      }
+    },
+    ['data/put/succeed'] (state, { payload }) {
+      return {
+        ...state,
+        manualData: payload
       }
     },
     ['query/update'] (state, { payload }) {

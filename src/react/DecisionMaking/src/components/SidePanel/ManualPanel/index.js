@@ -1,14 +1,25 @@
+/* @flow */
 import React, { Component } from 'react'
 import { Table, Icon, Button } from 'antd'
 
 import ConfigDept from '../ConfigDept'
 import ConfigType from '../ConfigType'
 
+import ProgressBar from '#/components/ProgressBar'
+import { round } from '#/utils'
+
+import Suggestions from '../Suggestions'
+
 import styles from './styles.scss'
 
 export default class ManualPanel extends Component {
+  state = {
+    showFocus: false
+  }
+
   render () {
-    const { config, focus } = this.props
+    const { showFocus } = this.state
+    const { config, focus: { node } } = this.props
     if (!config) return null
     if (!focus) return null
 
@@ -42,13 +53,50 @@ export default class ManualPanel extends Component {
             确认预期
           </Button>
         </div>
+        {
+          showFocus && node
+            ? this.renderFocusInfo(node.data)
+            : null
+        }
+      </div>
+    )
+  }
+
+  renderFocusInfo = (data: Object) => {
+    return (
+      <div className={styles.focusInfo}>
+        <div className="lead m-b-1">当前位置: {data.name}</div>
+        <div>根据预期增长产生的使用率预测</div>
+        <ProgressBar
+          color="#46af9b"
+          title="预测"
+          percent={data.usage_predict}
+          textDesc={`
+            ${round(data.usage_predict * 100, 1)}%
+            ${round(data.usage_predict_increase * 100, 1)}%
+          `} />
+        {
+          Array.isArray(data.suggestions) && data.suggestions.length
+            ? <div className={styles.suggestions}>
+              <Suggestions data={data} />
+            </div>
+            : null
+        }
       </div>
     )
   }
 
   handleSumbit = () => {
-    this.props.dispatch({
-      type: 'config/changes/submit'
+    new Promise((resolve, reject) => {
+      this.props.dispatch({
+        type: 'config/changes/submit',
+        resolve,
+        reject
+      })
+    }).then(() => {
+      this.setState({
+        showFocus: true
+      })
     })
   }
 

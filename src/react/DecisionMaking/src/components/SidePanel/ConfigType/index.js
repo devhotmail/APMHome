@@ -40,12 +40,16 @@ export default class ConfigType extends Component<*, ConfigT, *> {
 
     const thresholdNode = [
       <div>
-        <i className="dewicon-circle-full" style={{color:'#e26d26'}}></i>
-        <span>满负荷</span>
+        <Tooltip placement="topRight" title="您可以自定义使用率大于多少为满负荷">
+          <i className="dewicon dewicon-circle-full"></i>
+          <span>满负荷</span>
+        </Tooltip>
       </div>,
       <div>
-        <i className="dewicon-circle-low" style={{color:'#ebda51'}}></i>
-        <span>低负荷</span>
+        <Tooltip placement="topRight" title="您可以自定义使用率小于多少为低负荷">
+          <i className="dewicon dewicon-circle-low"></i>
+          <span>低负荷</span>
+        </Tooltip>
       </div>
     ]
 

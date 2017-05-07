@@ -5,19 +5,7 @@
     .dewicon {
       font-size: 24px;
     }
-
-    .dewicon-circle-high {
-      color: #b3b3b3;
-    }
-
-    .dewicon-circle-low {
-      color: $brand-warning;
-    }
-
-    .dewicon-circle-full {
-      color: $brand-danger;
-    }
-  }
+  }  
 }
 
 @mixin with-top-border {

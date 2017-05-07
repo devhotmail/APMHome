@@ -1,5 +1,4 @@
 /* @flow */
-import axios from 'axios'
 import { round, isFocusNode } from '#/utils'
 
 export default {
@@ -35,14 +34,14 @@ export default {
 
       }
     },
-    *['changes/submit'] ({ payload }, { put, call, select }) {
+    *['changes/submit'] ({ payload, resolve, reject }, { put, call, select }) {
       try {
         /**
          * todo:
          * Is it possible that API only need the changed part instead of threshold
          */
         const { changes, data: configList } = yield select(state => state.config)
-        
+
         const datum = Object.keys(changes).reduce((prev, cur) => {
           const item = changes[cur]
           const { cursor, increase, max, min } = item
@@ -77,14 +76,14 @@ export default {
 
         const body = [].concat.apply([], datum)
 
-        const { data } = yield call(
-          axios.put,
-          process.env.API_HOST + '/dmv2',
-          { config: body }
-        )
+        yield put({
+          type: 'finance/data/put',
+          payload: body
+        })
 
-
+        resolve && resolve()
       } catch (err) {
+        reject && reject()
         console.log(err)
       }
     }    
