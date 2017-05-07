@@ -52,13 +52,17 @@ export default {
           : require('#/mock/typeData').default
 
         yield put({
+          type: 'query/update',
+          payload: params
+        })
+
+        yield put({
           type: 'data/get/succeed',
           payload: data
         })
 
         yield put({
-          type: 'query/update',
-          payload: params
+          type: 'focus/cursor/reset'
         })
 
         yield put({
@@ -83,13 +87,17 @@ export default {
         )
 
         yield put({
+          type: 'query/update',
+          payload: params
+        })
+
+        yield put({
           type: 'data/get/succeed',
           payload: data
         })
 
         yield put({
-          type: 'query/update',
-          payload: params
+          type: 'focus/cursor/reset'
         })
 
         yield put({
@@ -132,13 +140,26 @@ export default {
           payload: err
         })
       }
+    },
+    *['data/toggle'] ({ payload = 'system' }, { put, select }) {
+      try {
+        const finance = yield select(state => state.finance)
+        const dataKey = `${payload}Data`
+        yield put({
+          type: 'nodeList/data/get',
+          payload: finance[dataKey]
+        })
+      } catch (err) {
+
+      }
     }
   },
   reducers: {
     ['data/get/succeed'] (state, { payload }) {
       return {
         ...state,
-        systemData: payload
+        systemData: payload,
+        manualData: payload
       }
     },
     ['data/put/succeed'] (state, { payload }) {

@@ -52,11 +52,15 @@ export default {
           payload: nodes
         })
 
-        const { depth, data: { id }} = nodes[0]
-        yield put({
-          type: 'focus/cursor/set',
-          payload: [ id, depth ]
-        })
+        // set root as cursor when cursor is empty
+        const { cursor } = yield select(state => state.focus)
+        if (!cursor.length) {
+          const { depth, data: { id }} = nodes[0]
+          yield put({
+            type: 'focus/cursor/set',
+            payload: [ id, depth ]
+          })
+        }
       } catch (err) {
         console.log(err)
       }

@@ -96,6 +96,11 @@ export default class SidePanel extends Component {
   }
 
   handleTabClick = (index: number) => (e: Event) => {
+    this.props.dispatch({
+      type: 'finance/data/toggle',
+      payload: ['system', 'manual'][index]
+    })
+
     this.setState({
       activeTab: index
     })

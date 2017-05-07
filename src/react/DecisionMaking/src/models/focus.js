@@ -39,7 +39,7 @@ export default {
             payload: target
           })
         }
-      } catch(err) {
+      } catch (err) {
         console.log(err)
       }
     }
@@ -52,6 +52,12 @@ export default {
         cursor: payload
       }
     },
+    ['cursor/reset'] (state, { payload }) {
+      return {
+        ...state,
+        cursor: []
+      }
+    },    
     ['node/set/succeed'] (state, { payload }) {
       if (payload === state.node) return state
       return {
