@@ -14,7 +14,7 @@ const defaultTableProps = {
   size: 'small',
   bordered: true,
   pagination: false,
-  scroll: { y: 160 },
+  scroll: { y: 174 },
   rowKey: n => n.data.id
 }
 

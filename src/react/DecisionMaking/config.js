@@ -9,7 +9,7 @@ module.exports = {
       'API_HOST': JSON.stringify('/api'),
       'BASE_HREF': JSON.stringify('/dm.xhtml')
     },
-    publicPathPrefix: '/react',
+    publicPathPrefix: '/react'
   },
   development: {
     env: {

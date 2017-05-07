@@ -26,16 +26,9 @@ const statusTips = [
   year: state.finance.query.year
 }))
 export default class SystemPanel extends Component {
-  shouldComponentUpdate (nextProps) {
-    return !isSameCursor(nextProps.focus.cursor, this.props.focus.cursor)
-  }
-
   render () {
-    const { focus, year } = this.props
-    const { node } = focus
-    if (!node) return null
-    const { data } = node
-
+    const { data, year } = this.props
+    if (!data) return null
     return (
       <div className={styles.systemPanel}>
         <div className="lead m-b-1">当前位置: {data.name}</div>

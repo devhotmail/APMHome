@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'dva'
-import { routerRedux } from 'dva/router'
 
 import RoleProvider from '#/components/RoleProvider'
 import SizeProvider from '#/components/SizeProvider'
@@ -17,7 +16,7 @@ const Panel = connect(state => ({
 }))(SidePanel)
 
 class Root extends Component {
-  render() {
+  render () {
     return <div className={styles.container}>
       <div className={styles.main}>
         <div className={styles.filterBar}>

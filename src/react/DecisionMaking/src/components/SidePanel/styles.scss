@@ -1,22 +1,7 @@
-$sidebar-width: 300px;
-$kpi-legend-circle-r: 25px;
-$gap: 10px;
-
-$brand: #5b84d7;
 @import "../../styles/variables.scss";
 
-$green: rgb(70, 175, 155);
-
-$gray: rgb(148, 147, 146);
-$orange: rgb(232, 136, 56);
-$yellow: rgb(236, 219, 84);
-
-$color-set: $orange $yellow $gray;
-$border-color: rgb(186, 186, 186);
-
-$tab-active-color: rgb(31, 105, 266);
-
 .sidepanel {
+  height: 100%;
   text-align: center;
 
   :global {
@@ -42,7 +27,7 @@ $tab-active-color: rgb(31, 105, 266);
     position: absolute;
     bottom: 0;
     left: 0;
-    background-color: $brand;
+    background-color: $brand-primary;
     height: 2px;
     transition: .2s ease-in-out;
   }
@@ -67,23 +52,56 @@ $tab-active-color: rgb(31, 105, 266);
 
     &:hover,
     &.active {
-      color: $brand;
+      color: $brand-primary;
     }
   }
 }
 
 .tabContent {
+  max-height: calc(100% - 50px);
   padding: 10px;
   border: 1px solid $border-color;
   border-radius: 10px;
   overflow-x: hidden;
+  overflow-y: auto;
   text-align: left;
-  background-color: white;
+  box-sizing: border-box;
 }
 
 :global {
-  .ant-table-fixed-header .ant-table-scroll .ant-table-header {
-    padding-bottom: 0px;
-    margin-bottom: -15px;
+
+  .ant-table {
+    border-radius: 8px;
+
+    table {
+      /* ditry override for the wrong shell.css:11 `margin-bottom: 1rem` */
+      margin-bottom: 0 !important;
+    }
+
+    .ant-table-row:last-child td:last-child {
+      border-bottom-right-radius: 8px;
+    }
+
+    tr > th {
+      padding: 6px 8px !important;
+      line-height: 20px;
+    }
+
+    .ant-table-header {
+      margin-bottom: 0 !important;
+    }
+
+    .ant-table-header,
+    .ant-table-body,
+    .ant-table-thead>tr>th {
+      background-color: transparent;
+    }
+  }
+
+  .ant-table-fixed-header {
+    .ant-table-scroll .ant-table-header {
+      padding-bottom: 0px;
+      margin-bottom: -15px;
+    }
   }
 }

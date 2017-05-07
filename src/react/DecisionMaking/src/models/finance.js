@@ -4,9 +4,6 @@ import { routerRedux } from 'dva/router'
 
 import { currentYear } from '#/constants'
 
-import deptData from '#/mock/deptData'
-import typeData from '#/mock/typeData'
-
 export default {
   namespace: 'finance',
   state: {
@@ -16,25 +13,29 @@ export default {
     query: {}
   },
   subscriptions: {
-    setup({ dispatch, history }) {
+    setup ({ dispatch, history }) {
       return history.listen(({query}) => {
         const { groupby, year } = query
 
-        if (!groupby) return dispatch(routerRedux.push({
-          pathname: '/',
-          query: {
-            ...query,
-            groupby: 'type'
-          }
-        }))
+        if (!groupby) {
+          return dispatch(routerRedux.push({
+            pathname: '/',
+            query: {
+              ...query,
+              groupby: 'type'
+            }
+          }))
+        }
 
-        if (!year) return dispatch(routerRedux.push({
-          pathname: '/',
-          query: {
-            ...query,
-            year: currentYear
-          }
-        }))
+        if (!year) {
+          return dispatch(routerRedux.push({
+            pathname: '/',
+            query: {
+              ...query,
+              year: currentYear
+            }
+          }))
+        }
 
         dispatch({
           type: 'data/get',
@@ -46,11 +47,13 @@ export default {
   effects: {
     *['data/get/1'] ({ payload: params }, { put, call, select }) {
       try {
-        const mockData = params.groupby === 'dept' ? deptData : typeData
+        const data = params.groupby === 'dept'
+          ? require('#/mock/deptData').default
+          : require('#/mock/typeData').default
 
         yield put({
           type: 'data/get/succeed',
-          payload: mockData
+          payload: data
         })
 
         yield put({
@@ -60,7 +63,7 @@ export default {
 
         yield put({
           type: 'nodeList/data/get',
-          payload: mockData
+          payload: data
         })
       } catch (err) {
         yield put({
@@ -72,7 +75,7 @@ export default {
     *['data/get'] ({ payload: params }, { put, call, select }) {
       try {
         const { data } = yield call(
-          axios.get,
+          axios,
           {
             url: process.env.API_HOST + '/dmv2',
             params
@@ -93,7 +96,6 @@ export default {
           type: 'nodeList/data/get',
           payload: data
         })
-
       } catch (err) {
         yield put({
           type: 'data/get/failed',
