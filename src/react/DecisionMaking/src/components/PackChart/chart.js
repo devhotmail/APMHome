@@ -4,10 +4,10 @@ import { Button } from 'antd'
 
 import { margin } from '#/constants'
 
+import type { NodeT } from '#/types'
+
 import TextNodes from './TextNodes'
 import TreeNodes from './TreeNodes'
-
-import type { NodeT } from './interface'
 
 import styles from './styles.scss'
 
@@ -25,7 +25,7 @@ type ChartProps = {
 
 export default class Chart extends PureComponent<*, ChartProps, *> {
   render () {
-    const { height, width, view, handleBackUpper } = this.props
+    const { height, width, view, nodeList, focus, setFocus, handleBackUpper } = this.props
 
     if (!width || !height || !view.length) return null
 
@@ -49,7 +49,10 @@ export default class Chart extends PureComponent<*, ChartProps, *> {
           height={height}
           viewBox={viewBox.join(' ')}
           onClick={handleBackUpper}>
-          <TreeNodes {...this.props} />
+          <TreeNodes
+            nodeList={nodeList}
+            cursor={focus.cursor}
+            setFocus={setFocus} />
           {/*<TextNodes {...this.props} />*/}
           {/*{ nodeList ? this.renderTexts(nodeList) : null }*/}
         </svg>
@@ -58,7 +61,7 @@ export default class Chart extends PureComponent<*, ChartProps, *> {
   }
 
   renderTexts = (nodeList: Array<NodeT>) => {
-    const { focus } = this.props
+    // const { focus } = this.props
     return <g>
       {
         nodeList.map((node, index) => {

@@ -1,4 +1,4 @@
-import { isSameCursor, isFocusNode } from '#/utils'
+import { isSameCursor } from '#/utils'
 
 export default {
   namespace: 'focus',
@@ -8,7 +8,7 @@ export default {
     cursor: []
   },
   subscriptions: {
-    setup({ dispatch }) {
+    setup ({ dispatch }) {
     }
   },
   effects: {

@@ -5,53 +5,28 @@ import * as d3 from 'd3'
 import type { cursorT, NodeT } from '#/types'
 import { getCursor, isSameCursor } from '#/utils'
 
+import { getCircleStrokeCls, getWaveFillCls } from './helpers'
+
 import styles from './styles.scss'
+
+type PropsT = {
+  nodeList: Array<NodeT>,
+  cursor: cursorT,
+  setFocus: Function
+}
 
 const percentKey = 'usage_predict'
 
-const constants = {
-  circleColor: 'rgba(255, 255, 255, 0)'
-}
-
-// todo: hard code field
-function getCircleStrokeCls (n: NodeT): string {
-  const circleStrokeCls = [
-    styles.strokeYellow,
-    styles.strokeGray,
-    styles.strokeOrange
-  ]
-
-  const { usage_predict, usage_threshold = [0.3, 1] } = n.data
-
-  let colorIndex = 1
-  if (usage_predict > usage_threshold[1]) colorIndex =  2
-  else if (usage_predict < usage_threshold[0]) colorIndex = 0
-  
-  return circleStrokeCls[colorIndex]
-}
-
-function getWaveFillCls (n: NodeT): string {
-  const waveFillCls = [
-    styles.fillYellow,
-    styles.fillGray,
-    styles.fillOrange
-  ]
-
-  const { usage_predict, usage_threshold = [0.3, 1] } = n.data
-
-  let colorIndex = 1
-  if (usage_predict > usage_threshold[1]) colorIndex =  2
-  else if (usage_predict < usage_threshold[0]) colorIndex = 0
-  
-  return waveFillCls[colorIndex]
-}
-
-export default class TreeNodes extends PureComponent<*, *, *> {  
+export default class TreeNodes extends PureComponent<*, *, *> {
   render () {
-    const { nodeList, focusCursor } = this.props
+    const { nodeList, cursor } = this.props
     return (
       <g>
-        { nodeList.length && focusCursor.length ? this.renderNodes(nodeList, focusCursor) : null }
+        {
+          nodeList.length && cursor.length
+            ? this.renderNodes(nodeList, cursor)
+            : null
+        }
       </g>
     )
   }

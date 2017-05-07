@@ -28,9 +28,9 @@ const textColor = 'rgb(111, 111, 111)' // Text color
 const textTopPercent = 0.85 // Percentage of height to show text top in the asset circle
 
 export default class TextNodes extends Component {
-  shouldComponentUpdate (nextProps, nextState) {
-    return false
-  }
+  // shouldComponentUpdate (nextProps, nextState) {
+  //   return false
+  // }
   
   render () {
     const { nodeList } = this.props
