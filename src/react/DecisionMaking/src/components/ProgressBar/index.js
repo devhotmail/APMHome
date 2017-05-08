@@ -11,12 +11,12 @@ type PropsT = {
   textDesc: React$Element
 }
 export default class ProgressBar extends Component<*, PropsT, *> {
-  static defaultProps = { color: '#6b6b6b' }
+  static defaultProps = { color: '#b6b6b6' }
 
   render () {
-    const { color, title, percent, textDesc } = this.props
+    const { color, title, percent, textDesc, ...otherProps } = this.props
     return (
-      <div style={{color}} className={styles.progressBar}>
+      <div style={{color}} className={styles.progressBar} {...otherProps}>
         <div className={styles.title}>{title}</div>
         <div className={styles.barWrapper}>
           <div style={{width: `${(percent > 1 ? 1 : percent)*100}%`}} className={styles.bar}></div>

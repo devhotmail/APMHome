@@ -1,13 +1,9 @@
 @import "../../../styles/variables.scss";
 
-.iconWarn,
+.iconLoad,
 .iconDanger {
   font-family: 'DewIcon';
   font-size: 0.7em;
-}
-
-.iconWarn {
-  fill: $gray;
 }
 
 .iconDanger {

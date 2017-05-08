@@ -17,14 +17,14 @@ export default class TextDesc extends PureComponent {
         <tspan className={styles.icon}>{label}</tspan>
       </text>
       <text y="1.1em" className={styles.font8}>
-        <tspan className={styles.iconWarn} dangerouslySetInnerHTML={createMarkup('&#xE003')}></tspan>
-        <tspan>{round(percent * 100)}%</tspan>
+        <tspan className={styles.iconLoad} dangerouslySetInnerHTML={createMarkup('&#xE003')}></tspan>
+        <tspan dx="0.3em">{round(percent * 100)}%</tspan>
       </text>
       {
         overload
           ? <text y="2.1em" className={styles.font8}>
             <tspan className={styles.iconDanger} dangerouslySetInnerHTML={createMarkup('&#xE002')}></tspan>
-            <tspan>{overload}</tspan>
+            <tspan dx="0.3em">{overload}</tspan>
           </text>
           : null
       }
