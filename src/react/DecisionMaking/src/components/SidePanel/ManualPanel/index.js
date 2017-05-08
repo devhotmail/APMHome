@@ -19,8 +19,8 @@ export default class ManualPanel extends Component {
 
   render () {
     const { showFocus } = this.state
-    const { config, focus: { node } } = this.props
-    if (!config) return null
+    const { config, focus: { node }, loading } = this.props
+    if (!config || !config.length) return null
     if (!focus) return null
 
     const root = config[0]
@@ -29,7 +29,6 @@ export default class ManualPanel extends Component {
 
     const depths = visibleConfig.map(n => n.depth)
     .filter((n, index, arr) => arr.indexOf(n) === index)
-
     return (
       <div className={styles.manualPanel}>
         <div className="lead m-b-1">使用率预测</div>
@@ -48,6 +47,7 @@ export default class ManualPanel extends Component {
           <Button
             size="large"
             type="primary"
+            loading={loading}
             style={{width: 120}}
             onClick={this.handleSumbit}>
             确认预期

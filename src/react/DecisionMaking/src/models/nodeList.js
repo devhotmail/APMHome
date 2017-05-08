@@ -26,9 +26,6 @@ export default {
         type: 'coefficient/set/succeed',
         payload: payload
       })
-      // yield put({
-      //   type: 'data/get'
-      // })
     },
     *['data/get'] ({ payload }, { put, select, call, take }) {
       try {
@@ -44,11 +41,6 @@ export default {
 
         yield put({
           type: 'data/get/succeed',
-          payload: nodes
-        })
-
-        yield put({
-          type: 'config/data/set',
           payload: nodes
         })
 

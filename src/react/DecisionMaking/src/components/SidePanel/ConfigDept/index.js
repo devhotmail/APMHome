@@ -20,7 +20,7 @@ const defaultTableProps = {
 
 export default class ConfigDept extends Component<*, ConfigT, *> {
   render () {
-    const { config, focus: { cursor}, depths, setFocus } = this.props
+    const { config, focus: { cursor}, depths, setFocus, loading } = this.props
 
     const configListOne = config.filter(n => n.depth === depths[0])
     .map(n => ({
@@ -34,6 +34,7 @@ export default class ConfigDept extends Component<*, ConfigT, *> {
 
     const tableProps = {
       ...defaultTableProps,
+      loading,
       onRowClick: node => setFocus(getCursor(node)),
       rowClassName: node => `${styles.tr} ${isFocusNode(node, activeCursors[0]) ? 'active': ''}`
     }
@@ -62,7 +63,7 @@ export default class ConfigDept extends Component<*, ConfigT, *> {
   }
 
   renderConfigTwo = (activeCursors) => {
-    const { config, focus: { cursor}, depths, setFocus } = this.props
+    const { config, focus: { cursor}, depths, setFocus, loading } = this.props
 
     const configListTwo = config.filter(n => n.depth === depths[1])
     .filter(n => isFocusNode(n.parent, activeCursors[0]))
@@ -73,6 +74,7 @@ export default class ConfigDept extends Component<*, ConfigT, *> {
 
     const tableProps = {
       ...defaultTableProps,
+      loading,
       onRowClick: node => setFocus(getCursor(node)),
       rowClassName: node => `${styles.tr} ${isFocusNode(node, activeCursors[1]) ? 'active': ''}`
     }

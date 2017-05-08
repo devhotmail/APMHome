@@ -45,8 +45,10 @@ export default {
     }
   },
   effects: {
-    *['data/get'] ({ payload: params }, { put, call, select }) {
+    *['data/get'] ({ payload: params }, { put, call, select, take }) {
       try {
+        yield put({ type: 'loading/on' })
+
         const { data } = yield call(
           axios,
           {
@@ -70,8 +72,21 @@ export default {
         })
 
         yield put({
+          type: 'config/changes/reset'
+        })
+
+        yield put({
           type: 'nodeList/data/get',
           payload: data
+        })
+
+        yield put({ type: 'loading/off' })
+
+        // init config
+        const action = yield take('nodeList/data/get/succeed')
+        yield put({
+          type: 'config/data/set',
+          payload: action.payload
         })
       } catch (err) {
         yield put({
@@ -80,7 +95,7 @@ export default {
         })
       }
     },
-    *['data/put'] ({ payload }, { put, call, select }) {
+    *['data/put'] ({ payload }, { put, call, select, take }) {
       try {
         const { query } = yield select(state => state.finance)
 
@@ -103,6 +118,13 @@ export default {
           type: 'nodeList/data/get',
           payload: data
         })
+
+        // set config
+        const action = yield take('nodeList/data/get/succeed')
+        yield put({
+          type: 'config/data/set',
+          payload: action.payload
+        })        
       } catch (err) {
         yield put({
           type: 'data/put/failed',
@@ -142,6 +164,18 @@ export default {
         ...state,
         query: payload
       }
-    }
+    },
+    ['loading/on'] (state, action) {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    ['loading/off'] (state, action) {
+      return {
+        ...state,
+        loading: false
+      }
+    }    
   }
 }

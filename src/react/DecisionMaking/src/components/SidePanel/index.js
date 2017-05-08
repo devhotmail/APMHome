@@ -1,3 +1,4 @@
+/* @flow */
 import React, { Component } from 'react'
 import { Animate } from 'react-move'
 import { connect } from 'dva'
@@ -24,6 +25,7 @@ const tabWidth = 90
 
 @connect(state => ({
   focus: state.focus,
+  loading: state.config.loading,
   config: state.config.data
 }))
 export default class SidePanel extends Component {

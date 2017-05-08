@@ -24,12 +24,16 @@ export default class FilterBar extends Component {
 
     return (
       <div className="flex flex--justify-content--space-between p-a-1">
-        <Dropdown overlay={menu} trigger={['click']} placement='bottomCenter'>
-          <Button>
-            { query.year || currentYear } <Icon type="down" />
-          </Button>
-        </Dropdown>
-        {this.renderGroupBy(query)}
+        <div className={styles.year}>
+          <Dropdown overlay={menu} trigger={['click']} placement='bottomCenter'>
+            <Button>
+              { query.year || currentYear } <Icon type="down" />
+            </Button>
+          </Dropdown>
+        </div>
+        <div className={styles.groupby}>
+          {this.renderGroupBy(query)}
+        </div>
       </div>
     )
   }

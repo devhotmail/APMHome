@@ -1,3 +1,4 @@
+/* @flow */
 import React from 'react'
 import styles from './styles.scss'
 
@@ -5,21 +6,19 @@ import styles from './styles.scss'
 const _require = require.context('#/assets/icons', false, /\.svg$/)
 _require.keys().forEach(key => _require(key))
 
-export default class PinenutIcon extends React.PureComponent {
-  static propTypes = {
-    symbolId: React.PropTypes.string.isRequired,
-    className: React.PropTypes.string
-  }
+type PropT = {
+  symbolId: string
+}
 
+export default class PinenutIcon extends React.PureComponent<*, PropT, *> {
   render() {
-    const { className, symbolId } = this.props
-    const iconClass = className
-      ? `${styles.icon} icon-${symbolId} ${className}`
-      : `${styles.icon} icon-${symbolId}`
+    const { symbolId, ...restProps } = this.props
     return (
-      <svg className={iconClass}>
-        <use xlinkHref={`#${symbolId}`} />
-      </svg>
+      <span {...restProps}>
+        <svg className={styles.icon}>
+          <use xlinkHref={`#${symbolId}`} />
+        </svg>
+      </span>
     )
   }
 }

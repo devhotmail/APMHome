@@ -9,7 +9,7 @@ export default {
     changes: {}
   },
   subscriptions: {
-    setup({ dispatch }) {
+    setup ({ dispatch }) {
     }
   },
   effects: {
@@ -20,7 +20,6 @@ export default {
           payload: payload
         })
       } catch (err) {
-
       }
     },
     *['changes'] ({ payload }, { put, call, select }) {
@@ -34,8 +33,9 @@ export default {
 
       }
     },
-    *['changes/submit'] ({ payload, resolve, reject }, { put, call, select }) {
+    *['changes/submit'] ({ payload, resolve, reject }, { put, call, select, take }) {
       try {
+        yield put({ type: 'loading/on' })
         /**
          * todo:
          * Is it possible that API only need the changed part instead of threshold
@@ -81,6 +81,9 @@ export default {
           payload: body
         })
 
+        yield take('config/data/set/succeed')
+
+        yield put({ type: 'loading/off' })
         resolve && resolve()
       } catch (err) {
         reject && reject()
@@ -114,7 +117,19 @@ export default {
         ...state,
         data: payload
       }
-    }      
+    },
+    ['loading/on'] (state, action) {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    ['loading/off'] (state, action) {
+      return {
+        ...state,
+        loading: false
+      }
+    }
   }
 }
 
