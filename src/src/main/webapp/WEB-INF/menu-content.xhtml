@@ -82,7 +82,7 @@
                 <p:menuitem id="um41" value="#{msg.UsageAndClinicalPerformance}" outcome="/portal/analysis/assetOperationalPerf"/>
                 <p:menuitem id="um42" value="#{msg.DeviceCostAnalysis}" rendered="false" outcome="/empty"/>
                 <p:menuitem id="um43" value="#{msg.DevicePurchaseDecisionSupport}"
-                            outcome="/portal/analysis/assetProcurement"/>
+                            outcome="/portal/analysis/decisionMaking"/>
             </p:submenu>
             <p:submenu id="um44" label="#{msg.SysAdmin}" icon="settings"
                        rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('ITAdmin')}">
