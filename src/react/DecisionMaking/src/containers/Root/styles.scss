@@ -35,9 +35,10 @@ $filterBarHeight: 50px;
 .sidebar {
   position: absolute;
   right: $sidebarRight;
-  top: 0;
+  top: 20px;
   width: $sidepanelWidth;
-  height: 100%;
+  // for user role position
+  height: calc(100% - 20px);
 }
 
 .chartWrapper {

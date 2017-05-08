@@ -1,6 +1,7 @@
 /* @flow */
 import axios from 'axios'
 import { routerRedux } from 'dva/router'
+import { notification } from 'antd'
 
 import { currentYear } from '#/constants'
 
@@ -65,40 +66,46 @@ export default {
           }
         )
 
-        yield put({
-          type: 'query/update',
-          payload: params
-        })
+        if (!data.items || (Array.isArray(data.items) && !data.items.length)) {
+          yield put({
+            type: 'data/status/empty'
+          })
+        } else {
+          yield put({
+            type: 'query/update',
+            payload: params
+          })
 
-        yield put({
-          type: 'data/get/succeed',
-          payload: data
-        })
+          yield put({
+            type: 'data/get/succeed',
+            payload: data
+          })
 
-        yield put({
-          type: 'focus/cursor/reset'
-        })
+          yield put({
+            type: 'focus/cursor/reset'
+          })
 
-        yield put({
-          type: 'config/changes/reset'
-        })
+          yield put({
+            type: 'config/changes/reset'
+          })
 
-        yield put({
-          type: 'nodeList/data/get',
-          payload: data
-        })
+          yield put({
+            type: 'nodeList/data/get',
+            payload: data
+          })
 
-        yield put({ type: 'loading/off' })
+          yield put({ type: 'loading/off' })
 
-        // init config
-        const action = yield take('nodeList/data/get/succeed')
-        yield put({
-          type: 'config/data/set',
-          payload: action.payload
-        })
+          // init config
+          const action = yield take('nodeList/data/get/succeed')
+          yield put({
+            type: 'config/data/set',
+            payload: action.payload
+          })
+        }
       } catch (err) {
         yield put({
-          type: 'data/get/failed',
+          type: 'data/status/failed',
           payload: err
         })
       }
@@ -117,25 +124,31 @@ export default {
           }
         )
 
-        yield put({
-          type: 'data/put/succeed',
-          payload: data
-        })
+        if (!data.items || (Array.isArray(data.items) && !data.items.length)) {
+          yield put({
+            type: 'data/status/empty'
+          })
+        } else {
+          yield put({
+            type: 'data/put/succeed',
+            payload: data
+          })
 
-        yield put({
-          type: 'nodeList/data/get',
-          payload: data
-        })
+          yield put({
+            type: 'nodeList/data/get',
+            payload: data
+          })
 
-        // set config
-        const action = yield take('nodeList/data/get/succeed')
-        yield put({
-          type: 'config/data/set',
-          payload: action.payload
-        })        
+          // set config
+          const action = yield take('nodeList/data/get/succeed')
+          yield put({
+            type: 'config/data/set',
+            payload: action.payload
+          })
+        }  
       } catch (err) {
         yield put({
-          type: 'data/put/failed',
+          type: 'data/status/failed',
           payload: err
         })
       }
@@ -151,7 +164,19 @@ export default {
       } catch (err) {
 
       }
-    }
+    },
+    *['data/status/failed'] ({ payload: err }) {
+      notification.error({
+        message: '数据加载出错，请尝试刷新页面',
+        description: err.message
+      })
+    },
+    *['data/status/empty'] () {
+      notification.warning({
+        message: '暂无可用设备数据',
+        description: '请稍后再试'
+      })      
+    }    
   },
   reducers: {
     ['data/get/succeed'] (state, { payload }) {
