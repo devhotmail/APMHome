@@ -21,7 +21,7 @@ class Root extends Component {
       </div>
       {
         loading
-          ? <div className="pos-f-c flex flex--justify-content--center flex--align-items--center">
+          ? <div className={styles.statusWrapper}>
             <StatusBar type="loading" />
           </div>
           : <div className={styles.content}>

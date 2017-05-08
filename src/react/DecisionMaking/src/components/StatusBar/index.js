@@ -1,21 +1,19 @@
 /* @flow */
 import React, { Component } from 'react'
 
-import ReactIcon from '../ReactIcon'
-
 import styles from './styles.scss'
 
 const statusSet = {
   empty: {
-    icon: 'inbox',
+    icon: 'fa fa-inbox',
     desc: '暂无可用设备数据'
   },
   error: {
-    icon: 'exclamation',
+    icon: 'fa fa-exclamation-circle',
     desc: '数据加载出错，请尝试刷新页面'
   },
   loading: {
-    icon: 'spinner',
+    icon: 'fa fa-spinner',
     desc: '数据加载中...'
   }
 }
@@ -32,7 +30,7 @@ export default class StatusBar extends Component<*, PropT, *> {
     if (!suit) return null
     return (
       <div className={styles.statusBar}>
-        <ReactIcon className={`${styles.icon} ${styles[type]}`} symbolId={suit.icon} />
+        <i className={`${suit.icon} ${styles.icon} ${styles[type]}`}></i>
         <div className={styles.desc}>{suit.desc}</div>
       </div>
     )

@@ -45,9 +45,17 @@ export default {
     }
   },
   effects: {
-    *['data/get'] ({ payload: params }, { put, call, select, take }) {
+    *['data/get'] ({ payload: query }, { put, call, select, take }) {
       try {
         yield put({ type: 'loading/on' })
+
+        let user = yield select(state => state.user.info)
+        if (!user.id) {
+          const action = yield take('user/info/set')
+          user = action.payload
+        }
+
+        const params = user.isHead ? query : { year: query.year, dept: user.orgId }
 
         const { data } = yield call(
           axios,

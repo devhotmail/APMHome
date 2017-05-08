@@ -1,7 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
 import dva from 'dva'
-import { browserHistory, HashHistory, useRouterHistory } from 'dva/router'
+import { useRouterHistory } from 'dva/router'
 import createHashHistory from 'history/lib/createHashHistory'
 
 import './polyfill'
@@ -17,7 +15,11 @@ const historyEngine = useRouterHistory(createHashHistory)({
 })
 
 const app = dva({
-  history: historyEngine
+  history: historyEngine,
+  onError: e => {
+    if (process.env.NODE_ENV === 'production') return
+    console.log(e)
+  }
 })
 
 models.forEach(model => app.model(model))

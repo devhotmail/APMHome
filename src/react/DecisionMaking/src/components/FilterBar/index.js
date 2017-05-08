@@ -1,12 +1,16 @@
 /* @flow */
 import React, { Component } from 'react'
 import { Menu, Dropdown, Button, Icon } from 'antd'
+import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 
 import { currentYear } from '#/constants'
 
 import styles from './styles.scss'
 
+@connect(state => ({
+  user: state.user.info
+}))
 export default class FilterBar extends Component {
   render () {
     const menu = <Menu onClick={this.handleMenuClick}>
@@ -19,8 +23,7 @@ export default class FilterBar extends Component {
       }
     </Menu>
 
-    const { query } = this.props.location
-    // const { isHead } = this.props.userInfo
+    const { user: { isHead }, location: { query }} = this.props
 
     return (
       <div className="flex flex--justify-content--space-between p-a-1">
@@ -32,7 +35,7 @@ export default class FilterBar extends Component {
           </Dropdown>
         </div>
         <div className={styles.groupby}>
-          {this.renderGroupBy(query)}
+          {isHead ? this.renderGroupBy(query) : null}
         </div>
       </div>
     )

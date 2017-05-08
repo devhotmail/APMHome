@@ -1,4 +1,6 @@
 const path = require('path')
+const SpriteLoaderPlugin = require('svg-sprite-loader/plugin')
+
 const svgoConfig = require('./svgo.config')
 
 const config = require('../config')
@@ -38,7 +40,10 @@ module.exports = {
         test: /\.svg$/,
         use: [
           {
-            loader: 'svg-sprite-loader'
+            loader: 'svg-sprite-loader',
+            options: {
+              extract: true
+            }
           },
           {
             loader: 'svgo-loader',
@@ -65,5 +70,8 @@ module.exports = {
         }
       }
     ]
-  }  
+  },
+  plugins: [
+     new SpriteLoaderPlugin()
+  ]    
 }
