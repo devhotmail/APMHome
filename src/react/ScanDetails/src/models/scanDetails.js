@@ -315,6 +315,25 @@ export default {
       dispatch({
         type: 'depts/get'
       })
+      dispatch({
+        type: 'brief/get'
+      })
+      dispatch({
+        type: 'detail/get',
+        payload: {
+          groupby: 'asset',
+          pageNum: 0,
+          pageSize: PAGE_SIZE
+        }
+      })
+      dispatch({
+        type: 'detailByStep/get',
+        payload: {
+          groupby: 'step',
+          pageNum: 0,
+          pageSize: PAGE_SIZE
+        }
+      })
     }
   }: Subscriptions),
   effects: ({
