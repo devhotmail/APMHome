@@ -345,7 +345,7 @@ export default {
         )
         yield put({
           type: 'depts/get/succeeded',
-          payload: data
+          payload: data.orgInGfos
         })
       } catch(err) {
         yield put({
@@ -488,6 +488,9 @@ export default {
     }
   }: Effects),
   reducers: ({
+    ['depts/get/succeeded'](state, { payload }) {
+      return state.set('depts', Immutable.fromJS(payload))
+    },
     ['dept/set'](state, { payload }) {
       return state.withMutations(state => {
         state
