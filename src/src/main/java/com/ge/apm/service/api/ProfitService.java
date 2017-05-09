@@ -4,8 +4,17 @@ import com.ge.apm.service.utils.CNY;
 import com.github.davidmoten.rx.jdbc.ConnectionProvider;
 import com.github.davidmoten.rx.jdbc.Database;
 import com.github.davidmoten.rx.jdbc.annotations.Column;
+import com.google.common.primitives.Doubles;
+import com.google.common.primitives.Ints;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import javaslang.*;
+import javaslang.collection.HashMap;
+import javaslang.collection.List;
+import javaslang.collection.Seq;
 import javaslang.control.Option;
+import javaslang.control.Try;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 import org.apache.ibatis.jdbc.SQL;
 import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
@@ -20,6 +29,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 
 @Service
 public class ProfitService {
@@ -52,6 +62,22 @@ public class ProfitService {
 
   public static Money predictRevenue() {
     return Option.of(LocalDate.now()).map(y -> CNY.money(2165.29491254D * ChronoUnit.DAYS.between(LocalDate.of(2000, 1, 1), y.plusYears(1)) + 1859154525.8260288D)).getOrElse(CNY.O);
+  }
+
+  public static Map<Integer, Double> parseInputJson(String s, String key, String value) {
+    Config parsedBody = ConfigFactory.parseString(s);
+    return HashMap.ofEntries(
+      List.ofAll(Try.of(() -> parsedBody.getConfigList("config")).get())
+        .filter(v -> !Try.of(() -> v.getString(value)).getOrElse("").equals(""))
+        .map(v2 -> Tuple.of(Ints.tryParse(v2.getString(key)), Doubles.tryParse(v2.getString(value)))))
+      .toJavaMap();
+  }
+
+  //input: Tuple2<future,past>
+  public static double calcIncRate(Observable<Tuple2<Double, Double>> items) {
+    double past = items.reduce(0D, (init, v) -> init + v._2).toBlocking().single();
+    double future = items.reduce(0D, (init, v) -> init + v._1).toBlocking().single();
+    return Option.when(past == 0D, 0D).getOrElse(future / past - 1D);
   }
 
   @Cacheable(cacheNames = "springCache", key = "'profitService.findRvnCstByYear.'+#siteId+'.'+#hospitalId + '.year'+#year")
@@ -179,7 +205,10 @@ public class ProfitService {
     int id();
 
     @Column
-    Timestamp yearMonth();
+    String name();
+
+    @Column
+    Timestamp created_date();
 
     @Column
     int type();
@@ -194,11 +223,10 @@ public class ProfitService {
     double costs();
   }
 
-  @Cacheable(cacheNames = "springCache", key = "'profitService.findRvnCstForForecast'+#siteId+'.'+#hospitalId+'.startDate'+#startDate+'.endDate'+#endDate")
-  public Observable<Tuple6<Integer, LocalDate, Integer, Integer, Double, Double>> findRvnCstForForecast(Integer siteId, Integer hospitalId, LocalDate startDate, LocalDate endDate) {
+  public Observable<Tuple7<Integer, String, LocalDate, Integer, Integer, Double, Double>> findRvnCstForForecast(Integer siteId, Integer hospitalId, LocalDate startDate, LocalDate endDate) {
     log.info("siteId:{}, hospitalId:{}, startDate:{}, endDate:{}", siteId, hospitalId, startDate, endDate);
     return db.select(new SQL() {{
-      SELECT("ai.id", "date_trunc(:time_unit,asu.created) as created_date", "ai.asset_group", "ai.clinical_dept_id", "COALESCE(sum(asu.revenue), 0)", "COALESCE(sum(asu.maintenance_cost), 0)");
+      SELECT("ai.id", "ai.name", "date_trunc(:time_unit,asu.created) as created_date", "ai.asset_group as type", "ai.clinical_dept_id as dept", "COALESCE(sum(asu.revenue), 0) as revenue", "COALESCE(sum(asu.maintenance_cost), 0) as costs");
       FROM("asset_info as ai");
       LEFT_OUTER_JOIN("asset_summit as asu on ai.id = asu.asset_id");
       WHERE("ai.site_id = :site_id");
@@ -217,7 +245,78 @@ public class ProfitService {
       .parameter("hospital_id", hospitalId)
       .parameter("time_unit", "month")
       .autoMap(Asset.class)
-      .map(v -> Tuple.of(v.id(), v.yearMonth().toLocalDateTime().toLocalDate(), v.type(), v.dept(), v.revenue(), v.costs()));
+      .map(v -> Tuple.of(v.id(), v.name(), v.created_date().toLocalDateTime().toLocalDate(), v.type(), v.dept(), v.revenue(), v.costs()))
+      .cache();
+  }
+
+  //forecast
+  private Integer localDateToX(LocalDate input) {
+    return (int) LocalDate.ofYearDay(2000, 1).until(input, ChronoUnit.DAYS);
+  }
+
+  private LocalDate xToLocaldate(Integer x) {
+    return LocalDate.ofYearDay(2000, 1).plusDays(x);
+  }
+
+  private Seq<Tuple7<Integer, String, LocalDate, Integer, Integer, Double, Double>> dataTransform(Observable<Tuple7<Integer, String, LocalDate, Integer, Integer, Double, Double>> items) {
+    return List.ofAll(items.toBlocking().toIterable());
+  }
+
+  //output:Map<type_id,Tuple7<id, name, time, type, dept, revenue_rate, cost_rate>>
+  private javaslang.collection.Map<Integer, Seq<Tuple7<Integer, String, LocalDate, Integer, Integer, Double, Double>>> ratios(Seq<Tuple7<Integer, String, LocalDate, Integer, Integer, Double, Double>> items) {
+    return
+      items.filter(v -> LocalDate.of(LocalDate.now().getYear() - 1, 12, 1).equals(v._3))
+        .groupBy(v -> v._4)
+        .map((k, v) -> Tuple.of(Tuple.of(k, v.map(sub -> sub._6).sum().doubleValue(), v.map(sub -> sub._7).sum().doubleValue()), v))
+        .map((k, v) -> Tuple.of(k._1, v.map(sub -> Tuple.of(sub._1, sub._2, sub._3, sub._4, sub._5, Option.when(k._2.equals(0D), 0D).getOrElse(sub._6 / k._2), Option.when(k._3.equals(0D), 0D).getOrElse(sub._7 / k._3)))));
+  }
+
+  //output: Tuple7<id, name, time, type, dept, revenue, cost>
+  private Seq<Tuple7<Integer, String, Integer, Integer, Integer, Double, Double>> predictRvnCst(javaslang.collection.Map<Integer, Seq<Tuple7<Integer, String, LocalDate, Integer, Integer, Double, Double>>> ratios,
+                                                                                                Seq<Tuple7<Integer, String, LocalDate, Integer, Integer, Double, Double>> items, int year) {
+    javaslang.collection.Map<Integer, Tuple2<Seq<Tuple2<Integer, Double>>, Seq<Tuple2<Integer, Double>>>> predicts = HashMap.ofEntries(items.groupBy(v -> v._4)
+      .map((k, v) -> Tuple.of(k,
+        v.groupBy(sub -> sub._3).map(pair -> Tuple.of(localDateToX(pair._1), pair._2))
+          .sortBy(sub -> sub._1)
+          .map(sub -> Tuple.of(sub._1, sub._2.map(subV -> subV._6).sum().doubleValue(), sub._2.map(subV -> subV._7).sum().doubleValue()))
+      )).map(v -> Tuple.of(v._1, Tuple.of(predictOneType(v._2.map(sub -> Tuple.of(sub._1, sub._2)), year), predictOneType(v._2.map(sub -> Tuple.of(sub._1, sub._3)), year)))));
+    return ratios.map((k, v) -> Tuple.of(k, v.map(sub -> Tuple.of(sub._1, sub._2, sub._3.getMonthValue(), sub._4, sub._5,
+      predicts.get(k).get()._1.map(monPre -> Tuple.of(monPre._1, monPre._2 * sub._6)),
+      predicts.get(k).get()._2.map(monPre -> Tuple.of(monPre._1, monPre._2 * sub._7))))))
+      .flatMap(v -> v._2)
+      .flatMap(v -> v._6.zip(v._7).map(sub -> Tuple.of(v._1, v._2, xToLocaldate(sub._1._1).getMonthValue(), v._4, v._5, sub._1._2, sub._2._2)))
+      .sortBy(v -> v._1 * 10000 + v._3);
+  }
+
+  //input: Historical Seq<Tuple2<id,revenue/cost>>for one type
+  //output: Seq<Tuple2<id,revenue/cost>>for one type including future data
+  private Seq<Tuple2<Integer, Double>> predictOneType(Seq<Tuple2<Integer, Double>> monthlyData, int year) {
+    monthlyData = monthlyData.removeLast(v -> true);
+    LocalDate lastHisDay = xToLocaldate(monthlyData.last()._1);
+    for (int i = 0; i < (int) lastHisDay.until(LocalDate.now().withDayOfMonth(1).minusMonths(1), ChronoUnit.MONTHS); i++) {
+      monthlyData = monthlyData.append(Tuple.of(localDateToX(lastHisDay.plusMonths(i + 1)), 0D));
+    }
+    SimpleRegression simpleRegression = new SimpleRegression();
+    monthlyData.forEach(v -> simpleRegression.addData(v._1, v._2));
+    lastHisDay = xToLocaldate(monthlyData.last()._1);
+    for (int i = 0; i < (int) lastHisDay.until(LocalDate.of(LocalDate.now().getYear() + 1, 12, 1), ChronoUnit.MONTHS); i++) {
+      monthlyData = monthlyData.append(Tuple.of(localDateToX(lastHisDay.plusMonths(i + 1)), simpleRegression.predict(localDateToX(lastHisDay.plusMonths(i + 1)))));
+    }
+    return monthlyData.filter(v -> xToLocaldate(v._1).getYear() == year);
+  }
+
+  @Cacheable(cacheNames = "springCache", key = "'profitService.predict'+#siteId+'.'+#hospitalId+'.startDate'+#startDate+'.endDate'+#endDate+'.year'+#year")
+  public Seq<Tuple7<Integer, String, Integer, Integer, Integer, Double, Double>> predict(Integer siteId, Integer hospitalId, LocalDate startDate, LocalDate endDate, Integer year) {
+    Seq<Tuple7<Integer, String, LocalDate, Integer, Integer, Double, Double>> items = dataTransform(findRvnCstForForecast(siteId, hospitalId, startDate, endDate));
+    return predictRvnCst(ratios(items), items, year);
+  }
+
+  //for forecast rate
+  @Cacheable(cacheNames = "springCache", key = "'profitService.lastYearData'+#siteId+'.'+#hospitalId")
+  public Seq<Tuple7<Integer, String, Integer, Integer, Integer, Double, Double>> lastYearData(Integer siteId, Integer hospitalId) {
+    return List.ofAll(findRvnCstForForecast(siteId, hospitalId, LocalDate.now().minusYears(1).withDayOfYear(1), LocalDate.now().withDayOfYear(1).minusDays(1))
+      .map(v -> Tuple.of(v._1, v._2, v._3.getMonthValue(), v._4, v._5, v._6, v._7))
+      .toBlocking().toIterable());
   }
 
 }
