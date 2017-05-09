@@ -48,12 +48,9 @@ class Types extends ImmutableComponent<void, Props, void> {
     this.el = this.el || ReactDOM.render(
       <div style={style}>
         <div>{data.getIn(['data', 'type', 'name'])}</div>
-        {data.getIn(['data','items', 'data']).map(datum => (
-          <div key={datum.get('id')}>
-            <span>{this.props.parts.getIn([datum.get('id'), 'name'])}</span>
-            <span>{datum.get('count')}</span>
-          </div>
-        ))}
+        <div>
+          {data.getIn(['data', 'items', 'data']).reduce((prev, cur) => prev + cur.get('count'), 0)}
+        </div>
       </div>,
       document.createElement('div')
     )
@@ -90,6 +87,7 @@ class Types extends ImmutableComponent<void, Props, void> {
         cx={cx}
         cy={cy}
         innerRadius={minRadius}
+        outerRadius={maxRadius}
         startAngle={-15 / 180 * Math.PI}
         endAngle={-165 / 180 * Math.PI}
         groups={groups}

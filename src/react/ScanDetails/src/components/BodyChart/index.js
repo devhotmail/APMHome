@@ -25,32 +25,32 @@ class BodyChart extends ImmutableComponent<*, Props, *> {
     const partId = partFilter ? partFilter.get('value') : null
     const mapping = {
       1: {
-        translate: [-0.03 * width, 1 * width],
+        translate: [0, 1.05 * width],
         scale: 6,
         clipRadius: width * 0.15
       },
       2: {
-        translate: [-0.02 * width, 0.68 * width],
+        translate: [0, 0.7 * width],
         scale: 5,
         clipRadius: width * 0.15
       },
       3: {
-        translate: [-0.02 * width, 0.38 * width],
+        translate: [0, 0.38 * width],
         scale: 3.5,
         clipRadius: width * 0.15
       },
       4: {
-        translate: [-0.02 * width, 0.2 * width],
+        translate: [0, 0.2 * width],
         scale: 3.6,
         clipRadius: width * 0.15
       },
       5: {
-        translate: [-0.02 * width, 0.12 * width],
+        translate: [0, 0.12 * width],
         scale: 4,
         clipRadius: width * 0.15
       },
       6: {
-        translate: [-0.02 * width, 0.2 * width],
+        translate: [0, 0.2 * width],
         scale: 2,
         clipRadius: width * 0.15
       },
@@ -60,7 +60,7 @@ class BodyChart extends ImmutableComponent<*, Props, *> {
         clipRadius: width * 0.15
       },
       8: {
-        translate: [-0.02 * width, -0.15 * width],
+        translate: [0, -0.15 * width],
         scale: 1.5,
         clipRadius: width * 0.15
       },
