@@ -1,5 +1,4 @@
-import * as d3 from 'd3'
-
+import * as d3 from 'd3-hierarchy'
 const childKey = 'items'
 
 export default {
@@ -54,7 +53,6 @@ export default {
           })
         }
       } catch (err) {
-        console.log(err)
       }
     }
   },

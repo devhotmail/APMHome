@@ -1,6 +1,6 @@
 /* @flow */
 import React, { PureComponent } from 'react'
-import * as d3 from 'd3'
+import { scaleLinear } from 'd3-scale'
 
 import type { cursorT, NodeT } from '#/types'
 import { getCursor, isSameCursor, isFocusNode } from '#/utils'
@@ -154,11 +154,11 @@ export default class TreeNodes extends PureComponent<*, *, *> {
 
       var waveHeight = defaultWaveHeight
       if (percent + defaultWaveHeight > 1) {
-        var waveScaleY = d3.scaleLinear().range([0.035, 0.03]).domain([1 - defaultWaveHeight, 1])
+        var waveScaleY = scaleLinear().range([0.035, 0.03]).domain([1 - defaultWaveHeight, 1])
         waveHeight = waveScaleY(percent)
       }
       if (percent < defaultWaveHeight) {
-        var waveScaleY = d3.scaleLinear().range([0.035, 0.03]).domain([defaultWaveHeight, 0])
+        var waveScaleY = scaleLinear().range([0.035, 0.03]).domain([defaultWaveHeight, 0])
         waveHeight = waveScaleY(percent)
       }
 
