@@ -28,7 +28,7 @@ public class ExamSummitApi {
   @ResponseBody
   public ResponseEntity<? extends Map<String, Object>> brief(HttpServletRequest request) {
     examSummitService.testGenerate();
-    return ResponseEntity.accepted().body(ImmutableMap.of("status", "in progress"));
+    return ResponseEntity.accepted().body(ImmutableMap.of("status", "accepted"));
   }
 
 }

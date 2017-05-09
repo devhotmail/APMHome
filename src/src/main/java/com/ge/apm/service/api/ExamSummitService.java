@@ -7,6 +7,8 @@ import javaslang.Tuple2;
 import javaslang.Tuple5;
 import javaslang.collection.Stream;
 import org.apache.ibatis.jdbc.SQL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import rx.Observable;
@@ -19,6 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class ExamSummitService {
+  private static final Logger log = LoggerFactory.getLogger(ExamSummitService.class);
   private final List<LocalDate> dates = Stream.iterate(LocalDate.now().minusYears(3), d -> d.plusDays(1)).takeUntil(date -> date.isAfter(LocalDate.now())).toJavaList();
   private final String sql = new SQL().INSERT_INTO("exam_summit")
     .VALUES("site_id", ":siteId")
@@ -43,13 +46,13 @@ public class ExamSummitService {
   @PostConstruct
   public void init() {
     db = Database.from(connectionProvider);
-    assets = db.select(new SQL().SELECT("site_id", "hospital_id", "id", "asset_group", "clinical_dept_id").FROM("asset_info").ORDER_BY("id").toString()).getAs(Integer.class, Integer.class, Integer.class, Integer.class, Integer.class).map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4(), t._5())).cache();
-    partSteps = db.select(new SQL().SELECT("part_id", "id").FROM("proc_step").ORDER_BY("id").toString()).getAs(Integer.class, Integer.class).map(t -> Tuple.of(t._1(), t._2())).cache();
-    db.update(new SQL().DELETE_FROM("exam_summit").toString()).count().toBlocking().single();
   }
 
   @Async
   public void testGenerate() {
+    assets = db.select(new SQL().SELECT("site_id", "hospital_id", "id", "asset_group", "clinical_dept_id").FROM("asset_info").ORDER_BY("id").toString()).getAs(Integer.class, Integer.class, Integer.class, Integer.class, Integer.class).map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4(), t._5())).cache();
+    partSteps = db.select(new SQL().SELECT("part_id", "id").FROM("proc_step").ORDER_BY("id").toString()).getAs(Integer.class, Integer.class).map(t -> Tuple.of(t._1(), t._2())).cache();
+    db.update(new SQL().DELETE_FROM("exam_summit").toString()).count().toBlocking().single();
     Observable.from(dates)
       .flatMap(date -> assets.map(a -> new ClinicalSummit(a._1, a._2, a._3, a._5, a._4, 0, 0, 0, 0, date, date))).cache()
       .flatMap(c -> partSteps.map(p -> new ClinicalSummit(c.getSiteId(), c.getHospitalId(), c.getAssetId(), c.getDeptId(), c.getAssetGroup(), p._1, 0, p._2, 0, c.getCreated(), c.getLastModified())))
