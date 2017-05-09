@@ -57,7 +57,7 @@ class Brief extends ImmutableComponent<*, Props, *> {
           cx={cx - 0.1 * width}
           cy={cy}
           maxRadius={maxRadius}
-          minRadius={maxRadius * 0.8}
+          minRadius={maxRadius * 0.75}
           briefs={briefs}
           parts={parts}
           filters={filters}
@@ -65,8 +65,8 @@ class Brief extends ImmutableComponent<*, Props, *> {
         <Parts
           cx={cx - 0.1 * width}
           cy={cy}
-          maxRadius={maxRadius * 0.65}
-          minRadius={maxRadius * 0.55}
+          maxRadius={maxRadius * 0.7}
+          minRadius={maxRadius * 0.5}
           parts={parts}
           partScans={partScans}
           filters={filters}

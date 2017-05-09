@@ -146,6 +146,7 @@ class Parts extends ImmutableComponent<void, Props, void> {
         cx={cx}
         cy={cy}
         innerRadius={minRadius}
+        outerRadius={maxRadius}
         startAngle={-10 / 180 * Math.PI}
         endAngle={-170 / 180 * Math.PI}
         groups={groups}

@@ -14,6 +14,7 @@ type Props = {
   cx: number,
   cy: number,
   innerRadius: number,
+  outerRadius: number,
   startAngle: number,
   endAngle: number,
   groups: List<*>,
@@ -91,7 +92,7 @@ class AnnulusRing extends ImmutableComponent<*, Props, *> {
   onMouseLeave = data => e => this.props.onMouseLeave && this.props.onMouseLeave()
 
   render() {
-    const { cx, cy, innerRadius, startAngle, endAngle, groups, curPage, pageSize, showNext, showPrev } = this.props
+    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, groups, curPage, pageSize, showNext, showPrev } = this.props
     const angles = distribute(startAngle, endAngle, groups.size)
     const id = uuid()
     // console.log(path().arc(0, 0, 10000, startAngle, endAngle));
@@ -117,6 +118,7 @@ class AnnulusRing extends ImmutableComponent<*, Props, *> {
                 onClick={e => this.props.onGroupClick(group)}
                 key={group.get('id', index)}
                 innerRadius={innerRadius}
+                outerRadius={outerRadius}
                 text={group.get('text')}
                 {...angles[index]}
                 annuluses={group.get('annuluses')}
@@ -164,6 +166,7 @@ class AnnulusRing extends ImmutableComponent<*, Props, *> {
                       onMouseLeave={this.onMouseLeave(config.data)}
                       onClick={e => this.props.onGroupClick && this.props.onGroupClick(config.data)}
                       innerRadius={innerRadius}
+                      outerRadius={outerRadius}
                       text={config.data.get('text')}
                       extraText={config.data.get('extraText')}
                       startAngle={config.style.startAngle}

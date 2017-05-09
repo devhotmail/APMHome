@@ -135,6 +135,9 @@ class Detail extends ImmutableComponent<void, Props, void> {
       )
     const [ minCount, maxCount ] = getRange(countSums)
 
+    const innerRadius = 0.6 * maxRadius
+    const outerRadius = 0.9 * maxRadius
+
     const groups = details
       .map((detail, index) => {
         const data = detail.getIn(['items', 'data'])
@@ -142,7 +145,7 @@ class Detail extends ImmutableComponent<void, Props, void> {
           id: detail.getIn(['asset', 'id']),
           text: detail.getIn(['asset', 'name']),
           annuluses: data.map(datum => Immutable.fromJS(({
-            width: valueToCoordinate(datum.get('count'), [minCount, maxCount], [0.8 * maxRadius, maxRadius]),
+            width: valueToCoordinate(datum.get('count'), [minCount, maxCount], [innerRadius, outerRadius]),
             color: parts.getIn([datum.get('id'), 'color'])
           }))),
           data: detail
@@ -170,7 +173,7 @@ class Detail extends ImmutableComponent<void, Props, void> {
           text: detail.getIn(['step', 'name']),
           extraText: detail.getIn(['asset', 'name']),
           annuluses: [{
-            width: valueToCoordinate(count, sequenceCountRange, [0.8 * maxRadius, maxRadius]),
+            width: valueToCoordinate(count, sequenceCountRange, [innerRadius, outerRadius]),
             color: parts.getIn([detail.getIn(['part', 'id']), 'color'])
           }],
           data: detail
@@ -204,7 +207,8 @@ class Detail extends ImmutableComponent<void, Props, void> {
                   <AnnulusRing
                     cx={cx + 0.1 * width}
                     cy={cy}
-                    innerRadius={0.8 * maxRadius}
+                    innerRadius={innerRadius}
+                    outerRadius={outerRadius}
                     startAngle={0}
                     endAngle={Math.PI}
                     groups={groups.slice(0, PAGE_SIZE)}
@@ -225,7 +229,8 @@ class Detail extends ImmutableComponent<void, Props, void> {
                   <AnnulusRing
                     cx={cx + 0.1 * width}
                     cy={cy}
-                    innerRadius={0.8 * maxRadius}
+                    innerRadius={innerRadius}
+                    outerRadius={outerRadius}
                     startAngle={0}
                     endAngle={Math.PI}
                     groups={stepGroups.slice(0, PAGE_SIZE)}
