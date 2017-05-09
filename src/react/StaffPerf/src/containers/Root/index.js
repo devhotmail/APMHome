@@ -3,13 +3,13 @@ import { connect } from 'dva'
 
 import RoleProvider from '#/components/RoleProvider'
 import SizeProvider from '#/components/SizeProvider'
-import AnnulusChart from '#/components/AnnulusChart'
+import StackChart from '#/components/StackChart'
 import FilterBar from '#/components/FilterBar'
 import StatusBar from '#/components/StatusBar'
 
 import styles from './styles.scss'
 
-const Chart = SizeProvider(AnnulusChart)
+const Chart = SizeProvider(StackChart)
 
 class Root extends Component {
   render () {

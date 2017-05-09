@@ -18,6 +18,10 @@ export function debounce(func, wait = 500, immediate) {
   }
 }
 
+export const getRadian = (angle: number) => angle * Math.PI / 180
+
+export const getAngle = (radian: number) => radian * 180 / Math.PI
+
 export const add = (a: number, b: number): number => a + b
 
 export function round (value: number, precision:number = 1): number {

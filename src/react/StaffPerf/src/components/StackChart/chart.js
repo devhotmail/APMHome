@@ -2,26 +2,25 @@
 import React, { PureComponent } from 'react'
 import { scaleLinear } from 'd3-scale'
 
-import { margin } from '#/constants'
+import { margin, stackHeight, pageSize } from '#/constants'
+import { getRadian } from '#/utils'
 
 import ArcStack from '../ArcStack'
-
-const pageSize = 15
 
 const averageSpace = 360 / pageSize
 
 const barAngle = averageSpace * 0.75
 
-const mockData = Array(15).fill([0.1, 0.2, 0.3, 0.4])
-
-const getRadian = (angle: number) => angle * Math.PI / 180
+const mockData = Array(15).fill([0.2, 0.2, 0.2, 0.2])
 
 const scaleFn = (length: number) => {
-  if (length < 8) {
+  if (length === 1) {
+    return () => 0
+  } else if (length < 8) {
     const space = length / 2 * averageSpace
     return scaleLinear().range([-space, space]).domain([0, length - 1])
   } else {
-    return scaleLinear().range([-90, 270]).domain([0, length - 1])
+    return scaleLinear().range([-90, 270]).domain([0, length])
   }
 }
 
@@ -51,12 +50,10 @@ export default class Chart extends PureComponent<*, PropsT, *> {
                 const middleAngle = getAngle(i)
                 return <ArcStack
                   key={i}
-                  innerRadius={radius * 0.65}
-                  outerRadius={radius}
+                  innerRadius={radius - stackHeight}
                   startAngle={getRadian(middleAngle - barAngle / 2)}
                   endAngle={getRadian(middleAngle + barAngle / 2)}
-                  stackes={n}
-                />
+                  stackes={n.map(a => a * stackHeight)} />
               })
             }
           </g>

@@ -9,26 +9,26 @@ type PropsT = {
   outerRadius?: number,
   startAngle: number,
   endAngle: number,
-  width?: number,
   color?: string
 }
 
-export default class AnnulusSector extends PureComponent<void, PropsT, void> {
+export default class ArcBar extends PureComponent<void, PropsT, void> {
   render() {
     const {
       innerRadius, outerRadius,
       startAngle, endAngle,
-      width, color
+      width, color,
+      ...restProps
     } = this.props
 
     const d = arc()
       .innerRadius(innerRadius)
-      .outerRadius(outerRadius || innerRadius + width)
+      .outerRadius(outerRadius)
       .startAngle(startAngle)
       .endAngle(endAngle)()
 
     return (
-      <path className={styles.path} fill={color} d={d}/>
+      <path className={styles.path} fill={color} d={d} {...restProps} />
     )
   }
 }
