@@ -135,12 +135,12 @@ public class HealthApi {
   }
 
   private String getHref(Integer category, HttpServletRequest request, Integer count) {
-	  
+
 	  if (count==0)
 		  return "";
-		  
+
 	  String baseurl = request.getRequestURL().toString().substring(0, request.getRequestURL().toString().indexOf("/api/health"));
-	  
+
 	  switch (category) {
       case 0:
       case 1:
@@ -160,7 +160,10 @@ public class HealthApi {
       case 14:
       case 15:
       case 16:
-        return String.format("%s%s", baseurl, redirect_1);
+        if (request.getQueryString()==null)
+          return String.format("%s?%s%s", request.getRequestURL().toString(), "category=", category-10);
+        else
+          return String.format("%s?%s%s&%s", request.getRequestURL().toString(), "category=", category-10, request.getQueryString());
 
       case 20:
         return String.format("%s%s", baseurl, redirect_2);
@@ -423,7 +426,7 @@ public class HealthApi {
   }
 
   private ImmutableList<ImmutableMap<String, Object>> jsonCategories(
-	HttpServletRequest request,
+    HttpServletRequest request,
     Observable<Tuple6<Integer, String, Integer, String, String, Integer>> asset_health_1,
     Observable<Tuple5<Integer, String, String, Integer, Integer>> asset_health_2,
     Observable<Tuple4<Integer, String, String, Integer>> asset_health_3,
@@ -441,7 +444,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("branch"))
-            .put("href", getHref(1, request, queryForCount(asset_health_1)))
+            .put("href", getHref(11, request, queryForCount(asset_health_1)))
             .build())
         .build())
 
@@ -453,7 +456,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("branch"))
-            .put("href", getHref(2, request, queryForCount(asset_health_2)))
+            .put("href", getHref(12, request, queryForCount(asset_health_2)))
             .build())
         .build())
 
@@ -465,7 +468,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("branch"))
-            .put("href", getHref(3, request, queryForCount(asset_health_3)))
+            .put("href", getHref(13, request, queryForCount(asset_health_3)))
             .build())
         .build())
 
@@ -477,7 +480,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("branch"))
-            .put("href", getHref(4, request, queryForCount(asset_health_4)))
+            .put("href", getHref(14, request, queryForCount(asset_health_4)))
             .build())
         .build())
 
@@ -489,7 +492,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("branch"))
-            .put("href", getHref(5, request, queryForCount(asset_health_5)))
+            .put("href", getHref(15, request, queryForCount(asset_health_5)))
             .build())
         .build())
 
@@ -501,7 +504,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("branch"))
-            .put("href", getHref(6, request, queryForCount(asset_health_6)))
+            .put("href", getHref(16, request, queryForCount(asset_health_6)))
             .build())
         .build())
 

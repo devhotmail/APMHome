@@ -1,0 +1,27 @@
+{
+  "presets": [
+    ["env", { "modules": false }],
+    "react",
+    "stage-0",
+    "flow"
+  ],
+  "plugins":[
+    "transform-decorators-legacy",
+    "transform-object-assign",
+    [
+      "import",
+      [
+        {
+          "libraryName": "antd",
+          "style": true
+        }
+      ]
+    ]
+  ],
+  "comments": false,
+  "env": {
+    "development": {
+      "presets": ["react-hmre"]
+    }
+  }
+}
