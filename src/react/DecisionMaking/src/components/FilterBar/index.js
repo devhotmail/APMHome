@@ -17,7 +17,7 @@ export default class FilterBar extends Component {
       {
         [currentYear, currentYear + 1].map(year => {
           return <Menu.Item key={year}>
-            <span>{year}</span>
+            <span>{year}年预测</span>
           </Menu.Item>
         })
       }
@@ -30,7 +30,7 @@ export default class FilterBar extends Component {
         <div className={styles.year}>
           <Dropdown overlay={menu} trigger={['click']} placement='bottomCenter'>
             <Button>
-              { query.year || currentYear } <Icon type="down" />
+              { query.year || currentYear }年预测 <Icon type="down" />
             </Button>
           </Dropdown>
         </div>
