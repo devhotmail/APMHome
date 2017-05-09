@@ -1,5 +1,5 @@
 /* @flow */
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { Table, Icon, Button } from 'antd'
 
 import ConfigDept from '../ConfigDept'
@@ -12,14 +12,9 @@ import Suggestions from '../Suggestions'
 
 import styles from './styles.scss'
 
-export default class ManualPanel extends Component {
-  state = {
-    showFocus: false
-  }
-
+export default class ManualPanel extends PureComponent {
   render () {
-    const { showFocus } = this.state
-    const { config, focus: { node }, loading } = this.props
+    const { config, focus: { node }, loading, configed } = this.props
     if (!config || !config.length) return null
     if (!focus) return null
 
@@ -54,7 +49,7 @@ export default class ManualPanel extends Component {
           </Button>
         </div>
         {
-          showFocus && node
+          configed && node
             ? this.renderFocusInfo(node.data)
             : null
         }
@@ -93,11 +88,7 @@ export default class ManualPanel extends Component {
         resolve,
         reject
       })
-    }).then(() => {
-      this.setState({
-        showFocus: true
-      })
-    })
+    }).then(this.props.markConfiged)
   }
 
   handleSetFocus = cursor => {
