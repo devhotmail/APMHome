@@ -2,7 +2,7 @@
 import React from 'react'
 import * as Immutable from 'immutable'
 import ImmutableComponent from '#/components/ImmutableComponent'
-import { arc } from 'd3'
+import { arc } from 'd3-shape'
 
 type Props = {
   innerRadius: number,

@@ -30,7 +30,7 @@ type Position = {
   endAngle: number
 }
 
-const MAX_GROUP_ANGLE = 15 * Math.PI / 180
+const MAX_GROUP_ANGLE = 10 * Math.PI / 180
 
 function distribute(startAngle: number, endAngle: number, count: number): Position[]  {
   const span = endAngle - startAngle

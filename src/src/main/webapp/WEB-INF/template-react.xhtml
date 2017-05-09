@@ -10,6 +10,8 @@
     <ui:include src="../commonHead.xhtml"/>
     <title>GE APM</title>
 
+    <!-- web components shim -->
+    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
     <link rel="stylesheet" type="text/css" href="css/shell.css" />
 
     <!-- PF UI scripts -->
@@ -39,6 +41,7 @@
     <div class="layout-wrapper #{guestPreferences.menuLayout}">
         <ui:include src="./menu.xhtml"/>
         <div class="layout-main">
+            <link id="main-element-import" rel="import" href="loader.html" />
             <ui:insert name="elements"/>
             <ui:insert name="content"/>
         </div>
