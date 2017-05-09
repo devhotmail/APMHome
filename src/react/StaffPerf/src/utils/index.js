@@ -1,6 +1,23 @@
 /* @flow */
 import type { NodeT, cursorT } from '#/types'
 
+export function getSum(arr: Array<number>) {
+  return arr.reduce((a, b) => a + b, 0)
+}
+
+export function debounce(func, wait = 500, immediate) {
+  let timeout
+  return function() {
+    const args = arguments
+    const later = () => {
+      timeout = null
+      if (!immediate) func.apply(this, args)
+    }
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+  }
+}
+
 export const add = (a: number, b: number): number => a + b
 
 export function round (value: number, precision:number = 1): number {
@@ -19,17 +36,4 @@ export const isSameCursor = (a: cursorT, b: cursorT): boolean => {
 
 export const isFocusNode = (node: NodeT, cursor: cursorT): boolean => {
   return isSameCursor(getCursor(node), cursor)
-}
-
-export function debounce(func, wait = 500, immediate) {
-  let timeout
-  return function() {
-    const args = arguments
-    const later = () => {
-      timeout = null
-      if (!immediate) func.apply(this, args)
-    }
-    clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
-  }
 }
