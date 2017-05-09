@@ -7,184 +7,184 @@ import { groupBy, pickBy } from 'lodash'
 import axios from 'axios'
 import { randRange } from '#/utils'
 import { COLORS, PAGE_SIZE } from '#/constants'
-
-type Type = {
-  id: number|string,
-  name: string
-}
-
-type Part = {
-  id: number|string,
-  name: '头部'|'胸部'| '腹部'|'脊柱'|'血管照影'|'大部位'|'第七个部位'|'最后一个部位'
-}
-
-type Subpart = {
-  id: number|string,
-  name: string
-}
-
-type Sequence = {
-  id: number|string,
-  name: string
-}
-
-type Asset = {
-  id: number|string,
-  name: string
-}
-
-type Scan = {
-  id: number|string,
-  type: Type,
-  part: Part,
-  subpart?: Subpart,
-  sequence: Sequence,
-  asset: Asset
-}
-
-const types = ['CT', 'MRI', '超声', 'DR', '乳腺仪', '胃肠X光机器', '第七个类型', '第八个类型', '其他']
-const parts = ['头部', '胸部',  '腹部', '脊柱', '血管照影', '大部位'
-  // , '第七个部位', '最后一个部位'
-]
-
-const scans: Scan[] = []
-
-for (let i = 0; i < ~~randRange(200, 400); i++) {
-  const typeIndex = ~~randRange(0, types.length)
-  const partIndex = ~~randRange(0, parts.length)
-  const subpartIndex = ~~randRange(0, 100)
-  const sequenceIndex = ~~randRange(0, 100)
-  const assetIndex = ~~randRange(0, 100)
-  const scan: Scan = {
-    id: i,
-    type: {
-      id: typeIndex,
-      name: types[typeIndex]
-    },
-    part: {
-      id: partIndex,
-      name: parts[partIndex]
-    },
-    subpart: {
-      id: subpartIndex,
-      name: `subpart ${subpartIndex}`
-    },
-    sequence: {
-      id: sequenceIndex,
-      name: `sequence ${sequenceIndex}`
-    },
-    asset: {
-      id: assetIndex,
-      name: `assetIndex ${assetIndex}`
-    }
-  }
-  scans.push(scan)
-}
-
-
-type BriefItems = {
-  desc: Part[],
-  data: {
-    id: string|number,
-    count: number
-  }[]
-}
-
-type Brief = {
-  type: {
-    id: number|string,
-    name: string
-  },
-  items: BriefItems
-}
-
-type BriefResponse = {
-  brief: Brief[]
-}
-
-
-function fetchBrief(endpoint?: string): Promise<BriefResponse> {
-  return new Promise((resolve, reject) => {
-    type GroupedScans = {
-      [string|number]: Scan[]
-    }
-    const groupedScans = groupBy(scans, scan => scan.type.id)
-
-    const groupedAgainByPart = Object.keys(groupedScans).map((typeId: string|number): GroupedScans => groupBy(groupedScans[typeId], scan => scan.part.id))
-
-
-    const res = groupedAgainByPart.map(groupedByParts => ({
-      // $FlowFixMe
-      type: Object.values(groupedByParts)[0][0].type,
-      items: {
-        // $FlowFixMe
-        desc: Object.values(groupedByParts).map((value: Scan[]): Part => value[0].part),
-        data: Object.values(groupedByParts).map(value => ({
-          // $FlowFixMe
-          id: value[0].part.id,
-          // $FlowFixMe
-          count: value.length
-        }))
-      }
-    }))
-
-    resolve({
-      brief: res
-    })
-  })
-}
-
-function fetchDetail(endpoint: string = '', filters: Array<{key: string, value: string|number}> = [], groupByKey?: 'sequence', start?: number, limit?: number): Promise<*> {
-  return new Promise((resolve, reject) => {
-    const filteredScans = scans.filter(scan => filters.reduce((prev, cur) => prev && scan[cur.key].id === cur.value, true))
-    if (!groupByKey) {
-      const groupedByAsset = groupBy(filteredScans, scan => scan.asset.id)
-      const res = Object.keys(groupedByAsset).map(key => ({
-        // $FlowFixMe
-        type: groupedByAsset[key][0].type,
-        // $FlowFixMe
-        asset: groupedByAsset[key][0].asset,
-        items: {
-          // $FlowFixMe
-          desc: Object.values(groupBy(groupedByAsset[key], scan => scan.part.id)).map(value => value[0].part),
-          data: Object.values(groupBy(groupedByAsset[key], scan => scan.part.id)).map(value => ({
-            // $FlowFixMe
-            id: value[0].part.id,
-            // $FlowFixMe
-            count: value.length
-          }))
-        }
-      }))
-      resolve({
-        dom: res
-      })
-    } else {
-      const groupedBySequence = groupBy(filteredScans, scan => scan.sequence.id)
-      const res = Object.keys(groupedBySequence).map(sequenceId => ({
-        // $FlowFixMe
-        type: groupedBySequence[sequenceId][0].type,
-        // $FlowFixMe
-        asset: groupedBySequence[sequenceId][0].asset,
-        // $FlowFixMe
-        sequence: groupedBySequence[sequenceId][0].sequence,
-        // $FlowFixMe
-        part: groupedBySequence[sequenceId][0].part,
-        items: {
-          // $FlowFixMe
-          desc: [groupedBySequence[sequenceId][0].part],
-          data: [{
-            // $FlowFixMe
-            id: groupedBySequence[sequenceId][0].part.id,
-            count: groupedBySequence[sequenceId].length
-          }]
-        }
-      }))
-      resolve({
-        dom: res
-      })
-    }
-  })
-}
+//
+// type Type = {
+//   id: number|string,
+//   name: string
+// }
+//
+// type Part = {
+//   id: number|string,
+//   name: '头部'|'胸部'| '腹部'|'脊柱'|'血管照影'|'大部位'|'第七个部位'|'最后一个部位'
+// }
+//
+// type Subpart = {
+//   id: number|string,
+//   name: string
+// }
+//
+// type Sequence = {
+//   id: number|string,
+//   name: string
+// }
+//
+// type Asset = {
+//   id: number|string,
+//   name: string
+// }
+//
+// type Scan = {
+//   id: number|string,
+//   type: Type,
+//   part: Part,
+//   subpart?: Subpart,
+//   sequence: Sequence,
+//   asset: Asset
+// }
+//
+// const types = ['CT', 'MRI', '超声', 'DR', '乳腺仪', '胃肠X光机器', '第七个类型', '第八个类型', '其他']
+// const parts = ['头部', '胸部',  '腹部', '脊柱', '血管照影', '大部位'
+//   // , '第七个部位', '最后一个部位'
+// ]
+//
+// const scans: Scan[] = []
+//
+// for (let i = 0; i < ~~randRange(200, 400); i++) {
+//   const typeIndex = ~~randRange(0, types.length)
+//   const partIndex = ~~randRange(0, parts.length)
+//   const subpartIndex = ~~randRange(0, 100)
+//   const sequenceIndex = ~~randRange(0, 100)
+//   const assetIndex = ~~randRange(0, 100)
+//   const scan: Scan = {
+//     id: i,
+//     type: {
+//       id: typeIndex,
+//       name: types[typeIndex]
+//     },
+//     part: {
+//       id: partIndex,
+//       name: parts[partIndex]
+//     },
+//     subpart: {
+//       id: subpartIndex,
+//       name: `subpart ${subpartIndex}`
+//     },
+//     sequence: {
+//       id: sequenceIndex,
+//       name: `sequence ${sequenceIndex}`
+//     },
+//     asset: {
+//       id: assetIndex,
+//       name: `assetIndex ${assetIndex}`
+//     }
+//   }
+//   scans.push(scan)
+// }
+//
+//
+// type BriefItems = {
+//   desc: Part[],
+//   data: {
+//     id: string|number,
+//     count: number
+//   }[]
+// }
+//
+// type Brief = {
+//   type: {
+//     id: number|string,
+//     name: string
+//   },
+//   items: BriefItems
+// }
+//
+// type BriefResponse = {
+//   brief: Brief[]
+// }
+//
+//
+// function fetchBrief(endpoint?: string): Promise<BriefResponse> {
+//   return new Promise((resolve, reject) => {
+//     type GroupedScans = {
+//       [string|number]: Scan[]
+//     }
+//     const groupedScans = groupBy(scans, scan => scan.type.id)
+//
+//     const groupedAgainByPart = Object.keys(groupedScans).map((typeId: string|number): GroupedScans => groupBy(groupedScans[typeId], scan => scan.part.id))
+//
+//
+//     const res = groupedAgainByPart.map(groupedByParts => ({
+//       // $FlowFixMe
+//       type: Object.values(groupedByParts)[0][0].type,
+//       items: {
+//         // $FlowFixMe
+//         desc: Object.values(groupedByParts).map((value: Scan[]): Part => value[0].part),
+//         data: Object.values(groupedByParts).map(value => ({
+//           // $FlowFixMe
+//           id: value[0].part.id,
+//           // $FlowFixMe
+//           count: value.length
+//         }))
+//       }
+//     }))
+//
+//     resolve({
+//       brief: res
+//     })
+//   })
+// }
+//
+// function fetchDetail(endpoint: string = '', filters: Array<{key: string, value: string|number}> = [], groupByKey?: 'sequence', start?: number, limit?: number): Promise<*> {
+//   return new Promise((resolve, reject) => {
+//     const filteredScans = scans.filter(scan => filters.reduce((prev, cur) => prev && scan[cur.key].id === cur.value, true))
+//     if (!groupByKey) {
+//       const groupedByAsset = groupBy(filteredScans, scan => scan.asset.id)
+//       const res = Object.keys(groupedByAsset).map(key => ({
+//         // $FlowFixMe
+//         type: groupedByAsset[key][0].type,
+//         // $FlowFixMe
+//         asset: groupedByAsset[key][0].asset,
+//         items: {
+//           // $FlowFixMe
+//           desc: Object.values(groupBy(groupedByAsset[key], scan => scan.part.id)).map(value => value[0].part),
+//           data: Object.values(groupBy(groupedByAsset[key], scan => scan.part.id)).map(value => ({
+//             // $FlowFixMe
+//             id: value[0].part.id,
+//             // $FlowFixMe
+//             count: value.length
+//           }))
+//         }
+//       }))
+//       resolve({
+//         dom: res
+//       })
+//     } else {
+//       const groupedBySequence = groupBy(filteredScans, scan => scan.sequence.id)
+//       const res = Object.keys(groupedBySequence).map(sequenceId => ({
+//         // $FlowFixMe
+//         type: groupedBySequence[sequenceId][0].type,
+//         // $FlowFixMe
+//         asset: groupedBySequence[sequenceId][0].asset,
+//         // $FlowFixMe
+//         sequence: groupedBySequence[sequenceId][0].sequence,
+//         // $FlowFixMe
+//         part: groupedBySequence[sequenceId][0].part,
+//         items: {
+//           // $FlowFixMe
+//           desc: [groupedBySequence[sequenceId][0].part],
+//           data: [{
+//             // $FlowFixMe
+//             id: groupedBySequence[sequenceId][0].part.id,
+//             count: groupedBySequence[sequenceId].length
+//           }]
+//         }
+//       }))
+//       resolve({
+//         dom: res
+//       })
+//     }
+//   })
+// }
 
 type Action = {
   type: string,
@@ -212,6 +212,35 @@ type Subscription = ({
 
 type Subscriptions = {
   [string]: Subscription
+}
+
+function* getBrief(actionType, params = {}, { put, call, select }) {
+  try {
+    const scans = yield select(({ scans }) => scans)
+    const from = scans.getIn(['range', 'from'])
+    const to = scans.getIn(['range', 'to'])
+    const dept = scans.get('deptSelected')
+    const { data } = yield call(
+      axios.get,
+      process.env.NODE_ENV === 'production' ? '/api/scan/brief' : '/geapm/api/scan/brief',
+      {
+        params: pickBy({
+          from,
+          to,
+          dept
+        })
+      }
+    )
+    yield put({
+      type: `${actionType}/succeeded`,
+      payload: data.brief
+    })
+  } catch(err) {
+    yield put({
+      type: `${actionType}/failed`,
+      payload: err
+    })
+  }
 }
 
 function* getDetails(actionType, params = {}, { put, call, select }) {
@@ -257,6 +286,12 @@ function* getDetails(actionType, params = {}, { put, call, select }) {
   }
 }
 
+const isHeadEl = document.querySelector('#user-context #isHead')
+const isHead = isHeadEl ? JSON.parse(isHeadEl.value) : false
+
+const orgIdEl = document.querySelector('#user-context #orgId')
+const orgId = isHead ? undefined : parseInt(orgIdEl.value)
+
 export default {
   namespace: 'scans',
   state: Immutable.Map({
@@ -272,34 +307,11 @@ export default {
     detailsCurPage: 0,
     detailsByStepCurPage: 0,
     pageSize: 15,
-    depts: Immutable.fromJS([{"id":5,"parent_id":2,"site_id":2,"hospital_id":2,"name":"超声室","name_en":"cariology Dept"},{"id":6,"parent_id":2,"site_id":2,"hospital_id":2,"name":"设备科","name_en":"Asset Dept"},{"id":4,"parent_id":2,"site_id":2,"hospital_id":2,"name":"放射科","name_en":""}])
+    deptSelected: orgId,
+    depts: Immutable.List()
   }),
   subscriptions: ({
     setup({ dispatch }) {
-      dispatch({
-        type: 'brief/get',
-        payload: {
-          from: '2016-01-01',
-          to: '2017-01-01'
-        }
-      })
-      // dispatch({
-      //   type: 'detail/get',
-      //   payload: {
-      //     from: '2016-01-01',
-      //     to: '2017-01-01',
-      //     groupby: 'asset'
-      //   }
-      // })
-      // dispatch({
-      //   type: 'detailByStep/get',
-      //   payload: {
-      //     from: '2016-01-01',
-      //     to: '2017-01-01',
-      //     groupby: 'step',
-      //     type: 2
-      //   }
-      // })
       dispatch({
         type: 'depts/get'
       })
@@ -323,23 +335,28 @@ export default {
         })
       }
     },
-    *['brief/get']({ payload }, { call, put }) {
-      try {
-        const { data } = yield call(
-          axios.get,
-          process.env.NODE_ENV === 'production' ? '/api/scan/brief' : '/geapm/api/scan/brief',
-          { params: payload }
-        )
-        yield put({
-          type: 'brief/get/succeeded',
-          payload: data.brief
-        })
-      } catch(err) {
-        yield put({
-          type: 'brief/get/failed',
-          payload: err
-        })
-      }
+    *['brief/get']({ payload }, effects) {
+      yield* getBrief(
+        'brief/get',
+        null,
+        effects
+      )
+      // try {
+      //   const { data } = yield call(
+      //     axios.get,
+      //     process.env.NODE_ENV === 'production' ? '/api/scan/brief' : '/geapm/api/scan/brief',
+      //     { params: payload }
+      //   )
+      //   yield put({
+      //     type: 'brief/get/succeeded',
+      //     payload: data.brief
+      //   })
+      // } catch(err) {
+      //   yield put({
+      //     type: 'brief/get/failed',
+      //     payload: err
+      //   })
+      // }
     },
     *['detail/get']({ payload }, effects){
       yield* getDetails(
@@ -381,103 +398,75 @@ export default {
         effects
       )
     },
-    *['range/change'](_, effects) {
-      yield effects.put({
+    *['range/change'](_, { put }) {
+      yield put({
         type: 'reset'
       })
-      yield* getDetails(
-        'detail/get',
-        {
+      yield put({
+        type: 'brief/get'
+      })
+      yield put({
+        type: 'detail/get',
+        payload: {
           groupby: 'asset',
           pageNum: 0,
           pageSize: PAGE_SIZE
-        },
-        effects
-      )
-      yield* getDetails(
-        'detailByStep/get',
-        {
+        }
+      })
+      yield put({
+        type: 'detailByStep/get',
+        payload: {
           groupby: 'step',
           pageNum: 0,
           pageSize: PAGE_SIZE
-        },
-        effects
-      )
+        }
+      })
     },
-    *['dept/set'](_, effects) {
-      yield effects.put({
+    *['dept/set'](_, { put }) {
+      yield put({
         type: 'reset'
       })
-      yield* getDetails(
-        'detail/get',
-        {
+      yield put({
+        type: 'brief/get'
+      })
+      yield put({
+        type: 'detail/get',
+        payload: {
           groupby: 'asset',
           pageNum: 0,
           pageSize: PAGE_SIZE
-        },
-        effects
-      )
-      yield* getDetails(
-        'detailByStep/get',
-        {
+        }
+      })
+      yield put({
+        type: 'detailByStep/get',
+        payload: {
           groupby: 'step',
           pageNum: 0,
           pageSize: PAGE_SIZE
-        },
-        effects
-      )
+        }
+      })
     },
-    *['filters/toggle'](_, effects) {
-      yield effects.put({
+    *['filters/toggle'](_, { put }) {
+      yield put({
         type: 'reset'
       })
-      yield* getDetails(
-        'detail/get',
-        {
+      yield put({
+        type: 'detail/get',
+        payload: {
           groupby: 'asset',
           pageNum: 0,
           pageSize: PAGE_SIZE
-        },
-        effects
-      )
-      yield* getDetails(
-        'detailByStep/get',
-        {
+        }
+      })
+      yield put({
+        type: 'detailByStep/get',
+        payload: {
           groupby: 'step',
           pageNum: 0,
           pageSize: PAGE_SIZE
-        },
-        effects
-      )
+        }
+      })
     }
-    // addWatcher: [ function* (effects) {
-    //   const payload = yield effects.takeLatest(
-    //     [
-    //       'scans/range/change',
-    //       'scans/filters/toggle'
-    //     ],
-    //     function* (action) {
-    //       yield* getDetails(
-    //         'detail/get',
-    //         {
-    //           groupby: 'asset',
-    //           pageNum: 0,
-    //           pageSize: 15
-    //         },
-    //         effects
-    //       )
-    //       yield* getDetails(
-    //         'detailByStep/get',
-    //         {
-    //           groupby: 'step',
-    //           pageNum: 0,
-    //           pageSize: 15
-    //         },
-    //         effects
-    //       )
-    //     }
-    //   )
-    // }, { type: 'watcher'}]
   }: Effects),
   reducers: ({
     ['dept/set'](state, { payload }) {
