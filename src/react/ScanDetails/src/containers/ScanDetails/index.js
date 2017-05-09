@@ -72,7 +72,7 @@ class ScanDetails extends ImmutableComponent<void, {scans: Map<string, any>}, vo
               ))
             }
           </Select>
-          :null
+          : null
         }
         <BodyChart className={styles['body-chart']} scans={scans} dispatch={this.props.dispatch} />
       </div>
