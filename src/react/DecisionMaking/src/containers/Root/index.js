@@ -27,8 +27,8 @@ class Root extends Component {
           : <div className={styles.content}>
             <div className={styles.main}>
               <div className={styles.chartWrapper}>
-              <Chart />
-            </div>
+                <Chart />
+              </div>
             </div>
             <div className={styles.sidebar}>
               <SidePanel />

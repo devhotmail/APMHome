@@ -1,7 +1,8 @@
 /* @flow */
 import React, { Component } from 'react'
 import { connect } from 'dva'
-import * as d3 from 'd3'
+import { transition } from 'd3-transition'
+import { interpolateZoom } from 'd3-interpolate'
 import raf from 'raf'
 
 import type { cursorT } from '#/types'
@@ -126,9 +127,9 @@ class extends Component {
 
   setView = (focus: Object) => {
     const nextView = this.getView(focus)
-    const i = d3.interpolateZoom(this.state.view, nextView)
+    const i = interpolateZoom(this.state.view, nextView)
 
-    d3.transition()
+    transition()
     .duration(750)
     .tween('zoom', () => t => {
       this.setState({
@@ -163,19 +164,5 @@ class extends Component {
 
   getView = (node: Object) => {
     return [node.x, node.y, node.r]
-  }
-
-  getNodes = (data, diameter) => {
-    const pack = d3.pack()
-    .size([diameter - margin, diameter - margin])
-    .padding(2)
-
-    const root = d3.hierarchy(data, d => d.items)
-    .sum(d => d[sizeKey])
-    .sort((a, b) => b.value - a.value)
-
-    const nodes = pack(root).descendants()
-
-    return nodes
   }
 }
