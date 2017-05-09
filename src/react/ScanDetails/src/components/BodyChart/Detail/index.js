@@ -127,7 +127,7 @@ class Detail extends ImmutableComponent<void, Props, void> {
     const { width, height } = clientRect
     const cx = width / 2
     const cy = height / 2
-    const maxRadius = Math.min.call(null, height * 0.7 / 2, width * 0.6 / 2)
+    const maxRadius = Math.min.call(null, height * 0.95 / 2, width * 0.95 / 2)
     const countSums = details
       .map(detail => detail
         .getIn(['items', 'data'])
