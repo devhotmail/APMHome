@@ -43,7 +43,7 @@
                 <p:menuitem id="um21" value="#{msg.SparePartsConsumptionAnalysis}" rendered="false"
                             outcome="/home"/>
                 <p:menuitem id="um23" value="#{msg.AdvancedDeviceInfoTracking}"
-                            outcome="/portal/analysis/deviceOperationMonitorAll"/>
+                            outcome="/portal/analysis/scanDetails"/>
             </p:submenu>
             <p:submenu id="um24" label="#{msg.PreventiveMaintainceMgmt}" icon="fa fa-check-square-o"
                        rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
