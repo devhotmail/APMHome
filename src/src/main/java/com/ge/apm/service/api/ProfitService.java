@@ -73,6 +73,19 @@ public class ProfitService {
       .toJavaMap();
   }
 
+  //output:type,dept,month
+  public static Seq<Tuple5<Option<Integer>, Option<Integer>, Option<Integer>, Option<Double>, Option<Double>>> parseJson(String s) {
+    Config parsedBody = ConfigFactory.parseString(s);
+    return List.ofAll(Try.of(() -> parsedBody.getConfigList("config")).get())
+      .map(v -> Tuple.of(
+        Option.of(Ints.tryParse(Try.of(() -> v.getString("type")).getOrElse(""))),
+        Option.of(Ints.tryParse(Try.of(() -> v.getString("dept")).getOrElse(""))),
+        Option.of(Ints.tryParse(Try.of(() -> v.getString("month")).getOrElse(""))),
+        Option.of(Doubles.tryParse(Try.of(() -> v.getString("revenue_rate")).getOrElse(""))),
+        Option.of(Doubles.tryParse(Try.of(() -> v.getString("cost_rate")).getOrElse("")))
+      ));
+  }
+
   //input: Tuple2<future,past>
   public static double calcIncRate(Observable<Tuple2<Double, Double>> items) {
     double past = items.reduce(0D, (init, v) -> init + v._2).toBlocking().single();

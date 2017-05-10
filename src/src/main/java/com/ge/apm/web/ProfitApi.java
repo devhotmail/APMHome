@@ -227,8 +227,7 @@ public class ProfitApi {
     Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> months = Observable.from(commonService.findFields(user.getSiteId(), "month").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
-    Map<Integer, Double> userRvn = ProfitService.parseInputJson(inputBody, "id", "revenue_rate");
-    Map<Integer, Double> userCst = ProfitService.parseInputJson(inputBody, "id", "cost_rate");
+    Seq<Tuple5<Option<Integer>, Option<Integer>, Option<Integer>, Option<Double>, Option<Double>>> userPre = ProfitService.parseJson(inputBody);
     log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (!(Option.of(from).isDefined() && Option.of(to).isDefined() && LocalDate.parse(from).compareTo(LocalDate.now().minusYears(3)) >= 0)) {
       if (Range.closed(DateTime.now().getYear() - 3, DateTime.now().plusYears(1).getYear()).contains(year)) {
@@ -245,7 +244,7 @@ public class ProfitApi {
     if (Option.of(groupBy).isDefined() && Option.of(type).isEmpty() && Option.of(month).isEmpty()) {
       return serialize(request, groups, depts, months,
         aggregateCstRvnByGroup(userPredict(profitService.predict(user.getSiteId(), user.getHospitalId(), LocalDate.now().withDayOfYear(1).minusYears(2), LocalDate.now(), startDate.getYear()),
-          profitService.lastYearData(user.getSiteId(), user.getHospitalId()), userRvn, userCst),
+          profitService.lastYearData(user.getSiteId(), user.getHospitalId()), userPre),
           groups, depts, months, groupBy)
           .map(v -> Tuple.of(v._1, v._2, CNY.money(v._3), CNY.money(v._4))),
         startDate, endDate, groupBy, type, dept, month, limit, start);
@@ -254,7 +253,7 @@ public class ProfitApi {
       (Option.of(groupBy).isEmpty() && Option.of(month).isEmpty() && Option.of(type).isEmpty() && Option.of(dept).isEmpty())) {
       return serialize(request, groups, depts, months,
         filterCstRvnByGroup(userPredict(profitService.predict(user.getSiteId(), user.getHospitalId(), LocalDate.now().withDayOfYear(1).minusYears(2), LocalDate.now(), startDate.getYear()),
-          profitService.lastYearData(user.getSiteId(), user.getHospitalId()), userRvn, userCst),
+          profitService.lastYearData(user.getSiteId(), user.getHospitalId()), userPre),
           type, dept, month),
         startDate, endDate, groupBy, type, dept, month, limit, start);
     } else {
@@ -356,8 +355,7 @@ public class ProfitApi {
     Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> months = Observable.from(commonService.findFields(user.getSiteId(), "month").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
-    Map<Integer, Double> userRvn = ProfitService.parseInputJson(inputBody, "id", "revenue_rate");
-    Map<Integer, Double> userCst = ProfitService.parseInputJson(inputBody, "id", "cost_rate");
+    Seq<Tuple5<Option<Integer>, Option<Integer>, Option<Integer>, Option<Double>, Option<Double>>> userPre = ProfitService.parseJson(inputBody);
     log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (!(Option.of(from).isDefined() && Option.of(to).isDefined() && LocalDate.parse(from).compareTo(LocalDate.now().minusYears(3)) >= 0)) {
       if (Range.closed(DateTime.now().getYear() - 3, DateTime.now().plusYears(1).getYear()).contains(year)) {
@@ -373,7 +371,7 @@ public class ProfitApi {
     if (Option.of(groupBy).isDefined() && Option.of(type).isEmpty() && Option.of(month).isEmpty()) {
       return serializeRate(request, groups, depts, months,
         cstRvnRateByGroup(userPredict(profitService.predict(user.getSiteId(), user.getHospitalId(), LocalDate.now().withDayOfYear(1).minusYears(2), LocalDate.now(), startDate.getYear()),
-          profitService.lastYearData(user.getSiteId(), user.getHospitalId()), userRvn, userCst),
+          profitService.lastYearData(user.getSiteId(), user.getHospitalId()), userPre),
           profitService.lastYearData(user.getSiteId(), user.getHospitalId()),
           groups, depts, months, groupBy),
         startDate, endDate, groupBy, type, dept, month, limit, start);
@@ -382,7 +380,7 @@ public class ProfitApi {
       (Option.of(groupBy).isEmpty() && Option.of(month).isEmpty() && Option.of(type).isEmpty() && Option.of(dept).isEmpty())) {
       return serializeRate(request, groups, depts, months,
         cstRvnRateBySubGroup(userPredict(profitService.predict(user.getSiteId(), user.getHospitalId(), LocalDate.now().withDayOfYear(1).minusYears(2), LocalDate.now(), startDate.getYear()),
-          profitService.lastYearData(user.getSiteId(), user.getHospitalId()), userRvn, userCst),
+          profitService.lastYearData(user.getSiteId(), user.getHospitalId()), userPre),
           profitService.lastYearData(user.getSiteId(), user.getHospitalId()),
           type, dept, month, groups),
         startDate, endDate, groupBy, type, dept, month, limit, start);
@@ -394,11 +392,19 @@ public class ProfitApi {
 
   private Seq<Tuple7<Integer, String, Integer, Integer, Integer, Double, Double>> userPredict(Seq<Tuple7<Integer, String, Integer, Integer, Integer, Double, Double>> predicts,
                                                                                               Seq<Tuple7<Integer, String, Integer, Integer, Integer, Double, Double>> lstY,
-                                                                                              Map<Integer, Double> revunues, Map<Integer, Double> costs) {
+                                                                                              Seq<Tuple5<Option<Integer>, Option<Integer>, Option<Integer>, Option<Double>, Option<Double>>> userPre) {
     return predicts.zip(lstY).map(v -> Tuple.of(
       v._1._1, v._1._2, v._1._3, v._1._4, v._1._5,
-      Option.of(revunues.get(v._1._1)).map(sub -> (sub + 1) * v._2._6).getOrElse(v._1._6),
-      Option.of(costs.get(v._1._1)).map(sub -> (sub + 1) * v._2._7).getOrElse(v._1._7)
+      userPre.find(sub -> sub._1.map(opt -> opt.equals(v._1._4)).getOrElse(true) &&
+        sub._2.map(opt -> opt.equals(v._1._5)).getOrElse(true) &&
+        sub._3.map(opt -> opt.equals(v._1._3)).getOrElse(true) &&
+        sub._4.isDefined()
+      ).map(sub -> v._2._6 * (sub._4.get() + 1D)).getOrElse(v._1._6),
+      userPre.find(sub -> sub._1.map(opt -> opt.equals(v._1._4)).getOrElse(true) &&
+        sub._2.map(opt -> opt.equals(v._1._5)).getOrElse(true) &&
+        sub._3.map(opt -> opt.equals(v._1._3)).getOrElse(true) &&
+        sub._5.isDefined()
+      ).map(sub -> v._2._7 * (sub._5.get() + 1D)).getOrElse(v._1._7)
     ));
   }
 
