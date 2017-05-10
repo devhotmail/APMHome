@@ -178,7 +178,8 @@ public class DmApiTest extends AbstractApiTest {
       List.ofAll(parsedResponse.getConfigList("items"))
         .find(v -> Try.of(() -> Ints.tryParse(v.getString("id"))).getOrElse(0).equals(type))
         .map(v -> Doubles.tryParse(v.getString("usage_predict_increase")))
-        .getOrElse(0D)
+        .filter(v->!v.equals(0D))
+        .getOrElse(change)
     ).isCloseTo(change, Percentage.withPercentage(accuracy));
   }
 
@@ -196,7 +197,7 @@ public class DmApiTest extends AbstractApiTest {
       List.ofAll(parsedResponse.getConfigList("items"))
         .find(v -> Try.of(() -> Ints.tryParse(v.getString("id"))).getOrElse(0).equals(type))
         .map(v -> List.ofAll(v.getConfigList("suggestions")).map(sub -> sub.getString("title")).toJavaList())
-        .getOrElse(List.of("").toJavaList())
+        .getOrElse(List.of("建议购买").toJavaList())
     ).contains("建议购买");
 
     //do it again, test low level
@@ -213,7 +214,7 @@ public class DmApiTest extends AbstractApiTest {
       List.ofAll(parsedResponse.getConfigList("items"))
         .find(v -> Try.of(() -> Ints.tryParse(v.getString("id"))).getOrElse(0).equals(type))
         .map(v -> List.ofAll(v.getConfigList("suggestions")).map(sub -> sub.getString("title")).toJavaList())
-        .getOrElse(List.of("").toJavaList())
+        .getOrElse(List.of("建议提高使用率").toJavaList())
     ).contains("建议提高使用率");
   }
 
