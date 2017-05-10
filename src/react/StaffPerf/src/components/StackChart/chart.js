@@ -11,7 +11,7 @@ const averageSpace = 360 / pageSize
 
 const barAngle = averageSpace * 0.75
 
-const mockData = Array(15).fill([0.2, 0.2, 0.2, 0.2])
+const mockData = Array(15).fill([0.4, 0.3, 0.2, 0.1])
 
 const scaleFn = (length: number) => {
   if (length === 1) {

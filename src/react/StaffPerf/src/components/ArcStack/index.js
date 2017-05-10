@@ -42,35 +42,34 @@ export default class ArcStack extends PureComponent<*, PropsT, *> {
               {...restProps} />
           })
         }
-        { this.renderText() }
+        { this.renderText('hello world') }
       </g>
     )
   }
 
-  renderText2 = () => {
+  renderText = (text) => {
     const { stackes, innerRadius, startAngle, endAngle } = this.props
 
     const textR = innerRadius + 10
     const textAngle = (startAngle + endAngle) / 2
     const textX = textR * Math.sin(textAngle)
     const textY = -textR * Math.cos(textAngle)
-    const textRotate = textAngle * 180 / Math.PI + (textAngle > 0 ? -1 : 1) * 90
 
-    const pathId = uuid()
-    return <g>
-      <ArcBar
-        id={`group-${pathId}`}
-        innerRadius={innerRadius}
-        outerRadius={innerRadius}
-        startAngle={endAngle}
-        endAngle={startAngle} />
-        <text>
-          <textPath xlinkHref={`#group-${pathId}`}>hello world</textPath>
-        </text>
-    </g>
+    const angle = getAngle(textAngle)
+    const direction = angle > 0 && angle < 180
+    const textRotate = angle + (direction ? -90 : 90)
+
+    return <text
+      className={`${styles.text} ${direction ? styles.anchorStart : styles.anchorEnd}`}
+      x={textX}
+      y={textY}
+      dy="0.35em"
+      transform={`rotate(${textRotate} ${textX} ${textY})`}>
+      {text}
+    </text>
   }
 
-  renderText = () => {
+  renderText1 = () => {
     const { innerRadius, startAngle, endAngle } = this.props
 
     const pathId = uuid()
@@ -84,7 +83,7 @@ export default class ArcStack extends PureComponent<*, PropsT, *> {
       endAngle: bool ? endAngle : startAngle
     }
 
-    const dy = bool ? 15 : -15
+    const dy = bool ? 15 : -7
 
     return <g>
       <ArcBar
@@ -93,7 +92,7 @@ export default class ArcStack extends PureComponent<*, PropsT, *> {
         outerRadius={innerRadius}
         {...arcAngleProps} />
         <text dy={dy}>
-          <textPath xlinkHref={`#group-${pathId}`}>hello world</textPath>
+          <textPath xlinkHref={`#group-${pathId}`}>{"hello world".substring(0, 5)}</textPath>
         </text>
     </g>
   }
