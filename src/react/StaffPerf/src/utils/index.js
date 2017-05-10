@@ -1,6 +1,8 @@
 /* @flow */
 import type { NodeT, cursorT } from '#/types'
 
+export getRangePresets from './getRangePresets'
+
 export function getSum(arr: Array<number>) {
   return arr.reduce((a, b) => a + b, 0)
 }

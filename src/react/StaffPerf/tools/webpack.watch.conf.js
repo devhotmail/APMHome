@@ -34,14 +34,13 @@ module.exports = merge(baseWebpackConfig, {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use:[
             'css-loader',
             'postcss-loader'
           ]
-        }),
+        })
       },
       {
         test: /\.s[ca]ss$/,

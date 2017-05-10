@@ -1,47 +1,73 @@
 /* @flow */
 import React, { Component } from 'react'
-import { Menu, Dropdown, Button, Icon } from 'antd'
+import { Menu, Dropdown, Button, Icon, DatePicker, Form } from 'antd'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
+import moment from 'moment'
 
-import { currentYear } from '#/constants'
+import { getRangePresets } from '#/utils'
+import { dateFormat } from '#/constants'
 
 import styles from './styles.scss'
 
-@connect(state => ({
-  user: state.user.info
-}))
+const { RangePicker } = DatePicker
+
+const presets = getRangePresets([
+  'oneWeek', 'oneMonth', 'oneYear', 'currentMonth',
+  'yearBeforeLast', 'lastYear', 'currentYear'
+])
+
+const ranges = presets.reduce((prev, cur) => {
+  prev[cur.text] = [
+    cur.start,
+    cur.end
+  ]
+  return prev
+}, {})
+
+
+@Form.create()
+@connect()
 export default class FilterBar extends Component {
   render () {
-    const menu = <Menu onClick={this.handleMenuClick}>
-      {
-        [currentYear, currentYear + 1].map(year => {
-          return <Menu.Item key={year}>
-            <span>{year}</span>
-          </Menu.Item>
-        })
-      }
-    </Menu>
+    const { from, to } = this.props.location.query
 
-    const { location: { query }} = this.props
+    const defaultValue= [
+      moment(from, dateFormat),
+      moment(to, dateFormat)
+    ]
 
     return (
-      <div className="flex flex--justify-content--space-between p-a-1">
-        <div className={styles.year}>
-          <Dropdown overlay={menu} trigger={['click']} placement='bottomCenter'>
-            <Button>
-              { query.year || currentYear } <Icon type="down" />
-            </Button>
-          </Dropdown>
-        </div>
-        <div className={styles.groupby}>
-        </div>
+      <div className="p-a-1">
+        <Form>
+          <Form.Item>
+            {
+              this.props.form.getFieldDecorator('range', {
+                initialValue: defaultValue,
+                rules: [
+                  { type: 'array', required: true, message: '请选择时间' }
+                ]
+              })(
+                <RangePicker
+                  showTime
+                  format={dateFormat}
+                  ranges={ranges}
+                  onOk={this.handleOk} />
+              )
+            }
+          </Form.Item>
+        </Form>
       </div>
     )
   }
 
-  handleMenuClick = (e: Event) => {
-    this.handlePush({ year: e.key })
+  handleOk = (e: Event) => {
+    const [from, to] = this.props.form.getFieldValue('range')
+
+    this.handlePush({
+      from: from.format('YYYY-MM-DD'),
+      to: to.format('YYYY-MM-DD')
+    })
   }
 
   handlePush = (newQuery: Object) => {

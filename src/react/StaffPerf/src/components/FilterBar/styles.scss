@@ -10,3 +10,9 @@
 .groupby {
   flex: 3;
 }
+
+:global {
+  .ant-calendar-time-picker-btn {
+    display: none !important;
+  }
+}

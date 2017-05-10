@@ -1,7 +1,6 @@
 /* @flow */
 import React, { PureComponent } from 'react'
 import { arc } from 'd3-shape'
-import uuid from 'uuid/v4'
 
 import { getSum, getAngle } from '#/utils'
 
