@@ -6,11 +6,13 @@ import javaslang.Tuple3;
 import javaslang.collection.List;
 import javaslang.collection.Seq;
 import org.apache.ibatis.jdbc.SQL;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Created by user14 on 5/11/17.
  */
+@Ignore
 public class FutureDeprecationDbTest extends AbstractDbTest {
 
   public Seq<Tuple3<Integer, Integer, Double>> getFutureDeprecation(Integer siteId, Integer hospitalId, Integer year) {
