@@ -25,6 +25,7 @@ import java.util.Map;
 
 public class ProfitApiTest extends AbstractApiTest {
   private final double accuracy = 0.01D;
+  private final double not_very_accurate = 1D;//for the sake of deprecation, 1% difference is OK
   private ProfitApiTestsInterface tests;
 
   public ProfitApiTest() {
@@ -159,7 +160,7 @@ public class ProfitApiTest extends AbstractApiTest {
             .find(sub -> Option.of(Ints.tryParse(sub.getString("id"))).getOrElse(0).equals(v._1))
             .map(sub -> Doubles.tryParse(sub.getString("cost")))
             .getOrElse(0D) * (1 + v._5),
-          Percentage.withPercentage(accuracy)
+          Percentage.withPercentage(not_very_accurate)
         );
       }
     });
