@@ -22,11 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ge.apm.dao.AssetFileAttachmentRepository;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.OrgInfoRepository;
+import com.ge.apm.dao.QrCodeLibRepository;
 import com.ge.apm.dao.SupplierRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.OrgInfo;
+import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.domain.Supplier;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AssetDepreciationService;
@@ -52,6 +54,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     AssetFileAttachmentRepository attachDao = null;
 
     private UserAccountRepository userDao;
+    
+    private QrCodeLibRepository qrcodeDao;
 
     private boolean resultStatus;
 
@@ -98,6 +102,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     protected void init() {
         dao = WebUtil.getBean(AssetInfoRepository.class);
         userDao = WebUtil.getBean(UserAccountRepository.class);
+        qrcodeDao = WebUtil.getBean(QrCodeLibRepository.class);
         UserContextService userContextService = WebUtil.getBean(UserContextService.class);
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         orgDao = WebUtil.getBean(OrgInfoRepository.class);
@@ -274,10 +279,41 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
+    private boolean validateQrcode(){
+        
+        QrCodeLib qrCodeLib = qrcodeDao.findByQrCode(selected.getQrCode());
+        if(qrCodeLib==null){
+            return false;
+        }
+        if(qrCodeLib.getSiteId()!=selected.getSiteId() || qrCodeLib.getHospitalId()!=selected.getHospitalId()){
+            return false;
+        }
+        List<AssetInfo> tempAsset = dao.getByQrCode(selected.getQrCode());
+        if(null==tempAsset || tempAsset.isEmpty()){
+            return qrCodeLib.getStatus()==1;
+        }else if(tempAsset.size()>1){
+            return false;
+        }else{
+            return selected.getId().equals(tempAsset.get(0).getId());
+        }
+    }
+    
     @Transactional
     public String applyChange() {
         if (!isTimeValidate()) {
             return "";
+        }
+        if(null != selected.getQrCode()){
+            if(!validateQrcode()){
+                WebUtil.addErrorMessage(WebUtil.getMessage("InvalidQRCode"));
+                return "";
+            }else{
+                QrCodeLib qrCodeLib = qrcodeDao.findByQrCode(selected.getQrCode());
+                if(qrCodeLib.getStatus()==1){
+                    qrCodeLib.setStatus(3);
+                    qrcodeDao.save(qrCodeLib);
+                }
+            }
         }
         this.save();
         assetDepreciationService.saveAssetDerpeciation(selected);
