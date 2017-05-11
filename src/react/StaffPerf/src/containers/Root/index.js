@@ -5,7 +5,6 @@ import { routerRedux } from 'dva/router'
 
 import SizeProvider from '#/components/SizeProvider'
 import FilterBar from '#/components/FilterBar'
-import StatusBar from '#/components/StatusBar'
 import Pager from '#/components/Pager'
 import StackChart from '#/components/StackChart'
 import CoreCircle from '#/components/CoreCircle'
@@ -42,16 +41,12 @@ class Root extends Component {
               backRoot={this.handleBackRoot} />
             <div className={styles.core}>
               <CoreCircle
+                loading={loading}
                 filter={filter}
                 focus={focus}
                 range={range}
                 onClick={this.handleFilterClick} />
             </div>
-            {/*{
-              loading
-                ? <StatusBar type="loading" />
-                : <PerfChart data={data} />
-            }*/}
           </div>
         </div>        
       </div>
