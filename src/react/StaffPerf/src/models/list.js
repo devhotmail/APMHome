@@ -4,7 +4,7 @@ import { routerRedux } from 'dva/router'
 import { notification } from 'antd'
 import moment from 'moment'
 
-import { now, dateFormat, pageSize, page } from '#/constants'
+import { now, dateFormat, pageSize, defaultPage } from '#/constants'
 
 const defaultRange = {
   from: moment(now).clone().subtract(1, 'year').format(dateFormat),
@@ -27,7 +27,7 @@ export default {
     range: undefined,
     items: [],
     pageSize: pageSize,
-    page: page,
+    page: defaultPage,
     total: 0,
     query: {}
   },

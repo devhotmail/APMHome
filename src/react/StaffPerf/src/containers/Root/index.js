@@ -42,6 +42,7 @@ class Root extends Component {
               backRoot={this.handleBackRoot} />
             <div className={styles.core}>
               <CoreCircle
+                filter={filter}
                 focus={focus}
                 range={range}
                 onClick={this.handleFilterClick} />
@@ -69,7 +70,6 @@ class Root extends Component {
   }
 
   handleBackRoot = () => {
-    console.log(this.props)
     this.handleSetFocus(this.props.root)
   }
 
