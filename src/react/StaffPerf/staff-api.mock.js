@@ -11,7 +11,8 @@
   "range":{  
     "man_hour":1921,
     "hour_total":2000,
-    "score":5
+    "score":5,
+    "work_order": 100
   },
   "summary":{  
     "man_hour": "@integer(1000, 1500)",

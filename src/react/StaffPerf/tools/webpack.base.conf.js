@@ -1,7 +1,4 @@
 const path = require('path')
-const SpriteLoaderPlugin = require('svg-sprite-loader/plugin')
-
-const svgoConfig = require('./svgo.config')
 
 const config = require('../config')
 
@@ -37,22 +34,6 @@ module.exports = {
         ]
       },
       {
-        test: /\.svg$/,
-        use: [
-          {
-            loader: 'svg-sprite-loader',
-            options: {
-              extract: true
-            }
-          },
-          {
-            loader: 'svgo-loader',
-            options: svgoConfig
-          }
-        ],
-        include: /assets\/icons/
-      },
-      {
         test: /\.(png|jpe?g|gif|ico|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
@@ -70,8 +51,5 @@ module.exports = {
         }
       }
     ]
-  },
-  plugins: [
-     new SpriteLoaderPlugin()
-  ]    
+  }   
 }

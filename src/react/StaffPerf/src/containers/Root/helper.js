@@ -1,24 +1,22 @@
-export function formatData (data, root) {
+import { ORDER, HOUR, RATE } from '#/constants'
+
+export function formatData (data, range) {
   const result = data.map(n => {
-    const {
-      owner_id, owner_name,
-      man_hour, repair, maintenance, meter, inspection,
-      score, work_order
-    } = n
+    const { owner_id, owner_name, man_hour } = n
 
     const hours = ['repair', 'maintenance', 'meter', 'inspection']
-    .map(c => n[c] / root[c])
+    .map(c => n[c] / man_hour)
 
-    const rate = ['score'].map(c => n[c] / root[c])
+    const rates = ['score'].map(c => n[c] / range.score)
 
-    const orders = ['work_order'].map(c => n[c] / root[c])
+    const orders = ['closed', 'open'].map(c => n[c] / range.work_order)
 
     return {
       id: owner_id,
       name: owner_name,
-      hours,
-      rate,
-      orders,
+      [HOUR]: hours,
+      [RATE]: rates,
+      [ORDER]: orders,
       data: n
     }
   })

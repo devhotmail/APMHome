@@ -1,9 +1,10 @@
 /* @flow */
+import { ORDER, HOUR, RATE } from '#/constants'
+
 export default {
-  namespace: 'focus',
+  namespace: 'filter',
   state: {
-    loading: false,
-    data: undefined
+    data: HOUR
   },
   effects: {   
   },

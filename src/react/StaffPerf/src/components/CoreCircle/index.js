@@ -2,14 +2,21 @@ import React, { Component } from 'react'
 import StarRate from '../StarRate'
 
 import { round } from '#/utils'
+import { ORDER, HOUR, RATE } from '#/constants'
 
 import styles from './styles.scss'
 
-export default class CoreCircle extends Component {
-  render () {
-    const { focus, range, root } = this.props
+type PropsT = {
+  focus: Object,
+  range: Object,
+  onClick: Function
+}
 
-    if (!focus || !range || !root) return null
+export default class CoreCircle extends Component<*, PropsT, *> {
+  render () {
+    const { focus, range, onClick } = this.props
+
+    if (!focus || !range) return null
 
     return (
       <div className={styles.coreCircle}>
@@ -17,7 +24,7 @@ export default class CoreCircle extends Component {
           <div className="m-b-1">{focus.owner_name}</div>
           <div className={styles.info}>
             <div className="m-b-1">
-              <div className="flex flex--align-items--center">
+              <div className="clickable flex flex--align-items--center" onClick={onClick(HOUR)}>
                 <div className={styles.rect} style={{color: 'rgb(106,180,166)'}}></div>
                 <div>
                   <span>工作量</span>
@@ -58,14 +65,14 @@ export default class CoreCircle extends Component {
                 </div>              
               </div>
             </div>
-            <div className="m-b-1 flex flex--align-items--center">
+            <div className="clickable m-b-1 flex flex--align-items--center" onClick={onClick(RATE)}>
               <div className={styles.rect} style={{color: '#d6c25e'}}></div>
               <div className="m-r-3">满意度</div>
               <StarRate total={range.score} value={focus.score} />
               <div className="m-l-1">{round(focus.score)} 分</div>
             </div>
             <div>
-              <div className="flex flex--align-items--center">
+              <div className="clickable flex flex--align-items--center" onClick={onClick(ORDER)}>
                 <div className={styles.rect} style={{color: '#bb81b8'}}></div>
                 <div>工单数量 {focus.work_order} 个</div>
               </div>

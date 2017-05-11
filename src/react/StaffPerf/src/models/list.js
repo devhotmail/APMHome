@@ -17,7 +17,6 @@ export default {
   namespace: 'list',
   state: {
     loading: false,
-    focus: undefined,
     root: undefined,
     range: undefined,
     items: [],
@@ -109,7 +108,7 @@ export default {
           })
 
           yield put({
-            type: 'focus/set/succeed',
+            type: 'focus/set',
             payload: {
               ...data.summary,
               owner_name: '所有人'
@@ -123,16 +122,6 @@ export default {
           type: 'data/status/failed',
           payload: err
         })
-      }
-    },
-    *['focus/set'] ({ payload }, { put, call }) {
-      try {
-        yield put({
-          type: 'focus/set/succeed',
-          payload
-        })
-      } catch (err) {
-
       }
     },
     *['data/status/failed'] ({ payload: err }) {
@@ -155,12 +144,6 @@ export default {
         total: payload.pages.total,
         items: payload.items,
         root: payload.summary
-      }
-    },
-    ['focus/set/succeed'] (state, { payload }) {
-      return {
-        ...state,
-        focus: payload
       }
     },
     ['range/set'] (state, { payload }) {

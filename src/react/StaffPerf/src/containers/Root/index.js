@@ -11,7 +11,6 @@ import StackChart from '#/components/StackChart'
 import CoreCircle from '#/components/CoreCircle'
 
 import DataProvider from './DataProvider'
-import { formatData } from './helper'
 
 import styles from './styles.scss'
 
@@ -22,11 +21,10 @@ class Root extends Component {
     const {
       loading, location,
       pageSize, total,
-      items, root, focus, range
+      filter,
+      items, focus, range
     } = this.props
     const { page } = location.query
-
-    const data = formatData(items, root)
 
     return <div className={styles.container}>
       <div className={styles.main}>
@@ -35,9 +33,15 @@ class Root extends Component {
         </div>
         <div className={styles.content}>
           <div className={styles.chartWrapper}>
-            <PerfChart data={data} />
+            <PerfChart
+              filter={filter}
+              items={items}
+              range={range} />
             <div className={styles.core}>
-              <CoreCircle root={root} focus={focus} range={range} />
+              <CoreCircle
+                focus={focus}
+                range={range}
+                onClick={this.handleFilterClick} />
             </div>
             {/*{
               loading
@@ -61,6 +65,13 @@ class Root extends Component {
     </div>
   }
 
+  handleFilterClick = filter => e => {
+    this.props.dispatch({
+      type: 'filter/set',
+      payload: filter
+    })
+  }
+
   handleChange = (nextPage: number) => {
     const { dispatch, location } = this.props
 
@@ -75,11 +86,7 @@ class Root extends Component {
 }
 
 export default connect(state => ({
-  range: state.list.range,
-  items: state.list.items,
-  focus: state.list.focus,
-  root: state.list.root,
-  loading: state.list.loading,
-  pageSize: state.list.pageSize,
-  total: state.list.total
+  focus: state.focus.data,
+  filter: state.filter.data,
+  ...state.list
 }))(Root)

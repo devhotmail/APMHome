@@ -1,39 +1,35 @@
 /* @flow */
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'dva'
+import { formatData } from './helper'
 
 @connect()
 export default WrappedComponent => 
-class extends Component {
-  state = {
-    type: 'hours'
-  }
-
+class extends PureComponent {
   render() {
-    const { data, width, height, diameter } = this.props 
+    const { items, filter, range, ...restProps } = this.props
 
-    if (!data) return <div>暂无数据</div>
+    if (!items || !items.length || !range) return <div>暂无数据</div>
 
-    const { type } = this.state
+    const data = formatData(items, range)
 
     const nodeList = data.map(n => ({
       id: n.id,
       text: n.name,
-      stackes: n[type],
+      stackes: n[filter],
       info: n.data
     }))
 
     return <WrappedComponent
-      width={width}
-      height={height}
-      diameter={diameter}
       nodeList={nodeList}
-      setFocus={this.setFocus} />
+      setFocus={this.setFocus}
+      filter={filter}
+      {...restProps} />
   }
 
   setFocus = (node: cursorT) => {
     this.props.dispatch({
-      type: 'list/focus/set',
+      type: 'focus/set',
       payload: node
     })
   }

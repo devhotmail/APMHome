@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react'
 import { arc } from 'd3-shape'
 
 import { getSum, getAngle } from '#/utils'
+import { colorSet } from '#/constants'
 
 import ArcBar from '../ArcBar'
 
@@ -17,18 +18,15 @@ type PropsT = {
   style?: Object
 }
 
-const colorSet = [
-  'rgb(106,180,166)',
-  'rgb(123,190,178)',
-  'rgb(135,203,190)',
-  'rgb(154,201,192)'
-]
-
-let textPathId = 0
-
 export default class ArcStack extends PureComponent<*, PropsT, *> {
   render() {
-    const { stackes, text, innerRadius, style, onClick, ...restProps } = this.props
+    const {
+      stackes, text, filter,
+      innerRadius, style, onClick,
+      dispatch, ...restProps
+    } = this.props
+
+    const colors = colorSet[filter]
     return (
       <g style={style} onClick={this.handleClick}>
         {
@@ -37,7 +35,7 @@ export default class ArcStack extends PureComponent<*, PropsT, *> {
             const outerR = innerR + n
             return <ArcBar
               key={i}
-              color={colorSet[i]}
+              color={colors[i]}
               innerRadius={innerR}
               outerRadius={outerR}
               {...restProps} />

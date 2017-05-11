@@ -36,7 +36,8 @@ export default class Chart extends PureComponent<*, PropsT, *> {
   render () {
     const {
       height, width, diameter,
-      nodeList, setFocus
+      nodeList, setFocus,
+      ...restProps
     } = this.props
 
     if (!diameter) return null
@@ -88,7 +89,8 @@ export default class Chart extends PureComponent<*, PropsT, *> {
                         startAngle={node.state.startAngle}
                         endAngle={node.state.startAngle + getRadian(barAngle)}
                         text={node.data.text}
-                        stackes={node.data.stackes.map(c => c * stackHeight)} />
+                        stackes={node.data.stackes.map(c => c * stackHeight)}
+                        {...restProps} />
                     )
                   }
                 </g>
