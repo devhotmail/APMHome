@@ -34,9 +34,12 @@ class Root extends Component {
         <div className={styles.content}>
           <div className={styles.chartWrapper}>
             <PerfChart
+              focus={focus}
               filter={filter}
               items={items}
-              range={range} />
+              range={range}
+              setFocus={this.handleSetFocus}
+              backRoot={this.handleBackRoot} />
             <div className={styles.core}>
               <CoreCircle
                 focus={focus}
@@ -63,6 +66,18 @@ class Root extends Component {
         }
       </div>      
     </div>
+  }
+
+  handleBackRoot = () => {
+    console.log(this.props)
+    this.handleSetFocus(this.props.root)
+  }
+
+  handleSetFocus = (node: cursorT) => {
+    this.props.dispatch({
+      type: 'focus/set',
+      payload: node
+    })
   }
 
   handleFilterClick = filter => e => {

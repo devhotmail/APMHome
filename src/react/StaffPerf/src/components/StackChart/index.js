@@ -36,7 +36,7 @@ export default class Chart extends PureComponent<*, PropsT, *> {
   render () {
     const {
       height, width, diameter,
-      nodeList, setFocus,
+      nodeList, focus, setFocus, backRoot,
       ...restProps
     } = this.props
 
@@ -64,11 +64,11 @@ export default class Chart extends PureComponent<*, PropsT, *> {
               getKey={(node, index) => node.id || index}
               update={node => ({
                 startAngle: node.startAngle,
-                opacity: 1
+                opacity: (focus && focus.id) ? (node.id === focus.id ? 1 : 0.3) : 1
               })}
               enter={node => ({
                 startAngle: getRadian(-90),
-                opacity: 0            
+                opacity: 0
               })}
               leave={node => ({
                 startAngle: getRadian(90),
@@ -84,7 +84,7 @@ export default class Chart extends PureComponent<*, PropsT, *> {
                       <ArcStack
                         key={node.key}
                         style={{opacity: node.state.opacity}}
-                        onClick={() => this.props.setFocus(node.data.info)}
+                        onClick={this.handleClick(node.data)}
                         innerRadius={radius - stackHeight}
                         startAngle={node.state.startAngle}
                         endAngle={node.state.startAngle + getRadian(barAngle)}
@@ -100,5 +100,15 @@ export default class Chart extends PureComponent<*, PropsT, *> {
         </svg>
       </div>
     )
+  }
+
+  handleClick = node => e => {
+    const { focus } = this.props
+    console.log(node, focus)
+    if (focus && node.id === focus.id) {
+      this.props.backRoot()
+    } else {
+      this.props.setFocus(node.info)
+    }
   }
 }

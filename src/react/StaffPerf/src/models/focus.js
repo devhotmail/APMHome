@@ -2,13 +2,24 @@
 export default {
   namespace: 'focus',
   state: {
-    loading: false,
     data: undefined
   },
-  effects: {   
+  effects: {
+    *['set'] ({ payload }, { put }) {
+      try {
+        yield put({
+          type: 'set/succeed',
+          payload: {
+            id: payload.owner_id,
+            ...payload
+          }
+        })
+      } catch (err) {
+      }
+    }     
   },
   reducers: {
-    ['set'] (state, { payload }) {
+    ['set/succeed'] (state, { payload }) {
       return {
         ...state,
         data: payload

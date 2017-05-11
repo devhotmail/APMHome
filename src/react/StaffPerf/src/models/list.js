@@ -4,14 +4,20 @@ import { routerRedux } from 'dva/router'
 import { notification } from 'antd'
 import moment from 'moment'
 
-import { now, dateFormat, pageSize } from '#/constants'
+import { now, dateFormat, pageSize, page } from '#/constants'
 
 const defaultRange = {
   from: moment(now).clone().subtract(1, 'year').format(dateFormat),
   to: moment(now).clone().format(dateFormat)
 }
 
-const defaultPage = 1
+function mockRoot (root) {
+  return {
+    ...root,
+    owner_id: null,
+    owner_name: '所有人'
+  }
+}
 
 export default {
   namespace: 'list',
@@ -21,7 +27,7 @@ export default {
     range: undefined,
     items: [],
     pageSize: pageSize,
-    page: defaultPage,
+    page: page,
     total: 0,
     query: {}
   },
@@ -107,12 +113,16 @@ export default {
             payload: data.range
           })
 
+          const root = yield call(mockRoot, data.summary)
+
+          yield put({
+            type: 'root/set',
+            payload: root
+          })
+
           yield put({
             type: 'focus/set',
-            payload: {
-              ...data.summary,
-              owner_name: '所有人'
-            }
+            payload: root
           })
 
           yield put({ type: 'loading/off' })
@@ -142,8 +152,13 @@ export default {
       return {
         ...state,
         total: payload.pages.total,
-        items: payload.items,
-        root: payload.summary
+        items: payload.items
+      }
+    },
+    ['root/set'] (state, { payload }) {
+      return {
+        ...state,
+        root: payload
       }
     },
     ['range/set'] (state, { payload }) {

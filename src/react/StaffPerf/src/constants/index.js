@@ -3,6 +3,7 @@ export ranges from './ranges'
 export const margin = 20
 export const stackHeight = 120
 export const pageSize = 15
+export const page = 1
 
 export const now = new Date()
 export const currentYear = now.getFullYear()

@@ -22,15 +22,7 @@ class extends PureComponent {
 
     return <WrappedComponent
       nodeList={nodeList}
-      setFocus={this.setFocus}
       filter={filter}
       {...restProps} />
-  }
-
-  setFocus = (node: cursorT) => {
-    this.props.dispatch({
-      type: 'focus/set',
-      payload: node
-    })
   }
 }
