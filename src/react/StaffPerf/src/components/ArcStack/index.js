@@ -12,7 +12,8 @@ type PropsT = {
   innerRadius: number,
   startAngle: number,
   endAngle: number,
-  stackes: Array<number>
+  stackes: Array<Object>,
+  text?: string
 }
 
 const colorSet = [
@@ -26,7 +27,7 @@ let textPathId = 0
 
 export default class ArcStack extends PureComponent<*, PropsT, *> {
   render() {
-    const { stackes, innerRadius, ...restProps } = this.props
+    const { stackes, text, innerRadius, ...restProps } = this.props
     return (
       <g>
         {
@@ -41,7 +42,7 @@ export default class ArcStack extends PureComponent<*, PropsT, *> {
               {...restProps} />
           })
         }
-        { this.renderText('hello world') }
+        { this.renderText(text) }
       </g>
     )
   }

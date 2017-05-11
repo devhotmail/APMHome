@@ -2,67 +2,82 @@
 import axios from 'axios'
 import { routerRedux } from 'dva/router'
 import { notification } from 'antd'
+import moment from 'moment'
 
-import { pageSize } from '#/constants'
+import { now, dateFormat, pageSize } from '#/constants'
+
+const defaultRange = {
+  from: moment(now).clone().subtract(1, 'year').format(dateFormat),
+  to: moment(now).clone().format(dateFormat)
+}
+
+const defaultPage = 1
 
 export default {
   namespace: 'list',
   state: {
     loading: false,
-    data: undefined,
-    page: 1,
+    focus: undefined,
+    root: undefined,
+    items: [],
     pageSize: pageSize,
-    total: 1,
-    from: undefined,
-    to: undefined
+    page: defaultPage,
+    total: 0,
+    query: {}
   },
   subscriptions: {
     setup ({ dispatch, history }) {
       return history.listen(({query}) => {
-        const { from, to } = query
+        const { from, to, page } = query
 
         if (!from || !to) {
           return dispatch(routerRedux.push({
             pathname: '/',
             query: {
               ...query,
-              from: '2016-05-10',
-              to: '2017-05-10'
+              ...defaultRange
             }
           }))
         }
 
-        if (!query.page) {
+        if (!page) {
           return dispatch(routerRedux.push({
             pathname: '/',
             query: {
               ...query,
-              page: 1
+              page: defaultPage
             }
           }))
         }
 
         dispatch({
           type: 'data/get',
-          payload: query
+          payload: { from, to, page }
         })
       })
     }
   },
   effects: {
-    *['data/get'] ({ payload }, { put, call, select, take }) {
+    *['data/get'] ({ payload: params }, { put, call, select, take }) {
       try {
-        yield put({ type: 'loading/on' })
-        const { pageSize } = yield select(state => state.list)
+        const { pageSize, query } = yield select(state => state.list)
 
-        const { page, ...query } = payload
+        const flag = ['from', 'to', 'page'].reduce((prev, cur) => {
+          if (query[cur] !== params[cur]) prev = false
+          return prev
+        }, true)
+        if (flag) return
+
+        yield put({ type: 'loading/on' })
+
+        const { page, ...restQuery } = params
 
         const { data } = yield call(
           axios,
           {
             url: process.env.API_HOST + '/staff',
             params: {
-              ...query,
+              ...restQuery,
               start: (page - 1) * pageSize,
               limit: pageSize
             }
@@ -82,6 +97,16 @@ export default {
             payload: data
           })
 
+          yield put({
+            type: 'query/update',
+            payload: params
+          })
+
+          yield put({
+            type: 'focus/set/succeed',
+            payload: data.summary
+          })
+
           yield put({ type: 'loading/off' })
         }
       } catch (err) {
@@ -89,6 +114,16 @@ export default {
           type: 'data/status/failed',
           payload: err
         })
+      }
+    },
+    *['focus/set'] ({ payload }, { put, call }) {
+      try {
+        yield put({
+          type: 'focus/set/succeed',
+          payload
+        })
+      } catch (err) {
+
       }
     },
     *['data/status/failed'] ({ payload: err }) {
@@ -109,7 +144,20 @@ export default {
       return {
         ...state,
         total: payload.pages.total,
-        data: payload
+        items: payload.items,
+        root: payload.summary
+      }
+    },
+    ['focus/set/succeed'] (state, { payload }) {
+      return {
+        ...state,
+        focus: payload
+      }
+    },
+    ['query/update'] (state, { payload }) {
+      return {
+        ...state,
+        query: payload
       }
     },
     ['loading/on'] (state, action) {

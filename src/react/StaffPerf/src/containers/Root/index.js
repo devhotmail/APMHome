@@ -1,27 +1,32 @@
+/* @flow */
 import React, { Component } from 'react'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
-import moment from 'moment'
-
-import { now, dateFormat } from '#/constants'
 
 import SizeProvider from '#/components/SizeProvider'
-import StackChart from '#/components/StackChart'
 import FilterBar from '#/components/FilterBar'
 import StatusBar from '#/components/StatusBar'
 import Pager from '#/components/Pager'
+import StackChart from '#/components/StackChart'
+
+import DataProvider from './DataProvider'
+import { formatData } from './helper'
 
 import styles from './styles.scss'
 
-const Chart = SizeProvider(StackChart)
-
-const from = moment(now).clone().subtract(1, 'year').format(dateFormat)
-const to = moment(now).clone().format(dateFormat)
+const PerfChart = SizeProvider(DataProvider(StackChart))
 
 class Root extends Component {
   render () {
-    const { loading, location, pageSize, total } = this.props
+    const {
+      loading, location,
+      pageSize, total,
+      items, root
+    } = this.props
     const { page } = location.query
+
+    const data = formatData(items, root)
+
     return <div className={styles.container}>
       <div className={styles.main}>
         <div className={styles.filterBar}>
@@ -29,21 +34,29 @@ class Root extends Component {
         </div>
         <div className={styles.content}>
           <div className={styles.chartWrapper}>
-            { loading ? <StatusBar type="loading" /> : <Chart /> }
+            {
+              loading
+                ? <StatusBar type="loading" />
+                : <PerfChart data={data} />
+            }
           </div>
         </div>        
       </div>
       <div className={styles.sidebar}>
-        <Pager
-          current={parseInt(page)}
-          pageSize={pageSize}
-          total={total}
-          onChange={this.handleChange} />
+        {
+          total
+            ? <Pager
+              current={parseInt(page)}
+              pageSize={pageSize}
+              total={total}
+              onChange={this.handleChange} />
+            : null
+        }
       </div>      
     </div>
   }
 
-  handleChange = (nextPage) => {
+  handleChange = (nextPage: number) => {
     const { dispatch, location } = this.props
 
     dispatch(routerRedux.push({
@@ -57,9 +70,10 @@ class Root extends Component {
 }
 
 export default connect(state => ({
-  data: state.list.data,
+  items: state.list.items,
+  focus: state.list.focus,
+  root: state.list.root,
   loading: state.list.loading,
-  current: state.list.currentPage,
   pageSize: state.list.pageSize,
   total: state.list.total
 }))(Root)

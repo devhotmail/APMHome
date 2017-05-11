@@ -1,9 +1,21 @@
+/* @flow */
 import React, { PureComponent, PropTypes } from 'react'
 import { Pagination } from 'antd'
 
 import styles from './styles.scss'
 
-export default class Pager extends PureComponent {
+type defaultPropsT = {
+  current: number,
+  pageSize: number
+}
+
+type PropsT = {
+  current: number,
+  pageSize: number,  
+  total: number
+}
+
+export default class Pager extends PureComponent<defaultPropsT, PropsT, void> {
   static defaultProps = {
     current: 1,
     pageSize: 10
@@ -11,7 +23,8 @@ export default class Pager extends PureComponent {
 
   static propTypes = {
     current: PropTypes.number,
-    pageSize: PropTypes.number
+    pageSize: PropTypes.number,
+    total: PropTypes.number.isRequired
   }
 
   render () {
@@ -20,12 +33,12 @@ export default class Pager extends PureComponent {
 
     const prevCls = [current === 1 ? styles.disabled : '', styles.prev].join(' ')
     const nextCls = [current === totalPages ? styles.disabled : '', styles.next].join(' ')
-    console.log(prevCls, nextCls, current, totalPages)
+
     return (
       <div className={styles.pager}>
         <div className={styles.wrapper}>
           <div className={prevCls} onClick={this.handlePrev}></div>
-          <div className={styles.counter} onClick={this.handleEnable}>
+          <div className={styles.counter}>
             <span>{current}</span>
             <span>/</span>
             <span>{totalPages}</span>
@@ -50,6 +63,8 @@ export default class Pager extends PureComponent {
   }
 
   changePage = (current: number) => {
-    if (current) this.props.onChange && this.props.onChange(current)
+    if (current) {
+      this.props.onChange && this.props.onChange(current)
+    }
   }
 }
