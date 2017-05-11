@@ -45,6 +45,7 @@ $filterBarHeight: 50px;
 .chartWrapper {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 
 .core {
@@ -52,4 +53,8 @@ $filterBarHeight: 50px;
   left: 50%;
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
+}
+
+.noPointer {
+  pointer-events: none;
 }

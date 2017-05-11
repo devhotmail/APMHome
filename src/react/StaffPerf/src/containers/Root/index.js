@@ -31,7 +31,7 @@ class Root extends Component {
           <FilterBar {...this.props} />
         </div>
         <div className={styles.content}>
-          <div className={styles.chartWrapper}>
+          <div className={`${styles.chartWrapper} ${loading ? styles.noPointer : ''}`}>
             <PerfChart
               focus={focus}
               filter={filter}
