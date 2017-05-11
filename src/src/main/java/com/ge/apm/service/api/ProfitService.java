@@ -241,9 +241,11 @@ public class ProfitService {
     return db.select(new SQL() {{
       SELECT("ai.id", "ai.name", "date_trunc(:time_unit,asu.created) as created_date", "ai.asset_group as type", "ai.clinical_dept_id as dept", "COALESCE(sum(asu.revenue), 0) as revenue", "COALESCE(sum(asu.maintenance_cost), 0) as costs");
       FROM("asset_info as ai");
-      LEFT_OUTER_JOIN("asset_summit as asu on ai.id = asu.asset_id and asu.created >= :start_day and asu.created <= :end_day");
+      LEFT_OUTER_JOIN("asset_summit as asu on ai.id = asu.asset_id");
       WHERE("ai.site_id = :site_id");
       WHERE("ai.hospital_id = :hospital_id");
+      WHERE("asu.created >= :start_day");
+      WHERE("asu.created <= :end_day");
       WHERE("ai.is_valid = true");
       GROUP_BY("ai.id");
       GROUP_BY("created_date");
