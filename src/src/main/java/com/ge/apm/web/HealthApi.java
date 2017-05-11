@@ -42,7 +42,7 @@ public class HealthApi {
   private static final String redirect_3 = "/portal/asset/info/List.xhtml?model=1";
   private static final String redirect_4 = "/portal/pm/List.xhtml?model=1";
   private static final String redirect_5 = "/portal/insp/MetrologyOrderList.xhtml?model=1";
-  private static final String redirect_6 = "/portal/insp/QualityCtrlOrderList.xhtml?model=1";
+  private static final String redirect_6 = "/portal/insp/InspOrderList.xhtml?model=1";
   private static final String categorized = "?category=";
 
 
@@ -73,7 +73,7 @@ public class HealthApi {
           healthService.queryForWarranty(site_id, hospital_id),
           healthService.queryForPm(site_id, hospital_id),
           healthService.queryForMeterqa(site_id, hospital_id, 2),
-          healthService.queryForMeterqa(site_id, hospital_id, 3));
+          healthService.queryForMeterqa(site_id, hospital_id, 1));
       case 1:
         return createResponseBody(category, request, healthService.queryForMaintain(site_id, hospital_id), start, limit);
 
@@ -90,7 +90,7 @@ public class HealthApi {
         return createResponseBody(healthService.queryForMeterqa(site_id, hospital_id, 2), category, request, start, limit);
 
       case 6:
-        return createResponseBody(healthService.queryForMeterqa(site_id, hospital_id, 3), category, request, start, limit);
+        return createResponseBody(healthService.queryForMeterqa(site_id, hospital_id, 1), category, request, start, limit);
 
       default:
         return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Bad Request"));
@@ -108,7 +108,7 @@ public class HealthApi {
           healthService.queryForWarranty(site_id, hospital_id, dept),
           healthService.queryForPm(site_id, hospital_id, dept),
           healthService.queryForMeterqa(site_id, hospital_id, 2, dept),
-          healthService.queryForMeterqa(site_id, hospital_id, 3, dept));
+          healthService.queryForMeterqa(site_id, hospital_id, 1, dept));
       case 1:
         return createResponseBody(category, request, healthService.queryForMaintain(site_id, hospital_id, dept), start, limit);
 
@@ -125,7 +125,7 @@ public class HealthApi {
         return createResponseBody(healthService.queryForMeterqa(site_id, hospital_id, 2, dept), category, request, start, limit);
 
       case 6:
-        return createResponseBody(healthService.queryForMeterqa(site_id, hospital_id, 3, dept), category, request, start, limit);
+        return createResponseBody(healthService.queryForMeterqa(site_id, hospital_id, 1, dept), category, request, start, limit);
 
       default:
         return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "Bad Request"));
@@ -229,7 +229,7 @@ public class HealthApi {
         return "设备计量";
 
       case 6:
-        return "设备质控";
+        return "设备巡检";
 
       case 11:
         return "申请";

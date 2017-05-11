@@ -277,7 +277,7 @@ public class ProfitApi {
   private Observable<Tuple4<Integer, String, Money, Money>> filterCstRvnByGroup(Seq<Tuple7<Integer, String, Integer, Integer, Integer, Double, Double>> items,
                                                                                 Integer type, Integer dept, Integer month) {
     return Observable.from(
-      items.filter(v -> Option.of(type).map(sub -> sub.equals(v._4)).orElse(Option.of(dept).map(sub -> sub.equals(v._5))).getOrElse(() -> month.equals(v._3)))
+      items.filter(v -> Option.of(type).map(sub -> sub.equals(v._4)).orElse(Option.of(dept).map(sub -> sub.equals(v._5))).orElse(Option.of(month).map(sub -> sub.equals(v._3))).getOrElse(true))
         .groupBy(v -> v._1)
         .map(v -> Tuple.of(v._1, v._2.get(0)._2, CNY.money(v._2.map(sub -> sub._6).sum().doubleValue()), CNY.money(v._2.map(sub -> sub._7).sum().doubleValue())))
     );

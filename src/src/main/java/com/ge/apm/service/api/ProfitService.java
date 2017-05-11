@@ -241,11 +241,9 @@ public class ProfitService {
     return db.select(new SQL() {{
       SELECT("ai.id", "ai.name", "date_trunc(:time_unit,asu.created) as created_date", "ai.asset_group as type", "ai.clinical_dept_id as dept", "COALESCE(sum(asu.revenue), 0) as revenue", "COALESCE(sum(asu.maintenance_cost), 0) as costs");
       FROM("asset_info as ai");
-      LEFT_OUTER_JOIN("asset_summit as asu on ai.id = asu.asset_id");
+      LEFT_OUTER_JOIN("asset_summit as asu on ai.id = asu.asset_id and asu.created >= :start_day and asu.created <= :end_day");
       WHERE("ai.site_id = :site_id");
       WHERE("ai.hospital_id = :hospital_id");
-      WHERE("asu.created >= :start_day");
-      WHERE("asu.created <= :end_day");
       WHERE("ai.is_valid = true");
       GROUP_BY("ai.id");
       GROUP_BY("created_date");
@@ -321,7 +319,9 @@ public class ProfitService {
   @Cacheable(cacheNames = "springCache", key = "'profitService.predict'+#siteId+'.'+#hospitalId+'.startDate'+#startDate+'.endDate'+#endDate+'.year'+#year")
   public Seq<Tuple7<Integer, String, Integer, Integer, Integer, Double, Double>> predict(Integer siteId, Integer hospitalId, LocalDate startDate, LocalDate endDate, Integer year) {
     Seq<Tuple7<Integer, String, LocalDate, Integer, Integer, Double, Double>> items = dataTransform(findRvnCstForForecast(siteId, hospitalId, startDate, endDate));
-    return predictRvnCst(ratios(items), items, year);
+    return predictRvnCst(ratios(items), items, year)
+      .zip(getFutureDeprecation(siteId, hospitalId, year))
+      .map(v -> Tuple.of(v._1._1, v._1._2, v._1._3, v._1._4, v._1._5, v._1._6, v._1._7 + v._2._3));
   }
 
   //for forecast rate
@@ -330,6 +330,26 @@ public class ProfitService {
     return List.ofAll(findRvnCstForForecast(siteId, hospitalId, LocalDate.now().minusYears(1).withDayOfYear(1), LocalDate.now().withDayOfYear(1).minusDays(1))
       .map(v -> Tuple.of(v._1, v._2, v._3.getMonthValue(), v._4, v._5, v._6, v._7))
       .toBlocking().toIterable());
+  }
+
+  public Seq<Tuple3<Integer, Integer, Double>> getFutureDeprecation(Integer siteId, Integer hospitalId, Integer year) {
+    return List.ofAll(
+      db.select(new SQL() {{
+        SELECT("index.id", "index.month", "COALESCE(sum(ad.deprecate_amount), 0) as deprecation");
+        FROM("(Select* FROM ((SELECT id From asset_info ai where ai.site_id = :site_id and ai.hospital_id = :hospital_id) as ids cross join generate_series(1,12) as month)) as index");
+        LEFT_OUTER_JOIN("asset_depreciation as ad on index.id=ad.asset_id and extract(month from ad.deprecate_date) = index.month and extract(year from ad.deprecate_date) = :year");
+        GROUP_BY("index.id");
+        GROUP_BY("index.month");
+        ORDER_BY("index.id");
+        ORDER_BY("index.month");
+      }}.toString())
+        .parameter("site_id", siteId)
+        .parameter("hospital_id", hospitalId)
+        .parameter("year", year)
+        .getAs(Integer.class, Integer.class, Double.class)
+        .map(tuple -> Tuple.of(tuple._1(), tuple._2(), tuple._3()))
+        .toBlocking().toIterable()
+    );
   }
 
 }
