@@ -196,3 +196,60 @@ asset_group_id int4,
 fault_name varchar(64)
 );
 alter table asset_fault_type add primary key (id);
+
+alter table inspection_order add COLUMN man_hours int;
+alter table pm_order add COLUMN man_hours int;
+
+--设备tag
+create table asset_tag(
+id serial not null,
+site_id int,
+hospital_id int,
+name varchar(64)
+);
+alter table asset_tag add primary key (id);
+
+--设备tag对应的规则，目前不保存规则，而是保存规则匹配的所有资产的ID
+create table asset_tag_rule(
+id serial not null,
+tag_id int,
+asset_id int
+);
+alter table asset_tag_rule add primary key (id);
+
+--医工分组
+create table biomed_group(
+id serial not null,
+site_id int,
+hospital_id int,
+group_name varchar(64)
+);
+alter table biomed_group add primary key (id);
+
+--医工分组中的医工
+create table biomed_group_user(
+id serial not null,
+group_id int,
+user_id int,
+user_name varchar(64)
+);
+alter table biomed_group_user add primary key (id);
+
+--设备tag对应的医工分组
+create table asset_tag_biomed_group(
+id serial not null,
+tag_id int,
+biomed_group_id int
+);
+alter table asset_tag_biomed_group add primary key (id);
+
+--设备tag对应的消息关注者
+create table asset_tag_msg_subscriber(
+id serial not null,
+tag_id int not null,		--订阅的相关设备 tag
+subscribe_user_id int not null,	--订阅者ID
+receive_msg_mode int not null, -- 1-只关注重要消息(报修，关单) / 2- 关注所有消息 / 3-不关注
+is_receive_timeout_msg bool not null,	--是否接受流程超期提醒
+is_receive_chat_msg bool not null	--是否接收聊天消息
+);
+alter table asset_tag_msg_subscriber add primary key (id);
