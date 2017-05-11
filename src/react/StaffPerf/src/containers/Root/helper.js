@@ -1,7 +1,7 @@
 export function formatData (data, root) {
   const result = data.map(n => {
     const {
-      owner_name,
+      owner_id, owner_name,
       man_hour, repair, maintenance, meter, inspection,
       score, work_order
     } = n
@@ -14,6 +14,7 @@ export function formatData (data, root) {
     const orders = ['work_order'].map(c => n[c] / root[c])
 
     return {
+      id: owner_id,
       name: owner_name,
       hours,
       rate,

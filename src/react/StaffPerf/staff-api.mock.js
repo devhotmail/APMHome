@@ -1,6 +1,6 @@
 {  
   pages:{  
-    total:11,
+    total:120,
     limit: function({  _req }) {
       return _req.query.limit || 15
     },
@@ -27,7 +27,7 @@
   "items|15":[  
     {  
       "owner_id": "@id()",
-      "owner_name": "@cfirst()@clast()",
+      "owner_name": "@cname()",
       "man_hour": "@integer(100, 150)",
       "repair": "@integer(10, 30)",
       "maintenance": "@integer(10, 30)",

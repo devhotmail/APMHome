@@ -16,8 +16,10 @@ class extends Component {
     const { type } = this.state
 
     const nodeList = data.map(n => ({
+      id: n.id,
       text: n.name,
-      stackes: n[type]
+      stackes: n[type],
+      info: n.data
     }))
 
     return <WrappedComponent

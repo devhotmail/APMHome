@@ -34,11 +34,12 @@ class Root extends Component {
         </div>
         <div className={styles.content}>
           <div className={styles.chartWrapper}>
-            {
+            <PerfChart data={data} />
+            {/*{
               loading
                 ? <StatusBar type="loading" />
                 : <PerfChart data={data} />
-            }
+            }*/}
           </div>
         </div>        
       </div>
