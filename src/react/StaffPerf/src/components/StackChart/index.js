@@ -1,6 +1,6 @@
 /* @flow */
 import React, { PureComponent } from 'react'
-import { TransitionMotion, spring } from 'react-motion'
+import { Transition } from 'react-move'
 import { scaleLinear } from 'd3-scale'
 
 import { margin, stackHeight, pageSize } from '#/constants'
@@ -48,11 +48,9 @@ export default class Chart extends PureComponent<*, PropsT, *> {
     const chartData = nodeList.map((node, i) => {
       const middleAngle = getAngle(i)
       const startAngle= getRadian(middleAngle - barAngle / 2)
-      const endAngle= getRadian(middleAngle + barAngle / 2)
       return {
         ...node,
-        startAngle,
-        endAngle
+        startAngle
       }
     })
 
@@ -60,45 +58,41 @@ export default class Chart extends PureComponent<*, PropsT, *> {
       <div>
         <svg width={width} height={height}>
           <g transform={`translate(${width / 2}, ${height / 2})`}>
-            <TransitionMotion
-              styles={
-                chartData.map((node, i) => ({
-                  key: node.id,
-                  data: node,
-                  style: {
-                    startAngle: spring(node.startAngle),
-                    endAngle: spring(node.endAngle),
-                    opacity: spring(1)
-                  }
-                }))           
-              }
-              willEnter={() => ({
-                startAngle: -90,
-                endAngle: -90,
+            <Transition
+              data={chartData}
+              getKey={(node, index) => node.id || index}
+              update={node => ({
+                startAngle: node.startAngle,
+                opacity: 1
+              })}
+              enter={node => ({
+                startAngle: getRadian(-90),
+                opacity: 0            
+              })}
+              leave={node => ({
+                startAngle: getRadian(90),
                 opacity: 0
               })}
-              willLeave={() => ({
-                startAngle: -90,
-                endAngle: -90,
-                opacity: 1
-              })}>
-              {
-                interpolatedStyles =>
-                  <g>
-                    {
-                      interpolatedStyles.map(node => {
-                        return <ArcStack
-                          key={node.key}
-                          innerRadius={radius - stackHeight}
-                          startAngle={node.style.startAngle}
-                          endAngle={node.style.endAngle}
-                          text={node.data.text}
-                          stackes={node.data.stackes.map(c => c * stackHeight)} />
-                      })
-                    }
-                  </g>
-              }
-            </TransitionMotion>
+              duration={300}
+              flexDuration={true}
+              easing="easePolyIn">
+              {data => (
+                <g>
+                  {
+                    data.map(node =>
+                      <ArcStack
+                        key={node.key}
+                        style={{opacity: node.state.opacity}}
+                        innerRadius={radius - stackHeight}
+                        startAngle={node.state.startAngle}
+                        endAngle={node.state.startAngle + getRadian(barAngle)}
+                        text={node.data.text}
+                        stackes={node.data.stackes.map(c => c * stackHeight)} />
+                    )
+                  }
+                </g>
+              )}
+            </Transition>
           </g>
         </svg>
       </div>

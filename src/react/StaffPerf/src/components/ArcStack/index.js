@@ -13,7 +13,8 @@ type PropsT = {
   startAngle: number,
   endAngle: number,
   stackes: Array<Object>,
-  text?: string
+  text?: string,
+  style?: Object
 }
 
 const colorSet = [
@@ -27,9 +28,9 @@ let textPathId = 0
 
 export default class ArcStack extends PureComponent<*, PropsT, *> {
   render() {
-    const { stackes, text, innerRadius, ...restProps } = this.props
+    const { stackes, text, innerRadius, style, ...restProps } = this.props
     return (
-      <g>
+      <g style={style}>
         {
           stackes.map((n, i, arr) => {
             const innerR = innerRadius + getSum(arr.slice(0, i))
