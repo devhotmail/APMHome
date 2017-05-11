@@ -591,6 +591,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3036,'message','SuccessForBinding', '绑定设备成功!','Success For Binding!',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3037,'message','ChooseAssets', '请选择设备!','Please choose assets first!',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3038,'message','ChooseAssetsOwner', '请选择设备负责人!','Please choose assets owner first!',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3039,'message','InvalidQRCode', '无效的二维码!','Invalid QRCode!',null,-1);
 
 -- Chart label/lengend （id from 5000 to 5500）
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan #',null,-1);
