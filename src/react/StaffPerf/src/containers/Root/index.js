@@ -8,6 +8,7 @@ import FilterBar from '#/components/FilterBar'
 import StatusBar from '#/components/StatusBar'
 import Pager from '#/components/Pager'
 import StackChart from '#/components/StackChart'
+import CoreCircle from '#/components/CoreCircle'
 
 import DataProvider from './DataProvider'
 import { formatData } from './helper'
@@ -21,7 +22,7 @@ class Root extends Component {
     const {
       loading, location,
       pageSize, total,
-      items, root
+      items, root, focus, range
     } = this.props
     const { page } = location.query
 
@@ -35,6 +36,9 @@ class Root extends Component {
         <div className={styles.content}>
           <div className={styles.chartWrapper}>
             <PerfChart data={data} />
+            <div className={styles.core}>
+              <CoreCircle root={root} focus={focus} range={range} />
+            </div>
             {/*{
               loading
                 ? <StatusBar type="loading" />
@@ -71,6 +75,7 @@ class Root extends Component {
 }
 
 export default connect(state => ({
+  range: state.list.range,
   items: state.list.items,
   focus: state.list.focus,
   root: state.list.root,

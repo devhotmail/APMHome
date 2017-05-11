@@ -28,9 +28,9 @@ let textPathId = 0
 
 export default class ArcStack extends PureComponent<*, PropsT, *> {
   render() {
-    const { stackes, text, innerRadius, style, ...restProps } = this.props
+    const { stackes, text, innerRadius, style, onClick, ...restProps } = this.props
     return (
-      <g style={style}>
+      <g style={style} onClick={this.handleClick}>
         {
           stackes.map((n, i, arr) => {
             const innerR = innerRadius + getSum(arr.slice(0, i))
@@ -70,31 +70,8 @@ export default class ArcStack extends PureComponent<*, PropsT, *> {
     </text>
   }
 
-  renderText1 = () => {
-    const { innerRadius, startAngle, endAngle } = this.props
-
-    const pathId = uuid()
-
-    const middleAngle = (startAngle + endAngle) / 2
-
-    const bool = getAngle(middleAngle) < 90
-
-    const arcAngleProps = {
-      startAngle: bool ? startAngle : endAngle,
-      endAngle: bool ? endAngle : startAngle
-    }
-
-    const dy = bool ? 15 : -7
-
-    return <g>
-      <ArcBar
-        id={`group-${pathId}`}
-        innerRadius={innerRadius}
-        outerRadius={innerRadius}
-        {...arcAngleProps} />
-        <text dy={dy}>
-          <textPath xlinkHref={`#group-${pathId}`}>{"hello world".substring(0, 5)}</textPath>
-        </text>
-    </g>
+  handleClick = (e: Event) => {
+    e.preventDefault()
+    this.props.onClick()
   }
 }

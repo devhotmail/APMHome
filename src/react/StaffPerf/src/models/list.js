@@ -19,6 +19,7 @@ export default {
     loading: false,
     focus: undefined,
     root: undefined,
+    range: undefined,
     items: [],
     pageSize: pageSize,
     page: defaultPage,
@@ -103,8 +104,16 @@ export default {
           })
 
           yield put({
+            type: 'range/set',
+            payload: data.range
+          })
+
+          yield put({
             type: 'focus/set/succeed',
-            payload: data.summary
+            payload: {
+              ...data.summary,
+              owner_name: '所有人'
+            }
           })
 
           yield put({ type: 'loading/off' })
@@ -152,6 +161,12 @@ export default {
       return {
         ...state,
         focus: payload
+      }
+    },
+    ['range/set'] (state, { payload }) {
+      return {
+        ...state,
+        range: payload
       }
     },
     ['query/update'] (state, { payload }) {

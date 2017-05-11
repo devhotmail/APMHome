@@ -9,8 +9,8 @@
     }
   },
   "range":{  
-    "man_hour":2000,
-    "hour_total":22000,
+    "man_hour":1921,
+    "hour_total":2000,
     "score":5
   },
   "summary":{  
@@ -22,7 +22,7 @@
     "work_order": "@integer(500, 1000)",
     "closed": "@integer(100, 600)",
     "open": "@integer(20, 150)",
-    "score": "@integer(0, 5)",
+    "score": "@float(0, 5)",
   },
   "items|15":[  
     {  
@@ -36,7 +36,7 @@
       "work_order": "@integer(50, 100)",
       "closed": "@integer(10, 60)",
       "open": "@integer(2, 15)",
-      "score": "@integer(0, 5)",
+      "score": "@float(0, 5)",
     }
   ],
   "link":{  

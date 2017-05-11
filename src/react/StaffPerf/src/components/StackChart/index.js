@@ -36,7 +36,7 @@ export default class Chart extends PureComponent<*, PropsT, *> {
   render () {
     const {
       height, width, diameter,
-      nodeList
+      nodeList, setFocus
     } = this.props
 
     if (!diameter) return null
@@ -83,6 +83,7 @@ export default class Chart extends PureComponent<*, PropsT, *> {
                       <ArcStack
                         key={node.key}
                         style={{opacity: node.state.opacity}}
+                        onClick={() => this.props.setFocus(node.data.info)}
                         innerRadius={radius - stackHeight}
                         startAngle={node.state.startAngle}
                         endAngle={node.state.startAngle + getRadian(barAngle)}

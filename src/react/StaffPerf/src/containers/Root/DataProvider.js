@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import { connect } from 'dva'
 
+@connect()
 export default WrappedComponent => 
 class extends Component {
   state = {
@@ -30,12 +31,10 @@ class extends Component {
       setFocus={this.setFocus} />
   }
 
-  setFocus = (cursor: cursorT) => {
-    if (cursor === this.props.focus.cursor) return
-
+  setFocus = (node: cursorT) => {
     this.props.dispatch({
-      type: 'focus/cursor/set',
-      payload: cursor
+      type: 'list/focus/set',
+      payload: node
     })
   }
 }
