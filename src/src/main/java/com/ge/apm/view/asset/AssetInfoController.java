@@ -80,6 +80,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     private AssetDepreciationService assetDepreciationService;
 
+    private String  qrCode;
     Boolean terminate;
 
     protected void setSelectedByUrlParam(String encodeUrl, String paramName) {
@@ -96,6 +97,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             SupplierRepository supplierDao = WebUtil.getBean(SupplierRepository.class);
             supplier = supplierDao.findById(selected.getSupplierId());
         }
+        
+        qrCode = selected.getQrCode();
     }
 
     @Override
@@ -279,23 +282,31 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
-    private boolean validateQrcode(){
-        
-        QrCodeLib qrCodeLib = qrcodeDao.findByQrCode(selected.getQrCode());
+    
+    private boolean updateQrCode(){
+        QrCodeLib qrCodeLib = qrcodeDao.findByQrCode(qrCode);
         if(qrCodeLib==null){
+            WebUtil.addErrorMessage(WebUtil.getMessage("InvalidQRCode"));
             return false;
         }
         if(qrCodeLib.getSiteId()!=selected.getSiteId() || qrCodeLib.getHospitalId()!=selected.getHospitalId()){
+            WebUtil.addErrorMessage(WebUtil.getMessage("WrongHospitalQRCode"));
             return false;
         }
-        List<AssetInfo> tempAsset = dao.getByQrCode(selected.getQrCode());
-        if(null==tempAsset || tempAsset.isEmpty()){
-            return qrCodeLib.getStatus()==1;
-        }else if(tempAsset.size()>1){
+        if(qrCodeLib.getStatus()!=1){
+            WebUtil.addErrorMessage(WebUtil.getMessage("AlreadyUsingQrCode"));
             return false;
-        }else{
-            return selected.getId().equals(tempAsset.get(0).getId());
         }
+        
+        QrCodeLib oldQRCodeLib = qrcodeDao.findByQrCode(selected.getQrCode());
+        if(null!=oldQRCodeLib){
+            oldQRCodeLib.setStatus(4);
+            qrcodeDao.save(oldQRCodeLib);
+        }
+        qrCodeLib.setStatus(3);
+        qrcodeDao.save(qrCodeLib);
+        selected.setQrCode(qrCode);
+        return true;
     }
     
     @Transactional
@@ -303,18 +314,12 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         if (!isTimeValidate()) {
             return "";
         }
-        if(null != selected.getQrCode()){
-            if(!validateQrcode()){
-                WebUtil.addErrorMessage(WebUtil.getMessage("InvalidQRCode"));
+        if(!qrCode.equals(selected.getQrCode())){
+            if(!updateQrCode()){
                 return "";
-            }else{
-                QrCodeLib qrCodeLib = qrcodeDao.findByQrCode(selected.getQrCode());
-                if(qrCodeLib.getStatus()==1){
-                    qrCodeLib.setStatus(3);
-                    qrcodeDao.save(qrCodeLib);
-                }
             }
         }
+        
         this.save();
         assetDepreciationService.saveAssetDerpeciation(selected);
         if (resultStatus) {
@@ -643,6 +648,15 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void setOwner2(UserAccount owner2) {
         this.owner2 = owner2;
     }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
+    }
+    
     
 
 }
