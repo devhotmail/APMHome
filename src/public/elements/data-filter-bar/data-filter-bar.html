@@ -143,8 +143,8 @@
 
           this.fetchPage(this.resolveApiUrl('/api/org/all'))
           .then(function(response) {
-            var list = Array.isArray(response.orgInGfos)
-              ? response.orgInGfos.map(function(n, index) {
+            var list = Array.isArray(response.orgInfos)
+              ? response.orgInfos.map(function(n, index) {
                 return {
                   key: n.id,
                   val: n.name

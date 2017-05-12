@@ -345,7 +345,7 @@ export default {
         )
         yield put({
           type: 'depts/get/succeeded',
-          payload: data.orgInGfos
+          payload: data.orgInfos
         })
       } catch(err) {
         yield put({
