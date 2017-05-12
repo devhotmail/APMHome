@@ -1,0 +1,17 @@
+.radio-group {
+  :global .ant-radio-button-wrapper {
+    &:first-child {
+      border-radius: 16px 0 0 16px;
+    }
+    &:last-child {
+      border-radius: 0 16px 16px 0;
+    }
+    border: 1px solid #6f6f6f;
+    background: transparent;
+  }
+  :global .ant-radio-button-wrapper-checked {
+    background: #5d86d4;
+    color: white;
+    border-color: #5d86d4;
+  }
+}
