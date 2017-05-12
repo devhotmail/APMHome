@@ -217,7 +217,7 @@ export class App extends Component<void, Props, void> {
             <GearListChart
               id="center-chart"
               startAngle={90} endAngle={90} 
-              outerRadius={inner_R} innerRadius={inner_r}
+              outerRadius={Math.max(inner_R, 200)} innerRadius={Math.max(inner_r, 160)}
               margin={8}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}

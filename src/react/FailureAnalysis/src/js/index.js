@@ -7,7 +7,13 @@ import { AppContainer } from 'react-hot-loader'
 import Redbox from 'redbox-react'
 
 // tree shaking doesn't work when use strip plugin
-const Perf = process.env.NODE_ENV === 'production' ? {} : require('react-addons-perf')
+const dummy = () => null
+const Perf = process.env.NODE_ENV === 'production' ? {
+  start: dummy,
+  stop: dummy,
+  printInclusive: dummy,
+  getLastMeasurements: dummy
+} : require('react-addons-perf')
 
 // components & stores
 import Root from 'containers/Root'
@@ -16,11 +22,6 @@ import configureStore from 'stores/config'
 // stylesheets, caveat: no alias
 import '../styles/glob.sass'
 
-if (process.env.NODE_ENV === 'development'){
-  let wrapper = document.createElement('div')
-  wrapper.innerHTML = require('src/user-context.html')
-  document.querySelector('body').append(wrapper)
-}
 const history = createHistory()
 const routerMW = routerMiddleware(history)
 const store = configureStore(
@@ -30,15 +31,15 @@ const store = configureStore(
 
 const rootElement = document.getElementById('app')
 
-// Perf.start()
+Perf.start()
 render(
   <AppContainer errorReporter={Redbox}>
     <Root store={store} history={history} />
   </AppContainer>,
   rootElement
 )
-// Perf.stop()
-// Perf.printInclusive(Perf.getLastMeasurements())
+Perf.stop()
+Perf.printInclusive(Perf.getLastMeasurements())
 
 if (module.hot) {
   /**

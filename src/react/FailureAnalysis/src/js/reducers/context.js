@@ -16,9 +16,9 @@ const initContext = function() {
     ctxState[f.id] = value
   })
   
-  if(!('id' in ctxState)) {
-    throw new Error('Failed to initialize user context on this page!')
-  }
+  // if(!('id' in ctxState)) {
+  //   throw new Error('Failed to initialize user context on this page!')
+  // }
   return ctxState
 }
 

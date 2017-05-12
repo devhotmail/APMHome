@@ -4,6 +4,7 @@
     position: relative;
     height: 100%;
     min-height: 600px;
+    min-width: 750px;
   }
   
   .chart-container {
@@ -63,7 +64,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 99;
-    background-color: #f0f0f0;
+    background-color: #ccc;
     border-radius: 861112px;
     width: 300px;
     height: 300px;
