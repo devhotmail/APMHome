@@ -1,4 +1,3 @@
-const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -9,7 +8,7 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const utils = require('./utils')
 const config = require('../config')
 
-const publicPath = utils.getProdPublicPath(config.production.publicPathPrefix)
+const publicPath = utils.getProdPublicPath(config.production.commonPrefix)
 
 const webpackConfig = merge(baseWebpackConfig, {
   devtool: false,
@@ -86,9 +85,12 @@ const webpackConfig = merge(baseWebpackConfig, {
               }
             },
             {
-              loader: 'less-loader'
+              loader: 'less-loader',
+              options: {
+                modifyVars: require('./theme')
+              }
             }
-          ],
+          ]
         }),
         include: /node_modules/
       },
