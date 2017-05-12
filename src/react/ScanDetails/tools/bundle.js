@@ -5,7 +5,6 @@ const chalk = require('chalk')
 const webpack = require('webpack')
 const rimraf = require('rimraf')
 const utils = require('./utils')
-const ensureDir = require('ensure-dir')
 
 const config = require('../config')
 const pkg = require('../package.json')
@@ -18,6 +17,7 @@ const webpackConfig = require(`./webpack.${mode}.conf`)
 
 const compiler = webpack(webpackConfig)
 
+const ensureDir = require('ensure-dir')
 ensureDir(config.distDir).then(() => {
   utils.symlink(config.distDir, config.targetDir, bundler)
 })
