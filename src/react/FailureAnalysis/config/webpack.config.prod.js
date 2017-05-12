@@ -37,32 +37,32 @@ module.exports = merge(config, {
       template: 'src/index.xhtml',
       filename: 'index.xhtml',
       appMountId: 'app',
-      // minify: {
-      //   removeComments: true,
-      //   collapseWhitespace: true,
-      //   removeRedundantAttributes: true,
-      //   useShortDoctype: true,
-      //   removeEmptyAttributes: true,
-      //   removeStyleLinkTypeAttributes: true,
-      //   keepClosingSlash: true,
-      //   minifyJS: false,
-      //   minifyCSS: true,
-      //   minifyURLs: true,
-      // },
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
       inject: false,
     }),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin(GLOBALS),
-    // new webpack.optimize.UglifyJsPlugin({
-    //   compress: {
-    //     warnings: false,
-    //     'screw_ie8': true
-    //   },
-    //   output: {
-    //     comments: false
-    //   },
-    //   sourceMap: false
-    // }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+        'screw_ie8': true
+      },
+      output: {
+        comments: false
+      },
+      sourceMap: false
+    }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false

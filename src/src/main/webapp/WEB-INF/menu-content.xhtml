@@ -32,8 +32,6 @@
                        rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
                 <p:menuitem id="um16" value="#{msg.DeviceStatusMonitor}"
                             outcome="/portal/analysis/deviceStatusMonitor"/>
-                <p:menuitem id="um494" value="#{msg.FailureAnalysis}"
-                            outcome="/empty"/>
                 <p:menuitem id="um17" value="#{msg.DeviceDowntimeAnalysis}" outcome="/empty" rendered="false"/>
                 <p:menuitem id="um171" value="#{msg.FailureAnalysis}" outcome="/portal/analysis/failureAnalysis"/>
                 <p:menuitem id="um172" value="#{msg.StaffPerformance}" outcome="/portal/analysis/staffPerf.xhtml" />
