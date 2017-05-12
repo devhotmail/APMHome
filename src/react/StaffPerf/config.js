@@ -8,20 +8,21 @@ module.exports = {
       'NODE_ENV': JSON.stringify('production'),
       'API_HOST': JSON.stringify('/api')
     },
-    publicPathPrefix: '/react'
+    commonPrefix: '/'
   },
   development: {
     env: {
       'NODE_ENV': JSON.stringify('development'),
       'API_HOST': JSON.stringify('https://www.easy-mock.com/mock/590e9930f926ef14e269a377/api')
     },
-    publicPathPrefix: '/geapm/react'
+    commonPrefix: '/'
   },
   watch: {
     env: {
       'NODE_ENV': JSON.stringify('watch'),
       'API_HOST': JSON.stringify('https://www.easy-mock.com/mock/590e9930f926ef14e269a377/api')
+      // 'API_HOST': JSON.stringify('/geapm/api')
     },
-    publicPathPrefix: '/geapm/react'
+    commonPrefix: '/geapm'
   }
 }

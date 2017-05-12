@@ -4,11 +4,12 @@ const merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+
 const baseWebpackConfig = require('./webpack.base.conf')
 const utils = require('./utils')
 const config = require('../config')
 
-const publicPath = utils.getProdPublicPath(config.development.publicPathPrefix)
+const publicPath = utils.getProdPublicPath(config.watch.commonPrefix)
 
 module.exports = merge(baseWebpackConfig, {
   devtool: '#inline-cheap-module-source-map',

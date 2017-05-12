@@ -3,7 +3,8 @@ const vfs = require('vinyl-fs')
 
 function getProdPublicPath (prefix) {
   const dirName = getRootDir()
-  return `${prefix}/${dirName}`
+  console.log(prefix)
+  return path.join(prefix, 'react', dirName)
 }
 
 function getRootDir () {
