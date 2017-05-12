@@ -4,6 +4,8 @@ import { routerRedux } from 'dva/router'
 import { notification } from 'antd'
 import moment from 'moment'
 
+import mockData from '#/mock/data'
+
 import { now, dateFormat, pageSize, defaultPage } from '#/constants'
 
 const defaultRange = {
@@ -78,17 +80,20 @@ export default {
 
         const { page, ...restQuery } = params
 
-        const { data } = yield call(
-          axios,
-          {
-            url: process.env.API_HOST + '/staff',
-            params: {
-              ...restQuery,
-              start: (page - 1) * pageSize,
-              limit: pageSize
-            }
-          }
-        )
+        // const { data } = yield call(
+        //   axios,
+        //   {
+        //     url: process.env.API_HOST + '/staff',
+        //     params: {
+        //       ...restQuery,
+        //       start: (page - 1) * pageSize,
+        //       limit: pageSize
+        //     }
+        //   }
+        // )
+
+        // to wipe
+        const data = mockData
 
         if (
           (data.pages && !data.pages.total)
