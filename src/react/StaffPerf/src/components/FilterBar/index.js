@@ -6,7 +6,7 @@ import { routerRedux } from 'dva/router'
 import moment from 'moment'
 
 import { getRangePresets } from '#/utils'
-import { dateFormat } from '#/constants'
+import { dateFormat, disabledDate } from '#/constants'
 
 import styles from './styles.scss'
 
@@ -50,6 +50,7 @@ export default class FilterBar extends Component {
               })(
                 <RangePicker
                   showTime
+                  disabledDate={disabledDate}
                   format={dateFormat}
                   ranges={ranges}
                   onOk={this.handleOk} />
@@ -65,8 +66,8 @@ export default class FilterBar extends Component {
     const [from, to] = this.props.form.getFieldValue('range')
 
     this.handlePush({
-      from: from.format('YYYY-MM-DD'),
-      to: to.format('YYYY-MM-DD')
+      from: from.format(dateFormat),
+      to: to.format(dateFormat)
     })
   }
 
