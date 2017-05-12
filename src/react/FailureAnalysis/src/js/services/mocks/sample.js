@@ -49,6 +49,142 @@ const AssetTypes = {
   "10": "PET-CT"
 }
 
+const BriefsByType = {
+    "briefs": [
+        {
+            "key": {
+                "id": 7,
+                "name": "乳腺机"
+            },
+            "val": {
+                "avail": 0.8891512081430746,
+                "ftfr": 0.11084879185692542,
+                "fix": 154
+            }
+        },
+        {
+            "key": {
+                "id": 11,
+                "name": "PET-MR"
+            },
+            "val": {
+                "avail": 0.8720602232369355,
+                "ftfr": 0.12793977676306442,
+                "fix": 459
+            }
+        },
+        {
+            "key": {
+                "id": 4,
+                "name": "CR"
+            },
+            "val": {
+                "avail": 0.8740792163453408,
+                "ftfr": 0.12592078365465922,
+                "fix": 545
+            }
+        },
+        {
+            "key": {
+                "id": 1,
+                "name": "CT"
+            },
+            "val": {
+                "avail": 0.8738028972179943,
+                "ftfr": 0.12619710278200574,
+                "fix": 538
+            }
+        },
+        {
+            "key": {
+                "id": 3,
+                "name": "DR"
+            },
+            "val": {
+                "avail": 0.8668683937933367,
+                "ftfr": 0.13313160620666328,
+                "fix": 553
+            }
+        },
+        {
+            "key": {
+                "id": 10,
+                "name": "PET-CT"
+            },
+            "val": {
+                "avail": 0.8654649078302046,
+                "ftfr": 0.13453509216979537,
+                "fix": 536
+            }
+        },
+        {
+            "key": {
+                "id": 12,
+                "name": "US"
+            },
+            "val": {
+                "avail": 0.868117139935312,
+                "ftfr": 0.13188286006468797,
+                "fix": 749
+            }
+        },
+        {
+            "key": {
+                "id": 8,
+                "name": "PET"
+            },
+            "val": {
+                "avail": 0.8719409070409831,
+                "ftfr": 0.12805909295901685,
+                "fix": 802
+            }
+        },
+        {
+            "key": {
+                "id": 9,
+                "name": "NM"
+            },
+            "val": {
+                "avail": 0.8718987893906083,
+                "ftfr": 0.12810121060939172,
+                "fix": 795
+            }
+        },
+        {
+            "key": {
+                "id": 2,
+                "name": "MR"
+            },
+            "val": {
+                "avail": 0.8745664752548314,
+                "ftfr": 0.12543352474516858,
+                "fix": 963
+            }
+        },
+        {
+            "key": {
+                "id": 5,
+                "name": "RF"
+            },
+            "val": {
+                "avail": 0.8679755863428809,
+                "ftfr": 0.13202441365711914,
+                "fix": 1011
+            }
+        },
+        {
+            "key": {
+                "id": 6,
+                "name": "DSA"
+            },
+            "val": {
+                "avail": 0.864494638402672,
+                "ftfr": 0.13550536159732793,
+                "fix": 1093
+            }
+        }
+    ]
+}
 const BriefsByAsset = {
     "briefs": [
         {
@@ -1478,29 +1614,27 @@ export default function(mock) {
     info(config.url)
     return [200, Departments]
   })
-
   mock.onGet('/api/fa/briefs')
       .reply(function(config) {
         info(config.url)
-        return [200, BriefsByDept]
-      })
-  
-  mock.onGet('/api/fa/briefs/byasset')
-      .reply(function(config) {
-        info(config.url)
-        return [200, BriefsByAsset]
+        let params = config.params
+        switch (params.groupby) {
+          case 'type':
+            return [200, BriefsByType]
+          case 'dept':
+            return [200, BriefsByDept]
+          case 'asset':
+            return [200, BriefsByAsset]
+          case 'supplier':
+            return [200, BriefsBySupplier]
+        }
+        return [200, []]
       })
 
-  mock.onGet('/api/fa/briefs?from=2016-1-1&to=2016-12-31&groupby=supplier&orderby=avail')
+  mock.onGet('/api/fa/briefs', { params: { groupby: 'supplier' }})
       .reply(function(config) {
         info(config.url)
         return [200, BriefsBySupplier]
-      })
-
-  mock.onGet('/api/fa/briefs?from=2016-1-1&to=2016-12-31&groupby=dept&orderby=avail')
-      .reply(function(config) {
-        info(config.url)
-        return [200, BriefsByDept]
       })
 
   mock.onGet('/api/fa/reasons')

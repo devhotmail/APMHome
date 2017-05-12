@@ -88,3 +88,9 @@ export default (configs) => {
 
   return rangePresets
 }
+
+export function DisabledDate(current) {
+  // can not select days after today
+  // and can not select days before three years ago
+  return current && (current.valueOf() > now || current < moment(now).subtract(3, 'year'))
+}

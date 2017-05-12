@@ -50,7 +50,7 @@ if (module.hot) {
    */
    const orgError: string => void = console.error // eslint-disable-line no-console
    console.error = (message) => { // eslint-disable-line no-console
-     if (message && message.indexOf('You cannot change <Router routes>') === -1) {
+     if (typeof message !== 'string' || message.indexOf('You cannot change <Router routes>') > -1) {
        // Log the error as normally
        orgError.apply(console, [message])
      }

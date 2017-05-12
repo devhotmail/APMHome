@@ -32,7 +32,7 @@ export default class Pager extends PureComponent<defaultPropsT, PropsT, void> {
     const { total, pageSize, current, className } = this.props
     const totalPages = Math.ceil(total / pageSize)
 
-    const prevCls = [current === 1 ? 'disabled' : '', 'prev'].join(' ')
+    const prevCls = [current <= 1 ? 'disabled' : '', 'prev'].join(' ')
     const nextCls = [current === totalPages ? 'disabled' : '', 'next'].join(' ')
 
     return (
@@ -40,9 +40,13 @@ export default class Pager extends PureComponent<defaultPropsT, PropsT, void> {
         <div className="wrapper">
           <div className={prevCls} onClick={this.handlePrev}></div>
           <div className="counter">
-            <span>{current}</span>
-            <span>/</span>
-            <span>{totalPages}</span>
+            { totalPages > 0 &&
+              <span>
+                <span>{(current % pageSize) + 1}</span>
+                <span>/</span>
+                <span>{totalPages}</span>
+              </span>
+            }
           </div>
           <div className={nextCls} onClick={this.handleNext}></div>
         </div>

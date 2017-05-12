@@ -7,7 +7,7 @@ import autobind from 'autobind-decorator'
 import { DatePicker } from 'antd'
 import SelectHelper from 'components/SelectHelper'
 import { ParamUpdate } from 'actions'
-import getRangePresets from 'utils/getRangePresets'
+import getRangePresets, { DisabledDate } from 'utils/getRangePresets'
 import './header.scss'
 
 const RangePicker = DatePicker.RangePicker
@@ -81,6 +81,7 @@ export class Header extends PureComponent {
             showTime
             format="YYYY-MM-DD"
             ranges={Ranges}
+            disabledDate={DisabledDate}
             defaultValue={[period.from, period.to]}
             onChange={onPeriodChange}
           />

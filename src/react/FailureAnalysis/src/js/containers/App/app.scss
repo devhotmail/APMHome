@@ -6,6 +6,10 @@
     min-height: 600px;
     min-width: 750px;
     width: auto;
+
+    .gear-list-chart.child-focued .tooth-annulus-sector:not(.tooth-focused){
+      opacity: .5;
+    }
   }
   
   .chart-container {
@@ -26,11 +30,11 @@
   }
 
   .pager-left {
-    left: -40px;
+    left: 0px;
   }
 
   .pager-right {
-    right: -40px;
+    right: 0px;
   }
   #left-chart {
     position: absolute;
@@ -45,7 +49,8 @@
     left: 50%;
     transform: translate(-50%, -54%);
     z-index: 98;
-    
+    user-select: none;
+    pointer-events: none;
     svg {
       overflow: visible;
     }

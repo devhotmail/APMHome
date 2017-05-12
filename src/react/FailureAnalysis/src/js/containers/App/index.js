@@ -5,7 +5,8 @@ import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
 import _ from 'lodash'
-import Radium from 'radium'
+// import Radium from 'radium'
+import { message } from 'antd'
 import EventBus from 'eventbusjs'
 import GearListChart from 'components/GearListChart'
 import Header from 'containers/Header'
@@ -21,6 +22,7 @@ import { GenerateTeethData as GTD, RandomInt } from 'utils/helpers'
 import './app.scss'
 import cache from 'utils/cache'
 import { MetaUpdate } from 'actions'
+import { DataTypeMapping } from 'services/api'
 
 const Placeholder = { strips: { color: '#F9F9F9', weight: 1, type: 'placeholder' } }
 const Items = [
@@ -40,7 +42,6 @@ const DisplayOptions = [
   { key: 'display_brand' },
   { key: 'display_dept' },
 ]
-
 function DataOrPlaceHolder(items, placeholderSize) {
   if (items && items.length && items[0].strips.type !== 'placeholder') {
     return items
@@ -49,20 +50,15 @@ function DataOrPlaceHolder(items, placeholderSize) {
 }
 
 function calc(width, height) {
-  if (width < 1000) {
-    width = 1000
-  }
-  if (width > 1500) {
-    width = 1500
-  }
+  width = _.clamp(width, 1000, 1500)
   if (height < 900) {
     width = 1100
   }
   return {
-    outer_R: width * .4125 / 1.5,
-    outer_r: width * .3 / 1.5,
-    inner_R: width * .2625 / 1.5,
-    inner_r: width * .2125 / 1.5
+    outer_R: width * .275,
+    outer_r: width * .2,
+    inner_R: width * .175,
+    inner_r: width * .142
   }
 }
 
@@ -70,6 +66,13 @@ function mapDispatch2Porps(dispatch) {
   return {
     updateDisplayType: (value) => {
       dispatch(ParamUpdate('display', value.key))
+    },
+    // sync data by response, do not trigger new request
+    syncPagination: (type, value) => {
+      dispatch(ParamUpdate('pagination/sync', { type, value }))
+    },
+    updatePagination: (type, value) => {
+      dispatch(ParamUpdate('pagination', { type, value }))
     },
     fetchBriefs: (type) => {
       dispatch({ type: 'update/briefs/' + type })
@@ -80,8 +83,8 @@ function mapDispatch2Porps(dispatch) {
 }
 
 function mapState2Props(state) {
-  let { parameters : { pagination, display } } = state
-  return { pagination, display }
+  let { parameters : { pagination, display, dataType } } = state
+  return { pagination, display, dataType }
 }
 
 @connect(mapState2Props, mapDispatch2Porps)
@@ -100,25 +103,29 @@ export class App extends Component<void, Props, void> {
   }
 
   showTooltip(evt) {
+    let { t, dataType } = this.props 
     if (evt.type === 'mouseleave') {
       this.setState({ tooltipX: -861112, tooltipY: -861112 })
     } else {
       let stripData = evt.stripData
-      let tooltip = stripData.type === 'placeholder' ? null : { label: getLabel(stripData) }
+      let tooltip = stripData.type === 'placeholder' ? null : getLabel(stripData, dataType)
       this.setState({ tooltipX: evt.clientX, tooltipY: evt.clientY, tooltip: tooltip })
     }
-    function getLabel(strip) {
-      
+    function getLabel(strip, type) {
+      let unit = t('incident_count_unit')
       if (strip.data.count) {
-        return strip.data.count
+        return strip.data.count + unit
       }
       if (strip.data.val) {
-        return (strip.data.val.avail * 100).toFixed(2) + '%'
+        let val = strip.data.val[DataTypeMapping[type]]
+        return type === 'incident_count' ? (val + unit) : (val * 100).toFixed(2) + '%'
       }
       return 'N.A.'
     }
   }
-
+  clickLeftTooth(evt) {
+    alert(evt)
+  }
   device() {
     const device = {
       name: 'CT-1',
@@ -169,16 +176,26 @@ export class App extends Component<void, Props, void> {
     return DisplayOptions.map(o => ({ key: o.key, label: this.props.t(o.key)}))
   }
   loadBriefData(evt) {
+    let { t } = this.props
     let briefs = evt.target
+    if (!briefs.length) {
+      message.info(t('no_more_data'))
+      return
+    }
     if (briefs.type === 'left') {
       this.setState({ leftItems: briefs })
     } else if (briefs.type === 'right'){
       this.setState({ rightItems: briefs })
     }
   }
+
   loadReason(evt) {
     let reasons = evt.target
-    this.setState({ centerItems: reasons })
+    if (reasons.length) {
+      this.setState({ centerItems: reasons })
+    } else {
+      message.info(this.props.t('no_more_data'))
+    }
   }
   constructor(props) {
     super(props)
@@ -188,20 +205,20 @@ export class App extends Component<void, Props, void> {
     if (!cache.get('departments') || !cache.get('assettypes')) {
       updateMeta()
     }
+    
+  }
+  componentWillMount() {
+    let { fetchBriefs, fetchReasons } = this.props
+    fetchBriefs('left')
+    fetchReasons() // todo
+    fetchBriefs('right')
   }
   render() {
     let { tooltipX, tooltipY, tooltip, leftItems, centerItems, rightItems, selectedDevice } = this.state
-    let { updateDisplayType, pagination, fetchBriefs, fetchReasons, clientRect, display } = this.props
+    let { updateDisplayType, pagination, clientRect, display } = this.props
+    let { left, right } = pagination
     let { outer_R, outer_r, inner_R, inner_r  } = calc(clientRect.width, clientRect.height)
-    if (!leftItems || leftItems.length === 0) {
-      fetchBriefs('left')
-    }
-    if (!centerItems || centerItems.length === 0) {
-      fetchReasons()
-    }
-    if (!rightItems || rightItems.length === 0) {
-      fetchBriefs('right')
-    }
+
     return (
       <div id="app-container" className="is-fullwidth">
         <Header/>
@@ -209,14 +226,16 @@ export class App extends Component<void, Props, void> {
           <div className="full-chart container">
 
             <div className="display-select">{selectHelper(display, this._getDisplayOptions(), updateDisplayType)}</div>
-            {/*<Pagination current={1} pageSize={10} total={100} className="pager-left" onChange={this._onLeftPagerChange}/>
-            <Pagination current={1} pageSize={10} total={100} className="pager-right" onChange={this._onRightPagerChange}/>*/}
+            <Pagination current={left.skip} pageSize={left.top} total={left.total} 
+              className="pager-left" onChange={this._onLeftPagerChange}/>
+            <Pagination current={right.skip} pageSize={right.top} total={right.total} 
+              className="pager-right" onChange={this._onRightPagerChange}/>
             <GearListChart 
               id="left-chart"
               startAngle={110} endAngle={250} 
               outerRadius={outer_R} innerRadius={outer_r}
               margin={7}
-              onClick={() => null}
+              onClick={this.clickLeftTooth}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
               clockwise={false}
@@ -240,14 +259,14 @@ export class App extends Component<void, Props, void> {
               startAngle={290} endAngle={70} 
               outerRadius={outer_R} innerRadius={outer_r}
               margin={3}
-              onClick={this.device}
+              onClick={this.device} //todo
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
               items={DataOrPlaceHolder(rightItems, pagination.right.top)} />
 
           </div>
-          { tooltip && tooltip.label && <Tooltip mouseX={tooltipX} mouseY={tooltipY} offsetY={-10} anchor="hcb">
-            <div style={{color: tooltip && tooltip.color}} className="tooltip-content">{tooltip.label}</div>
+          { tooltip && <Tooltip mouseX={tooltipX} mouseY={tooltipY} offsetY={-10} anchor="hcb">
+            <div style={{color: tooltip && tooltip.color}} className="tooltip-content">{tooltip}</div>
           </Tooltip>}
         </div>
         <button onClick={this.device}>Select Device</button>

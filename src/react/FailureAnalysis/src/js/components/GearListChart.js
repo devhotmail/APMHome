@@ -51,21 +51,27 @@ export default class GearListChart extends PureComponent<void, GearListProps, vo
     return evt.dispatchConfig.registrationName || evt.dispatchConfig.phasedRegistrationNames.bubbled
   }
 
+  state = {
+    childFocused: false,
+  }
+
   _defaultOffsetAngle = 0
   _springOffsetAngle = 360
 
   mouseEventHandler = (evt) => {
-    this.props[GearListChart.getRegistrationName(evt)](evt)
+    let name = GearListChart.getRegistrationName(evt)
+    this.props[name](evt)
+    if (name === 'onClick') {
+      this.setState( { childFocused: !this.state.childFocused })
+    }
   }
-  motionWillEnter = () => {
-    return { offsetAngle: this._defaultOffsetAngle }
-  }
-  motionWillLeave = () => {
-    return { offsetAngle: this._springOffsetAngle }
-  }
+  motionWillEnter = () => ({ offsetAngle: this._defaultOffsetAngle }) 
+  motionWillLeave = () => ({ offsetAngle: this._springOffsetAngle })
+
   render() {
     let { id, innerRadius, outerRadius, items, margin, limit, startAngle, endAngle, clockwise, className, style,
       onMouseMove, onMouseEnter, onMouseLeave, onMouseOver, onClick } = this.props
+    let { childFocused } = this.state
     let [ _startAngle, _endAngle ] = NormalizeAngleRange(startAngle, endAngle)
     let [ width, height, cx, cy ] = AnnulusViewport(startAngle, endAngle, outerRadius, innerRadius, 10)
     let _perItemAngle = (_endAngle - _startAngle) / items.length
@@ -76,7 +82,7 @@ export default class GearListChart extends PureComponent<void, GearListProps, vo
       this._springOffsetAngle = 0
     }
     return (
-      <div id={id} className={classnames('gear-list-chart', className)} 
+      <div id={id} className={classnames('gear-list-chart', className, childFocused ? 'child-focused' : '')} 
         style={[Styles.container, style]}>
 
         <svg width={width} height={height}>
