@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export ranges from './ranges'
 
 export const now = new Date()
@@ -17,3 +19,9 @@ export const COLORS = [
 ]
 
 export const PAGE_SIZE = 15
+
+export function disabledDate(current) {
+  // can not select days after today
+  // and can not select days before three years ago
+  return current && (current.valueOf() > now || current < moment(now).subtract(3, 'year'))
+}
