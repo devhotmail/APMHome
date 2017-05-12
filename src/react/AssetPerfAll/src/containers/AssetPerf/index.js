@@ -26,7 +26,11 @@ class AssetPerf extends React.PureComponent {
       <div className={styles['asset-perf']}>
         <FilterBar className={styles['filter-bar']} location={this.props.location}/>
         <BubbleChart data={chartData} depth={data.length}/>
-        <SidePanel className={styles['side-panel']} />
+        {
+          filters.type === 'future'
+          ? <SidePanel className={styles['side-panel']} />
+          : null
+        }
       </div>
     )
   }

@@ -2,98 +2,71 @@ import React, { Component } from 'react'
 import { connect } from 'dva'
 import { Spin, Alert, Tooltip } from 'antd'
 
-import { round, isSameCursor } from '#/utils'
+import { round } from '#/utils'
 import { currentYear } from '#/constants'
 
 import ProgressBar from '#/components/ProgressBar'
 
-import Suggestions from '../Suggestions'
 
 import styles from './styles.scss'
 
-const statusTips = [
-  {
-    text: '使用率预测超负荷台数',
-    icon: 'dewicon-circle-full'
-  },
-  {
-    text: '使用率预测低负荷台数',
-    icon: 'dewicon-circle-low'
-  }
-]
-
 @connect(state => ({
-  year: state.finance.query.year
+  overview: state.overview.data
 }))
 export default class SystemPanel extends Component {
   render () {
-    const { data, year } = this.props
-    if (!data) return null
+    const { overview } = this.props
+    const revenueRange = overview.slice(0, 4).reduce((prev, cur) => {
+      if (cur.revenue < prev[0]) prev[0] = cur.revenue
+      if (cur.revenue > prev[1]) prev[1] = cur.revenue
+      return prev
+    }, [+Infinity, -Infinity])
+    const costRange = overview.slice(0, 4).reduce((prev, cur) => {
+      if (cur.cost < prev[0]) prev[0] = cur.cost
+      if (cur.cost > prev[1]) prev[1] = cur.cost
+      return prev
+    }, [+Infinity, -Infinity])
     return (
       <div className={styles.systemPanel}>
-        <div className="lead m-b-1">当前位置: {data.name}</div>
-        {
-          Array.isArray(data.historical_data)
-            ? data.historical_data.map(n => {
-              return <ProgressBar
-                key={n.year}
-                title={`${n.year}${n.year === currentYear ? '至今' : '年' }`}
-                percent={n.usage}
-                textDesc={`${round(n.usage * 100, 1)}%`} />
-            })
-            : null
-        }
-        <ProgressBar
-          color="#46af9b"
-          title={`${year}预测`}
-          percent={data.usage_predict}
-          textDesc={`
-            ${round(data.usage_predict * 100, 1)}%
-            ${round(data.usage_predict_increase * 100, 1)}%
-          `} />
-        {
-          Array.isArray(data.usage_sum)
-            ? <div className={styles.statusTips}>
-              {
-                data.usage_sum.slice().reverse().map((n, i) => {
-                  const { text, icon } = statusTips[i]
-                  return <div key={i} className={styles.statusTip}>
-                    <div>{text}</div>
-                    <i className={`dewicon ${icon}`}></i>
-                    <div className="lead">{n}台</div>
-                  </div>
-                })
-              }
-            </div>
-            : null
-        }
-        {
-          Array.isArray(data.suggestions) && data.suggestions.length
-            ? <div className={styles.suggestions}>
-              <Suggestions data={data} />
-            </div>
-            : null
-        }
-        <div className={styles.legend}>
-          <div className="lead">使用率负荷说明</div>
-          <div className="flex flex--align-items--center">
-            <i className="dewicon dewicon-circle-high"></i>
-            <span className="m-l-1">平均使用率预测</span>
-          </div>
-          <Tooltip placement="topLeft" title="您可以自定义使用率大于多少为满负荷">
-            <div className="flex flex--align-items--center">
-              <i className="dewicon dewicon-circle-full"></i>
-              <span className="m-l-1">满负荷使用率</span>
-            </div>
-          </Tooltip>
-          <Tooltip placement="topLeft" title="您可以自定义使用率小于多少为低负荷">
-            <div className="flex flex--align-items--center">
-              <i className="dewicon dewicon-circle-low"></i>
-              <span className="m-l-1">低负荷使用率</span>
-            </div>
-          </Tooltip>
-          <div>球大小与设备利润预测相关</div>
-          <div>左侧的图形显示的是您选择的预测年份的数据</div>
+        <h2>全部设备：</h2>
+        <div className={styles['group']}>
+          <div className="lead m-b-1">收入预测（百万）：</div>
+          {
+            Array.isArray(overview)
+              ? overview.slice(0, 3).map((n, index) => {
+                return <ProgressBar
+                  key={index}
+                  title={index < 2 ? `${currentYear - 2 + index}年` : `${currentYear}至今`}
+                  percent={n.revenue / revenueRange[1]}
+                  textDesc={`${round(n.revenue / 1000000)}`} />
+              })
+              : null
+          }
+          <ProgressBar
+            color="#46af9b"
+            title={`${currentYear}预测`}
+            percent={overview[3].revenue / revenueRange[1]}
+            textDesc={`${round(overview[3].revenue / 100000, 1)}  ${round(overview[4].revenue_increase * 100, 1)}%`} />
+        </div>
+
+        <div className={styles['group']}>
+          <div className="lead m-b-1">成本预测（百万）：</div>
+          {
+            Array.isArray(overview)
+              ? overview.slice(0, 3).map((n, index) => {
+                return <ProgressBar
+                  key={index}
+                  title={index < 2 ? `${currentYear - 2 + index}年` : `${currentYear}至今`}
+                  percent={n.cost / costRange[1]}
+                  textDesc={`${round(n.cost / 1000000)}`} />
+              })
+              : null
+          }
+          <ProgressBar
+            color="#46af9b"
+            title={`${currentYear}预测`}
+            percent={overview[3].cost / costRange[1]}
+            textDesc={`${round(overview[3].cost / 1000000, 1)}  ${round(overview[4].cost_increase * 100, 1)}%`} />
         </div>
       </div>
     )

@@ -69,11 +69,7 @@ export default class SidePanel extends Component {
                       transform: `translateX(${data.translate}%)`
                     }}
                   >
-                  {/* {
-                    focus.node && focus.node.data
-                      ? <SystemPanel data={focus.node.data} />
-                      : null
-                  } */}
+                    <SystemPanel />
                   </div>
                 )}
               </Animate>

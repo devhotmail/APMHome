@@ -1,11 +1,18 @@
 @import "../../../styles/variables.scss";
 
 .systemPanel {
+  h2 {
+    font-size: 18px;
+    margin-bottom: 1em;
+  }
+  .group {
+    margin-bottom: 1em;
+  }
   :global {
     .dewicon {
       font-size: 24px;
     }
-  }  
+  }
 }
 
 @mixin with-top-border {

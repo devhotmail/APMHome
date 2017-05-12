@@ -13,6 +13,7 @@ import profit from '#/models/profit'
 import config from '#/models/config'
 import user from '#/models/user'
 import filters from '#/models/filters'
+import overview from '#/models/overview'
 
 const historyEngine = useRouterHistory(createHashHistory)({
   queryKey: false,
@@ -31,6 +32,7 @@ app.model(profit)
 app.model(config)
 app.model(user)
 app.model(filters)
+app.model(overview)
 
 app.router(router)
 

@@ -140,8 +140,8 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
               start: Math.max(data.pages.start - PAGE_SIZE, 0)
             })}
             next
-            x={cx + r * Math.sin(positions[0] - 4 / 180 * Math.PI)}
-            y={cy - r * Math.cos(positions[0] - 4 / 180 * Math.PI)}
+            x={cx + r * Math.sin(positions[0] - 5 / 180 * Math.PI)}
+            y={cy - r * Math.cos(positions[0] - 5 / 180 * Math.PI)}
           />
         }
         {
@@ -155,8 +155,8 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
               start: Math.min(data.pages.start + PAGE_SIZE, data.pages.total)
             })}
             next
-            x={cx + r * Math.sin(positions[positions.length - 1] + 4 / 180 * Math.PI)}
-            y={cy - r * Math.cos(positions[positions.length - 1] + 4 / 180 * Math.PI)}
+            x={cx + r * Math.sin(positions[positions.length - 1] + 5 / 180 * Math.PI)}
+            y={cy - r * Math.cos(positions[positions.length - 1] + 5 / 180 * Math.PI)}
           />
         }
       </g>
@@ -166,8 +166,8 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
   componentWillReceiveProps(nextProps) {
     if (!nextProps.data.pages || !this.props.data.pages) return this.direction = 0
     else if (nextProps.data.pages.start === this.props.data.pages.start) return this.direction = 0
-    else if (nextProps.data.pages.start > this.props.data.pages.start) return this.direction = 1
-    else return this.direction = -1
+    else if (nextProps.data.pages.start > this.props.data.pages.start) return this.direction = -1
+    else return this.direction = 1
 
   }
 
@@ -266,7 +266,7 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
               x: style.x,
               y: style.y,
               rotate: spring((90 / 180 * Math.PI) * this.direction),
-              opacity: 0
+              opacity: spring(0)
             })}
           >
             {

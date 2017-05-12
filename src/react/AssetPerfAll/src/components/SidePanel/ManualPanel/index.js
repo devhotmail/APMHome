@@ -9,7 +9,6 @@ import ConfigType from '../ConfigType'
 import ProgressBar from '#/components/ProgressBar'
 import { round } from '#/utils'
 
-import Suggestions from '../Suggestions'
 
 import styles from './styles.scss'
 
@@ -28,7 +27,7 @@ class ManualPanel extends PureComponent {
         <div className="m-b-1 font-small text-muted">手工调节预期增长（基于系统自动预测）</div>
         {
           groupBy === 'type'
-          ? <ConfigType {...this.props} config={c}/>
+          ? <ConfigType {...this.props} config={this.props.config[0]}/>
           : config.map((c, index) => {
             if (index === 0) {
               return <ConfigGroup key="group" onRowClick={record => this.props.dispatch({
@@ -42,7 +41,7 @@ class ManualPanel extends PureComponent {
             if (index === 1) return <ConfigType key={filterId} {...this.props} config={c}/>
           })
         }
-        <div className="m-y-1 text-center">
+        <div className={"m-y-1 text-center " + styles['button-container']}>
           <Button
             size="large"
             type="primary"

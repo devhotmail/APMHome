@@ -80,6 +80,12 @@ export default {
     // }
   },
   reducers: {
+    ['changes/reset'](state){
+      return {
+        ...state,
+        changes: []
+      }
+    },
     ['data/get/succeeded'](state, { payload, level }) {
       const data = [...state.data]
       data[level] = payload.items
