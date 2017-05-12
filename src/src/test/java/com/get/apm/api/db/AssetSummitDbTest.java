@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Ignore
-public class AssetSummitUnitTest {
+public class AssetSummitDbTest {
   private final Logger log = LoggerFactory.getLogger(DynamicSqlTest.class);
   private final List<LocalDate> dates = Stream.iterate(LocalDate.now().minusYears(3), d -> d.plusDays(1)).takeUntil(date -> date.isAfter(LocalDate.now())).toJavaList();
   private final String sql = new SQL().INSERT_INTO("asset_summit")

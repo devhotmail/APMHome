@@ -11,7 +11,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 @Ignore
-public class ProfitServiceDbUnitest extends AbstractDbTest {
+public class ProfitServiceDbTest extends AbstractDbTest {
   @Test
   public void sqlTest() {
     String groupBy = "type";
