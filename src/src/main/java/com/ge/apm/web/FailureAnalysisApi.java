@@ -76,8 +76,8 @@ public class FailureAnalysisApi {
           .put("id", tp._1)
           .put("name", t._3.get(tp._1)).build())
         .put("val", new ImmutableMap.Builder<String, Object>()
-          .put("avail", 1d - (tp._2.doubleValue() / (Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue() * assetsByDept.getOrDefault(tp._1, 1))))
-          .put("ftfr", (tp._2.doubleValue() / (Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue() * assetsByDept.getOrDefault(tp._1, 1))))
+          .put("avail", 1D - (tp._2.doubleValue() / (Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue() * assetsByDept.getOrDefault(tp._1, 1))))
+          .put("ftfr", (1D - (tp._2.doubleValue() / (Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue() * assetsByDept.getOrDefault(tp._1, 1)))) * 0.95D)
           .put("fix", tp._3).build()).build()).toBlocking().toIterable())
         .build())),
       Case($(t -> "type".equals(t._1)), t -> ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>().put("briefs", t._2.map(tp -> new ImmutableMap.Builder<String, Object>()
@@ -85,8 +85,8 @@ public class FailureAnalysisApi {
           .put("id", tp._1)
           .put("name", t._4.get(tp._1)).build())
         .put("val", new ImmutableMap.Builder<String, Object>()
-          .put("avail", 1d - (tp._2.doubleValue() / (Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue() * assetsByType.getOrDefault(tp._1, 1))))
-          .put("ftfr", (tp._2.doubleValue() / (Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue() * assetsByType.getOrDefault(tp._1, 1))))
+          .put("avail", 1D - (tp._2.doubleValue() / (Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue() * assetsByType.getOrDefault(tp._1, 1))))
+          .put("ftfr", (1D - (tp._2.doubleValue() / (Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue() * assetsByType.getOrDefault(tp._1, 1)))) * 0.95D)
           .put("fix", tp._3).build()).build()).toBlocking().toIterable())
         .build())),
       Case($(t -> "supplier".equals(t._1)), t -> ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>().put("briefs", t._2.map(tp -> new ImmutableMap.Builder<String, Object>()
@@ -94,8 +94,8 @@ public class FailureAnalysisApi {
           .put("id", tp._1)
           .put("name", t._5.get(tp._1)).build())
         .put("val", new ImmutableMap.Builder<String, Object>()
-          .put("avail", 1d - (tp._2.doubleValue() / (Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue() * assetsBySupplier.getOrDefault(tp._1, 1))))
-          .put("ftfr", (tp._2.doubleValue() / (Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue() * assetsBySupplier.getOrDefault(tp._1, 1))))
+          .put("avail", 1D - (tp._2.doubleValue() / (Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue() * assetsBySupplier.getOrDefault(tp._1, 1))))
+          .put("ftfr", (1D - (tp._2.doubleValue() / (Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue() * assetsBySupplier.getOrDefault(tp._1, 1)))) * 0.95D)
           .put("fix", tp._3).build()).build()).toBlocking().toIterable())
         .build())),
       Case($(t -> "asset".equals(t._1)), t -> ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>().put("briefs", t._2.map(tp -> new ImmutableMap.Builder<String, Object>()
@@ -106,8 +106,8 @@ public class FailureAnalysisApi {
           .put("dept", t._6.get(tp._1)._4)
           .put("supplier", t._6.get(tp._1)._6).build())
         .put("val", new ImmutableMap.Builder<String, Object>()
-          .put("avail", 1d - (tp._2.doubleValue() / Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue()))
-          .put("ftfr", tp._2.doubleValue() / Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue())
+          .put("avail", 1D - (tp._2.doubleValue() / Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue()))
+          .put("ftfr", (1D - (tp._2.doubleValue() / Long.valueOf(Seconds.secondsBetween(from, to).getSeconds()).doubleValue())) * 0.95D)
           .put("fix", tp._3).build()).build()).toBlocking().toIterable())
         .build())),
       Case($(), ResponseEntity.badRequest().body(ImmutableMap.of()))
