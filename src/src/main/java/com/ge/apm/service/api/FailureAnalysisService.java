@@ -108,7 +108,8 @@ public class FailureAnalysisService {
         WHERE("a.id = :asset");
       }
       GROUP_BY("w.case_type");
-      ORDER_BY("reason_count");
+      ORDER_BY("reason_count desc");
+
     }}.toString()).parameter("site", site).parameter("hospital", hospital).parameter("from", from).parameter("to", to);
     return Option.of(builder).filter(s -> Option.of(type).isDefined()).map(o -> o.parameter("type", type))
       .orElse(Option.of(builder)).filter(o -> Option.of(dept).isDefined()).map(o -> o.parameter("dept", dept))

@@ -85,6 +85,7 @@ alter table asset_summit add constraint uk_asset_summit_asset_n_date unique (ass
 INSERT INTO "i18n_message" VALUES (269, 'label', 'AssetBrowser', '设备分布分析', 'Asset Browser', NULL, -1);
 INSERT INTO "i18n_message" VALUES (270, 'label', 'UsageAndClinicalPerformance', '运用与临床绩效', 'Usage And Clinical Performance', NULL, -1);
 INSERT INTO "i18n_message" VALUES (271, 'label', 'FinancialPerformanceAndForecast', '财务绩效与预测', 'Financial Performance And Forcast', NULL, -1);
+INSERT INTO "i18n_message" VALUES (5624,'label','StaffPerformance', '人员绩效分析','Staff Performance Analysis',null,-1);
 
 create table  proc_part(
 id serial not null primary key,
