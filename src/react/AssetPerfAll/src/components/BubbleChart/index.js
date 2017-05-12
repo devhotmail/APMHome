@@ -29,8 +29,8 @@ class BubbleChart extends React.PureComponent<*, Props, *> {
       color = ROOT_COLOR
       background = ROOT_BACKGROUND_COLOR
     } else {
-      color = COLORS[cursor[0]]
-      background = BACKGROUND_COLORS[cursor[0]]
+      color = COLORS[cursor[0] % COLORS.length]
+      background = BACKGROUND_COLORS[cursor[0] % BACKGROUND_COLORS.length]
     }
 
     return (
