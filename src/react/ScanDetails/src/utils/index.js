@@ -1,4 +1,5 @@
 // @flow
+export getRangePresets from './getRangePresets'
 
 export function randRange(min:number, max:number):number {
   return min + (max - min) * Math.random()

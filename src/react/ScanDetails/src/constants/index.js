@@ -1,3 +1,9 @@
+export ranges from './ranges'
+
+export const now = new Date()
+export const currentYear = now.getFullYear()
+export const dateFormat = 'YYYY-MM-DD'
+
 export const COLORS = [
   '#6ab4a6',
   '#d5c165',
