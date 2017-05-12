@@ -5,7 +5,7 @@ import withClientRect from '#/HOC/withClientRect'
 import Ring from '#/components/Ring'
 import Gauge from '#/components/Gauge'
 import ImmutableComponent from '#/components/ImmutableComponent'
-import { COLORS, BACKGROUND_COLORS, ROOT_COLOR, ROOT_BACKGROUND_COLOR } from '#/constants'
+import { COLORS, BACKGROUND_COLORS, ROOT_COLOR, ROOT_BACKGROUND_COLOR, PAGE_SIZE } from '#/constants'
 
 type Props = {
   clientRect: {
@@ -29,8 +29,8 @@ class BubbleChart extends React.PureComponent<*, Props, *> {
       color = ROOT_COLOR
       background = ROOT_BACKGROUND_COLOR
     } else {
-      color = COLORS[cursor[0] % COLORS.length]
-      background = BACKGROUND_COLORS[cursor[0] % BACKGROUND_COLORS.length]
+      color = COLORS[cursor[0] % PAGE_SIZE]
+      background = BACKGROUND_COLORS[cursor[0] % PAGE_SIZE]
     }
 
     return (
