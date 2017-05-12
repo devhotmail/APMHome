@@ -57,7 +57,7 @@ export default class Chart extends PureComponent<*, PropsT, *> {
 
     return (
       <div>
-        <svg width={width} height={height}>
+        <svg width={width} height={height} onClick={this.props.backRoot}>
           <g transform={`translate(${width / 2}, ${height / 2})`}>
             <Transition
               data={chartData}
@@ -103,6 +103,7 @@ export default class Chart extends PureComponent<*, PropsT, *> {
   }
 
   handleClick = node => e => {
+    e.stopPropagation()
     const { focus } = this.props
     if (focus && node.id === focus.id) {
       this.props.backRoot()

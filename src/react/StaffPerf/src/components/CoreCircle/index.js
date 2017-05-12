@@ -43,8 +43,8 @@ export default class CoreCircle extends Component<*, PropsT, *> {
               <div className={styles.rect} style={{color: 'rgb(106,180,166)'}}></div>
               <div>
                 <span>工作量</span>
-                <span>&nbsp;{focus.man_hour} / {range.hour_total}</span>
-                <span>&nbsp;(法定小时) = {round(focus.man_hour * 100 / range.hour_total)} %</span>
+                <span>&nbsp;{focus.man_hour} / {focus.id ? range.man_hour : range.hour_total}</span>
+                <span>&nbsp;(法定小时) = {round(focus.man_hour * 100 / (focus.id ? range.man_hour : range.hour_tota))} %</span>
               </div>
             </div>
             <div className="m-l-2 flex flex--align-items--center">
