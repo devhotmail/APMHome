@@ -5,6 +5,8 @@ const chalk = require('chalk')
 const webpack = require('webpack')
 const rimraf = require('rimraf')
 const utils = require('./utils')
+const ensureDir = require('ensure-dir')
+
 const config = require('../config')
 const pkg = require('../package.json')
 
@@ -16,38 +18,43 @@ const webpackConfig = require(`./webpack.${mode}.conf`)
 
 const compiler = webpack(webpackConfig)
 
-const spinner = ora({
-  color: 'green',
-  text: ` Building for ${mode} mode...`,
-  spinner: cliSpinners.bouncingBar
+ensureDir(config.distDir).then(() => {
+  utils.symlink(config.distDir, config.targetDir, bundler)
 })
 
-spinner.start()
-
-rimraf(config.distDir, err => {
-  if (err) throw err
-
-  compiler.run((err, stats) => {
-    if (err) {
-      throw err
-      spinner.fail(chalk.red(`Build failed for Project ${pkg.name}.\n`))
-    }
-    spinner.succeed(chalk.green(`Build complete for Project ${pkg.name}.\n`))
-    process.stdout.write(statsOutput(stats) + '\n\n')
-    utils.symlink()
+function bundler() {
+  const spinner = ora({
+    color: 'green',
+    text: ` Building for ${mode} mode...`,
+    spinner: cliSpinners.bouncingBar
   })
 
-  if (isWatchMode) {
-    compiler.watch({
-      aggregateTimeout: 300,
-      poll: 1000
-    }, (err, stats) => {
-      if (err) throw err
-      console.log(chalk.bgGreen(chalk.black(` Files updated and you can reload it manually.\n`)))
-      process.stdout.write(statsOutput(stats) + '\n\n')
-    })
-  }
-})
+  spinner.start()
+
+  rimraf(config.distDir, err => {
+    if (err) throw err
+
+    if (isWatchMode) {
+      compiler.watch({
+        aggregateTimeout: 300,
+        poll: 1000
+      }, (err, stats) => {
+        if (err) throw err
+        spinner.succeed(chalk.bgGreen(chalk.black(` Files updated and you can reload it manually.\n`)))
+        process.stdout.write(statsOutput(stats) + '\n\n')
+      })
+    } else {
+      compiler.run((err, stats) => {
+        if (err) {
+          throw err
+          spinner.fail(chalk.red(`Build failed for Project ${pkg.name}.\n`))
+        }
+        spinner.succeed(chalk.green(`Build complete for Project ${pkg.name}.\n`))
+        process.stdout.write(statsOutput(stats) + '\n\n')
+      })
+    }
+  })
+}
 
 function statsOutput(stats) {
   return stats.toString({

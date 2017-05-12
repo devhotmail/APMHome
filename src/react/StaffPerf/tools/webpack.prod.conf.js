@@ -155,7 +155,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   ]
 })
 
-const bundleAnalyzerReport = process.env.NODE_ENV === 'analysis'
+const bundleAnalyzerReport = process.env.Analysis
 
 if (bundleAnalyzerReport) {
   var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin

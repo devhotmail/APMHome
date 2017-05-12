@@ -2,10 +2,12 @@ const path = require('path')
 const config = require('../config')
 
 const theme = {
-  '@btn-border-radius-base': '14px',
-  '@border-color-base': '#bababa',
-  '@border-color-split': '#bababa',
-  '@btn-primary-bg': '#5b84d7'
+  '@border-radius-base': '2px',
+  '@input-height-lg': '40px',
+  '@form-item-margin-bottom': '10px',
+  '@btn-padding-base': '10px 15px',
+  '@fill-body': 'transparent',
+  '@font-size-base': '14px'
 }
 
 const { NODE_ENV } = process.env

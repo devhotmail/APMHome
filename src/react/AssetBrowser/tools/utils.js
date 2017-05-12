@@ -1,30 +1,26 @@
 const path = require('path')
 const vfs = require('vinyl-fs')
 
-const config = require('../config')
+function getProdPublicPath (prefix) {
+  const dirName = getRootDir()
+  return path.join(prefix, 'react', dirName)
+}
 
-function getRootDir() {
+function getRootDir () {
   const pwd = path.resolve(__dirname, '../')
   return path.basename(pwd, path.extname(pwd))
 }
 
-function getProdPublicPath() {
+function symlink (distDir, targetDir, cb) {
   const dirName = getRootDir()
-  return `${config.publicPathPrefix}/${dirName}`
-}
-
-function symlink() {
-  const distDir = config.distDir
-  const dirName = getRootDir()
-  const targetDir = path.resolve(__dirname, `../../../src/main/webapp/react/${dirName}/`)
 
   vfs.src(distDir, {followSymlinks: false, base: 'dist'})
-  .pipe(vfs.symlink(targetDir))
+  .pipe(vfs.symlink(path.join(targetDir, dirName)))
   .on('end', () => {
     console.log(`🚀 Symlinked: ${distDir} -> ${targetDir} 🚀`)
+    cb()
   })
 }
-
 
 module.exports = {
   getRootDir,
