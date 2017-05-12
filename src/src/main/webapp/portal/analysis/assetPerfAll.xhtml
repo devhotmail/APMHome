@@ -4,16 +4,14 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/template-polymer.xhtml">
+                template="/WEB-INF/template-react.xhtml">
 
-  <ui:define name="elements">
-    <link rel="import" href="pages/asset-perf-all.html"/>
-  </ui:define>
-
-  <ui:define name="content">
-    <template is="dom-bind">
-      <!-- <device-selector-bar selected-year="{{year}}" selected-type="{{groupBy}}"></device-selector-bar> -->
-      <device-perf></device-perf>
-    </template>
-  </ui:define>
+  <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                  xmlns:jsf="http://xmlns.jcp.org/jsf"
+                  xmlns:h="http://java.sun.com/jsf/html"
+                  xmlns:f="http://java.sun.com/jsf/core"
+                  xmlns:ui="http://java.sun.com/jsf/facelets"
+                  xmlns:p="http://primefaces.org/ui"
+                  template="/react/AssetPerfAll/index.xhtml">
+  </ui:composition>
 </ui:composition>
