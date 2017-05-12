@@ -33,16 +33,19 @@ module.exports = merge(baseWebpackConfig, {
       },
       {
         test: /\.s[ca]ss$/,
+        exclude: /src\/styles/,
         use: [
           'style-loader',
           {
             loader: 'css-loader',
             options: {
               module: true,
+              importLoaders: 1,
               localIdentName: '[local]__[hash:base64:5]'
             }
           },
-          'sass-loader'
+          'sass-loader',
+          'postcss-loader'
         ]
       },
       {
@@ -58,7 +61,7 @@ module.exports = merge(baseWebpackConfig, {
           {
             loader: 'less-loader',
             options: {
-              modifyVars: JSON.stringify(require('../src/theme.js')())
+              modifyVars: require('./theme')
             }
           }
         ],
