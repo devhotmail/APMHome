@@ -58,6 +58,7 @@ export default class ManualPanel extends PureComponent {
   }
 
   renderFocusInfo = (data: Object) => {
+    console.log(data.suggestions)
     return (
       <div className={styles.focusInfo}>
         <div className="lead m-b-1">当前位置: {data.name}</div>
