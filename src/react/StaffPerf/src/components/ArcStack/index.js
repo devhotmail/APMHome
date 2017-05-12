@@ -70,6 +70,6 @@ export default class ArcStack extends PureComponent<*, PropsT, *> {
 
   handleClick = (e: Event) => {
     e.preventDefault()
-    this.props.onClick()
+    this.props.onClick(e)
   }
 }
