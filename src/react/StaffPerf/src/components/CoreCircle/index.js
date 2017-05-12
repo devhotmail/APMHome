@@ -52,7 +52,7 @@ export default class CoreCircle extends Component<*, PropsT, *> {
               <div>
                 <span>维修</span>
                 <span>&nbsp;{focus.repair} / {focus.man_hour}</span>
-                <span>&nbsp;(法定小时) = {round(focus.repair * 100 / focus.man_hour)} %</span>
+                <span>&nbsp;(工作小时) = {round(focus.repair * 100 / focus.man_hour)} %</span>
               </div>
             </div>
             <div className="m-l-2 flex flex--align-items--center">
@@ -60,7 +60,7 @@ export default class CoreCircle extends Component<*, PropsT, *> {
               <div>
                 <span>保养</span>
                 <span>&nbsp;{focus.maintenance} / {focus.man_hour}</span>
-                <span>&nbsp;(法定小时) = {round(focus.maintenance * 100 / focus.man_hour)} %</span>
+                <span>&nbsp;(工作小时) = {round(focus.maintenance * 100 / focus.man_hour)} %</span>
               </div>                
             </div>
             <div className="m-l-2 flex flex--align-items--center">
@@ -68,7 +68,7 @@ export default class CoreCircle extends Component<*, PropsT, *> {
               <div>
                 <span>计量</span>
                 <span>&nbsp;{focus.meter} / {focus.man_hour}</span>
-                <span>&nbsp;(法定小时) = {round(focus.meter * 100 / focus.man_hour)} %</span>
+                <span>&nbsp;(工作小时) = {round(focus.meter * 100 / focus.man_hour)} %</span>
               </div>                
             </div>
             <div className="m-l-2 flex flex--align-items--center">
@@ -76,7 +76,7 @@ export default class CoreCircle extends Component<*, PropsT, *> {
               <div>
                 <span>巡检</span>
                 <span>&nbsp;{focus.inspection} / {focus.man_hour}</span>
-                <span>&nbsp;(法定小时) = {round(focus.inspection * 100 / focus.man_hour)} %</span>
+                <span>&nbsp;(工作小时) = {round(focus.inspection * 100 / focus.man_hour)} %</span>
               </div>              
             </div>
           </div>
