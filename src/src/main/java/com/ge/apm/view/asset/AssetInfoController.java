@@ -22,11 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ge.apm.dao.AssetFileAttachmentRepository;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.OrgInfoRepository;
+import com.ge.apm.dao.QrCodeLibRepository;
 import com.ge.apm.dao.SupplierRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.OrgInfo;
+import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.domain.Supplier;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AssetDepreciationService;
@@ -52,6 +54,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     AssetFileAttachmentRepository attachDao = null;
 
     private UserAccountRepository userDao;
+    
+    private QrCodeLibRepository qrcodeDao;
 
     private boolean resultStatus;
 
@@ -76,6 +80,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     private AssetDepreciationService assetDepreciationService;
 
+    private String  qrCode;
     Boolean terminate;
 
     protected void setSelectedByUrlParam(String encodeUrl, String paramName) {
@@ -92,12 +97,15 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             SupplierRepository supplierDao = WebUtil.getBean(SupplierRepository.class);
             supplier = supplierDao.findById(selected.getSupplierId());
         }
+        
+        qrCode = selected.getQrCode();
     }
 
     @Override
     protected void init() {
         dao = WebUtil.getBean(AssetInfoRepository.class);
         userDao = WebUtil.getBean(UserAccountRepository.class);
+        qrcodeDao = WebUtil.getBean(QrCodeLibRepository.class);
         UserContextService userContextService = WebUtil.getBean(UserContextService.class);
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         orgDao = WebUtil.getBean(OrgInfoRepository.class);
@@ -274,11 +282,44 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
+    
+    private boolean updateQrCode(){
+        QrCodeLib qrCodeLib = qrcodeDao.findByQrCode(qrCode);
+        if(qrCodeLib==null){
+            WebUtil.addErrorMessage(WebUtil.getMessage("InvalidQRCode"));
+            return false;
+        }
+        if(qrCodeLib.getSiteId()!=selected.getSiteId() || qrCodeLib.getHospitalId()!=selected.getHospitalId()){
+            WebUtil.addErrorMessage(WebUtil.getMessage("WrongHospitalQRCode"));
+            return false;
+        }
+        if(qrCodeLib.getStatus()!=1){
+            WebUtil.addErrorMessage(WebUtil.getMessage("AlreadyUsingQrCode"));
+            return false;
+        }
+        
+        QrCodeLib oldQRCodeLib = qrcodeDao.findByQrCode(selected.getQrCode());
+        if(null!=oldQRCodeLib){
+            oldQRCodeLib.setStatus(4);
+            qrcodeDao.save(oldQRCodeLib);
+        }
+        qrCodeLib.setStatus(3);
+        qrcodeDao.save(qrCodeLib);
+        selected.setQrCode(qrCode);
+        return true;
+    }
+    
     @Transactional
     public String applyChange() {
         if (!isTimeValidate()) {
             return "";
         }
+        if(!qrCode.equals(selected.getQrCode())){
+            if(!updateQrCode()){
+                return "";
+            }
+        }
+        
         this.save();
         assetDepreciationService.saveAssetDerpeciation(selected);
         if (resultStatus) {
@@ -607,6 +648,15 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void setOwner2(UserAccount owner2) {
         this.owner2 = owner2;
     }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
+    }
+    
     
 
 }
