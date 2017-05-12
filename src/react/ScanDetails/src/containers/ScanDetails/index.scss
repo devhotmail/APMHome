@@ -37,3 +37,9 @@ body, html, #root, #root>div {
     background: #eaeaea;
   }
 }
+
+:global {
+  .ant-calendar-time-picker-btn {
+    display: none !important;
+  }
+}

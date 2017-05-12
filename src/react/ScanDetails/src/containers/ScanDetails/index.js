@@ -4,10 +4,33 @@ import ImmutableComponent from '#/components/ImmutableComponent'
 import BodyChart from '#/components/BodyChart'
 import type { Map } from 'immutable'
 import { connect } from 'dva'
-import { Select } from 'antd'
-import PxRangepicker from '../../../public/bower_components/px-rangepicker/px-rangepicker.html'
-import { PAGE_SIZE } from '#/constants'
+import { Select, DatePicker, Form } from 'antd'
+import moment from 'moment'
+
+import { dateFormat, now, PAGE_SIZE } from '#/constants'
+import { getRangePresets } from '#/utils'
+
 import styles from './index.scss'
+
+const { RangePicker } = DatePicker
+
+const presets = getRangePresets([
+  'oneWeek', 'oneMonth', 'oneYear', 'currentMonth',
+  'yearBeforeLast', 'lastYear', 'currentYear'
+])
+
+const ranges = presets.reduce((prev, cur) => {
+  prev[cur.text] = [
+    cur.start,
+    cur.end
+  ]
+  return prev
+}, {})
+
+const defaultRange = [
+  moment(now).subtract(1, 'year'),
+  moment(now)
+]
 
 const isHead = JSON.parse(document.querySelector('#user-context #isHead').value)
 
@@ -15,34 +38,43 @@ class ScanDetails extends ImmutableComponent<void, {scans: Map<string, any>}, vo
   onDatetimeChange = e => {
     const from = e.detail.range.from.split('T')[0]
     const to = e.detail.range.to.split('T')[0]
+
+  }
+
+  handleOk = (e: Event) => {
+    const [from, to] = this.props.form.getFieldValue('range')
+
     this.props.dispatch({
       type: 'scans/range/change',
       payload: {
-        from,
-        to
+        from: from.format(dateFormat),
+        to: to.format(dateFormat)
       }
     })
   }
 
-  rangePicker = (
-    <PxRangepicker
-      hideTime
-      showButtons
-      blockFutureDates
-      dateFormat="YYYY/MM/DD"
-      showTimeZone="none"
-      range={{
-        from: this.props.scans.getIn(['range', 'from']),
-        to: this.props.scans.getIn(['range', 'to'])
-      }}
-      onPxDatetimeRangeSubmitted={this.onDatetimeChange}
-    />
-  )
   render() {
-    const { scans } = this.props
+    const { scans, form } = this.props
     return (
       <div className={styles['scan-details']}>
-        {this.rangePicker}
+        <Form>
+          <Form.Item>
+            {
+              form.getFieldDecorator('range', {
+                initialValue: defaultRange,
+                rules: [
+                  { type: 'array', required: true, message: '请选择时间' }
+                ]
+              })(
+                <RangePicker
+                  showTime
+                  format={dateFormat}
+                  ranges={ranges}
+                  onOk={this.handleOk} />
+              )
+            }
+          </Form.Item>
+        </Form>
         {
           isHead
           ?
@@ -81,4 +113,4 @@ class ScanDetails extends ImmutableComponent<void, {scans: Map<string, any>}, vo
 }
 
 export default
-connect(({scans}) => ({scans}))(ScanDetails)
+connect(({scans}) => ({scans}))(Form.create()(ScanDetails))
