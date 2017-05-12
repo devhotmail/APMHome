@@ -1,6 +1,7 @@
 
 import _ from 'lodash'
 import colors from 'utils/colors'
+import SID from 'shortid'
 
 export function AssetTypesConv(resp) {
   let converted = Object.keys(resp.data).map(i => ({ id: String(i), name: resp.data[i] }))
@@ -25,7 +26,7 @@ export function ReasonConv(resp) {
 }
 
 function BriefToothAdapter(array, sum, type = 'avail') {
-  return array.map(a => ({ data: a, mode: 'bar', label: a.key.name, strips: [{color: getStripColor(type), weight: a.val[type] / sum, data: a}] }))
+  return array.map(a => ({ id: SID.generate(), data: a, mode: 'bar', label: a.key.name, strips: [{color: getStripColor(type), weight: a.val[type] / sum, data: a}] }))
 }
 
 function ReasonToothAdapter(array) {
@@ -34,7 +35,7 @@ function ReasonToothAdapter(array) {
   let result = []
   array.forEach(e => {
     let color = e.count/sum < .15 ? colors.gray : colors.blue  //  todo, refine algo
-    result.push({data: e, mode: 'bar', label: e.name, strips:[{ color: color, weight: e.count/weightMax, data: e}] })
+    result.push({id: SID.generate(), data: e, mode: 'bar', label: e.name, strips:[{ color: color, weight: e.count/weightMax, data: e}] })
   })
   return result
 }

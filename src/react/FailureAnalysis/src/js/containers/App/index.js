@@ -1,4 +1,5 @@
 //@flow
+/* eslint camelcase:0 */
 import React, { Component } from 'react'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
@@ -40,6 +41,13 @@ const DisplayOptions = [
   { key: 'display_dept' },
 ]
 
+function DataOrPlaceHolder(items, placeholderSize) {
+  if (items && items.length && items[0].strips.type !== 'placeholder') {
+    return items
+  }
+  return App.getPlaceholder(placeholderSize)
+}
+
 function calc(width, height) {
   if (width < 1000) {
     width = 1000
@@ -72,8 +80,8 @@ function mapDispatch2Porps(dispatch) {
 }
 
 function mapState2Props(state) {
-  let { parameters : { pagination } } = state
-  return { pagination }
+  let { parameters : { pagination, display } } = state
+  return { pagination, display }
 }
 
 @connect(mapState2Props, mapDispatch2Porps)
@@ -183,7 +191,7 @@ export class App extends Component<void, Props, void> {
   }
   render() {
     let { tooltipX, tooltipY, tooltip, leftItems, centerItems, rightItems, selectedDevice } = this.state
-    let { updateDisplayType, pagination, fetchBriefs, fetchReasons, clientRect } = this.props
+    let { updateDisplayType, pagination, fetchBriefs, fetchReasons, clientRect, display } = this.props
     let { outer_R, outer_r, inner_R, inner_r  } = calc(clientRect.width, clientRect.height)
     if (!leftItems || leftItems.length === 0) {
       fetchBriefs('left')
@@ -200,7 +208,7 @@ export class App extends Component<void, Props, void> {
         <div className="chart-container is-fullwidth">
           <div className="full-chart container">
 
-            <div className="display-select">{selectHelper('display_asset_type', this._getDisplayOptions(), updateDisplayType)}</div>
+            <div className="display-select">{selectHelper(display, this._getDisplayOptions(), updateDisplayType)}</div>
             {/*<Pagination current={1} pageSize={10} total={100} className="pager-left" onChange={this._onLeftPagerChange}/>
             <Pagination current={1} pageSize={10} total={100} className="pager-right" onChange={this._onRightPagerChange}/>*/}
             <GearListChart 
@@ -212,7 +220,7 @@ export class App extends Component<void, Props, void> {
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
               clockwise={false}
-              items={leftItems || App.getPlaceholder(pagination.left.top)} 
+              items={DataOrPlaceHolder(leftItems, pagination.left.top)} 
               />
             <GearListChart
               id="center-chart"
@@ -221,7 +229,7 @@ export class App extends Component<void, Props, void> {
               margin={8}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
-              items={centerItems || App.getPlaceholder(12)} />
+              items={DataOrPlaceHolder(centerItems, 12)} />
             <div id="legend-container">
               <Legend items={Items}>
                 <LegendTable items={ParameterTypes} selectedDevice={selectedDevice} checkBoxes={CheckBoxes}/>
@@ -235,10 +243,10 @@ export class App extends Component<void, Props, void> {
               onClick={this.device}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
-              items={rightItems || App.getPlaceholder(pagination.right.top)} />
+              items={DataOrPlaceHolder(rightItems, pagination.right.top)} />
 
           </div>
-          { tooltip && tooltip.label && <Tooltip mouseX={tooltipX} mouseY={tooltipY} anchor="rb">
+          { tooltip && tooltip.label && <Tooltip mouseX={tooltipX} mouseY={tooltipY} offsetY={-10} anchor="hcb">
             <div style={{color: tooltip && tooltip.color}} className="tooltip-content">{tooltip.label}</div>
           </Tooltip>}
         </div>
