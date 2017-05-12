@@ -2,6 +2,7 @@ const path = require('path')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const config = require('./webpack.config.base')
 
@@ -25,6 +26,22 @@ module.exports = merge(config, {
         to: 'images'
       }
     ]),
+    new HtmlWebpackPlugin({
+      template: 'src/index.xhtml',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
+      inject: true,
+    }),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin(GLOBALS),
     new webpack.optimize.UglifyJsPlugin({
