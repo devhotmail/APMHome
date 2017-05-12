@@ -27,12 +27,18 @@ public class AssetTagRule  implements Serializable {
     @Column(name = "asset_id")
     private Integer assetId;
 
-
     @Basic(optional = false)
     @NotNull
     @Column(name = "tag_id")
     private Integer tagId;
 
+    @JoinColumn(name = "tag_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private AssetTag assetTag;
+
+    @JoinColumn(name = "asset_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private AssetInfo assetInfo;
 
     public Integer getId() {
         return id;
@@ -56,5 +62,21 @@ public class AssetTagRule  implements Serializable {
 
     public Integer getTagId() {
         return tagId;
+    }
+
+    public AssetTag getAssetTag() {
+        return assetTag;
+    }
+
+    public void setAssetTag(AssetTag assetTag) {
+        this.assetTag = assetTag;
+    }
+
+    public AssetInfo getAssetInfo() {
+        return assetInfo;
+    }
+
+    public void setAssetInfo(AssetInfo assetInfo) {
+        this.assetInfo = assetInfo;
     }
 }

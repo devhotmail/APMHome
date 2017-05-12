@@ -2,10 +2,13 @@
  */
 package com.ge.apm.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -27,18 +30,19 @@ public class BiomedGroup  implements Serializable {
     @Column(name = "hospital_id")
     private Integer hospitalId;
 
-
     @Basic(optional = false)
     @NotNull
     @Column(name = "site_id")
     private Integer siteId;
-
 
     @Basic(optional = false)
     @NotNull
     @Column(name = "group_name")
     private String groupName;
 
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "biomedGroup", fetch = FetchType.LAZY)
+    private List<BiomedGroupUser> biomedGroupUserList;
 
     public Integer getId() {
         return id;
@@ -70,5 +74,13 @@ public class BiomedGroup  implements Serializable {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public List<BiomedGroupUser> getBiomedGroupUserList() {
+        return biomedGroupUserList;
+    }
+
+    public void setBiomedGroupUserList(List<BiomedGroupUser> biomedGroupUserList) {
+        this.biomedGroupUserList = biomedGroupUserList;
     }
 }

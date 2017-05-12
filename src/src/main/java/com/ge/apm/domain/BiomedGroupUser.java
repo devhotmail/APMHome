@@ -26,18 +26,23 @@ public class BiomedGroupUser  implements Serializable {
     @NotNull
     @Column(name = "group_id")
     private Integer groupId;
-
-
     @Basic(optional = false)
     @NotNull
     @Column(name = "user_id")
     private Integer userId;
-
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "user_name")
     private String userName;
+
+    @JoinColumn(name = "group_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private BiomedGroup biomedGroup;
+
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private UserAccount userAccount;
 
 
     public Integer getId() {
@@ -70,5 +75,21 @@ public class BiomedGroupUser  implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public BiomedGroup getBiomedGroup() {
+        return biomedGroup;
+    }
+
+    public void setBiomedGroup(BiomedGroup biomedGroup) {
+        this.biomedGroup = biomedGroup;
+    }
+
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 }

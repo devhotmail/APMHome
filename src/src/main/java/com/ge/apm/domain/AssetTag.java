@@ -3,12 +3,14 @@
 package com.ge.apm.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -38,6 +40,10 @@ public class AssetTag  implements Serializable {
     @NotNull
     @Column(name = "hospital_id")
     private Integer hospitalId;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assetTag", fetch = FetchType.LAZY)
+    private List<AssetTagBiomedGroup> assetTagBiomedGroup;
 
     public Integer getId() {
         return id;
@@ -69,5 +75,13 @@ public class AssetTag  implements Serializable {
 
     public void setHospitalId(Integer hospitalId) {
         this.hospitalId = hospitalId;
+    }
+
+    public List<AssetTagBiomedGroup> getAssetTagBiomedGroup() {
+        return assetTagBiomedGroup;
+    }
+
+    public void setAssetTagBiomedGroup(List<AssetTagBiomedGroup> assetTagBiomedGroup) {
+        this.assetTagBiomedGroup = assetTagBiomedGroup;
     }
 }
