@@ -33,6 +33,7 @@
                 <p:menuitem id="um16" value="#{msg.DeviceStatusMonitor}"
                             outcome="/portal/analysis/deviceStatusMonitor"/>
                 <p:menuitem id="um17" value="#{msg.DeviceDowntimeAnalysis}" outcome="/empty" rendered="false"/>
+                <p:menuitem id="um171" value="#{msg.StaffPerformance}" outcome="/portal/analysis/staffPerf.xhtml" />
                 <p:menuitem id="um18" value="#{msg.DeviceMaintainanceEventAnalysis}"
                             outcome="/portal/analysis/assetMaintenanceAll"
                             rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}"/>
