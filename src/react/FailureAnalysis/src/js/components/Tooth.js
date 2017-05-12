@@ -136,7 +136,7 @@ export default class Tooth extends PureComponent<void, ToothProps, void> {
     )
   }
 
-  mouseEventProxy(evt) {
+  mouseEventProxy = (evt) => {
     evt.stripData = this.strips()[evt.sectorId] //TODO: expose a func 'GetStripById' ?
     evt.stripData.id = evt.sectorId
     evt.toothData = this.strips().data

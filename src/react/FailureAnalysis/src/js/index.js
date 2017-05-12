@@ -30,15 +30,15 @@ const store = configureStore(
 
 const rootElement = document.getElementById('app')
 
-Perf.start()
+// Perf.start()
 render(
   <AppContainer errorReporter={Redbox}>
     <Root store={store} history={history} />
   </AppContainer>,
   rootElement
 )
-Perf.stop()
-Perf.printInclusive(Perf.getLastMeasurements())
+// Perf.stop()
+// Perf.printInclusive(Perf.getLastMeasurements())
 
 if (module.hot) {
   /**

@@ -12,6 +12,7 @@ import Legend from 'components/Legend'
 import LegendTable from 'components/LegendTable'
 import Tooltip from 'components/Tooltip'
 import Pagination from 'components/Pagination'
+import withClientRect from '../../HOC/withClientRect'
 import selectHelper from 'components/SelectHelper'
 import { ParamUpdate } from 'actions'
 import colors from 'utils/colors'
@@ -38,6 +39,24 @@ const DisplayOptions = [
   { key: 'display_brand' },
   { key: 'display_dept' },
 ]
+
+function calc(width, height) {
+  if (width < 1000) {
+    width = 1000
+  }
+  if (width > 1500) {
+    width = 1500
+  }
+  if (height < 900) {
+    width = 1100
+  }
+  return {
+    outer_R: width * .4125 / 1.5,
+    outer_r: width * .3 / 1.5,
+    inner_R: width * .2625 / 1.5,
+    inner_r: width * .2125 / 1.5
+  }
+}
 
 function mapDispatch2Porps(dispatch) {
   return {
@@ -164,7 +183,8 @@ export class App extends Component<void, Props, void> {
   }
   render() {
     let { tooltipX, tooltipY, tooltip, leftItems, centerItems, rightItems, selectedDevice } = this.state
-    let { updateDisplayType, pagination, fetchBriefs, fetchReasons } = this.props
+    let { updateDisplayType, pagination, fetchBriefs, fetchReasons, clientRect } = this.props
+    let { outer_R, outer_r, inner_R, inner_r  } = calc(clientRect.width, clientRect.height)
     if (!leftItems || leftItems.length === 0) {
       fetchBriefs('left')
     }
@@ -181,11 +201,12 @@ export class App extends Component<void, Props, void> {
           <div className="full-chart container">
 
             <div className="display-select">{selectHelper('display_asset_type', this._getDisplayOptions(), updateDisplayType)}</div>
-            <Pagination current={1} pageSize={10} total={100} className="pager-left" onChange={this._onLeftPagerChange}/>
+            {/*<Pagination current={1} pageSize={10} total={100} className="pager-left" onChange={this._onLeftPagerChange}/>
+            <Pagination current={1} pageSize={10} total={100} className="pager-right" onChange={this._onRightPagerChange}/>*/}
             <GearListChart 
               id="left-chart"
               startAngle={110} endAngle={250} 
-              outerRadius={330} innerRadius={240}
+              outerRadius={outer_R} innerRadius={outer_r}
               margin={7}
               onClick={() => null}
               onMouseMove={this.showTooltip}
@@ -196,7 +217,7 @@ export class App extends Component<void, Props, void> {
             <GearListChart
               id="center-chart"
               startAngle={90} endAngle={90} 
-              outerRadius={210} innerRadius={170}
+              outerRadius={inner_R} innerRadius={inner_r}
               margin={8}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
@@ -209,13 +230,12 @@ export class App extends Component<void, Props, void> {
             <GearListChart 
               id="right-chart" 
               startAngle={290} endAngle={70} 
-              outerRadius={330} innerRadius={240}
+              outerRadius={outer_R} innerRadius={outer_r}
               margin={3}
               onClick={this.device}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
               items={rightItems || App.getPlaceholder(pagination.right.top)} />
-            <Pagination current={1} pageSize={10} total={100} className="pager-right" onChange={this._onRightPagerChange}/>
 
           </div>
           { tooltip && tooltip.label && <Tooltip mouseX={tooltipX} mouseY={tooltipY} anchor="rb">
@@ -230,4 +250,4 @@ export class App extends Component<void, Props, void> {
   } 
 }
 
-export default translate()(App)
+export default translate()(withClientRect(App))

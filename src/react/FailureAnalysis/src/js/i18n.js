@@ -5,6 +5,8 @@ import Cache from 'i18next-localstorage-cache'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import conf from 'config'
 
+let isProd = conf.env === 'prod'
+
 i18n
   .use(XHR)
   .use(Cache)
@@ -18,7 +20,7 @@ i18n
       enabled: conf.i18n.cache,
     },
     backend: {
-      loadPath: 'assets/locales/{{lng}}/{{ns}}.json'
+      loadPath:  isProd ? '/geapm/react/FailureAnalysis/assets/locales/{{lng}}/{{ns}}.json' : 'assets/locales/{{lng}}/{{ns}}.json'
     },
     interpolation: {
       escapeValue: false, // not needed for react

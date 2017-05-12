@@ -1,9 +1,7 @@
 #app-container {
-
+  height: 100vh;
   .full-chart {
     position: relative;
-    max-width: 1000px;
-    min-width: 800px;
     height: 100%;
     min-height: 600px;
   }

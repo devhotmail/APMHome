@@ -6,7 +6,7 @@ import { translate } from 'react-i18next'
 import autobind from 'autobind-decorator'
 import { DatePicker } from 'antd'
 import SelectHelper from 'components/SelectHelper'
-import { ParamUpdate, ParamType } from 'actions'
+import { ParamUpdate } from 'actions'
 import './header.scss'
 
 const RangePicker = DatePicker.RangePicker
@@ -57,7 +57,7 @@ export class Header extends PureComponent {
   }
 
   render() {
-    let { t, org, name, period, filterBy, orderBy,
+    let { t, period, filterBy, orderBy,
       onFilterChange, onOrderChange, onPeriodChange
     } = this.props
     return (<nav id="header" className="header level">
@@ -86,8 +86,6 @@ export class Header extends PureComponent {
         <div className="nav-item">
           { SelectHelper(orderBy, this._sortOptions(), onOrderChange) }
         </div>
-        <div className="nav-item">{org}</div>
-        <div className="nav-item">{name}</div>
       </div>
 
     </nav>)

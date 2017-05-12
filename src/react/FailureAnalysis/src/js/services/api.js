@@ -4,7 +4,7 @@ import { AssetTypesConv, BriefConv, ReasonConv, BriefAssetConv } from 'converter
 import _ from 'lodash'
 
 const UseMock = true
-if (process.env.NODE_ENV === 'development' && UseMock) {
+if (true || process.env.NODE_ENV === 'development' && UseMock) {
   load('./sample')
 }
 

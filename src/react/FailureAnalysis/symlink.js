@@ -4,14 +4,14 @@ const vfs = require('vinyl-fs')
 const path = require('path')
 
 function getRootDir () {
-  const pwd = path.resolve(__dirname, '../')
+  const pwd = path.resolve(__dirname, './')
   return path.basename(pwd, path.extname(pwd))
 }
 
 function symlink (distDir, targetDir, cb) {
   const dirName = getRootDir()
 
-  vfs.src(distDir, {followSymlinks: false, base: 'dist'})
+  vfs.src(distDir, {followSymlinks: false, base: 'build'})
   .pipe(vfs.symlink(path.join(targetDir, dirName)))
   .on('end', () => {
     console.log(`🚀 Symlinked: ${distDir} -> ${targetDir} 🚀`)

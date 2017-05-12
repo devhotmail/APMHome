@@ -54,13 +54,13 @@ export default class GearListChart extends PureComponent<void, GearListProps, vo
   _defaultOffsetAngle = 0
   _springOffsetAngle = 360
 
-  mouseEventHandler(evt) {
+  mouseEventHandler = (evt) => {
     this.props[GearListChart.getRegistrationName(evt)](evt)
   }
-  motionWillEnter() {
+  motionWillEnter = () => {
     return { offsetAngle: this._defaultOffsetAngle }
   }
-  motionWillLeave() {
+  motionWillLeave = () => {
     return { offsetAngle: this._springOffsetAngle }
   }
   render() {

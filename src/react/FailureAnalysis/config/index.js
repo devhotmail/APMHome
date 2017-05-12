@@ -5,7 +5,7 @@ var env = process.env.NODE_ENV === 'development' ?
 
 var base = {
   distDir: path.resolve(__dirname, '../build'),
-  targetDir: path.resolve(__dirname, '../../src/main/webapp/react'),
+  targetDir: path.resolve(__dirname, '../../../src/main/webapp/react'),
   production: {
     env: {
       'API_HOST': JSON.stringify('/api')
