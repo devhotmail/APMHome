@@ -104,7 +104,6 @@ export default class Chart extends PureComponent<*, PropsT, *> {
 
   handleClick = node => e => {
     const { focus } = this.props
-    console.log(node, focus)
     if (focus && node.id === focus.id) {
       this.props.backRoot()
     } else {
