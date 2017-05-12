@@ -1,5 +1,4 @@
 /* @flow */
-import axios from 'axios'
 import { routerRedux } from 'dva/router'
 import { notification } from 'antd'
 import moment from 'moment'
@@ -9,7 +8,7 @@ import mockData from '#/mock/data'
 import { now, dateFormat, pageSize, defaultPage } from '#/constants'
 
 const defaultRange = {
-  from: moment(now).clone().subtract(1, 'year').format(dateFormat),
+  from: moment(now).clone().subtract(0.5, 'year').format(dateFormat),
   to: moment(now).clone().format(dateFormat)
 }
 

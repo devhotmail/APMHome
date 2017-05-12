@@ -7,7 +7,7 @@ import { connect } from 'dva'
 import { Select, DatePicker, Form } from 'antd'
 import moment from 'moment'
 
-import { dateFormat, now, PAGE_SIZE } from '#/constants'
+import { dateFormat, now, PAGE_SIZE, disabledDate } from '#/constants'
 import { getRangePresets } from '#/utils'
 
 import styles from './index.scss'
@@ -68,6 +68,7 @@ class ScanDetails extends ImmutableComponent<void, {scans: Map<string, any>}, vo
               })(
                 <RangePicker
                   showTime
+                  disabledDate={disabledDate}
                   format={dateFormat}
                   ranges={ranges}
                   onOk={this.handleOk} />
