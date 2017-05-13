@@ -291,14 +291,16 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
                               x2={x}
                               y2={y}
                               fill="none"
-                              stroke={COLORS[cursor[0]] || COLORS[index]}
+                              stroke="#555555"
+                              strokeOpacity={0.4}
                               strokeWidth={1}
                               opacity={Math.abs(rotate) < 0.01 ? 1 : 0}
                             />
                             :
                             <path
                               fill="none"
-                              stroke={COLORS[cursor[0]] || COLORS[index]}
+                              stroke="#555555"
+                              strokeOpacity={0.4}
                               strokeWidth={1}
                               d={this.calcCurvePath([px, py - item.props.r], [x, y])}
                               opacity={Math.abs(rotate) < 0.01 ? 1 : 0}
