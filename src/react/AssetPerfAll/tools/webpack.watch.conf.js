@@ -8,7 +8,7 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const utils = require('./utils')
 const config = require('../config')
 
-const publicPath = utils.getProdPublicPath(config.development.publicPathPrefix)
+const publicPath = utils.getProdPublicPath(config.watch.commonPrefix)
 
 module.exports = merge(baseWebpackConfig, {
   devtool: '#inline-cheap-module-source-map',
@@ -85,9 +85,12 @@ module.exports = merge(baseWebpackConfig, {
               }
             },
             {
-              loader: 'less-loader'
+              loader: 'less-loader',
+              options: {
+                modifyVars: require('./theme.js')
+              }
             }
-          ],
+          ]
         }),
         include: /node_modules/
       },

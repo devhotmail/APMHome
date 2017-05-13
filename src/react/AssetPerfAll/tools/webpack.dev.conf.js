@@ -73,7 +73,10 @@ module.exports = merge(baseWebpackConfig, {
             }
           },
           {
-            loader: 'less-loader'
+            loader: 'less-loader',
+            options: {
+              modifyVars: require('./theme.js')
+            }
           }
         ],
         include: /node_modules/
