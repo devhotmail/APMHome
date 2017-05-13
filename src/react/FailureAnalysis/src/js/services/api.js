@@ -21,14 +21,19 @@ export const DataTypeMapping = {
 }
 function mapParamsToQuery(params, type) {
   let pag = params.pagination[type]
+  let filterBy = params.filterBy
+  let assetType = filterBy.assettype === 'all_asset_type' ? '' : filterBy.assettype
+  let dept = filterBy.dept === 'all_dept' ? '' : filterBy.dept
   return {
     from: params.period.from.format(DateFormat),
     to: params.period.to.format(DateFormat),
     groupby: GroupBy[params.display],
     orderby: DataTypeMapping[params.orderBy],
-    dataType: DataTypeMapping[params.dataType],
+    type: assetType,
+    dept: dept,
     start: pag.skip || 0,
-    limit: pag.top
+    limit: pag.top,
+    dataType: DataTypeMapping[params.dataType],
   }
 }
 
