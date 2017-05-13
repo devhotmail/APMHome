@@ -74,6 +74,33 @@
     content: '' !important;
   }
 
+  .ant-table-body {
+    background-color: transparent;
+  }
+
+  .ant-checkbox-wrapper {
+    &:hover .ant-checkbox-inner {
+      border-color: white;
+    }
+  }
+
+  .ant-checkbox-inner {
+    background-color: transparent;
+    border-color: white;
+  }
+
+  thead, thead th {
+    background-color: transparent;
+  }
+
+  .ant-table-scroll:after {
+    background: none;
+  }
+
+  .ant-table-header {
+    background: none;
+  }
+
   .ant-table {
     border-radius: 8px;
 
