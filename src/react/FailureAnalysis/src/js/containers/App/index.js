@@ -86,7 +86,7 @@ function mapDispatch2Porps(dispatch) {
     fetchBriefs: (type) => {
       dispatch({ type: 'update/briefs/' + type })
     },
-    fetchReasons: () => dispatch({type: 'update/reasons'}),
+    fetchReasons: (data = {}) => dispatch({type: 'update/reasons', data }),
     updateMeta: () => dispatch(MetaUpdate())
   }
 }
@@ -144,16 +144,31 @@ export class App extends Component<void, Props, void> {
 
   clickLeftTooth(evt) {
     // 1, central chart: fetch reasons
-    // 2, reset selectedDevice
+    let { display } = this.props
+    let key = evt.stripData.data.key
+    let param = {}
+    if (display === 'display_asset_type') {
+      param.type = key.id
+    } else if (display === 'display_brand') {
+      param.supplier === key.id
+    } else if (display === 'display_dept') {
+      param.dept = key.id
+    }
+    this.props.fetchReasons(param)
+    // 2 reset lengend table
+    let { selectedDevice } = this.state
+    selectedDevice.show = false
+    this.setState({ selectedDevice: selectedDevice })
+    this.clearFocus('right')
   }
 
   clickRightTooth(evt) {
-
-    this.device(evt.strips)
-    // 1. update central table
+    this.showDevice(evt.strips)
+    this.props.fetchReasons({ asset: evt.stripData.data.key.id })
+    this.clearFocus('left')
   }
 
-  device(strips) {
+  showDevice(strips) {
     let [ current, lastYear ] = strips
     const device = {
       show: true,
@@ -172,10 +187,10 @@ export class App extends Component<void, Props, void> {
     this.setState({ selectedDevice: device })
   }
 
-  load() {
-    let {fetchBriefs, fetchReasons} = this.props
+  loadAll() {
+    let { fetchBriefs, fetchReasons } = this.props
     fetchBriefs('left')
-    fetchReasons()
+    fetchReasons({})
     fetchBriefs('right')
   }
 
@@ -190,7 +205,7 @@ export class App extends Component<void, Props, void> {
     return DisplayOptions.map(o => ({ key: o.key, label: this.props.t(o.key)}))
   }
 
-  loadBriefData(evt) {
+  mountBriefData(evt) {
     let { t } = this.props
     let [ current, lastYear ] = evt.target
     if (!current.length) {
@@ -205,7 +220,7 @@ export class App extends Component<void, Props, void> {
     this.clearFocus(current.type)
   }
 
-  loadReason(evt) {
+  mountReason(evt) {
     let reasons = evt.target
     if (reasons.length) {
       this.setState({ centerItems: reasons })
@@ -222,8 +237,8 @@ export class App extends Component<void, Props, void> {
   }
   constructor(props) {
     super(props)
-    EventBus.addEventListener('brief-data', this.loadBriefData )
-    EventBus.addEventListener('reason-data', this.loadReason )
+    EventBus.addEventListener('brief-data', this.mountBriefData )
+    EventBus.addEventListener('reason-data', this.mountReason )
     let { updateMeta } = this.props
     if (!cache.get('departments') || !cache.get('assettypes')) {
       updateMeta()
@@ -231,10 +246,7 @@ export class App extends Component<void, Props, void> {
     
   }
   componentWillMount() {
-    let { fetchBriefs, fetchReasons } = this.props
-    fetchBriefs('left')
-    fetchReasons() // todo
-    fetchBriefs('right')
+    this.loadAll()
   }
   render() {
     let { tooltipX, tooltipY, tooltip, leftItems, centerItems, rightItems, lastYear, selectedDevice } = this.state

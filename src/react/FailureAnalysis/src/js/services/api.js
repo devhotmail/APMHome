@@ -55,11 +55,15 @@ export default {
         .then(resp => BriefAssetConv(resp, params.dataType, lastYear))
     }
   },
-  getReasons(state) {
+  getReasons(state, { type, asset, supplier, dept }) {
+    let { period: { from, to }, filterBy } = state
     let params = {
-      from: state.period.from.format(DateFormat),
-      to: state.period.to.format(DateFormat),
-      // type: state.
+      from: from.format(DateFormat),
+      to: to.format(DateFormat),
+      type: filterBy.assettype === 'all_asset_type' ? type : filterBy.assettype,
+      dept: filterBy.dept === 'all_dept' ? dept : filterBy.dept,
+      supplier: supplier,
+      asset: asset,
     }
     return axios.get(prefix + 'api/fa/reasons', {params}).then(ReasonConv)
   },

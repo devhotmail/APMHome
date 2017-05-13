@@ -46,7 +46,8 @@ export default class GearListChart extends PureComponent<void, GearListProps, vo
   }
 
   static getRegistrationName(evt) {
-    return evt.dispatchConfig.registrationName || evt.dispatchConfig.phasedRegistrationNames.bubbled
+    return evt.dispatchConfig.registrationName || 
+           evt.dispatchConfig.phasedRegistrationNames.bubbled
   }
 
   _defaultOffsetAngle = 0
@@ -69,7 +70,11 @@ export default class GearListChart extends PureComponent<void, GearListProps, vo
   }
   motionWillEnter = () => ({ offsetAngle: this._defaultOffsetAngle }) 
   motionWillLeave = () => ({ offsetAngle: this._springOffsetAngle })
-  clearFocus = () => this.refs.chart.classList.remove('child-focused')
+  clearFocus = () => { 
+    let focused = this.refs.chart.querySelector('.tooth.focused')
+    focused && focused.classList.remove('focused')
+    this.setState({ childFocused: false })
+  }
   render() {
     let { id, innerRadius, outerRadius, items, margin, limit, startAngle, endAngle, clockwise, className, style,
       onMouseMove, onMouseEnter, onMouseLeave, onMouseOver, onClick } = this.props
