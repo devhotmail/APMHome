@@ -30,8 +30,8 @@ function* fetchBriefs(action) {
       lastYear.type = type
     } 
     let value = {
-      total: (briefs.total || 86), // todo!!!, ask ivar to provide
-      skip: briefs.skip || 11,
+      total: briefs.pages.total,
+      skip: briefs.pages.start,
     }
     yield put({ type: 'update/param/pagination/sync', data: { type, value } })
     EventBus.dispatch('brief-data', [ briefs, lastYear ])
@@ -74,8 +74,12 @@ function* briefSagaRight() {
 }
 
 function* paramChangeSaga() {
-  yield takeLatest(act => act.type.startsWith('update/param/') && !act.type.endsWith('sync')
+  yield takeLatest(act => act.type.startsWith('update/param/') && !act.type.contains('pagination')
   , fetchAll)
+}
+
+function* pageChangeSaga() {
+  yield takeLatest('update/page', fetchBriefs)
 }
 
 function* reasonSaga() {
@@ -88,6 +92,7 @@ export default function* sagas() {
     briefSagaLeft(),
     briefSagaRight(),
     reasonSaga(),
-    paramChangeSaga()
+    paramChangeSaga(),
+    pageChangeSaga()
   ])
 }

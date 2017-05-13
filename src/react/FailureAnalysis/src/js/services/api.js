@@ -18,13 +18,16 @@ export const DataTypeMapping = {
   'ftfr': 'ftfr',
   'incident_count': 'fix'
 }
-function mapParamsToQuery(params) {
+function mapParamsToQuery(params, type) {
+  let pag = params.pagination[type]
   return {
     from: params.period.from.format(DateFormat),
     to: params.period.to.format(DateFormat),
     groupby: GroupBy[params.display],
     orderby: DataTypeMapping[params.orderBy],
     dataType: DataTypeMapping[params.dataType],
+    start: pag.skip,
+    limit: pag.top
   }
 }
 
@@ -37,12 +40,12 @@ export default {
     return axios.get('/api/org/all').then(resp => resp.data.orgInfos)
   },
   getBriefs(type, state, lastYear) {
-    let params = mapParamsToQuery(state)
+    let params = mapParamsToQuery(state, type)
     if (lastYear) {
       params.from = state.period.from.subtract('1', 'years').format(DateFormat)
       params.to = state.period.to.subtract('1', 'years').format(DateFormat)
     }
-    if (type === 'left'){
+    if (type === 'left') {
       return axios.get('/api/fa/briefs', {params})
         .then(resp => BriefConv(resp, params.dataType, lastYear))
     } else {

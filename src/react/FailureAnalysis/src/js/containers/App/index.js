@@ -142,15 +142,18 @@ export class App extends Component<void, Props, void> {
       return 'N.A.'
     }
   }
+
   clickLeftTooth(evt) {
     console.log(evt)
     // 1, central chart: fetch reasons
     // 2, reset selectedDevice
   }
+
   clickRightTooth(evt) {
     console.log(evt)
     // 1. update central table
   }
+
   device() {
     const device = {
       name: 'CT-1',
@@ -167,33 +170,35 @@ export class App extends Component<void, Props, void> {
     }
     this.setState({ selectedDevice: this.state.selectedDevice === null ? device: null})
   }
+
   load() {
     let {fetchBriefs, fetchReasons} = this.props
     fetchBriefs('left')
     fetchReasons()
     fetchBriefs('right')
   }
-  loadDummy() {
-    setTimeout(() => {
-      let items = GTD(6, 'bar', 3, [colors.purple, colors.green, colors.yellow])
-      items.forEach(item => _.orderBy(item.strips, ['color']))
-      this.setState({leftItems: items})
-    }, RandomInt(600))
-    setTimeout(() => {
-      let items = GTD(12, 'bar', 1, [colors.blue, colors.gray])
-      this.setState({centerItems: _.orderBy(items, _ => _.strips[0].color, ['desc'])})
-    }, RandomInt(600))
-    setTimeout(() => {
-      let items = GTD(16, 'spokerib', 3, [colors.purple, colors.green, colors.yellow])
-      items.forEach(item => _.orderBy(item.strips, ['color']))
-      this.setState({rightItems: items})
-    }, RandomInt(600))
+
+  // loadDummy() {
+  //   setTimeout(() => {
+  //     let items = GTD(6, 'bar', 3, [colors.purple, colors.green, colors.yellow])
+  //     items.forEach(item => _.orderBy(item.strips, ['color']))
+  //     this.setState({leftItems: items})
+  //   }, RandomInt(600))
+  //   setTimeout(() => {
+  //     let items = GTD(12, 'bar', 1, [colors.blue, colors.gray])
+  //     this.setState({centerItems: _.orderBy(items, _ => _.strips[0].color, ['desc'])})
+  //   }, RandomInt(600))
+  //   setTimeout(() => {
+  //     let items = GTD(16, 'spokerib', 3, [colors.purple, colors.green, colors.yellow])
+  //     items.forEach(item => _.orderBy(item.strips, ['color']))
+  //     this.setState({rightItems: items})
+  //   }, RandomInt(600))
+  // }
+  _onRightPagerChange = value => {
+    this.props.updatePagination('right', { value })
   }
-  _onRightPagerChange() {
-    //todo
-  }
-  _onLeftPagerChange() {
-    // todo
+  _onLeftPagerChange = value => {
+    this.props.updatePagination('left', { value })
   }
   _getDisplayOptions() {
     return DisplayOptions.map(o => ({ key: o.key, label: this.props.t(o.key)}))
@@ -292,9 +297,9 @@ export class App extends Component<void, Props, void> {
             <div style={{color: tooltip && tooltip.color}} className="tooltip-content">{tooltip}</div>
           </Tooltip>}
         </div>
-        <button onClick={this.device}>Select Device</button>
+        {/*<button onClick={this.device}>Select Device</button>
         <button onClick={this.load}>Load Data</button>
-        <button onClick={this.loadDummy}>Load Dummy</button>
+        <button onClick={this.loadDummy}>Load Dummy</button>*/}
       </div>
     )
   } 

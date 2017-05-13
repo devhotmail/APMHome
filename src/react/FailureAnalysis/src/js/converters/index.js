@@ -10,15 +10,19 @@ export function AssetTypesConv(resp) {
 }
 
 export function BriefConv(resp, type, lastYear) {
-  let arr = resp.data.briefs.slice(0, 6) // todo, remove this line
+  let arr = resp.data.briefs
   let weightMax = _.maxBy(arr, item => item.val[type]).val[type]
-  return BriefToothAdapter(arr, weightMax, type, lastYear)
+  let result = BriefToothAdapter(arr, weightMax, type, lastYear)
+  result.pages = resp.data.pages
+  return result
 }
 
 export function BriefAssetConv(resp, type, lastYear) {
-  let arr = resp.data.briefs.slice(0, 16) // todo, remove this line
+  let arr = resp.data.briefs
   let weightMax = _.maxBy(arr, item => item.val[type]).val[type]
-  return BriefToothAdapter(arr, weightMax, type, lastYear)
+  let result = BriefToothAdapter(arr, weightMax, type, lastYear)
+  result.pages = resp.data.pages
+  return result
 }
 
 export function ReasonConv(resp) {

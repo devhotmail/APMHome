@@ -68,10 +68,6 @@ const reducers = {
     return next
   },
 
-  ['update/param/pagination'](next) {
-    return next
-  },
-
   ['update/param/pagination/sync'](next, data) {
     let pag = next.pagination[data.type]
     Object.assign(pag, data.value)

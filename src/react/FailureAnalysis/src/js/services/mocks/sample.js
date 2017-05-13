@@ -50,6 +50,10 @@ const AssetTypes = {
 }
 
 const BriefsByType = {
+    "pages": {
+      "total": 12,
+      "start": 4,
+    },
     "briefs": [
         {
             "key": {
@@ -186,6 +190,10 @@ const BriefsByType = {
     ]
 }
 const BriefsByAsset = {
+    "pages": {
+      "total": 12,
+      "start": 4,
+    },
     "briefs": [
         {
             "key": {
@@ -1465,7 +1473,12 @@ const BriefsByAsset = {
 }
 
 const BriefsBySupplier = {
+    "pages": {
+      "total": 12,
+      "start": 4,
+    },
     "briefs": [
+
         {
             "key": {
                 "id": 2,
@@ -1514,6 +1527,10 @@ const BriefsBySupplier = {
 }
 
 const BriefsByDept = {
+    "pages": {
+      "total": 12,
+      "start": 4,
+    },
     "briefs": [
         {
             "key": {
@@ -1620,21 +1637,15 @@ export default function(mock) {
         let params = config.params
         switch (params.groupby) {
           case 'type':
-            return [200, BriefsByType]
+            return [200, simPaging(params.limit, params.start, BriefsByType)]
           case 'dept':
-            return [200, BriefsByDept]
+            return [200, simPaging(params.limit, params.start, BriefsByDept)]
           case 'asset':
-            return [200, BriefsByAsset]
+            return [200, simPaging(params.limit, params.start, BriefsByAsset)]
           case 'supplier':
-            return [200, BriefsBySupplier]
+            return [200, simPaging(params.limit, params.start, BriefsBySupplier)]
         }
         return [200, []]
-      })
-
-  mock.onGet('/api/fa/briefs', { params: { groupby: 'supplier' }})
-      .reply(function(config) {
-        info(config.url)
-        return [200, BriefsBySupplier]
       })
 
   mock.onGet('/api/fa/reasons')
@@ -1642,4 +1653,17 @@ export default function(mock) {
         info(config.url)
         return [200, Reasons]
       })
+}
+
+function simPaging(top, skip, resp) {
+
+  let result = resp.briefs.slice(skip, top)
+  return {
+    pages: {
+      total: resp.briefs.length,
+      skip: skip,
+      limit: result.length
+    }, 
+    briefs: result
+  }
 }
