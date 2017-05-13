@@ -130,7 +130,7 @@ class Parts extends ImmutableComponent<void, Props, void> {
     const groups = partScans.entrySeq().map(([key, count]) => Immutable.fromJS({
       id: key,
       text: parts.getIn([key, 'name']),
-      opacity: filters.find(filter => filter.get('key') === 'part') ? filters.find(filter => filter.get('key') === 'part' && filter.get('value') === key) ? 1 : 0.4 : 1,
+      opacity: filters.find(filter => filter.get('key') === 'part') ? filters.find(filter => filter.get('key') === 'part' && filter.get('value') === key) ? 1 : 0.3 : 1,
       annuluses: [{
         width: valueToCoordinate(count, [minCount, maxCount], [minRadius, maxRadius]),
         color: parts.getIn([key, 'color'])
