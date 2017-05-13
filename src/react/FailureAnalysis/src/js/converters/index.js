@@ -12,6 +12,7 @@ export function AssetTypesConv(resp) {
 export function BriefConv(resp, type, lastYear) {
   let arr = resp.data.briefs
   if (arr.length === 0) {
+    arr.pages = resp.data.pages
     return arr
   }
   let weightMax = _.maxBy(arr, item => item.val[type]).val[type]
@@ -22,6 +23,10 @@ export function BriefConv(resp, type, lastYear) {
 
 export function BriefAssetConv(resp, type, lastYear) {
   let arr = resp.data.briefs
+  if (arr.length === 0) {
+    arr.pages = resp.data.pages
+    return arr
+  }
   let weightMax = _.maxBy(arr, item => item.val[type]).val[type]
   let result = BriefToothAdapter(arr, weightMax, type, lastYear)
   result.pages = resp.data.pages

@@ -1637,13 +1637,13 @@ export default function(mock) {
         let params = config.params
         switch (params.groupby) {
           case 'type':
-            return [200, simPaging(params.limit, params.start, BriefsByType)]
+            return [200, simulatePaging(params.limit, params.start, BriefsByType)]
           case 'dept':
-            return [200, simPaging(params.limit, params.start, BriefsByDept)]
+            return [200, simulatePaging(params.limit, params.start, BriefsByDept)]
           case 'asset':
-            return [200, simPaging(params.limit, params.start, BriefsByAsset)]
+            return [200, simulatePaging(params.limit, params.start, BriefsByAsset)]
           case 'supplier':
-            return [200, simPaging(params.limit, params.start, BriefsBySupplier)]
+            return [200, simulatePaging(params.limit, params.start, BriefsBySupplier)]
         }
         return [200, []]
       })
@@ -1655,7 +1655,7 @@ export default function(mock) {
       })
 }
 
-function simPaging(top, skip = 0, resp) {
+function simulatePaging(top, skip = 0, resp) {
 
   let result = resp.briefs.slice(skip, skip + top)
   return {

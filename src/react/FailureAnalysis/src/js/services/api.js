@@ -1,12 +1,13 @@
 import axios from 'axios'
 import { load } from './mocks/helper'
 import { AssetTypesConv, BriefConv, ReasonConv, BriefAssetConv } from 'converters'
-import qp from 'query-parse'
 
 const UseMock = true
-if (true || process.env.NODE_ENV === 'development' && UseMock) {
+if (process.env.NODE_ENV === 'development' && UseMock) {
   load('./sample')
 }
+
+const prefix = process.env.LOCAL ? '/geapm/' : '/' 
 const DateFormat = 'YYYY-MM-DD'
 const GroupBy = {
   'display_brand': 'supplier',
@@ -34,10 +35,10 @@ function mapParamsToQuery(params, type) {
 export default {
 
   getAssetTypes() {
-    return axios.get('/api/msg?type=assetGroup').then(AssetTypesConv)
+    return axios.get(prefix + 'api/msg?type=assetGroup').then(AssetTypesConv)
   },
   getDepartments() {
-    return axios.get('/api/org/all').then(resp => resp.data.orgInfos)
+    return axios.get(prefix + 'api/org/all').then(resp => resp.data.orgInfos)
   },
   getBriefs(type, state, lastYear) {
     let params = mapParamsToQuery(state, type)
@@ -46,11 +47,11 @@ export default {
       params.to = state.period.to.subtract('1', 'years').format(DateFormat)
     }
     if (type === 'left') {
-      return axios.get('/api/fa/briefs', {params})
+      return axios.get(prefix + 'api/fa/briefs', {params})
         .then(resp => BriefConv(resp, params.dataType, lastYear))
     } else {
       params.groupby = 'asset'
-      return axios.get('/api/fa/briefs', {params})
+      return axios.get(prefix + 'api/fa/briefs', {params})
         .then(resp => BriefAssetConv(resp, params.dataType, lastYear))
     }
   },
@@ -59,7 +60,7 @@ export default {
       from,
       to,
     }
-    return axios.get('/api/fa/reasons', {params}).then(ReasonConv)
+    return axios.get(prefix + 'api/fa/reasons', {params}).then(ReasonConv)
   },
 
 }

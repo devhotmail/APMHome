@@ -8,10 +8,10 @@ const config = require('./webpack.config.base')
 
 const GLOBALS = {
   'process.env': {
-    'NODE_ENV': JSON.stringify('production')
+    'NODE_ENV': JSON.stringify('production'),
+    LOCAL: JSON.parse(process.env.LOCAL || 'false')
   },
-  __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false'))
-
+  __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false')),
 }
 const pwd = path.resolve(__dirname, '../')
 const root = path.basename(pwd, path.extname(pwd))

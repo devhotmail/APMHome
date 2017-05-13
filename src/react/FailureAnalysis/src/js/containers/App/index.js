@@ -5,7 +5,6 @@ import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
 import _ from 'lodash'
-// import Radium from 'radium'
 import { message } from 'antd'
 import EventBus from 'eventbusjs'
 import GearListChart from 'components/GearListChart'
@@ -18,7 +17,6 @@ import withClientRect from '../../HOC/withClientRect'
 import selectHelper from 'components/SelectHelper'
 import { ParamUpdate, PageChange } from 'actions'
 import colors from 'utils/colors'
-import { GenerateTeethData as GTD } from 'utils/helpers'
 import './app.scss'
 import cache from 'utils/cache'
 import { MetaUpdate } from 'actions'
@@ -100,7 +98,7 @@ function mapState2Props(state) {
 @connect(mapState2Props, mapDispatch2Porps)
 @autobind
 export class App extends Component<void, Props, void> {
-  static GenerateTeethData = _.memoize(GTD)
+
   static getPlaceholder = _.memoize(count => _.range(count)
                            .map(() => Placeholder))
   state = {
@@ -178,22 +176,6 @@ export class App extends Component<void, Props, void> {
     fetchBriefs('right')
   }
 
-  // loadDummy() {
-  //   setTimeout(() => {
-  //     let items = GTD(6, 'bar', 3, [colors.purple, colors.green, colors.yellow])
-  //     items.forEach(item => _.orderBy(item.strips, ['color']))
-  //     this.setState({leftItems: items})
-  //   }, RandomInt(600))
-  //   setTimeout(() => {
-  //     let items = GTD(12, 'bar', 1, [colors.blue, colors.gray])
-  //     this.setState({centerItems: _.orderBy(items, _ => _.strips[0].color, ['desc'])})
-  //   }, RandomInt(600))
-  //   setTimeout(() => {
-  //     let items = GTD(16, 'spokerib', 3, [colors.purple, colors.green, colors.yellow])
-  //     items.forEach(item => _.orderBy(item.strips, ['color']))
-  //     this.setState({rightItems: items})
-  //   }, RandomInt(600))
-  // }
   _onRightPagerChange = value => {
     this.props.updatePagination('right', value)
   }
