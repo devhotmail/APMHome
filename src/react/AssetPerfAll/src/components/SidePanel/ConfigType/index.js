@@ -58,7 +58,7 @@ export default class ConfigType extends Component<*, ConfigT, *> {
 
     return (
       <div>
-        <Table dataSource={config} {...tableProps}>
+        <Table dataSource={config} {...tableProps} onRowClick={this.props.onRowClick || (() => {})}>
           <Table.Column
             title={<div className="p-l-1">设备类型</div>}
             dataIndex="name"
