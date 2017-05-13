@@ -36,7 +36,7 @@ export default {
   currentYear: {
     text: now.clone().startOf('year').year(),
     start: now.clone().startOf('year'),
-    end: now.clone().endOf('year')
+    end: now
   },
   nextYear: {
     text: now.clone().startOf('year').add(1, 'year').year(),

@@ -14,7 +14,7 @@ const { RangePicker } = DatePicker
 
 const presets = getRangePresets([
   'oneWeek', 'oneMonth', 'oneYear', 'currentMonth',
-  'yearBeforeLast', 'lastYear'
+  'yearBeforeLast', 'lastYear', 'currentYear'
 ])
 
 const ranges = presets.reduce((prev, cur) => {
