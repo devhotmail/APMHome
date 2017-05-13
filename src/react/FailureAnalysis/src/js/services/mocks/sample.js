@@ -1655,14 +1655,14 @@ export default function(mock) {
       })
 }
 
-function simPaging(top, skip, resp) {
+function simPaging(top, skip = 0, resp) {
 
-  let result = resp.briefs.slice(skip, top)
+  let result = resp.briefs.slice(skip, skip + top)
   return {
     pages: {
       total: resp.briefs.length,
       skip: skip,
-      limit: result.length
+      limit: Math.max(result.length, top)
     }, 
     briefs: result
   }

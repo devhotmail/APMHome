@@ -26,7 +26,7 @@ function mapParamsToQuery(params, type) {
     groupby: GroupBy[params.display],
     orderby: DataTypeMapping[params.orderBy],
     dataType: DataTypeMapping[params.dataType],
-    start: pag.skip,
+    start: pag.skip || 0,
     limit: pag.top
   }
 }

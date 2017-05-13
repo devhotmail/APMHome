@@ -1,5 +1,6 @@
 import { call, put, take, takeEvery, takeLatest, fork, all, select } from 'redux-saga/effects'
 import Services from 'services'
+import _ from 'lodash'
 import cache from 'utils/cache'
 import { error } from 'utils/logger'
 import EventBus from 'eventbusjs'
@@ -18,9 +19,20 @@ function* fetchMeta() {
 }
 
 function* fetchBriefs(action) {
-  let type = action.type.replace('update/briefs/', '')
+  let type, targetPage
+  if (action.type === 'page/change') {
+    type = action.data.type
+    targetPage = action.data.value
+  } else {
+    type = action.type.replace('update/briefs/', '')
+  }
   try {
     let params = yield select(state => state.parameters)
+    if (targetPage) {
+      params = _.cloneDeep(params)
+      let pag = params.pagination[type]
+      pag.skip = (targetPage - 1) * pag.top + 1
+    }
     let briefs = yield call(API.getBriefs, type, params)
 
     briefs.type = type
@@ -28,10 +40,11 @@ function* fetchBriefs(action) {
     if (params.showLastYear) {
       lastYear = yield call(API.getBriefs, type, params, true)
       lastYear.type = type
-    } 
+    }
+    
     let value = {
       total: briefs.pages.total,
-      skip: briefs.pages.start,
+      skip: briefs.pages.skip,
     }
     yield put({ type: 'update/param/pagination/sync', data: { type, value } })
     EventBus.dispatch('brief-data', [ briefs, lastYear ])
@@ -74,16 +87,17 @@ function* briefSagaRight() {
 }
 
 function* paramChangeSaga() {
-  yield takeLatest(act => act.type.startsWith('update/param/') && !act.type.contains('pagination')
+  yield takeLatest(act => act.type.startsWith('update/param/') && !act.type.endsWith('sync')
   , fetchAll)
 }
 
-function* pageChangeSaga() {
-  yield takeLatest('update/page', fetchBriefs)
-}
 
 function* reasonSaga() {
   yield takeLatest('update/reasons', fetchReasons)
+}
+
+function* pageChangeSaga() {
+  yield takeLatest('page/change', fetchBriefs)
 }
 
 export default function* sagas() {

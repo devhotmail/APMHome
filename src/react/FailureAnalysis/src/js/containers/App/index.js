@@ -16,9 +16,9 @@ import Tooltip from 'components/Tooltip'
 import Pagination from 'components/Pagination'
 import withClientRect from '../../HOC/withClientRect'
 import selectHelper from 'components/SelectHelper'
-import { ParamUpdate } from 'actions'
+import { ParamUpdate, PageChange } from 'actions'
 import colors from 'utils/colors'
-import { GenerateTeethData as GTD, RandomInt } from 'utils/helpers'
+import { GenerateTeethData as GTD } from 'utils/helpers'
 import './app.scss'
 import cache from 'utils/cache'
 import { MetaUpdate } from 'actions'
@@ -59,6 +59,10 @@ function DataOrPlaceHolder(items, lastYearItems, placeholderSize) {
   return App.getPlaceholder(placeholderSize)
 }
 
+function getCurrentPage(skip, top) {
+  return Math.ceil(skip / top) || 1
+}
+
 function ensureSize(width, height) {
   width = _.clamp(width, 1000, 1500)
   if (height < 900) {
@@ -77,12 +81,8 @@ function mapDispatch2Porps(dispatch) {
     updateDisplayType: (value) => {
       dispatch(ParamUpdate('display', value.key))
     },
-    // sync data by response, do not trigger new request
-    syncPagination: (type, value) => {
-      dispatch(ParamUpdate('pagination/sync', { type, value }))
-    },
-    updatePagination: (type, value) => {
-      dispatch(ParamUpdate('pagination', { type, value }))
+    updatePagination: (type, pageNumber) => {
+      dispatch(PageChange(type, pageNumber))
     },
     fetchBriefs: (type) => {
       dispatch({ type: 'update/briefs/' + type })
@@ -195,10 +195,10 @@ export class App extends Component<void, Props, void> {
   //   }, RandomInt(600))
   // }
   _onRightPagerChange = value => {
-    this.props.updatePagination('right', { value })
+    this.props.updatePagination('right', value)
   }
   _onLeftPagerChange = value => {
-    this.props.updatePagination('left', { value })
+    this.props.updatePagination('left', value)
   }
   _getDisplayOptions() {
     return DisplayOptions.map(o => ({ key: o.key, label: this.props.t(o.key)}))
@@ -254,9 +254,9 @@ export class App extends Component<void, Props, void> {
           <div className="full-chart container">
 
             <div className="display-select">{selectHelper(display, this._getDisplayOptions(), updateDisplayType)}</div>
-            <Pagination current={left.skip} pageSize={left.top} total={left.total} 
+            <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
               className="pager-left" onChange={this._onLeftPagerChange}/>
-            <Pagination current={right.skip} pageSize={right.top} total={right.total} 
+            <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
               className="pager-right" onChange={this._onRightPagerChange}/>
             <GearListChart 
               id="left-chart"

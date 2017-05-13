@@ -35,7 +35,6 @@ export default class Pager extends PureComponent<defaultPropsT, PropsT, void> {
     const prevCls = [current <= 1 ? 'disabled' : '', 'prev'].join(' ')
     const nextCls = [current === totalPages ? 'disabled' : '', 'next'].join(' ')
     
-    let currentPage = Math.ceil(current / pageSize)
     return (
       <div className={classnames('pager', className)}>
         <div className="wrapper">
@@ -43,7 +42,7 @@ export default class Pager extends PureComponent<defaultPropsT, PropsT, void> {
           <div className="counter">
             { totalPages > 0 &&
               <span>
-                <span>{currentPage}</span>
+                <span>{current}</span>
                 <span>/</span>
                 <span>{totalPages}</span>
               </span>

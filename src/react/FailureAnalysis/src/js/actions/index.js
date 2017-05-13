@@ -14,3 +14,15 @@ export function MetaUpdate(type = '', data) {
     data: data
   }
 }
+
+export const ACT_PAGE_CHANGE = 'page/change'
+
+export function PageChange(leftOrRight, value) {
+  return {
+    type: ACT_PAGE_CHANGE,
+    data: {
+      type: leftOrRight,
+      value: value
+    }
+  }
+}
