@@ -11,7 +11,7 @@ const initParameter = {
     ['assettype']: 'all_asset_type',
     ['dept']: 'all_dept'
   },
-  orderBy: 'operation_rate',
+  orderBy: 'operation_rate', // frfr, 
   period: {
     from: YearStart,
     to: Current
@@ -68,7 +68,11 @@ const reducers = {
     return next
   },
 
-  ['update/param/pagination'](next, data) {
+  ['update/param/pagination'](next) {
+    return next
+  },
+
+  ['update/param/pagination/sync'](next, data) {
     let pag = next.pagination[data.type]
     Object.assign(pag, data.value)
     return next

@@ -36,7 +36,7 @@ const styles = {
 export default class Tooltip extends PureComponent<void, Props, State> {
 
   static getPosition(mouseX, mouseY, offsetX, offsetY) {
-    return { left: mouseX + offsetX, top: mouseY + offsetY }
+    return { left: mouseX + offsetX - window.scrollX, top: mouseY + offsetY - window.scrollY }
   }
 
   static AnchorValueMap = { L: 0, R: -1, HC: -.5, T: 0, B: -1, VC: -.5 }

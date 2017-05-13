@@ -110,20 +110,14 @@ module.exports = {
         use: [
           'style-loader',
           'css-loader',
-          'less-loader'
+          { 
+            loader : 'less-loader',
+            options: {
+              modifyVars: require('./theme.js')
+            }
+          }
         ]
       }
-      // {
-      //   test: /\.html$/,
-      //   use: [{
-      //       loader: 'html-imports-loader/react',
-      //       options: {
-      //         emitFile: true
-      //       }
-      //   }],
-      //   include: /bower_components/,
-      //   exclude: /public/
-      // }
     ]
   },
 }

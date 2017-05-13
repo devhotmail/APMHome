@@ -27,12 +27,6 @@ module.exports = merge(config, {
     vendor: ['react', 'react-dom', 'react-redux', 'react-router', 'react-router-redux', 'redux']
   },
   plugins: [
-    new CopyWebpackPlugin([
-      {
-        from: path.join(__dirname, '../src/assets/img'),
-        to: 'images'
-      }
-    ]),
     new HtmlWebpackPlugin({
       template: 'src/index.xhtml',
       filename: 'index.xhtml',

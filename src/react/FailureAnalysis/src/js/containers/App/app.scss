@@ -6,11 +6,14 @@
     min-height: 600px;
     min-width: 750px;
     width: auto;
+
+    .gear-list-chart.child-focued .tooth-annulus-sector:not(.tooth-focused){
+      opacity: .5;
+    }
   }
   
   .chart-container {
     height: 100%;
-    transform: translateY(-4%) // slightly up a little to be visually centered
   }
 
   .display-select {
@@ -21,22 +24,22 @@
   }
   .pager {
     position: absolute;
-    transform: translateY(-50%);
+    transform: translateY(-54%);
     top: 50%;
     z-index: 99;
   }
 
   .pager-left {
-    left: -40px;
+    left: 0px;
   }
 
   .pager-right {
-    right: -40px;
+    right: 0px;
   }
   #left-chart {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-54%);
     left: 5%;
   }
 
@@ -44,9 +47,10 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -54%);
     z-index: 98;
-    
+    user-select: none;
+    pointer-events: none;
     svg {
       overflow: visible;
     }
@@ -55,7 +59,7 @@
   #right-chart {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-54%);
     right: 5%;
   }
 
@@ -63,7 +67,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -57%);
     z-index: 99;
     background-color: #ccc;
     border-radius: 861112px;
@@ -75,7 +79,7 @@
     width: 100%;
     position: relative;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-54%);
   }
 
   #legend-container .legend-item {
