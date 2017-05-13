@@ -121,8 +121,8 @@ export class LegendTable extends Component<void, Props, void> {
                 </td>
 
               { selectedDevice &&
-                [ <td key="current"><span>{selectedDevice.data.current[_.key]}</span></td>,
-                  <td key="lastYear"><span>{selectedDevice.data.lastYear[_.key]}</span></td> ]
+                [ <td key="current"><span>{selectedDevice.current[_.key]}</span></td>,
+                  <td key="lastYear"><span>{selectedDevice.lastYear[_.key]}</span></td> ]
               }
               </tr>)
             }
