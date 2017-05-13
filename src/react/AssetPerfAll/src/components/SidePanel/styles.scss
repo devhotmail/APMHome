@@ -69,6 +69,10 @@
 }
 
 :global {
+  .ant-table-wrapper:after,
+  .ant-table-wrapper:before {
+    content: '' !important;
+  }
 
   .ant-table {
     border-radius: 8px;
