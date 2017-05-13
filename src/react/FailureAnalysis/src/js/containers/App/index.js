@@ -42,8 +42,17 @@ const DisplayOptions = [
   { key: 'display_brand' },
   { key: 'display_dept' },
 ]
-function DataOrPlaceHolder(items, placeholderSize) {
+function DataOrPlaceHolder(items, lastYear, placeholderSize) {
   if (items && items.length && items[0].strips.type !== 'placeholder') {
+    if (lastYear && lastYear.length) {
+      items = items.map((item, i) => {
+        let lastYearItem = lastYear[i]
+        if (lastYearItem) {
+          lastYearItem.strips[0].color = colors.gray
+        }
+        lastYearItem && item.strips.concat(lastYear.strips)
+      })
+    }
     return items
   }
   return App.getPlaceholder(placeholderSize)
@@ -83,8 +92,8 @@ function mapDispatch2Porps(dispatch) {
 }
 
 function mapState2Props(state) {
-  let { parameters : { pagination, display, dataType } } = state
-  return { pagination, display, dataType }
+  let { parameters : { pagination, display, dataType, showLastYear } } = state
+  return { pagination, display, dataType, showLastYear }
 }
 
 @connect(mapState2Props, mapDispatch2Porps)
@@ -190,15 +199,15 @@ export class App extends Component<void, Props, void> {
   }
   loadBriefData(evt) {
     let { t } = this.props
-    let briefs = evt.target
-    if (!briefs.length) {
+    let [current, lastYear] = evt.target
+    if (!current.length) {
       message.info(t('no_more_data'))
       return
     }
-    if (briefs.type === 'left') {
-      this.setState({ leftItems: briefs })
-    } else if (briefs.type === 'right'){
-      this.setState({ rightItems: briefs })
+    if (current.type === 'left') {
+      this.setState({ leftItems: current, lastYear: { leftItems: lastYear } })
+    } else if (current.type === 'right'){
+      this.setState({ rightItems: current, lastYear: { rightItems: lastYear } })
     }
   }
 
