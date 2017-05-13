@@ -1,6 +1,11 @@
 import moment from 'moment'
 import { dateFormat } from '#/constants'
 
+const isHeadEl = document.querySelector('#user-context #isHead')
+const isHead = isHeadEl ? JSON.parse(isHeadEl.value) : false
+
+const orgIdEl = document.querySelector('#user-context #orgId')
+const orgId = isHead ? undefined : parseInt(orgIdEl.value)
 
 export default {
   namespace: 'filters',
@@ -8,7 +13,7 @@ export default {
     type: 'history',
     from: moment().subtract(1, 'year').format(dateFormat),
     to: moment().format(dateFormat),
-    groupBy: 'dept',
+    groupBy: isHead ? 'dept' : 'type',
     data: []
   },
   effects: {

@@ -2,14 +2,15 @@ import axios from 'axios'
 import { pickBy } from 'lodash'
 import { API_HOST, PAGE_SIZE } from '#/constants'
 
+const isHeadEl = document.querySelector('#user-context #isHead')
+const isHead = isHeadEl ? JSON.parse(isHeadEl.value) : false
+
+const orgIdEl = document.querySelector('#user-context #orgId')
+const orgId = isHead ? undefined : parseInt(orgIdEl.value)
+
 export default {
   namespace: 'profit',
   state: {
-    // type: 'history',
-    // groupBy: 'type',
-    // from: '2016-01-01',
-    // to: '2016-12-31',
-    // filters: [],
     data: []
   },
   subscriptions: {
@@ -35,6 +36,7 @@ export default {
             groupby: filter ? null : groupBy,
             from,
             to,
+            dept: orgId,
             ...filter,
             start,
             limit: PAGE_SIZE
