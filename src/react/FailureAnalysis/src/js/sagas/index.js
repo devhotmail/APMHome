@@ -56,7 +56,7 @@ function* fetchBriefs(action) {
 function* fetchReasons(action) {
   try {
     let params = yield select(state => state.parameters)
-    let reasons = yield call(API.getReasons, params)
+    let reasons = yield call(API.getReasons, params, action.data)
     EventBus.dispatch('reason-data', reasons)
   } catch (e) {
     error(e)
@@ -67,7 +67,7 @@ function* fetchAll() {
   try {
     let params = yield select((state) => state.parameters)
     yield all([
-      call(fetchReasons, {type: 'todo', params}), 
+      call(fetchReasons, { data: {} }), 
       call(fetchBriefs, {type: 'left', params}), 
       call(fetchBriefs, {type: 'right', params})])
   } catch (e) {

@@ -32,6 +32,10 @@ export function RandomDivide(count) {
   return arr.map(_ => _ / sum)
 }
 
+export function ToPrecentage(number, decimal = 2) {
+  return (number * 100).toFixed(decimal) + '%'
+}
+
 // export function GenerateTeethData(count, mode, stripCount, colors = []) {
 
 //   const colours = _.values(COLORS)

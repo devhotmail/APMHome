@@ -146,7 +146,7 @@ export default class Tooth extends PureComponent<void, ToothProps, void> {
   mouseEventProxy = (evt) => {
     evt.stripData = this.strips()[evt.sectorId] //TODO: expose a func 'GetStripById' ?
     evt.stripData.id = evt.sectorId
-    evt.toothData = this.strips().data
+    evt.strips = this.strips()
     let name = GLC.getRegistrationName(evt)
     this.props[name](evt)
     if (name === 'onClick') {

@@ -21,14 +21,19 @@ export const DataTypeMapping = {
 }
 function mapParamsToQuery(params, type) {
   let pag = params.pagination[type]
+  let filterBy = params.filterBy
+  let assetType = filterBy.assettype === 'all_asset_type' ? '' : filterBy.assettype
+  let dept = filterBy.dept === 'all_dept' ? '' : filterBy.dept
   return {
     from: params.period.from.format(DateFormat),
     to: params.period.to.format(DateFormat),
     groupby: GroupBy[params.display],
     orderby: DataTypeMapping[params.orderBy],
-    dataType: DataTypeMapping[params.dataType],
+    type: assetType,
+    dept: dept,
     start: pag.skip || 0,
-    limit: pag.top
+    limit: pag.top,
+    dataType: DataTypeMapping[params.dataType],
   }
 }
 
@@ -55,11 +60,15 @@ export default {
         .then(resp => BriefAssetConv(resp, params.dataType, lastYear))
     }
   },
-  getReasons(state) {
+  getReasons(state, { type, asset, supplier, dept }) {
+    let { period: { from, to }, filterBy } = state
     let params = {
-      from: state.period.from.format(DateFormat),
-      to: state.period.to.format(DateFormat),
-      // type: state.
+      from: from.format(DateFormat),
+      to: to.format(DateFormat),
+      type: filterBy.assettype === 'all_asset_type' ? type : filterBy.assettype,
+      dept: filterBy.dept === 'all_dept' ? dept : filterBy.dept,
+      supplier: supplier,
+      asset: asset,
     }
     return axios.get(prefix + 'api/fa/reasons', {params}).then(ReasonConv)
   },

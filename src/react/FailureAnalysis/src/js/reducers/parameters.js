@@ -11,7 +11,7 @@ const initParameter = {
     ['assettype']: 'all_asset_type',
     ['dept']: 'all_dept'
   },
-  orderBy: 'operation_rate', // frfr, 
+  orderBy: 'operation_rate', 
   period: {
     from: YearStart,
     to: Current

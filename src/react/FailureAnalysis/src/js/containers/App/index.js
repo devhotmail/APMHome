@@ -21,7 +21,7 @@ import './app.scss'
 import cache from 'utils/cache'
 import { MetaUpdate } from 'actions'
 import { DataTypeMapping } from 'services/api'
-import { RandomInt } from 'utils/helpers'
+import { ToPrecentage } from 'utils/helpers'
 
 const Placeholder = { strips: { color: '#F9F9F9', weight: 1, type: 'placeholder' } }
 const Items = [
@@ -86,7 +86,7 @@ function mapDispatch2Porps(dispatch) {
     fetchBriefs: (type) => {
       dispatch({ type: 'update/briefs/' + type })
     },
-    fetchReasons: () => dispatch({type: 'update/reasons'}),
+    fetchReasons: (data = {}) => dispatch({type: 'update/reasons', data }),
     updateMeta: () => dispatch(MetaUpdate())
   }
 }
@@ -144,52 +144,70 @@ export class App extends Component<void, Props, void> {
 
   clickLeftTooth(evt) {
     // 1, central chart: fetch reasons
-    // 2, reset selectedDevice
+    let { display } = this.props
+    let key = evt.stripData.data.key
+    let param = {}
+    if (display === 'display_asset_type') {
+      param.type = key.id
+    } else if (display === 'display_brand') {
+      param.supplier === key.id
+    } else if (display === 'display_dept') {
+      param.dept = key.id
+    }
+    this.props.fetchReasons(param)
+    // 2 reset lengend table
+    let { selectedDevice } = this.state
+    selectedDevice.show = false
+    this.setState({ selectedDevice: selectedDevice })
+    this.clearFocus('right')
   }
 
   clickRightTooth(evt) {
-
-    this.device(evt.stripData.data)
-    // 1. update central table
+    this.showDevice(evt.strips)
+    this.props.fetchReasons({ asset: evt.stripData.data.key.id })
+    this.clearFocus('left')
   }
 
-  device(data) {
+  showDevice(strips) {
+    let [ current, lastYear ] = strips
     const device = {
       show: true,
-      name: data.key.name,
+      name: current.data.key.name,
       current: {
-        'operation_rate': (data.val.avail * 100).toFixed(2) + "%",
-        'ftfr': (data.val.ftfr * 100).toFixed(2) + "%",
-        'incident_count': data.val.fix,
+        'operation_rate': ToPrecentage(current.data.val.avail) ,
+        'ftfr': ToPrecentage(current.data.val.ftfr),
+        'incident_count': current.data.val.fix,
       },
       lastYear: {
-        'operation_rate': RandomInt(50, 100) + "%",
-        'ftfr': RandomInt(4, 30)+'%',
-        'incident_count': RandomInt(10, 100) + ''
+        'operation_rate': lastYear ? ToPrecentage(lastYear.data.val.avail) : '-',
+        'ftfr': lastYear ? ToPrecentage(lastYear.data.val.ftfr) : '-',
+        'incident_count': lastYear ? lastYear.data.val.fix : '-',
       }
     }
     this.setState({ selectedDevice: device })
   }
 
-  load() {
-    let {fetchBriefs, fetchReasons} = this.props
+  loadAll() {
+    let { fetchBriefs, fetchReasons } = this.props
     fetchBriefs('left')
-    fetchReasons()
+    fetchReasons({})
     fetchBriefs('right')
   }
 
-  _onRightPagerChange = value => {
+  onRightPagerChange = value => {
     this.props.updatePagination('right', value)
   }
-  _onLeftPagerChange = value => {
+  onLeftPagerChange = value => {
     this.props.updatePagination('left', value)
   }
-  _getDisplayOptions() {
+
+  getDisplayOptions() {
     return DisplayOptions.map(o => ({ key: o.key, label: this.props.t(o.key)}))
   }
-  loadBriefData(evt) {
+
+  mountBriefData(evt) {
     let { t } = this.props
-    let [current, lastYear] = evt.target
+    let [ current, lastYear ] = evt.target
     if (!current.length) {
       message.info(t('no_more_data'))
       return
@@ -199,9 +217,10 @@ export class App extends Component<void, Props, void> {
     } else if (current.type === 'right'){
       this.setState({ rightItems: current, lastYear: { rightItems: lastYear, leftItems: this.state.lastYear.leftItems } })
     }
+    this.clearFocus(current.type)
   }
 
-  loadReason(evt) {
+  mountReason(evt) {
     let reasons = evt.target
     if (reasons.length) {
       this.setState({ centerItems: reasons })
@@ -209,10 +228,17 @@ export class App extends Component<void, Props, void> {
       message.info(this.props.t('no_more_data'))
     }
   }
+  clearFocus(type) {
+    if (type === 'left') {
+      this.refs.leftChart.clearFocus()
+    } else if (type === 'right') {
+      this.refs.rightChart.clearFocus()
+    }
+  }
   constructor(props) {
     super(props)
-    EventBus.addEventListener('brief-data', this.loadBriefData )
-    EventBus.addEventListener('reason-data', this.loadReason )
+    EventBus.addEventListener('brief-data', this.mountBriefData )
+    EventBus.addEventListener('reason-data', this.mountReason )
     let { updateMeta } = this.props
     if (!cache.get('departments') || !cache.get('assettypes')) {
       updateMeta()
@@ -220,10 +246,7 @@ export class App extends Component<void, Props, void> {
     
   }
   componentWillMount() {
-    let { fetchBriefs, fetchReasons } = this.props
-    fetchBriefs('left')
-    fetchReasons() // todo
-    fetchBriefs('right')
+    this.loadAll()
   }
   render() {
     let { tooltipX, tooltipY, tooltip, leftItems, centerItems, rightItems, lastYear, selectedDevice } = this.state
@@ -237,13 +260,14 @@ export class App extends Component<void, Props, void> {
         <div className="chart-container is-fullwidth">
           <div className="full-chart container">
 
-            <div className="display-select">{selectHelper(display, this._getDisplayOptions(), updateDisplayType)}</div>
+            <div className="display-select">{selectHelper(display, this.getDisplayOptions(), updateDisplayType)}</div>
             <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
-              className="pager-left" onChange={this._onLeftPagerChange}/>
+              className="pager-left" onChange={this.onLeftPagerChange}/>
             <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
-              className="pager-right" onChange={this._onRightPagerChange}/>
+              className="pager-right" onChange={this.onRightPagerChange}/>
             <GearListChart 
               id="left-chart"
+              ref="leftChart"
               startAngle={110} endAngle={250} 
               outerRadius={outer_R} innerRadius={outer_r}
               margin={7}
@@ -268,6 +292,7 @@ export class App extends Component<void, Props, void> {
             </div>
             <GearListChart 
               id="right-chart" 
+              ref="rightChart"
               startAngle={290} endAngle={70} 
               outerRadius={outer_R} innerRadius={outer_r}
               margin={3}
