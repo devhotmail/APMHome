@@ -14,7 +14,7 @@
     "clean": "rimraf build",
     "dev": "node ./src/devServer.js",
     "prod": "npm run build && node ./src/devServer.js",
-    "build": "cross-env webpack --config ./config/webpack.config.prod.js --progress && npm run symlink",
+    "build": "webpack --config ./config/webpack.config.prod.js && npm run symlink",
     "build:local": "LOCAL=true npm run build",
     "symlink": "node ./symlink.js",
     "coverage": "NODE_ENV=test nyc mocha --compilers js:babel-core/register,css:./test/unit/cssNullCompiler.js --require ./test/unit/testHelper.js --recursive ./test/unit",
