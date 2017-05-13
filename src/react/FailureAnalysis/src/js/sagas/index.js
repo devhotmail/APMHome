@@ -54,8 +54,8 @@ function* fetchBriefs(action) {
 }
 
 function* fetchReasons(action) {
-  let params = action.params
   try {
+    let params = yield select(state => state.parameters)
     let reasons = yield call(API.getReasons, params)
     EventBus.dispatch('reason-data', reasons)
   } catch (e) {

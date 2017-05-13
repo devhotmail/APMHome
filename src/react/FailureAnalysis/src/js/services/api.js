@@ -43,8 +43,8 @@ export default {
   getBriefs(type, state, lastYear) {
     let params = mapParamsToQuery(state, type)
     if (lastYear) {
-      params.from = state.period.from.subtract('1', 'years').format(DateFormat)
-      params.to = state.period.to.subtract('1', 'years').format(DateFormat)
+      params.from = state.period.from.clone().subtract('1', 'years').format(DateFormat)
+      params.to = state.period.to.clone().subtract('1', 'years').format(DateFormat)
     }
     if (type === 'left') {
       return axios.get(prefix + 'api/fa/briefs', {params})
@@ -55,10 +55,11 @@ export default {
         .then(resp => BriefAssetConv(resp, params.dataType, lastYear))
     }
   },
-  getReasons(from, to) {
+  getReasons(state) {
     let params = {
-      from,
-      to,
+      from: state.period.from.format(DateFormat),
+      to: state.period.to.format(DateFormat),
+      // type: state.
     }
     return axios.get(prefix + 'api/fa/reasons', {params}).then(ReasonConv)
   },
