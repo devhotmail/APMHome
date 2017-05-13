@@ -48,20 +48,36 @@ module.exports = merge(baseWebpackConfig, {
       },
       {
         test: /\.s[ca]ss$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              module: true,
-              importLoaders: 1,
-              localIdentName: '[local]__[hash:base64:5]'
-            }
-          },
-          'sass-loader',
-          'postcss-loader'
-        ]
-      },
+        exclude: /src\/styles/,
+         use: [
+           'style-loader',
+           {
+             loader: 'css-loader',
+             options: {
+               module: true,
+               importLoaders: 1,
+               localIdentName: '[local]__[hash:base64:5]'
+             }
+           },
+           'sass-loader',
+           'postcss-loader'
+         ]
+       },
+       {
+         test: /\.s[ca]ss$/,
+         include: /src\/styles/,
+         use: [
+           'style-loader',
+           {
+             loader: 'css-loader',
+             options: {
+               importLoaders: 1
+             }
+           },
+           'sass-loader',
+           'postcss-loader'
+         ]
+       },
       {
         test: /\.less$/,
         use: [

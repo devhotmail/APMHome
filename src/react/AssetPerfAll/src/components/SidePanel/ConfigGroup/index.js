@@ -35,7 +35,7 @@ class ConfigGroup extends Component<*, ConfigT, *> {
     }
 
     return (
-      <div>
+      <div className="m-b-1">
         <Table dataSource={config} {...tableProps}>
           <Table.Column
             title={{dept: '科室', type: '设备', month: '月份'}[config[0].type]}

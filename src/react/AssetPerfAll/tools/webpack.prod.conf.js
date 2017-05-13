@@ -58,6 +58,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
       {
         test: /\.s[ca]ss$/,
+        exclude: /src\/styles/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
@@ -71,6 +72,23 @@ const webpackConfig = merge(baseWebpackConfig, {
             },
             'sass-loader',
             'postcss-loader'
+          ]
+        })
+      },
+      {
+        test: /\.s[ca]ss$/,
+        include: /src\/styles/,
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 2
+              }
+            },
+            'postcss-loader',
+            'sass-loader'
           ]
         })
       },
