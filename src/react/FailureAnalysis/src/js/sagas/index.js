@@ -22,13 +22,19 @@ function* fetchBriefs(action) {
   try {
     let params = yield select(state => state.parameters)
     let briefs = yield call(API.getBriefs, type, params)
+
     briefs.type = type
+    let lastYear = undefined 
+    if (params.showLastYear) {
+      lastYear = yield call(API.getBriefs, type, params, true)
+      lastYear.type = type
+    } 
     let value = {
       total: (briefs.total || 86), // todo!!!, ask ivar to provide
       skip: briefs.skip || 11,
     }
     yield put({ type: 'update/param/pagination/sync', data: { type, value } })
-    EventBus.dispatch('brief-data', briefs)
+    EventBus.dispatch('brief-data', [ briefs, lastYear ])
   } catch (e) {
     error(e)
   }

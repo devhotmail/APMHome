@@ -42,16 +42,17 @@ const DisplayOptions = [
   { key: 'display_brand' },
   { key: 'display_dept' },
 ]
-function DataOrPlaceHolder(items, lastYear, placeholderSize) {
+
+function mergeItem(current, lastYear) {
+  let copy = _.cloneDeep(current)
+  copy.strips = copy.strips.concat(_.cloneDeep(lastYear.strips))
+  return copy
+}
+function DataOrPlaceHolder(items, lastYearItems, placeholderSize) {
+  // ignore placeholder and empty data
   if (items && items.length && items[0].strips.type !== 'placeholder') {
-    if (lastYear && lastYear.length) {
-      items = items.map((item, i) => {
-        let lastYearItem = lastYear[i]
-        if (lastYearItem) {
-          lastYearItem.strips[0].color = colors.gray
-        }
-        lastYearItem && item.strips.concat(lastYear.strips)
-      })
+    if (lastYearItems && lastYearItems.length) {
+      items = items.map( (item, i) => mergeItem(item, lastYearItems[i]))
     }
     return items
   }
@@ -205,9 +206,9 @@ export class App extends Component<void, Props, void> {
       return
     }
     if (current.type === 'left') {
-      this.setState({ leftItems: current, lastYear: { leftItems: lastYear } })
+      this.setState({ leftItems: current, lastYear: { leftItems: lastYear, rightItems: this.state.lastYear.rightItems } })
     } else if (current.type === 'right'){
-      this.setState({ rightItems: current, lastYear: { rightItems: lastYear } })
+      this.setState({ rightItems: current, lastYear: { rightItems: lastYear, leftItems: this.state.lastYear.leftItems } })
     }
   }
 
@@ -236,7 +237,7 @@ export class App extends Component<void, Props, void> {
     fetchBriefs('right')
   }
   render() {
-    let { tooltipX, tooltipY, tooltip, leftItems, centerItems, rightItems, selectedDevice } = this.state
+    let { tooltipX, tooltipY, tooltip, leftItems, centerItems, rightItems, lastYear, selectedDevice } = this.state
     let { updateDisplayType, pagination, clientRect, display } = this.props
     let { left, right } = pagination
     let { outer_R, outer_r, inner_R, inner_r  } = ensureSize(clientRect.width, clientRect.height)
@@ -261,7 +262,7 @@ export class App extends Component<void, Props, void> {
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
               clockwise={false}
-              items={DataOrPlaceHolder(leftItems, pagination.left.top)} 
+              items={DataOrPlaceHolder(leftItems, lastYear.leftItems, pagination.left.top)} 
               />
             <GearListChart
               id="center-chart"
@@ -270,7 +271,7 @@ export class App extends Component<void, Props, void> {
               margin={8}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
-              items={DataOrPlaceHolder(centerItems, 12)} />
+              items={DataOrPlaceHolder(centerItems, null, 12)} />
             <div id="legend-container">
               <Legend items={Items}>
                 <LegendTable items={ParameterTypes} selectedDevice={selectedDevice.show && selectedDevice} checkBoxes={CheckBoxes}/>
@@ -284,10 +285,10 @@ export class App extends Component<void, Props, void> {
               onClick={this.clickRightTooth}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
-              items={DataOrPlaceHolder(rightItems, pagination.right.top)} />
+              items={DataOrPlaceHolder(rightItems, lastYear.rightItems, pagination.right.top)} />
 
           </div>
-          { tooltip && <Tooltip mouseX={tooltipX} mouseY={tooltipY} offsetY={-10} anchor="hcb">
+          { tooltip && <Tooltip mouseX={tooltipX} mouseY={tooltipY} offsetY={-13} anchor="hcb">
             <div style={{color: tooltip && tooltip.color}} className="tooltip-content">{tooltip}</div>
           </Tooltip>}
         </div>

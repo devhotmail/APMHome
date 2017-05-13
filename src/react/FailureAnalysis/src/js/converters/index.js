@@ -2,22 +2,23 @@
 import _ from 'lodash'
 import colors from 'utils/colors'
 import SID from 'shortid'
+import ColorUtil from 'color'
 
 export function AssetTypesConv(resp) {
   let converted = Object.keys(resp.data).map(i => ({ id: String(i), name: resp.data[i] }))
   return _.sortBy(converted, ['name'])
 }
 
-export function BriefConv(resp, type) {
+export function BriefConv(resp, type, lastYear) {
   let arr = resp.data.briefs.slice(0, 6) // todo, remove this line
   let weightMax = _.maxBy(arr, item => item.val[type]).val[type]
-  return BriefToothAdapter(arr, weightMax, type)
+  return BriefToothAdapter(arr, weightMax, type, lastYear)
 }
 
-export function BriefAssetConv(resp, type) {
+export function BriefAssetConv(resp, type, lastYear) {
   let arr = resp.data.briefs.slice(0, 16) // todo, remove this line
   let weightMax = _.maxBy(arr, item => item.val[type]).val[type]
-  return BriefToothAdapter(arr, weightMax, type)
+  return BriefToothAdapter(arr, weightMax, type, lastYear)
 }
 
 export function ReasonConv(resp) {
@@ -25,9 +26,18 @@ export function ReasonConv(resp) {
   return result
 }
 
-function BriefToothAdapter(array, max, orderby) {
+function BriefToothAdapter(array, max, orderby, lastYear) {
   let color = getStripColor(orderby)
-  return array.map(a => ({ id: SID.generate(), data: a, mode: 'bar', label: a.key.name, strips: [{color: color, weight: a.val[orderby] / max, data: a}] }))
+  if (lastYear) {
+    color = ColorUtil(color).lighten(.4).hexString()
+  }
+  return array.map(a => ({ 
+    id: SID.generate(), 
+    data: a, 
+    mode: 'bar', 
+    label: a.key.name, 
+    strips: [{color: color, weight: a.val[orderby] / max, data: a}] 
+  }))
 }
 
 function ReasonToothAdapter(array) {

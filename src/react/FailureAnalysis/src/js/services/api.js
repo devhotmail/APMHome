@@ -36,15 +36,19 @@ export default {
   getDepartments() {
     return axios.get('/api/org/all').then(resp => resp.data.orgInfos)
   },
-  getBriefs(type, state) {
+  getBriefs(type, state, lastYear) {
     let params = mapParamsToQuery(state)
+    if (lastYear) {
+      params.from = state.period.from.subtract('1', 'years').format(DateFormat)
+      params.to = state.period.to.subtract('1', 'years').format(DateFormat)
+    }
     if (type === 'left'){
       return axios.get('/api/fa/briefs', {params})
-        .then(resp => BriefConv(resp, params.dataType))
+        .then(resp => BriefConv(resp, params.dataType, lastYear))
     } else {
       params.groupby = 'asset'
       return axios.get('/api/fa/briefs', {params})
-        .then(resp => BriefAssetConv(resp, params.dataType))
+        .then(resp => BriefAssetConv(resp, params.dataType, lastYear))
     }
   },
   getReasons(from, to) {
