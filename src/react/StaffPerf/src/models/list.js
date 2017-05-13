@@ -15,6 +15,7 @@ const defaultRange = {
 function mockRoot (root) {
   return {
     ...root,
+    isRoot: true,
     owner_id: null,
     owner_name: '所有人'
   }

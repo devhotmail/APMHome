@@ -28,7 +28,7 @@ export default class ArcStack extends PureComponent<*, PropsT, *> {
 
     const colors = colorSet[filter]
     return (
-      <g style={style} onClick={this.handleClick}>
+      <g className="clickable" style={style} onClick={this.handleClick}>
         {
           stackes.map((n, i, arr) => {
             const innerR = innerRadius + getSum(arr.slice(0, i))
