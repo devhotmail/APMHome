@@ -7,8 +7,9 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.conf')
 const utils = require('./utils')
+const config = require('../config')
 
-const publicPath = utils.getProdPublicPath()
+const publicPath = utils.getProdPublicPath(config.production.commonPrefix)
 
 const webpackConfig = merge(baseWebpackConfig, {
   devtool: false,
@@ -36,6 +37,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
       {
         test: /\.s[ca]ss$/,
+        exclude: /src\/styles/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
@@ -43,10 +45,12 @@ const webpackConfig = merge(baseWebpackConfig, {
               loader: 'css-loader',
               options: {
                 module: true,
+                importLoaders: 1,
                 localIdentName: '[local]__[hash:base64:5]'
               }
             },
-            'sass-loader'
+            'sass-loader',
+            'postcss-loader'
           ]
         })
       },
@@ -64,7 +68,7 @@ const webpackConfig = merge(baseWebpackConfig, {
             {
               loader: 'less-loader',
               options: {
-                modifyVars: JSON.stringify(require('../src/theme.js'))
+                modifyVars: require('./theme')
               }
             }
           ],

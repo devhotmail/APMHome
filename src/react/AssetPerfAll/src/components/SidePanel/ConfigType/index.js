@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Tooltip, Table } from 'antd'
 import uuid from 'uuid/v4'
 
-import { getCursor, isSameCursor, isFocusNode, round } from '#/utils'
+import { round } from '#/utils'
 
 import type { ConfigT, NodeT, cursorT } from '#/types'
 

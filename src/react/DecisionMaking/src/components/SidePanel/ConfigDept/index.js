@@ -63,7 +63,7 @@ export default class ConfigDept extends Component<*, ConfigT, *> {
   }
 
   renderConfigTwo = (activeCursors) => {
-    const { config, focus: { cursor}, depths, setFocus, loading } = this.props
+    const { config, focus: { cursor }, depths, setFocus, loading } = this.props
 
     const configListTwo = config.filter(n => n.depth === depths[1])
     .filter(n => isFocusNode(n.parent, activeCursors[0]))

@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class ExamSummitService {
   private static final Logger log = LoggerFactory.getLogger(ExamSummitService.class);
-  private final List<LocalDate> dates = Stream.iterate(LocalDate.now().minusYears(3), d -> d.plusDays(1)).takeUntil(date -> date.isAfter(LocalDate.now())).toJavaList();
+  private final List<LocalDate> dates = Stream.iterate(LocalDate.now().minusYears(1), d -> d.plusDays(1)).takeUntil(date -> date.isAfter(LocalDate.now())).toJavaList();
   private final String sql = new SQL().INSERT_INTO("exam_summit")
     .VALUES("site_id", ":siteId")
     .VALUES("hospital_id", ":hospitalId")

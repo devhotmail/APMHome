@@ -9,7 +9,7 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const utils = require('./utils')
 const config = require('../config')
 
-const publicPath = utils.getProdPublicPath(config.production.publicPathPrefix)
+const publicPath = utils.getProdPublicPath(config.production.commonPrefix)
 
 const webpackConfig = merge(baseWebpackConfig, {
   devtool: false,

@@ -145,6 +145,11 @@ export default {
             type: 'config/data/set',
             payload: action.payload
           })
+
+          // get the new focus node
+          yield put({
+            type: 'focus/node/set'
+          })
         }  
       } catch (err) {
         yield put({

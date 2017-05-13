@@ -1,0 +1,101 @@
+#app-container {
+  height: 100vh;
+  .full-chart {
+    position: relative;
+    height: 100%;
+    min-height: 600px;
+    min-width: 750px;
+    width: auto;
+
+    .gear-list-chart .tooth {
+      transition: opacity .5s ease-in-out;
+    }
+    .gear-list-chart.child-focused .tooth:not(.focused){
+      opacity: .5;
+    }
+  }
+  
+  .chart-container {
+    height: 100%;
+  }
+
+  .display-select {
+    position: absolute;
+    z-index: 99;
+    left: 2%;
+    top: 10%;
+  }
+  .pager {
+    position: absolute;
+    transform: translateY(-54%);
+    top: 50%;
+    z-index: 99;
+  }
+
+  .pager-left {
+    left: 0px;
+  }
+
+  .pager-right {
+    right: 0px;
+  }
+  #left-chart {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-54%);
+    left: 5%;
+  }
+
+  #center-chart {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -54%);
+    z-index: 98;
+    user-select: none;
+    pointer-events: none;
+    svg {
+      overflow: visible;
+    }
+  }
+
+  #right-chart {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-54%);
+    right: 5%;
+  }
+
+  #legend-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -57%);
+    z-index: 99;
+    background-color: #ccc;
+    border-radius: 861112px;
+    width: 300px;
+    height: 300px;
+  }
+  #legend-container > div {
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-54%);
+  }
+
+  #legend-container .legend-item {
+    position: relative;
+    bottom: -2em;
+  }
+
+  .tooltip-content {
+    min-width: 100px;
+    background: #d8d8d8;
+    border: 1px solid #5d87d4;
+    border-radius: 3;
+    padding: 12px 7px;
+  }
+
+}
