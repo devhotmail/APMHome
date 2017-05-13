@@ -57,7 +57,7 @@ export const ranges = {
   currentYear: {
     text: momentNow.clone().startOf('year').year(),
     start: momentNow.clone().startOf('year'),
-    end: momentNow.clone().endOf('year')
+    end: momentNow
   },
   nextYear: {
     text: momentNow.clone().startOf('year').add(1, 'year').year(),
