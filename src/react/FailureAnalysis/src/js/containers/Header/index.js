@@ -13,7 +13,7 @@ import './header.scss'
 const RangePicker = DatePicker.RangePicker
 const DatePresets = getRangePresets([
   'oneWeek', 'oneMonth', 'oneYear', 'currentMonth',
-  'yearBeforeLast', 'lastYear', 'currentYear'
+  'yearBeforeLast', 'lastYear'
 ])
 
 const Ranges = DatePresets.reduce((prev, cur) => {
