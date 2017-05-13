@@ -21,7 +21,7 @@ import './app.scss'
 import cache from 'utils/cache'
 import { MetaUpdate } from 'actions'
 import { DataTypeMapping } from 'services/api'
-import { RandomInt } from 'utils/helpers'
+import { RandomInt, ToPrecentage } from 'utils/helpers'
 
 const Placeholder = { strips: { color: '#F9F9F9', weight: 1, type: 'placeholder' } }
 const Items = [
@@ -149,23 +149,24 @@ export class App extends Component<void, Props, void> {
 
   clickRightTooth(evt) {
 
-    this.device(evt.stripData.data)
+    this.device(evt.strips)
     // 1. update central table
   }
 
-  device(data) {
+  device(strips) {
+    let [ current, lastYear ] = strips
     const device = {
       show: true,
-      name: data.key.name,
+      name: current.data.key.name,
       current: {
-        'operation_rate': (data.val.avail * 100).toFixed(2) + "%",
-        'ftfr': (data.val.ftfr * 100).toFixed(2) + "%",
-        'incident_count': data.val.fix,
+        'operation_rate': ToPrecentage(current.data.val.avail) ,
+        'ftfr': ToPrecentage(current.data.val.ftfr),
+        'incident_count': current.data.val.fix,
       },
       lastYear: {
-        'operation_rate': RandomInt(50, 100) + "%",
-        'ftfr': RandomInt(4, 30)+'%',
-        'incident_count': RandomInt(10, 100) + ''
+        'operation_rate': lastYear ? ToPrecentage(lastYear.data.val.avail) : '-',
+        'ftfr': lastYear ? ToPrecentage(lastYear.data.val.ftfr) : '-',
+        'incident_count': lastYear ? lastYear.data.val.fix : '-',
       }
     }
     this.setState({ selectedDevice: device })

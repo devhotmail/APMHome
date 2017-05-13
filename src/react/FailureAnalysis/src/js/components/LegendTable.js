@@ -47,6 +47,9 @@ let styles = {
       backgroundColor: '#E2E2E2'
     },
   },
+  centerAlign: {
+    textAlign: 'center',
+  },
   active: {
     opacity: 1,
   },
@@ -78,7 +81,7 @@ export class LegendTable extends Component<void, Props, void> {
 
   _getSymbol(item: LegendItem) {
     return (<span style={[{ color: item.color }, styles.symbol ]}>
-              { item.key !== 'same_period_last_year' ? '◼' : '⍿' }
+              { item.key !== 'same_period_last_year' ? '◼' : this.props.showLastYear ? '▣' : '⛶' }
             </span>)
   }
 
@@ -121,8 +124,8 @@ export class LegendTable extends Component<void, Props, void> {
                 </td>
 
               { selectedDevice &&
-                [ <td key="current"><span>{selectedDevice.current[_.key]}</span></td>,
-                  <td key="lastYear"><span>{selectedDevice.lastYear[_.key]}</span></td> ]
+                [ <td key="current" style={styles.centerAlign}><span>{selectedDevice.current[_.key]}</span></td>,
+                  <td key="lastYear" style={styles.centerAlign}><span>{selectedDevice.lastYear[_.key]}</span></td> ]
               }
               </tr>)
             }
