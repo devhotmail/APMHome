@@ -60,9 +60,14 @@ export default class ConfigType extends Component<*, ConfigT, *> {
       <div>
         <Table dataSource={config} {...tableProps}>
           <Table.Column
-            title="设备类型"
+            title={<div className="p-l-1">设备类型</div>}
             dataIndex="name"
-            key="name" />
+            key="name"
+            render={(text, node, index) => (
+              <div className="p-l-1">
+                {text}
+              </div>
+            )} />
           <Table.Column
             title="收入"
             dataIndex="revenue_increase"

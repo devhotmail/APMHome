@@ -85,7 +85,7 @@ export default class ConfigType extends Component<*, ConfigT, *> {
               <EditBlock
                 cursor={getCursor(node)}
                 fieldKey="max"
-                val={text * 100} />             
+                val={text * 100} />
             } />
           <Table.Column
             title={thresholdNode[1]}

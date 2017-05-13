@@ -46,7 +46,7 @@ export default class SystemPanel extends Component {
             color="#46af9b"
             title={`${currentYear}预测`}
             percent={overview[3].revenue / revenueRange[1]}
-            textDesc={`${round(overview[3].revenue / 100000, 1)}  ${round(overview[4].revenue_increase * 100, 1)}%`} />
+            textDesc={`${round(overview[3].revenue / 1000000, 1)}  ${round(overview[4].revenue_increase * 100, 1)}%`} />
         </div>
 
         <div className={styles['group']}>

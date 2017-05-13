@@ -35,12 +35,18 @@ class ConfigGroup extends Component<*, ConfigT, *> {
     }
 
     return (
-      <div>
+      <div className="m-b-1">
         <Table dataSource={config} {...tableProps}>
           <Table.Column
-            title={{dept: '科室', type: '设备', month: '月份'}[config[0].type]}
+            title={<div className="p-l-1">{{dept: '科室', type: '设备', month: '月份'}[config[0].type]}</div>}
             dataIndex="name"
-            key="name" />
+            key="name"
+            render={(text, node, index) => (
+              <div className="p-l-1">
+                {text}
+              </div>
+            )}
+          />
           <Table.Column
             title="收入"
             dataIndex="revenue_increase"

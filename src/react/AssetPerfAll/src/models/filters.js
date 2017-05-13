@@ -1,13 +1,19 @@
 import moment from 'moment'
 import { dateFormat } from '#/constants'
 
+const isHeadEl = document.querySelector('#user-context #isHead')
+const isHead = isHeadEl ? JSON.parse(isHeadEl.value) : false
+
+const orgIdEl = document.querySelector('#user-context #orgId')
+const orgId = isHead ? undefined : parseInt(orgIdEl.value)
+
 export default {
   namespace: 'filters',
   state: {
     type: 'history',
     from: moment().subtract(1, 'year').format(dateFormat),
     to: moment().format(dateFormat),
-    groupBy: 'month',
+    groupBy: isHead ? 'dept' : 'type',
     data: []
   },
   effects: {
@@ -21,12 +27,30 @@ export default {
         level
       })
     },
+    *['type/set']({ payload }, { put, select }) {
+      if (payload === 'history') {
+        yield put({
+          type: 'range/set',
+          payload: {
+            from: moment().subtract(1, 'year').format(dateFormat),
+            to: moment().subtract(1, 'day').format(dateFormat)
+          }
+        })
+      } else {
+        yield put({
+          type: 'range/set',
+          payload: {
+            from: moment().startOf('year').format(dateFormat),
+            to: moment().endOf('year').format(dateFormat)
+          }
+        })
+      }
+    },
     addWatcher: [ function* ({ takeLatest, put, call, select }) {
       const paload = yield takeLatest(
         [
-          'filters/type/set',
           'filters/range/set',
-          'filters/groupBy/set',
+          'filters/groupBy/set'
         ],
         function* (action) {
           yield put({

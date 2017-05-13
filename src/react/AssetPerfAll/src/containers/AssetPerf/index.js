@@ -6,6 +6,11 @@ import FilterBar from '#/components/FilterBar'
 import styles from './index.scss'
 
 class AssetPerf extends React.PureComponent {
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.profit === this.props.profit) return false
+    return true
+  }
+
   render() {
     const { profit, filters } = this.props
     const { data } = profit

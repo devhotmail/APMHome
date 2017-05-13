@@ -263,10 +263,10 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
               opacity: 0
             })}
             willLeave={({style}) => ({
-              x: style.x,
-              y: style.y,
+              x: this.direction === 0 ? spring(px) : style.x,
+              y: this.direction === 0 ? spring(py) : style.y,
               rotate: spring((90 / 180 * Math.PI) * this.direction),
-              opacity: spring(0)
+              opacity: this.direction === 0 ? 0 : spring(0)
             })}
           >
             {
@@ -291,14 +291,16 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
                               x2={x}
                               y2={y}
                               fill="none"
-                              stroke={COLORS[cursor[0]] || COLORS[index]}
+                              stroke="#555555"
+                              strokeOpacity={0.4}
                               strokeWidth={1}
                               opacity={Math.abs(rotate) < 0.01 ? 1 : 0}
                             />
                             :
                             <path
                               fill="none"
-                              stroke={COLORS[cursor[0]] || COLORS[index]}
+                              stroke="#555555"
+                              strokeOpacity={0.4}
                               strokeWidth={1}
                               d={this.calcCurvePath([px, py - item.props.r], [x, y])}
                               opacity={Math.abs(rotate) < 0.01 ? 1 : 0}
