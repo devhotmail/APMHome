@@ -44,7 +44,7 @@ export default class CoreCircle extends Component<*, PropsT, *> {
               <div>
                 <span>工作量</span>
                 <span>&nbsp;{focus.man_hour} / {focus.id ? range.man_hour : range.hour_total}</span>
-                <span>&nbsp;(法定小时) = {round(focus.man_hour * 100 / (focus.id ? range.man_hour : range.hour_tota))} %</span>
+                <span>&nbsp;(法定小时) = {round(focus.man_hour * 100 / (focus.id ? range.man_hour : range.hour_total))} %</span>
               </div>
             </div>
             <div className="m-l-2 flex flex--align-items--center">
