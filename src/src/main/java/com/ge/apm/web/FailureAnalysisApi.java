@@ -63,14 +63,8 @@ public class FailureAnalysisApi {
     Map<Integer, Integer> assetsByType = commonService.groupAssetsByType(user.getSiteId(), user.getHospitalId());
     Map<Integer, Integer> assetsByDept = commonService.groupAssetsByDept(user.getSiteId(), user.getHospitalId());
     Map<Integer, Integer> assetsBySupplier = commonService.groupAssetsBySupplier(user.getSiteId(), user.getHospitalId());
-    Observable<Tuple3<Integer, Integer, Integer>> report = faService.briefs(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), Match(groupBy).of(Case("dept", "dept_id"), Case("type", "asset_group"), Case("supplier", "supplier_id"), Case("asset", "asset_id")), dept, type, supplier, asset)
-      .sorted((l, r) -> Match(orderby).of(
-        Case("avail", l._2 - r._2),
-        Case("ftfr", r._2 - l._2),
-        Case("fix", r._3 - l._3)))
-      .limit(Option.of(limit).getOrElse(Integer.MAX_VALUE))
-      .skip(start).cache();
-    return Match(Tuple.of(groupBy, report, depts, types, suppliers, assets)).of(
+    Observable<Tuple3<Integer, Integer, Integer>> report = faService.briefs(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), Match(groupBy).of(Case("dept", "dept_id"), Case("type", "asset_group"), Case("supplier", "supplier_id"), Case("asset", "asset_id")), dept, type, supplier, asset);
+    return Match(Tuple.of(groupBy, report.sorted((l, r) -> Match(orderby).of(Case("avail", l._2 - r._2), Case("ftfr", r._2 - l._2), Case("fix", r._3 - l._3))).limit(Option.of(limit).getOrElse(Integer.MAX_VALUE)).skip(start).cache(), depts, types, suppliers, assets)).of(
       Case($(t -> "dept".equals(t._1)), t -> ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>()
         .put("pages", new ImmutableMap.Builder<String, Object>()
           .put("total", report.count().toBlocking().single())
@@ -219,3 +213,4 @@ public class FailureAnalysisApi {
         .map(t -> new ImmutableMap.Builder<String, Object>().put("id", t._1).put("name", reasons.get(t._1)).put("count", t._2).build()).toBlocking().toIterable()).build());
   }
 }
+
