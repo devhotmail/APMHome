@@ -50,7 +50,8 @@ export default class Tooth extends PureComponent<void, ToothProps, void> {
     let centerlineAngle = startAngle + offsetAngle + this.toothAngle() / 2
     let { x, y, textAnchor, rotate } = RadialText(innerRadius + labelMargin , centerlineAngle, cx, cy)
     return (<text
-      className="tooth-label" 
+      className="tooth-label"
+      ref="label"
       pointerEvents="none"
       userSelect="none"
       x={x} y={y} 
@@ -69,13 +70,12 @@ export default class Tooth extends PureComponent<void, ToothProps, void> {
    _renderSpokerib() {
 
     let { startAngle, endAngle, innerRadius, outerRadius } = this.props
-    let { focused } = this.state
     let strips = this.strips()
     let divisor = _.sumBy(strips, 'weight')
     let toothAngle = endAngle - startAngle
     let _startAngle = startAngle
 
-    return (<g className={classnames("tooth-annulus-sector", focused ? 'tooth-focused' : '')}>
+    return (<g className={classnames("tooth-annulus-sector")} ref="sector">
       { strips.map((_, i) => {
         let stripAngle = (_.weight / divisor) * toothAngle
         let _id = _.id || i
@@ -83,14 +83,12 @@ export default class Tooth extends PureComponent<void, ToothProps, void> {
       }) }
     </g>)
   }
-
   _renderLayer() {
     let { startAngle, endAngle, innerRadius } = this.props
-    let { focused } = this.state
     let strips = this.strips()
     let toothHeight = this.toothHeight()
     let _step = 0
-    return (<g className={classnames("tooth-annulus-sector", focused ? 'tooth-focused' : '')}>
+    return (<g className={classnames("tooth-annulus-sector")} ref="sector">
       { strips.map((_, i) => {
           let _innerR = innerRadius + _step
           let _height = _.weight * toothHeight
@@ -104,13 +102,12 @@ export default class Tooth extends PureComponent<void, ToothProps, void> {
 
   _renderBar() {
     let { startAngle, innerRadius } = this.props
-    let { focused } = this.state
     let strips = this.strips()
     let toothHeight = this.toothHeight()
 
     let _perItemAngle = this.toothAngle() / strips.length
     return (
-      <g className={classnames("tooth-annulus-sector", focused ? 'tooth-focused' : '')}>
+      <g className={classnames("tooth-annulus-sector")}  ref="sector">
         { strips.map((_, i) => {
             let _start = startAngle + i * _perItemAngle
             let _end = _start+ _perItemAngle
@@ -153,7 +150,14 @@ export default class Tooth extends PureComponent<void, ToothProps, void> {
     let name = GLC.getRegistrationName(evt)
     this.props[name](evt)
     if (name === 'onClick') {
-      this.setState({ focused: !this.state.focused })
+      let { tooth } = this.refs
+      if (evt.target === tooth || tooth.contains(evt.target)) {
+        if (tooth.classList.contains('focused')) {
+          tooth.classList.remove('focused')
+        } else {
+          tooth.classList.add('focused')
+        }
+      }
     }
   }
 
@@ -184,7 +188,7 @@ export default class Tooth extends PureComponent<void, ToothProps, void> {
         tooth = this._renderSpokerib()
     }
     return (
-      <g>
+      <g className="tooth" ref="tooth">
         { tooth }
         { label && this._renderLabel() }
       </g>
