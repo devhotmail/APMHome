@@ -21,7 +21,7 @@ import './app.scss'
 import cache from 'utils/cache'
 import { MetaUpdate } from 'actions'
 import { DataTypeMapping } from 'services/api'
-import { RandomInt, ToPrecentage } from 'utils/helpers'
+import { ToPrecentage } from 'utils/helpers'
 
 const Placeholder = { strips: { color: '#F9F9F9', weight: 1, type: 'placeholder' } }
 const Items = [
@@ -179,18 +179,20 @@ export class App extends Component<void, Props, void> {
     fetchBriefs('right')
   }
 
-  _onRightPagerChange = value => {
+  onRightPagerChange = value => {
     this.props.updatePagination('right', value)
   }
-  _onLeftPagerChange = value => {
+  onLeftPagerChange = value => {
     this.props.updatePagination('left', value)
   }
-  _getDisplayOptions() {
+
+  getDisplayOptions() {
     return DisplayOptions.map(o => ({ key: o.key, label: this.props.t(o.key)}))
   }
+
   loadBriefData(evt) {
     let { t } = this.props
-    let [current, lastYear] = evt.target
+    let [ current, lastYear ] = evt.target
     if (!current.length) {
       message.info(t('no_more_data'))
       return
@@ -200,6 +202,7 @@ export class App extends Component<void, Props, void> {
     } else if (current.type === 'right'){
       this.setState({ rightItems: current, lastYear: { rightItems: lastYear, leftItems: this.state.lastYear.leftItems } })
     }
+    this.clearFocus(current.type)
   }
 
   loadReason(evt) {
@@ -208,6 +211,13 @@ export class App extends Component<void, Props, void> {
       this.setState({ centerItems: reasons })
     } else {
       message.info(this.props.t('no_more_data'))
+    }
+  }
+  clearFocus(type) {
+    if (type === 'left') {
+      this.refs.leftChart.clearFocus()
+    } else if (type === 'right') {
+      this.refs.rightChart.clearFocus()
     }
   }
   constructor(props) {
@@ -238,13 +248,14 @@ export class App extends Component<void, Props, void> {
         <div className="chart-container is-fullwidth">
           <div className="full-chart container">
 
-            <div className="display-select">{selectHelper(display, this._getDisplayOptions(), updateDisplayType)}</div>
+            <div className="display-select">{selectHelper(display, this.getDisplayOptions(), updateDisplayType)}</div>
             <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
-              className="pager-left" onChange={this._onLeftPagerChange}/>
+              className="pager-left" onChange={this.onLeftPagerChange}/>
             <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
-              className="pager-right" onChange={this._onRightPagerChange}/>
+              className="pager-right" onChange={this.onRightPagerChange}/>
             <GearListChart 
               id="left-chart"
+              ref="leftChart"
               startAngle={110} endAngle={250} 
               outerRadius={outer_R} innerRadius={outer_r}
               margin={7}
@@ -269,6 +280,7 @@ export class App extends Component<void, Props, void> {
             </div>
             <GearListChart 
               id="right-chart" 
+              ref="rightChart"
               startAngle={290} endAngle={70} 
               outerRadius={outer_R} innerRadius={outer_r}
               margin={3}

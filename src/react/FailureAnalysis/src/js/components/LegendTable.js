@@ -49,6 +49,7 @@ let styles = {
   },
   centerAlign: {
     textAlign: 'center',
+    fontSize: '0.9em',
   },
   active: {
     opacity: 1,

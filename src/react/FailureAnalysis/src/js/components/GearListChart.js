@@ -69,7 +69,7 @@ export default class GearListChart extends PureComponent<void, GearListProps, vo
   }
   motionWillEnter = () => ({ offsetAngle: this._defaultOffsetAngle }) 
   motionWillLeave = () => ({ offsetAngle: this._springOffsetAngle })
-
+  clearFocus = () => this.refs.chart.classList.remove('child-focused')
   render() {
     let { id, innerRadius, outerRadius, items, margin, limit, startAngle, endAngle, clockwise, className, style,
       onMouseMove, onMouseEnter, onMouseLeave, onMouseOver, onClick } = this.props
