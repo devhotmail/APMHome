@@ -53,6 +53,9 @@ function BriefToothAdapter(array, max, orderby, lastYear) {
 }
 
 function ReasonToothAdapter(array) {
+  if (array.length === 0) {
+    return array
+  }
   let weightMax = _.maxBy(array, item => item.count).count
   let sum = _.sumBy(array, i => i.count)
   let result = []
