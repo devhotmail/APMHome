@@ -27,7 +27,13 @@ class ManualPanel extends PureComponent {
         <div className="m-b-1 font-small text-muted">手工调节预期增长（基于系统自动预测）</div>
         {
           groupBy === 'type'
-          ? <ConfigType {...this.props} config={this.props.config[0]}/>
+          ? <ConfigType {...this.props} onRowClick={record => this.props.dispatch({
+            type: 'filters/data/change',
+            payload: {
+              [record.type]: record.id
+            },
+            level: 1
+          })} config={this.props.config[0]}/>
           : config.map((c, index) => {
             if (index === 0) {
               return <ConfigGroup key="group" onRowClick={record => this.props.dispatch({
