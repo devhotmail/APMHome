@@ -64,8 +64,7 @@ export default class ConfigType extends Component<*, ConfigT, *> {
               <div className="p-l-1">
                 {text}
               </div>
-            )}
-          />
+            )} />
           <Table.Column
             title="预期增长"
             dataIndex="data.usage_predict_increase"
