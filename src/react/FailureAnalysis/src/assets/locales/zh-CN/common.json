@@ -16,5 +16,8 @@
   "display_asset_type": "显示设备类型",
   "display_brand": "显示品牌",
   "display_dept": "显示科室",
-  "no_more_data": "已没有更多的数据"
+  "no_more_data": "已没有更多的数据",
+  "failure_cause": "故障原因",
+  "group_info": "分组信息",
+  "asset_info": "设备信息"
 }
