@@ -6,6 +6,7 @@ import { useRouterHistory } from 'dva/router'
 import createHashHistory from 'history/lib/createHashHistory'
 import { AppContainer } from 'react-hot-loader'
 import './app.css'
+import './styles/index.scss'
 
 import router from '#/router'
 

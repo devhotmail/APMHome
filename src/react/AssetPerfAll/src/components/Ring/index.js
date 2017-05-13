@@ -263,10 +263,10 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
               opacity: 0
             })}
             willLeave={({style}) => ({
-              x: style.x,
-              y: style.y,
+              x: this.direction === 0 ? spring(px) : style.x,
+              y: this.direction === 0 ? spring(py) : style.y,
               rotate: spring((90 / 180 * Math.PI) * this.direction),
-              opacity: spring(0)
+              opacity: this.direction === 0 ? 0 : spring(0)
             })}
           >
             {
