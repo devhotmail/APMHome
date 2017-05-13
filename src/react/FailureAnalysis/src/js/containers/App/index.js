@@ -209,7 +209,8 @@ export class App extends Component<void, Props, void> {
     let { t } = this.props
     let [ current, lastYear ] = evt.target
     if (!current.length) {
-      message.info(t('no_more_data'))
+      let target = t(current.type === 'left' ? 'group_info' : 'asset_info')
+      message.info(target + ': ' + t('no_more_data'))
       return
     }
     if (current.type === 'left') {
@@ -221,11 +222,12 @@ export class App extends Component<void, Props, void> {
   }
 
   mountReason(evt) {
+    let { t } = this.props
     let reasons = evt.target
     if (reasons.length) {
       this.setState({ centerItems: reasons })
     } else {
-      message.info(this.props.t('no_more_data'))
+      message.info(t('failure_cause') + ': ' + t('no_more_data'))
     }
   }
   clearFocus(type) {
