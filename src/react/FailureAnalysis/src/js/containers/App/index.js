@@ -42,17 +42,8 @@ const DisplayOptions = [
   { key: 'display_brand' },
   { key: 'display_dept' },
 ]
-function DataOrPlaceHolder(items, lastYear, placeholderSize) {
+function DataOrPlaceHolder(items, placeholderSize) {
   if (items && items.length && items[0].strips.type !== 'placeholder') {
-    if (lastYear && lastYear.length) {
-      items = items.map((item, i) => {
-        let lastYearItem = lastYear[i]
-        if (lastYearItem) {
-          lastYearItem.strips[0].color = colors.gray
-        }
-        lastYearItem && item.strips.concat(lastYear.strips)
-      })
-    }
     return items
   }
   return App.getPlaceholder(placeholderSize)
@@ -92,8 +83,8 @@ function mapDispatch2Porps(dispatch) {
 }
 
 function mapState2Props(state) {
-  let { parameters : { pagination, display, dataType, showLastYear } } = state
-  return { pagination, display, dataType, showLastYear }
+  let { parameters : { pagination, display, dataType } } = state
+  return { pagination, display, dataType }
 }
 
 @connect(mapState2Props, mapDispatch2Porps)
