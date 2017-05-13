@@ -703,7 +703,7 @@ public class DmApiV2 {
     java.util.List<Integer> usageSum = ImmutableList.of(subItems.map(v -> v.getUsgSum().get(0)).sum().intValue(),
       subItems.map(v -> v.getUsgSum().get(1)).sum().intValue());
     double averageUsage = subItems.map(PdtData::getUsgPdt).average().getOrElse(0D);
-    int buyIn = (int) Math.ceil((averageUsage - subItems.get(0).getUsgThr().get(1)) * count);
+    int buyIn = (int) Math.ceil((averageUsage / (subItems.get(0).getUsgThr().get(1) + 1e-7D) - 1D) * count);
     return Tuple.of(new TypePdtData(calculateBottomLevelSuggestions(usageSum.get(1), averageUsage, buyIn, subItems.get(0).getUsgThr()), buyIn, new PdtData(
       subItems.get(0).getDate(), subItems.map(PdtData::getDepre).sum().doubleValue(), usageSum, subItems.get(0).getUsgThr(), averageUsage,
       Option.when(lastYearUsage.equals(0D), 0D).getOrElse(averageUsage / lastYearUsage - 1D),
@@ -974,7 +974,7 @@ public class DmApiV2 {
 
   private java.util.Map<String, Object> mapTypeInfo(TypeInfo item, Option<Integer> dept) {
     return new ImmutableMap.Builder<String, Object>()
-      .put("id",dept.map(v->String.format("%s-%s", v, item.getTypeBsc().getTypeId())).getOrElse(String.format("%s", item.getTypeBsc().getTypeId())))
+      .put("id", dept.map(v -> String.format("%s-%s", v, item.getTypeBsc().getTypeId())).getOrElse(String.format("%s", item.getTypeBsc().getTypeId())))
       .put("name", item.getTypeBsc().getTypeName())
       .put("size", item.getHisDatas()._2.getDepre())
       .put("usage_sum", item.getTypePdtDatas()._1.getPdtData().getUsgSum())
