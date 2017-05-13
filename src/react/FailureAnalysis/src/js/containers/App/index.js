@@ -190,15 +190,15 @@ export class App extends Component<void, Props, void> {
   }
   loadBriefData(evt) {
     let { t } = this.props
-    let briefs = evt.target
-    if (!briefs.length) {
+    let [current, lastYear] = evt.target
+    if (!current.length) {
       message.info(t('no_more_data'))
       return
     }
-    if (briefs.type === 'left') {
-      this.setState({ leftItems: briefs })
-    } else if (briefs.type === 'right'){
-      this.setState({ rightItems: briefs })
+    if (current.type === 'left') {
+      this.setState({ leftItems: current, lastYear: { leftItems: lastYear } })
+    } else if (current.type === 'right'){
+      this.setState({ rightItems: current, lastYear: { rightItems: lastYear } })
     }
   }
 

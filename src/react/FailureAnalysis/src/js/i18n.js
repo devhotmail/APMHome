@@ -7,6 +7,14 @@ import conf from 'config'
 
 let isProd = conf.env === 'prod'
 
+function getPath() {
+  if (process.env.LOCAL) {
+    return '/geapm/react/FailureAnalysis/assets/locales/{{lng}}/{{ns}}.json'
+  } else {
+    return '/react/FailureAnalysis/assets/locales/{{lng}}/{{ns}}.json'
+  }
+}
+
 i18n
   .use(XHR)
   .use(Cache)
@@ -20,7 +28,7 @@ i18n
       enabled: conf.i18n.cache,
     },
     backend: {
-      loadPath:  isProd ? '/geapm/react/FailureAnalysis/assets/locales/{{lng}}/{{ns}}.json' : 'assets/locales/{{lng}}/{{ns}}.json'
+      loadPath:  isProd ?  getPath() : 'assets/locales/{{lng}}/{{ns}}.json'
     },
     interpolation: {
       escapeValue: false, // not needed for react
