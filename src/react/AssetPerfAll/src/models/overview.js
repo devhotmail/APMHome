@@ -40,24 +40,24 @@ export default {
             method: 'get',
             url: API_HOST + '/profit',
             params: {
-              from: yesterday.startOf('year').format(dateFormat),
-              to: yesterday.format(dateFormat)
+              from: yesterday.clone().startOf('year').format(dateFormat),
+              to: yesterday.clone().format(dateFormat)
             }
           }),
           axios({
             method: 'get',
             url: API_HOST + '/profit/forecast',
             params: {
-              from: now.startOf('year').format(dateFormat),
-              to: now.endOf('year').format(dateFormat)
+              from: now.clone().startOf('year').format(dateFormat),
+              to: now.clone().endOf('year').format(dateFormat)
             }
           }),
           axios({
             method: 'get',
             url: API_HOST + '/profit/forecastrate',
             params: {
-              from: now.startOf('year').format(dateFormat),
-              to: now.endOf('year').format(dateFormat),
+              from: now.clone().startOf('year').format(dateFormat),
+              to: now.clone().endOf('year').format(dateFormat),
               groupby: 'type'
             }
           })
