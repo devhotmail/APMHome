@@ -165,6 +165,9 @@ public class HealthApi {
         else
           return String.format("%s?%s%s&%s", request.getRequestURL().toString(), "category=", category-10, request.getQueryString());
 
+      case 10:
+    	return String.format("%s%s", baseurl, redirect_1);
+
       case 20:
         return String.format("%s%s", baseurl, redirect_2);
 
@@ -578,7 +581,7 @@ public class HealthApi {
         .put("link",
           new ImmutableMap.Builder<String, Object>()
             .put("ref", getRef("leaf"))
-            .put("href", getHref(category * 10 + asset.getElement2(), request, 1))
+            .put("href", getHref(category * 10, request, 1))
             .build())
         .build())
       .toBlocking()
