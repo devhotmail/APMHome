@@ -49,7 +49,7 @@ function DataOrPlaceHolder(items, placeholderSize) {
   return App.getPlaceholder(placeholderSize)
 }
 
-function calc(width, height) {
+function ensureSize(width, height) {
   width = _.clamp(width, 1000, 1500)
   if (height < 900) {
     width = 1100
@@ -99,7 +99,16 @@ export class App extends Component<void, Props, void> {
     leftItems: [],
     centerItems: [],
     rightItems: [],
-    selectedDevice: null,
+    lastYear: {
+      leftItems: [],
+      rightItems: [],
+    },
+    selectedDevice: {
+      show: false,
+      name: '',
+      current: {},
+      lastYear: {},
+    },
   }
 
   showTooltip(evt) {
@@ -124,22 +133,23 @@ export class App extends Component<void, Props, void> {
     }
   }
   clickLeftTooth(evt) {
-    alert(evt)
+    console.log(evt)
+  }
+  clickRightTooth(evt) {
+    console.log(evt)
   }
   device() {
     const device = {
       name: 'CT-1',
-      data: {
-        current: {
-          'operation_rate': "80%",
-          'ftfr': '86%',
-          'incident_count': '32'
-        },
-        lastYear: {
-          'operation_rate': "43%",
-          'ftfr': '23%',
-          'incident_count': '20'
-        }
+      current: {
+        'operation_rate': "80%",
+        'ftfr': '86%',
+        'incident_count': '32'
+      },
+      lastYear: {
+        'operation_rate': "43%",
+        'ftfr': '23%',
+        'incident_count': '20'
       }
     }
     this.setState({ selectedDevice: this.state.selectedDevice === null ? device: null})
@@ -217,7 +227,7 @@ export class App extends Component<void, Props, void> {
     let { tooltipX, tooltipY, tooltip, leftItems, centerItems, rightItems, selectedDevice } = this.state
     let { updateDisplayType, pagination, clientRect, display } = this.props
     let { left, right } = pagination
-    let { outer_R, outer_r, inner_R, inner_r  } = calc(clientRect.width, clientRect.height)
+    let { outer_R, outer_r, inner_R, inner_r  } = ensureSize(clientRect.width, clientRect.height)
 
     return (
       <div id="app-container" className="is-fullwidth">
@@ -251,7 +261,7 @@ export class App extends Component<void, Props, void> {
               items={DataOrPlaceHolder(centerItems, 12)} />
             <div id="legend-container">
               <Legend items={Items}>
-                <LegendTable items={ParameterTypes} selectedDevice={selectedDevice} checkBoxes={CheckBoxes}/>
+                <LegendTable items={ParameterTypes} selectedDevice={selectedDevice.show && selectedDevice} checkBoxes={CheckBoxes}/>
               </Legend>
             </div>
             <GearListChart 
@@ -259,7 +269,7 @@ export class App extends Component<void, Props, void> {
               startAngle={290} endAngle={70} 
               outerRadius={outer_R} innerRadius={outer_r}
               margin={3}
-              onClick={this.device} //todo
+              onClick={this.clickRightTooth}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
               items={DataOrPlaceHolder(rightItems, pagination.right.top)} />

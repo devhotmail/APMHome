@@ -3,8 +3,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { TransitionMotion, spring, presets } from 'react-motion'
-import _ from 'lodash'
-import SID from 'shortid'
 import autobind from 'autobind-decorator'
 import Radium from 'radium'
 import classnames from 'classnames'
@@ -51,10 +49,6 @@ export default class GearListChart extends PureComponent<void, GearListProps, vo
     return evt.dispatchConfig.registrationName || evt.dispatchConfig.phasedRegistrationNames.bubbled
   }
 
-  state = {
-    childFocused: false,
-  }
-
   _defaultOffsetAngle = 0
   _springOffsetAngle = 360
 
@@ -62,7 +56,15 @@ export default class GearListChart extends PureComponent<void, GearListProps, vo
     let name = GearListChart.getRegistrationName(evt)
     this.props[name](evt)
     if (name === 'onClick') {
-      this.setState( { childFocused: !this.state.childFocused })
+      let self = this.refs.chart
+      let teeth = self.querySelectorAll('.tooth')
+      let focusedTooth = self.querySelector('.tooth.focused')
+      if (focusedTooth && focusedTooth.contains(evt.target) && this.state.childFocused) {
+        this.setState({ childFocused: false })
+      } else {
+        this.setState({ childFocused: true })
+      }
+      teeth.forEach(t => t.classList.remove('focused'))
     }
   }
   motionWillEnter = () => ({ offsetAngle: this._defaultOffsetAngle }) 
@@ -82,7 +84,7 @@ export default class GearListChart extends PureComponent<void, GearListProps, vo
       this._springOffsetAngle = 0
     }
     return (
-      <div id={id} className={classnames('gear-list-chart', className, childFocused ? 'child-focused' : '')} 
+      <div id={id} ref="chart" className={classnames('gear-list-chart', className, childFocused ? 'child-focused' : '')} 
         style={[Styles.container, style]}>
 
         <svg width={width} height={height}>
