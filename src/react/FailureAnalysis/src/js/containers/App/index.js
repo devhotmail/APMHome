@@ -134,9 +134,12 @@ export class App extends Component<void, Props, void> {
   }
   clickLeftTooth(evt) {
     console.log(evt)
+    // 1, central chart: fetch reasons
+    // 2, reset selectedDevice
   }
   clickRightTooth(evt) {
     console.log(evt)
+    // 1. update central table
   }
   device() {
     const device = {
