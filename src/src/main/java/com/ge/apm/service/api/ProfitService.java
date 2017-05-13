@@ -93,6 +93,26 @@ public class ProfitService {
     return Option.when(past == 0D, 0D).getOrElse(future / past - 1D);
   }
 
+  //calculate the frontend month name according to length of time frame
+  public static Map<Integer, String> calculateMonth(LocalDate from, LocalDate to,
+                                                    Map<Integer, String> months) {
+    int length = (int) from.withDayOfMonth(1)
+      .until(to.withDayOfMonth(1), ChronoUnit.MONTHS) + 1;
+    int[] a = new int[length];
+    for (int i = 0; i < length; i++) {
+      a[i] = from.plusMonths(i).getYear() * 100 + from.plusMonths(i).getMonthValue();
+    }
+    if (length <= 12) {
+      return List.ofAll(a).map(v -> Tuple.of(v, months.get(v % 100)))
+        .toMap(v -> Tuple.of(v._1, v._2))
+        .toJavaMap();
+    } else {
+      return List.ofAll(a).map(v -> Tuple.of(v, v / 100 + "年" + v % 100 + "月"))
+        .toMap(v -> Tuple.of(v._1, v._2))
+        .toJavaMap();
+    }
+  }
+
   @Cacheable(cacheNames = "springCache", key = "'profitService.findRvnCstByYear.'+#siteId+'.'+#hospitalId + '.year'+#year")
   public Observable<Tuple5<Integer, String, Money, Money, Money>> findRvnCstByYear(int siteId, int hospitalId, int year) {
     return db
@@ -115,7 +135,10 @@ public class ProfitService {
   public Observable<Tuple4<Integer, Money, Money, Money>> findRvnCstGroupBy(int siteId, int hospitalId, int year, String groupBy) {
     return db
       .select(new SQL()
-        .SELECT(String.format("%s as group_id", Option.when("dept".equals(groupBy), "ai.clinical_dept_id").getOrElse(Option.when("type".equals(groupBy), "ai.asset_group").getOrElse("extract(month from asu.created)"))),
+        .SELECT(String.format("%s as group_id",
+          Option.when("dept".equals(groupBy), "ai.clinical_dept_id")
+            .getOrElse(Option.when("type".equals(groupBy), "ai.asset_group")
+              .getOrElse("extract(year from asu.created)*100+extract(month from asu.created)"))),
           "COALESCE(sum(asu.revenue), 0)", "COALESCE(sum(asu.maintenance_cost), 0)", "COALESCE(sum(asu.deprecation_cost), 0)")
         .FROM("asset_info as ai")
         .INNER_JOIN("asset_summit as asu on ai.id = asu.asset_id")
@@ -164,8 +187,9 @@ public class ProfitService {
       if (Option.of(dept).filter(v -> v >= 1).isDefined()) {
         WHERE("ai.clinical_dept_id = " + String.format("%s", dept));
       }
-      if (Option.of(month).filter(v -> v >= 1 && v <= 12).isDefined()) {
-        WHERE("extract(month from asu.created) = " + String.format("%s", month));
+      if (Option.of(month).isDefined()) {
+        WHERE("extract(month from asu.created) = " + String.format("%s", month % 100));
+        WHERE("extract(year from asu.created) = " + String.format("%s", month / 100));
       }
       if (Option.of(type).filter(v -> v >= 1).isDefined()) {
         WHERE("ai.asset_group = " + String.format("%s", type));
@@ -185,7 +209,7 @@ public class ProfitService {
   public Observable<Tuple4<Integer, Money, Money, Money>> findRvnCstForEachGroup(Integer siteId, Integer hospitalId, LocalDate startDate, LocalDate endDate, String groupBy, Integer dept, Integer month, Integer type) {
     log.info("siteId:{}, hospitalId:{}, startDate:{}, endDate:{}, groupBy:{}, dept:{}, month:{}, type:{}", siteId, hospitalId, startDate, endDate, groupBy, dept, month, type);
     return db.select(new SQL() {{
-      SELECT(String.format("%s as group_id", Option.when("dept".equals(groupBy), "ai.clinical_dept_id").getOrElse(Option.when("type".equals(groupBy), "ai.asset_group").getOrElse("extract(month from asu.created)"))),
+      SELECT(String.format("%s as group_id", Option.when("dept".equals(groupBy), "ai.clinical_dept_id").getOrElse(Option.when("type".equals(groupBy), "ai.asset_group").getOrElse("extract(year from asu.created)*100+extract(month from asu.created)"))),
         "COALESCE(sum(asu.revenue), 0)", "COALESCE(sum(asu.maintenance_cost), 0)", "COALESCE(sum(asu.deprecation_cost), 0)");
       FROM("asset_info as ai");
       INNER_JOIN("asset_summit as asu on ai.id = asu.asset_id");
@@ -236,6 +260,7 @@ public class ProfitService {
     double costs();
   }
 
+  //forecast
   public Observable<Tuple7<Integer, String, LocalDate, Integer, Integer, Double, Double>> findRvnCstForForecast(Integer siteId, Integer hospitalId, LocalDate startDate, LocalDate endDate) {
     log.info("siteId:{}, hospitalId:{}, startDate:{}, endDate:{}", siteId, hospitalId, startDate, endDate);
     return db.select(new SQL() {{
@@ -262,7 +287,6 @@ public class ProfitService {
       .cache();
   }
 
-  //forecast
   private Integer localDateToX(LocalDate input) {
     return (int) LocalDate.ofYearDay(2000, 1).until(input, ChronoUnit.DAYS);
   }

@@ -51,7 +51,7 @@ public class ProfitApi {
                                                         @Pattern(regexp = "type|dept|month") @RequestParam(value = "groupby", required = false) String groupBy,
                                                         @Min(1) @RequestParam(value = "type", required = false) Integer type,
                                                         @Min(1) @RequestParam(value = "dept", required = false) Integer dept,
-                                                        @Min(1) @Max(12) @RequestParam(value = "month", required = false) Integer month,
+                                                        @Min(1) @RequestParam(value = "month", required = false) Integer month,
                                                         @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(value = "limit", required = false) Integer limit,
                                                         @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
     log.info("year:{}, groupby:{}, type:{}, dept:{}, month:{}, limit:{}, start:{}, from:{}, to:{}", year, groupBy, type, dept, month, limit, start, from, to);
@@ -61,7 +61,6 @@ public class ProfitApi {
     Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> months = Observable.from(commonService.findFields(user.getSiteId(), "month").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
-    log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (!(Option.of(from).isDefined() && Option.of(to).isDefined() && LocalDate.parse(from).compareTo(LocalDate.now().minusYears(3)) >= 0 && LocalDate.parse(to).compareTo(LocalDate.now()) <= 0)) {
       if (Range.closed(DateTime.now().getYear() - 3, DateTime.now().getYear()).contains(year)) {
         startDate = LocalDate.of(year, 1, 1);
@@ -73,6 +72,8 @@ public class ProfitApi {
       startDate = LocalDate.parse(from);
       endDate = LocalDate.parse(to);
     }
+    months = ProfitService.calculateMonth(startDate, endDate, months);
+    log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (Option.of(groupBy).isDefined() && Option.of(type).isEmpty() && Option.of(month).isEmpty()) {
       return serialize(request, groups, depts, months,
         calcRoot(Option.when("type".equals(groupBy), groups).getOrElse(Option.when("dept".equals(groupBy), depts).getOrElse(months)),
@@ -178,7 +179,6 @@ public class ProfitApi {
     Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> months = Observable.from(commonService.findFields(user.getSiteId(), "month").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
-    log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (!(Option.of(from).isDefined() && Option.of(to).isDefined() && LocalDate.parse(from).compareTo(LocalDate.now().minusYears(3)) >= 0)) {
       if (Range.closed(DateTime.now().plusYears(1).getYear() - 3, DateTime.now().plusYears(1).getYear()).contains(year)) {
         startDate = LocalDate.of(year, 1, 1);
@@ -190,7 +190,7 @@ public class ProfitApi {
       startDate = LocalDate.parse(from);
       endDate = LocalDate.parse(to);
     }
-
+    log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (Option.of(groupBy).isDefined() && Option.of(type).isEmpty() && Option.of(month).isEmpty()) {
       return serialize(request, groups, depts, months,
         aggregateCstRvnByGroup(profitService.predict(user.getSiteId(), user.getHospitalId(), LocalDate.now().withDayOfYear(1).minusYears(2), LocalDate.now(), startDate.getYear()), groups, depts, months, groupBy)
@@ -228,7 +228,6 @@ public class ProfitApi {
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> months = Observable.from(commonService.findFields(user.getSiteId(), "month").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Seq<Tuple5<Option<Integer>, Option<Integer>, Option<Integer>, Option<Double>, Option<Double>>> userPre = ProfitService.parseJson(inputBody);
-    log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (!(Option.of(from).isDefined() && Option.of(to).isDefined() && LocalDate.parse(from).compareTo(LocalDate.now().minusYears(3)) >= 0)) {
       if (Range.closed(DateTime.now().getYear() - 3, DateTime.now().plusYears(1).getYear()).contains(year)) {
         startDate = LocalDate.of(year, 1, 1);
@@ -240,7 +239,7 @@ public class ProfitApi {
       startDate = LocalDate.parse(from);
       endDate = LocalDate.parse(to);
     }
-
+    log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (Option.of(groupBy).isDefined() && Option.of(type).isEmpty() && Option.of(month).isEmpty()) {
       return serialize(request, groups, depts, months,
         aggregateCstRvnByGroup(userPredict(profitService.predict(user.getSiteId(), user.getHospitalId(), LocalDate.now().withDayOfYear(1).minusYears(2), LocalDate.now(), startDate.getYear()),
@@ -304,7 +303,6 @@ public class ProfitApi {
     Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> months = Observable.from(commonService.findFields(user.getSiteId(), "month").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
-    log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (!(Option.of(from).isDefined() && Option.of(to).isDefined() && LocalDate.parse(from).compareTo(LocalDate.now().minusYears(3)) >= 0)) {
       if (Range.closed(DateTime.now().getYear() - 3, DateTime.now().plusYears(1).getYear()).contains(year)) {
         startDate = LocalDate.of(year, 1, 1);
@@ -316,6 +314,7 @@ public class ProfitApi {
       startDate = LocalDate.parse(from);
       endDate = LocalDate.parse(to);
     }
+    log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (Option.of(groupBy).isDefined() && Option.of(type).isEmpty() && Option.of(month).isEmpty()) {
       return serializeRate(request, groups, depts, months,
         cstRvnRateByGroup(profitService.predict(user.getSiteId(), user.getHospitalId(), LocalDate.now().withDayOfYear(1).minusYears(2), LocalDate.now(), startDate.getYear()),
@@ -356,7 +355,6 @@ public class ProfitApi {
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> months = Observable.from(commonService.findFields(user.getSiteId(), "month").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Seq<Tuple5<Option<Integer>, Option<Integer>, Option<Integer>, Option<Double>, Option<Double>>> userPre = ProfitService.parseJson(inputBody);
-    log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (!(Option.of(from).isDefined() && Option.of(to).isDefined() && LocalDate.parse(from).compareTo(LocalDate.now().minusYears(3)) >= 0)) {
       if (Range.closed(DateTime.now().getYear() - 3, DateTime.now().plusYears(1).getYear()).contains(year)) {
         startDate = LocalDate.of(year, 1, 1);
@@ -368,6 +366,7 @@ public class ProfitApi {
       startDate = LocalDate.parse(from);
       endDate = LocalDate.parse(to);
     }
+    log.info("groups: {}, depts: {}, month: {}", groups, depts, months);
     if (Option.of(groupBy).isDefined() && Option.of(type).isEmpty() && Option.of(month).isEmpty()) {
       return serializeRate(request, groups, depts, months,
         cstRvnRateByGroup(userPredict(profitService.predict(user.getSiteId(), user.getHospitalId(), LocalDate.now().withDayOfYear(1).minusYears(2), LocalDate.now(), startDate.getYear()),
