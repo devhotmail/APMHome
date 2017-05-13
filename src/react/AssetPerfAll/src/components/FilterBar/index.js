@@ -150,7 +150,6 @@ class FilterBar extends Component {
           >
             <Select.Option value={new Date().getFullYear()}>{new Date().getFullYear()}年预测</Select.Option>
             <Select.Option value={new Date().getFullYear() + 1}>{new Date().getFullYear() + 1}年预测</Select.Option>
-            <Select.Option value={new Date().getFullYear() + 2}>{new Date().getFullYear() + 2}年预测</Select.Option>
           </Select>
         }
         {this.renderGroupBy()}
