@@ -5,7 +5,6 @@ import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
 import _ from 'lodash'
-// import Radium from 'radium'
 import { message } from 'antd'
 import EventBus from 'eventbusjs'
 import GearListChart from 'components/GearListChart'
@@ -16,9 +15,8 @@ import Tooltip from 'components/Tooltip'
 import Pagination from 'components/Pagination'
 import withClientRect from '../../HOC/withClientRect'
 import selectHelper from 'components/SelectHelper'
-import { ParamUpdate } from 'actions'
+import { ParamUpdate, PageChange } from 'actions'
 import colors from 'utils/colors'
-import { GenerateTeethData as GTD, RandomInt } from 'utils/helpers'
 import './app.scss'
 import cache from 'utils/cache'
 import { MetaUpdate } from 'actions'
@@ -42,11 +40,25 @@ const DisplayOptions = [
   { key: 'display_brand' },
   { key: 'display_dept' },
 ]
-function DataOrPlaceHolder(items, placeholderSize) {
+
+function mergeItem(current, lastYear) {
+  let copy = _.cloneDeep(current)
+  copy.strips = copy.strips.concat(_.cloneDeep(lastYear.strips))
+  return copy
+}
+function DataOrPlaceHolder(items, lastYearItems, placeholderSize) {
+  // ignore placeholder and empty data
   if (items && items.length && items[0].strips.type !== 'placeholder') {
+    if (lastYearItems && lastYearItems.length) {
+      items = items.map( (item, i) => mergeItem(item, lastYearItems[i]))
+    }
     return items
   }
   return App.getPlaceholder(placeholderSize)
+}
+
+function getCurrentPage(skip, top) {
+  return Math.ceil(skip / top) || 1
 }
 
 function ensureSize(width, height) {
@@ -67,12 +79,8 @@ function mapDispatch2Porps(dispatch) {
     updateDisplayType: (value) => {
       dispatch(ParamUpdate('display', value.key))
     },
-    // sync data by response, do not trigger new request
-    syncPagination: (type, value) => {
-      dispatch(ParamUpdate('pagination/sync', { type, value }))
-    },
-    updatePagination: (type, value) => {
-      dispatch(ParamUpdate('pagination', { type, value }))
+    updatePagination: (type, pageNumber) => {
+      dispatch(PageChange(type, pageNumber))
     },
     fetchBriefs: (type) => {
       dispatch({ type: 'update/briefs/' + type })
@@ -83,14 +91,14 @@ function mapDispatch2Porps(dispatch) {
 }
 
 function mapState2Props(state) {
-  let { parameters : { pagination, display, dataType } } = state
-  return { pagination, display, dataType }
+  let { parameters : { pagination, display, dataType, showLastYear } } = state
+  return { pagination, display, dataType, showLastYear }
 }
 
 @connect(mapState2Props, mapDispatch2Porps)
 @autobind
 export class App extends Component<void, Props, void> {
-  static GenerateTeethData = _.memoize(GTD)
+
   static getPlaceholder = _.memoize(count => _.range(count)
                            .map(() => Placeholder))
   state = {
@@ -132,15 +140,18 @@ export class App extends Component<void, Props, void> {
       return 'N.A.'
     }
   }
+
   clickLeftTooth(evt) {
     console.log(evt)
     // 1, central chart: fetch reasons
     // 2, reset selectedDevice
   }
+
   clickRightTooth(evt) {
     console.log(evt)
     // 1. update central table
   }
+
   device() {
     const device = {
       name: 'CT-1',
@@ -157,33 +168,19 @@ export class App extends Component<void, Props, void> {
     }
     this.setState({ selectedDevice: this.state.selectedDevice === null ? device: null})
   }
+
   load() {
     let {fetchBriefs, fetchReasons} = this.props
     fetchBriefs('left')
     fetchReasons()
     fetchBriefs('right')
   }
-  loadDummy() {
-    setTimeout(() => {
-      let items = GTD(6, 'bar', 3, [colors.purple, colors.green, colors.yellow])
-      items.forEach(item => _.orderBy(item.strips, ['color']))
-      this.setState({leftItems: items})
-    }, RandomInt(600))
-    setTimeout(() => {
-      let items = GTD(12, 'bar', 1, [colors.blue, colors.gray])
-      this.setState({centerItems: _.orderBy(items, _ => _.strips[0].color, ['desc'])})
-    }, RandomInt(600))
-    setTimeout(() => {
-      let items = GTD(16, 'spokerib', 3, [colors.purple, colors.green, colors.yellow])
-      items.forEach(item => _.orderBy(item.strips, ['color']))
-      this.setState({rightItems: items})
-    }, RandomInt(600))
+
+  _onRightPagerChange = value => {
+    this.props.updatePagination('right', value)
   }
-  _onRightPagerChange() {
-    //todo
-  }
-  _onLeftPagerChange() {
-    // todo
+  _onLeftPagerChange = value => {
+    this.props.updatePagination('left', value)
   }
   _getDisplayOptions() {
     return DisplayOptions.map(o => ({ key: o.key, label: this.props.t(o.key)}))
@@ -196,9 +193,9 @@ export class App extends Component<void, Props, void> {
       return
     }
     if (current.type === 'left') {
-      this.setState({ leftItems: current, lastYear: { leftItems: lastYear } })
+      this.setState({ leftItems: current, lastYear: { leftItems: lastYear, rightItems: this.state.lastYear.rightItems } })
     } else if (current.type === 'right'){
-      this.setState({ rightItems: current, lastYear: { rightItems: lastYear } })
+      this.setState({ rightItems: current, lastYear: { rightItems: lastYear, leftItems: this.state.lastYear.leftItems } })
     }
   }
 
@@ -227,7 +224,7 @@ export class App extends Component<void, Props, void> {
     fetchBriefs('right')
   }
   render() {
-    let { tooltipX, tooltipY, tooltip, leftItems, centerItems, rightItems, selectedDevice } = this.state
+    let { tooltipX, tooltipY, tooltip, leftItems, centerItems, rightItems, lastYear, selectedDevice } = this.state
     let { updateDisplayType, pagination, clientRect, display } = this.props
     let { left, right } = pagination
     let { outer_R, outer_r, inner_R, inner_r  } = ensureSize(clientRect.width, clientRect.height)
@@ -239,9 +236,9 @@ export class App extends Component<void, Props, void> {
           <div className="full-chart container">
 
             <div className="display-select">{selectHelper(display, this._getDisplayOptions(), updateDisplayType)}</div>
-            <Pagination current={left.skip} pageSize={left.top} total={left.total} 
+            <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
               className="pager-left" onChange={this._onLeftPagerChange}/>
-            <Pagination current={right.skip} pageSize={right.top} total={right.total} 
+            <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
               className="pager-right" onChange={this._onRightPagerChange}/>
             <GearListChart 
               id="left-chart"
@@ -252,7 +249,7 @@ export class App extends Component<void, Props, void> {
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
               clockwise={false}
-              items={DataOrPlaceHolder(leftItems, pagination.left.top)} 
+              items={DataOrPlaceHolder(leftItems, lastYear.leftItems, pagination.left.top)} 
               />
             <GearListChart
               id="center-chart"
@@ -261,7 +258,7 @@ export class App extends Component<void, Props, void> {
               margin={8}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
-              items={DataOrPlaceHolder(centerItems, 12)} />
+              items={DataOrPlaceHolder(centerItems, null, 12)} />
             <div id="legend-container">
               <Legend items={Items}>
                 <LegendTable items={ParameterTypes} selectedDevice={selectedDevice.show && selectedDevice} checkBoxes={CheckBoxes}/>
@@ -275,16 +272,16 @@ export class App extends Component<void, Props, void> {
               onClick={this.clickRightTooth}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
-              items={DataOrPlaceHolder(rightItems, pagination.right.top)} />
+              items={DataOrPlaceHolder(rightItems, lastYear.rightItems, pagination.right.top)} />
 
           </div>
-          { tooltip && <Tooltip mouseX={tooltipX} mouseY={tooltipY} offsetY={-10} anchor="hcb">
+          { tooltip && <Tooltip mouseX={tooltipX} mouseY={tooltipY} offsetY={-13} anchor="hcb">
             <div style={{color: tooltip && tooltip.color}} className="tooltip-content">{tooltip}</div>
           </Tooltip>}
         </div>
-        <button onClick={this.device}>Select Device</button>
+        {/*<button onClick={this.device}>Select Device</button>
         <button onClick={this.load}>Load Data</button>
-        <button onClick={this.loadDummy}>Load Dummy</button>
+        <button onClick={this.loadDummy}>Load Dummy</button>*/}
       </div>
     )
   } 
