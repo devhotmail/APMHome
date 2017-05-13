@@ -40,7 +40,8 @@ public class ScanApiTest extends AbstractApiTest {
                                          Integer type, Integer dept, Integer asset)
     throws IOException {
     ImmutableMap.Builder<String, String> builder =
-      new ImmutableMap.Builder<String, String>();
+      new ImmutableMap.Builder<String, String>()
+        .put("limit", String.format("%s", Integer.MAX_VALUE));
     if (from != null) {
       builder = builder.put("from", from.toString());
     }
@@ -80,7 +81,8 @@ public class ScanApiTest extends AbstractApiTest {
     ImmutableMap.Builder<String, String> b =
       new ImmutableMap.Builder<String, String>()
         .put("part", onePartInType._1.toString())
-        .put("groupby", "asset");
+        .put("groupby", "asset")
+        .put("limit", String.format("%s", Integer.MAX_VALUE));
     if (from != null) {
       b = b.put("from", from.toString());
     }
