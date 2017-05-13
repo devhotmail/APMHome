@@ -43,9 +43,14 @@ export default class ConfigDept extends Component<*, ConfigT, *> {
       <div>
         <Table dataSource={configListOne} {...tableProps}>
           <Table.Column
-            title="科室名称"
+            title={<div className="p-l-1">科室名称</div>}
             dataIndex="data.name"
-            key="name" />
+            key="name"
+            render={(text, node, index) => (
+              <div className="p-l-1">
+                {text}
+              </div>
+            )} />
           <Table.Column
             title="预期增长"
             dataIndex="data.usage_predict_increase"
@@ -101,9 +106,14 @@ export default class ConfigDept extends Component<*, ConfigT, *> {
         </div>
         <Table dataSource={configListTwo} {...tableProps}>
           <Table.Column
-            title="设备类型"
+            title={<div className="p-l-1">设备类型</div>}
             dataIndex="data.name"
-            key="name" />
+            key="name"
+            render={(text, node, index) => (
+              <div className="p-l-1">
+                {text}
+              </div>
+            )} />
           <Table.Column
             title="预期增长"
             dataIndex="data.usage_predict_increase"

@@ -126,11 +126,15 @@
     .ant-table-header,
     .ant-table-body,
     .ant-table-thead>tr>th {
-      background-color: transparent;
+      background-color: transparent !important;
     }
   }
 
   .ant-table-fixed-header {
+    .ant-table-body {
+      background: transparent !important;
+    }
+
     .ant-table-scroll .ant-table-header {
       padding-bottom: 0px;
       margin-bottom: -15px;
