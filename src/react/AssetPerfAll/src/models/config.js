@@ -30,7 +30,9 @@ export default {
       try {
         const filters = yield select(state => state.filters)
 
-        const { groupBy, from, to, data: filtersData } = filters
+        const { type, groupBy, from, to, data: filtersData } = filters
+
+        if (type === 'history') return
 
         const filter = filtersData[level]
 
