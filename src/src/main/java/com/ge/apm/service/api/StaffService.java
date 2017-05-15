@@ -30,12 +30,12 @@ public class StaffService {
 	private static final String staff_wo
 		= " SELECT asset_owner_id, asset_owner_name, wo_hour, score, count, closed, open "
 		+ " FROM "
-			+ " ( (SELECT DISTINCT asset_owner_id, asset_owner_name FROM asset_info ) left_table "
+			+ " ( (SELECT DISTINCT asset_owner_id, asset_owner_name FROM asset_info WHERE site_id = :site_id AND hospital_id = :hospital_id ) left_table "
 			+ " LEFT JOIN "
-			+ " (SELECT case_owner_id, SUM(total_man_hour) as wo_hour, COUNT(*) as count, SUM(CASE WHEN is_closed = true THEN 1 ELSE 0 END) as closed, SUM(CASE WHEN is_closed = false THEN 1 ELSE 0 END) as open FROM work_order GROUP BY case_owner_id) right_table "
+			+ " (SELECT case_owner_id, SUM(total_man_hour) as wo_hour, COUNT(*) as count, SUM(CASE WHEN is_closed = true THEN 1 ELSE 0 END) as closed, SUM(CASE WHEN is_closed = false THEN 1 ELSE 0 END) as open FROM work_order WHERE site_id = :site_id AND hospital_id = :hospital_id AND create_time >= :from AND create_time <= :to GROUP BY case_owner_id) right_table "
 			+ " ON left_table.asset_owner_id = right_table.case_owner_id ) left_table "
 			+ " LEFT JOIN "
-			+ " (SELECT case_owner_id, AVG(feedback_rating) as score FROM work_order WHERE feedback_rating > 0 GROUP BY case_owner_id) right_table "
+			+ " (SELECT case_owner_id, AVG(feedback_rating) as score FROM work_order WHERE feedback_rating > 0 AND site_id = :site_id AND hospital_id = :hospital_id AND create_time >= :from AND create_time <= :to GROUP BY case_owner_id) right_table "
 			+ " ON left_table.asset_owner_id = right_table.case_owner_id "
 		+ " ORDER BY asset_owner_id ";
 
@@ -55,12 +55,12 @@ public class StaffService {
 	private static final String staff_other
 		= " SELECT asset_owner_id, pm_hour, insp_hour, meter_hour "
 		+ " FROM "
-			+ " ( (SELECT DISTINCT asset_owner_id FROM asset_info ) left_table "
+			+ " ( (SELECT DISTINCT asset_owner_id FROM asset_info WHERE site_id = :site_id AND hospital_id = :hospital_id ) left_table "
 			+ " LEFT JOIN "
-			+ " (SELECT owner_id, SUM(man_hours) as pm_hour FROM pm_order GROUP BY owner_id) right_table "
+			+ " (SELECT owner_id, SUM(man_hours) as pm_hour FROM pm_order WHERE site_id = :site_id AND hospital_id = :hospital_id AND create_time >= :from AND create_time <= :to GROUP BY owner_id) right_table "
 			+ " ON left_table.asset_owner_id = right_table.owner_id ) left_table "
 			+ " LEFT JOIN "
-			+ " (SELECT owner_id, SUM(CASE WHEN order_type = 1 THEN man_hours ELSE 0 END) as insp_hour, SUM(CASE WHEN order_type = 2 THEN man_hours ELSE 0 END) as meter_hour FROM inspection_order GROUP BY owner_id) right_table "
+			+ " (SELECT owner_id, SUM(CASE WHEN order_type = 1 THEN man_hours ELSE 0 END) as insp_hour, SUM(CASE WHEN order_type = 2 THEN man_hours ELSE 0 END) as meter_hour FROM inspection_order WHERE site_id = :site_id AND hospital_id = :hospital_id AND create_time >= :from AND create_time <= :to GROUP BY owner_id) right_table "
 			+ " ON left_table.asset_owner_id = right_table.owner_id "
 		+ " ORDER BY asset_owner_id ";
 
