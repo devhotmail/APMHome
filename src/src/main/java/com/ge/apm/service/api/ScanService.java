@@ -34,7 +34,7 @@ public class ScanService {
     db = Database.from(connectionProvider);
   }
 
-  @Cacheable(cacheNames = "springCache", key = "'ScanService.brief.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset")
+  @Cacheable(cacheNames = "springCache", key = "'scanService.brief.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset")
   public Observable<Tuple3<Integer, Integer, Integer>> brief(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset) {
     Objects.requireNonNull(from);
     Objects.requireNonNull(to);
@@ -65,7 +65,7 @@ public class ScanService {
       .cache();
   }
 
-  @Cacheable(cacheNames = "springCache", key = "'ScanService.assetDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part+'.'+#limit+'.'+#start")
+  @Cacheable(cacheNames = "springCache", key = "'scanService.assetDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part+'.'+#limit+'.'+#start")
   public Observable<Tuple5<Integer, Integer, String, Integer, Integer>> assetDetail(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset, Integer part, int limit, int start) {
     QuerySelect.Builder builder = db.select(new SQL() {{
       SELECT("m.asset_group", "m.asset_id", "a.name as asset_name", "m.part_id", "sum(m.exam_count) as exam_num");
@@ -101,7 +101,7 @@ public class ScanService {
       .cache();
   }
 
-  @Cacheable(cacheNames = "springCache", key = "'ScanService.stepDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part+'.'+#step+'.'+#limit+'.'+#start")
+  @Cacheable(cacheNames = "springCache", key = "'scanService.stepDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part+'.'+#step+'.'+#limit+'.'+#start")
   public Observable<Tuple7<Integer, Integer, String, Integer, Integer, String, Integer>> stepDetail(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset, Integer part, Integer step, int limit, int start) {
     QuerySelect.Builder builder = db.select(new SQL() {{
       SELECT("m.asset_group", "m.asset_id", "a.name as asset_name", "m.part_id", "m.step_id", "s.name as step_name", "sum(m.exam_count) as exam_num");
