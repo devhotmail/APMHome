@@ -1,16 +1,26 @@
 $sidepanelWidth: 50px;
-$sidebarRight: 10px;
-$gap: 15px;
 $filterBarHeight: 50px;
 
 .container {
-  position: relative;
   width: 100%;
   height: 100vh;
   font-size: 14px;
   // reset for shell.css
   line-height: 1.5 !important;
   font-family: Roboto, "Helvetica Neue", sans-serif !important;
+  display: flex;
+}
+
+.sidebar {
+  width: $sidepanelWidth;
+  height: 100%;
+  display: flex;
+  align-items: center;  
+}
+
+.main {
+  flex: 1;
+  height: 100%;
 }
 
 .filterBar {
@@ -22,24 +32,6 @@ $filterBarHeight: 50px;
   position: relative;
   width: 100%;
   height: calc(100% - #{$filterBarHeight});
-}
-
-.main {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: calc(100% - #{$sidepanelWidth + $sidebarRight + $gap});
-  height: 100%;
-}
-
-.sidebar {
-  position: absolute;
-  right: $sidebarRight;
-  top: 0;
-  width: $sidepanelWidth;
-  height: 100%;
-  display: flex;
-  align-items: center;  
 }
 
 .chartWrapper {
