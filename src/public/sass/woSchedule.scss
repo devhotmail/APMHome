@@ -9,6 +9,9 @@ $type-5: rgba(245,166,35,1);
 
 $type-color: $type-1 $type-2 $type-3 $type-4 $type-5;
 
+$text-color: #7b7c7d;
+$border-color: #cecece;
+
 @mixin get-bgc($num) {
   background-color: nth($type-color, $num);
 }
@@ -31,19 +34,27 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5;
 }
 
 @each $num in (1,2,3,4,5) {
-  .status--#{$num}::before {
+  .status-#{$num}::before {
     @include get-bgc($num);
   }
 }
 
+.calendar-header .card--summary {
+  color: #7b7c7d !important;
+}
+
 .calendar {
   margin: 0 5px 5px;
-  padding: 30px 30px 15px;
-  background-color: #fff;
+  padding: 0 25px 15px;
 }
 
 .calendar-footer {
   text-align: right;
+}
+
+.calendar-content {
+  padding-top: 30px;
+  border-top: 1px solid #cecece;
 }
 
 // event tooltip styles
@@ -204,11 +215,18 @@ $type-color: $type-1 $type-2 $type-3 $type-4 $type-5;
     }
 
     .ui-widget-header {
-      background-color: #fff!important;
+      color: rgb(33, 33, 33);
+      background-color: transparent !important;
+      border-top-color: transparent !important;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: $border-color !important;
+      font-size: 16px;
     }
 
     .ui-widget-content {
-      border-color: rgba(206,206,206,1);
+      border-color: $border-color;
+      background-color: transparent !important;
     }
 
     // reset the way of highlight today
