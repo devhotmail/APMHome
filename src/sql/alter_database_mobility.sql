@@ -53,13 +53,13 @@ alter table asset_info alter COLUMN asset_owner_name type varchar(32);
 alter table asset_info alter COLUMN asset_owner_name2 type varchar(32);
 alter table asset_info alter COLUMN clinical_owner_name type varchar(32);
 
-alter table asset_info alter COLUMN eam_id type varchar(32);
-alter table asset_info alter COLUMN system_id type varchar(32);
-alter table asset_info alter COLUMN system_num1 type varchar(32);
-alter table asset_info alter COLUMN system_num2 type varchar(32);
-alter table asset_info alter COLUMN system_num3 type varchar(32);
-alter table asset_info alter COLUMN system_num4 type varchar(32);
-alter table asset_info alter COLUMN system_num5 type varchar(32);
+alter table asset_info add COLUMN eam_id varchar(32);
+alter table asset_info add COLUMN system_id varchar(32);
+alter table asset_info add COLUMN system_num1 varchar(32);
+alter table asset_info add COLUMN system_num2 varchar(32);
+alter table asset_info add COLUMN system_num3 varchar(32);
+alter table asset_info add COLUMN system_num4 varchar(32);
+alter table asset_info add COLUMN system_num5 varchar(32);
 
 
 create table qr_code_lib(
@@ -178,6 +178,7 @@ ALTER TABLE workflow_config ADD CONSTRAINT uk_workflow_hospital_id UNIQUE (hospi
 alter table workflow_config add COLUMN max_message_count int;
 ALTER TABLE workflow_config ADD COLUMN dispatch_user_id2 int4 NULL ;
 ALTER TABLE workflow_config ADD COLUMN dispatch_user_name2 varchar(16) NULL ;
+ALTER TABLE workflow_config ADD COLUMN is_take_order_enabled bool;
 
 create table wechat_message_log(
 id serial not null,

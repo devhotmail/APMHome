@@ -169,7 +169,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (266, 'label', 'AssetContractName', '合同名称', 'Asset Contract Name', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (267, 'label', 'SysCodeConfig', '系统编码配置', 'Sys Code Config', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (268, 'label', 'ItemConfig', '配置', 'Config', NULL, -1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (269, 'label', 'AssetOwnerSetting', '设备负责人设置', 'Asset owner setting', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (269, 'label', 'AssetOwnerSetting', '维修责任人设置', 'Asset owner setting', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (270, 'label', 'SettingOwner', '设置', 'Setting', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (271, 'label', 'AvailableAssets', '备选设备', 'Available Assets', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (272, 'label', 'ChoseAssets', '选中设备', 'Chose Assets', NULL, -1);
@@ -212,9 +212,9 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (606,'field_name','assetDeptId','所属设备科','Asset Dept Id',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (607,'field_name','functionType','设备型号','Function Type',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (608,'field_name','assetId','设备ID','Asset Id',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (609,'field_name','assetOwnerId','责任人','Asset Owner Id',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (610,'field_name','assetOwnerName','责任人','Asset Owner Name',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (611,'field_name','assetOwnerTel','责任人电话','Asset Owner Tel',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (609,'field_name','assetOwnerId','维修责任人','Asset Owner Id',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (610,'field_name','assetOwnerName','维修责任人','Asset Owner Name',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (611,'field_name','assetOwnerTel','维修责任人电话','Asset Owner Tel',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (612,'field_name','attachmentUrl','上传附件','Attachment Url',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (613,'field_name','barcode','条码','Barcode',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (614,'field_name','caseOwnerId','负责人','Case Owner Id',null,-1);
@@ -223,8 +223,8 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (617,'field_name','caseSubType','故障子类别','Case Sub Type',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (618,'field_name','caseType','故障类别','Case Type',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (619,'field_name','city','城市','City',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (620,'field_name','clinicalDeptId','所属科室','Clinical Dept Id',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (621,'field_name','clinicalDeptName','所属科室','Clinical Dept Name',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (620,'field_name','clinicalDeptId','使用科室','Clinical Dept Id',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (621,'field_name','clinicalDeptName','使用科室','Clinical Dept Name',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (622,'field_name','closeReason','关单原因','Close Reason',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (623,'field_name','comments','备注','Comments',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (624,'field_name','confirmedEndTime','确认的恢复可用时间','Confirmed End Time',null,-1);
@@ -365,16 +365,20 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (759,'field_name','otherExpense', '其他费用(元)','Other Expense(RMB)',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (760,'field_name','manhourPrice', '内部工时单价(元)','Manhour Price(RMB)',null,-1);
 
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (761,'field_name','clinicalOwnerId', '科室负责人','Clinical Dept Owner',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (762,'field_name','clinicalOwnerName', '科室负责人','Clinical Dept Owner',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (763,'field_name','clinicalOwnerTel', '科室负责人电话','Clinical Dept Owner Tel',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (761,'field_name','clinicalOwnerId', '使用责任人','Clinical Dept Owner',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (762,'field_name','clinicalOwnerName', '使用责任人','Clinical Dept Owner',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (763,'field_name','clinicalOwnerTel', '使用责任人电话','Clinical Dept Owner Tel',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (764,'field_name','registrationNo', '注册证号','Registration No',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (765,'field_name','factoryWarrantyDate', '质保日期','Manhour Price(RMB)',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (766,'field_name','contractType', '合同类型','Contract Type',null,-1);
 
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (767,'field_name','assetOwnerId2','责任人2','2nd Asset Owner Id',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (768,'field_name','assetOwnerName2','责任人2','2nd Asset Owner Name',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (769,'field_name','assetOwnerTel2','责任人2电话','2nd Asset Owner Tel',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (767,'field_name','assetOwnerId2','维修责任人2','2nd Asset Owner Id',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (768,'field_name','assetOwnerName2','维修责任人2','2nd Asset Owner Name',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (769,'field_name','assetOwnerTel2','维修责任人2电话','2nd Asset Owner Tel',null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (770,'field_name','eamId','EAM系统编号','EAM ID',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (771,'field_name','systemId','厂商System Id','System ID',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (772,'field_name','isTakeOrderEnabled','允许抢单?','Compte For Order Enabled',null,-1);
 
 
 -- field value code types  ( id from 1400)
