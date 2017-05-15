@@ -152,23 +152,23 @@ public class StaffApi {
 
     return new ImmutableMap.Builder<String, Object>()
 
-        .put("man_hour", calculateTotal(staff_info, 1) )
+        .put("man_hour", calculateTotal(staff_info, 10) )
 
-        .put("repair", calculateTotal(staff_info, 1) )
+        .put("repair", calculateTotal(staff_info, 2) )
 
-        .put("maintenance", calculateTotal(staff_info, 1) )
+        .put("maintenance", calculateTotal(staff_info, 7) )
 
-        .put("meter", calculateTotal(staff_info, 1) )
+        .put("meter", calculateTotal(staff_info, 9) )
 
-        .put("inspection", calculateTotal(staff_info, 1) )
+        .put("inspection", calculateTotal(staff_info, 8) )
 
-        .put("work_order", calculateTotal(staff_info, 1) )
+        .put("work_order", calculateTotal(staff_info, 4) )
 
-        .put("closed", calculateTotal(staff_info, 1) )
+        .put("closed", calculateTotal(staff_info, 5) )
 
-        .put("open", calculateTotal(staff_info, 1) )
+        .put("open", calculateTotal(staff_info, 6) )
 
-        .put("score", calculateTotal(staff_info, 1) )
+        .put("score", calculateTotal(staff_info, 3) )
 
         .build();
   }
@@ -224,25 +224,23 @@ public class StaffApi {
 
     switch(key) {
 
-      case 1: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement7()) ).toBlocking().single().doubleValue();
+      case 2: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement2()) ).toBlocking().single().doubleValue();
 
-      case 2: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement7()) ).toBlocking().single().doubleValue();
+      case 3: return OperatorSum.sumDoubles(staff_info.map(staff -> staff.getElement3()) ).toBlocking().single().doubleValue();
 
-      case 3: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement7()) ).toBlocking().single().doubleValue();
+      case 4: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement4()) ).toBlocking().single().doubleValue();
 
-      case 4: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement7()) ).toBlocking().single().doubleValue();
+      case 5: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement5()) ).toBlocking().single();
 
-      case 5: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement7()) ).toBlocking().single().doubleValue();
-
-      case 6: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement7()) ).toBlocking().single().doubleValue();
+      case 6: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement6()) ).toBlocking().single().doubleValue();
 
       case 7: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement7()) ).toBlocking().single().doubleValue();
 
-      case 8: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement7()) ).toBlocking().single().doubleValue();
+      case 8: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement8()) ).toBlocking().single().doubleValue();
 
-      case 9: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement7()) ).toBlocking().single().doubleValue();
+      case 9: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement9()) ).toBlocking().single().doubleValue();
 
-      default: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement7()) ).toBlocking().single().doubleValue();
+      default: return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement10()) ).toBlocking().single().doubleValue();
 
     }
   }
