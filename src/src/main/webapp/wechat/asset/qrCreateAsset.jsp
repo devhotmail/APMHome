@@ -111,7 +111,7 @@
                 </div>
 
                 <div class="weui-cell">
-                    <div class="weui-cell__hd"><label class="weui-label">所属科室</label></div>
+                    <div class="weui-cell__hd"><label class="weui-label">使用科室</label></div>
                     <div class="weui-cell__bd">
                         <div class="weui-cell weui-cell_select">
                             <div class="weui-cell__bd">

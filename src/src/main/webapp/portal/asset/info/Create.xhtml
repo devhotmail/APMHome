@@ -137,9 +137,13 @@
                     <p:fieldset  style="margin-bottom:20px">
                         <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                             <h:panelGroup>
+                                <label class="label">#{msg.systemId}</label>
+                                <p:inputText id="systemId" value="#{assetInfoController.selected.systemId}"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
                                 <label class="label">#{msg.departNum}</label>
                                 <p:inputText id="departNum2" value="#{assetInfoController.selected.departNum}"/>
-
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.financingNum}</label>

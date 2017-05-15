@@ -23,17 +23,17 @@
                              </p:selectOneMenu>
                         </h:panelGroup>
                         <h:panelGroup >
-                            <label class="label">#{msg.dispatchUserName}*</label>
+                            <label class="label">#{msg.dispatchUserName}</label>
                             <p:selectOneMenu id="dispatchUserId" value="#{workflowConfigController.selected.dispatchUserId}" 
-                            		 required="true" requiredMessage="#{msg.ownerId} #{msg.ValidationRequire}" >
+                            		 required="false" requiredMessage="#{msg.dispatchUserName} #{msg.ValidationRequire}" >
                                 <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
                                 <f:selectItems value="#{workflowConfigController.dispatchUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                             </p:selectOneMenu>
                         </h:panelGroup>
                         <h:panelGroup >
-                            <label class="label">#{msg.dispatchUserName}2*</label>
+                            <label class="label">#{msg.dispatchUserName}2</label>
                             <p:selectOneMenu id="dispatchUserId2" value="#{workflowConfigController.selected.dispatchUserId2}" 
-                            		 required="true" requiredMessage="#{msg.ownerId} #{msg.ValidationRequire}" >
+                            		 required="false" requiredMessage="#{msg.dispatchUserName}2 #{msg.ValidationRequire}" >
                                 <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
                                 <f:selectItems value="#{workflowConfigController.dispatchUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                             </p:selectOneMenu>
@@ -65,7 +65,7 @@
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>
-                    <p:commandButton validateClient="true" actionListener="#{workflowConfigController.save}" value="#{msg.Save}" icon="ui-icon-check" rendered="#{workflowConfigController.selected != null}"/>
+                    <p:commandButton validateClient="true" actionListener="#{workflowConfigController.save}" value="#{msg.Save}" icon="ui-icon-check" rendered="#{workflowConfigController.selected != null}" update=":growl"/>
                 </h:panelGroup>
             </h:form>
 

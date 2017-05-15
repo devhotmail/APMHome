@@ -181,6 +181,21 @@ public class AssetInfo implements Serializable {
     @Column(name = "depreciation_method")
     private Integer depreciationMethod;
 
+    @Column(name = "eam_id")
+    private String eamId;
+    @Column(name = "system_id")
+    private String systemId;
+    @Column(name = "system_num1")
+    private String systemNum1;
+    @Column(name = "system_num2")
+    private String systemNum2;
+    @Column(name = "system_num3")
+    private String systemNum3;
+    @Column(name = "system_num4")
+    private String systemNum4;
+    @Column(name = "system_num5")
+    private String systemNum5;
+    
     @Column(name = "hospital_id")
     @Basic(optional = false)
     @NotNull
@@ -661,6 +676,62 @@ public class AssetInfo implements Serializable {
 
     public void setClinicalOwnerTel(String clinicalOwnerTel) {
         this.clinicalOwnerTel = clinicalOwnerTel;
+    }
+
+    public String getEamId() {
+        return eamId;
+    }
+
+    public void setEamId(String eamId) {
+        this.eamId = eamId;
+    }
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
+    public String getSystemNum1() {
+        return systemNum1;
+    }
+
+    public void setSystemNum1(String systemNum1) {
+        this.systemNum1 = systemNum1;
+    }
+
+    public String getSystemNum2() {
+        return systemNum2;
+    }
+
+    public void setSystemNum2(String systemNum2) {
+        this.systemNum2 = systemNum2;
+    }
+
+    public String getSystemNum3() {
+        return systemNum3;
+    }
+
+    public void setSystemNum3(String systemNum3) {
+        this.systemNum3 = systemNum3;
+    }
+
+    public String getSystemNum4() {
+        return systemNum4;
+    }
+
+    public void setSystemNum4(String systemNum4) {
+        this.systemNum4 = systemNum4;
+    }
+
+    public String getSystemNum5() {
+        return systemNum5;
+    }
+
+    public void setSystemNum5(String systemNum5) {
+        this.systemNum5 = systemNum5;
     }
     
     
