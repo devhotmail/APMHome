@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+
+    <p:dialog id="BiomedGroupEditDlg" widgetVar="BiomedGroupEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="用户群组EDIT">
+        <h:form id="BiomedGroupEditForm">
+            <p:fieldset legend="用户群组信息">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{biomedGroupController.selected != null}">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="name" value="#{biomedGroupController.selected.groupName}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                            <label>#{msg.name}*</label>
+                        </h:panelGroup>
+                    </p:panelGrid>
+
+                </h:panelGroup>
+            </p:fieldset>
+            <p:fieldset legend="用户选择">
+                <p:pickList id="UserAccountPickList" value="#{biomedGroupController.availableUserAccount}" var="item"
+                            itemValue="#{item}" itemLabel="#{item.name}" showCheckbox="false" responsive="true"
+                            showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="userAccountConverter" >
+                    <f:facet name="sourceCaption">待选用户</f:facet>
+                    <f:facet name="targetCaption">已选用户</f:facet>
+                    <p:ajax event="transfer" listener="#{biomedGroupController.onUserAccountTransfer}" />
+                    <p:column style="width:40%">
+                        <h:outputText value="#{item.name}" />
+                    </p:column>
+                </p:pickList>
+            </p:fieldset>
+
+            <br/>
+            <p:commandButton validateClient="true" actionListener="#{biomedGroupController.save}" value="#{msg.Save}" update="display,:BiomedGroupEditDlg, :BiomedGroupListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'BiomedGroupEditDialog');"/>
+            &nbsp;&nbsp;
+            <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('BiomedGroupEditDialog').hide()"/>
+        </h:form>
+    </p:dialog>
+
+</ui:composition>
+</html>
