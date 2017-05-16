@@ -58,7 +58,7 @@ public class WorkflowConfig implements Serializable {
     private String dispatchUserName2;
 
     @Column(name = "is_take_order_enabled")
-    private String isTakeOrderEnabled;
+    private Boolean isTakeOrderEnabled;
     
 	public WorkflowConfig() {
     }
@@ -186,11 +186,11 @@ public class WorkflowConfig implements Serializable {
         this.dispatchUserName2 = dispatchUserName2;
     }
 
-    public String getIsTakeOrderEnabled() {
+    public Boolean getIsTakeOrderEnabled() {
         return isTakeOrderEnabled;
     }
 
-    public void setIsTakeOrderEnabled(String isTakeOrderEnabled) {
+    public void setIsTakeOrderEnabled(Boolean isTakeOrderEnabled) {
         this.isTakeOrderEnabled = isTakeOrderEnabled;
     }
 

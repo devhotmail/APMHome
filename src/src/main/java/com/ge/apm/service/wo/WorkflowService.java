@@ -79,7 +79,13 @@ public class WorkflowService {
 				logger.error("fetch WorkflowConfig error,siteId is {},hospitalId is {}", workOrder.getSiteId(),workOrder.getHospitalId());
 				continue;
 			}
-			isTimeout(workOrder, woc);
+                        try{
+        			isTimeout(workOrder, woc);
+                        }
+                        catch(Exception ex){
+                            logger.error(ex.getMessage(), ex);
+                        }
+                            
 			// isReopen(workOrder,woc); // 暂不开放 2017.3.30
 		}
 		if (logger.isDebugEnabled()) {
@@ -141,6 +147,8 @@ public class WorkflowService {
 					List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 3);
 					users.addAll(dispatchers);
 				}else if(ownerId > 0){//自动派工
+                                        users.add(ownerId);
+                                    
 					AssetInfo asset = assetInfoMapper.fetchAssetInfoById(workOrder.getAssetId());
 					if (asset != null) {
 						users.add(asset.getAssetOwnerId());
