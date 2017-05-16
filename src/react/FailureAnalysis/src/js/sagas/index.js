@@ -31,7 +31,7 @@ function* fetchBriefs(action) {
     if (targetPage) {
       params = _.cloneDeep(params)
       let pag = params.pagination[type]
-      pag.skip = (targetPage - 1) * pag.top + 1
+      pag.skip = (targetPage - 1) * pag.top
     }
     let extraParam = action.data || {}
     if ('type' in extraParam) {
