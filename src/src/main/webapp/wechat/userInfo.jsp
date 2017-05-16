@@ -26,6 +26,8 @@
 		});
 	</script>
 	<script type="text/html" id="create">
+		<c:choose>
+   		  <c:when test="${user != null}">  
             <div class="page">
                 <div class="page__bd"> 
 					<div class="weui-cells__title">已绑定信息</div>
@@ -57,7 +59,9 @@
                             </div>
                         </div>
 					</form>
-
+   					</c:when>
+			</c:choose>
+	
 					<div class="weui-cells__title">绑定账号</div>
                     <form id="userForm">
                         <div class="weui-cells weui-cells_form">
