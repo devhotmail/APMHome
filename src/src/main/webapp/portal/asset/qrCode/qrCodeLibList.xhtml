@@ -47,7 +47,7 @@
                             </f:facet>
                             <h:outputText value="#{qrCodeLibController.getHospitalName(item.hospitalId)}"/>
                         </p:column>
-                        <p:column headerText="二维码" sortBy="#{item.qrCode}" filterBy="#{item.qrCode}" filterMatchMode="EQ">
+                        <p:column headerText="二维码" sortBy="#{item.qrCode}" filterBy="#{item.qrCode}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.qrCode}"/>
                         </p:column>
                         <p:column headerText="当前状态" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
