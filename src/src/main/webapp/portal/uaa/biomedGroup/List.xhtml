@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="用户群组"/>
+            </div>
+
+            <div class="ui-g-12 card">
+                <h:form id="BiomedGroupListForm">
+                    <p:dataTable id="datalist" value="#{biomedGroupController.lazyModel}" var="item" widgetVar="varDataList"
+                                 selectionMode="single" selection="#{biomedGroupController.selected}"
+                                 lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                 rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                                 paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="#{msg.recordCount}: {totalRecords}"
+                                 rows="20" emptyMessage="#{msg.noRecordFound}"
+                                 rowsPerPageTemplate="20,40,60,90">
+
+                        <p:ajax event="rowSelect" update="editButton"/>
+                        <p:ajax event="filter" listener="#{biomedGroupController.onFilter}" />
+
+                        <p:column headerText="#{msg.name}" sortBy="#{item.groupName}" filterBy="#{item.groupName}" filterMatchMode="LIKE">
+                            <h:outputText value="#{item.groupName}"/>
+                        </p:column>
+
+                        <p:column headerText="医院" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
+                            <f:facet name="filter">
+                                <p:selectOneMenu id="hospitalIdSelect_list" value="#{biomedGroupController.hospitalIdFilter}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue="#{null}" noSelectionOption="true"/>
+                                    <f:selectItems value="#{biomedGroupController.hospitalListFilter}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{biomedGroupController.getHospitalName(item.hospitalId)}"/>
+                        </p:column>
+
+                        <f:facet name="{Toolbar}">
+                            <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{biomedGroupController.prepareCreate}" update=":BiomedGroupEditDlg" oncomplete="PF('BiomedGroupEditDialog').show()"/>
+                            <p:commandButton id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}" actionListener="#{biomedGroupController.prepareEdit}" update=":BiomedGroupEditDlg" oncomplete="PF('BiomedGroupEditDialog').show()" disabled="#{empty biomedGroupController.selected}"/>
+                        </f:facet>
+                    </p:dataTable>
+                </h:form>
+
+                <ui:include src="Edit.xhtml"/>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>
