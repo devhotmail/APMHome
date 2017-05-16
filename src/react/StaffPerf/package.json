@@ -70,6 +70,7 @@
     "axios": "^0.16.0",
     "d3-scale": "^1.0.5",
     "d3-shape": "^1.0.6",
+    "dew-pager": "git+https://github.build.ge.com/foundry-sh/dew-pager.git#1.0.0",
     "dva": "^1.2.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
