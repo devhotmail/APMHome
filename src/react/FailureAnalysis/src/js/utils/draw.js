@@ -1,5 +1,4 @@
 // @flow
-import _ from 'lodash'
 import { Sin, Cos, Asin, Deg2Rad, Rad2Deg, PI } from 'utils/math'
 
 type AnnularOptions = {

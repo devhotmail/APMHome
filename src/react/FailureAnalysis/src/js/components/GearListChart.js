@@ -50,6 +50,7 @@ export default class GearListChart extends PureComponent<void, GearListProps, vo
            evt.dispatchConfig.phasedRegistrationNames.bubbled
   }
 
+  /** properties for animation */
   _defaultOffsetAngle = 0
   _springOffsetAngle = 360
 
@@ -68,13 +69,19 @@ export default class GearListChart extends PureComponent<void, GearListProps, vo
       teeth.forEach(t => t.classList.remove('focused'))
     }
   }
-  motionWillEnter = () => ({ offsetAngle: this._defaultOffsetAngle }) 
+  /** willEnter for react-motion */
+  motionWillEnter = () => ({ offsetAngle: this._defaultOffsetAngle })
+
+  /** willLeave for react-motion */
   motionWillLeave = () => ({ offsetAngle: this._springOffsetAngle })
+
+  /** Clear focus status if need to */
   clearFocus = () => { 
     let focused = this.refs.chart.querySelector('.tooth.focused')
     focused && focused.classList.remove('focused')
     this.setState({ childFocused: false })
   }
+
   render() {
     let { id, innerRadius, outerRadius, items, margin, limit, startAngle, endAngle, clockwise, className, style,
       onMouseMove, onMouseEnter, onMouseLeave, onMouseOver, onClick } = this.props
@@ -154,7 +161,11 @@ GearListChart.defaultProps = {
 }
 
 GearListChart.propTypes = {
-  limit: PropTypes.number.isRequired,
+  startAngle: PropTypes.number.isRequired,
+  endAngle: PropTypes.number.isRequired,
+  innerRadius: PropTypes.number.isRequired,
+  outerRadius: PropTypes.number.isRequired,
+  limit: PropTypes.number,
 }
 
 

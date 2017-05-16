@@ -1,13 +1,10 @@
 //@flow
 import React, { Component } from 'react'
 import { translate } from 'react-i18next'
-import autobind from 'autobind-decorator'
 import _ from 'lodash'
 import Radium from 'radium'
 import DebounceInput from 'react-debounce-input'
-// import Legend from './Legend'
-// import LegendTable from './LegendTable'
-import GearListChart from 'components/GearListChart'
+import GearListChart from 'react-gear-list-chart'
 import Tooltip from 'components/Tooltip'
 import { GenerateTeethData } from 'utils/helpers'
 
@@ -31,7 +28,6 @@ let styles = {
   }
 }
 
-@autobind
 @Radium
 export class Demo extends Component<void, Props, void> {
 
@@ -47,14 +43,14 @@ export class Demo extends Component<void, Props, void> {
     tooltipY: -861112,
   }
 
-  changeMode(evt) {
+  changeMode = evt => {
     let mode = evt.target.textContent.toLowerCase()
     this.setState({ items: GenerateTeethData(this.state.amount, mode.startsWith('Total') ? undefined : mode) })
   }
 
-  changeValue(e) {
-    let prop = e.target.getAttribute('data-prop')
-    let value = +e.target.value
+  changeValue = evt => {
+    let prop = evt.target.getAttribute('data-prop')
+    let value = +evt.target.value
     if (prop === 'amount') {
       this.setState({ items: GenerateTeethData(value)})
     } else {
@@ -62,14 +58,6 @@ export class Demo extends Component<void, Props, void> {
     }
   }
 
-  showTooltip(evt) {
-    if (evt.type === 'mouseleave') {
-      this.setState({ tooltipX: -861112, tooltipY: -861112 })
-    } else {
-      this.setState({ tooltipX: evt.clientX, tooltipY: evt.clientY, tooltip: evt.stripData })
-    }
-  }
-  
   render() {
     let { startAngle, endAngle, outerRadius, innerRadius, margin, amount, tooltipX, tooltipY, tooltip } = this.state
     return (
@@ -127,8 +115,6 @@ export class Demo extends Component<void, Props, void> {
           outerRadius={outerRadius} innerRadius={innerRadius}
           margin={margin}
           items={this.state.items}
-          onMouseMove={this.showTooltip}
-          onMouseLeave={this.showTooltip}
         />
         <div>
           <Tooltip mouseX={tooltipX} mouseY={tooltipY}>

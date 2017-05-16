@@ -53,7 +53,6 @@ export default class Tooth extends PureComponent<void, ToothProps, void> {
       className="tooth-label"
       ref="label"
       pointerEvents="none"
-      userSelect="none"
       x={x} y={y} 
       textAnchor={textAnchor}
       transform={`rotate(${rotate.join(',')})`}>{label}</text>)
