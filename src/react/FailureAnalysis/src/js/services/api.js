@@ -24,6 +24,7 @@ function mapParamsToQuery(params, type) {
   let filterBy = params.filterBy
   let assetType = filterBy.assettype === 'all_asset_type' ? '' : filterBy.assettype
   let dept = filterBy.dept === 'all_dept' ? '' : filterBy.dept
+  let supplier = filterBy.supplier === 'all_supplier' ? '' : filterBy.supplier
   return {
     from: params.period.from.format(DateFormat),
     to: params.period.to.format(DateFormat),
@@ -33,6 +34,7 @@ function mapParamsToQuery(params, type) {
     dept: dept,
     start: pag.skip || 0,
     limit: pag.top,
+    supplier: supplier,
     dataType: DataTypeMapping[params.dataType],
   }
 }

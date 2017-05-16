@@ -33,6 +33,14 @@ function* fetchBriefs(action) {
       let pag = params.pagination[type]
       pag.skip = (targetPage - 1) * pag.top + 1
     }
+    let extraParam = action.data || {}
+    if ('type' in extraParam) {
+      params.filterBy.assettype = extraParam['type']
+    } else if ('dept' in extraParam) {
+      params.filterBy.dept = extraParam['dept']
+    } else if ('supplier' in extraParam) {
+      params.filterBy.supplier = extraParam['supplier']
+    }
     let briefs = yield call(API.getBriefs, type, params)
 
     briefs.type = type
@@ -82,6 +90,7 @@ function* metaSaga() {
 function* briefSagaLeft() {
   yield takeLatest('update/briefs/left', fetchBriefs)
 }
+
 function* briefSagaRight() {
   yield takeLatest('update/briefs/right', fetchBriefs)
 }
