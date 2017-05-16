@@ -83,8 +83,8 @@ function mapDispatch2Porps(dispatch) {
     updatePagination: (type, pageNumber) => {
       dispatch(PageChange(type, pageNumber))
     },
-    fetchBriefs: (type) => {
-      dispatch({ type: 'update/briefs/' + type })
+    fetchBriefs: (type, extraParam) => {
+      dispatch({ type: 'update/briefs/' + type, data: extraParam })
     },
     fetchReasons: (data = {}) => dispatch({type: 'update/reasons', data }),
     updateMeta: () => dispatch(MetaUpdate())
@@ -136,7 +136,7 @@ export class App extends Component<void, Props, void> {
       }
       if (strip.data.val) {
         let val = strip.data.val[DataTypeMapping[type]]
-        return type === 'incident_count' ? (val + unit) : (val * 100).toFixed(2) + '%'
+        return type === 'incident_count' ? (val + unit) : ToPrecentage(val)
       }
       return 'N.A.'
     }
@@ -150,16 +150,17 @@ export class App extends Component<void, Props, void> {
     if (display === 'display_asset_type') {
       param.type = key.id
     } else if (display === 'display_brand') {
-      param.supplier === key.id
+      param.supplier = key.id
     } else if (display === 'display_dept') {
       param.dept = key.id
     }
     this.props.fetchReasons(param)
-    // 2 reset lengend table
-    let { selectedDevice } = this.state
-    selectedDevice.show = false
-    this.setState({ selectedDevice: selectedDevice })
+    // 2 refresh lengend table
+    this.showDevice(evt.strips)
     this.clearFocus('right')
+
+    // 3 refesh right chart
+    this.props.fetchBriefs('right', param)
   }
 
   clickRightTooth(evt) {
@@ -187,6 +188,12 @@ export class App extends Component<void, Props, void> {
     this.setState({ selectedDevice: device })
   }
 
+  hideDevice() {
+    let { selectedDevice } = this.state
+    selectedDevice.show = false
+    this.setState({ selectedDevice: selectedDevice })
+  }
+
   loadAll() {
     let { fetchBriefs, fetchReasons } = this.props
     fetchBriefs('left')
@@ -197,6 +204,7 @@ export class App extends Component<void, Props, void> {
   onRightPagerChange = value => {
     this.props.updatePagination('right', value)
   }
+
   onLeftPagerChange = value => {
     this.props.updatePagination('left', value)
   }
@@ -230,6 +238,7 @@ export class App extends Component<void, Props, void> {
       message.info(t('failure_cause') + ': ' + t('no_more_data'))
     }
   }
+
   clearFocus(type) {
     if (type === 'left') {
       this.refs.leftChart.clearFocus()
@@ -237,6 +246,7 @@ export class App extends Component<void, Props, void> {
       this.refs.rightChart.clearFocus()
     }
   }
+
   constructor(props) {
     super(props)
     EventBus.addEventListener('brief-data', this.mountBriefData )
@@ -247,9 +257,11 @@ export class App extends Component<void, Props, void> {
     }
     
   }
+
   componentWillMount() {
     this.loadAll()
   }
+
   render() {
     let { tooltipX, tooltipY, tooltip, leftItems, centerItems, rightItems, lastYear, selectedDevice } = this.state
     let { updateDisplayType, pagination, clientRect, display } = this.props
@@ -306,11 +318,8 @@ export class App extends Component<void, Props, void> {
           </div>
           { tooltip && <Tooltip mouseX={tooltipX} mouseY={tooltipY} offsetY={-13} anchor="hcb">
             <div style={{color: tooltip && tooltip.color}} className="tooltip-content">{tooltip}</div>
-          </Tooltip>}
+          </Tooltip> }
         </div>
-        {/*<button onClick={this.device}>Select Device</button>
-        <button onClick={this.load}>Load Data</button>
-        <button onClick={this.loadDummy}>Load Dummy</button>*/}
       </div>
     )
   } 
