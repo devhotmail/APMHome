@@ -128,7 +128,7 @@ $border-color: #cecece;
       transform: translate3d(-50%, -50%, 0);
 
       > h2 {
-        font-size: 20px;
+        font-size: 26px;
         font-weight: normal;
         line-height: 1;
       }
@@ -262,15 +262,15 @@ $border-color: #cecece;
   }
 
   // keep calendar in one screen
-  @media(min-width: 1335px) {
-    .fc-row:not(.ui-widget-header) {
-      height: 120px!important;
-    }
-  }
+  // @media(min-width: 1335px) {
+  //   .fc-row:not(.ui-widget-header) {
+  //     height: 120px!important;
+  //   }
+  // }
 
-  @media(max-height: 960px) {
-    .fc-row:not(.ui-widget-header) {
-      max-height:90px!important;
-    }
-  }
+  // @media(max-height: 960px) {
+  //   .fc-row:not(.ui-widget-header) {
+  //     max-height:90px!important;
+  //   }
+  // }
 }
