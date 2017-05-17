@@ -15,10 +15,7 @@
     <ui:define name="content">
         <h:form>
             <p:growl id="messages" showDetail="true"/>
-            <header>
-                <div class="card--title text--center">
-                    <span class="epsilon">#{msg.HomePage}</span>
-                </div>
+            <div class="calendar-header">
                 <div class="card--summary">
                     <div class="u-p flex flex--row">
                         <div class="flex__item"></div>
@@ -57,24 +54,24 @@
                         <div class="flex__item"></div>
                     </div>
                 </div>
-            </header>
+            </div>
             <div class="ui-g">
                 <div class="ui-g-12">
-                    <div class="block">
-                        <div class="calendar">
+                    <div class="calendar">
+                        <div class="calendar-content">
                             <p:schedule id="schedule" value="#{woScheduleController.model}"
                                         widgetVar="myschedule" timeZone="GMT+8" tooltip="true" timeFormat="HH:mm"
                                         leftHeaderTemplate="prev,today,next" centerHeaderTemplate="title"
                                         rightHeaderTemplate="">
                             </p:schedule>
-                            <div class="calendar-footer">
-                                <span class="u-m status status--1">#{msg.staff_tile_inspection}</span>
-                                <span class="u-m status status--2">#{msg.staff_tile_meter}</span>
-                                <span class="u-m status status--3">#{msg.staff_tile_quality}</span>
-                                <span class="u-m status status--4">#{msg.staff_tile_maintenance}</span>
-                                <span class="u-m status status--5">#{msg.staff_tile_preventive}</span>
-                            </div>
                         </div>
+                        <!--<div class="calendar-footer">
+                            <span class="u-m status status-1">#{msg.staff_tile_inspection}</span>
+                            <span class="u-m status status-2">#{msg.staff_tile_meter}</span>
+                            <span class="u-m status status-3">#{msg.staff_tile_quality}</span>
+                            <span class="u-m status status-4">#{msg.staff_tile_maintenance}</span>
+                            <span class="u-m status status-5">#{msg.staff_tile_preventive}</span>
+                        </div>-->
                     </div>
                 </div>
             </div>
