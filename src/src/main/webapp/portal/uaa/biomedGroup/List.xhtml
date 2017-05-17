@@ -8,7 +8,7 @@
     <ui:define name="content">
         <div class="ui-g">
             <div class="ui-g-12 card cardTitle">
-                <p:outputLabel class="pageTitle" value="用户群组"/>
+                <p:outputLabel class="pageTitle" value="维修工程师群组"/>
             </div>
 
             <div class="ui-g-12 card">
@@ -28,14 +28,10 @@
                         <p:column headerText="#{msg.name}" sortBy="#{item.groupName}" filterBy="#{item.groupName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.groupName}"/>
                         </p:column>
-
-                        <p:column headerText="医院" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
-                            <f:facet name="filter">
-                                <p:selectOneMenu id="hospitalIdSelect_list" value="#{biomedGroupController.hospitalIdFilter}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue="#{null}" noSelectionOption="true"/>
-                                    <f:selectItems value="#{biomedGroupController.hospitalListFilter}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                </p:selectOneMenu>
-                            </f:facet>
+                        <p:column headerText="租户">
+                            <h:outputText value="#{biomedGroupController.getSiteName(item.siteId)}"/>
+                        </p:column>
+                        <p:column headerText="医院">
                             <h:outputText value="#{biomedGroupController.getHospitalName(item.hospitalId)}"/>
                         </p:column>
 

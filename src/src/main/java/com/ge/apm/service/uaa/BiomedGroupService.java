@@ -20,7 +20,6 @@ import java.util.List;
 @Component
 public class BiomedGroupService {
 
-
     @Autowired
     private BiomedGroupRepository biomedGroupDao;
     @Autowired
@@ -28,13 +27,14 @@ public class BiomedGroupService {
     @Autowired
     private UserAccountRepository userDao;
 
-    public List<UserAccount> getBiomedGroupList(UserAccount queryUserAccount) {
+    public List<UserAccount> getSourceUserAccountList(UserAccount queryUserAccount) {
 
-        List<SearchFilter> OrgInfoFilters = new ArrayList<>();
-        OrgInfoFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, queryUserAccount.getSiteId()));
-        OrgInfoFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, queryUserAccount.getHospitalId()));
+        if(queryUserAccount.getHospitalId() != null && !queryUserAccount.getHospitalId().equals("")){
+            return userDao.getUsersWithAssetStaffRole(queryUserAccount.getHospitalId());
+        }else{
+            return userDao.getUsersWithAssetStaffRoleBySiteId(queryUserAccount.getSiteId());
+        }
 
-        return userDao.findBySearchFilter(OrgInfoFilters);
     }
 
     public List<UserAccount> getTargetUserAccount(BiomedGroup tempBiomedGroup){

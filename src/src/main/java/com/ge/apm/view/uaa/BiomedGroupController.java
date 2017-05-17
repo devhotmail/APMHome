@@ -9,6 +9,7 @@ import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
 
@@ -65,7 +66,7 @@ public class BiomedGroupController extends JpaCRUDController<BiomedGroup> {
 
         queryUserAccount = new UserAccount();
         queryUserAccount.setSiteId(currentUser.getSiteId());
-        queryUserAccount.setHospitalId(currentUser.getHospitalId());
+        //queryUserAccount.setHospitalId(currentUser.getHospitalId());
         this.getQueryUserAccountList();
     }
 
@@ -78,10 +79,17 @@ public class BiomedGroupController extends JpaCRUDController<BiomedGroup> {
     protected Page<BiomedGroup> loadData(PageRequest pageRequest) {
 
         selected = null;
+
+        List<SearchFilter> searchFilters = this.searchFilters;
+        SearchFilter siteIdFilter = new SearchFilter("siteId", SearchFilter.Operator.EQ, currentUser.getSiteId());
+        SearchFilter hospitalIdFilter = new SearchFilter("hospitalId", SearchFilter.Operator.EQ, currentUser.getHospitalId());
+        searchFilters.add(siteIdFilter);
+        searchFilters.add(hospitalIdFilter);
+
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
-            return dao.findBySearchFilter(this.searchFilters, pageRequest);
+            return dao.findBySearchFilter(searchFilters, pageRequest);
         }
 
     }
@@ -108,7 +116,7 @@ public class BiomedGroupController extends JpaCRUDController<BiomedGroup> {
 
     public List<OrgInfo> getHospitalList() {
 
-        List<OrgInfo> hospitalList = null;
+        List<OrgInfo> hospitalList = new ArrayList<>();
         if (siteId != null) {
 
             hospitalList = orgInfoDao.getHospitalBySiteId(Integer.valueOf(siteId));
@@ -119,7 +127,7 @@ public class BiomedGroupController extends JpaCRUDController<BiomedGroup> {
 
     public List<OrgInfo> getHospitalListFilter() {
 
-        List<OrgInfo> hospitalList = null;
+        List<OrgInfo> hospitalList = new ArrayList<>();
         if (siteIdFilter != null) {
 
             hospitalList = orgInfoDao.getHospitalBySiteId(Integer.valueOf(siteIdFilter));
@@ -141,7 +149,7 @@ public class BiomedGroupController extends JpaCRUDController<BiomedGroup> {
     }
 
     public void getQueryUserAccountList() {
-        sourceUserAccount = biomedGroupService.getBiomedGroupList(queryUserAccount);
+        sourceUserAccount = biomedGroupService.getSourceUserAccountList(queryUserAccount);
         targetUserAccount.forEach((item)->{
             if(sourceUserAccount.contains(item)){
                 sourceUserAccount.remove(item);
@@ -264,5 +272,13 @@ public class BiomedGroupController extends JpaCRUDController<BiomedGroup> {
 
     public void setTargetUserAccount(List<UserAccount> targetUserAccount) {
         this.targetUserAccount = targetUserAccount;
+    }
+
+    public UserAccount getQueryUserAccount() {
+        return queryUserAccount;
+    }
+
+    public void setQueryUserAccount(UserAccount queryUserAccount) {
+        this.queryUserAccount = queryUserAccount;
     }
 }

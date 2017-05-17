@@ -28,26 +28,12 @@
                         <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.name}"/>
                         </p:column>
-                        <p:column headerText="租户" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
-                            <f:facet name="filter">
-                                <p:selectOneMenu value="#{assetTagController.siteIdFilter}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
-                                    <p:ajax  listener="#{assetTagController.onSiteFilterChange}" update="hospitalIdSelect_list" />
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue="#{null}" noSelectionOption="true"/>
-                                    <f:selectItems value="#{assetTagController.siteList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                </p:selectOneMenu>
-                            </f:facet>
+                        <p:column headerText="租户">
                             <h:outputText value="#{assetTagController.getSiteName(item.siteId)}"/>
                         </p:column>
-                        <p:column headerText="医院" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
-                            <f:facet name="filter">
-                                <p:selectOneMenu id="hospitalIdSelect_list" value="#{assetTagController.hospitalIdFilter}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue="#{null}" noSelectionOption="true"/>
-                                    <f:selectItems value="#{assetTagController.hospitalListFilter}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                </p:selectOneMenu>
-                            </f:facet>
+                        <p:column headerText="医院">
                             <h:outputText value="#{assetTagController.getHospitalName(item.hospitalId)}"/>
                         </p:column>
-
 
                         <f:facet name="{Toolbar}">
                             <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetTagController.prepareCreate}" update=":AssetTagEditDlg" oncomplete="PF('AssetTagEditDialog').show()"/>

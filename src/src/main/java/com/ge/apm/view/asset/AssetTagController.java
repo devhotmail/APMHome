@@ -1,11 +1,12 @@
 package com.ge.apm.view.asset;
 
 import com.ge.apm.dao.*;
-import com.ge.apm.domain.AssetTag;
-import com.ge.apm.domain.OrgInfo;
-import com.ge.apm.domain.SiteInfo;
+import com.ge.apm.domain.*;
 import com.ge.apm.service.asset.AssetCreateService;
+import com.ge.apm.service.asset.AssetTagService;
 import com.ge.apm.view.sysutil.UserContextService;
+import org.primefaces.event.TransferEvent;
+import org.primefaces.model.DualListModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.dao.SearchFilter;
@@ -31,7 +32,18 @@ public class AssetTagController extends JpaCRUDController<AssetTag> {
     SiteInfoRepository siteInfoDao = null;
     OrgInfoRepository orgInfoDao = null;
 
+    private DualListModel<BiomedGroup> availableBiomedGroup;
+    private List<BiomedGroup> sourceBiomedGroup;
+    private List<BiomedGroup> targetBiomedGroup;
+    private BiomedGroup queryBiomedGroup;
+
+    private DualListModel<AssetInfo> availableAssets;
+    private List<AssetInfo> sourceAssets;
+    private List<AssetInfo> targetAssets;
+    private AssetInfo queryAsset;
+
     private AssetCreateService acService;
+    private AssetTagService assetTagService;
 
     private Integer siteId;
     private Integer hospitalId;
@@ -39,7 +51,7 @@ public class AssetTagController extends JpaCRUDController<AssetTag> {
     private Integer siteIdFilter;
     private Integer hospitalIdFilter;
 
-    private String tempSiteId = "";
+    private UserAccount currentUser;
 
     @Override
     protected void init() {
@@ -48,20 +60,22 @@ public class AssetTagController extends JpaCRUDController<AssetTag> {
         siteInfoDao = WebUtil.getBean(SiteInfoRepository.class);
         orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
         acService = WebUtil.getBean(AssetCreateService.class);
+        assetTagService = WebUtil.getBean(AssetTagService.class);
 
-        UserContextService userContextService = WebUtil.getBean(UserContextService.class);
+        currentUser = UserContextService.getCurrentUserAccount();
 
-        if (userContextService.hasRole("SuperAdmin")) {
-            this.filterByHospital = false;
-            this.filterBySite = false;
-        } else {
-            this.filterBySite = true;
-            if (!userContextService.hasRole("MultiHospital")) {
-                this.filterByHospital = false;
-            } else {
-                this.filterByHospital = true;
-            }
-        }
+        targetBiomedGroup = new ArrayList<>();
+        queryBiomedGroup = new BiomedGroup();
+        queryBiomedGroup.setSiteId(currentUser.getSiteId());
+        queryBiomedGroup.setHospitalId(currentUser.getHospitalId());
+        this.getQueryBiomedGroupList();
+
+        targetAssets = new ArrayList();
+        queryAsset = new AssetInfo();
+        queryAsset.setSiteId(currentUser.getSiteId());
+        queryAsset.setHospitalId(currentUser.getHospitalId());
+        this.getQueryAssetsList();
+
     }
 
     @Override
@@ -72,40 +86,19 @@ public class AssetTagController extends JpaCRUDController<AssetTag> {
     @Override
     protected Page<AssetTag> loadData(PageRequest pageRequest) {
 
+        selected = null;
+
         List<SearchFilter> searchFilters = this.searchFilters;
-        if (searchFilters == null || searchFilters.size() == 0) {
+        SearchFilter siteIdFilter = new SearchFilter("siteId", SearchFilter.Operator.EQ, currentUser.getSiteId());
+        SearchFilter hospitalIdFilter = new SearchFilter("hospitalId", SearchFilter.Operator.EQ, currentUser.getHospitalId());
+        searchFilters.add(siteIdFilter);
+        searchFilters.add(hospitalIdFilter);
+
+        if(searchFilters.size() <= 0){
             return dao.findAll(pageRequest);
-        } else {
-            Map<String, SearchFilter> tempSearchFilterMap = new HashMap<>(searchFilters.size());
-            for (SearchFilter tempSearchFilter : searchFilters) {
-                tempSearchFilterMap.put(tempSearchFilter.fieldName, tempSearchFilter);
-            }
-
-            if(tempSearchFilterMap.containsKey("siteId")){
-                if(!tempSearchFilterMap.get("siteId").value.toString().equals(tempSiteId)){
-                    tempSearchFilterMap.remove("hospitalId");
-                }
-
-                this.tempSiteId = tempSearchFilterMap.get("siteId").value.toString();
-            }
-
-            if(!tempSearchFilterMap.containsKey("siteId") && tempSearchFilterMap.containsKey("hospitalId")){
-                tempSearchFilterMap.remove("hospitalId");
-            }
-
-            searchFilters = new ArrayList<SearchFilter>();
-            for(Map.Entry<String, SearchFilter> entry : tempSearchFilterMap.entrySet()){
-                searchFilters.add(entry.getValue());
-            }
-
-            if(searchFilters.size() <= 0){
-                return dao.findAll(pageRequest);
-            }else{
-                return dao.findBySearchFilter(searchFilters, pageRequest);
-            }
-
+        }else{
+            return dao.findBySearchFilter(searchFilters, pageRequest);
         }
-
     }
 
     @Override
@@ -162,11 +155,85 @@ public class AssetTagController extends JpaCRUDController<AssetTag> {
         }
     }
 
-    public void onSave(){
+    public void getQueryBiomedGroupList() {
+        sourceBiomedGroup = assetTagService.getBiomedGroupList(queryBiomedGroup);
+        targetBiomedGroup.forEach((item)->{
+            if(sourceBiomedGroup.contains(item)){
+                sourceBiomedGroup.remove(item);
+            }
+        });
 
+        availableBiomedGroup = new DualListModel<>(sourceBiomedGroup, targetBiomedGroup);
+    }
 
+    public void onBiomedGroupTransfer(TransferEvent event) {
 
-        Object obj = this.selected;
+        for(Object item : event.getItems()) {
+            if(event.isAdd()){
+                targetBiomedGroup.add((BiomedGroup)item);
+            }else{
+                targetBiomedGroup.remove((BiomedGroup)item);
+            }
+        }
+    }
+
+    public void getQueryAssetsList() {
+        sourceAssets = assetTagService.getAssetList(queryAsset);
+        targetAssets.forEach((item)->{
+            if(sourceAssets.contains(item)){
+                sourceAssets.remove(item);
+            }
+        });
+
+        availableAssets = new DualListModel<>(sourceAssets, targetAssets);
+    }
+
+    public void onAssetsTransfer(TransferEvent event) {
+
+        for(Object item : event.getItems()) {
+            if(event.isAdd()){
+                targetAssets.add((AssetInfo)item);
+            }else{
+                targetAssets.remove((AssetInfo)item);
+            }
+        }
+    }
+
+    public List<OrgInfo> getClinicalDeptList() {
+        return acService.getClinicalDeptList(queryAsset.getHospitalId());
+    }
+
+    public List<UserAccount> getOwnerList() {
+        List<UserAccount> res = acService.getAssetOnwers(queryAsset.getSiteId(), queryAsset.getHospitalId());
+        return res;
+    }
+
+    public void save(){
+        super.save();
+        assetTagService.saveAssetTag(this.getSelected(), targetBiomedGroup, targetAssets);
+    }
+
+    @Override
+    public void onBeforeNewObject(AssetTag object) {
+        object.setSiteId(currentUser.getSiteId());
+        object.setHospitalId(currentUser.getHospitalId());
+
+        targetBiomedGroup = assetTagService.getTargetBiomedGroup(this.getSelected());
+        this.getQueryBiomedGroupList();
+
+        targetAssets = assetTagService.getTargetAssets(this.getSelected());
+        this.getQueryAssetsList();
+    }
+
+    @Override
+    public void prepareEdit() {
+        super.prepareEdit();
+
+        targetBiomedGroup = assetTagService.getTargetBiomedGroup(this.getSelected());
+        this.getQueryBiomedGroupList();
+
+        targetAssets = assetTagService.getTargetAssets(this.getSelected());
+        this.getQueryAssetsList();
     }
 
     public Integer getSiteId() {
@@ -199,5 +266,69 @@ public class AssetTagController extends JpaCRUDController<AssetTag> {
 
     public void setHospitalIdFilter(Integer hospitalIdFilter) {
         this.hospitalIdFilter = hospitalIdFilter;
+    }
+
+    public DualListModel<BiomedGroup> getAvailableBiomedGroup() {
+        return availableBiomedGroup;
+    }
+
+    public void setAvailableBiomedGroup(DualListModel<BiomedGroup> availableBiomedGroup) {
+        this.availableBiomedGroup = availableBiomedGroup;
+    }
+
+    public List<BiomedGroup> getSourceBiomedGroup() {
+        return sourceBiomedGroup;
+    }
+
+    public void setSourceBiomedGroup(List<BiomedGroup> sourceBiomedGroup) {
+        this.sourceBiomedGroup = sourceBiomedGroup;
+    }
+
+    public List<BiomedGroup> getTargetBiomedGroup() {
+        return targetBiomedGroup;
+    }
+
+    public void setTargetBiomedGroup(List<BiomedGroup> targetBiomedGroup) {
+        this.targetBiomedGroup = targetBiomedGroup;
+    }
+
+    public DualListModel<AssetInfo> getAvailableAssets() {
+        return availableAssets;
+    }
+
+    public void setAvailableAssets(DualListModel<AssetInfo> availableAssets) {
+        this.availableAssets = availableAssets;
+    }
+
+    public List<AssetInfo> getSourceAssets() {
+        return sourceAssets;
+    }
+
+    public void setSourceAssets(List<AssetInfo> sourceAssets) {
+        this.sourceAssets = sourceAssets;
+    }
+
+    public List<AssetInfo> getTargetAssets() {
+        return targetAssets;
+    }
+
+    public void setTargetAssets(List<AssetInfo> targetAssets) {
+        this.targetAssets = targetAssets;
+    }
+
+    public BiomedGroup getQueryBiomedGroup() {
+        return queryBiomedGroup;
+    }
+
+    public void setQueryBiomedGroup(BiomedGroup queryBiomedGroup) {
+        this.queryBiomedGroup = queryBiomedGroup;
+    }
+
+    public AssetInfo getQueryAsset() {
+        return queryAsset;
+    }
+
+    public void setQueryAsset(AssetInfo queryAsset) {
+        this.queryAsset = queryAsset;
     }
 }
