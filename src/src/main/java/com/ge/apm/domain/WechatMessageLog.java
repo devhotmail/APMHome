@@ -3,6 +3,10 @@
 package com.ge.apm.domain;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
+import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +19,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.joda.time.Minutes;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  *
@@ -54,13 +63,30 @@ public class WechatMessageLog implements Serializable {
     @NotNull
     @Column(name = "message_type")
     private int messageType;
+    
+    @LastModifiedDate
+    @Column(name = "last_modified_date")
+    //private ZonedDateTime lastModifiedDate = ZonedDateTime.now();
+    private Timestamp lastModifiedDate = new Timestamp(System.currentTimeMillis());
 
     public WechatMessageLog() {
     }
     
     
 
-    public WechatMessageLog(Integer id) {
+    public Timestamp getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+
+
+	public void setLastModifiedDate(Timestamp lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+
+
+	public WechatMessageLog(Integer id) {
         this.id = id;
     }
 
@@ -138,7 +164,7 @@ public class WechatMessageLog implements Serializable {
         return true;
     }
 
-    @Override
+	@Override
     public String toString() {
         return "com.ge.apm.domain.WechatMessageLog[ id=" + id + " ]";
     }

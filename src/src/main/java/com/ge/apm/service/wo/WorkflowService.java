@@ -10,6 +10,7 @@ import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.CasePriorityNum;
 import com.ge.apm.domain.Constans;
 import com.ge.apm.domain.ReopenPushModel;
+import com.ge.apm.domain.TimeOutRule;
 import com.ge.apm.domain.TimeoutPushModel;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WechatMessageLog;
@@ -79,7 +80,13 @@ public class WorkflowService {
 				logger.error("fetch WorkflowConfig error,siteId is {},hospitalId is {}", workOrder.getSiteId(),workOrder.getHospitalId());
 				continue;
 			}
-			isTimeout(workOrder, woc);
+                        try{
+        			isTimeout(workOrder, woc);
+                        }
+                        catch(Exception ex){
+                            logger.error(ex.getMessage(), ex);
+                        }
+                            
 			// isReopen(workOrder,woc); // 暂不开放 2017.3.30
 		}
 		if (logger.isDebugEnabled()) {
@@ -135,12 +142,15 @@ public class WorkflowService {
 		Integer currentStepId = lastOne.getCurrentStepId();
 		Integer ownerId = lastOne.getCurrentPersonId();
 		Integer times = woc.getMaxMessageCount();
-		if (isTimeout(lastOne, woc)) {
+		TimeOutRule tor = isTimeout(lastOne, woc);
+		if (tor.getIsTimeout()) {
 			if(currentStepId == WORK_ORDER_STATUS_ACCEPT){
 				if(ownerId == -1){//抢单
 					List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 3);
 					users.addAll(dispatchers);
 				}else if(ownerId > 0){//自动派工
+                                        users.add(ownerId);
+                                    
 					AssetInfo asset = assetInfoMapper.fetchAssetInfoById(workOrder.getAssetId());
 					if (asset != null) {
 						users.add(asset.getAssetOwnerId());
@@ -176,7 +186,7 @@ public class WorkflowService {
 			Iterator<Integer> it = filterUser.iterator();  
 			while(it.hasNext()) {
 				Integer needPushUser = it.next();
-				 if(!isMatchRule(needPushUser, woId, currentStepId, times)){
+				 if(!isMatchRule(needPushUser, woId, currentStepId, times,tor.getTime())){
 					 logger.info("userId {} is removed because of rule!",needPushUser);
 					 it.remove();
 				 }
@@ -205,7 +215,7 @@ public class WorkflowService {
 		Integer woId = workOrder.getId();
 		Integer currentStepId = lastOne.getCurrentStepId();
 		Integer times = woc.getMaxMessageCount();
-		if (isTimeout(lastOne, woc)) {
+		if (isTimeoutBak(lastOne, woc)) {
 			model = new TimeoutPushModel();
 			model.setFirst(stepName + "超时");
 			model.setKeyword1(workOrder.getAssetName());
@@ -245,7 +255,7 @@ public class WorkflowService {
 			Iterator<Integer> it = filterUser.iterator();  
 			while(it.hasNext()) {
 				Integer needPushUser = it.next();
-				 if(!isMatchRule(needPushUser, woId, currentStepId, times)){
+				 if(!isMatchRuleBak(needPushUser, woId, currentStepId, times)){
 					 logger.info("userId {} is removed because of rule!",needPushUser);
 					 it.remove();
 				 }
@@ -271,7 +281,42 @@ public class WorkflowService {
 		logger.info("push timeout over,to users is {}", users);
 	}
 	
-	private boolean isMatchRule(Integer userId,Integer woId,Integer currentStepId,Integer times) {
+	private boolean isMatchRule(Integer userId,Integer woId,Integer currentStepId,Integer times, Integer timeOutConfig) {
+		WechatMessageLog wml = new WechatMessageLog();
+		UserAccount user = userAccountMapper.getUserById(userId);
+		String weChatId = user.getWeChatId();
+		if (StringUtils.isEmpty(weChatId)) {
+			logger.error("user {} does not bind wx!", user.getLoginName());
+			return false;
+		}
+		wml.setWechatid(weChatId);
+		wml.setWoId(woId);
+		wml.setWoStepId(currentStepId);
+		WechatMessageLog wmlFromDB = wechatMessageLogMapper.fetchByProperties(wml);
+		if (wmlFromDB == null) {
+			wechatMessageLogMapper.insertMessageLogMapper(wml);
+			return true;
+		}
+		DateTime lastPushTime = new DateTime(wmlFromDB.getLastModifiedDate());
+		DateTime now = new DateTime();
+		//如果当前时间和上次发送时间的间隔不足配置的时间间隔，则不发送
+		if(Minutes.minutesBetween(lastPushTime, now).getMinutes() < timeOutConfig){
+			logger.info("timeout interval is not enough!,interval is {}",timeOutConfig);
+			return false;
+		}
+		//-1 stands for no limit
+		if(times == -1){
+			return true;
+		}
+
+		if (wmlFromDB.getMessageCount() >= times) {
+			return false;
+		}
+		wechatMessageLogMapper.updateMessageLogMapper(wmlFromDB);
+		return true;
+	}
+	
+	private boolean isMatchRuleBak(Integer userId,Integer woId,Integer currentStepId,Integer times) {
 		//-1 stands for no limit
 		if(times == -1){
 			return true;
@@ -298,7 +343,7 @@ public class WorkflowService {
 		return true;
 	}
 
-	public boolean isTimeout(WorkFlow workFlow, WorkflowConfig woc) {
+	public boolean isTimeoutBak(WorkFlow workFlow, WorkflowConfig woc) {
 		DateTime now = new DateTime(new Date());
 		DateTime startTime = new DateTime(workFlow.getStartTime());
 		Integer timeout = 0;
@@ -309,7 +354,6 @@ public class WorkflowService {
 			timeout = woc.getTimeoutAccept();
 		} else if (workFlow.getCurrentStepId() == Constans.CLOSED.getIndex()) {
 			timeout = woc.getTimeoutClose();
-
 		}
 		if (timeout > 0) {
 			return Minutes.minutesBetween(startTime, now).getMinutes() > timeout;
@@ -319,6 +363,33 @@ public class WorkflowService {
 		// timeout =woc.getTimeoutRepair();
 		// }
 		return false;
+	}
+	
+	public TimeOutRule isTimeout(WorkFlow workFlow, WorkflowConfig woc) {
+		TimeOutRule tor = new TimeOutRule();
+		Boolean isTimeOut = false;
+		DateTime now = new DateTime(new Date());
+		DateTime startTime = new DateTime(workFlow.getStartTime());
+		Integer timeout = 0;
+//		if (workFlow.getCurrentStepId() == Constans.DISPATCH.getIndex()) {
+//			timeout = woc.getTimeoutDispatch();
+//		} else 
+		if (workFlow.getCurrentStepId() == Constans.ACCEPT.getIndex()) {
+			timeout = woc.getTimeoutAccept();
+		} else if (workFlow.getCurrentStepId() == Constans.CLOSED.getIndex()) {
+			timeout = woc.getTimeoutClose();
+		}
+		tor.setTime(timeout);
+		
+		if (timeout > 0) {
+			isTimeOut = Minutes.minutesBetween(startTime, now).getMinutes() > timeout;
+		}
+		tor.setIsTimeout(isTimeOut);
+		// else if(workFlow.getCurrentStepId() == Constans.REPAIR.getIndex()){
+		// //repair need not to notice
+		// timeout =woc.getTimeoutRepair();
+		// }
+		return tor;
 	}
 
 }
