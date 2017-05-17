@@ -178,7 +178,7 @@ ALTER TABLE workflow_config ADD CONSTRAINT uk_workflow_hospital_id UNIQUE (hospi
 alter table workflow_config add COLUMN max_message_count int;
 ALTER TABLE workflow_config ADD COLUMN dispatch_user_id2 int4 NULL ;
 ALTER TABLE workflow_config ADD COLUMN dispatch_user_name2 varchar(16) NULL ;
-ALTER TABLE workflow_config ADD COLUMN is_take_order_enabled bool;
+ALTER TABLE workflow_config ADD COLUMN is_take_order_enabled bool;  --是否运行抢单
 
 create table wechat_message_log(
 id serial not null,
