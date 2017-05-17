@@ -1758,6 +1758,10 @@ detect-indent@^4.0.0:
   dependencies:
     repeating "^2.0.0"
 
+"dew-pager@git+https://github.build.ge.com/foundry-sh/dew-pager.git#1.0.0":
+  version "1.0.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-pager.git#0b89e9f2ac7de030a9aa1c4809cf8e3e37f21387"
+
 diffie-hellman@^5.0.0:
   version "5.0.2"
   resolved "https://registry.npmjs.org/diffie-hellman/-/diffie-hellman-5.0.2.tgz#b5835739270cfe26acf632099fded2a07f209e5e"

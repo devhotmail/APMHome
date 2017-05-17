@@ -2,10 +2,10 @@
 import React, { Component } from 'react'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
+import Pager from 'dew-pager'
 
 import SizeProvider from '#/components/SizeProvider'
 import FilterBar from '#/components/FilterBar'
-import Pager from '#/components/Pager'
 import StackChart from '#/components/StackChart'
 import CoreCircle from '#/components/CoreCircle'
 

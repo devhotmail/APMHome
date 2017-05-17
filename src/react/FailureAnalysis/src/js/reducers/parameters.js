@@ -9,7 +9,8 @@ const initParameter = {
 
   filterBy: {
     ['assettype']: 'all_asset_type',
-    ['dept']: 'all_dept'
+    ['dept']: 'all_dept',
+    ['supplier']: 'all_supplier', // currently no dropdown on UI
   },
   orderBy: 'operation_rate', 
   period: {

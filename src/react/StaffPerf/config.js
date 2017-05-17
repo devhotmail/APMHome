@@ -20,8 +20,8 @@ module.exports = {
   watch: {
     env: {
       'NODE_ENV': JSON.stringify('watch'),
-      'API_HOST': JSON.stringify('https://www.easy-mock.com/mock/590e9930f926ef14e269a377/api')
-      // 'API_HOST': JSON.stringify('/geapm/api')
+      // 'API_HOST': JSON.stringify('https://www.easy-mock.com/mock/590e9930f926ef14e269a377/api')
+      'API_HOST': JSON.stringify('/geapm/api')
     },
     commonPrefix: '/geapm'
   }

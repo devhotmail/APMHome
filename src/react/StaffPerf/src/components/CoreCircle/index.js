@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import StarRate from '../StarRate'
 
 import StatusBar from '../StatusBar'
@@ -14,7 +14,25 @@ type PropsT = {
   onClick: Function
 }
 
-export default class CoreCircle extends Component<*, PropsT, *> {
+class PercentText extends PureComponent {
+  render () {
+    const { title, numerator, denominator, tip = '工作小时' } = this.props
+    return (
+      <div>
+        <span>{title}</span>
+        <span>&nbsp;{numerator} / {denominator}</span>
+        <span>&nbsp;({tip})</span>
+        {
+          denominator
+            ? <span>&nbsp;= {round(numerator * 100 / denominator)} %</span>
+            : null
+        }
+      </div>
+    )
+  }
+}
+
+export default class CoreCircle extends PureComponent<*, PropsT, *> {
   render () {
     const { loading } = this.props
     
@@ -41,43 +59,44 @@ export default class CoreCircle extends Component<*, PropsT, *> {
               className="clickable flex flex--align-items--center"
               onClick={onClick(HOUR)}>
               <div className={styles.rect} style={{color: 'rgb(106,180,166)'}}></div>
-              <div>
-                <span>工作量</span>
-                <span>&nbsp;{focus.man_hour} / {focus.id ? range.man_hour : range.hour_total}</span>
-                <span>&nbsp;(法定小时) = {round(focus.man_hour * 100 / (focus.id ? range.man_hour : range.hour_total))} %</span>
-              </div>
+              <PercentText {...{
+                title: '工作量',
+                tip: '法定小时',
+                numerator: focus.man_hour,
+                denominator: (focus.id ? range.man_hour : range.hour_total)
+              }} />
             </div>
             <div className="m-l-2 flex flex--align-items--center">
               <div className={styles.rect} style={{color: 'rgb(106,180,166)'}}></div>
-              <div>
-                <span>维修</span>
-                <span>&nbsp;{focus.repair} / {focus.man_hour}</span>
-                <span>&nbsp;(工作小时) = {round(focus.repair * 100 / focus.man_hour)} %</span>
-              </div>
+              <PercentText {...{
+                title: '维修',
+                numerator: focus.repair,
+                denominator: focus.man_hour
+              }} />     
             </div>
             <div className="m-l-2 flex flex--align-items--center">
               <div className={styles.rect} style={{color: 'rgb(123,190,178)'}}></div>
-              <div>
-                <span>保养</span>
-                <span>&nbsp;{focus.maintenance} / {focus.man_hour}</span>
-                <span>&nbsp;(工作小时) = {round(focus.maintenance * 100 / focus.man_hour)} %</span>
-              </div>                
+              <PercentText {...{
+                title: '保养',
+                numerator: focus.maintenance,
+                denominator: focus.man_hour
+              }} />
             </div>
             <div className="m-l-2 flex flex--align-items--center">
               <div className={styles.rect} style={{color: 'rgb(135,203,190)'}}></div>
-              <div>
-                <span>计量</span>
-                <span>&nbsp;{focus.meter} / {focus.man_hour}</span>
-                <span>&nbsp;(工作小时) = {round(focus.meter * 100 / focus.man_hour)} %</span>
-              </div>                
+              <PercentText {...{
+                title: '计量',
+                numerator: focus.meter,
+                denominator: focus.man_hour
+              }} />       
             </div>
             <div className="m-l-2 flex flex--align-items--center">
               <div className={styles.rect} style={{color: 'rgb(154,201,192)'}}></div>
-              <div>
-                <span>巡检</span>
-                <span>&nbsp;{focus.inspection} / {focus.man_hour}</span>
-                <span>&nbsp;(工作小时) = {round(focus.inspection * 100 / focus.man_hour)} %</span>
-              </div>              
+              <PercentText {...{
+                title: '巡检',
+                numerator: focus.inspection,
+                denominator: focus.man_hour
+              }} />
             </div>
           </div>
           <div
