@@ -45,7 +45,10 @@ public class GenericRepositoryFactoryBean<T extends JpaRepository<S, ID>, S, ID 
 
         @Override
         protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
-            return GenericRepositoryImpl.class;
+            if(metadata.getIdType().isAssignableFrom(String.class))
+                return GenericRepositoryUUIDImpl.class;
+            else
+                return GenericRepositoryImpl.class;
         }
     }
 }
