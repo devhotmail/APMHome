@@ -8,7 +8,7 @@
 
 <ui:composition>
 
-    <p:dialog id="BiomedGroupEditDlg" widgetVar="BiomedGroupEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="用户群组EDIT">
+    <p:dialog id="BiomedGroupEditDlg" widgetVar="BiomedGroupEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{biomedGroupController.CRUDActionName} 维修工程师群组">
         <h:form id="BiomedGroupEditForm">
             <p:fieldset legend="维修工程师群组信息">
                 <h:panelGroup id="display">
@@ -18,11 +18,10 @@
                             <label>#{msg.name}*</label>
                         </h:panelGroup>
                     </p:panelGrid>
-
                 </h:panelGroup>
             </p:fieldset>
             <p:fieldset legend="维修工程师选择">
-                <p:fieldset legend="设备筛选条件">
+                <p:fieldset legend="维修工程师筛选条件">
                     <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
                         <h:panelGroup >
                             <label class="label">所属医院</label>

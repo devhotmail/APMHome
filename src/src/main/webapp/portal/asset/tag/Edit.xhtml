@@ -8,21 +8,20 @@
 
 <ui:composition>
 
-    <p:dialog id="AssetTagEditDlg" widgetVar="AssetTagEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="设备标签EDIT">
+    <p:dialog id="AssetTagEditDlg" widgetVar="AssetTagEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{assetTagController.CRUDActionName} 设备标签">
         <h:form id="AssetTagEditForm">
-            <p:tabView>
-                <p:tab title="设备标签信息">
-                    <p:fieldset legend="设备标签信息">
-                        <h:panelGroup>
-                            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetTagController.selected != null}">
-                                <h:panelGroup styleClass="md-inputfield">
-                                    <p:inputText id="name" value="#{assetTagController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
-                                    <label>#{msg.name}*</label>
-                                </h:panelGroup>
-                            </p:panelGrid>
+            <p:fieldset legend="设备标签信息">
+                <h:panelGroup>
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{assetTagController.selected != null}">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="name" value="#{assetTagController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                            <label>#{msg.name}*</label>
                         </h:panelGroup>
-                    </p:fieldset>
-                </p:tab>
+                    </p:panelGrid>
+                </h:panelGroup>
+            </p:fieldset>
+            <br/>
+            <p:tabView>
                 <p:tab title="相关维修工程师群组">
                     <p:fieldset legend="维修工程师群组选择">
                         <p:pickList id="UserAccountPickList" value="#{assetTagController.availableBiomedGroup}" var="item"
@@ -38,27 +37,27 @@
                     </p:fieldset>
                 </p:tab>
                 <p:tab title="相关设备">
+                    <p:fieldset legend="设备筛选条件">
+                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup >
+                                <label class="label">#{msg.assetGroup}*</label>
+                                <p:selectOneMenu id="assetGroup" value="#{assetTagController.queryAsset.assetGroup}">
+                                    <p:ajax  listener="#{assetTagController.getQueryAssetsList()}" update="AssetsPickList" />
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.clinicalDeptName}</label>
+                                <p:selectOneMenu id="clinicalDeptName" value="#{assetTagController.queryAsset.clinicalDeptId}">
+                                    <p:ajax  listener="#{assetTagController.getQueryAssetsList()}" update="AssetsPickList" />
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{assetTagController.getClinicalDeptList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </p:fieldset>
                     <p:fieldset legend="设备选择">
-                        <p:fieldset legend="设备筛选条件">
-                            <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                                <h:panelGroup >
-                                    <label class="label">#{msg.assetGroup}*</label>
-                                    <p:selectOneMenu id="assetGroup" value="#{assetTagController.queryAsset.assetGroup}">
-                                        <p:ajax  listener="#{assetTagController.getQueryAssetsList()}" update="AssetsPickList" />
-                                        <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                        <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                    </p:selectOneMenu>
-                                </h:panelGroup>
-                                <h:panelGroup>
-                                    <label class="label">#{msg.clinicalDeptName}</label>
-                                    <p:selectOneMenu id="clinicalDeptName" value="#{assetTagController.queryAsset.clinicalDeptId}">
-                                        <p:ajax  listener="#{assetTagController.getQueryAssetsList()}" update="AssetsPickList" />
-                                        <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                        <f:selectItems value="#{assetTagController.getClinicalDeptList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                    </p:selectOneMenu>
-                                </h:panelGroup>
-                            </p:panelGrid>
-                        </p:fieldset>
                         <p:pickList id="AssetsPickList" value="#{assetTagController.availableAssets}" var="item"
                                     itemValue="#{item}" itemLabel="#{item.name}" showCheckbox="false" responsive="true"
                                     showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="assetInfoConverter" >
