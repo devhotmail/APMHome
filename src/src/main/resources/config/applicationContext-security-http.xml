@@ -42,10 +42,12 @@
         <intercept-url pattern="/homeDeptHead**" access="hasAnyRole('SuperAdmin','DeptHead')"/>
         
         <!-- 系统管理 -->
+        <intercept-url pattern="/portal/uaa/biomedGroup/List.xhtml**" access="hasAnyRole('SuperAdmin','ITAdmin')"/><!-- 维修管理员群组管理 -->
         <intercept-url pattern="/portal/uaa/**" access="hasRole('ITAdmin')"/>
         <intercept-url pattern="/portal/insp/checkListList**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead','AssetStaff')"/> <!-- 巡检条目配置 -->
         <intercept-url pattern="/portal/i18n/FieldCodeType.xhtml**" access="hasAnyRole('SuperAdmin','ITAdmin','AssetHead')"/> <!-- 系统编码配置 -->
         <intercept-url pattern="/portal/asset/qrCode/qrCodeLibList.xhtml**" access="hasAnyRole('SuperAdmin')"/> <!-- 二维码生成 -->
+        <intercept-url pattern="/portal/asset/tag/List.xhtml**" access="hasAnyRole('SuperAdmin','ITAdmin')"/><!-- 设备标签管理类 -->
 
         <!-- 设备档案 -->
        
