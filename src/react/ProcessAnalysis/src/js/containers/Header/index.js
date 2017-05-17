@@ -1,6 +1,5 @@
 // @flow
 import React, { PureComponent } from 'react'
-import _ from 'lodash'
 import { connect } from 'react-redux'
 import { translate } from 'react-i18next'
 import autobind from 'autobind-decorator'
@@ -50,19 +49,20 @@ export class Header extends PureComponent {
   _sortOptions() {
     let { t } = this.props
     return [
-      {key: 'operation_rate', label: t('operation_rate')},
-      {key: 'ftfr', label: t('ftfr')},
-      {key: 'incident_count', label: t('incident_count')},
+      { key: 'response_time', label: t('response_time') },
+      { key: 'ettr', label: t('ettr') },
+      { key: 'arrival_time', label: t('arrival_time') },
+      { key: 'composite_order', label: t('composite_order') },
     ]
   }
-  _filtersDept() {
+  filtersDept() {
     let { t, departments = []} = this.props
     return [
       { key: 'all_dept', label: t('all_dept') },
     ].concat(departments.map(t => ({ key: String(t.id), label: t.name })))
     
   }
-  _filtersAssetType() {
+  filtersAssetType() {
     let { t, assetTypes = [] } = this.props
     return [
       { key: 'all_asset_type', label: t('all_asset_type') },
@@ -90,10 +90,10 @@ export class Header extends PureComponent {
       <div className="nav-center">
         <div className="nav-item">{t('filter_by')}</div>
         <div className="nav-item">
-          { SelectHelper(filterBy['assettype'], this._filtersAssetType(), onFilterChange('assettype')) }
+          { SelectHelper(filterBy['assettype'], this.filtersAssetType(), onFilterChange('assettype')) }
         </div>
         <div className="nav-item">
-          { SelectHelper(filterBy['dept'], this._filtersDept(), onFilterChange('dept')) }
+          { SelectHelper(filterBy['dept'], this.filtersDept(), onFilterChange('dept')) }
         </div>
       </div>
       <div className="nav-right">

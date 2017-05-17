@@ -19,5 +19,8 @@
   "no_more_data": "已没有更多的数据",
   "failure_cause": "故障原因",
   "group_info": "分组信息",
-  "asset_info": "设备信息"
+  "asset_info": "设备信息",
+  "response_time": "响应时间",
+  "composite_order": "综合排序",
+  "arrival_time": "到场时间"
 }
