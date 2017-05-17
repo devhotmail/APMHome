@@ -63,7 +63,7 @@ function ReasonToothAdapter(array) {
     let color = e.count/sum < .15 ? colors.gray : colors.blue  //  todo, refine algo
     result.push({id: SID.generate(), data: e, mode: 'bar', label: e.name, strips:[{ color: color, weight: e.count/weightMax, data: e}] })
   })
-  return result
+  return result.reverse() // todo: use clockwise props of chart
 }
 
 function getStripColor(type) {
