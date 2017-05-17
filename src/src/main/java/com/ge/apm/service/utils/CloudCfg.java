@@ -17,21 +17,20 @@ public class CloudCfg {
   private final String jdbcUrl;
 
   public CloudCfg() {
-    Config conf = Try.of(() -> (Config) ConfigFactory.parseString(System.getenv("VCAP_SERVICES")).getConfigList("postgres").get(0))
-      //.orElse(Try.of(() -> ConfigFactory.parseResources(this.getClass().getClassLoader(), "database.properties")))
-      .getOrElse(ConfigFactory.empty()
+    Config cfg = Try.of(() -> (Config) ConfigFactory.parseString(System.getenv("VCAP_SERVICES")).getConfigList("postgres").get(0))
+      .getOrElse(ConfigFactory.parseResources(this.getClass().getClassLoader(), "database.properties").withFallback(ConfigFactory.empty()
         .withValue("credentials.host", ConfigValueFactory.fromAnyRef("localhost"))
         .withValue("credentials.port", ConfigValueFactory.fromAnyRef(5432))
         .withValue("credentials.database", ConfigValueFactory.fromAnyRef("ge_apm"))
         .withValue("credentials.username", ConfigValueFactory.fromAnyRef("postgres"))
         .withValue("credentials.password", ConfigValueFactory.fromAnyRef("root"))
-        .withValue("credentials.jdbc_uri", ConfigValueFactory.fromAnyRef("jdbc:postgresql://localhost:5432/ge_apm")));
-    jdbcHost = conf.getString("credentials.host");
-    jdbcPort = conf.getInt("credentials.port");
-    jdbcDatabase = conf.getString("credentials.database");
-    jdbcUserName = conf.getString("credentials.username");
-    jdbcPassword = conf.getString("credentials.password");
-    jdbcUrl = conf.getString("credentials.jdbc_uri");
+        .withValue("credentials.jdbc_uri", ConfigValueFactory.fromAnyRef("jdbc:postgresql://localhost:5432/ge_apm"))));
+    jdbcHost = cfg.getString("credentials.host");
+    jdbcPort = cfg.getInt("credentials.port");
+    jdbcDatabase = cfg.getString("credentials.database");
+    jdbcUserName = cfg.getString("credentials.username");
+    jdbcPassword = cfg.getString("credentials.password");
+    jdbcUrl = cfg.getString("credentials.jdbc_uri");
   }
 
   public String getJdbcHost() {
