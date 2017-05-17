@@ -1617,7 +1617,7 @@ const Reasons = {
             "name": "其他",
             "count": 2335
         }
-    ]
+    ].reverse()
 }
 
 export default function(mock) {

@@ -18,11 +18,13 @@ function* fetchMeta() {
   }
 }
 
+/** TODO!!! refactor this */
 function* fetchBriefs(action) {
   let type, targetPage
   if (action.type === 'page/change') {
     type = action.data.type
     targetPage = action.data.value
+    delete action.data.type
   } else {
     type = action.type.replace('update/briefs/', '')
   }
