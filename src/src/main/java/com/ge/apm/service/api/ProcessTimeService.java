@@ -14,6 +14,7 @@ import javaslang.Tuple3;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import rx.Observable;
 
@@ -56,15 +57,16 @@ public class ProcessTimeService {
         db = Database.from(connectionProvider);
     }
 
+    @Cacheable(cacheNames = "springCache", key = "'processTimeService.queryListByType.'+#siteId+'.'+#hospitalId+'.'+#fromTime+'.'+#toTime+'.orderBy'+#orderBy+'.groupby'+#groupby")
     public Observable<Tuple5<String, String, String, String, String>> queryListByType(Integer siteId, Integer hospitalId, DateTime fromTime, DateTime toTime, String orderBy, String groupby) {
 
-        
         return db.select(SQL_PROCESS_TIME_BY_GROUP.replace(":groupby", groupby.contains("type") ? "ai.asset_group" : "ai.clinical_dept_name,ai.clinical_dept_id")).parameter("site_id", siteId).parameter("hospital_id", hospitalId)
                 .parameter("start_time",fromTime.toDate()).parameter("end_time", toTime.toDate())
                 .parameter("orderBy", "avg_".concat(orderBy))
                 .get(rs -> new Tuple5<>(rs.getString(groupby.contains("type") ? "asset_group" : "clinical_dept_id"), groupby.contains("type") ? "" : rs.getString("clinical_dept_name"), rs.getString("avg_respond"), rs.getString("avg_arrived"), rs.getString("avg_ETTR")));
     }
 
+    @Cacheable(cacheNames = "springCache", key = "'processTimeService.queryListByAsset.'+#siteId+'.'+#hospitalId+'.'+#typeId+'.'+#deptId+'.'+#offset+'.'+#limit+'.'+#fromTime+'.'+#toTime+'.orderBy'+#orderBy+'.groupby'+#groupby")
     public Observable<Tuple5<String, String, String, String, String>> queryListByAsset(Integer siteId, Integer hospitalId, DateTime fromTime, DateTime toTime, String orderBy, Integer typeId, Integer deptId, Integer offset, Integer limit) {
 
         return db.select(SQL_PROCESS_TIME_BY_ASSET.replace(":conditionType", typeId == 0 ? "" : "and ai.asset_group='" + typeId.toString() + "'")
@@ -76,6 +78,7 @@ public class ProcessTimeService {
                 .get(rs -> new Tuple5<>(rs.getString("id"), rs.getString("name"), rs.getString("avg_respond"), rs.getString("avg_arrived"), rs.getString("avg_ETTR")));
     }
 
+    @Cacheable(cacheNames = "springCache", key = "'processTimeService.queryGross.'+#siteId+'.'+#hospitalId+'.'+#typeId+'.'+#deptId+'.'+#fromTime+'.'+#toTime")
     public Observable<Tuple3<String, String, String>> queryGross(Integer siteId, Integer hospitalId, DateTime fromTime, DateTime toTime, Integer typeId, Integer deptId) {
 
         return db.select(SQL_PROCESS_TIME_GROSS.replace(":conditionType", typeId == 0 ? "" : "and ai.asset_group='" + typeId.toString() + "'")
