@@ -133,7 +133,7 @@ and open the template in the editor.
                     </div>
                     <div class="weui-tab__panel">
                         <div id="tab1Panel" class="">
-                            <h:form id="updatePictureForm">
+                            <h:form id="updatePictureForm" rendered="#{userContextService.hasRole('AssetHead')}">
                                 <p:remoteCommand name="updatePForm" actionListener="#{wxAssetInfoController.updateAttachmentPics()}" update="removedPicList addedPicList photoPanel" />
                                 <h:inputHidden id="removedPicList" value="#{wxAssetInfoController.removedPicStr}"/>
                                 <h:inputHidden id="addedPicList" value="#{wxAssetInfoController.addedPicStr}"/>
@@ -316,8 +316,8 @@ and open the template in the editor.
                                 </div>
 
                             </h:form>
-                            <div class="weui-panel" id="detailPanel" style="display:none">
-                                <h:form id="updateDetailFieldForm">
+                            <div class="weui-panel" id="detailPanel" style="display:none" >
+                                <h:form id="updateDetailFieldForm" >
                                     <p:remoteCommand name="updateDForm" actionListener="#{wxAssetInfoController.updateFields(2)}" update=":updateDetailFieldForm" />
                                     <div class="weui-panel__hd">设备详细信息<h:panelGroup rendered="#{userContextService.hasRole('AssetStaff')}"><span  style="float: right" onclick="updateDForm();">#{wxAssetInfoController.isModifying[2]?"完成修改":"修改"}</span></h:panelGroup></div>
                                     <div class="weui-panel__bd">
@@ -609,9 +609,11 @@ and open the template in the editor.
                                     </div>
                                 </h:form>
                             </div>
-                            <p class="weui-btn-area">
-                                <a id="viewMore" href="javascript:showDetails();" class="weui-btn weui-btn_primary">查看更多信息</a>
-                            </p>
+                            <h:panelGroup rendered="#{userContextService.hasRole('AssetHead')}">
+	                            <p class="weui-btn-area" >
+	                                <a id="viewMore" href="javascript:showDetails();" class="weui-btn weui-btn_primary" >查看更多信息</a>
+	                            </p>
+                            </h:panelGroup>
                         </div>
                         <div id="tab2Panel" class="weui-tab__content">
 
