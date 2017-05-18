@@ -254,3 +254,111 @@ is_receive_timeout_msg bool not null,	--是否接受流程超期提醒
 is_receive_chat_msg bool not null	--是否接收聊天消息
 );
 alter table asset_tag_msg_subscriber add primary key (id);
+
+CREATE TABLE v2_blob_object (
+id char(32)  NOT NULL,
+created_by varchar(50),
+created_date timestamp(6),
+last_modified_by varchar(50),
+last_modified_date timestamp(6),
+bo_id varchar(255) NOT NULL,
+object_name varchar(255),
+object_size int8,
+object_source int4,
+object_storage_id varchar(255),
+object_type varchar(255),
+CONSTRAINT v2_blob_object_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE v2_service_request (
+id char(32)  NOT NULL,
+created_by varchar(50) ,
+created_date timestamp(6),
+last_modified_by varchar(50) ,
+last_modified_date timestamp(6),
+asset_id int4 NOT NULL,
+asset_name varchar(64)  NOT NULL,
+case_priority int4 NOT NULL,
+close_time timestamp(6),
+confirmed_down_time timestamp(6),
+confirmed_up_time timestamp(6),
+estimated_close_time timestamp(6),
+from_dept_id int4,
+from_dept_name varchar(64) ,
+hospital_id int4 NOT NULL,
+hospital_name varchar(64)  NOT NULL,
+request_reason varchar(256)  NOT NULL,
+request_reason_voice int4,
+request_time timestamp(6) NOT NULL,
+requestor_id int4 NOT NULL,
+requestor_name varchar(16)  NOT NULL,
+reponse_time timestamp(6),
+site_id int4 NOT NULL,
+status int4,
+CONSTRAINT v2_service_request_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE v2_work_order (
+id char(32)  NOT NULL,
+created_by varchar(50) ,
+created_date timestamp(6),
+last_modified_by varchar(50) ,
+last_modified_date timestamp(6),
+asset_id int4 NOT NULL,
+close_time timestamp(6),
+current_person_id int4 NOT NULL,
+current_person_name varchar(16) ,
+current_step_id int4 NOT NULL,
+current_step_name varchar(16)  NOT NULL,
+feedback_comment varchar(255) ,
+feedback_rating int4,
+hospital_id int4 NOT NULL,
+int_ext_type int4,
+parent_wo_id int4,
+pat_actions varchar(255) ,
+pat_problems varchar(255) ,
+pat_tests varchar(255) ,
+site_id int4 NOT NULL,
+sr_id varchar(255)  NOT NULL,
+status int4,
+total_man_hour int4,
+total_price float8,
+CONSTRAINT v2_work_order_pkey PRIMARY KEY (id)
+);
+
+
+CREATE TABLE v2_work_order_detail (
+id char(32)  NOT NULL,
+created_by varchar(50) ,
+created_date timestamp(6),
+last_modified_by varchar(50) ,
+last_modified_date timestamp(6),
+parts_quantity int4,
+cowoker_user_id int4,
+cowoker_user_name varchar(255) ,
+man_hours int4,
+other_expense float8,
+parts varchar(60) ,
+parts_price float8,
+site_id int4 NOT NULL,
+wo_id varchar(255)  NOT NULL,
+CONSTRAINT v2_work_order_detail_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE v2_work_order_step (
+id char(32)  NOT NULL,
+created_by varchar(50) ,
+created_date timestamp(6),
+last_modified_by varchar(50) ,
+last_modified_date timestamp(6),
+comments varchar(128) ,
+end_time timestamp(6),
+owner_id int4 NOT NULL,
+owner_name varchar(16)  NOT NULL,
+site_id int4 NOT NULL,
+start_time timestamp(6),
+step_id int4 NOT NULL,
+step_name varchar(16)  NOT NULL,
+wo_id varchar(255)  NOT NULL,
+CONSTRAINT v2_work_order_step_pkey PRIMARY KEY (id)
+);
