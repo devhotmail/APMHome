@@ -1,6 +1,8 @@
 package com.ge.apm.dao;
 
 import com.ge.apm.domain.OrgInfo;
+
+import java.util.Collection;
 import java.util.List;
 import javax.persistence.QueryHint;
 import org.springframework.data.domain.Page;

@@ -1,7 +1,21 @@
 package com.ge.apm.service.wo;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Minutes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
 import com.ge.apm.dao.mapper.AssetInfoMapper;
 import com.ge.apm.dao.mapper.UserAccountMapper;
 import com.ge.apm.dao.mapper.WechatMessageLogMapper;
@@ -21,24 +35,12 @@ import com.ge.apm.service.utils.ConfigUtils;
 import com.ge.apm.service.utils.TimeUtils;
 import com.ge.apm.service.utils.WeiXinUtils;
 import com.ge.apm.service.wechat.CoreService;
-import org.apache.commons.collections.CollectionUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Minutes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import org.springframework.util.StringUtils;
 
 @Service
 public class WorkflowService {
 	Logger logger = LoggerFactory.getLogger(getClass());
-	public static final int SPECIAL_DISPATCHER = 1;// 专人派工 work_order_dispather角色
+	public static final int SPECIAL_DISPATCHER = 1;// 专人派工
+													// work_order_dispather角色
 	public static final int GRAB_DISPATCHER = 2;// 抢单 asset_staff 角色
 	public static final int AUTO_DISPATCHER = 3;// 资产owner 1 2
 	public static final int WORK_ORDER_STATUS_ACCEPT = 3;
@@ -77,17 +79,17 @@ public class WorkflowService {
 		for (WorkOrder workOrder : orders) {
 			WorkflowConfig woc = workOrderMapper.fetchWorkflowConfig(workOrder.getSiteId(), workOrder.getHospitalId());
 			if (woc == null) {
-				logger.error("fetch WorkflowConfig error,siteId is {},hospitalId is {}", workOrder.getSiteId(),workOrder.getHospitalId());
+				logger.error("fetch WorkflowConfig error,siteId is {},hospitalId is {}", workOrder.getSiteId(),
+						workOrder.getHospitalId());
 				continue;
 			}
-                        try{
-        			isTimeout(workOrder, woc);
-                        }
-                        catch(Exception ex){
-                            logger.error(ex.getMessage(), ex);
-                        }
-                            
-			// isReopen(workOrder,woc); // 暂不开放 2017.3.30
+			try {
+				isTimeout(workOrder, woc);
+				// isReopen(workOrder,woc); // 暂不开放 2017.3.30
+			} catch (Exception ex) {
+				logger.error(ex.getMessage(), ex);
+			}
+
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("end timeout and reopen……");
@@ -144,23 +146,24 @@ public class WorkflowService {
 		Integer times = woc.getMaxMessageCount();
 		TimeOutRule tor = isTimeout(lastOne, woc);
 		if (tor.getIsTimeout()) {
-			if(currentStepId == WORK_ORDER_STATUS_ACCEPT){
-				if(ownerId == -1){//抢单
+			if (currentStepId == WORK_ORDER_STATUS_ACCEPT) {
+				if (ownerId == -1) {// 抢单
 					List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 3);
 					users.addAll(dispatchers);
-				}else if(ownerId > 0){//自动派工
-                                        users.add(ownerId);
-                                    
+				} else if (ownerId > 0) {// 自动派工
+					users.add(ownerId);
+
 					AssetInfo asset = assetInfoMapper.fetchAssetInfoById(workOrder.getAssetId());
 					if (asset != null) {
 						users.add(asset.getAssetOwnerId());
 						users.add(asset.getAssetOwnerId2());
 					}
 				}
-			}else if(currentStepId == WORK_ORDER_STATUS_CLOSED){
+			} else if (currentStepId == WORK_ORDER_STATUS_CLOSED) {
 				users.add(lastOne.getCurrentPersonId());
-			}else{
-				logger.error("current step need not remind,current stepId is {},workOrderId is {}",currentStepId,woId);
+			} else {
+				logger.error("current step need not remind,current stepId is {},workOrderId is {}", currentStepId,
+						woId);
 				return;
 			}
 			model = new TimeoutPushModel();
@@ -171,28 +174,29 @@ public class WorkflowService {
 			model.setKeyword4(stepName);// Constans.getName(workOrder.getCurrentStepId())
 			model.setKeyword5(workOrder.getCurrentPersonName());
 			model.setLinkUrl(coreService.getWoDetailUrl(workOrder.getId()));
-			
-			users.add(workOrder.getRequestorId());//报修人
+
+			users.add(workOrder.getRequestorId());// 报修人
 
 			List<Integer> subscribers = userAccountMapper.getAssetSubscriber(workOrder.getAssetId());
 			users.addAll(subscribers);
-			logger.info("before filter ,users is {}",users);
-			List<Integer> filterUser =users.stream().filter(id -> id != null).filter(id -> id >0).distinct().collect(Collectors.toList());
-			logger.info("after filter ,users is {}",users);
-			if(CollectionUtils.isEmpty(filterUser)){
-				logger.error("1workOrder timeout but no users find,orderId is {}",workOrder.getId());
+			logger.info("before filter ,users is {}", users);
+			List<Integer> filterUser = users.stream().filter(id -> id != null).filter(id -> id > 0).distinct()
+					.collect(Collectors.toList());
+			logger.info("after filter ,users is {}", users);
+			if (CollectionUtils.isEmpty(filterUser)) {
+				logger.error("1workOrder timeout but no users find,orderId is {}", workOrder.getId());
 				return;
 			}
-			Iterator<Integer> it = filterUser.iterator();  
-			while(it.hasNext()) {
+			Iterator<Integer> it = filterUser.iterator();
+			while (it.hasNext()) {
 				Integer needPushUser = it.next();
-				 if(!isMatchRule(needPushUser, woId, currentStepId, times,tor.getTime())){
-					 logger.info("userId {} is removed because of rule!",needPushUser);
-					 it.remove();
-				 }
+				if (!isMatchRule(needPushUser, woId, currentStepId, times, tor.getTime())) {
+					logger.info("userId {} is removed because of rule!", needPushUser);
+					it.remove();
+				}
 			}
-			if(CollectionUtils.isEmpty(filterUser)){
-				logger.warn("2workOrder timeout but no users find,orderId is {}",workOrder.getId());
+			if (CollectionUtils.isEmpty(filterUser)) {
+				logger.warn("2workOrder timeout but no users find,orderId is {}", workOrder.getId());
 				return;
 			}
 			buildTimeoutTemplateMsg(model, filterUser);
@@ -201,7 +205,7 @@ public class WorkflowService {
 		}
 
 	}
-	
+
 	private void isTimeoutBak(WorkOrder workOrder, WorkflowConfig woc) {
 		List<WorkFlow> workFlows = workOrderMapper.fetchWorkFlowList(workOrder);
 		if (CollectionUtils.isEmpty(workFlows)) {
@@ -227,9 +231,9 @@ public class WorkflowService {
 			for (WorkFlow workFlow : workFlows) {
 				users.add(workFlow.getCurrentPersonId());
 			}
-			users.add(workOrder.getRequestorId());//报修人
+			users.add(workOrder.getRequestorId());// 报修人
 
-			// sysRole 
+			// sysRole
 			if (woc.getDispatchMode() == SPECIAL_DISPATCHER) {
 				List<Integer> dispatchers = userAccountMapper.fetchDispaterUser(workOrder.getRequestorId(), 8);
 				users.addAll(dispatchers);
@@ -245,23 +249,24 @@ public class WorkflowService {
 			}
 			List<Integer> subscribers = userAccountMapper.getAssetSubscriber(workOrder.getAssetId());
 			users.addAll(subscribers);
-			logger.info("before filter ,users is {}",users);
-			List<Integer> filterUser =users.stream().filter(id -> id != null).filter(id -> id >0).distinct().collect(Collectors.toList());
-			logger.info("after filter ,users is {}",users);
-			if(CollectionUtils.isEmpty(filterUser)){
-				logger.error("1workOrder timeout but no users find,orderId is {}",workOrder.getId());
+			logger.info("before filter ,users is {}", users);
+			List<Integer> filterUser = users.stream().filter(id -> id != null).filter(id -> id > 0).distinct()
+					.collect(Collectors.toList());
+			logger.info("after filter ,users is {}", users);
+			if (CollectionUtils.isEmpty(filterUser)) {
+				logger.error("1workOrder timeout but no users find,orderId is {}", workOrder.getId());
 				return;
 			}
-			Iterator<Integer> it = filterUser.iterator();  
-			while(it.hasNext()) {
+			Iterator<Integer> it = filterUser.iterator();
+			while (it.hasNext()) {
 				Integer needPushUser = it.next();
-				 if(!isMatchRuleBak(needPushUser, woId, currentStepId, times)){
-					 logger.info("userId {} is removed because of rule!",needPushUser);
-					 it.remove();
-				 }
+				if (!isMatchRuleBak(needPushUser, woId, currentStepId, times)) {
+					logger.info("userId {} is removed because of rule!", needPushUser);
+					it.remove();
+				}
 			}
-			if(CollectionUtils.isEmpty(filterUser)){
-				logger.warn("2workOrder timeout but no users find,orderId is {}",workOrder.getId());
+			if (CollectionUtils.isEmpty(filterUser)) {
+				logger.warn("2workOrder timeout but no users find,orderId is {}", workOrder.getId());
 				return;
 			}
 			buildTimeoutTemplateMsg(model, filterUser);
@@ -280,8 +285,9 @@ public class WorkflowService {
 		}
 		logger.info("push timeout over,to users is {}", users);
 	}
-	
-	private boolean isMatchRule(Integer userId,Integer woId,Integer currentStepId,Integer times, Integer timeOutConfig) {
+
+	private boolean isMatchRule(Integer userId, Integer woId, Integer currentStepId, Integer times,
+			Integer timeOutConfig) {
 		WechatMessageLog wml = new WechatMessageLog();
 		UserAccount user = userAccountMapper.getUserById(userId);
 		String weChatId = user.getWeChatId();
@@ -299,13 +305,14 @@ public class WorkflowService {
 		}
 		DateTime lastPushTime = new DateTime(wmlFromDB.getLastModifiedDate());
 		DateTime now = new DateTime();
-		//如果当前时间和上次发送时间的间隔不足配置的时间间隔，则不发送
-		if(Minutes.minutesBetween(lastPushTime, now).getMinutes() < timeOutConfig){
-			logger.info("timeout interval is not enough!,interval is {}",timeOutConfig);
+		// 如果当前时间和上次发送时间的间隔不足配置的时间间隔，则不发送
+		if (Minutes.minutesBetween(lastPushTime, now).getMinutes() < timeOutConfig) {
+			logger.info("timeout interval is not enough!,interval is {}", timeOutConfig);
 			return false;
 		}
-		//-1 stands for no limit
-		if(times == -1){
+		// -1 stands for no limit
+		if (times <= -1) {
+			wechatMessageLogMapper.updateMessageLogLastModifyTime(wmlFromDB);
 			return true;
 		}
 
@@ -315,10 +322,10 @@ public class WorkflowService {
 		wechatMessageLogMapper.updateMessageLogMapper(wmlFromDB);
 		return true;
 	}
-	
-	private boolean isMatchRuleBak(Integer userId,Integer woId,Integer currentStepId,Integer times) {
-		//-1 stands for no limit
-		if(times == -1){
+
+	private boolean isMatchRuleBak(Integer userId, Integer woId, Integer currentStepId, Integer times) {
+		// -1 stands for no limit
+		if (times == -1) {
 			return true;
 		}
 		WechatMessageLog wml = new WechatMessageLog();
@@ -347,9 +354,9 @@ public class WorkflowService {
 		DateTime now = new DateTime(new Date());
 		DateTime startTime = new DateTime(workFlow.getStartTime());
 		Integer timeout = 0;
-//		if (workFlow.getCurrentStepId() == Constans.DISPATCH.getIndex()) {
-//			timeout = woc.getTimeoutDispatch();
-//		} else 
+		// if (workFlow.getCurrentStepId() == Constans.DISPATCH.getIndex()) {
+		// timeout = woc.getTimeoutDispatch();
+		// } else
 		if (workFlow.getCurrentStepId() == Constans.ACCEPT.getIndex()) {
 			timeout = woc.getTimeoutAccept();
 		} else if (workFlow.getCurrentStepId() == Constans.CLOSED.getIndex()) {
@@ -364,23 +371,23 @@ public class WorkflowService {
 		// }
 		return false;
 	}
-	
+
 	public TimeOutRule isTimeout(WorkFlow workFlow, WorkflowConfig woc) {
 		TimeOutRule tor = new TimeOutRule();
 		Boolean isTimeOut = false;
 		DateTime now = new DateTime(new Date());
 		DateTime startTime = new DateTime(workFlow.getStartTime());
 		Integer timeout = 0;
-//		if (workFlow.getCurrentStepId() == Constans.DISPATCH.getIndex()) {
-//			timeout = woc.getTimeoutDispatch();
-//		} else 
+		// if (workFlow.getCurrentStepId() == Constans.DISPATCH.getIndex()) {
+		// timeout = woc.getTimeoutDispatch();
+		// } else
 		if (workFlow.getCurrentStepId() == Constans.ACCEPT.getIndex()) {
 			timeout = woc.getTimeoutAccept();
 		} else if (workFlow.getCurrentStepId() == Constans.CLOSED.getIndex()) {
 			timeout = woc.getTimeoutClose();
 		}
 		tor.setTime(timeout);
-		
+
 		if (timeout > 0) {
 			isTimeOut = Minutes.minutesBetween(startTime, now).getMinutes() > timeout;
 		}

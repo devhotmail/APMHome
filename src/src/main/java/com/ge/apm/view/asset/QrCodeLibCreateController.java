@@ -7,8 +7,11 @@ import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
+
+import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.QrCodeLibRepository;
 import com.ge.apm.dao.SiteInfoRepository;
+import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.domain.SiteInfo;
 import com.ge.apm.service.asset.AssetCreateService;
@@ -20,8 +23,10 @@ import webapp.framework.web.WebUtil;
 @ViewScoped
 public class QrCodeLibCreateController extends JpaCRUDController<QrCodeLib> {
 
-    QrCodeLibRepository dao = null;
+	private static final long serialVersionUID = -1;
+	QrCodeLibRepository dao = null;
     SiteInfoRepository sitedao = null;
+    OrgInfoRepository orgDao = null;
 
     private AssetCreateService acService;
     UserContextService userContextService;
@@ -30,6 +35,7 @@ public class QrCodeLibCreateController extends JpaCRUDController<QrCodeLib> {
 
     @Override
     protected void init() {
+    	orgDao = WebUtil.getBean(OrgInfoRepository.class);
         dao = WebUtil.getBean(QrCodeLibRepository.class);
         sitedao = WebUtil.getBean(SiteInfoRepository.class);
         acService = WebUtil.getBean(AssetCreateService.class);
@@ -93,6 +99,24 @@ public class QrCodeLibCreateController extends JpaCRUDController<QrCodeLib> {
 
     public String getSiteName(Integer siteId) {
         return acService.getSiteName(siteId);
+    }
+    
+    public String getOrgName(Integer orgId) {
+        return acService.getOrgName(orgId);
+    }
+    
+    public List<OrgInfo> getHospitalList() {
+    	List<OrgInfo> res = new ArrayList<OrgInfo>();
+    	 if (userContextService.hasRole("SuperAdmin")) {
+             res.addAll(orgDao.find());
+         } else {
+             res.add(orgDao.findById(UserContextService.getCurrentUserAccount().getHospitalId()));
+         }
+    	return  res;
+    }
+    
+    public List<OrgInfo> getOrgList() {
+    	return  acService.getClinicalDeptList(UserContextService.getCurrentUserAccount().getHospitalId());
     }
 
 }
