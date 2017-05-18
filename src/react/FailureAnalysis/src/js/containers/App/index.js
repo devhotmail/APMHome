@@ -255,7 +255,6 @@ export class App extends Component<void, Props, void> {
     if (!cache.get('departments') || !cache.get('assettypes')) {
       updateMeta()
     }
-    
   }
 
   componentWillMount() {
