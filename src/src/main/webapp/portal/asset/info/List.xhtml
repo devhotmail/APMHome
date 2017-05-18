@@ -229,7 +229,7 @@
 	                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
 	                        </h:outputText>
 	                    </p:column>
-	                    <p:column headerText="#{msg.lastStockTakeDate}" visible="false" exportable="true">
+	                    <p:column headerText="#{msg.lastStockTakeDate}" visible="false" exportable="false">
 	                        <f:facet name="filter">
 	                            <p:inputText id="filterLastStockTakeDate" widgetVar="varFilterLastStockTakeDate"/>
 	                        </f:facet>
@@ -285,5 +285,4 @@
         </p:overlayPanel>
 
     </ui:define>
-
 </ui:composition>
