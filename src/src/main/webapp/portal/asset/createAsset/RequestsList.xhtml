@@ -36,7 +36,22 @@
                             <h:outputText value="#{qrCodeLibCreateController.getSiteName(item.siteId)}"/>
                         </p:column>
                         <p:column headerText="#{msg.hospitalId}" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
+                             <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{qrCodeLibCreateController.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
                             <h:outputText value="#{qrCodeLibCreateController.getHospitalName(item.hospitalId)}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.clinicalDeptName}" sortBy="#{item.orgId}" filterBy="#{item.orgId}" filterMatchMode="EQ">
+	                        <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{qrCodeLibCreateController.getOrgList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+	                         </f:facet>
+                        	<h:outputText value="#{qrCodeLibCreateController.getOrgName(item.orgId)}"/>
                         </p:column>
                         <p:column headerText="#{msg.name}" sortBy="#{item}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.assetName}"/>

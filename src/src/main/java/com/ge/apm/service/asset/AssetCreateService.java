@@ -25,6 +25,7 @@ import com.ge.apm.service.utils.TimeUtils;
 import com.ge.apm.service.wechat.CoreService;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,8 @@ public class AssetCreateService {
 
     AttachmentFileService fileService = WebUtil.getBean(AttachmentFileService.class);
 
+    
+    
     public String getSiteName(Integer siteId) {
         SiteInfo si = siteDao.findById(siteId);
         return si.getName();
@@ -230,5 +233,12 @@ public class AssetCreateService {
         }
         file.delete();
     }
+
+	public String getOrgName(Integer orgId) {
+		if(orgId != null){
+			return orgDao.findById(orgId).getName();
+		}
+		return null;
+	}
 
 }

@@ -13,6 +13,9 @@ public interface WechatMessageLogMapper {
 
 	@Update("update wechat_message_log set message_count = message_count+1,last_modified_date = now()  where id =#{id}")
 	public void updateMessageLogMapper(WechatMessageLog wml);
+	
+	@Update("update wechat_message_log set last_modified_date = now()  where id =#{id}")
+	public void updateMessageLogLastModifyTime(WechatMessageLog wml);
 
 	@Insert("insert into wechat_message_log(wechatid,wo_id,wo_step_id,message_count,message_type,last_modified_date) "+
 			 	"values(#{wechatid},#{woId},#{woStepId},1,1,now()) ")
