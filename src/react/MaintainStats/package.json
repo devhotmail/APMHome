@@ -1,5 +1,5 @@
 {
-  "name": "hello-world",
+  "name": "maintain-stats",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -64,7 +64,12 @@
   "dependencies": {
     "antd": "^2.10.1",
     "axios": "^0.16.0",
+    "dew-filterbar": "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git",
+    "dew-pager": "git+https://github.build.ge.com/foundry-sh/dew-pager.git",
+    "dva": "^1.2.1",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "react-gear-list-chart": "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git",
+    "viewport-units-buggyfill": "^0.6.1"
   }
 }
