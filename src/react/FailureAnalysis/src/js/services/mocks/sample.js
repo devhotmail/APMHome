@@ -1661,7 +1661,7 @@ function simulatePaging(top, skip = 0, resp) {
   return {
     pages: {
       total: resp.briefs.length,
-      skip: skip,
+      start: skip,
       limit: Math.max(result.length, top)
     }, 
     briefs: result

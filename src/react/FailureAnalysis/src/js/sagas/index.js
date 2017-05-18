@@ -54,7 +54,7 @@ function* fetchBriefs(action) {
     
     let value = {
       total: briefs.pages.total,
-      skip: briefs.pages.skip,
+      skip: briefs.pages.start,
     }
     yield put({ type: 'update/param/pagination/sync', data: { type, value } })
     EventBus.dispatch('brief-data', [ briefs, lastYear ])
