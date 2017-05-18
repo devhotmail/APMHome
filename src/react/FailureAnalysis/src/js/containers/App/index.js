@@ -42,11 +42,16 @@ const DisplayOptions = [
   { key: 'display_dept' },
 ]
 
+// TODO: temp fix for error
 function mergeItem(current, lastYear) {
+  if (!lastYear) {
+    return current
+  }
   let copy = _.cloneDeep(current)
   copy.strips = copy.strips.concat(_.cloneDeep(lastYear.strips))
   return copy
 }
+
 function DataOrPlaceHolder(items, lastYearItems, placeholderSize) {
   // ignore placeholder and empty data
   if (items && items.length && items[0].strips.type !== 'placeholder') {
