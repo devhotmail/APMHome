@@ -40,8 +40,7 @@
                             <h:outputText value="#{item.siteId}"/>
                         </p:column>
                         -->
-                        <p:column >
-                            
+                        <p:column exportable="false">
                             <p:commandButton icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" action="#{assetInfoController.getDetailPage(item.id,item.name)}" style="width:26px;height: 26px"/>
                             <p:commandButton icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}"  action="#{assetInfoController.getEditPage(item.id,item.name)}" style="width:26px;height: 26px"/>
                         </p:column>
@@ -101,6 +100,157 @@
                                 <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd" />
                             </h:outputText>
                         </p:column>
+                        
+                        
+                        <!-- import to xml begin-->
+                        <p:column headerText="#{msg.hospitalId}" visible="false" exportable="true">
+	                        <h:outputText value="#{assetInfoController.getOrgName(item.hospitalId)}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.functionGroup}" visible="false" exportable="true">
+	                        <h:outputText value="#{fieldMsg.fieldValue('assetFunctionType',item.functionType)}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.functionType}"  visible="false" exportable="true">
+	                        <h:outputText value="#{item.functionType}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.functionGrade}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.functionGrade}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.maitanance}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.maitanance}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.maitananceTel}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.maitananceTel}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.serialNum}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.serialNum}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.departNum}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.departNum}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.financingNum}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.financingNum}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.barcode}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.barcode}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.modalityId}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.modalityId}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.locationCode}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.locationCode}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.locationName}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.locationName}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.clinicalDeptId}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.clinicalDeptName}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.assetDeptId}" visible="false" exportable="true">
+	                    	<h:outputText value="#{assetInfoController.getOrgName(item.assetDeptId)}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.assetOwnerId}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.assetOwnerName}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.assetOwnerTel}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.assetOwnerTel}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.isValid}" visible="false" exportable="true">
+	                        <f:facet name="filter">
+	                            <p:selectOneMenu onchange="PF('varDataList').filter()">
+	                                <f:converter converterId="javax.faces.Boolean" />
+	                                <f:selectItem itemLabel="#{msg.All}" itemValue="" />
+	                                <f:selectItem itemLabel="#{msg.True2Yes}" itemValue="true" />
+	                                <f:selectItem itemLabel="#{msg.False2No}" itemValue="false" />
+	                            </p:selectOneMenu>
+	                        </f:facet>
+	                        <h:outputText value="#{item.isValid? msg.True2Yes : msg.False2No }"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.manufactDate}" visible="false" exportable="true">
+	                        <f:facet name="filter">
+	                            <p:inputText id="filterManufactDate" widgetVar="varFilterManufactDate"/>
+	                        </f:facet>
+	                        <h:outputText value="#{item.manufactDate}">
+	                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+	                        </h:outputText>
+	                    </p:column>
+	                    <p:column headerText="#{msg.purchaseDate}" visible="false" exportable="true">
+	                        <f:facet name="filter">
+	                            <p:inputText id="filterPurchaseDate" widgetVar="varFilterPurchaseDate"/>
+	                        </f:facet>
+	                        <h:outputText value="#{item.purchaseDate}">
+	                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+	                        </h:outputText>
+	                    </p:column>
+	                    <p:column headerText="#{msg.arriveDate}" visible="false" exportable="true">
+	                        <f:facet name="filter">
+	                            <p:inputText id="filterArriveDate" widgetVar="varFilterArriveDate"/>
+	                        </f:facet>
+	                        <h:outputText value="#{item.arriveDate}">
+	                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+	                        </h:outputText>
+	                    </p:column>
+	                    <p:column headerText="#{msg.installDate}" visible="false" exportable="true">
+	                        <f:facet name="filter">
+	                            <p:inputText id="filterInstallDate" widgetVar="varFilterInstallDate"/>
+	                        </f:facet>
+	                        <h:outputText value="#{item.installDate}">
+	                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+	                        </h:outputText>
+	                    </p:column>
+	                    <p:column headerText="#{msg.terminateDate}" visible="false" exportable="true">
+	                        <f:facet name="filter">
+	                            <p:inputText id="filterTerminateDate" widgetVar="varFilterTerminateDate"/>
+	                        </f:facet>
+	                        <h:outputText value="#{item.terminateDate}">
+	                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+	                        </h:outputText>
+	                    </p:column>
+	                    <p:column headerText="#{msg.lastPmDate}" visible="false" exportable="true">
+	                        <f:facet name="filter">
+	                            <p:inputText id="filterLastPmDate" widgetVar="varFilterLastPmDate"/>
+	                        </f:facet>
+	                        <h:outputText value="#{item.lastPmDate}">
+	                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+	                        </h:outputText>
+	                    </p:column>
+	                    <p:column headerText="#{msg.lastMeteringDate}" visible="false" exportable="true">
+	                        <f:facet name="filter">
+	                            <p:inputText id="filterLastMeteringDate" widgetVar="varFilterLastMeteringDate"/>
+	                        </f:facet>
+	                        <h:outputText value="#{item.lastMeteringDate}">
+	                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+	                        </h:outputText>
+	                    </p:column>
+	                    <p:column headerText="#{msg.lastQaDate}" visible="false" exportable="true">
+	                        <f:facet name="filter">
+	                            <p:inputText id="filterLastQaDate" widgetVar="varFilterLastQaDate"/>
+	                        </f:facet>
+	                        <h:outputText value="#{item.lastQaDate}">
+	                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+	                        </h:outputText>
+	                    </p:column>
+	                    <p:column headerText="#{msg.lastStockTakeDate}" visible="false" exportable="true">
+	                        <f:facet name="filter">
+	                            <p:inputText id="filterLastStockTakeDate" widgetVar="varFilterLastStockTakeDate"/>
+	                        </f:facet>
+	                        <h:outputText value="#{item.lastStockTakeDate}">
+	                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+	                        </h:outputText>
+	                    </p:column>
+	                    <p:column headerText="#{msg.purchasePrice}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.purchasePrice}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.salvageValue}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.salvageValue}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.lifecycle}" visible="false" exportable="true">
+	                        <h:outputText value="#{item.lifecycle}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.depreciationMethod}" visible="false" exportable="true">
+	                     	<h:outputText value="#{fieldMsg.fieldValue('depreciationMethodList',item.depreciationMethod)}"/>
+	                    </p:column>
+
+                        <!-- import to xml end -->
                         <f:facet name="{Toolbar}">
 <!--                             <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetInfoController.prepareCreate}" action="Create?faces-redirect=true&amp;actionName=Create" />
                             <p:commandButton id="viewButton" icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" action="#{assetInfoController.getViewPage('Detail','View')}"  disabled="#{empty assetInfoController.selected}" >

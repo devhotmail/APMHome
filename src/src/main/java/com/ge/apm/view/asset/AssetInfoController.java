@@ -657,6 +657,12 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         this.qrCode = qrCode;
     }
     
-    
+    public String getOrgName(Integer orgId){
+    	OrgInfo org = orgDao.findById(orgId);
+    	if(org != null){
+    		return org.getName();
+    	}
+    	return null;
+    }
 
 }
