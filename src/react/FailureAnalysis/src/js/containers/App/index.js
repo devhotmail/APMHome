@@ -59,7 +59,7 @@ function DataOrPlaceHolder(items, lastYearItems, placeholderSize) {
 }
 
 function getCurrentPage(skip, top) {
-  return Math.ceil(skip / top) || 1
+  return Math.ceil((skip + 1)/ top)
 }
 
 function ensureSize(width, height) {
