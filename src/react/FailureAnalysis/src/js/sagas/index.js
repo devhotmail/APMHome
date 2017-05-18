@@ -48,6 +48,7 @@ function* fetchBriefs(action) {
     briefs.type = type
     let lastYear = undefined 
     if (params.showLastYear) {
+      params.keys = briefs.map(_ => _.data.key.id).join(',')
       lastYear = yield call(API.getBriefs, type, params, true)
       lastYear.type = type
     }

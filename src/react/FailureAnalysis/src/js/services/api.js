@@ -36,6 +36,7 @@ function mapParamsToQuery(params, type) {
     limit: pag.top,
     supplier: supplier,
     dataType: DataTypeMapping[params.dataType],
+    key: params.keys
   }
 }
 
