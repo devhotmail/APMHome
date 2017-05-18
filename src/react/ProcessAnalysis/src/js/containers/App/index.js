@@ -10,15 +10,16 @@ import EventBus from 'eventbusjs'
 import GearListChart from 'react-gear-list-chart'
 import Header from 'containers/Header'
 import Pagination from 'components/Pagination'
+import Donut from 'components/DonutChart'
+import Orbit from 'components/OrbitChart'
 import withClientRect from '../../HOC/withClientRect'
 import selectHelper from 'components/SelectHelper'
 import { ParamUpdate, PageChange } from 'actions'
-import colors from 'utils/colors'
 import './app.scss'
 import cache from 'utils/cache'
 import { MetaUpdate } from 'actions'
-import { DataTypeMapping } from 'services/api'
-import { ToPrecentage } from 'utils/helpers'
+import classnames from 'classnames'
+import { log } from 'utils/logger'
 
 const Placeholder = { strips: { color: '#F9F9F9', weight: 1, type: 'placeholder' } }
 const DisplayOptions = [
@@ -26,6 +27,15 @@ const DisplayOptions = [
   { key: 'display_brand' },
   { key: 'display_dept' },
 ]
+const BallsStub = [
+  { key: 'report_incident', distance: 0 },
+  { key: 'dispatch_incident', distance: 45 },
+  { key: 'accept_incident', distance: 123, connectPrevious: true, fill: 'red' },
+  { key: 'signin_incident', distance: 190 },
+  { key: 'fixing_incident', distance: 230 },
+  { key: 'close_incident', distance: 300 }
+]
+
 
 function DataOrPlaceHolder(items, placeholderSize) {
   // ignore placeholder and empty data
@@ -57,6 +67,9 @@ function mapDispatch2Porps(dispatch) {
     updateDisplayType: (value) => {
       dispatch(ParamUpdate('display', value.key))
     },
+    updateDataType: (value) => {
+      dispatch(ParamUpdate('datatype', value))
+    },
     updatePagination: (type, pageNumber) => {
       dispatch(PageChange(type, pageNumber))
     },
@@ -82,7 +95,11 @@ export class App extends Component<void, Props, void> {
   state = {
     leftItems: [],
     centerItems: [],
-    rightItems: []
+    rightItems: [],
+    selected: {},
+    ettrSummary: [],
+    arrivalSummary: [],
+    responseSummary: []
   }
 
   clickLeftTooth(evt) {
@@ -92,14 +109,6 @@ export class App extends Component<void, Props, void> {
   clickRightTooth(evt) {
 
   }
-
-  loadAll() {
-    let { fetchBriefs, fetchReasons } = this.props
-    fetchBriefs('left')
-    fetchReasons({})
-    fetchBriefs('right')
-  }
-
   onRightPagerChange = value => {
     this.props.updatePagination('right', value)
   }
@@ -107,6 +116,20 @@ export class App extends Component<void, Props, void> {
   onLeftPagerChange = value => {
     this.props.updatePagination('left', value)
   }
+
+  onClickDonut(evt) {
+    let id = evt.currentTarget.id
+    if (id !== this.props.dataType) {
+      this.props.updateDataType(id)
+    }
+  }
+  loadAll() {
+    let { fetchBriefs, fetchReasons } = this.props
+    fetchBriefs('left')
+    fetchReasons({})
+    fetchBriefs('right')
+  }
+
 
   getDisplayOptions() {
     return DisplayOptions.map(o => ({ key: o.key, label: this.props.t(o.key)}))
@@ -116,15 +139,21 @@ export class App extends Component<void, Props, void> {
     let { t } = this.props
     let [ current ] = evt.target
     if (!current.length) {
-      let target = t(current.type === 'left' ? 'group_info' : 'asset_info')
-      message.info(target + ': ' + t('no_more_data'))
+      message.info( + ': ' + t('no_more_data'))
       return
     }
-    if (current.type === 'left') {
-      this.setState({ leftItems: current })
-    } else if (current.type === 'right'){
-      this.setState({ rightItems: current })
+    this.setState({ leftItems: current })
+    this.clearFocus(current.type)
+  }
+
+  mountAssetData(evt) {
+    let { t } = this.props
+    let [ current ] = evt.target
+    if (!current.length) {
+      message.info( + ': ' + t('no_more_data'))
+      return
     }
+    this.setState({ leftItems: current })
     this.clearFocus(current.type)
   }
 
@@ -149,12 +178,12 @@ export class App extends Component<void, Props, void> {
   constructor(props) {
     super(props)
     EventBus.addEventListener('brief-data', this.mountBriefData )
-    EventBus.addEventListener('reason-data', this.mountReason )
+    EventBus.addEventListener('asset-data', this.mountAssetData )
+    EventBus.addEventListener('distribution-data', this.mountDistribution )
     let { updateMeta } = this.props
     if (!cache.get('departments') || !cache.get('assettypes')) {
       updateMeta()
     }
-    
   }
 
   componentWillMount() {
@@ -162,10 +191,11 @@ export class App extends Component<void, Props, void> {
   }
 
   render() {
-    let { leftItems, rightItems } = this.state
-    let { updateDisplayType, pagination, clientRect, display } = this.props
+    let { leftItems, rightItems, ettrSummary, responseSummary, arrivalSummary } = this.state
+    let { t, updateDisplayType, pagination, clientRect, display, dataType } = this.props
     let { left, right } = pagination
     let { outer_R, outer_r, inner_R, inner_r  } = ensureSize(clientRect.width, clientRect.height)
+    let onClickDonut = this.onClickDonut
 
     return (
       <div id="app-container" className="is-fullwidth">
@@ -190,13 +220,40 @@ export class App extends Component<void, Props, void> {
               clockwise={false}
               items={DataOrPlaceHolder(leftItems, pagination.left.top)} 
               />
+            <Orbit 
+              id="center-chart" 
+              radius={180}
+              ballRadius={30}
+              balls={BallsStub.map(_ => { _.label = t(_.key); return _; })}
+            />
             <div id="legend-container">
-              here goes orbit chart
+              <h1 className="center-chart-title">Title</h1>
+              <Donut 
+                id="ettr"
+                className={classnames("donut-chart-ettr", dataType === 'ettr' ? 'active' : '' )}
+                onClick={onClickDonut} 
+                title={t('ettr')}
+                rows={ettrSummary}
+              />
+              <Donut 
+                id="arrival_time"
+                className={classnames("donut-chart-arrival", dataType === 'arrival_time' ? 'active' : '' )}
+                onClick={onClickDonut} 
+                title={t('arrival_time')}
+                rows={arrivalSummary}
+              />
+              <Donut 
+                id="response_time"
+                className={classnames("donut-chart-response", dataType === 'response_time' ? 'active' : '' )}
+                onClick={onClickDonut} 
+                title={t('response_time')}
+                rows={responseSummary}
+              />
             </div>
             <GearListChart 
               id="right-chart" 
               ref="rightChart"
-              startAngle={290} endAngle={70} 
+              startAngle={290} endAngle={70}
               outerRadius={outer_R} innerRadius={outer_r}
               margin={3}
               onClick={this.clickRightTooth}

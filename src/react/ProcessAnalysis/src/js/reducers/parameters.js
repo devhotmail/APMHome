@@ -8,25 +8,22 @@ const YearStart = moment(new Date().getFullYear(), 'YYYY')
 const initParameter = {
 
   filterBy: {
-    ['assettype']: 'all_asset_type',
-    ['dept']: 'all_dept',
-    ['supplier']: 'all_supplier', // currently no dropdown on UI
+    'assettype': 'all_assettype',
+    'dept': 'all_dept',
   },
-  orderBy: 'operation_rate', 
+  orderBy: 'response_time', 
   period: {
     from: YearStart,
     to: Current
   },
-  dataType: 'operation_rate',
-  showLastYear: false,
-  display: 'display_asset_type', // type | brand | name
+  dataType: 'arrival_time',
+  display: 'display_assettype', // type | supplier | name
   pagination: {
     left: {
       skip: 0,
       top: 6,
       total: 0,
     },
-
     right: {
       skip: 0,
       top: 16,

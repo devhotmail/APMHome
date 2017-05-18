@@ -2,7 +2,6 @@
   "parameters": "参数类别",
   "chosen_period": "选中时段",
   "operation_rate": "开机率",
-  "tdt": "TDT",
   "ftfr": "一次修复率",
   "same_period_last_year": "去年同时段",
   "incident_count": "报修次数",
@@ -20,7 +19,14 @@
   "failure_cause": "故障原因",
   "group_info": "分组信息",
   "asset_info": "设备信息",
+  "ettr": "ETTR",
   "response_time": "响应时间",
   "composite_order": "综合排序",
-  "arrival_time": "到场时间"
+  "arrival_time": "到场时间",
+  "report_incident": "报修",
+  "dispatch_incident": "派工",
+  "accept_incident": "接单",
+  "signin_incident": "签到",
+  "fixing_incident": "维修",
+  "close_incident": "关单"
 }

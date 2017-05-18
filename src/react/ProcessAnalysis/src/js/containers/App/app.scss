@@ -74,14 +74,45 @@
     z-index: 99;
     width: 300px;
     height: 300px;
+    border: 1px solid gray;
+    border-radius: 861112px;
+
+    > .center-chart-title {
+      left: 50%;
+      top: -47%;
+      display: inline-block;
+      position: relative;
+      transform: translateX(-50%);
+      font-size: 1.3em;
+      font-weight: bold;
+    }
   }
-  #legend-container > div {
-    display: inline-block;
-    width: 100%;
-    position: relative;
-    top: 50%;
-    transform: translateY(-54%);
+
+  #legend-container > .donut-chart {
+    position: absolute;
+    user-select: none;
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.02)
+    }
+    &:not(.active) {
+      opacity: .4
+    }
+    &.donut-chart-ettr {
+      top: 104px;
+      left: 2px;
+    }
+    
+    &.donut-chart-arrival {
+      top: 1px;
+      left: 97px;
+    }
+    &.donut-chart-response {
+      top: 135px;
+      left: 138px;
+    }
   }
+
 
   #legend-container .legend-item {
     position: relative;

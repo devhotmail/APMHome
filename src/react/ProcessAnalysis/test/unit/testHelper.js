@@ -27,17 +27,6 @@ chaiJquery(chai, chai.util, $)
 chai.use(require('chai-stats'))
 chai.use(require('chai-string'))
 
-/*function renderComponent(ComponentClass, props = {}, state = {}) {
-  const componentInstance = ReactTestUtils.renderIntoDocument(
-    <Provider store={createStore(reducers, state)}>
-      <ComponentClass {...props} />
-    </Provider>
-  )
-
-  // Produces HTML
-  return $(ReactDOM.findDOMNode(componentInstance))
-}*/
-
 function mockHistory(component) {
   component.childContextTypes = { history: PropTypes.object }
   component.prototype.getChildContext = () => ({ history: createHistory() })

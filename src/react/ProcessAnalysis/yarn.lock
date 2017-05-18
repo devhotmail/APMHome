@@ -1520,6 +1520,13 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
 
+cat-names@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/cat-names/-/cat-names-1.0.2.tgz#6d09d12a65f9db79d706f3ab3cc455ed4f1adadd"
+  dependencies:
+    meow "^3.0.0"
+    unique-random-array "^1.0.0"
+
 caw@^1.0.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/caw/-/caw-1.2.0.tgz#ffb226fe7efc547288dc62ee3e97073c212d1034"
@@ -1919,6 +1926,10 @@ copy-webpack-plugin@^4.0.1:
     minimatch "^3.0.0"
     node-dir "^0.1.10"
 
+core-decorators@^0.19.0:
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/core-decorators/-/core-decorators-0.19.0.tgz#28c9b44aa6208902934627a28f4f5950bd5b463e"
+
 core-js@^1.0.0:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
@@ -2269,6 +2280,10 @@ deep-extend@~0.4.0:
 deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
+
+deepcopy@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/deepcopy/-/deepcopy-0.6.3.tgz#634780f2f8656ab771af8fa8431ed1ccee55c7b0"
 
 default-require-extensions@^1.0.0:
   version "1.0.0"
@@ -4284,6 +4299,13 @@ istanbul-reports@^1.0.2:
   dependencies:
     handlebars "^4.0.3"
 
+javascript-decorators@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/javascript-decorators/-/javascript-decorators-1.0.2.tgz#90934cf19f13df2152c2f75ea0c007a7fa1db6c5"
+  dependencies:
+    deep-equal "^1.0.1"
+    deepcopy "^0.6.3"
+
 jodid25519@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/jodid25519/-/jodid25519-1.0.2.tgz#06d4912255093419477d425633606e0e90782967"
@@ -5069,7 +5091,7 @@ memory-fs@~0.3.0:
     errno "^0.1.3"
     readable-stream "^2.0.1"
 
-meow@^3.1.0, meow@^3.3.0, meow@^3.5.0, meow@^3.7.0:
+meow@^3.0.0, meow@^3.1.0, meow@^3.3.0, meow@^3.5.0, meow@^3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/meow/-/meow-3.7.0.tgz#72cb668b425228290abbfa856892587308a801fb"
   dependencies:
@@ -6694,7 +6716,7 @@ react-addons-perf@^15.4.2:
     fbjs "^0.8.4"
     object-assign "^4.1.0"
 
-react-addons-test-utils@^15.5.4:
+react-addons-test-utils@^15.5.1:
   version "15.5.1"
   resolved "https://registry.yarnpkg.com/react-addons-test-utils/-/react-addons-test-utils-15.5.1.tgz#e0d258cda2a122ad0dff69f838260d0c3958f5f7"
   dependencies:
@@ -6728,9 +6750,9 @@ react-dom@^15.5.4:
     object-assign "^4.1.0"
     prop-types "~15.5.7"
 
-"react-gear-list-chart@git+https://github.com/noru/react-gear-list-chart.git":
-  version "0.0.1"
-  resolved "git+https://github.com/noru/react-gear-list-chart.git#83d611a006e93fb105c31bcafeda415a73e0d84b"
+"react-gear-list-chart@git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git":
+  version "0.0.2"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#f859439fcbc5a3cfbd67fbf34cb26c5a92752986"
   dependencies:
     babel-runtime "6.11.6"
     classnames "^2.2.5"
@@ -6787,6 +6809,12 @@ react-lazy-load@^3.0.10:
     lodash.debounce "^4.0.0"
     lodash.throttle "^4.0.0"
     prop-types "^15.5.8"
+
+react-minimal-pie-chart@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-minimal-pie-chart/-/react-minimal-pie-chart-1.1.0.tgz#9c6750f0ce3bdfa55833a5960f025936eb3f590f"
+  dependencies:
+    prop-types "^15.5.7"
 
 react-mixin@^1.7.0:
   version "1.7.0"
@@ -8231,6 +8259,16 @@ uniqid@^4.0.0:
 uniqs@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/uniqs/-/uniqs-2.0.0.tgz#ffede4b36b25290696e6e165d4a59edb998e6b02"
+
+unique-random-array@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/unique-random-array/-/unique-random-array-1.0.0.tgz#42b3721c579388d8b667c93c2dbde3d5d81a9136"
+  dependencies:
+    unique-random "^1.0.0"
+
+unique-random@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/unique-random/-/unique-random-1.0.0.tgz#ce3e224c8242cd33a0e77b0d7180d77e6b62d0c4"
 
 unique-stream@^2.0.2:
   version "2.2.1"
