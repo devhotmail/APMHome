@@ -32,9 +32,9 @@ public class FailureAnalysisService {
   }
 
   @Cacheable(cacheNames = "springCache", key = "'failureAnalysisService.briefs.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#groupBy+'.'+#dept+'.'+#type+'.'+#supplier+'.'+#asset")
-  public Observable<Tuple3<Integer, Integer, Integer>> briefs(int site, int hospital, Date from, Date to, String groupBy, Integer dept, Integer type, Integer supplier, Integer asset) {
+  public Observable<Tuple3<Integer, Double, Integer>> briefs(int site, int hospital, Date from, Date to, String groupBy, Integer dept, Integer type, Integer supplier, Integer asset) {
     QuerySelect.Builder builder = db.select(new SQL() {{
-      SELECT(groupBy, "sum(down_time)", "sum(work_order_count)");
+      SELECT(groupBy, "1-avg(down_time)/86400", "sum(work_order_count)");
       FROM("asset_summit");
       WHERE("site_id = :site");
       WHERE("hospital_id = :hospital");
@@ -59,15 +59,15 @@ public class FailureAnalysisService {
       .orElse(Option.of(builder)).filter(o -> Option.of(supplier).isDefined()).map(o -> o.parameter("supplier", supplier))
       .orElse(Option.of(builder)).filter(o -> Option.of(asset).isDefined()).map(o -> o.parameter("asset", asset))
       .orElse(Option.of(builder)).get()
-      .getAs(Integer.class, Integer.class, Integer.class)
+      .getAs(Integer.class, Double.class, Integer.class)
       .map(t -> Tuple.of(t._1(), t._2(), t._3()))
       .cache();
   }
 
   @Cacheable(cacheNames = "springCache", key = "'failureAnalysisService.details.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#groupBy+'.'+#key")
-  public Observable<Tuple3<Integer, Integer, Integer>> details(int site, int hospital, Date from, Date to, String groupBy, Integer key) {
+  public Observable<Tuple3<Integer, Double, Integer>> details(int site, int hospital, Date from, Date to, String groupBy, Integer key) {
     return db.select(new SQL() {{
-      SELECT(groupBy, "sum(down_time)", "sum(work_order_count)");
+      SELECT(groupBy, "1-avg(down_time)/86400", "sum(work_order_count)");
       FROM("asset_summit");
       WHERE("site_id = :site");
       WHERE("hospital_id = :hospital");
@@ -81,7 +81,7 @@ public class FailureAnalysisService {
       .parameter("from", from)
       .parameter("to", to)
       .parameter("key", key)
-      .getAs(Integer.class, Integer.class, Integer.class)
+      .getAs(Integer.class, Double.class, Integer.class)
       .map(t -> Tuple.of(t._1(), t._2(), t._3()))
       .cache();
   }
