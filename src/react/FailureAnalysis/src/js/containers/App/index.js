@@ -11,7 +11,7 @@ import GearListChart from 'react-gear-list-chart'
 import Header from 'containers/Header'
 import Legend from 'components/Legend'
 import LegendTable from 'components/LegendTable'
-import Tooltip from 'components/Tooltip'
+import Tooltip from 'dew-tooltip'
 import Pagination from 'components/Pagination'
 import withClientRect from '../../HOC/withClientRect'
 import selectHelper from 'components/SelectHelper'
@@ -59,7 +59,7 @@ function DataOrPlaceHolder(items, lastYearItems, placeholderSize) {
 }
 
 function getCurrentPage(skip, top) {
-  return Math.ceil(skip / top) || 1
+  return Math.ceil((skip + 1)/ top)
 }
 
 function ensureSize(width, height) {
