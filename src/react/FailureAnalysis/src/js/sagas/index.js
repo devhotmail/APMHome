@@ -30,10 +30,12 @@ function* fetchBriefs(action) {
   }
   try {
     let params = yield select(state => state.parameters)
+    params = _.cloneDeep(params)
+    let pag = params.pagination[type]
     if (targetPage) {
-      params = _.cloneDeep(params)
-      let pag = params.pagination[type]
       pag.skip = (targetPage - 1) * pag.top
+    } else {
+      pag.skip = 0
     }
     let extraParam = action.data || {}
     if ('type' in extraParam) {
@@ -48,6 +50,7 @@ function* fetchBriefs(action) {
     briefs.type = type
     let lastYear = undefined 
     if (params.showLastYear) {
+      params.keys = briefs.map(_ => _.data.key.id).join(',')
       lastYear = yield call(API.getBriefs, type, params, true)
       lastYear.type = type
     }
