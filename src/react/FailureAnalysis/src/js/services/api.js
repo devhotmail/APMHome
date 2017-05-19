@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { load } from './mocks/helper'
 import { AssetTypesConv, BriefConv, ReasonConv, BriefAssetConv } from 'converters'
+import moment from 'moment'
 
 const UseMock = true
 if (process.env.NODE_ENV === 'development' && UseMock) {
@@ -19,6 +20,13 @@ export const DataTypeMapping = {
   'ftfr': 'ftfr',
   'incident_count': 'fix'
 }
+
+function formatDate(date) {
+  if (typeof date === 'string') {
+    date = moment(date)
+  }
+  return date.format(DateFormat)
+}
 function mapParamsToQuery(params, type) {
   let pag = params.pagination[type]
   let filterBy = params.filterBy
@@ -26,8 +34,8 @@ function mapParamsToQuery(params, type) {
   let dept = filterBy.dept === 'all_dept' ? '' : filterBy.dept
   let supplier = filterBy.supplier === 'all_supplier' ? '' : filterBy.supplier
   return {
-    from: params.period.from.format(DateFormat),
-    to: params.period.to.format(DateFormat),
+    from: formatDate(params.period.from),
+    to: formatDate(params.period.to),
     groupby: GroupBy[params.display],
     orderby: DataTypeMapping[params.orderBy],
     type: assetType,
@@ -38,6 +46,13 @@ function mapParamsToQuery(params, type) {
     dataType: DataTypeMapping[params.dataType],
     key: params.keys
   }
+}
+
+function minusOneYear(date) {
+  if (typeof date === 'string') {
+    date = moment(date)
+  }
+  return date.clone().subtract('1', 'years').format(DateFormat)
 }
 
 export default {
@@ -51,8 +66,8 @@ export default {
   getBriefs(type, state, lastYear) {
     let params = mapParamsToQuery(state, type)
     if (lastYear) {
-      params.from = state.period.from.clone().subtract('1', 'years').format(DateFormat)
-      params.to = state.period.to.clone().subtract('1', 'years').format(DateFormat)
+      params.from = minusOneYear(state.period.from)
+      params.to = minusOneYear(state.period.to)
     }
     if (type === 'left') {
       return axios.get(prefix + 'api/fa/briefs', {params})
@@ -66,8 +81,8 @@ export default {
   getReasons(state, { type, asset, supplier, dept }) {
     let { period: { from, to }, filterBy } = state
     let params = {
-      from: from.format(DateFormat),
-      to: to.format(DateFormat),
+      from: formatDate(from),
+      to: formatDate(to),
       type: filterBy.assettype === 'all_asset_type' ? type : filterBy.assettype,
       dept: filterBy.dept === 'all_dept' ? dept : filterBy.dept,
       supplier: supplier,
