@@ -35,6 +35,7 @@ import com.ge.apm.service.asset.AssetDepreciationService;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.service.utils.QRCodeUtil;
+import com.ge.apm.service.utils.UrlParamUtil;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.io.IOException;
@@ -176,7 +177,10 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public void onSelectAsset() throws IOException{
-        FacesContext.getCurrentInstance().getExternalContext().redirect(getDetailPage(selected.getId().toString(), selected.getName()));
+        String url = "actionName=View&selectedid=" + selected.getId().toString() + "&asset_name=" + selected.getName();
+        url = "Detail.xhtml?str="+UrlParamUtil.encodeUrlQueryString(url);
+                
+        FacesContext.getCurrentInstance().getExternalContext().redirect(url);
     }
     
     public String getViewPage(String pageName, String actionName) {
