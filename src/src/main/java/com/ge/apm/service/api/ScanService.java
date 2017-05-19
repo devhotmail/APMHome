@@ -7,7 +7,6 @@ import com.github.davidmoten.rx.jdbc.QuerySelect;
 import javaslang.Tuple;
 import javaslang.Tuple3;
 import javaslang.Tuple5;
-import javaslang.Tuple7;
 import javaslang.control.Option;
 import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
@@ -34,7 +33,7 @@ public class ScanService {
     db = Database.from(connectionProvider);
   }
 
-  @Cacheable(cacheNames = "springCache", key = "'scanService.brief.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset")
+  @Cacheable(cacheNames = "springCache", key = "'ScanService.brief.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset")
   public Observable<Tuple3<Integer, Integer, Integer>> brief(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset) {
     Objects.requireNonNull(from);
     Objects.requireNonNull(to);
@@ -65,7 +64,7 @@ public class ScanService {
       .cache();
   }
 
-  @Cacheable(cacheNames = "springCache", key = "'scanService.assetDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part+'.'+#limit+'.'+#start")
+  @Cacheable(cacheNames = "springCache", key = "'ScanService.assetDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part+'.'+#limit+'.'+#start")
   public Observable<Tuple5<Integer, Integer, String, Integer, Integer>> assetDetail(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset, Integer part, int limit, int start) {
     QuerySelect.Builder builder = db.select(new SQL() {{
       SELECT("m.asset_group", "m.asset_id", "a.name as asset_name", "m.part_id", "sum(m.exam_count) as exam_num");
@@ -101,10 +100,10 @@ public class ScanService {
       .cache();
   }
 
-  @Cacheable(cacheNames = "springCache", key = "'scanService.stepDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part+'.'+#step+'.'+#limit+'.'+#start")
-  public Observable<Tuple7<Integer, Integer, String, Integer, Integer, String, Integer>> stepDetail(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset, Integer part, Integer step, int limit, int start) {
+  @Cacheable(cacheNames = "springCache", key = "'ScanService.stepDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part+'.'+#step+'.'+#limit+'.'+#start")
+  public Observable<Tuple5<Integer, Integer, Integer, String, Integer>> stepDetail(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset, Integer part, Integer step, int limit, int start) {
     QuerySelect.Builder builder = db.select(new SQL() {{
-      SELECT("m.asset_group", "m.asset_id", "a.name as asset_name", "m.part_id", "m.step_id", "s.name as step_name", "sum(m.exam_count) as exam_num");
+      SELECT("m.asset_group", "m.part_id", "m.step_id", "s.name as step_name", "sum(m.exam_count) as exam_num");
       FROM("exam_summit as m");
       JOIN("proc_step as s on m.step_id = s.id");
       JOIN("asset_info as a on m.asset_id = a.id");
@@ -126,8 +125,8 @@ public class ScanService {
       if (Option.of(step).filter(i -> i > 0).isDefined()) {
         WHERE("m.step_id = :step");
       }
-      GROUP_BY("m.asset_group", "m.asset_id", "a.name", "m.part_id", "m.step_id", "s.name");
-      ORDER_BY("m.asset_group", "m.asset_id", "m.part_id", "m.step_id");
+      GROUP_BY("m.asset_group", "m.part_id", "m.step_id", "s.name");
+      ORDER_BY("m.asset_group", "m.part_id", "m.step_id");
     }}.toString().concat(" limit :limit ").concat(" offset :start ")).parameter("site", site).parameter("hospital", hospital).parameter("from", from).parameter("to", to);
     return Option.of(builder).filter(s -> Option.of(type).isDefined()).map(o -> o.parameter("type", type))
       .orElse(Option.of(builder)).filter(o -> Option.of(dept).isDefined()).map(o -> o.parameter("dept", dept))
@@ -137,8 +136,8 @@ public class ScanService {
       .orElse(Option.of(builder)).filter(o -> Option.of(limit).isDefined()).map(o -> o.parameter("limit", limit))
       .orElse(Option.of(builder)).filter(o -> Option.of(start).isDefined()).map(o -> o.parameter("start", start))
       .orElse(Option.of(builder)).get()
-      .getAs(Integer.class, Integer.class, String.class, Integer.class, Integer.class, String.class, Integer.class)
-      .map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4(), t._5(), t._6(), t._7()))
+      .getAs(Integer.class, Integer.class, Integer.class, String.class, Integer.class)
+      .map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4(), t._5()))
       .cache();
   }
 }
