@@ -279,10 +279,16 @@ export class App extends Component<void, Props, void> {
           <div className="full-chart container">
 
             <div className="display-select">{selectHelper(display, this.getDisplayOptions(), updateDisplayType)}</div>
-            <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
-              className="pager-left" onChange={this.onLeftPagerChange}/>
-            <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
-              className="pager-right" onChange={this.onRightPagerChange}/>
+            {
+              leftItems && leftItems.length &&
+              <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
+                className="pager-left" onChange={this.onLeftPagerChange}/>
+            }
+            {
+              rightItems && rightItems.length &&
+              <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
+                className="pager-right" onChange={this.onRightPagerChange}/>
+            }
             <GearListChart 
               id="left-chart"
               ref="leftChart"
