@@ -65,7 +65,6 @@ export default class OrbitChart extends PureComponent {
             let angle = ball.distance - 90
             return renderBall(ball, totalRadius, cx, cy, angle, ballRadius)
           })}
-
         </svg>
       </div> 
     )
@@ -84,7 +83,7 @@ OrbitChart.propTypes = {
   radius: PropTypes.number.isRequired,
   startAngle: PropTypes.number,
   endAngle: PropTypes.number,
-  clockwise: PropTypes.boolean,
+  clockwise: PropTypes.bool,
   ballRadius: PropTypes.number.isRequired,
   maxBallAngle: PropTypes.number,
   balls: PropTypes.arrayOf(PropTypes.object),

@@ -20,7 +20,8 @@ import cache from 'utils/cache'
 import { MetaUpdate } from 'actions'
 import classnames from 'classnames'
 import colors from 'utils/colors'
-import { log } from 'utils/logger'
+import { BriefConv, DetailConv } from 'converters'
+import { log, warn } from 'utils/logger'
 
 const Placeholder = { strips: { color: '#F9F9F9', weight: 1, type: 'placeholder' } }
 const DisplayOptions = [
@@ -31,7 +32,7 @@ const DisplayOptions = [
 const BallsStub = [
   { key: 'report_incident', distance: 0 },
   { key: 'dispatch_incident', distance: 45 },
-  { key: 'accept_incident', distance: 123, connectPrevious: true, fill: 'red' },
+  { key: 'accept_incident', distance: 123 },
   { key: 'signin_incident', distance: 190 },
   { key: 'fixing_incident', distance: 230 },
   { key: 'close_incident', distance: 300 }
@@ -74,10 +75,15 @@ function mapDispatch2Porps(dispatch) {
     updatePagination: (type, pageNumber) => {
       dispatch(PageChange(type, pageNumber))
     },
-    fetchBriefs: (type, extraParam) => {
-      dispatch({ type: 'update/briefs/' + type, data: extraParam })
+    fetchBriefs: extraParam => {
+      dispatch({ type: 'get/briefs', data: extraParam })
     },
-    fetchReasons: (data = {}) => dispatch({type: 'update/reasons', data }),
+    fetchDetails: extraParam => {
+      dispatch({ type: 'get/details', data: extraParam })
+    },
+    fetchGross: extraParam => {
+      // todo
+    },
     updateMeta: () => dispatch(MetaUpdate())
   }
 }
@@ -94,28 +100,28 @@ export class App extends Component<void, Props, void> {
   static getPlaceholder = _.memoize(count => _.range(count)
                            .map(() => Placeholder))
   state = {
-    leftItems: [],
+    briefs: [],
     centerItems: [],
-    rightItems: [],
+    details: [],
     selected: {},
     ettrSummary: [],
     arrivalSummary: [],
-    responseSummary: []
+    briefsonseSummary: []
   }
 
   clickLeftTooth(evt) {
-
+    // todo
   }
 
   clickRightTooth(evt) {
-
+    // todo
   }
   onRightPagerChange = value => {
-    this.props.updatePagination('right', value)
+    this.props.updatePagination('detail', value)
   }
 
   onLeftPagerChange = value => {
-    this.props.updatePagination('left', value)
+    this.props.updatePagination('brief', value)
   }
 
   onClickDonut(evt) {
@@ -124,49 +130,37 @@ export class App extends Component<void, Props, void> {
       this.props.updateDataType(id)
     }
   }
-  loadAll() {
-    let { fetchBriefs, fetchReasons } = this.props
-    fetchBriefs('left')
-    fetchReasons({})
-    fetchBriefs('right')
-  }
 
+  loadAll() {
+    let { fetchBriefs, fetchDetails, fetchGross } = this.props
+    fetchBriefs()
+    fetchDetails()
+    fetchGross()
+  }
 
   getDisplayOptions() {
     return DisplayOptions.map(o => ({ key: o.key, label: this.props.t(o.key)}))
   }
 
-  mountBriefData(evt) {
-    let { t } = this.props
-    let [ current ] = evt.target
-    if (!current.length) {
-      message.info( + ': ' + t('no_more_data'))
-      return
+  mountBriefData(evt, data) {
+    let { t, dataType } = this.props
+    let briefs = data.data || []
+    if (briefs.length === 0) {
+      message.info(t('group_info') + ': ' + t('no_more_data'))
     }
-    this.setState({ leftItems: current })
-    this.clearFocus(current.type)
+    this.setState({ briefs: BriefConv(briefs, dataType) })
+    this.clearFocus('left')
   }
 
-  mountAssetData(evt) {
-    let { t } = this.props
-    let [ current ] = evt.target
-    if (!current.length) {
-      message.info( + ': ' + t('no_more_data'))
-      return
+  mountDetailData(evt, data) {
+    let { t, dataType } = this.props
+    let details = data.data || []
+    if (details.length === 0) {
+      message.info(t('asset_info') + ': ' + t('no_more_data'))
     }
-    this.setState({ leftItems: current })
-    this.clearFocus(current.type)
-  }
-
-  mountReason(evt) {
-    let { t } = this.props
-    let reasons = evt.target
-    if (reasons.length) {
-      this.setState({ centerItems: reasons })
-    } else {
-      message.info(t('failure_cause') + ': ' + t('no_more_data'))
-    }
-  }
+    this.setState({ details: DetailConv(details, dataType) })
+    this.clearFocus('right')
+  }  
 
   clearFocus(type) {
     if (type === 'left') {
@@ -176,7 +170,6 @@ export class App extends Component<void, Props, void> {
     }
   }
   getLaneColor() {
-
     let dataType = this.props.dataType
     switch (dataType) {
       case 'ettr':
@@ -186,14 +179,36 @@ export class App extends Component<void, Props, void> {
       case 'arrival_time':
         return colors.green
       default:
-        throw Error('Invalid dataType, no correspondent color')
+        throw Error('Invalid dataType, no corbriefsondent color')
     }
-
+  }
+  getBalls() {
+    let { t } = this.props
+    // update label
+    let balls = BallsStub.map(b => Object.assign({label: t(b.key)}, b)) 
+    // update lane color
+    let dataType = this.props.dataType
+    let connectIndex = -1
+    switch (dataType) {
+      case 'ettr':
+        connectIndex = 5
+        break
+      case 'response_time':
+        connectIndex = 2
+        break
+      case 'arrival_time':
+        connectIndex = 3
+        break
+      default:
+        warn('Invalid type')
+    }
+    balls[connectIndex] && (balls[connectIndex].connectPrevious = true) 
+    return balls
   }
   constructor(props) {
     super(props)
     EventBus.addEventListener('brief-data', this.mountBriefData )
-    EventBus.addEventListener('asset-data', this.mountAssetData )
+    EventBus.addEventListener('detail-data', this.mountDetailData )
     EventBus.addEventListener('distribution-data', this.mountDistribution )
     let { updateMeta } = this.props
     if (!cache.get('departments') || !cache.get('assettypes')) {
@@ -206,7 +221,7 @@ export class App extends Component<void, Props, void> {
   }
 
   render() {
-    let { leftItems, rightItems, ettrSummary, responseSummary, arrivalSummary } = this.state
+    let { briefs, details, ettrSummary, briefsonseSummary, arrivalSummary } = this.state
     let { t, updateDisplayType, pagination, clientRect, display, dataType } = this.props
     let { left, right } = pagination
     let { outer_R, outer_r, inner_R, inner_r  } = ensureSize(clientRect.width, clientRect.height)
@@ -233,14 +248,14 @@ export class App extends Component<void, Props, void> {
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
               clockwise={false}
-              items={DataOrPlaceHolder(leftItems, pagination.left.top)} 
+              items={DataOrPlaceHolder(briefs, pagination.left.top)} 
               />
             <Orbit 
               id="center-chart" 
               radius={180}
               ballRadius={30}
               laneColor={this.getLaneColor()}
-              balls={BallsStub.map(_ => { _.label = t(_.key); return _; })}
+              balls={this.getBalls()}
             />
             <div id="legend-container">
               <h1 className="center-chart-title">Title</h1>
@@ -266,7 +281,7 @@ export class App extends Component<void, Props, void> {
                 baseColor={colors.yellow}
                 onClick={onClickDonut} 
                 title={t('response_time')}
-                rows={responseSummary}
+                rows={briefsonseSummary}
               />
             </div>
             <GearListChart 
@@ -278,7 +293,7 @@ export class App extends Component<void, Props, void> {
               onClick={this.clickRightTooth}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
-              items={DataOrPlaceHolder(rightItems, pagination.right.top)} />
+              items={DataOrPlaceHolder(details, pagination.right.top)} />
 
           </div>
         </div>

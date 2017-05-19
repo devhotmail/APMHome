@@ -79,7 +79,7 @@ export default class DonutChart extends PureComponent {
         {...restPorps}
       >
         <PieChart
-          lineWidth='10'
+          lineWidth={10}
           data={SampleData.map((d, i) => { d.color = colorGradation[i]; return d })}
         />
         <div style={centered(radius, baseColor)}>

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const TAG = '[Failure Analysis] '
+const TAG = '[Process Analysis] '
 
 function warn(msg, ...args) {
   _call('warn', msg, ...args)

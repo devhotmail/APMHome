@@ -1,6 +1,6 @@
 import kizzy from 'kizzy'
 
-const DEFAULT_EXPIRERATION = process.env.NODE_ENV === 'development' ? 5000 : 1 * 24 * 3600 * 1000 // one day
+const DEFAULT_EXPIRERATION = process.env.NODE_ENV === 'development' ? 50000 : 1 * 24 * 3600 * 1000 // one day
 const cache = kizzy('default')
 
 const handler = {

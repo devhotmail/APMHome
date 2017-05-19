@@ -56,7 +56,7 @@ export class Header extends PureComponent {
     ]
   }
   filtersDept() {
-    let { t, departments = []} = this.props
+    let { t, departments = [] } = this.props
     return [
       { key: 'all_dept', label: t('all_dept') },
     ].concat(departments.map(t => ({ key: String(t.id), label: t.name })))

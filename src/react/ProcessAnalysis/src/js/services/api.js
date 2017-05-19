@@ -1,24 +1,28 @@
 import axios from 'axios'
 import { load } from './mocks/helper'
-import { AssetTypesConv, BriefConv, ReasonConv, BriefAssetConv } from 'converters'
+import { AssetTypesConv } from 'converters'
 
 const UseMock = true
 if (process.env.NODE_ENV === 'development' && UseMock) {
   load('./sample')
 }
 
-const prefix = process.env.LOCAL ? '/geapm/' : '/' 
+const PREFIX = process.env.LOCAL ? '/geapm/' : '/' 
+export const PATH_BRIEF = PREFIX + 'api/process/brief'
+export const PATH_DETAIL = PREFIX + 'api/process/detail'
+export const PATH_GROSS = PREFIX + 'api/process/gross'
+
 const DateFormat = 'YYYY-MM-DD'
 const GroupBy = {
   'display_brand': 'supplier',
-  'display_asset_type': 'type',
-  'display_dept': 'dept', 
+  'display_asset_type': 'type'
 }
 export const DataTypeMapping = {
-  'operation_rate': 'avail',
-  'ftfr': 'ftfr',
-  'incident_count': 'fix'
+  'response_time': 'respond',
+  'ettr': 'ETTR',
+  'arrival_time': 'arrived'
 }
+
 function mapParamsToQuery(params, type) {
   let pag = params.pagination[type]
   let filterBy = params.filterBy
@@ -42,37 +46,18 @@ function mapParamsToQuery(params, type) {
 export default {
 
   getAssetTypes() {
-    return axios.get(prefix + 'api/msg?type=assetGroup').then(AssetTypesConv)
+    return axios.get(PREFIX + 'api/msg?type=assetGroup').then(AssetTypesConv)
   },
   getDepartments() {
-    return axios.get(prefix + 'api/org/all').then(resp => resp.data.orgInfos)
+    return axios.get(PREFIX + 'api/org/all').then(resp => resp.data.orgInfos)
   },
-  getBriefs(type, state, lastYear) {
-    let params = mapParamsToQuery(state, type)
-    if (lastYear) {
-      params.from = state.period.from.clone().subtract('1', 'years').format(DateFormat)
-      params.to = state.period.to.clone().subtract('1', 'years').format(DateFormat)
-    }
-    if (type === 'left') {
-      return axios.get(prefix + 'api/fa/briefs', {params})
-        .then(resp => BriefConv(resp, params.dataType, lastYear))
-    } else {
-      params.groupby = 'asset'
-      return axios.get(prefix + 'api/fa/briefs', {params})
-        .then(resp => BriefAssetConv(resp, params.dataType, lastYear))
-    }
+  getBriefs(params) {
+    return axios.get(PATH_BRIEF, { params }).then(_ => _.data)
   },
-  getReasons(state, { type, asset, supplier, dept }) {
-    let { period: { from, to }, filterBy } = state
-    let params = {
-      from: from.format(DateFormat),
-      to: to.format(DateFormat),
-      type: filterBy.assettype === 'all_asset_type' ? type : filterBy.assettype,
-      dept: filterBy.dept === 'all_dept' ? dept : filterBy.dept,
-      supplier: supplier,
-      asset: asset,
-    }
-    return axios.get(prefix + 'api/fa/reasons', {params}).then(ReasonConv)
+  getDetails(params) {
+    return axios.get(PATH_DETAIL, { params }).then(_ => _.data)
   },
-
+  getGross(params) {
+    return axios.get(PATH_GROSS, { params }).then(_ => _)
+  }
 }
