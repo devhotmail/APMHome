@@ -42,13 +42,13 @@ const DisplayOptions = [
   { key: 'display_dept' },
 ]
 
-// TODO: temp fix for error
-function mergeItem(current, lastYear) {
-  if (!lastYear) {
+function mergeItem(current, lastYearDict) {
+  let lastYearItem = lastYearDict[current.data.key.id]
+  if (lastYearItem === undefined) {
     return current
   }
   let copy = _.cloneDeep(current)
-  copy.strips = copy.strips.concat(_.cloneDeep(lastYear.strips))
+  copy.strips = copy.strips.concat(_.cloneDeep(lastYearItem.strips))
   return copy
 }
 
@@ -56,7 +56,9 @@ function DataOrPlaceHolder(items, lastYearItems, placeholderSize) {
   // ignore placeholder and empty data
   if (items && items.length && items[0].strips.type !== 'placeholder') {
     if (lastYearItems && lastYearItems.length) {
-      items = items.map( (item, i) => mergeItem(item, lastYearItems[i]))
+      let dict = {}
+      lastYearItems.forEach(item => dict[item.data.key.id] = item)
+      items = items.map( item => mergeItem(item, dict))
     }
     return items
   }
