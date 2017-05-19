@@ -19,6 +19,7 @@ import './app.scss'
 import cache from 'utils/cache'
 import { MetaUpdate } from 'actions'
 import classnames from 'classnames'
+import colors from 'utils/colors'
 import { log } from 'utils/logger'
 
 const Placeholder = { strips: { color: '#F9F9F9', weight: 1, type: 'placeholder' } }
@@ -231,6 +232,7 @@ export class App extends Component<void, Props, void> {
               <Donut 
                 id="ettr"
                 className={classnames("donut-chart-ettr", dataType === 'ettr' ? 'active' : '' )}
+                baseColor={colors.purple}
                 onClick={onClickDonut} 
                 title={t('ettr')}
                 rows={ettrSummary}
@@ -238,6 +240,7 @@ export class App extends Component<void, Props, void> {
               <Donut 
                 id="arrival_time"
                 className={classnames("donut-chart-arrival", dataType === 'arrival_time' ? 'active' : '' )}
+                baseColor={colors.green}
                 onClick={onClickDonut} 
                 title={t('arrival_time')}
                 rows={arrivalSummary}
@@ -245,6 +248,7 @@ export class App extends Component<void, Props, void> {
               <Donut 
                 id="response_time"
                 className={classnames("donut-chart-response", dataType === 'response_time' ? 'active' : '' )}
+                baseColor={colors.yellow}
                 onClick={onClickDonut} 
                 title={t('response_time')}
                 rows={responseSummary}

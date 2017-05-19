@@ -2,9 +2,19 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import PieChart from 'react-minimal-pie-chart'
 import classnames from 'classnames'
+import { memoization } from 'javascript-decorators'
+import colorUtil from 'color'
 
 
 const MAGIC_NUMBER = 2.1546
+const DARKEN_LIMIT = .8
+
+const SampleData = [
+  { value: 10, key: 1 },
+  { value: 15, key: 2 },
+  { value: 20, key: 3 },
+  { value: 20, key: 4 },
+]
 
 let wrapperStyle = radius => {
   return {
@@ -38,14 +48,29 @@ function rowHelper(rowData) {
   )
 }
 
+
 export default class DonutChart extends PureComponent {
 
+  @memoization()
+  static getColorGradation(baseColor, number) {
+    let result = [ baseColor ]
+    if (number > 1) {
+      let color = colorUtil(baseColor)
+      let step = DARKEN_LIMIT / number
+      for (let i = 1; i < number; i++) {
+        result.push(color.darken(i * step).hexString())
+      }
+    }
+    return result
+  }
   onClickProxy = evt => {
     this.props.onClick(evt)
   }
 
   render() {
-    let { title, rows, radius, fontColor, className, onClick, ...restPorps } = this.props
+    let { title, rows, radius, data, baseColor, fontColor, className, onClick, ...restPorps } = this.props
+    let colorGradation = DonutChart.getColorGradation(baseColor, data.length)
+
     return (
       <div 
         style={wrapperStyle(radius)} 
@@ -55,11 +80,7 @@ export default class DonutChart extends PureComponent {
       >
         <PieChart
           lineWidth='10'
-          data={[
-            { value: 10, key: 1, color: '#E38627' },
-            { value: 15, key: 2, color: '#C13C37' },
-            { value: 20, key: 3, color: '#6A2135' },
-          ]}
+          data={SampleData.map((d, i) => { d.color = colorGradation[i]; return d })}
         />
         <div style={centered(radius, fontColor)}>
           <span style={titleStyle}>{title}</span>
@@ -76,11 +97,13 @@ DonutChart.propTypes = {
   rows: PropTypes.arrayOf(PropTypes.object),
   fontColor: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.object),
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  baseColor: PropTypes.string.isRequired
 }
 
 DonutChart.defaultProps = {
   radius: 150 / MAGIC_NUMBER,
+  data: SampleData,
   title: '到场时间',
   rows: [
     { label: '平均', value: '3小时'},
