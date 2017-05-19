@@ -29,7 +29,7 @@
                                  rows="20" emptyMessage="#{msg.noRecordFound}"
                                  rowsPerPageTemplate="20,40,60,90">
 
-                        <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton "/>
+                        <p:ajax event="rowSelect" listener="#{assetInfoController.onSelectAsset}" update="createButton editButton viewButton deleteButton "/>
                         <p:ajax event="filter" listener="#{assetInfoController.onFilter}" oncomplete="rc();"/>
 
                         <!--
@@ -40,8 +40,8 @@
                             <h:outputText value="#{item.siteId}"/>
                         </p:column>
                         -->
-                        <p:column exportable="false">
-                            <p:commandButton icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" action="#{assetInfoController.getDetailPage(item.id,item.name)}" style="width:26px;height: 26px"/>
+                        <p:column exportable="false" width="22">
+                            <!--<p:commandButton icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" action="#{assetInfoController.getDetailPage(item.id,item.name)}" style="width:26px;height: 26px"/>-->
                             <p:commandButton icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}"  action="#{assetInfoController.getEditPage(item.id,item.name)}" style="width:26px;height: 26px"/>
                         </p:column>
                         <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">

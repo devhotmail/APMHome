@@ -37,6 +37,7 @@ import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.service.utils.QRCodeUtil;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.io.IOException;
 import org.joda.time.DateTime;
 
 import webapp.framework.dao.SearchFilter;
@@ -174,6 +175,10 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
+    public void onSelectAsset() throws IOException{
+        FacesContext.getCurrentInstance().getExternalContext().redirect(getDetailPage(selected.getId().toString(), selected.getName()));
+    }
+    
     public String getViewPage(String pageName, String actionName) {
         operation = pageName + "?actionName=" + actionName + "&selectedid=" + selected.getId();
         return operation;
