@@ -160,7 +160,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (255, 'label', 'BasicInfo', '基本信息', 'Basic Info', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (256, 'label', 'UsageAmount', '使用量', 'Usage Amount', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (257, 'label', 'Attachment', '附件', 'Attachment', NULL, -1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (259, 'label', 'ChecklistAdmin', '巡检/质控/计量条目维护', 'Checklist Mgmt.', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (259, 'label', 'ChecklistAdmin', '巡检/计量条目维护', 'Checklist Mgmt.', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (260, 'label', 'checkListSetting', '检查项配置', 'Checklist Configure', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (261, 'label', 'checkListItem', '检查项', 'Checklist Item', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (263, 'label', 'AssetStatusTimeChange', '资产状态与时间变更', 'Asset Status And Confirm Time Change', NULL, -1);
@@ -175,8 +175,6 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (272, 'label', 'ChoseAssets', '选中设备', 'Chose Assets', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (273, 'label', 'ChoosingAssets', '选择设备列表', 'Choosing Assets', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (274, 'label', 'FilterCondition', '过滤条件', 'Filter Conditions', NULL, -1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (275, 'label', 'AssetTagMgmt', '设备标签管理', 'AssetTag Mgmt', NULL, -1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (276, 'label', 'BiomedGroupMgmt', '维修管理员群组管理', 'BiomedGroup Mgmt', NULL, -1);
 
 
 -- Entity Object Names  ( id from 400 to  599)
@@ -304,7 +302,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (696,'field_name','requestorId','报修人','Requestor Id',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (697,'field_name','requestorName','报修人','Requestor Name',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (698,'field_name','salvageValue','最终残值(元)','Salvage Value',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (699,'field_name','serialNum','设备编号（制造商）','Serial Num',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (699,'field_name','serialNum','序列号(厂商SN)','Serial Num',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (700,'field_name','startTime','开始时间','Start Time',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (701,'field_name','status','当前状态','Status',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (702,'field_name','stepName','步骤名称','Step Name',null,-1);
@@ -475,6 +473,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1552,'assetFunctionType','19', '6823医用超声仪器及有关设备',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1553,'assetFunctionType','20', '6824医用激光仪器设备',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1554,'assetFunctionType','21', '6825医用高频仪器设备',null,null,-1);
+
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1555,'assetFunctionType','22', '6826物理治疗及康复设备',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1556,'assetFunctionType','23', '6827中医器械',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1557,'assetFunctionType','24', '6828医用磁共振设备',null,null,-1);
