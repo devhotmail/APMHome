@@ -22,7 +22,7 @@ function renderBall(ball, radius, cx, cy, angle, ballRadius) {
   )
 }
 
-function renderLane(balls, radius, cx, cy) {
+function renderLane(balls, radius, cx, cy, color) {
   let ball = balls.find(_ => _.connectPrevious)
   if (ball) {
     return (
@@ -34,7 +34,7 @@ function renderLane(balls, radius, cx, cy) {
           innerRadius: radius - 5,
           cx: cx,
           cy: cy,
-        })} fill={ball.fill} stroke="none" />
+        })} fill={color} stroke="none" />
       </g>
     )
   } else {
@@ -51,7 +51,7 @@ export default class OrbitChart extends PureComponent {
 
   render() {
 
-    let { id, className, radius, ballRadius, balls } = this.props
+    let { id, className, radius, ballRadius, balls, laneColor } = this.props
     let totalRadius = radius + ballRadius
     let chartSize = (radius + ballRadius) * 2
     let cx, cy; cx = cy = totalRadius
@@ -60,8 +60,8 @@ export default class OrbitChart extends PureComponent {
       <div id={id} className={classnames('orbit-chart', className)}>
         <svg width={chartSize} height={chartSize}>
           <circle className="indicator-circle" cx={cx} cy={cy} r={totalRadius} fill="none" stroke="gray"/>
-          { renderLane(balls, totalRadius, cx, cy) }
-          { balls.map((ball, i) => {
+          { renderLane(balls, totalRadius, cx, cy, laneColor) }
+          { balls.map(ball => {
             let angle = ball.distance - 90
             return renderBall(ball, totalRadius, cx, cy, angle, ballRadius)
           })}
@@ -76,7 +76,7 @@ OrbitChart.defaultProps = {
   startAngle: 0,
   endAngle: 360,
   clockwise: true,
-  maxBallAngle: 360
+  maxBallAngle: 360,
 }
 
 
@@ -87,5 +87,6 @@ OrbitChart.propTypes = {
   clockwise: PropTypes.boolean,
   ballRadius: PropTypes.number.isRequired,
   maxBallAngle: PropTypes.number,
-  balls: PropTypes.arrayOf(PropTypes.object)
+  balls: PropTypes.arrayOf(PropTypes.object),
+  laneColor: PropTypes.string.isRequired
 }

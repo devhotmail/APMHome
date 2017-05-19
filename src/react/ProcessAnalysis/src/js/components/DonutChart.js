@@ -26,7 +26,7 @@ let wrapperStyle = radius => {
 
 let centered = (radius, fontColor) => ({
   fontSize: radius / 6,
-  fontColor: fontColor || '',
+  color: fontColor,
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -68,7 +68,7 @@ export default class DonutChart extends PureComponent {
   }
 
   render() {
-    let { title, rows, radius, data, baseColor, fontColor, className, onClick, ...restPorps } = this.props
+    let { title, rows, radius, data, baseColor, className, onClick, ...restPorps } = this.props
     let colorGradation = DonutChart.getColorGradation(baseColor, data.length)
 
     return (
@@ -82,7 +82,7 @@ export default class DonutChart extends PureComponent {
           lineWidth='10'
           data={SampleData.map((d, i) => { d.color = colorGradation[i]; return d })}
         />
-        <div style={centered(radius, fontColor)}>
+        <div style={centered(radius, baseColor)}>
           <span style={titleStyle}>{title}</span>
           { rows.map(rowHelper) }
         </div>
@@ -95,7 +95,6 @@ DonutChart.propTypes = {
   radius: PropTypes.number.isRequired,
   title: PropTypes.string,
   rows: PropTypes.arrayOf(PropTypes.object),
-  fontColor: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.object),
   onClick: PropTypes.func,
   baseColor: PropTypes.string.isRequired

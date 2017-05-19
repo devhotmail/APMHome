@@ -175,7 +175,21 @@ export class App extends Component<void, Props, void> {
       this.refs.rightChart.clearFocus()
     }
   }
+  getLaneColor() {
 
+    let dataType = this.props.dataType
+    switch (dataType) {
+      case 'ettr':
+        return colors.purple
+      case 'response_time':
+        return colors.yellow
+      case 'arrival_time':
+        return colors.green
+      default:
+        throw Error('Invalid dataType, no correspondent color')
+    }
+
+  }
   constructor(props) {
     super(props)
     EventBus.addEventListener('brief-data', this.mountBriefData )
@@ -225,6 +239,7 @@ export class App extends Component<void, Props, void> {
               id="center-chart" 
               radius={180}
               ballRadius={30}
+              laneColor={this.getLaneColor()}
               balls={BallsStub.map(_ => { _.label = t(_.key); return _; })}
             />
             <div id="legend-container">
