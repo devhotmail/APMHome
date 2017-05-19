@@ -202,47 +202,47 @@ public class QRCodeUtil {
 
         String logoFile = "c:/Temp/logo.jpg";
         String backGroundPath = "c:/Temp/background.png";
-        String prefix = "http://weixin.qq.com/r/8D9OVorEdtcJrc4192ri";
+        String prefix = "http://weixin.qq.com/r/nCnx6dbEDItzrZKK93yO";
         String text = "1703307223655922";
 //		QRCodeUtil.encode(text, logoFile, "c:/Temp", true);
 
         //    批量生成
-        String srcFolder = "c:/Temp/170425";
+        String srcFolder = "c:/Temp/170516";
         String[] files = new File(srcFolder).list();
         for (String item : files) {
             System.out.println(item);
             qrCodeBatchJob(srcFolder + File.separator + item, logoFile, backGroundPath, prefix);
         }
 
-//        BufferedImage image = QRCodeUtil.createImage(UUID.randomUUID().toString() + "1703307223655922", logoFile, true);
+//        BufferedImage image = QRCodeUtil.createImage(prefix + "1703307223655922", logoFile, true);
 //        BufferedImage img =addBackground(backGroundPath,image,472,"1703307223655922");
 //        ImageIO.write(img, FORMAT_NAME, new File( "c:/Temp/" + text + ".jpg"));
 //        
 //        
     }
 
-    private static BufferedImage addBackground(String bgPath, BufferedImage innerImg, int size) throws IOException {
-
-        int sizeOfBackGround = size;
-        int sizeOfCode = 370 * size / 472;
-        int margin = sizeOfCode / 13;
-
-        BufferedImage src = ImageIO.read(new File(bgPath));
-        Image background = src.getScaledInstance(sizeOfBackGround, sizeOfBackGround, Image.SCALE_SMOOTH);
-        Image resizedCode = innerImg.getScaledInstance(sizeOfCode, sizeOfCode, Image.SCALE_SMOOTH);
-
-        BufferedImage bufImg = new BufferedImage(sizeOfBackGround, sizeOfBackGround, BufferedImage.TYPE_INT_RGB);
-        Graphics g = bufImg.createGraphics();
-        g.drawImage(background, 0, 0, null);
-
-        int x = (sizeOfBackGround - sizeOfCode) / 2 + margin;
-        int y = (sizeOfBackGround - sizeOfCode) / 2 + margin + 3 * margin / 4;
-        g.drawImage(resizedCode, x, y, x + sizeOfCode - 2 * margin, y + sizeOfCode - 2 * margin, margin, margin, sizeOfCode - margin, sizeOfCode - margin, null);
-        g.dispose();
-
-        return bufImg;
-
-    }
+//    private static BufferedImage addBackground(String bgPath, BufferedImage innerImg, int size) throws IOException {
+//
+//        int sizeOfBackGround = size;
+//        int sizeOfCode = 370 * size / 472;
+//        int margin = sizeOfCode / 13;
+//
+//        BufferedImage src = ImageIO.read(new File(bgPath));
+//        Image background = src.getScaledInstance(sizeOfBackGround, sizeOfBackGround, Image.SCALE_SMOOTH);
+//        Image resizedCode = innerImg.getScaledInstance(sizeOfCode, sizeOfCode, Image.SCALE_SMOOTH);
+//
+//        BufferedImage bufImg = new BufferedImage(sizeOfBackGround, sizeOfBackGround, BufferedImage.TYPE_INT_RGB);
+//        Graphics g = bufImg.createGraphics();
+//        g.drawImage(background, 0, 0, null);
+//
+//        int x = (sizeOfBackGround - sizeOfCode) / 2 + margin;
+//        int y = (sizeOfBackGround - sizeOfCode) / 2 + margin + 3 * margin / 4;
+//        g.drawImage(resizedCode, x, y, x + sizeOfCode - 2 * margin, y + sizeOfCode - 2 * margin, margin, margin, sizeOfCode - margin, sizeOfCode - margin, null);
+//        g.dispose();
+//
+//        return bufImg;
+//
+//    }
 
     private static BufferedImage addBackground(String bgPath, BufferedImage innerImg, int size, String text) throws IOException {
 
@@ -252,12 +252,12 @@ public class QRCodeUtil {
         textSB.insert(14, "-");
         
         int sizeOfBackGround = size;
-        int sizeOfCode = 310 * size / 472;
+        int sizeOfCode = 320 * size / 472;
         int margin = sizeOfCode / 24;
         int textX = 85 * size / 472;
 //        int textX =  (size/2-65)*size / 472;
         
-        int textY = 125 * size / 472;
+        int textY = 425 * size / 472;
 
         BufferedImage src = ImageIO.read(new File(bgPath));
         Image background = src.getScaledInstance(sizeOfBackGround, sizeOfBackGround, Image.SCALE_SMOOTH);
@@ -268,7 +268,7 @@ public class QRCodeUtil {
         g.drawImage(background, 0, 0, null);
 
         int x = (sizeOfBackGround - sizeOfCode) / 2 + margin;
-        int y = (sizeOfBackGround - sizeOfCode) / 2 + margin + 12 * margin / 4;
+        int y = (sizeOfBackGround - sizeOfCode) / 2 + margin + 4 * margin / 4;
 
         int fontSize = 30 * size / 472;
         Font font = new Font("TimesRoman", Font.BOLD, fontSize);
@@ -293,7 +293,7 @@ public class QRCodeUtil {
             InputStreamReader read = new InputStreamReader(new FileInputStream(src));
             BufferedReader bufferedReader = new BufferedReader(read);
             String lineTxt = null;
-            int smallCount = 50;
+            int smallCount = 100;
             while ((lineTxt = bufferedReader.readLine()) != null) {
                 System.out.println(lineTxt);
 //                String prefix = UUID.randomUUID().toString();
