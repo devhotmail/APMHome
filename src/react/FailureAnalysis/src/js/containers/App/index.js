@@ -151,15 +151,17 @@ export class App extends Component<void, Props, void> {
 
   clickLeftTooth(evt) {
     // 1, central chart: fetch reasons
-    let { display } = this.props
-    let key = evt.stripData.data.key
     let param = {}
-    if (display === 'display_asset_type') {
-      param.type = key.id
-    } else if (display === 'display_brand') {
-      param.supplier = key.id
-    } else if (display === 'display_dept') {
-      param.dept = key.id
+    if (!this.refs.leftChart.refs.chart.classList.contains('child-focused')) {
+      let { display } = this.props
+      let key = evt.stripData.data.key
+      if (display === 'display_asset_type') {
+        param.type = key.id
+      } else if (display === 'display_brand') {
+        param.supplier = key.id
+      } else if (display === 'display_dept') {
+        param.dept = key.id
+      }
     }
     this.props.fetchReasons(param)
     // 2 refresh lengend table
