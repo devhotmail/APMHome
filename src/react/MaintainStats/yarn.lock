@@ -1635,6 +1635,16 @@ currently-unhandled@^0.4.1:
   dependencies:
     array-find-index "^1.0.1"
 
+d3-path@1:
+  version "1.0.5"
+  resolved "https://registry.npmjs.org/d3-path/-/d3-path-1.0.5.tgz#241eb1849bd9e9e8021c0d0a799f8a0e8e441764"
+
+d3-shape@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/d3-shape/-/d3-shape-1.2.0.tgz#45d01538f064bafd05ea3d6d2cb748fd8c41f777"
+  dependencies:
+    d3-path "1"
+
 dashdash@^1.12.0:
   version "1.14.1"
   resolved "https://registry.npmjs.org/dashdash/-/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"
@@ -1707,12 +1717,12 @@ detect-indent@^4.0.0:
     repeating "^2.0.0"
 
 "dew-filterbar@git+https://github.build.ge.com/foundry-sh/dew-filterbar.git":
-  version "1.1.0"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#4bf49971cea9017cd6e345a4ffc587cda5413158"
+  version "1.2.2"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#83556e9afc95a612ebe9387c671220716d1f0a3c"
 
 "dew-pager@git+https://github.build.ge.com/foundry-sh/dew-pager.git":
-  version "1.2.0"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-pager.git#db4325250f455efeee365df4bc622d03cc7ae7ff"
+  version "1.3.1"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-pager.git#e74d012f918952cb320001a90630752e9a4e0c8f"
 
 diffie-hellman@^5.0.0:
   version "5.0.2"
@@ -4749,6 +4759,14 @@ rimraf@2, rimraf@^2.2.8, rimraf@^2.5.1, rimraf@^2.6.1:
   dependencies:
     glob "^7.0.5"
 
+"ring-sector-layout@git+https://github.build.ge.com/foundry-sh/ring-sector-layout.git":
+  version "1.0.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/ring-sector-layout.git#e99ba82e39bd1ee98bc33d094dae1a317b16e3b8"
+  dependencies:
+    d3-shape "^1.2.0"
+    react-motion "^0.5.0"
+    uuid "^3.0.1"
+
 ripemd160@^2.0.0, ripemd160@^2.0.1:
   version "2.0.1"
   resolved "https://registry.npmjs.org/ripemd160/-/ripemd160-2.0.1.tgz#0f4584295c53a3628af7e6d79aca21ce57d1c6e7"
@@ -5299,7 +5317,7 @@ utils-merge@1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.0.tgz#0294fb922bb9375153541c4f7096231f287c8af8"
 
-uuid@^3.0.0:
+uuid@^3.0.0, uuid@^3.0.1:
   version "3.0.1"
   resolved "https://registry.npmjs.org/uuid/-/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
 

@@ -1,5 +1,8 @@
 import moment from 'moment'
 
+export const completion = 'completion'
+export const quality = 'quality'
+
 export const margin = 20
 export const stackHeight = 120
 export const pageSize = 15

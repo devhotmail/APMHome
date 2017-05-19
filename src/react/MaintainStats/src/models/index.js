@@ -1,5 +1,7 @@
-import list from './list'
+import asset from './asset'
+import group from './group'
 
 export default [
-  list
+  asset,
+  group
 ]

@@ -21,11 +21,10 @@ function mockRoot (root) {
 }
 
 export default {
-  namespace: 'list',
+  namespace: 'group',
   state: {
     loading: false,
     root: undefined,
-    range: undefined,
     items: [],
     pageSize: pageSize,
     page: defaultPage,
@@ -35,7 +34,7 @@ export default {
   subscriptions: {
     setup ({ dispatch, history }) {
       return history.listen(({ query }) => {
-        const { from, to, page } = query
+        const { from, to, groupPage } = query
 
         if (!from || !to) {
           return dispatch(routerRedux.push({
@@ -47,27 +46,27 @@ export default {
           }))
         }
 
-        if (!page) {
+        if (!groupPage) {
           return dispatch(routerRedux.push({
             pathname: '/',
             query: {
               ...query,
-              page: defaultPage
+              groupPage: defaultPage
             }
           }))
         }
 
         dispatch({
           type: 'data/get',
-          payload: { from, to, page }
+          payload: { from, to, page: groupPage }
         })
       })
     }
-  },
+  },  
   effects: {
     *['data/get'] ({ payload: params }, { put, call, select, take }) {
       try {
-        const { pageSize, query } = yield select(state => state.list)
+        const { pageSize, query } = yield select(state => state.group)
 
         const flag = ['from', 'to', 'page'].reduce((prev, cur) => {
           if (query[cur] !== params[cur]) prev = false
@@ -82,7 +81,7 @@ export default {
         const { data } = yield call(
           axios,
           {
-            url: process.env.API_HOST + '/staff',
+            url: process.env.API_HOST + '/pm/brief/left',
             params: {
               ...restQuery,
               start: (page - 1) * pageSize,
@@ -109,12 +108,7 @@ export default {
             payload: params
           })
 
-          yield put({
-            type: 'range/set',
-            payload: data.range
-          })
-
-          const root = yield call(mockRoot, data.summary)
+          const root = yield call(mockRoot, data.root)
 
           yield put({
             type: 'root/set',
@@ -129,6 +123,7 @@ export default {
           yield put({ type: 'loading/off' })
         }
       } catch (err) {
+        console.log(err)
         yield put({
           type: 'data/status/failed',
           payload: err
@@ -160,12 +155,6 @@ export default {
       return {
         ...state,
         root: payload
-      }
-    },
-    ['range/set'] (state, { payload }) {
-      return {
-        ...state,
-        range: payload
       }
     },
     ['query/update'] (state, { payload }) {
