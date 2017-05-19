@@ -15,7 +15,6 @@ import rx.Observable;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.sql.Date;
-import java.time.LocalDate;
 
 
 @Service
@@ -35,17 +34,18 @@ public class MaService {
   //return values in Tuple3 are measurements of assets: price, onrate, maintenanceCost
   @Cacheable(cacheNames = "springCache", key = "'MaService.findAstMtItems.'+#siteId+'.'+#hospitalId+'.'+#startDate+'.'+#endDate+'.'+#dept+'.'+#type+'.'+#supplier")
   public Observable<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple3<Double, Double, Double>>> findAstMtItems
-  (Integer siteId, Integer hospitalId, LocalDate startDate, LocalDate endDate, Integer dept, Integer type, Integer supplier) {
+  (Integer siteId, Integer hospitalId, Date startDate, Date endDate, Integer dept, Integer type, Integer supplier) {
     String astMtSQL = new SQL() {{
-      SELECT("ai.id", "ai.name", "dept", "type", "supplier", "ai.purchase_price as price", "down_rate", "maintenance_cost");
+      SELECT("ai.id", "ai.name", "dept", "type", "supplier", "COALESCE(ai.purchase_price,0) as price", "down_rate", "maintenance_cost");
       FROM("asset_info ai");
       INNER_JOIN("(" + new SQL() {{
         SELECT("distinct asset_id", "dept_id as dept", "asset_group as type", "supplier_id as supplier", "COALESCE(AVG(asu.down_time),0)/86400 as down_rate", "COALESCE(SUM(asu.maintenance_cost),0) as maintenance_cost");
-        FROM("asset_summit");
-        WHERE("hospital_id = : hospital_id");
+        FROM("asset_summit asu");
+        WHERE("hospital_id = :hospital_id");
         WHERE("site_id = :site_id");
         WHERE("created >= :start_day");
         WHERE("created <= :end_day");
+        GROUP_BY("asset_id, dept, type, supplier");
         if (dept != null) {
           WHERE("dept_id = :dept");
         }
@@ -55,13 +55,13 @@ public class MaService {
         if (supplier != null) {
           WHERE("supplier_id = :supplier");
         }
-      }}.toString() + ") asu on ai.id = asu.asset_id");
+      }}.toString() + ") right_table on ai.id = right_table.asset_id");
       ORDER_BY("ai.id");
     }}.toString();
 
     QuerySelect.Builder dbBuilder = db.select(astMtSQL)
-      .parameter("start_day", Date.valueOf(startDate))
-      .parameter("end_day", Date.valueOf(endDate))
+      .parameter("start_day", startDate)
+      .parameter("end_day", endDate)
       .parameter("site_id", siteId)
       .parameter("hospital_id", hospitalId);
     if (dept != null) {
@@ -84,12 +84,12 @@ public class MaService {
   //return values in Tuple2 are measurements of assets: onrate, maintenanceCost
   @Cacheable(cacheNames = "springCache", key = "'MaService.findAstMtGroups.'+#siteId+'.'+#hospitalId+'.'+#startDate+'.'+#endDate+'.'+#dept+'.'+#type+'.'+#supplier+'.'+#groupBy")
   public Observable<Tuple2<Integer, Tuple2<Double, Double>>> findAstMtGroups
-  (Integer siteId, Integer hospitalId, LocalDate startDate, LocalDate endDate, Integer dept, Integer type, Integer supplier, String groupBy) {
+  (Integer siteId, Integer hospitalId, Date startDate, Date endDate, Integer dept, Integer type, Integer supplier, String groupBy) {
     String astMtSQL = new SQL() {{
       SELECT("dept".equals(groupBy) ? "dept_id as group_id" : ("type".equals(groupBy) ? "asset_group as group_id" : "supplier_id as group_id"),
-        "COALESCE(AVG(asu.down_time),0)/86400 as down_rate", "COALESCE(SUM(asu.maintenance_cost),0) as maintenance_cost");
+        "COALESCE(AVG(down_time),0)/86400 as down_rate", "COALESCE(SUM(maintenance_cost),0) as maintenance_cost");
       FROM("asset_summit");
-      WHERE("hospital_id = : hospital_id");
+      WHERE("hospital_id = :hospital_id");
       WHERE("site_id = :site_id");
       WHERE("created >= :start_day");
       WHERE("created <= :end_day");
@@ -102,12 +102,13 @@ public class MaService {
       if (supplier != null) {
         WHERE("supplier_id = :supplier");
       }
+      GROUP_BY("group_id");
       ORDER_BY("group_id");
     }}.toString();
 
     QuerySelect.Builder dbBuilder = db.select(astMtSQL)
-      .parameter("start_day", Date.valueOf(startDate))
-      .parameter("end_day", Date.valueOf(endDate))
+      .parameter("start_day", startDate)
+      .parameter("end_day", endDate)
       .parameter("site_id", siteId)
       .parameter("hospital_id", hospitalId);
     if (dept != null) {
