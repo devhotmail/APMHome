@@ -223,10 +223,9 @@ export class App extends Component<void, Props, void> {
   mountBriefData(evt) {
     let { t } = this.props
     let [ current, lastYear ] = evt.target
-    if (!current.length) {
+    if (current.length === 0) {
       let target = t(current.type === 'left' ? 'group_info' : 'asset_info')
       message.info(target + ': ' + t('no_more_data'))
-      return
     }
     if (current.type === 'left') {
       this.setState({ leftItems: current, lastYear: { leftItems: lastYear, rightItems: this.state.lastYear.rightItems } })
@@ -239,11 +238,10 @@ export class App extends Component<void, Props, void> {
   mountReason(evt) {
     let { t } = this.props
     let reasons = evt.target
-    if (reasons.length) {
-      this.setState({ centerItems: reasons })
-    } else {
+    if (reasons.length === 0) {
       message.info(t('failure_cause') + ': ' + t('no_more_data'))
     }
+    this.setState({ centerItems: reasons })
   }
 
   clearFocus(type) {
