@@ -151,15 +151,17 @@ export class App extends Component<void, Props, void> {
 
   clickLeftTooth(evt) {
     // 1, central chart: fetch reasons
-    let { display } = this.props
-    let key = evt.stripData.data.key
     let param = {}
-    if (display === 'display_asset_type') {
-      param.type = key.id
-    } else if (display === 'display_brand') {
-      param.supplier = key.id
-    } else if (display === 'display_dept') {
-      param.dept = key.id
+    if (!this.refs.leftChart.refs.chart.classList.contains('child-focused')) {
+      let { display } = this.props
+      let key = evt.stripData.data.key
+      if (display === 'display_asset_type') {
+        param.type = key.id
+      } else if (display === 'display_brand') {
+        param.supplier = key.id
+      } else if (display === 'display_dept') {
+        param.dept = key.id
+      }
     }
     this.props.fetchReasons(param)
     // 2 refresh lengend table
@@ -223,10 +225,9 @@ export class App extends Component<void, Props, void> {
   mountBriefData(evt) {
     let { t } = this.props
     let [ current, lastYear ] = evt.target
-    if (!current.length) {
+    if (current.length === 0) {
       let target = t(current.type === 'left' ? 'group_info' : 'asset_info')
       message.info(target + ': ' + t('no_more_data'))
-      return
     }
     if (current.type === 'left') {
       this.setState({ leftItems: current, lastYear: { leftItems: lastYear, rightItems: this.state.lastYear.rightItems } })
@@ -239,11 +240,10 @@ export class App extends Component<void, Props, void> {
   mountReason(evt) {
     let { t } = this.props
     let reasons = evt.target
-    if (reasons.length) {
-      this.setState({ centerItems: reasons })
-    } else {
+    if (reasons.length === 0) {
       message.info(t('failure_cause') + ': ' + t('no_more_data'))
     }
+    this.setState({ centerItems: reasons })
   }
 
   clearFocus(type) {
@@ -281,10 +281,16 @@ export class App extends Component<void, Props, void> {
           <div className="full-chart container">
 
             <div className="display-select">{selectHelper(display, this.getDisplayOptions(), updateDisplayType)}</div>
-            <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
-              className="pager-left" onChange={this.onLeftPagerChange}/>
-            <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
-              className="pager-right" onChange={this.onRightPagerChange}/>
+            {
+              leftItems && leftItems.length &&
+              <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
+                className="pager-left" onChange={this.onLeftPagerChange}/>
+            }
+            {
+              rightItems && rightItems.length &&
+              <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
+                className="pager-right" onChange={this.onRightPagerChange}/>
+            }
             <GearListChart 
               id="left-chart"
               ref="leftChart"
