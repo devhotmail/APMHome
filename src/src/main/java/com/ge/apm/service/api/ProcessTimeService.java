@@ -29,30 +29,30 @@ public class ProcessTimeService {
     private static final Logger log = LoggerFactory.getLogger(CommonService.class);
     private Database db;
 
-    private static final String SQL_PROCESS_TIME_BY_GROUP = "select :groupby as id,avg(wst.responseTime) as avg_respond,avg(wst.arrivedTime) as avg_arrived, avg(wst.ETTRTime) as avg_ETTR "
-            + "from asset_info ai, work_order wo, (select work_order_id,count(*) as count,sum(case  when step_id <=2 then (ws.end_time-ws.start_time)  end) as responseTime,"
-            + "sum(case  when step_id <=3 then (ws.end_time-ws.start_time)  end) as arrivedTime,"
-            + "sum(case  when step_id <=5 then (ws.end_time-ws.start_time)  end) as ETTRTime "
+    private static final String SQL_PROCESS_TIME_BY_GROUP = "select :groupby as id,cast(avg(wst.responseTime)as integer) as avg_respond,cast(avg(wst.arrivedTime)as integer) as avg_arrived, cast(avg(wst.ETTRTime)as integer) as avg_ETTR "
+            + "from asset_info ai, work_order wo, (select work_order_id,count(*) as count,sum(case  when step_id <=2 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as responseTime,"
+            + "sum(case  when step_id <=3 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as arrivedTime,"
+            + "sum(case  when step_id <=5 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as ETTRTime "
             + "from work_order_step ws where start_time > :start_time and end_time < :end_time   group by work_order_id ) wst "
             + "where ai.id=wo.asset_id and wo.id=wst.work_order_id and ai.site_id=:site_id and ai.hospital_id=:hospital_id :conditionType :conditionDept :conditionSupplier group by :groupby order by :orderBy :limit :offset";
 
-    private static final String SQL_PROCESS_TIME_BY_ASSET = "select ai.id,ai.name ,avg(wst.responseTime) as avg_respond,avg(wst.arrivedTime) as avg_arrived, avg(wst.ETTRTime) as avg_ETTR, "
-            + "avg(wst.dispatchTime) as dispatchTime, avg(wst.workingTime) as workingTime "
-            + "from asset_info ai, work_order wo, (select work_order_id,count(*) as count,sum(case  when step_id <=1 then (ws.end_time-ws.start_time)  end) as dispatchTime,"
-            + "sum(case  when step_id <=2 then (ws.end_time-ws.start_time)  end) as responseTime,"
-            + "sum(case  when step_id <=3 then (ws.end_time-ws.start_time)  end) as arrivedTime,"
-            + "sum(case  when step_id <=4 then (ws.end_time-ws.start_time)  end) as workingTime,"
-            + "sum(case  when step_id <=5 then (ws.end_time-ws.start_time)  end) as ETTRTime "
+    private static final String SQL_PROCESS_TIME_BY_ASSET = "select ai.id,ai.name ,cast(avg(wst.responseTime)as integer) as avg_respond,cast(avg(wst.arrivedTime)as integer) as avg_arrived, cast(avg(wst.ETTRTime)as integer) as avg_ETTR, "
+            + "cast(avg(wst.dispatchTime)as integer) as dispatchTime, cast(avg(wst.workingTime)as integer) as workingTime "
+            + "from asset_info ai, work_order wo, (select work_order_id,count(*) as count,sum(case  when step_id <=1 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as dispatchTime,"
+            + "sum(case  when step_id <=2 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as responseTime,"
+            + "sum(case  when step_id <=3 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as arrivedTime,"
+            + "sum(case  when step_id <=4 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as workingTime,"
+            + "sum(case  when step_id <=5 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as ETTRTime "
             + "from work_order_step ws where start_time> :start_time and end_time< :end_time   group by work_order_id ) wst "
             + "where ai.id=wo.asset_id and wo.id=wst.work_order_id and ai.site_id=:site_id and ai.hospital_id=:hospital_id :conditionType :conditionDept :conditionSupplier group by ai.id order by :orderBy :limit :offset ";
 
-    private static final String SQL_PROCESS_TIME_GROSS = "select avg(wst.responseTime) as avg_respond,avg(wst.arrivedTime) as avg_arrived, avg(wst.ETTRTime) as avg_ETTR ,"
-            + "avg(wst.dispatchTime) as dispatchTime, avg(wst.workingTime) as workingTime "
-            + "from asset_info ai, work_order wo, (select work_order_id,count(*) as count,sum(case  when step_id <=1 then (ws.end_time-ws.start_time)  end) as dispatchTime,"
-            + "sum(case  when step_id <=2 then (ws.end_time-ws.start_time)  end) as responseTime,"
-            + "sum(case  when step_id <=3 then (ws.end_time-ws.start_time)  end) as arrivedTime,"
-            + "sum(case  when step_id <=4 then (ws.end_time-ws.start_time)  end) as workingTime,"
-            + "sum(case  when step_id <=5 then (ws.end_time-ws.start_time)  end) as ETTRTime "
+    private static final String SQL_PROCESS_TIME_GROSS = "select cast(avg(wst.responseTime)as integer) as avg_respond,cast(avg(wst.arrivedTime)as integer) as avg_arrived, cast(avg(wst.ETTRTime)as integer) as avg_ETTR ,"
+            + "cast(avg(wst.dispatchTime)as integer) as dispatchTime, cast(avg(wst.workingTime)as integer) as workingTime "
+            + "from asset_info ai, work_order wo, (select work_order_id,count(*) as count,sum(case  when step_id <=1 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as dispatchTime,"
+            + "sum(case  when step_id <=2 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as responseTime,"
+            + "sum(case  when step_id <=3 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as arrivedTime,"
+            + "sum(case  when step_id <=4 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as workingTime,"
+            + "sum(case  when step_id <=5 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as ETTRTime "
             + "from work_order_step ws where start_time> :start_time and end_time< :end_time   group by work_order_id ) wst "
             + "where ai.id=wo.asset_id and wo.id=wst.work_order_id and ai.site_id=:site_id and ai.hospital_id=:hospital_id :conditionType :conditionDept :conditionSupplier ";
 
