@@ -39,6 +39,7 @@ INSERT INTO user_account(id,site_id,hospital_id,org_id,login_name,name,pwd_salt,
 INSERT INTO user_account(id,site_id,hospital_id,org_id,login_name,name,pwd_salt,password,email,telephone,is_super_admin,is_site_admin,is_local_admin,is_active,is_online,last_login_time) values ('7', '2', '2', '6', 'EQPHead', 'Head of Equipment Dept', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'assethead@a.com', '', 'f', 'f', 'f', 't', 'f', null);
 INSERT INTO user_account(id,site_id,hospital_id,org_id,login_name,name,pwd_salt,password,email,telephone,is_super_admin,is_site_admin,is_local_admin,is_active,is_online,last_login_time) values ('8', '2', '2', '4', 'RADHead', 'Head of Radiology Dept', 'b380e7bb58d700d5','092561820bad0790cd3b3d5546809287c0cb17e67e6b8dd28665b292560298da', 'radiologyHead@a.com', null, 'f', 'f', 'f', 't', 'f', null);
 
+INSERT INTO user_role(id,user_id,role_id) VALUES ('0', '0', '9');
 INSERT INTO user_role(id,user_id,role_id) VALUES ('1', '2', '1');
 INSERT INTO user_role(id,user_id,role_id) VALUES ('2', '3', '2');
 INSERT INTO user_role(id,user_id,role_id) VALUES ('3', '4', '4');
