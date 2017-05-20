@@ -11,6 +11,7 @@ import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrder;
 import com.ge.apm.domain.WorkflowConfig;
+import com.ge.apm.service.utils.TimeUtils;
 import com.ge.apm.service.wechat.CoreService;
 import com.ge.apm.service.wechat.WorkOrderWeChatService;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
@@ -197,11 +198,15 @@ public class WorkOrderController {
         if (list.isEmpty())
             return null;
         AssetInfo info = list.get(0);
-        Map map = new HashMap();
-        map.put("assetId", info.getId());
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("deviceSn", info.getFunctionType());
         map.put("assetName", info.getName());
-        map.put("supplier", info.getSupplierId()==null?"":service.getSupplierName(info.getSupplierId()));
         map.put("assetGroup", service.getMsgValue("assetGroup", info.getAssetGroup().toString()));
+        map.put("maitanance", info.getMaitanance());
+        map.put("maitananceTel", info.getMaitananceTel());
+        map.put("warrantyDate", TimeUtils.getStrDate(info.getWarrantyDate(), "yyyy-MM-dd HH:mm:ss"));
+        map.put("assetId", info.getId());
+        map.put("supplier", info.getSupplierId()==null?"":service.getSupplierName(info.getSupplierId()));
 //        map.put("assetStatus", service.getMsgValue("assetStatus", info.getStatus()+""));
         map.put("assetStatus", info.getStatus());
         

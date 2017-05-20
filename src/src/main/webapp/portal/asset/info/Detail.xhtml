@@ -11,17 +11,20 @@
     <ui:define name="content">
         <div class="ui-g clearfix">
             <div class="ui-g-12 card cardTitle">
-                <p:outputLabel class="pageTitle" value="#{msg.AssetInfoDetail}"/>
+                <p:outputLabel class="pageTitle" value="#{assetInfoController.getAssetDetailTitle()}"/>
             </div>
 
         </div>
 
-        <div class="ui-g-12 card">
-            <p:link outcome="/portal/analysis/assetUsageSingle.xhtml" value="#{msg.DeviceUtilizationAnalysis}">
-                <f:param name="asset_name" value="#{assetInfoController.selected.name}" />
-                <f:param name="asset_id" value="#{assetInfoController.selected.id}" />
-            </p:link>
-        <br/>
+        <div class="ui-g-12 card" >
+       		<h:panelGroup rendered="#{!assetInfoController.terminate}">
+	            <p:link outcome="/portal/analysis/assetUsageSingle.xhtml" value="#{msg.DeviceUtilizationAnalysis}">
+	                <f:param name="asset_name" value="#{assetInfoController.selected.name}" />
+	                <f:param name="asset_id" value="#{assetInfoController.selected.id}" />
+            	</p:link>
+       			<br/>
+			</h:panelGroup>
+
 
         <p:accordionPanel id="accordion" multiple="false" >
             <p:tab title="#{msg.BasicInfo}">
@@ -168,12 +171,6 @@
                         <label class="label">#{msg.clinicalOwnerTel}</label>
                         <p:inputText id="clinicalOwnerTel" value="#{assetInfoController.selected.clinicalOwnerTel}" readonly="true"/>
                     </h:panelGroup>
-                    
-                    
-                    <h:panelGroup>
-                        <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isValid}" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
-                    </h:panelGroup>
-
                     <h:panelGroup>
                         <label class="label">#{msg.manufactDate}</label>
                         <p:inputText id="manufactDate" value="#{assetInfoController.selected.manufactDate}" readonly="true">
@@ -444,7 +441,7 @@
                 </p:tab>
             </p:tabView>
         </h:form>
-        
+        	
             <h:panelGroup >
                 <p:commandButton id="returnButton" value="#{msg.Return}" icon="ui-icon-arrow-back" action="#{assetInfoController.getListPageLink()}" immediate="true"  update=":growl" style="float:left"/>
             </h:panelGroup>

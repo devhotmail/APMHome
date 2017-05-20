@@ -67,19 +67,37 @@
                     <div class="weui-cells__title">资产基本信息</div>
                     <div class="weui-form-preview">
                         <div class="weui-form-preview__bd">
+							<div class="weui-form-preview__item">
+                                <label class="weui-form-preview__label">设备编号</label>
+                                <span class="weui-form-preview__value" id="deviceSnInfo"></span>
+                                <input id="assetIdInfo" type="hidden"/>
+                            </div>
                             <div class="weui-form-preview__item">
                                 <label class="weui-form-preview__label">资产名称</label>
                                 <span class="weui-form-preview__value" id="assetNameInfo"></span>
                                 <input id="assetIdInfo" type="hidden"/>
                             </div>
-                            <div class="weui-form-preview__item">
-                                <label class="weui-form-preview__label">供应商</label>
-                                <span class="weui-form-preview__value" id="supplierInfo"></span>
-                            </div>
-                            <div class="weui-form-preview__item">
+							<div class="weui-form-preview__item">
                                 <label class="weui-form-preview__label">类型</label>
                                 <span class="weui-form-preview__value" id="assetGroupInfo"></span>
                             </div>
+							<div class="weui-form-preview__item">
+                                <label class="weui-form-preview__label">维修商</label>
+                                <span class="weui-form-preview__value" id="maitananceInfo"></span>
+							</div>
+							<div class="weui-form-preview__item">
+                                <label class="weui-form-preview__label">维修商电话</label>
+                                <span class="weui-form-preview__value" id="maitananceTelInfo"></span>
+							</div>
+							<div class="weui-form-preview__item">
+                                <label class="weui-form-preview__label">保修截止日期</label>
+                                <span class="weui-form-preview__value" id="warrantyDateInfo"></span>
+							</div>
+                            <!-- <div class="weui-form-preview__item">
+                                <label class="weui-form-preview__label">供应商</label>
+                                <span class="weui-form-preview__value" id="supplierInfo"></span>
+                            </div>-->
+                            
 <!--                            <div class="weui-form-preview__item">
                                 <label class="weui-form-preview__label">状态</label>
                                 <span class="weui-form-preview__value" id="assetStatus"></span>
@@ -190,7 +208,11 @@
                     $('#supplierInfo').html(pageManager.workOrder.supplier);
                     $('#assetGroupInfo').html(pageManager.workOrder.assetGroup);
 //                    $('#assetStatus').html(pageManager.workOrder.assetStatus);
-                    
+                    $('#deviceSnInfo').html(pageManager.workOrder.deviceSn);
+                    $('#maitananceInfo').html(pageManager.workOrder.maitanance);
+                    $('#maitananceTelInfo').html(pageManager.workOrder.maitananceTel);      
+                    $('#warrantyDateInfo').html(pageManager.workOrder.warrantyDate);               
+
                     //图片功能开始
                     var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
                         $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),

@@ -160,7 +160,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (255, 'label', 'BasicInfo', '基本信息', 'Basic Info', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (256, 'label', 'UsageAmount', '使用量', 'Usage Amount', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (257, 'label', 'Attachment', '附件', 'Attachment', NULL, -1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (259, 'label', 'ChecklistAdmin', '巡检/质控/计量条目维护', 'Checklist Mgmt.', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (259, 'label', 'ChecklistAdmin', '巡检/计量条目维护', 'Checklist Mgmt.', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (260, 'label', 'checkListSetting', '检查项配置', 'Checklist Configure', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (261, 'label', 'checkListItem', '检查项', 'Checklist Item', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (263, 'label', 'AssetStatusTimeChange', '资产状态与时间变更', 'Asset Status And Confirm Time Change', NULL, -1);
@@ -381,6 +381,13 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (770,'field_name','eamId','EAM系统编号','EAM ID',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (771,'field_name','systemId','厂商System Id','System ID',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (772,'field_name','isTakeOrderEnabled','允许抢单?','Compte For Order Enabled',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (773, 'label', 'TerminateAssetInfo', '报废资产信息', 'terminate Asset Info', NULL, -1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (774, 'label', 'ActiveAsset', '激活资产', 'active asset', NULL, -1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (775, 'label', 'InactiveAsset', '报废资产', 'inactive asset', NULL, -1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (776, 'label', 'BuildAsset', '资产建档', 'build asset', NULL, -1);
 
 
 -- field value code types  ( id from 1400)
@@ -542,6 +549,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1632, 'label', 'ForeighKeyErrorWithSiteId', '该租户不可删除: 请先删除其下面的组织机构信息', NULL, NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1633, 'label', 'ForeighKeyErrorWithOrgId', '该组织机构不可删除: 请先删除其下面的组织机构或用户信息', NULL, NULL, -1);
 
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1634, 'label', 'TerminateAssetInfoDetail', '报废资产信息', 'terminate Asset Detail Info', NULL, -1);
 --qr_code_lib status ( id from 1700)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1700,'qrCodeLibStatus','1', '已发行','issued',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1701,'qrCodeLibStatus','2', '已上传','uploaded',null,-1);

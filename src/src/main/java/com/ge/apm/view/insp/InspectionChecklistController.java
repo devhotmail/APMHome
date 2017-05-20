@@ -67,7 +67,7 @@ public class InspectionChecklistController extends JpaCRUDController<InspectionC
         if (nodeData instanceof AssetInfo) {
             new DefaultTreeNode("checklist", new Object[]{1, WebUtil.getFieldValueMessage("checklistType", "1")}, node);
             new DefaultTreeNode("checklist", new Object[]{2, WebUtil.getFieldValueMessage("checklistType", "2")}, node);
-            new DefaultTreeNode("checklist", new Object[]{3, WebUtil.getFieldValueMessage("checklistType", "3")}, node);
+            //new DefaultTreeNode("checklist", new Object[]{3, WebUtil.getFieldValueMessage("checklistType", "3")}, node);
         } else {
             for (TreeNode item : node.getChildren()) {
                 setCheckType(item);

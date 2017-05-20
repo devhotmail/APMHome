@@ -8,7 +8,7 @@
     <ui:define name="content">
         <div class="ui-g clearfix">
             <div class="ui-g-12 card cardTitle">
-                <p:outputLabel class="pageTitle" value="#{assetInfoController.CRUDActionName} #{msg.AssetInfo}"/>
+                <p:outputLabel class="pageTitle" value="#{assetInfoController.CRUDActionName} #{assetInfoController.getAssetEditTitle()}"/>
             </div>
 
             <div class="ui-g-12 card">
@@ -336,6 +336,7 @@
                     <h:panelGroup >
                         <p:commandButton value="#{msg.Save}" icon="ui-icon-check" action="#{assetInfoController.applyChange()}" validateClient="true" update=":growl" style="float:left"/>
                         <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="#{assetInfoController.getListPageLink()}" immediate="true"  update=":growl" style="float:left"/>
+                        <p:commandButton id="setIsValid" value="#{assetInfoController.getButtonName()}" icon="ui-icon-arrow-back" action="#{assetInfoController.setValidButton}" immediate="true"  update=":growl" style="float:left"/>
                     </h:panelGroup>
                 </h:form>
             </div>

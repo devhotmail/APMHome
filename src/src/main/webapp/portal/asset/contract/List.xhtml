@@ -57,7 +57,8 @@
                             </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.AssetContractAmount}" sortBy="#{item.contractAmount}" >
-                            <h:outputText value="#{item.contractAmount}"/>
+                            <!-- <h:outputText  value="#{item.contractAmount}"/> -->
+                            <p:inputNumber value="#{item.contractAmount}" readonly="true"> </p:inputNumber>
                         </p:column>
                         <p:column headerText="#{msg.AssetContractAttachment}" exportable="false">
                             <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" rendered="#{item.fileId > 0}">

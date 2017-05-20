@@ -122,7 +122,6 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");
         String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr, "actionName");
-
         // String actionName = WebUtil.getRequestParameter("actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
             try {
@@ -132,10 +131,18 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             }
         } else if ("View".equalsIgnoreCase(actionName)) {
             // setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+        	 String terminateStr = (String) UrlEncryptController.getValueFromMap(encodeStr, "terminate");
+             if(terminateStr != null){
+             	terminate = Boolean.parseBoolean(terminateStr);
+             }
             setSelectedByUrlParam(encodeStr, "selectedid");
             prepareView();
         } else if ("Edit".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+            String terminateStr = (String) UrlEncryptController.getValueFromMap(encodeStr, "terminate");
+            if(terminateStr != null){
+            	terminate = Boolean.parseBoolean(terminateStr);
+            }
             setSelectedByUrlParam(encodeStr, "selectedid");
             prepareEdit();
         } else if ("Delete".equalsIgnoreCase(actionName)) {
@@ -160,8 +167,16 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void setFileService(AttachmentFileService fileService) {
         this.fileService = fileService;
     }
+    
+    public Boolean getTerminate() {
+		return terminate;
+	}
 
-    @Override
+	public void setTerminate(Boolean terminate) {
+		this.terminate = terminate;
+	}
+
+	@Override
     protected AssetInfoRepository getDAO() {
         return dao;
     }
@@ -177,7 +192,10 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public void onSelectAsset() throws IOException{
-        String url = "actionName=View&selectedid=" + selected.getId().toString() + "&asset_name=" + selected.getName();
+        String url = "actionName=View&selectedid=" 
+        			+ selected.getId().toString() 
+        			+ "&asset_name=" + selected.getName()
+					+ "&terminate=" + this.terminate;
         url = "Detail.xhtml?str="+UrlParamUtil.encodeUrlQueryString(url);
                 
         FacesContext.getCurrentInstance().getExternalContext().redirect(url);
@@ -189,17 +207,22 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public String getDetailPage() {
-        operation = "Detail.xhtml?actionName=View&selectedid=" + selected.getId() + "&asset_name=" + selected.getName();
+        operation = "Detail.xhtml?actionName=View&selectedid=" + selected.getId() 
+        		+ "&asset_name=" + selected.getName();
         return operation;
     }
 
     public String getDetailPage(String assetId, String assetName) {
-        operation = "Detail.xhtml?actionName=View&selectedid=" + assetId + "&asset_name=" + assetName;
+        operation = "Detail.xhtml?actionName=View&selectedid=" + assetId 
+        		+ "&asset_name=" + assetName
+        		+ "&terminate=" + this.terminate;
         return UrlEncryptController.encodeUrlParam(operation);
     }
 
     public String getEditPage(String assetId, String assetName) {
-        operation = "Create.xhtml?actionName=Edit&selectedid=" + assetId + "&asset_name=" + assetName;
+        operation = "Create.xhtml?actionName=Edit&selectedid=" + assetId 
+        		+ "&asset_name=" + assetName
+        		+ "&terminate=" + this.terminate;
         return UrlEncryptController.encodeUrlParam(operation);
     }
 
@@ -227,7 +250,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public String getContractAddLink() {
         return "/portal/asset/contract/List?assetId=" + selected.getId() + "&actionName=Create";
     }
-
+    
     @Override
     public void onBeforeNewObject(AssetInfo object) {
         object.setSiteId(UserContextService.getSiteId());
@@ -341,6 +364,18 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public String getListPageLink() {
         return "List?faces-redirect=true" + (this.isTerminate() ? "&terminate=true" : "");
     }
+    
+  public String setValidButton(){
+	  if(terminate){
+		  this.selected.setIsValid(true);
+		  this.selected.setTerminateDate(null);
+	  }else{
+		  this.selected.setIsValid(false);
+		  this.selected.setTerminateDate(new Date());
+	  }
+	  update();
+	  return "List?faces-redirect=true" + (terminate ? "&terminate=true" : "");
+  }
 
     public UserAccount getOwner() {
         return owner;
@@ -673,5 +708,23 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     	}
     	return null;
     }
+    
+    public String getAssetDetailTitle(){
+    	return terminate ? WebUtil.getMessage("TerminateAssetInfoDetail"):WebUtil.getMessage("AssetInfoDetail");
+    }
+    
+    public String getAssetEditTitle(){
+    	return terminate ? WebUtil.getMessage("TerminateAssetInfo"):WebUtil.getMessage("AssetInfo");
+    }
+    
+    public String getAssetListTitle(){
+    	return terminate ? WebUtil.getMessage("TerminateAssetInfo"):WebUtil.getMessage("AssetInfo");
+    }
+    
+    public String getButtonName(){
+    	return terminate ? WebUtil.getMessage("ActiveAsset"):WebUtil.getMessage("InactiveAsset");
+    }
+    
+    
 
 }
