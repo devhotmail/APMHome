@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="AssetTagSubscribEditDlg" widgetVar="AssetTagSubscribEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{tagSubscriberController.CRUDActionName} 修改标签关注">
+            <h:form id="AssetTagSubscribEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{tagSubscriberController.selected != null}">
+                        <h:panelGroup >
+                            <label class="label"> 标签*</label>
+                            <p:selectOneMenu disabled="#{tagSubscriberController.selected.tagId != null}" value="#{tagSubscriberController.selected.tagId}" required="true" requiredMessage="标签不能为空">
+                                <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                <f:selectItems value="#{tagSubscriberController.assetTags}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+
+                        <h:panelGroup >
+                            <label class="label">关注选项*</label>
+                            <p:selectOneMenu  value="#{tagSubscriberController.selected.receiveMsgMode}" required="true"  >
+                                <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                <f:selectItems value="#{tagSubscriberController.msgModeList}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}" />
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <label class="label">关注工单超时消息</label>
+                            <p:selectBooleanCheckbox value="#{tagSubscriberController.selected.isReceiveTimeoutMsg}" />
+                        </h:panelGroup>
+
+                     <!--   <h:panelGroup>
+                            <label class="label">关注工单对话消息</label>
+                            <p:selectBooleanCheckbox value="#{tagSubscriberController.selected.isReceiveChatMsg}" />
+                        </h:panelGroup>-->
+
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{tagSubscriberController.save}" value="#{msg.Save}" update=":AssetTagSubscribEditDlg, :TagSubscriberForm:dataList, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'AssetTagSubscribEditDialog');"/>
+
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('AssetTagSubscribEditDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -29,7 +29,7 @@ public class AssetTagMsgSubscriber  implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "receive_msg_mode")
-    private int receiveMsgMode;
+    private Integer receiveMsgMode;
 
     @Basic(optional = false)
     @NotNull
@@ -55,19 +55,20 @@ public class AssetTagMsgSubscriber  implements Serializable {
         this.id = id;
     }
 
-    public boolean isReceiveChatMsg() {
+
+    public boolean getIsReceiveChatMsg() {
         return isReceiveChatMsg;
     }
 
-    public void setReceiveChatMsg(boolean receiveChatMsg) {
+    public void setIsReceiveChatMsg(boolean receiveChatMsg) {
         isReceiveChatMsg = receiveChatMsg;
     }
 
-    public int getReceiveMsgMode() {
+    public Integer getReceiveMsgMode() {
         return receiveMsgMode;
     }
 
-    public void setReceiveMsgMode(int receiveMsgMode) {
+    public void setReceiveMsgMode(Integer receiveMsgMode) {
         this.receiveMsgMode = receiveMsgMode;
     }
 
@@ -87,11 +88,11 @@ public class AssetTagMsgSubscriber  implements Serializable {
         this.tagId = tagId;
     }
 
-    public boolean isReceiveTimeoutMsg() {
+    public boolean getIsReceiveTimeoutMsg() {
         return isReceiveTimeoutMsg;
     }
 
-    public void setReceiveTimeoutMsg(boolean receiveTimeoutMsg) {
+    public void setIsReceiveTimeoutMsg(boolean receiveTimeoutMsg) {
         isReceiveTimeoutMsg = receiveTimeoutMsg;
     }
 

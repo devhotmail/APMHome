@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/inspection.css" />
+
+        <style type="text/css">
+            .ui-datalist-content{
+                border: 0!important;
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g-12 card ">
+            <h:form id ="TagSubscriberForm">
+<p:dataTable  id="dataList" value="#{tagSubscriberController.lazyModel}" var="item" widgetVar="varDataList" selectionMode="single" selection="#{tagSubscriberController.selected}" lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+              rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+              paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+              currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+              rows="20" emptyMessage="#{msg.noRecordFound}"
+              rowsPerPageTemplate="20,40,60">
+    <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
+    <p:ajax event="filter" listener="#{tagSubscriberController.onFilter}" />
+
+    <p:column headerText="标签" filterMatchMode="LIKE">
+        <h:outputText value="#{tagSubscriberController.getTagName(item.tagId)}" />
+    </p:column>
+
+    <p:column headerText="推送工单流程消息" >
+        <h:outputText value="#{tagSubscriberController.getMsgMode(item.receiveMsgMode)}" />
+    </p:column>
+   <p:column headerText="工单超时消息" ><h:outputText value="#{item.isReceiveTimeoutMsg?'已选':'未选'}" style="color:#{item.isReceiveTimeoutMsg?'blue':'red'} "/></p:column>
+   <!-- <p:column headerText="关注工单超时消息xxx" >
+       <h:outputText value="#{item.isReceiveChatMsg?'已选':'未选'}" style="color:#{item.isReceiveChatMsg?'blue':'red'} "/></p:column>
+    <p:column headerText="关注工单对话消息" >
+        <h:outputText  value="#{item.isReceiveTimeoutMsg?'已选':'未选'}" style="color:#{item.isReceiveTimeoutMsg?'blue':'red'}" />
+    </p:column>-->
+
+
+    <f:facet name="{Toolbar}">
+      <!--  <p:commandButton id="createButton" actionListener="#{tagSubscriberController.prepareCreate}" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" />-->
+
+        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{tagSubscriberController.prepareCreate}" update=":AssetTagSubscribEditDlg" oncomplete="PF('AssetTagSubscribEditDialog').show()"/>
+        <p:commandButton id="editButton" actionListener="#{tagSubscriberController.prepareEdit}" icon="ui-icon-pencil" title="#{msg.Edit}"  update=":AssetTagSubscribEditDlg" oncomplete="PF('AssetTagSubscribEditDialog').show()" disabled="#{empty tagSubscriberController.selected}"/>
+
+
+        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{tagSubscriberController.delete}" update=":TagSubscriberForm:dataList" disabled="#{empty tagSubscriberController.selected}"/>
+    </f:facet>
+</p:dataTable>
+
+            </h:form>
+            <ui:include src="EditSub.xhtml"/>
+        </div>
+    </ui:define>
+</ui:composition>
