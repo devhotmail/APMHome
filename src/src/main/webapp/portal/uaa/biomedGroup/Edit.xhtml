@@ -10,29 +10,27 @@
 
     <p:dialog id="BiomedGroupEditDlg" widgetVar="BiomedGroupEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{biomedGroupController.CRUDActionName} 维修工程师群组">
         <h:form id="BiomedGroupEditForm">
-            <p:fieldset legend="维修工程师群组信息">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{biomedGroupController.selected != null}">
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="name" value="#{biomedGroupController.selected.groupName}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
-                            <label>#{msg.name}*</label>
-                        </h:panelGroup>
-                    </p:panelGrid>
-                </h:panelGroup>
-            </p:fieldset>
+            <br/>
+            <h:panelGroup id="display">
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{biomedGroupController.selected != null}">
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="name" value="#{biomedGroupController.selected.groupName}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                        <label>维修工程师群组名称*</label>
+                    </h:panelGroup>
+                </p:panelGrid>
+            </h:panelGroup>
+            <br/>
             <p:fieldset legend="维修工程师选择">
-                <p:fieldset legend="维修工程师筛选条件">
-                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                        <h:panelGroup >
-                            <label class="label">所属医院</label>
-                            <p:selectOneMenu id="hospitalId" value="#{biomedGroupController.queryUserAccount.hospitalId}">
-                                <p:ajax  listener="#{biomedGroupController.getQueryUserAccountList()}" update="UserAccountPickList" />
-                                <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                <f:selectItems value="#{biomedGroupController.getHospitalListFilter()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                            </p:selectOneMenu>
-                        </h:panelGroup>
-                    </p:panelGrid>
-                </p:fieldset>
+                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                    <h:panelGroup >
+                        <label class="label">所属医院</label>
+                        <p:selectOneMenu id="hospitalId" value="#{biomedGroupController.queryUserAccount.hospitalId}">
+                            <p:ajax  listener="#{biomedGroupController.getQueryUserAccountList()}" update="UserAccountPickList" />
+                            <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                            <f:selectItems value="#{biomedGroupController.getHospitalListFilter()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                </p:panelGrid>
                 <p:pickList id="UserAccountPickList" value="#{biomedGroupController.availableUserAccount}" var="item"
                             itemValue="#{item}" itemLabel="#{item.name}" showCheckbox="false" responsive="true"
                             showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="userAccountConverter" >
@@ -47,7 +45,6 @@
                     </p:column>
                 </p:pickList>
             </p:fieldset>
-
             <br/>
             <p:commandButton validateClient="true" actionListener="#{biomedGroupController.save}" value="#{msg.Save}" update="display,:BiomedGroupEditDlg, :BiomedGroupListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'BiomedGroupEditDialog');"/>
             &nbsp;&nbsp;
