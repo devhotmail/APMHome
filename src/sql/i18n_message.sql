@@ -821,7 +821,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9100,'focusOption','0',  '所有工单流程消息','all workorder msg',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9101,'focusOption','1',  '仅工单创建和关单消息','only create and shutdown msg',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9102,'focusOption','1',  '不推送工单消息','no need push workorder msg',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9102,'focusOption','2',  '不推送工单消息','no need push workorder msg',null,-1);
 
 
 
