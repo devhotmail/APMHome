@@ -175,6 +175,8 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (272, 'label', 'ChoseAssets', '选中设备', 'Chose Assets', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (273, 'label', 'ChoosingAssets', '选择设备列表', 'Choosing Assets', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (274, 'label', 'FilterCondition', '过滤条件', 'Filter Conditions', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (275, 'label', 'AssetTag', '设备标签管理', 'AssetTag Mgmt', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (276, 'label', 'BiomedGroup', '维修工程师群组管理', 'BiomedGroup Mgmt', NULL, -1);
 
 
 -- Entity Object Names  ( id from 400 to  599)
