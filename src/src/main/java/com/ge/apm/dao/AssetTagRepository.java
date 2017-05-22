@@ -11,6 +11,6 @@ import java.util.List;
  */
 public interface AssetTagRepository extends GenericRepository<AssetTag> {
 
-    @Query(value = "select * from asset_tag where id not in (select tag_id from asset_tag_msg_subscriber where subscribe_user_id=?1)",nativeQuery =true)
-    public List<AssetTag> getUnSbuscriberTag(Integer userId);
+    @Query(value = "select * from asset_tag where hospital_id=?1 and id not in (select tag_id from asset_tag_msg_subscriber where subscribe_user_id=?2)",nativeQuery =true)
+    public List<AssetTag> getUnSbuscriberTag(int hospitalId, int userId);
 }

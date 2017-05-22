@@ -38,6 +38,7 @@ public class TagSubscriberController extends JpaCRUDController<AssetTagMsgSubscr
     @Override
     protected void init() {
         this.filterBySite =false;
+        
         dao= WebUtil.getBean(AssetTagMsgSubscriberRepository.class);
         assetTagRepository =WebUtil.getBean(AssetTagRepository.class);
         currentUser = UserContextService.getCurrentUserAccount();
@@ -49,8 +50,6 @@ public class TagSubscriberController extends JpaCRUDController<AssetTagMsgSubscr
         for (I18nMessage local1 : msgModeList) {
             hmMsgMode.put(Integer.parseInt(local1.getMsgKey()), local1.getValue());
         }
-        assetTags =  assetTagRepository.getUnSbuscriberTag(currentUser.getId());
-        System.out.println();
     }
     public String getTagName(Integer tagId){
         return assetTagRepository.findById(tagId).getName();
@@ -85,7 +84,7 @@ public class TagSubscriberController extends JpaCRUDController<AssetTagMsgSubscr
     public void prepareCreate() throws InstantiationException, IllegalAccessException {
         super.prepareCreate();
         this.selected.setReceiveMsgMode(null);
-        assetTags =  assetTagRepository.getUnSbuscriberTag(currentUser.getId());
+        assetTags =  assetTagRepository.getUnSbuscriberTag(currentUser.getHospitalId(), currentUser.getId());
     }
 
     @Override
