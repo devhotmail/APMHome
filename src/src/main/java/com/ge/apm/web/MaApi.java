@@ -6,10 +6,7 @@ import com.ge.apm.service.api.CommonService;
 import com.ge.apm.service.api.MaService;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Ints;
-import javaslang.Tuple;
-import javaslang.Tuple2;
-import javaslang.Tuple3;
-import javaslang.Tuple5;
+import javaslang.*;
 import javaslang.control.Option;
 import javaslang.control.Try;
 import org.slf4j.Logger;
@@ -51,7 +48,10 @@ public class MaApi {
                                                                   @Pattern(regexp = "type|dept|supplier") @RequestParam(name = "groupby", required = false) String groupBy,
                                                                   @Min(1) @RequestParam(name = "dept", required = false) Integer dept,
                                                                   @Min(1) @RequestParam(name = "type", required = false) Integer type,
-                                                                  @Min(1) @RequestParam(name = "supplier", required = false) Integer supplier) {
+                                                                  @Min(1) @RequestParam(name = "supplier", required = false) Integer supplier,
+                                                                  @Pattern(regexp = "cost|wo") @RequestParam(name = "rltgrp", required = true) String rltGrp,
+                                                                  @Min(1) @RequestParam(name = "limit", required = false, defaultValue = "" + Integer.MAX_VALUE) Integer limit,
+                                                                  @Min(0) @RequestParam(name = "start", required = false, defaultValue = "0") Integer start) {
     UserAccount user = UserContext.getCurrentLoginUser();
     int siteId = user.getSiteId();
     int hospitalId = user.getHospitalId();
@@ -61,26 +61,26 @@ public class MaApi {
     Map<Integer, String> suppliers = commonService.findSuppliers(siteId);
     log.info("inputs: from {}, to {}, groupBy {}, dept {}, type {}, supplier {}", from, to, groupBy, dept, type, supplier);
     if (Option.of(groupBy).isDefined()) {
-      Observable<Tuple2<Integer, Tuple2<Double, Double>>> items = maService.findAstMtGroups(siteId, hospitalId, from, to, dept, type, supplier, groupBy);
+      Observable<Tuple2<Integer, Tuple3<Double, Double, Double>>> items = maService.findAstMtGroups(siteId, hospitalId, from, to, dept, type, supplier, groupBy, rltGrp);
       return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
         .body(new ImmutableMap.Builder<String, Object>()
-          .put("root", mapRoot(items.map(v -> v._2._2), dept, type, supplier, groupBy))
-          .put("items", mapGroups(items, "type".equals(groupBy) ? groups : ("dept".equals(groupBy) ? depts : suppliers)))
+          .put("root", mapRoot(items.map(v -> Tuple.of(v._2._2, v._2._3)), dept, type, supplier, groupBy, rltGrp, start, limit))
+          .put("items", mapGroups(items, "type".equals(groupBy) ? groups : ("dept".equals(groupBy) ? depts : suppliers), rltGrp, start, limit))
           .build());
     } else {
-      Observable<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple3<Double, Double, Double>>> items = maService.findAstMtItems(siteId, hospitalId, from, to, dept, type, supplier);
+      Observable<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> items = maService.findAstMtItems(siteId, hospitalId, from, to, dept, type, supplier, rltGrp);
       return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
         .body(new ImmutableMap.Builder<String, Object>()
-          .put("root", mapRoot(items.map(v -> v._2._3), dept, type, supplier, groupBy))
-          .put("items", mapAssets(items))
+          .put("root", mapRoot(items.map(v -> Tuple.of(v._2._3, v._2._4)), dept, type, supplier, groupBy, rltGrp, start, limit))
+          .put("items", mapAssets(items, rltGrp, start, limit))
           .build());
     }
   }
 
   //id, name, dept, type, supplier
-  //price, onrate, maintenanceCost
-  private Iterable<ImmutableMap<String, Object>> mapAssets(Observable<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple3<Double, Double, Double>>> items) {
-    return items.map(v -> new ImmutableMap.Builder<String, Object>()
+  //price, onrate, labor/repair,parts/PM
+  private Iterable<ImmutableMap<String, Object>> mapAssets(Observable<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> items, String rltGrp, Integer start, Integer limit) {
+    return items.skip(start).limit(limit).map(v -> new ImmutableMap.Builder<String, Object>()
       .put("id", v._1._1)
       .put("name", Option.of(v._1._2).getOrElse(""))
       .put("dept", Option.of(v._1._3).getOrElse(0))
@@ -88,28 +88,34 @@ public class MaApi {
       .put("supplier", Option.of(v._1._5).getOrElse(0))
       .put("price", v._2._1)
       .put("onrate", v._2._2)
-      .put("maintenance_cost", v._2._3)
+      .put("cost".equals(rltGrp) ? "labor" : "repair", v._2._3)
+      .put("cost".equals(rltGrp) ? "parts" : "PM", v._2._4)
       .build()).toBlocking().toIterable();
   }
 
   //group_id
-  //onrate, maintenanceCost
-  private Iterable<ImmutableMap<String, Object>> mapGroups(Observable<Tuple2<Integer, Tuple2<Double, Double>>> items, Map<Integer, String> groups) {
-    return items.map(v -> new ImmutableMap.Builder<String, Object>()
+  //onrate, labor/repair,parts/PM
+  private Iterable<ImmutableMap<String, Object>> mapGroups(Observable<Tuple2<Integer, Tuple3<Double, Double, Double>>> items, Map<Integer, String> groups, String rltGrp, Integer start, Integer limit) {
+    return items.skip(start).limit(limit).map(v -> new ImmutableMap.Builder<String, Object>()
       .put("id", v._1)
       .put("name", Option.of(groups.get(v._1)).getOrElse(""))
       .put("onrate", v._2._1)
-      .put("maintenance_cost", v._2._2)
+      .put("cost".equals(rltGrp) ? "labor" : "repair", v._2._2)
+      .put("cost".equals(rltGrp) ? "parts" : "PM", v._2._3)
       .build()).toBlocking().toIterable();
   }
 
   //id for group: dept-type-supplier
-  private ImmutableMap<String, Object> mapRoot(Observable<Double> costs, Integer dept, Integer type, Integer supplier, String groupBy) {
+  private ImmutableMap<String, Object> mapRoot(Observable<Tuple2<Double, Double>> costs, Integer dept, Integer type, Integer supplier, String groupBy, String rltGrp, Integer start, Integer limit) {
     return new ImmutableMap.Builder<String, Object>()
       .put("id", Option.of(groupBy)
         .map(v -> "100")
         .getOrElse(String.format("%s-%s-%s", Option.of(dept).getOrElse(0), Option.of(type).getOrElse(0), Option.of(supplier).getOrElse(0))))
-      .put("maintenance_cost", Try.of(() -> costs.reduce((a, b) -> a + b).toBlocking().single()).getOrElse(0D))
+      .put("total", costs.count().toBlocking().single())
+      .put("start", start)
+      .put("limit", limit)
+      .put("cost".equals(rltGrp) ? "labor" : "repair", Try.of(() -> costs.map(v -> v._1).reduce((a, b) -> a + b).toBlocking().single()).getOrElse(0D))
+      .put("cost".equals(rltGrp) ? "parts" : "PM", Try.of(() -> costs.map(v -> v._2).reduce((a, b) -> a + b).toBlocking().single()).getOrElse(0D))
       .build();
   }
 }
