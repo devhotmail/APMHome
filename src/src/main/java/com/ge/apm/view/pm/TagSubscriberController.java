@@ -45,16 +45,15 @@ public class TagSubscriberController extends JpaCRUDController<AssetTagMsgSubscr
         i18nMessageRepository = WebUtil.getBean(I18nMessageRepository.class);
         FieldValueMessageController fieldMsg = WebUtil.getBean(FieldValueMessageController.class, "fieldMsg");
         msgModeList = fieldMsg.getFieldValueList("focusOption");
-
         for (I18nMessage local1 : msgModeList) {
             hmMsgMode.put(Integer.parseInt(local1.getMsgKey()), local1.getValue());
         }
-        assetTags =  assetTagRepository.getUnSbuscriberTag(currentUser.getId());
-        System.out.println();
+
     }
     public String getTagName(Integer tagId){
         return assetTagRepository.findById(tagId).getName();
     }
+
 
 
     public String getMsgMode(int msgmode){

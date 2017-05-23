@@ -176,6 +176,8 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (273, 'label', 'ChoosingAssets', '选择设备列表', 'Choosing Assets', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (274, 'label', 'FilterCondition', '过滤条件', 'Filter Conditions', NULL, -1);
 
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (277, 'label', 'AssetTagMsgSubscriber', '设备标签关注', 'assetTagMsg Subscriber', NULL, -1);
+
 
 -- Entity Object Names  ( id from 400 to  599)
 
