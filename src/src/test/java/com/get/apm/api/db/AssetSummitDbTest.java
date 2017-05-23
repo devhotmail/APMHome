@@ -34,7 +34,10 @@ public class AssetSummitDbTest {
     .VALUES("dept_id", ":dept_id")
     .VALUES("supplier_id", ":supplier_id")
     .VALUES("revenue", ":revenue")
-    .VALUES("maintenance_cost", ":maintenance_cost")
+    .VALUES("mt_manpower", ":mt_manpower")
+    .VALUES("mt_accessory", ":mt_accessory")
+    .VALUES("pm_manpower", ":pm_manpower")
+    .VALUES("pm_accessory", ":pm_accessory")
     .VALUES("deprecation_cost", ":deprecation_cost")
     .VALUES("inject_count", ":inject_count")
     .VALUES("expose_count", ":expose_count")
@@ -73,7 +76,10 @@ public class AssetSummitDbTest {
   private Map<String, Integer> gen() {
     final int workOrderCount = ThreadLocalRandom.current().nextInt(0, 2) * ThreadLocalRandom.current().nextInt(0, 2);
     final int downTime = workOrderCount * ThreadLocalRandom.current().nextInt(3600, 86400);
-    final int maintenanceCost = downTime * ThreadLocalRandom.current().nextInt(1, 5);
+    final int mtManpower = downTime * ThreadLocalRandom.current().nextInt(1, 5) / 4;
+    final int mtAccessory = downTime * ThreadLocalRandom.current().nextInt(1, 5) / 4;
+    final int pmManpower = downTime * ThreadLocalRandom.current().nextInt(1, 5) / 4;
+    final int pmAccessory = downTime * ThreadLocalRandom.current().nextInt(1, 5) / 4;
     final int deprecationCost = ThreadLocalRandom.current().nextInt(50, 300);
     final int examCount = ThreadLocalRandom.current().nextInt(60, 200) * Math.abs(86400 - downTime) / 86400;
     final int examDuration = examCount * ThreadLocalRandom.current().nextInt(400, 420);
@@ -81,10 +87,13 @@ public class AssetSummitDbTest {
     final int exposeCount = examCount * ThreadLocalRandom.current().nextInt(1, 9);
     final int injectCount = examCount * ThreadLocalRandom.current().nextInt(1, 9);
     final int revenue = examCount * ThreadLocalRandom.current().nextInt(100, 900);
-    final int rating = Math.abs(revenue - maintenanceCost - deprecationCost) * examCount / 10000;
+    final int rating = Math.abs(revenue - (mtAccessory + mtManpower + pmAccessory + pmManpower) - deprecationCost) * examCount / 10000;
 
     return HashMap.of("revenue", revenue)
-      .put("maintenance_cost", maintenanceCost)
+      .put("mt_manpower", mtManpower)
+      .put("mt_accessory", mtAccessory)
+      .put("pm_manpower", pmManpower)
+      .put("pm_accessory", pmAccessory)
       .put("deprecation_cost", deprecationCost)
       .put("inject_count", injectCount)
       .put("expose_count", exposeCount)
@@ -111,7 +120,10 @@ public class AssetSummitDbTest {
         .parameter("dept_id", t._5)
         .parameter("supplier_id", t._6)
         .parameter("revenue", t._8.get("revenue"))
-        .parameter("maintenance_cost", t._8.get("maintenance_cost"))
+        .parameter("mt_manpower", t._8.get("mt_manpower"))
+        .parameter("mt_accessory", t._8.get("mt_accessory"))
+        .parameter("pm_manpower", t._8.get("pm_manpower"))
+        .parameter("pm_accessory", t._8.get("pm_accessory"))
         .parameter("deprecation_cost", t._8.get("deprecation_cost"))
         .parameter("inject_count", t._8.get("inject_count"))
         .parameter("expose_count", t._8.get("expose_count"))
