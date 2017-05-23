@@ -62,7 +62,7 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "antd": "^2.10.1",
+    "antd": "^2.10.2",
     "axios": "^0.16.0",
     "dew-filterbar": "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git",
     "dew-pager": "git+https://github.build.ge.com/foundry-sh/dew-pager.git",

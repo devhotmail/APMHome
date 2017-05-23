@@ -35,17 +35,8 @@ export default {
   subscriptions: {
     setup ({ dispatch, history }) {
       return history.listen(({ query }) => {
-        const { from, to, assetPage, dept, type } = query
-
-        if (!from || !to) {
-          return dispatch(routerRedux.push({
-            pathname: '/',
-            query: {
-              ...query,
-              ...defaultRange
-            }
-          }))
-        }
+        const { from, to, assetPage, dept, type, groupby, groupId } = query
+        if (!from || !to) return
 
         if (!assetPage) {
           return dispatch(routerRedux.push({
@@ -57,9 +48,14 @@ export default {
           }))
         }
 
+        let payload = { from, to, page: assetPage, dept, type }
+        if (groupby && groupId) {
+          payload[groupby] = groupId
+        }
+
         dispatch({
           type: 'data/get',
-          payload: { from, to, page: assetPage, dept, type }
+          payload
         })
       })
     }
@@ -85,6 +81,7 @@ export default {
             url: process.env.API_HOST + '/pm/brief/right',
             params: {
               ...restQuery,
+              groupby: 'asset',
               start: (page - 1) * pageSize,
               limit: pageSize
             }

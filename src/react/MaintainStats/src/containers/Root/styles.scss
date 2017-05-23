@@ -18,15 +18,41 @@ $filtersHeight: 50px;
   justify-content: center;
   align-items: center;
   height: calc(100vh - #{$filtersHeight});
+  position: relative;
+}
+
+
+.leftPager,
+.rightPager {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.leftPager {
+  left: 10px;
+}
+
+.rightPager {
+  right: 10px;
 }
 
 .asset,
 .group {
   flex: 1;
   height: 100%;
+  position: relative;
 
   svg {
     width: 100%;
     height: 100%;
   }
+}
+
+.groupby {
+  position: absolute;
+  right: 200px;
+  top: 20px;
 }

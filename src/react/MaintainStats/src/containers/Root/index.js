@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
+import { Dropdown, Button, Icon, Menu } from 'antd'
 import FilterBar from 'dew-filterbar'
 import Pager from 'dew-pager'
 import RingSectorLayout from 'ring-sector-layout'
@@ -25,7 +26,21 @@ const prasinous = '#6ab6a6'
 export default class Root extends Component {
   state = {
     groupAD: 0,
-    assetAD: 0
+    assetAD: 0,
+    groubyOpts: [
+      {
+        key: 'type',
+        text: '设备类型'
+      },
+      {
+        key: 'supplier',
+        text: '品牌'
+      },
+      {
+        key: 'dept',
+        text: '科室'
+      }
+    ]
   }
 
   componentDidMount () {
@@ -36,9 +51,9 @@ export default class Root extends Component {
 
   render () {
     const { group, asset, location, filter } = this.props
-    const { groupPage, assetPage, dept, type } = location.query
+    const { groupPage, assetPage, dept, type, groupby } = location.query
 
-    const { groupAD, assetAD } = this.state
+    const { groupAD, assetAD, groubyOpts } = this.state
 
     const filterOpts = [
       {
@@ -61,18 +76,39 @@ export default class Root extends Component {
       }
     ]
 
+    const menu = (
+      <Menu onClick={this.handleGroupbyChange} selectedKeys={[groupby]} trigger={['click']}>
+        {
+          groubyOpts.map((opt, i) => 
+            <Menu.Item key={opt.key}>显示{opt.text}</Menu.Item>
+          )
+        }
+      </Menu>
+    )
+
+    const { text: selectedGroupby } = groubyOpts.find(n => n.key === groupby) || groubyOpts[0]
+
     return (
       <div className={styles.container}>
         <div className={styles.filters}>
           <FilterBar options={filterOpts} onChange={this.handleFilterChange} />
         </div>
         <div className={styles.chartWrapper}>
-          <Pager
-            current={parseInt(groupPage)}
-            pageSize={group.pageSize}
-            total={group.total}
-            onChange={this.handlePageChange('group')} />      
+          <div className={styles.leftPager}>
+            <Pager
+              current={parseInt(groupPage)}
+              pageSize={group.pageSize}
+              total={group.total}
+              onChange={this.handlePageChange('group')} />
+          </div>
           <div className={styles.group}>
+            <div className={styles.groupby}>
+              <Dropdown overlay={menu}>
+                <Button style={{ marginLeft: 8 }}>
+                  {selectedGroupby} <Icon type="down" />
+                </Button>
+              </Dropdown>
+            </div>
             {
               group.items.length
                 ? <PartGroup
@@ -94,14 +130,25 @@ export default class Root extends Component {
                 : null
             }
           </div>
-          <Pager
-            current={parseInt(assetPage)}
-            pageSize={asset.pageSize}
-            total={asset.total}
-            onChange={this.handlePageChange('asset')} />
+          <div className={styles.rightPager}>
+            <Pager
+              current={parseInt(assetPage)}
+              pageSize={asset.pageSize}
+              total={asset.total}
+              onChange={this.handlePageChange('asset')} />
+          </div>
         </div>
       </div>
     )
+  }
+
+  handleGroupbyChange = (e) => {
+    const { location } = this.props
+
+    this.changeQuery({
+      groupby: e.key,
+      groupId: undefined
+    })    
   }
 
   handleGroupClick = (groupId: string) => e => {
