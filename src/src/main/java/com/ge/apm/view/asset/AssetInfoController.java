@@ -346,7 +346,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         if (!isTimeValidate()) {
             return "";
         }
-        if(!qrCode.equals(selected.getQrCode())){
+        if(!qrCode.equals(selected.getQrCode()) && !qrCode.isEmpty()){
             if(!updateQrCode()){
                 return "";
             }
