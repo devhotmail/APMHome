@@ -60,6 +60,11 @@ public class TagSubscriberController extends JpaCRUDController<AssetTagMsgSubscr
     }
 
     @Override
+    protected String getActionMessage(String actionName) {
+        return WebUtil.getMessage("标签"+this.getTagName(this.selected.getTagId())+"  "+WebUtil.getMessage(actionName));
+    }
+
+    @Override
     protected AssetTagMsgSubscriberRepository getDAO() {
         return dao;
     }
@@ -90,7 +95,6 @@ public class TagSubscriberController extends JpaCRUDController<AssetTagMsgSubscr
     public void prepareEdit() {
         super.prepareEdit();
         assetTags = assetTagRepository.find();
-
     }
 
     @Override
