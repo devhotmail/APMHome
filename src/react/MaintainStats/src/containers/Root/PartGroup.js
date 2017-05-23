@@ -1,5 +1,7 @@
 /* @flow */
 import React, { PureComponent } from 'react'
+import { connect } from 'dva'
+import { routerRedux } from 'dva/router'
 import RingSectorLayout from 'ring-sector-layout'
 import AnnulusSector from 'ring-sector-layout/dist/AnnulusSector'
 import AnnulusSectorStack from 'ring-sector-layout/dist/AnnulusSectorStack'
@@ -9,14 +11,24 @@ import { formatData } from './helper'
 const purple = '#b781b4'
 const prasinous = '#6ab6a6'
 
-export default class PartGroup extends PureComponent {
+type PropsT = {
+  data: Array<Object>,
+  switcher: string,
+  animationDirection: number,
+  onClick: Function,
+  selectedGroupId: string
+}
+
+@connect()
+export default class PartGroup extends PureComponent<*, PropsT, *> {
   render () {
-    const { data, switcher, animationDirection } = this.props
+    const { data, switcher, animationDirection, onClick, selectedGroupId } = this.props
 
     const chartData = formatData(data).map(n => {
       return {
         id: n.id,
         name: n.name,
+        origin: n.origin,
         children: n[switcher]
       }
     })
@@ -37,6 +49,7 @@ export default class PartGroup extends PureComponent {
           (item, index, innerRadius, outerRadius) => {
             const span = Math.min(range / 18, range / (chartData.length + 1))
             const { data } = item
+            const opacity = selectedGroupId ? selectedGroupId === item.data.id ? 1 : 0.3 : 1
             return (
               <AnnulusSectorStack
                 key={item.key}
@@ -52,7 +65,8 @@ export default class PartGroup extends PureComponent {
                   fill: '#6b6b6b',
                   fontSize: 16
                 }}
-                opacity={item.style.opacity} />
+                onClick={onClick(item.data.id)}
+                opacity={opacity} />
             )
           }
         }

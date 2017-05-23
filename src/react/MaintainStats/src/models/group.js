@@ -34,7 +34,7 @@ export default {
   subscriptions: {
     setup ({ dispatch, history }) {
       return history.listen(({ query }) => {
-        const { from, to, groupPage } = query
+        const { from, to, groupPage, dept, type } = query
 
         if (!from || !to) {
           return dispatch(routerRedux.push({
@@ -58,17 +58,17 @@ export default {
 
         dispatch({
           type: 'data/get',
-          payload: { from, to, page: groupPage }
+          payload: { from, to, page: groupPage, dept, type }
         })
       })
     }
-  },  
+  },
   effects: {
     *['data/get'] ({ payload: params }, { put, call, select, take }) {
       try {
         const { pageSize, query } = yield select(state => state.group)
 
-        const flag = ['from', 'to', 'page'].reduce((prev, cur) => {
+        const flag = ['from', 'to', 'page', 'dept', 'type'].reduce((prev, cur) => {
           if (query[cur] !== params[cur]) prev = false
           return prev
         }, true)

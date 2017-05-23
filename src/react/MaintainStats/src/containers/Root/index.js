@@ -19,76 +19,52 @@ const prasinous = '#6ab6a6'
 
 @connect(state => ({
   group: state.group,
-  asset: state.asset
+  asset: state.asset,
+  filter: state.filter
 }))
 export default class Root extends Component {
   state = {
-    filterOpts: [
-      {
-        type: 'range',
-        key: 'range',
-        value: {
-          // from: '2016-10-05',
-          // to: '2017-01-25'
-        },
-        // ...otherProps API same as Antd RangePicker
-      },
-      {
-        type: 'radio',
-        key: 'radio',
-        value: 1,
-        options: [
-          {
-            key: 1,
-            value: '1'
-          },
-          {
-            key: 13,
-            value: '13'
-          },
-          {
-            key: 12,
-            value: '12'
-          }
-        ],
-        // ...otherProps API same as Antd Button
-      },
-      {
-        type: 'select',
-        key: 'select',
-        value: 1,
-        options: [
-          {
-            key: 1,
-            value: '科室一'
-          },
-          {
-            key: 13,
-            value: '科室十三'
-          },
-          {
-            key: 12,
-            value: '科室十二'
-          }
-        ],
-        placeholder: '全部科室'
-        // ...otherProps API same as Antd Select
-      }
-    ],
     groupAD: 0,
     assetAD: 0
   }
 
-  render () {
-    const { filterOpts, groupAD, assetAD } = this.state
+  componentDidMount () {
+    this.props.dispatch({
+      type: 'filter/data/get'
+    })
+  }
 
-    const { group, asset, location } = this.props
-    const { groupPage, assetPage } = location.query
+  render () {
+    const { group, asset, location, filter } = this.props
+    const { groupPage, assetPage, dept, type } = location.query
+
+    const { groupAD, assetAD } = this.state
+
+    const filterOpts = [
+      {
+        type: 'range',
+        key: 'range'
+      },
+      {
+        type: 'select',
+        key: 'dept',
+        value: dept,
+        options: filter.depts,
+        placeholder: '全部科室'
+      },
+      {
+        type: 'select',
+        key: 'type',
+        value: type,
+        options: filter.types,
+        placeholder: '全部设备类型'
+      }
+    ]
 
     return (
       <div className={styles.container}>
         <div className={styles.filters}>
-          <FilterBar options={filterOpts} onChange={this.handleChange} />
+          <FilterBar options={filterOpts} onChange={this.handleFilterChange} />
         </div>
         <div className={styles.chartWrapper}>
           <Pager
@@ -100,9 +76,11 @@ export default class Root extends Component {
             {
               group.items.length
                 ? <PartGroup
-                  data={group.items}
-                  animationDirection={groupAD}
-                  switcher={completion} />
+                    data={group.items}
+                    selectedGroupId={location.query.groupId}
+                    animationDirection={groupAD}
+                    onClick={this.handleGroupClick}
+                    switcher={completion} />
                 : null
             }
           </div>
@@ -110,9 +88,9 @@ export default class Root extends Component {
             {
               asset.items.length
                 ? <PartAsset
-                  data={asset.items}
-                  animationDirection={assetAD}
-                  switcher={completion} />
+                    data={asset.items}
+                    animationDirection={assetAD}
+                    switcher={completion} />
                 : null
             }
           </div>
@@ -126,16 +104,15 @@ export default class Root extends Component {
     )
   }
 
-  handlePageChange = (key: string) => (current: number, last: number) => {
-    const { dispatch, location } = this.props
+  handleGroupClick = (groupId: string) => e => {
+    e.preventDefault()
+    this.changeQuery({ groupId })
+  }
 
-    dispatch(routerRedux.push({
-      pathname: '/',
-      query: {
-        ...location.query,
-        [`${key}Page`]: current
-      }
-    }))
+  handlePageChange = (key: string) => (current: number, last: number) => {
+    this.changeQuery({
+      [`${key}Page`]: current
+    })
 
     this.setState((state, props) => ({
       ...state,
@@ -143,8 +120,26 @@ export default class Root extends Component {
     }))
   }
 
-  handleChange = (payload) => {
+  handleFilterChange = (payload) => {
     const { key, value } = payload
-    console.log(payload)
+    if (key === 'range') {
+      this.changeQuery(value)
+    } else {
+      this.changeQuery({
+        [key]: value
+      })
+    }
+  }  
+
+  changeQuery = (params: Object) => {
+    const { dispatch, location } = this.props
+
+    dispatch(routerRedux.push({
+      pathname: '/',
+      query: {
+        ...location.query,
+        ...params
+      }
+    }))    
   }
 }

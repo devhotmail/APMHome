@@ -1717,8 +1717,8 @@ detect-indent@^4.0.0:
     repeating "^2.0.0"
 
 "dew-filterbar@git+https://github.build.ge.com/foundry-sh/dew-filterbar.git":
-  version "1.2.2"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#83556e9afc95a612ebe9387c671220716d1f0a3c"
+  version "1.3.2"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#14a74cb3b404103b459f8b65b33e9952438db02c"
 
 "dew-pager@git+https://github.build.ge.com/foundry-sh/dew-pager.git":
   version "1.3.1"

@@ -14,6 +14,7 @@ export function formatData (data) {
     return {
       id: key.id,
       name: key.name,
+      origin: data,
       [completion]: [
         {
           color: purple,
