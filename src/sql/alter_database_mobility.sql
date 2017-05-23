@@ -57,24 +57,6 @@ file_id int not null
 );
 alter table qr_code_attachment add primary key (id);
 
-/*
-drop table if exists account_application
-create table account_application(
-id serial not null,
-wechat_id varchar(64) not null, 
-name varchar(32) not null,	--真实姓名
-telephone varchar(16) not null,	--电话
-hospital_name varchar(64) not null,	--所属医院或供应商
-clinical_dept_name varchar(32),	--所属临床科室
-role_id int not null,	--角色ID
-comment varchar(128),	--备注
-application_date date,	--帐号申请日期
-status int,	-- 1-待审批 / 2-审批通过 / 3-拒绝
-password varchar(16)  --密码
-);
-alter table account_application add primary key (id);
-*/
-
 create table message_subscriber(
 id serial not null,
 site_id int not null,
@@ -334,3 +316,7 @@ Alter table site_info add column password_lifetime int;  --密码有效天数
 Alter table user_account add column password_update_date date; --上次密码修改时间
 Alter table user_account add column password_error_count int; --密码连续错误次数
 Alter table user_account add column is_locked bool;	--帐号是否锁定
+
+
+alter table pm_order add column plan_time timestamp;
+alter table pm_order add column nearest_sr_time timestamp;
