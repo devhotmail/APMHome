@@ -28,14 +28,14 @@
     <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
     <p:ajax event="filter" listener="#{tagSubscriberController.onFilter}" />
 
-    <p:column headerText="标签" filterMatchMode="LIKE">
+    <p:column headerText="设备标签" filterMatchMode="LIKE">
         <h:outputText value="#{tagSubscriberController.getTagName(item.tagId)}" />
     </p:column>
 
-    <p:column headerText="推送工单流程消息" >
+    <p:column headerText="工单消息推送选项" >
         <h:outputText value="#{tagSubscriberController.getMsgMode(item.receiveMsgMode)}" />
     </p:column>
-   <p:column headerText="工单超时消息" ><h:outputText value="#{item.isReceiveTimeoutMsg?'已选':'未选'}" style="color:#{item.isReceiveTimeoutMsg?'blue':'red'} "/></p:column>
+   <p:column headerText="工单超时推送选项" ><h:outputText value="#{item.isReceiveTimeoutMsg?'推送':'不推送'}" style="color:#{item.isReceiveTimeoutMsg?'blue':'red'} "/></p:column>
    <!-- <p:column headerText="关注工单超时消息xxx" >
        <h:outputText value="#{item.isReceiveChatMsg?'已选':'未选'}" style="color:#{item.isReceiveChatMsg?'blue':'red'} "/></p:column>
     <p:column headerText="关注工单对话消息" >

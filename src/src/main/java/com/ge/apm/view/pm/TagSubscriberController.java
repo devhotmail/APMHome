@@ -55,7 +55,6 @@ public class TagSubscriberController extends JpaCRUDController<AssetTagMsgSubscr
     }
 
 
-
     public String getMsgMode(int msgmode){
         return hmMsgMode.get(msgmode);
     }
@@ -84,7 +83,7 @@ public class TagSubscriberController extends JpaCRUDController<AssetTagMsgSubscr
     public void prepareCreate() throws InstantiationException, IllegalAccessException {
         super.prepareCreate();
         this.selected.setReceiveMsgMode(null);
-        assetTags =  assetTagRepository.getUnSbuscriberTag(currentUser.getId());
+        assetTags =  assetTagRepository.getUnSbuscriberTag(currentUser.getHospitalId(), currentUser.getId());
     }
 
     @Override

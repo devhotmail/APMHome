@@ -8,30 +8,27 @@
 
     <ui:composition>
 
-        <p:dialog id="AssetTagSubscribEditDlg" widgetVar="AssetTagSubscribEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{tagSubscriberController.CRUDActionName} 修改标签关注">
+        <p:dialog id="AssetTagSubscribEditDlg" widgetVar="AssetTagSubscribEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{tagSubscriberController.CRUDActionName} 标签关注">
             <h:form id="AssetTagSubscribEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{tagSubscriberController.selected != null}">
                         <h:panelGroup >
-                            <label class="label"> 标签*</label>
+                            <label class="label">设备标签*</label>
                             <p:selectOneMenu disabled="#{tagSubscriberController.selected.tagId != null}" value="#{tagSubscriberController.selected.tagId}" required="true" requiredMessage="标签不能为空">
                                 <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                 <f:selectItems value="#{tagSubscriberController.assetTags}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                             </p:selectOneMenu>
                         </h:panelGroup>
-
+                        
                         <h:panelGroup >
-                            <label class="label">关注选项*</label>
+                            <label class="label">工单消息推送选项*</label>
                             <p:selectOneMenu  value="#{tagSubscriberController.selected.receiveMsgMode}" required="true"  >
                                 <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                 <f:selectItems value="#{tagSubscriberController.msgModeList}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}" />
                             </p:selectOneMenu>
                         </h:panelGroup>
 
-                        <h:panelGroup>
-                            <label class="label">关注工单超时消息</label>
-                            <p:selectBooleanCheckbox value="#{tagSubscriberController.selected.isReceiveTimeoutMsg}" />
-                        </h:panelGroup>
+                        <p:selectBooleanCheckbox value="#{tagSubscriberController.selected.isReceiveTimeoutMsg}"  itemLabel="工单超时消息推送"/>
 
                      <!--   <h:panelGroup>
                             <label class="label">关注工单对话消息</label>
