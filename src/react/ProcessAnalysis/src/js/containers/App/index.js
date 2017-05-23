@@ -4,10 +4,11 @@ import React, { Component } from 'react'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
-import _ from 'lodash'
+import { last, range, memoize, isEqual, debounce, clamp } from 'lodash-es'
 import { message } from 'antd'
 import EventBus from 'eventbusjs'
 import GearListChart from 'react-gear-list-chart'
+import Slider from 'rc-slider'
 import Header from 'containers/Header'
 import Pagination from 'components/Pagination'
 import Donut from 'components/DonutChart'
@@ -15,13 +16,15 @@ import Orbit from 'components/OrbitChart'
 import withClientRect from '../../HOC/withClientRect'
 import selectHelper from 'components/SelectHelper'
 import { ParamUpdate, PageChange } from 'actions'
-import './app.scss'
 import cache from 'utils/cache'
 import { MetaUpdate } from 'actions'
 import classnames from 'classnames'
 import colors from 'utils/colors'
+import moment from 'moment'
 import { BriefConv, DetailConv } from 'converters'
 import { log, warn } from 'utils/logger'
+import './app.scss'
+import 'rc-slider/assets/index.css'
 
 const Placeholder = { strips: { color: '#F9F9F9', weight: 1, type: 'placeholder' } }
 const DisplayOptions = [
@@ -38,6 +41,14 @@ const BallsStub = [
   { key: 'close_incident', distance: 300 }
 ]
 
+function periodFormatter(value) {
+  if (value === 0) {
+    return '0'
+  }
+  return moment.duration(value * 1000).humanize() // fixme: momentjs abandoned residue
+}
+
+const Range = Slider.createSliderWithTooltip(Slider.Range)
 
 function DataOrPlaceHolder(items, placeholderSize) {
   // ignore placeholder and empty data
@@ -52,7 +63,7 @@ function getCurrentPage(skip, top) {
 }
 
 function ensureSize(width, height) {
-  width = _.clamp(width, 1000, 1500)
+  width = clamp(width, 1000, 1500)
   if (height < 900) {
     width = 1100
   }
@@ -75,6 +86,9 @@ function mapDispatch2Porps(dispatch) {
     updatePagination: (type, pageNumber) => {
       dispatch(PageChange(type, pageNumber))
     },
+    updateDistribution: (value) => {
+      dispatch(ParamUpdate('distribution', value))
+    },
     fetchBriefs: extraParam => {
       dispatch({ type: 'get/briefs', data: extraParam })
     },
@@ -89,15 +103,15 @@ function mapDispatch2Porps(dispatch) {
 }
 
 function mapState2Props(state) {
-  let { parameters : { pagination, display, dataType } } = state
-  return { pagination, display, dataType }
+  let { parameters : { pagination, display, dataType, distribution } } = state
+  return { pagination, display, dataType, distribution }
 }
 
 @connect(mapState2Props, mapDispatch2Porps)
 @autobind
 export class App extends Component<void, Props, void> {
 
-  static getPlaceholder = _.memoize(count => _.range(count)
+  static getPlaceholder = memoize(count => range(count)
                            .map(() => Placeholder))
   state = {
     briefs: [],
@@ -111,10 +125,12 @@ export class App extends Component<void, Props, void> {
 
   clickLeftTooth(evt) {
     // todo
+    this.clearFocus('right')
   }
 
   clickRightTooth(evt) {
     // todo
+    this.clearFocus('left')
   }
   onRightPagerChange = value => {
     this.props.updatePagination('detail', value)
@@ -205,6 +221,25 @@ export class App extends Component<void, Props, void> {
     balls[connectIndex] && (balls[connectIndex].connectPrevious = true) 
     return balls
   }
+
+  onSliderChange = value => {
+    let { distribution, updateDistribution } = this.props
+    let max = last(distribution)
+    value = value.map(v => max - v).reverse()
+    // make first/last immutable
+    value[0] = 0
+    value[value.length - 1] = max
+    if (!isEqual(value, distribution)) {
+      updateDistribution(value)
+    }
+  }
+
+  updateDistributionMax = debounce(value => {
+    let { distribution, updateDistribution } = this.props
+    let step = value / (distribution.length - 1)
+    updateDistribution(distribution.map((v, i) => i * step))
+  }, 800)
+
   constructor(props) {
     super(props)
     EventBus.addEventListener('brief-data', this.mountBriefData )
@@ -222,11 +257,12 @@ export class App extends Component<void, Props, void> {
 
   render() {
     let { briefs, details, ettrSummary, briefsonseSummary, arrivalSummary } = this.state
-    let { t, updateDisplayType, pagination, clientRect, display, dataType } = this.props
+    let { t, updateDisplayType, pagination, clientRect, display, dataType, distribution } = this.props
     let { left, right } = pagination
     let { outer_R, outer_r, inner_R, inner_r  } = ensureSize(clientRect.width, clientRect.height)
     let onClickDonut = this.onClickDonut
-
+    let distriMax = last(distribution)
+    let reversedDistribution = distribution.map(v => distriMax - v).reverse()
     return (
       <div id="app-container" className="is-fullwidth">
         <Header/>
@@ -294,6 +330,21 @@ export class App extends Component<void, Props, void> {
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
               items={DataOrPlaceHolder(details, pagination.right.top)} />
+
+            <div className="range-wrapper">
+              {/*<input type="number" onChange={evt => this.updateDistributionMax(evt.target.value)} />*/}
+              <Range
+                className={'slider-' + dataType}
+                vertical
+                min={0} 
+                max={distriMax} 
+                value={reversedDistribution}
+                defaultValue={reversedDistribution}
+                onChange={this.onSliderChange}
+                tipFormatter={val => periodFormatter(distriMax - val)} />
+            </div>
+
+            
 
           </div>
         </div>

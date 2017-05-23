@@ -28,5 +28,6 @@
   "accept_incident": "接单",
   "signin_incident": "签到",
   "fixing_incident": "维修",
-  "close_incident": "关单"
+  "close_incident": "关单",
+  "self_define_distribution": "自定义时间分布"
 }

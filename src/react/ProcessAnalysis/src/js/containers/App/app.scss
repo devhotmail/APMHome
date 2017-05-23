@@ -33,23 +33,23 @@
   }
 
   .pager-left {
-    left: 0px;
+    left: 0;
   }
 
   .pager-right {
-    right: 0px;
+    right: 8%;
   }
   #left-chart {
     position: absolute;
     top: 50%;
     transform: translateY(-54%);
-    left: 5%;
+    left: 2%;
   }
 
   #center-chart {
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 45%;
     transform: translate(-50%, -54%);
     z-index: 98;
     user-select: none;
@@ -63,19 +63,17 @@
     position: absolute;
     top: 50%;
     transform: translateY(-54%);
-    right: 5%;
+    right: 13%;
   }
 
   #legend-container {
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 45%;
     transform: translate(-50%, -57%);
     z-index: 99;
     width: 300px;
     height: 300px;
-    // border: 1px solid gray;
-    // border-radius: 861112px;
 
     > .center-chart-title {
       left: 50%;
@@ -115,19 +113,71 @@
       left: 140px;
     }
   }
-
-
-  #legend-container .legend-item {
-    position: relative;
-    bottom: -2em;
+  .range-wrapper {
+    width: 5em;
+    height: 20em;
+    padding: 2em;
+    border: 1px solid #bababa;
+    border-radius: 1em;
+    position: absolute;
+    right: 0;
   }
 
-  .tooltip-content {
-    min-width: 100px;
-    background: #d8d8d8;
-    border: 1px solid #5d87d4;
-    border-radius: 3;
-    padding: 12px 7px;
+  .rc-slider-handle-1:hover,
+  .rc-slider-handle-4:hover {
+    cursor: initial;
   }
+
+  .slider-ettr {
+    $base-color: #B276AF;
+    .rc-slider-handle {
+      border-color: $base-color;
+    }
+    .rc-slider-track-1 {
+      background-color: darken($base-color, 28%)
+    }
+    .rc-slider-track-2 {
+      background-color: darken($base-color, 14%)
+    }
+    .rc-slider-track-3 {
+      background-color: $base-color;
+    }
+  }
+
+  .slider-arrival_time {
+    $base-color: #5CAC9C;
+    .rc-slider-handle {
+      border-color: $base-color;
+    }
+    .rc-slider-track-1 {
+      background-color: darken($base-color, 28%)
+    }
+    .rc-slider-track-2 {
+      background-color: darken($base-color, 14%)
+    }
+    .rc-slider-track-3 {
+      background-color: $base-color;
+    }
+  }
+
+  .slider-response_time {
+    $base-color: #D0BA54;
+    .rc-slider-handle {
+      border-color: $base-color;
+    }
+    .rc-slider-track-1 {
+      background-color: darken($base-color, 28%)
+    }
+    .rc-slider-track-2 {
+      background-color: darken($base-color, 14%)
+    }
+    .rc-slider-track-3 {
+      background-color: $base-color;
+    }
+
+  }
+
+
+
 
 }

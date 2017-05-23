@@ -29,7 +29,9 @@ const initParameter = {
       top: 16,
       total: 0
     }
-  }
+  },
+  distribution: [0, 12 * 3600, 24 * 3600 , 48 * 3600]
+  
 }
 
 const reducers = {
@@ -63,6 +65,11 @@ const reducers = {
 
   ['update/param/display'](next, data) {
     next.display = data
+    return next
+  },
+
+  ['update/param/distribution'](next, data) {
+    next.distribution = data
     return next
   },
 
