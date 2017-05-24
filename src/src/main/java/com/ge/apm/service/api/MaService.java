@@ -157,7 +157,6 @@ public class MaService {
         Tuple.of(rs.getInt("id"), rs.getString("name"), rs.getInt("dept"), rs.getInt("type"), rs.getInt("supplier")),
         Tuple.of(rs.getDouble("price"), 1D - rs.getDouble("down_rate"), rs.getDouble("cost1"), rs.getDouble("cost2"))))
       .cache();
-
   }
 
 }

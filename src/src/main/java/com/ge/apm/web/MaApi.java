@@ -3,6 +3,7 @@ package com.ge.apm.web;
 
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.api.CommonService;
+import com.ge.apm.service.api.MaForecastService;
 import com.ge.apm.service.api.MaService;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Ints;
@@ -37,6 +38,9 @@ public class MaApi {
 
   @Autowired
   private CommonService commonService;
+
+  @Autowired
+  private MaForecastService maForecastService;
 
   @RequestMapping(method = RequestMethod.GET)
   public ResponseEntity<Map<String, Object>> findMaintenanceCosts(HttpServletRequest request,
@@ -86,6 +90,8 @@ public class MaApi {
       .body(mapAssets(items, rltGrp, 0, 1));
   }
 
+
+
   //id, name, dept, type, supplier
   //price, onrate, labor/repair,parts/PM
   private Iterable<ImmutableMap<String, Object>> mapAssets(Observable<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> items, String rltGrp, Integer start, Integer limit) {
@@ -126,4 +132,8 @@ public class MaApi {
       .put("acyman".equals(rltGrp) ? "parts" : "PM", Try.of(() -> costs.map(v -> v._2).reduce((a, b) -> a + b).toBlocking().single()).getOrElse(0D))
       .build();
   }
+
+
+
+
 }
