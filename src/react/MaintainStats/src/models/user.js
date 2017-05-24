@@ -2,13 +2,13 @@
 export default {
   namespace: 'user',
   state: {
-    data: {}
+    info: {}
   },
   reducers: {
     ['info/set'] (state, { payload }) {
       return {
         ...state,
-        data: payload
+        info: payload
       }
     }
   }

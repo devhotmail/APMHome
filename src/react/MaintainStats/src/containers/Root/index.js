@@ -11,6 +11,7 @@ import AnnulusSectorStack from 'ring-sector-layout/dist/AnnulusSectorStack'
 
 import { QUALITY, COMPLETION, defaultPage } from '#/constants'
 import CoreCircle from '#/components/CoreCircle'
+import RoleProvider from '#/components/RoleProvider'
 
 import PartGroup from './PartGroup'
 import PartAsset from './PartAsset'
@@ -20,13 +21,20 @@ import styles from './styles.scss'
 const purple = '#b781b4'
 const prasinous = '#6ab6a6'
 
+const roleFilterFn = isHead => n => {
+  if (!isHead) return n.key !== 'dept'
+  else return true
+}
+
 @connect(state => ({
+  user: state.user.info,
   focus: state.focus.data,
   group: state.group,
   asset: state.asset,
   filter: state.filter,
   loading: !(!state.group.loading && !state.asset.loading)
 }))
+@RoleProvider
 export default class Root extends Component {
   state = {
     groupAD: 0,
@@ -65,11 +73,10 @@ export default class Root extends Component {
   }
 
   render () {
-    const { group, asset, location, filter, loading, focus } = this.props
+    const { group, asset, location, filter, loading, focus, user } = this.props
     const { groupPage, assetPage, dept, type, groupby } = location.query
 
     const { groupAD, assetAD, groupbyOpts } = this.state
-
     const filterOpts = [
       {
         type: 'range',
@@ -89,12 +96,12 @@ export default class Root extends Component {
         options: filter.types,
         placeholder: '全部设备类型'
       }
-    ]
+    ].filter(roleFilterFn(user.isHead))
 
     const menu = (
       <Menu onClick={this.handleGroupbyChange} selectedKeys={[groupby]} trigger={['click']}>
         {
-          groupbyOpts.map((opt, i) => 
+          groupbyOpts.filter(roleFilterFn(user.isHead)).map((opt, i) => 
             <Menu.Item key={opt.key}>显示{opt.text}</Menu.Item>
           )
         }
