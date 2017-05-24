@@ -98,10 +98,9 @@
                             <p:menuitem id="um48" value="#{msg.OrgAdmin}" outcome="/portal/uaa/orgInfo/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin') eq false}"/>
                             <p:menuitem id="um49" value="#{msg.UserAdmin}" outcome="/portal/uaa/userAccount/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin') eq false}"/>
                             <p:menuitem id="um491" value="#{msg.SupplierMgmt}"  rendered="false" outcome="/portal/supplier/List.xhtml"/>
-                            <p:menuitem id="um492" value="#{msg.ChecklistAdmin}" rendered="false" outcome="/portal/insp/checkListList.xhtml"/>
                             <p:menuitem id="um493" value="#{msg.SysCodeConfig}" rendered="false" outcome="/portal/config/FieldCodeTypeConfig.xhtml"/>
                             <p:menuitem id="um494" value="#{msg.WorkFlowConfig}" outcome="/portal/config/workFlowConfig/Edit.xhtml"/>
-                            <p:menuitem id="um495" value="#{msg.QRCodeMgmt}" outcome="/portal/asset/qrCode/qrCodeLibList.xhtml"/>
+                            <p:menuitem id="um495" value="#{msg.QRCodeMgmt}" outcome="/portal/asset/qrCode/qrCodeLibList.xhtml" rendered="#{userContextService.hasRole('SuperAdmin')}"/>
                             <p:menuitem id="um496" value="#{msg.AssetOwnerSetting}" outcome="/portal/asset/ownerSetting/SetOwners.xhtml"/>
                             <p:menuitem id="um497" value="#{msg.AssetTag}" outcome="/portal/asset/tag/List.xhtml"/>
                             <p:menuitem id="um498" value="#{msg.BiomedGroup}" outcome="/portal/uaa/biomedGroup/List.xhtml"/>

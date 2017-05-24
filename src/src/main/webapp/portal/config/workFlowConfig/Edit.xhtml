@@ -22,7 +22,8 @@
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('dispatchMode')}" var="item"  itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                              </p:selectOneMenu>
                         </h:panelGroup>
-                        <h:panelGroup >
+                        <p:spacer/>
+                        <h:panelGroup rendered="false">
                             <label class = "label">是否允许抢单?</label>
                             <p:selectBooleanCheckbox value="#{workflowConfigController.selected.isTakeOrderEnabled}"/>
                         </h:panelGroup >
