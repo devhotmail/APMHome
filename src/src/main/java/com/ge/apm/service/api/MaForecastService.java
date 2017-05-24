@@ -197,7 +197,81 @@ public class MaForecastService extends CommonForecastService {
           v.map(sub -> sub._2._4).sum().doubleValue(), v.map(sub -> sub._2._5).sum().doubleValue(), v.map(sub -> sub._2._6).sum().doubleValue())))
       .map(v -> Tuple.of(v._1, Tuple.of(v._2._1, v._2._2,
         "acyman".equals(rltGrp) ? v._2._3 + v._2._5 : v._2._3 + v._2._4,
+        "acyman".equals(rltGrp) ? v._2._4 + v._2._6 : v._2._5 + v._2._6)))
+      .sortBy(v -> v._1._1);
+  }
+
+  public static Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>>virtualSqlSingle
+    (Integer id,String rltGrp,
+     Seq<Tuple2<Tuple6<Integer, String, Integer, Integer, Integer, Integer>, Tuple6<Double, Double, Double, Double, Double, Double>>> items){
+    return items.filter(v->v._1._1.equals(id))
+      .groupBy(v -> v._1._1)
+      .map((k, v) -> Tuple.of(Tuple.of(k, v.get(0)._1._2, v.get(0)._1._4, v.get(0)._1._5, v.get(0)._1._6),
+        Tuple.of(v.get(0)._2._1, v.map(sub -> sub._2._2).average().getOrElse(0D), v.map(sub -> sub._2._3).sum().doubleValue(),
+          v.map(sub -> sub._2._4).sum().doubleValue(), v.map(sub -> sub._2._5).sum().doubleValue(), v.map(sub -> sub._2._6).sum().doubleValue())))
+      .map(v -> Tuple.of(v._1, Tuple.of(v._2._1, v._2._2,
+        "acyman".equals(rltGrp) ? v._2._3 + v._2._5 : v._2._3 + v._2._4,
         "acyman".equals(rltGrp) ? v._2._4 + v._2._6 : v._2._5 + v._2._6)));
+  }
+
+  /**
+   * ajust the predicted result with user's assumption
+   *
+   * @param future  predicted data by system
+   * @param history data of last year
+   * @param onrate  onrate
+   * @param cost1   labor/repair
+   * @param cost2   parts/PM
+   * @return first Tuple5 are dimensions: id, name, dept, type, supplier
+   * second Tuple4 are measurements: price, onrate, labor/repair, parts/PM
+   */
+  public static Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> userPredict
+  (Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> future,
+   Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> history,
+   java.util.Map<Integer, Double> onrate, java.util.Map<Integer, Double> cost1, java.util.Map<Integer, Double> cost2) {
+    return future.zip(history)
+      .map(v -> Tuple.of(v._1._1, Tuple.of(v._1._2._1,
+        Option.of(onrate.get(v._1._1._1)).map(sub -> v._2._2._2 * (1D + sub)).getOrElse(v._1._2._2),
+        Option.of(cost1.get(v._1._1._1)).map(sub -> v._2._2._3 * (1D + sub)).getOrElse(v._1._2._3),
+        Option.of(cost2.get(v._1._1._1)).map(sub -> v._2._2._4 * (1D + sub)).getOrElse(v._1._2._4)
+      )));
+  }
+
+  /**
+   * ajust the predicted result with user's assumption and return the result in the form of increase rate
+   *
+   * @param future  predicted data by system
+   * @param history data of last year
+   * @param onrate  onrate
+   * @param cost1   labor/repair
+   * @param cost2   parts/PM
+   * @return first Tuple5 are dimensions: id, name, dept, type, supplier
+   * second Tuple4 are measurements: price, onrate_increase, labor/repair_increase, parts/PM_increase
+   */
+  public static Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> getForecastRate
+  (Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> future,
+   Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> history,
+   java.util.Map<Integer, Double> onrate, java.util.Map<Integer, Double> cost1, java.util.Map<Integer, Double> cost2) {
+    return future.zip(history)
+      .map(v -> Tuple.of(v._1._1, Tuple.of(v._1._2._1,
+        Option.of(onrate.get(v._1._1._1)).getOrElse(Option.when(v._2._2._2.equals(0D), 0D).getOrElse(v._1._2._2 / v._2._2._2 - 1D)),
+        Option.of(cost1.get(v._1._1._1)).getOrElse(Option.when(v._2._2._3.equals(0D), 0D).getOrElse(v._1._2._3 / v._2._2._3 - 1D)),
+        Option.of(cost2.get(v._1._1._1)).getOrElse(Option.when(v._2._2._4.equals(0D), 0D).getOrElse(v._1._2._4 / v._2._2._4 - 1D))
+      )));
+  }
+
+  public static boolean sugLowBound(Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>> asset, Double lowBound) {
+    return asset._2._2 < lowBound;
+  }
+
+  public static boolean sugHighCost(Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>> asset, Double rate) {
+    return asset._2._3 + asset._2._4 >= rate * asset._2._1;
+  }
+
+  public static boolean sugBindOnrateCost(Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>> asset,
+                                          Double lowBound, Double highBound, Double rate, Double accuracy) {
+    return asset._2._2 >= lowBound && asset._2._2 < highBound
+      && asset._2._3 + asset._2._4 >= (rate - accuracy) * asset._2._1 && asset._2._3 + asset._2._4 < (rate + accuracy) * asset._2._1;
   }
 
   /**
