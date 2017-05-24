@@ -11,6 +11,10 @@ import com.ge.apm.dao.WorkflowConfigRepository;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkflowConfig;
 import com.ge.apm.service.uaa.UaaService;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
 
@@ -34,11 +38,53 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
             dao = WebUtil.getBean(WorkflowConfigRepository.class);
             uuaService =  (UaaService) WebUtil.getBean(UaaService.class);
             dispatchUserList = uuaService.getUsersWithAssetHeadOrStaffRole(user.getHospitalId());
+            
+            initDispatchUserList();
+            
             this.selected = dao.getBySiteIdAndHospitalId(user.getSiteId(), user.getHospitalId());
             if (selected == null) {
                 initWorkflowConfig(user);
             }
 	}
+        
+    private List<UserInfo> userList;
+
+    private void initDispatchUserList(){
+        userList = new ArrayList<UserInfo>();
+        try{
+            String sql = "select distinct u.id, u.name, o.name as hospital_name, o.id as hospital_id from user_account u, org_info o, user_role r where u.hospital_id=o.id and u.id=r.user_id and r.role_id in (2,3) and u.site_id=:#siteId and u.hospital_id=:#hospitalId " +
+                         "union all " +
+                         "select distinct u.id, u.name, o.name as hospital_name, o.id as hospital_id from user_account u, org_info o, user_role r where u.hospital_id=o.id and u.id=r.user_id and r.role_id in (2,3) and u.site_id=:#siteId and u.hospital_id<>:#hospitalId";
+
+            Map<String, Object> sqlParams = new HashMap<>();
+            sqlParams.put("hospitalId", user.getHospitalId());
+            sqlParams.put("siteId", user.getSiteId());
+
+            List<Map<String, Object>> userListMap = NativeSqlUtil.queryForList(sql, sqlParams);
+            for(Map<String, Object> infoMap: userListMap){
+                UserInfo userInfo = new UserInfo();
+                userList.add(userInfo);
+
+                userInfo.setId(Integer.parseInt(infoMap.get("id").toString()));
+                userInfo.setHospitalId(Integer.parseInt(infoMap.get("hospital_id").toString()));
+                userInfo.setName(infoMap.get("name").toString());
+                userInfo.setHospitalName(infoMap.get("hospital_name").toString());
+
+                if(!userInfo.getHospitalId().equals(user.getHospitalId()))
+                    userInfo.setName(String.format("%s(%s)", userInfo.getName(), userInfo.getHospitalName()));
+            }
+        }
+        catch(Exception ex){
+        }
+    }
+
+    public List<UserInfo> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<UserInfo> userList) {
+        this.userList = userList;
+    }
         
         public void initWorkflowConfig(UserAccount user){
             WorkflowConfig wfConfig = new WorkflowConfig();

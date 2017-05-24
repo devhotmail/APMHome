@@ -684,7 +684,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5069,'label','timeoutClose','关单超时时间(分钟)','close timeout',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5070,'label','orderReopenTimeframe','二次开单间隔(天)','order reopen timeframe',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5071,'label','unbundWX','是否解除微信绑定？','unbundWX?',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5072,'label','maxMessageCount','最大消息次数','max message count',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5072,'label','maxMessageCount','最大消息提醒次数','max message count',null,-1);
 
 
 -- asset head
