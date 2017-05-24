@@ -73,7 +73,7 @@ public class PmApi {
       .put("items", StreamSupport.stream(report.spliterator(), false).skip(start).limit(limit).map(t -> new ImmutableMap.Builder<String, Object>()
         .put("key", new ImmutableMap.Builder<String, Object>()
           .put("id", t._1)
-          .put("name", Match(Tuple.of(groupBy, t._1)).of(Case($(a -> "type".equals(a._1)), b -> types.get(b._2)), Case($(a -> "dept".equals(a._1)), b -> depts.get(b._2)), Case($(a -> "supplier".equals(a._1)), b -> suppliers.get(b._2)), Case($(a -> "asset".equals(a._1)), b -> assets.get(b._2)))).build())
+          .put("name", Match(Tuple.of(groupBy, t._1)).of(Case($(a -> "type".equals(a._1)), b -> types.getOrDefault(b._2, "")), Case($(a -> "dept".equals(a._1)), b -> depts.getOrDefault(b._2, "")), Case($(a -> "supplier".equals(a._1)), b -> suppliers.getOrDefault(b._2, "")), Case($(a -> "asset".equals(a._1)), b -> assets.getOrDefault(b._2, "")))).build())
         .put("val", new ImmutableMap.Builder<String, Object>()
           .put("completion", ImmutableMap.of("due", t._3, "completed", t._2, "all", t._5))
           .put("quality", ImmutableMap.of("repair", t._4, "all", t._5))

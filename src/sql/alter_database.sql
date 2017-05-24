@@ -85,11 +85,11 @@ last_modified timestamp);
 alter table asset_summit add primary key (id);
 alter table asset_summit add constraint uk_asset_summit_asset_n_date unique (asset_id, created);
 
-INSERT INTO "i18n_message" VALUES (269, 'label', 'AssetBrowser', '设备分布分析', 'Asset Browser', NULL, -1);
-INSERT INTO "i18n_message" VALUES (270, 'label', 'UsageAndClinicalPerformance', '运用与临床绩效', 'Usage And Clinical Performance', NULL, -1);
-INSERT INTO "i18n_message" VALUES (271, 'label', 'FinancialPerformanceAndForecast', '财务绩效与预测', 'Financial Performance And Forcast', NULL, -1);
-INSERT INTO "i18n_message" VALUES (5624,'label','StaffPerformance', '人员绩效分析','Staff Performance Analysis',null,-1);
-INSERT INTO "i18n_message" VALUES (5625,'label','FailureAnalysis', '设备故障分析','Failure Analysis',null,-1);
+INSERT INTO "i18n_message" VALUES (269,  'label', 'AssetBrowser', '设备分布分析', 'Asset Browser', NULL, -1);
+INSERT INTO "i18n_message" VALUES (270,  'label', 'UsageAndClinicalPerformance', '运用与临床绩效', 'Usage And Clinical Performance', NULL, -1);
+INSERT INTO "i18n_message" VALUES (271,  'label', 'FinancialPerformanceAndForecast', '财务绩效与预测', 'Financial Performance And Forcast', NULL, -1);
+INSERT INTO "i18n_message" VALUES (5624, 'label', 'StaffPerformance', '人员绩效分析','Staff Performance Analysis',null,-1);
+INSERT INTO "i18n_message" VALUES (5625, 'label', 'FailureAnalysis', '设备故障分析','Failure Analysis',null,-1);
 
 create table  proc_part(
 id serial not null primary key,
@@ -126,3 +126,6 @@ last_modified timestamp
 alter table inspection_order add COLUMN man_hours int;
 alter table pm_order add COLUMN man_hours int;
 alter table work_order add column feedback_rating int;
+
+alter table pm_order add COLUMN planned_time timestamp;
+alter table pm_order add COLUMN nearest_sr_time timestamp;
