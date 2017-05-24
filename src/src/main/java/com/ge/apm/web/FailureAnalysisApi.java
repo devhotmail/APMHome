@@ -61,9 +61,6 @@ public class FailureAnalysisApi {
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> suppliers = commonService.findSuppliers(user.getSiteId());
     Map<Integer, Tuple7<Integer, Integer, Integer, Integer, Integer, Integer, String>> assets = commonService.findAssets(user.getSiteId(), user.getHospitalId());
-    Map<Integer, Integer> assetsByType = commonService.groupAssetsByType(user.getSiteId(), user.getHospitalId());
-    Map<Integer, Integer> assetsByDept = commonService.groupAssetsByDept(user.getSiteId(), user.getHospitalId());
-    Map<Integer, Integer> assetsBySupplier = commonService.groupAssetsBySupplier(user.getSiteId(), user.getHospitalId());
     Observable<Tuple3<Integer, Double, Integer>> report = faService.briefs(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), Match(groupBy).of(Case("dept", "dept_id"), Case("type", "asset_group"), Case("supplier", "supplier_id"), Case("asset", "asset_id")), dept, type, supplier, asset);
     Observable<Tuple3<Integer, Double, Integer>> filteredReport = Option.of(Tuple.of(report, keys)).filter(a -> Option.of(a._2).isDefined()).map(b -> Tuple.of(b._1, Arrays.asList(b._2))).map(c -> c._1.filter((t -> c._2.contains(t._1)))).getOrElse(report);
     return Match(Tuple.of(groupBy, filteredReport.sorted((l, r) -> Match(orderby).of(Case("avail", (int) (r._2 * 1000) - (int) (l._2 * 1000)), Case("ftfr", (int) (r._2 * 1000) - (int) (l._2 * 1000)), Case("fix", r._3 - l._3))).skip(start).limit(Option.of(limit).getOrElse(Integer.MAX_VALUE)).cache(), depts, types, suppliers, assets)).of(
@@ -133,68 +130,6 @@ public class FailureAnalysisApi {
       Case($(), ResponseEntity.badRequest().body(ImmutableMap.of()))
     );
   }
-
-
-  @RequestMapping(path = "/details", method = RequestMethod.GET)
-  @ResponseBody
-  public ResponseEntity<? extends Map<String, Object>> details(HttpServletRequest request,
-                                                               @Past @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime from,
-                                                               @Past @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime to,
-                                                               @Pattern(regexp = "dept|type|supplier|asset") @RequestParam(name = "groupby", required = true) String groupBy,
-                                                               @Min(1) @RequestParam(name = "key", required = true) Integer key) {
-    UserAccount user = UserContext.getCurrentLoginUser();
-    Map<Integer, String> types = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
-    Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
-    Map<Integer, String> suppliers = commonService.findSuppliers(user.getSiteId());
-    Map<Integer, Tuple7<Integer, Integer, Integer, Integer, Integer, Integer, String>> assets = commonService.findAssets(user.getSiteId(), user.getHospitalId());
-    Map<Integer, Integer> assetsByType = commonService.groupAssetsByType(user.getSiteId(), user.getHospitalId());
-    Map<Integer, Integer> assetsByDept = commonService.groupAssetsByDept(user.getSiteId(), user.getHospitalId());
-    Map<Integer, Integer> assetsBySupplier = commonService.groupAssetsBySupplier(user.getSiteId(), user.getHospitalId());
-    Observable<Tuple3<Integer, Double, Integer>> report = faService.details(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), Match(groupBy).of(Case("dept", "dept_id"), Case("type", "asset_group"), Case("supplier", "supplier_id"), Case("asset", "asset_id")), key);
-    return Match(Tuple.of(groupBy, report, depts, types, suppliers, assets)).of(
-      Case($(t -> "dept".equals(t._1)), t -> ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>().put("briefs", Try.of(() -> t._2.map(tp -> new ImmutableMap.Builder<String, Object>()
-        .put("key", new ImmutableMap.Builder<String, Object>()
-          .put("id", tp._1)
-          .put("name", t._3.getOrDefault(tp._1, "")).build())
-        .put("val", new ImmutableMap.Builder<String, Object>()
-          .put("avail", tp._2)
-          .put("ftfr", tp._2 * 0.95D)
-          .put("fix", tp._3).build()).build()).toBlocking().single()).getOrElse(ImmutableMap.of()))
-        .build())),
-      Case($(t -> "type".equals(t._1)), t -> ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>().put("briefs", Try.of(() -> t._2.map(tp -> new ImmutableMap.Builder<String, Object>()
-        .put("key", new ImmutableMap.Builder<String, Object>()
-          .put("id", tp._1)
-          .put("name", t._4.getOrDefault(tp._1, "")).build())
-        .put("val", new ImmutableMap.Builder<String, Object>()
-          .put("avail", tp._2)
-          .put("ftfr", tp._2 * 0.95D)
-          .put("fix", tp._3).build()).build()).toBlocking().single()).getOrElse(ImmutableMap.of()))
-        .build())),
-      Case($(t -> "supplier".equals(t._1)), t -> ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>().put("briefs", Try.of(() -> t._2.map(tp -> new ImmutableMap.Builder<String, Object>()
-        .put("key", new ImmutableMap.Builder<String, Object>()
-          .put("id", tp._1)
-          .put("name", t._5.getOrDefault(tp._1, "")).build())
-        .put("val", new ImmutableMap.Builder<String, Object>()
-          .put("avail", tp._2)
-          .put("ftfr", tp._2 * 0.95D)
-          .put("fix", tp._3).build()).build()).toBlocking().single()).getOrElse(ImmutableMap.of()))
-        .build())),
-      Case($(t -> "asset".equals(t._1)), t -> ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>().put("briefs", Try.of(() -> t._2.map(tp -> new ImmutableMap.Builder<String, Object>()
-        .put("key", new ImmutableMap.Builder<String, Object>()
-          .put("id", tp._1)
-          .put("name", Try.of(() -> t._6.get(tp._1)._7).getOrElse(""))
-          .put("type", Try.of(() -> t._6.get(tp._1)._5).getOrElse(0))
-          .put("dept", Try.of(() -> t._6.get(tp._1)._4).getOrElse(0))
-          .put("supplier", Try.of(() -> t._6.get(tp._1)._6).getOrElse(0)).build())
-        .put("val", new ImmutableMap.Builder<String, Object>()
-          .put("avail", tp._2)
-          .put("ftfr", tp._2 * 0.95D)
-          .put("fix", tp._3).build()).build()).toBlocking().single()).getOrElse(ImmutableMap.of()))
-        .build())),
-      Case($(), ResponseEntity.badRequest().body(ImmutableMap.of()))
-    );
-  }
-
 
   @RequestMapping(path = "/reasons", method = RequestMethod.GET)
   @ResponseBody
