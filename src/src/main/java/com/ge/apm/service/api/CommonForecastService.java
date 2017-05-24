@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 /**
  * Common methods for Forecast service of other APIs.
  */
-public class AbstractForecastService {
+public class CommonForecastService {
   //transfer between X axis value and Date
   public Integer localDateToX(LocalDate input) {
     return (int) LocalDate.ofYearDay(2000, 1).until(input, ChronoUnit.DAYS);

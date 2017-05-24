@@ -75,7 +75,8 @@ public class MaService {
 
     return dbBuilder.get(rs -> Tuple.of(
       Tuple.of(rs.getInt("id"), rs.getString("name"), rs.getInt("dept"), rs.getInt("type"), rs.getInt("supplier")),
-      Tuple.of(rs.getDouble("price"), 1D - rs.getDouble("down_rate"), rs.getDouble("cost1"), rs.getDouble("cost2"))));
+      Tuple.of(rs.getDouble("price"), 1D - rs.getDouble("down_rate"), rs.getDouble("cost1"), rs.getDouble("cost2"))))
+      .cache();
   }
 
 
@@ -123,12 +124,14 @@ public class MaService {
     }
 
     return dbBuilder.get(rs -> Tuple.of(rs.getInt("group_id"),
-      Tuple.of(1D - rs.getDouble("down_rate"), rs.getDouble("cost1"), rs.getDouble("cost2"))));
+      Tuple.of(1D - rs.getDouble("down_rate"), rs.getDouble("cost1"), rs.getDouble("cost2"))))
+      .cache();
   }
 
   //specific entry for querying for single asset data
   //return values in Tuple5 are attributes of assets: id, name, dept, type, supplier
   //return values in Tuple4 are measurements of assets: price, onrate, labor/repair,parts/PM
+  @Cacheable(cacheNames = "springCache", key = "'MaService.findMtSingleAsset.'+#startDate+'.'+#endDate+'.'+#id+'.'+#rltGrp")
   public Observable<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> findMtSingleAsset
   (Date startDate, Date endDate, Integer id, String rltGrp) {
     String astMtSQL = new SQL() {{
@@ -139,6 +142,7 @@ public class MaService {
           "acyman".equals(rltGrp) ? "(COALESCE(SUM(asu.mt_manpower),0) + COALESCE(SUM(asu.pm_manpower),0)) as cost1" : "(COALESCE(SUM(asu.mt_manpower),0) + COALESCE(SUM(asu.mt_accessory),0)) as cost1",
           "acyman".equals(rltGrp) ? "(COALESCE(SUM(asu.mt_accessory),0) + COALESCE(SUM(asu.pm_accessory),0)) as cost2" : "(COALESCE(SUM(asu.pm_manpower),0) + COALESCE(SUM(asu.pm_accessory),0)) as cost2");
         FROM("asset_summit asu");
+        WHERE("asset_id = :id");
         WHERE("created >= :start_day");
         WHERE("created <= :end_day");
         GROUP_BY("asset_id, dept, type, supplier");
@@ -148,9 +152,11 @@ public class MaService {
     return db.select(astMtSQL)
       .parameter("start_day", startDate)
       .parameter("end_day", endDate)
+      .parameter("id", id)
       .get(rs -> Tuple.of(
         Tuple.of(rs.getInt("id"), rs.getString("name"), rs.getInt("dept"), rs.getInt("type"), rs.getInt("supplier")),
-        Tuple.of(rs.getDouble("price"), 1D - rs.getDouble("down_rate"), rs.getDouble("cost1"), rs.getDouble("cost2"))));
+        Tuple.of(rs.getDouble("price"), 1D - rs.getDouble("down_rate"), rs.getDouble("cost1"), rs.getDouble("cost2"))))
+      .cache();
 
   }
 
