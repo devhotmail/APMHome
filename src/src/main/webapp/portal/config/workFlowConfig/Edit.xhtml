@@ -15,7 +15,7 @@
                 <p:growl autoUpdate="true" life="3000"/>
                 <h:form id="WorkflowConfigEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workflowConfigController.selected != null}">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workflowConfigController.selected != null}">
                         <h:panelGroup>
                             <label class = "label">#{msg.dispatchMode}</label>
                             <p:selectOneMenu value="#{workflowConfigController.selected.dispatchMode}" disabled="false">
@@ -23,11 +23,15 @@
                              </p:selectOneMenu>
                         </h:panelGroup>
                         <h:panelGroup >
+                            <label class = "label">是否允许抢单?</label>
+                            <p:selectBooleanCheckbox value="#{workflowConfigController.selected.isTakeOrderEnabled}"/>
+                        </h:panelGroup >
+                        <h:panelGroup >
                             <label class="label">#{msg.dispatchUserName}</label>
                             <p:selectOneMenu id="dispatchUserId" value="#{workflowConfigController.selected.dispatchUserId}" 
                             		 required="false" requiredMessage="#{msg.dispatchUserName} #{msg.ValidationRequire}" >
                                 <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{workflowConfigController.dispatchUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                <f:selectItems value="#{workflowConfigController.userList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                             </p:selectOneMenu>
                         </h:panelGroup>
                         <h:panelGroup >
@@ -35,10 +39,14 @@
                             <p:selectOneMenu id="dispatchUserId2" value="#{workflowConfigController.selected.dispatchUserId2}" 
                             		 required="false" requiredMessage="#{msg.dispatchUserName}2 #{msg.ValidationRequire}" >
                                 <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{workflowConfigController.dispatchUserList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                <f:selectItems value="#{workflowConfigController.userList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                             </p:selectOneMenu>
                         </h:panelGroup>
-                        
+                        <h:panelGroup >
+                            <label class = "label">工单完工是否需要验收?</label>
+                            <p:selectBooleanCheckbox value="#{workflowConfigController.selected.autoAck}"/>
+                        </h:panelGroup >
+                        <p:spacer/>
                         <h:panelGroup>
                             <label class="label">#{msg.timeoutDispatch}</label>
                             <p:inputText id="timeoutDispatch" value="#{workflowConfigController.selected.timeoutDispatch}" />
@@ -47,10 +55,12 @@
                             <label class="label">#{msg.timeoutAccept}</label>
                             <p:inputText id="timeoutAccept" value="#{workflowConfigController.selected.timeoutAccept}" />
                         </h:panelGroup>
+<!--
                         <h:panelGroup>
                             <label class="label">#{msg.timeoutRepair}</label>
                             <p:inputText id="timeoutRepair" value="#{workflowConfigController.selected.timeoutRepair}" />
                         </h:panelGroup>
+-->
                         <h:panelGroup>
                             <label class="label">#{msg.timeoutClose}</label>
                             <p:inputText id="timeoutClose" value="#{workflowConfigController.selected.timeoutClose}" />
@@ -59,10 +69,12 @@
                             <label class="label">#{msg.maxMessageCount}</label>
                             <p:inputText id="maxMessageCount" value="#{workflowConfigController.selected.maxMessageCount}" />
                         </h:panelGroup>
-                        <h:panelGroup>
+<!--
+                    <h:panelGroup>
                             <label class="label">#{msg.orderReopenTimeframe}</label>
                             <p:inputText id="orderReopenTimeframe" value="#{workflowConfigController.selected.orderReopenTimeframe}" required="true"/>
                         </h:panelGroup>
+-->
                     </p:panelGrid>
                     <br/>
                     <p:commandButton validateClient="true" actionListener="#{workflowConfigController.save}" value="#{msg.Save}" icon="ui-icon-check" rendered="#{workflowConfigController.selected != null}" update=":growl"/>
