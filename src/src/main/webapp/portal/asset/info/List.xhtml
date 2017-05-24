@@ -45,7 +45,7 @@
                             <!--<p:commandButton icon="ui-icon-remove-red-eye" class="btn btn-sm btn-gray" title="#{msg.View}" action="#{assetInfoController.getDetailPage(item.id,item.name)}" style="width:26px;height: 26px"/>-->
                             <p:commandButton icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}"  action="#{assetInfoController.getEditPage(item.id,item.name)}" style="width:26px;height: 26px"/>
                             <p:commandButton rendered="#{userContextService.hasRole('AssetHead')}" id="deleteButton" icon="ui-icon-trash" class="btn btn-sm" style="width:26px;height: 26px" title="#{msg.Delete}"  actionListener="#{assetInfoController.deleteAsset(item)}" update="datalist">
-                                <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteAssetConformationMsg}#{item.name}" icon="ui-icon-warning"/>
+                                <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>
                             </p:commandButton>
                         </p:column>
                         <p:column headerText="#{msg.name}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="LIKE">
