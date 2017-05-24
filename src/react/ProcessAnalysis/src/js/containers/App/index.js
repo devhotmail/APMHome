@@ -8,11 +8,11 @@ import { last, range, memoize, isEqual, debounce, clamp } from 'lodash-es'
 import { message } from 'antd'
 import EventBus from 'eventbusjs'
 import GearListChart from 'react-gear-list-chart'
-import Slider from 'rc-slider'
 import Header from 'containers/Header'
 import Pagination from 'components/Pagination'
 import Donut from 'components/DonutChart'
 import Orbit from 'components/OrbitChart'
+import ReversedRange from 'components/ReversedRange'
 import withClientRect from '../../HOC/withClientRect'
 import selectHelper from 'components/SelectHelper'
 import { ParamUpdate, PageChange } from 'actions'
@@ -20,11 +20,9 @@ import cache from 'utils/cache'
 import { MetaUpdate } from 'actions'
 import classnames from 'classnames'
 import colors from 'utils/colors'
-import moment from 'moment'
 import { BriefConv, DetailConv } from 'converters'
 import { log, warn } from 'utils/logger'
 import './app.scss'
-import 'rc-slider/assets/index.css'
 
 const Placeholder = { strips: { color: '#F9F9F9', weight: 1, type: 'placeholder' } }
 const DisplayOptions = [
@@ -40,15 +38,6 @@ const BallsStub = [
   { key: 'fixing_incident', distance: 230 },
   { key: 'close_incident', distance: 300 }
 ]
-
-function periodFormatter(value) {
-  if (value === 0) {
-    return '0'
-  }
-  return moment.duration(value * 1000).humanize() // fixme: momentjs abandoned residue
-}
-
-const Range = Slider.createSliderWithTooltip(Slider.Range)
 
 function DataOrPlaceHolder(items, placeholderSize) {
   // ignore placeholder and empty data
@@ -224,11 +213,6 @@ export class App extends Component<void, Props, void> {
 
   onSliderChange = value => {
     let { distribution, updateDistribution } = this.props
-    let max = last(distribution)
-    value = value.map(v => max - v).reverse()
-    // make first/last immutable
-    value[0] = 0
-    value[value.length - 1] = max
     if (!isEqual(value, distribution)) {
       updateDistribution(value)
     }
@@ -261,8 +245,7 @@ export class App extends Component<void, Props, void> {
     let { left, right } = pagination
     let { outer_R, outer_r, inner_R, inner_r  } = ensureSize(clientRect.width, clientRect.height)
     let onClickDonut = this.onClickDonut
-    let distriMax = last(distribution)
-    let reversedDistribution = distribution.map(v => distriMax - v).reverse()
+    
     return (
       <div id="app-container" className="is-fullwidth">
         <Header/>
@@ -333,15 +316,11 @@ export class App extends Component<void, Props, void> {
 
             <div className="range-wrapper">
               {/*<input type="number" onChange={evt => this.updateDistributionMax(evt.target.value)} />*/}
-              <Range
+              <ReversedRange
                 className={'slider-' + dataType}
-                vertical
-                min={0} 
-                max={distriMax} 
-                value={reversedDistribution}
-                defaultValue={reversedDistribution}
+                value={distribution}
                 onChange={this.onSliderChange}
-                tipFormatter={val => periodFormatter(distriMax - val)} />
+              />
             </div>
 
             
