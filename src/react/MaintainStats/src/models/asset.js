@@ -67,7 +67,7 @@ export default {
         const { data } = yield call(
           axios,
           {
-            url: process.env.API_HOST + '/pm/brief/right',
+            url: process.env.API_HOST + '/pm/brief' + (process.env.NODE_ENV === 'development' ? '/right' : ''),
             params: {
               ...restQuery,
               groupby: 'asset',
