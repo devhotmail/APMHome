@@ -78,3 +78,7 @@ function ArrayGen(times) {
     return arr
   }
 }
+
+export function CurrentPage(skip, top) {
+  return Math.ceil(skip / top) || 1
+}

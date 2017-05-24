@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { spring, Motion } from 'react-motion'
-import catNames from 'cat-names'
 import { Polar2Cartesian } from 'utils/math'
-import { memoization } from 'javascript-decorators'
+import { decorate } from 'core-decorators'
+import { memoize } from 'lodash-es'
 import { AnnulusSector } from 'utils/draw'
 
 import './styles.scss'
@@ -28,7 +28,7 @@ function renderLane(balls, radius, cx, cy, color) {
     return (
       <g className="orbit-chart-lane">
         <path d={AnnulusSector({
-          startAngle: 90 - ball.distance,
+          startAngle: 90 - (ball.distance || 0),
           endAngle: 90,
           outerRadius: radius + 5,
           innerRadius: radius - 5,
@@ -44,7 +44,7 @@ function renderLane(balls, radius, cx, cy, color) {
 
 export default class OrbitChart extends PureComponent {
 
-  @memoization()
+  @decorate(memoize)
   getAvailiableAngle(ballCount) {
     return 360 - RESERVED_ANGEL * ballCount
   }
@@ -62,7 +62,7 @@ export default class OrbitChart extends PureComponent {
           <circle className="indicator-circle" cx={cx} cy={cy} r={totalRadius} fill="none" stroke="gray"/>
           { renderLane(balls, totalRadius, cx, cy, laneColor) }
           { balls.map(ball => {
-            let angle = ball.distance - 90
+            let angle = (ball.distance || 0) - 90
             return renderBall(ball, totalRadius, cx, cy, angle, ballRadius)
           })}
         </svg>

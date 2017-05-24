@@ -1,16 +1,3 @@
-// import { createStore, applyMiddleware, compose } from 'redux'
-// import promiseMiddleware from 'redux-promise'
-
-// import rootReducer from 'reducers/root'
-
-// const enhancer = compose(
-//   applyMiddleware(promiseMiddleware)
-// )(createStore)
-
-// export default function configureStore(initialState) {
-//   return enhancer(rootReducer, initialState)
-// }
-
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import promiseMiddleware from 'redux-promise'

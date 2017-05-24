@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Slider from 'rc-slider'
 import { last } from 'lodash-es'
 import moment from 'moment'
-import 'rc-slider/assets/index.css'
+// import 'rc-slider/assets/index.css'
 
 const Range = Slider.createSliderWithTooltip(Slider.Range)
 

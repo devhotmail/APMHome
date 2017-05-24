@@ -83,13 +83,6 @@ module.exports = merge(config, {
             { loader: 'sass-loader', query: { outputStyle: 'compressed' } }
           ]
         })
-      },
-      {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract({
-          fallbackLoader: 'style-loader',
-          loader: ['css-loader', 'postcss-loader']
-        })
       }
     ]
   },

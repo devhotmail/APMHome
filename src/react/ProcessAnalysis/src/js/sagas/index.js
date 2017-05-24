@@ -3,27 +3,44 @@ import Services from 'services'
 import cache from 'utils/cache'
 import { error } from 'utils/logger'
 import EventBus from 'eventbusjs'
+import { DateFormat, GroupByMap, DataTypeMap} from 'converters'
 const API = Services.api
 
-const DateFormat = 'YYYY-MM-DD'
-const GroupByMapping = {
-  'display_assettype': 'type',
-  'display_brand': 'supplier',
-  'display_dept': 'dept'
-}
+
 /** Do not temper the original object !! */
+// TODO extract common params
 function mapParamsBrief(parameters) {
+  let { assettype, dept } = parameters.filterBy
   return {
     from: parameters.period.from.format(DateFormat),
     to: parameters.period.to.format(DateFormat),
     limit: parameters.pagination.left.top,
-    groupby: GroupByMapping[parameters.display],
+    groupby: GroupByMap[parameters.display],
+    type: assettype === 'all_assettype' ? undefined : assettype ,
+    dept: dept === 'all_dept' ? undefined : dept,
+    orderby: DataTypeMap[parameters.dataType]
   }
 }
 
-function mapParamsDetail(paramters) {
+function mapParamsDetail(parameters) {
+  let { assettype, dept } = parameters.filterBy
   return {
-    limit: paramters.pagination.right.top
+    from: parameters.period.from.format(DateFormat),
+    to: parameters.period.to.format(DateFormat),
+    limit: parameters.pagination.right.top,
+    type: assettype === 'all_assettype' ? undefined : assettype ,
+    dept: dept === 'all_dept' ? undefined : dept,
+    orderby: DataTypeMap[parameters.dataType]
+  }
+}
+
+function mapParamsGross(parameters) {
+  let { assettype, dept } = parameters.filterBy
+  return {
+    from: parameters.period.from.format(DateFormat),
+    to: parameters.period.to.format(DateFormat),
+    type: assettype === 'all_assettype' ? undefined : assettype ,
+    dept: dept === 'all_dept' ? undefined : dept
   }
 }
 
@@ -86,21 +103,31 @@ function* fetchDetails(action) {
   }
 }
 
-function* fetchGross() {
-  let result = yield {}
-  EventBus.dispatch('gross-data', this, result)
+function* fetchGross(action) {
+  try {
+    let store = yield select(state => state.parameters)
+    let params = mapParamsGross(store)
+    if (action.type === 'update/param') {
+      // do general reload when param changes
+    }
+    let gross = yield call(API.getGross, params)
+    EventBus.dispatch('gross-data', this, gross)
+  } catch (e) {
+    error(e)
+  }
 }
 
 function* fetchAll(action) {
   try {
     // distribution changes only effect gross data
-    if (action.type === 'update/param/distribution') {
+    // todo, 3 types of distribution
+    if (action.type.startsWith('update/param/distribution')) {
       yield call(fetchGross)
       return
     }
     let params = yield select((state) => state.parameters)
     yield all([
-      // call(fetchGross, { params }),
+      call(fetchGross, { params }),
       call(fetchDetails, { params }), 
       call(fetchBriefs, { params })])
   } catch (e) {
@@ -136,12 +163,16 @@ function* getBriefsSaga() {
 function* getDetailsSaga() {
   yield takeLatest('get/details', fetchDetails)
 }
+function* getGrossSaga() {
+  yield takeLatest('get/details', fetchGross)
+}
 export default function* sagas() {
   yield all([
     metaSaga(), 
     paramChangeSaga(),
     pageChangeSaga(),
     getBriefsSaga(),
-    getDetailsSaga()
+    getDetailsSaga(),
+    getGrossSaga()
   ])
 }

@@ -30,5 +30,12 @@
   "fixing_incident": "维修",
   "close_incident": "关单",
   "self_define_distribution": "自定义时间分布",
-  "max_duration": "最大时间"
+  "max_duration": "最大时间",
+  "average": "平均",
+  "day": "天",
+  "hour": "时",
+  "min": "分",
+  "edit_max_duration": "编辑上限",
+  "all_chosen_assets": "全部选中设备",
+  "submit": "查看结果"
 }

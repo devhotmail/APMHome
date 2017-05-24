@@ -34,7 +34,6 @@ function mapState2Props(state) {
 function mapDispatch2Props(dispatch) {
   return {
     onFilterChange: (type) => (data) => dispatch(ParamUpdate('filter', { type, data })),
-    onOrderChange: (data) => dispatch(ParamUpdate('order', data)),
     onPeriodChange: (data) => dispatch(ParamUpdate('period', data))
   }
 }
@@ -70,8 +69,8 @@ export class Header extends PureComponent {
   }
 
   render() {
-    let { t, period, filterBy, orderBy,
-      onFilterChange, onOrderChange, onPeriodChange
+    let { t, period, filterBy,
+      onFilterChange, onPeriodChange
     } = this.props
     return (<nav id="header" className="header level">
 
@@ -94,12 +93,6 @@ export class Header extends PureComponent {
         </div>
         <div className="nav-item">
           { SelectHelper(filterBy['dept'], this.filtersDept(), onFilterChange('dept')) }
-        </div>
-      </div>
-      <div className="nav-right">
-        <div className="nav-item">{t('sort_by')}</div>
-        <div className="nav-item">
-          { SelectHelper(orderBy, this._sortOptions(), onOrderChange) }
         </div>
       </div>
 

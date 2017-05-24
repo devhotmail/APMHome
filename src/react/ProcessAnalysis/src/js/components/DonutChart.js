@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import PieChart from 'react-minimal-pie-chart'
 import classnames from 'classnames'
-import { memoization } from 'javascript-decorators'
+import { decorate } from 'core-decorators'
+import { memoize } from 'lodash-es'
 import colorUtil from 'color'
 
 
@@ -41,6 +42,9 @@ let titleStyle = {
 }
 
 function rowHelper(rowData) {
+  if (!rowData.value) {
+    return null
+  }
   return (
     <div>
       <span>{rowData.label}: {rowData.value}</span>
@@ -51,7 +55,7 @@ function rowHelper(rowData) {
 
 export default class DonutChart extends PureComponent {
 
-  @memoization()
+  @decorate(memoize)
   static getColorGradation(baseColor, number) {
     let result = [ baseColor ]
     if (number > 1) {
@@ -103,11 +107,5 @@ DonutChart.propTypes = {
 DonutChart.defaultProps = {
   radius: 150 / MAGIC_NUMBER,
   data: SampleData,
-  title: '到场时间',
-  rows: [
-    { label: '平均', value: '3小时'},
-    { label: 'P75', value: '2小时'},
-    { label: 'P95', value: '2.5小时'},
-  ]
 
 }

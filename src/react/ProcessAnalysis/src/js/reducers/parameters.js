@@ -4,14 +4,11 @@ import { ACT_UPDATE_PARAM } from 'actions'
 
 const Current = moment()
 const YearStart = moment(new Date().getFullYear(), 'YYYY')
-
 const initParameter = {
-
   filterBy: {
     'assettype': 'all_assettype',
     'dept': 'all_dept',
   },
-  orderBy: 'response_time', 
   period: {
     from: YearStart,
     to: Current
@@ -30,18 +27,14 @@ const initParameter = {
       total: 0
     }
   },
-  distribution: [0, 12 * 3600, 24 * 3600 , 48 * 3600]
-  
+  distributionEttr: [0, 24 * 3600, 3 * 24 * 3600 , 7 * 24 * 3600], // 1, 3, 7 days
+  distributionResponse: [0, 15 * 60, 30 * 60 , 3600], // 15, 30, 60 mins
+  distributionArrival: [0, 12 * 3600, 24 * 3600 , 48 * 3600], // 12, 24, 48 hours
 }
 
 const reducers = {
   ['update/param/filter'](next, data) {
     next.filterBy[data.type] = data.data.key
-    return next
-  },
-
-  ['update/param/order'](next, data) {
-    next.orderBy = data.key
     return next
   },
 
@@ -68,8 +61,16 @@ const reducers = {
     return next
   },
 
-  ['update/param/distribution'](next, data) {
-    next.distribution = data
+  ['update/param/distributionEttr'](next, data) {
+    next.distributionEttr = data
+    return next
+  },
+  ['update/param/distributionResponse'](next, data) {
+    next.distributionResponse = data
+    return next
+  },
+  ['update/param/distributionArrival'](next, data) {
+    next.distributionArrival = data
     return next
   },
 
@@ -78,9 +79,7 @@ const reducers = {
     Object.assign(pag, data.value)
     return next
   }
-
 }
-
 
 export default (state = initParameter, action) => {
 

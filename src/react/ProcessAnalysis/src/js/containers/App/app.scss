@@ -25,6 +25,7 @@
     left: 2%;
     top: 10%;
   }
+
   .pager {
     position: absolute;
     transform: translateY(-54%);
@@ -103,7 +104,6 @@
       top: 115px;
       left: -13px;
     }
-    
     &.donut-chart-arrival {
       top: 1px;
       left: 97px;
@@ -119,15 +119,22 @@
     border-radius: 1em;
     position: absolute;
     right: 0;
-
-    input {
-      width: 3.5em;
-      margin: 0 0.6em .7em;
-      border-radius: .5em;
-      border: 1px solid #bababa;
+    text-align: center;
+    .hidden {
+      display: none;
     }
-    input::placeholder {
-      font-size: .8em
+    .ant-input-number {
+      width: 5.2em;
+    }
+    button {
+      margin-bottom: 1em;
+      width: 64px;
+    }
+    .ant-radio-group label {
+      padding: 0px 4px;
+      &.ant-radio-button-wrapper-checked {
+        color: white;
+      }
     }
     .rc-slider {
       margin: 2em;
@@ -142,6 +149,15 @@
 
     .slider-ettr {
       $base-color: #B276AF;
+      &:not(.hidden) ~ button {
+        background-color: $base-color;
+        border-color: $base-color;
+      }
+      &:not(.hidden) ~ .ant-radio-group label.ant-radio-button-wrapper-checked {
+        background-color: $base-color;
+        border-color: $base-color;
+        box-shadow: -1px 0 0 0 $base-color;
+      }
       .rc-slider-handle {
         border-color: $base-color;
       }
@@ -158,6 +174,15 @@
 
     .slider-arrival_time {
       $base-color: #5CAC9C;
+      &:not(.hidden) ~ button {
+        background-color: $base-color;
+        border-color: $base-color;
+      }
+      &:not(.hidden) ~ .ant-radio-group label.ant-radio-button-wrapper-checked {
+        background-color: $base-color;
+        border-color: $base-color;
+        box-shadow: -1px 0 0 0 $base-color;
+      }
       .rc-slider-handle {
         border-color: $base-color;
       }
@@ -174,6 +199,15 @@
 
     .slider-response_time {
       $base-color: #D0BA54;
+      &:not(.hidden) ~ button {
+        background-color: $base-color;
+        border-color: $base-color;
+      }
+      &:not(.hidden) ~ .ant-radio-group label.ant-radio-button-wrapper-checked {
+        background-color: $base-color;
+        border-color: $base-color;
+        box-shadow: -1px 0 0 0 $base-color;
+      }
       .rc-slider-handle {
         border-color: $base-color;
       }

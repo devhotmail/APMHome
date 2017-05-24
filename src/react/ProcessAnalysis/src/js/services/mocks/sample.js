@@ -1,8 +1,7 @@
 import { info as _info } from 'utils/logger'
-import { PATH_BRIEF, PATH_GROSS, PATH_DETAIL } from 'services/api'
 import { briefsByType, briefsBySupplier, briefsByDept } from './briefs'
 import { details } from './details'
-import { grossByDept } from './gross'
+import { grossByDept, grossBySupplier, grossByType } from './gross'
 
 const TAG = '[Mock]: '
 
@@ -75,10 +74,9 @@ export default function (mock) {
           return [200, simulatePaging(params.limit, params.start, briefsByType)]
         case 'dept':
           return [200, simulatePaging(params.limit, params.start, briefsByDept)]
-        case 'supplier':
+        default: // 'supplier'
           return [200, simulatePaging(params.limit, params.start, briefsBySupplier)]
       }
-      return [200, simulatePaging(params.limit, params.start, briefsByType)]
     })
 
   mock.onGet('/api/process/detail')
@@ -91,7 +89,15 @@ export default function (mock) {
   mock.onGet('/api/process/gross')
     .reply(function (config) {
       info(config.url)
-      return [200, undefined]
+      let params = config.params
+      switch (params.groupby) {
+        case 'type':
+          return [200, grossByType]
+        case 'dept':
+          return [200, grossByDept]
+        default: // 'supplier'
+          return [200, grossBySupplier]
+      }
     })
 }
 
