@@ -1,6 +1,5 @@
 import { call, put, take, takeEvery, takeLatest, fork, all, select } from 'redux-saga/effects'
 import Services from 'services'
-import _ from 'lodash'
 import cache from 'utils/cache'
 import { error } from 'utils/logger'
 import EventBus from 'eventbusjs'
@@ -51,7 +50,6 @@ function* fetchBriefs(action) {
       // do general reload when param changes
     }
     let briefs = yield call(API.getBriefs, params)
-    
     // sync pagination
     let value = {
       total: briefs.page.total,
@@ -95,10 +93,6 @@ function* fetchGross() {
 
 function* fetchAll(action) {
   try {
-    // do nothing for paginator sync action
-    if (action.type === 'update/param/pagination/sync') {
-      return
-    }
     // distribution changes only effect gross data
     if (action.type === 'update/param/distribution') {
       yield call(fetchGross)
@@ -127,7 +121,7 @@ function* metaSaga() {
 }
 
 function* paramChangeSaga() {
-  yield takeLatest(act => act.type.startsWith('update/param/')
+  yield takeLatest(act => act.type.startsWith('update/param/') && !act.type.endsWith('sync')
   , fetchAll)
 }
 
