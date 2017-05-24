@@ -29,7 +29,6 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Map;
 
 @Service
 public class ProfitService {
@@ -64,14 +63,7 @@ public class ProfitService {
     return Option.of(LocalDate.now()).map(y -> CNY.money(2165.29491254D * ChronoUnit.DAYS.between(LocalDate.of(2000, 1, 1), y.plusYears(1)) + 1859154525.8260288D)).getOrElse(CNY.O);
   }
 
-  public static Map<Integer, Double> parseInputJson(String s, String key, String value) {
-    Config parsedBody = ConfigFactory.parseString(s);
-    return HashMap.ofEntries(
-      List.ofAll(Try.of(() -> parsedBody.getConfigList("config")).get())
-        .filter(v -> !Try.of(() -> v.getString(value)).getOrElse("").equals(""))
-        .map(v2 -> Tuple.of(Ints.tryParse(v2.getString(key)), Doubles.tryParse(v2.getString(value)))))
-      .toJavaMap();
-  }
+
 
   //output:type,dept,month
   public static Seq<Tuple5<Option<Integer>, Option<Integer>, Option<Integer>, Option<Double>, Option<Double>>> parseJson(String s) {
@@ -86,12 +78,7 @@ public class ProfitService {
       ));
   }
 
-  //input: Tuple2<future,past>
-  public static double calcIncRate(Observable<Tuple2<Double, Double>> items) {
-    double past = items.reduce(0D, (init, v) -> init + v._2).toBlocking().single();
-    double future = items.reduce(0D, (init, v) -> init + v._1).toBlocking().single();
-    return Option.when(past == 0D, 0D).getOrElse(future / past - 1D);
-  }
+
 
   //calculate the frontend month name according to length of time frame
   public static Map<Integer, String> calculateMonth(LocalDate from, LocalDate to,
