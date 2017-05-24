@@ -8,7 +8,7 @@ import { now, dateFormat, pageSize, defaultPage } from '#/constants'
 import { mockRoot } from '#/utils'
 
 const defaultRange = {
-  from: moment(now).clone().subtract(0.5, 'year').format(dateFormat),
+  from: moment(now).clone().subtract(1, 'year').format(dateFormat),
   to: moment(now).clone().format(dateFormat)
 }
 
