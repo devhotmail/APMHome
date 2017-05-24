@@ -16,12 +16,12 @@ function periodFormatter(value) {
 export default class ReversedRange extends Component {
 
   onChangeProxy(value) {
-    let max = last(value)
-    let reversedValue = value.map(v => max - v).reverse()
+    let max = last(this.props.value)
+    let reverseBack = value.map(v => max - v).reverse()
     // make first/last immutable
-    reversedValue[0] = 0
-    reversedValue[value.length - 1] = max
-    this.props.onChange(reversedValue)
+    if (reverseBack[0] === 0 && reverseBack[value.length - 1] === max) {
+      this.props.onChange(reverseBack)
+    }
   }
 
   render() {

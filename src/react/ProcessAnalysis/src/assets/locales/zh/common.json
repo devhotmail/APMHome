@@ -29,5 +29,6 @@
   "signin_incident": "签到",
   "fixing_incident": "维修",
   "close_incident": "关单",
-  "self_define_distribution": "自定义时间分布"
+  "self_define_distribution": "自定义时间分布",
+  "max_duration": "最大时间"
 }

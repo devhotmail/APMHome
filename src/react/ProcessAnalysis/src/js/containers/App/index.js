@@ -315,12 +315,12 @@ export class App extends Component<void, Props, void> {
               items={DataOrPlaceHolder(details, pagination.right.top)} />
 
             <div className="range-wrapper">
-              {/*<input type="number" onChange={evt => this.updateDistributionMax(evt.target.value)} />*/}
               <ReversedRange
                 className={'slider-' + dataType}
                 value={distribution}
                 onChange={this.onSliderChange}
               />
+              <input type="number" placeholder={t('max_duration')} onChange={evt => this.updateDistributionMax(evt.target.value)} />
             </div>
 
             

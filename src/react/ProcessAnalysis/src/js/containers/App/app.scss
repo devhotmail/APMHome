@@ -115,67 +115,81 @@
   }
   .range-wrapper {
     width: 5em;
-    height: 20em;
-    padding: 2em;
     border: 1px solid #bababa;
     border-radius: 1em;
     position: absolute;
     right: 0;
-  }
 
-  .rc-slider-handle-1:hover,
-  .rc-slider-handle-4:hover {
-    cursor: initial;
-  }
-
-  .slider-ettr {
-    $base-color: #B276AF;
-    .rc-slider-handle {
-      border-color: $base-color;
+    input {
+      width: 3.5em;
+      margin: 0 0.6em .7em;
+      border-radius: .5em;
+      border: 1px solid #bababa;
     }
-    .rc-slider-track-1 {
-      background-color: darken($base-color, 28%)
+    input::placeholder {
+      font-size: .8em
     }
-    .rc-slider-track-2 {
-      background-color: darken($base-color, 14%)
-    }
-    .rc-slider-track-3 {
-      background-color: $base-color;
-    }
-  }
-
-  .slider-arrival_time {
-    $base-color: #5CAC9C;
-    .rc-slider-handle {
-      border-color: $base-color;
-    }
-    .rc-slider-track-1 {
-      background-color: darken($base-color, 28%)
-    }
-    .rc-slider-track-2 {
-      background-color: darken($base-color, 14%)
-    }
-    .rc-slider-track-3 {
-      background-color: $base-color;
-    }
-  }
-
-  .slider-response_time {
-    $base-color: #D0BA54;
-    .rc-slider-handle {
-      border-color: $base-color;
-    }
-    .rc-slider-track-1 {
-      background-color: darken($base-color, 28%)
-    }
-    .rc-slider-track-2 {
-      background-color: darken($base-color, 14%)
-    }
-    .rc-slider-track-3 {
-      background-color: $base-color;
+    .rc-slider {
+      margin: 2em;
+      margin-bottom: 1.2em;
+      height: 25em; 
     }
 
+    .rc-slider-handle-1:hover,
+    .rc-slider-handle-4:hover {
+      cursor: initial;
+    }
+
+    .slider-ettr {
+      $base-color: #B276AF;
+      .rc-slider-handle {
+        border-color: $base-color;
+      }
+      .rc-slider-track-1 {
+        background-color: darken($base-color, 28%)
+      }
+      .rc-slider-track-2 {
+        background-color: darken($base-color, 14%)
+      }
+      .rc-slider-track-3 {
+        background-color: $base-color;
+      }
+    }
+
+    .slider-arrival_time {
+      $base-color: #5CAC9C;
+      .rc-slider-handle {
+        border-color: $base-color;
+      }
+      .rc-slider-track-1 {
+        background-color: darken($base-color, 28%)
+      }
+      .rc-slider-track-2 {
+        background-color: darken($base-color, 14%)
+      }
+      .rc-slider-track-3 {
+        background-color: $base-color;
+      }
+    }
+
+    .slider-response_time {
+      $base-color: #D0BA54;
+      .rc-slider-handle {
+        border-color: $base-color;
+      }
+      .rc-slider-track-1 {
+        background-color: darken($base-color, 28%)
+      }
+      .rc-slider-track-2 {
+        background-color: darken($base-color, 14%)
+      }
+      .rc-slider-track-3 {
+        background-color: $base-color;
+      }
+
+    }
   }
+
 
 
 
