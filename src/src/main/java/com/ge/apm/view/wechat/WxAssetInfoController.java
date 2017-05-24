@@ -7,18 +7,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.QrCodeLibRepository;
-import com.ge.apm.dao.WorkOrderRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.MessageSubscriber;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.domain.UserAccount;
-import com.ge.apm.domain.WorkOrder;
+import com.ge.apm.domain.V2_ServiceRequest;
+import com.ge.apm.domain.V2_WorkOrder;
 import com.ge.apm.service.asset.AssetCreateService;
 import com.ge.apm.service.asset.MessageSubscriberService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.service.utils.QRCodeUtil;
+import com.ge.apm.service.wo.V2_WorkOrderService;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
     private AssetFileAttachmentRepository attachDao;
     private AssetCreateService acService;
     private UserContextService userContextService;
+    private V2_WorkOrderService v2WOService;
     private UaaService uaaService;
     private UserAccount currentUser;
     private AssetInfo assetInfo;
@@ -62,7 +64,7 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
 
     private MessageSubscriber messageSubscriber;
 
-    private List<WorkOrder> woList;
+    private List<V2_ServiceRequest> srList;
 
     //设备查询 0:无效编码;1:未创建档案;2:建档中;3:无权限查看
     private Integer assetFlag = 0;
@@ -80,6 +82,7 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         qrLibDao = WebUtil.getBean(QrCodeLibRepository.class);
         acService = WebUtil.getBean(AssetCreateService.class);
         userContextService = WebUtil.getBean(UserContextService.class);
+        v2WOService = WebUtil.getBean(V2_WorkOrderService.class);
         msService = WebUtil.getBean(MessageSubscriberService.class);
         uaaService = WebUtil.getBean(UaaService.class);
         currentUser = WebUtil.getUserAccountFromRequest();
@@ -124,7 +127,7 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
                 messageSubscriber.setHospitalId(assetInfo.getHospitalId());
                 messageSubscriber.setSubscribeUserId(currentUser.getId());
             }
-            woList = findWoList();
+            srList = findSrList();
         }
 
     }
@@ -151,9 +154,17 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         return res;
     }
 
-    private List<WorkOrder> findWoList() {
-        WorkOrderRepository wodao = WebUtil.getBean(WorkOrderRepository.class);
-        return wodao.findByAssetIdOrderByIdDesc(assetInfo.getId());
+    private List<V2_ServiceRequest> findSrList() {
+
+        return v2WOService.getServiceRequestByAssetId(assetInfo.getId());
+    }
+
+    public List<V2_WorkOrder> getWorkOrderList(String srId) {
+        return v2WOService.getWorkOrdersBySR(srId);
+    }
+
+    public String getUserOpenId() {
+        return userContextService.getLoginUser().getWeChatId();
     }
 
     public List<AssetFileAttachment> getPictureList(Integer assetid) {
@@ -383,8 +394,8 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
         this.messageSubscriber = messageSubscriber;
     }
 
-    public List<WorkOrder> getWoList() {
-        return woList;
+    public List<V2_ServiceRequest> getSrList() {
+        return srList;
     }
 
     public Integer getSearchDept() {

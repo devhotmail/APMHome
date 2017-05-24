@@ -619,6 +619,13 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             filterWarrantyDate = null;
         }
     }
+    
+    
+    public void deleteAsset(AssetInfo asset){
+        asset.setIsDeleted(true);
+        asset.setIsValid(false);
+        dao.save(asset);
+    }
 
     private String filterWarrantyDate = null;
 
