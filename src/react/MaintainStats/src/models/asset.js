@@ -2,23 +2,8 @@
 import axios from 'axios'
 import { routerRedux } from 'dva/router'
 import { notification } from 'antd'
-import moment from 'moment'
 
-import { now, dateFormat, pageSize, defaultPage } from '#/constants'
-
-const defaultRange = {
-  from: moment(now).clone().subtract(0.5, 'year').format(dateFormat),
-  to: moment(now).clone().format(dateFormat)
-}
-
-function mockRoot (root) {
-  return {
-    ...root,
-    isRoot: true,
-    owner_id: null,
-    owner_name: '全部设备'
-  }
-}
+import { pageSize, defaultPage } from '#/constants'
 
 export default {
   namespace: 'asset',
@@ -50,7 +35,11 @@ export default {
 
         let payload = { from, to, page: assetPage, dept, type }
         if (groupby && groupId) {
-          payload[groupby] = groupId
+          payload = {
+            ...payload,
+            groupby,
+            groupId
+          }
         }
 
         dispatch({
@@ -65,7 +54,7 @@ export default {
       try {
         const { pageSize, query } = yield select(state => state.asset)
 
-        const flag = ['from', 'to', 'page', 'dept', 'type'].reduce((prev, cur) => {
+        const flag = ['from', 'to', 'page', 'dept', 'type', 'groupby', 'groupId'].reduce((prev, cur) => {
           if (query[cur] !== params[cur]) prev = false
           return prev
         }, true)
@@ -73,7 +62,7 @@ export default {
 
         yield put({ type: 'loading/on' })
 
-        const { page, ...restQuery } = params
+        const { page, groupby, groupId, ...restQuery } = params
 
         const { data } = yield call(
           axios,
@@ -82,6 +71,7 @@ export default {
             params: {
               ...restQuery,
               groupby: 'asset',
+              [groupby]: groupId,
               start: (page - 1) * pageSize,
               limit: pageSize
             }
@@ -104,18 +94,6 @@ export default {
           yield put({
             type: 'query/update',
             payload: params
-          })
-
-          const root = yield call(mockRoot, data.summary)
-
-          yield put({
-            type: 'root/set',
-            payload: root
-          })
-
-          yield put({
-            type: 'focus/set',
-            payload: root
           })
 
           yield put({ type: 'loading/off' })
@@ -146,18 +124,6 @@ export default {
         ...state,
         total: payload.pages.total,
         items: payload.items
-      }
-    },
-    ['root/set'] (state, { payload }) {
-      return {
-        ...state,
-        root: payload
-      }
-    },
-    ['range/set'] (state, { payload }) {
-      return {
-        ...state,
-        range: payload
       }
     },
     ['query/update'] (state, { payload }) {

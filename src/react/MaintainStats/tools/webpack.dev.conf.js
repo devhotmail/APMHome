@@ -61,7 +61,7 @@ module.exports = merge(baseWebpackConfig, {
           'postcss-loader',
           'sass-loader'
         ]
-      },      
+      },
       {
         test: /\.less$/,
         use: [

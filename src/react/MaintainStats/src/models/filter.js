@@ -1,13 +1,15 @@
 /* @flow */
 import axios from 'axios'
 import { notification } from 'antd'
+import { COMPLETION, QUALITY } from '#/constants'
 
 export default {
   namespace: 'filter',
   state: {
     loading: false,
     depts: [],
-    types: []
+    types: [],
+    switcher: COMPLETION
   }, 
   effects: {
     *['data/get'] (action, { put, call, select, take }) {
@@ -20,7 +22,6 @@ export default {
           type: 'type/get'
         })
       } catch (err) {
-        console.log(err)
         yield put({
           type: 'data/status/failed',
           payload: err
@@ -83,6 +84,12 @@ export default {
     }    
   },
   reducers: {
+    ['switcher/set'] (state, { payload }) {
+      return {
+        ...state,
+        switcher: payload
+      }
+    },
     ['dept/get/succeed'] (state, { payload }) {
       return {
         ...state,

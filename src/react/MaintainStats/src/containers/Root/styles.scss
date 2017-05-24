@@ -21,6 +21,13 @@ $filtersHeight: 50px;
   position: relative;
 }
 
+.core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  z-index: 10;
+}
 
 .leftPager,
 .rightPager {
@@ -29,6 +36,7 @@ $filtersHeight: 50px;
   height: 100%;
   display: flex;
   align-items: center;
+  z-index: 10;
 }
 
 .leftPager {

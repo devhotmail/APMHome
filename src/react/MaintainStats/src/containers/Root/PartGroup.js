@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import RingSectorLayout from 'ring-sector-layout'
-import AnnulusSector from 'ring-sector-layout/dist/AnnulusSector'
 import AnnulusSectorStack from 'ring-sector-layout/dist/AnnulusSectorStack'
 
 import { formatData } from './helper'
@@ -49,7 +48,7 @@ export default class PartGroup extends PureComponent<*, PropsT, *> {
           (item, index, innerRadius, outerRadius) => {
             const span = Math.min(range / 18, range / (chartData.length + 1))
             const { data } = item
-            const opacity = selectedGroupId ? selectedGroupId === item.data.id ? 1 : 0.3 : 1
+            const opacity = selectedGroupId ? selectedGroupId === item.data.id ? 1 : 0.3 : item.style.progress
             return (
               <AnnulusSectorStack
                 key={item.key}
@@ -72,10 +71,5 @@ export default class PartGroup extends PureComponent<*, PropsT, *> {
         }
       </RingSectorLayout>
     )
-  }
-
-  handleChange = (payload) => {
-    const { key, value } = payload
-    console.log(payload)
   }
 }

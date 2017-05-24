@@ -9,7 +9,9 @@ import RingSectorLayout from 'ring-sector-layout'
 import AnnulusSector from 'ring-sector-layout/dist/AnnulusSector'
 import AnnulusSectorStack from 'ring-sector-layout/dist/AnnulusSectorStack'
 
-import { quality, completion } from '#/constants'
+import { QUALITY, COMPLETION } from '#/constants'
+import CoreCircle from '#/components/CoreCircle'
+
 import PartGroup from './PartGroup'
 import PartAsset from './PartAsset'
 
@@ -19,15 +21,17 @@ const purple = '#b781b4'
 const prasinous = '#6ab6a6'
 
 @connect(state => ({
+  focus: state.focus.data,
   group: state.group,
   asset: state.asset,
-  filter: state.filter
+  filter: state.filter,
+  loading: !(!state.group.loading && !state.asset.loading)
 }))
 export default class Root extends Component {
   state = {
     groupAD: 0,
     assetAD: 0,
-    groubyOpts: [
+    groupbyOpts: [
       {
         key: 'type',
         text: '设备类型'
@@ -50,10 +54,10 @@ export default class Root extends Component {
   }
 
   render () {
-    const { group, asset, location, filter } = this.props
+    const { group, asset, location, filter, loading, focus } = this.props
     const { groupPage, assetPage, dept, type, groupby } = location.query
 
-    const { groupAD, assetAD, groubyOpts } = this.state
+    const { groupAD, assetAD, groupbyOpts } = this.state
 
     const filterOpts = [
       {
@@ -79,14 +83,14 @@ export default class Root extends Component {
     const menu = (
       <Menu onClick={this.handleGroupbyChange} selectedKeys={[groupby]} trigger={['click']}>
         {
-          groubyOpts.map((opt, i) => 
+          groupbyOpts.map((opt, i) => 
             <Menu.Item key={opt.key}>显示{opt.text}</Menu.Item>
           )
         }
       </Menu>
     )
 
-    const { text: selectedGroupby } = groubyOpts.find(n => n.key === groupby) || groubyOpts[0]
+    const { text: selectedGroupby } = groupbyOpts.find(n => n.key === groupby) || groupbyOpts[0]
 
     return (
       <div className={styles.container}>
@@ -94,18 +98,32 @@ export default class Root extends Component {
           <FilterBar options={filterOpts} onChange={this.handleFilterChange} />
         </div>
         <div className={styles.chartWrapper}>
+          <div className={styles.core}>
+            <CoreCircle
+              loading={loading}
+              switcher={filter.switcher}
+              focus={focus}
+              onClick={this.handleSwitcherChange} />
+          </div>
           <div className={styles.leftPager}>
             <Pager
               current={parseInt(groupPage)}
               pageSize={group.pageSize}
               total={group.total}
-              onChange={this.handlePageChange('group')} />
+              onChange={this.handleLeftPageChange} />
           </div>
+          <div className={styles.rightPager}>
+            <Pager
+              current={parseInt(assetPage)}
+              pageSize={asset.pageSize}
+              total={asset.total}
+              onChange={this.handleRightPageChange} />
+          </div>          
           <div className={styles.group}>
             <div className={styles.groupby}>
               <Dropdown overlay={menu}>
                 <Button style={{ marginLeft: 8 }}>
-                  {selectedGroupby} <Icon type="down" />
+                  显示{selectedGroupby} <Icon type="down" />
                 </Button>
               </Dropdown>
             </div>
@@ -116,7 +134,7 @@ export default class Root extends Component {
                     selectedGroupId={location.query.groupId}
                     animationDirection={groupAD}
                     onClick={this.handleGroupClick}
-                    switcher={completion} />
+                    switcher={filter.switcher} />
                 : null
             }
           </div>
@@ -125,21 +143,24 @@ export default class Root extends Component {
               asset.items.length
                 ? <PartAsset
                     data={asset.items}
+                    selectedGroupId={location.query.assetId}
                     animationDirection={assetAD}
-                    switcher={completion} />
+                    onClick={this.handleAssetClick}
+                    switcher={filter.switcher} />
                 : null
             }
-          </div>
-          <div className={styles.rightPager}>
-            <Pager
-              current={parseInt(assetPage)}
-              pageSize={asset.pageSize}
-              total={asset.total}
-              onChange={this.handlePageChange('asset')} />
           </div>
         </div>
       </div>
     )
+  }
+
+  handleSwitcherChange = key => e => {
+    e.preventDefault()
+    this.props.dispatch({
+      type: 'filter/switcher/set',
+      payload: key
+    })
   }
 
   handleGroupbyChange = (e) => {
@@ -148,17 +169,76 @@ export default class Root extends Component {
     this.changeQuery({
       groupby: e.key,
       groupId: undefined
-    })    
+    })
   }
 
-  handleGroupClick = (groupId: string) => e => {
+  handleGroupClick = (id: string) => e => {
     e.preventDefault()
-    this.changeQuery({ groupId })
+    const { dispatch, location } = this.props
+    const { query: { groupId }  } = location
+
+    // remove groupId when click the selected group
+    const isGroupSelected = id === groupId
+
+    const newGroupId = isGroupSelected ? undefined : id
+    const payload = isGroupSelected ? undefined : id
+
+    this.changeQuery({ groupId: newGroupId })
+
+    dispatch({
+      type: 'focus/set',
+      payload
+    })
+  }
+
+  handleAssetClick = (id: string) => e => {
+    e.preventDefault()
+    const { dispatch, location } = this.props
+    const { query: { assetId }  } = location
+
+    // remove groupId when click the selected group
+    const isAssetSelected = id === assetId
+
+    const newAssetId = isAssetSelected ? undefined : id
+    const payload = isAssetSelected ? undefined : id
+
+    this.changeQuery({ assetId: newAssetId })
+
+    dispatch({
+      type: 'focus/set',
+      payload
+    })
+  }
+
+  handleLeftPageChange = (current: number, last: number) => {
+    this.changeQuery({
+      groupPage: current,
+      groupId: undefined
+    })
+    
+    this.setState((state, props) => ({
+      ...state,
+      groupAD: last - current
+    }))
+  }
+
+  handleRightPageChange = (current: number, last: number) => {
+    this.changeQuery({
+      assetPage: current,
+      assetId: undefined
+    })
+    
+    this.setState((state, props) => ({
+      ...state,
+      assetAD: last - current
+    }))
   }
 
   handlePageChange = (key: string) => (current: number, last: number) => {
+    // remove selected group id in query when pager changed
     this.changeQuery({
-      [`${key}Page`]: current
+      [`${key}Page`]: current,
+      groupId: undefined
     })
 
     this.setState((state, props) => ({

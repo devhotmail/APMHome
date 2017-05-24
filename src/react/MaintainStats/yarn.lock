@@ -1236,6 +1236,10 @@ chokidar@^1.4.3:
   optionalDependencies:
     fsevents "^1.0.0"
 
+ci-info@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/ci-info/-/ci-info-1.0.0.tgz#dc5285f2b4e251821683681c381c3388f46ec534"
+
 cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   version "1.0.3"
   resolved "https://registry.npmjs.org/cipher-base/-/cipher-base-1.0.3.tgz#eeabf194419ce900da3018c207d212f2a6df0a07"
@@ -1724,6 +1728,12 @@ detect-indent@^4.0.0:
   version "1.3.1"
   resolved "git+https://github.build.ge.com/foundry-sh/dew-pager.git#e74d012f918952cb320001a90630752e9a4e0c8f"
 
+"dew-statusbar@git+https://github.build.ge.com/foundry-sh/dew-statusbar.git":
+  version "1.0.1"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-statusbar.git#feff86770a8fbf61fad0201c674ba28ec8c0546d"
+  dependencies:
+    husky "^0.13.3"
+
 diffie-hellman@^5.0.0:
   version "5.0.2"
   resolved "https://registry.npmjs.org/diffie-hellman/-/diffie-hellman-5.0.2.tgz#b5835739270cfe26acf632099fded2a07f209e5e"
@@ -2163,6 +2173,10 @@ find-cache-dir@^0.1.1:
     mkdirp "^0.5.1"
     pkg-dir "^1.0.0"
 
+find-parent-dir@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.npmjs.org/find-parent-dir/-/find-parent-dir-0.3.0.tgz#33c44b429ab2b2f0646299c5f9f718f376ff8d54"
+
 find-up@^1.0.0:
   version "1.1.2"
   resolved "https://registry.npmjs.org/find-up/-/find-up-1.1.2.tgz#6b2e9822b1a2ce0a60ab64d610eccad53cb24d0f"
@@ -2594,6 +2608,15 @@ https-browserify@0.0.1:
   version "0.0.1"
   resolved "https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz#3f91365cabe60b77ed0ebba24b454e3e09d95a82"
 
+husky@^0.13.3:
+  version "0.13.3"
+  resolved "https://registry.npmjs.org/husky/-/husky-0.13.3.tgz#bc2066080badc8b8fe3516e881f5bc68a57052ff"
+  dependencies:
+    chalk "^1.1.3"
+    find-parent-dir "^0.3.0"
+    is-ci "^1.0.9"
+    normalize-path "^1.0.0"
+
 hydrolysis@^1.19.1:
   version "1.25.0"
   resolved "https://registry.npmjs.org/hydrolysis/-/hydrolysis-1.25.0.tgz#a4fb14a37a1e03b0db52d8aaa57c682272a14d84"
@@ -2709,6 +2732,12 @@ is-builtin-module@^1.0.0:
   resolved "https://registry.npmjs.org/is-builtin-module/-/is-builtin-module-1.0.0.tgz#540572d34f7ac3119f8f76c30cbc1b1e037affbe"
   dependencies:
     builtin-modules "^1.0.0"
+
+is-ci@^1.0.9:
+  version "1.0.10"
+  resolved "https://registry.npmjs.org/is-ci/-/is-ci-1.0.10.tgz#f739336b2632365061a9d48270cd56ae3369318e"
+  dependencies:
+    ci-info "^1.0.0"
 
 is-directory@^0.3.1:
   version "0.3.1"
@@ -3438,6 +3467,10 @@ normalize-package-data@^2.3.2, normalize-package-data@^2.3.4:
     is-builtin-module "^1.0.0"
     semver "2 || 3 || 4 || 5"
     validate-npm-package-license "^3.0.1"
+
+normalize-path@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/normalize-path/-/normalize-path-1.0.0.tgz#32d0e472f91ff345701c15a8311018d3b0a90379"
 
 normalize-path@^2.0.1:
   version "2.1.1"
@@ -4257,6 +4290,13 @@ rc-pagination@~1.8.7:
   dependencies:
     prop-types "^15.5.7"
 
+rc-progress@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.npmjs.org/rc-progress/-/rc-progress-2.1.2.tgz#d31ccb1499ae223c0d21d1485650aa4a0d374ce0"
+  dependencies:
+    babel-runtime "^6.23.0"
+    prop-types "^15.5.8"
+
 rc-progress@~2.1.0:
   version "2.1.1"
   resolved "https://registry.npmjs.org/rc-progress/-/rc-progress-2.1.1.tgz#808cb3cd42e75cf986569d9c03ecff7158b73df4"
@@ -4758,8 +4798,8 @@ rimraf@2, rimraf@^2.2.8, rimraf@^2.5.1, rimraf@^2.6.1:
     glob "^7.0.5"
 
 "ring-sector-layout@git+https://github.build.ge.com/foundry-sh/ring-sector-layout.git":
-  version "1.0.2"
-  resolved "git+https://github.build.ge.com/foundry-sh/ring-sector-layout.git#8ee9afdbbad0656a2276687a76b7aae8a3be5c96"
+  version "2.0.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/ring-sector-layout.git#d7def41ee4fa66eade6f946a31d098d74bc87509"
   dependencies:
     d3-shape "^1.2.0"
     react-motion "^0.5.0"

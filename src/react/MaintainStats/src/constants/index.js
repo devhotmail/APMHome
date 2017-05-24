@@ -1,7 +1,11 @@
 import moment from 'moment'
 
-export const completion = 'completion'
-export const quality = 'quality'
+export const COMPLETION = 'completion'
+export const QUALITY = 'quality'
+
+export const purple = '#b781b4'
+export const prasinous = '#6ab6a6'
+export const gray = '#b7b7b7'
 
 export const margin = 20
 export const stackHeight = 120

@@ -5,19 +5,11 @@ import { notification } from 'antd'
 import moment from 'moment'
 
 import { now, dateFormat, pageSize, defaultPage } from '#/constants'
+import { mockRoot } from '#/utils'
 
 const defaultRange = {
   from: moment(now).clone().subtract(0.5, 'year').format(dateFormat),
   to: moment(now).clone().format(dateFormat)
-}
-
-function mockRoot (root) {
-  return {
-    ...root,
-    isRoot: true,
-    owner_id: null,
-    owner_name: '所有人'
-  }
 }
 
 export default {
@@ -134,7 +126,6 @@ export default {
           yield put({ type: 'loading/off' })
         }
       } catch (err) {
-        console.log(err)
         yield put({
           type: 'data/status/failed',
           payload: err
@@ -160,12 +151,6 @@ export default {
         ...state,
         total: payload.pages.total,
         items: payload.items
-      }
-    },
-    ['root/set'] (state, { payload }) {
-      return {
-        ...state,
-        root: payload
       }
     },
     ['query/update'] (state, { payload }) {

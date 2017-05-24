@@ -1,21 +1,17 @@
-import { quality, completion } from '#/constants'
-
-const purple = '#b781b4'
-const prasinous = '#6ab6a6'
-const gray = '#b7b7b7'
+import { COMPLETION, QUALITY, purple, prasinous, gray } from '#/constants'
 
 export function formatData (data) {
   return data.map(n => {
     const { key, val } = n
 
-    const completePercent = val[completion].completed / val[completion].all
-    const qualityPercent = val[quality].repair / val[quality].all
+    const completePercent = val[COMPLETION].completed / val[COMPLETION].all
+    const qualityPercent = val[QUALITY].repair / val[QUALITY].all
 
     return {
       id: key.id,
       name: key.name,
       origin: data,
-      [completion]: [
+      [COMPLETION]: [
         {
           color: purple,
           value: completePercent
@@ -25,7 +21,7 @@ export function formatData (data) {
           value: 1 - completePercent
         }
       ],
-      [quality]: [
+      [QUALITY]: [
         {
           color: prasinous,
           value: qualityPercent
