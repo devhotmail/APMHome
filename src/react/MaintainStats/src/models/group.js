@@ -84,7 +84,7 @@ export default {
         const { data } = yield call(
           axios,
           {
-            url: process.env.API_HOST + '/pm/brief' + (process.env.NODE_ENV === 'development' ? '/left' : ''),
+            url: process.env.API_HOST + '/pm' + (process.env.NODE_ENV === 'development' ? '/left' : ''),
             params: {
               ...restQuery,
               start: (page - 1) * pageSize,
