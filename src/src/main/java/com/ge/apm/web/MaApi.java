@@ -49,14 +49,14 @@ public class MaApi {
                                                                   @Pattern(regexp = "acyman|mtpm") @RequestParam(name = "rltgrp", required = true) String rltGrp,
                                                                   @Min(1) @RequestParam(name = "limit", required = false, defaultValue = "" + Integer.MAX_VALUE) Integer limit,
                                                                   @Min(0) @RequestParam(name = "start", required = false, defaultValue = "0") Integer start) {
+    log.info("inputs: from {}, to {}, groupBy {}, dept {}, type {}, supplier {}", from, to, groupBy, dept, type, supplier);
     UserAccount user = UserContext.getCurrentLoginUser();
     int siteId = user.getSiteId();
     int hospitalId = user.getHospitalId();
-    Map<Integer, String> groups = javaslang.collection.HashMap.ofAll(commonService.findFields(siteId, "asset_group"))
-      .map(v -> Tuple.of(Ints.tryParse(v._1), v._2)).filter(v -> v._1 != null).toJavaMap(v -> Tuple.of(v._1, v._2));
+    Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(siteId, hospitalId);
     Map<Integer, String> suppliers = commonService.findSuppliers(siteId);
-    log.info("inputs: from {}, to {}, groupBy {}, dept {}, type {}, supplier {}", from, to, groupBy, dept, type, supplier);
+    log.info("groups: {}, depts: {}, suppliers: {}", groups, depts, suppliers);
     if (Option.of(groupBy).isDefined()) {
       Observable<Tuple2<Integer, Tuple3<Double, Double, Double>>> items = maService.findAstMtGroups(siteId, hospitalId, from, to, dept, type, supplier, groupBy, rltGrp);
       return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
