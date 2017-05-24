@@ -9,7 +9,7 @@ import RingSectorLayout from 'ring-sector-layout'
 import AnnulusSector from 'ring-sector-layout/dist/AnnulusSector'
 import AnnulusSectorStack from 'ring-sector-layout/dist/AnnulusSectorStack'
 
-import { QUALITY, COMPLETION } from '#/constants'
+import { QUALITY, COMPLETION, defaultPage } from '#/constants'
 import CoreCircle from '#/components/CoreCircle'
 
 import PartGroup from './PartGroup'
@@ -48,9 +48,20 @@ export default class Root extends Component {
   }
 
   componentDidMount () {
-    this.props.dispatch({
+    const { location, dispatch } = this.props
+
+    dispatch({
       type: 'filter/data/get'
     })
+    // remove selected asset and group when initial load
+    dispatch(routerRedux.push({
+      pathname: '/',
+      query: {
+        ...location.query,
+        assetId: undefined,
+        groupId: undefined
+      }
+    }))
   }
 
   render () {
@@ -168,11 +179,12 @@ export default class Root extends Component {
 
     this.changeQuery({
       groupby: e.key,
-      groupId: undefined
+      groupId: undefined,
+      groupPage: defaultPage
     })
   }
 
-  handleGroupClick = (id: string) => e => {
+  handleGroupClick = (id: string, data: Object) => e => {
     e.preventDefault()
     const { dispatch, location } = this.props
     const { query: { groupId }  } = location
@@ -183,15 +195,18 @@ export default class Root extends Component {
     const newGroupId = isGroupSelected ? undefined : id
     const payload = isGroupSelected ? undefined : id
 
-    this.changeQuery({ groupId: newGroupId })
+    this.changeQuery({
+      groupId: newGroupId,
+      assetId: undefined
+    })
 
     dispatch({
       type: 'focus/set',
-      payload
+      payload: data
     })
   }
 
-  handleAssetClick = (id: string) => e => {
+  handleAssetClick = (id: string, data: Object) => e => {
     e.preventDefault()
     const { dispatch, location } = this.props
     const { query: { assetId }  } = location
@@ -206,7 +221,7 @@ export default class Root extends Component {
 
     dispatch({
       type: 'focus/set',
-      payload
+      payload: data
     })
   }
 
@@ -250,13 +265,18 @@ export default class Root extends Component {
   handleFilterChange = (payload) => {
     const { key, value } = payload
     if (key === 'range') {
-      this.changeQuery(value)
+      this.changeQuery({
+        ...value,
+        assetPage: defaultPage
+      })
     } else {
       this.changeQuery({
-        [key]: value
+        [key]: value,
+        assetPage: defaultPage,
+        groupPage: defaultPage
       })
     }
-  }  
+  }
 
   changeQuery = (params: Object) => {
     const { dispatch, location } = this.props

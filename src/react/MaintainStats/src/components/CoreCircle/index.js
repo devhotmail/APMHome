@@ -27,7 +27,7 @@ class ProgressBar extends PureComponent {
 class Completion extends PureComponent {
   render () {
     const { switcher, info, onClick } = this.props
-    const { incomplete, completed, all } = info
+    const { due, completed, all } = info
     const percent = all ? round(completed / all * 100) : 0
 
     return (
@@ -39,7 +39,7 @@ class Completion extends PureComponent {
         <div className={`${styles.info} text-center`}>
           <div>保养完成率</div>
           <h3>{percent}%</h3>
-          <div>逾期未完成: {incomplete}个</div>
+          <div>逾期未完成: {due}个</div>
           <div>完成保养: {completed}个</div>
           <div>所有保养: {all}个</div>
         </div>
@@ -82,12 +82,12 @@ type PropsT = {
 export default class CoreCircle extends PureComponent<*, PropsT, *> {
   render () {
     const { loading, focus, ...restProps } = this.props
-    
     if (loading) return <StatusBar type="loading" />
-
     if (!focus) return null
     const completion = focus[COMPLETION]
     const quality = focus[QUALITY]
+    if (!completion || !quality) return null
+
     return (
       <div className={styles.coreCircle}>
         <h5>{focus.name}</h5>

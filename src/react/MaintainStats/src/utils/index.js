@@ -13,9 +13,9 @@ export const add = (a: number, b: number): number => a + b
 export function mockRoot (root) {
   return {
     ...root,
-    isRoot: true,
     id: null,
-    name: '全部设备'
+    name: '全部设备',
+    isRoot: true
   }
 }
 

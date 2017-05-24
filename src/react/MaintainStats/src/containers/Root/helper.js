@@ -10,7 +10,10 @@ export function formatData (data) {
     return {
       id: key.id,
       name: key.name,
-      origin: data,
+      origin: {
+        ...n.key,
+        ...n.val
+      },
       [COMPLETION]: [
         {
           color: purple,
