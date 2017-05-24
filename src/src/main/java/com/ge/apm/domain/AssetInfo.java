@@ -195,6 +195,8 @@ public class AssetInfo implements Serializable {
     private String systemNum4;
     @Column(name = "system_num5")
     private String systemNum5;
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
     
     @Column(name = "hospital_id")
     @Basic(optional = false)
@@ -733,6 +735,16 @@ public class AssetInfo implements Serializable {
     public void setSystemNum5(String systemNum5) {
         this.systemNum5 = systemNum5;
     }
+
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+    
+    
     
     
     @Override

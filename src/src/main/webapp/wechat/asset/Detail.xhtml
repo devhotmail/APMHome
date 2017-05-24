@@ -619,7 +619,7 @@ and open the template in the editor.
 
                             <div class="page__bd">
 
-                                <h:panelGroup rendered="#{empty wxAssetInfoController.woList}">
+                                <h:panelGroup rendered="#{empty wxAssetInfoController.srList}">
                                     <div class="weui-cells">
                                         <div class="weui-cell">
                                             <div class="weui-cell__bd">
@@ -631,31 +631,36 @@ and open the template in the editor.
 
                                 <div class="weui-msg__opr-area">
                                     <p class="weui-btn-area">
-                                        <a href="#{wechatUtilService.getContextPath()}/web/scanworeport?from=detail&amp;qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增报修</a>
+                                        <a href="/wx/createWo?id=#{wxAssetInfoController.assetInfo.id}&amp;openid=#{wxAssetInfoController.getUserOpenId()}" class="weui-btn weui-btn_primary">新增报修</a>
+                                        <!--<a href="#{wechatUtilService.getContextPath()}/web/scanworeport?from=detail&amp;qrCode=#{wxAssetInfoController.assetInfo.qrCode}" class="weui-btn weui-btn_primary">新增报修</a>-->
                                     </p>
                                 </div>
 
-                                <c:forEach  items="#{wxAssetInfoController.woList}" var="item" >
+                                <c:forEach  items="#{wxAssetInfoController.srList}" var="srItem" >
                                     <div class="weui-cells">
                                         <div class="weui-cell">
                                             <div class="weui-cell__bd">
-                                                <h4>工单编号: #{item.id}</h4>
+                                                <h4>工单</h4>
+                                                <p>报修人：#{srItem.requestorName}</p>
+                                                <p>故障现象：#{srItem.requestReason}</p>
                                             </div>
-                                            <div class="ftitle weui-cell__ft" style="#{item.casePriority==1?'color:red':''}#{item.casePriority==2?'color:orange':'color:green'};">#{fieldMsg.fieldValue("casePriority",item.casePriority)}</div>
+                                            <div class="ftitle weui-cell__ft" style="#{srItem.casePriority==1?'color:red':''}#{srItem.casePriority==2?'color:orange':'color:green'};">#{fieldMsg.fieldValue("casePriority",srItem.casePriority)}</div>
                                         </div>
-                                        <a class="weui-cell weui-cell_access" href="#{wechatUtilService.getContextPath()}/web/scanwodetail?from=detail&amp;woId=#{item.id}">
+                                        <c:forEach  items="#{wxAssetInfoController.getWorkOrderList(srItem.id)}" var="woItem" >
+                                        
+                                            <a class="weui-cell weui-cell_access" href="/wx/workorder/#{woItem.id}/viewWo?openid=#{wxAssetInfoController.getUserOpenId()}">
+                                                <div class="show-data weui-cell__bd">
+                                                    <h4>当前步骤：</h4>
+                                                </div>
+                                                <div class="weui-cell__ft reportview">#{woItem.currentStepName}</div>
+                                            </a>
+                                        </c:forEach>
+<!--                                         <a class="weui-cell weui-cell_access" href="#{wechatUtilService.getContextPath()}/web/scanwodetail?from=detail&amp;woId=#{item.id}">
                                             <div class="show-data weui-cell__bd">
-                                                <p>资产编号：#{item.id}</p>
-                                                <p>资产名称：#{item.assetName}</p>
-                                                <p>报修人：#{item.requestorName}</p>
-                                                <p>报修时间：
-                                                    <h:outputText value="#{item.requestTime}" >
-                                                        <f:convertDateTime pattern="yyyy-MM-dd HH:mm" timeZone="GMT+8"/>
-                                                    </h:outputText>
-                                                </p>
-                                                <p>工单状态：#{item.currentStepName}</p></div>
-                                            <div class="weui-cell__ft reportview"></div>
-                                        </a>
+                                                <h4>当前步骤：</h4>
+                                            </div>
+                                            <div class="weui-cell__ft reportview">#{item.status}</div>
+                                        </a>-->
                                     </div>
                                 </c:forEach>
 

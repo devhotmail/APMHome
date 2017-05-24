@@ -611,6 +611,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3039,'message','InvalidQRCode', '无效的二维码!','Invalid QRCode!',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3040,'message','WrongHospitalQRCode', '非本院二维码!','Not for this Hospital!',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3041,'message','AlreadyUsingQrCode', '已经使用中二维码!','Already using Code!',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3042,'message','DeleteAssetConformationMsg', '确认删除设备?','Confirm to remove this asset?',null,-1);
 
 -- Chart label/lengend （id from 5000 to 5500）
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan #',null,-1);

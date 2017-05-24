@@ -27,6 +27,7 @@ alter table asset_info add COLUMN system_num3 varchar(32);
 alter table asset_info add COLUMN system_num4 varchar(32);
 alter table asset_info add COLUMN system_num5 varchar(32);
 
+alter table asset_info add COLUMN is_deleted bool;
 
 create table qr_code_lib(
 id serial not null,
