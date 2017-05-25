@@ -101,6 +101,9 @@ public class InspectionOrder implements Serializable {
     @NotNull
     private Integer hospitalId;
 
+    @Column(name = "man_hours")
+    private Integer manHours;
+
     public InspectionOrder() {
     }
 
@@ -245,6 +248,14 @@ public class InspectionOrder implements Serializable {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
         return hash;
+    }
+
+    public Integer getManHours() {
+        return manHours;
+    }
+
+    public void setManHours(Integer manHours) {
+        this.manHours = manHours;
     }
 
     @Override

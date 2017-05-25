@@ -1,5 +1,3 @@
-/*
- */
 package com.ge.apm.domain;
 
 import java.io.Serializable;
@@ -27,13 +25,13 @@ public class WorkflowConfig implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @Column(name = "site_id")
-    private int siteId;
+    private Integer siteId;
     @Basic(optional = false)
     @Column(name = "hospital_id")
-    private int hospitalId;
+    private Integer hospitalId;
     @Basic(optional = false)
     @Column(name = "dispatch_mode")
-    private int dispatchMode;
+    private Integer dispatchMode;
     @Column(name = "dispatch_user_id")
     private Integer dispatchUserId;
     @Column(name = "dispatch_user_name")
@@ -49,17 +47,84 @@ public class WorkflowConfig implements Serializable {
     
     @Column(name="order_reopen_timeframe")
     private Integer orderReopenTimeframe;//二次开单的最大时间间隔
+    
     @Column(name="max_message_count")
     private Integer maxMessageCount;//推送消息的次数上限
     
     @Column(name = "dispatch_user_id2")
     private Integer dispatchUserId2;
+    
     @Column(name = "dispatch_user_name2")
     private String dispatchUserName2;
-
+     
     @Column(name = "is_take_order_enabled")
-    private Boolean isTakeOrderEnabled;
+    private Boolean isTakeOrderEnabled; //是否允许抢单
     
+    @Column(name = "auto_ack")
+    private Boolean autoAck;
+    
+    
+
+    public Boolean getAutoAck() {
+		return autoAck;
+	}
+
+	public void setAutoAck(Boolean autoAck) {
+		this.autoAck = autoAck;
+	}
+
+	public void setSiteId(Integer siteId) {
+		this.siteId = siteId;
+	}
+
+	public void setHospitalId(Integer hospitalId) {
+		this.hospitalId = hospitalId;
+	}
+
+	public void setDispatchMode(Integer dispatchMode) {
+		this.dispatchMode = dispatchMode;
+	}
+
+	public Boolean getIsTakeOrderEnabled() {
+		return isTakeOrderEnabled;
+	}
+
+	public void setIsTakeOrderEnabled(Boolean isTakeOrderEnabled) {
+		this.isTakeOrderEnabled = isTakeOrderEnabled;
+	}
+
+	public Integer getOrderReopenTimeframe() {
+		return orderReopenTimeframe;
+	}
+
+	public void setOrderReopenTimeframe(Integer orderReopenTimeframe) {
+		this.orderReopenTimeframe = orderReopenTimeframe;
+	}
+
+	public Integer getMaxMessageCount() {
+		return maxMessageCount;
+	}
+
+	public void setMaxMessageCount(Integer maxMessageCount) {
+		this.maxMessageCount = maxMessageCount;
+	}
+
+	public Integer getDispatchUserId2() {
+		return dispatchUserId2;
+	}
+
+	public void setDispatchUserId2(Integer dispatchUserId2) {
+		this.dispatchUserId2 = dispatchUserId2;
+	}
+
+	public String getDispatchUserName2() {
+		return dispatchUserName2;
+	}
+
+	public void setDispatchUserName2(String dispatchUserName2) {
+		this.dispatchUserName2 = dispatchUserName2;
+	}
+
 	public WorkflowConfig() {
     }
 
@@ -82,7 +147,7 @@ public class WorkflowConfig implements Serializable {
         this.id = id;
     }
 
-    public int getSiteId() {
+    public Integer getSiteId() {
         return siteId;
     }
 
@@ -90,7 +155,7 @@ public class WorkflowConfig implements Serializable {
         this.siteId = siteId;
     }
 
-    public int getHospitalId() {
+    public Integer getHospitalId() {
         return hospitalId;
     }
 
@@ -98,7 +163,7 @@ public class WorkflowConfig implements Serializable {
         this.hospitalId = hospitalId;
     }
 
-    public int getDispatchMode() {
+    public Integer getDispatchMode() {
         return dispatchMode;
     }
 
@@ -154,46 +219,6 @@ public class WorkflowConfig implements Serializable {
         this.timeoutClose = timeoutClose;
     }
 
-    public Integer getOrderReopenTimeframe() {
-        return orderReopenTimeframe;
-    }
-
-    public void setOrderReopenTimeframe(Integer orderReopenTimeframe) {
-        this.orderReopenTimeframe = orderReopenTimeframe;
-    }
-
-    public Integer getMaxMessageCount() {
-        return maxMessageCount;
-    }
-
-    public void setMaxMessageCount(Integer maxMessageCount) {
-        this.maxMessageCount = maxMessageCount;
-    }
-
-    public Integer getDispatchUserId2() {
-        return dispatchUserId2;
-    }
-
-    public void setDispatchUserId2(Integer dispatchUserId2) {
-        this.dispatchUserId2 = dispatchUserId2;
-    }
-
-    public String getDispatchUserName2() {
-        return dispatchUserName2;
-    }
-
-    public void setDispatchUserName2(String dispatchUserName2) {
-        this.dispatchUserName2 = dispatchUserName2;
-    }
-
-    public Boolean getIsTakeOrderEnabled() {
-        return isTakeOrderEnabled;
-    }
-
-    public void setIsTakeOrderEnabled(Boolean isTakeOrderEnabled) {
-        this.isTakeOrderEnabled = isTakeOrderEnabled;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -214,33 +239,9 @@ public class WorkflowConfig implements Serializable {
         return true;
     }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("WorkflowConfig [id=");
-		builder.append(id);
-		builder.append(", siteId=");
-		builder.append(siteId);
-		builder.append(", hospitalId=");
-		builder.append(hospitalId);
-		builder.append(", dispatchMode=");
-		builder.append(dispatchMode);
-		builder.append(", dispatchUserId=");
-		builder.append(dispatchUserId);
-		builder.append(", dispatchUserName=");
-		builder.append(dispatchUserName);
-		builder.append(", timeoutDispatch=");
-		builder.append(timeoutDispatch);
-		builder.append(", timeoutAccept=");
-		builder.append(timeoutAccept);
-		builder.append(", timeoutRepair=");
-		builder.append(timeoutRepair);
-		builder.append(", timeoutClose=");
-		builder.append(timeoutClose);
-		builder.append("]");
-		return builder.toString();
-	}
-
-
+    @Override
+    public String toString() {
+        return "com.ge.apm.domain.WorkflowConfig[ id=" + id + " ]";
+    }
     
 }

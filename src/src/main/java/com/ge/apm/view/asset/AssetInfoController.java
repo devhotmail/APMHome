@@ -346,7 +346,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         if (!isTimeValidate()) {
             return "";
         }
-        if(!qrCode.equals(selected.getQrCode())){
+        if(!qrCode.equals(selected.getQrCode()) && !qrCode.isEmpty()){
             if(!updateQrCode()){
                 return "";
             }
@@ -618,6 +618,13 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             searchFilters.add(new SearchFilter("warrantyDate", SearchFilter.Operator.LTE, varWarrantyDateTo));
             filterWarrantyDate = null;
         }
+    }
+    
+    
+    public void deleteAsset(AssetInfo asset){
+        asset.setIsDeleted(true);
+        asset.setIsValid(false);
+        dao.save(asset);
     }
 
     private String filterWarrantyDate = null;

@@ -47,7 +47,7 @@ public class QrCreateAssetController {
         WxJsapiSignature s;
         String openId=request.getAttribute("openId").toString();
         try {
-            s = wxMpService.createJsapiSignature(request.getRequestURL().toString() + "?" + request.getQueryString());
+            s = wxMpService.createJsapiSignature(request.getRequestURL().toString().replace(":9000", "") + "?" + request.getQueryString());
         } catch (WxErrorException ex) {
             Logger.getLogger(QrCreateAssetController.class.getName()).log(Level.SEVERE, null, ex);
             return "asset/qrCreateAsset";

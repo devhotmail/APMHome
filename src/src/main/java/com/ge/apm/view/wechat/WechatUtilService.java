@@ -35,7 +35,7 @@ public class WechatUtilService {
         Map<String,String> signatureMap = new HashMap<>();
         try {
             HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-            jsSignature = wxMpService.createJsapiSignature(request.getRequestURL().toString() + "?" + request.getQueryString());
+            jsSignature = wxMpService.createJsapiSignature(request.getRequestURL().toString().replace(":9000", "") + "?" + request.getQueryString());
             signatureMap.put("appid", jsSignature.getAppid());
             signatureMap.put("noncestr", jsSignature.getNoncestr());
             signatureMap.put("signature", jsSignature.getSignature());
