@@ -48,7 +48,7 @@ const webpackConfig = merge(baseWebpackConfig, {
               loader: 'css-loader',
               options: {
                 module: true,
-                importLoaders: 1,
+                importLoaders: 2,
                 localIdentName: '[local]__[hash:base64:5]'
               }
             },
@@ -69,14 +69,14 @@ const webpackConfig = merge(baseWebpackConfig, {
             {
               loader: 'css-loader',
               options: {
-                importLoaders: 1
+                importLoaders: 2
               }
             },
-            'sass-loader',
-            'postcss-loader'
+            'postcss-loader',
+            'sass-loader'
           ]
         })
-      }, 
+      },
       {
         test: /\.less$/,
         loader: ExtractTextPlugin.extract({
