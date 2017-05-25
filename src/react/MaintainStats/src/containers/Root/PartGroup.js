@@ -48,7 +48,10 @@ export default class PartGroup extends PureComponent<*, PropsT, *> {
           (item, index, innerRadius, outerRadius) => {
             const span = Math.min(range / 18, range / (chartData.length + 1))
             const { data } = item
-            const opacity = selectedGroupId ? selectedGroupId === item.data.id ? 1 : 0.3 : item.style.progress
+
+            // `id` typed String
+            const opacity = selectedGroupId ? selectedGroupId == item.data.id ? 1 : 0.3 : item.style.progress
+
             return (
               <AnnulusSectorStack
                 key={item.key}

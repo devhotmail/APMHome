@@ -96,13 +96,15 @@ public class MaApi {
 
   @RequestMapping(value = "/suggestion/{condition}", method = RequestMethod.PUT)
   public ResponseEntity<Map<String, Object>> groupSuggestions(HttpServletRequest request,
-                                                              @RequestParam(name = "year", required = true) Integer year,
+                                                              @RequestParam(name = "from", required = true) Date from,
+                                                              @RequestParam(name = "to", required = true) Date to,
                                                               @Pattern(regexp = "type|dept|supplier") @RequestParam(name = "groupby", required = true) String groupBy,
                                                               @Min(1) @RequestParam(name = "dept", required = false) Integer dept,
                                                               @Min(1) @RequestParam(name = "type", required = false) Integer type,
                                                               @Min(1) @RequestParam(name = "supplier", required = false) Integer supplier,
                                                               @Pattern(regexp = "lowonrate|highcost|bindonratecost") @PathVariable(value = "condition") String condition,
                                                               @RequestBody(required = true) String inputJson) {
+    int year = from.toLocalDate().getYear();
     log.info("inputs: year {}, groupBy {}, dept {}, type {}, supplier {}, condition {}, inputJson {}", year, groupBy, dept, type, supplier, condition, inputJson);
     if (!List.of(LocalDate.now().getYear(), LocalDate.now().plusYears(1).getYear()).contains(year)) {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "year must be this year or next year"));
@@ -110,10 +112,13 @@ public class MaApi {
     UserAccount user = UserContext.getCurrentLoginUser();
     int siteId = user.getSiteId();
     int hospitalId = user.getHospitalId();
-    java.util.List<Double> threshold = List.ofAll(Try.of(() -> ConfigFactory.parseString(inputJson)
-      .getDoubleList("threshold")).getOrElse(List.of(0D).toJavaList())
-    ).filter(v -> Option.of(v).isDefined()).toJavaList();
-    if (threshold.size() != 4) {
+    java.util.List<Double> threshold1 = Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold.condition1")).getOrElseThrow(() -> new IllegalArgumentException("wrong parameter for condition1"));
+    java.util.List<Double> threshold2 = Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold.condition2")).getOrElseThrow(() -> new IllegalArgumentException("wrong parameter for condition1"));
+    java.util.List<Double> threshold3 = Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold.condition3")).getOrElseThrow(() -> new IllegalArgumentException("wrong parameter for condition1"));
+    if (!(threshold1.size() == 1 && threshold2.size() == 1 && threshold3.size() == 4)) {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "input threshold not supported"));
     }
     Map<Integer, Double> onrate = CommonService.parseInputJson(inputJson, "items", "id", "onrate_increase");
@@ -122,9 +127,9 @@ public class MaApi {
     Seq<Integer> sugItems = MaForecastService.userPredict(MaForecastService.virtualSqlItems(dept, type, supplier, "acyman",
       maForecastService.predict(siteId, hospitalId, Date.valueOf(LocalDate.now().minusYears(2).withDayOfYear(1)), Date.valueOf(LocalDate.now()), year)),
       MaForecastService.virtualSqlItems(dept, type, supplier, "acyman", maForecastService.lastYearData(siteId, hospitalId)), onrate, cost1, cost2)
-      .filter(v -> "lowonrate".equals(condition) ? MaForecastService.sugLowBound(v, threshold.get(0)) :
-        ("highcost".equals(condition) ? MaForecastService.sugHighCost(v, threshold.get(2)) :
-          MaForecastService.sugBindOnrateCost(v, threshold.get(0), threshold.get(1), threshold.get(2), threshold.get(3))))
+      .filter(v -> "lowonrate".equals(condition) ? MaForecastService.sugLowBound(v, threshold1.get(0)) :
+        ("highcost".equals(condition) ? MaForecastService.sugHighCost(v, threshold2.get(0)) :
+          MaForecastService.sugBindOnrateCost(v, threshold3.get(0), threshold3.get(1), threshold3.get(2), threshold3.get(3))))
       .map(v -> v._1._1);
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(
       new ImmutableMap.Builder<String, Object>()
@@ -137,7 +142,8 @@ public class MaApi {
 
   @RequestMapping(value = "/forecast", method = RequestMethod.PUT)
   public ResponseEntity<Map<String, Object>> forecast(HttpServletRequest request,
-                                                      @RequestParam(name = "year", required = true) Integer year,
+                                                      @RequestParam(name = "from", required = true) Date from,
+                                                      @RequestParam(name = "to", required = true) Date to,
                                                       @Pattern(regexp = "type|dept|supplier") @RequestParam(name = "groupby", required = false) String groupBy,
                                                       @Min(1) @RequestParam(name = "dept", required = false) Integer dept,
                                                       @Min(1) @RequestParam(name = "type", required = false) Integer type,
@@ -147,6 +153,7 @@ public class MaApi {
                                                       @Min(1) @RequestParam(name = "limit", required = false, defaultValue = "" + Integer.MAX_VALUE) Integer limit,
                                                       @Min(0) @RequestParam(name = "start", required = false, defaultValue = "0") Integer start,
                                                       @RequestBody(required = true) String inputJson) {
+    int year = from.toLocalDate().getYear();
     log.info("inputs: year {}, groupBy {}, dept {}, type {}, rltGrp {}, mas {}, limit {}, start {} inputJson {}", year, groupBy, dept, type, rltGrp, msa, limit, start, inputJson);
     if (!List.of(LocalDate.now().getYear(), LocalDate.now().plusYears(1).getYear()).contains(year)) {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "year must be this year or next year"));
@@ -154,10 +161,13 @@ public class MaApi {
     UserAccount user = UserContext.getCurrentLoginUser();
     int siteId = user.getSiteId();
     int hospitalId = user.getHospitalId();
-    java.util.List<Double> threshold = List.ofAll(Try.of(() -> ConfigFactory.parseString(inputJson)
-      .getDoubleList("threshold")).getOrElse(List.of(0D).toJavaList())
-    ).filter(v -> Option.of(v).isDefined()).toJavaList();
-    if (threshold.size() != 4) {
+    java.util.List<Double> threshold1 = Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold.condition1")).getOrElseThrow(() -> new IllegalArgumentException("wrong parameter for condition1"));
+    java.util.List<Double> threshold2 = Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold.condition2")).getOrElseThrow(() -> new IllegalArgumentException("wrong parameter for condition1"));
+    java.util.List<Double> threshold3 = Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold.condition3")).getOrElseThrow(() -> new IllegalArgumentException("wrong parameter for condition1"));
+    if (!(threshold1.size() == 1 && threshold2.size() == 1 && threshold3.size() == 4)) {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "input threshold not supported"));
     }
     Map<Integer, Double> onrate = CommonService.parseInputJson(inputJson, "items", "id", "onrate_increase");
@@ -168,11 +178,11 @@ public class MaApi {
         maForecastService.predict(siteId, hospitalId, Date.valueOf(LocalDate.now().minusYears(2).withDayOfYear(1)), Date.valueOf(LocalDate.now()), year)),
         MaForecastService.virtualSqlItems(dept, type, supplier, rltGrp, maForecastService.lastYearData(siteId, hospitalId)), onrate, cost1, cost2);
     if ("yes".equals(msa)) {
-      assets = assets.filter(v -> MaForecastService.sugLowBound(v, threshold.get(0)) || MaForecastService.sugHighCost(v, threshold.get(2))
-        || MaForecastService.sugBindOnrateCost(v, threshold.get(0), threshold.get(1), threshold.get(2), threshold.get(3)));
+      assets = assets.filter(v -> MaForecastService.sugLowBound(v, threshold1.get(0)) || MaForecastService.sugHighCost(v, threshold2.get(2))
+        || MaForecastService.sugBindOnrateCost(v, threshold3.get(0), threshold3.get(1), threshold3.get(2), threshold3.get(3)));
     } else if ("no".equals(msa)) {
-      assets = assets.filter(v -> !(MaForecastService.sugLowBound(v, threshold.get(0)) || MaForecastService.sugHighCost(v, threshold.get(2))
-        || MaForecastService.sugBindOnrateCost(v, threshold.get(0), threshold.get(1), threshold.get(2), threshold.get(3))));
+      assets = assets.filter(v -> !(MaForecastService.sugLowBound(v, threshold1.get(0)) || MaForecastService.sugHighCost(v, threshold2.get(0))
+        || MaForecastService.sugBindOnrateCost(v, threshold3.get(0), threshold3.get(1), threshold3.get(2), threshold3.get(3))));
     }
     Map<Integer, String> groups = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> depts = commonService.findDepts(siteId, hospitalId);
@@ -196,7 +206,8 @@ public class MaApi {
 
   @RequestMapping(value = "/forecastrate", method = RequestMethod.PUT)
   public ResponseEntity<Map<String, Object>> forecastrate(HttpServletRequest request,
-                                                          @RequestParam(name = "year", required = true) Integer year,
+                                                          @RequestParam(name = "from", required = true) Date from,
+                                                          @RequestParam(name = "to", required = true) Date to,
                                                           @Min(1) @RequestParam(name = "dept", required = false) Integer dept,
                                                           @Min(1) @RequestParam(name = "type", required = false) Integer type,
                                                           @Min(1) @RequestParam(name = "supplier", required = false) Integer supplier,
@@ -205,6 +216,7 @@ public class MaApi {
                                                           @Min(1) @RequestParam(name = "limit", required = false, defaultValue = "" + Integer.MAX_VALUE) Integer limit,
                                                           @Min(0) @RequestParam(name = "start", required = false, defaultValue = "0") Integer start,
                                                           @RequestBody(required = true) String inputJson) {
+    int year = from.toLocalDate().getYear();
     log.info("inputs: year {}, dept {}, type {}, rltGrp {}, mas {}, limit {}, start {} inputJson {}", year, dept, type, rltGrp, msa, limit, start, inputJson);
     if (!List.of(LocalDate.now().getYear(), LocalDate.now().plusYears(1).getYear()).contains(year)) {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "year must be this year or next year"));
@@ -212,10 +224,13 @@ public class MaApi {
     UserAccount user = UserContext.getCurrentLoginUser();
     int siteId = user.getSiteId();
     int hospitalId = user.getHospitalId();
-    java.util.List<Double> threshold = List.ofAll(Try.of(() -> ConfigFactory.parseString(inputJson)
-      .getDoubleList("threshold")).getOrElse(List.of(0D).toJavaList())
-    ).filter(v -> Option.of(v).isDefined()).toJavaList();
-    if (threshold.size() != 4) {
+    java.util.List<Double> threshold1 = Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold.condition1")).getOrElseThrow(() -> new IllegalArgumentException("wrong parameter for condition1"));
+    java.util.List<Double> threshold2 = Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold.condition2")).getOrElseThrow(() -> new IllegalArgumentException("wrong parameter for condition1"));
+    java.util.List<Double> threshold3 = Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold.condition3")).getOrElseThrow(() -> new IllegalArgumentException("wrong parameter for condition1"));
+    if (!(threshold1.size() == 1 && threshold2.size() == 1 && threshold3.size() == 4)) {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "input threshold not supported"));
     }
     Map<Integer, Double> onrate = CommonService.parseInputJson(inputJson, "items", "id", "onrate_increase");
@@ -230,12 +245,12 @@ public class MaApi {
         maForecastService.predict(siteId, hospitalId, Date.valueOf(LocalDate.now().minusYears(2).withDayOfYear(1)), Date.valueOf(LocalDate.now()), year)),
         MaForecastService.virtualSqlItems(dept, type, supplier, rltGrp, maForecastService.lastYearData(siteId, hospitalId)), onrate, cost1, cost2);
     if ("yes".equals(msa)) {
-      assetsRate = assets.zip(assetsRate).filter(v -> MaForecastService.sugLowBound(v._1, threshold.get(0)) || MaForecastService.sugHighCost(v._1, threshold.get(2))
-        || MaForecastService.sugBindOnrateCost(v._1, threshold.get(0), threshold.get(1), threshold.get(2), threshold.get(3)))
+      assetsRate = assets.zip(assetsRate).filter(v -> MaForecastService.sugLowBound(v._1, threshold1.get(0)) || MaForecastService.sugHighCost(v._1, threshold2.get(0))
+        || MaForecastService.sugBindOnrateCost(v._1, threshold3.get(0), threshold3.get(1), threshold3.get(2), threshold3.get(3)))
         .map(v -> v._2);
     } else if ("no".equals(msa)) {
-      assetsRate = assets.zip(assetsRate).filter(v -> !(MaForecastService.sugLowBound(v._1, threshold.get(0)) || MaForecastService.sugHighCost(v._1, threshold.get(2))
-        || MaForecastService.sugBindOnrateCost(v._1, threshold.get(0), threshold.get(1), threshold.get(2), threshold.get(3))))
+      assetsRate = assets.zip(assetsRate).filter(v -> !(MaForecastService.sugLowBound(v._1, threshold1.get(0)) || MaForecastService.sugHighCost(v._1, threshold2.get(0))
+        || MaForecastService.sugBindOnrateCost(v._1, threshold3.get(0), threshold3.get(1), threshold3.get(2), threshold3.get(3))))
         .map(v -> v._2);
     }
     Observable<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> items = Observable.from(assetsRate);
@@ -248,10 +263,12 @@ public class MaApi {
 
   @RequestMapping(value = "/forecast/asset/{id}", method = RequestMethod.PUT)
   public ResponseEntity<Iterable<ImmutableMap<String, Object>>> forecastSingleAsset(HttpServletRequest request,
-                                                                                    @RequestParam(name = "year", required = true) Integer year,
+                                                                                    @RequestParam(name = "from", required = true) Date from,
+                                                                                    @RequestParam(name = "to", required = true) Date to,
                                                                                     @Pattern(regexp = "acyman|mtpm") @RequestParam(name = "rltgrp", required = true) String rltGrp,
                                                                                     @Min(1) @PathVariable(value = "id") Integer id,
-                                                                                    @RequestBody(required = true) String inputJson) {
+                                                                                    @RequestBody(required = false) String inputJson) {
+    int year = from.toLocalDate().getYear();
     log.info("inputs: year {}, rltGrp {}, id {}, inputJson {}", year, rltGrp, id, inputJson);
     if (!List.of(LocalDate.now().getYear(), LocalDate.now().plusYears(1).getYear()).contains(year)) {
       return ResponseEntity.badRequest().body(List.of(ImmutableMap.of("msg", "year must be this year or next year")));
@@ -259,15 +276,6 @@ public class MaApi {
     UserAccount user = UserContext.getCurrentLoginUser();
     int siteId = user.getSiteId();
     int hospitalId = user.getHospitalId();
-    java.util.List<Double> threshold = List.ofAll(Try.of(() -> ConfigFactory.parseString(inputJson)
-      .getDoubleList("threshold")).getOrElse(List.of(0D).toJavaList())
-    ).filter(v -> Option.of(v).isDefined()).toJavaList();
-    if (threshold.size() != 4) {
-      return ResponseEntity.badRequest().body(List.of(ImmutableMap.of("msg", "year must be this year or next year")));
-    }
-    Map<Integer, Double> onrate = CommonService.parseInputJson(inputJson, "items", "id", "onrate_increase");
-    Map<Integer, Double> cost1 = CommonService.parseInputJson(inputJson, "items", "id", "cost1_increase");
-    Map<Integer, Double> cost2 = CommonService.parseInputJson(inputJson, "items", "id", "cost2_increase");
     Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> assets =
       MaForecastService.virtualSqlSingle(id, rltGrp,
         maForecastService.predict(siteId, hospitalId, Date.valueOf(LocalDate.now().minusYears(2).withDayOfYear(1)), Date.valueOf(LocalDate.now()), year));

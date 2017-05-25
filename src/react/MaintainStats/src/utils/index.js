@@ -13,7 +13,7 @@ export const add = (a: number, b: number): number => a + b
 export function mockRoot (root) {
   return {
     ...root,
-    id: null,
+    id: '@@root##',
     name: '全部设备',
     isRoot: true
   }
