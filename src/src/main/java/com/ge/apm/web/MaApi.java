@@ -6,7 +6,6 @@ import com.ge.apm.service.api.CommonService;
 import com.ge.apm.service.api.MaForecastService;
 import com.ge.apm.service.api.MaService;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
 import com.typesafe.config.ConfigFactory;
 import javaslang.*;
@@ -31,7 +30,6 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/ma")
@@ -112,8 +110,9 @@ public class MaApi {
     UserAccount user = UserContext.getCurrentLoginUser();
     int siteId = user.getSiteId();
     int hospitalId = user.getHospitalId();
-    java.util.List<Double> threshold = Try.of(() -> ConfigFactory.parseString(inputJson).getStringList("threshold")).getOrElse(List.of("").toJavaList())
-      .stream().map(Doubles::tryParse).filter(v -> v != null).collect(Collectors.toList());
+    java.util.List<Double> threshold = List.ofAll(Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold")).getOrElse(List.of(0D).toJavaList())
+    ).filter(v -> Option.of(v).isDefined()).toJavaList();
     if (threshold.size() != 4) {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "input threshold not supported"));
     }
@@ -144,7 +143,7 @@ public class MaApi {
                                                       @Min(1) @RequestParam(name = "type", required = false) Integer type,
                                                       @Min(1) @RequestParam(name = "supplier", required = false) Integer supplier,
                                                       @Pattern(regexp = "acyman|mtpm") @RequestParam(name = "rltgrp", required = true) String rltGrp,
-                                                      @Pattern(regexp = "yes|no") @RequestParam(name = "msa", required = true) String msa,
+                                                      @Pattern(regexp = "yes|no") @RequestParam(name = "msa", required = false) String msa,
                                                       @Min(1) @RequestParam(name = "limit", required = false, defaultValue = "" + Integer.MAX_VALUE) Integer limit,
                                                       @Min(0) @RequestParam(name = "start", required = false, defaultValue = "0") Integer start,
                                                       @RequestBody(required = true) String inputJson) {
@@ -155,8 +154,9 @@ public class MaApi {
     UserAccount user = UserContext.getCurrentLoginUser();
     int siteId = user.getSiteId();
     int hospitalId = user.getHospitalId();
-    java.util.List<Double> threshold = Try.of(() -> ConfigFactory.parseString(inputJson).getStringList("threshold")).getOrElse(List.of("").toJavaList())
-      .stream().map(Doubles::tryParse).filter(v -> v != null).collect(Collectors.toList());
+    java.util.List<Double> threshold = List.ofAll(Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold")).getOrElse(List.of(0D).toJavaList())
+    ).filter(v -> Option.of(v).isDefined()).toJavaList();
     if (threshold.size() != 4) {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "input threshold not supported"));
     }
@@ -201,7 +201,7 @@ public class MaApi {
                                                           @Min(1) @RequestParam(name = "type", required = false) Integer type,
                                                           @Min(1) @RequestParam(name = "supplier", required = false) Integer supplier,
                                                           @Pattern(regexp = "acyman|mtpm") @RequestParam(name = "rltgrp", required = true) String rltGrp,
-                                                          @Pattern(regexp = "yes|no") @RequestParam(name = "msa", required = true) String msa,
+                                                          @Pattern(regexp = "yes|no") @RequestParam(name = "msa", required = false) String msa,
                                                           @Min(1) @RequestParam(name = "limit", required = false, defaultValue = "" + Integer.MAX_VALUE) Integer limit,
                                                           @Min(0) @RequestParam(name = "start", required = false, defaultValue = "0") Integer start,
                                                           @RequestBody(required = true) String inputJson) {
@@ -212,8 +212,9 @@ public class MaApi {
     UserAccount user = UserContext.getCurrentLoginUser();
     int siteId = user.getSiteId();
     int hospitalId = user.getHospitalId();
-    java.util.List<Double> threshold = Try.of(() -> ConfigFactory.parseString(inputJson).getStringList("threshold")).getOrElse(List.of("").toJavaList())
-      .stream().map(Doubles::tryParse).filter(v -> v != null).collect(Collectors.toList());
+    java.util.List<Double> threshold = List.ofAll(Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold")).getOrElse(List.of(0D).toJavaList())
+    ).filter(v -> Option.of(v).isDefined()).toJavaList();
     if (threshold.size() != 4) {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "input threshold not supported"));
     }
@@ -258,8 +259,9 @@ public class MaApi {
     UserAccount user = UserContext.getCurrentLoginUser();
     int siteId = user.getSiteId();
     int hospitalId = user.getHospitalId();
-    java.util.List<Double> threshold = Try.of(() -> ConfigFactory.parseString(inputJson).getStringList("threshold")).getOrElse(List.of("").toJavaList())
-      .stream().map(Doubles::tryParse).filter(v -> v != null).collect(Collectors.toList());
+    java.util.List<Double> threshold = List.ofAll(Try.of(() -> ConfigFactory.parseString(inputJson)
+      .getDoubleList("threshold")).getOrElse(List.of(0D).toJavaList())
+    ).filter(v -> Option.of(v).isDefined()).toJavaList();
     if (threshold.size() != 4) {
       return ResponseEntity.badRequest().body(List.of(ImmutableMap.of("msg", "year must be this year or next year")));
     }

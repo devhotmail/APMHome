@@ -56,6 +56,11 @@ public class MaForecastService extends CommonForecastService {
         WHERE("site_id = :site_id");
         WHERE("created >= :start_day");
         WHERE("created <= :end_day");
+        GROUP_BY("asset_id");
+        GROUP_BY("year_month");
+        GROUP_BY("dept");
+        GROUP_BY("type");
+        GROUP_BY("supplier");
       }}.toString() + ") right_table on ai.id = right_table.asset_id");
       ORDER_BY("ai.id");
       ORDER_BY("year_month");
@@ -65,6 +70,7 @@ public class MaForecastService extends CommonForecastService {
       .parameter("site_id", siteId)
       .parameter("start_day", startDate)
       .parameter("end_day", endDate)
+      .parameter("time_unit", "month")
       .get(rs -> Tuple.of(
         Tuple.of(rs.getInt("id"), rs.getString("name"), rs.getTimestamp("year_month").toLocalDateTime().toLocalDate(),
           rs.getInt("dept"), rs.getInt("type"), rs.getInt("supplier")),
@@ -169,7 +175,13 @@ public class MaForecastService extends CommonForecastService {
   public Seq<Tuple2<Tuple6<Integer, String, Integer, Integer, Integer, Integer>, Tuple6<Double, Double, Double, Double, Double, Double>>>
   lastYearData(Integer siteId, Integer hospitalId) {
     return findDataForForecast(siteId, hospitalId, Date.valueOf(LocalDate.now().minusYears(1).withDayOfYear(1)), Date.valueOf(LocalDate.now().withDayOfYear(1).minusDays(1)))
-      .map(v -> Tuple.of(Tuple.of(v._1._1, v._1._2, localDateToX(v._1._3), v._1._4, v._1._5, v._1._6), v._2));
+      .map(v -> Tuple.of(v._1, Tuple.of(v._2._1, v._2._2,
+        v._2._3 * (int) v._1._3.until(v._1._3.plusMonths(1), ChronoUnit.DAYS),
+        v._2._4 * (int) v._1._3.until(v._1._3.plusMonths(1), ChronoUnit.DAYS),
+        v._2._5 * (int) v._1._3.until(v._1._3.plusMonths(1), ChronoUnit.DAYS),
+        v._2._6 * (int) v._1._3.until(v._1._3.plusMonths(1), ChronoUnit.DAYS)
+      )))
+      .map(v -> Tuple.of(Tuple.of(v._1._1, v._1._2, v._1._3.getMonthValue(), v._1._4, v._1._5, v._1._6), v._2));
   }
 
   /**
@@ -201,10 +213,10 @@ public class MaForecastService extends CommonForecastService {
       .sortBy(v -> v._1._1);
   }
 
-  public static Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>>virtualSqlSingle
-    (Integer id,String rltGrp,
-     Seq<Tuple2<Tuple6<Integer, String, Integer, Integer, Integer, Integer>, Tuple6<Double, Double, Double, Double, Double, Double>>> items){
-    return items.filter(v->v._1._1.equals(id))
+  public static Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> virtualSqlSingle
+    (Integer id, String rltGrp,
+     Seq<Tuple2<Tuple6<Integer, String, Integer, Integer, Integer, Integer>, Tuple6<Double, Double, Double, Double, Double, Double>>> items) {
+    return items.filter(v -> v._1._1.equals(id))
       .groupBy(v -> v._1._1)
       .map((k, v) -> Tuple.of(Tuple.of(k, v.get(0)._1._2, v.get(0)._1._4, v.get(0)._1._5, v.get(0)._1._6),
         Tuple.of(v.get(0)._2._1, v.map(sub -> sub._2._2).average().getOrElse(0D), v.map(sub -> sub._2._3).sum().doubleValue(),
