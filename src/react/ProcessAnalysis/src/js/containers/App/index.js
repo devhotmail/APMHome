@@ -384,7 +384,6 @@ export class App extends Component<void, Props, void> {
     let { outer_R, outer_r, inner_R, inner_r  } = ensureSize(clientRect.width, clientRect.height)
     let onClickDonut = this.onClickDonut
     let gross = selected || generalGross
-    
     return (
       <div id="app-container" className="is-fullwidth">
         <Header/>

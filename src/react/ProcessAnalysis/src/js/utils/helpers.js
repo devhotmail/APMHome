@@ -80,5 +80,5 @@ function ArrayGen(times) {
 }
 
 export function CurrentPage(skip, top) {
-  return Math.ceil(skip / top) || 1
+  return Math.ceil((skip + 1)/ top) || 1
 }

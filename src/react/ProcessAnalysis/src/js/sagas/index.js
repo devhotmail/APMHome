@@ -27,8 +27,8 @@ function mapParamsBrief(params) {
     start: params.pagination.left.skip,
     limit: params.pagination.left.top,
     groupby: GroupByMap[params.display],
-    typeId: assettype === 'all_assettype' ? undefined : assettype ,
-    deptId: dept === 'all_dept' ? undefined : dept,
+    type: assettype === 'all_assettype' ? undefined : assettype ,
+    dept: dept === 'all_dept' ? undefined : dept,
     orderby: DataTypeMap[params.dataType]
   }
 }
@@ -40,8 +40,8 @@ function mapParamsDetail(params) {
     to: params.period.to.format(DateFormat),
     start: params.pagination.right.skip,
     limit: params.pagination.right.top,
-    typeId: assettype === 'all_assettype' ? undefined : assettype ,
-    deptId: dept === 'all_dept' ? undefined : dept,
+    type: assettype === 'all_assettype' ? undefined : assettype ,
+    dept: dept === 'all_dept' ? undefined : dept,
     orderby: DataTypeMap[params.dataType]
   }
 }
@@ -106,7 +106,7 @@ function* fetchBriefs(action) {
     // sync pagination
     let value = {
       total: briefs.page.total,
-      skip: briefs.page.skip,
+      skip: briefs.page.start,
     }
     yield put({ type: 'update/param/pagination/sync', data: { type: 'left', value } })
     EventBus.dispatch('brief-data', this, briefs)
@@ -130,7 +130,7 @@ function* fetchDetails(action) {
     // sync pagination
     let value = {
       total: details.page.total,
-      skip: details.page.skip,
+      skip: details.page.start,
     }
     yield put({ type: 'update/param/pagination/sync', data: { type: 'right', value } })
     EventBus.dispatch('detail-data', this, details)

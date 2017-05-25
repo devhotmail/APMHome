@@ -123,6 +123,10 @@
     .hidden {
       display: none;
     }
+    .ant-input-number,
+    .ant-radio-group {
+      margin-bottom: .5em;
+    }
     .ant-input-number {
       width: 5.2em;
     }
