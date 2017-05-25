@@ -43,19 +43,4 @@ public class CommonForecastService {
     return monthlyData.filter(v -> xToLocaldate(v._1).getYear() == year);
   }
 
-//  /**
-//   * return ratios used when mapping predicted data to single asset
-//   * currently use data of December last year
-//   *
-//   * @param items Asset info(id, time, group_id(usual asset type), measurement)
-//   * @return ratios for each group and asset. (group_id, id, ratio)
-//   */
-//  public Map<Integer, Seq<Tuple2<Integer, Double>>> ratios(Seq<Tuple4<Integer, LocalDate, Integer, Double>> items) {
-//    return items.filter(v -> LocalDate.of(LocalDate.now().getYear() - 1, 12, 1).equals(v._2))
-//      .groupBy(v -> v._3)
-//      .map((k, v) -> Tuple.of(Tuple.of(k, v.map(sub -> sub._4).sum().doubleValue()), v))
-//      .map((k, v) -> Tuple.of(k._1, v.map(sub -> Tuple.of(sub._1, Option.when(k._2.equals(0D), 0D).getOrElse(sub._4 / k._2)))));
-//  }
-
-
 }
