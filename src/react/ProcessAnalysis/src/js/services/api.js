@@ -11,37 +11,13 @@ const PREFIX = process.env.LOCAL ? '/geapm/' : '/'
 export const PATH_BRIEF = PREFIX + 'api/process/brief'
 export const PATH_DETAIL = PREFIX + 'api/process/detail'
 export const PATH_GROSS = PREFIX + 'api/process/gross'
+export const PATH_PHASE = PREFIX + 'api/process/phase'
 
-// const DateFormat = 'YYYY-MM-DD'
-// const GroupBy = {
-//   'display_brand': 'supplier',
-//   'display_asset_type': 'type'
-// }
 export const DataTypeMapping = {
   'response_time': 'respond',
   'ettr': 'ETTR',
   'arrival_time': 'arrived'
 }
-
-// function mapParamsToQuery(params, type) {
-//   let pag = params.pagination[type]
-//   let filterBy = params.filterBy
-//   let assetType = filterBy.assettype === 'all_asset_type' ? '' : filterBy.assettype
-//   let dept = filterBy.dept === 'all_dept' ? '' : filterBy.dept
-//   let supplier = filterBy.supplier === 'all_supplier' ? '' : filterBy.supplier
-//   return {
-//     from: params.period.from.format(DateFormat),
-//     to: params.period.to.format(DateFormat),
-//     groupby: GroupBy[params.display],
-//     orderby: DataTypeMapping[params.orderBy],
-//     type: assetType,
-//     dept: dept,
-//     start: pag.skip || 0,
-//     limit: pag.top,
-//     supplier: supplier,
-//     dataType: DataTypeMapping[params.dataType],
-//   }
-// }
 
 export default {
 
@@ -59,5 +35,9 @@ export default {
   },
   getGross(params) {
     return axios.get(PATH_GROSS, { params }).then(_ => _)
+  },
+  getPhase(params) {
+    return axios.get(PATH_PHASE, { params }).then(_ => _)
   }
+  
 }

@@ -11,10 +11,7 @@ const MAGIC_NUMBER = 2.1546
 const DARKEN_LIMIT = .8
 
 const SampleData = [
-  { value: 10, key: 1 },
-  { value: 15, key: 2 },
-  { value: 20, key: 3 },
-  { value: 20, key: 4 },
+  { value: 10, key: 1 }
 ]
 
 let wrapperStyle = radius => {
@@ -56,7 +53,7 @@ function rowHelper(rowData) {
 export default class DonutChart extends PureComponent {
 
   @decorate(memoize)
-  static getColorGradation(baseColor, number) {
+  static getColorGradation({ baseColor, number }) {
     let result = [ baseColor ]
     if (number > 1) {
       let color = colorUtil(baseColor)
@@ -73,8 +70,10 @@ export default class DonutChart extends PureComponent {
 
   render() {
     let { title, rows, radius, data, baseColor, className, onClick, ...restPorps } = this.props
-    let colorGradation = DonutChart.getColorGradation(baseColor, data.length)
-
+    if (!data || data.length === 0) {
+      data = SampleData
+    }
+    let colorGradation = DonutChart.getColorGradation({ baseColor, number: data.length})
     return (
       <div 
         style={wrapperStyle(radius)} 
@@ -84,7 +83,7 @@ export default class DonutChart extends PureComponent {
       >
         <PieChart
           lineWidth={10}
-          data={SampleData.map((d, i) => { d.color = colorGradation[i]; return d })}
+          data={data.map((d, i) => { d.color = colorGradation[i]; return d })}
         />
         <div style={centered(radius, baseColor)}>
           <span style={titleStyle}>{title}</span>
@@ -106,6 +105,4 @@ DonutChart.propTypes = {
 
 DonutChart.defaultProps = {
   radius: 150 / MAGIC_NUMBER,
-  data: SampleData,
-
 }

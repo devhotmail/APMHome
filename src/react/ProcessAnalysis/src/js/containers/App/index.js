@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
-import { range, memoize, isEqual, debounce, clamp, last } from 'lodash-es'
+import { range, memoize, isEqual, debounce, clamp, last, values, sum } from 'lodash-es'
 import { message, InputNumber, Button, Radio } from 'antd'
 import moment from 'moment'
 import EventBus from 'eventbusjs'
@@ -125,7 +125,10 @@ function mapDispatch2Porps(dispatch) {
     },
     fetchGross: extraParam => {
       dispatch({ type: 'get/gross', data: extraParam })
-  },
+    },
+    fetchPhase: phase => {
+      dispatch({ type: 'get/phase', data: phase })
+    },
     updateMeta: () => dispatch(MetaUpdate())
   }
 }
@@ -148,7 +151,10 @@ export class App extends Component<void, Props, void> {
     generalGross: {},
     selected: null,
     distriMax: 0,
-    distriUnit: 'min'
+    distriUnit: 'min',
+    distriEttr: [],
+    distriArrival: [],
+    distriResponse: []
   }
 
   clickLeftTooth(evt) {
@@ -171,11 +177,11 @@ export class App extends Component<void, Props, void> {
       this.clearFocus('left')
     }
   }
-  onRightPagerChange = value => {
-    this.props.updatePagination('detail', value)
-  }
   onLeftPagerChange = value => {
     this.props.updatePagination('brief', value)
+  }
+  onRightPagerChange = value => {
+    this.props.updatePagination('detail', value)
   }
   initDistributionMax() {
     let [ max, unit ] = HumanizeDuration(last(this.getCurrentDistribution()), this.props.dataType)
@@ -194,10 +200,13 @@ export class App extends Component<void, Props, void> {
   }
 
   loadAll() {
-    let { fetchBriefs, fetchDetails, fetchGross } = this.props
+    let { fetchBriefs, fetchDetails, fetchGross, fetchPhase } = this.props
     fetchBriefs()
     fetchDetails()
     fetchGross()
+    fetchPhase('ettr')
+    fetchPhase('arrival_time')
+    fetchPhase('response_time')
   }
 
   getDisplayOptions() {
@@ -229,6 +238,24 @@ export class App extends Component<void, Props, void> {
     this.setState({ generalGross: gross })
   }
 
+  mountPhaseData(evt, data) {
+    let phaseData = data.data
+    let phases = values(phaseData.data).sort()
+    let distri = phases.map((val, i) => {
+      if (i > 0) {
+        val = val - phases[i - 1]
+      }
+      return { value: val, key: i }
+    })
+    if (phaseData.phase === 'ETTR') {
+      this.setState({ distriEttr: distri })
+    } else if (phaseData.phase === 'arrived') {
+      this.setState({ distriArrival: distri })
+    } else { // respond
+      this.setState({ distriResponse: distri })
+    }
+  }
+
   clearFocus(type) {
     if (type === 'left') {
       this.refs.leftChart.clearFocus()
@@ -254,7 +281,9 @@ export class App extends Component<void, Props, void> {
     let { t } = this.props
     let { selected, generalGross } = this.state
     // update label
-    let balls = BallsStub.map(b => Object.assign({label: t(b.i18n), distance: GetDistance(b, selected || generalGross)}, b)) 
+    let gross = selected || generalGross
+    let isEmpty = gross.ETTR == 0
+    let balls = BallsStub.map((b, i) => Object.assign({label: t(b.i18n), distance: isEmpty ? i * 60 : GetDistance(b, gross)}, b)) 
     // update lane color
     let dataType = this.props.dataType
     let connectIndex = -1
@@ -291,7 +320,6 @@ export class App extends Component<void, Props, void> {
     } else if (distriUnit === 'day') {
       factor = 3600 * 24
     }
-    warn(factor)
     return distriMax * factor 
   }
 
@@ -300,7 +328,6 @@ export class App extends Component<void, Props, void> {
     let distribution = this.getCurrentDistribution()
     let step = this.getMaxInSec() / (distribution.length - 1)
     updateDistribution(distribution.map((v, i) => i * step), dataType)
-    warn("TODO: refresh 3 donuts")
   }
 
   getCurrentDistribution() {
@@ -320,7 +347,7 @@ export class App extends Component<void, Props, void> {
     EventBus.addEventListener('brief-data', this.mountBriefData )
     EventBus.addEventListener('detail-data', this.mountDetailData )
     EventBus.addEventListener('gross-data', this.mountGrossData )
-    EventBus.addEventListener('distribution-data', this.mountDistribution )
+    EventBus.addEventListener('phase-data', this.mountPhaseData )
     let { updateMeta } = this.props
     if (!cache.get('departments') || !cache.get('assettypes')) {
       updateMeta()
@@ -347,7 +374,9 @@ export class App extends Component<void, Props, void> {
     }
   }
   render() {
-    let { briefs, details, selected, distriMax, distriUnit, generalGross } = this.state
+    let { briefs, details, selected, generalGross, distriMax, distriUnit, 
+      distriArrival, distriEttr, distriResponse
+    } = this.state
     let { t, updateDisplayType, pagination, clientRect, display, dataType, 
       distributionEttr, distributionResponse, distributionArrival
     } = this.props
@@ -394,7 +423,8 @@ export class App extends Component<void, Props, void> {
                 baseColor={colors.purple}
                 onClick={onClickDonut} 
                 title={t('ettr')}
-                rows={[GetDonutChartRow(t('average'), gross.ETTR)]}
+                data={distriEttr}
+                rows={[GetDonutChartRow(t('average'), gross.ETTR), GetDonutChartRow('P75', gross.ETTR75), GetDonutChartRow('P95', gross.ETTR95)]}
               />
               <Donut 
                 id="arrival_time"
@@ -402,6 +432,7 @@ export class App extends Component<void, Props, void> {
                 baseColor={colors.green}
                 onClick={onClickDonut} 
                 title={t('arrival_time')}
+                data={distriArrival}
                 rows={[GetDonutChartRow(t('average'), gross.arrived)]}
               />
               <Donut 
@@ -410,6 +441,7 @@ export class App extends Component<void, Props, void> {
                 baseColor={colors.yellow}
                 onClick={onClickDonut} 
                 title={t('response_time')}
+                data={distriResponse}
                 rows={[GetDonutChartRow(t('average'), gross.respond)]}
               />
             </div>

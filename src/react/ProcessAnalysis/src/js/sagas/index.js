@@ -3,44 +3,80 @@ import Services from 'services'
 import cache from 'utils/cache'
 import { error } from 'utils/logger'
 import EventBus from 'eventbusjs'
-import { DateFormat, GroupByMap, DataTypeMap} from 'converters'
+import { DateFormat, GroupByMap, DataTypeMap } from 'converters'
 const API = Services.api
 
 
+// function mapParamsCommon(params) {
+//   let { assettype, dept } = params.filterBy
+//   return {
+//     from: params.period.from.format(DateFormat),
+//     to: params.period.to.format(DateFormat),
+//     type: assettype === 'all_assettype' ? undefined : assettype ,
+//     dept: dept === 'all_dept' ? undefined : dept,
+//   }
+// }
+
 /** Do not temper the original object !! */
-// TODO extract common params
-function mapParamsBrief(parameters) {
-  let { assettype, dept } = parameters.filterBy
+// TODO: extract common params
+function mapParamsBrief(params) {
+  let { assettype, dept } = params.filterBy
   return {
-    from: parameters.period.from.format(DateFormat),
-    to: parameters.period.to.format(DateFormat),
-    limit: parameters.pagination.left.top,
-    groupby: GroupByMap[parameters.display],
-    type: assettype === 'all_assettype' ? undefined : assettype ,
-    dept: dept === 'all_dept' ? undefined : dept,
-    orderby: DataTypeMap[parameters.dataType]
+    from: params.period.from.format(DateFormat),
+    to: params.period.to.format(DateFormat),
+    start: params.pagination.left.skip,
+    limit: params.pagination.left.top,
+    groupby: GroupByMap[params.display],
+    typeId: assettype === 'all_assettype' ? undefined : assettype ,
+    deptId: dept === 'all_dept' ? undefined : dept,
+    orderby: DataTypeMap[params.dataType]
   }
 }
 
-function mapParamsDetail(parameters) {
-  let { assettype, dept } = parameters.filterBy
+function mapParamsDetail(params) {
+  let { assettype, dept } = params.filterBy
   return {
-    from: parameters.period.from.format(DateFormat),
-    to: parameters.period.to.format(DateFormat),
-    limit: parameters.pagination.right.top,
-    type: assettype === 'all_assettype' ? undefined : assettype ,
-    dept: dept === 'all_dept' ? undefined : dept,
-    orderby: DataTypeMap[parameters.dataType]
+    from: params.period.from.format(DateFormat),
+    to: params.period.to.format(DateFormat),
+    start: params.pagination.right.skip,
+    limit: params.pagination.right.top,
+    typeId: assettype === 'all_assettype' ? undefined : assettype ,
+    deptId: dept === 'all_dept' ? undefined : dept,
+    orderby: DataTypeMap[params.dataType]
   }
 }
 
-function mapParamsGross(parameters) {
-  let { assettype, dept } = parameters.filterBy
+function mapParamsGross(params) {
+  let { assettype, dept } = params.filterBy
   return {
-    from: parameters.period.from.format(DateFormat),
-    to: parameters.period.to.format(DateFormat),
-    type: assettype === 'all_assettype' ? undefined : assettype ,
-    dept: dept === 'all_dept' ? undefined : dept
+    from: params.period.from.format(DateFormat),
+    to: params.period.to.format(DateFormat),
+    typeId: assettype === 'all_assettype' ? undefined : assettype ,
+    deptId: dept === 'all_dept' ? undefined : dept
+  }
+}
+
+function mapParamsPhase(params, phase) {
+  let { assettype, dept } = params.filterBy
+  let { distributionEttr, distributionResponse, distributionArrival, dataType } = params
+  dataType = phase || dataType
+  let distribution
+    if (dataType === 'ettr') {
+      distribution = distributionEttr
+    } else if (dataType === 'arrival_time') {
+      distribution = distributionArrival
+    } else { // response_time
+      distribution = distributionResponse
+    }
+  return {
+    from: params.period.from.format(DateFormat),
+    to: params.period.to.format(DateFormat),
+    typeId: assettype === 'all_assettype' ? undefined : assettype ,
+    deptId: dept === 'all_dept' ? undefined : dept,
+    t1: distribution[1],
+    t2: distribution[2],
+    tmax: distribution[3],
+    phase: DataTypeMap[dataType]
   }
 }
 
@@ -61,11 +97,11 @@ function* fetchBriefs(action) {
     let store = yield select(state => state.parameters)
     let params = mapParamsBrief(store)
     if (action.type === 'page/change') {
-      // do page change thing
+      params.start = params.limit * (action.data.value - 1)
     }
-    if (action.type === 'update/param') {
-      // do general reload when param changes
-    }
+    // if (action.type === 'update/param') {
+    //   // do general reload when param changes
+    // }
     let briefs = yield call(API.getBriefs, params)
     // sync pagination
     let value = {
@@ -84,11 +120,11 @@ function* fetchDetails(action) {
     let store = yield select(state => state.parameters)
     let params = mapParamsDetail(store)
     if (action.type === 'page/change') {
-      // do page change thing
+      params.start = params.limit * (action.data.value - 1)
     }
-    if (action.type === 'update/param') {
-      // do general reload when param changes
-    }
+    // if (action.type === 'update/param') {
+    //   // do general reload when param changes
+    // }
 
     let details = yield call(API.getDetails, params)
     // sync pagination
@@ -103,13 +139,13 @@ function* fetchDetails(action) {
   }
 }
 
-function* fetchGross(action) {
+function* fetchGross() {
   try {
     let store = yield select(state => state.parameters)
     let params = mapParamsGross(store)
-    if (action.type === 'update/param') {
-      // do general reload when param changes
-    }
+    // if (action.type === 'update/param') {
+    //   // do general reload when param changes
+    // }
     let gross = yield call(API.getGross, params)
     EventBus.dispatch('gross-data', this, gross)
   } catch (e) {
@@ -117,19 +153,33 @@ function* fetchGross(action) {
   }
 }
 
+function* fetchPhase(action) {
+  try {
+    let store = yield select(state => state.parameters)
+    let params = mapParamsPhase(store, action.data)
+    let phase = yield call(API.getPhase, params)
+    phase.data.phase = params.phase
+    EventBus.dispatch('phase-data', this, phase)
+  } catch (e) {
+    error(e)
+  }
+}
+
 function* fetchAll(action) {
   try {
-    // distribution changes only effect gross data
-    // todo, 3 types of distribution
+    // distribution changes only effect phase data
     if (action.type.startsWith('update/param/distribution')) {
-      yield call(fetchGross)
+      yield call(fetchPhase, {})
       return
     }
-    let params = yield select((state) => state.parameters)
     yield all([
-      call(fetchGross, { params }),
-      call(fetchDetails, { params }), 
-      call(fetchBriefs, { params })])
+      call(fetchGross, action),
+      call(fetchDetails, action), 
+      call(fetchBriefs, action),
+      call(fetchPhase, { data: 'ettr' }),
+      call(fetchPhase, { data: 'arrival_time' }),
+      call(fetchPhase, { data: 'response_time' }),
+    ])
   } catch (e) {
     error(e)
   }
@@ -137,9 +187,9 @@ function* fetchAll(action) {
 
 function* pageChange(action) {
   if (action.data.type === 'brief') {
-    yield call(fetchBriefs, {})
+    yield call(fetchBriefs, action)
   } else {
-    yield call(fetchDetails, {})
+    yield call(fetchDetails, action)
   }
 }
 
@@ -164,7 +214,10 @@ function* getDetailsSaga() {
   yield takeLatest('get/details', fetchDetails)
 }
 function* getGrossSaga() {
-  yield takeLatest('get/details', fetchGross)
+  yield takeLatest('get/gross', fetchGross)
+}
+function* getPhase() {
+  yield takeEvery('get/phase', fetchPhase)
 }
 export default function* sagas() {
   yield all([
@@ -173,6 +226,7 @@ export default function* sagas() {
     pageChangeSaga(),
     getBriefsSaga(),
     getDetailsSaga(),
-    getGrossSaga()
+    getGrossSaga(),
+    getPhase()
   ])
 }

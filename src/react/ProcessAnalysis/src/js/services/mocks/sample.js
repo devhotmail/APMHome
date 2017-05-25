@@ -2,6 +2,7 @@ import { info as _info } from 'utils/logger'
 import { briefsByType, briefsBySupplier, briefsByDept } from './briefs'
 import { details } from './details'
 import { grossByDept, grossBySupplier, grossByType } from './gross'
+import { phaseArrival, phaseRespond, phaseETTR } from './phase'
 
 const TAG = '[Mock]: '
 
@@ -98,6 +99,20 @@ export default function (mock) {
         default: // 'supplier'
           return [200, grossBySupplier]
       }
+    })
+  mock.onGet('/api/process/phase')
+    .reply(function (config) {
+      info(config.url)
+      let params = config.params
+      switch (params.phase) {
+        case 'ETTR':
+          return [200, phaseETTR]
+        case 'arrived':
+          return [200, phaseArrival]
+        case 'respond':
+          return [200, phaseRespond]
+      }
+      return [200, simulatePaging(params.limit, params.start, details)]
     })
 }
 
