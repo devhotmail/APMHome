@@ -392,6 +392,16 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (776, 'label', ' set', '资产建档', 'build asset', NULL, -1);
 
 
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (777, 'focusOption', ' set', '资产建档', 'build asset', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (777, 'focusOption', ' set', '资产建档', 'build asset', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (777, 'focusOption', ' set', '资产建档', 'build asset', NULL, -1);
+
+
+
+
+
+
 -- field value code types  ( id from 1400)
 
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES(1400,'assetGroup','1','CT类','CT类',null,-1);
@@ -824,3 +834,6 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 
 
 
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9102, 'focusOption', ' 2', '不推送工单消息', 'no push', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9101, 'focusOption', ' 1', '仅工单创建和关单消息', 'only push create and close workorder', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9100, 'focusOption', ' 0', '所有工单流程消息', 'push all workroder msg', NULL, -1);
