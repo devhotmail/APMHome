@@ -64,6 +64,8 @@ public class AssetTagController extends JpaCRUDController<AssetTag> {
 
         currentUser = UserContextService.getCurrentUserAccount();
 
+        this.siteIdFilter = currentUser.getSiteId();
+
         targetBiomedGroup = new ArrayList<>();
         queryBiomedGroup = new BiomedGroup();
         queryBiomedGroup.setSiteId(currentUser.getSiteId());
@@ -73,7 +75,7 @@ public class AssetTagController extends JpaCRUDController<AssetTag> {
         targetAssets = new ArrayList();
         queryAsset = new AssetInfo();
         queryAsset.setSiteId(currentUser.getSiteId());
-        queryAsset.setHospitalId(currentUser.getHospitalId());
+        //queryAsset.setHospitalId(currentUser.getHospitalId());
         this.getQueryAssetsList();
 
     }
@@ -200,7 +202,11 @@ public class AssetTagController extends JpaCRUDController<AssetTag> {
     }
 
     public List<OrgInfo> getClinicalDeptList() {
-        return acService.getClinicalDeptList(queryAsset.getHospitalId());
+        List<OrgInfo> tempDeptList = new ArrayList<>();
+        if(queryAsset.getHospitalId() != null && queryAsset.getHospitalId() != 0){
+            tempDeptList = acService.getClinicalDeptList(queryAsset.getHospitalId());
+        }
+        return tempDeptList;
     }
 
     public List<UserAccount> getOwnerList() {
