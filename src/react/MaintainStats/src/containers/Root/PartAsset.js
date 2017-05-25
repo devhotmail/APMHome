@@ -15,13 +15,13 @@ type PropsT = {
   switcher: string,
   animationDirection: number,
   onClick: Function,
-  selectedGroupId: string
+  selectedAssetId: string
 }
 
 @connect()
 export default class PartAsset extends PureComponent<*, PropsT, *> {
   render () {
-    const { data, switcher, animationDirection, onClick, selectedGroupId } = this.props
+    const { data, switcher, animationDirection, onClick, selectedAssetId } = this.props
 
     const chartData = formatData(data).map(n => {
       return {
@@ -46,7 +46,8 @@ export default class PartAsset extends PureComponent<*, PropsT, *> {
           (item, index, innerRadius, outerRadius) => {
             const span = Math.min(range / 18, range / (chartData.length + 1))
             const { data } = item
-            const opacity = selectedGroupId ? selectedGroupId === item.data.id ? 1 : 0.3 : item.style.progress
+            // `id` typed String
+            const opacity = selectedAssetId ? selectedAssetId == item.data.id ? 1 : 0.3 : item.style.progress
             return (
               <AnnulusSectorStack
                 key={item.key}
