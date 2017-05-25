@@ -53,7 +53,8 @@ export default class Root extends Component {
         key: 'dept',
         text: '科室'
       }
-    ]
+    ],
+    lastSelectedGroup: undefined
   }
 
   componentDidMount () {
@@ -208,6 +209,10 @@ export default class Root extends Component {
       assetId: undefined
     })
 
+    this.setState({
+      lastSelectedGroup: payload
+    })
+
     dispatch({
       type: 'focus/set',
       payload
@@ -218,12 +223,14 @@ export default class Root extends Component {
     e.preventDefault()
     const { dispatch, location, root } = this.props
     const { query: { assetId }  } = location
+    const { lastSelectedGroup } = this.state
 
     // remove groupId when click the selected group
     const isAssetSelected = id == assetId
 
     const newAssetId = isAssetSelected ? undefined : id
-    const payload = isAssetSelected ? root : data
+    // use lastSelectedGroup instead of root here
+    const payload = isAssetSelected ? lastSelectedGroup : data
 
     this.changeQuery({ assetId: newAssetId })
 
