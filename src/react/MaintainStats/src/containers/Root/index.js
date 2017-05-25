@@ -29,6 +29,7 @@ const roleFilterFn = isHead => n => {
 @connect(state => ({
   user: state.user.info,
   focus: state.focus.data,
+  root: state.root.data,
   group: state.group,
   asset: state.asset,
   filter: state.filter,
@@ -161,7 +162,7 @@ export default class Root extends Component {
               asset.items.length
                 ? <PartAsset
                     data={asset.items}
-                    selectedGroupId={location.query.assetId}
+                    selectedAssetId={location.query.assetId}
                     animationDirection={assetAD}
                     onClick={this.handleAssetClick}
                     switcher={filter.switcher} />
@@ -193,14 +194,14 @@ export default class Root extends Component {
 
   handleGroupClick = (id: string, data: Object) => e => {
     e.preventDefault()
-    const { dispatch, location } = this.props
+    const { dispatch, location, root } = this.props
     const { query: { groupId }  } = location
 
     // remove groupId when click the selected group
-    const isGroupSelected = id === groupId
+    const isGroupSelected = id == groupId
 
     const newGroupId = isGroupSelected ? undefined : id
-    const payload = isGroupSelected ? undefined : id
+    const payload = isGroupSelected ? root : data
 
     this.changeQuery({
       groupId: newGroupId,
@@ -209,26 +210,26 @@ export default class Root extends Component {
 
     dispatch({
       type: 'focus/set',
-      payload: data
+      payload
     })
   }
 
   handleAssetClick = (id: string, data: Object) => e => {
     e.preventDefault()
-    const { dispatch, location } = this.props
+    const { dispatch, location, root } = this.props
     const { query: { assetId }  } = location
 
     // remove groupId when click the selected group
-    const isAssetSelected = id === assetId
+    const isAssetSelected = id == assetId
 
     const newAssetId = isAssetSelected ? undefined : id
-    const payload = isAssetSelected ? undefined : id
+    const payload = isAssetSelected ? root : data
 
     this.changeQuery({ assetId: newAssetId })
 
     dispatch({
       type: 'focus/set',
-      payload: data
+      payload
     })
   }
 
