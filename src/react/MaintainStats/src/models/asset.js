@@ -82,20 +82,19 @@ export default {
           yield put({
             type: 'data/status/empty'
           })
-          yield put({ type: 'loading/off' })
-        } else {
-          yield put({
-            type: 'data/get/succeed',
-            payload: data
-          })
-
-          yield put({
-            type: 'query/update',
-            payload: params
-          })
-
-          yield put({ type: 'loading/off' })
         }
+
+        yield put({
+          type: 'data/get/succeed',
+          payload: data
+        })
+
+        yield put({
+          type: 'query/update',
+          payload: params
+        })
+
+        yield put({ type: 'loading/off' })
       } catch (err) {
         yield put({
           type: 'data/status/failed',
