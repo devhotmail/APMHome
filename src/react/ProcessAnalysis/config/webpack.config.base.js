@@ -60,10 +60,10 @@ module.exports = {
       filename: 'assets/js/vendor.bundle.js',
       minChunks: Infinity
     }),
-    new CopyWebpackPlugin([{
-      from: 'src/assets',
-      to: 'assets'
-    }])
+    new CopyWebpackPlugin([
+      { from: 'src/assets/locales/zh', to: 'src/assets/locales/zh-CN'},
+      { from: 'src/assets', to: 'assets' },
+    ])
   ],
   module: {
     loaders: [
