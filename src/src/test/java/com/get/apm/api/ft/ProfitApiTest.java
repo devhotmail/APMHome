@@ -336,8 +336,6 @@ public class ProfitApiTest extends AbstractApiTest {
 
     doNegativeTest(tests, ImmutableMap.of("year", "2016", "month", "-1"));
 
-    doNegativeTest(tests, ImmutableMap.of("year", "2016", "month", "13"));
-
     doNegativeTest(tests, ImmutableMap.of("year", "2016", "month", "ga"));
 
     doNegativeTest(tests, ImmutableMap.of("year", "2016", "month", "-1", "limit", "5", "start", "6"));
@@ -442,7 +440,7 @@ public class ProfitApiTest extends AbstractApiTest {
   @Test
   public void testConsistency() throws IOException {
     consistencyForDifferentQueriesTest(tests, ImmutableMap.of("year", "2016", "groupby", "type"), ImmutableMap.of("from", "2016-01-01", "to", "2016-12-31", "groupby", "month"));
-    consistencyForDifferentQueriesTest(tests, ImmutableMap.of("year", "2016", "month", "12"), ImmutableMap.of("from", "2016-12-01", "to", "2016-12-31", "groupby", "type"));
+    consistencyForDifferentQueriesTest(tests, ImmutableMap.of("year", "2016", "month", "" + "201612"), ImmutableMap.of("from", "2016-12-01", "to", "2016-12-31", "groupby", "type"));
   }
 
   //logical forecast tests
