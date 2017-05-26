@@ -218,21 +218,51 @@ and open the template in the editor.
                                         </div>
                                         <div class="weui-cell">
                                             <div class="weui-cell__hd">
-                                                <label class="weui-label">生产厂家</label>
+                                                <label class="weui-label">#{msg.financingNum}</label>
                                             </div>
                                             <div class="weui-cell__bd">
-                                                <h:outputText value="#{wxAssetInfoController.assetInfo.manufacture}" rendered="#{!wxAssetInfoController.isModifying[1]}"/>
-                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.manufacture}"  rendered="#{wxAssetInfoController.isModifying[1]}"/>
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.financingNum}" rendered="#{!wxAssetInfoController.isModifying[1]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.financingNum}"  rendered="#{wxAssetInfoController.isModifying[1]}"/>
                                             </div>
                                         </div>
-
-                                        <div class="weui-cell" onclick="javascript:showBRCode();">
-                                            <div class="weui-cell__bd">
-                                                <label class="weui-label">#{msg.qrCode}</label>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.assetGroup}</label>
                                             </div>
-                                            <div class="weui-cell__ft">
-                                                <!--<p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />-->
-                                                <img id='qrcode' src="#{wxAssetInfoController.getQrCodeImageBase64()}" height="20px" width="20px"/>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{fieldMsg.fieldValue('assetGroup',wxAssetInfoController.assetInfo.assetGroup)}" rendered="#{!wxAssetInfoController.isModifying[1]}"/>
+                                                <h:selectOneMenu class="weui-select" value="#{wxAssetInfoController.assetInfo.assetGroup}" rendered="#{wxAssetInfoController.isModifying[1]}">
+                                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.maitanance}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.maitanance}" rendered="#{!wxAssetInfoController.isModifying[1]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.maitanance}"  rendered="#{wxAssetInfoController.isModifying[1]}"/>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.maitananceTel}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.maitananceTel}" rendered="#{!wxAssetInfoController.isModifying[1]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.maitananceTel}"  rendered="#{wxAssetInfoController.isModifying[1]}"/>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell weui-cell_access">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.warrantyDate}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.warrantyDate}" rendered="#{!wxAssetInfoController.isModifying[1]}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                                <p:calendar id="warrantyDate" class="weui-input"  value="#{wxAssetInfoController.assetInfo.warrantyDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[1]}"/>
                                             </div>
                                         </div>
                                         <div class="weui-cell">
@@ -260,6 +290,24 @@ and open the template in the editor.
                                             </div>
                                             <div class="weui-cell__ft">
                                                 <h:outputText id="clinicalOwnerTel" value="#{wxAssetInfoController.assetInfo.clinicalOwnerTel}"/>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">生产厂家</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.manufacture}" rendered="#{!wxAssetInfoController.isModifying[1]}"/>
+                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.manufacture}"  rendered="#{wxAssetInfoController.isModifying[1]}"/>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell" onclick="javascript:showBRCode();">
+                                            <div class="weui-cell__bd">
+                                                <label class="weui-label">#{msg.qrCode}</label>
+                                            </div>
+                                            <div class="weui-cell__ft">
+                                                <!--<p:barcode id='qrcode' class="weui-cell__ft" value="#{wxAssetInfoController.assetInfo.qrCode}" type="qr" height="20" format="png" rendered="#{not empty wxAssetInfoController.assetInfo.qrCode}" />-->
+                                                <img id='qrcode' src="#{wxAssetInfoController.getQrCodeImageBase64()}" height="20px" width="20px"/>
                                             </div>
                                         </div>
                                         <div class="weui-cell">
@@ -299,19 +347,6 @@ and open the template in the editor.
                                                 <p:calendar id="purchaseDate" class="weui-input"  value="#{wxAssetInfoController.assetInfo.purchaseDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[1]}"/>
                                             </div>
                                         </div>
-                                        <div class="weui-cell weui-cell_access">
-                                            <div class="weui-cell__hd">
-                                                <label class="weui-label">#{msg.warrantyDate}</label>
-                                            </div>
-                                            <div class="weui-cell__bd">
-                                                <h:outputText value="#{wxAssetInfoController.assetInfo.warrantyDate}" rendered="#{!wxAssetInfoController.isModifying[1]}">
-                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
-                                                </h:outputText>
-                                                <p:calendar id="warrantyDate" class="weui-input"  value="#{wxAssetInfoController.assetInfo.warrantyDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[1]}"/>
-                                            </div>
-                                        </div>
-
-
                                     </div>
                                 </div>
 
@@ -359,17 +394,6 @@ and open the template in the editor.
                                         </div>
                                         <div class="weui-cell">
                                             <div class="weui-cell__hd">
-                                                <label class="weui-label">#{msg.assetGroup}</label>
-                                            </div>
-                                            <div class="weui-cell__bd">
-                                                <h:outputText value="#{fieldMsg.fieldValue('assetGroup',wxAssetInfoController.assetInfo.assetGroup)}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
-                                                <h:selectOneMenu class="weui-select" value="#{wxAssetInfoController.assetInfo.assetGroup}" rendered="#{wxAssetInfoController.isModifying[2]}">
-                                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                                </h:selectOneMenu>
-                                            </div>
-                                        </div>
-                                        <div class="weui-cell">
-                                            <div class="weui-cell__hd">
                                                 <label class="weui-label">#{msg.functionGrade}</label>
                                             </div>
                                             <div class="weui-cell__bd">
@@ -388,33 +412,6 @@ and open the template in the editor.
                                                 <h:selectOneMenu class="weui-select" value="#{wxAssetInfoController.assetInfo.functionGroup}" rendered="#{wxAssetInfoController.isModifying[2]}">
                                                     <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                                 </h:selectOneMenu> 
-                                            </div>
-                                        </div>
-                                        <div class="weui-cell">
-                                            <div class="weui-cell__hd">
-                                                <label class="weui-label">#{msg.maitanance}</label>
-                                            </div>
-                                            <div class="weui-cell__bd">
-                                                <h:outputText value="#{wxAssetInfoController.assetInfo.maitanance}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
-                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.maitanance}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
-                                            </div>
-                                        </div>
-                                        <div class="weui-cell">
-                                            <div class="weui-cell__hd">
-                                                <label class="weui-label">#{msg.maitananceTel}</label>
-                                            </div>
-                                            <div class="weui-cell__bd">
-                                                <h:outputText value="#{wxAssetInfoController.assetInfo.maitananceTel}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
-                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.maitananceTel}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
-                                            </div>
-                                        </div>
-                                        <div class="weui-cell">
-                                            <div class="weui-cell__hd">
-                                                <label class="weui-label">#{msg.financingNum}</label>
-                                            </div>
-                                            <div class="weui-cell__bd">
-                                                <h:outputText value="#{wxAssetInfoController.assetInfo.financingNum}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
-                                                <h:inputText class="weui-input" value="#{wxAssetInfoController.assetInfo.financingNum}"  rendered="#{wxAssetInfoController.isModifying[2]}"/>
                                             </div>
                                         </div>
                                         <div class="weui-cell">
