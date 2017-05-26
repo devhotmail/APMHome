@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -59,7 +61,7 @@ public class PmApi {
     Map<Integer, String> suppliers = commonService.findSuppliers(user.getSiteId());
     Map<Integer, String> assets = commonService.findAssets(user.getSiteId(), user.getHospitalId()).entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, kv -> kv.getValue()._7));
     Iterable<Tuple5<Integer, Integer, Integer, Integer, Integer>> report = pmService.findPm(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), Match(groupBy).of(Case("dept", "dept_id"), Case("type", "asset_group"), Case("supplier", "supplier_id"), Case("asset", "id")), dept, type, supplier, asset).toBlocking().toIterable();
-    return ResponseEntity.ok(new ImmutableMap.Builder<String, Object>()
+    return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ImmutableMap.Builder<String, Object>()
       .put("pages", new ImmutableMap.Builder<String, Object>().put("total", StreamSupport.stream(report.spliterator(), false).count()).put("start", start).put("limit", limit).build())
       .put("root", new ImmutableMap.Builder<String, Object>()
         .put("completion", new ImmutableMap.Builder<String, Object>()

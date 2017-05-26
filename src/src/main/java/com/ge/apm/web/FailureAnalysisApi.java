@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static javaslang.API.*;
 
@@ -64,7 +66,7 @@ public class FailureAnalysisApi {
     Observable<Tuple3<Integer, Double, Integer>> report = faService.briefs(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), Match(groupBy).of(Case("dept", "dept_id"), Case("type", "asset_group"), Case("supplier", "supplier_id"), Case("asset", "asset_id")), dept, type, supplier, asset);
     Observable<Tuple3<Integer, Double, Integer>> filteredReport = Option.of(Tuple.of(report, keys)).filter(a -> Option.of(a._2).isDefined()).map(b -> Tuple.of(b._1, Arrays.asList(b._2))).map(c -> c._1.filter((t -> c._2.contains(t._1)))).getOrElse(report);
     return Match(Tuple.of(groupBy, filteredReport.sorted((l, r) -> Match(orderby).of(Case("avail", (int) (r._2 * 1000) - (int) (l._2 * 1000)), Case("ftfr", (int) (r._2 * 1000) - (int) (l._2 * 1000)), Case("fix", r._3 - l._3))).skip(start).limit(Option.of(limit).getOrElse(Integer.MAX_VALUE)).cache(), depts, types, suppliers, assets)).of(
-      Case($(t -> "dept".equals(t._1)), t -> ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>()
+      Case($(t -> "dept".equals(t._1)), t -> ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ImmutableMap.Builder<String, Object>()
         .put("pages", new ImmutableMap.Builder<String, Object>()
           .put("total", report.count().toBlocking().single())
           .put("limit", Option.of(limit).getOrElse(Integer.MAX_VALUE))
@@ -79,7 +81,7 @@ public class FailureAnalysisApi {
             .put("ftfr", tp._2 * 0.95D)
             .put("fix", tp._3).build()).build()).toBlocking().toIterable())
         .build())),
-      Case($(t -> "type".equals(t._1)), t -> ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>()
+      Case($(t -> "type".equals(t._1)), t -> ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ImmutableMap.Builder<String, Object>()
         .put("pages", new ImmutableMap.Builder<String, Object>()
           .put("total", report.count().toBlocking().single())
           .put("limit", Option.of(limit).getOrElse(Integer.MAX_VALUE))
@@ -94,7 +96,7 @@ public class FailureAnalysisApi {
             .put("ftfr", tp._2 * 0.95D)
             .put("fix", tp._3).build()).build()).toBlocking().toIterable())
         .build())),
-      Case($(t -> "supplier".equals(t._1)), t -> ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>()
+      Case($(t -> "supplier".equals(t._1)), t -> ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ImmutableMap.Builder<String, Object>()
         .put("pages", new ImmutableMap.Builder<String, Object>()
           .put("total", report.count().toBlocking().single())
           .put("limit", Option.of(limit).getOrElse(Integer.MAX_VALUE))
@@ -109,7 +111,7 @@ public class FailureAnalysisApi {
             .put("ftfr", tp._2 * 0.95D)
             .put("fix", tp._3).build()).build()).toBlocking().toIterable())
         .build())),
-      Case($(t -> "asset".equals(t._1)), t -> ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>()
+      Case($(t -> "asset".equals(t._1)), t -> ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ImmutableMap.Builder<String, Object>()
         .put("pages", new ImmutableMap.Builder<String, Object>()
           .put("total", report.count().toBlocking().single())
           .put("limit", Option.of(limit).getOrElse(Integer.MAX_VALUE))
@@ -144,7 +146,7 @@ public class FailureAnalysisApi {
                                                                @Min(0) @RequestParam(name = "start", required = false, defaultValue = "0") Integer start) {
     UserAccount user = UserContext.getCurrentLoginUser();
     Map<Integer, String> reasons = Observable.from(commonService.findFields(user.getSiteId(), "caseType").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
-    return ResponseEntity.ok().body(new ImmutableMap.Builder<String, Object>()
+    return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ImmutableMap.Builder<String, Object>()
       .put("reasons", faService.reasons(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), dept, type, supplier, asset).skip(start).limit(Option.of(limit).getOrElse(Integer.MAX_VALUE))
         .map(t -> new ImmutableMap.Builder<String, Object>().put("id", t._1).put("name", reasons.getOrDefault(t._1, "")).put("count", t._2).build()).toBlocking().toIterable()).build());
   }
