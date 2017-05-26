@@ -30,7 +30,7 @@ public class PmService {
     db = Database.from(connectionProvider);
   }
 
-  @Cacheable(cacheNames = "springCache", key = "'pmService.findPm.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#groupBy+'.'+#dept+'.'+#type+'.'+#supplier+'.'+#asset")
+  @Cacheable(cacheNames = "springCache", key = "'pmService.findPm.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#agg+'.'+#dept+'.'+#type+'.'+#supplier+'.'+#asset")
   public Observable<Tuple5<Integer, Integer, Integer, Integer, Integer>> findPm(int site, int hospital, Date from, Date to, String agg, Integer dept, Integer type, Integer supplier, Integer asset) {
     QuerySelect.Builder builder = db.select(new SQL() {{
       SELECT(String.format("sm.%s as agg", agg), "COALESCE(sum(sm.cmp),0) as sum_cmp", "COALESCE(sum(sm.due),0) as sum_due", "COALESCE(sum(sm.rq),0) as sum_rq", "COALESCE(count(*),0) as sum_all");
