@@ -67,11 +67,11 @@
                         </p:column>
                         <p:column headerText="#{msg.assetName}" sortBy="#{item.assetName}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.assetName}"/>
-                        </p:column><!--
--->                        <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
+                        </p:column>
+                        <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
                             <h:outputText value="#{serviceRequestController.getRequestReasonInShort(item)}" title="#{item.requestReason}"/>
-                        </p:column><!--
--->                        <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
+                        </p:column>
+                        <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />

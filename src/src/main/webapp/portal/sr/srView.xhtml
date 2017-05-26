@@ -25,7 +25,9 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.requestTime}</label>
-                            <p:outputLabel value="#{serviceRequestController.selected.requestTime}" />
+                            <p:outputLabel value="#{serviceRequestController.selected.requestTime}" >
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </p:outputLabel>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.requestReason}</label>
@@ -33,7 +35,7 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.status}</label>
-                            <p:outputLabel value="#{serviceRequestController.selected.status}" />
+                            <p:outputLabel value="#{fieldMsg.fieldValue('status', serviceRequestController.selected.status)}" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.equipmentTaker}</label>
@@ -45,12 +47,12 @@
                             <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
                                 <h:panelGroup>
-                                    <label class="label">#{msg.currentStepName}</label>
+                                    <label class="label">#{msg.status}</label>
                                     <p:outputLabel value="#{woItem.currentStepName}" />
                                 </h:panelGroup>
                                 <h:panelGroup>
                                     <label class="label">#{msg.caseType}</label>
-                                    <p:outputLabel value="#{woItem.caseType}"/>
+                                    <p:outputLabel value="#{fieldMsg.fieldValue('caseSubType',woItem.caseType)}"/>
                                 </h:panelGroup>
                                 <h:panelGroup>
                                     <label class="label">#{msg.totalManHour}</label>
@@ -66,7 +68,7 @@
                                 </h:panelGroup>
                                 <h:panelGroup>
                                     <label class="label">#{msg.status}</label>
-                                    <p:outputLabel value="#{woItem.status}"/>
+                                    <p:outputLabel value="#{fieldMsg.fieldValue('status',woItem.status)}"/>
                                 </h:panelGroup>
                                 <h:panelGroup>
                                     <label class="label">#{msg.feedbackRating}</label>
@@ -78,7 +80,9 @@
                                 </h:panelGroup>
                                 <h:panelGroup>
                                     <label class="label">#{msg.endTime}</label>
-                                    <p:outputLabel value="#{woItem.closeTime}"/>
+                                    <p:outputLabel value="#{woItem.closeTime}">
+                                        <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                                    </p:outputLabel>
                                 </h:panelGroup>
                                 <h:panelGroup>
                                     <label class="label">#{msg.patProblems}</label>
@@ -95,7 +99,7 @@
 
                             </p:panelGrid>
 
-                            
+
                             <p:dataTable value="#{serviceRequestController.getWOrkOrderStep(woItem.id)}" var="stepItem">
                                 <p:column headerText="#{msg.stepName}">
                                     <h:outputText value="#{stepItem.stepName}" />
@@ -110,7 +114,7 @@
                                 </p:column>
                                 <p:column headerText="#{msg.endTime}">
                                     <h:outputText value="#{stepItem.endTime}" >
-                                    <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                                        <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                                     </h:outputText>
                                 </p:column>
                                 <p:column headerText="#{msg.description}">
@@ -118,7 +122,7 @@
                                 </p:column>
 
                             </p:dataTable>
-                            
+
                             <br/>
 
                             <p:dataTable value="#{serviceRequestController.getWOrkOrderDetail(woItem.id)}" var="detailItem"  rendered="#{not empty serviceRequestController.getWOrkOrderDetail(woItem.id)}">
