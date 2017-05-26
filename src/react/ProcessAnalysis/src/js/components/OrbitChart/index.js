@@ -43,7 +43,10 @@ function renderLane(balls, radius, cx, cy, color) {
 }
 
 function trail(cx, cy, r) {
-  return <path className="orbit-trail" d={`M ${cx} ${cy - r} A ${r} ${r} 0 1 1 ${cx - 0.866 * r} ${cy - r/2}`} fill="none" stroke="gray"/>
+  return (<path 
+    className="orbit-trail" fill="none" stroke="gray"
+    d={`M ${cx} ${cy - r} A ${r} ${r} 0 1 1 ${cx - 0.866 * r} ${cy - r/2}`} 
+  />)
 }
 
 export default class OrbitChart extends PureComponent {
@@ -81,7 +84,6 @@ OrbitChart.defaultProps = {
   clockwise: true,
   maxBallAngle: 360,
 }
-
 
 OrbitChart.propTypes = {
   radius: PropTypes.number.isRequired,
