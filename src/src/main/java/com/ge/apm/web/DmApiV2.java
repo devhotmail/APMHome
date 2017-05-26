@@ -799,36 +799,6 @@ public class DmApiV2 {
     ));
   }
 
-//  /**
-//   * Calculate High level suggestions using low level suggestions
-//   * THis function may change when suggestion logic changes
-//   *
-//   * @param lowerLevelSuggestions a list of low level suggestions
-//   * @param groupBy               dept|type
-//   * @return High level suggestions
-//   */
-//  private List<Map<String, String>> calculateHigherLevelSuggestions(Seq<Seq<Map<String, String>>> lowerLevelSuggestions, String groupBy) {
-//    Seq<Seq<String>> suggestionLists = lowerLevelSuggestions.map(v -> v.map(sub -> sub.get("title").getOrElse("")));
-//    int numBuy = suggestionLists.count(v -> v.exists(v2 -> v2.contains(SUGGESTION_BUY)));
-//    Integer numBuyAssets = lowerLevelSuggestions
-//      .filter(v -> v.map(sub -> sub.get("title").getOrElse("")).exists(v2 -> v2.contains(SUGGESTION_BUY)))
-//      .map(v -> v.filter(sub -> sub.get("addition").isDefined()).headOption().map(v2 -> v2.get("addition").get()).get())
-//      .map(v -> Ints.tryParse(Option.when(v.contains("（"), v.substring(v.indexOf("（") + 1, v.indexOf("台设备"))).getOrElse(v.substring(0, v.indexOf("台设备")))))
-//      .sum().intValue();
-//    int numAjst = suggestionLists.count(v -> v.exists(v2 -> v2.contains(SUGGESTION_ADJUST)));
-//    int numRse = suggestionLists.count(v -> v.exists(v2 -> v2.contains(SUGGESTION_RAISE)));
-//    ImmutableList.Builder<Map<String, String>> totalSuggestions = new ImmutableList.Builder<Map<String, String>>();
-//    if (numBuy > 0) {
-//      totalSuggestions.add(HashMap.of("title", SUGGESTION_BUY.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", Option.when(groupBy.equals("dept"), String.format("%s个（%s台设备）", numBuy, numBuyAssets)).getOrElse(String.format("%s种（%s台设备）", numBuy, numBuyAssets))));
-//    }
-//    if (numAjst > 0) {
-//      totalSuggestions.add(HashMap.of("title", SUGGESTION_ADJUST.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", Option.when(groupBy.equals("dept"), String.format("%s个", numAjst)).getOrElse(String.format("%s种", numAjst))));
-//    }
-//    if (numRse > 0) {
-//      totalSuggestions.add(HashMap.of("title", SUGGESTION_RAISE.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", Option.when(groupBy.equals("dept"), String.format("%s个", numRse)).getOrElse(String.format("%s种", numRse))));
-//    }
-//    return List.ofAll(totalSuggestions.build());
-//  }
 
   /**
    * Calculate High level suggestions using low level suggestions
