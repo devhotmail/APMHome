@@ -1,0 +1,11 @@
+{
+  "parameters": "Parameters",
+  "chosen_period": "Period",
+  "operation_rate": "Operation Rate",
+  "tdt": "TDT",
+  "ftfr": "FTFR",
+  "same_period_last_year": "Same Period Last Year",
+  "incident_count": "Incident Count",
+  "primary_failure": "Primary Failure",
+  "secondary_failure": "Secondary Failure"
+}

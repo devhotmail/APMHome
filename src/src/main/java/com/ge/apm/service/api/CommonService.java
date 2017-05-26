@@ -137,15 +137,16 @@ public class CommonService {
 
   /**
    * get key-value map from a json.
-   * @param s input json
-   * @param key key of map. eg: id
+   *
+   * @param s     input json
+   * @param key   key of map. eg: id
    * @param value value of map. eg:revenue
    * @return a map of key and value specified by user
    */
-  public static Map<Integer, Double> parseInputJson(String s, String key, String value) {
+  public static Map<Integer, Double> parseInputJson(String s, String listName, String key, String value) {
     Config parsedBody = ConfigFactory.parseString(s);
     return HashMap.ofEntries(
-      List.ofAll(Try.of(() -> parsedBody.getConfigList("config")).get())
+      List.ofAll(Try.of(() -> parsedBody.getConfigList(listName)).get())
         .filter(v -> !Try.of(() -> v.getString(value)).getOrElse("").equals(""))
         .map(v2 -> Tuple.of(Ints.tryParse(v2.getString(key)), Doubles.tryParse(v2.getString(value)))))
       .toJavaMap();
