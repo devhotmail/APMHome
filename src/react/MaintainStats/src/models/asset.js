@@ -54,11 +54,8 @@ export default {
       try {
         const { pageSize, query } = yield select(state => state.asset)
 
-        const flag = ['from', 'to', 'page', 'dept', 'type', 'groupby', 'groupId'].reduce((prev, cur) => {
-          if (query[cur] !== params[cur]) prev = false
-          return prev
-        }, true)
-        if (flag) return
+        // equal compare for pure object
+        if (JSON.stringify(query) === JSON.stringify(params)) return
 
         yield put({ type: 'loading/on' })
 
@@ -85,19 +82,19 @@ export default {
           yield put({
             type: 'data/status/empty'
           })
-        } else {
-          yield put({
-            type: 'data/get/succeed',
-            payload: data
-          })
-
-          yield put({
-            type: 'query/update',
-            payload: params
-          })
-
-          yield put({ type: 'loading/off' })
         }
+
+        yield put({
+          type: 'data/get/succeed',
+          payload: data
+        })
+
+        yield put({
+          type: 'query/update',
+          payload: params
+        })
+
+        yield put({ type: 'loading/off' })
       } catch (err) {
         yield put({
           type: 'data/status/failed',

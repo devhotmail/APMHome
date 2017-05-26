@@ -90,7 +90,7 @@ export default class CoreCircle extends PureComponent<*, PropsT, *> {
 
     return (
       <div className={styles.coreCircle}>
-        <h5>{focus.name}</h5>
+        <h5>{focus.name || '未命名'}</h5>
         <Completion info={completion} {...restProps} />
         <Quality info={quality} {...restProps} />
       </div>
