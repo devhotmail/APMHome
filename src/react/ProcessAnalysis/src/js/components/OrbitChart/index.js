@@ -42,6 +42,10 @@ function renderLane(balls, radius, cx, cy, color) {
   }
 }
 
+function trail(cx, cy, r) {
+  return <path d={`M ${cx} ${cy - r} A ${r} ${r} 0 1 1 ${cx - 0.866 * r} ${cy - r/2}`} fill="none" stroke="gray"/>
+}
+
 export default class OrbitChart extends PureComponent {
 
   @decorate(memoize)
@@ -59,7 +63,7 @@ export default class OrbitChart extends PureComponent {
     return (
       <div id={id} className={classnames('orbit-chart', className)}>
         <svg width={chartSize} height={chartSize}>
-          <circle className="indicator-circle" cx={cx} cy={cy} r={totalRadius} fill="none" stroke="gray"/>
+          { trail(cx, cy, totalRadius) }
           { renderLane(balls, totalRadius, cx, cy, laneColor) }
           { balls.map(ball => {
             let angle = (ball.distance || 0) - 90
