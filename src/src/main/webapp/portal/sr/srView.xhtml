@@ -4,97 +4,151 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:composition>
 
-        <h:form id="WorkOrderEditForm">
-            <p:fieldset legend="#{msg.WorkOrder}" rendered="#{serviceRequestController.workOrders != null}">
-                123
-                
-            </p:fieldset>
-<!--            <p:fieldset legend="#{msg.WorkOrder}, #{msg.WorkOrderStepDetail}" rendered="#{workOrderController.selected != null}">
-                
-                <p:steps activeIndex="#{workOrderController.selected.currentStepId-1}" styleClass="test" readonly="false">
-                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '1')}" onclick="return false;"/>
-                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '2')}" onclick="return false;"/>
-                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '3')}" onclick="return false;"/>
-                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '4')}" onclick="return false;"/>
-                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '5')}" onclick="return false;"/>
-                    <p:menuitem value="#{fieldMsg.fieldValue('woSteps', '6')}" onclick="return false;"/>
-                </p:steps>
-                <br/>
-                
-                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                    <h:panelGroup>
-                        <label class="label">#{msg.assetName}</label>
-                        <p:outputLabel value="#{workOrderController.selected.assetName}"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.casePriority}</label>
-                        <p:outputLabel value="#{fieldMsg.fieldValue('casePriority',workOrderController.selected.casePriority)}"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.requestorName}</label>
-                        <p:outputLabel value="#{workOrderController.selected.requestorName}"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.requestTime}</label>
-                        <p:outputLabel value="#{workOrderController.selected.requestTime}">
-                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
-                        </p:outputLabel>
-                        
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.currentPersonName}</label>
-                        <p:outputLabel value="#{workOrderController.selected.currentPersonName}"/>
-                    </h:panelGroup>
-                    
-                    <p:spacer/>
-                    
-                    <h:panelGroup>
-                        <label class="label">#{msg.caseType}</label>
-                        <p:outputLabel value="#{fieldMsg.fieldValue('caseType',workOrderController.selected.caseType)}"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.caseSubType}</label>
-                        <p:outputLabel value="#{fieldMsg.fieldValue('caseSubType',workOrderController.selected.caseSubType)}"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.intExtType}</label>
-                        <p:outputLabel value="#{fieldMsg.fieldValue('intExtType',workOrderController.selected.intExtType)}"/>
-                    </h:panelGroup>
+        <div class="ui-g-12 card">
 
-                    <h:panelGroup>
-                        <label class="label">#{msg.totalManHour}</label>
-                        <p:outputLabel value="#{workOrderController.selected.totalManHour}" />
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.totalPrice}</label>
-                        <p:outputLabel value="#{workOrderController.selected.totalPrice}" />
-                    </h:panelGroup>
-                    <p:spacer/>
-                    <h:panelGroup>
-                        <label class="label">#{msg.confirmedStartTime}</label>
-                        <p:outputLabel value="#{workOrderController.selected.confirmedDownTime}" />
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.confirmedEndTime}</label>
-                        <p:outputLabel value="#{workOrderController.selected.confirmedUpTime}" />
-                    </h:panelGroup>
-                </p:panelGrid>
+            <h:form id="WorkOrderEditForm">
+                <p:fieldset legend="#{msg.WorkOrder}" rendered="#{not empty serviceRequestController.workOrders}">
 
-                <p:panelGrid columns="1" layout="grid" style="width: 80%" styleClass="ui-panelgrid-blank form-group">
-                    <h:panelGroup>
-                        <label class="label">#{msg.requestReason}</label>
-                        <p:inputTextarea style="border-bottom: 0;" readonly="true" cols="100" value="#{workOrderController.selected.requestReason}"/>
-                    </h:panelGroup>
-                </p:panelGrid>
-            </p:fieldset>-->
-            
-        </h:form>
-<!--        <ui:include src="woStepList.xhtml"/>
-        
-        <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>-->
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <h:panelGroup>
+                            <label class="label">#{msg.assetName}</label>
+                            <p:outputLabel value="#{serviceRequestController.selected.assetName}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.requestorName}</label>
+                            <p:outputLabel value="#{serviceRequestController.selected.requestorName}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.requestTime}</label>
+                            <p:outputLabel value="#{serviceRequestController.selected.requestTime}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.requestReason}</label>
+                            <p:outputLabel value="#{serviceRequestController.selected.requestReason}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.status}</label>
+                            <p:outputLabel value="#{serviceRequestController.selected.status}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.equipmentTaker}</label>
+                            <p:outputLabel value="#{serviceRequestController.selected.equipmentTaker}" />
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <c:forEach items="#{serviceRequestController.workOrders}" var="woItem" varStatus="rowIndex" >
+                        <p:fieldset legend="#{msg.WorkOrder}#{rowIndex.index+1}" toggleable="false" >
+                            <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                                <h:panelGroup>
+                                    <label class="label">#{msg.currentStepName}</label>
+                                    <p:outputLabel value="#{woItem.currentStepName}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.caseType}</label>
+                                    <p:outputLabel value="#{woItem.caseType}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.totalManHour}</label>
+                                    <p:outputLabel value="#{woItem.totalManHour}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.totalPrice}</label>
+                                    <p:outputLabel value="#{woItem.totalPrice}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.currentPersonName}</label>
+                                    <p:outputLabel value="#{woItem.currentPersonName}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.status}</label>
+                                    <p:outputLabel value="#{woItem.status}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.feedbackRating}</label>
+                                    <p:outputLabel value="#{woItem.feedbackRating}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.feedbackComment}</label>
+                                    <p:outputLabel value="#{woItem.feedbackComment}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.endTime}</label>
+                                    <p:outputLabel value="#{woItem.closeTime}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.patProblems}</label>
+                                    <p:outputLabel value="#{woItem.patProblems}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.patActions}</label>
+                                    <p:outputLabel value="#{woItem.patActions}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <label class="label">#{msg.patTests}</label>
+                                    <p:outputLabel value="#{woItem.patTests}"/>
+                                </h:panelGroup>
+
+                            </p:panelGrid>
+
+                            
+                            <p:dataTable value="#{serviceRequestController.getWOrkOrderStep(woItem.id)}" var="stepItem">
+                                <p:column headerText="#{msg.stepName}">
+                                    <h:outputText value="#{stepItem.stepName}" />
+                                </p:column>
+                                <p:column headerText="#{msg.ownerName}">
+                                    <h:outputText value="#{stepItem.ownerName}" />
+                                </p:column>
+                                <p:column headerText="#{msg.startTime}">
+                                    <h:outputText value="#{stepItem.startTime}" >
+                                        <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{msg.endTime}">
+                                    <h:outputText value="#{stepItem.endTime}" >
+                                    <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{msg.description}">
+                                    <h:outputText value="#{stepItem.comments}" />
+                                </p:column>
+
+                            </p:dataTable>
+                            
+                            <br/>
+
+                            <p:dataTable value="#{serviceRequestController.getWOrkOrderDetail(woItem.id)}" var="detailItem"  rendered="#{not empty serviceRequestController.getWOrkOrderDetail(woItem.id)}">
+                                <p:column headerText="#{msg.manHours}">
+                                    <h:outputText value="#{detailItem.manHours}" />
+                                </p:column>
+                                <p:column headerText="#{msg.accessory}">
+                                    <h:outputText value="#{detailItem.parts}" />
+                                </p:column>
+                                <p:column headerText="#{msg.accessoryQuantity}">
+                                    <h:outputText value="#{detailItem.apartsQuantity}" />
+                                </p:column>
+                                <p:column headerText="#{msg.accessoryPrice}">
+                                    <h:outputText value="#{detailItem.partsPrice}" />
+                                </p:column>
+                                <p:column headerText="#{msg.otherExpense}">
+                                    <h:outputText value="#{detailItem.otherExpense}" />
+                                </p:column>
+                                <p:column headerText="#{msg.cowokerUserName}">
+                                    <h:outputText value="#{detailItem.cowokerUserName}" />
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:fieldset>
+
+
+                    </c:forEach>
+                </p:fieldset>
+            </h:form>
+
+        </div>
     </ui:composition>
 </html>

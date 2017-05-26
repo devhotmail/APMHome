@@ -63,7 +63,7 @@ public abstract class GenericDataTableModel<T> extends LazyDataModel<T> {
     public T getRowData(String rowKey) {
         try{
             for (T item : ((List<T>) getWrappedData())) {
-                if (rowKey.equals("" + item.hashCode())) {
+                if (rowKey.equals("" + item.hashCode()) || rowKey.hashCode()==item.hashCode()) {
                     return item;
                 }
             }
