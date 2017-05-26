@@ -28,7 +28,7 @@
                         <p:column headerText="#{msg.name}" sortBy="#{item.groupName}" filterBy="#{item.groupName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.groupName}"/>
                         </p:column>
-                        <p:column headerText="租户">
+                        <p:column headerText="租户" rendered="false">
                             <h:outputText value="#{biomedGroupController.getSiteName(item.siteId)}"/>
                         </p:column>
                         <p:column headerText="医院">
