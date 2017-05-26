@@ -52,8 +52,6 @@ const AssetTypes = {
   "10": "PET-CT"
 }
 
-// todo
-
 export default function (mock) {
 
   mock.onGet('/api/msg?type=assetGroup').reply(function (config) {

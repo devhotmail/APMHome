@@ -26,16 +26,20 @@ function renderLane(balls, radius, cx, cy, color) {
   let ball = balls.find(_ => _.connectPrevious)
   if (ball) {
     return (
-      <g className="orbit-chart-lane">
-        <path d={AnnulusSector({
-          startAngle: 90 - (ball.distance || 0),
-          endAngle: 90,
-          outerRadius: radius + 5,
-          innerRadius: radius - 5,
-          cx: cx,
-          cy: cy,
-        })} fill={color} stroke="none" />
-      </g>
+      <Motion defaultStyle={{startAngle: 90}} style={{startAngle: spring(90 - (ball.distance || 0))}}>
+        { interpolated => 
+          (<g className="orbit-chart-lane">
+            <path d={AnnulusSector({
+              startAngle: interpolated.startAngle,
+              endAngle: 90,
+              outerRadius: radius + 5,
+              innerRadius: radius - 5,
+              cx: cx,
+              cy: cy,
+            })} fill={color} stroke="none" />
+          </g>)
+        }
+      </Motion>
     )
   } else {
     return null
@@ -43,7 +47,10 @@ function renderLane(balls, radius, cx, cy, color) {
 }
 
 function trail(cx, cy, r) {
-  return <path className="orbit-trail" d={`M ${cx} ${cy - r} A ${r} ${r} 0 1 1 ${cx - 0.866 * r} ${cy - r/2}`} fill="none" stroke="gray"/>
+  return (<path 
+    className="orbit-trail" fill="none" stroke="gray"
+    d={`M ${cx} ${cy - r} A ${r} ${r} 0 1 1 ${cx - 0.866 * r} ${cy - r/2}`} 
+  />)
 }
 
 export default class OrbitChart extends PureComponent {
@@ -67,7 +74,14 @@ export default class OrbitChart extends PureComponent {
           { renderLane(balls, totalRadius, cx, cy, laneColor) }
           { balls.map(ball => {
             let angle = (ball.distance || 0) - 90
-            return renderBall(ball, totalRadius, cx, cy, angle, ballRadius)
+            return (
+              <Motion key={ball.key} defaultStyle={{angle: 90}} style={{angle: spring(angle)}}>
+                { interpolated => 
+                  renderBall(ball, totalRadius, cx, cy, interpolated.angle, ballRadius)
+                }
+              </Motion>
+            )
+             
           })}
         </svg>
       </div> 
@@ -81,7 +95,6 @@ OrbitChart.defaultProps = {
   clockwise: true,
   maxBallAngle: 360,
 }
-
 
 OrbitChart.propTypes = {
   radius: PropTypes.number.isRequired,
