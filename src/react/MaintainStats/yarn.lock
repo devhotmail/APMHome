@@ -3056,7 +3056,7 @@ loader-utils@^1.0.1, loader-utils@^1.0.2, loader-utils@^1.1.0:
     emojis-list "^2.0.0"
     json5 "^0.5.0"
 
-lodash-es@^4.17.4, lodash-es@^4.2.1:
+lodash-es@^4.2.1:
   version "4.17.4"
   resolved "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.4.tgz#dcc1d7552e150a0640073ba9cb31d70f032950e7"
 
@@ -4461,6 +4461,10 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+"react-HOCs@git+https://github.build.ge.com/foundry-sh/react-HOCs.git":
+  version "1.1.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/react-HOCs.git#cf8789ef8db61a415c5e563581e22f707c6d250f"
+
 react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
@@ -4473,16 +4477,6 @@ react-dom@^15.4.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
     prop-types "~15.5.7"
-
-"react-gear-list-chart@git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git":
-  version "0.1.0"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#fe19a9f3dd840ea5f6e2d573a090528c51695dee"
-  dependencies:
-    classnames "^2.2.5"
-    lodash-es "^4.17.4"
-    react-motion "^0.5.0"
-    reselect "2.5.3"
-    shortid "^2.2.8"
 
 react-lazy-load@^3.0.10:
   version "3.0.12"
@@ -4768,10 +4762,6 @@ requires-port@1.x.x:
   version "1.0.0"
   resolved "https://registry.npmjs.org/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
 
-reselect@2.5.3:
-  version "2.5.3"
-  resolved "https://registry.npmjs.org/reselect/-/reselect-2.5.3.tgz#236591136ad5ff63ee50cdd84feff7f6afd80eea"
-
 restore-cursor@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/restore-cursor/-/restore-cursor-2.0.0.tgz#9f7ee287f82fd326d4fd162923d62129eee0dfaf"
@@ -4911,10 +4901,6 @@ shallowequal@0.2.x, shallowequal@^0.2.2:
   resolved "https://registry.npmjs.org/shallowequal/-/shallowequal-0.2.2.tgz#1e32fd5bcab6ad688a4812cb0cc04efc75c7014e"
   dependencies:
     lodash.keys "^3.1.2"
-
-shortid@^2.2.8:
-  version "2.2.8"
-  resolved "https://registry.npmjs.org/shortid/-/shortid-2.2.8.tgz#033b117d6a2e975804f6f0969dbe7d3d0b355131"
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"

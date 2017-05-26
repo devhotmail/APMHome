@@ -129,3 +129,5 @@ alter table work_order add column feedback_rating int;
 
 alter table pm_order add COLUMN planned_time timestamp;
 alter table pm_order add COLUMN nearest_sr_time timestamp;
+
+INSERT INTO "i18n_message" VALUES (5626, 'label', 'ProcessAnalysis', '维修流程分析','ProcessAnalysis',null,-1);

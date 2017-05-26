@@ -229,8 +229,8 @@ export default class Root extends Component {
     const isAssetSelected = id == assetId
 
     const newAssetId = isAssetSelected ? undefined : id
-    // use lastSelectedGroup instead of root here
-    const payload = isAssetSelected ? lastSelectedGroup : data
+    // use lastSelectedGroup || root here
+    const payload = isAssetSelected ? (lastSelectedGroup || root) : data
 
     this.changeQuery({ assetId: newAssetId })
 
@@ -243,12 +243,14 @@ export default class Root extends Component {
   handleLeftPageChange = (current: number, last: number) => {
     this.changeQuery({
       groupPage: current,
-      groupId: undefined
+      groupId: undefined,
+      assetId: undefined
     })
     
     this.setState((state, props) => ({
       ...state,
-      groupAD: last - current
+      groupAD: last - current,
+      lastSelectedGroup: this.props.root
     }))
   }
 

@@ -65,7 +65,8 @@ export default class PartGroup extends PureComponent<*, PropsT, *> {
                 text={{
                   content: data.name,
                   fill: '#6b6b6b',
-                  fontSize: 16
+                  fontSize: 16,
+                  offset: (outerRadius - innerRadius) / 10
                 }}
                 onClick={onClick(item.data.id, item.data.origin)}
                 opacity={opacity} />
