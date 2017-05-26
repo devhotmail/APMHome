@@ -92,8 +92,7 @@ function ensureSize(width, height) {
   return {
     outer_R: width * .275,
     outer_r: width * .2,
-    inner_R: width * .175,
-    inner_r: width * .142
+    inner_R: width * .145,
   }
 }
 
@@ -381,7 +380,7 @@ export class App extends Component<void, Props, void> {
       distributionEttr, distributionResponse, distributionArrival
     } = this.props
     let { left, right } = pagination
-    let { outer_R, outer_r, inner_R, inner_r  } = ensureSize(clientRect.width, clientRect.height)
+    let { outer_R, outer_r, inner_R  } = ensureSize(clientRect.width, clientRect.height)
     let onClickDonut = this.onClickDonut
     let gross = selected || generalGross
     return (
@@ -409,13 +408,13 @@ export class App extends Component<void, Props, void> {
               />
             <Orbit 
               id="center-chart" 
-              radius={180}
+              radius={Math.max(inner_R, 165)}
               ballRadius={30}
               laneColor={this.getLaneColor()}
               balls={this.getBalls()}
             />
             <div id="legend-container">
-              <h1 className="center-chart-title">{gross.name || t('all_chosen_assets')}</h1>
+              <h1 className="center-chart-title" style={{top: -(inner_R * .4 - 18) + '%'}}>{gross.name || t('all_chosen_assets')}</h1>
               <Donut 
                 id="ettr"
                 className={classnames("donut-chart-ettr", dataType === 'ettr' ? 'active' : '' )}
