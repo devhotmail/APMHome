@@ -9,9 +9,9 @@ let isProd = conf.env === 'prod'
 
 function getPath() {
   if (process.env.LOCAL) {
-    return '/geapm/react/processAnalysis/assets/locales/{{lng}}/{{ns}}.json'
+    return '/geapm/react/ProcessAnalysis/assets/locales/{{lng}}/{{ns}}.json'
   } else {
-    return '/react/processAnalysis/assets/locales/{{lng}}/{{ns}}.json'
+    return '/react/ProcessAnalysis/assets/locales/{{lng}}/{{ns}}.json'
   }
 }
 
