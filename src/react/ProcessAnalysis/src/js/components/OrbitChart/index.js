@@ -15,6 +15,9 @@ function renderBall(ball, radius, cx, cy, angle, ballRadius) {
   let [x, y] = Polar2Cartesian(radius, angle, { baseX: cx, baseY: cy })
 
   return (
+    /*<Motion>
+
+    </Motion>*/
     <g className="orbit-chart-ball" key={ball.key} >
       <circle cx={x} cy={y} r={ballRadius} fill="white" stroke="gray"/>
       <text x={x} y={y} textAnchor="middle" dy=".3em">{ball.label}</text>
@@ -26,16 +29,20 @@ function renderLane(balls, radius, cx, cy, color) {
   let ball = balls.find(_ => _.connectPrevious)
   if (ball) {
     return (
-      <g className="orbit-chart-lane">
-        <path d={AnnulusSector({
-          startAngle: 90 - (ball.distance || 0),
-          endAngle: 90,
-          outerRadius: radius + 5,
-          innerRadius: radius - 5,
-          cx: cx,
-          cy: cy,
-        })} fill={color} stroke="none" />
-      </g>
+      <Motion defaultStyle={{startAngle: 90}} style={{startAngle: spring(90 - (ball.distance || 0))}}>
+        { interpolated => 
+          (<g className="orbit-chart-lane">
+            <path d={AnnulusSector({
+              startAngle: interpolated.startAngle,
+              endAngle: 90,
+              outerRadius: radius + 5,
+              innerRadius: radius - 5,
+              cx: cx,
+              cy: cy,
+            })} fill={color} stroke="none" />
+          </g>)
+        }
+      </Motion>
     )
   } else {
     return null
