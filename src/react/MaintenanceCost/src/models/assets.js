@@ -37,7 +37,6 @@ export default {
         const start = state.assets.index * PAGE_SIZE
         const limit = PAGE_SIZE
         const res = {
-          [groupBy]: cursor[0],
           from,
           to,
           dept,
@@ -51,9 +50,17 @@ export default {
           res[groupBy] = cursor[0]
         return res
       })
+      const isPast = yield select(state => state.filters.type === 'history')
+      const thresholds = yield select(state => state.thresholds)
       try {
-        const {data} = yield call(axios, API_HOST + '/ma', {
-          params: pickBy(query, v => v !== undefined)
+        const { data } = yield call(axios, {
+          method: isPast ? 'GET' : 'PUT',
+          url: API_HOST + '/ma' + (isPast ? '' : '/forecast'),
+          params: pickBy(query, v => v !== undefined),
+          data: {
+            thresholds: thresholds.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {}),
+            items: []
+          }
         })
         yield put({type: 'data/get/succeeded', payload: data.items, total: data.root.total})
       } catch (err) {

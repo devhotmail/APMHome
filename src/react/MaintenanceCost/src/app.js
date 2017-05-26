@@ -6,6 +6,7 @@ import { useRouterHistory } from 'dva/router'
 import createHashHistory from 'history/lib/createHashHistory'
 import { AppContainer } from 'react-hot-loader'
 import './app.css'
+import '#/styles/index.scss'
 
 import router from '#/router'
 
@@ -15,6 +16,8 @@ import assetTypes from '#/models/assetTypes'
 import groups from '#/models/groups'
 import assets from '#/models/assets'
 import overview from '#/models/overview'
+import forecastOverview from '#/models/forecastOverview'
+import thresholds from '#/models/thresholds'
 
 const historyEngine = useRouterHistory(createHashHistory)({
   queryKey: false,
@@ -35,6 +38,8 @@ app.model(assetTypes)
 app.model(groups)
 app.model(assets)
 app.model(overview)
+app.model(forecastOverview)
+app.model(thresholds)
 
 function render(router) {
   const App = router ? app._getProvider(router) : app.start();

@@ -4,7 +4,7 @@ export const COLORS = {
   'labor': '#6ab4a6',
   'parts': '#7bbfb2',
   'repair': '#99b992',
-  'PM': '#99b992'
+  'PM': '#9fc9a2'
 }
 
 export const PAST_COLORS = {

@@ -35,7 +35,7 @@ class Chart extends React.PureComponent {
           key,
           value: {
             from: `${value}-01-01`,
-            to: `${value + 1}-01-01`
+            to: `${value}-12-31`
           }
         }
       })

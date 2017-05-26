@@ -40,7 +40,7 @@ class Assets extends React.PureComponent<*, Props, *> {
   animationDirection = 0
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.assets.index !== this.props.assets.index) return 
+    if (nextProps.assets.index !== this.props.assets.index) return
     if (nextProps.assets.data === this.props.assets.data) this.animationDirection = 0
   }
 
@@ -78,6 +78,7 @@ class Assets extends React.PureComponent<*, Props, *> {
                   {
                     style => (
                       <AnnulusSectorStack
+                        style={{cursor: 'pointer'}}
                         opacity={style.opacity * item.style.progress}
                         onClick={this.onClick(item)}
                         innerRadius={innerRadius}
