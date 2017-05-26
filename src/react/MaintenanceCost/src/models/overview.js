@@ -1,6 +1,6 @@
 import moment from 'moment'
 import axios from 'axios'
-import { API_HOST, PAGE_SIZE } from '#/constants'
+import { API_HOST } from '#/constants'
 
 export default {
   namespace: 'overview',

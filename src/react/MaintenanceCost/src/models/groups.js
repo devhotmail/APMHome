@@ -58,7 +58,7 @@ export default {
                 to: moment(query.to).subtract(index, 'year').format('YYYY-MM-DD')
               }, v => v !== undefined),
               data: {
-                thresholds: thresholds.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {}),
+                threshold: thresholds.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {}),
                 items: []
               }
             })

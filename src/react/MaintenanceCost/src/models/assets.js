@@ -58,7 +58,7 @@ export default {
           url: API_HOST + '/ma' + (isPast ? '' : '/forecast'),
           params: pickBy(query, v => v !== undefined),
           data: {
-            thresholds: thresholds.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {}),
+            threshold: thresholds.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {}),
             items: []
           }
         })
