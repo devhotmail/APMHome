@@ -178,7 +178,7 @@ public class MaApi {
         maForecastService.predict(siteId, hospitalId, Date.valueOf(LocalDate.now().minusYears(2).withDayOfYear(1)), Date.valueOf(LocalDate.now()), year)),
         MaForecastService.virtualSqlItems(dept, type, supplier, rltGrp, maForecastService.lastYearData(siteId, hospitalId)), onrate, cost1, cost2);
     if ("yes".equals(msa)) {
-      assets = assets.filter(v -> MaForecastService.sugLowBound(v, threshold1.get(0)) || MaForecastService.sugHighCost(v, threshold2.get(2))
+      assets = assets.filter(v -> MaForecastService.sugLowBound(v, threshold1.get(0)) || MaForecastService.sugHighCost(v, threshold2.get(0))
         || MaForecastService.sugBindOnrateCost(v, threshold3.get(0), threshold3.get(1), threshold3.get(2), threshold3.get(3)));
     } else if ("no".equals(msa)) {
       assets = assets.filter(v -> !(MaForecastService.sugLowBound(v, threshold1.get(0)) || MaForecastService.sugHighCost(v, threshold2.get(0))
