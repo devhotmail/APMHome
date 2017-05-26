@@ -101,7 +101,7 @@ class Groups extends React.PureComponent<*, Props, *> {
                 >
                   {
                     style => (
-                      <g onClick={this.onClick(item)} opacity={style.opacity}>
+                      <g onClick={this.onClick(item)} opacity={style.opacity} style={{cursor: 'pointer'}}>
                         <AnnulusSectorStack
                           opacity={item.style.progress}
                           innerRadius={innerRadius}

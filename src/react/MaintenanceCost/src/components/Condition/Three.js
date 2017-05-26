@@ -1,39 +1,51 @@
 import React, { PureComponent } from 'react'
+import { connect } from 'dva'
 import EditBlock from 'dew-editblock'
 
 import pic from './pic.png'
 
 import styles from './styles.scss'
 
-const initialValue = '80'
 
-function handleChange (value) {
-  console.log(value)
-}
-
-export default class Three extends PureComponent {
+export default
+@connect(({thresholds}) => ({threshold: thresholds[2]}))
+class Three extends PureComponent {
+  handleChange = index => value => {
+    this.props.dispatch({
+      type: 'thresholds/set',
+      payload: Number(value) / 100,
+      i: 2,
+      j: index
+    })
+  }
   render () {
+    const { threshold } = this.props
     return (
-      <div className={styles.three} style={{color: 'green'}}>
+      <div className={styles.three} style={{color: '#ce84b4'}}>
         <div>条件3</div>
         <div className={styles.main}>
           <div className={styles.title}>
-            <div style={{color: 'yellow'}}>开机率 95%</div>
-            <div style={{color: 'yellow'}}>开机率 80%</div>
+            {/* <div>开机率 95%</div>
+            <div>开机率 80%</div> */}
           </div>
           <img className={styles.img} src={pic} />
           <div className={styles.content}>
-            <span>开机率 &lt;</span>
             <EditBlock
               className={styles.block}
-              onChange={handleChange}
-              initialValue={initialValue}
+              onChange={this.handleChange(0)}
+              initialValue={String(threshold[0] * 100)}
+              sign="%" />
+            <span>&nbsp;&lt; 开机率 &lt;</span>
+            <EditBlock
+              className={styles.block}
+              onChange={this.handleChange(1)}
+              initialValue={String(threshold[1] * 100)}
               sign="%" />
           </div>
         </div>
         <div className={styles.main}>
           <div className={styles.title}>
-            <div style={{color: 'red'}}>购买成本 10%</div>
+            {/* <div style={{color: '#ce84b4'}}>购买成本 10%</div> */}
           </div>
           <img className={styles.img} src={pic} />
           <div className={styles.content}>
@@ -42,11 +54,15 @@ export default class Three extends PureComponent {
                 <span>人力+备件 &gt; 购买成本</span>
                 <EditBlock
                   className={styles.block}
-                  onChange={handleChange}
-                  initialValue={initialValue}
+                  onChange={this.handleChange(2)}
+                  initialValue={String(threshold[2] * 100)}
                   sign="%" />
               </div>
-              <div className={styles.content}>偏差不超过1%</div>
+              <div className={styles.content}>偏差不超过<EditBlock
+                className={styles.block}
+                onChange={this.handleChange(3)}
+                initialValue={String(threshold[3] * 100)}
+                sign="%" /></div>
             </div>
           </div>
         </div>

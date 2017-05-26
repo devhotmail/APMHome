@@ -23,6 +23,9 @@ export default {
         level: 0
       })
       yield put({
+        type: 'forecastOverview/ranges/calc'
+      })
+      yield put({
         type: 'groups/page/reset'
       })
       yield put({
@@ -38,13 +41,19 @@ export default {
         type: 'overview/data/get'
       })
     },
-    *['cursor/toggle']({ payload, level}, { put }) {
+    *['cursor/toggle']({ payload, level}, { put, select }) {
       if (level === 1) {
         yield put({
           type: 'assets/page/reset',
         })
         yield put({
           type: 'assets/data/get'
+        })
+      }
+      if (level === 2) {
+        const type = yield select(state => state.filters.type)
+        if (type === 'forecast') yield put({
+          type: 'forecastOverview/data/get'
         })
       }
       yield put({
@@ -83,7 +92,7 @@ export default {
             [key]: value,
             range: {
               from: ranges.currentYear.start.format('YYYY-MM-DD'),
-              to: ranges.currentYear.end.format('YYYY-MM-DD')
+              to: ranges.currentYear.start.endOf('year').format('YYYY-MM-DD')
             }
           }
         } else {
