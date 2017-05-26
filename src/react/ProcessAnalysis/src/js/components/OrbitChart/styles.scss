@@ -1,10 +1,8 @@
 
-.indicator-circle {
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
+.orbit-trail {
   stroke-dasharray: 1500;
   stroke-dashoffset: 1500;
-  animation: dash 0.5s linear forwards;
+  animation: dash 1s linear forwards;
 }
 
 @keyframes dash {
