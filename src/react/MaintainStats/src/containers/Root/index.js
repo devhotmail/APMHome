@@ -229,8 +229,8 @@ export default class Root extends Component {
     const isAssetSelected = id == assetId
 
     const newAssetId = isAssetSelected ? undefined : id
-    // use lastSelectedGroup instead of root here
-    const payload = isAssetSelected ? lastSelectedGroup : data
+    // use lastSelectedGroup || root here
+    const payload = isAssetSelected ? (lastSelectedGroup || root) : data
 
     this.changeQuery({ assetId: newAssetId })
 
