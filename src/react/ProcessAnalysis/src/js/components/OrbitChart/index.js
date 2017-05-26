@@ -15,9 +15,6 @@ function renderBall(ball, radius, cx, cy, angle, ballRadius) {
   let [x, y] = Polar2Cartesian(radius, angle, { baseX: cx, baseY: cy })
 
   return (
-    /*<Motion>
-
-    </Motion>*/
     <g className="orbit-chart-ball" key={ball.key} >
       <circle cx={x} cy={y} r={ballRadius} fill="white" stroke="gray"/>
       <text x={x} y={y} textAnchor="middle" dy=".3em">{ball.label}</text>
@@ -77,7 +74,14 @@ export default class OrbitChart extends PureComponent {
           { renderLane(balls, totalRadius, cx, cy, laneColor) }
           { balls.map(ball => {
             let angle = (ball.distance || 0) - 90
-            return renderBall(ball, totalRadius, cx, cy, angle, ballRadius)
+            return (
+              <Motion key={ball.key} defaultStyle={{angle: 90}} style={{angle: spring(angle)}}>
+                { interpolated => 
+                  renderBall(ball, totalRadius, cx, cy, interpolated.angle, ballRadius)
+                }
+              </Motion>
+            )
+             
           })}
         </svg>
       </div> 
