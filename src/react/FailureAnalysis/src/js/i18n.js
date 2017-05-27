@@ -24,6 +24,7 @@ i18n
     ns: ['common'],
     defaultNS: 'common',
     debug: conf.i18n.debug,
+    wait: true,
     cache: {
       enabled: conf.i18n.cache,
     },

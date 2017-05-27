@@ -158,7 +158,7 @@ function* fetchPhase(action) {
     let store = yield select(state => state.parameters)
     let params = mapParamsPhase(store, action.data)
     let phase = yield call(API.getPhase, params)
-    phase.data.phase = params.phase
+    phase.phase = params.phase
     EventBus.dispatch('phase-data', this, phase)
   } catch (e) {
     error(e)
