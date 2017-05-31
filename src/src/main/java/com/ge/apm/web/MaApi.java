@@ -269,18 +269,22 @@ public class MaApi {
                                                                                     @RequestParam(name = "to", required = true) Date to,
                                                                                     @Pattern(regexp = "acyman|mtpm") @RequestParam(name = "rltgrp", required = true) String rltGrp,
                                                                                     @Min(1) @PathVariable(value = "id") Integer id,
-                                                                                    @RequestBody(required = false) String inputJson) {
+                                                                                    @RequestBody(required = true) String inputJson) {
     int year = from.toLocalDate().getYear();
     log.info("inputs: year {}, rltGrp {}, id {}, inputJson {}", year, rltGrp, id, inputJson);
     if (!List.of(LocalDate.now().getYear(), LocalDate.now().plusYears(1).getYear()).contains(year)) {
       return ResponseEntity.badRequest().body(List.of(ImmutableMap.of("msg", "year must be this year or next year")));
     }
+    Map<Integer, Double> onrate = CommonService.parseInputJson(inputJson, "items", "id", "onrate_increase");
+    Map<Integer, Double> cost1 = CommonService.parseInputJson(inputJson, "items", "id", "cost1_increase");
+    Map<Integer, Double> cost2 = CommonService.parseInputJson(inputJson, "items", "id", "cost2_increase");
     UserAccount user = UserContext.getCurrentLoginUser();
     int siteId = user.getSiteId();
     int hospitalId = user.getHospitalId();
     Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> assets =
-      MaForecastService.virtualSqlSingle(id, rltGrp,
-        maForecastService.predict(siteId, hospitalId, Date.valueOf(LocalDate.now().minusYears(2).withDayOfYear(1)), Date.valueOf(LocalDate.now()), year));
+      MaForecastService.userPredict(MaForecastService.virtualSqlSingle(id, rltGrp,
+        maForecastService.predict(siteId, hospitalId, Date.valueOf(LocalDate.now().minusYears(2).withDayOfYear(1)), Date.valueOf(LocalDate.now()), year)),
+        MaForecastService.virtualSqlSingle(id, rltGrp, maForecastService.lastYearData(siteId, hospitalId)), onrate, cost1, cost2);
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
       .body(mapAssets(Observable.from(assets), rltGrp, 0, 1));
   }
