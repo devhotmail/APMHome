@@ -70,7 +70,7 @@ export default class DonutChart extends PureComponent {
 
   render() {
     let { title, rows, radius, data, baseColor, className, onClick, ...restPorps } = this.props
-    if (!data || data.length === 0) {
+    if (!data || data.length === 0 || data.sum === 0) {
       data = SampleData
     }
     let colorGradation = DonutChart.getColorGradation({ baseColor, number: data.length})

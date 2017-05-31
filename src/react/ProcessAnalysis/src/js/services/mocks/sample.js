@@ -107,10 +107,9 @@ export default function (mock) {
           return [200, phaseETTR]
         case 'arrived':
           return [200, phaseArrival]
-        case 'respond':
+        default: // respond
           return [200, phaseRespond]
       }
-      return [200, simulatePaging(params.limit, params.start, details)]
     })
 }
 
