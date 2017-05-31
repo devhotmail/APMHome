@@ -147,7 +147,12 @@
 
     .rc-slider-handle-1:hover,
     .rc-slider-handle-4:hover {
-      cursor: initial;
+      cursor: not-allowed;
+    }
+    .rc-slider .rc-slider-handle.rc-slider-handle-1,
+    .rc-slider .rc-slider-handle.rc-slider-handle-4 {
+      border-color: #bababa;
+      cursor: not-allowed;
     }
 
     .slider-ettr {
