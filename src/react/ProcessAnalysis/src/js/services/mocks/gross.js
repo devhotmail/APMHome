@@ -4,7 +4,9 @@ export const grossByDept = {
     "arrived": 7164,
     "ETTR": 11757,
     "dispatchTime": 2963,
-    "workingTime": 9375
+    "workingTime": 9375,
+    "ETTR75": 7299,
+    "ETTR95": 88694
   }
 }
 

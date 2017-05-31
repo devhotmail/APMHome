@@ -23,6 +23,9 @@ export function AssetTypesConv(resp) {
 
 export function BriefConv(briefs, type) {
   type = DataTypeMap[type]
+  if (briefs.length === 0) {
+    return result
+  }
   let weightMax = maxBy(briefs, item => item[type])[type]
   let result = ToothAdapter(briefs, weightMax, type)
   return result
@@ -30,6 +33,9 @@ export function BriefConv(briefs, type) {
 
 export function DetailConv(details, type) {
   type = DataTypeMap[type]
+  if (details.length === 0) {
+    return result
+  }
   let weightMax = +maxBy(details, item => item[type])[type] // todo, remove +
   let result = ToothAdapter(details, weightMax, type)
   return result
