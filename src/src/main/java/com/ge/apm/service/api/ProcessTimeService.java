@@ -100,11 +100,10 @@ public class ProcessTimeService {
                 .replace(":conditionType", typeId == 0 ? "" : "and ai.asset_group=".concat(typeId.toString()))
                 .replace(":conditionDept", deptId == 0 ? "" : "and ai.clinical_dept_id=".concat(deptId.toString()))
                 .replace(":conditionSupplier", supplier == 0 ? "" : "and ai.supplier_id=".concat(supplier.toString()))
-                .replace(":limit", limit == 0 ? "" : " limit ".concat(limit.toString()))
+                .replace(":limit", limit == 0 ? "" : " limit ".concat(limit.toString())).replace(":orderBy", "avg_".concat(orderBy))
                 .replace(":offset", limit == 0 || offset == 0 ? "" : " offset ".concat(offset.toString())))
                 .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
                 .parameter("start_time", fromTime.toDate()).parameter("end_time", toTime.toDate())
-                .parameter("orderBy", "avg_".concat(orderBy))
                 .get(rs -> new Tuple5<>(rs.getString("id"), groupby.contains("dept") ? rs.getString("clinical_dept_name") : "", rs.getInt("avg_respond"), rs.getInt("avg_arrived"), rs.getInt("avg_ETTR")));
     }
 
@@ -114,10 +113,10 @@ public class ProcessTimeService {
         return db.select(SQL_PROCESS_TIME_BY_ASSET.replace(":conditionType", typeId == 0 ? "" : "and ai.asset_group=".concat(typeId.toString()))
                 .replace(":conditionDept", deptId == 0 ? "" : "and ai.clinical_dept_id=".concat(deptId.toString()))
                 .replace(":conditionSupplier", supplier == 0 ? "" : "and ai.supplier_id=".concat(supplier.toString()))
-                .replace(":limit", limit == 0 ? "" : " limit ".concat(limit.toString()))
+                .replace(":limit", limit == 0 ? "" : " limit ".concat(limit.toString())).replace(":orderBy", "avg_".concat(orderBy))
                 .replace(":offset", limit == 0 || offset == 0 ? "" : " offset ".concat(offset.toString())))
                 .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
-                .parameter("start_time", fromTime.toDate()).parameter("end_time", toTime.toDate()).parameter("orderBy", "avg_".concat(orderBy))
+                .parameter("start_time", fromTime.toDate()).parameter("end_time", toTime.toDate())
                 .get(rs -> new Tuple7<>(rs.getString("id"), rs.getString("name"), rs.getInt("avg_respond"), rs.getInt("avg_arrived"), rs.getInt("avg_ETTR"), rs.getInt("dispatchTime"), rs.getInt("workingTime")));
     }
 
@@ -132,6 +131,7 @@ public class ProcessTimeService {
                 .get(rs -> new Tuple5<>(rs.getInt("avg_respond"), rs.getInt("avg_arrived"), rs.getInt("avg_ETTR"), rs.getInt("dispatchTime"), rs.getInt("workingTime")));
     }
 
+    @Cacheable(cacheNames = "springCache", key = "'processTimeService.queryCountsOfPhase.'+#siteId+'.'+#hospitalId+'.'+#typeId+'.'+#deptId+'.'+#supplier+'.'+#assetId+'.'+#fromTime+'.'+#toTime+'.'+#t1+'.'+#t2+'.'+#tMax")
     public Observable<Tuple4<Integer, Integer, Integer, Integer>> queryCountsOfPhase(Integer siteId, Integer hospitalId, DateTime fromTime, DateTime toTime, Integer typeId, Integer deptId, Integer supplier, Integer assetId, String timeType, Integer t1, Integer t2, Integer tMax) {
 
         return db.select(SQL_PROCESS_TIME_PHASE_COUNTS.replace(":timePhase", ImmutableMap.of("ETTR", "ETTRTime", "arrived", "arrivedTime", "respond", "responseTime").get(timeType))
@@ -146,6 +146,7 @@ public class ProcessTimeService {
 
     }
 
+    @Cacheable(cacheNames = "springCache", key = "'processTimeService.queryDistribution.'+#siteId+'.'+#hospitalId+'.'+#typeId+'.'+#deptId+'.'+#supplier+'.'+#fromTime+'.'+#toTime+'.'+#count")
     public Observable<Integer> queryDistribution(Integer siteId, Integer hospitalId, DateTime fromTime, DateTime toTime, Integer typeId, Integer deptId, Integer supplier, Integer count) {
         
         return db.select(SQL_PROCESS_TIME_DISTRIBUTION.replace(":conditionType", typeId == 0 ? "" : "and ai.asset_group=".concat(typeId.toString()))
