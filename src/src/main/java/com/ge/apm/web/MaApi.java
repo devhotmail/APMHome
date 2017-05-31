@@ -102,9 +102,11 @@ public class MaApi {
                                                               @Min(1) @RequestParam(name = "dept", required = false) Integer dept,
                                                               @Min(1) @RequestParam(name = "type", required = false) Integer type,
                                                               @Min(1) @RequestParam(name = "supplier", required = false) Integer supplier,
+                                                              @Pattern(regexp = "yes|no") @RequestParam(name = "msa", required = true) String msa,
                                                               @Pattern(regexp = "lowonrate|highcost|bindonratecost") @PathVariable(value = "condition") String condition,
                                                               @RequestBody(required = true) String inputJson) {
     int year = from.toLocalDate().getYear();
+    boolean whetherMSA = "yes".equals(msa);
     log.info("inputs: year {}, groupBy {}, dept {}, type {}, supplier {}, condition {}, inputJson {}", year, groupBy, dept, type, supplier, condition, inputJson);
     if (!List.of(LocalDate.now().getYear(), LocalDate.now().plusYears(1).getYear()).contains(year)) {
       return ResponseEntity.badRequest().body(ImmutableMap.of("msg", "year must be this year or next year"));
@@ -127,9 +129,9 @@ public class MaApi {
     Seq<Integer> sugItems = MaForecastService.userPredict(MaForecastService.virtualSqlItems(dept, type, supplier, "acyman",
       maForecastService.predict(siteId, hospitalId, Date.valueOf(LocalDate.now().minusYears(2).withDayOfYear(1)), Date.valueOf(LocalDate.now()), year)),
       MaForecastService.virtualSqlItems(dept, type, supplier, "acyman", maForecastService.lastYearData(siteId, hospitalId)), onrate, cost1, cost2)
-      .filter(v -> "lowonrate".equals(condition) ? MaForecastService.sugLowBound(v, threshold1.get(0)) :
-        ("highcost".equals(condition) ? MaForecastService.sugHighCost(v, threshold2.get(0)) :
-          MaForecastService.sugBindOnrateCost(v, threshold3.get(0), threshold3.get(1), threshold3.get(2), threshold3.get(3))))
+      .filter(v -> "lowonrate".equals(condition) ? !Boolean.logicalXor(whetherMSA, MaForecastService.sugLowBound(v, threshold1.get(0))) :
+        ("highcost".equals(condition) ? !Boolean.logicalXor(whetherMSA, MaForecastService.sugHighCost(v, threshold2.get(0))) :
+          !Boolean.logicalXor(whetherMSA, MaForecastService.sugBindOnrateCost(v, threshold3.get(0), threshold3.get(1), threshold3.get(2), threshold3.get(3)))))
       .map(v -> v._1._1);
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(
       new ImmutableMap.Builder<String, Object>()
