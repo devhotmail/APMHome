@@ -9,6 +9,8 @@ import com.ge.apm.dao.ServiceRequestRepository;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.V2_ServiceRequest;
 import com.ge.apm.domain.V2_WorkOrder;
+import com.ge.apm.domain.V2_WorkOrder_Detail;
+import com.ge.apm.domain.V2_WorkOrder_Step;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.service.wo.V2_WorkOrderService;
 import com.ge.apm.view.sysutil.UserContextService;
@@ -17,9 +19,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import webapp.framework.dao.GenericRepository;
+import webapp.framework.dao.GenericRepositoryUUID;
 import webapp.framework.web.WebUtil;
-import webapp.framework.web.mvc.JpaCRUDController;
+import webapp.framework.web.mvc.GenericCRUDUUIDController;
 
 /**
  *
@@ -27,22 +29,24 @@ import webapp.framework.web.mvc.JpaCRUDController;
  */
 @ManagedBean
 @ViewScoped
-public class ServiceRequestController extends JpaCRUDController<V2_ServiceRequest> {
+public class ServiceRequestController extends GenericCRUDUUIDController<V2_ServiceRequest> {
 
     ServiceRequestRepository dao;
     
     List<V2_WorkOrder> workOrders;
     
     private V2_WorkOrderService woService;
-
+    
+    
     protected void init() {
         dao = WebUtil.getBean(ServiceRequestRepository.class);
         woService = WebUtil.getBean(V2_WorkOrderService.class);
         this.filterBySite = true;
+        
     }
 
     @Override
-    protected GenericRepository<V2_ServiceRequest> getDAO() {
+    protected GenericRepositoryUUID<V2_ServiceRequest> getDAO() {
         return dao;
     }
 
@@ -50,6 +54,7 @@ public class ServiceRequestController extends JpaCRUDController<V2_ServiceReques
     protected Page<V2_ServiceRequest> loadData(PageRequest pageRequest) {
         this.setSiteFilter();
         this.selected = null;
+        this.workOrders = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
@@ -72,9 +77,15 @@ public class ServiceRequestController extends JpaCRUDController<V2_ServiceReques
         return uaaService.getUserList(UserContextService.getCurrentUserAccount().getHospitalId());
     }
      
-     public void onSelectWorkOrder(){
-         workOrders = woService.getWorkOrdersBySR(this.selected.getId());
-         
+     public void onSelectServiceRequest(){
+         workOrders = woService.getWorkOrdersBySR(selected.getId());
+     }
+     
+     public List<V2_WorkOrder_Step> getWOrkOrderStep(String woId){
+         return woService.getWorkOrderSteps(woId);
+     }
+     public List<V2_WorkOrder_Detail> getWOrkOrderDetail(String woId){
+         return woService.getWorkOrderDetails(woId);
      }
 
     public List<V2_WorkOrder> getWorkOrders() {
@@ -84,6 +95,6 @@ public class ServiceRequestController extends JpaCRUDController<V2_ServiceReques
     public void setWorkOrders(List<V2_WorkOrder> workOrders) {
         this.workOrders = workOrders;
     }
-     
+
      
 }

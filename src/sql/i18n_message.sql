@@ -389,6 +389,13 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (776, 'label', 'BuildAsset', '资产建档', 'build asset', NULL, -1);
 
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (777,'field_name','equipmentTaker','取件人','Equipment Taker',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (778,'field_name','feedbackRating','评价','Feedback Rating',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (779,'field_name','feedbackComment','反馈意见','Feedback Comment',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (780,'field_name','patProblems','问题现象','Problem Comment',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (781,'field_name','patActions','采取措施','Actions Comment',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (782,'field_name','patTests','测试结果','Tests Comment',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (783,'field_name','cowokerUserName','协作者','Co-woker',null,-1);
 
 -- field value code types  ( id from 1400)
 
