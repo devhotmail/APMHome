@@ -37,7 +37,11 @@ export default {
     return axios.get(PATH_GROSS, { params }).then(_ => _)
   },
   getPhase(params) {
-    return axios.get(PATH_PHASE, { params }).then(_ => _)
+
+    return axios.get(PATH_PHASE, { params }).then(_ => {
+      _.data.nodes = [0, params.t1, params.t2, params.tmax, Infinity ]
+      return _.data
+    })
   }
   
 }

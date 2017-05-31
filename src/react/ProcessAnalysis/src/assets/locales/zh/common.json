@@ -37,5 +37,6 @@
   "min": "分",
   "edit_max_duration": "编辑上限",
   "all_chosen_assets": "全部选中设备",
-  "submit": "查看结果"
+  "submit": "查看结果",
+  "above_duration": "超出{{node}}"
 }

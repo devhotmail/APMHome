@@ -2373,6 +2373,13 @@ detective@^4.3.1:
     acorn "^4.0.3"
     defined "^1.0.0"
 
+"dew-tooltip@git+https://github.build.ge.com/foundry-sh/dew-tooltip.git#v0.0.1":
+  version "0.0.1"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-tooltip.git#612952a314a083f93570b0587c6c7443b769fd59"
+  dependencies:
+    jiugongge "^0.0.5"
+    lodash.memoize "^4.1.2"
+
 diff@1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-1.4.0.tgz#7f28d2eb9ee7b15a97efd89ce63dcfdaa3ccbabf"
@@ -4305,6 +4312,10 @@ javascript-decorators@^1.0.2:
   dependencies:
     deep-equal "^1.0.1"
     deepcopy "^0.6.3"
+
+jiugongge@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/jiugongge/-/jiugongge-0.0.5.tgz#d30e8dd16429b4ade74fd17c5e279ea5844c4c9a"
 
 jodid25519@^1.0.0:
   version "1.0.2"
@@ -6758,9 +6769,9 @@ react-dom@^15.5.4:
     object-assign "^4.1.0"
     prop-types "~15.5.7"
 
-"react-gear-list-chart@git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#v0.2.0":
-  version "0.2.0"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#99297f244324da4ab519e1518683dfaf21cfca8e"
+"react-gear-list-chart@git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#v0.0.1":
+  version "0.0.1"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#9fa7efb8230cda47f31879c5f0a92fbc3662cd3c"
   dependencies:
     classnames "^2.2.5"
     lodash-es "^4.17.4"

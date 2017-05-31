@@ -3,13 +3,11 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { spring, Motion } from 'react-motion'
 import { Polar2Cartesian } from 'utils/math'
-import { decorate } from 'core-decorators'
-import { memoize } from 'lodash-es'
 import { AnnulusSector } from 'utils/draw'
 
 import './styles.scss'
 
-const RESERVED_ANGEL = 5
+const MIN_BALL_INTERVAL = 18
 
 function renderBall(ball, radius, cx, cy, angle, ballRadius) {
   let [x, y] = Polar2Cartesian(radius, angle, { baseX: cx, baseY: cy })
@@ -53,12 +51,21 @@ function trail(cx, cy, r) {
   />)
 }
 
-export default class OrbitChart extends PureComponent {
+// In case neighbors got overlap, comb them up with a min interval
+function combBalls(balls) {
+  balls.forEach((ball, i) => {
+    let lastBall = balls[i - 1]
+    if (lastBall) {
+      let interval = ball.distance - lastBall.distance 
+      let overlap = MIN_BALL_INTERVAL - interval
+      if (overlap > 0 && ball.distance + overlap < 300) {
+        ball.distance += overlap
+      }
+    }
+  })
+}
 
-  @decorate(memoize)
-  getAvailiableAngle(ballCount) {
-    return 360 - RESERVED_ANGEL * ballCount
-  }
+export default class OrbitChart extends PureComponent {
 
   render() {
 
@@ -66,6 +73,8 @@ export default class OrbitChart extends PureComponent {
     let totalRadius = radius + ballRadius
     let chartSize = (radius + ballRadius) * 2
     let cx, cy; cx = cy = totalRadius
+
+    combBalls(balls)
     
     return (
       <div id={id} className={classnames('orbit-chart', className)}>

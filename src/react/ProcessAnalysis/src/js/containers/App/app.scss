@@ -223,12 +223,17 @@
       .rc-slider-track-3 {
         background-color: $base-color;
       }
-
     }
   }
+  .donut-tooltip {
+    background: #dadada;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 12px 7px;
 
-
-
-
+    td {
+      padding-right: .4em;
+    }
+  }
 
 }

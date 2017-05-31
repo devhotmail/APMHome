@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
-import { range, memoize, isEqual, debounce, clamp, last, values, sum } from 'lodash-es'
+import { range, memoize, isEqual, clamp, last, values, sum } from 'lodash-es'
 import { message, InputNumber, Button, Radio } from 'antd'
 import moment from 'moment'
 import EventBus from 'eventbusjs'
@@ -12,13 +12,14 @@ import GearListChart from 'react-gear-list-chart'
 import Header from 'containers/Header'
 import Pagination from 'components/Pagination'
 import Donut from 'components/DonutChart'
+import Tooltip from 'dew-tooltip'
 import Orbit from 'components/OrbitChart'
 import ReversedRange from 'components/ReversedRange'
 import withClientRect from '../../HOC/withClientRect'
 import selectHelper from 'components/SelectHelper'
 import { ParamUpdate, PageChange } from 'actions'
 import cache from 'utils/cache'
-import { CurrentPage } from 'utils/helpers'
+import { CurrentPage, ToPrecentage } from 'utils/helpers'
 import { MetaUpdate } from 'actions'
 import classnames from 'classnames'
 import colors from 'utils/colors'
@@ -65,7 +66,12 @@ function HumanizeDuration(valueInSec) {
   }
   return [(valueInSec / ONE_MIN) | 0, 'min']
 }
-
+function HumanizeDurationString(valueInSec) {
+  if (valueInSec === 0) {
+    return '0'
+  }
+  return moment.duration(valueInSec * 1000).humanize()
+}
 function GetDonutChartRow(label, value) {
   value = value ? moment.duration(value * 1000).humanize() : ''
   return { label, value }
@@ -153,7 +159,10 @@ export class App extends Component<void, Props, void> {
     distriUnit: 'min',
     distriEttr: [],
     distriArrival: [],
-    distriResponse: []
+    distriResponse: [],
+    tooltipX: -861112,
+    tooltipY: -861112,
+    tooltipData: []
   }
 
   clickLeftTooth(evt) {
@@ -237,15 +246,17 @@ export class App extends Component<void, Props, void> {
     this.setState({ generalGross: gross })
   }
 
-  mountPhaseData(evt, data) {
-    let phaseData = data.data
+  mountPhaseData(evt, phaseData) {
     let phases = values(phaseData.data).sort()
+    let timeNodes = phaseData.nodes
     let distri = phases.map((val, i) => {
       if (i > 0) {
         val = val - phases[i - 1]
       }
-      return { value: val, key: i }
+      let range = timeNodes.slice(i, i + 2)
+      return { value: val, key: i, range: range }
     })
+    distri.sum = sum(phases)
     if (phaseData.phase === 'ETTR') {
       this.setState({ distriEttr: distri })
     } else if (phaseData.phase === 'arrived') {
@@ -341,6 +352,14 @@ export class App extends Component<void, Props, void> {
     }
     return distribution
   }
+  onDonutHover(evt, data) {
+    if (evt.type === 'mouseleave') {
+      this.setState({ tooltipX: -861112, tooltipY: -861112 })
+    } else {
+      this.setState({ tooltipX: evt.clientX, tooltipY: evt.clientY })
+      this.setState({ tooltipData: data})
+    }
+  }
   constructor(props) {
     super(props)
     EventBus.addEventListener('brief-data', this.mountBriefData )
@@ -374,7 +393,7 @@ export class App extends Component<void, Props, void> {
   }
   render() {
     let { briefs, details, selected, generalGross, distriMax, distriUnit, 
-      distriArrival, distriEttr, distriResponse
+      distriArrival, distriEttr, distriResponse, tooltipX, tooltipY, tooltipData
     } = this.state
     let { t, updateDisplayType, pagination, clientRect, display, dataType, 
       distributionEttr, distributionResponse, distributionArrival
@@ -423,6 +442,8 @@ export class App extends Component<void, Props, void> {
                 title={t('ettr')}
                 data={distriEttr}
                 rows={[GetDonutChartRow(t('average'), gross.ETTR), GetDonutChartRow('P75', gross.ETTR75), GetDonutChartRow('P95', gross.ETTR95)]}
+                onMouseMove={evt => this.onDonutHover(evt, distriEttr, distributionEttr)}
+                onMouseLeave={this.onDonutHover}
               />
               <Donut 
                 id="arrival_time"
@@ -432,6 +453,8 @@ export class App extends Component<void, Props, void> {
                 title={t('arrival_time')}
                 data={distriArrival}
                 rows={[GetDonutChartRow(t('average'), gross.arrived)]}
+                onMouseMove={evt => this.onDonutHover(evt, distriArrival, distributionArrival)}
+                onMouseLeave={this.onDonutHover}
               />
               <Donut 
                 id="response_time"
@@ -441,7 +464,10 @@ export class App extends Component<void, Props, void> {
                 title={t('response_time')}
                 data={distriResponse}
                 rows={[GetDonutChartRow(t('average'), gross.respond)]}
+                onMouseMove={evt => this.onDonutHover(evt, distriResponse, distributionResponse)}
+                onMouseLeave={this.onDonutHover}
               />
+ 
             </div>
             <GearListChart 
               id="right-chart" 
@@ -480,6 +506,21 @@ export class App extends Component<void, Props, void> {
             </div>
           </div>
         </div>
+        <Tooltip mouseX={tooltipX} mouseY={tooltipY} anchor="lvc" offsetX={30} >
+          <div className="donut-tooltip">
+            { tooltipData.map((row, i) => (
+              <tr key={String(i)}>
+                <td style={{color:row.color}}>◼</td>
+                { Number.isFinite(row.range[1]) ?
+                  <td>{HumanizeDurationString(row.range[0]) + ' - ' + HumanizeDurationString(row.range[1])}</td> :
+                  <td>{t('above_duration', { node: HumanizeDurationString(row.range[0])})}</td>
+                }
+                <td>{ToPrecentage(row.value / tooltipData.sum)}</td>
+                <td>{row.value + t('incident_count_unit')}</td>
+              </tr>
+            ))}
+          </div>
+        </Tooltip>
       </div>
     )
   } 
