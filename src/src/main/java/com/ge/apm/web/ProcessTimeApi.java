@@ -112,6 +112,13 @@ public class ProcessTimeApi {
         
         Integer count = ptService.queryCount(user.getSiteId(), user.getHospitalId(), fromTime, toTime, "WorkOrder", typeId, deptId, supplier).toBlocking().single();
         
+        if(count==0){
+            Map<String, Object> body = new ImmutableMap.Builder<String, Object>()
+                .put("data",new ImmutableMap.Builder<String, Object>().put("respond", 0).put("arrived", 0).put("ETTR", 0).put("dispatchTime", 0)
+                        .put("workingTime", 0).put("ETTR75", 0).put("ETTR95", 0).build()).build();
+            return ResponseEntity.ok().body(body);
+        }
+            
         Integer ettr75 = ptService.queryDistribution(user.getSiteId(), user.getHospitalId(), fromTime, toTime, typeId, deptId, supplier, count*75/100).toBlocking().single();
         Integer ettr95 = ptService.queryDistribution(user.getSiteId(), user.getHospitalId(), fromTime, toTime, typeId, deptId, supplier, count*95/100).toBlocking().single();
 
@@ -121,6 +128,7 @@ public class ProcessTimeApi {
         Map<String, Object> body = new ImmutableMap.Builder<String, Object>()
                 .put("data",new ImmutableMap.Builder<String, Object>().putAll(result).put("ETTR75", ettr75).put("ETTR95", ettr95).build()).build();
         return ResponseEntity.ok().body(body);
+        
     }
 
     @RequestMapping(path = "/phase", method = RequestMethod.GET)
