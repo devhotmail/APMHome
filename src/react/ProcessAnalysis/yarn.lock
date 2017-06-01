@@ -3864,6 +3864,10 @@ https-proxy-agent@1:
     debug "2"
     extend "3"
 
+humanize-duration@^3.10.0:
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/humanize-duration/-/humanize-duration-3.10.0.tgz#4d15bccaefcb12401b4d80475cf6c49a039e3959"
+
 hyphenate-style-name@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/hyphenate-style-name/-/hyphenate-style-name-1.0.2.tgz#31160a36930adaf1fc04c6074f7eb41465d4ec4b"
@@ -6769,9 +6773,9 @@ react-dom@^15.5.4:
     object-assign "^4.1.0"
     prop-types "~15.5.7"
 
-"react-gear-list-chart@git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#v0.0.1":
-  version "0.0.1"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#9fa7efb8230cda47f31879c5f0a92fbc3662cd3c"
+"react-gear-list-chart@git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git":
+  version "0.0.2"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#4be8999550c82a678cf78d26a60cf4dbc555aeea"
   dependencies:
     classnames "^2.2.5"
     lodash-es "^4.17.4"

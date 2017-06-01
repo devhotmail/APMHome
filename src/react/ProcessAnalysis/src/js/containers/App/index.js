@@ -7,6 +7,7 @@ import autobind from 'autobind-decorator'
 import { range, memoize, isEqual, clamp, last, values, sum } from 'lodash-es'
 import { message, InputNumber, Button, Radio } from 'antd'
 import moment from 'moment'
+import humanizeDuration from 'humanize-duration'
 import EventBus from 'eventbusjs'
 import GearListChart from 'react-gear-list-chart'
 import Header from 'containers/Header'
@@ -25,6 +26,7 @@ import classnames from 'classnames'
 import colors from 'utils/colors'
 import { BriefConv, DetailConv } from 'converters'
 import { warn } from 'utils/logger'
+import { HumanizeDurationInput, HumanizeDurationLabel } from 'utils/helpers'
 import './app.scss'
 
 const RadioButton = Radio.Button
@@ -52,26 +54,6 @@ function DataOrPlaceHolder(items, placeholderSize) {
   return App.getPlaceholder(placeholderSize)
 }
 
-const ONE_DAY = 3600 * 24
-const ONE_HOUR = 3600
-const ONE_MIN = 60
-function HumanizeDuration(valueInSec) {
-  let topDigit = valueInSec / ONE_DAY
-  if (Number.isInteger(topDigit)){
-    return [topDigit, 'day']
-  }
-  topDigit = valueInSec / ONE_HOUR
-  if (Number.isInteger(topDigit)){
-    return [topDigit, 'hour']
-  }
-  return [(valueInSec / ONE_MIN) | 0, 'min']
-}
-function HumanizeDurationString(valueInSec) {
-  if (valueInSec === 0) {
-    return '0'
-  }
-  return moment.duration(valueInSec * 1000).humanize()
-}
 function GetDonutChartRow(label, value) {
   value = value ? moment.duration(value * 1000).humanize() : ''
   return { label, value }
@@ -192,7 +174,7 @@ export class App extends Component<void, Props, void> {
     this.props.updatePagination('detail', value)
   }
   initDistributionMax() {
-    let [ max, unit ] = HumanizeDuration(last(this.getCurrentDistribution()), this.props.dataType)
+    let [ max, unit ] = HumanizeDurationInput(last(this.getCurrentDistribution()), this.props.dataType)
     this.setState({
       distriMax: max,
       distriUnit: unit
@@ -516,8 +498,8 @@ export class App extends Component<void, Props, void> {
               <tr key={String(i)}>
                 <td style={{color:row.color}}>◼</td>
                 { Number.isFinite(row.range[1]) ?
-                  <td>{HumanizeDurationString(row.range[0]) + ' - ' + HumanizeDurationString(row.range[1])}</td> :
-                  <td>{t('above_duration', { node: HumanizeDurationString(row.range[0])})}</td>
+                  <td>{HumanizeDurationLabel(row.range[0]) + ' - ' + HumanizeDurationLabel(row.range[1])}</td> :
+                  <td>{t('above_duration', { node: HumanizeDurationLabel(row.range[0])})}</td>
                 }
                 <td>{ToPrecentage(row.value / tooltipData.sum)}</td>
                 <td>{row.value + t('incident_count_unit')}</td>

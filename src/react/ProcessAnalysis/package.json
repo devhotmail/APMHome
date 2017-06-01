@@ -103,6 +103,7 @@
     "dew-tooltip": "git+https://github.build.ge.com/foundry-sh/dew-tooltip.git#v0.0.1",
     "eventbusjs": "^0.2.0",
     "express": "^4.14.0",
+    "humanize-duration": "^3.10.0",
     "i18next": "^8.0.0",
     "i18next-browser-languagedetector": "^1.0.1",
     "i18next-localstorage-cache": "^1.1.0",
