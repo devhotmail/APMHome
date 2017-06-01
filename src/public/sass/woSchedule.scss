@@ -39,8 +39,14 @@ $border-color: #cecece;
   }
 }
 
-.calendar-header .card--summary {
-  color: #7b7c7d !important;
+.calendar-header {
+  .card--summary {
+    color: #7b7c7d !important;
+  }
+  .calendar-redirect {
+    text-align: center;
+    color: inherit;
+  }
 }
 
 .calendar {
