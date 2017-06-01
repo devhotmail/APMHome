@@ -72,7 +72,7 @@ public class CommonService {
 
   @Cacheable(cacheNames = "springCache", key = "'commonService.findDepts.'+#siteId+'.'+#hospitalId")
   public Map<Integer, String> findDepts(int siteId, int hospitalId) {
-    return Try.of(() -> db.select(new SQL().SELECT_DISTINCT("clinical_dept_id", "clinical_dept_name").FROM("asset_info").WHERE("site_id = :site_id ").WHERE("hospital_id = :hospital_id").toString())
+    return Try.of(() -> db.select(new SQL().SELECT("id", "name as cn").FROM("org_info").WHERE("site_id = :site_id ").WHERE("hospital_id = :hospital_id").WHERE("parent_id is not NULL").toString())
       .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
       .getAs(Integer.class, String.class)
       .toMap(Tuple2::_1, tuple -> Option.of(tuple._2()).getOrElse(""))
