@@ -1818,6 +1818,20 @@ detect-indent@^4.0.0:
   dependencies:
     repeating "^2.0.0"
 
+"dew-editblock@git+https://github.build.ge.com/foundry-sh/dew-editblock.git":
+  version "1.1.2"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-editblock.git#07ce2345c7835c41441798533075c4f14c771da6"
+
+"dew-filterbar@git+https://github.build.ge.com/foundry-sh/dew-filterbar.git":
+  version "2.1.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#3c048293a103bb514a520e539b6aa7fa299f460d"
+  dependencies:
+    dew-styles "git+https://github.build.ge.com/foundry-sh/dew-styles.git"
+
+"dew-styles@git+https://github.build.ge.com/foundry-sh/dew-styles.git":
+  version "1.0.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-styles.git#d8471eee47b2f8130df45c6af6a973d0868e1b6d"
+
 diffie-hellman@^5.0.0:
   version "5.0.2"
   resolved "https://registry.npmjs.org/diffie-hellman/-/diffie-hellman-5.0.2.tgz#b5835739270cfe26acf632099fded2a07f209e5e"
@@ -4560,10 +4574,6 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-click-outside@tj/react-click-outside:
-  version "1.1.0"
-  resolved "https://codeload.github.com/tj/react-click-outside/tar.gz/82d51114d841a151e6285ac542d6fd98690910e6"
-
 react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
@@ -4587,15 +4597,15 @@ react-hammerjs@~0.5.0:
   dependencies:
     hammerjs "^2.0.8"
 
-react-hot-loader@3:
-  version "3.0.0-beta.6"
-  resolved "http://registry.npm.taobao.org/react-hot-loader/download/react-hot-loader-3.0.0-beta.6.tgz#463fac0bfc8b63a8385258af20c91636abce75f4"
+react-hot-loader@^3.0.0-beta.5:
+  version "3.0.0-beta.7"
+  resolved "http://registry.npm.taobao.org/react-hot-loader/download/react-hot-loader-3.0.0-beta.7.tgz#d5847b8165d731c4d5b30d86d5d4716227a0fa83"
   dependencies:
     babel-template "^6.7.0"
     global "^4.3.0"
     react-deep-force-update "^2.0.1"
     react-proxy "^3.0.0-alpha.0"
-    redbox-react "^1.2.5"
+    redbox-react "^1.3.6"
     source-map "^0.4.4"
 
 react-lazy-load@^3.0.10:
@@ -4742,7 +4752,7 @@ readdirp@^2.0.0:
     readable-stream "^2.0.2"
     set-immediate-shim "^1.0.1"
 
-redbox-react@^1.2.2, redbox-react@^1.2.5:
+redbox-react@^1.2.2, redbox-react@^1.3.6:
   version "1.3.6"
   resolved "http://registry.npm.taobao.org/redbox-react/download/redbox-react-1.3.6.tgz#70314c57c066257eb70b0a24dc794b5cef4f1c4e"
   dependencies:
@@ -5520,6 +5530,10 @@ utila@~0.4:
 utils-merge@1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.0.tgz#0294fb922bb9375153541c4f7096231f287c8af8"
+
+uuid@^3.0.0, uuid@^3.0.1:
+  version "3.0.1"
+  resolved "http://registry.npm.taobao.org/uuid/download/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
 
 vali-date@^1.0.0:
   version "1.0.0"
