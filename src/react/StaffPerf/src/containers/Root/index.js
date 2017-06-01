@@ -3,9 +3,10 @@ import React, { Component } from 'react'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import Pager from 'dew-pager'
+import FilterBar from 'dew-filterbar'
 
 import SizeProvider from '#/components/SizeProvider'
-import FilterBar from '#/components/FilterBar'
+// import FilterBar from '#/components/FilterBar'
 import StackChart from '#/components/StackChart'
 import CoreCircle from '#/components/CoreCircle'
 
@@ -23,12 +24,21 @@ class Root extends Component {
       filter,
       items, focus, range
     } = this.props
-    const { page } = location.query
+    const { page, from, to } = location.query
+
+    const filterOpts = [
+      {
+        type: 'range',
+        key: 'range',
+        value: { from, to },
+        allowClear: false
+      }
+    ]
 
     return <div className={styles.container}>
       <div className={styles.main}>
         <div className={styles.filterBar}>
-          <FilterBar {...this.props} />
+          <FilterBar options={filterOpts} onChange={this.handleFilterChange} />
         </div>
         <div className={styles.content}>
           <div className={`${styles.chartWrapper} ${loading ? styles.noPointer : ''}`}>
@@ -64,6 +74,31 @@ class Root extends Component {
     </div>
   }
 
+  handleFilterChange = (payload) => {
+    const { key, value } = payload
+    if (key === 'range') {
+      this.changeQuery({
+        ...value
+      })
+    } else {
+      this.changeQuery({
+        [key]: value
+      })
+    }
+  }
+
+  changeQuery = (params: Object) => {
+    const { dispatch, location } = this.props
+
+    dispatch(routerRedux.push({
+      pathname: '/',
+      query: {
+        ...location.query,
+        ...params
+      }
+    }))
+  }
+
   handleBackRoot = () => {
     this.handleSetFocus(this.props.root)
   }
@@ -85,13 +120,9 @@ class Root extends Component {
   handleChange = (nextPage: number) => {
     const { dispatch, location } = this.props
 
-    dispatch(routerRedux.push({
-      pathname: '/',
-      query: {
-        ...location.query,
-        page: nextPage
-      }
-    }))
+    this.changeQuery({
+      page: nextPage
+    })
   }
 }
 
