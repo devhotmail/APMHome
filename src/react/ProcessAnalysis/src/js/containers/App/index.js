@@ -500,7 +500,7 @@ export class App extends Component<void, Props, void> {
                   <td>{HumanizeDurationLabel(row.range[0]) + ' - ' + HumanizeDurationLabel(row.range[1])}</td> :
                   <td>{t('above_duration', { node: HumanizeDurationLabel(row.range[0])})}</td>
                 }
-                <td>{ToPrecentage(row.value / tooltipData.sum)}</td>
+                <td>{ToPrecentage((row.value || 0)/ (tooltipData.sum || 1))}</td>
                 <td>{row.value + t('incident_count_unit')}</td>
               </tr>
             ))}

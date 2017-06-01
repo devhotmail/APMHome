@@ -36,7 +36,10 @@ export function RandomDivide(count) {
 }
 
 export function ToPrecentage(number, decimal = 2) {
-  return (number * 100).toFixed(decimal) + '%'
+  if (Number.isNaN(number)) {
+    return number
+  }
+  return +(number * 100).toFixed(decimal) + '%'
 }
 
 export function GenerateTeethData(count, mode, stripCount, colors = []) {
