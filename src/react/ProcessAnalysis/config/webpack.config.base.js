@@ -61,9 +61,11 @@ module.exports = {
       minChunks: Infinity
     }),
     new CopyWebpackPlugin([
-      { from: 'src/assets/locales/zh', to: 'src/assets/locales/zh-CN'},
-      { from: 'src/assets', to: 'assets' },
-    ])
+      { from: 'src/assets', to: 'assets'},
+    ]),
+    new CopyWebpackPlugin([
+      { from: 'src/assets/locales/zh', to: 'assets/locales/zh-CN'},
+    ]),
   ],
   module: {
     loaders: [
