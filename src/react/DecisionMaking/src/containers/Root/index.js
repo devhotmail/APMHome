@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import FilterBar from 'dew-filterbar'
@@ -15,9 +15,14 @@ import styles from './styles.scss'
 
 const Chart = SizeProvider(PackChart)
 
-class Root extends Component {
+const roleFilterFn = isHead => n => {
+  if (!isHead) return n.key !== 'groupby'
+  else return true
+}
+
+class Root extends PureComponent {
   render () {
-    const { loading, location } = this.props
+    const { loading, location, user } = this.props
     const { groupby, year } = location.query
 
     const filterOpts = [
@@ -46,7 +51,7 @@ class Root extends Component {
           }
         ]
       }
-    ]
+    ].filter(roleFilterFn(user.isHead))
 
     return <div className={styles.container}>
       <div className={styles.filterBar}>
@@ -98,6 +103,7 @@ class Root extends Component {
 }
 
 export default connect(state => ({
+  user: state.user.info,
   data: state.finance.data,
   loading: state.finance.loading
 }))(RoleProvider(Root))
