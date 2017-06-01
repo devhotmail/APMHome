@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import _ from 'lodash'
+import { sum } from 'lodash-es'
 import COLORS from 'utils/colors'
 import { log } from 'utils/logger'
 import SID from 'shortid'
@@ -31,12 +31,15 @@ export function RandomInt(...args) {
 
 export function RandomDivide(count) {
   let arr = ArrayGen(count)(_ => Random())
-  let sum = _.sum(arr)
-  return arr.map(_ => _ / sum)
+  let _sum = sum(arr)
+  return arr.map(_ => _ / _sum)
 }
 
 export function ToPrecentage(number, decimal = 2) {
-  return (number * 100).toFixed(decimal) + '%'
+  if (Number.isNaN(number)) {
+    return number
+  }
+  return +(number * 100).toFixed(decimal) + '%'
 }
 
 export function GenerateTeethData(count, mode, stripCount, colors = []) {
