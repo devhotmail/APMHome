@@ -4,6 +4,10 @@ import _ from 'lodash'
 import COLORS from 'utils/colors'
 import { log } from 'utils/logger'
 import SID from 'shortid'
+import humanizeDuration from 'humanize-duration'
+import i18n from 'js/i18n'
+
+const LANG = i18n.services.languageDetector.detect().replace('-', '_')
 
 export function TODO() { throw Error('TODO') }
 
@@ -81,4 +85,26 @@ function ArrayGen(times) {
 
 export function CurrentPage(skip, top) {
   return Math.ceil((skip + 1)/ top) || 1
+}
+
+const ONE_DAY = 3600 * 24
+const ONE_HOUR = 3600
+const ONE_MIN = 60
+
+export function HumanizeDurationInput(valueInSec) {
+  let topDigit = valueInSec / ONE_DAY
+  if (Number.isInteger(topDigit)){
+    return [topDigit, 'day']
+  }
+  topDigit = valueInSec / ONE_HOUR
+  if (Number.isInteger(topDigit)){
+    return [topDigit, 'hour']
+  }
+  return [(valueInSec / ONE_MIN) | 0, 'min']
+}
+export function HumanizeDurationLabel(valueInSec) {
+  if (valueInSec === 0) {
+    return '0'
+  }
+  return humanizeDuration(valueInSec * 1000, { largest: 2, language: LANG })
 }

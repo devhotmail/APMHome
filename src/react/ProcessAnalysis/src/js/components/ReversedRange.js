@@ -1,17 +1,10 @@
 import React, { Component } from 'react'
 import Slider from 'rc-slider'
 import { last } from 'lodash-es'
-import moment from 'moment'
+import { HumanizeDurationLabel } from 'utils/helpers'
 // import 'rc-slider/assets/index.css'
 
 const Range = Slider.createSliderWithTooltip(Slider.Range)
-
-function periodFormatter(value) {
-  if (value === 0) {
-    return '0'
-  }
-  return moment.duration(value * 1000).humanize() // fixme: momentjs abandoned residue
-}
 
 export default class ReversedRange extends Component {
 
@@ -36,7 +29,7 @@ export default class ReversedRange extends Component {
       value={mirrored}
       defaultValue={mirrored}
       onChange={onChange && this.onChangeProxy.bind(this)}
-      tipFormatter={val => periodFormatter(max - val)} 
+      tipFormatter={val => HumanizeDurationLabel(max - val)} 
       {...restProps}
     />)
   }
