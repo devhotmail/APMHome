@@ -14,6 +14,12 @@ export const PAST_COLORS = {
   'PM': '#99b992'
 }
 
+export const THRESHOLD_COLORS = [
+  '#82b1d1',
+  '#d5c165',
+  '#ce84b4'
+]
+
 export const API_HOST = process.env.NODE_ENV === 'production' ? '/api' : '/geapm/api'
 
 export function disabledDate(current) {

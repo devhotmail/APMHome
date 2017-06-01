@@ -1,14 +1,23 @@
 // @flow
+import moment from 'moment'
+import axios from 'axios'
+import {pickBy} from 'lodash'
 import { ranges } from '#/constants'
 
-export function pickDefinedProperty(obj) {
-  const newObj = {}
-  const keys = Object.keys(obj)
-  keys.map(key => {
-    const property = obj[key]
-    if (property) newObj[key] = property
+export function fetchData(api: string|string[], {params, data}: any) {
+  const isPast = moment(params.to).format('YYYY-MM-DD') <= moment().format('YYYY-MM-DD')
+  let url
+  if (Array.isArray(api)) {
+    url = api[isPast ? 0 : 1]
+  } else {
+    url = api + (isPast ? '' : '/forecast')
+  }
+  return axios({
+    method: isPast ? 'GET' : 'PUT',
+    url,
+    data,
+    params: pickBy(params, v => v !== undefined)
   })
-  return newObj
 }
 
 export function randRange(min:number, max:number):number {

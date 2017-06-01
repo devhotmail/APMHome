@@ -40,6 +40,7 @@
     "dew-editblock": "git+https://github.build.ge.com/foundry-sh/dew-editblock.git",
     "dew-filterbar": "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git",
     "dew-pager": "git+https://github.build.ge.com/foundry-sh/dew-pager.git",
+    "dew-statusbar": "git+https://github.build.ge.com/foundry-sh/dew-statusbar.git",
     "dew-tabs": "git+https://github.build.ge.com/foundry-sh/dew-tabs.git",
     "dva": "1.3.0-beta.3",
     "ensure-dir": "^0.1.0",

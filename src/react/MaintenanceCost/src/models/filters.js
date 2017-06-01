@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { ranges } from '#/constants'
 
 export default {
@@ -16,7 +17,7 @@ export default {
     cursor: []
   },
   effects: {
-    *['field/set']({ payload }, { put }) {
+    *['field/set']({ payload }, { select, put }) {
       if (payload.key === 'groupBy') yield put({
         type: 'cursor/toggle',
         payload: undefined,
@@ -40,6 +41,16 @@ export default {
       yield put({
         type: 'overview/data/get'
       })
+      const to = yield select(state => state.filters.range.to)
+      if (moment(to) > moment()) {
+        yield put({
+          type: 'assets/rate/get'
+        })
+        const cursor = yield select(state => state.filters.cursor)
+        if (cursor.length < 2) yield put({
+          type: 'suggestions/data/get/all'
+        })
+      }
     },
     *['cursor/toggle']({ payload, level}, { put, select }) {
       if (level === 1) {
@@ -49,6 +60,15 @@ export default {
         yield put({
           type: 'assets/data/get'
         })
+        const to = yield select(state => state.filters.range.to)
+        if (moment(to) > moment()) {
+          yield put({
+            type: 'assets/rate/get'
+          })
+          yield put({
+            type: 'suggestions/data/get/all'
+          })
+        }
       }
       if (level === 2) {
         const type = yield select(state => state.filters.type)
@@ -62,9 +82,9 @@ export default {
     }
   },
   reducers: {
-    ['cursor/toggle'](state, { payload, level }) {
+    ['cursor/toggle'](state, { payload, level, noReset }) {
       const { cursor } = state
-      if (payload === cursor[level - 1]) {
+      if (payload === cursor[level - 1] && !noReset) {
         return {
           ...state,
           cursor: cursor.slice(0, level - 1)

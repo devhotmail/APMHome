@@ -2,6 +2,7 @@ import axios from 'axios'
 import {pickBy, times} from 'lodash'
 import moment from 'moment'
 import {API_HOST} from '#/constants'
+import {fetchData} from '#/utils'
 
 export const PAGE_SIZE = 10
 
@@ -23,12 +24,13 @@ export default {
     *['page/change'](_, {put}) {
       yield put({type: 'filters/cursor/reset', level: 1})
       yield put({type: 'data/get'})
+      const cursor = yield select(state => state.filters.cursor)
     },
     *['data/get']({payload}, {put, call, select}) {
       const query = yield select(state => {
         const {filters} = state
         const groupby = filters.groupBy
-        const {dept, assetType: type, supplier, target: rltgrp} = filters
+        const {dept, assetType: type, supplier, target: rltgrp, MSA} = filters
         const {from, to} = filters.range
         const start = state.groups.index * PAGE_SIZE
         const limit = PAGE_SIZE
@@ -41,28 +43,32 @@ export default {
           supplier,
           rltgrp,
           start,
-          limit
+          limit,
+          msa: MSA
         }
       })
-      const thresholds = yield select(state => state.thresholds)
+      const thresholdArray = yield select(state => state.thresholds)
+      const threshold = thresholdArray.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {})
+      const items = yield select(state => state.assets.rate.map(item => {
+        if (state.filters.target === 'acyman') {
+          return {
+            id: item.id,
+            onrate_increase: item.onrate_increase,
+            cost1_increase: item.labor_increase,
+            cost2_increase: item.parts_increase,
+          }
+        } else {
+          return {
+            id: item.id,
+            onrate_increase: item.onrate_increase,
+            cost1_increase: item.repair_increase,
+            cost2_increase: item.PM_increase
+          }
+        }
+      }))
       try {
         const data = yield Promise.all(
-          times(2, index => {
-            const isPast = moment(query.to).subtract(index, 'year').format('YYYY-MM-DD') <= moment().format('YYYY-MM-DD')
-            return axios({
-              method: isPast ? 'GET' : 'PUT',
-              url: API_HOST + '/ma' + (isPast ? '' : '/forecast'),
-              params: pickBy({
-                ...query,
-                from: moment(query.from).subtract(index, 'year').format('YYYY-MM-DD'),
-                to: moment(query.to).subtract(index, 'year').format('YYYY-MM-DD')
-              }, v => v !== undefined),
-              data: {
-                thresholds: thresholds.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {}),
-                items: []
-              }
-            })
-          })
+          times(2, index => fetchData(API_HOST + '/ma', {data: {threshold, items}, params: query}))
         )
         yield put({type: 'data/get/succeeded', payload: data})
       } catch (err) {

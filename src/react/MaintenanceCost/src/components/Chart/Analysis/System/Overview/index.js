@@ -14,7 +14,6 @@ class Overview extends React.PureComponent {
     const maxSum = Math.max(...data.map(datum => keys.reduce((prev, cur) => prev + datum[cur], 0)))
     return (
       <div className={styles.overview}>
-        <h2>{data.length ? data[0].name : null}</h2>
         <div className={styles['group']}>
           <div className="lead m-b-1">开机率：</div>
           {

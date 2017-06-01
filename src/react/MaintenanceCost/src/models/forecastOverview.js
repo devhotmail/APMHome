@@ -6,7 +6,7 @@ import { API_HOST, currentYear } from '#/constants'
 export default {
   namespace: 'forecastOverview',
   state: {
-    loading: true,
+    loading: false,
     data: [],
     ranges: []
   },
@@ -39,6 +39,25 @@ export default {
       const { type, cursor } = yield select(state => state.filters)
       const { ranges } = yield select(state => state.forecastOverview)
       if(type === 'history' || cursor.length < 2) return
+      const thresholdArray = yield select(state => state.thresholds)
+      const threshold = thresholdArray.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {})
+      const items = yield select(state => state.assets.rate.map(item => {
+        if (state.filters.target === 'acyman') {
+          return {
+            id: item.id,
+            onrate_increase: item.onrate_increase,
+            cost1_increase: item.labor_increase,
+            cost2_increase: item.parts_increase,
+          }
+        } else {
+          return {
+            id: item.id,
+            onrate_increase: item.onrate_increase,
+            cost1_increase: item.repair_increase,
+            cost2_increase: item.PM_increase
+          }
+        }
+      }))
       try {
         const res = yield Promise.all(ranges.map(([from, to]) => {
           if (to <= moment().format('YYYY-MM-DD')) {
@@ -49,8 +68,8 @@ export default {
               url: API_HOST + '/ma/forecast/asset/' + cursor[1],
               params: {from, to, rltgrp: key},
               data: {
-                threshold: {},
-                items: []
+                threshold,
+                items
               }
             })))
           }
@@ -65,10 +84,17 @@ export default {
     }
   },
   reducers: {
+    ['data/get'](state) {
+      return {
+        ...state,
+        loading: true
+      }
+    },
     ['data/get/succeeded'](state, { payload }) {
       return {
         ...state,
-        data: payload
+        data: payload,
+        loading: false
       }
     },
     ['ranges/set'](state, { payload }) {

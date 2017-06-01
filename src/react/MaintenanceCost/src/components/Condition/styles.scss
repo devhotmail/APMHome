@@ -12,7 +12,7 @@
 
 .img {
   margin-right: 10px;
-  width: 80px;
+  width: 60px;
   height: 50px;
 }
 
@@ -34,6 +34,18 @@
   padding: 5px 10px;
   border: 1px solid currentColor;
   border-radius: 10px;
+  .content {
+    margin-left: 0.15em;
+    :global .dew-editblock {
+      input {
+        width: 1.5em;
+      }
+    }
+  }
+  > * {
+    vertical-align: top;
+    display: inline-block;
+  }
 }
 
 .main {
