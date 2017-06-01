@@ -7,7 +7,6 @@ import autobind from 'autobind-decorator'
 import { range, memoize, isEqual, clamp, last, values, sum } from 'lodash-es'
 import { message, InputNumber, Button, Radio } from 'antd'
 import moment from 'moment'
-import humanizeDuration from 'humanize-duration'
 import EventBus from 'eventbusjs'
 import GearListChart from 'react-gear-list-chart'
 import Header from 'containers/Header'
@@ -61,15 +60,15 @@ function GetDonutChartRow(label, value) {
 
 function GetDistance(ball, gross) {
   // start/end angle are fixed
-  if (gross == undefined || ball.key === 'reportTime') {
+  if (gross == undefined || gross.ETTR == undefined || ball.key === 'reportTime') {
     return 0
   }
   if (ball.key === 'ETTR') {
     return 300
   }
   let max = gross.ETTR
-  let distance = (gross[ball.key] / max) * 300
-  return distance
+  let current = gross[ball.key] || 0
+  return (current / max) * 300
 }
 
 function ensureSize(width, height) {
