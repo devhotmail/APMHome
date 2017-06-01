@@ -258,7 +258,7 @@ public class MaApi {
     Observable<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> items = Observable.from(assetsRate);
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
       .body(new ImmutableMap.Builder<String, Object>()
-        .put("threshold", mapRootRate(items.map(v -> Tuple.of(v._2._3, v._2._4)), dept, type, supplier, rltGrp, start, limit))
+        .put("root", mapRootRate(items.map(v -> Tuple.of(v._2._3, v._2._4)), dept, type, supplier, rltGrp, start, limit))
         .put("items", mapAssetsRate(items, rltGrp, start, limit))
         .build());
   }
