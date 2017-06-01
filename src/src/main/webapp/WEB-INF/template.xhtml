@@ -55,7 +55,7 @@
                 <br/>
                 <h:outputLabel value="要解锁系统屏幕, 请输入您的帐号密码:"/>
                 <p:password id="plainPassword" required="true" value="#{loginController.plainPassword}" requiredMessage="#{msg.password}: #{msg.ValidationRequire}"/>
-                <p:commandButton icon="ui-icon-arrow-forward" validateClient="true" class="popupIconButton" actionListener="#{loginController.validatePassword()}" value="" oncomplete="handleSubmit(args, 'idleDialog');" update=":growl"/>
+                <p:commandButton icon="ui-icon-arrow-forward" validateClient="true" class="popupIconButton" actionListener="#{loginController.validatePassword()}" oncomplete="handleSubmit(args, 'idleDialog');" update=":growl"/>
             </h:form>
         </p:dialog>
 
