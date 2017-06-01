@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'dva'
 import EditBlock from 'dew-editblock'
+import { THRESHOLD_COLORS } from '#/constants'
 
 import pic from './pic.png'
 
@@ -20,12 +21,12 @@ class Two extends PureComponent {
   render () {
     const { threshold } = this.props
     return (
-      <div className={styles.wrapper} style={{color: '#d5c165'}}>
+      <div className={styles.wrapper} style={{color: THRESHOLD_COLORS[1]}}>
         <div className={styles.title}>
           <div>条件2</div>
           {/* <div>购买成本 10%</div> */}
         </div>
-        <img className={styles.img} src={pic} />
+        {/* <img className={styles.img} src={pic} /> */}
         <div className={styles.content}>
           <span>人力+备件 &gt; 购买成本</span>
           <EditBlock

@@ -1234,6 +1234,10 @@ chokidar@^1.4.3:
   optionalDependencies:
     fsevents "^1.0.0"
 
+ci-info@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-1.0.0.tgz#dc5285f2b4e251821683681c381c3388f46ec534"
+
 cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/cipher-base/-/cipher-base-1.0.3.tgz#eeabf194419ce900da3018c207d212f2a6df0a07"
@@ -1715,12 +1719,24 @@ detect-indent@^4.0.0:
   resolved "git+https://github.build.ge.com/foundry-sh/dew-editblock.git#b31fc0989ea427c3984b7bcc64f555da06e510d3"
 
 "dew-filterbar@git+https://github.build.ge.com/foundry-sh/dew-filterbar.git":
-  version "1.3.2"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#14a74cb3b404103b459f8b65b33e9952438db02c"
+  version "2.1.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#3c048293a103bb514a520e539b6aa7fa299f460d"
+  dependencies:
+    dew-styles "git+https://github.build.ge.com/foundry-sh/dew-styles.git"
 
 "dew-pager@git+https://github.build.ge.com/foundry-sh/dew-pager.git":
   version "1.3.1"
   resolved "git+https://github.build.ge.com/foundry-sh/dew-pager.git#e74d012f918952cb320001a90630752e9a4e0c8f"
+
+"dew-statusbar@git+https://github.build.ge.com/foundry-sh/dew-statusbar.git":
+  version "1.0.2"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-statusbar.git#f4a7f2d87a080e0db526200f7daab77e0da166ba"
+  dependencies:
+    husky "^0.13.3"
+
+"dew-styles@git+https://github.build.ge.com/foundry-sh/dew-styles.git":
+  version "1.0.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-styles.git#d8471eee47b2f8130df45c6af6a973d0868e1b6d"
 
 "dew-tabs@git+https://github.build.ge.com/foundry-sh/dew-tabs.git":
   version "1.1.1"
@@ -2111,6 +2127,10 @@ find-cache-dir@^0.1.1:
     commondir "^1.0.1"
     mkdirp "^0.5.1"
     pkg-dir "^1.0.0"
+
+find-parent-dir@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/find-parent-dir/-/find-parent-dir-0.3.0.tgz#33c44b429ab2b2f0646299c5f9f718f376ff8d54"
 
 find-up@^1.0.0:
   version "1.1.2"
@@ -2541,6 +2561,15 @@ https-browserify@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-0.0.1.tgz#3f91365cabe60b77ed0ebba24b454e3e09d95a82"
 
+husky@^0.13.3:
+  version "0.13.4"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-0.13.4.tgz#48785c5028de3452a51c48c12c4f94b2124a1407"
+  dependencies:
+    chalk "^1.1.3"
+    find-parent-dir "^0.3.0"
+    is-ci "^1.0.9"
+    normalize-path "^1.0.0"
+
 iconv-lite@~0.4.13:
   version "0.4.17"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.17.tgz#4fdaa3b38acbc2c031b045d0edcdfe1ecab18c8d"
@@ -2643,6 +2672,12 @@ is-builtin-module@^1.0.0:
   resolved "https://registry.yarnpkg.com/is-builtin-module/-/is-builtin-module-1.0.0.tgz#540572d34f7ac3119f8f76c30cbc1b1e037affbe"
   dependencies:
     builtin-modules "^1.0.0"
+
+is-ci@^1.0.9:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/is-ci/-/is-ci-1.0.10.tgz#f739336b2632365061a9d48270cd56ae3369318e"
+  dependencies:
+    ci-info "^1.0.0"
 
 is-directory@^0.3.1:
   version "0.3.1"
@@ -3361,6 +3396,10 @@ normalize-package-data@^2.3.2, normalize-package-data@^2.3.4:
     is-builtin-module "^1.0.0"
     semver "2 || 3 || 4 || 5"
     validate-npm-package-license "^3.0.1"
+
+normalize-path@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-1.0.0.tgz#32d0e472f91ff345701c15a8311018d3b0a90379"
 
 normalize-path@^2.0.1:
   version "2.1.1"
@@ -4342,8 +4381,8 @@ react:
     prop-types "^15.5.7"
 
 "react-HOCs@git+https://github.build.ge.com/foundry-sh/react-HOCs.git":
-  version "1.0.1"
-  resolved "git+https://github.build.ge.com/foundry-sh/react-HOCs.git#570e81ca3425ac295695f9188d2a6204efcf9999"
+  version "1.1.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/react-HOCs.git#cf8789ef8db61a415c5e563581e22f707c6d250f"
 
 react-deep-force-update@^2.0.1:
   version "2.0.1"

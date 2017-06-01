@@ -1,12 +1,15 @@
 import moment from 'moment'
 import axios from 'axios'
+import { pickBy } from 'lodash'
 import { API_HOST } from '#/constants'
+import { fetchData } from '#/utils'
 
 export default {
   namespace: 'overview',
   state: {
     data: {},
-    pastData: {}
+    pastData: {},
+    loading: true
   },
   subscriptions: {
     setup({ history, dispatch }) {
@@ -22,19 +25,39 @@ export default {
         const groupby = filters.groupBy
         const { dept, assetType: type, supplier, target: rltgrp, cursor, groupBy } = filters
         const { from, to } = filters.range
-        const start = state.groups.index * PAGE_SIZE
-        const limit = PAGE_SIZE
+        const start = 0
+        const limit = 10
         const res = { from, to, groupby: groupBy, dept, type, supplier, rltgrp, start, limit, cursor}
         if (res[groupBy] === undefined) res[groupBy] = cursor[0]
         return res
       })
+      const thresholdArray = yield select(state => state.thresholds)
+      const threshold = thresholdArray.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {})
+      const items = yield select(state => state.assets.rate.map(item => {
+        if (state.filters.target === 'acyman') {
+          return {
+            id: item.id,
+            onrate_increase: item.onrate_increase,
+            cost1_increase: item.labor_increase,
+            cost2_increase: item.parts_increase,
+          }
+        } else {
+          return {
+            id: item.id,
+            onrate_increase: item.onrate_increase,
+            cost1_increase: item.repair_increase,
+            cost2_increase: item.PM_increase
+          }
+        }
+      }))
+
       if (cursor[1]) {
         try {
           const data = yield Promise.all([
-            axios(API_HOST + '/ma/asset/' + cursor[1], {params: {from, to, rltgrp: 'acyman'}}),
-            axios(API_HOST + '/ma/asset/' + cursor[1], {params: {from, to, rltgrp: 'mtpm'}}),
-            axios(API_HOST + '/ma/asset/' + cursor[1], {params: {from: moment(from).subtract(1, 'year').format('YYYY-MM-DD'), to: moment(to).subtract(1, 'year').format('YYYY-MM-DD'), rltgrp: 'acyman'}}),
-            axios(API_HOST + '/ma/asset/' + cursor[1], {params: {from: moment(from).subtract(1, 'year').format('YYYY-MM-DD'), to: moment(to).subtract(1, 'year').format('YYYY-MM-DD'), rltgrp: 'mtpm'}})
+            fetchData([API_HOST + '/ma/asset/' + cursor[1], API_HOST + '/ma/forecast/asset/' + cursor[1]], {data: {threshold, items}, params: {from, to, rltgrp: 'acyman'}}),
+            fetchData([API_HOST + '/ma/asset/' + cursor[1], API_HOST + '/ma/forecast/asset/' + cursor[1]], {data: {threshold, items}, params: {from, to, rltgrp: 'mtpm'}}),
+            fetchData([API_HOST + '/ma/asset/' + cursor[1], API_HOST + '/ma/forecast/asset/' + cursor[1]], {data: {threshold, items}, params: {from: moment(from).subtract(1, 'year').format('YYYY-MM-DD'), to: moment(to).subtract(1, 'year').format('YYYY-MM-DD'), rltgrp: 'acyman'}}),
+            fetchData([API_HOST + '/ma/asset/' + cursor[1], API_HOST + '/ma/forecast/asset/' + cursor[1]], {data: {threshold, items}, params: {from: moment(from).subtract(1, 'year').format('YYYY-MM-DD'), to: moment(to).subtract(1, 'year').format('YYYY-MM-DD'), rltgrp: 'mtpm'}})
           ])
           yield put({
             type: 'data/get/succeeded',
@@ -46,10 +69,10 @@ export default {
       } else {
         try {
           const data = yield Promise.all([
-            axios(API_HOST + '/ma', {params: {from, to, groupby, dept, type, supplier, rltgrp: 'acyman'}}),
-            axios(API_HOST + '/ma', {params: {from, to, groupby, dept, type, supplier, rltgrp: 'mtpm'}}),
-            axios(API_HOST + '/ma', {params: {from: moment(from).subtract(1, 'year').format('YYYY-MM-DD'), to: moment(to).subtract(1, 'year').format('YYYY-MM-DD'), groupby, dept, type, supplier, rltgrp: 'acyman'}}),
-            axios(API_HOST + '/ma', {params: {from: moment(from).subtract(1, 'year').format('YYYY-MM-DD'), to: moment(to).subtract(1, 'year').format('YYYY-MM-DD'), groupby, dept, type, supplier, rltgrp: 'mtpm'}})
+            fetchData(API_HOST + '/ma', {data: {threshold, items}, params: {from, to, groupby, dept, type, supplier, rltgrp: 'acyman'}}),
+            fetchData(API_HOST + '/ma', {data: {threshold, items}, params: {from, to, groupby, dept, type, supplier, rltgrp: 'mtpm'}}),
+            fetchData(API_HOST + '/ma', {data: {threshold, items}, params: {from: moment(from).subtract(1, 'year').format('YYYY-MM-DD'), to: moment(to).subtract(1, 'year').format('YYYY-MM-DD'), groupby, dept, type, supplier, rltgrp: 'acyman'}}),
+            fetchData(API_HOST + '/ma', {data: {threshold, items}, params: {from: moment(from).subtract(1, 'year').format('YYYY-MM-DD'), to: moment(to).subtract(1, 'year').format('YYYY-MM-DD'), groupby, dept, type, supplier, rltgrp: 'mtpm'}})
           ])
           yield put({
             type: 'data/get/succeeded',
@@ -62,9 +85,16 @@ export default {
     }
   },
   reducers: {
+    ['data/get'](state) {
+      return {
+        ...state,
+        loading: true
+      }
+    },
     ['data/get/succeeded'](state, { payload }) {
       return {
         ...state,
+        loading: false,
         data: {
           ...payload[0],
           ...payload[1]

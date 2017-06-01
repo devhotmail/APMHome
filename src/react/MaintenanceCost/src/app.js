@@ -18,6 +18,8 @@ import assets from '#/models/assets'
 import overview from '#/models/overview'
 import forecastOverview from '#/models/forecastOverview'
 import thresholds from '#/models/thresholds'
+import suggestions from '#/models/suggestions'
+import confirm from '#/models/confirm'
 
 const historyEngine = useRouterHistory(createHashHistory)({
   queryKey: false,
@@ -40,6 +42,8 @@ app.model(assets)
 app.model(overview)
 app.model(forecastOverview)
 app.model(thresholds)
+app.model(suggestions)
+app.model(confirm)
 
 function render(router) {
   const App = router ? app._getProvider(router) : app.start();

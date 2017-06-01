@@ -7,6 +7,7 @@ import Assets from './Assets'
 import AssetsForecast from './AssetsForecast'
 import Center from './Center'
 import Analysis from './Analysis'
+import Loading from './Loading'
 import styles from './index.scss'
 
 const assets = times(20, index => ({
@@ -100,7 +101,7 @@ class Chart extends React.PureComponent {
           <div className={styles['forecast']}>
             <div className={styles['left']}>
               <Groups className={styles['groups']} />
-              <AssetsForecast className={styles['assets-forecast']} items={assetsPredict} />
+              <AssetsForecast className={styles['assets-forecast']}  />
               <Center />
             </div>
             <div className={styles['right']}>
@@ -108,6 +109,7 @@ class Chart extends React.PureComponent {
             </div>
           </div>
         }
+        <Loading />
       </div>
     )
   }

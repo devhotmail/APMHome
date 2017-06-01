@@ -2,6 +2,7 @@ import axios from 'axios'
 import {pickBy} from 'lodash'
 import moment from 'moment'
 import {API_HOST} from '#/constants'
+import {fetchData} from '#/utils'
 
 export const PAGE_SIZE = 20
 export default {
@@ -13,14 +14,26 @@ export default {
   },
   state : {
     loading: true,
+    rateLoading: false,
     data: [],
+    rate: [],
     index: 0,
     total: 0
   },
   effects : {
-    *['page/change'](_, {put}) {
+    *['page/change'](_, {put, select}) {
       yield put({type: 'filters/cursor/reset', level: 2})
       yield put({type: 'data/get'})
+      const to = yield select(state => state.filters.range.to)
+      if (moment(to) > moment()) {
+        yield put({
+          type: 'rate/get'
+        })
+        // const cursor = yield select(state => state.filters.cursor)
+        // if (cursor.length < 2) yield put({
+        //   type: 'suggestions/data/get/all'
+        // })
+      }
     },
     *['data/get']({payload}, {put, select, call}) {
       const query = yield select(state => {
@@ -31,7 +44,8 @@ export default {
           supplier,
           target: rltgrp,
           cursor,
-          groupBy
+          groupBy,
+          MSA
         } = filters
         const {from, to} = filters.range
         const start = state.assets.index * PAGE_SIZE
@@ -44,31 +58,109 @@ export default {
           supplier,
           rltgrp,
           start,
-          limit
+          limit,
+          msa: MSA
         }
         if (res[groupBy] === undefined)
           res[groupBy] = cursor[0]
         return res
       })
-      const isPast = yield select(state => state.filters.type === 'history')
+      const thresholdArray = yield select(state => state.thresholds)
+      const threshold = thresholdArray.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {})
+      const items = yield select(state => state.assets.rate.map(item => {
+        if (state.filters.target === 'acyman') {
+          return {
+            id: item.id,
+            onrate_increase: item.onrate_increase,
+            cost1_increase: item.labor_increase,
+            cost2_increase: item.parts_increase,
+          }
+        } else {
+          return {
+            id: item.id,
+            onrate_increase: item.onrate_increase,
+            cost1_increase: item.repair_increase,
+            cost2_increase: item.PM_increase
+          }
+        }
+      }))
+      const thresholds = yield select(state => state.thresholds)
+      try {
+        const { data } = yield call(fetchData, API_HOST + '/ma', {data: {threshold, items}, params: query})
+        yield put({type: 'data/get/succeeded', payload: data.items, total: data.root.total})
+      } catch (err) {
+        console.error(err)
+      }
+    },
+    *['rate/get']({payload}, {put, select, call}) {
+      const query = yield select(state => {
+        const {filters} = state
+        const {
+          dept,
+          assetType: type,
+          supplier,
+          target: rltgrp,
+          cursor,
+          groupBy,
+          MSA
+        } = filters
+        const {from, to} = filters.range
+        const start = state.assets.index * PAGE_SIZE
+        const limit = PAGE_SIZE
+        const res = {
+          from,
+          to,
+          dept,
+          type,
+          supplier,
+          rltgrp,
+          start,
+          limit,
+          msa: MSA
+        }
+        if (res[groupBy] === undefined)
+          res[groupBy] = cursor[0]
+        return res
+      })
+      const thresholdArray = yield select(state => state.thresholds)
+      const threshold = thresholdArray.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {})
+      const items = []
       const thresholds = yield select(state => state.thresholds)
       try {
         const { data } = yield call(axios, {
-          method: isPast ? 'GET' : 'PUT',
-          url: API_HOST + '/ma' + (isPast ? '' : '/forecast'),
-          params: pickBy(query, v => v !== undefined),
-          data: {
-            threshold: thresholds.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {}),
-            items: []
-          }
+          method: 'PUT',
+          url: API_HOST + '/ma/forecastrate',
+          data: {threshold, items},
+          params: query
         })
-        yield put({type: 'data/get/succeeded', payload: data.items, total: data.root.total})
+        yield put({type: 'rate/get/succeeded', payload: data.items})
       } catch (err) {
         console.error(err)
       }
     }
   },
   reducers : {
+    ['rate/change'](state, {payload, field, id}) {
+      const index = state.rate.findIndex(item => item.id === id)
+      state.rate[index][field] = payload
+      return {
+        ...state,
+        rate: [...state.rate]
+      }
+    },
+    ['rate/get'](state) {
+      return {
+        ...state,
+        rateLoading: true
+      }
+    },
+    ['rate/get/succeeded'](state, {payload}) {
+      return {
+        ...state,
+        rate: payload,
+        rateLoading: false
+      }
+    },
     ['page/change'](state, {payload}) {
       return {
         ...state,
