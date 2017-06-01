@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import org.apache.commons.codec.DecoderException;
+import org.primefaces.context.RequestContext;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.service.LoginService;
 
@@ -18,6 +19,44 @@ import webapp.framework.web.service.LoginService;
 @RequestScoped
 public class LoginController extends LoginService {
 	private Boolean isSuccess;
+
+    private String plainPassword;
+
+    public String getPlainPassword() {
+        return plainPassword;
+    }
+
+    public void setPlainPassword(String plainPassword) {
+        this.plainPassword = plainPassword;
+    }
+    
+    public void validatePassword(){
+        UserAccount user = UserContextService.getCurrentUserAccount();
+        if(user==null){
+            RequestContext.getCurrentInstance().addCallbackParam("validationFailed", true);
+            return;
+        }
+        
+        try {
+            byte[] salt = Digests.decodeHex(user.getPwdSalt());
+            byte[] hashPassword;
+
+            hashPassword = Digests.sha1(plainPassword.getBytes(), salt, UserAccount.HASH_INTERATIONS);
+            String saltedPassword = Digests.encodeHex(hashPassword);
+
+            if(!user.getPassword().equals(saltedPassword)){
+                WebUtil.addErrorMessageKey("PasswordNotMatch");
+                RequestContext.getCurrentInstance().addCallbackParam("validationFailed", true);
+            }
+
+            plainPassword = "";
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DecoderException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @Override
     public String onPasswordEncrypted(String loginName, String plainPassword){
         UserAccountRepository userDao = WebUtil.getBean(UserAccountRepository.class);
