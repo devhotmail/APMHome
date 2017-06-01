@@ -1758,9 +1758,19 @@ detect-indent@^4.0.0:
   dependencies:
     repeating "^2.0.0"
 
-"dew-pager@git+https://github.build.ge.com/foundry-sh/dew-pager.git#1.0.0":
+"dew-filterbar@git+https://github.build.ge.com/foundry-sh/dew-filterbar.git":
+  version "2.1.2"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#9070f93562c5ac2e3401e13bd6de20581bc0ad2c"
+  dependencies:
+    dew-styles "git+https://github.build.ge.com/foundry-sh/dew-styles.git"
+
+"dew-pager@git+https://github.build.ge.com/foundry-sh/dew-pager.git":
+  version "1.3.1"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-pager.git#e74d012f918952cb320001a90630752e9a4e0c8f"
+
+"dew-styles@git+https://github.build.ge.com/foundry-sh/dew-styles.git":
   version "1.0.0"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-pager.git#0b89e9f2ac7de030a9aa1c4809cf8e3e37f21387"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-styles.git#d8471eee47b2f8130df45c6af6a973d0868e1b6d"
 
 diffie-hellman@^5.0.0:
   version "5.0.2"
@@ -3371,9 +3381,9 @@ node-pre-gyp@^0.6.29:
     tar "^2.2.1"
     tar-pack "^3.4.0"
 
-node-sass@^4.5.2:
-  version "4.5.2"
-  resolved "https://registry.npmjs.org/node-sass/-/node-sass-4.5.2.tgz#4012fa2bd129b1d6365117e88d9da0500d99da64"
+node-sass@^4.5.3:
+  version "4.5.3"
+  resolved "https://registry.npmjs.org/node-sass/-/node-sass-4.5.3.tgz#d09c9d1179641239d1b97ffc6231fdcec53e1568"
   dependencies:
     async-foreach "^0.1.3"
     chalk "^1.1.1"
@@ -4411,9 +4421,9 @@ react-hammerjs@~0.5.0:
   dependencies:
     hammerjs "^2.0.8"
 
-react-hot-loader@3:
-  version "3.0.0-beta.6"
-  resolved "http://registry.npm.taobao.org/react-hot-loader/download/react-hot-loader-3.0.0-beta.6.tgz#463fac0bfc8b63a8385258af20c91636abce75f4"
+react-hot-loader@3.0.0-beta.5:
+  version "3.0.0-beta.5"
+  resolved "http://registry.npm.taobao.org/react-hot-loader/download/react-hot-loader-3.0.0-beta.5.tgz#d7f97d15ef50a5433f17ba5d19c6ee1a7242170e"
   dependencies:
     babel-template "^6.7.0"
     global "^4.3.0"
@@ -4764,13 +4774,13 @@ safe-buffer@^5.0.1:
   resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.0.1.tgz#d263ca54696cd8a306b5ca6551e92de57918fbe7"
 
 sass-graph@^2.1.1:
-  version "2.2.2"
-  resolved "https://registry.npmjs.org/sass-graph/-/sass-graph-2.2.2.tgz#f4d6c95b546ea2a09d14176d0fc1a07ee2b48354"
+  version "2.2.4"
+  resolved "https://registry.npmjs.org/sass-graph/-/sass-graph-2.2.4.tgz#13fbd63cd1caf0908b9fd93476ad43a51d1e0b49"
   dependencies:
     glob "^7.0.0"
     lodash "^4.0.0"
-    scss-tokenizer "^0.2.1"
-    yargs "^6.6.0"
+    scss-tokenizer "^0.2.3"
+    yargs "^7.0.0"
 
 sass-loader@^6.0.3:
   version "6.0.3"
@@ -4786,9 +4796,9 @@ sax@~1.2.1:
   version "1.2.2"
   resolved "https://registry.npmjs.org/sax/-/sax-1.2.2.tgz#fd8631a23bc7826bef5d871bdb87378c95647828"
 
-scss-tokenizer@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.npmjs.org/scss-tokenizer/-/scss-tokenizer-0.2.1.tgz#07c0cc577bb7ab4d08fd900185adbf4bc844141d"
+scss-tokenizer@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.npmjs.org/scss-tokenizer/-/scss-tokenizer-0.2.3.tgz#8eb06db9a9723333824d3f5530641149847ce5d1"
   dependencies:
     js-base64 "^2.1.8"
     source-map "^0.4.2"
@@ -5535,7 +5545,13 @@ yargs-parser@^4.2.0:
   dependencies:
     camelcase "^3.0.0"
 
-yargs@^6.0.0, yargs@^6.6.0:
+yargs-parser@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.npmjs.org/yargs-parser/-/yargs-parser-5.0.0.tgz#275ecf0d7ffe05c77e64e7c86e4cd94bf0e1228a"
+  dependencies:
+    camelcase "^3.0.0"
+
+yargs@^6.0.0:
   version "6.6.0"
   resolved "https://registry.npmjs.org/yargs/-/yargs-6.6.0.tgz#782ec21ef403345f830a808ca3d513af56065208"
   dependencies:
@@ -5552,6 +5568,24 @@ yargs@^6.0.0, yargs@^6.6.0:
     which-module "^1.0.0"
     y18n "^3.2.1"
     yargs-parser "^4.2.0"
+
+yargs@^7.0.0:
+  version "7.1.0"
+  resolved "https://registry.npmjs.org/yargs/-/yargs-7.1.0.tgz#6ba318eb16961727f5d284f8ea003e8d6154d0c8"
+  dependencies:
+    camelcase "^3.0.0"
+    cliui "^3.2.0"
+    decamelize "^1.1.1"
+    get-caller-file "^1.0.1"
+    os-locale "^1.4.0"
+    read-pkg-up "^1.0.1"
+    require-directory "^2.1.1"
+    require-main-filename "^1.0.1"
+    set-blocking "^2.0.0"
+    string-width "^1.0.2"
+    which-module "^1.0.0"
+    y18n "^3.2.1"
+    yargs-parser "^5.0.0"
 
 yargs@~3.10.0:
   version "3.10.0"
