@@ -41,10 +41,26 @@ $filtersHeight: 50px;
 
 .leftPager {
   left: 5%;
+
+  @media (max-width: 1250px) {
+    left: 1%;
+  }
+
+  @media (max-width: 768px) {
+    left: 0.5%;
+  }
 }
 
 .rightPager {
   right: 5%;
+
+  @media (max-width: 1250px) {
+    right: 1%;
+  }
+
+  @media (max-width: 768px) {
+    right: 0.5%;
+  }  
 }
 
 .asset,

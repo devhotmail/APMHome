@@ -76,7 +76,18 @@ export default {
 
         yield put({ type: 'loading/on' })
 
-        const { page, ...restQuery } = params
+        let user = yield select(state => state.user.info)
+        if (!user.id) {
+          const action = yield take('user/info/set')
+          user = action.payload
+        }
+
+        const persistParams = user.isHead ? params : {
+          ...params,
+          dept: user.orgId
+        }
+
+        const { page, ...restQuery } = persistParams
 
         const { data } = yield call(
           axios,
