@@ -26,16 +26,15 @@ const Ranges = DatePresets.reduce((prev, cur) => {
 
 function mapState2Props(state) {
   let { 
-    parameters: { filterBy, orderBy, period },
+    parameters: { filterBy, period },
     context: { org, name },
     meta: { departments, assetTypes }
   } = state
-  return { filterBy, orderBy, period, org, name, departments, assetTypes }
+  return { filterBy, period, org, name, departments, assetTypes }
 }
 function mapDispatch2Props(dispatch) {
   return {
     onFilterChange: (type) => (data) => dispatch(ParamUpdate('filter', { type, data })),
-    onOrderChange: (data) => dispatch(ParamUpdate('order', data)),
     onPeriodChange: (data) => dispatch(ParamUpdate('period', data))
   }
 }
@@ -70,9 +69,7 @@ export class Header extends PureComponent {
   }
 
   render() {
-    let { t, period, filterBy, orderBy,
-      onFilterChange, onOrderChange, onPeriodChange
-    } = this.props
+    let { t, period, filterBy, onFilterChange, onPeriodChange } = this.props
     return (<nav id="header" className="header level">
 
       <div className="nav-left">
@@ -96,13 +93,6 @@ export class Header extends PureComponent {
           { SelectHelper(filterBy['dept'], this._filtersDept(), onFilterChange('dept')) }
         </div>
       </div>
-      <div className="nav-right">
-        <div className="nav-item">{t('sort_by')}</div>
-        <div className="nav-item">
-          { SelectHelper(orderBy, this._sortOptions(), onOrderChange) }
-        </div>
-      </div>
-
     </nav>)
   }
 }

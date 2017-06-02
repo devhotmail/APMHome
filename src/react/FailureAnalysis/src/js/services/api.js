@@ -37,7 +37,7 @@ function mapParamsToQuery(params, type) {
     from: formatDate(params.period.from),
     to: formatDate(params.period.to),
     groupby: GroupBy[params.display],
-    orderby: DataTypeMapping[params.orderBy],
+    orderby: GroupBy[params.display],
     type: assetType,
     dept: dept,
     start: pag.skip || 0,

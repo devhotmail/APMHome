@@ -38,8 +38,8 @@ export function ReasonConv(resp) {
   return result
 }
 
-function BriefToothAdapter(array, max, orderby, lastYear) {
-  let color = getStripColor(orderby)
+function BriefToothAdapter(array, max, type, lastYear) {
+  let color = getStripColor(type)
   if (lastYear) {
     color = ColorUtil(color).lighten(.4).hexString()
   }
@@ -48,7 +48,7 @@ function BriefToothAdapter(array, max, orderby, lastYear) {
     data: a, 
     mode: 'bar', 
     label: a.key.name, 
-    strips: [{color: color, weight: a.val[orderby] / max, data: a}] 
+    strips: [{color: color, weight: a.val[type] / max, data: a}] 
   }))
 }
 
