@@ -814,7 +814,7 @@ public class DmApiV2 {
     Seq<Tuple3<String, Seq<Map<String, String>>, Integer>> sugRse = lowerLevel.filter(v -> v._2.exists(sub -> sub.get("title").getOrElse("").contains(SUGGESTION_RAISE)));
     ImmutableList.Builder<Map<String, String>> totalSuggestions = new ImmutableList.Builder<Map<String, String>>();
     if (!sugBuy.isEmpty()) {
-      totalSuggestions.add(HashMap.of("title", SUGGESTION_BUY.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", sugBuy.reduce((prev, next) -> Tuple.of(prev._1 + "（" + prev._3 + "台）, " + next._1+ "（" + next._3 + "台）", prev._2, prev._3))._1));
+      totalSuggestions.add(HashMap.of("title", SUGGESTION_BUY.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", sugBuy.map(v -> Tuple.of(v._1, v._3)).foldLeft(Tuple.of("", 0), (prev, next) -> Tuple.of(prev._1 + "，" + next._1 + "（" + next._2 + "台）", prev._2))._1.substring(1)));
     }
     if (!sugAjst.isEmpty()) {
       totalSuggestions.add(HashMap.of("title", SUGGESTION_ADJUST.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", sugAjst.reduce((prev, next) -> Tuple.of(prev._1 + ", " + next._1, prev._2, prev._3))._1));
