@@ -85,12 +85,8 @@ function ensureSize(width, height) {
 
 function mapDispatch2Porps(dispatch) {
   return {
-    updateDisplayType: (value) => {
-      dispatch(ParamUpdate('display', value.key))
-    },
-    updateDataType: (value) => {
-      dispatch(ParamUpdate('datatype', value))
-    },
+    updateDisplayType: (value) => dispatch(ParamUpdate('display', value.key)),
+    updateDataType: (value) => dispatch(ParamUpdate('datatype', value)),
     updatePagination: (type, pageNumber) => {
       dispatch(PageChange(type, pageNumber))
     },
@@ -172,8 +168,8 @@ export class App extends Component<void, Props, void> {
   onRightPagerChange = value => {
     this.props.updatePagination('detail', value)
   }
-  initDistributionMax() {
-    let [ max, unit ] = HumanizeDurationInput(last(this.getCurrentDistribution()), this.props.dataType)
+  initDistributionMax(dataType) {
+    let [ max, unit ] = HumanizeDurationInput(last(this.getCurrentDistribution(dataType)))
     this.setState({
       distriMax: max,
       distriUnit: unit
@@ -184,7 +180,7 @@ export class App extends Component<void, Props, void> {
     let { dataType } = this.props
     if (id !== dataType) {
       this.props.updateDataType(id)
-      this.initDistributionMax()
+      this.initDistributionMax(id)
     }
   }
 
@@ -237,7 +233,7 @@ export class App extends Component<void, Props, void> {
       let range = timeNodes.slice(i, i + 2)
       return { value: val, key: i, range: range }
     })
-    distri.sum = sum(phases)
+    distri.sum = last(phases) // max
     if (phaseData.phase === 'ETTR') {
       this.setState({ distriEttr: distri })
     } else if (phaseData.phase === 'arrived') {
@@ -321,12 +317,13 @@ export class App extends Component<void, Props, void> {
     updateDistribution(distribution.map((v, i) => i * step), dataType)
   }
 
-  getCurrentDistribution() {
+  getCurrentDistribution(type) {
     let { dataType, distributionEttr, distributionArrival, distributionResponse } = this.props
+    type = type || dataType 
     let distribution
-    if (dataType === 'ettr') {
+    if (type === 'ettr') {
       distribution = distributionEttr
-    } else if (dataType === 'arrival_time') {
+    } else if (type === 'arrival_time') {
       distribution = distributionArrival
     } else { // response_time
       distribution = distributionResponse
@@ -367,7 +364,7 @@ export class App extends Component<void, Props, void> {
     } else { // response_time
       distribution = distributionResponse
     }
-    let max = last(distribution) 
+    let max = last(distribution)
     if (max !== this.state.distributionMax) {
       this.setState({ distributionMax: max})
     }
