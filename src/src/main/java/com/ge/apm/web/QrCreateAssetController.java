@@ -54,6 +54,7 @@ public class QrCreateAssetController {
         }
 
         String qrCode = request.getParameter("qrCode");
+        String source = request.getParameter("source");
 
         model.addAttribute("openId", openId);
         model.addAttribute("appId", s.getAppid());
@@ -61,6 +62,7 @@ public class QrCreateAssetController {
         model.addAttribute("nonceStr", s.getNoncestr());
         model.addAttribute("signature", s.getSignature());
         model.addAttribute("qrCode", qrCode);
+        model.addAttribute("source", source);
         model.addAttribute("assetGroupList", qrCreateAssetService.getMsg("assetGroup"));
 
         if(qrCode != null && !qrCode.equals("")){
