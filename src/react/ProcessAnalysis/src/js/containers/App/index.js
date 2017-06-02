@@ -237,7 +237,7 @@ export class App extends Component<void, Props, void> {
       let range = timeNodes.slice(i, i + 2)
       return { value: val, key: i, range: range }
     })
-    distri.sum = sum(phases)
+    distri.sum = last(phases) // max
     if (phaseData.phase === 'ETTR') {
       this.setState({ distriEttr: distri })
     } else if (phaseData.phase === 'arrived') {
