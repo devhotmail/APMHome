@@ -4,6 +4,20 @@ import axios from 'axios'
 import {pickBy} from 'lodash'
 import { ranges } from '#/constants'
 
+export function withUnit(number: number) {
+  if (number > 100000000) {
+    return round(number / 100000000) + '亿'
+  } else if (number > 10000000) {
+    return round(number / 10000000) + '千万'
+  } else if (number > 1000000) {
+    return round(number / 1000000) + '百万'
+  } else if (number > 10000) {
+    return round(number / 10000) + '万'
+  } else {
+    return round(number)
+  }
+}
+
 export function fetchData(api: string|string[], {params, data}: any) {
   const isPast = moment(params.to).format('YYYY-MM-DD') <= moment().format('YYYY-MM-DD')
   let url
@@ -78,8 +92,6 @@ export function trimString(str, len, endstr) {
   }
 }
 
-
-export const add = (a: number, b: number): number => a + b
 
 export function round (value: number, precision:number = 1): number {
   var multiplier = Math.pow(10, precision)
