@@ -121,9 +121,19 @@ public class StaffApi {
 
       .put("score", 5 )
 
-      .put("work_order", OperatorMinMax.max( ( Observable<Integer>) staff_info.map(staff -> staff.getElement4() ) ) .toBlocking().single() )
+      .put("work_order", calculateRange(staff_info) )
 
       .build();
+  }
+
+
+  private int calculateRange(Observable<Tuple11<Integer, String, Integer, Double, Integer, Integer, Integer, Integer, Integer, Integer, Integer>> staff_info) {
+
+      if (staff_info.isEmpty().toBlocking().single())
+        return 0;
+      else
+        return OperatorMinMax.max( ( Observable<Integer>) staff_info.map(staff -> staff.getElement4() ) ) .toBlocking().single();
+
   }
 
   private int calculateHours(Date dfrom, Date dto) {

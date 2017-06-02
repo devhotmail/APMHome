@@ -53,7 +53,7 @@ public class ListService {
 
 // #2
 	private static final String asset_op
-		= " SELECT AVG(rating) as rating, SUM(expose_count) as exposure, SUM(exam_count) as scan, SUM(exam_duration)/3600.0 as usage, SUM(down_time)/86400 as stop, SUM(work_order_count) as fix, SUM(revenue) as revenue, SUM(revenue - maintenance_cost - deprecation_cost) as profit, COUNT(*) as day "
+		= " SELECT AVG(rating) as rating, SUM(expose_count) as exposure, SUM(exam_count) as scan, SUM(exam_duration)/3600.0 as usage, SUM(down_time)/86400 as stop, SUM(work_order_count) as fix, SUM(revenue) as revenue, SUM(revenue - mt_manpower - mt_accessory - pm_manpower - pm_accessory - deprecation_cost) as profit, COUNT(*) as day "
 		+ " FROM asset_summit "
 		+ " WHERE site_id = :site_id AND hospital_id = :hospital_id AND created >= :from AND created <= :to "
 		+ " GROUP BY asset_id "
@@ -80,7 +80,7 @@ public class ListService {
 		+ " FROM "
 			+ " (SELECT DISTINCT asset_id, asset_group FROM asset_summit WHERE site_id = :site_id AND hospital_id = :hospital_id AND created >= :from AND created <= :to ) left_table "
 			+ " LEFT JOIN "
-			+ " (SELECT asset_group, AVG(expose_count) as exposure, AVG(exam_count) as scan, AVG(exam_duration)/3600.0 as usage, AVG(down_time)/86400 as stop, AVG(work_order_count) as fix, AVG(revenue - maintenance_cost - deprecation_cost) as profit "
+			+ " (SELECT asset_group, AVG(expose_count) as exposure, AVG(exam_count) as scan, AVG(exam_duration)/3600.0 as usage, AVG(down_time)/86400 as stop, AVG(work_order_count) as fix, AVG(revenue - mt_manpower - mt_accessory - pm_manpower - pm_accessory - deprecation_cost) as profit "
 				+ " FROM asset_summit "
 				+ " WHERE created >= :from AND created <= :to "
 				+ " GROUP BY asset_group ) right_table "
