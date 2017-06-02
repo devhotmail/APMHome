@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'dva'
 import classnames from 'classnames'
-import { round } from '#/utils'
+import { round, withUnit } from '#/utils'
 import styles from './index.scss'
 
 type Props = {
@@ -40,18 +40,18 @@ class Center extends React.PureComponent<*, Props, *> {
           <tbody>
             <tr>
               <td className={classnames(styles['with-rect'], styles['labor'])}>按成本类型</td>
-              <td>{round(overview.data.labor + overview.data.parts, 0)}({Center.getIncrease(overview.data.labor + overview.data.parts, overview.pastData.labor + overview.pastData.parts)})</td>
-              <td>{round(overview.pastData.labor + overview.pastData.parts, 0)}</td>
+              <td>{withUnit(overview.data.labor + overview.data.parts)}({Center.getIncrease(overview.data.labor + overview.data.parts, overview.pastData.labor + overview.pastData.parts)})</td>
+              <td>{withUnit(overview.pastData.labor + overview.pastData.parts)}</td>
             </tr>
             <tr>
               <td className={classnames(styles['with-rect'], styles['labor'])}>人力</td>
-              <td>{round(overview.data.labor, 0)}({Center.getIncrease(overview.data.labor, overview.pastData.labor)})</td>
-              <td>{round(overview.pastData.labor, 0)}</td>
+              <td>{withUnit(overview.data.labor)}({Center.getIncrease(overview.data.labor, overview.pastData.labor)})</td>
+              <td>{withUnit(overview.pastData.labor)}</td>
             </tr>
             <tr>
               <td className={classnames(styles['with-rect'], styles['parts'])}>备件</td>
-              <td>{round(overview.data.parts, 0)}({Center.getIncrease(overview.data.labor, overview.pastData.labor)})</td>
-              <td>{round(overview.pastData.parts, 0)}</td>
+              <td>{withUnit(overview.data.parts)}({Center.getIncrease(overview.data.labor, overview.pastData.labor)})</td>
+              <td>{withUnit(overview.pastData.parts)}</td>
             </tr>
           </tbody>
         </table>
@@ -66,18 +66,18 @@ class Center extends React.PureComponent<*, Props, *> {
           <tbody>
             <tr>
               <td className={classnames(styles['with-rect'], styles['repair'])}>按派工单类型</td>
-              <td>{round(overview.data.repair + overview.data.PM, 0)}({Center.getIncrease(overview.data.repair + overview.data.PM, overview.pastData.repair + overview.pastData.PM)})</td>
-              <td>{round(overview.pastData.repair + overview.pastData.PM, 0)}</td>
+              <td>{withUnit(overview.data.repair + overview.data.PM)}({Center.getIncrease(overview.data.repair + overview.data.PM, overview.pastData.repair + overview.pastData.PM)})</td>
+              <td>{withUnit(overview.pastData.repair + overview.pastData.PM)}</td>
             </tr>
             <tr>
               <td className={classnames(styles['with-rect'], styles['repair'])}>维修</td>
-              <td>{round(overview.data.repair, 0)}({Center.getIncrease(overview.data.repair, overview.pastData.repair)})</td>
-              <td>{round(overview.pastData.repair, 0)}</td>
+              <td>{withUnit(overview.data.repair)}({Center.getIncrease(overview.data.repair, overview.pastData.repair)})</td>
+              <td>{withUnit(overview.pastData.repair)}</td>
             </tr>
             <tr>
               <td className={classnames(styles['with-rect'], styles['PM'])}>PM</td>
-              <td>{round(overview.data.PM, 0)}({Center.getIncrease(overview.data.PM, overview.pastData.PM)})</td>
-              <td>{round(overview.pastData.PM, 0)}</td>
+              <td>{withUnit(overview.data.PM)}({Center.getIncrease(overview.data.PM, overview.pastData.PM)})</td>
+              <td>{withUnit(overview.pastData.PM)}</td>
             </tr>
           </tbody>
         </table>

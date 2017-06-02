@@ -2,7 +2,7 @@ import React from 'react'
 import ProgressBar from '#/components/ProgressBar'
 import { connect } from 'dva'
 import moment from 'moment'
-import { round } from '#/utils'
+import { round, withUnit } from '#/utils'
 import styles from './index.scss'
 
 class Overview extends React.PureComponent {
@@ -52,13 +52,13 @@ class Overview extends React.PureComponent {
                   key={index}
                   title={moment(from).format('YYYY') + '年'}
                   percent={percent}
-                  textDesc={`${round(keys.reduce((prev, cur) => prev + data[index][cur], 0))}`} />
+                  textDesc={`${withUnit(keys.reduce((prev, cur) => prev + data[index][cur], 0))}`} />
               } else if (to > moment().startOf('year').format('YYYY-MM-DD') && to < moment().endOf('year').format('YYYY-MM-DD')) {
                 return <ProgressBar
                   key={index}
                   title={moment(from).format('YYYY') + '年至今'}
                   percent={percent}
-                  textDesc={`${round(keys.reduce((prev, cur) => prev + data[index][cur], 0))}`} />
+                  textDesc={`${withUnit(keys.reduce((prev, cur) => prev + data[index][cur], 0))}`} />
               } else {
                 const prevPercent = keys.reduce((prev, cur) => prev + data[index - 2][cur], 0) / maxSum
                 return <ProgressBar
@@ -66,7 +66,7 @@ class Overview extends React.PureComponent {
                   color="#46af9b"
                   title={`${moment(from).format('YYYY')}预测`}
                   percent={percent}
-                  textDesc={`${round(keys.reduce((prev, cur) => prev + data[index][cur], 0))}  ${(percent - prevPercent) > 0 ? '+' : ''}${round((percent - prevPercent) / prevPercent * 100, 1)}%`} />
+                  textDesc={`${withUnit(keys.reduce((prev, cur) => prev + data[index][cur], 0))}  ${(percent - prevPercent) > 0 ? '+' : ''}${round((percent - prevPercent) / prevPercent * 100, 1)}%`} />
               }
             }) : null
           }
