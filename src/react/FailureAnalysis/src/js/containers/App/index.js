@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
-import _ from 'lodash'
+import { cloneDeep, memoize, clamp, range } from 'lodash-es'
 import { message } from 'antd'
 import EventBus from 'eventbusjs'
 import GearListChart from 'react-gear-list-chart'
@@ -47,8 +47,8 @@ function mergeItem(current, lastYearDict) {
   if (lastYearItem === undefined) {
     return current
   }
-  let copy = _.cloneDeep(current)
-  copy.strips = copy.strips.concat(_.cloneDeep(lastYearItem.strips))
+  let copy = cloneDeep(current)
+  copy.strips = copy.strips.concat(cloneDeep(lastYearItem.strips))
   return copy
 }
 
@@ -70,7 +70,7 @@ function getCurrentPage(skip, top) {
 }
 
 function ensureSize(width, height) {
-  width = _.clamp(width, 1000, 1500)
+  width = clamp(width, 1000, 1500)
   if (height < 900) {
     width = 1100
   }
@@ -107,7 +107,7 @@ function mapState2Props(state) {
 @autobind
 export class App extends Component<void, Props, void> {
 
-  static getPlaceholder = _.memoize(count => _.range(count)
+  static getPlaceholder = memoize(count => range(count)
                            .map(() => Placeholder))
   state = {
     tooltipX: -861112,

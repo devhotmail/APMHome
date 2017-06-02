@@ -1,6 +1,5 @@
 // @flow
 import React, { PureComponent } from 'react'
-import _ from 'lodash'
 import { connect } from 'react-redux'
 import { translate } from 'react-i18next'
 import autobind from 'autobind-decorator'

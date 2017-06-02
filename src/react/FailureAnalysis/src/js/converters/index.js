@@ -1,12 +1,12 @@
 
-import _ from 'lodash'
+import { maxBy, sumBy, sortBy } from 'lodash-es'
 import colors from 'utils/colors'
 import SID from 'shortid'
 import ColorUtil from 'color'
 
 export function AssetTypesConv(resp) {
   let converted = Object.keys(resp.data).map(i => ({ id: String(i), name: resp.data[i] }))
-  return _.sortBy(converted, ['name'])
+  return sortBy(converted, ['name'])
 }
 
 export function BriefConv(resp, type, lastYear) {
@@ -15,7 +15,7 @@ export function BriefConv(resp, type, lastYear) {
     arr.pages = resp.data.pages
     return arr
   }
-  let weightMax = _.maxBy(arr, item => item.val[type]).val[type]
+  let weightMax = maxBy(arr, item => item.val[type]).val[type]
   let result = BriefToothAdapter(arr, weightMax, type, lastYear)
   result.pages = resp.data.pages
   return result
@@ -27,7 +27,7 @@ export function BriefAssetConv(resp, type, lastYear) {
     arr.pages = resp.data.pages
     return arr
   }
-  let weightMax = _.maxBy(arr, item => item.val[type]).val[type]
+  let weightMax = maxBy(arr, item => item.val[type]).val[type]
   let result = BriefToothAdapter(arr, weightMax, type, lastYear)
   result.pages = resp.data.pages
   return result
@@ -56,8 +56,8 @@ function ReasonToothAdapter(array) {
   if (array.length === 0) {
     return array
   }
-  let weightMax = _.maxBy(array, item => item.count).count
-  let sum = _.sumBy(array, i => i.count)
+  let weightMax = maxBy(array, item => item.count).count
+  let sum = sumBy(array, i => i.count)
   let result = []
   array.forEach(e => {
     let color = e.count/sum < .15 ? colors.gray : colors.blue  //  todo, refine algo

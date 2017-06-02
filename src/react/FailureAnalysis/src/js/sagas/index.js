@@ -1,6 +1,6 @@
 import { call, put, take, takeEvery, takeLatest, fork, all, select } from 'redux-saga/effects'
 import Services from 'services'
-import _ from 'lodash'
+import { cloneDeep } from 'lodash-es'
 import cache from 'utils/cache'
 import { error } from 'utils/logger'
 import EventBus from 'eventbusjs'
@@ -30,7 +30,7 @@ function* fetchBriefs(action) {
   }
   try {
     let params = yield select(state => state.parameters)
-    params = _.cloneDeep(params)
+    params = cloneDeep(params)
     let pag = params.pagination[type]
     if (targetPage) {
       pag.skip = (targetPage - 1) * pag.top

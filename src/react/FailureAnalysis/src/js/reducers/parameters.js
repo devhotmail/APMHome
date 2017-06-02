@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { cloneDeep } from 'lodash-es'
 import moment from 'moment'
 import { ACT_UPDATE_PARAM } from 'actions'
 
@@ -77,6 +77,6 @@ export default (state = initParameter, action) => {
   if (!action.type.startsWith(ACT_UPDATE_PARAM)) {
     return state
   }
-  return reducers[action.type](_.cloneDeep(state), action.data)
+  return reducers[action.type](cloneDeep(state), action.data)
 
 }
