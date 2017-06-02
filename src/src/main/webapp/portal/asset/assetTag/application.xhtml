@@ -1,0 +1,188 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                >
+    <ui:define name="content">
+        <div class="ui-g-12 card ">
+    <h:form id="ApplicationForm">
+
+        <div class="ui-g">
+            <div class="ui-g-2"> <p:outputLabel value="申请科室:"/></div>
+            <div class="ui-g-4"> <p:inputText id="sheqingkeshi" required="true" value="sqds"/></div>
+            <div class="ui-g-2"><p:outputLabel value="填表日期:"/></div>
+            <div class="ui-g-4"><p:calendar timeZone="GMT+8" id="xx" pattern="yyyy/MM/dd"  value="#{applictionController.date1}" showOn="button" showButtonPanel="true" navigator="true" locale="zh"></p:calendar></div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-2"><p:outputLabel value="科室联系人:"/></div>
+            <div class="ui-g-4"><p:inputText id="keshilianxsiren" required="true" value="xxdees"/></div>
+            <div class="ui-g-2"><p:outputLabel value="联系电话:"/></div>
+            <div class="ui-g-4"><p:inputText  id="lianxidianhua" required="true" value="lianxidianhua"/></div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-2"><p:outputLabel value="设备名称:"/></div>
+            <div class="ui-g-3"><p:inputText id="shebeimingcheng" required="true"  value="shebeimingcheng"/></div>
+            <div class="ui-g-1"><p:outputLabel value="数量:"/></div>
+            <div class="ui-g-2"><p:inputText id="shuliang" required="true" value="shuliang"/></div>
+            <div class="ui-g-1"><p:outputLabel value="预估单价:"/></div>
+            <div class="ui-g-3"><p:inputText id="yugudanjia" size="10"  required="true"  value="yugudaxxxddnjia"/></div>
+        </div>
+
+        <div class="ui-g">
+            <div class="ui-g-2"><p:outputLabel value="申购性质:"/></div>
+            <div class="ui-g-3">
+                <p:selectManyCheckbox id="basic" >
+                    <f:selectItem itemLabel="新购" itemValue="1" />
+                    <f:selectItem itemLabel="更新" itemValue="2" />
+                    <f:selectItem itemLabel="补充" itemValue="3" />
+                </p:selectManyCheckbox>
+            </div>
+            <div class="ui-g-2"> <p:outputLabel value="是否需要专用耗品:"/></div>
+            <div class="ui-g-4" style="padding-left: -10px">
+                <p:selectOneRadio id="console" value="#{applicationController.needCost}">
+                    <f:selectItem itemLabel="是" itemValue="yes" />
+                    <f:selectItem itemLabel="否" itemValue="no" />
+                </p:selectOneRadio>
+            </div>
+
+        </div>
+
+        <div class="ui-g">
+            <div class="ui-g-2"><p:outputLabel value="资金来源"/></div>
+            <div class="ui-g-4">
+                <p:selectManyCheckbox id="basic1" >
+                    <f:selectItem itemLabel="医院自筹" itemValue="Xbox One" />
+                    <f:selectItem itemLabel="经费/基金" itemValue="PS4" />
+                    <f:selectItem itemLabel="财政资金/上级补助" itemValue="Wii U" />
+
+                </p:selectManyCheckbox>
+
+
+            </div>
+            <div class="ui-g-1"> <p:outputLabel  value="其它:"/></div>
+            <div class="ui-g-5"> <p:inputText id="qita"  value="qita"/></div>
+        </div>
+
+        <div class="ui-g">
+            <p:fieldset legend="推荐品牌,规格型号和联系电话" >
+            <div class="ui-g-2"><p:outputLabel value="(如果有的话)"/></div>
+            <div class="ui-g-10 ui-g-nopad">
+                <div class="ui-g-6"><p:inputText size="55" value="1."/></div>
+                <div class="ui-g-1"><p:outputLabel value="电话"/></div>
+                <div class="ui-g-3"><p:inputText  value="1321246235"/></div>
+                <div class="ui-g-6"><p:inputText size="55" value="2."/></div>
+                <div class="ui-g-1"><p:outputLabel value="电话"/></div>
+                <div class="ui-g-3"><p:inputText   value="1537543467"/></div>
+                <div class="ui-g-6"><p:inputText size="55" value="3."/></div>
+                <div class="ui-g-1"><p:outputLabel value="电话"/></div>
+                <div class="ui-g-3"><p:inputText  value="1783467899"/></div>
+            </div>
+            </p:fieldset>
+        </div>
+
+
+<!--<p:inputTextarea-->
+        <div class="ui-g">
+            <p:fieldset legend="申请理由及用途(可另纸附后)" >
+            <div class="ui-g-2">
+                <p:selectManyCheckbox style="height: 200px" id="grid3" value="#{applicationController.selectedCars}" layout="pageDirection" columns="1">
+                    <f:selectItems  value="#{applicationController.cars}" var="car" itemLabel="#{car}" itemValue="#{car}" />
+                </p:selectManyCheckbox>
+
+            </div>
+                <div class="ui-g-10 ui-g-nopad" >
+                    <p:outputLabel value="理由及依据(阐述):该科室常规进行CTTR治疗，同时心脏手术患者较多,均需反复检测ACT,以调整治疗"/>
+                    <p:inputTextarea rows="10"  cols="70"  queryDelay="750" minQueryLength="4" />
+                </div>
+            </p:fieldset>
+        </div>
+
+
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+            <p:fieldset legend="对产品性能有无特殊要求" >
+                <p:outputLabel value="快速(即时报告结果),简便,易于操作,可与医院HIS系统连接"/>
+                <p:inputTextarea rows="5"  cols="70"  queryDelay="750" minQueryLength="4" />
+                 </p:fieldset>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:fieldset legend="申请科室负责人(签字)" >
+                    <p:inputTextarea rows="3"  cols="70"  queryDelay="750" minQueryLength="4" />
+                </p:fieldset>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:fieldset legend="医务处/科研处/信息中心意见" >
+                    <p:outputLabel value="签字"/>
+                    <p:inputTextarea rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                    <p:outputLabel value="日期"/>
+                    <p:calendar timeZone="GMT+8" id="xsddsx" pattern="yyyy/MM/dd"  value="#{applictionController.date1}" showOn="button" showButtonPanel="true" navigator="true" locale="zh"></p:calendar>
+                </p:fieldset>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:fieldset legend="设备处意见" >
+                    <p:outputLabel value="签字"/>
+                    <p:inputTextarea rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                    <p:outputLabel value="日期"/>
+                    <p:calendar timeZone="GMT+8" id="xssesx" pattern="yyyy/MM/dd"  value="#{applictionController.date1}" showOn="button" showButtonPanel="true" navigator="true" locale="zh"></p:calendar>
+                </p:fieldset>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:fieldset legend="院领导意见" >
+                    <p:outputLabel value="签字"/>
+                    <p:inputTextarea rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                    <p:outputLabel value="日期"/>
+                    <p:calendar timeZone="GMT+8" id="xssx" pattern="yyyy/MM/dd"  value="#{applictionController.date1}" showOn="button" showButtonPanel="true" navigator="true" locale="zh"></p:calendar>
+
+                    <p:commandButton validateClient="true" actionListener="#{profileController.saveProfile}" value="#{msg.Save}" update=":growl" icon="ui-icon-check"/>
+                </p:fieldset>
+            </div>
+        </div>
+      <!--  <div class="ui-g">
+            <div class="ui-g-2">2</div>
+            <div class="ui-g-10 ui-g-nopad">
+                <div class="ui-g-10">10</div>
+                <div class="ui-g-10">10</div>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-2">2</div>
+            <div class="ui-g-10 ui-g-nopad">
+                <div class="ui-g-10">10</div>
+                <div class="ui-g-10">10</div>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-2">2</div>
+            <div class="ui-g-10 ui-g-nopad">
+                <div class="ui-g-10">10</div>
+                <div class="ui-g-10">10</div>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-2">2</div>
+            <div class="ui-g-10 ui-g-nopad">
+                <div class="ui-g-10">10</div>
+                <div class="ui-g-10">10</div>
+            </div>
+        </div>-->
+
+    </h:form>
+
+        </div>
+
+
+    </ui:define>
+
+</ui:composition>
+
