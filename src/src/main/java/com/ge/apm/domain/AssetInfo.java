@@ -197,8 +197,6 @@ public class AssetInfo implements Serializable {
     private String systemNum5;
     @Column(name = "is_deleted")
     private Boolean isDeleted;
-    @Column(name = "parent_asset_id")
-    private Integer parentAssetId;
     
     @Column(name = "hospital_id")
     @Basic(optional = false)
@@ -745,15 +743,10 @@ public class AssetInfo implements Serializable {
     public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
-
-    public Integer getParentAssetId() {
-        return parentAssetId;
-    }
-
-    public void setParentAssetId(Integer parentAssetId) {
-        this.parentAssetId = parentAssetId;
-    }
-
+    
+    
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;

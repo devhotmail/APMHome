@@ -29,7 +29,7 @@ etime = enddate.to_time
 duration  = etime.to_i - stime.to_i
 
 randnum = Random.new()
-rand2   = Random.new(123456)
+rand2   = Random.new(G125@e)
 
 
 table = "org_info"

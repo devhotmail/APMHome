@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import webapp.framework.dao.GenericRepositoryUUID;
+import webapp.framework.dao.GenericRepository;
 
-public interface ServiceRequestRepository extends GenericRepositoryUUID<V2_ServiceRequest> {
+public interface ServiceRequestRepository extends GenericRepository<V2_ServiceRequest> {
     V2_ServiceRequest findByIdAndHospitalId(String id, Integer hospitalId);
     
     public List<V2_ServiceRequest>findByAssetId(int assetId);
@@ -19,6 +19,4 @@ public interface ServiceRequestRepository extends GenericRepositoryUUID<V2_Servi
     public Page<V2_ServiceRequest> findByRequestorIdAndStatusOrderByRequestTimeDesc(Integer userId, int status, Pageable pageable);
     
     public Page<V2_ServiceRequest> findByFromDeptIdAndStatusOrderByRequestTimeDesc(Integer orgId, int status, Pageable pageable);
-
-    
 }

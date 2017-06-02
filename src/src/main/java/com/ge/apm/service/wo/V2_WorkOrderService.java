@@ -7,12 +7,8 @@ package com.ge.apm.service.wo;
 
 import com.ge.apm.dao.ServiceRequestRepository;
 import com.ge.apm.dao.V2_WorkOrderRepository;
-import com.ge.apm.dao.V2_WorkOrderStepRepository;
-import com.ge.apm.dao.WorkOrderDetailRepository;
 import com.ge.apm.domain.V2_ServiceRequest;
 import com.ge.apm.domain.V2_WorkOrder;
-import com.ge.apm.domain.V2_WorkOrder_Detail;
-import com.ge.apm.domain.V2_WorkOrder_Step;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,12 +26,6 @@ public class V2_WorkOrderService {
     
     @Autowired
     private ServiceRequestRepository srDao;
-    
-    @Autowired
-    private V2_WorkOrderStepRepository stepDao;
-    
-    @Autowired
-    private WorkOrderDetailRepository detailDao;
 
     public List<V2_WorkOrder> getWorkOrdersBySR(String serviceRequest) {
         
@@ -45,14 +35,6 @@ public class V2_WorkOrderService {
     public List<V2_ServiceRequest> getServiceRequestByAssetId(Integer id) {
         
         return srDao.findByAssetId(id);
-    }
-
-    public List<V2_WorkOrder_Step> getWorkOrderSteps(String woId) {
-        return stepDao.findByWorkOrder(woId);
-    }
-    
-    public List<V2_WorkOrder_Detail> getWorkOrderDetails(String woId) {
-        return detailDao.findByWoId(woId);
     }
     
     

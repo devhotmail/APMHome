@@ -8,7 +8,7 @@
 
     <ui:composition>
 
-        <p:dialog id="UserAccountEditDlg" widgetVar="UserAccountEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{userAccountController.CRUDActionName} #{msg.UserAccount}">
+        <p:dialog id="UserAccountEditDlg" widgetVar="UserAccountEditDialog" modal="true" resizable="true" draggable="true"  appendTo="@(body)" header="#{userAccountController.CRUDActionName} #{msg.UserAccount}" >
             <h:form id="UserAccountEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{userAccountController.selected != null}">

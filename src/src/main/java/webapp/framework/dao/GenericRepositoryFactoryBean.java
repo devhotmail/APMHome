@@ -40,11 +40,7 @@ public class GenericRepositoryFactoryBean<T extends JpaRepository<S, ID>, S, ID 
         protected <T, ID extends Serializable> SimpleJpaRepository<?, ?> getTargetRepository(RepositoryInformation information,
                 EntityManager entityManager) {
             JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(information.getDomainType());
-            if (entityInformation.getIdType().isAssignableFrom(String.class)) {
-                return new GenericRepositoryUUIDImpl(entityInformation, entityManager, byExampleSpecification);
-            } else {
-                return new GenericRepositoryImpl(entityInformation, entityManager, byExampleSpecification);
-            }
+            return new GenericRepositoryImpl(entityInformation, entityManager, byExampleSpecification);
         }
 
         @Override

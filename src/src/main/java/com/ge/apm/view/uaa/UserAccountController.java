@@ -14,6 +14,7 @@ import com.ge.apm.domain.SiteInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.UserRole;
 import com.ge.apm.service.uaa.UaaService;
+import com.ge.apm.service.utils.PasswordUtil;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -211,7 +212,7 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     public void prepareCreate() throws InstantiationException, IllegalAccessException{
         super.prepareCreate();
         
-        selected.setPlainPassword("123456");
+        selected.setPlainPassword(PasswordUtil.DEFAULT_PWD);
         try {
             selected.entryptPassword();
         } catch (NoSuchAlgorithmException ex) {
@@ -254,7 +255,7 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     }
     
     public void resetPassword() {
-        selected.setPlainPassword("123456");
+        selected.setPlainPassword(PasswordUtil.DEFAULT_PWD);
         try {
             selected.entryptPassword();
         } catch (NoSuchAlgorithmException ex) {

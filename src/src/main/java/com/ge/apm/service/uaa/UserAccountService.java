@@ -17,6 +17,7 @@ import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.SysRole;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.UserModel;
+import com.ge.apm.service.utils.PasswordUtil;
 
 @Component
 public class UserAccountService {
@@ -76,7 +77,7 @@ public class UserAccountService {
 			user.setHospitalId(asset.getHospitalId());
 			user.setOrgInfoId(asset.getClinicalDeptId());
 			user.setIsActive(true);
-			user.setPlainPassword("123456");
+			user.setPlainPassword(PasswordUtil.DEFAULT_PWD);
 			//TODO nickName
 			
 			try {
