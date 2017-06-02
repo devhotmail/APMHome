@@ -38,7 +38,12 @@ export default {
     *['data/get']({ payload }, { put, select, call }) {
       const { type, cursor } = yield select(state => state.filters)
       const { ranges } = yield select(state => state.forecastOverview)
-      if(type === 'history' || cursor.length < 2) return
+      if(type === 'history' || cursor.length < 2) {
+        yield put({
+          type: 'loading/reset'
+        })
+        return
+      }
       const thresholdArray = yield select(state => state.thresholds)
       const threshold = thresholdArray.reduce((prev, cur, index) => (prev['condition' + (index + 1)] = cur, prev), {})
       const items = yield select(state => state.assets.rate.map(item => {
@@ -84,6 +89,12 @@ export default {
     }
   },
   reducers: {
+    ['loading/reset'](state) {
+      return {
+        ...state,
+        loading: false
+      }
+    },
     ['data/get'](state) {
       return {
         ...state,

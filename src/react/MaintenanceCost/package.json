@@ -61,7 +61,6 @@
     "react": "^15.5.4",
     "react-HOCs": "git+https://github.build.ge.com/foundry-sh/react-HOCs.git",
     "react-dom": "^15.5.4",
-    "react-hot-loader": "next",
     "remove": "^0.1.5",
     "rimraf": "^2.6.1",
     "ring-sector-layout": "git+https://github.build.ge.com/foundry-sh/ring-sector-layout.git",
@@ -76,5 +75,7 @@
     "webpack-hot-middleware": "^2.18.0",
     "webpack-merge": "^4.1.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "react-hot-loader": "3.0.0-beta.6"
+  }
 }
