@@ -953,7 +953,7 @@ public class DmApiV2 {
   private java.util.Map<String, Object> mapAssetInfo(Asset item) {
     return new ImmutableMap.Builder<String, Object>()
       .put("id", item.getAssetBsc().getId())
-      .put("name", item.getAssetBsc().getName())
+      .put("name", Option.of(item.getAssetBsc().getName()).getOrElse(""))
       .put("size", item.getHisDatas()._2.getDepre())
       .put("usage_sum", item.getPdtDatas()._1.getUsgSum())
       .put("usage_threshold", item.getPdtDatas()._1.getUsgThr())
@@ -971,7 +971,7 @@ public class DmApiV2 {
   private java.util.Map<String, Object> mapTypeInfo(TypeInfo item, Option<Integer> dept) {
     return new ImmutableMap.Builder<String, Object>()
       .put("id", dept.map(v -> String.format("%s-%s", v, item.getTypeBsc().getTypeId())).getOrElse(String.format("%s", item.getTypeBsc().getTypeId())))
-      .put("name", item.getTypeBsc().getTypeName())
+      .put("name", Option.of(item.getTypeBsc().getTypeName()).getOrElse(""))
       .put("size", item.getHisDatas()._2.getDepre())
       .put("usage_sum", item.getTypePdtDatas()._1.getPdtData().getUsgSum())
       .put("usage_threshold", item.getTypePdtDatas()._1.getPdtData().getUsgThr())
@@ -990,7 +990,7 @@ public class DmApiV2 {
   private java.util.Map<String, Object> mapDeptInfo(DeptInfo item) {
     return new ImmutableMap.Builder<String, Object>()
       .put("id", item.getDeptBsc().getDeptId())
-      .put("name", item.getDeptBsc().getDeptName())
+      .put("name", Option.of(item.getDeptBsc().getDeptName()).getOrElse(""))
       .put("size", item.getHisDatas()._2.getDepre())
       .put("usage_sum", item.getDeptPdtDatas()._1.getUsgSum())
       .put("historical_data", ImmutableList.of(
@@ -1008,7 +1008,7 @@ public class DmApiV2 {
   private java.util.Map<String, Object> mapAllAssets(AllAssetInfo item) {
     return new ImmutableMap.Builder<String, Object>()
       .put("id", item.getAllAssetBsc().getId())
-      .put("name", item.getAllAssetBsc().getName())
+      .put("name", Option.of(item.getAllAssetBsc().getName()).getOrElse(""))
       .put("size", item.getAllAssetHisDatas()._2.getDepre())
       .put("usage_sum", item.getAllAssetPdtDatas()._1.getUsgSum())
       .put("historical_data", ImmutableList.of(
