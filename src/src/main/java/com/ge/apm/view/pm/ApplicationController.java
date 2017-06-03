@@ -1,18 +1,8 @@
 package com.ge.apm.view.pm;
 
-import com.ge.apm.dao.AssetTagMsgSubscriberRepository;
-import com.ge.apm.dao.AssetTagRepository;
-import com.ge.apm.dao.I18nMessageRepository;
-import com.ge.apm.dao.UserAccountRepository;
-import com.ge.apm.domain.AssetTag;
-import com.ge.apm.domain.AssetTagMsgSubscriber;
-import com.ge.apm.domain.I18nMessage;
-import com.ge.apm.domain.UserAccount;
-import com.ge.apm.view.sysutil.FieldValueMessageController;
-import com.ge.apm.view.sysutil.UserContextService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import webapp.framework.dao.SearchFilter;
+import com.ge.apm.dao.*;
+import com.ge.apm.domain.*;
+
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
 
@@ -22,16 +12,16 @@ import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+
 import java.util.List;
 
 @ManagedBean
 @ViewScoped
-public class ApplicationController extends JpaCRUDController<AssetTagMsgSubscriber> {
+public class ApplicationController extends JpaCRUDController<PurchaseApplication> {
 
     private static final long serialVersionUID = 1L;
 
-    private AssetTagMsgSubscriberRepository dao = null;
+    private PurchaseApplicationRepository dao = null;
 private Date date1;
 private String shenqingkeshi;
     private List<SelectItem> cars;
@@ -57,9 +47,10 @@ private String shenqingkeshi;
     }
     public void saveProfile(){
 
-        UserAccountRepository userAccountDao = WebUtil.getBean(UserAccountRepository.class);
+        PurchaseApplicationRepository userAccountDao = WebUtil.getBean(PurchaseApplicationRepository.class);
+      //  userAccountDao.save()
 
-        WebUtil.addSuccessMessage(WebUtil.getMessage("UserAccount")+WebUtil.getMessage("Updated"));
+      /*  WebUtil.addSuccessMessage(WebUtil.getMessage("UserAccount")+WebUtil.getMessage("Updated"));*/
     }
 
     @Override
@@ -68,7 +59,7 @@ private String shenqingkeshi;
     }
 
     @Override
-    protected AssetTagMsgSubscriberRepository getDAO() {
+    protected PurchaseApplicationRepository getDAO() {
         return dao;
     }
 
