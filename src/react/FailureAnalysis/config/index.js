@@ -1,4 +1,5 @@
 var path = require('path')
+var assign = require('es6-object-assign').assign
 
 var env = process.env.NODE_ENV === 'development' ? 
            require('./dev') : require('./prod')
@@ -27,5 +28,4 @@ var base = {
   }
 }
 
-var config = Object.assign(base, env)
-module.exports = config
+module.exports = assign(base, env)
