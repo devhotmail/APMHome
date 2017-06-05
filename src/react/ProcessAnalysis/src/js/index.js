@@ -5,7 +5,9 @@ import createHistory from 'history/createBrowserHistory'
 import { routerMiddleware } from 'react-router-redux'
 import { AppContainer } from 'react-hot-loader'
 import Redbox from 'redbox-react'
+// polyfills
 require('es6-object-assign').polyfill()
+require('proxy-polyfill/proxy.min.js')
 // tree shaking doesn't work when use strip plugin
 const dummy = () => null
 const Perf = process.env.NODE_ENV === 'production' ? {

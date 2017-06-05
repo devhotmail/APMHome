@@ -116,6 +116,7 @@
     "moment": "^2.18.1",
     "mx-react-toaster": "^1.1.5",
     "prop-types": "^15.5.8",
+    "proxy-polyfill": "^0.1.7",
     "query-parse": "^1.0.0",
     "radium": "^0.18.2",
     "react": "^15.5.4",

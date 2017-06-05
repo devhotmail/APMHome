@@ -114,6 +114,7 @@
     "lodash-es": "^4.17.4",
     "moment": "^2.18.1",
     "prop-types": "^15.5.8",
+    "proxy-polyfill": "^0.1.7",
     "query-parse": "^1.0.0",
     "radium": "^0.18.2",
     "rc-slider": "^7.0.8",
