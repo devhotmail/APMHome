@@ -19,7 +19,7 @@ import java.util.Objects;
 
 @Ignore
 public class ScanDbTest extends AbstractDbTest {
-  private final Logger log = LoggerFactory.getLogger(ExamSummitDbTest.class);
+  private final Logger log = LoggerFactory.getLogger(ScanDbTest.class);
 
   public Observable<Tuple3<Integer, Integer, Integer>> brief(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset) {
     Objects.requireNonNull(from);

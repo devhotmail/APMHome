@@ -21,7 +21,7 @@ import java.util.Date;
 
 @Ignore
 public class FailureAnalysisDbTest extends AbstractDbTest {
-  private final Logger log = LoggerFactory.getLogger(ExamSummitDbTest.class);
+  private final Logger log = LoggerFactory.getLogger(FailureAnalysisDbTest.class);
 
   public Observable<Tuple3<Integer, Integer, Integer>> briefs(int site, int hospital, Date from, Date to, String groupBy, Integer dept, Integer type, Integer supplier, Integer asset) {
     QuerySelect.Builder builder = db.select(new SQL() {{

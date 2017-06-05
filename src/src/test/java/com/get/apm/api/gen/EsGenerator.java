@@ -1,6 +1,7 @@
-package com.get.apm.api.db;
+package com.get.apm.api.gen;
 
 
+import com.get.apm.api.db.AbstractDbTest;
 import javaslang.Tuple;
 import javaslang.Tuple2;
 import javaslang.Tuple5;
@@ -19,9 +20,9 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Ignore
-public class ExamSummitDbTest extends AbstractDbTest {
-  private final Logger log = LoggerFactory.getLogger(ExamSummitDbTest.class);
-  private final List<LocalDate> dates = Stream.iterate(LocalDate.now().minusYears(3), d -> d.plusDays(1)).takeUntil(date -> date.isAfter(LocalDate.now())).toJavaList();
+public class EsGenerator extends AbstractDbTest {
+  private final Logger log = LoggerFactory.getLogger(EsGenerator.class);
+  private final List<LocalDate> dates = Stream.iterate(LocalDate.now().minusYears(1), d -> d.plusDays(1)).takeUntil(date -> date.isAfter(LocalDate.now())).toJavaList();
   private final String sql = new SQL().INSERT_INTO("exam_summit")
     .VALUES("site_id", ":siteId")
     .VALUES("hospital_id", ":hospitalId")
