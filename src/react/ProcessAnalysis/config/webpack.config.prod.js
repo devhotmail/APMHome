@@ -24,7 +24,7 @@ module.exports = merge(config, {
   },
   entry: {
     app: path.join(__dirname, '../src/js/index'),
-    vendor: ['react', 'react-dom', 'react-redux', 'react-router', 'react-router-redux', 'redux']
+    vendor: ['babel-polyfill', 'react', 'react-dom', 'react-redux', 'react-router', 'react-router-redux', 'redux']
   },
   plugins: [
     new HtmlWebpackPlugin({
