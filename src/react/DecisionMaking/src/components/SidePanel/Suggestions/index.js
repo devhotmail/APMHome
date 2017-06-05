@@ -14,7 +14,13 @@ export default class Suggestions extends PureComponent {
           data.suggestions.map((n, i) => {
             return <div key={i}>
               <div>{n.title}</div>
-              <div className="lead m-l-3">{n.addition}</div>
+              {
+                n.addition
+                  ? n.addition.split(',')
+                    .filter(n => n)
+                    .map((item, index) => <div key={index} className="lead m-l-3">{item.trim()}</div>)
+                  : null
+              }
             </div>
           })
         }
