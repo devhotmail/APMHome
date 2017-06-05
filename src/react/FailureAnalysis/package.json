@@ -104,6 +104,7 @@
     "bulma": "^0.4.1",
     "classnames": "^2.2.5",
     "dew-tooltip": "git+https://github.build.ge.com/foundry-sh/dew-tooltip.git",
+    "es6-object-assign": "^1.1.0",
     "eventbusjs": "^0.2.0",
     "express": "^4.14.0",
     "i18next": "^8.0.0",

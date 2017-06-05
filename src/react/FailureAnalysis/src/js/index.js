@@ -5,6 +5,7 @@ import createHistory from 'history/createBrowserHistory'
 import { routerMiddleware } from 'react-router-redux'
 import { AppContainer } from 'react-hot-loader'
 import Redbox from 'redbox-react'
+require('es6-object-assign').polyfill()
 
 // tree shaking doesn't work when use strip plugin
 const dummy = () => null
