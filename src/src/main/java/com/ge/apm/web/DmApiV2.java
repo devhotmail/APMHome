@@ -789,7 +789,7 @@ public class DmApiV2 {
     java.util.List<Integer> usageSum = ImmutableList.of(subItems.map(v -> v.getPdtData().getUsgSum().get(0)).sum().intValue(),
       subItems.map(v -> v.getPdtData().getUsgSum().get(1)).sum().intValue());
     return Tuple.of(new DeptPdtData(
-      calculateHighLevelSuggestions(items.map(v -> Tuple.of(v.getTypeBsc().getTypeName(), v.getTypePdtDatas()._1.getSuggestions())), buyIn, "type"), buyIn,
+      calculateHighLevelSuggestions(items.map(v -> Tuple.of(v.getTypeBsc().getTypeName(), v.getTypePdtDatas()._1.getSuggestions(), v.getTypePdtDatas()._1.getBuyIn())), "type"), buyIn,
       subItems.get(0).getPdtData().getDate(),
       subItems.map(v -> v.getPdtData().getDepre()).sum().doubleValue(), usageSum,
       averageUsage,
@@ -804,24 +804,23 @@ public class DmApiV2 {
    * Calculate High level suggestions using low level suggestions
    * THis function may change when suggestion logic changes
    *
-   * @param lowerLevel a list of low level suggestions and the corresponding dept or type name
-   * @param buyIn      number of buyIn assets
+   * @param lowerLevel a list of low level suggestions and the corresponding dept or type name, and the number of buyIn asset
    * @param groupBy    dept|type
    * @return High level suggestions
    */
-  private List<Map<String, String>> calculateHighLevelSuggestions(Seq<Tuple2<String, Seq<Map<String, String>>>> lowerLevel, Integer buyIn, String groupBy) {
-    Seq<Tuple2<String, Seq<Map<String, String>>>> sugBuy = lowerLevel.filter(v -> v._2.exists(sub -> sub.get("title").getOrElse("").contains(SUGGESTION_BUY)));
-    Seq<Tuple2<String, Seq<Map<String, String>>>> sugAjst = lowerLevel.filter(v -> v._2.exists(sub -> sub.get("title").getOrElse("").contains(SUGGESTION_ADJUST)));
-    Seq<Tuple2<String, Seq<Map<String, String>>>> sugRse = lowerLevel.filter(v -> v._2.exists(sub -> sub.get("title").getOrElse("").contains(SUGGESTION_RAISE)));
+  private List<Map<String, String>> calculateHighLevelSuggestions(Seq<Tuple3<String, Seq<Map<String, String>>, Integer>> lowerLevel, String groupBy) {
+    Seq<Tuple3<String, Seq<Map<String, String>>, Integer>> sugBuy = lowerLevel.filter(v -> v._2.exists(sub -> sub.get("title").getOrElse("").contains(SUGGESTION_BUY)));
+    Seq<Tuple3<String, Seq<Map<String, String>>, Integer>> sugAjst = lowerLevel.filter(v -> v._2.exists(sub -> sub.get("title").getOrElse("").contains(SUGGESTION_ADJUST)));
+    Seq<Tuple3<String, Seq<Map<String, String>>, Integer>> sugRse = lowerLevel.filter(v -> v._2.exists(sub -> sub.get("title").getOrElse("").contains(SUGGESTION_RAISE)));
     ImmutableList.Builder<Map<String, String>> totalSuggestions = new ImmutableList.Builder<Map<String, String>>();
     if (!sugBuy.isEmpty()) {
-      totalSuggestions.add(HashMap.of("title", SUGGESTION_BUY.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", sugBuy.reduce((prev, next) -> Tuple.of(prev._1 + ", " + next._1, prev._2))._1.concat(String.format(" (共%s台设备)", buyIn))));
+      totalSuggestions.add(HashMap.of("title", SUGGESTION_BUY.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", sugBuy.map(v -> Tuple.of(v._1, v._3)).foldLeft(Tuple.of("", 0), (prev, next) -> Tuple.of(prev._1 + "，" + next._1 + "（" + next._2 + "台）", prev._2))._1.substring(1)));
     }
     if (!sugAjst.isEmpty()) {
-      totalSuggestions.add(HashMap.of("title", SUGGESTION_ADJUST.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", sugAjst.reduce((prev, next) -> Tuple.of(prev._1 + ", " + next._1, prev._2))._1));
+      totalSuggestions.add(HashMap.of("title", SUGGESTION_ADJUST.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", sugAjst.reduce((prev, next) -> Tuple.of(prev._1 + ", " + next._1, prev._2, prev._3))._1));
     }
     if (!sugRse.isEmpty()) {
-      totalSuggestions.add(HashMap.of("title", SUGGESTION_ADJUST.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", sugRse.reduce((prev, next) -> Tuple.of(prev._1 + ", " + next._1, prev._2))._1));
+      totalSuggestions.add(HashMap.of("title", SUGGESTION_ADJUST.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", sugRse.reduce((prev, next) -> Tuple.of(prev._1 + ", " + next._1, prev._2, prev._3))._1));
     }
     return List.ofAll(totalSuggestions.build());
   }
@@ -850,7 +849,7 @@ public class DmApiV2 {
     java.util.List<Integer> usageSum = ImmutableList.of(subItems.map(v -> v.getPdtData().getUsgSum().get(0)).sum().intValue(),
       subItems.map(v -> v.getPdtData().getUsgSum().get(1)).sum().intValue());
     return Tuple.of(new AllAssetPdtData(
-      calculateHighLevelSuggestions(items.map(v -> Tuple.of(v.getTypeBsc().getTypeName(), v.getTypePdtDatas()._1.getSuggestions())), buyIn, "type"), buyIn,
+      calculateHighLevelSuggestions(items.map(v -> Tuple.of(v.getTypeBsc().getTypeName(), v.getTypePdtDatas()._1.getSuggestions(), v.getTypePdtDatas()._1.getBuyIn())), "type"), buyIn,
       subItems.get(0).getPdtData().getDate(),
       subItems.map(v -> v.getPdtData().getDepre()).sum().doubleValue(), usageSum,
       averageUsage,
@@ -867,7 +866,7 @@ public class DmApiV2 {
     java.util.List<Integer> usageSum = ImmutableList.of(subItems.map(v -> v.getUsgSum().get(0)).sum().intValue(),
       subItems.map(v -> v.getUsgSum().get(1)).sum().intValue());
     return Tuple.of(new AllAssetPdtData(
-      calculateHighLevelSuggestions(items.map(v -> Tuple.of(v.getDeptBsc().getDeptName(), v.getDeptPdtDatas()._1.getSuggestions())), buyIn, "dept"), buyIn,
+      calculateHighLevelSuggestions(items.map(v -> Tuple.of(v.getDeptBsc().getDeptName(), v.getDeptPdtDatas()._1.getSuggestions(), v.getDeptPdtDatas()._1.getBuyIn())), "dept"), buyIn,
       subItems.get(0).getDate(),
       subItems.map(DeptPdtData::getUsgPdt).sum().doubleValue(), usageSum,
       averageUsage,
