@@ -36,13 +36,8 @@
                 <p:menuitem id="um171" value="#{msg.FailureAnalysis}" outcome="/portal/analysis/failureAnalysis"/>
                 <p:menuitem id="um172" value="#{msg.StaffPerformance}" outcome="/portal/analysis/staffPerf.xhtml" />
                 <p:menuitem id="um173" value="#{msg.MaintenanceCost}" outcome="/portal/analysis/maintenanceCost.xhtml" />
-                <p:menuitem id="um18" value="#{msg.DeviceMaintainanceEventAnalysis}"
-                            outcome="/portal/analysis/assetMaintenanceAll"
-                            rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}"/>
                 <p:menuitem id="um19" value="#{msg.DeviceMaintainanceCostAnalysis}" rendered="false"
                             outcome="/empty"/>
-                <p:menuitem id="um20" value="#{msg.DeviceUtilizationAnalysis}"
-                            outcome="/portal/analysis/assetUsageAll" rendered="true"/>
                 <p:menuitem id="um21" value="#{msg.SparePartsConsumptionAnalysis}" rendered="false"
                             outcome="/home"/>
                 <p:menuitem id="um22" value="#{msg.ProcessAnalysis}"
