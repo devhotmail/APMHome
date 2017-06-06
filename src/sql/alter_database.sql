@@ -128,6 +128,12 @@ alter table pm_order add COLUMN man_hours int;
 alter table work_order add column feedback_rating int;
 
 alter table pm_order add COLUMN planned_time timestamp;
-alter table pm_order add COLUMN nearest_sr_time timestamp;
+alter table pm_order drop COLUMN nearest_sr_time;
+alter table pm_order add COLUMN nearest_sr_days int;
+alter table pm_order add COLUMN nearest_sr_id character(32);
 
-INSERT INTO "i18n_message" VALUES (5626, 'label', 'ProcessAnalysis', '维修流程分析','ProcessAnalysis',null,-1);
+alter table V2_service_request add COLUMN nearest_sr_days int;
+alter table V2_service_request add COLUMN nearest_sr_id character(32);
+
+INSERT INTO "i18n_message" VALUES (5626, 'label', 'ProcessAnalysis', '维修流程分析','Process Analysis',null,-1);
+INSERT INTO "i18n_message" VALUES (5627, 'label', 'MaintenanceCost', '维修成本分析','Maintenance Cost',null,-1);

@@ -1,5 +1,9 @@
 import kizzy from 'kizzy'
 
+if (!window.Proxy) {
+  require('proxy-polyfill/proxy.min.js')
+}
+
 const DEFAULT_EXPIRERATION = process.env.NODE_ENV === 'development' ? 50000 : 1 * 24 * 3600 * 1000 // one day
 const cache = kizzy('default')
 

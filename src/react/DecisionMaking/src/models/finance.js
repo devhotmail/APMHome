@@ -166,6 +166,11 @@ export default {
           type: 'nodeList/data/get',
           payload: finance[dataKey]
         })
+
+        // update focus for mannual/system
+        yield put({
+          type: 'focus/node/set'
+        })
       } catch (err) {
 
       }
