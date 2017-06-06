@@ -219,6 +219,7 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
 //				messageUtil.error("security_cookie_error");
 //			}
 			afterLogin();
+			messageUtil.error("after login, updateLoginStatus");
 			updateLoginStatus(userName, true);
 			// redirects to the home page
 			/*
@@ -233,7 +234,7 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
 		} catch (DisabledException e) {
 			messageUtil.error("security_account_disabled");
 		} catch (LockedException e) {
-			messageUtil.error("security_account_locked");
+			messageUtil.error("AccountLocked");
 		} catch (AccountExpiredException e) {
 			messageUtil.error("security_account_expired");
 		} catch (CredentialsExpiredException e) {
@@ -245,7 +246,7 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
 			//messageUtil.error("security_bad_credentials");
 		} catch (AuthenticationException e) {
 			updateLoginStatus(userName, false);
-			messageUtil.error("security_error");
+			//messageUtil.error("security_error");
 		} finally {
 			securityContextRepository.saveContext(securityContext, holder.getRequest(), holder.getResponse());
 		}
@@ -263,10 +264,15 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
 			logger.error("can't find user by loginName:{}", userName);
 			return;
 		}
+                if(user.getIsLocked()!=null && user.getIsLocked().booleanValue()==true){
+                    messageUtil.error("AccountLocked");
+                    return;
+                }
+
 		if (loginStatus) {
 			user.setLastLoginTime(new Date());
-			user.setPasswordUpdateDate(new Date());
 			user.setPasswordErrorCount(0);
+                        user.setIsLocked(false);
 			userAccountDao.save(user);
 		} else {
 			Integer errorTimes = user.getPasswordErrorCount();
@@ -278,13 +284,16 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
 			errorTimes = ai.get();
 			if (errorTimes >= PASSWORD_ERROR_TIME_LIMIT) {
 				user.setIsLocked(true);
+                                user.setLockTime(new Date());
+        			userAccountDao.save(user);
 				logger.error("user:{} is locked because of password error times reach the limit !", userName);
 				messageUtil.error("AccountLocked");
 				return;
 			}
 			user.setPasswordErrorCount(errorTimes);
 			userAccountDao.save(user);
-			messageUtil.error("security_bad_credentials");
+
+                        messageUtil.error("security_bad_credentials");
 		}
 	}
 }

@@ -80,7 +80,7 @@ public class ProfileController implements Serializable {
     public void resetPassword() throws NoSuchAlgorithmException{
     	String result = PasswordUtil.checkPwd(newPassword);
     	if(!StringUtils.isEmpty(result)){
-    		WebUtil.addSuccessMessage(result+"\n"+WebUtil.getMessage("PwdIllegal"));
+    		WebUtil.addSuccessMessage(result);
     		return;
     	}
     	if(samePwd(newPassword)){

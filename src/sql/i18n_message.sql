@@ -97,7 +97,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (94, 'label', 'issueDate', '发行日期', 'Issue Date', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (95, 'label', 'submitDate', '提交日期', 'Submit Date', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (96, 'label', 'submitWechatId', '提交人', 'Submit People', NULL, -1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (97, 'label', 'AccountLocked', '帐号被锁定，请联系系统管理员!', 'account locked!', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (97, 'label', 'AccountLocked', '帐号被锁定，请24小时后再试!', 'account locked!', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (98, 'label', 'SamePwd', '新老密码不能相同!', 'the new password cannot be the same as the old one', NULL, -1);
 
 -- menu item names  ( id from 200 to  399)
@@ -389,8 +389,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (775, 'label', 'InactiveAsset', '转入报废', 'inactive asset', NULL, -1);
 
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (776, 'label', 'BuildAsset', '资产建档', 'build asset', NULL, -1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (777, 'label', 'PwdIllegal', '密码不合法,密码必须6位以上，首字母大写,尾字母小写,必须包含数字,不可使用三个以上(包括三个)连续的数字或字母,不可使用 3个以上相同的数字或字母,必须包含一个特殊字符(!@#$%&)', 'password illegal', NULL, -1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (777, 'label', 'PwdTips', '密码必须6位以上，首字母大写,尾字母小写,必须包含数字,不可使用三个以上(包括三个)连续的数字或字母,不可使用 3个以上相同的数字或字母,必须包含一个特殊字符(!@#$%&)', 'password tips', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (777, 'label', 'PwdTips', '密码必须6位以上，首字母大写,尾字母小写,必须包含数字,不可使用3个以上连续的数字或字母,不可使用3个以上相同的数字或字母,必须包含一个特殊字符(!@#$%&)', 'password tips', NULL, -1);
 
 
 -- field value code types  ( id from 1400)

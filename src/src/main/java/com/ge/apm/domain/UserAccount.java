@@ -125,6 +125,10 @@ public class UserAccount implements Serializable {
 
     @Column(name = "is_locked")
     private Boolean isLocked;
+
+    @Column(name = "lock_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lockTime;
     
     @Transient
     private String plainPassword;
@@ -359,7 +363,14 @@ public class UserAccount implements Serializable {
         setPassword(Digests.encodeHex(hashPassword));
     }
 
-        
+    public Date getLockTime() {
+        return lockTime;
+    }
+
+    public void setLockTime(Date lockTime) {
+        this.lockTime = lockTime;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
