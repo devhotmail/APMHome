@@ -33,7 +33,7 @@ const roleFilterFn = isHead => n => {
   group: state.group,
   asset: state.asset,
   filter: state.filter,
-  loading: !(!state.group.loading && !state.asset.loading)
+  loading: state.group.loading || state.asset.loading
 }))
 @RoleProvider
 export default class Root extends Component {
@@ -206,7 +206,8 @@ export default class Root extends Component {
 
     this.changeQuery({
       groupId: newGroupId,
-      assetId: undefined
+      assetId: undefined,
+      assetPage: defaultPage // set asset page to `defaultPage` when groupId set
     })
 
     this.setState({
@@ -296,6 +297,7 @@ export default class Root extends Component {
   }
 
   changeQuery = (params: Object) => {
+    console.log(params)
     const { dispatch, location } = this.props
 
     dispatch(routerRedux.push({
