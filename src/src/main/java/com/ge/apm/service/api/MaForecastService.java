@@ -243,7 +243,7 @@ public class MaForecastService extends CommonForecastService {
    java.util.Map<Integer, Double> onrate, java.util.Map<Integer, Double> cost1, java.util.Map<Integer, Double> cost2) {
     return future.zip(history)
       .map(v -> Tuple.of(v._1._1, Tuple.of(v._1._2._1,
-        Option.of(onrate.get(v._1._1._1)).map(sub -> v._2._2._2 * (1D + sub)).getOrElse(v._1._2._2),
+        Option.of(onrate.get(v._1._1._1)).getOrElse(v._1._2._2),
         Option.of(cost1.get(v._1._1._1)).map(sub -> v._2._2._3 * (1D + sub)).getOrElse(v._1._2._3),
         Option.of(cost2.get(v._1._1._1)).map(sub -> v._2._2._4 * (1D + sub)).getOrElse(v._1._2._4)
       )));
@@ -266,7 +266,7 @@ public class MaForecastService extends CommonForecastService {
    java.util.Map<Integer, Double> onrate, java.util.Map<Integer, Double> cost1, java.util.Map<Integer, Double> cost2) {
     return future.zip(history)
       .map(v -> Tuple.of(v._1._1, Tuple.of(v._1._2._1,
-        Option.of(onrate.get(v._1._1._1)).getOrElse(Option.when(v._2._2._2.equals(0D), 0D).getOrElse(v._1._2._2 / v._2._2._2 - 1D)),
+        Option.of(onrate.get(v._1._1._1)).getOrElse(v._1._2._2),
         Option.of(cost1.get(v._1._1._1)).getOrElse(Option.when(v._2._2._3.equals(0D), 0D).getOrElse(v._1._2._3 / v._2._2._3 - 1D)),
         Option.of(cost2.get(v._1._1._1)).getOrElse(Option.when(v._2._2._4.equals(0D), 0D).getOrElse(v._1._2._4 / v._2._2._4 - 1D))
       )));
