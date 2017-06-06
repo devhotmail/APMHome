@@ -43,6 +43,8 @@ public class AssetGenerator extends AbstractDbTest {
     .VALUES("supplier_id", ":supplier_id")
     .VALUES("install_date", ":install_date")
     .VALUES("purchase_price", ":purchase_price")
+    .VALUES("asset_owner_id", ":asset_owner_id")
+    .VALUES("asset_owner_name", ":asset_owner_name")
     .toString();
 
 
@@ -84,7 +86,7 @@ public class AssetGenerator extends AbstractDbTest {
   @Ignore
   @Test
   public void testGenerate() {
-    Observable.range(1, 90).map(id -> Tuple.of(id, gen(), LocalDate.now().minusYears(2).minusDays(ThreadLocalRandom.current().nextInt(-99, 365)), 1_000_000D - ThreadLocalRandom.current().nextDouble(-200_000D, 200_000D)))
+    Observable.range(1, 90).map(id -> Tuple.of(id, gen(), LocalDate.now().minusYears(2).minusDays(ThreadLocalRandom.current().nextInt(-99, 365)), 1_000_000D - ThreadLocalRandom.current().nextDouble(-200_000D, 200_000D), ThreadLocalRandom.current().nextInt(1, 15)))
       .subscribe(t -> db.update(sql)
         .parameter("site_id", 1)
         .parameter("hospital_id", 1)
@@ -98,6 +100,8 @@ public class AssetGenerator extends AbstractDbTest {
         .parameter("supplier_id", t._2._3)
         .parameter("install_date", Date.valueOf(t._3))
         .parameter("purchase_price", t._4)
+        .parameter("asset_owner_id", t._5)
+        .parameter("asset_owner_name", String.format("owner-%s", t._5))
         .returnGeneratedKeys()
         .getAs(Integer.class).toBlocking().single());
   }

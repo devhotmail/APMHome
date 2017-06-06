@@ -69,7 +69,7 @@ public class SrGenerator extends AbstractDbTest {
           .parameter("request_reason", "")
           .parameter("requestor_id", 5)
           .parameter("requestor_name", "user")
-          .parameter("status", 1)
+          .parameter("status", 2)
           .parameter("request_time", Timestamp.valueOf(t._3))
           .parameter("confirmed_down_time", Timestamp.valueOf(t._3))
           .parameter("confirmed_up_time", Timestamp.valueOf(t._4))

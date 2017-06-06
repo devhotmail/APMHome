@@ -53,6 +53,7 @@ public class PmApi {
                                                     @Min(1) @RequestParam(name = "type", required = false) Integer type,
                                                     @Min(1) @RequestParam(name = "supplier", required = false) Integer supplier,
                                                     @Min(1) @RequestParam(name = "asset", required = false) Integer asset,
+                                                    @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(name = "pm", required = false, defaultValue = "30") Integer pmv,
                                                     @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(name = "limit", required = false, defaultValue = "30") Integer limit,
                                                     @Min(0) @RequestParam(name = "start", required = false, defaultValue = "0") Integer start) {
     UserAccount user = UserContext.getCurrentLoginUser();
@@ -60,7 +61,7 @@ public class PmApi {
     Map<Integer, String> depts = commonService.findDepts(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> suppliers = commonService.findSuppliers(user.getSiteId());
     Map<Integer, String> assets = commonService.findAssets(user.getSiteId(), user.getHospitalId()).entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, kv -> kv.getValue()._7));
-    Iterable<Tuple5<Integer, Integer, Integer, Integer, Integer>> report = pmService.findPm(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), Match(groupBy).of(Case("dept", "dept_id"), Case("type", "asset_group"), Case("supplier", "supplier_id"), Case("asset", "id")), dept, type, supplier, asset).toBlocking().toIterable();
+    Iterable<Tuple5<Integer, Integer, Integer, Integer, Integer>> report = pmService.findPm(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), Match(groupBy).of(Case("dept", "dept_id"), Case("type", "asset_group"), Case("supplier", "supplier_id"), Case("asset", "id")), dept, type, supplier, asset, pmv).toBlocking().toIterable();
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ImmutableMap.Builder<String, Object>()
       .put("pages", new ImmutableMap.Builder<String, Object>().put("total", StreamSupport.stream(report.spliterator(), false).count()).put("start", start).put("limit", limit).build())
       .put("root", new ImmutableMap.Builder<String, Object>()

@@ -123,6 +123,65 @@ created date,
 last_modified timestamp
 );
 
+CREATE TABLE "public"."v2_service_request" (
+"id" char(32) COLLATE "default" NOT NULL,
+"created_by" varchar(50) COLLATE "default",
+"created_date" timestamp(6),
+"last_modified_by" varchar(50) COLLATE "default",
+"last_modified_date" timestamp(6),
+"asset_id" int4 NOT NULL,
+"asset_name" varchar(64) COLLATE "default" NOT NULL,
+"case_priority" int4 NOT NULL,
+"close_time" timestamp(6),
+"confirmed_down_time" timestamp(6),
+"confirmed_up_time" timestamp(6),
+"estimated_close_time" timestamp(6),
+"from_dept_id" int4,
+"from_dept_name" varchar(64) COLLATE "default",
+"hospital_id" int4 NOT NULL,
+"hospital_name" varchar(64) COLLATE "default" NOT NULL,
+"request_reason" varchar(256) COLLATE "default" NOT NULL,
+"request_reason_voice" int4,
+"request_time" timestamp(6) NOT NULL,
+"requestor_id" int4 NOT NULL,
+"requestor_name" varchar(16) COLLATE "default" NOT NULL,
+"reponse_time" timestamp(6),
+"site_id" int4 NOT NULL,
+"status" int4,
+"equipment_taker" varchar(255) COLLATE "default",
+"take_time" timestamp(6),
+CONSTRAINT "v2_service_request_pkey" PRIMARY KEY ("id")
+);
+
+CREATE TABLE "public"."v2_work_order" (
+"id" char(32) COLLATE "default" NOT NULL,
+"created_by" varchar(50) COLLATE "default",
+"created_date" timestamp(6),
+"last_modified_by" varchar(50) COLLATE "default",
+"last_modified_date" timestamp(6),
+"asset_id" int4 NOT NULL,
+"close_time" timestamp(6),
+"current_person_id" int4 NOT NULL,
+"current_person_name" varchar(16) COLLATE "default",
+"current_step_id" int4 NOT NULL,
+"current_step_name" varchar(16) COLLATE "default" NOT NULL,
+"feedback_comment" varchar(255) COLLATE "default",
+"feedback_rating" int4,
+"hospital_id" int4 NOT NULL,
+"int_ext_type" int4,
+"parent_wo_id" int4,
+"pat_actions" varchar(255) COLLATE "default",
+"pat_problems" varchar(255) COLLATE "default",
+"pat_tests" varchar(255) COLLATE "default",
+"site_id" int4 NOT NULL,
+"sr_id" varchar(255) COLLATE "default" NOT NULL,
+"status" int4,
+"total_man_hour" int4,
+"total_price" float8,
+"case_type" int4,
+CONSTRAINT "v2_work_order_pkey" PRIMARY KEY ("id")
+);
+
 alter table inspection_order add COLUMN man_hours int;
 alter table pm_order add COLUMN man_hours int;
 alter table work_order add column feedback_rating int;
@@ -137,3 +196,4 @@ alter table V2_service_request add COLUMN nearest_sr_id character(32);
 
 INSERT INTO "i18n_message" VALUES (5626, 'label', 'ProcessAnalysis', '维修流程分析','Process Analysis',null,-1);
 INSERT INTO "i18n_message" VALUES (5627, 'label', 'MaintenanceCost', '维修成本分析','Maintenance Cost',null,-1);
+

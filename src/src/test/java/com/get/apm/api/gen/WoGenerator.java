@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Ignore
 public class WoGenerator extends AbstractDbTest {
@@ -30,9 +31,12 @@ public class WoGenerator extends AbstractDbTest {
     .VALUES("current_step_id", ":current_step_id")
     .VALUES("current_step_name", ":current_step_name")
     .VALUES("status", ":status")
+    .VALUES("created_date", ":created_date")
     .VALUES("close_time", ":close_time")
     .VALUES("total_man_hour", ":total_man_hour")
     .VALUES("total_price", ":total_price")
+    .VALUES("feedback_rating", ":feedback_rating")
+    .VALUES("case_type", ":case_type")
     .toString();
 
   private Observable<Tuple6<Integer, Integer, Integer, String, Timestamp, Timestamp>> srs;
@@ -63,10 +67,13 @@ public class WoGenerator extends AbstractDbTest {
       .parameter("current_person_id", 0)
       .parameter("current_step_id", 0)
       .parameter("current_step_name", "")
-      .parameter("status", 1)
+      .parameter("status", 2)
+      .parameter("created_date", t._5)
       .parameter("close_time", t._6)
       .parameter("total_man_hour", Duration.between(t._5.toLocalDateTime(), t._6.toLocalDateTime()).toHours())
       .parameter("total_price", Duration.between(t._5.toLocalDateTime(), t._6.toLocalDateTime()).toHours() * 300D)
+      .parameter("feedback_rating", ThreadLocalRandom.current().nextInt(1, 6))
+      .parameter("case_type", ThreadLocalRandom.current().nextInt(1, 60))
       .returnGeneratedKeys()
       .getAs(String.class).toBlocking().single());
   }
