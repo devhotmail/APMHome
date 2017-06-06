@@ -27,6 +27,42 @@ DROP TABLE IF EXISTS field_code_type CASCADE;
 DROP TABLE IF EXISTS edge_server_info;
 DROP TABLE IF EXISTS asset_contract;
 
+drop table account_application
+CREATE TABLE account_application (
+"id" serial NOT NULL,
+"apply_clinical" varchar(64) ,
+"fill_date" date ,
+"clinical_contact" varchar(64) ,
+"telephone" VARCHAR (64),
+"quantity" float,
+"predicate_price" float,
+"device" VARCHAR (64),
+"needy" bool,
+"apply_feature" int4,
+"clinical_responser" VARCHAR (64),
+"funding_resource" VARCHAR (64)
+);
+ALTER TABLE account_application ADD PRIMARY KEY (id);
+alter table account_application add COLUMN info_advice VARCHAR (64);
+alter table account_application add COLUMN dev_advice varchar(64);
+alter table account_application add COLUMN leader_advice varchar(64);
+
+alter table account_application add COLUMN recom_ad1 varchar(64);
+alter table account_application add COLUMN recom_ad1_tel varchar(32);
+alter table account_application add COLUMN recom_ad2 varchar(64);
+alter table account_application add COLUMN recom_ad2_tel varchar(32);
+alter table account_application add COLUMN recom_ad3 varchar(64);
+alter table account_application add COLUMN recom_ad3_tel varchar(32);
+alter table account_application add COLUMN recom_ad3_tel varchar(32);
+
+alter table account_application add COLUMN info_sign_date DATE ;
+alter table account_application add COLUMN dev_sign_date DATE;
+alter table account_application add COLUMN leader_sign_date DATE;
+alter table account_application add COLUMN apply_reason varchar(512);
+alter table account_application add COLUMN special_requirement varchar(512);
+
+
+
 CREATE TABLE i18n_message (
 "id" serial NOT NULL,
 "msg_type" varchar(60) COLLATE "default" NOT NULL,

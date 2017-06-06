@@ -3,17 +3,25 @@ package com.ge.apm.view.pm;
 import com.ge.apm.dao.*;
 import com.ge.apm.domain.*;
 
+import com.ge.apm.service.utils.UrlParamUtil;
+import com.ge.apm.view.asset.AssetInfoController;
+import com.ge.apm.view.sysutil.UrlEncryptController;
+import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @ManagedBean
 @ViewScoped
@@ -22,17 +30,19 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
     private static final long serialVersionUID = 1L;
 
     private PurchaseApplicationRepository dao = null;
-private Date date1;
-private String shenqingkeshi;
+    private String operation;
     private List<SelectItem> cars;
     private String[] selectedCars;
 
-    private List<String> applyFeatures;
-    private List<String> fundingResource;
+
+
+
     private String needCost;
 
     @Override
     protected void init() {
+        this.filterBySite=false;
+        dao=WebUtil.getBean(PurchaseApplicationRepository.class);
         cars = new ArrayList<SelectItem>();
         SelectItemGroup germanCars = new SelectItemGroup("拟用方向:");
         germanCars.setSelectItems(new SelectItem[] {
@@ -43,40 +53,56 @@ private String shenqingkeshi;
         cars.add(germanCars);
 
 
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String encodeStr = request.getParameter("str");
+        String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr, "actionName");
+        if ("Create".equalsIgnoreCase(actionName)) {
+            try {
+                prepareCreate();
+            } catch (InstantiationException | IllegalAccessException ex) {
+                Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }else if ("Edit".equalsIgnoreCase(actionName)) {
+
+           setSelectedByUrlParam(encodeStr, "selectedid");
+            prepareEdit();
+        } else if ("Delete".equalsIgnoreCase(actionName)) {
+            //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
+          //setSelectedByUrlParam(encodeStr, "selectedid");
+            prepareDelete();
+        }
+
+
 
     }
-    public void saveProfile(){
 
-        PurchaseApplicationRepository userAccountDao = WebUtil.getBean(PurchaseApplicationRepository.class);
-      //  userAccountDao.save()
-
-      /*  WebUtil.addSuccessMessage(WebUtil.getMessage("UserAccount")+WebUtil.getMessage("Updated"));*/
+    protected void setSelectedByUrlParam(String encodeUrl, String paramName) {
+        setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeUrl, paramName)));
     }
+
+    @Transactional
+    public void applyChange() {
+        this.save();
+    }
+
 
     @Override
     protected String getActionMessage(String actionName) {
-        return null;//WebUtil.getMessage("标签"+this.getTagName(this.selected.getTagId())+"  "+WebUtil.getMessage(actionName));
+        return WebUtil.getMessage("标签");
     }
 
     @Override
     protected PurchaseApplicationRepository getDAO() {
         return dao;
     }
-
-    public Date getDate1() {
-        return date1;
-    }
-
-    public void setDate1(Date date1) {
-        this.date1 = date1;
-    }
-
-    public String getShenqingkeshi() {
-        return shenqingkeshi;
-    }
-
-    public void setShenqingkeshi(String shenqingkeshi) {
-        this.shenqingkeshi = shenqingkeshi;
+    String url;
+    public String getViewPage(String pageName, String actionName) throws IOException {
+         url = "actionName=Edit&selectedid="
+                + selected.getId().toString();
+        url = "application.xhtml?str="+ UrlParamUtil.encodeUrlQueryString(url);
+        FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+    return url;
     }
 
     public List<SelectItem> getCars() {
@@ -91,25 +117,19 @@ private String shenqingkeshi;
         return selectedCars;
     }
 
-    public List<String> getFundingResource() {
+ /*   public List<String> getFundingResource() {
         return fundingResource;
     }
 
     public void setFundingResource(List<String> fundingResource) {
         this.fundingResource = fundingResource;
-    }
+    }*/
 
     public void setSelectedCars(String[] selectedCars) {
         this.selectedCars = selectedCars;
     }
 
-    public List<String> getApplyFeatures() {
-        return applyFeatures;
-    }
 
-    public void setApplyFeatures(List<String> applyFeatures) {
-        this.applyFeatures = applyFeatures;
-    }
 
     public String getNeedCost() {
         return needCost;
@@ -117,5 +137,15 @@ private String shenqingkeshi;
 
     public void setNeedCost(String needCost) {
         this.needCost = needCost;
+    }
+
+
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

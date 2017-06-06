@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/inspection.css" />
+
+        <style type="text/css">
+            .ui-datalist-content{
+                border: 0!important;
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g-12 card ">
+            <h:form id ="ApplicationForm">
+                <p:dataTable  id="dataList" value="#{applicationController.lazyModel}" var="item" widgetVar="varDataList" selectionMode="single" selection="#{applicationController.selected}" lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                              rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                              paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                              currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                              rows="20" emptyMessage="#{msg.noRecordFound}"
+                              rowsPerPageTemplate="20,40,60">
+                    <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{applicationController.onFilter}" />
+                    <p:column headerText="电话" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.telephone}" />
+                    </p:column>
+
+
+                    <f:facet name="{Toolbar}">
+                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{applicationController.prepareCreate}" action="#{urlEncryptController.encodeUrlParam('application.xhtml?actionName=Create')}" />
+                      <!-- gl: origin: <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetInfoController.prepareCreate}" action="#{urlEncryptController.encodeUrlParam('Create.xhtml?actionName=Create')}" rendered="#{!assetInfoController.isTerminate()}"/>-->
+
+                        <p:commandButton rendered="true" id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}"  actionListener="#{applicationController.getViewPage('Create','Edit')}"  action="#{urlEncryptController.encodeUrlParam(applicationController.url)}"  disabled="#{empty applicationController.selected}" />
+
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{applicationController.delete}" update=":ApplicationForm:dataList" disabled="#{empty applicationController.selected}"/>
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+           <!-- <ui:include src="application.xhtml"/>-->
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+</html>
