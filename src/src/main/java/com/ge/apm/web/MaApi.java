@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import rx.Observable;
 import webapp.framework.web.service.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import java.sql.Date;
@@ -358,4 +360,8 @@ public class MaApi {
       .build();
   }
 
+  @ExceptionHandler({ConstraintViolationException.class, IllegalArgumentException.class})
+  public ResponseEntity<? extends Map<String, Object>> handleValidation(RuntimeException t) {
+    return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(ImmutableMap.of("error", Option.of(t).map(Throwable::getMessage).getOrElse("validation error")));
+  }
 }
