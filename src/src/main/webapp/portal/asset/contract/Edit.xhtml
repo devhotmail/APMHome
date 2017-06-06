@@ -29,6 +29,7 @@
                         <h:panelGroup>
                             <label class="label">#{msg.contractType}</label>
                             <p:selectOneMenu id="contractType" value="#{assetContractController.selected.contractType}" required="false" requiredMessage="#{msg.contractType} #{msg.ValidationRequire}">
+                                <p:ajax update="pmCount" />
                                 <f:selectItem itemLabel="#{msg.selectOneMessage}" />
                                 <f:selectItems value="#{fieldMsg.getFieldValueList('contractType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}" />
                             </p:selectOneMenu>
@@ -48,6 +49,13 @@
                             <label class="label">#{msg.endTime}*</label>
                             <p:calendar timeZone="GMT+8"  id="endTime" pattern="yyyy/MM/dd" value="#{assetContractController.selected.endDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.endTime} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
+
+                        <h:panelGroup id="pmCount">
+                        <h:panelGroup rendered="#{assetContractController.selected.contractType == 5}">
+                            <label class="label">保养次数*</label>
+                            <p:inputNumber decimalPlaces="0" value="#{assetContractController.pmCount}" required="true" requiredMessage="保养次数 #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        </h:panelGroup>
                         
                         <h:panelGroup>
                             <label class="label">#{msg.AssetContractAmount}*</label>
@@ -64,7 +72,7 @@
                                 <label class="label">#{msg.AssetContractAttachment}*</label>
                                 <p:inputText id="name" value="#{assetContractController.fileName}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}" readonly="true"/>
                                 <p:commandButton actionListener="#{assetContractController.removeAttachment(assetContractController.selected.fileId)}" id="iconOnly" update=":AssetContractEditForm:upload" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this" rendered="#{assetContractController.isCreatAction()}">
-                                    <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>  
+                                    <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>
                                 </p:commandButton>
                             </h:panelGroup>
                         </p:panel>

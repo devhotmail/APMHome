@@ -8,7 +8,12 @@ import java.util.Date;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+
+import com.ge.apm.service.asset.AssetCreateService;
+import com.ge.apm.service.pm.PmOrderService;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.TransferEvent;
+import org.primefaces.model.DualListModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +61,20 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     private FileUploadedRepository fileUploadedRepository;
     
     private AssetInfoOperateService assetInfoOperateService = null;
+
+    private DualListModel<AssetInfo> availableAssets;
+    private List<AssetInfo> sourceAssets;
+    private List<AssetInfo> targetAssets;
+    private AssetInfo queryAsset;
+
+    private OrgInfoRepository orgInfoDao = null;
+    private AssetCreateService acService;
+    private PmOrderService pmOrderService;
+    private Integer siteIdFilter;
+
+    private Date startPlanTime;
+    private Date endPlanTime;
+    private Integer pmCount;
     
     @Override
     protected void init() {
@@ -70,6 +89,16 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 		attachements = new ArrayList<FileUploaded>();
         ownerList =uuaService.getUsersWithAssetHeadOrStaffRole(currentUser.getHospitalId());
         assetInfoOperateService = WebUtil.getBean(AssetInfoOperateService.class);
+        acService = WebUtil.getBean(AssetCreateService.class);
+        pmOrderService = WebUtil.getBean(PmOrderService.class);
+        orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
+
+        this.siteIdFilter = currentUser.getSiteId();
+
+        targetAssets = new ArrayList();
+        queryAsset = new AssetInfo();
+        queryAsset.setSiteId(currentUser.getSiteId());
+        this.getQueryAssetsListByHospital();
     }
 
     @Override
@@ -363,4 +392,124 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
             this.startFormatTime = startFormatTime;
         }
 
+    public void getQueryAssetsListByHospital() {
+        queryAsset.setClinicalDeptId(null);
+        sourceAssets = pmOrderService.getAssetList(queryAsset);
+        targetAssets.forEach((item)->{
+            if(sourceAssets.contains(item)){
+                sourceAssets.remove(item);
+            }
+        });
+
+        availableAssets = new DualListModel<>(sourceAssets, targetAssets);
+    }
+
+    public void getQueryAssetsListByDept() {
+        sourceAssets = pmOrderService.getAssetList(queryAsset);
+        targetAssets.forEach((item)->{
+            if(sourceAssets.contains(item)){
+                sourceAssets.remove(item);
+            }
+        });
+
+        availableAssets = new DualListModel<>(sourceAssets, targetAssets);
+    }
+
+    public void onAssetsTransfer(TransferEvent event) {
+
+        for(Object item : event.getItems()) {
+            if(event.isAdd()){
+                targetAssets.add((AssetInfo)item);
+            }else{
+                targetAssets.remove((AssetInfo)item);
+            }
+        }
+    }
+
+    public List<OrgInfo> getClinicalDeptList() {
+        List<OrgInfo> tempDeptList = new ArrayList<>();
+        if(queryAsset.getHospitalId() != null && queryAsset.getHospitalId() != 0){
+            tempDeptList = acService.getClinicalDeptList(queryAsset.getHospitalId());
+        }
+        return tempDeptList;
+    }
+
+    public List<OrgInfo> getHospitalListFilter() {
+
+        List<OrgInfo> hospitalList = null;
+        if (siteIdFilter != null) {
+
+            hospitalList = orgInfoDao.getHospitalBySiteId(Integer.valueOf(siteIdFilter));
+        }
+
+        return hospitalList;
+    }
+
+    public void saveBatchPmOrder(){
+        pmOrderService.saveBatchPmOrder(targetAssets, startPlanTime, endPlanTime, pmCount);
+    }
+
+    public void prepareBatchCreate(){
+        startPlanTime = null;
+        endPlanTime = null;
+        pmCount = null;
+        targetAssets = new ArrayList<>();
+        this.getQueryAssetsListByHospital();
+    }
+
+    public DualListModel<AssetInfo> getAvailableAssets() {
+        return availableAssets;
+    }
+
+    public void setAvailableAssets(DualListModel<AssetInfo> availableAssets) {
+        this.availableAssets = availableAssets;
+    }
+
+    public List<AssetInfo> getSourceAssets() {
+        return sourceAssets;
+    }
+
+    public void setSourceAssets(List<AssetInfo> sourceAssets) {
+        this.sourceAssets = sourceAssets;
+    }
+
+    public List<AssetInfo> getTargetAssets() {
+        return targetAssets;
+    }
+
+    public void setTargetAssets(List<AssetInfo> targetAssets) {
+        this.targetAssets = targetAssets;
+    }
+
+    public AssetInfo getQueryAsset() {
+        return queryAsset;
+    }
+
+    public void setQueryAsset(AssetInfo queryAsset) {
+        this.queryAsset = queryAsset;
+    }
+
+    public Date getStartPlanTime() {
+        return startPlanTime;
+    }
+
+    public void setStartPlanTime(Date startPlanTime) {
+        this.startPlanTime = startPlanTime;
+    }
+
+    public Date getEndPlanTime() {
+        return endPlanTime;
+    }
+
+    public void setEndPlanTime(Date endPlanTime) {
+        this.endPlanTime = endPlanTime;
+    }
+
+    public Integer getPmCount() {
+        return pmCount;
+    }
+
+    public void setPmCount(Integer pmCount) {
+        this.pmCount = pmCount;
+    }
 }

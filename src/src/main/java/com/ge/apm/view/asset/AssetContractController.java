@@ -5,6 +5,8 @@ import com.ge.apm.dao.AssetDepreciationRepository;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+
+import com.ge.apm.service.pm.PmOrderService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
@@ -37,9 +39,13 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
 
     AssetInfo selectedAsset;
 
+    private PmOrderService pmOrderService;
+
     private AssetInfoService assetService;
 
     private String fileName;
+
+    private Integer pmCount;
 
     @Override
     protected void init() {
@@ -48,6 +54,7 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
         depredao = WebUtil.getBean(AssetDepreciationRepository.class);
         fileService = WebUtil.getBean(AttachmentFileService.class);
         assetService = WebUtil.getBean(AssetInfoService.class);
+        pmOrderService = WebUtil.getBean(PmOrderService.class);
 
         String encodeStr = WebUtil.getRequestParameter("str");
         if (null != encodeStr) {
@@ -120,6 +127,9 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
             selected.setAssetId(selectedAsset.getId());
             super.save();
             saveDepreciation();
+            if(this.selected.getContractType() == 5){
+                pmOrderService.savePmOrder(selectedAsset, this.selected.getStartDate(), this.selected.getEndDate(), pmCount);
+            }
             cancel();
         }
     }
@@ -235,4 +245,11 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
         this.fileName = fileName;
     }
 
+    public Integer getPmCount() {
+        return pmCount;
+    }
+
+    public void setPmCount(Integer pmCount) {
+        this.pmCount = pmCount;
+    }
 }

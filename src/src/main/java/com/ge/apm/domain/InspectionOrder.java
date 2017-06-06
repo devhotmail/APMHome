@@ -104,6 +104,10 @@ public class InspectionOrder implements Serializable {
     @Column(name = "man_hours")
     private Integer manHours;
 
+    @Column(name = "plan_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date planTime;  //计划时间
+
     public InspectionOrder() {
     }
 

@@ -26,6 +26,7 @@
                                              process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg" oncomplete="PF('varSelectAssetDlg').show()" disabled="#{pmOrderController.selected.isFinished}"/>
                         </h:panelGroup>
 
+                        <!--
                         <h:panelGroup >
                             <label class="label">#{msg.ownerId}*</label>
                             <p:selectOneMenu id="assetOwnerName" value="#{pmOrderController.owner}" converter="userAccountConverter"  var="t"  filter="true" 
@@ -38,11 +39,30 @@
                                 </p:column>
                             </p:selectOneMenu>
                         </h:panelGroup>
-
-<!--                          <h:panelGroup>
+                        -->
+                        <!--
+                        <h:panelGroup>
                             <label class="label">#{msg.ownerId}</label>
                             <p:inputText readonly="true"  id="ownerName" value="#{pmOrderController.selected.ownerName}" />
                         </h:panelGroup> -->
+                        <!--
+                        <h:panelGroup>
+                            <label class="label">#{msg.ownerOrgName}</label>
+                            <p:inputText id="ownerOrgName" value="#{pmOrderController.selected.ownerOrgName}" readonly="true"/>
+                        </h:panelGroup>
+                        -->
+                        <h:panelGroup >
+                            <label class="label">#{msg.ownerId}</label>
+                            <p:selectOneMenu id="assetOwnerName" value="#{pmOrderController.owner}" converter="userAccountConverter"  var="t"  filter="true"
+                                             filterMatchMode="startsWith" disabled="#{pmOrderController.selected.isFinished}">
+                                <p:ajax listener="#{pmOrderController.onOwnerChange()}" process="@this"  update=":PmOrderEditForm:ownerOrgName" />
+                                <f:selectItem itemLabel="" />
+                                <f:selectItems value="#{pmOrderController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                <p:column>
+                                    <h:outputText value="#{t.name}"/>
+                                </p:column>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.ownerOrgName}</label>
                             <p:inputText id="ownerOrgName" value="#{pmOrderController.selected.ownerOrgName}" readonly="true"/>
@@ -59,6 +79,10 @@
                         <h:panelGroup>
                             <label class="label">#{msg.nextTime}</label>
                             <p:calendar timeZone="GMT+8"  id="nextTime" pattern="yyyy/MM/dd" value="#{pmOrderController.selected.nextTime}" showOn="button" disabled="#{pmOrderController.selected.isFinished}"  Input="false" showButtonPanel="true" navigator="true" mask="true"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">计划时间*</label>
+                            <p:calendar timeZone="GMT+8"  id="planTime" pattern="yyyy/MM/dd" value="#{pmOrderController.selected.planTime}" required="true" requiredMessage="计划时间 #{msg.ValidationRequire}" showOn="button" disabled="#{pmOrderController.selected.isFinished}"  Input="false" showButtonPanel="true" navigator="true" mask="true"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isFinished}" value="#{pmOrderController.selected.isFinished}" required="true" 
