@@ -47,7 +47,7 @@ public class FailureAnalysisService {
         WHERE("ai.asset_group = :type");
       }
       if (Option.of(dept).filter(i -> i > 0).isDefined()) {
-        WHERE("ai.dept_id = :dept");
+        WHERE("ai.clinical_dept_id = :dept");
       }
       if (Option.of(supplier).filter(i -> i > 0).isDefined()) {
         WHERE("ai.supplier_id = :supplier");
