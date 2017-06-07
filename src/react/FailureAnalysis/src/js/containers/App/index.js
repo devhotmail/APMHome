@@ -139,13 +139,14 @@ export class App extends Component<void, Props, void> {
       this.setState({ tooltipX: evt.clientX, tooltipY: evt.clientY, tooltip: tooltip })
     }
     function getLabel(strip, type) {
+      let name = strip.data.name || strip.data.key.name
       let unit = t('incident_count_unit')
       if (strip.data.count) {
-        return strip.data.count + unit
+        return name + ' ' + strip.data.count + unit
       }
       if (strip.data.val) {
         let val = strip.data.val[DataTypeMapping[type]]
-        return type === 'incident_count' ? (val + unit) : ToPrecentage(val)
+        return name + ' ' + (type === 'incident_count' ? (val + unit) : ToPrecentage(val))
       }
       return 'N.A.'
     }

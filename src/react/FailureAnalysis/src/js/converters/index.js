@@ -1,6 +1,7 @@
 
 import { maxBy, sumBy, sortBy } from 'lodash-es'
 import colors from 'utils/colors'
+import { ellipsis } from 'utils/helpers'
 import SID from 'shortid'
 import ColorUtil from 'color'
 
@@ -47,7 +48,7 @@ function BriefToothAdapter(array, max, type, lastYear) {
     id: SID.generate(), 
     data: a, 
     mode: 'bar', 
-    label: a.key.name, 
+    label: ellipsis(a.key.name, 8),
     strips: [{color: color, weight: a.val[type] / max, data: a}] 
   }))
 }
@@ -61,7 +62,12 @@ function ReasonToothAdapter(array) {
   let result = []
   array.forEach(e => {
     let color = e.count/sum < .15 ? colors.gray : colors.blue  //  todo, refine algo
-    result.push({id: SID.generate(), data: e, mode: 'bar', label: e.name, strips:[{ color: color, weight: e.count/weightMax, data: e}] })
+    result.push({
+      id: SID.generate(), 
+      data: e, 
+      mode: 'bar', 
+      label: ellipsis(e.name, 5),
+      strips:[{ color: color, weight: e.count/weightMax, data: e}] })
   })
   return result
 }
