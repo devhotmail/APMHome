@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.CacheControl;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import rx.Observable;
 import webapp.framework.web.service.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Past;
@@ -151,6 +153,11 @@ public class FailureAnalysisApi {
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ImmutableMap.Builder<String, Object>()
       .put("reasons", faService.reasons(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), dept, type, supplier, asset).skip(start).limit(Option.of(limit).getOrElse(Integer.MAX_VALUE))
         .map(t -> new ImmutableMap.Builder<String, Object>().put("id", t._1).put("name", Try.of(() -> reasons.get(t._1)._3).getOrElse("")).put("count", t._2).build()).toBlocking().toIterable()).build());
+  }
+
+  @ExceptionHandler({ConstraintViolationException.class})
+  public ResponseEntity<? extends Map<String, Object>> handleValidation(RuntimeException t) {
+    return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(ImmutableMap.of("error", Option.of(t).map(Throwable::getMessage).getOrElse("validation error")));
   }
 
 }
