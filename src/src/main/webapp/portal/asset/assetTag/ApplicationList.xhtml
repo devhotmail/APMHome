@@ -34,6 +34,18 @@
                               rowsPerPageTemplate="20,40,60">
                     <p:ajax event="rowSelect" listener="#{applicationController.onSelectAsset}" update="createButton editButton deleteButton"/>
                     <p:ajax event="filter" listener="#{applicationController.onFilter}" />
+                    <p:column headerText="申请科室" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.applyClinical}" />
+                    </p:column>
+
+                    <p:column headerText="科室联系人" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.clinicalContact}" />
+                    </p:column>
+
+                    <p:column headerText="填表日期" filterMatchMode="LIKE">
+                        <h:outputText value="#{item.fillDate}" />
+                    </p:column>
+
                     <p:column headerText="电话" filterMatchMode="LIKE">
                         <h:outputText value="#{item.telephone}" />
                     </p:column>
@@ -49,10 +61,7 @@
                     </f:facet>
                 </p:dataTable>
             </h:form>
-           <!-- <ui:include src="application.xhtml"/>-->
         </div>
-
     </ui:define>
-
 </ui:composition>
 </html>

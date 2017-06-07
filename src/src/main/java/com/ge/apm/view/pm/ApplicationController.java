@@ -32,10 +32,6 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
     private static final long serialVersionUID = 1L;
 
     private PurchaseApplicationRepository dao = null;
-
-    private List<SelectItem> intentGroupList;
-    private List<SelectItem> intentGroupListSelected;
-    private List<String> selectedIntention;
     private List<Integer> selectedIntention1;
     private List<String> selectedIntention2;
     private String needCost;
@@ -44,24 +40,8 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
     protected void init() {
         this.filterBySite=false;
         dao=WebUtil.getBean(PurchaseApplicationRepository.class);
-        intentGroupList = new ArrayList<SelectItem>();
-
-        SelectItemGroup intentGroup = new SelectItemGroup("拟用方向:");
-        intentGroup.setSelectItems(new SelectItem[] {
-                new SelectItem(0, "临床必备"),
-                new SelectItem(0, "学科发展"),
-                new SelectItem(1, "教学科研")
-        });
-        intentGroupList.add(intentGroup);
         selectedIntention1=new ArrayList<Integer>();
         selectedIntention2 = new ArrayList<String>();
-
-       /* selectedIntention1.add(0);*/
-        //intentGroupListSelected = new ArrayList<SelectItem>();
-         // intentGroupListSelected.add(new SelectItem(1, "临床必备"));
-
-
-
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");
         String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr, "actionName");
@@ -72,7 +52,7 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
                 Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else if ("Edit".equalsIgnoreCase(actionName)) {
-           setSelectedByUrlParam(encodeStr, "selectedid");
+            setSelectedByUrlParam(encodeStr, "selectedid");
             prepareEdit();
             PurchaseApplication byId = dao.findById(this.selected.getId());
             int v1=  byId.getIntent();
@@ -98,21 +78,9 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
             }
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             prepareDelete();
-
-
         }
     }
 
-    public void onSelectAsset() throws IOException{
-        if(this.selected!=null){
-            PurchaseApplication byId = dao.findById(this.selected.getId());
-            int v1=  byId.getIntent();
-            System.out.println("v1v1 "+v1);
-           // selectedIntention1 = intToIntegerList(v1);
-            System.out.println();
-        }
-
-    }
     public static  List<Integer> intToIntegerList(int ind) {
         String s = Integer.toBinaryString(ind);
         int[] intArray = new int[s.length()];
@@ -129,29 +97,16 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
     @Transactional
     public void applyChange() {
         //资金来源是其它输入
-if(this.selected.getFundingResource()==4){
-    this.selected.setFundingResourceOthers(this.selected.getFundingResourceOthers());
-}
+        if(this.selected.getFundingResource()==4){
+            this.selected.setFundingResourceOthers(this.selected.getFundingResourceOthers());
+        }
 
-int p =0;
-for( int i=0;i<this.selectedIntention2.size();i++){
-    selectedIntention1.add(Integer.parseInt(selectedIntention2.get(i)));
-}
-        int j= selectedIntention1.stream().reduce(0,(Integer::sum));
-        System.out.println(p);
-        this.selected.setIntent(j);
+        for( int i=0;i<this.selectedIntention2.size();i++){
+            selectedIntention1.add(Integer.parseInt(selectedIntention2.get(i)));
+        }
+        int sumInt= selectedIntention1.stream().reduce(0,(Integer::sum));
+        this.selected.setIntent(sumInt);
         this.save();
-        /*List<Integer> x2 = new ArrayList<Integer>();
-x2.add(this.selectedIntention1.get(0));
-        x2.add(this.selectedIntention1.get(1).intValue());
-        System.out.println(this.selectedIntention1);
-       //=this.selectedIntention1.stream().mapToInt(Integer::intValue).sum();
-        *//*this.selectedIntention1 = new ArrayList<Integer>();
-        this.selectedIntention1.add(2);
-        this.selectedIntention1.add(10);*//*
-        int j =x2.stream().reduce(0,(Integer::sum));
-        System.out.println();*/
-
     }
 
     @Override
@@ -159,34 +114,17 @@ x2.add(this.selectedIntention1.get(0));
         return WebUtil.getMessage("申请单"+WebUtil.getMessage(actionName));
     }
 
-
     @Override
     protected PurchaseApplicationRepository getDAO() {
         return dao;
     }
     String url;
     public String getViewPage(String pageName, String actionName) throws IOException {
-         url = "actionName=Edit&selectedid="
+        url = "actionName=Edit&selectedid="
                 + selected.getId().toString();
         url = "application.xhtml?str="+ UrlParamUtil.encodeUrlQueryString(url);
         FacesContext.getCurrentInstance().getExternalContext().redirect(url);
-    return url;
-    }
-
-    public List<SelectItem> getIntentGroupList() {
-        return intentGroupList;
-    }
-
-    public void setIntentGroupList(List<SelectItem> intentGroupList) {
-        this.intentGroupList = intentGroupList;
-    }
-
-    public List<String> getSelectedIntention() {
-        return selectedIntention;
-    }
-
-    public void setSelectedIntention(List<String> selectedIntention) {
-        this.selectedIntention = selectedIntention;
+        return url;
     }
 
     public String getNeedCost() {
@@ -196,8 +134,6 @@ x2.add(this.selectedIntention1.get(0));
     public void setNeedCost(String needCost) {
         this.needCost = needCost;
     }
-
-
 
     public String getUrl() {
         return url;
@@ -214,15 +150,6 @@ x2.add(this.selectedIntention1.get(0));
     public void setSelectedIntention1(List<Integer> selectedIntention1) {
         this.selectedIntention1 = selectedIntention1;
     }
-
-    public List<SelectItem> getIntentGroupListSelected() {
-        return intentGroupListSelected;
-    }
-
-    public void setIntentGroupListSelected(List<SelectItem> intentGroupListSelected) {
-        this.intentGroupListSelected = intentGroupListSelected;
-    }
-
     public List<String> getSelectedIntention2() {
         return selectedIntention2;
     }

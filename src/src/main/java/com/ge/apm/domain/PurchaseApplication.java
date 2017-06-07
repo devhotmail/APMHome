@@ -64,14 +64,9 @@ public class PurchaseApplication implements Serializable {
     @Basic(optional = false)
     @Column(name = "clinical_responser")
     private String clinicalResponser;
-
-
-
-
     @Basic(optional = false)
     @Column(name = "funding_resource")
     private int fundingResource;
-
     @Basic(optional = false)
     @Column(name = "recom_ad1")
     private String recomAd1;
@@ -213,8 +208,6 @@ private String infoSign;
         this.id = id;
     }
 
-
-
     public String getTelephone() {
         return telephone;
     }
@@ -222,8 +215,6 @@ private String infoSign;
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
-
-
 
     @Override
     public int hashCode() {
@@ -250,7 +241,6 @@ private String infoSign;
         StringBuilder builder = new StringBuilder();
         builder.append("AccountApplication [id=");
         builder.append(id);
-
         builder.append("]");
         return builder.toString();
     }

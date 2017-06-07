@@ -6,9 +6,6 @@
                 template="/WEB-INF/template.xhtml">
 <ui:define name="content">
     <div class="ui-g-12 card ">
-
-         <!--   <p:dialog id="ApplicationDlg" widgetVar="ApplicationDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{applicationController.CRUDActionName} 申请表">-->
-
                 <h:form id="PurchaseApplicationForm">
 
                     <div class="ui-g">
@@ -91,9 +88,6 @@
                     <div class="ui-g">
                         <p:fieldset legend="申请理由及用途(可另纸附后)" >
                             <div class="ui-g-2">
-                               <!-- <p:selectManyCheckbox style="height: 200px" id="grid3" value="#{applicationController.intentGroupListSelected}" layout="pageDirection" columns="1">
-                                    <f:selectItems  value="#{applicationController.intentGroupList}" var="item" itemLabel="#{item.getLabel}" itemValue="#{item.getValue}" />
-                                </p:selectManyCheckbox>-->
                                 <p:selectManyCheckbox style="height: 200px" id="grid3" value="#{applicationController.selectedIntention2}" layout="pageDirection" columns="1">
                                     <f:selectItem itemLabel="临床必备" itemValue="1" />
                                     <f:selectItem itemLabel="学科发展" itemValue="2" />
@@ -106,9 +100,6 @@
                             </div>
                         </p:fieldset>
                     </div>
-
-
-
                     <div class="ui-g">
                         <div class="ui-g-12">
                             <p:fieldset legend="对产品性能有无特殊要求" >
@@ -168,14 +159,8 @@
                         <p:commandButton value="#{msg.Save}" icon="ui-icon-check" actionListener="#{applicationController.applyChange()}" validateClient="true" update=":growl" style="float:left"/>
                        <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" action="ApplicationList?faces-redirect=true" immediate="true"  update=":growl" style="float:left"/>
 
-                        <!--   <p:commandButton id="setIsValid" value="#{assetInfoController.getButtonName()}" action="#{assetInfoController.setValidButton}" immediate="true"  update=":growl" style="float:right;"/>-->
                     </h:panelGroup>
                 </h:form>
-            <!--</p:dialog>-->
-
-
     </div>
-
-
 </ui:define>
 </ui:composition>
