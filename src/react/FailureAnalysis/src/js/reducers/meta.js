@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { cloneDeep } from 'lodash-es'
 import cache from 'utils/cache'
 import { ACT_UPDATE_META } from 'actions'
 
@@ -27,7 +27,7 @@ export default (state = initParameter, action) => {
   }
   let reducer = reducers[action.type]
   if (reducer) {
-    let meta = _.cloneDeep(state)
+    let meta = cloneDeep(state)
     reducer(meta, action.data)
     return meta
   } else {

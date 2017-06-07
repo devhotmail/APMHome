@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
-import _ from 'lodash'
+import { cloneDeep, memoize, clamp, range } from 'lodash-es'
 import { message } from 'antd'
 import EventBus from 'eventbusjs'
 import GearListChart from 'react-gear-list-chart'
@@ -47,8 +47,8 @@ function mergeItem(current, lastYearDict) {
   if (lastYearItem === undefined) {
     return current
   }
-  let copy = _.cloneDeep(current)
-  copy.strips = copy.strips.concat(_.cloneDeep(lastYearItem.strips))
+  let copy = cloneDeep(current)
+  copy.strips = copy.strips.concat(cloneDeep(lastYearItem.strips))
   return copy
 }
 
@@ -70,7 +70,7 @@ function getCurrentPage(skip, top) {
 }
 
 function ensureSize(width, height) {
-  width = _.clamp(width, 1000, 1500)
+  width = clamp(width, 1000, 1500)
   if (height < 900) {
     width = 1100
   }
@@ -82,7 +82,7 @@ function ensureSize(width, height) {
   }
 }
 
-function mapDispatch2Porps(dispatch) {
+function mapDispatch2Props(dispatch) {
   return {
     updateDisplayType: (value) => {
       dispatch(ParamUpdate('display', value.key))
@@ -103,18 +103,20 @@ function mapState2Props(state) {
   return { pagination, display, dataType, showLastYear }
 }
 
-@connect(mapState2Props, mapDispatch2Porps)
+@connect(mapState2Props, mapDispatch2Props)
 @autobind
 export class App extends Component<void, Props, void> {
 
-  static getPlaceholder = _.memoize(count => _.range(count)
+  static getPlaceholder = memoize(count => range(count)
                            .map(() => Placeholder))
   state = {
     tooltipX: -861112,
     tooltipY: -861112,
     leftItems: [],
+    leftClockwise: false,
     centerItems: [],
     rightItems: [],
+    rightClockwise: true,
     lastYear: {
       leftItems: [],
       rightItems: [],
@@ -210,12 +212,26 @@ export class App extends Component<void, Props, void> {
     fetchBriefs('right')
   }
 
-  onRightPagerChange = value => {
-    this.props.updatePagination('right', value)
+  getCurrentPageLeft() {
+    let page = this.props.pagination.left
+    return getCurrentPage(page.skip, page.top)
   }
 
-  onLeftPagerChange = value => {
-    this.props.updatePagination('left', value)
+  getCurrentPageRight() {
+    let page = this.props.pagination.right
+    return getCurrentPage(page.skip, page.top)
+  }
+
+  onRightPagerChange = next => {
+    let current = this.getCurrentPageRight()
+    this.setState({ rightClockwise: current < next})
+    this.props.updatePagination('right', next)
+  }
+
+  onLeftPagerChange = next => {
+    let current = this.getCurrentPageLeft()
+    this.setState({ leftClockwise: current > next })
+    this.props.updatePagination('left', next)
   }
 
   getDisplayOptions() {
@@ -269,7 +285,8 @@ export class App extends Component<void, Props, void> {
   }
 
   render() {
-    let { tooltipX, tooltipY, tooltip, leftItems, centerItems, rightItems, lastYear, selectedDevice } = this.state
+    let { tooltipX, tooltipY, tooltip,lastYear, selectedDevice,
+      leftItems, centerItems, rightItems, leftClockwise, rightClockwise } = this.state
     let { updateDisplayType, pagination, clientRect, display } = this.props
     let { left, right } = pagination
     let { outer_R, outer_r, inner_R, inner_r  } = ensureSize(clientRect.width, clientRect.height)
@@ -282,12 +299,12 @@ export class App extends Component<void, Props, void> {
 
             <div className="display-select">{selectHelper(display, this.getDisplayOptions(), updateDisplayType)}</div>
             {
-              leftItems && leftItems.length &&
+              leftItems && !!leftItems.length &&
               <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
                 className="pager-left" onChange={this.onLeftPagerChange}/>
             }
             {
-              rightItems && rightItems.length &&
+              rightItems && !!rightItems.length &&
               <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
                 className="pager-right" onChange={this.onRightPagerChange}/>
             }
@@ -301,6 +318,7 @@ export class App extends Component<void, Props, void> {
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
               clockwise={false}
+              clockwiseAnimate={leftClockwise}
               items={DataOrPlaceHolder(leftItems, lastYear.leftItems, pagination.left.top)} 
               />
             <GearListChart
@@ -317,7 +335,7 @@ export class App extends Component<void, Props, void> {
               </Legend>
             </div>
             <GearListChart 
-              id="right-chart" 
+              id="right-chart"
               ref="rightChart"
               startAngle={290} endAngle={70} 
               outerRadius={outer_R} innerRadius={outer_r}
@@ -325,6 +343,7 @@ export class App extends Component<void, Props, void> {
               onClick={this.clickRightTooth}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
+              clockwiseAnimate={rightClockwise}
               items={DataOrPlaceHolder(rightItems, lastYear.rightItems, pagination.right.top)} />
 
           </div>

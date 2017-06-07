@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { cloneDeep } from 'lodash-es'
 import moment from 'moment'
 import { ACT_UPDATE_PARAM } from 'actions'
 
@@ -12,7 +12,6 @@ const initParameter = {
     ['dept']: 'all_dept',
     ['supplier']: 'all_supplier', // currently no dropdown on UI
   },
-  orderBy: 'operation_rate', 
   period: {
     from: YearStart,
     to: Current
@@ -38,11 +37,6 @@ const initParameter = {
 const reducers = {
   ['update/param/filter'](next, data) {
     next.filterBy[data.type] = data.data.key
-    return next
-  },
-
-  ['update/param/order'](next, data) {
-    next.orderBy = data.key
     return next
   },
 
@@ -83,6 +77,6 @@ export default (state = initParameter, action) => {
   if (!action.type.startsWith(ACT_UPDATE_PARAM)) {
     return state
   }
-  return reducers[action.type](_.cloneDeep(state), action.data)
+  return reducers[action.type](cloneDeep(state), action.data)
 
 }

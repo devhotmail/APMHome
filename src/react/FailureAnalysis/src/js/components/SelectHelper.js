@@ -1,5 +1,5 @@
 import React from 'react'
-import _ from 'lodash'
+import { find } from 'lodash-es'
 import { Select } from 'antd'
 import SID from 'shortid'
 
@@ -12,7 +12,7 @@ export default function selectHelper(defaultKey: string, options: Array<Option>,
   // HACK: when i18n is not ready, label would fallback to the key
   // and defaultValue only rendered once
   // so do this trick at initial phrase
-  let defaultValue = _.find(options, {key: defaultKey}) || options[0]
+  let defaultValue = find(options, {key: defaultKey}) || options[0]
   if (defaultValue.key === defaultValue.label) {
     return null
   }
