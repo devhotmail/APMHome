@@ -7,13 +7,20 @@ import './app.css'
 
 import router from '#/router'
 
-import scanDetails from '#/models/scanDetails'
+import assets from '#/models/assets'
+import briefs from '#/models/briefs'
+import depts from '#/models/depts'
+import filters from '#/models/filters'
+import steps from '#/models/steps'
 
 
 const app = dva()
 
-app.model(scanDetails)
-// app.model(board)
+app.model(assets)
+app.model(briefs)
+app.model(depts)
+app.model(filters)
+app.model(steps)
 
 app.router(router)
 

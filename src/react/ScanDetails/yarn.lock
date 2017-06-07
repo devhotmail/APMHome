@@ -1257,6 +1257,10 @@ chokidar@^1.4.3:
   optionalDependencies:
     fsevents "^1.0.0"
 
+ci-info@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-1.0.0.tgz#dc5285f2b4e251821683681c381c3388f46ec534"
+
 cipher-base@^1.0.0, cipher-base@^1.0.1:
   version "1.0.3"
   resolved "https://registry.npmjs.org/cipher-base/-/cipher-base-1.0.3.tgz#eeabf194419ce900da3018c207d212f2a6df0a07"
@@ -1659,6 +1663,12 @@ d3-shape:
   dependencies:
     d3-path "1"
 
+d3-shape@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-1.2.0.tgz#45d01538f064bafd05ea3d6d2cb748fd8c41f777"
+  dependencies:
+    d3-path "1"
+
 dashdash@^1.12.0:
   version "1.14.1"
   resolved "https://registry.npmjs.org/dashdash/-/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"
@@ -1729,6 +1739,22 @@ detect-indent@^4.0.0:
   resolved "https://registry.npmjs.org/detect-indent/-/detect-indent-4.0.0.tgz#f76d064352cdf43a1cb6ce619c4ee3a9475de208"
   dependencies:
     repeating "^2.0.0"
+
+"dew-filterbar@git+https://github.build.ge.com/foundry-sh/dew-filterbar.git":
+  version "2.1.4"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#51697ac20703c1fc8c0dd7c6eebaaba6b3976d22"
+  dependencies:
+    dew-styles "git+https://github.build.ge.com/foundry-sh/dew-styles.git"
+
+"dew-statusbar@git+https://github.build.ge.com/foundry-sh/dew-statusbar.git":
+  version "1.0.2"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-statusbar.git#f4a7f2d87a080e0db526200f7daab77e0da166ba"
+  dependencies:
+    husky "^0.13.3"
+
+"dew-styles@git+https://github.build.ge.com/foundry-sh/dew-styles.git":
+  version "1.0.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-styles.git#d8471eee47b2f8130df45c6af6a973d0868e1b6d"
 
 diffie-hellman@^5.0.0:
   version "5.0.2"
@@ -2173,6 +2199,10 @@ find-cache-dir@^0.1.1:
     mkdirp "^0.5.1"
     pkg-dir "^1.0.0"
 
+find-parent-dir@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/find-parent-dir/-/find-parent-dir-0.3.0.tgz#33c44b429ab2b2f0646299c5f9f718f376ff8d54"
+
 find-up@^1.0.0:
   version "1.1.2"
   resolved "https://registry.npmjs.org/find-up/-/find-up-1.1.2.tgz#6b2e9822b1a2ce0a60ab64d610eccad53cb24d0f"
@@ -2606,6 +2636,15 @@ https-browserify@0.0.1:
   version "0.0.1"
   resolved "https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz#3f91365cabe60b77ed0ebba24b454e3e09d95a82"
 
+husky@^0.13.3:
+  version "0.13.4"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-0.13.4.tgz#48785c5028de3452a51c48c12c4f94b2124a1407"
+  dependencies:
+    chalk "^1.1.3"
+    find-parent-dir "^0.3.0"
+    is-ci "^1.0.9"
+    normalize-path "^1.0.0"
+
 hydrolysis@^1.19.1:
   version "1.25.0"
   resolved "https://registry.yarnpkg.com/hydrolysis/-/hydrolysis-1.25.0.tgz#a4fb14a37a1e03b0db52d8aaa57c682272a14d84"
@@ -2721,6 +2760,12 @@ is-builtin-module@^1.0.0:
   resolved "https://registry.npmjs.org/is-builtin-module/-/is-builtin-module-1.0.0.tgz#540572d34f7ac3119f8f76c30cbc1b1e037affbe"
   dependencies:
     builtin-modules "^1.0.0"
+
+is-ci@^1.0.9:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/is-ci/-/is-ci-1.0.10.tgz#f739336b2632365061a9d48270cd56ae3369318e"
+  dependencies:
+    ci-info "^1.0.0"
 
 is-dotfile@^1.0.0:
   version "1.0.2"
@@ -3432,6 +3477,10 @@ normalize-package-data@^2.3.2, normalize-package-data@^2.3.4:
     semver "2 || 3 || 4 || 5"
     validate-npm-package-license "^3.0.1"
 
+normalize-path@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-1.0.0.tgz#32d0e472f91ff345701c15a8311018d3b0a90379"
+
 normalize-path@^2.0.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/normalize-path/-/normalize-path-2.1.1.tgz#1ab28b556e198363a8c1a6f7e6fa20137fe6aed9"
@@ -3945,7 +3994,7 @@ postcss-value-parser@^3.0.1, postcss-value-parser@^3.0.2, postcss-value-parser@^
 
 postcss-viewport-units@^0.1.3:
   version "0.1.3"
-  resolved "https://registry.npmjs.org/postcss-viewport-units/-/postcss-viewport-units-0.1.3.tgz#cc44d89585300a74d292b965db61f076f39d0df6"
+  resolved "https://registry.yarnpkg.com/postcss-viewport-units/-/postcss-viewport-units-0.1.3.tgz#cc44d89585300a74d292b965db61f076f39d0df6"
   dependencies:
     postcss "^5.2.8"
 
@@ -4409,6 +4458,10 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+"react-HOCs@git+https://github.build.ge.com/foundry-sh/react-HOCs.git":
+  version "1.1.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/react-HOCs.git#cf8789ef8db61a415c5e563581e22f707c6d250f"
+
 react-deep-force-update@^2.0.1:
   version "2.0.1"
   resolved "https://registry.npmjs.org/react-deep-force-update/-/react-deep-force-update-2.0.1.tgz#4f7f6c12c3e7de42f345992a3c518236fa1ecad3"
@@ -4452,6 +4505,14 @@ react-motion@^0.4.7:
   resolved "https://registry.npmjs.org/react-motion/-/react-motion-0.4.7.tgz#f77331ec7920bdb0d0cfc37eb6ffa10571bf42c7"
   dependencies:
     performance-now "^0.2.0"
+    raf "^3.1.0"
+
+react-motion@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-motion/-/react-motion-0.5.0.tgz#1708fc2aee552900d21c1e6bed28346863e017b6"
+  dependencies:
+    performance-now "^0.2.0"
+    prop-types "^15.5.8"
     raf "^3.1.0"
 
 react-proxy@^3.0.0-alpha.0:
@@ -4737,6 +4798,14 @@ rimraf@2, rimraf@^2.2.8, rimraf@^2.5.1, rimraf@^2.6.1:
   resolved "https://registry.npmjs.org/rimraf/-/rimraf-2.6.1.tgz#c2338ec643df7a1b7fe5c54fa86f57428a55f33d"
   dependencies:
     glob "^7.0.5"
+
+"ring-sector-layout@git+https://github.build.ge.com/foundry-sh/ring-sector-layout.git":
+  version "2.1.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/ring-sector-layout.git#dd15521f8920c7a5ae772e03515df2e6238ae209"
+  dependencies:
+    d3-shape "^1.2.0"
+    react-motion "^0.5.0"
+    uuid "^3.0.1"
 
 ripemd160@^1.0.0:
   version "1.0.1"
@@ -5264,7 +5333,7 @@ utils-merge@1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.0.tgz#0294fb922bb9375153541c4f7096231f287c8af8"
 
-uuid@^3.0.0:
+uuid, uuid@^3.0.0, uuid@^3.0.1:
   version "3.0.1"
   resolved "https://registry.npmjs.org/uuid/-/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
 
