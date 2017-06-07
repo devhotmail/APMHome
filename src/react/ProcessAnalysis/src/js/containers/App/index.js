@@ -128,8 +128,10 @@ export class App extends Component<void, Props, void> {
                            .map(() => Placeholder))
   state = {
     briefs: [],
+    leftClockwise: false,
     centerItems: [],
     details: [],
+    rightClockwise: true,
     generalGross: {},
     selected: null,
     distriMax: 0,
@@ -162,11 +164,23 @@ export class App extends Component<void, Props, void> {
       this.clearFocus('left')
     }
   }
-  onLeftPagerChange = value => {
-    this.props.updatePagination('brief', value)
+
+  getCurrentPageLeft() {
+    let pag = this.props.pagination.left
+    return CurrentPage(pag.skip, pag.top)
   }
-  onRightPagerChange = value => {
-    this.props.updatePagination('detail', value)
+  getCurrentPageRight() {
+    let pag = this.props.pagination.right
+    return CurrentPage(pag.skip, pag.top)
+  }
+
+  onLeftPagerChange = next => {
+    let current = this.getCurrentPageLeft()
+    this.props.updatePagination('brief', current < next)
+  }
+  onRightPagerChange = next => {
+    let current = this.getCurrentPageRight()
+    this.props.updatePagination('detail', current < next)
   }
   initDistributionMax(dataType) {
     let [ max, unit ] = HumanizeDurationInput(last(this.getCurrentDistribution(dataType)))
@@ -370,7 +384,7 @@ export class App extends Component<void, Props, void> {
     }
   }
   render() {
-    let { briefs, details, selected, generalGross, distriMax, distriUnit, 
+    let { briefs, details, selected, generalGross, distriMax, distriUnit, leftClockwise, rightClockwise,
       distriArrival, distriEttr, distriResponse, tooltipX, tooltipY, tooltipData
     } = this.state
     let { t, updateDisplayType, pagination, clientRect, display, dataType, 
@@ -405,6 +419,7 @@ export class App extends Component<void, Props, void> {
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
               clockwise={false}
+              clockwiseAnimate={leftClockwise}
               items={DataOrPlaceHolder(briefs, pagination.left.top)} 
               />
             <Orbit 
@@ -457,6 +472,7 @@ export class App extends Component<void, Props, void> {
               startAngle={290} endAngle={70}
               outerRadius={outer_R} innerRadius={outer_r}
               margin={3}
+              clockwiseAnimate={rightClockwise}
               onClick={this.clickRightTooth}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
