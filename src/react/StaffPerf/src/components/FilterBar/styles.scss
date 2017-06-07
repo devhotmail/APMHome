@@ -1,0 +1,18 @@
+.filters {
+  display: flex;
+}
+
+.year {
+  flex: 1;
+  text-align: center;
+}
+
+.groupby {
+  flex: 3;
+}
+
+:global {
+  .ant-calendar-time-picker-btn {
+    display: none !important;
+  }
+}

@@ -32,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 public class ListApi {
 
   private static final Logger log = LoggerFactory.getLogger(ListApi.class);
-  private static final Map<String, String> env = System.getenv();
 
   @Autowired
   private ListService ListService;

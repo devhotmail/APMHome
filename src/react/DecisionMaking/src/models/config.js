@@ -29,6 +29,10 @@ export default {
           payload
         })
 
+        yield put({
+          type: 'data/update/item',
+          payload
+        })
       } catch (err) {
 
       }
@@ -87,7 +91,6 @@ export default {
         resolve && resolve()
       } catch (err) {
         reject && reject()
-        console.log(err)
       }
     }    
   },
@@ -111,7 +114,28 @@ export default {
         ...state,
         changes: {}
       }
-    },    
+    },
+    ['data/update/item'] (state, { payload }) {
+      const { cursor, ...restPart } = payload
+
+      const newData = state.data.map(n => {
+        if (isFocusNode(n, cursor)) {
+          return {
+            ...n,
+            data: {
+              ...n.data,
+              ...updatePart(n.data, restPart)
+            }
+          }
+        }
+        return n
+      })
+
+      return {
+        ...state,
+        data: [...newData]
+      }
+    },
     ['data/set/succeed'] (state, { payload }) {
       return {
         ...state,
@@ -133,23 +157,14 @@ export default {
   }
 }
 
-function getConfig (nodes) {
-  const root = nodes[0]
-  const { depth, height } = root
-  return nodes
-  .filter(n => !~[depth, height].indexOf(n.depth))
-}
-
-function pickUpFields (obj) {
-  return {
-    depth: obj.depth,
-    height: obj.height,
-    id: obj.data.id,
-    uid: obj.data.uid,
-    name: obj.data.name,      
-    // for the display usage # 1 hard code OMG !!!!!
-    change: round(obj.data.usage_predict * 100, 1),
-    usage_min: obj.data.usage_threshold ? obj.data.usage_threshold[0] * 100 : '',
-    usage_max: obj.data.usage_threshold ? obj.data.usage_threshold[1] * 100 : ''  
+function updatePart (node, props) {
+  let result = {}
+  const tmp = Object.entries(props)
+  if (Array.isArray(tmp) && tmp.length) {
+    const [key, value] = tmp[0]
+    if (key === 'increase') result = {usage_predict_increase: value}
+    if (key === 'max') result = {usage_threshold: [node.usage_threshold[0], value]}
+    if (key === 'min') result = {usage_threshold: [value, node.usage_threshold[1]]}
   }
+  return result
 }

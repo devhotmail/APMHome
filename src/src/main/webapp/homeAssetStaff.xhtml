@@ -15,66 +15,68 @@
     <ui:define name="content">
         <h:form>
             <p:growl id="messages" showDetail="true"/>
-            <header>
-                <div class="card--title text--center">
-                    <span class="epsilon">#{msg.HomePage}</span>
-                </div>
+            <div class="calendar-header">
                 <div class="card--summary">
                     <div class="u-p flex flex--row">
                         <div class="flex__item"></div>
                         <div class="flex__item"></div>
-                        <div class="flex__item" style="text-align:center">
+                        <!--巡检-->
+                        <a href="#{request.contextPath}/portal/insp/InspOrderList.xhtml?model=1" class="calendar-redirect flex__item">
                             <div class="event-count event-type-1">
                                 #{woScheduleController.inspNum}
                             </div>
                             <div>#{msg.staff_tile_inspection}</div>
-                        </div>
-                        <div class="flex__item" style="text-align:center">
+                        </a>
+                        <!--计量-->
+                        <a href="#{request.contextPath}/portal/insp/MetrologyOrderList.xhtml?model=1" class="calendar-redirect flex__item">
                             <div class="event-count event-type-2">
                                 #{woScheduleController.meterNum}
                             </div>
                             <div>#{msg.staff_tile_meter}</div>
-                        </div>
-                        <div class="flex__item" style="text-align:center">
+                        </a>
+                        <!--质控-->
+                        <!--<a href="#{request.contextPath}/portal/insp/QualityCtrlOrderList.xhtml?model=1" class="flex__item">
                             <div class="event-count event-type-3">
                                 #{woScheduleController.qaNum}
                             </div>
                             <div>#{msg.staff_tile_quality}</div>
-                        </div>
-                        <div class="flex__item" style="text-align:center">
+                        </a>-->
+                        <!--维修-->
+                        <a href="#{request.contextPath}/portal/wo/woList.xhtml?isClosed=false" class="calendar-redirect flex__item">
                             <div class="event-count event-type-4">
                                 #{woScheduleController.mtMum}
                             </div>
                             <div>#{msg.staff_tile_maintenance}</div>
-                        </div>
-                        <div class="flex__item" style="text-align:center">
+                        </a>
+                        <!--保养-->
+                        <a href="#{request.contextPath}/portal/pm/List.xhtml?model=1" class="calendar-redirect flex__item">
                             <div class="event-count event-type-5">
                                 #{woScheduleController.pmNum}
                             </div>
                             <div>#{msg.staff_tile_preventive}</div>
-                        </div>
+                        </a>
                         <div class="flex__item"></div>
                         <div class="flex__item"></div>
                     </div>
                 </div>
-            </header>
+            </div>
             <div class="ui-g">
                 <div class="ui-g-12">
-                    <div class="block">
-                        <div class="calendar">
+                    <div class="calendar">
+                        <div class="calendar-content">
                             <p:schedule id="schedule" value="#{woScheduleController.model}"
                                         widgetVar="myschedule" timeZone="GMT+8" tooltip="true" timeFormat="HH:mm"
                                         leftHeaderTemplate="prev,today,next" centerHeaderTemplate="title"
                                         rightHeaderTemplate="">
                             </p:schedule>
-                            <div class="calendar-footer">
-                                <span class="u-m status status--1">#{msg.staff_tile_inspection}</span>
-                                <span class="u-m status status--2">#{msg.staff_tile_meter}</span>
-                                <span class="u-m status status--3">#{msg.staff_tile_quality}</span>
-                                <span class="u-m status status--4">#{msg.staff_tile_maintenance}</span>
-                                <span class="u-m status status--5">#{msg.staff_tile_preventive}</span>
-                            </div>
                         </div>
+                        <!--<div class="calendar-footer">
+                            <span class="u-m status status-1">#{msg.staff_tile_inspection}</span>
+                            <span class="u-m status status-2">#{msg.staff_tile_meter}</span>
+                            <span class="u-m status status-3">#{msg.staff_tile_quality}</span>
+                            <span class="u-m status status-4">#{msg.staff_tile_maintenance}</span>
+                            <span class="u-m status status-5">#{msg.staff_tile_preventive}</span>
+                        </div>-->
                     </div>
                 </div>
             </div>

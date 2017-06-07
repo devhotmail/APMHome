@@ -33,17 +33,17 @@
                 <p:menuitem id="um16" value="#{msg.DeviceStatusMonitor}"
                             outcome="/portal/analysis/deviceStatusMonitor"/>
                 <p:menuitem id="um17" value="#{msg.DeviceDowntimeAnalysis}" outcome="/empty" rendered="false"/>
-                <p:menuitem id="um18" value="#{msg.DeviceMaintainanceEventAnalysis}"
-                            outcome="/portal/analysis/assetMaintenanceAll"
-                            rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}"/>
+                <p:menuitem id="um171" value="#{msg.FailureAnalysis}" outcome="/portal/analysis/failureAnalysis"/>
+                <p:menuitem id="um172" value="#{msg.StaffPerformance}" outcome="/portal/analysis/staffPerf.xhtml" />
+                <p:menuitem id="um173" value="#{msg.MaintenanceCost}" outcome="/portal/analysis/maintenanceCost.xhtml" />
                 <p:menuitem id="um19" value="#{msg.DeviceMaintainanceCostAnalysis}" rendered="false"
                             outcome="/empty"/>
-                <p:menuitem id="um20" value="#{msg.DeviceUtilizationAnalysis}"
-                            outcome="/portal/analysis/assetUsageAll" rendered="true"/>
                 <p:menuitem id="um21" value="#{msg.SparePartsConsumptionAnalysis}" rendered="false"
                             outcome="/home"/>
+                <p:menuitem id="um22" value="#{msg.ProcessAnalysis}"
+                            outcome="/portal/analysis/processAnalysis" rendered="true"/>
                 <p:menuitem id="um23" value="#{msg.AdvancedDeviceInfoTracking}"
-                            outcome="/portal/analysis/deviceOperationMonitorAll"/>
+                            outcome="/portal/analysis/scanDetails"/>
             </p:submenu>
             <p:submenu id="um24" label="#{msg.PreventiveMaintainceMgmt}" icon="fa fa-check-square-o"
                        rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">

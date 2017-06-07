@@ -1,0 +1,45 @@
+.filter-bar {
+  right: 300px;
+  display: flex;
+  align-items: center;
+  :global .ant-form-item {
+    margin-bottom: 0;
+  }
+}
+
+.radio-group {
+  margin-right: 20px;
+  :global .ant-radio-button-wrapper {
+    &:first-child {
+      border-radius: 16px 0 0 16px;
+    }
+    &:last-child {
+      border-radius: 0 16px 16px 0;
+    }
+  }
+  :global .ant-radio-button-wrapper-checked {
+    background: #5b84d7;
+    color: white;
+    border-color: #5b84d7;
+  }
+}
+
+.drop-down {
+  :global .ant-select-selection {
+    border-radius: 16px;
+    width: 120px;
+    padding: 0 10px;
+  }
+}
+
+.group-by {
+  margin-left: 100px;
+  :global .ant-btn-primary {
+    background-color: #5b84d7;
+    border-color: #5b84d7;
+  }
+  button {
+    border-radius: 14px;
+    margin-right: 15px;
+  }
+}

@@ -57,7 +57,7 @@ public class OrgApi {
     return Try.of(UserContext::getCurrentLoginUser).map(u ->
       ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
         .body(new ImmutableMap.Builder<String, Object>()
-          .put("orgInGfos", StreamSupport.stream(orgService.find(u.getSiteId(), u.getHospitalId(), start, limit).spliterator(), false)
+          .put("orgInfos", StreamSupport.stream(orgService.find(u.getSiteId(), u.getHospitalId(), start, limit).spliterator(), false)
             .map(t -> new ImmutableMap.Builder<String, Object>().
               put("id", t._1)
               .put("parent_id", t._2)

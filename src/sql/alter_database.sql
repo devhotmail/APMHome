@@ -66,7 +66,10 @@ asset_group int,
 dept_id int,
 supplier_id int,
 revenue float,
-maintenance_cost float,
+mt_manpower float,
+mt_accessory float,
+pm_manpower float,
+pm_accessory float,
 deprecation_cost float,
 inject_count float,
 expose_count float,
@@ -82,9 +85,11 @@ last_modified timestamp);
 alter table asset_summit add primary key (id);
 alter table asset_summit add constraint uk_asset_summit_asset_n_date unique (asset_id, created);
 
-INSERT INTO "i18n_message" VALUES (269, 'label', 'AssetBrowser', '设备分布分析', 'Asset Browser', NULL, -1);
-INSERT INTO "i18n_message" VALUES (270, 'label', 'UsageAndClinicalPerformance', '运用与临床绩效', 'Usage And Clinical Performance', NULL, -1);
-INSERT INTO "i18n_message" VALUES (271, 'label', 'FinancialPerformanceAndForecast', '财务绩效与预测', 'Financial Performance And Forcast', NULL, -1);
+INSERT INTO "i18n_message" VALUES (269,  'label', 'AssetBrowser', '设备分布分析', 'Asset Browser', NULL, -1);
+INSERT INTO "i18n_message" VALUES (270,  'label', 'UsageAndClinicalPerformance', '运用与临床绩效', 'Usage And Clinical Performance', NULL, -1);
+INSERT INTO "i18n_message" VALUES (271,  'label', 'FinancialPerformanceAndForecast', '财务绩效与预测', 'Financial Performance And Forcast', NULL, -1);
+INSERT INTO "i18n_message" VALUES (5624, 'label', 'StaffPerformance', '人员绩效分析','Staff Performance Analysis',null,-1);
+INSERT INTO "i18n_message" VALUES (5625, 'label', 'FailureAnalysis', '设备故障分析','Failure Analysis',null,-1);
 
 create table  proc_part(
 id serial not null primary key,
@@ -118,76 +123,77 @@ created date,
 last_modified timestamp
 );
 
-create index ix_exam_summit_site_id on exam_summit(site_id);
-create index ix_exam_summit_hospital_id on exam_summit(hospital_id);
-create index ix_exam_summit_asset_id on exam_summit(asset_id);
-create index ix_exam_summit_asset_group on exam_summit(asset_group);
-create index ix_exam_summit_dept_id on exam_summit(dept_id);
-create index ix_exam_summit_part_id on exam_summit(part_id);
-create index ix_exam_summit_subpart_id on exam_summit(subpart_id);
-create index ix_exam_summit_step_id on exam_summit(step_id);
+CREATE TABLE "public"."v2_service_request" (
+"id" char(32) COLLATE "default" NOT NULL,
+"created_by" varchar(50) COLLATE "default",
+"created_date" timestamp(6),
+"last_modified_by" varchar(50) COLLATE "default",
+"last_modified_date" timestamp(6),
+"asset_id" int4 NOT NULL,
+"asset_name" varchar(64) COLLATE "default" NOT NULL,
+"case_priority" int4 NOT NULL,
+"close_time" timestamp(6),
+"confirmed_down_time" timestamp(6),
+"confirmed_up_time" timestamp(6),
+"estimated_close_time" timestamp(6),
+"from_dept_id" int4,
+"from_dept_name" varchar(64) COLLATE "default",
+"hospital_id" int4 NOT NULL,
+"hospital_name" varchar(64) COLLATE "default" NOT NULL,
+"request_reason" varchar(256) COLLATE "default" NOT NULL,
+"request_reason_voice" int4,
+"request_time" timestamp(6) NOT NULL,
+"requestor_id" int4 NOT NULL,
+"requestor_name" varchar(16) COLLATE "default" NOT NULL,
+"reponse_time" timestamp(6),
+"site_id" int4 NOT NULL,
+"status" int4,
+"equipment_taker" varchar(255) COLLATE "default",
+"take_time" timestamp(6),
+CONSTRAINT "v2_service_request_pkey" PRIMARY KEY ("id")
+);
 
-insert into proc_part(name) values ('头部');
-insert into proc_part(name) values ('颈部');
-insert into proc_part(name) values ('胸部');
-insert into proc_part(name) values ('腹部');
-insert into proc_part(name) values ('盆部');
-insert into proc_part(name) values ('脊柱');
-insert into proc_part(name) values ('上肢');
-insert into proc_part(name) values ('下肢');
-insert into proc_part(name) values ('其它');
+CREATE TABLE "public"."v2_work_order" (
+"id" char(32) COLLATE "default" NOT NULL,
+"created_by" varchar(50) COLLATE "default",
+"created_date" timestamp(6),
+"last_modified_by" varchar(50) COLLATE "default",
+"last_modified_date" timestamp(6),
+"asset_id" int4 NOT NULL,
+"close_time" timestamp(6),
+"current_person_id" int4 NOT NULL,
+"current_person_name" varchar(16) COLLATE "default",
+"current_step_id" int4 NOT NULL,
+"current_step_name" varchar(16) COLLATE "default" NOT NULL,
+"feedback_comment" varchar(255) COLLATE "default",
+"feedback_rating" int4,
+"hospital_id" int4 NOT NULL,
+"int_ext_type" int4,
+"parent_wo_id" int4,
+"pat_actions" varchar(255) COLLATE "default",
+"pat_problems" varchar(255) COLLATE "default",
+"pat_tests" varchar(255) COLLATE "default",
+"site_id" int4 NOT NULL,
+"sr_id" varchar(255) COLLATE "default" NOT NULL,
+"status" int4,
+"total_man_hour" int4,
+"total_price" float8,
+"case_type" int4,
+CONSTRAINT "v2_work_order_pkey" PRIMARY KEY ("id")
+);
 
-insert into proc_step(part_id, name) values (1,'head_step1');
-insert into proc_step(part_id, name) values (1,'head_step2');
-insert into proc_step(part_id, name) values (1,'head_step3');
-insert into proc_step(part_id, name) values (1,'head_step4');
-insert into proc_step(part_id, name) values (1,'head_step5');
+alter table inspection_order add COLUMN man_hours int;
+alter table pm_order add COLUMN man_hours int;
+alter table work_order add column feedback_rating int;
 
-insert into proc_step(part_id, name) values (2,'neck_step1');
-insert into proc_step(part_id, name) values (2,'neck_step2');
-insert into proc_step(part_id, name) values (2,'neck_step3');
-insert into proc_step(part_id, name) values (2,'neck_step4');
-insert into proc_step(part_id, name) values (2,'neck_step5');
+alter table pm_order add COLUMN planned_time timestamp;
+alter table pm_order drop COLUMN nearest_sr_time;
+alter table pm_order add COLUMN nearest_sr_days int;
+alter table pm_order add COLUMN nearest_sr_id character(32);
 
-insert into proc_step(part_id, name) values (3,'chest_step1');
-insert into proc_step(part_id, name) values (3,'chest_step2');
-insert into proc_step(part_id, name) values (3,'chest_step3');
-insert into proc_step(part_id, name) values (3,'chest_step4');
-insert into proc_step(part_id, name) values (3,'chest_step5');
+alter table V2_service_request add COLUMN nearest_sr_days int;
+alter table V2_service_request add COLUMN nearest_sr_id character(32);
 
-insert into proc_step(part_id, name) values (4,'abdomen_step1');
-insert into proc_step(part_id, name) values (4,'abdomen_step2');
-insert into proc_step(part_id, name) values (4,'abdomen_step3');
-insert into proc_step(part_id, name) values (4,'abdomen_step4');
-insert into proc_step(part_id, name) values (4,'abdomen_step5');
-
-insert into proc_step(part_id, name) values (5,'pelvic_step1');
-insert into proc_step(part_id, name) values (5,'pelvic_step2');
-insert into proc_step(part_id, name) values (5,'pelvic_step3');
-insert into proc_step(part_id, name) values (5,'pelvic_step4');
-insert into proc_step(part_id, name) values (5,'pelvic_step5');
-
-insert into proc_step(part_id, name) values (6,'spine_step1');
-insert into proc_step(part_id, name) values (6,'spine_step2');
-insert into proc_step(part_id, name) values (6,'spine_step3');
-insert into proc_step(part_id, name) values (6,'spine_step4');
-insert into proc_step(part_id, name) values (6,'spine_step5');
-
-insert into proc_step(part_id, name) values (7,'upper_limbs_step1');
-insert into proc_step(part_id, name) values (7,'upper_limbs_step2');
-insert into proc_step(part_id, name) values (7,'upper_limbs_step3');
-insert into proc_step(part_id, name) values (7,'upper_limbs_step4');
-insert into proc_step(part_id, name) values (7,'upper_limbs_step5');
-
-insert into proc_step(part_id, name) values (8,'lower_limbs_step1');
-insert into proc_step(part_id, name) values (8,'lower_limbs_step2');
-insert into proc_step(part_id, name) values (8,'lower_limbs_step3');
-insert into proc_step(part_id, name) values (8,'lower_limbs_step4');
-insert into proc_step(part_id, name) values (8,'lower_limbs_step5');
-
-insert into proc_step(part_id, name) values (9,'else_step1');
-insert into proc_step(part_id, name) values (9,'else_step2');
-insert into proc_step(part_id, name) values (9,'else_step3');
-insert into proc_step(part_id, name) values (9,'else_step4');
-insert into proc_step(part_id, name) values (9,'else_step5');
+INSERT INTO "i18n_message" VALUES (5626, 'label', 'ProcessAnalysis', '维修流程分析','Process Analysis',null,-1);
+INSERT INTO "i18n_message" VALUES (5627, 'label', 'MaintenanceCost', '维修成本分析','Maintenance Cost',null,-1);
 

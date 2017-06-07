@@ -33,3 +33,9 @@ body, html, #root, #root>div {
     }
   }
 }
+
+:global {
+  .ant-calendar-time-picker-btn {
+    display: none !important;
+  }
+}

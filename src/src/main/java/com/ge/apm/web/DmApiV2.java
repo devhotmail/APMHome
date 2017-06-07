@@ -215,7 +215,7 @@ public class DmApiV2 {
   }
 
   public class TypePdtData {
-    private List<Map<String, String>> suggestions;
+    private Seq<Map<String, String>> suggestions;
     private int buyIn;
     private PdtData pdtData;
 
@@ -225,7 +225,7 @@ public class DmApiV2 {
       this.pdtData = pdtData;
     }
 
-    public List<Map<String, String>> getSuggestions() {
+    public Seq<Map<String, String>> getSuggestions() {
       return suggestions;
     }
 
@@ -703,7 +703,7 @@ public class DmApiV2 {
     java.util.List<Integer> usageSum = ImmutableList.of(subItems.map(v -> v.getUsgSum().get(0)).sum().intValue(),
       subItems.map(v -> v.getUsgSum().get(1)).sum().intValue());
     double averageUsage = subItems.map(PdtData::getUsgPdt).average().getOrElse(0D);
-    int buyIn = (int) Math.ceil((averageUsage - subItems.get(0).getUsgThr().get(1)) * count);
+    int buyIn = (int) Math.ceil((averageUsage / (subItems.get(0).getUsgThr().get(1) + 1e-7D) - 1D) * count);
     return Tuple.of(new TypePdtData(calculateBottomLevelSuggestions(usageSum.get(1), averageUsage, buyIn, subItems.get(0).getUsgThr()), buyIn, new PdtData(
       subItems.get(0).getDate(), subItems.map(PdtData::getDepre).sum().doubleValue(), usageSum, subItems.get(0).getUsgThr(), averageUsage,
       Option.when(lastYearUsage.equals(0D), 0D).getOrElse(averageUsage / lastYearUsage - 1D),
@@ -767,7 +767,7 @@ public class DmApiV2 {
    */
   private DeptInfo calculateDeptInfo(Seq<TypeInfo> items, java.util.Map<Integer, String> depts, int deptId) {
     return new DeptInfo(new DeptBsc(deptId, depts.get(deptId), items.map(v -> v.getTypeBsc().getCount()).sum().intValue()),
-      calculateDeptPdtData(items.map(TypeInfo::getTypePdtDatas),
+      calculateDeptPdtData(items,
         items.map(v -> v.getTypeBsc().getCount()).sum().intValue(),
         items.map(v -> v.getHisDatas()._2.getUsage()).average().getOrElse(0D)),
       calculateHistoricalData(items.map(TypeInfo::getHisDatas)));
@@ -782,14 +782,14 @@ public class DmApiV2 {
    * @param lastYearUsage usage of last year in current dept
    * @return DeptPdtData
    */
-  private Tuple1<DeptPdtData> calculateDeptPdtData(Seq<Tuple1<TypePdtData>> items, int count, Double lastYearUsage) {
-    Seq<TypePdtData> subItems = items.map(v -> v._1);
+  private Tuple1<DeptPdtData> calculateDeptPdtData(Seq<TypeInfo> items, int count, Double lastYearUsage) {
+    Seq<TypePdtData> subItems = items.map(v -> v.getTypePdtDatas()._1);
     int buyIn = subItems.map(TypePdtData::getBuyIn).sum().intValue();
     double averageUsage = subItems.map(v -> v.getPdtData().getUsgPdt()).average().getOrElse(0D);
     java.util.List<Integer> usageSum = ImmutableList.of(subItems.map(v -> v.getPdtData().getUsgSum().get(0)).sum().intValue(),
       subItems.map(v -> v.getPdtData().getUsgSum().get(1)).sum().intValue());
     return Tuple.of(new DeptPdtData(
-      calculateHigherLevelSuggestions(subItems.map(TypePdtData::getSuggestions), "type"), buyIn,
+      calculateHighLevelSuggestions(items.map(v -> Tuple.of(v.getTypeBsc().getTypeName(), v.getTypePdtDatas()._1.getSuggestions(), v.getTypePdtDatas()._1.getBuyIn())), "type"), buyIn,
       subItems.get(0).getPdtData().getDate(),
       subItems.map(v -> v.getPdtData().getDepre()).sum().doubleValue(), usageSum,
       averageUsage,
@@ -799,40 +799,35 @@ public class DmApiV2 {
     ));
   }
 
+
   /**
    * Calculate High level suggestions using low level suggestions
    * THis function may change when suggestion logic changes
    *
-   * @param lowerLevelSuggestions a list of low level suggestions
-   * @param groupBy               dept|type
+   * @param lowerLevel a list of low level suggestions and the corresponding dept or type name, and the number of buyIn asset
+   * @param groupBy    dept|type
    * @return High level suggestions
    */
-  private List<Map<String, String>> calculateHigherLevelSuggestions(Seq<Seq<Map<String, String>>> lowerLevelSuggestions, String groupBy) {
-    Seq<Seq<String>> suggestionLists = lowerLevelSuggestions.map(v -> v.map(sub -> sub.get("title").getOrElse("")));
-    int numBuy = suggestionLists.count(v -> v.exists(v2 -> v2.contains(SUGGESTION_BUY)));
-    Integer numBuyAssets = lowerLevelSuggestions
-      .filter(v -> v.map(sub -> sub.get("title").getOrElse("")).exists(v2 -> v2.contains(SUGGESTION_BUY)))
-      .map(v -> v.filter(sub -> sub.get("addition").isDefined()).headOption().map(v2 -> v2.get("addition").get()).get())
-      .map(v -> Ints.tryParse(Option.when(v.contains("（"), v.substring(v.indexOf("（") + 1, v.indexOf("台设备"))).getOrElse(v.substring(0, v.indexOf("台设备")))))
-      .sum().intValue();
-    int numAjst = suggestionLists.count(v -> v.exists(v2 -> v2.contains(SUGGESTION_ADJUST)));
-    int numRse = suggestionLists.count(v -> v.exists(v2 -> v2.contains(SUGGESTION_RAISE)));
+  private List<Map<String, String>> calculateHighLevelSuggestions(Seq<Tuple3<String, Seq<Map<String, String>>, Integer>> lowerLevel, String groupBy) {
+    Seq<Tuple3<String, Seq<Map<String, String>>, Integer>> sugBuy = lowerLevel.filter(v -> v._2.exists(sub -> sub.get("title").getOrElse("").contains(SUGGESTION_BUY)));
+    Seq<Tuple3<String, Seq<Map<String, String>>, Integer>> sugAjst = lowerLevel.filter(v -> v._2.exists(sub -> sub.get("title").getOrElse("").contains(SUGGESTION_ADJUST)));
+    Seq<Tuple3<String, Seq<Map<String, String>>, Integer>> sugRse = lowerLevel.filter(v -> v._2.exists(sub -> sub.get("title").getOrElse("").contains(SUGGESTION_RAISE)));
     ImmutableList.Builder<Map<String, String>> totalSuggestions = new ImmutableList.Builder<Map<String, String>>();
-    if (numBuy > 0) {
-      totalSuggestions.add(HashMap.of("title", SUGGESTION_BUY.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", Option.when(groupBy.equals("dept"), String.format("%s个（%s台设备）", numBuy, numBuyAssets)).getOrElse(String.format("%s种（%s台设备）", numBuy, numBuyAssets))));
+    if (!sugBuy.isEmpty()) {
+      totalSuggestions.add(HashMap.of("title", SUGGESTION_BUY.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", sugBuy.map(v -> Tuple.of(v._1, v._3)).foldLeft(Tuple.of("", 0), (prev, next) -> Tuple.of(prev._1 + ", " + next._1 + "（" + next._2 + "台）", prev._2))._1.substring(1)));
     }
-    if (numAjst > 0) {
-      totalSuggestions.add(HashMap.of("title", SUGGESTION_ADJUST.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", Option.when(groupBy.equals("dept"), String.format("%s个", numAjst)).getOrElse(String.format("%s种", numAjst))));
+    if (!sugAjst.isEmpty()) {
+      totalSuggestions.add(HashMap.of("title", SUGGESTION_ADJUST.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", sugAjst.reduce((prev, next) -> Tuple.of(prev._1 + ", " + next._1, prev._2, prev._3))._1));
     }
-    if (numRse > 0) {
-      totalSuggestions.add(HashMap.of("title", SUGGESTION_RAISE.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", Option.when(groupBy.equals("dept"), String.format("%s个", numRse)).getOrElse(String.format("%s种", numRse))));
+    if (!sugRse.isEmpty()) {
+      totalSuggestions.add(HashMap.of("title", SUGGESTION_ADJUST.concat(Option.when("dept".equals(groupBy), "的科室").getOrElse("的类型")), "addition", sugRse.reduce((prev, next) -> Tuple.of(prev._1 + ", " + next._1, prev._2, prev._3))._1));
     }
     return List.ofAll(totalSuggestions.build());
   }
 
   private AllAssetInfo calculateAllAssetInfoDept(Seq<DeptInfo> items) {
     return new AllAssetInfo(new AllAssetBsc(items.map(v -> v.getDeptBsc().getCount()).sum().intValue()),
-      calculateAllAssetPdtDataDept(items.map(DeptInfo::getDeptPdtDatas),
+      calculateAllAssetPdtDataDept(items,
         items.map(v -> v.getDeptBsc().getCount()).sum().intValue(),
         items.map(v -> v.getHisDatas()._2.getUsage()).average().getOrElse(0D)),
       calculateHistoricalData(items.map(DeptInfo::getHisDatas))
@@ -841,20 +836,20 @@ public class DmApiV2 {
 
   private AllAssetInfo calculateAllAssetInfoType(Seq<TypeInfo> items) {
     return new AllAssetInfo(new AllAssetBsc(items.map(v -> v.getTypeBsc().getCount()).sum().intValue()),
-      calculateAllAssetPdtDataType(items.map(TypeInfo::getTypePdtDatas),
+      calculateAllAssetPdtDataType(items,
         items.map(v -> v.getTypeBsc().getCount()).sum().intValue(),
         items.map(v -> v.getHisDatas()._2.getUsage()).average().getOrElse(0D)),
       calculateHistoricalData(items.map(TypeInfo::getHisDatas)));
   }
 
-  private Tuple1<AllAssetPdtData> calculateAllAssetPdtDataType(Seq<Tuple1<TypePdtData>> items, int count, Double lastYearUsage) {
-    Seq<TypePdtData> subItems = items.map(v -> v._1);
+  private Tuple1<AllAssetPdtData> calculateAllAssetPdtDataType(Seq<TypeInfo> items, int count, Double lastYearUsage) {
+    Seq<TypePdtData> subItems = items.map(v -> v.getTypePdtDatas()._1);
     int buyIn = subItems.map(TypePdtData::getBuyIn).sum().intValue();
     double averageUsage = subItems.map(v -> v.getPdtData().getUsgPdt()).average().getOrElse(0D);
     java.util.List<Integer> usageSum = ImmutableList.of(subItems.map(v -> v.getPdtData().getUsgSum().get(0)).sum().intValue(),
       subItems.map(v -> v.getPdtData().getUsgSum().get(1)).sum().intValue());
     return Tuple.of(new AllAssetPdtData(
-      calculateHigherLevelSuggestions(subItems.map(TypePdtData::getSuggestions), "type"), buyIn,
+      calculateHighLevelSuggestions(items.map(v -> Tuple.of(v.getTypeBsc().getTypeName(), v.getTypePdtDatas()._1.getSuggestions(), v.getTypePdtDatas()._1.getBuyIn())), "type"), buyIn,
       subItems.get(0).getPdtData().getDate(),
       subItems.map(v -> v.getPdtData().getDepre()).sum().doubleValue(), usageSum,
       averageUsage,
@@ -864,14 +859,14 @@ public class DmApiV2 {
     ));
   }
 
-  private Tuple1<AllAssetPdtData> calculateAllAssetPdtDataDept(Seq<Tuple1<DeptPdtData>> items, int count, Double lastYearUsage) {
-    Seq<DeptPdtData> subItems = items.map(v -> v._1);
+  private Tuple1<AllAssetPdtData> calculateAllAssetPdtDataDept(Seq<DeptInfo> items, int count, Double lastYearUsage) {
+    Seq<DeptPdtData> subItems = items.map(v -> v.getDeptPdtDatas()._1);
     int buyIn = subItems.map(DeptPdtData::getBuyIn).sum().intValue();
     double averageUsage = subItems.map(DeptPdtData::getUsgPdt).average().getOrElse(0D);
     java.util.List<Integer> usageSum = ImmutableList.of(subItems.map(v -> v.getUsgSum().get(0)).sum().intValue(),
       subItems.map(v -> v.getUsgSum().get(1)).sum().intValue());
     return Tuple.of(new AllAssetPdtData(
-      calculateHigherLevelSuggestions(subItems.map(DeptPdtData::getSuggestions), "dept"), buyIn,
+      calculateHighLevelSuggestions(items.map(v -> Tuple.of(v.getDeptBsc().getDeptName(), v.getDeptPdtDatas()._1.getSuggestions(), v.getDeptPdtDatas()._1.getBuyIn())), "dept"), buyIn,
       subItems.get(0).getDate(),
       subItems.map(DeptPdtData::getUsgPdt).sum().doubleValue(), usageSum,
       averageUsage,
@@ -957,7 +952,7 @@ public class DmApiV2 {
   private java.util.Map<String, Object> mapAssetInfo(Asset item) {
     return new ImmutableMap.Builder<String, Object>()
       .put("id", item.getAssetBsc().getId())
-      .put("name", item.getAssetBsc().getName())
+      .put("name", Option.of(item.getAssetBsc().getName()).getOrElse(""))
       .put("size", item.getHisDatas()._2.getDepre())
       .put("usage_sum", item.getPdtDatas()._1.getUsgSum())
       .put("usage_threshold", item.getPdtDatas()._1.getUsgThr())
@@ -974,8 +969,8 @@ public class DmApiV2 {
 
   private java.util.Map<String, Object> mapTypeInfo(TypeInfo item, Option<Integer> dept) {
     return new ImmutableMap.Builder<String, Object>()
-      .put("id",dept.map(v->String.format("%s-%s", v, item.getTypeBsc().getTypeId())).getOrElse(String.format("%s", item.getTypeBsc().getTypeId())))
-      .put("name", item.getTypeBsc().getTypeName())
+      .put("id", dept.map(v -> String.format("%s-%s", v, item.getTypeBsc().getTypeId())).getOrElse(String.format("%s", item.getTypeBsc().getTypeId())))
+      .put("name", Option.of(item.getTypeBsc().getTypeName()).getOrElse(""))
       .put("size", item.getHisDatas()._2.getDepre())
       .put("usage_sum", item.getTypePdtDatas()._1.getPdtData().getUsgSum())
       .put("usage_threshold", item.getTypePdtDatas()._1.getPdtData().getUsgThr())
@@ -994,7 +989,7 @@ public class DmApiV2 {
   private java.util.Map<String, Object> mapDeptInfo(DeptInfo item) {
     return new ImmutableMap.Builder<String, Object>()
       .put("id", item.getDeptBsc().getDeptId())
-      .put("name", item.getDeptBsc().getDeptName())
+      .put("name", Option.of(item.getDeptBsc().getDeptName()).getOrElse(""))
       .put("size", item.getHisDatas()._2.getDepre())
       .put("usage_sum", item.getDeptPdtDatas()._1.getUsgSum())
       .put("historical_data", ImmutableList.of(
@@ -1012,7 +1007,7 @@ public class DmApiV2 {
   private java.util.Map<String, Object> mapAllAssets(AllAssetInfo item) {
     return new ImmutableMap.Builder<String, Object>()
       .put("id", item.getAllAssetBsc().getId())
-      .put("name", item.getAllAssetBsc().getName())
+      .put("name", Option.of(item.getAllAssetBsc().getName()).getOrElse(""))
       .put("size", item.getAllAssetHisDatas()._2.getDepre())
       .put("usage_sum", item.getAllAssetPdtDatas()._1.getUsgSum())
       .put("historical_data", ImmutableList.of(

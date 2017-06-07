@@ -9,7 +9,7 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const utils = require('./utils')
 const config = require('../config')
 
-const publicPath = utils.getProdPublicPath(config.production.publicPathPrefix)
+const publicPath = utils.getProdPublicPath(config.production.commonPrefix)
 
 const webpackConfig = merge(baseWebpackConfig, {
   devtool: false,
@@ -18,7 +18,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       'babel-polyfill'
     ],
     app: './src/index.js'
-  },  
+  },
   output: {
     filename: '[name].[hash].js',
     publicPath,
@@ -35,18 +35,20 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use:[
+          use: [
             'css-loader',
             'postcss-loader'
           ]
-        }),
+        })
       },
       {
         test: /\.s[ca]ss$/,
-        exclude: /src\/styles/,
+        exclude: [
+          /src\/styles/,
+          /node_modules/
+        ],
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
@@ -54,32 +56,35 @@ const webpackConfig = merge(baseWebpackConfig, {
               loader: 'css-loader',
               options: {
                 module: true,
-                importLoaders: 1,
+                importLoaders: 2,
                 localIdentName: '[local]__[hash:base64:5]'
               }
             },
-            'sass-loader',
-            'postcss-loader'
+            'postcss-loader',
+            'sass-loader'
           ]
         })
       },
       {
         test: /\.s[ca]ss$/,
-        include: /src\/styles/,
+        include: [
+          /src\/styles/,
+          /node_modules/
+        ],
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
             {
               loader: 'css-loader',
               options: {
-                importLoaders: 1
+                importLoaders: 2
               }
             },
-            'sass-loader',
-            'postcss-loader'
+            'postcss-loader',
+            'sass-loader'
           ]
         })
-      },    
+      },
       {
         test: /\.less$/,
         loader: ExtractTextPlugin.extract({
@@ -97,12 +102,12 @@ const webpackConfig = merge(baseWebpackConfig, {
                 modifyVars: require('./theme.js')
               }
             }
-          ],
+          ]
         }),
         include: /node_modules/
-      }     
+      }
     ]
-  },  
+  },
   plugins: [
     new webpack.NamedModulesPlugin(),
     new webpack.DefinePlugin({

@@ -145,6 +145,11 @@ export default {
             type: 'config/data/set',
             payload: action.payload
           })
+
+          // get the new focus node
+          yield put({
+            type: 'focus/node/set'
+          })
         }  
       } catch (err) {
         yield put({
@@ -160,6 +165,11 @@ export default {
         yield put({
           type: 'nodeList/data/get',
           payload: finance[dataKey]
+        })
+
+        // update focus for mannual/system
+        yield put({
+          type: 'focus/node/set'
         })
       } catch (err) {
 

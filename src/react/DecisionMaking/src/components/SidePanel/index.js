@@ -28,12 +28,13 @@ const tabWidth = 90
 }))
 export default class SidePanel extends Component {
   state = {
-    activeTab: 0
+    activeTab: 0,
+    configed: false
   }
 
   render () {
     const { focus } = this.props
-    const { activeTab } = this.state
+    const { activeTab, configed } = this.state
     
     return (
       <div className={styles.sidepanel}>
@@ -68,7 +69,7 @@ export default class SidePanel extends Component {
                       transform: `translateX(${data.translate}%)`
                     }}
                   >
-                  { 
+                  {
                     focus.node && focus.node.data
                       ? <SystemPanel data={focus.node.data} />
                       : null
@@ -91,7 +92,10 @@ export default class SidePanel extends Component {
                       transform: `translateX(${data.translate}%)`
                     }}
                   >
-                    <ManualPanel {...this.props} />
+                    <ManualPanel
+                      configed={configed}
+                      markConfiged={this.markConfiged}
+                      {...this.props} />
                   </div>
                 )}
               </Animate>
@@ -100,6 +104,12 @@ export default class SidePanel extends Component {
         </div>
       </div>
     )
+  }
+
+  markConfiged = () => {
+    this.setState({
+      configed: true
+    })
   }
 
   handleTabClick = (index: number) => (e: Event) => {

@@ -6,7 +6,7 @@ import { getCursor, isSameCursor, isFocusNode, round } from '#/utils'
 
 import type { ConfigT, NodeT, cursorT } from '#/types'
 
-import EditBlock from '#/components/EditBlock'
+import EditBlock from 'dew-editblock'
 
 import styles from './styles.scss'
 
@@ -57,9 +57,14 @@ export default class ConfigType extends Component<*, ConfigT, *> {
       <div>
         <Table dataSource={configListOne} {...tableProps}>
           <Table.Column
-            title="设备类型"
+            title={<div className="p-l-1">设备类型</div>}
             dataIndex="data.name"
-            key="name" />
+            key="name"
+            render={(text, node, index) => (
+              <div className="p-l-1">
+                {text}
+              </div>
+            )} />
           <Table.Column
             title="预期增长"
             dataIndex="data.usage_predict_increase"
@@ -67,9 +72,9 @@ export default class ConfigType extends Component<*, ConfigT, *> {
             width={70}
             render={(text, node, index) =>
               <EditBlock
-                cursor={getCursor(node)}
-                fieldKey="increase"
-                val={round(text * 100, 1)} />              
+                onChange={this.handleChange(getCursor(node), 'increase')}
+                initialValue={round(text * 100, 1)}
+                sign="%" />
             } />
           <Table.Column
             title={thresholdNode[0]}
@@ -78,9 +83,9 @@ export default class ConfigType extends Component<*, ConfigT, *> {
             width={70}
             render={(text, node, index) =>
               <EditBlock
-                cursor={getCursor(node)}
-                fieldKey="max"
-                val={text * 100} />             
+                onChange={this.handleChange(getCursor(node), 'max')}
+                initialValue={text * 100}
+                sign="%" />
             } />
           <Table.Column
             title={thresholdNode[1]}
@@ -89,13 +94,23 @@ export default class ConfigType extends Component<*, ConfigT, *> {
             width={70}
             render={(text, node, index) =>
               <EditBlock
-                cursor={getCursor(node)}
-                fieldKey="min"
-                val={text * 100} />
+                onChange={this.handleChange(getCursor(node), 'min')}
+                initialValue={text * 100}
+                sign="%" />
             } />
         </Table>
       </div>
     )
+  }
+
+  handleChange = (cursor: cursorT, fieldKey: string) => (value: string) => {
+    this.props.dispatch({
+      type: 'config/changes',
+      payload: {
+        cursor,
+        [fieldKey]: value / 100
+      }
+    })
   }
 
   getParentCursors = (): Array<cursorT>  => {

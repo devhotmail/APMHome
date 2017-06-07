@@ -47,8 +47,7 @@
   <!-- spring transaction -->
   <tx:annotation-driven/>
 
-  <bean id="cloudCfg" class="com.ge.apm.service.utils.CloudCfg">
-  </bean>
+  <bean id="cloudCfg" class="com.ge.apm.service.utils.CloudCfg"/>
 
   <!-- datasource -->
   <bean id="risDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
