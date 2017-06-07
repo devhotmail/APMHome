@@ -103,16 +103,23 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
         }
         
         if (null == code || code.isEmpty()) {
-            request.getRequestDispatcher("/wechat/relogin.jsp").forward(request, response);
-            return;
+        	if (request.getParameter("openid")!=null){
+        		openId=request.getParameter("openid");
+        	}else{
+        		request.getRequestDispatcher("/wechat/relogin.jsp").forward(request, response);
+        		return;
+        	}
+
         }
 
         Boolean isBinded = false;
 
         try {
-            WxMpUser wxUser = getWxMpUser(code); 
-            openId = wxUser.getOpenId();
-            nickName = wxUser.getNickname();
+        	if(openId.isEmpty()){
+        		WxMpUser wxUser = getWxMpUser(code); 
+        		openId = wxUser.getOpenId();
+        		nickName = wxUser.getNickname();
+        	}
             ExternalLoginHandler loginHandler = WebUtil.getServiceBean(ExternalLoginHandler.class);
             isBinded = loginHandler.doLoginByWeChatOpenId(openId, request, response);
             //add url and openId to cookie

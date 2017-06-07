@@ -1,9 +1,6 @@
 package com.ge.apm.service.asset;
 
-import com.ge.apm.dao.AssetInfoRepository;
-import com.ge.apm.dao.AssetTagBiomedGroupRepository;
-import com.ge.apm.dao.AssetTagRuleRepository;
-import com.ge.apm.dao.BiomedGroupRepository;
+import com.ge.apm.dao.*;
 import com.ge.apm.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +24,8 @@ public class AssetTagService {
     private AssetTagRuleRepository assetTagRuleDao;
     @Autowired
     private AssetInfoRepository assetDao;
+    @Autowired
+    private OrgInfoRepository orgDao;
 
     public List<BiomedGroup> getBiomedGroupList(BiomedGroup queryBiomedGroup){
         List<SearchFilter> biomedGroupFilters = new ArrayList<>();
@@ -52,12 +51,17 @@ public class AssetTagService {
 
         List<SearchFilter> assetFilters = new ArrayList<>();
         assetFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, queryAsset.getSiteId()));
-        assetFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, queryAsset.getHospitalId()));
-        if (null != queryAsset.getAssetGroup()) {
-            assetFilters.add(new SearchFilter("assetGroup", SearchFilter.Operator.EQ, queryAsset.getAssetGroup()));
+        //assetFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, queryAsset.getHospitalId()));
+        if (null != queryAsset.getHospitalId() && queryAsset.getHospitalId() != 0) {
+            assetFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, queryAsset.getHospitalId()));
+        }else{
+            queryAsset.setClinicalDeptId(null);
         }
         if (null != queryAsset.getClinicalDeptId()) {
             assetFilters.add(new SearchFilter("clinicalDeptId", SearchFilter.Operator.EQ, queryAsset.getClinicalDeptId()));
+        }
+        if (null != queryAsset.getAssetGroup()) {
+            assetFilters.add(new SearchFilter("assetGroup", SearchFilter.Operator.EQ, queryAsset.getAssetGroup()));
         }
 
         return assetDao.findBySearchFilter(assetFilters);

@@ -227,9 +227,19 @@
                 initOrgSelect(qrCode);
             });
         }else{
-            init();
-            initOrgSelect(tempQrcode);
-            initUserSelect("${orgSelect}");
+            var source = "${source}";
+
+            if(source == null || source ==""){
+                init();
+                initOrgSelect(tempQrcode);
+                initUserSelect("${orgSelect}");
+            }else{
+                $("#qrCode").val(tempQrcode);
+
+                validateQrCode(tempQrcode);
+
+                initOrgSelect(tempQrcode);
+            }
         }
 
 

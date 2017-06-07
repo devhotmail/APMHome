@@ -110,6 +110,7 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
             setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeStr, "selectedid")));
             owner = inspectionService.getUserAccountById(selected.getOwnerId());
             orderDetailItemList = inspectionService.getDetailList(selected.getId());
+            ownerList = uuaService.getUserList(hospitalId);
             prepareEdit();
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
@@ -213,6 +214,11 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         }
     }
 
+    public String updateOrder(){
+        inspectionService.updateOrder(this.selected, new ArrayList<>());
+        return "InspOrderList?faces-redirect=true";
+    }
+
     @Override
     public void onBeforeNewObject(InspectionOrder object) {
         object.setSiteId(UserContextService.getSiteId());
@@ -273,7 +279,8 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
     }
 
     public boolean isExcuteable() {
-        return selected != null && !selected.getIsFinished() && (selected.getStartTime().before(new Date()));
+        //return selected != null && !selected.getIsFinished() && (selected.getStartTime().before(new Date()));
+        return selected != null && !selected.getIsFinished() && (selected.getPlanTime().before(new Date()));
     }
 
     public void onHospitalChange() {

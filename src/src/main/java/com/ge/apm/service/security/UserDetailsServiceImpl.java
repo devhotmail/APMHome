@@ -8,6 +8,7 @@ import com.ge.apm.domain.UserAccount;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import webapp.framework.util.TimeUtil;
 
 /**
  * An implementation of Spring Security's UserDetailsService.
@@ -64,6 +66,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("account " + login + " could not be found");
         }
 
+        if(account.getIsLocked()){
+            if(TimeUtil.toJodaDate(account.getLockTime()).plusHours(24).isBeforeNow()){
+                account.setIsLocked(false);
+                account.setPasswordErrorCount(0);
+                accountRepository.save(account);
+            }
+            else
+                throw new LockedException("account locked");
+        }
+        
         Collection<GrantedAuthority> grantedAuthorities = obtainGrantedAuthorities(login);
 
         if (grantedAuthorities == null) {

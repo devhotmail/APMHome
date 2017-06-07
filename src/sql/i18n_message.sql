@@ -97,7 +97,8 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (94, 'label', 'issueDate', '发行日期', 'Issue Date', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (95, 'label', 'submitDate', '提交日期', 'Submit Date', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (96, 'label', 'submitWechatId', '提交人', 'Submit People', NULL, -1);
-
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (97, 'label', 'AccountLocked', '帐号被锁定，请24小时后再试!', 'account locked!', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (98, 'label', 'SamePwd', '新老密码不能相同!', 'the new password cannot be the same as the old one', NULL, -1);
 
 -- menu item names  ( id from 200 to  399)
 
@@ -177,8 +178,6 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (274, 'label', 'FilterCondition', '过滤条件', 'Filter Conditions', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (275, 'label', 'AssetTag', '设备标签', 'AssetTag Mgmt', NULL, -1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (276, 'label', 'BiomedGroup', '维修工程师群组', 'BiomedGroup Mgmt', NULL, -1);
-
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (277, 'label', 'AssetTagMsgSubscriber', '设备标签关注', 'assetTagMsg Subscriber', NULL, -1);
 
 
 -- Entity Object Names  ( id from 400 to  599)
@@ -389,10 +388,8 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (775, 'label', 'InactiveAsset', '转入报废', 'inactive asset', NULL, -1);
 
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (776, 'label', ' set', '资产建档', 'build asset', NULL, -1);
-
-
-
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (776, 'label', 'BuildAsset', '资产建档', 'build asset', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (777, 'label', 'PwdTips', '密码必须6位以上，首字母大写,尾字母小写,必须包含数字,不可使用3个以上连续的数字或字母,不可使用3个以上相同的数字或字母,必须包含一个特殊字符(!@#$%&)', 'password tips', NULL, -1);
 
 
 -- field value code types  ( id from 1400)
@@ -443,11 +440,12 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 */
 
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1510,'woSteps','1', '报修','Create',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1511,'woSteps','2', '派工','Assign',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1512,'woSteps','3', '接单','Accept',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1513,'woSteps','4', '维修','Repair',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1514,'woSteps','5', '关单','Closed',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1515,'woSteps','6', '反馈','Feedback',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1511,'woSteps','2', '待派工','Assign',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1512,'woSteps','3', '待接单','Accept',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1513,'woSteps','4', '维修中','Repair',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1514,'woSteps','5', '待验收','Closed',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1515,'woSteps','6', '待关单','Closed',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1516,'woSteps','7', '反馈','Feedback',null,-1);
 
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1517,'assetStatus','1', '正常','Up',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1518,'assetStatus','2', '停机','Down',null,-1);
@@ -615,6 +613,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3039,'message','InvalidQRCode', '无效的二维码!','Invalid QRCode!',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3040,'message','WrongHospitalQRCode', '非本院二维码!','Not for this Hospital!',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3041,'message','AlreadyUsingQrCode', '已经使用中二维码!','Already using Code!',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3042,'message','DeleteAssetConformationMsg', '确认删除设备?','Confirm to remove this asset?',null,-1);
 
 -- Chart label/lengend （id from 5000 to 5500）
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5000,'label','deviceScanhd', '设备扫描量（次）','Scan #',null,-1);
@@ -688,7 +687,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5069,'label','timeoutClose','关单超时时间(分钟)','close timeout',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5070,'label','orderReopenTimeframe','二次开单间隔(天)','order reopen timeframe',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5071,'label','unbundWX','是否解除微信绑定？','unbundWX?',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5072,'label','maxMessageCount','最大消息次数','max message count',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5072,'label','maxMessageCount','最大消息提醒次数','max message count',null,-1);
 
 
 -- asset head
@@ -826,7 +825,6 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9012,'month','12', '十二月','December',null,-1);
 
 
-
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9102, 'focusOption', '2', '不推送工单消息', 'no push', NULL, -1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9101, 'focusOption', '1', '仅工单创建和关单消息', 'only push create and close workorder', NULL, -1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9100, 'focusOption', '0', '所有工单流程消息', 'push all workroder msg', NULL, -1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9100,'focusOption','0',  '所有工单流程消息','all workorder msg',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9101,'focusOption','1',  '仅工单创建和关单消息','only create and shutdown msg',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9102,'focusOption','2',  '不推送工单消息','no need push workorder msg',null,-1);

@@ -19,6 +19,9 @@
             </div>
 
             <div class="ui-g-12 card">
+                <h:form>
+                    <p:commandButton id="batchCreateButton" icon="ui-icon-extlink" value="批量创建" title="批量创建" actionListener="#{pmOrderController.prepareBatchCreate}" update=":BatchCreateDlg" oncomplete="PF('BatchCreateDialog').show()"/>
+                </h:form>
                 <h:form id="PmOrderListForm">
                     <p:dataTable id="datalist" value="#{pmOrderController.lazyModel}" var="item" widgetVar="varDataList"
                                  selectionMode="single" selection="#{pmOrderController.selected}"
@@ -38,6 +41,7 @@
                         <p:column headerText="#{msg.assetName}" sortBy="#{item.assetName}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.assetName}"/>
                         </p:column>
+                        <!--
                         <p:column headerText="#{msg.creatorName}" sortBy="#{item.creatorName}" filterBy="#{item.creatorId}" filterMatchMode="EQ">
                             <h:outputText value="#{item.creatorName}"/>
                             <f:facet name="filter">
@@ -53,6 +57,15 @@
                             </f:facet>
                             <h:outputText value="#{item.createTime}">
                                 <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </h:outputText>
+                        </p:column>
+                        -->
+                        <p:column headerText="计划时间" sortBy="#{item.planTime}" filterBy="#{item.planTime}" filterMatchMode="GTE">
+                            <f:facet name="filter">
+                                <p:inputText id="filterPlanTime" widgetVar="varFilterPlanTime"/>
+                            </f:facet>
+                            <h:outputText value="#{item.planTime}">
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd" />
                             </h:outputText>
                         </p:column>
                         <p:column headerText="#{msg.ownerId}" sortBy="#{item.ownerName}" filterBy="#{item.ownerId}" filterMatchMode="EQ">
@@ -111,10 +124,11 @@
 
                 <ui:include src="Edit.xhtml"/>
                 <ui:include src="View.xhtml"/>
+                <ui:include src="BatchCreate.xhtml"/>
 
             </div>
         </div>
-		
+        <!--
         <p:overlayPanel widgetVar="panelFilterCreateTime" for=":PmOrderListForm:datalist:filterCreateTime" dismissable="false">
             <h:panelGrid columns="2">
                 <p:outputLabel value="#{msg.From}"/>
@@ -124,6 +138,17 @@
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList', 'varFilterCreateTime', 'varCreateTimeFrom', 'varCreateTimeTo'); PF('panelFilterCreateTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterCreateTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
+        </p:overlayPanel>
+        -->
+        <p:overlayPanel widgetVar="panelFilterPlanTime" for=":PmOrderListForm:datalist:filterPlanTime" dismissable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{msg.From}"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varPlanTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:outputLabel value="#{msg.To}"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varPlanTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+            </h:panelGrid>
+            <p:commandButton onclick="setDateFilter('varDataList', 'varFilterPlanTime', 'varPlanTimeFrom', 'varPlanTimeTo'); PF('panelFilterPlanTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
+            <p:commandButton onclick="PF('panelFilterPlanTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
         </p:overlayPanel>
         <p:overlayPanel widgetVar="panelFilterStartTime" for=":PmOrderListForm:datalist:filterStartTime" dismissable="false">
             <h:panelGrid columns="2">

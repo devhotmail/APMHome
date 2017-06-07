@@ -120,7 +120,8 @@ public class InspectionService {
                     calender.add(Calendar.MONTH, 12);
                     break;
             }
-            order.setStartTime(itemstartDate);
+            order.setStartTime(null);
+            order.setPlanTime(itemstartDate);
             itemendDate = calender.getTime();
             itemstartDate = itemendDate;
             order.setId(null);

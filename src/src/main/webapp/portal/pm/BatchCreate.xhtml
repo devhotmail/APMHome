@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+
+    <p:dialog id="BatchCreateDlg" widgetVar="BatchCreateDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{pmOrderController.CRUDActionName} 设备标签" width="70%">
+        <h:form id="BatchCreateForm">
+            <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+            <h:panelGroup>
+                <label class="label" >计划开始时间*</label>
+                <p:calendar timeZone="GMT+8"  id="startTime" pattern="yyyy/MM/dd" value="#{pmOrderController.startPlanTime}" required="true" requiredMessage="计划开始时间 #{msg.ValidationRequire}" showOn="button" showButtonPanel="true" navigator="true" mask="true"/>
+            </h:panelGroup>
+            <h:panelGroup>
+                <label class="label">计划结束时间*</label>
+                <p:calendar timeZone="GMT+8"  id="endTime" pattern="yyyy/MM/dd" value="#{pmOrderController.endPlanTime}" required="true" requiredMessage="计划结束时间 #{msg.ValidationRequire}" showOn="button" showButtonPanel="true" navigator="true" mask="true"/>
+            </h:panelGroup>
+            <h:panelGroup>
+                <label class="label">保养次数*</label>
+                <p:inputNumber decimalPlaces="0" value="#{pmOrderController.pmCount}" required="true" requiredMessage="保养次数 #{msg.ValidationRequire}"/>
+            </h:panelGroup>
+            </p:panelGrid>
+            <br/>
+            <p:tabView>
+                <p:tab title="相关设备">
+                    <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <h:panelGroup >
+                            <label class="label">所属医院</label>
+                            <p:selectOneMenu id="hospitalId" value="#{pmOrderController.queryAsset.hospitalId}">
+                                <p:ajax  listener="#{pmOrderController.getQueryAssetsListByHospital()}" update="AssetsPickList, clinicalDeptName" />
+                                <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue="0"/>
+                                <f:selectItems value="#{pmOrderController.getHospitalListFilter()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.clinicalDeptName}</label>
+                            <p:selectOneMenu id="clinicalDeptName" value="#{pmOrderController.queryAsset.clinicalDeptId}">
+                                <p:ajax  listener="#{pmOrderController.getQueryAssetsListByDept()}" update="AssetsPickList" />
+                                <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                <f:selectItems value="#{pmOrderController.getClinicalDeptList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <label class="label">#{msg.assetGroup}</label>
+                            <p:selectOneMenu id="assetGroup" value="#{pmOrderController.queryAsset.assetGroup}">
+                                <p:ajax  listener="#{pmOrderController.getQueryAssetsList()}" update="AssetsPickList" />
+                                <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <p:pickList id="AssetsPickList" value="#{pmOrderController.availableAssets}" var="item"
+                                itemValue="#{item}" itemLabel="#{item.name}" showCheckbox="false" responsive="true"
+                                showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="assetInfoConverter"
+                                required="true" requiredMessage="相关设备 #{msg.ValidationRequire}">
+                        <f:facet name="sourceCaption">待选设备</f:facet>
+                        <f:facet name="targetCaption">已选设备</f:facet>
+                        <p:ajax event="transfer" listener="#{pmOrderController.onAssetsTransfer}" />
+                        <p:column style="float: left;width:40%;">
+                            <h:outputText value="#{item.name}" />
+                        </p:column>
+                        <p:column style="float: left;width:30%;">
+                            <h:outputText value="#{item.hospital.name}" />
+                        </p:column>
+                        <p:column style="float: left;width:30%;">
+                            <h:outputText value="#{item.clinicalDeptName}" />
+                        </p:column>
+                    </p:pickList>
+                </p:tab>
+            </p:tabView>
+            <br/>
+            <p:commandButton validateClient="true" actionListener="#{pmOrderController.saveBatchPmOrder}" value="#{msg.Save}" update=":BatchCreateDlg, :PmOrderListForm:datalist, :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'BatchCreateDialog');"/>
+            &nbsp;&nbsp;
+            <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('BatchCreateDialog').hide()"/>
+        </h:form>
+    </p:dialog>
+
+</ui:composition>
+</html>

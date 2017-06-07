@@ -56,7 +56,7 @@ public class UserAccount implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 16)
+    @Size(min = 1, max = 64)
     @Column(name = "login_name")
     private String loginName;
     @Basic(optional = false)
@@ -115,6 +115,20 @@ public class UserAccount implements Serializable {
     
     @Column(name = "leader_user_id")
     private Integer leaderUserId;
+
+    @Column(name = "password_update_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date passwordUpdateDate;
+
+    @Column(name = "password_error_count")
+    private Integer passwordErrorCount;
+
+    @Column(name = "is_locked")
+    private Boolean isLocked;
+
+    @Column(name = "lock_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lockTime;
     
     @Transient
     private String plainPassword;
@@ -259,6 +273,30 @@ public class UserAccount implements Serializable {
         this.userRoleList = userRoleList;
     }
 
+    public Date getPasswordUpdateDate() {
+        return passwordUpdateDate;
+    }
+
+    public void setPasswordUpdateDate(Date passwordUpdateDate) {
+        this.passwordUpdateDate = passwordUpdateDate;
+    }
+
+    public Integer getPasswordErrorCount() {
+        return passwordErrorCount;
+    }
+
+    public void setPasswordErrorCount(Integer passwordErrorCount) {
+        this.passwordErrorCount = passwordErrorCount;
+    }
+
+    public Boolean getIsLocked() {
+        return isLocked;
+    }
+
+    public void setIsLocked(Boolean isLocked) {
+        this.isLocked = isLocked;
+    }
+
     @Transient
     private List<String> userRoleNames;
     @JsonIgnore
@@ -324,7 +362,15 @@ public class UserAccount implements Serializable {
         byte[] hashPassword = Digests.sha1(getPlainPassword().getBytes(), salt, HASH_INTERATIONS);
         setPassword(Digests.encodeHex(hashPassword));
     }
-        
+
+    public Date getLockTime() {
+        return lockTime;
+    }
+
+    public void setLockTime(Date lockTime) {
+        this.lockTime = lockTime;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

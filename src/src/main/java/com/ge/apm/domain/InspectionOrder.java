@@ -101,6 +101,13 @@ public class InspectionOrder implements Serializable {
     @NotNull
     private Integer hospitalId;
 
+    @Column(name = "man_hours")
+    private Integer manHours;
+
+    @Column(name = "plan_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date planTime;  //计划时间
+
     public InspectionOrder() {
     }
 
@@ -240,11 +247,27 @@ public class InspectionOrder implements Serializable {
         this.hospitalId = hospitalId;
     }
 
+    public Date getPlanTime() {
+        return planTime;
+    }
+
+    public void setPlanTime(Date planTime) {
+        this.planTime = planTime;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
         return hash;
+    }
+
+    public Integer getManHours() {
+        return manHours;
+    }
+
+    public void setManHours(Integer manHours) {
+        this.manHours = manHours;
     }
 
     @Override

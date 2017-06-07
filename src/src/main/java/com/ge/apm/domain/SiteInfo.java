@@ -86,7 +86,10 @@ public class SiteInfo implements Serializable {
     private Boolean wfAutoStep5;
     @Column(name = "wf_auto_step6")
     private Boolean wfAutoStep6;
-    
+
+    @Column(name = "password_lifetime")
+    private Integer passwordLifeTime; //密码有效天数
+
     public SiteInfo() {
         isEnabled = true;
         wfAutoStep2 = false;
@@ -246,6 +249,14 @@ public class SiteInfo implements Serializable {
 
     public void setManhourPrice(Double manhourPrice) {
         this.manhourPrice = manhourPrice;
+    }
+
+    public Integer getPasswordLifeTime() {
+        return passwordLifeTime;
+    }
+
+    public void setPasswordLifeTime(Integer passwordLifeTime) {
+        this.passwordLifeTime = passwordLifeTime;
     }
 
     @Override

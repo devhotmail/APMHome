@@ -102,6 +102,14 @@ public class PmOrder implements Serializable {
     @Column(name = "file_id")
     private Integer fileId;
     
+    @Column(name = "plan_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date planTime;  //计划时间
+
+    @Column(name = "nearest_sr_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date nearestSrTime;  //最近的一次报修时间
+
     public PmOrder() {
     }
 
@@ -293,6 +301,22 @@ public class PmOrder implements Serializable {
         	return this.comments;
         }
         return   this.comments.substring(0,LENGTH)+"...";
+    }
+
+    public Date getPlanTime() {
+        return planTime;
+    }
+
+    public void setPlanTime(Date planTime) {
+        this.planTime = planTime;
+    }
+
+    public Date getNearestSrTime() {
+        return nearestSrTime;
+    }
+
+    public void setNearestSrTime(Date nearestSrTime) {
+        this.nearestSrTime = nearestSrTime;
     }
 
     @Override
