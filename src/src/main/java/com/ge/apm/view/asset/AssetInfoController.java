@@ -85,6 +85,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     private String  qrCode;
     Boolean terminate;
 
+    private List<AssetInfo> parentAssetList;
+
     protected void setSelectedByUrlParam(String encodeUrl, String paramName) {
         setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeUrl, paramName)));
 
@@ -731,7 +733,40 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public String getButtonName(){
     	return terminate ? WebUtil.getMessage("ActiveAsset"):WebUtil.getMessage("InactiveAsset");
     }
-    
-    
+
+    public void onAssetGroupChange(){
+
+        List<SearchFilter> assetFilters = new ArrayList<>();
+        if(this.selected.getAssetGroup() != null){
+            assetFilters.add(new SearchFilter("assetGroup", SearchFilter.Operator.EQ, this.selected.getAssetGroup()));
+
+            parentAssetList = dao.findBySearchFilter(assetFilters);
+        }else{
+            parentAssetList = new ArrayList<>();
+        }
+
+    }
+
+    @Override
+    public void prepareEdit() {
+        super.prepareEdit();
+
+        List<SearchFilter> assetFilters = new ArrayList<>();
+        if(this.selected.getAssetGroup() != null){
+            assetFilters.add(new SearchFilter("assetGroup", SearchFilter.Operator.EQ, this.selected.getAssetGroup()));
+
+            parentAssetList = dao.findBySearchFilter(assetFilters);
+        }else{
+            parentAssetList = new ArrayList<>();
+        }
+    }
+
+    public List<AssetInfo> getParentAssetList() {
+        return parentAssetList;
+    }
+
+    public void setParentAssetList(List<AssetInfo> parentAssetList) {
+        this.parentAssetList = parentAssetList;
+    }
 
 }
