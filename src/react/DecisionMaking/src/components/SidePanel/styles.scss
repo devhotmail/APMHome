@@ -69,6 +69,9 @@
 }
 
 :global {
+  .ant-table-fixed-header .ant-table-scroll .ant-table-header {
+    overflow: hidden;
+  }
 
   .ant-table-wrapper:after,
   .ant-table-wrapper:before {

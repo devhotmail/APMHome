@@ -154,7 +154,8 @@ export class App extends Component<void, Props, void> {
   clickLeftTooth(evt) {
     // 1, central chart: fetch reasons
     let param = {}
-    if (!this.refs.leftChart.refs.chart.classList.contains('child-focused')) {
+    let isFocused = this.refs.leftChart.isFocused()
+    if (!isFocused) {
       let { display } = this.props
       let key = evt.stripData.data.key
       if (display === 'display_asset_type') {
@@ -167,15 +168,23 @@ export class App extends Component<void, Props, void> {
     }
     this.props.fetchReasons(param)
     // 2 refresh lengend table
-    this.showDevice(evt.strips)
-    this.clearFocus('right')
-
+    if (isFocused) {
+      this.hideDevice()
+    } else {
+      this.showDevice(evt.strips)
+    }
     // 3 refesh right chart
     this.props.fetchBriefs('right', param)
+    this.clearFocus('right')
   }
 
   clickRightTooth(evt) {
-    this.showDevice(evt.strips)
+    let isFocused = this.refs.rightChart.isFocused()
+    if (isFocused) {
+      this.hideDevice()
+    } else {
+      this.showDevice(evt.strips)
+    }
     this.props.fetchReasons({ asset: evt.stripData.data.key.id })
     this.clearFocus('left')
   }
