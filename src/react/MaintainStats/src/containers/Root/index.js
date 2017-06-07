@@ -28,12 +28,11 @@ const roleFilterFn = isHead => n => {
 
 @connect(state => ({
   user: state.user.info,
-  focus: state.focus.data,
   root: state.root.data,
   group: state.group,
   asset: state.asset,
   filter: state.filter,
-  loading: !(!state.group.loading && !state.asset.loading)
+  loading: state.group.loading || state.asset.loading
 }))
 @RoleProvider
 export default class Root extends Component {
@@ -54,7 +53,7 @@ export default class Root extends Component {
         text: '科室'
       }
     ],
-    lastSelectedGroup: undefined
+    selected: []
   }
 
   componentDidMount () {
@@ -75,10 +74,10 @@ export default class Root extends Component {
   }
 
   render () {
-    const { group, asset, location, filter, loading, focus, user } = this.props
+    const { group, asset, location, filter, loading, user, root } = this.props
     const { groupPage, assetPage, dept, type, groupby } = location.query
 
-    const { groupAD, assetAD, groupbyOpts } = this.state
+    const { groupAD, assetAD, groupbyOpts, selected } = this.state
     const filterOpts = [
       {
         type: 'range',
@@ -111,6 +110,10 @@ export default class Root extends Component {
     )
 
     const { text: selectedGroupby } = groupbyOpts.find(n => n.key === groupby) || groupbyOpts[0]
+
+    const existSelected = selected.filter(n => n)
+
+    const focus = existSelected[existSelected.length - 1] || root
 
     return (
       <div className={styles.container}>
@@ -202,20 +205,15 @@ export default class Root extends Component {
     const isGroupSelected = id == groupId
 
     const newGroupId = isGroupSelected ? undefined : id
-    const payload = isGroupSelected ? root : data
 
     this.changeQuery({
       groupId: newGroupId,
-      assetId: undefined
+      assetId: undefined,
+      assetPage: defaultPage // set asset page to `defaultPage` when groupId set
     })
 
     this.setState({
-      lastSelectedGroup: payload
-    })
-
-    dispatch({
-      type: 'focus/set',
-      payload
+      selected: [isGroupSelected ? null : data, null]
     })
   }
 
@@ -229,14 +227,10 @@ export default class Root extends Component {
     const isAssetSelected = id == assetId
 
     const newAssetId = isAssetSelected ? undefined : id
-    // use lastSelectedGroup || root here
-    const payload = isAssetSelected ? (lastSelectedGroup || root) : data
-
     this.changeQuery({ assetId: newAssetId })
 
-    dispatch({
-      type: 'focus/set',
-      payload
+    this.setState({
+      selected: [this.state.selected[0], isAssetSelected ? null : data]
     })
   }
 
