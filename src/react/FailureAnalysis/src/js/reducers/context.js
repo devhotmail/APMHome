@@ -1,10 +1,10 @@
-import _ from 'lodash'
+import { forEach } from 'lodash-es'
 
 const initContext = function() {
   let ctx = document.querySelector('#user-context') || {}
   let fields = ctx.elements || []
   let ctxState = {}
-  _.forEach(fields, f => {
+  forEach(fields, f => {
     let value = f.value
     if (!Number.isNaN(+value)) {
       value = +value
