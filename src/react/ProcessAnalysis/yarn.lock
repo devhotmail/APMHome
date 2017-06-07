@@ -6770,13 +6770,12 @@ react-dom@^15.5.4:
     prop-types "~15.5.7"
 
 "react-gear-list-chart@git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git":
-  version "0.0.2"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#4be8999550c82a678cf78d26a60cf4dbc555aeea"
+  version "0.0.3"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#15430b5a632ba9850a5b5ce6e15bff1a9068f7d8"
   dependencies:
     classnames "^2.2.5"
     lodash-es "^4.17.4"
     react-motion "^0.5.0"
-    reselect "2.5.3"
     shortid "^2.2.8"
 
 react-hammerjs@~0.5.0:
@@ -7314,10 +7313,6 @@ require-uncached@^1.0.2:
 requires-port@1.0.x, requires-port@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
-
-reselect@2.5.3:
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/reselect/-/reselect-2.5.3.tgz#236591136ad5ff63ee50cdd84feff7f6afd80eea"
 
 resolve-from@^1.0.0:
   version "1.0.1"
