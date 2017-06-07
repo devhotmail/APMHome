@@ -3,7 +3,6 @@ package com.ge.apm.service.api;
 import com.github.davidmoten.rx.jdbc.ConnectionProvider;
 import com.github.davidmoten.rx.jdbc.Database;
 import com.github.davidmoten.rx.jdbc.QuerySelect;
-import com.github.davidmoten.rx.jdbc.annotations.Column;
 import javaslang.Tuple;
 import javaslang.Tuple4;
 import javaslang.Tuple6;
@@ -34,25 +33,6 @@ public class DmService {
     db = Database.from(connectionProvider);
   }
 
-  interface Props {
-    @Column
-    int id();
-
-    @Column
-    String name();
-
-    @Column
-    int dept();
-
-    @Column
-    int type();
-
-    @Column
-    double use_time();
-
-    @Column
-    double deprecation();
-  }
 
   /**
    * find data for each asset
