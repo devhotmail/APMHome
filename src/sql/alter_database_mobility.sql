@@ -321,3 +321,5 @@ Alter table user_account add column is_locked bool;	--帐号是否锁定
 
 alter table pm_order add column plan_time timestamp;
 alter table pm_order add column nearest_sr_time timestamp;
+
+alter table inspection_order add column plan_time timestamp;

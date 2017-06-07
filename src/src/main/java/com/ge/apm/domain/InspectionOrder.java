@@ -247,6 +247,14 @@ public class InspectionOrder implements Serializable {
         this.hospitalId = hospitalId;
     }
 
+    public Date getPlanTime() {
+        return planTime;
+    }
+
+    public void setPlanTime(Date planTime) {
+        this.planTime = planTime;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
