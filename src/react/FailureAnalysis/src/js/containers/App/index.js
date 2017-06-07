@@ -257,6 +257,7 @@ export class App extends Component<void, Props, void> {
     }
     if (current.type === 'left') {
       this.setState({ leftItems: current, lastYear: { leftItems: lastYear, rightItems: this.state.lastYear.rightItems } })
+      this.hideDevice() // everytime leftside got refreshed, selected device should be cleared
     } else if (current.type === 'right'){
       this.setState({ rightItems: current, lastYear: { rightItems: lastYear, leftItems: this.state.lastYear.leftItems } })
     }
