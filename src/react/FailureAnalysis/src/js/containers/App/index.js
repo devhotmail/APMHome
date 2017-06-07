@@ -309,12 +309,12 @@ export class App extends Component<void, Props, void> {
 
             <div className="display-select">{selectHelper(display, this.getDisplayOptions(), updateDisplayType)}</div>
             {
-              leftItems && !!leftItems.length &&
+              left.total > left.top &&
               <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
                 className="pager-left" onChange={this.onLeftPagerChange}/>
             }
             {
-              rightItems && !!rightItems.length &&
+              right.total > right.top &&
               <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
                 className="pager-right" onChange={this.onRightPagerChange}/>
             }
