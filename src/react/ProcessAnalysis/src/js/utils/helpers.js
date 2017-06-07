@@ -67,7 +67,7 @@ export function GenerateTeethData(count, mode, stripCount, colors = []) {
   }
   let result = ArrayGen(count)(_ => ({
       mode: mode || modes[RandomInt(2)],
-      label: "placeholder",
+      label: 'placeholder',
       id: SID.generate(),
       strips: getRandomStrips(stripCount || RandomInt(1, 4))
     }))

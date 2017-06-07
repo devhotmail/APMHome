@@ -2,7 +2,6 @@
 
 import { sum, values, every } from 'lodash-es'
 import COLORS from 'utils/colors'
-import randomName from 'random-name'
 import { log } from 'utils/logger'
 import SID from 'shortid'
 
@@ -61,7 +60,7 @@ export function GenerateTeethData(count, mode, stripCount, colors = []) {
   }
   let result = ArrayGen(count)(_ => ({
       mode: mode || modes[RandomInt(2)],
-      label: randomName.first(),
+      label: 'placeholder',
       id: SID.generate(),
       strips: getRandomStrips(stripCount || RandomInt(1, 4))
     }))
