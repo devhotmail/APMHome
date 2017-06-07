@@ -47,6 +47,10 @@
                             <p:menuitem id="um08" value="#{msg.SupplierMgmt}" outcome="/portal/supplier/List.xhtml"/>
                             <p:menuitem id="um081" value="#{msg.TerminatedAsset}" outcome="/portal/asset/info/List.xhtml?terminate=true"/>
                             <p:menuitem id="um083" value="#{msg.Create}#{msg.BuildAsset}" outcome="/portal/asset/createAsset/RequestsList.xhtml"/>
+                            <p:menuitem id="um085" value="#{msg.AssetTagMsgSubscriber}" outcome="/portal/asset/assetTag/TagSubscribeList.xhtml"/>
+
+                            <p:menuitem id="um086" value="申请" outcome="/portal/asset/assetTag/ApplicationList.xhtml"/>
+
                         </p:submenu>
                         <p:submenu id="um09" label="#{msg.WorkOrderMgmt}" icon="fa fa-wrench" rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
                             <!--<p:menuitem id="um10" value="#{msg.ServiceRequestMgmt}" outcome="/portal/wo/woList.xhtml"/>-->
@@ -55,7 +59,6 @@
                             <p:menuitem id="um12" value="#{msg.MaintainanceRecord}" rendered="false" outcome="/empty"/>
                             <p:menuitem id="um13" value="#{msg.ServiceQualityReview}" outcome="/empty" rendered="false"/>
                             <p:menuitem id="um14" value="#{msg.Inspection}" rendered="false" outcome="/empty"/>
-                            <p:menuitem id="um085" value="维修事件消息关注" outcome="/portal/asset/assetTag/TagSubscribeList.xhtml"/>
                         </p:submenu>
                         <p:submenu id="um15" label="#{msg.DeviceMonitor}" icon="fa fa-bell-o" rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
                             <p:menuitem id="um16" value="#{msg.DeviceStatusMonitor}" outcome="/portal/analysis/deviceStatusMonitor" />
