@@ -112,7 +112,6 @@
                     <div class="ui-g">
                         <div class="ui-g-12">
                             <p:fieldset legend="申请科室负责人(签字)" >
-                                <!--<p:inputTextarea rows="3"  cols="70"  queryDelay="750" minQueryLength="4" value="#{applicationController.selected.}"/>-->
                                 <p:outputLabel value="签字"/>
                                 <p:inputText value="#{applicationController.selected.clinicalResponser}" rows="1"  cols="40"  queryDelay="750" minQueryLength="4"/>
                             </p:fieldset>
@@ -125,7 +124,7 @@
                                 <p:inputTextarea value="#{applicationController.selected.infoAdvice}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
 
                                 <p:outputLabel value="签字"/>
-                                <p:inputText value="#{applicationController.selected.infoSign}" rows="1"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                                <p:inputTextarea value="#{applicationController.selected.infoSign}" rows="1"  cols="15"  queryDelay="750" minQueryLength="4"/>
                                 <p:outputLabel value="日期"/>
                                 <p:calendar timeZone="GMT+8" id="infoSignDate" pattern="yyyy/MM/dd"  value="#{applicationController.selected.infoSignDate}" showOn="button" showButtonPanel="true" navigator="true" locale="zh"></p:calendar>
                             </p:fieldset>
@@ -137,7 +136,7 @@
                                 <p:outputLabel value="意见"/>
                                 <p:inputTextarea value="#{applicationController.selected.devAdvice}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
                                 <p:outputLabel value="签字"/>
-                                <p:inputTextarea value="#{applicationController.selected.devSign}" rows="1"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                                <p:inputTextarea value="#{applicationController.selected.devSign}" rows="1"  cols="15"  queryDelay="750" minQueryLength="4"/>
                                 <p:outputLabel value="日期"/>
                                 <p:calendar timeZone="GMT+8" id="devSignDate" pattern="yyyy/MM/dd"  value="#{applicationController.selected.devSignDate}" showOn="button" showButtonPanel="true" navigator="true" locale="zh"></p:calendar>
                             </p:fieldset>
@@ -149,7 +148,7 @@
                                 <p:outputLabel value="意见"/>
                                 <p:inputTextarea value="#{applicationController.selected.leaderAdvice}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
                                 <p:outputLabel value="签字"/>
-                                <p:inputTextarea value="#{applicationController.selected.leaderSign}" rows="1"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                                <p:inputTextarea value="#{applicationController.selected.leaderSign}" rows="1"  cols="15"  queryDelay="750" minQueryLength="4"/>
                                 <p:outputLabel value="日期"/>
                                 <p:calendar timeZone="GMT+8" id="leaderSignDate" pattern="yyyy/MM/dd"  value="#{applicationController.selected.leaderSignDate}" showOn="button" showButtonPanel="true" navigator="true" locale="zh"></p:calendar>
 
