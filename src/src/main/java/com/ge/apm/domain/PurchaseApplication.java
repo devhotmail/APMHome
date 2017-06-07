@@ -43,8 +43,11 @@ public class PurchaseApplication implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "quantity")
-    private int quantity;
+    private Integer quantity;
 
+    @Basic(optional = false)
+    @Column(name = "intent")
+    private Integer intent;
 
     @Basic(optional = false)
     @Column(name = "predicate_price")
@@ -65,23 +68,9 @@ public class PurchaseApplication implements Serializable {
 
 
 
-
-    @Basic(optional = false)
-    @Column(name = "info_advice")
-    private String infoAdvice;
-
-
-    @Basic(optional = false)
-    @Column(name = "dev_advice")
-    private String devAdvice;
-
-    @Basic(optional = false)
-    @Column(name = "leader_advice")
-    private String leaderAdvice;
-
     @Basic(optional = false)
     @Column(name = "funding_resource")
-    private String fundingResource;
+    private int fundingResource;
 
     @Basic(optional = false)
     @Column(name = "recom_ad1")
@@ -127,6 +116,47 @@ public class PurchaseApplication implements Serializable {
     @Column(name = "special_requirement")
     private String specialRequirement;
 
+    @Basic(optional = false)
+    @Column(name = "funding_resource_others")
+    private String fundingResourceOthers;
+
+////
+@Basic(optional = false)
+@Column(name = "info_sign")
+private String infoSign;
+
+    @Basic(optional = false)
+    @Column(name = "dev_sign")
+    private String devSign;
+
+    @Basic(optional = false)
+    @Column(name = "leader_sign")
+    private String leaderSign;
+
+
+    @Basic(optional = false)
+    @Column(name = "info_advice")
+    private String infoAdvice;
+
+    @Basic(optional = false)
+    @Column(name = "dev_advice")
+    private String devAdvice;
+
+    @Basic(optional = false)
+    @Column(name = "leader_advice")
+    private String leaderAdvice;
+
+
+
+
+
+    public String getFundingResourceOthers() {
+        return fundingResourceOthers;
+    }
+
+    public void setFundingResourceOthers(String fundingResourceOthers) {
+        this.fundingResourceOthers = fundingResourceOthers;
+    }
 
     public PurchaseApplication() {
     }
@@ -257,11 +287,11 @@ public class PurchaseApplication implements Serializable {
         this.device = device;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -369,11 +399,43 @@ public class PurchaseApplication implements Serializable {
         this.recomAd3Tel = recomAd3Tel;
     }
 
-    public String getFundingResource() {
+    public int getFundingResource() {
         return fundingResource;
     }
 
-    public void setFundingResource(String fundingResource) {
+    public void setFundingResource(int fundingResource) {
         this.fundingResource = fundingResource;
+    }
+
+    public Integer getIntent() {
+        return intent;
+    }
+
+    public void setIntent(Integer intent) {
+        this.intent = intent;
+    }
+
+    public String getInfoSign() {
+        return infoSign;
+    }
+
+    public void setInfoSign(String infoSign) {
+        this.infoSign = infoSign;
+    }
+
+    public String getDevSign() {
+        return devSign;
+    }
+
+    public void setDevSign(String devSign) {
+        this.devSign = devSign;
+    }
+
+    public String getLeaderSign() {
+        return leaderSign;
+    }
+
+    public void setLeaderSign(String leaderSign) {
+        this.leaderSign = leaderSign;
     }
 }

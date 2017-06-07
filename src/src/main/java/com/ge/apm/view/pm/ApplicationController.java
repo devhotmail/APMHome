@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @ManagedBean
 @ViewScoped
@@ -30,27 +32,34 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
     private static final long serialVersionUID = 1L;
 
     private PurchaseApplicationRepository dao = null;
-    private String operation;
-    private List<SelectItem> cars;
-    private String[] selectedCars;
 
-
-
-
+    private List<SelectItem> intentGroupList;
+    private List<SelectItem> intentGroupListSelected;
+    private List<String> selectedIntention;
+    private List<Integer> selectedIntention1;
+    private List<String> selectedIntention2;
     private String needCost;
 
     @Override
     protected void init() {
         this.filterBySite=false;
         dao=WebUtil.getBean(PurchaseApplicationRepository.class);
-        cars = new ArrayList<SelectItem>();
-        SelectItemGroup germanCars = new SelectItemGroup("拟用方向:");
-        germanCars.setSelectItems(new SelectItem[] {
-                new SelectItem("lingchuangbibei", "临床必备"),
-                new SelectItem("xuekefazhan", "学科发展"),
-                new SelectItem("jiaoxuekeyan", "教学科研")
+        intentGroupList = new ArrayList<SelectItem>();
+
+        SelectItemGroup intentGroup = new SelectItemGroup("拟用方向:");
+        intentGroup.setSelectItems(new SelectItem[] {
+                new SelectItem(0, "临床必备"),
+                new SelectItem(0, "学科发展"),
+                new SelectItem(1, "教学科研")
         });
-        cars.add(germanCars);
+        intentGroupList.add(intentGroup);
+        selectedIntention1=new ArrayList<Integer>();
+        selectedIntention2 = new ArrayList<String>();
+
+       /* selectedIntention1.add(0);*/
+        //intentGroupListSelected = new ArrayList<SelectItem>();
+         // intentGroupListSelected.add(new SelectItem(1, "临床必备"));
+
 
 
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -62,35 +71,94 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
             } catch (InstantiationException | IllegalAccessException ex) {
                 Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }else if ("Edit".equalsIgnoreCase(actionName)) {
-
            setSelectedByUrlParam(encodeStr, "selectedid");
             prepareEdit();
+            PurchaseApplication byId = dao.findById(this.selected.getId());
+            int v1=  byId.getIntent();
+            if(v1==7){
+                selectedIntention2.add("1");
+                selectedIntention2.add("2");
+                selectedIntention2.add("4");
+            }else if(v1==6){
+                selectedIntention2.add("2");
+                selectedIntention2.add("4");
+            }else if(v1==5){
+                selectedIntention2.add("1");
+                selectedIntention2.add("4");
+            }else if(v1==4){
+                selectedIntention2.add("4");
+            }else if(v1==3){
+                selectedIntention2.add("1");
+                selectedIntention2.add("2");
+            }else if(v1==2){
+                selectedIntention2.add("2");
+            }else if(v1==1){
+                selectedIntention2.add("1");
+            }
         } else if ("Delete".equalsIgnoreCase(actionName)) {
-            //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-          //setSelectedByUrlParam(encodeStr, "selectedid");
             prepareDelete();
+
+
         }
-
-
-
     }
 
+    public void onSelectAsset() throws IOException{
+        if(this.selected!=null){
+            PurchaseApplication byId = dao.findById(this.selected.getId());
+            int v1=  byId.getIntent();
+            System.out.println("v1v1 "+v1);
+           // selectedIntention1 = intToIntegerList(v1);
+            System.out.println();
+        }
+
+    }
+    public static  List<Integer> intToIntegerList(int ind) {
+        String s = Integer.toBinaryString(ind);
+        int[] intArray = new int[s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            intArray[i] = Character.digit(s.charAt(i), 10);
+        }
+        List<Integer> integelist  = IntStream.of(intArray).boxed().collect(Collectors.toList());
+        return integelist;
+    }
     protected void setSelectedByUrlParam(String encodeUrl, String paramName) {
         setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeUrl, paramName)));
     }
 
     @Transactional
     public void applyChange() {
-        this.save();
-    }
+        //资金来源是其它输入
+if(this.selected.getFundingResource()==4){
+    this.selected.setFundingResourceOthers(this.selected.getFundingResourceOthers());
+}
 
+int p =0;
+for( int i=0;i<this.selectedIntention2.size();i++){
+    selectedIntention1.add(Integer.parseInt(selectedIntention2.get(i)));
+}
+        int j= selectedIntention1.stream().reduce(0,(Integer::sum));
+        System.out.println(p);
+        this.selected.setIntent(j);
+        this.save();
+        /*List<Integer> x2 = new ArrayList<Integer>();
+x2.add(this.selectedIntention1.get(0));
+        x2.add(this.selectedIntention1.get(1).intValue());
+        System.out.println(this.selectedIntention1);
+       //=this.selectedIntention1.stream().mapToInt(Integer::intValue).sum();
+        *//*this.selectedIntention1 = new ArrayList<Integer>();
+        this.selectedIntention1.add(2);
+        this.selectedIntention1.add(10);*//*
+        int j =x2.stream().reduce(0,(Integer::sum));
+        System.out.println();*/
+
+    }
 
     @Override
     protected String getActionMessage(String actionName) {
-        return WebUtil.getMessage("标签");
+        return WebUtil.getMessage("申请单"+WebUtil.getMessage(actionName));
     }
+
 
     @Override
     protected PurchaseApplicationRepository getDAO() {
@@ -105,31 +173,21 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
     return url;
     }
 
-    public List<SelectItem> getCars() {
-        return cars;
+    public List<SelectItem> getIntentGroupList() {
+        return intentGroupList;
     }
 
-    public void setCars(List<SelectItem> cars) {
-        this.cars = cars;
+    public void setIntentGroupList(List<SelectItem> intentGroupList) {
+        this.intentGroupList = intentGroupList;
     }
 
-    public String[] getSelectedCars() {
-        return selectedCars;
+    public List<String> getSelectedIntention() {
+        return selectedIntention;
     }
 
- /*   public List<String> getFundingResource() {
-        return fundingResource;
+    public void setSelectedIntention(List<String> selectedIntention) {
+        this.selectedIntention = selectedIntention;
     }
-
-    public void setFundingResource(List<String> fundingResource) {
-        this.fundingResource = fundingResource;
-    }*/
-
-    public void setSelectedCars(String[] selectedCars) {
-        this.selectedCars = selectedCars;
-    }
-
-
 
     public String getNeedCost() {
         return needCost;
@@ -147,5 +205,29 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public List<Integer> getSelectedIntention1() {
+        return selectedIntention1;
+    }
+
+    public void setSelectedIntention1(List<Integer> selectedIntention1) {
+        this.selectedIntention1 = selectedIntention1;
+    }
+
+    public List<SelectItem> getIntentGroupListSelected() {
+        return intentGroupListSelected;
+    }
+
+    public void setIntentGroupListSelected(List<SelectItem> intentGroupListSelected) {
+        this.intentGroupListSelected = intentGroupListSelected;
+    }
+
+    public List<String> getSelectedIntention2() {
+        return selectedIntention2;
+    }
+
+    public void setSelectedIntention2(List<String> selectedIntention2) {
+        this.selectedIntention2 = selectedIntention2;
     }
 }

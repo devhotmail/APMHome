@@ -32,7 +32,7 @@
                               currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
                               rows="20" emptyMessage="#{msg.noRecordFound}"
                               rowsPerPageTemplate="20,40,60">
-                    <p:ajax event="rowSelect" update="createButton editButton deleteButton"/>
+                    <p:ajax event="rowSelect" listener="#{applicationController.onSelectAsset}" update="createButton editButton deleteButton"/>
                     <p:ajax event="filter" listener="#{applicationController.onFilter}" />
                     <p:column headerText="电话" filterMatchMode="LIKE">
                         <h:outputText value="#{item.telephone}" />
