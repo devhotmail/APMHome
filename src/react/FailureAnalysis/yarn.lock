@@ -6739,14 +6739,13 @@ react-dom@^15.5.4:
     object-assign "^4.1.0"
     prop-types "~15.5.7"
 
-"react-gear-list-chart@git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#v0.0.2":
-  version "0.0.2"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#4be8999550c82a678cf78d26a60cf4dbc555aeea"
+"react-gear-list-chart@git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#v0.0.3":
+  version "0.0.3"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#15430b5a632ba9850a5b5ce6e15bff1a9068f7d8"
   dependencies:
     classnames "^2.2.5"
     lodash-es "^4.17.4"
     react-motion "^0.5.0"
-    reselect "2.5.3"
     shortid "^2.2.8"
 
 react-hammerjs@~0.5.0:
