@@ -141,6 +141,15 @@ public class ScanApiTest extends AbstractApiTest {
     briefDetailContinuityTest(tests, LocalDate.now().withDayOfYear(1), LocalDate.now(),
       null, null,
       null);
+    briefDetailContinuityTest(tests, LocalDate.now().withDayOfYear(1).minusYears(1), LocalDate.now().withDayOfYear(1).minusDays(1),
+      1, null,
+      null);
+    briefDetailContinuityTest(tests, LocalDate.now().withDayOfYear(1), LocalDate.now(),
+      null, 2,
+      null);
+    briefDetailContinuityTest(tests, LocalDate.now().withDayOfYear(1).minusYears(1), LocalDate.now().withDayOfYear(1).minusDays(1),
+      null, null,
+      3);
   }
 }
 

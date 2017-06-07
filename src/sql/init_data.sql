@@ -68,14 +68,19 @@ SELECT setval('"data_table_config_id_seq"', 4, false);
 SELECT setval('"field_code_type_id_seq"', 5, false);
 
 
-create index ix_exam_summit_site_id on exam_summit(site_id);
-create index ix_exam_summit_hospital_id on exam_summit(hospital_id);
-create index ix_exam_summit_asset_id on exam_summit(asset_id);
-create index ix_exam_summit_asset_group on exam_summit(asset_group);
-create index ix_exam_summit_dept_id on exam_summit(dept_id);
-create index ix_exam_summit_part_id on exam_summit(part_id);
-create index ix_exam_summit_subpart_id on exam_summit(subpart_id);
-create index ix_exam_summit_step_id on exam_summit(step_id);
+--create index ix_exam_summit_site_id on exam_summit(site_id);
+--create index ix_exam_summit_hospital_id on exam_summit(hospital_id);
+--create index ix_exam_summit_asset_id on exam_summit(asset_id);
+--create index ix_exam_summit_asset_group on exam_summit(asset_group);
+--create index ix_exam_summit_dept_id on exam_summit(dept_id);
+--create index ix_exam_summit_part_id on exam_summit(part_id);
+--create index ix_exam_summit_subpart_id on exam_summit(subpart_id);
+--create index ix_exam_summit_step_id on exam_summit(step_id);
+
+insert into supplier(site_id,name) values (1, '通用电气');
+insert into supplier(site_id,name) values (1, '西门子');
+insert into supplier(site_id,name) values (1, '飞利浦');
+insert into supplier(site_id,name) values (1, '霍尼韦尔');
 
 insert into proc_part(name) values ('头部');
 insert into proc_part(name) values ('颈部');

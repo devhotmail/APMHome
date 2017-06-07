@@ -18,6 +18,7 @@
   <http pattern="/error/*" security="none"/>
   <http pattern="/about.html" security="none"/>
 
+
   <beans:bean name="logoutHandler" class="com.ge.apm.view.sysutil.LogoutHandler"
               p:logoutSuccessUrl="/login.xhtml"/>
 

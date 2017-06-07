@@ -8,10 +8,15 @@ import com.github.davidmoten.rx.jdbc.tuple.Tuple2;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.primitives.Doubles;
+import com.google.common.primitives.Ints;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import javaslang.Tuple;
 import javaslang.Tuple3;
 import javaslang.Tuple7;
 import javaslang.collection.HashMap;
+import javaslang.collection.List;
 import javaslang.control.Option;
 import javaslang.control.Try;
 import org.apache.ibatis.jdbc.SQL;
@@ -67,7 +72,7 @@ public class CommonService {
 
   @Cacheable(cacheNames = "springCache", key = "'commonService.findDepts.'+#siteId+'.'+#hospitalId")
   public Map<Integer, String> findDepts(int siteId, int hospitalId) {
-    return Try.of(() -> db.select(new SQL().SELECT_DISTINCT("clinical_dept_id", "clinical_dept_name").FROM("asset_info").WHERE("site_id = :site_id ").WHERE("hospital_id = :hospital_id").toString())
+    return Try.of(() -> db.select(new SQL().SELECT("id", "name as cn").FROM("org_info").WHERE("site_id = :site_id ").WHERE("hospital_id = :hospital_id").WHERE("parent_id is not NULL").toString())
       .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
       .getAs(Integer.class, String.class)
       .toMap(Tuple2::_1, tuple -> Option.of(tuple._2()).getOrElse(""))
@@ -126,7 +131,41 @@ public class CommonService {
       .cache().toBlocking().single()).getOrElse(ImmutableMap.of());
   }
 
+  @Cacheable(cacheNames = "springCache", key = "'commonService.findFaults'")
+  public Map<Integer, Tuple3<Integer, Integer, String>> findFaults() {
+    return Try.of(() -> db.select(new SQL().SELECT("id", "asset_group_id", "fault_name").FROM("asset_fault_type").toString())
+      .getAs(Integer.class, Integer.class, String.class)
+      .map(t -> Tuple.of(t._1(), t._2(), t._3()))
+      .toMap(Tuple3::_1)
+      .cache().toBlocking().single()).getOrElse(ImmutableMap.of());
+  }
+
   public ResponseEntity.BodyBuilder headerUserProfile(ResponseEntity.BodyBuilder builder, UserAccount user, Map<Integer, Tuple3<Integer, String, String>> hospitals) {
     return builder.header("user-profile", JsonMapper.nonEmptyMapper().toJson(HashMap.empty().put("user.id", user.getId()).put("user.name", user.getName()).put("hospital.name", Option.of(hospitals.get(user.getSiteId())).map(t -> !Strings.isNullOrEmpty(t._3) && t._3.length() > t._2.length() ? t._3 : t._2).getOrElse("")).toJavaMap()));
+  }
+
+  /**
+   * get key-value map from a json.
+   *
+   * @param s     input json
+   * @param key   key of map. eg: id
+   * @param value value of map. eg:revenue
+   * @return a map of key and value specified by user
+   */
+  public static Map<Integer, Double> parseInputJson(String s, String listName, String key, String value) {
+    Config parsedBody = ConfigFactory.parseString(s);
+    return HashMap.ofEntries(
+      List.ofAll(Try.of(() -> parsedBody.getConfigList(listName)).get())
+        .filter(v -> !Try.of(() -> v.getString(value)).getOrElse("").equals(""))
+        .map(v2 -> Tuple.of(Ints.tryParse(v2.getString(key)), Doubles.tryParse(v2.getString(value)))))
+      .toJavaMap();
+  }
+
+  //given 2 list of measurement of assets, one of which representing historical data, the other future data. calculate total increase rate
+  //input: Tuple2<future,past>
+  public static double calcIncRate(Observable<javaslang.Tuple2<Double, Double>> items) {
+    double past = items.reduce(0D, (init, v) -> init + v._2).toBlocking().single();
+    double future = items.reduce(0D, (init, v) -> init + v._1).toBlocking().single();
+    return Option.when(past == 0D, 0D).getOrElse(future / past - 1D);
   }
 }

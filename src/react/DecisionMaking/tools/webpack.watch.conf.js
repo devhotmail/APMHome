@@ -17,7 +17,7 @@ module.exports = merge(baseWebpackConfig, {
       'babel-polyfill'
     ],
     app: './src/index.js'
-  },  
+  },
   output: {
     filename: '[name].js',
     publicPath,
@@ -34,18 +34,20 @@ module.exports = merge(baseWebpackConfig, {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use:[
+          use: [
             'css-loader',
             'postcss-loader'
           ]
-        }),
+        })
       },
       {
         test: /\.s[ca]ss$/,
-        exclude: /src\/styles/,
+        exclude: [
+          /src\/styles/,
+          /node_modules/
+        ],
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
@@ -53,18 +55,21 @@ module.exports = merge(baseWebpackConfig, {
               loader: 'css-loader',
               options: {
                 module: true,
-                importLoaders: 1,
+                importLoaders: 2,
                 localIdentName: '[local]__[hash:base64:5]'
               }
             },
-            'sass-loader',
-            'postcss-loader'
+            'postcss-loader',
+            'sass-loader'
           ]
         })
       },
       {
         test: /\.s[ca]ss$/,
-        include: /src\/styles/,
+        include: [
+          /src\/styles/,
+          /node_modules/
+        ],
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
@@ -101,7 +106,7 @@ module.exports = merge(baseWebpackConfig, {
         include: /node_modules/
       }
     ]
-  },  
+  },
   plugins: [
     new webpack.NamedModulesPlugin(),
     new webpack.LoaderOptionsPlugin({

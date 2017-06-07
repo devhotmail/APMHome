@@ -8,7 +8,6 @@ import com.google.common.primitives.Ints;
 import javaslang.Tuple;
 import javaslang.Tuple3;
 import javaslang.Tuple5;
-import javaslang.Tuple7;
 import javaslang.control.Option;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -109,16 +108,14 @@ public class ScanApi {
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(body);
   }
 
-  private ResponseEntity<Map<String, Object>> serializeStep(HttpServletRequest request, Map<Integer, String> types, Map<Integer, String> parts, Observable<Tuple7<Integer, Integer, String, Integer, Integer, String, Integer>> report) {
+  private ResponseEntity<Map<String, Object>> serializeStep(HttpServletRequest request, Map<Integer, String> types, Map<Integer, String> parts, Observable<Tuple5<Integer, Integer, Integer, String, Integer>> report) {
     final Map<String, Object> body = new ImmutableMap.Builder<String, Object>()
-      .put("detail", StreamSupport.stream(report.toBlocking().toIterable().spliterator(), false).sorted(Comparator.<Tuple7<Integer, Integer, String, Integer, Integer, String, Integer>, Integer>comparing(Tuple7::_1).thenComparing(Tuple7::_2).thenComparing(Tuple7::_4).thenComparing(Tuple7::_5)).map(t -> new ImmutableMap.Builder<String, Object>()
+      .put("detail", StreamSupport.stream(report.toBlocking().toIterable().spliterator(), false).sorted(Comparator.<Tuple5<Integer, Integer, Integer, String, Integer>, Integer>comparing(Tuple5::_1).thenComparing(Tuple5::_2).thenComparing(Tuple5::_3)).map(t -> new ImmutableMap.Builder<String, Object>()
         .put("type", ImmutableMap.of("id", t._1, "name", types.getOrDefault(t._1, "")))
-        .put("asset", ImmutableMap.of("id", t._2, "name", t._3))
-        .put("part", ImmutableMap.of("id", t._4, "name", parts.getOrDefault(t._4, "")))
-        .put("step", ImmutableMap.of("id", t._5, "name", t._6, "count", t._7)).build()).collect(Collectors.toList())).build();
+        .put("part", ImmutableMap.of("id", t._2, "name", parts.getOrDefault(t._2, "")))
+        .put("step", ImmutableMap.of("id", t._3, "name", t._4, "count", t._5)).build()).collect(Collectors.toList())).build();
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(body);
   }
-
 
   @ExceptionHandler({ConstraintViolationException.class})
   public ResponseEntity<? extends Map<String, Object>> handleValidation(Throwable t) {

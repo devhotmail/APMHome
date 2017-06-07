@@ -28,11 +28,11 @@ public class HealthService {
 
 
     private static final String asset_maintain
-    	= " SELECT work_order.asset_id, work_order.asset_name, current_step_id, current_step_name, case_owner_name, asset_info.clinical_dept_id "
-    	+ " FROM work_order "
+    	= " SELECT v2_work_order.asset_id, asset_info.name, current_step_id, current_step_name, current_person_name, asset_info.clinical_dept_id "
+    	+ " FROM v2_work_order "
     	+ " LEFT JOIN asset_info "
-    	+ " ON work_order.asset_id = asset_info.id "
-    	+ " WHERE work_order.is_closed=false AND asset_info.site_id=:site_id AND asset_info.hospital_id=:hospital_id ";
+    	+ " ON v2_work_order.asset_id = asset_info.id "
+    	+ " WHERE v2_work_order.status = 1 AND asset_info.site_id=:site_id AND asset_info.hospital_id=:hospital_id ";
 
 	public Observable<Tuple6<Integer, String, Integer, String, String, Integer>> queryForMaintain(Integer site_id, Integer hospital_id) {
 
@@ -63,19 +63,19 @@ public class HealthService {
 
 
     private static final String asset_outage
-    	= " SELECT asset_info.id, asset_info.name, to_char(inner_2.create_time, 'YYYY-MM-DD'), inner_2.case_type, asset_info.clinical_dept_id "
+    	= " SELECT asset_info.id, asset_info.name, to_char(inner_2.created_date, 'YYYY-MM-DD'), inner_2.int_ext_type as case_type, asset_info.clinical_dept_id "
     	+ " FROM "
     		+ " asset_info "
     		+ " LEFT JOIN "
-    		+ " (SELECT inner_1.asset_id, inner_1.create_time, work_order.case_type "
+    		+ " (SELECT inner_1.asset_id, inner_1.created_date, v2_work_order.int_ext_type "
     		+ " FROM "
-    			+ " ( SELECT asset_id, MAX(create_time) AS create_time FROM work_order GROUP BY asset_id) AS inner_1 "
-    			+ " INNER JOIN work_order "
-    			+ " ON inner_1.asset_id = work_order.asset_id "
-    			+ " WHERE inner_1.create_time = work_order.create_time ) AS inner_2 "
+    			+ " ( SELECT asset_id, MAX(created_date) AS created_date FROM v2_work_order GROUP BY asset_id) AS inner_1 "
+    			+ " INNER JOIN v2_work_order "
+    			+ " ON inner_1.asset_id = v2_work_order.asset_id "
+    			+ " WHERE inner_1.created_date = v2_work_order.created_date ) AS inner_2 "
     		+ " ON asset_info.id = inner_2.asset_id "
     		+ " WHERE asset_info.is_valid = true AND asset_info.status = 2 AND asset_info.site_id = :site_id AND asset_info.hospital_id = :hospital_id "
-    		+ " ORDER BY to_char, id, case_type ";
+    		+ " ORDER BY to_char, id, int_ext_type ";
 
 	public Observable<Tuple5<Integer, String, String, Integer, Integer>> queryForOutage(Integer site_id, Integer hospital_id) {
 

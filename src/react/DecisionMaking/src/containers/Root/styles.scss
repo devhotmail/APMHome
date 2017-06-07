@@ -16,6 +16,8 @@ $filterBarHeight: 50px;
 .filterBar {
   width: 100%;
   height: $filterBarHeight;
+  display: flex;
+  align-items: center;
 }
 
 .content {

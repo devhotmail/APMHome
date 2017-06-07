@@ -28,15 +28,16 @@ public class StaffService {
 
 // #1
 	private static final String staff_wo
-		= " SELECT asset_owner_id, asset_owner_name, wo_hour, score, count, closed, open "
+		= " SELECT asset_owner_id, asset_owner_name, SUM(wo_hour) as wo_hour, AVG(score) as score, SUM(count) as count, SUM(closed) as closed, SUM(open) as open "
 		+ " FROM "
-			+ " ( (SELECT DISTINCT asset_owner_id, asset_owner_name FROM asset_info WHERE site_id = :site_id AND hospital_id = :hospital_id ) left_table "
+			+ " ( (SELECT DISTINCT asset_owner_id, id, asset_owner_name FROM asset_info WHERE site_id = :site_id AND hospital_id = :hospital_id ) left_table "
 			+ " LEFT JOIN "
-			+ " (SELECT case_owner_id, SUM(total_man_hour) as wo_hour, COUNT(*) as count, SUM(CASE WHEN is_closed = true THEN 1 ELSE 0 END) as closed, SUM(CASE WHEN is_closed = false THEN 1 ELSE 0 END) as open FROM work_order WHERE site_id = :site_id AND hospital_id = :hospital_id AND create_time >= :from AND create_time <= :to GROUP BY case_owner_id) right_table "
-			+ " ON left_table.asset_owner_id = right_table.case_owner_id ) left_table "
+			+ " (SELECT asset_id, SUM(total_man_hour) as wo_hour, COUNT(*) as count, SUM(CASE WHEN status != 1 THEN 1 ELSE 0 END) as closed, SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as open FROM v2_work_order WHERE site_id = :site_id AND hospital_id = :hospital_id AND created_date >= :from AND created_date <= :to GROUP BY asset_id) right_table "
+			+ " ON left_table.id = right_table.asset_id ) left_table "
 			+ " LEFT JOIN "
-			+ " (SELECT case_owner_id, AVG(feedback_rating) as score FROM work_order WHERE feedback_rating > 0 AND site_id = :site_id AND hospital_id = :hospital_id AND create_time >= :from AND create_time <= :to GROUP BY case_owner_id) right_table "
-			+ " ON left_table.asset_owner_id = right_table.case_owner_id "
+			+ " (SELECT asset_id, AVG(feedback_rating) as score FROM v2_work_order WHERE feedback_rating > 0 AND site_id = :site_id AND hospital_id = :hospital_id AND created_date >= :from AND created_date <= :to GROUP BY asset_id) right_table "
+			+ " ON left_table.id = right_table.asset_id "
+		+ " GROUP BY asset_owner_id, asset_owner_name "
 		+ " ORDER BY asset_owner_id ";
 
 	public Observable<Tuple7<Integer, String, Integer, Double, Integer, Integer, Integer>> queryForWo(Integer site_id, Integer hospital_id, Date from, Date to) {

@@ -30,7 +30,6 @@ module.exports = merge(baseWebpackConfig, {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
         use: [
           'style-loader',
           'css-loader',
@@ -39,7 +38,10 @@ module.exports = merge(baseWebpackConfig, {
       },
       {
         test: /\.s[ca]ss$/,
-        exclude: /src\/styles/,
+        exclude: [
+          /src\/styles/,
+          /node_modules/
+        ],
         use: [
           'style-loader',
           {
@@ -56,7 +58,10 @@ module.exports = merge(baseWebpackConfig, {
       },
       {
         test: /\.s[ca]ss$/,
-        include: /src\/styles/,
+        include: [
+          /src\/styles/,
+          /node_modules/
+        ],
         use: [
           'style-loader',
           {
@@ -68,7 +73,7 @@ module.exports = merge(baseWebpackConfig, {
           'sass-loader',
           'postcss-loader'
         ]
-      },      
+      },
       {
         test: /\.less$/,
         use: [
@@ -107,11 +112,11 @@ module.exports = merge(baseWebpackConfig, {
         const o1 = orders.indexOf(c1.names[0])
         const o2 = orders.indexOf(c2.names[0])
         return o1 - o2
-      }      
+      }
     }),
     new webpack.WatchIgnorePlugin([
       /node_modules/
     ]),
     new FriendlyErrorsPlugin()
-  ]  
+  ]
 })
