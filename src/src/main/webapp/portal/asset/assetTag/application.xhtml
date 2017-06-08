@@ -54,7 +54,7 @@
                         <div class="ui-g-2"><p:outputLabel value="资金来源:"/></div>
                         <div class="ui-g-4">
                             <p:selectOneRadio id="fundingResource" required="true" value="#{applicationController.selected.fundingResource}">
-                                <p:ajax  update=":PurchaseApplicationForm:other" event="change" listener="#{applicationController.test}"></p:ajax>
+                                <p:ajax  update=":PurchaseApplicationForm:other" event="change"></p:ajax>
                                 <f:selectItem itemLabel="医院自筹" itemValue="1" />
                                 <f:selectItem itemLabel="经费/基金" itemValue="2" />
                                 <f:selectItem itemLabel="财政资金/上级补助" itemValue="3" />
