@@ -61,7 +61,7 @@ class Gauge extends React.PureComponent<*, *, *> {
       >
         {
           ({ percent, opacity }) => (
-            <g>
+            <g cursor="pointer">
               <circle
                 opacity={opacity}
                 r={r}
