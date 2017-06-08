@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'dva'
+import moment from 'moment'
 import BubbleChart from '#/components/BubbleChart'
+import Loading from '#/components/Loading'
 import SidePanel from '#/components/SidePanel'
 import FilterBar from '#/components/FilterBar'
 import styles from './index.scss'
@@ -36,6 +38,7 @@ class AssetPerf extends React.PureComponent {
           ? <SidePanel className={styles['side-panel']} />
           : null
         }
+        <Loading />
       </div>
     )
   }

@@ -23,9 +23,12 @@ class BubbleChart extends React.PureComponent<*, Props, *> {
     return (value - range[0]) / (range[1] - range[0]) * (maxRadius - minRadius) + minRadius
   }
 
-  renderItem = (data, minRadius, maxRadius, range, cursor) => {
+  renderItem = (data, minRadius, maxRadius, range, cursor, enteringFlag) => {
     let color, background
-    if (cursor.length === 0) {
+    if (enteringFlag) {
+      color = '#dddddd'
+      background = `rgba(224, 224, 224, 0.3)`
+    } else if (cursor.length === 0) {
       color = ROOT_COLOR
       background = ROOT_BACKGROUND_COLOR
     } else {

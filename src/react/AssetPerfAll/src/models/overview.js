@@ -13,6 +13,7 @@ export default {
   namespace: 'overview',
   state: {
     data: [],
+    loading: true
   },
   subscriptions: {
     setup({dispatch}) {
@@ -85,10 +86,17 @@ export default {
     }
   },
   reducers: {
+    ['data/get'](state, { payload }) {
+      return {
+        ...state,
+        loading: true
+      }
+    },
     ['data/get/succeeded'](state, { payload }) {
       return {
         ...state,
-        data: payload
+        data: payload,
+        loading: false
       }
     }
   }
