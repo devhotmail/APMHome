@@ -20,6 +20,12 @@ export default {
   effects: {
   },
   effects: {
+    ['field/set'](_, { select, put }) {
+      yield put({type: 'assets/page/reset'})
+      yield put({type: 'assets/data/get'})
+      yield put({type: 'steps/page/reset'})
+      yield put({type: 'steps/data/get'})
+    },
     *['cursor/toggle']({ payload: { key, value } }, { select, put }){
       const cursor = yield select(state => state.filters.cursor)
       if (key === 'type') {
