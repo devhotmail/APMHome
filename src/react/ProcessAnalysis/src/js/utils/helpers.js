@@ -105,9 +105,9 @@ export function HumanizeDurationInput(valueInSec) {
   }
   return [(valueInSec / ONE_MIN) | 0, 'min']
 }
-export function HumanizeDurationLabel(valueInSec) {
+export function HumanizeDurationLabel(valueInSec, unit = 'h') {
   if (valueInSec === 0) {
     return '0'
   }
-  return humanizeDuration(valueInSec * 1000, { largest: 2, language: LANG })
+  return humanizeDuration(valueInSec * 1000, { units: [unit], language: LANG })
 }
