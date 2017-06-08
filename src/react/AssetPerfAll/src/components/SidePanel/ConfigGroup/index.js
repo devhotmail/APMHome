@@ -7,8 +7,6 @@ import { getCursor, isSameCursor, isFocusNode, round } from '#/utils'
 
 import type { ConfigT, NodeT, cursorT } from '#/types'
 
-import EditBlock from '#/components/EditBlock'
-
 import styles from './styles.scss'
 
 const defaultTableProps = {

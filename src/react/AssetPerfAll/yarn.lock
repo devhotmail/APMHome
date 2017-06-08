@@ -1782,6 +1782,10 @@ detect-indent@^4.0.0:
   dependencies:
     repeating "^2.0.0"
 
+"dew-editblock@git+https://github.build.ge.com/foundry-sh/dew-editblock.git":
+  version "1.2.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-editblock.git#884660fce4716c7af3ef30711be71e0ccfb0de6b"
+
 "dew-filterbar@git+https://github.build.ge.com/foundry-sh/dew-filterbar.git":
   version "2.1.4"
   resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#51697ac20703c1fc8c0dd7c6eebaaba6b3976d22"
