@@ -246,7 +246,7 @@ public class MaForecastService extends CommonForecastService {
         Option.of(onrate.get(v._1._1._1)).getOrElse(v._1._2._2),
         Option.of(cost1.get(v._1._1._1)).map(sub -> v._2._2._3 * (1D + sub)).getOrElse(v._1._2._3),
         Option.of(cost2.get(v._1._1._1)).map(sub -> v._2._2._4 * (1D + sub)).getOrElse(v._1._2._4)
-      )));
+      ))).sorted((left, right) -> Double.compare(right._2._3 + right._2._4, left._2._3 + left._2._4));
   }
 
   /**
@@ -258,9 +258,9 @@ public class MaForecastService extends CommonForecastService {
    * @param cost1   labor/repair
    * @param cost2   parts/PM
    * @return first Tuple5 are dimensions: id, name, dept, type, supplier
-   * second Tuple4 are measurements: price, onrate_increase, labor/repair_increase, parts/PM_increase
+   * second Tuple4 are measurements: price, onrate_increase, labor/repair_increase, parts/PM_increase,labor/repair,parts/PM
    */
-  public static Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> getForecastRate
+  public static Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple6<Double, Double, Double, Double, Double, Double>>> getForecastRate
   (Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> future,
    Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> history,
    java.util.Map<Integer, Double> onrate, java.util.Map<Integer, Double> cost1, java.util.Map<Integer, Double> cost2) {
@@ -268,8 +268,10 @@ public class MaForecastService extends CommonForecastService {
       .map(v -> Tuple.of(v._1._1, Tuple.of(v._1._2._1,
         Option.of(onrate.get(v._1._1._1)).getOrElse(v._1._2._2),
         Option.of(cost1.get(v._1._1._1)).getOrElse(Option.when(v._2._2._3.equals(0D), 0D).getOrElse(v._1._2._3 / v._2._2._3 - 1D)),
-        Option.of(cost2.get(v._1._1._1)).getOrElse(Option.when(v._2._2._4.equals(0D), 0D).getOrElse(v._1._2._4 / v._2._2._4 - 1D))
-      )));
+        Option.of(cost2.get(v._1._1._1)).getOrElse(Option.when(v._2._2._4.equals(0D), 0D).getOrElse(v._1._2._4 / v._2._2._4 - 1D)),
+        Option.of(cost1.get(v._1._1._1)).map(sub -> v._2._2._3 * (1D + sub)).getOrElse(v._1._2._3),
+        Option.of(cost2.get(v._1._1._1)).map(sub -> v._2._2._4 * (1D + sub)).getOrElse(v._1._2._4)
+      ))).sorted((left, right) -> Double.compare(right._2._5 + right._2._6, left._2._5 + left._2._6));
   }
 
   public static boolean sugLowBound(Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>> asset, Double lowBound) {
@@ -290,7 +292,7 @@ public class MaForecastService extends CommonForecastService {
    * a virtual sql based on the result of {@code virtualSqlItems()}. this virtual sql return data for each group
    * Do not cache the result of this function. If you really want to do that, put siteId and hospitalId into your cache key, or you'll get logical error
    *
-   * @param groupBy groupBy
+   * @param groupBy groupBym
    * @param items   first Tuple5 are dimensions: id, name, dept, type, supplier
    *                second Tuple4 are measurements: price, onrate, labor/repair,parts/PM
    * @return 1st param: group_id
@@ -301,7 +303,8 @@ public class MaForecastService extends CommonForecastService {
    Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> items) {
     return items.groupBy(v -> "dept".equals(groupBy) ? v._1._3 : ("type".equals(groupBy) ? v._1._4 : v._1._5))
       .map(v -> Tuple.of(v._1, Tuple.of(v._2.map(sub -> sub._2._2).average().getOrElse(0D),
-        v._2.map(sub -> sub._2._3).sum().doubleValue(), v._2.map(sub -> sub._2._4).sum().doubleValue())));
+        v._2.map(sub -> sub._2._3).sum().doubleValue(), v._2.map(sub -> sub._2._4).sum().doubleValue())))
+      .sorted((left, right) -> Double.compare(right._2._2 + right._2._3, left._2._2 + left._2._3));
   }
 
 }
