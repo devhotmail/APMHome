@@ -70,6 +70,7 @@ class BubbleChart extends React.PureComponent<*, Props, *> {
           renderItem={this.renderItem}
           range={[data.root.renevue, data.root.renevue]}
           dispatch={this.props.dispatch}
+          getId={data => `${data.root.type}-${data.root.id}`}
         />
       </svg>
     )
