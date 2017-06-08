@@ -240,24 +240,22 @@ public class MaApi {
     Map<Integer, Double> onrate = CommonService.parseInputJson(inputJson, "items", "id", "onrate_increase");
     Map<Integer, Double> cost1 = CommonService.parseInputJson(inputJson, "items", "id", "cost1_increase");
     Map<Integer, Double> cost2 = CommonService.parseInputJson(inputJson, "items", "id", "cost2_increase");
-    Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> assets =
-      MaForecastService.userPredict(MaForecastService.virtualSqlItems(dept, type, supplier, rltGrp,
-        maForecastService.predict(siteId, hospitalId, Date.valueOf(LocalDate.now().minusYears(2).withDayOfYear(1)), Date.valueOf(LocalDate.now()), year)),
-        MaForecastService.virtualSqlItems(dept, type, supplier, rltGrp, maForecastService.lastYearData(siteId, hospitalId)), onrate, cost1, cost2);
-    Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> assetsRate =
+    Seq<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple6<Double, Double, Double, Double, Double, Double>>> assetsRate =
       MaForecastService.getForecastRate(MaForecastService.virtualSqlItems(dept, type, supplier, rltGrp,
         maForecastService.predict(siteId, hospitalId, Date.valueOf(LocalDate.now().minusYears(2).withDayOfYear(1)), Date.valueOf(LocalDate.now()), year)),
         MaForecastService.virtualSqlItems(dept, type, supplier, rltGrp, maForecastService.lastYearData(siteId, hospitalId)), onrate, cost1, cost2);
     if ("yes".equals(msa)) {
-      assetsRate = assets.zip(assetsRate).filter(v -> MaForecastService.sugLowBound(v._1, threshold1.get(0)) || MaForecastService.sugHighCost(v._1, threshold2.get(0))
-        || MaForecastService.sugBindOnrateCost(v._1, threshold3.get(0), threshold3.get(1), threshold3.get(2), threshold3.get(3)))
-        .map(v -> v._2);
+      assetsRate = assetsRate.filter(v ->
+        MaForecastService.sugLowBound(v.transform((sub1, sub2) -> Tuple.of(sub1, Tuple.of(sub2._1, sub2._2, sub2._5, sub2._6))), threshold1.get(0))
+          || MaForecastService.sugHighCost(v.transform((sub1, sub2) -> Tuple.of(sub1, Tuple.of(sub2._1, sub2._2, sub2._5, sub2._6))), threshold2.get(0))
+          || MaForecastService.sugBindOnrateCost(v.transform((sub1, sub2) -> Tuple.of(sub1, Tuple.of(sub2._1, sub2._2, sub2._5, sub2._6))), threshold3.get(0), threshold3.get(1), threshold3.get(2), threshold3.get(3)));
     } else if ("no".equals(msa)) {
-      assetsRate = assets.zip(assetsRate).filter(v -> !(MaForecastService.sugLowBound(v._1, threshold1.get(0)) || MaForecastService.sugHighCost(v._1, threshold2.get(0))
-        || MaForecastService.sugBindOnrateCost(v._1, threshold3.get(0), threshold3.get(1), threshold3.get(2), threshold3.get(3))))
-        .map(v -> v._2);
+      assetsRate = assetsRate.filter(v -> !(
+        MaForecastService.sugLowBound(v.transform((sub1, sub2) -> Tuple.of(sub1, Tuple.of(sub2._1, sub2._2, sub2._5, sub2._6))), threshold1.get(0))
+          || MaForecastService.sugHighCost(v.transform((sub1, sub2) -> Tuple.of(sub1, Tuple.of(sub2._1, sub2._2, sub2._5, sub2._6))), threshold2.get(0))
+          || MaForecastService.sugBindOnrateCost(v.transform((sub1, sub2) -> Tuple.of(sub1, Tuple.of(sub2._1, sub2._2, sub2._5, sub2._6))), threshold3.get(0), threshold3.get(1), threshold3.get(2), threshold3.get(3))));
     }
-    Observable<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> items = Observable.from(assetsRate);
+    Observable<Tuple2<Tuple5<Integer, String, Integer, Integer, Integer>, Tuple4<Double, Double, Double, Double>>> items = Observable.from(assetsRate.map(v -> Tuple.of(v._1, Tuple.of(v._2._1, v._2._2, v._2._3, v._2._4))));
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
       .body(new ImmutableMap.Builder<String, Object>()
         .put("root", mapRootRate(items.map(v -> Tuple.of(v._2._3, v._2._4)), dept, type, supplier, rltGrp, start, limit))
