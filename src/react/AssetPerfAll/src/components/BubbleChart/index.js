@@ -13,7 +13,8 @@ type Props = {
     height: number
   },
   data: *,
-  depth: number
+  depth: number,
+  type: string
 }
 
 class BubbleChart extends React.PureComponent<*, Props, *> {
@@ -23,9 +24,12 @@ class BubbleChart extends React.PureComponent<*, Props, *> {
     return (value - range[0]) / (range[1] - range[0]) * (maxRadius - minRadius) + minRadius
   }
 
-  renderItem = (data, minRadius, maxRadius, range, cursor) => {
+  renderItem = (data, minRadius, maxRadius, range, cursor, enteringFlag) => {
     let color, background
-    if (cursor.length === 0) {
+    if (enteringFlag) {
+      color = '#dddddd'
+      background = `rgba(224, 224, 224, 0.3)`
+    } else if (cursor.length === 0) {
       color = ROOT_COLOR
       background = ROOT_BACKGROUND_COLOR
     } else {
@@ -44,7 +48,7 @@ class BubbleChart extends React.PureComponent<*, Props, *> {
   }
 
   render() {
-    const { clientRect, data, depth } = this.props
+    const { clientRect, data, depth, type } = this.props
     const { width, height } = clientRect
     return (
       <svg viewBox={`0 0 ${width} ${height}`}>
@@ -70,6 +74,7 @@ class BubbleChart extends React.PureComponent<*, Props, *> {
           renderItem={this.renderItem}
           range={[data.root.renevue, data.root.renevue]}
           dispatch={this.props.dispatch}
+          getId={data => `${type}-${data.root.type}-${data.root.id}`}
         />
       </svg>
     )

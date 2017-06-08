@@ -4,8 +4,8 @@ import React, { Component } from 'react'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
-import { range, memoize, isEqual, clamp, last, values, sum } from 'lodash-es'
-import { message, InputNumber, Button, Radio } from 'antd'
+import { range, memoize, isEqual, clamp, last, values } from 'lodash-es'
+import { message, InputNumber, Button, Radio, Input } from 'antd'
 import moment from 'moment'
 import EventBus from 'eventbusjs'
 import GearListChart from 'react-gear-list-chart'
@@ -30,6 +30,7 @@ import './app.scss'
 
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
+const InputGroup = Input.Group
 const Placeholder = { strips: { color: '#F9F9F9', weight: 1, type: 'placeholder' } }
 const DisplayOptions = [
   { key: 'display_asset_type' },
@@ -284,7 +285,10 @@ export class App extends Component<void, Props, void> {
     // update label
     let gross = selected || generalGross
     let isEmpty = gross.ETTR == 0
-    let balls = BallsStub.map((b, i) => Object.assign({label: t(b.i18n), distance: isEmpty ? i * 60 : GetDistance(b, gross)}, b)) 
+    let balls = BallsStub.map((b, i) => Object.assign({
+      label: t(b.i18n), 
+      distance: isEmpty ? i * 60 : GetDistance(b, gross)
+    }, b)) 
     // update lane color
     let dataType = this.props.dataType
     let connectIndex = -1
@@ -482,24 +486,34 @@ export class App extends Component<void, Props, void> {
               <ReversedRange
                 className={classnames('slider-ettr', dataType === 'ettr' ? '' : 'hidden')}
                 value={distributionEttr}
+                showTooltip={dataType === 'ettr'}
+                unit="d"
+                step={.5}
                 onChange={this.onSliderChange}
               />
               <ReversedRange
                 className={classnames('slider-arrival_time', dataType === 'arrival_time' ? '' : 'hidden')}
+                showTooltip={dataType === 'arrival_time'}
                 value={distributionArrival}
+                unit="h"
+                step={1}
                 onChange={this.onSliderChange}
               />
               <ReversedRange
                 className={classnames('slider-response_time', dataType === 'response_time' ? '' : 'hidden')}
                 value={distributionResponse}
+                showTooltip={dataType === 'response_time'}
+                unit="h"
+                step={.1}
                 onChange={this.onSliderChange}
               />
-              <InputNumber min={0} value={distriMax} size="small" onChange={val => this.setState({ distriMax: val})} />
-              <RadioGroup value={distriUnit} size="small" onChange={e => this.setState({ distriUnit: e.target.value})}>
-                <RadioButton value="min">{t('min')}</RadioButton>
-                <RadioButton value="hour">{t('hour')}</RadioButton>
-                <RadioButton value="day">{t('day')}</RadioButton>
-              </RadioGroup>
+              <InputGroup compact>
+                <InputNumber min={0} value={distriMax} size="small" onChange={val => this.setState({ distriMax: val})} />
+                <RadioGroup value={distriUnit} size="small" onChange={e => this.setState({ distriUnit: e.target.value})}>
+                  <RadioButton value="hour">{t('hour')}</RadioButton>
+                  <RadioButton value="day">{t('day')}</RadioButton>
+                </RadioGroup>
+              </InputGroup>
               <Button type="primary" size="small" onClick={this.updateDistributionMax}>{t('submit')}</Button>
             </div>
           </div>

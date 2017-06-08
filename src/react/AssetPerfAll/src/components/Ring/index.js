@@ -47,7 +47,9 @@ type Tree = {
   curPage: number | void,
   maxRadius: number,
   minRadius: number,
-  range: [number, number]
+  range: [number, number],
+  dispatch: any,
+  enteringFlag: number
 }
 
 type DefaultProps = {
@@ -207,9 +209,10 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
       renderItem,
       minRadius,
       maxRadius,
-      range
+      range,
+      enteringFlag
     } = this.props
-    const item = renderItem(data, minRadius, maxRadius, range, cursor)
+    const item = renderItem(data, minRadius, maxRadius, range, cursor, enteringFlag)
 
     const childrenRange = getChildrenRange(getChildren(data))
 
@@ -252,7 +255,8 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
                   y: spring(y),
                   includedAngle,
                   rotate: spring(0),
-                  opacity: spring(1)
+                  opacity: spring(1),
+                  enteringFlag: spring(0)
                 }
               }
             })}
@@ -260,13 +264,15 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
               x: this.direction === 0 ? px : cx,
               y: this.direction === 0 ? py : cy - this.calcPrevR() * (1 + 0.5 / Math.sqrt(cursor.length + 1)),
               rotate: -(90 / 180 * Math.PI) * this.direction,
-              opacity: 0
+              opacity: 0,
+              enteringFlag: 1
             })}
             willLeave={({style}) => ({
               x: this.direction === 0 ? spring(px) : style.x,
               y: this.direction === 0 ? spring(py) : style.y,
               rotate: spring((90 / 180 * Math.PI) * this.direction),
-              opacity: this.direction === 0 ? 0 : spring(0)
+              opacity: this.direction === 0 ? 0 : spring(0),
+              enteringFlag: 0
             })}
           >
             {
@@ -278,7 +284,7 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
                       const prevR = this.calcPrevR()
                       const r = prevR * (1 + 0.5 / Math.sqrt(cursor.length + 1))
 
-                      let { includedAngle, x, y, rotate, opacity, originalX, originalY } = style
+                      let { includedAngle, x, y, rotate, opacity, originalX, originalY, enteringFlag } = style
 
                       return (
                         <g key={key} opacity={opacity} transform={`rotate(${rotate / Math.PI * 180}, ${cx}, ${cy})`}>
@@ -318,6 +324,7 @@ class Ring extends React.PureComponent<DefaultProps, Tree, *> {
                             maxRadius={maxRadius * 0.9}
                             range={childrenRange}
                             dispatch={this.props.dispatch}
+                            enteringFlag={this.direction !== 0 && enteringFlag}
                           />
                         </g>
                       )

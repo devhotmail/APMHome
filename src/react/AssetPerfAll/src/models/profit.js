@@ -11,7 +11,8 @@ const orgId = isHead ? undefined : parseInt(orgIdEl.value)
 export default {
   namespace: 'profit',
   state: {
-    data: []
+    data: [],
+    loading: true
   },
   subscriptions: {
     setup({ dispatch, location }) {
@@ -57,12 +58,19 @@ export default {
     }
   },
   reducers: {
+    ['data/get'](state) {
+      return {
+        ...state,
+        loading: true
+      }
+    },
     ['data/get/succeeded'](state, { payload, level }) {
       const data = [...state.data]
       data[level] = payload
       return {
         ...state,
-        data: data.slice(0, level + 1)
+        data: data.slice(0, level + 1),
+        loading: false
       }
     }
   }

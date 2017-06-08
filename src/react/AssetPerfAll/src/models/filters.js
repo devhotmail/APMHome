@@ -22,10 +22,13 @@ export default {
         type: 'profit/data/get',
         level
       })
-      yield put({
-        type: 'config/data/get',
-        level
-      })
+      const type = yield select(state => state.filters.type)
+      if (type !== 'history') {
+        yield put({
+          type: 'config/data/get',
+          level
+        })
+      }
     },
     *['type/set']({ payload }, { put, select }) {
       if (payload === 'history') {
@@ -54,19 +57,22 @@ export default {
         ],
         function* (action) {
           yield put({
-            type: 'filters/data/reset'
-          })
-          yield put({
-            type: 'config/changes/reset'
-          })
-          yield put({
-            type: 'config/data/get',
-            level: 0
+            type: 'data/reset'
           })
           yield put({
             type: 'profit/data/get',
             level: 0
           })
+          const type = yield select(state => state.filters.type)
+          if (type !== 'history') {
+            yield put({
+              type: 'config/changes/reset'
+            })
+            yield put({
+              type: 'config/data/get',
+              level: 0
+            })
+          }
         }
       )
     }, { type: 'watcher'}]

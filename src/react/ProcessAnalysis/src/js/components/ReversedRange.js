@@ -7,23 +7,28 @@ import { HumanizeDurationLabel } from 'utils/helpers'
 const Range = Slider.Range
 const Handle = Slider.Handle
 
-const handleWrapper = max => (
+const handleWrapper = (max, unit, showTooltip) => (
    function handle(props) {
     let { value, index, dragging, ...restProps } = props //eslint-disable-line
-    value = HumanizeDurationLabel(max - value)
+    value = HumanizeDurationLabel(max - value, unit)
     return (
       <Tooltip
         prefixCls="rc-slider-tooltip"
         overlay={value}
         placement="right"
         key={index}
-        visible
+        visible={showTooltip}
       >
         <Handle value={value} {...restProps} />
       </Tooltip>
     )
   }
 )
+const HOUR = 3600
+const DAY = HOUR * 24
+function getStep(unit, step) {
+  return step * (unit === 'd' ? DAY : HOUR)
+}
 
 export default class ReversedRange extends Component {
 
@@ -37,7 +42,7 @@ export default class ReversedRange extends Component {
   }
 
   render() {
-    let { value, onChange, ...restProps } = this.props
+    let { value, onChange, unit, step, showTooltip /* a hack */, ...restProps } = this.props
     let max = last(value)
     let mirrored = value.map(v => max - v).reverse()
 
@@ -47,8 +52,9 @@ export default class ReversedRange extends Component {
       max={max} 
       value={mirrored}
       defaultValue={mirrored}
+      step={getStep(unit, step)}
       onChange={onChange && this.onChangeProxy.bind(this)}
-      handle={handleWrapper(max)}
+      handle={handleWrapper(max, unit, showTooltip)}
       {...restProps}
     />)
   }

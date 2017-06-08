@@ -8,7 +8,7 @@ import withHover from '#/HOC/withHover'
 class Gauge extends React.PureComponent<*, *, *> {
 
   getWavePath = (radius: number, percent: number): string => {
-    if (percent > 1) {
+    if (percent >= 1) {
       return 'M' + radius + ' 0'
         + 'm'+ (-radius) + ', 0'
         + 'a' + radius + ',' + radius + ' 0 1,0 ' + (radius * 2) + ',0'
@@ -47,7 +47,7 @@ class Gauge extends React.PureComponent<*, *, *> {
   render() {
     const { color, r, background, data, hovered } = this.props
     const { root } = data
-    const percent = root.cost / root.revenue
+    const percent = root.revenue === 0 ? 1 : root.cost / root.revenue
     return (
       <Motion
         defaultStyle={{
@@ -61,7 +61,7 @@ class Gauge extends React.PureComponent<*, *, *> {
       >
         {
           ({ percent, opacity }) => (
-            <g>
+            <g cursor="pointer">
               <circle
                 opacity={opacity}
                 r={r}

@@ -1,4 +1,3 @@
-const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -58,7 +57,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
       {
         test: /\.s[ca]ss$/,
-        exclude: /src\/styles/,
+        exclude: [/src\/styles/, /node_modules/],
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
@@ -66,18 +65,18 @@ const webpackConfig = merge(baseWebpackConfig, {
               loader: 'css-loader',
               options: {
                 module: true,
-                importLoaders: 1,
+                importLoaders: 2,
                 localIdentName: '[local]__[hash:base64:5]'
               }
             },
-            'sass-loader',
-            'postcss-loader'
+            'postcss-loader',
+            'sass-loader'
           ]
         })
       },
       {
         test: /\.s[ca]ss$/,
-        include: /src\/styles/,
+        include: [/src\/styles/, /node_modules/],
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
