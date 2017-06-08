@@ -5,6 +5,7 @@ import com.github.davidmoten.rx.jdbc.tuple.Tuple2;
 import com.google.common.primitives.Ints;
 import javaslang.Tuple;
 import javaslang.Tuple4;
+import javaslang.control.Option;
 import org.apache.ibatis.jdbc.SQL;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -54,22 +55,22 @@ public class AssetGenerator extends AbstractDbTest {
   }
 
   private Tuple4<Integer, Integer, Integer, Integer> gen() {
-    return Tuple.of(ThreadLocalRandom.current().nextInt(1, 6), ThreadLocalRandom.current().nextInt(2, 45), ThreadLocalRandom.current().nextInt(1, 5), ThreadLocalRandom.current().nextInt(4, 9));
+    return Tuple.of(ThreadLocalRandom.current().nextInt(1, assetGroups.size() + 1), ThreadLocalRandom.current().nextInt(2, 45), ThreadLocalRandom.current().nextInt(1, 5), ThreadLocalRandom.current().nextInt(4, 9));
   }
 
   @Ignore
   @Test
   public void testGenerate() {
-    Observable.range(1, 90).map(id -> Tuple.of(id, gen(), LocalDate.now().minusYears(2).minusDays(ThreadLocalRandom.current().nextInt(-99, 365)), 1_000_000D - ThreadLocalRandom.current().nextDouble(-200_000D, 200_000D), ThreadLocalRandom.current().nextInt(1, 15)))
+    Observable.range(1, assetGroups.size() * 5).map(id -> Tuple.of(id, gen(), LocalDate.now().minusYears(2).minusDays(ThreadLocalRandom.current().nextInt(-99, 365)), 1_000_000D - ThreadLocalRandom.current().nextDouble(-200_000D, 200_000D), ThreadLocalRandom.current().nextInt(1, 15)))
       .subscribe(t -> db.update(sql)
         .parameter("site_id", 1)
         .parameter("hospital_id", 1)
         .parameter("id", t._1)
-        .parameter("name", String.format("%s-%s", assetGroups.get(t._2._1), t._1))
+        .parameter("name", String.format("%s-%s", assetGroups.get(Option.of(t._1 % assetGroups.size()).filter(i -> i > 0).getOrElse(assetGroups.size())), t._1))
         .parameter("is_valid", true)
         .parameter("status", 1)
         .parameter("function_group", t._2._2)
-        .parameter("asset_group", t._2._1)
+        .parameter("asset_group", Option.of(t._1 % assetGroups.size()).filter(i -> i > 0).getOrElse(assetGroups.size()))
         .parameter("clinical_dept_id", t._2._4)
         .parameter("supplier_id", t._2._3)
         .parameter("install_date", Date.valueOf(t._3))

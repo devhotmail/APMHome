@@ -65,7 +65,7 @@ public class AsGenerator {
     dataSource.addFilters("slf4j");
     dataSource.setValidationQuery("SELECT 1");
     db = Database.from(new ConnectionProviderFromDataSource(dataSource));
-    assets = db.select(new SQL().SELECT("site_id", "hospital_id", "id", "asset_group", "clinical_dept_id").FROM("asset_info").ORDER_BY("id").toString()).getAs(Integer.class, Integer.class, Integer.class, Integer.class, Integer.class).map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4(), t._5(), ThreadLocalRandom.current().nextInt(1, 5))).cache();
+    assets = db.select(new SQL().SELECT("site_id", "hospital_id", "id", "asset_group", "clinical_dept_id", "supplier_id").FROM("asset_info").ORDER_BY("id").toString()).getAs(Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class).map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4(), t._5(), t._6())).cache();
     db.update(new SQL().DELETE_FROM("asset_summit").toString()).count().toBlocking().single();
   }
 
