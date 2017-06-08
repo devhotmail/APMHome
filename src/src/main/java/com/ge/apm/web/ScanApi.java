@@ -89,7 +89,7 @@ public class ScanApi {
     Map<Integer, String> types = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> parts = commonService.findParts();
     if ("asset".equals(groupBy)) {
-      return serializeAsset(request, types, parts, scanService.assetDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part, Match(Tuple.of(part, limit)).of(Case($(t -> Option.of(t._1).isDefined()), a -> a._2), Case($(t -> Option.of(t._1).isEmpty() && Option.of(t._2).isDefined()), a -> a._2 * parts.size()), Case($(), Integer.MAX_VALUE)), start * parts.size()));
+      return serializeAsset(request, types, parts, scanService.assetDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part, Match(Tuple.of(part, limit)).of(Case($(t -> Option.of(t._1).isDefined()), a -> a._2), Case($(t -> Option.of(t._1).isEmpty() && Option.of(t._2).isDefined()), a -> a._2 * parts.size()), Case($(), Integer.MAX_VALUE)), Match(Tuple.of(part, start)).of(Case($(t -> Option.of(t._1).isDefined()), a -> a._2), Case($(t -> Option.of(t._1).isEmpty() && Option.of(t._2).isDefined()), a -> a._2 * parts.size()), Case($(), 0))));
     } else if ("step".equals(groupBy)) {
       return serializeStep(request, types, parts, scanService.stepDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part, step, Option.of(limit).getOrElse(Integer.MAX_VALUE), start));
     } else {
