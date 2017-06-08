@@ -76,6 +76,7 @@ public class MaService {
     return dbBuilder.get(rs -> Tuple.of(
       Tuple.of(rs.getInt("id"), rs.getString("name"), rs.getInt("dept"), rs.getInt("type"), rs.getInt("supplier")),
       Tuple.of(rs.getDouble("price"), 1D - rs.getDouble("down_rate"), rs.getDouble("cost1"), rs.getDouble("cost2"))))
+      .sorted((left, right) -> Double.compare(right._2._3 + right._2._4, left._2._3 + left._2._4))
       .cache();
   }
 
@@ -125,6 +126,7 @@ public class MaService {
 
     return dbBuilder.get(rs -> Tuple.of(rs.getInt("group_id"),
       Tuple.of(1D - rs.getDouble("down_rate"), rs.getDouble("cost1"), rs.getDouble("cost2"))))
+      .sorted((left, right) -> Double.compare(right._2._2+right._2._3, left._2._2+left._2._3))
       .cache();
   }
 
