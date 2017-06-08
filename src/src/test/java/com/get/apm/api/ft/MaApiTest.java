@@ -160,8 +160,7 @@ public class MaApiTest extends AbstractApiTest {
 
       if (v.get("onrate_increase") != null) {
         Assertions.assertThat(Try.of(() -> ConfigFactory.parseString(preAst.substring(1, preAst.length() - 1)).getDouble("onrate")).getOrElse(0D))
-          .isCloseTo(Try.of(() -> ConfigFactory.parseString(hisAst.substring(1, hisAst.length() - 1)).getDouble("onrate")).getOrElse(0D) *
-            (1D + (Double) v.get("onrate_increase")), Percentage.withPercentage(accuracy));
+          .isCloseTo((Double) v.getOrDefault("onrate_increase", 0D), Percentage.withPercentage(accuracy));
       }
 
       if (v.get("cost1_increase") != null) {
@@ -206,7 +205,7 @@ public class MaApiTest extends AbstractApiTest {
           Config itemSingle = ConfigFactory.parseString(items.substring(1, items.length() - 1));
           return Tuple.of(itemSingle.getDouble("acyman".equals(queryMap.get("rltgrp")) ? "labor" : "repair"),
             itemSingle.getDouble("acyman".equals(queryMap.get("rltgrp")) ? "parts" : "PM"), itemSingle.getDouble("price"));
-        }).reduce((init, v) -> Tuple.of(init._1 + v._1, init._2 + v._2, init._3 + v._3));
+        }).reduceLeftOption((init, v) -> Tuple.of(init._1 + v._1, init._2 + v._2, init._3 + v._3)).getOrElse(Tuple.of(0D, 0D, 0D));
 
     Assertions.assertThat(rootV._1).isCloseTo(itemSum._1, Percentage.withPercentage(accuracy));
     Assertions.assertThat(rootV._2).isCloseTo(itemSum._2, Percentage.withPercentage(accuracy));
@@ -229,7 +228,7 @@ public class MaApiTest extends AbstractApiTest {
           Config itemSingle = ConfigFactory.parseString(items.substring(1, items.length() - 1));
           return Tuple.of(itemSingle.getDouble("acyman".equals(queryMap.get("rltgrp")) ? "labor" : "repair"),
             itemSingle.getDouble("acyman".equals(queryMap.get("rltgrp")) ? "parts" : "PM"), itemSingle.getDouble("price"));
-        }).reduce((init, v) -> Tuple.of(init._1 + v._1, init._2 + v._2, init._3 + v._3));
+        }).reduceLeftOption((init, v) -> Tuple.of(init._1 + v._1, init._2 + v._2, init._3 + v._3)).getOrElse(Tuple.of(0D, 0D, 0D));
 
     Assertions.assertThat(rootV._1).isCloseTo(itemSum._1, Percentage.withPercentage(accuracy));
     Assertions.assertThat(rootV._2).isCloseTo(itemSum._2, Percentage.withPercentage(accuracy));
@@ -239,32 +238,32 @@ public class MaApiTest extends AbstractApiTest {
   @Test
   public void testFormat() throws IOException {
     formatTests(tests, maps(LocalDate.now().minusYears(1), LocalDate.now(), "type", null, 2, null, "acyman", null, 0, 50),
-      3, bodies(ImmutableList.of(ImmutableMap.of("id", 1, "onrate_increase", 0.05), ImmutableMap.of("id", 5, "cost1_increase", 0.05, "cost2_increase", 0.07),
-        ImmutableMap.of("id", 7, "onrate_increase", 0.10, "cost1_increase", 0.01, "cost2_increase", 0.08)), null, null, null), "lowonrate");
+      3, bodies(ImmutableList.of(ImmutableMap.of("id", 1, "onrate_increase", 1.05), ImmutableMap.of("id", 5, "cost1_increase", 0.05, "cost2_increase", 0.07),
+        ImmutableMap.of("id", 7, "onrate_increase", 1.10, "cost1_increase", 0.01, "cost2_increase", 0.08)), null, null, null), "lowonrate");
     formatTests(tests, maps(LocalDate.now().minusYears(2), LocalDate.now().withDayOfYear(1), null, 1, null, null, "mtpm", "no", null, null),
-      2, bodies(ImmutableList.of(ImmutableMap.of("id", 2, "onrate_increase", 0.02), ImmutableMap.of("id", 4, "cost1_increase", -1D, "cost2_increase", 0.5),
-        ImmutableMap.of("id", 6, "onrate_increase", 1D, "cost1_increase", 0.1, "cost2_increase", -0.5)), ImmutableList.of(0.7), null, null), "highcost");
+      2, bodies(ImmutableList.of(ImmutableMap.of("id", 2, "onrate_increase", 1.02), ImmutableMap.of("id", 4, "cost1_increase", -1D, "cost2_increase", 0.5),
+        ImmutableMap.of("id", 6, "onrate_increase", 2D, "cost1_increase", 0.1, "cost2_increase", -0.5)), ImmutableList.of(0.7), null, null), "highcost");
   }
 
   @Test
   public void testFormatFuture() throws IOException {
     formatTestsFuture(tests, maps(LocalDate.now().withDayOfYear(1), LocalDate.now().withDayOfYear(1).plusYears(1).minusDays(1), "supplier", null, null, null, "acyman", "yes", 0, 50),
-      90, bodies(ImmutableList.of(ImmutableMap.of("id", 1, "onrate_increase", 0.05), ImmutableMap.of("id", 5, "cost1_increase", 0.05, "cost2_increase", 0.07),
-        ImmutableMap.of("id", 7, "onrate_increase", 0.10, "cost1_increase", 0.01, "cost2_increase", 0.08)), null, ImmutableList.of(0.2), null), "bindonratecost");
+      90, bodies(ImmutableList.of(ImmutableMap.of("id", 1, "onrate_increase", 1.05), ImmutableMap.of("id", 5, "cost1_increase", 0.05, "cost2_increase", 0.07),
+        ImmutableMap.of("id", 7, "onrate_increase", 1.10, "cost1_increase", 0.01, "cost2_increase", 0.08)), null, ImmutableList.of(0.2), null), "bindonratecost");
     formatTestsFuture(tests, maps(LocalDate.now().withDayOfYear(1).plusYears(1), LocalDate.now().withDayOfYear(1).plusYears(2).minusDays(1), "type", null, null, 10, "mtpm", "no", null, null),
-      5, bodies(ImmutableList.of(ImmutableMap.of("id", 2, "onrate_increase", 0.02), ImmutableMap.of("id", 4, "cost1_increase", -1D, "cost2_increase", 0.5),
-        ImmutableMap.of("id", 6, "onrate_increase", 1D, "cost1_increase", 0.1, "cost2_increase", -0.5)), ImmutableList.of(0.7), null, ImmutableList.of(0.7, 0.88, 0.15, 0.02)), "highcost");
+      5, bodies(ImmutableList.of(ImmutableMap.of("id", 2, "onrate_increase", 1.02), ImmutableMap.of("id", 4, "cost1_increase", -1D, "cost2_increase", 0.5),
+        ImmutableMap.of("id", 6, "onrate_increase", 2D, "cost1_increase", 0.1, "cost2_increase", -0.5)), ImmutableList.of(0.7), null, ImmutableList.of(0.7, 0.88, 0.15, 0.02)), "highcost");
   }
 
   //logic test
   @Test
   public void testHistoryForecastJoint() throws IOException {
     forecastHistoryJointTest(tests, maps(null, null, null, null, null, null, "acyman", null, null, null),
-      ImmutableList.of(ImmutableMap.of("id", 1, "onrate_increase", 0.05), ImmutableMap.of("id", 5, "cost1_increase", 0.05, "cost2_increase", 0.07),
-        ImmutableMap.of("id", 7, "onrate_increase", 0.10, "cost1_increase", 0.01, "cost2_increase", 0.08)), null, null, null);
+      ImmutableList.of(ImmutableMap.of("id", 1, "onrate_increase", 1.05), ImmutableMap.of("id", 5, "cost1_increase", 0.05, "cost2_increase", 0.07),
+        ImmutableMap.of("id", 7, "onrate_increase", 1.10, "cost1_increase", 0.01, "cost2_increase", 0.08)), null, null, null);
     forecastHistoryJointTest(tests, maps(null, null, null, null, null, null, "mtpm", null, null, null),
-      ImmutableList.of(ImmutableMap.of("id", 2, "onrate_increase", 0.02), ImmutableMap.of("id", 4, "cost1_increase", -1D, "cost2_increase", 0.5),
-        ImmutableMap.of("id", 6, "onrate_increase", 1D, "cost1_increase", 0.1, "cost2_increase", -0.5)), null, null, null);
+      ImmutableList.of(ImmutableMap.of("id", 2, "onrate_increase", 1.02), ImmutableMap.of("id", 4, "cost1_increase", -1D, "cost2_increase", 0.5),
+        ImmutableMap.of("id", 6, "onrate_increase", 2D, "cost1_increase", 0.1, "cost2_increase", -0.5)), null, null, null);
   }
 
   @Test
@@ -279,23 +278,23 @@ public class MaApiTest extends AbstractApiTest {
   public void testForecastDataConsistency() throws IOException {
     forecastDataConsistencyTest(tests, maps(LocalDate.now().withDayOfYear(1), LocalDate.now().withDayOfYear(1).plusYears(1).minusDays(1),
       null, null, 1, null, "acyman", null, null, null),
-      bodies(ImmutableList.of(ImmutableMap.of("id", 1, "onrate_increase", 0.05), ImmutableMap.of("id", 5, "cost1_increase", 0.05, "cost2_increase", 0.07),
-        ImmutableMap.of("id", 7, "onrate_increase", 0.10, "cost1_increase", 0.01, "cost2_increase", 0.08)), null, null, null));
+      bodies(ImmutableList.of(ImmutableMap.of("id", 1, "onrate_increase", 1.05), ImmutableMap.of("id", 5, "cost1_increase", 0.05, "cost2_increase", 0.07),
+        ImmutableMap.of("id", 7, "onrate_increase", 1.10, "cost1_increase", 0.01, "cost2_increase", 0.08)), null, null, null));
 
     forecastDataConsistencyTest(tests, maps(LocalDate.now().withDayOfYear(1).plusYears(1), LocalDate.now().withDayOfYear(1).plusYears(2).minusDays(1),
       null, null, null, 2, "mtpm", null, null, null),
-      bodies(ImmutableList.of(ImmutableMap.of("id", 2, "onrate_increase", 0.02), ImmutableMap.of("id", 4, "cost1_increase", -1D, "cost2_increase", 0.5),
-        ImmutableMap.of("id", 6, "onrate_increase", 1D, "cost1_increase", 0.1, "cost2_increase", -0.5)), null, null, null));
+      bodies(ImmutableList.of(ImmutableMap.of("id", 2, "onrate_increase", 1.02), ImmutableMap.of("id", 4, "cost1_increase", -1D, "cost2_increase", 0.5),
+        ImmutableMap.of("id", 6, "onrate_increase", 2D, "cost1_increase", 0.1, "cost2_increase", -0.5)), null, null, null));
 
     forecastDataConsistencyTest(tests, maps(LocalDate.now().withDayOfYear(1), LocalDate.now().withDayOfYear(1).plusYears(1).minusDays(1),
       null, 3, null, 2, "mtpm", null, null, null),
-      bodies(ImmutableList.of(ImmutableMap.of("id", 1, "onrate_increase", 0.05), ImmutableMap.of("id", 5, "cost1_increase", 0.05, "cost2_increase", 0.07),
-        ImmutableMap.of("id", 7, "onrate_increase", 0.10, "cost1_increase", 0.01, "cost2_increase", 0.08)), null, null, null));
+      bodies(ImmutableList.of(ImmutableMap.of("id", 1, "onrate_increase", 1.05), ImmutableMap.of("id", 5, "cost1_increase", 0.05, "cost2_increase", 0.07),
+        ImmutableMap.of("id", 7, "onrate_increase", 1.10, "cost1_increase", 0.01, "cost2_increase", 0.08)), null, null, null));
 
     forecastDataConsistencyTest(tests, maps(LocalDate.now().withDayOfYear(1).plusYears(1), LocalDate.now().withDayOfYear(1).plusYears(2).minusDays(1),
       null, 3, 1, 2, "acyman", null, 0, null),
-      bodies(ImmutableList.of(ImmutableMap.of("id", 2, "onrate_increase", 0.02), ImmutableMap.of("id", 4, "cost1_increase", -1D, "cost2_increase", 0.5),
-        ImmutableMap.of("id", 6, "onrate_increase", 1D, "cost1_increase", 0.1, "cost2_increase", -0.5)), null, null, null));
+      bodies(ImmutableList.of(ImmutableMap.of("id", 2, "onrate_increase", 1.02), ImmutableMap.of("id", 4, "cost1_increase", -1D, "cost2_increase", 0.5),
+        ImmutableMap.of("id", 6, "onrate_increase", 2D, "cost1_increase", 0.1, "cost2_increase", -0.5)), null, null, null));
   }
 }
 
