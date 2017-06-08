@@ -13,7 +13,8 @@ type Props = {
     height: number
   },
   data: *,
-  depth: number
+  depth: number,
+  type: string
 }
 
 class BubbleChart extends React.PureComponent<*, Props, *> {
@@ -47,7 +48,7 @@ class BubbleChart extends React.PureComponent<*, Props, *> {
   }
 
   render() {
-    const { clientRect, data, depth } = this.props
+    const { clientRect, data, depth, type } = this.props
     const { width, height } = clientRect
     return (
       <svg viewBox={`0 0 ${width} ${height}`}>
@@ -73,7 +74,7 @@ class BubbleChart extends React.PureComponent<*, Props, *> {
           renderItem={this.renderItem}
           range={[data.root.renevue, data.root.renevue]}
           dispatch={this.props.dispatch}
-          getId={data => `${data.root.type}-${data.root.id}`}
+          getId={data => `${type}-${data.root.type}-${data.root.id}`}
         />
       </svg>
     )

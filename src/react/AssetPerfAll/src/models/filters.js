@@ -57,7 +57,7 @@ export default {
         ],
         function* (action) {
           yield put({
-            type: 'filters/data/reset'
+            type: 'data/reset'
           })
           yield put({
             type: 'profit/data/get',

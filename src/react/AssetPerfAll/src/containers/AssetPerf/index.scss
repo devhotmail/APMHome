@@ -3,7 +3,7 @@
   width: 100%;
   height: 100%;
   position: relative;
-  .filter-bar {
+  :global .dew-filterbar {
     position: absolute;
     top: 0;
     left: 0;
