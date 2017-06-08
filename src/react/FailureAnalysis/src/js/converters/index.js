@@ -1,6 +1,7 @@
 
-import { maxBy, sumBy, sortBy } from 'lodash-es'
+import { maxBy, sumBy, sortBy, clamp } from 'lodash-es'
 import colors from 'utils/colors'
+import { ellipsis } from 'utils/helpers'
 import SID from 'shortid'
 import ColorUtil from 'color'
 
@@ -47,10 +48,14 @@ function BriefToothAdapter(array, max, type, lastYear) {
     id: SID.generate(), 
     data: a, 
     mode: 'bar', 
-    label: a.key.name, 
+    label: ellipsis(a.key.name, 8),
     strips: [{color: color, weight: a.val[type] / max, data: a}] 
   }))
 }
+
+/* ask designer/BE why about below code*/
+const MAGIC_NAME = '其它'
+const MAGIC_DATA = { name: MAGIC_NAME }
 
 function ReasonToothAdapter(array) {
   if (array.length === 0) {
@@ -59,11 +64,31 @@ function ReasonToothAdapter(array) {
   let weightMax = maxBy(array, item => item.count).count
   let sum = sumBy(array, i => i.count)
   let result = []
+  let cursor = 0
+  let otherReasonCount = 0
   array.forEach(e => {
-    let color = e.count/sum < .15 ? colors.gray : colors.blue  //  todo, refine algo
-    result.push({id: SID.generate(), data: e, mode: 'bar', label: e.name, strips:[{ color: color, weight: e.count/weightMax, data: e}] })
+    if (e.name === MAGIC_NAME) {
+      otherReasonCount += e.count
+      return
+    }
+    cursor += e.count
+    let color = cursor/sum > .85 ? colors.gray : colors.blue
+    result.push({
+      id: SID.generate(), 
+      data: e, 
+      mode: 'bar', 
+      label: ellipsis(e.name, 5),
+      strips:[{ color: color, weight: e.count/weightMax, data: e}] })
   })
-  return result
+  // select top 10 reasons, then append '其他'
+  MAGIC_DATA.count = otherReasonCount
+  return result.slice(0, 12).concat(otherReasonCount ? [{
+    id: SID.generate(),
+    data: MAGIC_DATA,
+    mode: 'bar',
+    label: MAGIC_NAME,
+    strips:[{ color: colors.gray, weight: clamp(otherReasonCount, weightMax)/weightMax, data: MAGIC_DATA}]
+  }] : [])
 }
 
 function getStripColor(type) {

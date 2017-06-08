@@ -35,6 +35,10 @@ export function ToPrecentage(number, decimal = 2) {
   return (number * 100).toFixed(decimal) + '%'
 }
 
+export function ellipsis(str, limit) {
+  return str.length > limit ? str.substring(0, limit) + '…' : str
+}
+
 export function GenerateTeethData(count, mode, stripCount, colors = []) {
 
   const colours = values(COLORS)

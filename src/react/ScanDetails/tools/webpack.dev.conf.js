@@ -48,20 +48,36 @@ module.exports = merge(baseWebpackConfig, {
       },
       {
         test: /\.s[ca]ss$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              module: true,
-              importLoaders: 1,
-              localIdentName: '[local]__[hash:base64:5]'
-            }
-          },
-          'sass-loader',
-          'postcss-loader'
-        ]
-      },
+        exclude: [/src\/styles/, /node_modules/],
+         use: [
+           'style-loader',
+           {
+             loader: 'css-loader',
+             options: {
+               module: true,
+               importLoaders: 2,
+               localIdentName: '[local]__[hash:base64:5]'
+             }
+           },
+           'postcss-loader',
+           'sass-loader',
+         ]
+       },
+       {
+         test: /\.s[ca]ss$/,
+         include: [/src\/styles/, /node_modules/],
+         use: [
+           'style-loader',
+           {
+             loader: 'css-loader',
+             options: {
+               importLoaders: 2
+             }
+           },
+           'postcss-loader',
+           'sass-loader'
+         ]
+       },
       {
         test: /\.less$/,
         use: [
@@ -75,7 +91,7 @@ module.exports = merge(baseWebpackConfig, {
           {
             loader: 'less-loader',
             options: {
-              modifyVars: require('./theme')
+              modifyVars: require('./theme.js')
             }
           }
         ],

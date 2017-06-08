@@ -57,6 +57,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
       {
         test: /\.s[ca]ss$/,
+        exclude: [/src\/styles/, /node_modules/],
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
@@ -64,12 +65,29 @@ const webpackConfig = merge(baseWebpackConfig, {
               loader: 'css-loader',
               options: {
                 module: true,
-                importLoaders: 1,
+                importLoaders: 2,
                 localIdentName: '[local]__[hash:base64:5]'
               }
             },
-            'sass-loader',
-            'postcss-loader'
+            'postcss-loader',
+            'sass-loader'
+          ]
+        })
+      },
+      {
+        test: /\.s[ca]ss$/,
+        include: [/src\/styles/, /node_modules/],
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 2
+              }
+            },
+            'postcss-loader',
+            'sass-loader'
           ]
         })
       },
@@ -87,7 +105,7 @@ const webpackConfig = merge(baseWebpackConfig, {
             {
               loader: 'less-loader',
               options: {
-                modifyVars: require('./theme')
+                modifyVars: require('./theme.js')
               }
             }
           ]

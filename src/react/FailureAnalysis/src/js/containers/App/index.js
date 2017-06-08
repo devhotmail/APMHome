@@ -139,13 +139,14 @@ export class App extends Component<void, Props, void> {
       this.setState({ tooltipX: evt.clientX, tooltipY: evt.clientY, tooltip: tooltip })
     }
     function getLabel(strip, type) {
+      let name = strip.data.name || strip.data.key.name
       let unit = t('incident_count_unit')
       if (strip.data.count) {
-        return strip.data.count + unit
+        return name + ' ' + strip.data.count + unit
       }
       if (strip.data.val) {
         let val = strip.data.val[DataTypeMapping[type]]
-        return type === 'incident_count' ? (val + unit) : ToPrecentage(val)
+        return name + ' ' + (type === 'incident_count' ? (val + unit) : ToPrecentage(val))
       }
       return 'N.A.'
     }
@@ -256,6 +257,7 @@ export class App extends Component<void, Props, void> {
     }
     if (current.type === 'left') {
       this.setState({ leftItems: current, lastYear: { leftItems: lastYear, rightItems: this.state.lastYear.rightItems } })
+      this.hideDevice() // everytime leftside got refreshed, selected device should be cleared
     } else if (current.type === 'right'){
       this.setState({ rightItems: current, lastYear: { rightItems: lastYear, leftItems: this.state.lastYear.leftItems } })
     }
@@ -308,12 +310,12 @@ export class App extends Component<void, Props, void> {
 
             <div className="display-select">{selectHelper(display, this.getDisplayOptions(), updateDisplayType)}</div>
             {
-              leftItems && !!leftItems.length &&
+              left.total > left.top &&
               <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
                 className="pager-left" onChange={this.onLeftPagerChange}/>
             }
             {
-              rightItems && !!rightItems.length &&
+              right.total > right.top &&
               <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
                 className="pager-right" onChange={this.onRightPagerChange}/>
             }
