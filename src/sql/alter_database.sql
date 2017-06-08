@@ -108,6 +108,15 @@ part_id int not null,
 name varchar(128) not null
 );
 
+create table proc_map(
+id serial not null primary key,
+asset_group int not null,
+part_id int not null,
+subpart_id int,
+step_id int
+);
+
+
 create table exam_summit(
 id serial not null primary key,
 site_id  int not null,
