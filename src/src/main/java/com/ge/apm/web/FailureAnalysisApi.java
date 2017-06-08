@@ -69,7 +69,7 @@ public class FailureAnalysisApi {
     Map<Integer, Tuple7<Integer, Integer, Integer, Integer, Integer, Integer, String>> assets = commonService.findAssets(user.getSiteId(), user.getHospitalId());
     Observable<Tuple4<Integer, Double, Double, Integer>> report = faService.briefs(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), Match(groupBy).of(Case("dept", "clinical_dept_id"), Case("type", "asset_group"), Case("supplier", "supplier_id"), Case("asset", "id")), dept, type, supplier, asset, pmv);
     Observable<Tuple4<Integer, Double, Double, Integer>> filteredReport = Option.of(Tuple.of(report, keys)).filter(a -> Option.of(a._2).isDefined()).map(b -> Tuple.of(b._1, Arrays.asList(b._2))).map(c -> c._1.filter((t -> c._2.contains(t._1)))).getOrElse(report);
-    return Match(Tuple.of(groupBy, filteredReport.sorted((l, r) -> Match(orderby).of(Case("avail", (int) (r._2 * 1000) - (int) (l._2 * 1000)), Case("ftfr", (int) (r._3 * 1000) - (int) (l._3 * 1000)), Case("fix", r._4 - l._4))).skip(start).limit(Option.of(limit).getOrElse(Integer.MAX_VALUE)).cache(), depts, types, suppliers, assets)).of(
+    return Match(Tuple.of(groupBy, filteredReport.sorted((l, r) -> Match(orderby).of(Case("avail", Double.compare(r._2, l._2)), Case("ftfr", Double.compare(r._3, l._3)), Case("fix", r._4 - l._4))).skip(start).limit(Option.of(limit).getOrElse(Integer.MAX_VALUE)).cache(), depts, types, suppliers, assets)).of(
       Case($(t -> "dept".equals(t._1)), t -> ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(new ImmutableMap.Builder<String, Object>()
         .put("pages", new ImmutableMap.Builder<String, Object>()
           .put("total", report.count().toBlocking().single())
