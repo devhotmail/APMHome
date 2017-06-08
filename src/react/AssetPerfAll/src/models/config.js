@@ -18,12 +18,6 @@ export default {
     changes: []
   },
   subscriptions: {
-    setup ({ dispatch }) {
-      dispatch({
-        type: 'data/get',
-        level: 0
-      })
-    }
   },
   effects: {
     *['data/get']({ payload, level }, { put, call, select }) {
@@ -53,7 +47,7 @@ export default {
           level
         })
       } catch(err) {
-
+        console.error(err)
       }
     },
     *['changes/submit']({ resolve, reject } , { put, take, call, select }) {
@@ -95,13 +89,20 @@ export default {
         changes: []
       }
     },
+    ['data/get'](state) {
+      return {
+        ...state,
+        loading: true
+      }
+    },
     ['data/get/succeeded'](state, { payload, level }) {
       const data = [...state.data]
       data[level] = payload.items
 
       return {
         ...state,
-        data: data.slice(0, level + 1)
+        data: data.slice(0, level + 1),
+        loading: false
       }
     },
     ['changes'] (state, { payload, filter }) {

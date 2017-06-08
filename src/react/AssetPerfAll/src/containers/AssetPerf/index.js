@@ -1,11 +1,35 @@
 import React from 'react'
 import { connect } from 'dva'
+import moment from 'moment'
 import BubbleChart from '#/components/BubbleChart'
+import Loading from '#/components/Loading'
 import SidePanel from '#/components/SidePanel'
-import FilterBar from '#/components/FilterBar'
+import FilterBar from 'dew-filterbar'
 import styles from './index.scss'
 
+const isHead = JSON.parse(document.querySelector('#user-context #isHead').value)
+
 class AssetPerf extends React.PureComponent {
+  onFilterChange = ({key, value}) => {
+    const { dispatch } = this.props
+    if (key === 'type') {
+      dispatch({
+        type: 'filters/type/set',
+        payload: value
+      })
+    } else if (key === 'range') {
+      dispatch({
+        type: 'filters/range/set',
+        payload: value
+      })
+    } else if (key === 'groupBy') {
+      dispatch({
+        type: 'filters/groupBy/set',
+        payload: value
+      })
+    }
+  }
+
   shouldComponentUpdate(nextProps) {
     if (nextProps.profit === this.props.profit) return false
     return true
@@ -14,7 +38,7 @@ class AssetPerf extends React.PureComponent {
   render() {
     const { profit, filters } = this.props
     const { data } = profit
-    const { groupBy, data: filtersData } = filters
+    const { groupBy, data: filtersData, type } = filters
     if (data.length === 0) return null
     const chartData = data
       .reduceRight((prev, cur, index) => {
@@ -27,15 +51,23 @@ class AssetPerf extends React.PureComponent {
         }
         return cur
       })
+
+    const filterOptions = [
+      { type: 'radio', key: 'type', options: [{id: 'history', name: '历史'}, {id: 'future', name: '预测'}], value: type},
+      { type: 'range', key: 'range', value: filters.range },
+      { type: 'radio', key: 'groupBy', options: [{id: 'type', name: '按设备类型'}, {id: 'month', name: '按月份'}], value: groupBy},
+    ]
+    if (isHead) filterOptions[2].options.unshift({id: 'dept', name: '按科室'})
     return (
       <div className={styles['asset-perf']}>
-        <FilterBar className={styles['filter-bar']} location={this.props.location}/>
-        <BubbleChart data={chartData} depth={data.length}/>
+        <FilterBar options={filterOptions} onChange={this.onFilterChange}/>
+        <BubbleChart data={chartData} depth={data.length} type={type}/>
         {
           filters.type === 'future'
           ? <SidePanel className={styles['side-panel']} />
           : null
         }
+        <Loading />
       </div>
     )
   }
