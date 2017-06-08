@@ -1,10 +1,29 @@
 import React, { Component } from 'react'
 import Slider from 'rc-slider'
 import { last } from 'lodash-es'
+import Tooltip from 'rc-tooltip'
 import { HumanizeDurationLabel } from 'utils/helpers'
-// import 'rc-slider/assets/index.css'
 
-const Range = Slider.createSliderWithTooltip(Slider.Range)
+const Range = Slider.Range
+const Handle = Slider.Handle
+
+const handleWrapper = max => (
+   function handle(props) {
+    let { value, index, dragging, ...restProps } = props //eslint-disable-line
+    value = HumanizeDurationLabel(max - value)
+    return (
+      <Tooltip
+        prefixCls="rc-slider-tooltip"
+        overlay={value}
+        placement="right"
+        key={index}
+        visible
+      >
+        <Handle value={value} {...restProps} />
+      </Tooltip>
+    )
+  }
+)
 
 export default class ReversedRange extends Component {
 
@@ -29,7 +48,7 @@ export default class ReversedRange extends Component {
       value={mirrored}
       defaultValue={mirrored}
       onChange={onChange && this.onChangeProxy.bind(this)}
-      tipFormatter={val => HumanizeDurationLabel(max - val)} 
+      handle={handleWrapper(max)}
       {...restProps}
     />)
   }
