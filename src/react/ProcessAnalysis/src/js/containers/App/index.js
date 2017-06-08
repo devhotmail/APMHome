@@ -486,12 +486,14 @@ export class App extends Component<void, Props, void> {
               <ReversedRange
                 className={classnames('slider-ettr', dataType === 'ettr' ? '' : 'hidden')}
                 value={distributionEttr}
+                showTooltip={dataType === 'ettr'}
                 unit="d"
                 step={.5}
                 onChange={this.onSliderChange}
               />
               <ReversedRange
                 className={classnames('slider-arrival_time', dataType === 'arrival_time' ? '' : 'hidden')}
+                showTooltip={dataType === 'arrival_time'}
                 value={distributionArrival}
                 unit="h"
                 step={1}
@@ -500,6 +502,7 @@ export class App extends Component<void, Props, void> {
               <ReversedRange
                 className={classnames('slider-response_time', dataType === 'response_time' ? '' : 'hidden')}
                 value={distributionResponse}
+                showTooltip={dataType === 'response_time'}
                 unit="h"
                 step={.1}
                 onChange={this.onSliderChange}

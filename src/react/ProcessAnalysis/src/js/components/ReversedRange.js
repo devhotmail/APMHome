@@ -7,7 +7,7 @@ import { HumanizeDurationLabel } from 'utils/helpers'
 const Range = Slider.Range
 const Handle = Slider.Handle
 
-const handleWrapper = (max, unit) => (
+const handleWrapper = (max, unit, showTooltip) => (
    function handle(props) {
     let { value, index, dragging, ...restProps } = props //eslint-disable-line
     value = HumanizeDurationLabel(max - value, unit)
@@ -17,7 +17,7 @@ const handleWrapper = (max, unit) => (
         overlay={value}
         placement="right"
         key={index}
-        visible
+        visible={showTooltip}
       >
         <Handle value={value} {...restProps} />
       </Tooltip>
@@ -42,7 +42,7 @@ export default class ReversedRange extends Component {
   }
 
   render() {
-    let { value, onChange, unit, step, ...restProps } = this.props
+    let { value, onChange, unit, step, showTooltip /* a hack */, ...restProps } = this.props
     let max = last(value)
     let mirrored = value.map(v => max - v).reverse()
 
@@ -54,7 +54,7 @@ export default class ReversedRange extends Component {
       defaultValue={mirrored}
       step={getStep(unit, step)}
       onChange={onChange && this.onChangeProxy.bind(this)}
-      handle={handleWrapper(max, unit)}
+      handle={handleWrapper(max, unit, showTooltip)}
       {...restProps}
     />)
   }
