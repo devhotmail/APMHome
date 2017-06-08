@@ -65,6 +65,9 @@ export default {
   },
   getBriefs(type, state, lastYear) {
     let params = mapParamsToQuery(state, type)
+    if (params.key) {
+      params.start = 0
+    }
     if (lastYear) {
       params.from = minusOneYear(state.period.from)
       params.to = minusOneYear(state.period.to)
