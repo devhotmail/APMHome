@@ -33,27 +33,32 @@ public class ScanService {
     db = Database.from(connectionProvider);
   }
 
+
   @Cacheable(cacheNames = "springCache", key = "'ScanService.brief.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset")
   public Observable<Tuple3<Integer, Integer, Integer>> brief(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset) {
     Objects.requireNonNull(from);
     Objects.requireNonNull(to);
     QuerySelect.Builder builder = db.select(new SQL() {{
-      SELECT("asset_group", "part_id", "sum(exam_count) as exam_num");
-      FROM("exam_summit");
-      WHERE("site_id = :site");
-      WHERE("hospital_id = :hospital");
-      WHERE("created between :from and :to");
-      if (Option.of(type).filter(i -> i > 0).isDefined()) {
-        WHERE("asset_group = :type");
-      }
-      if (Option.of(dept).filter(i -> i > 0).isDefined()) {
-        WHERE("dept_id = :dept");
-      }
-      if (Option.of(asset).filter(i -> i > 0).isDefined()) {
-        WHERE("asset_id = :asset");
-      }
-      GROUP_BY("asset_group", "part_id");
-      ORDER_BY("asset_group", "part_id");
+      SELECT("l.asset_group", "l.part_id", "COALESCE(r.exam_num,0)");
+      FROM("(select distinct asset_group, part_id from proc_map) as l");
+      LEFT_OUTER_JOIN("(".concat(new SQL() {{
+        SELECT("asset_group", "part_id", "sum(exam_count) as exam_num");
+        FROM("exam_summit");
+        WHERE("site_id = :site");
+        WHERE("hospital_id = :hospital");
+        WHERE("created between :from and :to");
+        if (Option.of(type).filter(i -> i > 0).isDefined()) {
+          WHERE("asset_group = :type");
+        }
+        if (Option.of(dept).filter(i -> i > 0).isDefined()) {
+          WHERE("dept_id = :dept");
+        }
+        if (Option.of(asset).filter(i -> i > 0).isDefined()) {
+          WHERE("asset_id = :asset");
+        }
+        GROUP_BY("asset_group", "part_id");
+      }}.toString()).concat(") as r on l.asset_group = r.asset_group and l.part_id = r.part_id"));
+      ORDER_BY("l.asset_group", "l.part_id");
     }}.toString()).parameter("site", site).parameter("hospital", hospital).parameter("from", from).parameter("to", to);
     return Option.of(builder).filter(s -> Option.of(type).isDefined()).map(o -> o.parameter("type", type))
       .orElse(Option.of(builder)).filter(o -> Option.of(dept).isDefined()).map(o -> o.parameter("dept", dept))
@@ -64,74 +69,78 @@ public class ScanService {
       .cache();
   }
 
-  @Cacheable(cacheNames = "springCache", key = "'ScanService.assetDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part+'.'+#limit+'.'+#start")
-  public Observable<Tuple4<Integer, Integer, Integer, Integer>> assetDetail(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset, Integer part, int limit, int start) {
+  @Cacheable(cacheNames = "springCache", key = "'ScanService.assetDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part")
+  public Observable<Tuple4<Integer, Integer, Integer, Integer>> assetDetail(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset, Integer part) {
     QuerySelect.Builder builder = db.select(new SQL() {{
-      SELECT("m.asset_group", "m.asset_id", "m.part_id", "sum(m.exam_count) as exam_num");
-      FROM("exam_summit as m");
-      WHERE("m.site_id = :site");
-      WHERE("m.hospital_id = :hospital");
-      WHERE("m.created between :from and :to");
-      if (Option.of(type).filter(i -> i > 0).isDefined()) {
-        WHERE("m.asset_group = :type");
-      }
-      if (Option.of(dept).filter(i -> i > 0).isDefined()) {
-        WHERE("m.dept_id = :dept");
-      }
-      if (Option.of(asset).filter(i -> i > 0).isDefined()) {
-        WHERE("m.asset_id = :asset");
-      }
-      if (Option.of(part).filter(i -> i > 0).isDefined()) {
-        WHERE("m.part_id = :part");
-      }
-      GROUP_BY("m.asset_group", "m.asset_id", "m.part_id");
-      ORDER_BY("m.asset_group", "m.asset_id", "m.part_id");
-    }}.toString().concat(" limit :limit ").concat(" offset :start ")).parameter("site", site).parameter("hospital", hospital).parameter("from", from).parameter("to", to);
+      SELECT("l.asset_group", "r.asset_id", "l.part_id", "COALESCE(r.exam_num,0)");
+      FROM("(select distinct asset_group, part_id from proc_map) as l");
+      LEFT_OUTER_JOIN("(".concat(new SQL() {{
+        SELECT("asset_group", "asset_id", "part_id", "sum(exam_count) as exam_num");
+        FROM("exam_summit");
+        WHERE("site_id = :site");
+        WHERE("hospital_id = :hospital");
+        WHERE("created between :from and :to");
+        if (Option.of(type).filter(i -> i > 0).isDefined()) {
+          WHERE("asset_group = :type");
+        }
+        if (Option.of(dept).filter(i -> i > 0).isDefined()) {
+          WHERE("dept_id = :dept");
+        }
+        if (Option.of(asset).filter(i -> i > 0).isDefined()) {
+          WHERE("asset_id = :asset");
+        }
+        if (Option.of(part).filter(i -> i > 0).isDefined()) {
+          WHERE("part_id = :part");
+        }
+        GROUP_BY("asset_group", "asset_id", "part_id");
+      }}.toString()).concat(") as r on l.asset_group = r.asset_group and l.part_id = r.part_id"));
+      ORDER_BY("l.asset_group", "l.part_id");
+    }}.toString()).parameter("site", site).parameter("hospital", hospital).parameter("from", from).parameter("to", to);
     return Option.of(builder).filter(s -> Option.of(type).isDefined()).map(o -> o.parameter("type", type))
       .orElse(Option.of(builder)).filter(o -> Option.of(dept).isDefined()).map(o -> o.parameter("dept", dept))
       .orElse(Option.of(builder)).filter(o -> Option.of(asset).isDefined()).map(o -> o.parameter("asset", asset))
       .orElse(Option.of(builder)).filter(o -> Option.of(part).isDefined()).map(o -> o.parameter("part", part))
-      .orElse(Option.of(builder)).filter(o -> Option.of(limit).isDefined()).map(o -> o.parameter("limit", limit))
-      .orElse(Option.of(builder)).filter(o -> Option.of(start).isDefined()).map(o -> o.parameter("start", start))
       .orElse(Option.of(builder)).get()
       .getAs(Integer.class, Integer.class, Integer.class, Integer.class)
       .map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4()))
       .cache();
   }
 
-  @Cacheable(cacheNames = "springCache", key = "'ScanService.stepDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part+'.'+#step+'.'+#limit+'.'+#start")
-  public Observable<Tuple4<Integer, Integer, Integer, Integer>> stepDetail(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset, Integer part, Integer step, int limit, int start) {
+  @Cacheable(cacheNames = "springCache", key = "'ScanService.stepDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part+'.'+#step")
+  public Observable<Tuple4<Integer, Integer, Integer, Integer>> stepDetail(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset, Integer part, Integer step) {
     QuerySelect.Builder builder = db.select(new SQL() {{
-      SELECT("m.asset_group", "m.part_id", "m.step_id", "sum(m.exam_count) as exam_num");
-      FROM("exam_summit as m");
-      WHERE("m.site_id = :site");
-      WHERE("m.hospital_id = :hospital");
-      WHERE("m.created between :from and :to");
-      if (Option.of(type).filter(i -> i > 0).isDefined()) {
-        WHERE("m.asset_group = :type");
-      }
-      if (Option.of(dept).filter(i -> i > 0).isDefined()) {
-        WHERE("m.dept_id = :dept");
-      }
-      if (Option.of(asset).filter(i -> i > 0).isDefined()) {
-        WHERE("m.asset_id = :asset");
-      }
-      if (Option.of(part).filter(i -> i > 0).isDefined()) {
-        WHERE("m.part_id = :part");
-      }
-      if (Option.of(step).filter(i -> i > 0).isDefined()) {
-        WHERE("m.step_id = :step");
-      }
-      GROUP_BY("m.asset_group", "m.part_id", "m.step_id");
-      ORDER_BY("m.asset_group", "m.part_id", "m.step_id");
-    }}.toString().concat(" limit :limit ").concat(" offset :start ")).parameter("site", site).parameter("hospital", hospital).parameter("from", from).parameter("to", to);
+      SELECT("l.asset_group", "l.part_id", "l.step_id", "COALESCE(r.exam_num,0)");
+      FROM("(SELECT DISTINCT asset_group, part_id, step_id from proc_map) as l");
+      LEFT_OUTER_JOIN("(".concat(new SQL() {{
+        SELECT("asset_group", "part_id", "step_id", "sum(exam_count) as exam_num");
+        FROM("exam_summit");
+        WHERE("site_id = :site");
+        WHERE("hospital_id = :hospital");
+        WHERE("created between :from and :to");
+        if (Option.of(type).filter(i -> i > 0).isDefined()) {
+          WHERE("asset_group = :type");
+        }
+        if (Option.of(dept).filter(i -> i > 0).isDefined()) {
+          WHERE("dept_id = :dept");
+        }
+        if (Option.of(asset).filter(i -> i > 0).isDefined()) {
+          WHERE("asset_id = :asset");
+        }
+        if (Option.of(part).filter(i -> i > 0).isDefined()) {
+          WHERE("part_id = :part");
+        }
+        if (Option.of(step).filter(i -> i > 0).isDefined()) {
+          WHERE("step_id = :step");
+        }
+        GROUP_BY("asset_group", "part_id", "step_id");
+      }}.toString()).concat(") as r on l.asset_group = r.asset_group and l.part_id = r.part_id and l.step_id = r.step_id"));
+      ORDER_BY("l.asset_group", "l.part_id", "l.step_id");
+    }}.toString()).parameter("site", site).parameter("hospital", hospital).parameter("from", from).parameter("to", to);
     return Option.of(builder).filter(s -> Option.of(type).isDefined()).map(o -> o.parameter("type", type))
       .orElse(Option.of(builder)).filter(o -> Option.of(dept).isDefined()).map(o -> o.parameter("dept", dept))
       .orElse(Option.of(builder)).filter(o -> Option.of(asset).isDefined()).map(o -> o.parameter("asset", asset))
       .orElse(Option.of(builder)).filter(o -> Option.of(part).isDefined()).map(o -> o.parameter("part", part))
       .orElse(Option.of(builder)).filter(o -> Option.of(step).isDefined()).map(o -> o.parameter("step", step))
-      .orElse(Option.of(builder)).filter(o -> Option.of(limit).isDefined()).map(o -> o.parameter("limit", limit))
-      .orElse(Option.of(builder)).filter(o -> Option.of(start).isDefined()).map(o -> o.parameter("start", start))
       .orElse(Option.of(builder)).get()
       .getAs(Integer.class, Integer.class, Integer.class, Integer.class)
       .map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4()))

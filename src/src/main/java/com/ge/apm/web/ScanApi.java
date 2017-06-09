@@ -33,8 +33,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static javaslang.API.*;
-
 @RestController
 @RequestMapping("/scan")
 @Validated
@@ -90,17 +88,17 @@ public class ScanApi {
     Map<Integer, String> parts = commonService.findParts();
     Map<Integer, Tuple3<Integer, Integer, String>> steps = commonService.findSteps();
     if ("asset".equals(groupBy)) {
-      return serializeAsset(request, assets, types, parts, scanService.assetDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part, Match(Tuple.of(part, limit)).of(Case($(t -> Option.of(t._1).isDefined()), a -> a._2), Case($(t -> Option.of(t._1).isEmpty() && Option.of(t._2).isDefined()), a -> a._2 * parts.size()), Case($(), Integer.MAX_VALUE)), Match(Tuple.of(part, start)).of(Case($(t -> Option.of(t._1).isDefined()), a -> a._2), Case($(t -> Option.of(t._1).isEmpty() && Option.of(t._2).isDefined()), a -> a._2 * parts.size()), Case($(), 0))));
+      return serializeAsset(request, assets, types, parts, scanService.assetDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part), start, limit);
     } else if ("step".equals(groupBy)) {
-      return serializeStep(request, types, parts, steps, scanService.stepDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part, step, Option.of(limit).getOrElse(Integer.MAX_VALUE), start));
+      return serializeStep(request, types, parts, steps, scanService.stepDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part, step), start, Option.of(limit).getOrElse(Integer.MAX_VALUE));
     } else {
       return ResponseEntity.badRequest().body(ImmutableMap.of());
     }
   }
 
-  private ResponseEntity<Map<String, Object>> serializeAsset(HttpServletRequest request, Map<Integer, Tuple7<Integer, Integer, Integer, Integer, Integer, Integer, String>> assets, Map<Integer, String> types, Map<Integer, String> parts, Observable<Tuple4<Integer, Integer, Integer, Integer>> report) {
+  private ResponseEntity<Map<String, Object>> serializeAsset(HttpServletRequest request, Map<Integer, Tuple7<Integer, Integer, Integer, Integer, Integer, Integer, String>> assets, Map<Integer, String> types, Map<Integer, String> parts, Observable<Tuple4<Integer, Integer, Integer, Integer>> report, Integer start, Integer limit) {
     final Map<String, Object> body = new ImmutableMap.Builder<String, Object>()
-      .put("detail", report.map(t -> Tuple.of(t._1, t._2, Try.of(() -> assets.get(t._2)._7).getOrElse(""), t._3, t._4)).toMultimap(t -> Tuple.of(t._1, t._2, t._3)).toBlocking().single().entrySet().stream().sorted(Comparator.<Map.Entry<Tuple3<Integer, Integer, String>, Collection<Tuple5<Integer, Integer, String, Integer, Integer>>>, Integer>comparing(kv -> kv.getKey()._1).thenComparing(kv -> kv.getKey()._2)).map(kv -> new ImmutableMap.Builder<String, Object>()
+      .put("detail", report.skip(start).limit(limit).map(t -> Tuple.of(t._1, t._2, Try.of(() -> assets.get(t._2)._7).getOrElse(""), t._3, t._4)).toMultimap(t -> Tuple.of(t._1, t._2, t._3)).toBlocking().single().entrySet().stream().sorted(Comparator.<Map.Entry<Tuple3<Integer, Integer, String>, Collection<Tuple5<Integer, Integer, String, Integer, Integer>>>, Integer>comparing(kv -> kv.getKey()._1).thenComparing(kv -> kv.getKey()._2)).map(kv -> new ImmutableMap.Builder<String, Object>()
         .put("type", ImmutableMap.of("id", kv.getKey()._1, "name", types.getOrDefault(kv.getKey()._1, "")))
         .put("asset", ImmutableMap.of("id", kv.getKey()._2, "name", kv.getKey()._3))
         .put("items", new ImmutableMap.Builder<String, Object>()
@@ -111,9 +109,9 @@ public class ScanApi {
     return ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)).body(body);
   }
 
-  private ResponseEntity<Map<String, Object>> serializeStep(HttpServletRequest request, Map<Integer, String> types, Map<Integer, String> parts, Map<Integer, Tuple3<Integer, Integer, String>> steps, Observable<Tuple4<Integer, Integer, Integer, Integer>> report) {
+  private ResponseEntity<Map<String, Object>> serializeStep(HttpServletRequest request, Map<Integer, String> types, Map<Integer, String> parts, Map<Integer, Tuple3<Integer, Integer, String>> steps, Observable<Tuple4<Integer, Integer, Integer, Integer>> report, Integer start, Integer limit) {
     final Map<String, Object> body = new ImmutableMap.Builder<String, Object>()
-      .put("detail", StreamSupport.stream(report.map(t -> Tuple.of(t._1, t._2, t._3, Try.of(() -> steps.get(t._3)._3).getOrElse(""), t._4)).toBlocking().toIterable().spliterator(), false).sorted(Comparator.<Tuple5<Integer, Integer, Integer, String, Integer>, Integer>comparing(Tuple5::_1).thenComparing(Tuple5::_2).thenComparing(Tuple5::_3)).map(t -> new ImmutableMap.Builder<String, Object>()
+      .put("detail", StreamSupport.stream(report.skip(start).limit(limit).map(t -> Tuple.of(t._1, t._2, t._3, Try.of(() -> steps.get(t._3)._3).getOrElse(""), t._4)).toBlocking().toIterable().spliterator(), false).sorted(Comparator.<Tuple5<Integer, Integer, Integer, String, Integer>, Integer>comparing(Tuple5::_1).thenComparing(Tuple5::_2).thenComparing(Tuple5::_3)).map(t -> new ImmutableMap.Builder<String, Object>()
         .put("type", ImmutableMap.of("id", t._1, "name", types.getOrDefault(t._1, "")))
         .put("part", ImmutableMap.of("id", t._2, "name", parts.getOrDefault(t._2, "")))
         .put("step", ImmutableMap.of("id", t._3, "name", t._4, "count", t._5)).build()).collect(Collectors.toList())).build();
