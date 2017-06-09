@@ -55,7 +55,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
   private ScheduleModel model;
   private int inspNum;
   private int meterNum;
-  private int mtMum;
+  private int mtNum;
   private int pmNum;
 
   public WoScheduleController() {
@@ -64,9 +64,8 @@ public class WoScheduleController extends SqlConfigurableChartController {
     userId = user.getId();
     queries = Maps.newLinkedHashMap();
     queries.put("inspection", "select distinct io.order_type, io.name, io.start_time, io.end_time, io.create_time, io.creator_name, ai.location_name, io.is_finished from inspection_order_detail iod join inspection_order io on iod.site_id = io.site_id and iod.order_id = io.id join asset_info ai on iod.site_id = ai.site_id and iod.asset_id = ai.id where io.start_time between ? and ? and ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and io.owner_id = ? and io.start_time is not null order by io.start_time");
-    queries.put("maintenance", "select wo.name, wo.create_time as start_time, max(ws.end_time) as end_time, wo.creator_name, ai.location_name, wo.is_closed from work_order_step ws join work_order wo on ws.site_id = wo.site_id and ws.work_order_id = wo.id join asset_info ai on wo.site_id = ai.site_id and wo.hospital_id = ai.hospital_id and wo.asset_id = ai.id where wo.create_time between ? and ? and ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and ws.owner_id = ? and ws.start_time is not null group by wo.id, ai.id order by wo.create_time");
     String mtSql = new SQL() {{
-      SELECT("sr.from_dept_name as name", "sr.created_date as start_time", "sr.close_time as end_time", "sr.created_by as creator_name", "ai.location_name", "CASE WHEN sr.status=1 THEN 1 ELSE 0 END as is_closed");
+      SELECT("sr.from_dept_name || '设备维修' as name", "sr.created_date as start_time", "sr.close_time as end_time", "sr.requestor_name as creator_name", "ai.location_name", "CASE WHEN sr.status=2 THEN 1 ELSE 0 END as is_closed");
       FROM("v2_service_request sr join asset_info ai on sr.asset_id = ai.id");
       WHERE("sr.created_date between ? and ?");
       WHERE("ai.is_valid = true");
@@ -76,10 +75,10 @@ public class WoScheduleController extends SqlConfigurableChartController {
       WHERE("sr.created_date is not null");
       ORDER_BY("sr.created_date");
     }}.toString();
+    queries.put("maintenance", mtSql);
     queries.put("preventiveMaintenance", "select po.name, po.start_time, po.end_time, po.create_time, po.creator_name, ai.location_name, po.is_finished from pm_order po join asset_info ai on po.site_id = ai.site_id and po.hospital_id = ai.hospital_id and po.asset_id = ai.id where po.start_time between ? and ? and ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and po.owner_id = ? and po.start_time is not null order by po.start_time");
     queries.put("inspNum", "select count(*) from (select distinct io.order_type, io.name, io.start_time, io.end_time, io.create_time, io.creator_name, ai.location_name, io.is_finished from inspection_order_detail iod join inspection_order io on iod.site_id = io.site_id and iod.order_id = io.id join asset_info ai on iod.site_id = ai.site_id and iod.asset_id = ai.id where ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and io.owner_id = ? and io.is_finished = false and io.start_time is not null order by io.start_time) insp where order_type = 1");
     queries.put("meterNum", "select count(*) from (select distinct io.order_type, io.name, io.start_time, io.end_time, io.create_time, io.creator_name, ai.location_name, io.is_finished from inspection_order_detail iod join inspection_order io on iod.site_id = io.site_id and iod.order_id = io.id join asset_info ai on iod.site_id = ai.site_id and iod.asset_id = ai.id where ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and io.owner_id = ? and io.is_finished = false and io.start_time is not null order by io.start_time) insp where order_type = 2");
-    queries.put("mtMum", "select count(*) from (select wo.name, wo.create_time as start_time, max(ws.end_time) as end_time, wo.creator_name, ai.location_name, wo.is_closed from work_order_step ws join work_order wo on ws.site_id = wo.site_id and ws.work_order_id = wo.id join asset_info ai on wo.site_id = ai.site_id and wo.hospital_id = ai.hospital_id and wo.asset_id = ai.id where ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and ws.owner_id = ? and ws.start_time is not null group by wo.id, ai.id order by wo.create_time) as mt");
     String mtNum = new SQL() {{
       SELECT("count(*)");
       FROM("v2_service_request sr join asset_info ai on sr.asset_id = ai.id");
@@ -87,6 +86,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
       WHERE("ai.hospital_id = ?");
       WHERE("sr.requestor_id = ?");
     }}.toString();
+    queries.put("mtNum", mtNum);
     queries.put("pmNum", "select count(*) from pm_order po join asset_info ai on po.site_id = ai.site_id and po.hospital_id = ai.hospital_id and po.asset_id = ai.id where ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and po.owner_id = ? and po.start_time is not null and po.is_finished = false");
     eventTypes = ImmutableMap.of(1, "巡检", 2, "计量", 3, "质控", 4, "维修", 5, "保养");
   }
@@ -123,7 +123,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
         for (DefaultScheduleEvent event : events) {
           model.addEvent(event);
         }
-        //RequestContext.getCurrentInstance().execute(String.format("updateTopPanel([%s,%s,%s,%s,%s])", inspNum, meterNum, qaNum, mtMum, pmNum));
+        //RequestContext.getCurrentInstance().execute(String.format("updateTopPanel([%s,%s,%s,%s,%s])", inspNum, meterNum, qaNum, mtNum, pmNum));
       }
     };
 
@@ -138,9 +138,9 @@ public class WoScheduleController extends SqlConfigurableChartController {
     meterNum = jdbcTemplate.queryForObject(queries.get("meterNum"), Integer.TYPE, site_id, hospital_id, userId);
 
     sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, user_Id=%s}",
-      queries.get("mtMum"), site_id, hospital_id, userId);
+      queries.get("mtNum"), site_id, hospital_id, userId);
     logger.debug("{} {} {} {} \"{}\" {}", remote_addr, site_id, hospital_id, username, page_uri, sqlParams);
-    mtMum = jdbcTemplate.queryForObject(queries.get("mtMum"), Integer.TYPE, site_id, hospital_id, userId);
+    mtNum = jdbcTemplate.queryForObject(queries.get("mtNum"), Integer.TYPE, site_id, hospital_id, userId);
 
     sqlParams = String.format("{_sql=%s, site_id=%s, hospital_id=%s, user_Id=%s}",
       queries.get("pmNum"), site_id, hospital_id, userId);
@@ -206,8 +206,8 @@ public class WoScheduleController extends SqlConfigurableChartController {
     return meterNum;
   }
 
-  public int getMtMum() {
-    return mtMum;
+  public int getmtNum() {
+    return mtNum;
   }
 
   public int getPmNum() {

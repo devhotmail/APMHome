@@ -20,7 +20,7 @@ public class HomeAssetStaffDbTest extends AbstractDbTest {
   private final int userId = 5;
 
   String mtSql = new SQL() {{
-    SELECT("sr.from_dept_name as name", "sr.created_date as start_time", "sr.close_time as end_time", "sr.created_by", "ai.location_name", "CASE WHEN sr.status=1 THEN 1 ELSE 0 END as is_closed");
+    SELECT("sr.from_dept_name || '设备维修' as name", "sr.created_date as start_time", "sr.close_time as end_time", "sr.requestor_name", "ai.location_name", "CASE WHEN sr.status=1 THEN 1 ELSE 0 END as is_closed");
     FROM("v2_service_request sr join asset_info ai on sr.asset_id = ai.id");
     WHERE("sr.created_date between :start and :end");
     WHERE("ai.is_valid = true");
