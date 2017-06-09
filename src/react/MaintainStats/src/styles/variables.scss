@@ -1,22 +1,6 @@
-/* Colors */
-/* Grayscale and brand colors for use across Bootstrap. */
+@import "~dew-styles/variables.scss";
 
 $enable-hover-media-query: true !default;
-
-$gray-dark:                 #373a3c !default;
-$gray:                      #b3b3b3 !default;
-$gray-light:                #949392 !default;
-$gray-lighter:              #eceeef !default;
-$gray-lightest:             #f7f7f9 !default;
-
-$brand-primary:             #5b84d7 !default;
-$brand-success:             #5cb85c !default;
-$brand-info:                #5bc0de !default;
-$brand-warning:             #ebda51 !default;
-$brand-danger:              #e26d26 !default;
-$brand-inverse:             $gray-dark !default;
-
-$text-muted: $gray-light !default;
 
 /* --- Spacing  --- */
 
@@ -35,18 +19,14 @@ $spacers: (
     y: $spacer-y
   ),
   2: (
-    x: ($spacer-x * 2),
-    y: ($spacer-y * 2)
+    x: ($spacer-x * 1.5),
+    y: ($spacer-y * 1.5)
   ),
   3: (
     x: ($spacer-x * 3),
     y: ($spacer-y * 3)
   )
 ) !default;
-
-$border-width: 1px !default;
-$border-radius: 5px !default;
-$border-color: $gray !default;
 
 // Pixel value used to responsively scale all typography. Applied to the `<html>` element.
 $font-size-root: 16px !default;
@@ -81,7 +61,7 @@ $headings-font-weight:   500 !default;
 $headings-line-height:   1.1 !default;
 $headings-color:         inherit !default;
 
-$lead-font-size:   1.25 * $font-size-root !default;
+$lead-font-size:   $title-font !default;
 $lead-font-weight: 500 !default;
 
 $small-font-size: 80% !default;
@@ -108,19 +88,3 @@ $nested-kbd-font-weight: bold !default;
 $list-inline-padding: 5px !default;
 
 $mark-bg:               #fcf8e3 !default;
-
-/* --- z-index master list --- */
-// Warning: Avoid customizing these values. They're used for a bird's eye view
-// of components dependent on the z-axis and are designed to all work together.
-// this is from antd.less
-// https://github.com/ant-design/ant-design/blob/master/components/style/themes/default.less#L197
-$zindex-affix           : 10;
-$zindex-back-top        : 10;
-$zindex-modal-mask      : 1000;
-$zindex-modal           : 1000;
-$zindex-notification    : 1010;
-$zindex-message         : 1010;
-$zindex-popover         : 1030;
-$zindex-picker          : 1050;
-$zindex-dropdown        : 1050;
-$zindex-tooltip         : 1060;

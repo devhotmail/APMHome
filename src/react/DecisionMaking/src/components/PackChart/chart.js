@@ -53,6 +53,7 @@ export default class Chart extends PureComponent<*, ChartProps, *> {
           <Button className="m-l-1" onClick={this.props.handleBackRoot}>返回顶层</Button>
         </div>        
         <svg
+          className={styles.svg}
           width={width}
           height={height}
           fontSize={20 / k}

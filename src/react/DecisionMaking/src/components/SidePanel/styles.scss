@@ -19,49 +19,11 @@
   }
 }
 
-.tabs {
-  display: inline-block;
-  position: relative;
-
-  .sliding {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    background-color: $brand-primary;
-    height: 2px;
-    transition: .2s ease-in-out;
-  }
-
-  ul {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    width: 180px;
-  }
-
-  li {
-    flex: 1;
-    padding: 10px 0px;
-    box-sizing: border-box;
-    cursor: pointer;
-    user-select: none;
-    text-align: center;
-
-    &:hover,
-    &.active {
-      color: $brand-primary;
-    }
-  }
-}
-
 .tabContent {
   max-height: calc(100% - 50px);
-  padding: 10px;
-  border: 1px solid $border-color;
-  border-radius: 10px;
+  padding: $padding-y $padding-x;
+  border: $border-width solid $border-color;
+  border-radius: $border-radius;
   overflow-x: hidden;
   overflow-y: auto;
   text-align: left;

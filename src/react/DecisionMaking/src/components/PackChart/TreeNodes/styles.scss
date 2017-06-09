@@ -1,5 +1,7 @@
+@import "../../../styles/variables.scss";
+
 .treeNodes {
-  fill: rgb(111, 111, 111);
+  fill: $chart-title-color;
 
   text {
     text-anchor: middle;
