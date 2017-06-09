@@ -58,7 +58,7 @@
     <logger name="druid.sql.Connection" additivity="false" level="warn">
       <appender-ref ref="Console"/>
     </logger>
-    <logger name="druid.sql.Statement" additivity="false" level="debug">
+    <logger name="druid.sql.Statement" additivity="false" level="warn">
       <appender-ref ref="Console"/>
     </logger>
     <logger name="druid.sql.ResultSet" additivity="false" level="warn">
