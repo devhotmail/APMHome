@@ -51,8 +51,8 @@ public class EsGenerator extends AbstractDbTest {
   @Test
   public void testGenerate() {
     Observable.from(dates)
-      .flatMap(date -> assets.map(a -> new ClinicalSummit(a._1, a._2, a._3, a._5, a._4, 0, 0, 0, 0, date, date))).cache()
-      .flatMap(c -> partSteps.map(p -> new ClinicalSummit(c.getSiteId(), c.getHospitalId(), c.getAssetId(), c.getDeptId(), c.getAssetGroup(), p._1, 0, p._2, 0, c.getCreated(), c.getLastModified())))
+      .flatMap(date -> assets.map(a -> Tuple.of(new ClinicalSummit(a._1, a._2, a._3, a._5, a._4, 0, 0, 0, 0, date, date), javaslang.collection.HashSet.fill(ThreadLocalRandom.current().nextInt(1, 45), () -> ThreadLocalRandom.current().nextInt(1, 46))))).cache()
+      .flatMap(t -> partSteps.map(p -> new ClinicalSummit(t._1.getSiteId(), t._1.getHospitalId(), t._1.getAssetId(), t._1.getDeptId(), t._1.getAssetGroup(), p._1, 0, p._2, 0, t._1.getCreated(), t._1.getLastModified())).filter(a -> t._2.contains(a.stepId)))
       .subscribe(d -> db.update(sql)
         .parameter("siteId", d.getSiteId())
         .parameter("hospitalId", d.getHospitalId())

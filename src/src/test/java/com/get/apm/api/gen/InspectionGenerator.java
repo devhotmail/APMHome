@@ -65,8 +65,7 @@ public class InspectionGenerator extends AbstractDbTest {
   @Before
   public void setUp() throws SQLException {
     super.setUp();
-    db.update("delete from inspection_order").execute();
-    db.update("delete from inspection_order_detail").execute();
+    db.update("truncate table inspection_order cascade").execute();
     assets = db.select("SELECT site_id, hospital_id, id, name, install_date, clinical_dept_id from asset_info").getAs(Integer.class, Integer.class, Integer.class, String.class, Date.class, Integer.class)
       .map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4(), t._5(), t._6())).cache();
     assetsMap = assets.toMap(t -> t._3).toBlocking().single();

@@ -5,10 +5,9 @@ import com.ge.apm.service.api.CommonService;
 import com.ge.apm.service.api.ScanService;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Ints;
-import javaslang.Tuple;
-import javaslang.Tuple3;
-import javaslang.Tuple5;
+import javaslang.*;
 import javaslang.control.Option;
+import javaslang.control.Try;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,10 +85,11 @@ public class ScanApi {
                                                               @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(name = "limit", required = false, defaultValue = "50") Integer limit,
                                                               @Min(0) @RequestParam(name = "start", required = false, defaultValue = "0") Integer start) {
     UserAccount user = UserContext.getCurrentLoginUser();
+    Map<Integer, Tuple7<Integer, Integer, Integer, Integer, Integer, Integer, String>> assets = commonService.findAssets(user.getSiteId(), user.getHospitalId());
     Map<Integer, String> types = Observable.from(commonService.findFields(user.getSiteId(), "assetGroup").entrySet()).filter(e -> Option.of(Ints.tryParse(e.getKey())).isDefined()).toMap(e -> Ints.tryParse(e.getKey()), Map.Entry::getValue).toBlocking().single();
     Map<Integer, String> parts = commonService.findParts();
     if ("asset".equals(groupBy)) {
-      return serializeAsset(request, types, parts, scanService.assetDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part, Match(Tuple.of(part, limit)).of(Case($(t -> Option.of(t._1).isDefined()), a -> a._2), Case($(t -> Option.of(t._1).isEmpty() && Option.of(t._2).isDefined()), a -> a._2 * parts.size()), Case($(), Integer.MAX_VALUE)), Match(Tuple.of(part, start)).of(Case($(t -> Option.of(t._1).isDefined()), a -> a._2), Case($(t -> Option.of(t._1).isEmpty() && Option.of(t._2).isDefined()), a -> a._2 * parts.size()), Case($(), 0))));
+      return serializeAsset(request, assets, types, parts, scanService.assetDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part, Match(Tuple.of(part, limit)).of(Case($(t -> Option.of(t._1).isDefined()), a -> a._2), Case($(t -> Option.of(t._1).isEmpty() && Option.of(t._2).isDefined()), a -> a._2 * parts.size()), Case($(), Integer.MAX_VALUE)), Match(Tuple.of(part, start)).of(Case($(t -> Option.of(t._1).isDefined()), a -> a._2), Case($(t -> Option.of(t._1).isEmpty() && Option.of(t._2).isDefined()), a -> a._2 * parts.size()), Case($(), 0))));
     } else if ("step".equals(groupBy)) {
       return serializeStep(request, types, parts, scanService.stepDetail(user.getSiteId(), user.getHospitalId(), from.toDate(), to.toDate(), type, dept, asset, part, step, Option.of(limit).getOrElse(Integer.MAX_VALUE), start));
     } else {
@@ -97,9 +97,9 @@ public class ScanApi {
     }
   }
 
-  private ResponseEntity<Map<String, Object>> serializeAsset(HttpServletRequest request, Map<Integer, String> types, Map<Integer, String> parts, Observable<Tuple5<Integer, Integer, String, Integer, Integer>> report) {
+  private ResponseEntity<Map<String, Object>> serializeAsset(HttpServletRequest request, Map<Integer, Tuple7<Integer, Integer, Integer, Integer, Integer, Integer, String>> assets, Map<Integer, String> types, Map<Integer, String> parts, Observable<Tuple4<Integer, Integer, Integer, Integer>> report) {
     final Map<String, Object> body = new ImmutableMap.Builder<String, Object>()
-      .put("detail", report.toMultimap(t -> Tuple.of(t._1, t._2, t._3)).toBlocking().single().entrySet().stream().sorted(Comparator.<Map.Entry<Tuple3<Integer, Integer, String>, Collection<Tuple5<Integer, Integer, String, Integer, Integer>>>, Integer>comparing(kv -> kv.getKey()._1).thenComparing(kv -> kv.getKey()._2)).map(kv -> new ImmutableMap.Builder<String, Object>()
+      .put("detail", report.map(t -> Tuple.of(t._1, t._2, Try.of(() -> assets.get(t._2)._7).getOrElse(""), t._3, t._4)).toMultimap(t -> Tuple.of(t._1, t._2, t._3)).toBlocking().single().entrySet().stream().sorted(Comparator.<Map.Entry<Tuple3<Integer, Integer, String>, Collection<Tuple5<Integer, Integer, String, Integer, Integer>>>, Integer>comparing(kv -> kv.getKey()._1).thenComparing(kv -> kv.getKey()._2)).map(kv -> new ImmutableMap.Builder<String, Object>()
         .put("type", ImmutableMap.of("id", kv.getKey()._1, "name", types.getOrDefault(kv.getKey()._1, "")))
         .put("asset", ImmutableMap.of("id", kv.getKey()._2, "name", kv.getKey()._3))
         .put("items", new ImmutableMap.Builder<String, Object>()

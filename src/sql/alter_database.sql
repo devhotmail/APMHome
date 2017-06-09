@@ -132,6 +132,11 @@ created date,
 last_modified timestamp
 );
 
+create index idx_exam_summit_asset on exam_summit(site_id, hospital_id, asset_id);
+create index idx_exam_summit_date on exam_summit(created);
+create index idx_exam_summit_step on exam_summit(asset_group, part_id, step_id);
+create index idx_exam_summit_step on exam_summit(asset_group, asset_id, part_id);
+
 CREATE TABLE "public"."v2_service_request" (
 "id" char(32) COLLATE "default" NOT NULL,
 "created_by" varchar(50) COLLATE "default",

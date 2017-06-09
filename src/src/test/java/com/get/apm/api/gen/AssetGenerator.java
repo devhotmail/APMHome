@@ -41,15 +41,18 @@ public class AssetGenerator extends AbstractDbTest {
     .VALUES("purchase_price", ":purchase_price")
     .VALUES("asset_owner_id", ":asset_owner_id")
     .VALUES("asset_owner_name", ":asset_owner_name")
+    .VALUES("location_name", ":location_name")
     .toString();
 
   private Map<Integer, String> users;
   private Map<Integer, String> assetGroups;
+  private Map<Integer, String> orgs;
 
   @Before
   public void setUp() throws SQLException {
     super.setUp();
     users = db.select("select id, login_name from user_account where site_id = :site and hospital_id = :hospital").parameter("site", 1).parameter("hospital", 1).getAs(Integer.class, String.class).toMap(Tuple2::_1, Tuple2::_2).toBlocking().single();
+    orgs = StreamSupport.stream(findOrgs(1).spliterator(), false).collect(Collectors.toMap(t -> t._1, t -> t._5));
     assetGroups = StreamSupport.stream(findMsgs(-1, "assetGroup").spliterator(), false).collect(Collectors.toMap(t -> Ints.tryParse(t._3), t -> t._4));
     db.update("truncate table asset_info cascade").execute();
   }
@@ -78,6 +81,7 @@ public class AssetGenerator extends AbstractDbTest {
         .parameter("purchase_price", t._4)
         .parameter("asset_owner_id", t._5)
         .parameter("asset_owner_name", users.get(t._5))
+        .parameter("location_name", String.format("XX院%s科/室", orgs.get(t._2._4)))
         .returnGeneratedKeys()
         .getAs(Integer.class).toBlocking().single());
   }
