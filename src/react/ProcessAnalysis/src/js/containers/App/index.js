@@ -25,7 +25,7 @@ import classnames from 'classnames'
 import colors from 'utils/colors'
 import { BriefConv, DetailConv } from 'converters'
 import { warn } from 'utils/logger'
-import { HumanizeDurationInput, HumanizeDurationLabel } from 'utils/helpers'
+import { HumanizeDurationInput, HumanizeDurationLabel as humanize } from 'utils/helpers'
 import './app.scss'
 
 const RadioButton = Radio.Button
@@ -57,6 +57,12 @@ function DataOrPlaceHolder(items, placeholderSize) {
 function GetDonutChartRow(label, value) {
   value = value ? moment.duration(value * 1000).humanize() : ''
   return { label, value }
+}
+
+const TWO_DAY = 48 * 3600
+function HumanizeDurationLabel(value) {
+  let unit = value > TWO_DAY ? 'd' : 'h'
+  return humanize(value, unit)
 }
 
 function GetDistance(ball, gross) {
@@ -352,8 +358,7 @@ export class App extends Component<void, Props, void> {
     if (evt.type === 'mouseleave') {
       this.setState({ tooltipX: -861112, tooltipY: -861112 })
     } else {
-      this.setState({ tooltipX: evt.clientX, tooltipY: evt.clientY })
-      this.setState({ tooltipData: data})
+      this.setState({ tooltipX: evt.clientX, tooltipY: evt.clientY, tooltipData: data })
     }
   }
   constructor(props) {
