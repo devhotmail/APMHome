@@ -37,6 +37,7 @@ export default class SystemPanel extends Component {
             ? data.historical_data.map(n => {
               return <ProgressBar
                 key={n.year}
+                className={styles['muted-progress']}
                 title={`${n.year}${n.year === currentYear ? '至今' : '年' }`}
                 percent={n.usage}
                 textDesc={`${round(n.usage * 100, 1)}%`} />
@@ -44,7 +45,7 @@ export default class SystemPanel extends Component {
             : null
         }
         <ProgressBar
-          color="#46af9b"
+          className={styles['progress']}
           title={`${year}预测`}
           percent={data.usage_predict}
           textDesc={`

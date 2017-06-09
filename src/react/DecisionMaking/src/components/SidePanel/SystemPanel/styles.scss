@@ -1,5 +1,13 @@
 @import "../../../styles/variables.scss";
 
+.muted-progress {
+  color: $text-muted;
+}
+
+.progress {
+  color: $green;
+}
+
 .systemPanel {
   :global {
     .dewicon {

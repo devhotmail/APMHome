@@ -2,13 +2,14 @@
 import React, { Component } from 'react'
 import { Animate } from 'react-move'
 import { connect } from 'dva'
+import Tabs from 'dew-tabs'
 
 import SystemPanel from './SystemPanel'
 import ManualPanel from './ManualPanel'
 
 import styles from './styles.scss'
 
-const panelOpts = [
+const tabOpts = [
   {
     key: 'system',
     text: '系统自动'
@@ -18,8 +19,6 @@ const panelOpts = [
     text: '手动调节'
   }
 ]
-
-const tabWidth = 90
 
 @connect(state => ({
   focus: state.focus,
@@ -38,23 +37,7 @@ export default class SidePanel extends Component {
     
     return (
       <div className={styles.sidepanel}>
-        <div className={styles.tabs}>
-          <div style={{width: tabWidth, left: activeTab * tabWidth}} className={styles.sliding}></div>
-          <ul style={{width: tabWidth * 2}}>
-            {
-              panelOpts.map(({key, text}, index) => {
-                return (
-                  <li
-                    key={key}
-                    className={activeTab === index ? styles.active : ''}
-                    onClick={this.handleTabClick(index)}>
-                    {text}
-                  </li>
-                )
-              })
-            }
-          </ul>
-        </div>
+        <Tabs activeIndex={activeTab} options={tabOpts} onChange={this.handleTabChange} />
         <div className={styles.tabContent}>
           {
             activeTab === 0
@@ -106,13 +89,7 @@ export default class SidePanel extends Component {
     )
   }
 
-  markConfiged = () => {
-    this.setState({
-      configed: true
-    })
-  }
-
-  handleTabClick = (index: number) => (e: Event) => {
+  handleTabChange = (index: number) => {
     this.props.dispatch({
       type: 'finance/data/toggle',
       payload: ['system', 'manual'][index]
@@ -120,6 +97,12 @@ export default class SidePanel extends Component {
 
     this.setState({
       activeTab: index
+    })    
+  }
+
+  markConfiged = () => {
+    this.setState({
+      configed: true
     })
   }
 }
