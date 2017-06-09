@@ -4,7 +4,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.poi.hssf.record.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
@@ -16,7 +15,7 @@ import webapp.framework.web.mvc.JpaCRUDController;
 
 @ManagedBean
 @ViewScoped
-public class WxScanController  extends JpaCRUDController<T>{
+public class WxScanController<T>  extends JpaCRUDController<T>{
 
 	private static final long serialVersionUID = -1L;
     private Logger logger = LoggerFactory.getLogger(getClass());
