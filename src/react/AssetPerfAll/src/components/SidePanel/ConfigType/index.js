@@ -1,13 +1,14 @@
 /* @flow */
 import React, { Component } from 'react'
 import { Tooltip, Table } from 'antd'
+import { connect } from 'dva'
 import uuid from 'uuid/v4'
 
 import { round } from '#/utils'
 
 import type { ConfigT, NodeT, cursorT } from '#/types'
 
-import EditBlock from '#/components/EditBlock'
+import EditBlock from 'dew-editblock'
 
 import styles from './styles.scss'
 
@@ -19,42 +20,29 @@ const defaultTableProps = {
   rowKey: n => n.id
 }
 
-export default class ConfigType extends Component<*, ConfigT, *> {
-  render () {
-    // const { config, focus: { cursor}, depths, setFocus } = this.props
-    //
-    // const configListOne = config.filter(n => n.depth === depths[0])
-    // .map(n => ({
-    //   ...n,
-    //   children: null
-    // }))
-    //
-    // if (!configListOne.length) return null
-    //
-    // const activeCursors = this.getParentCursors()
+@connect(state => ({
+  groupBy: state.filters.groupBy,
+  filterId: state.filters.data[1] ? state.filters.data[1][state.filters.groupBy] : null
+}))
+export default
+class ConfigType extends Component<*, ConfigT, *> {
+  onChange = node => key => v => this.props.dispatch({
+    type: 'config/changes',
+    payload: {
+      ...node,
+      [key]: v / 100,
+    },
+    filter: {
+      [this.props.groupBy]: this.props.filterId
+    }
+  })
 
+  render () {
     const { config } = this.props
 
     const tableProps = {
-      ...defaultTableProps,
-      // onRowClick: node => setFocus(getCursor(node)),
-      // rowClassName: node => `${styles.tr} ${isFocusNode(node, activeCursors[0]) ? 'active': ''}`
+      ...defaultTableProps
     }
-
-    // const thresholdNode = [
-    //   <div>
-    //     <Tooltip placement="topRight" title="您可以自定义使用率大于多少为满负荷">
-    //       <i className="dewicon dewicon-circle-full"></i>
-    //       <span>满负荷</span>
-    //     </Tooltip>
-    //   </div>,
-    //   <div>
-    //     <Tooltip placement="topRight" title="您可以自定义使用率小于多少为低负荷">
-    //       <i className="dewicon dewicon-circle-low"></i>
-    //       <span>低负荷</span>
-    //     </Tooltip>
-    //   </div>
-    // ]
 
     return (
       <div>
@@ -74,21 +62,41 @@ export default class ConfigType extends Component<*, ConfigT, *> {
             key="revenue_increase"
             width={70}
             render={(text, node, index) =>
-              <EditBlock
-                cursor={node}
-                fieldKey="revenue_increase"
-                val={round(text * 100, 1)} />
-            } />
+              <EditBlock onChange={this.onChange(node)('revenue_increase')} formOpts={{
+                initialValue: round(text * 100, 1),
+                rules: [
+                  {
+                    validator: (rule, value, callback) => {
+                      if (value < -100) {
+                        callback('输入不能小于-100')
+                      } else {
+                        callback()
+                      }
+                    }
+                  }
+                ]
+              }} sign="%" />}
+            />
           <Table.Column
             title="维护成本"
             dataIndex="cost_increase"
             key="cost_increase"
             width={70}
             render={(text, node, index) =>
-              <EditBlock
-                cursor={node}
-                fieldKey="cost_increase"
-                val={round(text * 100, 1)} />
+              <EditBlock onChange={this.onChange(node)('cost_increase')} formOpts={{
+                initialValue: round(text * 100, 1),
+                rules: [
+                  {
+                    validator: (rule, value, callback) => {
+                      if (value < -100) {
+                        callback('输入不能小于-100')
+                      } else {
+                        callback()
+                      }
+                    }
+                  }
+                ]
+              }} sign="%" />
             } />
         </Table>
       </div>
