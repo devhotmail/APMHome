@@ -76,6 +76,8 @@
     "d3-transition": "^1.0.4",
     "dew-editblock": "git+https://github.build.ge.com/foundry-sh/dew-editblock.git",
     "dew-filterbar": "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git",
+    "dew-styles": "git+https://github.build.ge.com/foundry-sh/dew-styles.git",
+    "dew-tabs": "git+https://github.build.ge.com/foundry-sh/dew-tabs.git",
     "dva": "^1.3.0-beta.3",
     "raf": "^3.3.0",
     "react": "^15.5.4",

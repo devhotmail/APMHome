@@ -67,6 +67,7 @@
     "dew-filterbar": "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git",
     "dew-pager": "git+https://github.build.ge.com/foundry-sh/dew-pager.git",
     "dew-statusbar": "git+https://github.build.ge.com/foundry-sh/dew-statusbar.git",
+    "dew-styles": "git+https://github.build.ge.com/foundry-sh/dew-styles.git",
     "dva": "^1.2.1",
     "rc-progress": "^2.1.2",
     "react": "^15.4.2",

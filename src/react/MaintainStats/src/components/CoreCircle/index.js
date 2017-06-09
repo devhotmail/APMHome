@@ -15,8 +15,8 @@ class ProgressBar extends PureComponent {
         style={{width: 170, height: 170}}
         percent={percent}
         trailColor={gray}
-        trailWidth="8"
-        strokeWidth="8"
+        trailWidth="6"
+        strokeWidth="6"
         strokeColor={color}
         strokeLinecap="square"
         {...restProps} />

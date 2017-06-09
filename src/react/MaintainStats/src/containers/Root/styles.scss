@@ -1,3 +1,5 @@
+@import "../../styles/variables.scss";
+
 $filtersHeight: 50px;
 
 .container {
@@ -79,4 +81,8 @@ $filtersHeight: 50px;
   position: absolute;
   right: 200px;
   top: 20px;
+}
+
+.text {
+  fill: $chart-title-color;
 }

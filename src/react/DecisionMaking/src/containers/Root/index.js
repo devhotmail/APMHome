@@ -42,11 +42,11 @@ class Root extends PureComponent {
         value: groupby,
         options: [
           {
-            id: 'type',
+            id: 'dept',
             name: '按科室'
           },
           {
-            id: 'dept',
+            id: 'type',
             name: '按设备类型'
           }
         ]

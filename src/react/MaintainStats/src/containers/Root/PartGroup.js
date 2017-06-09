@@ -6,6 +6,7 @@ import RingSectorLayout from 'ring-sector-layout'
 import AnnulusSectorStack from 'ring-sector-layout/dist/AnnulusSectorStack'
 
 import { formatData } from './helper'
+import styles from './styles.scss'
 
 const purple = '#b781b4'
 const prasinous = '#6ab6a6'
@@ -64,8 +65,8 @@ export default class PartGroup extends PureComponent<*, PropsT, *> {
                 }))}
                 text={{
                   content: data.name,
-                  fill: '#6b6b6b',
                   fontSize: 16,
+                  className: styles.text,
                   offset: (outerRadius - innerRadius) / 10
                 }}
                 onClick={onClick(item.data.id, item.data.origin)}

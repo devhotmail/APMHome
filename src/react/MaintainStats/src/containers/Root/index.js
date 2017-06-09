@@ -21,8 +21,8 @@ import styles from './styles.scss'
 const purple = '#b781b4'
 const prasinous = '#6ab6a6'
 
-const roleFilterFn = isHead => n => {
-  if (!isHead) return n.key !== 'dept'
+const roleFilterFn = (isHead, cb) => n => {
+  if (!isHead) return cb(n)
   else return true
 }
 
@@ -39,20 +39,6 @@ export default class Root extends Component {
   state = {
     groupAD: 0,
     assetAD: 0,
-    groupbyOpts: [
-      {
-        key: 'type',
-        text: '设备类型'
-      },
-      {
-        key: 'supplier',
-        text: '品牌'
-      },
-      {
-        key: 'dept',
-        text: '科室'
-      }
-    ],
     selected: []
   }
 
@@ -77,7 +63,7 @@ export default class Root extends Component {
     const { group, asset, location, filter, loading, user, root } = this.props
     const { groupPage, assetPage, dept, type, groupby } = location.query
 
-    const { groupAD, assetAD, groupbyOpts, selected } = this.state
+    const { groupAD, assetAD, selected } = this.state
     const filterOpts = [
       {
         type: 'range',
@@ -97,17 +83,30 @@ export default class Root extends Component {
         options: filter.types,
         placeholder: '全部设备类型'
       }
-    ].filter(roleFilterFn(user.isHead))
+    ].filter(roleFilterFn(user.isHead, n => n.key !== 'dept'))
 
-    const menu = (
-      <Menu onClick={this.handleGroupbyChange} selectedKeys={[groupby]} trigger={['click']}>
-        {
-          groupbyOpts.filter(roleFilterFn(user.isHead)).map((opt, i) => 
-            <Menu.Item key={opt.key}>显示{opt.text}</Menu.Item>
-          )
-        }
-      </Menu>
-    )
+    const groupbyOpts = [
+      {
+        type: 'select',
+        key: 'dept',
+        value: groupby,
+        options: [
+          {
+            id: 'type',
+            name: '显示设备类型'
+          },
+          {
+            id: 'supplier',
+            name: '显示品牌'
+          },
+          {
+            id: 'dept',
+            name: '显示科室'
+          }
+        ].filter(roleFilterFn(user.isHead, n => n.id !== 'dept')),
+        allowClear: false
+      }
+    ]
 
     const { text: selectedGroupby } = groupbyOpts.find(n => n.key === groupby) || groupbyOpts[0]
 
@@ -144,11 +143,7 @@ export default class Root extends Component {
           </div>          
           <div className={styles.group}>
             <div className={styles.groupby}>
-              <Dropdown overlay={menu}>
-                <Button style={{ marginLeft: 8 }}>
-                  显示{selectedGroupby} <Icon type="down" />
-                </Button>
-              </Dropdown>
+              <FilterBar options={groupbyOpts} onChange={this.handleGroupbyChange} />
             </div>
             {
               group.items.length
@@ -186,7 +181,15 @@ export default class Root extends Component {
     })
   }
 
-  handleGroupbyChange = (e) => {
+  handleGroupbyChange = ({ value }) => {
+    this.changeQuery({
+      groupby: value,
+      groupId: undefined,
+      groupPage: defaultPage
+    })
+  }
+
+  handleGroupbyChange1 = (e) => {
     const { location } = this.props
 
     this.changeQuery({

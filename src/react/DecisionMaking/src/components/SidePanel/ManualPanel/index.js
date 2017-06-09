@@ -63,7 +63,7 @@ export default class ManualPanel extends PureComponent {
         <div className="lead m-b-1">当前位置: {data.name}</div>
         <div>根据预期增长产生的使用率预测</div>
         <ProgressBar
-          color="#46af9b"
+          className={styles['progress']}
           title="预测"
           percent={data.usage_predict}
           textDesc={`

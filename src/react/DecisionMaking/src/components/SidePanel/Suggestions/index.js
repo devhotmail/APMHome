@@ -4,6 +4,8 @@ import ProgressBar from '#/components/ProgressBar'
 
 import { round } from '#/utils'
 
+import styles from './styles.scss'
+
 export default class Suggestions extends PureComponent {
   render () {
     const { data } = this.props
@@ -31,7 +33,7 @@ export default class Suggestions extends PureComponent {
           ) && <div>
             <div>采纳建议后的使用率预测</div>
             <ProgressBar
-              color="#46af9b"
+              className={styles['progress']}
               title="采取建议"
               percent={data.usage_sug}
               textDesc={`
