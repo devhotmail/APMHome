@@ -219,8 +219,8 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
 //				messageUtil.error("security_cookie_error");
 //			}
 			afterLogin();
-			messageUtil.error("after login, updateLoginStatus");
-			updateLoginStatus(userName, true);
+
+                        updateLoginStatus(userName, true);
 			// redirects to the home page
 			/*
 			 * FacesContext context = FacesContext.getCurrentInstance();

@@ -66,7 +66,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("account " + login + " could not be found");
         }
 
-        if(account.getIsLocked()){
+        if(account.getIsLocked()!=null && account.getIsLocked().booleanValue()==true){
             if(TimeUtil.toJodaDate(account.getLockTime()).plusHours(24).isBeforeNow()){
                 account.setIsLocked(false);
                 account.setPasswordErrorCount(0);

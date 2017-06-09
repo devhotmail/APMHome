@@ -10,7 +10,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Weeks;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.postgresql.jdbc4.Jdbc4Array;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webapp.framework.dao.NativeSqlUtil;
@@ -25,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.sql.SQLException;
 import java.util.*;
+import org.postgresql.jdbc.PgArray;
 
 @ManagedBean
 @ViewScoped
@@ -125,7 +125,7 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
         List<Object> ret = new ArrayList<>(13);
         for (Map<String, Object> map : list) {
             try {
-                String[] a = (String[]) ((Jdbc4Array) map.get("scalar")).getArray();
+                String[] a = (String[]) ((PgArray) map.get("scalar")).getArray();
                 a[0] = WebUtil.getFieldValueMessage("month", a[0].trim());
                 ret.add(a);
             }
@@ -205,7 +205,7 @@ public final class AssetProactiveMaintenanceController implements ServerEventInt
         List<Object> ret = new ArrayList<>();
         for (Map<String, Object> map : list) {
             try {
-                String[] array =(String[])((Jdbc4Array) map.get("scalar")).getArray();
+                String[] array =(String[])((PgArray) map.get("scalar")).getArray();
                 // backward
                 int l2 = array.length - 1;
                 while (l2 >= 0 && array[l2].length() == 0) {

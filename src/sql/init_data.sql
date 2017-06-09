@@ -8,8 +8,8 @@ truncate table data_table_config cascade;
 truncate table field_code_type cascade;
 
 
-INSERT INTO site_info(id,name,name_en,alias_name,site_description,contact_person,contact_phone,contact_email,location,location_en,time_zone,default_lang,is_enabled,wf_auto_step2,wf_auto_step3,wf_auto_step4,wf_auto_step5,wf_auto_step6) VALUES ('1', 'GE', 'GE', 'GE', 'GE', null, null, null, null, null, null, null, true, false,false, false, false,false);
-INSERT INTO site_info(id,name,name_en,alias_name,site_description,contact_person,contact_phone,contact_email,location,location_en,time_zone,default_lang,is_enabled,wf_auto_step2,wf_auto_step3,wf_auto_step4,wf_auto_step5,wf_auto_step6) VALUES ('2', 'Demo医联体', 'DemoHospitalGrup', '医联体', '医联体', null, null, null, null, null, null, null, true, false,false, false, false,false);
+INSERT INTO site_info(id,name,name_en,alias_name,site_description,contact_person,contact_phone,contact_email,location,location_en,time_zone,default_lang,is_enabled,wf_auto_step2,wf_auto_step3,wf_auto_step4,wf_auto_step5,wf_auto_step6, manhour_price) VALUES ('1', 'GE', 'GE', 'GE', 'GE', null, null, null, null, null, null, null, true, false,false, false, false,false, 1000);
+INSERT INTO site_info(id,name,name_en,alias_name,site_description,contact_person,contact_phone,contact_email,location,location_en,time_zone,default_lang,is_enabled,wf_auto_step2,wf_auto_step3,wf_auto_step4,wf_auto_step5,wf_auto_step6, manhour_price) VALUES ('2', 'Demo医联体', 'DemoHospitalGrup', '医联体', '医联体', null, null, null, null, null, null, null, true, false,false, false, false,false, 1000);
 
 INSERT INTO org_info(id,site_id,hospital_id,name,name_en,parent_id) values ('1', '1', null, 'Digital Healthcare', 'Digital Healthcare', null);
 INSERT INTO org_info(id,site_id,hospital_id,name,name_en,parent_id) values ('2', '2', null, '医院本部', 'Hospital Headquarter', null);

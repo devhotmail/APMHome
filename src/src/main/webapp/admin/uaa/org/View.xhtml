@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="OrgInfoViewDlg" widgetVar="OrgInfoViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{orgInfoController.CRUDActionName} #{msg.OrgInfo}">
+            <h:form id="OrgInfoViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{orgInfoController.selected != null}">
+                        <h:outputLabel value="#{msg.id}" for="id" />
+                        <h:outputText value="#{orgInfoController.selected.id}"/>
+                        <h:outputLabel value="#{msg.name}" for="name" />
+                        <h:outputText value="#{orgInfoController.selected.name}"/>
+                        <h:outputLabel value="#{msg.nameEn}" for="nameEn" />
+                        <h:outputText value="#{orgInfoController.selected.nameEn}"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton rendered="#{orgInfoController.deleteAction}" icon="ui-icon-trash" actionListener="#{orgInfoController.delete}" value="#{msg.Delete}" update=":OrgInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'OrgInfoViewDialog');"/>
+                    &nbsp;&nbsp;
+                    <p:commandButton immediate="true" value="#{msg.Close}" icon="ui-icon ui-icon-close" onclick="PF('OrgInfoViewDialog').hide()"/>
+                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
